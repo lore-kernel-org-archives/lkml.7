@@ -2,137 +2,201 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D99C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80930C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE51F20637
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:24:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="amGepPz7"
+	by mail.kernel.org (Postfix) with ESMTP id 4FBE520637
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfLDIYW (ORCPT
+        id S1727350AbfLDIZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:24:22 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46029 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfLDIYV (ORCPT
+        Wed, 4 Dec 2019 03:25:11 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:48394 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfLDIZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:24:21 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 2so3242786pfg.12;
-        Wed, 04 Dec 2019 00:24:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8xvQ4KrBz1M6n1c0YpMC9j+X8HvnhtQ5BjOcRHIdsx4=;
-        b=amGepPz7ql+vTupsCnD6IPDipjGdbEdlKhY9cDj1Ekdy9V/2p6pYvzaA+jruVaXcuZ
-         rO1xKldA6IhBJmcwJ/vnXGFEIYBKAHziPGeGrBZvW9m1px5SyLsyUbx3D3ydcil6qGB/
-         K1NZiwbGggzcQ5EoFuozvvigL+u60IS+K2+0sJw7PUREwd0Vq9rbx8I+x1RrSOT9ychp
-         CeBXvLiBfT64rb0Ixq0cMg6+y7mOOd+UDClM+uVwM7FESrFiH1aysjLxbYJqiwg+TKX4
-         dl7VDEbU7KJNXdlpyx4/lY4iLWHNBLsFgMZ8ZdIyej9mA+hM03g7ymt93X70bI7zNJjo
-         3+fQ==
+        Wed, 4 Dec 2019 03:25:10 -0500
+Received: by mail-il1-f199.google.com with SMTP id 4so5272847ill.15
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 00:25:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8xvQ4KrBz1M6n1c0YpMC9j+X8HvnhtQ5BjOcRHIdsx4=;
-        b=nvAJnrpEqFG05x4iwxcpcCIfrz9OS+bozDiZ1E97UXPINxwpPFLDUaPz7S7Pzi1Q81
-         QxG9/stbglf1NEw00drpqVRy6pyzeR4h9uYPq4ycYXWtxMiV96jAS8dkdeZvhYA8wWND
-         P+cpBG0Hjk/fy5KNp/t8r6iZA7GncqW2WTT45nd7cT1DG/Yq0vFAGpEmYWYg3+sDRFCX
-         tY+w9pWSKhWid9l2VTifFh6KGvqXMTTVjyxpstxcVeGz6eM1gPkcGCa7aG0zCjoo+Gl/
-         06LW1BPsRtoXJpnBYTsNu3g3r9OI0kNt8EZtx5GVGM1Np6nHWwPiH87QMEv0mloN6NDe
-         Jq7Q==
-X-Gm-Message-State: APjAAAXB5H6D5Li7COyiA3vGn+sJ6LbfjcwrK7Ysm7bQB5JqEDXMkUq6
-        42VoOOJhNvGomZ+fIm0pduzHYRXacJY=
-X-Google-Smtp-Source: APXvYqylPnT6dgCmD55Q7hCAukiHfv8BLJTgQms5dq+Bh33cuTtxDo9AxShUdojQylsoPDn2w9Zvbw==
-X-Received: by 2002:aa7:80d2:: with SMTP id a18mr2318629pfn.29.1575447860727;
-        Wed, 04 Dec 2019 00:24:20 -0800 (PST)
-Received: from workstation-kernel-dev ([139.5.253.155])
-        by smtp.gmail.com with ESMTPSA id o19sm5926518pjr.2.2019.12.04.00.24.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 00:24:20 -0800 (PST)
-Date:   Wed, 4 Dec 2019 13:54:12 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: Re: [PATCH] doc: listRCU: Add some more listRCU patterns in the
- kernel
-Message-ID: <20191204082412.GA6959@workstation-kernel-dev>
-References: <20191203063941.6981-1-frextrite@gmail.com>
- <20191203064132.38d75348@lwn.net>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=xR5WgA40E8BOPKf4qd5fJUmP6cRoyoo4UJ5r6074hn8=;
+        b=k3tB9oby4Q8YHNsc3fFFUtWrNECm+kG+DgwaBQraUQPuHWlriYJMTzp50ghFOC/5Js
+         kzkokEwmg7kKCjSG2tWV/chPD/fRlGnlWiLSqpLzQGOcwuQlT+kDyxiaDYvg/FxDKXta
+         CNwA+v63Z8OlsaEjhaLUfS3KK7dI1bcsfLQJ2mJcXlf/ppojYHshPK9xmluEOwZU5yfp
+         B2Iwz6E0bdjiB/wgGgSWEUJTcDkpwh/om6/XdzFgeH3J92YPJ0LfY3f9JTykB1HY3Dn/
+         YiC2zCSlZEoeG9nkj4RSfJwrF1U1DeZMUVXBgzWjzFn3+5/NxYr0ubgaaYTHVpjhlPiL
+         9Riw==
+X-Gm-Message-State: APjAAAU6vuOBGrNPskwTuIkeUqQrgC+2tNiUGAEXqbzgr5D9khDYS9dz
+        M7LlXMZe3yAG/i3RI9oAwsTrgKN8OzNXHyGnRiyE6FonruyU
+X-Google-Smtp-Source: APXvYqyOc6oa87Us5ks53P3kXDpiYH+nWSitUPPB+dpT3Y/Gn//ub3pWsT526I8W2a+JsOvnHH3OLLBOojLC8RoVYpUIr5K4N+IX
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203064132.38d75348@lwn.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Received: by 2002:a02:5489:: with SMTP id t131mr1905663jaa.40.1575447909716;
+ Wed, 04 Dec 2019 00:25:09 -0800 (PST)
+Date:   Wed, 04 Dec 2019 00:25:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000055ac40598dc8d46@google.com>
+Subject: KASAN: slab-out-of-bounds Read in linear_transfer (3)
+From:   syzbot <syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com>
+To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com,
+        tiwai@suse.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 06:41:32AM -0700, Jonathan Corbet wrote:
-> On Tue,  3 Dec 2019 12:09:43 +0530
-> Amol Grover <frextrite@gmail.com> wrote:
-> 
-> > - Add more information about listRCU patterns taking examples
-> > from audit subsystem in the linux kernel.
-> > 
-> > - The initially written audit examples are kept, even though they are
-> > slightly different in the kernel.
-> > 
-> > - Modify inline text for better passage quality.
-> > 
-> > - Fix typo in code-blocks and improve code comments.
-> > 
-> > - Add text formatting (italics, bold and code) for better emphasis.
-> 
-> Thanks for improving the documentation!  I'll leave the RCU stuff to the
-> experts, but I do have one request...
-> 
-> [...]
-> 
-> > +When a process exits, ``release_task()`` calls ``list_del_rcu(&p->tasks)`` under
-> > +``tasklist_lock`` writer lock protection, to remove the task from the list of
-> > +all tasks. The ``tasklist_lock`` prevents concurrent list additions/removals
-> > +from corrupting the list. Readers using ``for_each_process()`` are not protected
-> > +with the ``tasklist_lock``. To prevent readers from noticing changes in the list
-> > +pointers, the ``task_struct`` object is freed only after one or more grace
-> > +periods elapse (with the help of ``call_rcu()``). This deferring of destruction
-> > +ensures that any readers traversing the list will see valid ``p->tasks.next``
-> > +pointers and deletion/freeing can happen in parallel with traversal of the list.
-> > +This pattern is also called an **existence lock**, since RCU pins the object in
-> > +memory until all existing readers finish.
-> 
-> Please don't put function names as literal text.  If you just say
-> call_rcu(), it will be formatted correctly and cross-linked to the
-> appropriate kerneldoc entry.  Saying ``call_rcu()`` defeats that and
-> clutters the plain-text reading experience.
-> 
+Hello,
 
-Hi Jon,
+syzbot found the following crash on:
 
-The cross-reference of the functions should be done automatically by sphinx
-while generating HTML, right? But when compiled none of the functions were
-cross-referenced hence "``" was added around the methods (and other symbols)
-to distinguish them from normal text.
+HEAD commit:    76bb8b05 Merge tag 'kbuild-v5.5' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1416a90ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dd226651cb0f364b
+dashboard link: https://syzkaller.appspot.com/bug?extid=f153bde47a62e0b05f83
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10fe9e41e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1522042ae00000
 
-Thanks
-Amol
+The bug was bisected to:
 
-> Thanks,
-> 
-> jon
+commit 65766ee0bf7fe8b3be80e2e1c3ef54ad59b29476
+Author: Takashi Iwai <tiwai@suse.de>
+Date:   Fri Nov 9 10:59:45 2018 +0000
+
+     ALSA: oss: Use kvzalloc() for local buffer allocations
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1727742ae00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14a7742ae00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10a7742ae00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com
+Fixes: 65766ee0bf7f ("ALSA: oss: Use kvzalloc() for local buffer  
+allocations")
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in memcpy include/linux/string.h:380 [inline]
+BUG: KASAN: slab-out-of-bounds in do_convert sound/core/oss/linear.c:48  
+[inline]
+BUG: KASAN: slab-out-of-bounds in convert sound/core/oss/linear.c:81  
+[inline]
+BUG: KASAN: slab-out-of-bounds in linear_transfer  
+sound/core/oss/linear.c:110 [inline]
+BUG: KASAN: slab-out-of-bounds in linear_transfer+0x6de/0x970  
+sound/core/oss/linear.c:88
+Read of size 1 at addr ffff8880a3eb5540 by task syz-executor567/8984
+
+CPU: 0 PID: 8984 Comm: syz-executor567 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:638
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+  memcpy+0x24/0x50 mm/kasan/common.c:124
+  memcpy include/linux/string.h:380 [inline]
+  do_convert sound/core/oss/linear.c:48 [inline]
+  convert sound/core/oss/linear.c:81 [inline]
+  linear_transfer sound/core/oss/linear.c:110 [inline]
+  linear_transfer+0x6de/0x970 sound/core/oss/linear.c:88
+  snd_pcm_plug_read_transfer+0x197/0x2e0 sound/core/oss/pcm_plugin.c:651
+  snd_pcm_oss_read2+0x1f0/0x3f0 sound/core/oss/pcm_oss.c:1460
+  snd_pcm_oss_read1 sound/core/oss/pcm_oss.c:1517 [inline]
+  snd_pcm_oss_read+0x548/0x6a0 sound/core/oss/pcm_oss.c:2741
+  __vfs_read+0x8a/0x110 fs/read_write.c:425
+  vfs_read+0x1f0/0x440 fs/read_write.c:461
+  ksys_read+0x14f/0x290 fs/read_write.c:587
+  __do_sys_read fs/read_write.c:597 [inline]
+  __se_sys_read fs/read_write.c:595 [inline]
+  __x64_sys_read+0x73/0xb0 fs/read_write.c:595
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x445a99
+Code: e8 dc bd 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb 11 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f2955880ce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 0000000000445a99
+RDX: 0000000000001000 RSI: 0000000020000380 RDI: 0000000000000003
+RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
+R13: 00007ffd9643eb4f R14: 00007f29558819c0 R15: 20c49ba5e353f7cf
+
+Allocated by task 8984:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:512 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:485
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:526
+  __do_kmalloc_node mm/slab.c:3616 [inline]
+  __kmalloc_node+0x4e/0x70 mm/slab.c:3623
+  kmalloc_node include/linux/slab.h:579 [inline]
+  kvmalloc_node+0x68/0x100 mm/util.c:574
+  kvmalloc include/linux/mm.h:655 [inline]
+  kvzalloc include/linux/mm.h:663 [inline]
+  snd_pcm_plugin_alloc+0x585/0x770 sound/core/oss/pcm_plugin.c:70
+  snd_pcm_plug_alloc+0x146/0x330 sound/core/oss/pcm_plugin.c:129
+  snd_pcm_oss_change_params_locked+0x210f/0x3750  
+sound/core/oss/pcm_oss.c:1024
+  snd_pcm_oss_change_params+0x7b/0xd0 sound/core/oss/pcm_oss.c:1087
+  snd_pcm_oss_get_active_substream+0x136/0x190 sound/core/oss/pcm_oss.c:1104
+  snd_pcm_oss_get_rate sound/core/oss/pcm_oss.c:1754 [inline]
+  snd_pcm_oss_set_rate sound/core/oss/pcm_oss.c:1746 [inline]
+  snd_pcm_oss_ioctl+0x1794/0x33a0 sound/core/oss/pcm_oss.c:2593
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 0:
+(stack is not available)
+
+The buggy address belongs to the object at ffff8880a3eb5500
+  which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 0 bytes to the right of
+  64-byte region [ffff8880a3eb5500, ffff8880a3eb5540)
+The buggy address belongs to the page:
+page:ffffea00028fad40 refcount:1 mapcount:0 mapping:ffff8880aa400380  
+index:0x0
+raw: 00fffe0000000200 ffffea00027da7c8 ffff8880aa401348 ffff8880aa400380
+raw: 0000000000000000 ffff8880a3eb5000 0000000100000020 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880a3eb5400: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880a3eb5480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff8880a3eb5500: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+                                            ^
+  ffff8880a3eb5580: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880a3eb5600: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
