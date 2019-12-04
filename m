@@ -2,65 +2,180 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886C0C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1464DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65665206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B56206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:00:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfLDJ7R (ORCPT
+        id S1727545AbfLDKAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:59:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:53790 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726899AbfLDJ7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:59:16 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5CE181FB;
-        Wed,  4 Dec 2019 01:59:16 -0800 (PST)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CF193F52E;
-        Wed,  4 Dec 2019 01:59:15 -0800 (PST)
-Subject: Re: Null pointer crash at find_idlest_group on db845c w/ linus/master
-To:     Vincent Guittot <vincent.guittot@linaro.org>,
-        John Stultz <john.stultz@linaro.org>
-Cc:     Quentin Perret <qperret@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Patrick Bellasi <Patrick.Bellasi@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <CALAqxLXrWWnWi32BR1F8JOtrGt1y2Kzj__zWopLx1ZfRy3EZKA@mail.gmail.com>
- <CAKfTPtAvnLY3brp9iy_aHNu0rMM8nLfgeLc3CXEkMk3bwU1weA@mail.gmail.com>
- <CAKfTPtCvckhXQ97RR5X+QW49RRa0EK8gZV-Ajy8FzVeaw3PccQ@mail.gmail.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <19f58fca-9397-4cbc-9255-04ca30c6aacf@arm.com>
-Date:   Wed, 4 Dec 2019 09:59:14 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 4 Dec 2019 05:00:09 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53747 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbfLDKAI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 05:00:08 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1icRS2-000533-CD; Wed, 04 Dec 2019 11:00:06 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1icRS2-0005y6-0h; Wed, 04 Dec 2019 11:00:06 +0100
+Date:   Wed, 4 Dec 2019 11:00:05 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     shawnguo@kernel.org, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, wsa@the-dreams.de, leoyang.li@nxp.com,
+        aisheng.dong@nxp.com, xiaoning.wang@nxp.com,
+        o.rempel@pengutronix.de, xiaobo.xie@nxp.com,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        jiafei.pan@nxp.com, linux-arm-kernel@lists.infradead.org,
+        laurentiu.tudor@nxp.com
+Subject: Re: [v6] i2c: imx: support slave mode for imx I2C driver
+Message-ID: <20191204100005.r56huywxa7h3c6zr@pengutronix.de>
+References: <20191203114809.21226-1-biwen.li@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtCvckhXQ97RR5X+QW49RRa0EK8gZV-Ajy8FzVeaw3PccQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203114809.21226-1-biwen.li@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:53:58 up 149 days, 16:04, 138 users,  load average: 0.01, 0.10,
+ 0.15
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/12/2019 08:22, Vincent Guittot wrote:
->>>  5.4.0-mainline-11225-g9c5add21ff63 #1252
-> 
-> Do you have the sha1 that you use for your test ?
-> The one above doesn't seem to point on a valid commit in linus/master
-> 
+Hi,
 
-That would be https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/db845c-mainline-WIP
+The patch looks ok to me now, but I still do not like the #ifdeffery
+around CONFIG_I2C_SLAVE. With the patch I just sent (You are on Cc:)
+we could apply the following on your patch which makes it more readable
+and increases compile coverage.
 
-There's a db845_defconfig there too which I expect should be used to compile
-this kernel.
+Wolfram, Biwen, what do you think?
+
+Sascha
+
+---------------------------8<------------------------------
+
+From 52f7c2bf59db61d4b27b59ca6404136e3ed77310 Mon Sep 17 00:00:00 2001
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Date: Wed, 4 Dec 2019 10:56:34 +0100
+Subject: [PATCH] fixup! i2c: imx: support slave mode for imx I2C driver
+
+---
+ drivers/i2c/busses/i2c-imx.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+index 40ccfca600bf..c5d9ae8226cd 100644
+--- a/drivers/i2c/busses/i2c-imx.c
++++ b/drivers/i2c/busses/i2c-imx.c
+@@ -203,9 +203,7 @@ struct imx_i2c_struct {
+ 	struct pinctrl_state *pinctrl_pins_gpio;
+ 
+ 	struct imx_i2c_dma	*dma;
+-#if IS_ENABLED(CONFIG_I2C_SLAVE)
+ 	struct i2c_client	*slave;
+-#endif
+ };
+ 
+ static const struct imx_i2c_hwdata imx1_i2c_hwdata = {
+@@ -913,12 +911,10 @@ static int i2c_imx_xfer(struct i2c_adapter *adapter,
+ 
+ 	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
+ 
+-#if IS_ENABLED(CONFIG_I2C_SLAVE)
+ 	if (i2c_imx->slave) {
+ 		dev_err(&i2c_imx->adapter.dev, "Please not do operations of master mode in slave mode");
+ 		return -EBUSY;
+ 	}
+-#endif
+ 
+ 	result = pm_runtime_get_sync(i2c_imx->adapter.dev.parent);
+ 	if (result < 0)
+@@ -1068,7 +1064,6 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
+ 		| I2C_FUNC_SMBUS_READ_BLOCK_DATA;
+ }
+ 
+-#if IS_ENABLED(CONFIG_I2C_SLAVE)
+ static int i2c_imx_slave_init(struct imx_i2c_struct *i2c_imx)
+ {
+ 	int temp;
+@@ -1159,6 +1154,10 @@ static int i2c_imx_reg_slave(struct i2c_client *client)
+ {
+ 	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
+ 	int ret;
++
++	if (!IS_ENABLED(CONFIG_I2C_SLAVE))
++		return -EINVAL;
++
+ 	if (i2c_imx->slave)
+ 		return -EBUSY;
+ 
+@@ -1173,6 +1172,9 @@ static int i2c_imx_unreg_slave(struct i2c_client *client)
+ {
+ 	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
+ 
++	if (!IS_ENABLED(CONFIG_I2C_SLAVE))
++		return -EINVAL;
++
+ 	if (!i2c_imx->slave)
+ 		return -EINVAL;
+ 
+@@ -1188,15 +1190,12 @@ static int i2c_imx_unreg_slave(struct i2c_client *client)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ static const struct i2c_algorithm i2c_imx_algo = {
+ 	.master_xfer	= i2c_imx_xfer,
+ 	.functionality	= i2c_imx_func,
+-#if IS_ENABLED(CONFIG_I2C_SLAVE)
+ 	.reg_slave	= i2c_imx_reg_slave,
+ 	.unreg_slave	= i2c_imx_unreg_slave,
+-#endif
+ };
+ 
+ static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
+@@ -1208,10 +1207,10 @@ static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
+ 
+ 	if (status & I2SR_IIF) {
+ 		i2c_imx_clr_if_bit(status, i2c_imx);
+-#if IS_ENABLED(CONFIG_I2C_SLAVE)
+-		if (i2c_imx->slave)
++
++		if (IS_ENABLED(CONFIG_I2C_SLAVE) && i2c_imx->slave)
+ 			return i2c_imx_slave_isr(i2c_imx);
+-#endif
++
+ 		i2c_imx->i2csr = status;
+ 		return i2c_imx_master_isr(i2c_imx);
+ 	}
+-- 
+2.24.0
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
