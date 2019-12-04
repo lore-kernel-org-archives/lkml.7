@@ -2,136 +2,126 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CD4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2F6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BFCE2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKSjtAbg"
+	by mail.kernel.org (Postfix) with ESMTP id 03AF720863
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575482338;
+	bh=6iOqpa5WwY1gcwJ4kk5LnOlREP87OlWOFSW0QW2bHBw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dRFKKQEY55zY9E6mXTZKSZELgqjHpoC233Y36hIlKIwQRXipX/bsZLwAjZSYaZMqy
+	 +zObWN9i2Pwune58cFWWAsiEoBjqaDV/lmCsv11WwUqGvk8P23Z+Eijq6/So+Awzla
+	 ftRjpZJr008vChNcGsqXnwO8HnHFehViYIDlbWIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbfLDR6v (ORCPT
+        id S1728340AbfLDR64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 4 Dec 2019 12:58:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728955AbfLDR6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Dec 2019 12:58:51 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38621 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728892AbfLDR6p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:58:45 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x185so212309pfc.5;
-        Wed, 04 Dec 2019 09:58:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3qnc/DourAqKXGB8UexuKZfhfQtrrL3DnO6ZS7E2dpQ=;
-        b=KKSjtAbgjQCv82EVwdoro4f52/90n5yCUHxG8IULoz7ohvN4vitOIY2YSHRadcioVL
-         BIx+JrM+9MJlNmNjQuA/RN67FTuo0sYlbWtkZo2bfsg6qvGGcxQ5F8dey72dHgkmHYwW
-         VtmZRVrET/ylJX9oXmurT9Cx+dEVeY62RqvToYx5CjVDVll96NQMQGJob8pJblBjjT7w
-         1intd91Qos7FhYBFac5baWA48xYNs2HD02o7JwGS0oNvV0JSW7E/9qZQzcdeCAKqRArI
-         FSDunxb2dGWah1ARojP2gj0ck+vplzcoSE1mE2qXyfsYWQlTz4ZfSTnZaTEdbvr1s+4+
-         rxWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3qnc/DourAqKXGB8UexuKZfhfQtrrL3DnO6ZS7E2dpQ=;
-        b=CmpdCMUsJq7iJVcIh9h5Wy9k1b7VDlEh2r4J2VGZwpqgj9BEzP6XR5aFoUD7L/9pDD
-         a1XCSixNhGwl0KtRqFhrsJuFkL6WQJNveU8Mw82tq+nShhzOsePm2AcFIQRexrJP15YG
-         65m+vf4giy9YEHDy4iy1LWHFNOP4USZHNNgyF0xBikRMZVjjv8Ywwnp0V/lSHdJTpAd1
-         CX6+VkuspLgSNAY0xFmISy9id5geIqQX2JMvzix7OXdUY47iGS9Ys9CjBBy1x4OI1ScV
-         75WpXzuI+ORFTTYjEa8Fo71kIvejQcMKUk/VCM+I5/kPcDkC9SRuFQr1n/wATKHekezz
-         b1uQ==
-X-Gm-Message-State: APjAAAVaNsoPY0dT6hgdcCN4PpEnTwVa5wSnG0vCJZgzXB3Y4OUtlPrH
-        RZ9mA4ar2G1fi8IrEvi74KpgnqVAhfUyj8CMpGjW/xd9I5o=
-X-Google-Smtp-Source: APXvYqz0Dsrj0gSyIghA8gf8j2wFq83ExJKRTKEdu92Mm+R3nl5Bdz56n1irUdrVmavcZVcLUaaCkkqZRR5Ia5Tf2l8=
-X-Received: by 2002:a62:1944:: with SMTP id 65mr4859751pfz.151.1575482325114;
- Wed, 04 Dec 2019 09:58:45 -0800 (PST)
+Received: from localhost (unknown [217.68.49.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEDAD2084B;
+        Wed,  4 Dec 2019 17:58:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575482331;
+        bh=6iOqpa5WwY1gcwJ4kk5LnOlREP87OlWOFSW0QW2bHBw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xMBpaDYWlbOh/iuYTJDRxnKiP4+kPkvgtK/AvXX9ce7R8rwiSVrm1t6b3fXUXwgaf
+         CYn1P1/xlvMMBJdKq21HKL8W20YkZ6utx6SUmj6XbOXQjLxUME/+7n+JmqxwM1WbM1
+         meCld6LADiVuDWB2A15utgljZ5UTz+cfxJOxi9dk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 10/92] ARM: debug-imx: only define DEBUG_IMX_UART_PORT if needed
+Date:   Wed,  4 Dec 2019 18:49:10 +0100
+Message-Id: <20191204174329.720036699@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
+References: <20191204174327.215426506@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20191204101042.4275-5-cleger@kalray.eu> <CAHp75VdQ6VooLVAfA1z98-bBcfQuR7AomaO8F19AGRjeBtByEQ@mail.gmail.com>
- <1988869450.95325741.1575471003953.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <1988869450.95325741.1575471003953.JavaMail.zimbra@kalray.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Dec 2019 19:58:35 +0200
-Message-ID: <CAHp75Vc6oU2nNkKT8N+6RomSxHVXu0AvwoZVBKvTERLQ68Kz_Q@mail.gmail.com>
-Subject: Re: [PATCH 4/5] pinctrl: dw: add pinctrl support for dwapb gpio driver
-To:     =?UTF-8?Q?Cl=C3=A9ment_Leger?= <cleger@kalray.eu>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        "open list, GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 4:50 PM Cl=C3=A9ment Leger <cleger@kalray.eu> wrote:
-> ----- On 4 Dec, 2019, at 13:43, Andy Shevchenko andy.shevchenko@gmail.com=
- wrote:
-> > On Wed, Dec 4, 2019 at 12:12 PM Clement Leger <cleger@kalray.eu> wrote:
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-> > Can't you split adding pin control data to a separate patch?
->
-> Yes even if the first one will not be buildable.
+[ Upstream commit 7c41ea57beb2aee96fa63091a457b1a2826f3c42 ]
 
-It will. Just split it wisely.
-I'm preparing Intel Lynxpoint conversion (you may see the approach
-here [1]) and I stumbled over similar problem.
+If debugging on i.MX is enabled DEBUG_IMX_UART_PORT defines which UART
+is used for the debug output. If however debugging is off don't only
+hide the then unused config item but drop it completely by using a
+dependency instead of a conditional prompt.
 
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git/comm=
-it/?h=3Dreview-andy&id=3Dddbf10ea98c1c96de98fb5878ca0d0042e912f6a
+This fixes DEBUG_IMX_UART_PORT being present in the kernel config even
+if DEBUG_LL is disabled.
 
-> > Can't we generate these lists dynamically?
->
-> Indeed, these list could be dynamically generated. However, since they
-> can be shared between all pinctrl instances of this driver I thought
-> it was better to keep them common and simply restrict the number
-> of pins at pinctrl registration. But as I said, I can generate them if
-> you want.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/Kconfig.debug | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-OK, let's wait for subsys maintainers to comment on this.
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index ddbb361267d87..9c3042da44402 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -1260,21 +1260,21 @@ config DEBUG_OMAP2PLUS_UART
+ 	depends on ARCH_OMAP2PLUS
+ 
+ config DEBUG_IMX_UART_PORT
+-	int "i.MX Debug UART Port Selection" if DEBUG_IMX1_UART || \
+-						DEBUG_IMX25_UART || \
+-						DEBUG_IMX21_IMX27_UART || \
+-						DEBUG_IMX31_UART || \
+-						DEBUG_IMX35_UART || \
+-						DEBUG_IMX50_UART || \
+-						DEBUG_IMX51_UART || \
+-						DEBUG_IMX53_UART || \
+-						DEBUG_IMX6Q_UART || \
+-						DEBUG_IMX6SL_UART || \
+-						DEBUG_IMX6SX_UART || \
+-						DEBUG_IMX6UL_UART || \
+-						DEBUG_IMX7D_UART
++	int "i.MX Debug UART Port Selection"
++	depends on DEBUG_IMX1_UART || \
++		   DEBUG_IMX25_UART || \
++		   DEBUG_IMX21_IMX27_UART || \
++		   DEBUG_IMX31_UART || \
++		   DEBUG_IMX35_UART || \
++		   DEBUG_IMX50_UART || \
++		   DEBUG_IMX51_UART || \
++		   DEBUG_IMX53_UART || \
++		   DEBUG_IMX6Q_UART || \
++		   DEBUG_IMX6SL_UART || \
++		   DEBUG_IMX6SX_UART || \
++		   DEBUG_IMX6UL_UART || \
++		   DEBUG_IMX7D_UART
+ 	default 1
+-	depends on ARCH_MXC
+ 	help
+ 	  Choose UART port on which kernel low-level debug messages
+ 	  should be output.
+-- 
+2.20.1
 
-> >> +       ret =3D pinctrl_enable(port->pctl);
-> >> +       if (ret) {
-> >> +               dev_err(gpio->dev, "pinctrl enable failed\n");
-> >> +               return ret;
-> >> +       }
-> >
-> > Not sure why it's needed at all.
->
-> I saw a comment over "pinctrl_register" in pinctrl.h saying:
->
-> /* Please use pinctrl_register_and_init() and pinctrl_enable() instead */
->
-> So I switched to pinctrl_register_and_init + pinctrl_enable.
 
-I read the code and do not see any evidence you have to use above.
-Do you plan to do something in between of those two calls?
 
-> > Can you use new callback for this?
->
-> Do you mean the gpiochip add_pin_ranges callback ?
-> If so, I will look at it.
-
-I meant ->add_pin_ranges() which is part of GPIO chip structure.
-
-> >> -               .name   =3D "gpio-dwapb",
-> >> +               .name   =3D "pinctrl-dwapb",
-> >
-> > This will break existing users.
->
-> Ok, I will revert that.
-
-You may fix users at the same time.
-Either fine with me.
-
---
-With Best Regards,
-Andy Shevchenko
