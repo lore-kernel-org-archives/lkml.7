@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FEDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FD8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7B320674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A485F20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483044;
-	bh=bj6XBP8ylTa1ul4GAmiTOHUvhP1gVcBdVe0nXVxbj4c=;
+	s=default; t=1575483047;
+	bh=Zz6q1n7jhjgnIr65Qd6fTf3oWuooO9oeyz8MIF+nWd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TM92M23fn885YfiEOd/wPcfWINpM3inzIg4BfQuo6x4ysZQvXYSOnvisjp8Ykc+C9
-	 1yGyFPk6j2yOsbaqtMzL5uD+kcSDJO/bJPDz4rRPOsEu0ILvw52EsEmPZvhPyAKUrM
-	 F0K6UuTfawEiaAxUYEDNLyKPnltRsgGf6ZTEtzIA=
+	b=puVUaj4HgqEg7zo2mIL1tgKhQ4IJzDE1iz/mMzWlmv8B0xFaEzHP2CqVNnwrQu+Wn
+	 xg9HBv2OsBrPQ5nE4/bV6uL5g2QPj4L1yLyLS3t9aS3Z34VC1E8o7vUS4v0obL8OCM
+	 ijWpBXm5HDwR29JwgBmdRnu1Iq0gA2IzeSq73c6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbfLDSKn (ORCPT
+        id S1731323AbfLDSKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:10:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38206 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:10:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731308AbfLDSKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:10:41 -0500
+        id S1730606AbfLDSKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:10:43 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 031922173B;
-        Wed,  4 Dec 2019 18:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 701BE206DF;
+        Wed,  4 Dec 2019 18:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483040;
-        bh=bj6XBP8ylTa1ul4GAmiTOHUvhP1gVcBdVe0nXVxbj4c=;
+        s=default; t=1575483042;
+        bh=Zz6q1n7jhjgnIr65Qd6fTf3oWuooO9oeyz8MIF+nWd4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RoOp0NrXSGITg2WBerP55ZwmCWRwtCn7T8NqpYIiZqPMGypuGtHSAfJ5ONl7S22QW
-         NzIdX2818KAiMsNpUUV1KguzU8AS5pctvNEP+oZYyhYEwinftqoJ6rmReP91N1vwSD
-         zReE6x1JoaCKOcyhaBOFuA9K7m6nbMMrWHbfBHQE=
+        b=n7I5b9DOpJ+wzWuCsvOL2aCGCFjlsFdi5F/5yhYGOEzCA6iNo1Q7CsU8Vo/htln7p
+         hO3+hTRm91uhQljjq01vIL2E/ISYW8aaOM/EnMtq4bx0CRBHWz+ewgpOH1qxuQn3BM
+         eqlsPIGLa1rZtmAshBh1aIwsydGFuoz/njPPfXIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Bill ODonnell <billodo@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 027/125] rtl818x: fix potential use after free
-Date:   Wed,  4 Dec 2019 18:55:32 +0100
-Message-Id: <20191204175319.967225530@linuxfoundation.org>
+Subject: [PATCH 4.9 028/125] xfs: require both realtime inodes to mount
+Date:   Wed,  4 Dec 2019 18:55:33 +0100
+Message-Id: <20191204175320.091647445@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,41 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit afbb1947db94eacc5a13302eee88a9772fb78935 ]
+[ Upstream commit 64bafd2f1e484e27071e7584642005d56516cb77 ]
 
-entry is released via usb_put_urb just after calling usb_submit_urb.
-However, entry is used if the submission fails, resulting in a use after
-free bug. The patch fixes this.
+Since mkfs always formats the filesystem with the realtime bitmap and
+summary inodes immediately after the root directory, we should expect
+that both of them are present and loadable, even if there isn't a
+realtime volume attached.  There's no reason to skip this if rbmino ==
+NULLFSINO; in fact, this causes an immediate crash if the there /is/ a
+realtime volume and someone writes to it.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-ACKed-by: Larry Finger <Larry.Finger@lwfinger.net>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Bill O'Donnell <billodo@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_rtalloc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
-index 6113624ccec39..17e3d5e830626 100644
---- a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
-+++ b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
-@@ -446,12 +446,13 @@ static int rtl8187_init_urbs(struct ieee80211_hw *dev)
- 		skb_queue_tail(&priv->rx_queue, skb);
- 		usb_anchor_urb(entry, &priv->anchored);
- 		ret = usb_submit_urb(entry, GFP_KERNEL);
--		usb_put_urb(entry);
- 		if (ret) {
- 			skb_unlink(skb, &priv->rx_queue);
- 			usb_unanchor_urb(entry);
-+			usb_put_urb(entry);
- 			goto err;
- 		}
-+		usb_put_urb(entry);
- 	}
- 	return ret;
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index 802bcc326d9fb..0d93d3c10fcc4 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -1222,13 +1222,11 @@ xfs_rtmount_inodes(
+ 	xfs_sb_t	*sbp;
  
+ 	sbp = &mp->m_sb;
+-	if (sbp->sb_rbmino == NULLFSINO)
+-		return 0;
+ 	error = xfs_iget(mp, NULL, sbp->sb_rbmino, 0, 0, &mp->m_rbmip);
+ 	if (error)
+ 		return error;
+ 	ASSERT(mp->m_rbmip != NULL);
+-	ASSERT(sbp->sb_rsumino != NULLFSINO);
++
+ 	error = xfs_iget(mp, NULL, sbp->sb_rsumino, 0, 0, &mp->m_rsumip);
+ 	if (error) {
+ 		IRELE(mp->m_rbmip);
 -- 
 2.20.1
 
