@@ -2,119 +2,125 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435D8C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18991C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195262077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF780205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Le1QT0gf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTlKA8wS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbfLDNgV (ORCPT
+        id S1727959AbfLDNhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:36:21 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53522 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727530AbfLDNgU (ORCPT
+        Wed, 4 Dec 2019 08:37:55 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:42268 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727530AbfLDNhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:36:20 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4DZgfg076462;
-        Wed, 4 Dec 2019 07:35:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575466542;
-        bh=xCS1lfwtIPofr9BfV2xLTa/QhcNCHCI0ym0C/edSDAw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Le1QT0gfKf0J1Zmr9pgZT9X4k12QhPopGG8dlQQnQX17lGcjpYaQEaHQIDQIuB5SZ
-         Nau+DeyJIwhRkh8TnJxm2B8csKx1i7fkqPQeKFe6wB/yfcqY/zD+yUO53XMcrzdyz6
-         FvNdmCsdCiPdp3KBEcryhCKib2EYO0TMAtA5OIg4=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4DZg7J115194;
-        Wed, 4 Dec 2019 07:35:42 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
- 2019 07:35:42 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Dec 2019 07:35:42 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4DZcZa084113;
-        Wed, 4 Dec 2019 07:35:38 -0600
-Subject: Re: [PATCH] scsi: ufs: Disable autohibern8 feature in Cadence UFS
-To:     sheebab <sheebab@cadence.com>, <alim.akhtar@samsung.com>,
-        <avri.altman@wdc.com>, <pedrom.sousa@synopsys.com>,
-        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <stanley.chu@mediatek.com>, <beanhuo@micron.com>,
-        <yuehaibing@huawei.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <mparab@cadence.com>, <rafalc@cadence.com>
-References: <1575367635-22662-1-git-send-email-sheebab@cadence.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <38cfe842-c07a-410f-97f1-f2bf13fd2655@ti.com>
-Date:   Wed, 4 Dec 2019 19:06:09 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 4 Dec 2019 08:37:55 -0500
+Received: by mail-il1-f193.google.com with SMTP id f6so6681138ilh.9;
+        Wed, 04 Dec 2019 05:37:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+b0g+KEhsGSbMr8f59QsRUNDcK99rmsk3xClHRajYv8=;
+        b=bTlKA8wS/DozQEHHB74GZRbgit+aAQ2EVrDJt4zQLpUQVHEF8Wdt6zUpqlZBJTHZ1W
+         uXsNxfknQ6aRLAHOheTyuDb3+Rfrn02TZqFpV90i9NSNrWWbOiHiE9jWiq5kdoPe5CJC
+         iGWeaabMNepDBWuR7WT+hdRSeVZ3UlVdLb0b+5p03aAmt6FFMTTqj1JD7DESZEZe9d00
+         CYG6NmzJ2CuTPyuA4jk5lVXpt/EOY/tEdeXjccSUf+NEk/W6DsMv348e6TIl2TeMTKns
+         e5iK6Yn/+yxd2pZYda7EB4SSfiAm3bO0Llp31CL/minmalQ17DDKbOEEBlOYoKbtQyk0
+         4hYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+b0g+KEhsGSbMr8f59QsRUNDcK99rmsk3xClHRajYv8=;
+        b=hMrY3jQPl3UYXWDBI+taWWkVs14ynXJ0b3t3drZsYkMUVXnTqKYsVIxxEBUIQBVEav
+         LFCJNTW5Cpm0mUquvJEZELYGSG1mEfmVp6NZxdDqW0cKjSMgKpsmq2CiMJWo165yXo3+
+         Mv3L/RFZg4TEfiIujENZ00+mCZBVtatelq7S8UtSubQfzew4+taWSLaN3cGHslq6HmTB
+         /ikbDhHdrWpLd41FXs8umJJqc4hYZ7jjHr8zktlFpEwKuoea2nTY5jR+9BPAQjsye5rC
+         dYmfh0KjksEEPGIXCK2yga45pmozCh5ZuJCccmQNufXE3co4/mUhOxxYb0n9LNNkgdl3
+         lkKA==
+X-Gm-Message-State: APjAAAWxp5SYLOAii12iAMEdKtqfV6hqdvzK7mgIyMAJ5Rv1bMKKFMuI
+        oewKv+8lGncXrZXhc7Z2vautaLS+zXenaQ5/SdJ4Fq6z
+X-Google-Smtp-Source: APXvYqz+4eY7fzeIA115HzD2/HdBg2qM64eGapJRh5UfVXMSymTEddhoTmqudiohtFS9r9NQfo+tWtwY5jBi/vYua+E=
+X-Received: by 2002:a05:6e02:c2c:: with SMTP id q12mr3496269ilg.205.1575466674334;
+ Wed, 04 Dec 2019 05:37:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1575367635-22662-1-git-send-email-sheebab@cadence.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191204130907.19799-1-aford173@gmail.com> <20191204132557.pl6rwfprtcwewato@uno.localdomain>
+In-Reply-To: <20191204132557.pl6rwfprtcwewato@uno.localdomain>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 4 Dec 2019 07:37:43 -0600
+Message-ID: <CAHCN7xLKBWoHVPZqcgMTuY7dMM7UhwU9kOyzALhHyvf7fTLeng@mail.gmail.com>
+Subject: Re: [PATCH V2] media: ov5640: Fix check for PLL1 exceeding max
+ allowed rate
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     linux-media <linux-media@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 4, 2019 at 7:23 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
+>
+> Hi Adam,
+>
+> On Wed, Dec 04, 2019 at 07:09:07AM -0600, Adam Ford wrote:
+> > The PLL calculation routine checks the wrong variable name 'rate'
+> > when it should be called '_rate' when checking to see whether or
+> > not the PLL1 output frequency exceeds 1GHz.
+> >
+> > This patch changes it to the correct variable '_rate'
+> >
+> > Acked-by: Jacopo Mondi <jacopo@jmondi.org>
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+>
+> Why have you dropped the fixes tag you had in v1?
+>
+> Fixes: aa2882481cad ("media: ov5640: Adjust the clock based on the expected rate")
+>
+> I'm not the one who collects patches, so maybe wait for Sakari or Hans
+> to tell you if you need to resend or not :)
 
+It wasn't intentional.  I couldn't find the original patch nor could I
+find it in patchwork, so I re-did it from scratch and forgot.
+(I have too many different computers)
 
-On 03/12/19 3:37 pm, sheebab wrote:
-> This patch disables autohibern8 feature in Cadence UFS. 
-> The autohibern8 feature has issues due to which unexpected interrupt
-> trigger is happening. After the interrupt issue is sorted out autohibern8
-> feature will be re-enabled
-> 
-> Signed-off-by: sheebab <sheebab@cadence.com>
-> ---
+I already sent a V3 before I read your e-mail.  Sorry about that.
 
-Tested-by: Vignesh Raghavendra <vigneshr@ti.com>
+adam
 
-You will have to repost patch 2/2[1] of your previous series as that
-patch no longer applies cleanly anymore given that we no longer want 1/2
-to be merged.
-
-[1]
-https://lore.kernel.org/linux-scsi/1574147082-22725-3-git-send-email-sheebab@cadence.com/
-
-
->  drivers/scsi/ufs/cdns-pltfrm.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/scsi/ufs/cdns-pltfrm.c b/drivers/scsi/ufs/cdns-pltfrm.c
-> index b2af04c57a39..882425d1166b 100644
-> --- a/drivers/scsi/ufs/cdns-pltfrm.c
-> +++ b/drivers/scsi/ufs/cdns-pltfrm.c
-> @@ -98,6 +98,12 @@ static int cdns_ufs_link_startup_notify(struct ufs_hba *hba,
->  	 * completed.
->  	 */
->  	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
-> +
-> +	/*
-> +	 * Disabling Autohibern8 feature in cadence UFS
-> +	 * to mask unexpected interrupt trigger.
-> +	 */
-> +	hba->ahit = 0;
->  
->  	return 0;
->  }
-> 
-
--- 
-Regards
-Vignesh
+>
+> Thanks
+>    j
+>
+> > ---
+> > V2:  No code change.  Only change commit description to be less confusing.
+> >
+> > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> > index 5e495c833d32..bb968e764f31 100644
+> > --- a/drivers/media/i2c/ov5640.c
+> > +++ b/drivers/media/i2c/ov5640.c
+> > @@ -874,7 +874,7 @@ static unsigned long ov5640_calc_sys_clk(struct ov5640_dev *sensor,
+> >                        * We have reached the maximum allowed PLL1 output,
+> >                        * increase sysdiv.
+> >                        */
+> > -                     if (!rate)
+> > +                     if (!_rate)
+> >                               break;
+> >
+> >                       /*
+> > --
+> > 2.20.1
+> >
