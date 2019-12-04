@@ -2,169 +2,158 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7E8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E39C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98CEF20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87B0206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:40:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ZBGugCJy";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="CsEsluVQ"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="q8nNR2Jn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbfLDSi7 (ORCPT
+        id S1728618AbfLDSkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:38:59 -0500
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:22323 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728059AbfLDSi7 (ORCPT
+        Wed, 4 Dec 2019 13:40:19 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37580 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728285AbfLDSkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:38:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1575484807; x=1607020807;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=AQFo6fmOFFup9ahB6ZR0BfGF3zU3mPSpsvGEXZ5XvLE=;
-  b=ZBGugCJyt11peB26MBank3KvBFwUxUZl+3IcG6y0VCvUEaXu/GJxiYYz
-   hUxcgE+BzECcMRrdPv9ZGtQjJhDllbUagOCn2zQ6Ekw8lrsPedrs3Q6nr
-   5RPc2xvB4Nqd3mD2U0BkD6Au+HrUPNNUVDt+TNU5/exkkoQXgVQTAs83K
-   WWtsrG6QeWahvGY/Kti562tk+LrRPy+96F2p+qELrKjCwY2aSjlNkUrGp
-   hcmL4brvSPbJ4Tgaeuo7MEzVoE1ugXt5YVt21Edg5o6jJ80Pf0W6nywIS
-   QlKhqXFdg3HAl4uRlGF/dlZELWatGrLsJyA7LGjFfl3k008LyMGoKbf6j
-   A==;
-IronPort-SDR: 7gttZcY5SdoKVaJ8L7JUiu+YffhQwdwsT+MOtkSMmUrY6d/5K6Ps+CmeMULh369qdz39huHcQE
- DWd1J65PZ7H4DEV62wfYz08sOOdGzUEhxEUVOAi+fyW8yyXDczknG1BjiB2HZYEgj+kuhGyIZr
- a5yh+e688y8A++p8GvxL2uYBXdH7Z2GmA7c7NiRdVlOOTCNgwnPqjK3L98TOuP9F1Jzsdzxf8Q
- 8/Bov1se9h9g6ObZjvmDfSqYp2tMx700qQfwleC9/UepgOST9szIZXSex+w2Oh6a+hqmpxWbpb
- j14=
-X-IronPort-AV: E=Sophos;i="5.69,278,1571673600"; 
-   d="scan'208";a="226072530"
-Received: from mail-co1nam04lp2058.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.58])
-  by ob1.hgst.iphmx.com with ESMTP; 05 Dec 2019 02:40:06 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZbPenlD6LbbjCOA6CgFW4ziMWeK3tjSF+eodmd8i1Vivf7FEToRWN5QKmpaiwMhSmNDGwneshSkyK4XDAcQyMVql4If14aD6kqGvWP7aaSXrODFH9/CW6f4gJsD9rH0CDOMn6FyiFDoLVmxm+niXh4Kg7L52I9GzxLnglG6ud+kFrV3Xb+bcs2LuPTsbz1IcEMjea95SlvwmuwqQn68GZsfrqEb02sn/GRFNc4kPkA4JSPu2RlWL2FZhIsjSEf/YJRwwbPINlVEyKZopzWMiZ14xqWY/vq11CsUBb5zc4Oggod1nMm7Se2zdsiYHcfh1w0yFw3X9haD+4Dx0LSHaag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AQFo6fmOFFup9ahB6ZR0BfGF3zU3mPSpsvGEXZ5XvLE=;
- b=mPq0UsVk0dRqTfM4z8mgxNc3xSrg3qMcZMPIZKfNCfocT4N80BQ3bF6w9bHAI8vf7V6NuecMtYEVtTlchIMhoF4HOH6z69JfDLinOrlwasUfg9wukDm62J4/nH8WzPNVVdXWLyey+GplNGBZIU6lKmd/Bz28/A4cORlf3ctThHAg/Am6ZwJlgsrNULYznilMHY8HtkoHBLOw5AVRJipueT10aTQaiEQ9zBKX08mwO8iTHiAU51o1UYcfioqriy2HNlV2owerc1hGWUw/NNJUUhV3+XYvICTqFU7c8lo/gwwJn0iTG/ph+AUMIeuSBGVNkObfk7u4XkAPAhR3zrglpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Wed, 4 Dec 2019 13:40:18 -0500
+Received: by mail-lj1-f196.google.com with SMTP id u17so476141lja.4
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:40:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AQFo6fmOFFup9ahB6ZR0BfGF3zU3mPSpsvGEXZ5XvLE=;
- b=CsEsluVQgcvY5bF2K3dEj0L0+R6WYmk1YnWe2yr68UX5/skhveXc2j/zuk5+lreugG/tLLr+ltqjDA4UNcMd/J7zgzlBBKypjeu6tTWLLCcEuqTk90ysWELFBnONQULojQzCR+X3itOg91AIwM9ygz6uubvFQWnfoTxMIGtKFGY=
-Received: from BYAPR04MB4901.namprd04.prod.outlook.com (52.135.232.206) by
- BYAPR04MB5143.namprd04.prod.outlook.com (52.135.234.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.22; Wed, 4 Dec 2019 18:38:56 +0000
-Received: from BYAPR04MB4901.namprd04.prod.outlook.com
- ([fe80::545f:1547:d48a:7fbc]) by BYAPR04MB4901.namprd04.prod.outlook.com
- ([fe80::545f:1547:d48a:7fbc%7]) with mapi id 15.20.2516.014; Wed, 4 Dec 2019
- 18:38:56 +0000
-From:   Alistair Francis <Alistair.Francis@wdc.com>
-To:     "anup@brainfault.org" <anup@brainfault.org>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@lst.de" <hch@lst.de>
-Subject: Re: [GIT PULL] Second set of RISC-V updates for v5.5-rc1
-Thread-Topic: [GIT PULL] Second set of RISC-V updates for v5.5-rc1
-Thread-Index: AQHVqoAixayXodMShUatl8RuOOpeiKep7kMAgABfWIA=
-Date:   Wed, 4 Dec 2019 18:38:56 +0000
-Message-ID: <9044bad02aa6553cdb2523294500b50fccf3fd2a.camel@wdc.com>
-References: <alpine.DEB.2.21.9999.1912040050430.56420@viisi.sifive.com>
-         <CAAhSdy2id0FoLBxWwN7WHEk5Am770BizkK=sZO0-G54MtYa6DQ@mail.gmail.com>
-In-Reply-To: <CAAhSdy2id0FoLBxWwN7WHEk5Am770BizkK=sZO0-G54MtYa6DQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Alistair.Francis@wdc.com; 
-x-originating-ip: [199.255.44.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b28ac3bf-8da6-4f92-b0af-08d778e9385a
-x-ms-traffictypediagnostic: BYAPR04MB5143:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR04MB5143C6D2993FFACC8260E238905D0@BYAPR04MB5143.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 0241D5F98C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(396003)(136003)(376002)(366004)(199004)(189003)(36756003)(66476007)(26005)(2501003)(102836004)(71200400001)(478600001)(14454004)(4001150100001)(76116006)(76176011)(64756008)(66556008)(71190400001)(86362001)(6506007)(53546011)(118296001)(8676002)(6116002)(186003)(8936002)(25786009)(66946007)(81156014)(305945005)(2616005)(3846002)(110136005)(6246003)(6486002)(81166006)(11346002)(5660300002)(66446008)(15650500001)(229853002)(6436002)(2906002)(54906003)(7736002)(4326008)(316002)(6512007)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5143;H:BYAPR04MB4901.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Nfg/Im7ngfVd+jtT8PtYVbXsvvcO5+JBsK3UQrclLGiiTHD3yDQ9iO5KmemavnlqOozy0SyTbED0s5lhuHoAXOizPqjhV3gXm3tJgHJNk9ZG2GX04jF5+BCU7x9Ba+1VAJaOjBW1YayW3o/RWMjjaiTISmN2UkixtTfywczWmqKEAisEHZ+r5+my68VZbvgY2Er1knWQsGnblF4N/awvMHrdQd9EPNvF2x3YEELJlQFz8JYA2R9xJfNRC0sa3hNwhhr3NoTX6pz59S6vqma2bI77WCW/mi8rbuCTk7mVKqy786meGmsTETURz6srQ3993BX7hLVDR8HSY8ryrhYvl2Z8LqVDU7mwOHOcCQzuQOK/NMp+OI2zUdP4fbgfj7eLAijnWQx+ReWUm80/qpzUGqfptiH7uwWOWYhvReswQQ8Su08Wh/c3c4X19F6RN0Gy
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <94D2DB335E81E44A982CAD148423A872@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=MPUgt8BKK8jntMpPJJpiSxrSzMem1sQgZ2v86URinXA=;
+        b=q8nNR2JnYKwS3g9vjbQ3LUk+rSLD9sMW5X6tYyysV5UGJQTejC8CEhjzojGmF56EJg
+         MzrOIkU2eI//hos+tVVTrz5UrbWRNr188CTiCTjgseET0IO5HsgGi/tcJl8p4jNM3BwH
+         rtyt3Qsk4yAmL7hhGfYpgbk5xtCDX3V1e2SxNcC/yOx8qbJ3VhBYvd70O1llAIjC1o+z
+         Y0DfWuMLJIv9pOZgsTPNrQBJggY4rEzKIdZTTE7qMFEtYny79ScbaKo8zrhKmCpBi5sa
+         wUnV4WeWDl0kk1rWTPbFh2DZtV0r/bw9ujOIk6ekRJhvxNeqVCbK4C3bZQ71bT1DV4eZ
+         D1Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=MPUgt8BKK8jntMpPJJpiSxrSzMem1sQgZ2v86URinXA=;
+        b=axHehZWYn35FSJ4z0QXZN1dAziwcYCMwM22yNVv7doP0Ksmp8BvARKHhcMdikiCkTh
+         LdIJchAVqa8G2F0SAHFio9cg9f9KyXdtmMeC3STiBQfLwz2yO7oJcddgfHdEP4DFrzvo
+         ujN0yYxNs9EQH+AeWfzEa00iLlKqeARwMZHQqDjhMH0VO6b/Ylh6jKyLOiyYu5xraAmv
+         iIp1enD4ndFlfKiKVJ6qIB8ouGoCPio4Drla5gTbA8izUNPDt17VT3nFi/BgjROeLI3V
+         4zIUPDrjqiuysd1S8iX2IBPCzaXh8fxWPVbVh9nbJQVECLcPo/7xB5r5PM2sueHsZsH8
+         5f4A==
+X-Gm-Message-State: APjAAAUONPSkycgQVzOw4tLcgJGDoyY5Vg10ak0yAykZIB9Lq7peEJUm
+        O9amb5ss7BO6+QjR5tUOuWqocA==
+X-Google-Smtp-Source: APXvYqwdXIR+tb8hZ6Ua2SQCwf0XVGUGg7xt5ESgNSXxlS0m4rBtdDw61DUznFeBsV4bTXIUOIjh/A==
+X-Received: by 2002:a2e:84d0:: with SMTP id q16mr2935643ljh.138.1575484816865;
+        Wed, 04 Dec 2019 10:40:16 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id a24sm3584077ljp.97.2019.12.04.10.40.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 10:40:16 -0800 (PST)
+Date:   Wed, 4 Dec 2019 10:39:55 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        "David S. Miller" <davem@davemloft.net>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        John Hurley <john.hurley@netronome.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        oss-drivers@netronome.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] nfp: abm: fix memory leak in
+ nfp_abm_u32_knode_replace
+Message-ID: <20191204103955.63c4d9af@cakuba.netronome.com>
+In-Reply-To: <20190927015157.20070-1-navid.emamdoost@gmail.com>
+References: <20190925215314.10cf291d@cakuba.netronome.com>
+        <20190927015157.20070-1-navid.emamdoost@gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b28ac3bf-8da6-4f92-b0af-08d778e9385a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 18:38:56.2946
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: I6sJydiVKQ4T7JzSAXTNeocWfuSPmVpjOOwgDZu2hNpSej7PTPVtu7sx2orIzmFnjsO7aV0/hXhB+Fem/z3V4851LpPvJNxzer5JWkv6yWA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5143
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTEyLTA0IGF0IDE4OjIyICswNTMwLCBBbnVwIFBhdGVsIHdyb3RlOg0KPiBP
-biBXZWQsIERlYyA0LCAyMDE5IGF0IDI6MjIgUE0gUGF1bCBXYWxtc2xleSA8DQo+IHBhdWwud2Fs
-bXNsZXlAc2lmaXZlLmNvbT4gd3JvdGU6DQo+ID4gTGludXMsDQo+ID4gDQo+ID4gVGhlIGZvbGxv
-d2luZyBjaGFuZ2VzIHNpbmNlIGNvbW1pdA0KPiA+IDViYTlhYTU2ZTZkM2U4ZmRkYjk1NGMyZjgx
-OGQxY2UwNTI1MjM1YmI6DQo+ID4gDQo+ID4gICBNZXJnZSBicmFuY2ggJ25leHQvbm9tbXUnIGlu
-dG8gZm9yLW5leHQgKDIwMTktMTEtMjIgMTg6NTk6MDkNCj4gPiAtMDgwMCkNCj4gPiANCj4gPiBh
-cmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3NpdG9yeSBhdDoNCj4gPiANCj4gPiAgIGdpdDov
-L2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9yaXNjdi9saW51eC5naXQN
-Cj4gPiB0YWdzL3Jpc2N2L2Zvci12NS41LXJjMS0yDQo+ID4gDQo+ID4gZm9yIHlvdSB0byBmZXRj
-aCBjaGFuZ2VzIHVwIHRvDQo+ID4gMTY0NjIyMGE2ZDRiMjcxNTNkZGI1ZmZiMTE3YWExZjRjMzll
-M2QxZjoNCj4gPiANCj4gPiAgIE1lcmdlIGJyYW5jaCAnbmV4dC9kZWZjb25maWctYWRkLWRlYnVn
-JyBpbnRvIGZvci1uZXh0ICgyMDE5LTExLTIyIA0KPiA+IDE4OjU5OjIzIC0wODAwKQ0KPiA+IA0K
-PiA+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0NCj4gPiBTZWNvbmQgc2V0IG9mIFJJU0MtViB1cGRhdGVzIGZvciB2NS41LXJj
-MQ0KPiA+IA0KPiA+IEEgZmV3IG1pbm9yIFJJU0MtViB1cGRhdGVzIGZvciB2NS41LXJjMSB0aGF0
-IGFycml2ZWQgbGF0ZS4NCj4gPiANCj4gPiBOZXcgZmVhdHVyZXM6DQo+ID4gDQo+ID4gLSBEdW1w
-IHNvbWUga2VybmVsIHZpcnR1YWwgbWVtb3J5IG1hcCBkZXRhaWxzIHRvIHRoZSBjb25zb2xlIGlm
-DQo+ID4gICBDT05GSUdfREVCVUdfVk0gaXMgZW5hYmxlZA0KPiA+IA0KPiA+IE90aGVyIGltcHJv
-dmVtZW50czoNCj4gPiANCj4gPiAtIEVuYWJsZSBtb3JlIGRlYnVnZ2luZyBvcHRpb25zIGluIHRo
-ZSBwcmltYXJ5IGRlZmNvbmZpZ3MNCj4gPiANCj4gPiBDbGVhbnVwczoNCj4gPiANCj4gPiAtIENs
-ZWFuIHVwIEtjb25maWcgaW5kZW50YXRpb24NCj4gPiANCj4gPiAtLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gS3J6eXN6
-dG9mIEtvemxvd3NraSAoMSk6DQo+ID4gICAgICAgcmlzY3Y6IEZpeCBLY29uZmlnIGluZGVudGF0
-aW9uDQo+ID4gDQo+ID4gUGF1bCBXYWxtc2xleSAoNCk6DQo+ID4gICAgICAgcmlzY3Y6IGRlZmNv
-bmZpZ3M6IGVuYWJsZSBkZWJ1Z2ZzDQo+ID4gICAgICAgcmlzY3Y6IGRlZmNvbmZpZ3M6IGVuYWJs
-ZSBtb3JlIGRlYnVnZ2luZyBvcHRpb25zDQo+IA0KPiBJIGhhZCBjb21tZW50ZWQgb24geW91ciBw
-YXRjaCBidXQgbXkgY29tbWVudHMgYXJlIHN0aWxsDQo+IG5vdCBhZGRyZXNzZWQuDQo+IA0KPiBW
-YXJpb3VzIGRlYnVnIG9wdGlvbnMgZW5hYmxlZCBieSB0aGlzIHBhdGNoIGhhdmUgcGVyZm9ybWFu
-Y2UNCj4gaW1wYWN0LiBJbnN0ZWFkIG9mIGVuYWJsaW5nIHRoZXNlIGRlYnVnIG9wdGlvbnMgaW4g
-cHJpbWFyeQ0KPiBkZWZjb25maWdzLCBJIHN1Z2dlc3QgdG8gaGF2ZSBzZXBhcmF0ZSBkZWJ1ZyBk
-ZWZjb25maWdzIHdpdGgNCj4gdGhlc2Ugb3B0aW9ucyBlbmFibGVkLg0KDQorMQ0KDQpPRSB1c2Vz
-IHRoZSBkZWZjb25maWcgKGFzIEknbSBzdXJlIG90aGVyIGRpc3Ryb3MgZG8pIGFuZCBzbG93aW5n
-IGRvd24NCnVzZXJzIHNlZW1zIGxpa2UgYSBiYWQgaWRlYS4NCg0KQWxpc3RhaXINCg0KPiANCj4g
-UGxlYXNlIGFkZHJlc3MgbXkgY29tbWVudHMgYW5kIHNlbmQgdGhpcyBwYXRjaCBpbg0KPiBzZXBh
-cmF0ZSBQUi4NCj4gDQo+IFJlZ2FyZHMsDQo+IEFudXANCj4gDQo+ID4gICAgICAgTWVyZ2UgYnJh
-bmNoICduZXh0L21pc2MyJyBpbnRvIGZvci1uZXh0DQo+ID4gICAgICAgTWVyZ2UgYnJhbmNoICdu
-ZXh0L2RlZmNvbmZpZy1hZGQtZGVidWcnIGludG8gZm9yLW5leHQNCj4gPiANCj4gPiBZYXNoIFNo
-YWggKDEpOg0KPiA+ICAgICAgIFJJU0MtVjogQWRkIGFkZHJlc3MgbWFwIGR1bXBlcg0KPiA+IA0K
-PiA+ICBhcmNoL3Jpc2N2L0tjb25maWcuc29jcyAgICAgICAgICAgfCAxNiArKysrKysrKy0tLS0t
-LS0tDQo+ID4gIGFyY2gvcmlzY3YvY29uZmlncy9kZWZjb25maWcgICAgICB8IDI0ICsrKysrKysr
-KysrKysrKysrKysrKysrKw0KPiA+ICBhcmNoL3Jpc2N2L2NvbmZpZ3MvcnYzMl9kZWZjb25maWcg
-fCAyNCArKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgYXJjaC9yaXNjdi9tbS9pbml0LmMg
-ICAgICAgICAgICAgIHwgMzINCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0K
-PiA+ICA0IGZpbGVzIGNoYW5nZWQsIDg4IGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pDQo=
+On Thu, 26 Sep 2019 20:51:46 -0500, Navid Emamdoost wrote:
+> In nfp_abm_u32_knode_replace if the allocation for match fails it should
+> go to the error handling instead of returning. Updated other gotos to
+> have correct errno returned, too.
+> 
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+> Changes in v2:
+> 	- Reused err variable for erorr value returning.
+> Changes in v3:
+> 	- Fix the err value in the first goto, and fix subject prefix.
+
+Ugh damn this. Apparently this "fix" has made the news:
+
+https://news.softpedia.com/news/canonical-releases-major-kernel-security-update-for-ubuntu-19-10-and-18-04-lts-528433.shtml
+
+https://nvd.nist.gov/vuln/detail/CVE-2019-19076
+
+and (a) it would be a damn control path, root-only memory leak, but
+also (b) upon closer inspection there is no leak here at all!
+
+We don't need to delete the entry if we failed to allocate it...
+The delete path is in case the entry for the handle is changed, but 
+if we're trying to allocate one anew there can't be any on the list.
+
+Congratulations to whoever classified this as a security fix.
+
+I will send a revert, and go ask for the CVE to be marked invalid.
+What a waste of time. I should have paid more attention :/
+
+> diff --git a/drivers/net/ethernet/netronome/nfp/abm/cls.c b/drivers/net/ethernet/netronome/nfp/abm/cls.c
+> index 23ebddfb9532..9f8a1f69c0c4 100644
+> --- a/drivers/net/ethernet/netronome/nfp/abm/cls.c
+> +++ b/drivers/net/ethernet/netronome/nfp/abm/cls.c
+> @@ -176,8 +176,10 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
+>  	u8 mask, val;
+>  	int err;
+>  
+> -	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack))
+> +	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack)) {
+> +		err = -EOPNOTSUPP;
+>  		goto err_delete;
+> +	}
+>  
+>  	tos_off = proto == htons(ETH_P_IP) ? 16 : 20;
+>  
+> @@ -198,14 +200,18 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
+>  		if ((iter->val & cmask) == (val & cmask) &&
+>  		    iter->band != knode->res->classid) {
+>  			NL_SET_ERR_MSG_MOD(extack, "conflict with already offloaded filter");
+> +			err = -EOPNOTSUPP;
+>  			goto err_delete;
+>  		}
+>  	}
+>  
+>  	if (!match) {
+>  		match = kzalloc(sizeof(*match), GFP_KERNEL);
+> -		if (!match)
+> -			return -ENOMEM;
+> +		if (!match) {
+> +			err = -ENOMEM;
+> +			goto err_delete;
+> +		}
+> +
+>  		list_add(&match->list, &alink->dscp_map);
+>  	}
+>  	match->handle = knode->handle;
+> @@ -221,7 +227,7 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
+>  
+>  err_delete:
+>  	nfp_abm_u32_knode_delete(alink, knode);
+> -	return -EOPNOTSUPP;
+> +	return err;
+>  }
+>  
+>  static int nfp_abm_setup_tc_block_cb(enum tc_setup_type type,
+
