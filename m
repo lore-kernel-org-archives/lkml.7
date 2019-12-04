@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23091C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6BDC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA07420409
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2666620409
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483671;
-	bh=HS84tFKpKufgsJQxZKLcluRkNCzY3Fs/Uh0TZmuPb40=;
+	s=default; t=1575483675;
+	bh=2m71RfjpJMhsE/hnMO23RQYRMaw/9glv4FzCsCZ4loM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V3H6kwjSG7P32iUfDrR/eKl860VxwX56l/hapEx8eT5Qw05nB//XRiQFtRBqSscId
-	 Qcg0q98ciHbW1L+TehiySyOIJJJBDkYiT/ZbewXuz0yMG5rHjHlISul4VCQr3i+dk6
-	 hNGN+AxXY38b3B6ZKtXheSyLY5TWUZmWQXn97nSE=
+	b=GfnAV5LkYon6JbLEwZLadivuFPiAnkPtitk2FjHIuEtlaeFVsX4AFa/eIhubDvpZQ
+	 PbnsLHFJ3ANff+rZYARZwTNKidvrdt/OaTBGqW3IxM2jpfL5d2IJrti97auPtCK8DM
+	 ATheuWTFkdin9b23wqF2mPdv2zGMQ0lnQ+tFGviU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730714AbfLDSHN (ORCPT
+        id S1731229AbfLDSVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:07:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56460 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:21:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730700AbfLDSHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:07:08 -0500
+        id S1729039AbfLDSHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:07:10 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3BDC20674;
-        Wed,  4 Dec 2019 18:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72A8120675;
+        Wed,  4 Dec 2019 18:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482827;
-        bh=HS84tFKpKufgsJQxZKLcluRkNCzY3Fs/Uh0TZmuPb40=;
+        s=default; t=1575482829;
+        bh=2m71RfjpJMhsE/hnMO23RQYRMaw/9glv4FzCsCZ4loM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gf7sqid04AhN/kQPJmtiHQobhxig0zqaeGyP15SVa29iXwvagQ7FMztT74vt7TMCg
-         zf5VvFK1WI1K9SuZmvlGlr8vyp/QXdWjF2eb+mpGkijLlSg6rt7DrC+pzYm0qfvV6M
-         2aTy6PTJ+ePC3WM8YCc0YiC1T4vEuyn426cEkPEo=
+        b=rQui2GjLfDTqEpVBBhzrgtYOMQXY0oWUKYTxO7pgJRQONBdQ1T5EMfKWVhQjuCO3v
+         LAgnuihfW0EnFNmhmZ9RPU0dSTEtx2OhcgNfNRb7B3/lC8vB/S4Rcxbu3xfn6icHsU
+         UdyC7lKI+s3JMaixBbEY94DBgCuF5ZHQWI+0o1j4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Jian Luo <luojian5@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 151/209] ACPI / APEI: Switch estatus pool to use vmalloc memory
-Date:   Wed,  4 Dec 2019 18:56:03 +0100
-Message-Id: <20191204175333.892862473@linuxfoundation.org>
+Subject: [PATCH 4.14 152/209] scsi: libsas: Check SMP PHY control function result
+Date:   Wed,  4 Dec 2019 18:56:04 +0100
+Message-Id: <20191204175333.958242641@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,91 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit 0ac234be1a9497498e57d958f4251f5257b116b4 ]
+[ Upstream commit 01929a65dfa13e18d89264ab1378854a91857e59 ]
 
-The ghes code is careful to parse and round firmware's advertised
-memory requirements for CPER records, up to a maximum of 64K.
-However when ghes_estatus_pool_expand() does its work, it splits
-the requested size into PAGE_SIZE granules.
+Currently the SMP PHY control execution result is checked, however the
+function result for the command is not.
 
-This means if firmware generates 5K of CPER records, and correctly
-describes this in the table, __process_error() will silently fail as it
-is unable to allocate more than PAGE_SIZE.
+As such, we may be missing all potential errors, like SMP FUNCTION FAILED,
+INVALID REQUEST FRAME LENGTH, etc., meaning the PHY control request has
+failed.
 
-Switch the estatus pool to vmalloc() memory. On x86 vmalloc() memory
-may fault and be fixed up by vmalloc_fault(). To prevent this call
-vmalloc_sync_all() before an NMI handler could discover the memory.
+In some scenarios we need to ensure the function result is accepted, so add
+a check for this.
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Tested-by: Jian Luo <luojian5@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/apei/ghes.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/scsi/libsas/sas_expander.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 9c31c7cd5cb5e..cd6fae6ad4c2a 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -170,40 +170,40 @@ static int ghes_estatus_pool_init(void)
- 	return 0;
- }
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index 63c44eaabf69e..f77d72f01da91 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -614,7 +614,14 @@ int sas_smp_phy_control(struct domain_device *dev, int phy_id,
+ 	}
  
--static void ghes_estatus_pool_free_chunk_page(struct gen_pool *pool,
-+static void ghes_estatus_pool_free_chunk(struct gen_pool *pool,
- 					      struct gen_pool_chunk *chunk,
- 					      void *data)
- {
--	free_page(chunk->start_addr);
-+	vfree((void *)chunk->start_addr);
- }
- 
- static void ghes_estatus_pool_exit(void)
- {
- 	gen_pool_for_each_chunk(ghes_estatus_pool,
--				ghes_estatus_pool_free_chunk_page, NULL);
-+				ghes_estatus_pool_free_chunk, NULL);
- 	gen_pool_destroy(ghes_estatus_pool);
- }
- 
- static int ghes_estatus_pool_expand(unsigned long len)
- {
--	unsigned long i, pages, size, addr;
--	int ret;
-+	unsigned long size, addr;
- 
- 	ghes_estatus_pool_size_request += PAGE_ALIGN(len);
- 	size = gen_pool_size(ghes_estatus_pool);
- 	if (size >= ghes_estatus_pool_size_request)
- 		return 0;
--	pages = (ghes_estatus_pool_size_request - size) / PAGE_SIZE;
--	for (i = 0; i < pages; i++) {
--		addr = __get_free_page(GFP_KERNEL);
--		if (!addr)
--			return -ENOMEM;
--		ret = gen_pool_add(ghes_estatus_pool, addr, PAGE_SIZE, -1);
--		if (ret)
--			return ret;
--	}
- 
--	return 0;
-+	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
-+	if (!addr)
-+		return -ENOMEM;
-+
-+	/*
-+	 * New allocation must be visible in all pgd before it can be found by
-+	 * an NMI allocating from the pool.
-+	 */
-+	vmalloc_sync_all();
-+
-+	return gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
- }
- 
- static int map_gen_v2(struct ghes *ghes)
+ 	res = smp_execute_task(dev, pc_req, PC_REQ_SIZE, pc_resp,PC_RESP_SIZE);
+-
++	if (res) {
++		pr_err("ex %016llx phy%02d PHY control failed: %d\n",
++		       SAS_ADDR(dev->sas_addr), phy_id, res);
++	} else if (pc_resp[2] != SMP_RESP_FUNC_ACC) {
++		pr_err("ex %016llx phy%02d PHY control failed: function result 0x%x\n",
++		       SAS_ADDR(dev->sas_addr), phy_id, pc_resp[2]);
++		res = pc_resp[2];
++	}
+ 	kfree(pc_resp);
+ 	kfree(pc_req);
+ 	return res;
 -- 
 2.20.1
 
