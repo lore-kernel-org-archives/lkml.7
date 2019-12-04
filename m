@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB512C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35352C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B78072073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A12220661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483690;
-	bh=OUxMEqaedTerczHBI7WUPaEO4Ds7NoVMV/fIilPn1tk=;
+	s=default; t=1575483695;
+	bh=sRG+9fKCS3DXqU/Po1FFA9lconLe0eam9JEYAbnx8JU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wssDbI3dVUsSQJMXNdqh0mCLLZT7+eO/4s8wBS0GlJEzAbbzYO5D8NokhccAAfH7I
-	 A43bKUpo6qDuscBg6vJfY619DDUNIp7P2PgN8QbeijHMB2h/Os5ECp3mEQNtpf32DI
-	 YZ6oOOgfYxnyTQRBkD5bD7FfUJ7liz2k0wwsXkow=
+	b=p/tzD3QNsQYwzO3PSSpIIszg4uR6hnlgwRdOmYVCOyJQtHCWMf0sc4Un9UIfwAFcn
+	 G54ljwvbh9+bjlevSFlTrHWE6qMH+A9F1WrZ7tVDNaWM/Mzp/5l+pJ+JUqnWhgYA2i
+	 b1FUx5tBIa5+rDAllTlbqpNAb4siaDyqXCS7LAaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbfLDSGg (ORCPT
+        id S1730564AbfLDSVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:06:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55064 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:21:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730024AbfLDSGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:06:33 -0500
+        id S1729634AbfLDSGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:06:31 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B02D20674;
-        Wed,  4 Dec 2019 18:06:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3DE7206DF;
+        Wed,  4 Dec 2019 18:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482792;
-        bh=OUxMEqaedTerczHBI7WUPaEO4Ds7NoVMV/fIilPn1tk=;
+        s=default; t=1575482790;
+        bh=sRG+9fKCS3DXqU/Po1FFA9lconLe0eam9JEYAbnx8JU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NjRdYUI3pDktxWO/aXFyQcHeCIuOaxWsSnohMGjiZLuc7iFz1zbcVNo+r6gqdkOow
-         Fz0PHarssx32tcpOwbRde0KBVfPzc6GWxud2z85SAxCgmv7TYfNZ6mixTIW1T72VJW
-         Y3wjrcaXfaEowfNvobKTTHwD50jwGNFIP9H1kX1s=
+        b=aBf5tdmlj5jlc4DyW98xGhOSi4G9ptFrRMR5D+7spj2yJpfUPxbCC0A5TtYBc0tyh
+         Gnb3wc0ye3hsx1baIoHR6VzBwNxjtFnL6t/6JIr/qK0E9bXIYZpzpxcfnVu+uFNh+3
+         cVJ3TaJQS1Z8uJPV1h3jSC/L5cJ9h4QjmO8/g6s8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, wenxu <wenxu@ucloud.cn>,
+        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 134/209] ip_tunnel: Make none-tunnel-dst tunnel port work with lwtunnel
-Date:   Wed,  4 Dec 2019 18:55:46 +0100
-Message-Id: <20191204175332.445673372@linuxfoundation.org>
+Subject: [PATCH 4.14 133/209] sfc: suppress duplicate nvmem partition types in efx_ef10_mtd_probe
+Date:   Wed,  4 Dec 2019 18:55:45 +0100
+Message-Id: <20191204175332.357016852@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,51 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wenxu <wenxu@ucloud.cn>
+From: Edward Cree <ecree@solarflare.com>
 
-[ Upstream commit d71b57532d70c03f4671dd04e84157ac6bf021b0 ]
+[ Upstream commit 3366463513f544c12c6b88c13da4462ee9e7a1a1 ]
 
-ip l add dev tun type gretap key 1000
-ip a a dev tun 10.0.0.1/24
+Use a bitmap to keep track of which partition types we've already seen;
+ for duplicates, return -EEXIST from efx_ef10_mtd_probe_partition() and
+ thus skip adding that partition.
+Duplicate partitions occur because of the A/B backup scheme used by newer
+ sfc NICs.  Prior to this patch they cause sysfs_warn_dup errors because
+ they have the same name, causing us not to expose any MTDs at all.
 
-Packets with tun-id 1000 can be recived by tun dev. But packet can't
-be sent through dev tun for non-tunnel-dst
-
-With this patch: tunnel-dst can be get through lwtunnel like beflow:
-ip r a 10.0.0.7 encap ip dst 172.168.0.11 dev tun
-
-Signed-off-by: wenxu <wenxu@ucloud.cn>
+Signed-off-by: Edward Cree <ecree@solarflare.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_tunnel.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/sfc/ef10.c | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
 
-diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
-index fabc299cb875f..7a31287ff1232 100644
---- a/net/ipv4/ip_tunnel.c
-+++ b/net/ipv4/ip_tunnel.c
-@@ -661,13 +661,19 @@ void ip_tunnel_xmit(struct sk_buff *skb, struct net_device *dev,
- 	dst = tnl_params->daddr;
- 	if (dst == 0) {
- 		/* NBMA tunnel */
-+		struct ip_tunnel_info *tun_info;
+diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
+index 09352ee43b55c..cc3be94d05622 100644
+--- a/drivers/net/ethernet/sfc/ef10.c
++++ b/drivers/net/ethernet/sfc/ef10.c
+@@ -5852,22 +5852,25 @@ static const struct efx_ef10_nvram_type_info efx_ef10_nvram_types[] = {
+ 	{ NVRAM_PARTITION_TYPE_LICENSE,		   0,    0, "sfc_license" },
+ 	{ NVRAM_PARTITION_TYPE_PHY_MIN,		   0xff, 0, "sfc_phy_fw" },
+ };
++#define EF10_NVRAM_PARTITION_COUNT	ARRAY_SIZE(efx_ef10_nvram_types)
  
- 		if (!skb_dst(skb)) {
- 			dev->stats.tx_fifo_errors++;
- 			goto tx_error;
- 		}
+ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
+ 					struct efx_mcdi_mtd_partition *part,
+-					unsigned int type)
++					unsigned int type,
++					unsigned long *found)
+ {
+ 	MCDI_DECLARE_BUF(inbuf, MC_CMD_NVRAM_METADATA_IN_LEN);
+ 	MCDI_DECLARE_BUF(outbuf, MC_CMD_NVRAM_METADATA_OUT_LENMAX);
+ 	const struct efx_ef10_nvram_type_info *info;
+ 	size_t size, erase_size, outlen;
++	int type_idx = 0;
+ 	bool protected;
+ 	int rc;
  
--		if (skb->protocol == htons(ETH_P_IP)) {
-+		tun_info = skb_tunnel_info(skb);
-+		if (tun_info && (tun_info->mode & IP_TUNNEL_INFO_TX) &&
-+		    ip_tunnel_info_af(tun_info) == AF_INET &&
-+		    tun_info->key.u.ipv4.dst)
-+			dst = tun_info->key.u.ipv4.dst;
-+		else if (skb->protocol == htons(ETH_P_IP)) {
- 			rt = skb_rtable(skb);
- 			dst = rt_nexthop(rt, inner_iph->daddr);
- 		}
+-	for (info = efx_ef10_nvram_types; ; info++) {
+-		if (info ==
+-		    efx_ef10_nvram_types + ARRAY_SIZE(efx_ef10_nvram_types))
++	for (type_idx = 0; ; type_idx++) {
++		if (type_idx == EF10_NVRAM_PARTITION_COUNT)
+ 			return -ENODEV;
++		info = efx_ef10_nvram_types + type_idx;
+ 		if ((type & ~info->type_mask) == info->type)
+ 			break;
+ 	}
+@@ -5880,6 +5883,13 @@ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
+ 	if (protected)
+ 		return -ENODEV; /* hide it */
+ 
++	/* If we've already exposed a partition of this type, hide this
++	 * duplicate.  All operations on MTDs are keyed by the type anyway,
++	 * so we can't act on the duplicate.
++	 */
++	if (__test_and_set_bit(type_idx, found))
++		return -EEXIST;
++
+ 	part->nvram_type = type;
+ 
+ 	MCDI_SET_DWORD(inbuf, NVRAM_METADATA_IN_TYPE, type);
+@@ -5908,6 +5918,7 @@ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
+ static int efx_ef10_mtd_probe(struct efx_nic *efx)
+ {
+ 	MCDI_DECLARE_BUF(outbuf, MC_CMD_NVRAM_PARTITIONS_OUT_LENMAX);
++	DECLARE_BITMAP(found, EF10_NVRAM_PARTITION_COUNT);
+ 	struct efx_mcdi_mtd_partition *parts;
+ 	size_t outlen, n_parts_total, i, n_parts;
+ 	unsigned int type;
+@@ -5936,11 +5947,13 @@ static int efx_ef10_mtd_probe(struct efx_nic *efx)
+ 	for (i = 0; i < n_parts_total; i++) {
+ 		type = MCDI_ARRAY_DWORD(outbuf, NVRAM_PARTITIONS_OUT_TYPE_ID,
+ 					i);
+-		rc = efx_ef10_mtd_probe_partition(efx, &parts[n_parts], type);
+-		if (rc == 0)
+-			n_parts++;
+-		else if (rc != -ENODEV)
++		rc = efx_ef10_mtd_probe_partition(efx, &parts[n_parts], type,
++						  found);
++		if (rc == -EEXIST || rc == -ENODEV)
++			continue;
++		if (rc)
+ 			goto fail;
++		n_parts++;
+ 	}
+ 
+ 	rc = efx_mtd_add(efx, &parts[0].common, n_parts, sizeof(*parts));
 -- 
 2.20.1
 
