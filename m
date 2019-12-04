@@ -2,370 +2,142 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E833C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA27C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC23B21823
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D773F2073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:29:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="fLgMIXm0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbfLDX2r (ORCPT
+        id S1728495AbfLDX3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 18:28:47 -0500
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:43206 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728378AbfLDX2o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 18:28:44 -0500
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 04 Dec 2019 15:28:43 -0800
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 04 Dec 2019 15:28:43 -0800
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id A293B484D; Wed,  4 Dec 2019 15:28:43 -0800 (PST)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [RESEND PATCH v3 1/1] pwm: Convert period and duty cycle to u64
-Date:   Wed,  4 Dec 2019 15:28:42 -0800
-Message-Id: <7876b13fbd7302c45253336e246542535db2b712.1575501920.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1575501920.git.gurus@codeaurora.org>
-References: <cover.1575501920.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1575501920.git.gurus@codeaurora.org>
-References: <cover.1575501920.git.gurus@codeaurora.org>
+        Wed, 4 Dec 2019 18:29:40 -0500
+Received: from mail-mw2nam12on2053.outbound.protection.outlook.com ([40.107.244.53]:6244
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727989AbfLDX3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 18:29:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mlaun8ZwESX+UFIf8DnsL/5tYV2av/PBIZrf2vI/NgL6h3woB5Fyg7c9W6E1iJD/AeTMI//DI0rdcHiECPxVNcDLAzlsdM07zOYt4f7e5QRs47i+z3roD/IqgAo2JLFCW+m4zam7XKBRnS/lWcnGxve3OQ6Yy4+MbH2UMgf5HH5LTbYeBIUxO6qS+vds3BjjD/Bunzx8kHoqVuWV93adO3X/9hbPNJVJA0vCdmiip6BAA3WPx758Pff2AjzoWtykMLVFF9Sk0zfNrtGYM1o59GUj+WbbrQsfzxqM4y6OaNa5K9znTrlANbE0oSFLyDmIVf4o37wNA/H4J6pu8M2osQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zhQRQrRHXJzpymcVqd+6FVQMsZ96gqCd1J96oDRdrnQ=;
+ b=Ur8Z8++jEo0PrsYPWloOOcQ1Xeyfz76MOqfzjnpJy+JOkQMfUterjHJyfWY8iriTaqiZCgNBThJjWWPNALpBP3I2wmnX9Pm0aKXtuKS1ifcw9UzI1W+A8IZgikM2ApYGM6xraDdtLA1pJAcrqy82f71Wu2M1YC+Lnwgk6F6FYwtHdKLF55GWUvAHChaJKEDnVE1oh9eDk4IogPpkSqUu5M5HrDd6eR5M1sWvvNygmFkO3+WcLHAT157V0EHf5vjwbiGgPGlXxP+oeoAYeX/sVR3sa5AQqPT4ICz6i4s0MjTM2o2AGalGZMxvLolGap4xGwL6nXqFCqUi4rF5b4oZCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zhQRQrRHXJzpymcVqd+6FVQMsZ96gqCd1J96oDRdrnQ=;
+ b=fLgMIXm0eXNBfC5RD0y1eHHAqDEqL5JfqvlN01kN/HJHHvmr+3cS/C5fAzPMR+vQpLnx+xtMqMh1IhEg0GDwOYmASauq3HEoIEiAI0bm/HXsHdrJt1QHaw5aVhQTZrBg0/jMvS4JfcfzUAuoKEJoOCqAMUgkggkyy/g+gwKUJAE=
+Received: from CH2PR02CA0023.namprd02.prod.outlook.com (2603:10b6:610:4e::33)
+ by BY5PR02MB6385.namprd02.prod.outlook.com (2603:10b6:a03:1f5::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12; Wed, 4 Dec
+ 2019 23:29:36 +0000
+Received: from BL2NAM02FT031.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::201) by CH2PR02CA0023.outlook.office365.com
+ (2603:10b6:610:4e::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.20 via Frontend
+ Transport; Wed, 4 Dec 2019 23:29:35 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT031.mail.protection.outlook.com (10.152.77.173) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
+ via Frontend Transport; Wed, 4 Dec 2019 23:29:35 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1ice5O-0005aC-Qg; Wed, 04 Dec 2019 15:29:34 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1ice5J-00080R-NV; Wed, 04 Dec 2019 15:29:29 -0800
+Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB4NTR2m004747;
+        Wed, 4 Dec 2019 15:29:27 -0800
+Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1ice5H-000802-DS; Wed, 04 Dec 2019 15:29:27 -0800
+From:   Jolly Shah <jolly.shah@xilinx.com>
+To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
+        gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
+        sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org,
+        dmitry.torokhov@gmail.com, michal.simek@xilinx.com
+Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH 0/5] firmware: xilinx: Add xilinx specific sysfs interface
+Date:   Wed,  4 Dec 2019 15:29:14 -0800
+Message-Id: <1575502159-11327-1-git-send-email-jolly.shah@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(39860400002)(376002)(189003)(199004)(51416003)(48376002)(50466002)(2616005)(478600001)(81166006)(81156014)(2906002)(50226002)(9786002)(7416002)(36756003)(70206006)(8676002)(44832011)(426003)(70586007)(26005)(8936002)(5660300002)(356004)(4326008)(336012)(14444005)(316002)(36386004)(16586007)(6636002)(7696005)(4744005)(107886003)(6666004)(186003)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR02MB6385;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: be16e3c5-b1a8-4bd8-7e0b-08d77911d2ec
+X-MS-TrafficTypeDiagnostic: BY5PR02MB6385:
+X-Microsoft-Antispam-PRVS: <BY5PR02MB638588D9884BA0EC385A249FB85D0@BY5PR02MB6385.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:2276;
+X-Forefront-PRVS: 0241D5F98C
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7uPlMiUyZXpDX3fBVcEfPJXBF/zS2YEuRI9eiYyXD7k+0w6BULnN86wJuCjas7ymkxQTH6XVzSNOPAudT41avwccFOuQ0mWuhEcvYFJFVWTOjgsmTIN5WmK4nG2Z1ApRB4EQsf4IqdsioaXj/zyFSzhLMhv/UZFDoLb6XmLYgxFpdmPWwJ8th8nVjkkdcAFeYHXYJ0cdRRHDBFgWDCC6+8+EwxHvTvJN5Zu9YamzuNcBp4HnERFdnvFZH4aZecMvi5HzkVANlfZ4dap32Os7y9zhVoF95lv8lM3JzqhlcxAhFKXuhBLlTKm5IT8+Kx7dppLoqMG07dWTM9mO+IxepLELZiDlww4CCbvHYOS+T9jSK77ZeL2WAqCSJV5TzQBoadlYeCQ1Nbo0NIZ+amsC+WtU9kAyajtXBcLNDDYskno4rL3QArqeq4ZkLrUzdxmI
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 23:29:35.4612
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: be16e3c5-b1a8-4bd8-7e0b-08d77911d2ec
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6385
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because period and duty cycle are defined as ints with units of
-nanoseconds, the maximum time duration that can be set is limited to
-~2.147 seconds. Change their definitions to u64 in the structs of the
-PWM framework so that higher durations may be set.
+This patch series adds xilinx specific sysfs interface for below
+purposes:
+- Register access
+- Set shutdown scope
+- Set boot health status bit
 
-Also make the relevant fixes to those drivers that use the period and
-duty_cycle struct members in division operations, viz. replacing the
-division operations with 64-bit division macros as appropriate.
+Rajan Vaja (5):
+  firmware: xilinx: Adds new eemi call for reg access
+  firmware: xilinx: Add sysfs interface
+  firmware: xilinx: Add system shutdown API interface
+  firmware: xilinx: Add sysfs to set shutdown scope
+  firmware: xilinx: Add sysfs and IOCTL to set boot health status
 
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Reported-by: kbuild test robot <lkp@intel.com>
----
- drivers/clk/clk-pwm.c                      |  2 +-
- drivers/gpu/drm/i915/display/intel_panel.c |  2 +-
- drivers/hwmon/pwm-fan.c                    |  2 +-
- drivers/media/rc/ir-rx51.c                 |  3 ++-
- drivers/pwm/core.c                         |  4 ++--
- drivers/pwm/pwm-clps711x.c                 |  2 +-
- drivers/pwm/pwm-imx-tpm.c                  |  2 +-
- drivers/pwm/pwm-imx27.c                    |  5 ++---
- drivers/pwm/pwm-sifive.c                   |  2 +-
- drivers/pwm/pwm-sti.c                      |  4 ++--
- drivers/pwm/pwm-stm32-lp.c                 |  2 +-
- drivers/pwm/pwm-sun4i.c                    |  2 +-
- drivers/pwm/sysfs.c                        | 10 +++++-----
- drivers/video/backlight/pwm_bl.c           |  3 ++-
- include/linux/pwm.h                        | 16 ++++++++--------
- 15 files changed, 31 insertions(+), 30 deletions(-)
+ Documentation/ABI/stable/sysfs-firmware-zynqmp | 103 +++++++
+ drivers/firmware/xilinx/Makefile               |   2 +-
+ drivers/firmware/xilinx/zynqmp-ggs.c           | 289 ++++++++++++++++++
+ drivers/firmware/xilinx/zynqmp.c               | 392 +++++++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h           |  37 ++-
+ 5 files changed, 821 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/ABI/stable/sysfs-firmware-zynqmp
+ create mode 100644 drivers/firmware/xilinx/zynqmp-ggs.c
 
-diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-index 87fe0b0e..7b1f7a0 100644
---- a/drivers/clk/clk-pwm.c
-+++ b/drivers/clk/clk-pwm.c
-@@ -89,7 +89,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
- 	}
- 
- 	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
--		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
-+		clk_pwm->fixed_rate = div64_u64(NSEC_PER_SEC, pargs.period);
- 
- 	if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
- 	    pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
-diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
-index bc14e9c..ca373b8 100644
---- a/drivers/gpu/drm/i915/display/intel_panel.c
-+++ b/drivers/gpu/drm/i915/display/intel_panel.c
-@@ -1868,7 +1868,7 @@ static int pwm_setup_backlight(struct intel_connector *connector,
- 
- 	panel->backlight.min = 0; /* 0% */
- 	panel->backlight.max = 100; /* 100% */
--	panel->backlight.level = DIV_ROUND_UP(
-+	panel->backlight.level = DIV64_U64_ROUND_UP(
- 				 pwm_get_duty_cycle(panel->backlight.pwm) * 100,
- 				 CRC_PMIC_PWM_PERIOD_NS);
- 	panel->backlight.enabled = panel->backlight.level != 0;
-diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index 42ffd2e..283423a 100644
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -437,7 +437,7 @@ static int pwm_fan_resume(struct device *dev)
- 		return 0;
- 
- 	pwm_get_args(ctx->pwm, &pargs);
--	duty = DIV_ROUND_UP(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
-+	duty = DIV_ROUND_UP_ULL(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
- 	ret = pwm_config(ctx->pwm, duty, pargs.period);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/media/rc/ir-rx51.c b/drivers/media/rc/ir-rx51.c
-index 8574eda..9a5dfd7 100644
---- a/drivers/media/rc/ir-rx51.c
-+++ b/drivers/media/rc/ir-rx51.c
-@@ -241,7 +241,8 @@ static int ir_rx51_probe(struct platform_device *dev)
- 	}
- 
- 	/* Use default, in case userspace does not set the carrier */
--	ir_rx51.freq = DIV_ROUND_CLOSEST(pwm_get_period(pwm), NSEC_PER_SEC);
-+	ir_rx51.freq = DIV_ROUND_CLOSEST_ULL(pwm_get_period(pwm),
-+			NSEC_PER_SEC);
- 	pwm_put(pwm);
- 
- 	hrtimer_init(&ir_rx51.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index f877e77..0789371 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -1156,8 +1156,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
- 		if (state.enabled)
- 			seq_puts(s, " enabled");
- 
--		seq_printf(s, " period: %u ns", state.period);
--		seq_printf(s, " duty: %u ns", state.duty_cycle);
-+		seq_printf(s, " period: %llu ns", state.period);
-+		seq_printf(s, " duty: %llu ns", state.duty_cycle);
- 		seq_printf(s, " polarity: %s",
- 			   state.polarity ? "inverse" : "normal");
- 
-diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-index 924d39a..ba9500a 100644
---- a/drivers/pwm/pwm-clps711x.c
-+++ b/drivers/pwm/pwm-clps711x.c
-@@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
- static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
- {
- 	/* Duty cycle 0..15 max */
--	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-+	return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
- }
- 
- static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-index 9145f61..53bf364 100644
---- a/drivers/pwm/pwm-imx-tpm.c
-+++ b/drivers/pwm/pwm-imx-tpm.c
-@@ -126,7 +126,7 @@ static int pwm_imx_tpm_round_state(struct pwm_chip *chip,
- 		real_state->duty_cycle = state->duty_cycle;
- 
- 	tmp = (u64)p->mod * real_state->duty_cycle;
--	p->val = DIV_ROUND_CLOSEST_ULL(tmp, real_state->period);
-+	p->val = DIV64_U64_ROUND_CLOSEST(tmp, real_state->period);
- 
- 	real_state->polarity = state->polarity;
- 	real_state->enabled = state->enabled;
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index ae11d85..b4b0fbd 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -198,7 +198,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- 	sr = readl(imx->mmio_base + MX3_PWMSR);
- 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
- 	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
--		period_ms = DIV_ROUND_UP(pwm_get_period(pwm),
-+		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
- 					 NSEC_PER_MSEC);
- 		msleep(period_ms);
- 
-@@ -231,8 +231,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 		period_cycles /= prescale;
- 		c = (unsigned long long)period_cycles * state->duty_cycle;
--		do_div(c, state->period);
--		duty_cycles = c;
-+		duty_cycles = div64_u64(c, state->period);
- 
- 		/*
- 		 * according to imx pwm RM, the real period value should be
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index cc63f9b..62de0bb 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -181,7 +181,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * consecutively
- 	 */
- 	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
--	frac = DIV_ROUND_CLOSEST_ULL(num, state->period);
-+	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
- 	/* The hardware cannot generate a 100% duty cycle */
- 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
- 
-diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
-index 1508616..857f2ad 100644
---- a/drivers/pwm/pwm-sti.c
-+++ b/drivers/pwm/pwm-sti.c
-@@ -371,10 +371,10 @@ static int sti_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
- 		effective_ticks = clk_get_rate(pc->cpt_clk);
- 
- 		result->period = (high + low) * NSEC_PER_SEC;
--		result->period /= effective_ticks;
-+		do_div(result->period, effective_ticks);
- 
- 		result->duty_cycle = high * NSEC_PER_SEC;
--		result->duty_cycle /= effective_ticks;
-+		do_div(result->duty_cycle, effective_ticks);
- 
- 		break;
- 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 67fca62..134c146 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	do_div(div, NSEC_PER_SEC);
- 	if (!div) {
- 		/* Clock is too slow to achieve requested period. */
--		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
-+		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
- 		return -EINVAL;
- 	}
- 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 581d232..9b16591 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -244,7 +244,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
- 		sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
- 		sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
--			usecs_to_jiffies(cstate.period / 1000 + 1);
-+			usecs_to_jiffies(div_u64(cstate.period, 1000) + 1);
- 		sun4i_pwm->needs_delay[pwm->hwpwm] = true;
- 	}
- 
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 2389b86..3fb1610 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.period);
-+	return sprintf(buf, "%llu\n", state.period);
- }
- 
- static ssize_t period_store(struct device *child,
-@@ -52,10 +52,10 @@ static ssize_t period_store(struct device *child,
- 	struct pwm_export *export = child_to_pwm_export(child);
- 	struct pwm_device *pwm = export->pwm;
- 	struct pwm_state state;
--	unsigned int val;
-+	u64 val;
- 	int ret;
- 
--	ret = kstrtouint(buf, 0, &val);
-+	ret = kstrtou64(buf, 0, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.duty_cycle);
-+	return sprintf(buf, "%llu\n", state.duty_cycle);
- }
- 
- static ssize_t duty_cycle_store(struct device *child,
-@@ -212,7 +212,7 @@ static ssize_t capture_show(struct device *child,
- 	if (ret)
- 		return ret;
- 
--	return sprintf(buf, "%u %u\n", result.period, result.duty_cycle);
-+	return sprintf(buf, "%llu %llu\n", result.period, result.duty_cycle);
- }
- 
- static DEVICE_ATTR_RW(period);
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 746eebc..c79ea13 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -616,7 +616,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 		pb->scale = data->max_brightness;
- 	}
- 
--	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
-+	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
-+				pb->scale));
- 
- 	props.type = BACKLIGHT_RAW;
- 	props.max_brightness = data->max_brightness;
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 0ef808d..df83440 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -39,7 +39,7 @@ enum pwm_polarity {
-  * current PWM hardware state.
-  */
- struct pwm_args {
--	unsigned int period;
-+	u64 period;
- 	enum pwm_polarity polarity;
- };
- 
-@@ -56,8 +56,8 @@ enum {
-  * @enabled: PWM enabled status
-  */
- struct pwm_state {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- 	enum pwm_polarity polarity;
- 	bool enabled;
- };
-@@ -105,13 +105,13 @@ static inline bool pwm_is_enabled(const struct pwm_device *pwm)
- 	return state.enabled;
- }
- 
--static inline void pwm_set_period(struct pwm_device *pwm, unsigned int period)
-+static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
- {
- 	if (pwm)
- 		pwm->state.period = period;
- }
- 
--static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
-+static inline u64 pwm_get_period(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
-@@ -126,7 +126,7 @@ static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
- 		pwm->state.duty_cycle = duty;
- }
- 
--static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *pwm)
-+static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
-@@ -305,8 +305,8 @@ struct pwm_chip {
-  * @duty_cycle: duty cycle of the PWM signal (in nanoseconds)
-  */
- struct pwm_capture {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- };
- 
- #if IS_ENABLED(CONFIG_PWM)
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
 
