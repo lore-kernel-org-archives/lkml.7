@@ -2,115 +2,110 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 838E7C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EE6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3782073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD182073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:04:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZ5GJZ16"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b7NmR+qF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfLDUEA (ORCPT
+        id S1728186AbfLDUES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 15:04:00 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33437 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfLDUEA (ORCPT
+        Wed, 4 Dec 2019 15:04:18 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38046 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727887AbfLDUER (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 15:04:00 -0500
-Received: by mail-pf1-f194.google.com with SMTP id y206so381007pfb.0;
-        Wed, 04 Dec 2019 12:03:59 -0800 (PST)
+        Wed, 4 Dec 2019 15:04:17 -0500
+Received: by mail-pl1-f195.google.com with SMTP id o8so173941pls.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 12:04:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+OdMqVzUj6WvcnoNuOeLlw4Z2rBRaftuL3BvYZInvZ8=;
-        b=YZ5GJZ16ZLo8TmIpcoHWo0OH5dVqqXeCM8U+/V+JOOcoBUppCWNR+9VOLemCcFLFoO
-         B19Ejz1697SpvZq0siV/srTDU+bGp913SLV/h3TwIPeqBet/9EcIgBQHTe2yQ4/pGmmU
-         YUfBROgB7Xpi0ynDkqfQJa9uDIDnT3k47sg0UDeBeWvOF2k1nREuPfEUFb8hySmugQQQ
-         Qa4V2F0LBSS+EElrf8J/7BOxriKxwIEXqX56v1LPYbpxmNXbThqPJGhfzRJJB5aFTozV
-         W/O/Tm+bEwSaujOGTE4hAcGx+wHqe/MMvAQArBaO0h43IH8RBkMM2Koo28Vqh9XOJhjZ
-         +ddA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ELTAmH9zkiQxFiFkiHdPx6vGU7gbG/ie/I1ns5+Qwf0=;
+        b=b7NmR+qF+vnxWm4yIdm9VpajCEJKepEQB55cnHNpOMHIokAoPr34EBknlvq7Rx4SIX
+         HzzkF1H2mla69oKJZOjib3KdC1hLFVpPt6/JB3wIyoX+7CcRy7GXBX2cIo7YYAbL4QIm
+         SkECYLq/nhBcSmvVpJtYpE5Y67vz0aRAWHz14=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+OdMqVzUj6WvcnoNuOeLlw4Z2rBRaftuL3BvYZInvZ8=;
-        b=PjeBbxTaREdlqANVL5CwEmsBskFidQFqRCLRpY3LNFGMQQjjvvcKmOfH+tWJZe03O4
-         oatxFT5Kvqwd/5JsMPZb8+ZXKbiH7a94DH/f03kRUaLViR9xX758F5F+i50MN5wc9gbf
-         sOI5zY7H6VyR4s+xqDotOXQGMEqJHfuqR20zq8fZ5e1Yk5IPAHfCQdRS82fie9Jw8soM
-         wOE5QvW+aabH6iAL9dTaGtZg+4B3SZFSNsXGWbpKxgbBv5g4+xWg9UOB6zj6hJwI36Ii
-         GCd2gnRhXf/fd6Z+4ZSkmNH+fiBDU7jZxLEL/DM2G81Z3C+aggn3WVRU6YGqOSR99UO6
-         C6IQ==
-X-Gm-Message-State: APjAAAWIWaKBCWl4UZr3ZQ4Fo/rUzfr+6zTP6eJAQRkAOZDpb6HKMaV5
-        YujWLvuqa5UIcxi6VL2DfdE=
-X-Google-Smtp-Source: APXvYqxIhnX8thQjmt8iuhBBU6ma7W8uPSUf7YesCllGRzMI6W6eaFebhaDb+YyKeNwrbljnm4XNsw==
-X-Received: by 2002:a63:f961:: with SMTP id q33mr5403005pgk.350.1575489839279;
-        Wed, 04 Dec 2019 12:03:59 -0800 (PST)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id r14sm8994697pfh.10.2019.12.04.12.03.57
+        bh=ELTAmH9zkiQxFiFkiHdPx6vGU7gbG/ie/I1ns5+Qwf0=;
+        b=sqo/Nb2/a3Hz8a8LTxCQFotdzP+E6nlEiiedeH274XZFn+U2KWdA4vgHSr+6ZkcG5b
+         9rjIsJJeODL6D5SMjgWsHPYw50Nl50nCQqQKYKEQbRD2affnAf+Ufn8Xhb3+5xWg34dH
+         4RvG0zL/CrNB69GHNplVp0uRNJpD0i6yyR8v9q5VFtf5P26UH+fmfv/pGqXDLziT5bO7
+         G8aXfNJ6e5lE8K8sRElXArlbVvaI0qAMBTOAsAkfQtXZLztOb5P1g3IXcjPrnlthNZiX
+         IVjDMEYaRYrOZBTs3MZDh6NFP0t+/bzoJCXI285GSk81xIllI3s2FeJb8q+TIcDm5jg3
+         Mecw==
+X-Gm-Message-State: APjAAAV9QshuqIiEq0W5SSGDFh02lMSYXX29QzQt/EHQN/kujgoSgHwX
+        e2gV2HmK1oBexV0OZSzbPVfV/w==
+X-Google-Smtp-Source: APXvYqyvlVyp3wP4RGPm+o/Ndrxy5XeKmjPozpw3mhNrwwRc7fTWujDUcpkjGLkMlZTIn4J60g5EhA==
+X-Received: by 2002:a17:90a:366e:: with SMTP id s101mr5231134pjb.18.1575489857123;
+        Wed, 04 Dec 2019 12:04:17 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id z23sm8423636pgj.43.2019.12.04.12.04.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 12:03:58 -0800 (PST)
-Subject: Re: [PATCH] selftests: net: ip_defrag: increase netdev_max_backlog
-To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        netdev@vger.kernel.org
-Cc:     davem@davemloft.net, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        posk@google.com
-References: <20191204195321.406365-1-cascardo@canonical.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <483097a3-92ec-aedd-60d9-ab7f58b9708d@gmail.com>
-Date:   Wed, 4 Dec 2019 12:03:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 04 Dec 2019 12:04:16 -0800 (PST)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Andy Gross <agross@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-arm-msm@vger.kernel.org, Taniya Das <tdas@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] clk: qcom: gcc-sc7180: Fix setting flag for votable GDSCs
+Date:   Wed,  4 Dec 2019 12:04:12 -0800
+Message-Id: <20191204120341.1.I9971817e83ee890d1096c43c5a6ce6ced53d5bd3@changeid>
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
 MIME-Version: 1.0
-In-Reply-To: <20191204195321.406365-1-cascardo@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit 17269568f7267 ("clk: qcom: Add Global Clock controller (GCC)
+driver for SC7180") sets the VOTABLE flag in .pwrsts, but it needs
+to be set in .flags, fix this.
 
+Fixes: 17269568f7267 ("clk: qcom: Add Global Clock controller (GCC) driver for SC7180")
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
 
-On 12/4/19 11:53 AM, Thadeu Lima de Souza Cascardo wrote:
-> When using fragments with size 8 and payload larger than 8000, the backlog
-> might fill up and packets will be dropped, causing the test to fail. This
-> happens often enough when conntrack is on during the IPv6 test.
-> 
-> As the larger payload in the test is 10000, using a backlog of 1250 allow
-> the test to run repeatedly without failure. At least a 1000 runs were
-> possible with no failures, when usually less than 50 runs were good enough
-> for showing a failure.
-> 
-> As netdev_max_backlog is not a pernet setting, this sets the backlog to
-> 1000 during exit to prevent disturbing following tests.
-> 
+ drivers/clk/qcom/gcc-sc7180.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Hmmm... I would prefer not changing a global setting like that.
-This is going to be flaky since we often run tests in parallel (using different netns)
-
-What about adding a small delay after each sent packet ?
-
-diff --git a/tools/testing/selftests/net/ip_defrag.c b/tools/testing/selftests/net/ip_defrag.c
-index c0c9ecb891e1d78585e0db95fd8783be31bc563a..24d0723d2e7e9b94c3e365ee2ee30e9445deafa8 100644
---- a/tools/testing/selftests/net/ip_defrag.c
-+++ b/tools/testing/selftests/net/ip_defrag.c
-@@ -198,6 +198,7 @@ static void send_fragment(int fd_raw, struct sockaddr *addr, socklen_t alen,
-                error(1, 0, "send_fragment: %d vs %d", res, frag_len);
+diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
+index 38424e63bcae2..7f59fb8da0337 100644
+--- a/drivers/clk/qcom/gcc-sc7180.c
++++ b/drivers/clk/qcom/gcc-sc7180.c
+@@ -2186,7 +2186,8 @@ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc = {
+ 	.pd = {
+ 		.name = "hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc",
+ 	},
+-	.pwrsts = PWRSTS_OFF_ON | VOTABLE,
++	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
  
-        frag_counter++;
-+       usleep(1000);
- }
+ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_sf_gdsc = {
+@@ -2194,7 +2195,8 @@ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_sf_gdsc = {
+ 	.pd = {
+ 		.name = "hlos1_vote_mmnoc_mmu_tbu_sf_gdsc",
+ 	},
+-	.pwrsts = PWRSTS_OFF_ON | VOTABLE,
++	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
  
- static void send_udp_frags(int fd_raw, struct sockaddr *addr,
+ static struct gdsc *gcc_sc7180_gdscs[] = {
+-- 
+2.24.0.393.g34dc348eaf-goog
 
