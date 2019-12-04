@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895E1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13745C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602D0205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE15820833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483571;
-	bh=HLzYD/HbGyf9vZgF+em7Xrr/GbFuua27gc0B8hIZUeg=;
+	s=default; t=1575483575;
+	bh=45pYFyKcVPl9aq3G/+/M2pqNf9Ix+NuT7eye5i+f9yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwbvj1tM/ahpyi3+zaWyS13n2K9X9Y1FPWacSkezcuqkd0hU/81gO/kuUk/B8V4PO
-	 t93pfqn7acqmZVXgXs36dvtYoKJfZtzQmvU2DHe1P3QIgFwp0vBvhquRE8fR5xcEja
-	 yCNX/W1MJMZzvfBDlfXMokdY8yhTie2EJ4IdRx5Q=
+	b=TDo4QgYpsQ6xEH2B4I4aAEVsbI99E4Q+T7HoYMOskFyO45qPSrvGc0HO6B11J/6Ip
+	 Df8YuBFFiNag0F/wp9WLlSBtC16/ohUrEhn8RrSuOKwUwFrqY5lpPyktR9ERABrFLu
+	 eujrQ8ZchR3Ghp2g0FIdL+wURasNUuN7ok6c+X9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730817AbfLDSJg (ORCPT
+        id S1730779AbfLDSJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:09:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35332 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:09:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731069AbfLDSJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:09:31 -0500
+        id S1730544AbfLDSJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:09:26 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2D7420833;
-        Wed,  4 Dec 2019 18:09:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 054CD20833;
+        Wed,  4 Dec 2019 18:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482970;
-        bh=HLzYD/HbGyf9vZgF+em7Xrr/GbFuua27gc0B8hIZUeg=;
+        s=default; t=1575482965;
+        bh=45pYFyKcVPl9aq3G/+/M2pqNf9Ix+NuT7eye5i+f9yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tAODdpRmvUj+C0q4Hgi6OdJbcSey+4Jp2Bzy9QToiyc6qduo3HKGnY4INg9B7Vyk/
-         oKtZOAH7UGImJBxY/le5WoSNW4ts4ieu1r3I6FVG0vxOofhade5K/qSLIRJ6ZWs3Be
-         00EQU4NyddFWeOhe14DmaIcV2KV2wZ4cQdPh0wgo=
+        b=JZQls3f2KRrwg5xirkBQe4+g00YgmSfmoovTGmQLwQjDeSaoIKZF1S9eKePm3KrFY
+         98Vj0MRdZHKqOVRwIhHKL/3MG9z8mVtqh72t/ER4XxRxGvMNSYw26IKLcWmVM/kX+2
+         hsECOcyAaJm70dRtFcRwuThpjPhlPI7hDiIZ0mJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.14 208/209] platform/x86: hp-wmi: Fix ACPI errors caused by passing 0 as input size
-Date:   Wed,  4 Dec 2019 18:57:00 +0100
-Message-Id: <20191204175337.805782234@linuxfoundation.org>
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.14 206/209] ASoC: stm32: i2s: fix IRQ clearing
+Date:   Wed,  4 Dec 2019 18:56:58 +0100
+Message-Id: <20191204175337.669141996@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -59,63 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-commit f3e4f3fc8ee9729c4b1b27a478c68b713df53c0c upstream.
+commit 8ba3c5215d69c09f5c39783ff3b78347769822ad upstream.
 
-The AML code implementing the WMI methods creates a variable length
-field to hold the input data we pass like this:
+Because of regmap cache, interrupts may not be cleared
+as expected.
+Declare IFCR register as write only and make writings
+to IFCR register unconditional.
 
-        CreateDWordField (Arg1, 0x0C, DSZI)
-        Local5 = DSZI /* \HWMC.DSZI */
-        CreateField (Arg1, 0x80, (Local5 * 0x08), DAIN)
-
-If we pass 0 as bios_args.datasize argument then (Local5 * 0x08)
-is 0 which results in these errors:
-
-[   71.973305] ACPI BIOS Error (bug): Attempt to CreateField of length zero (20190816/dsopcode-133)
-[   71.973332] ACPI Error: Aborting method \HWMC due to previous error (AE_AML_OPERAND_VALUE) (20190816/psparse-529)
-[   71.973413] ACPI Error: Aborting method \_SB.WMID.WMAA due to previous error (AE_AML_OPERAND_VALUE) (20190816/psparse-529)
-
-And in our HPWMI_WIRELESS2_QUERY calls always failing. for read commands
-like HPWMI_WIRELESS2_QUERY the DSZI value is not used / checked, except for
-read commands where extra input is needed to specify exactly what to read.
-
-So for HPWMI_WIRELESS2_QUERY we can safely pass the size of the expected
-output as insize to hp_wmi_perform_query(), as we are already doing for all
-other HPWMI_READ commands we send. Doing so fixes these errors.
-
-Cc: stable@vger.kernel.org
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197007
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=201981
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1520703
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/hp-wmi.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/stm/stm32_i2s.c |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -393,7 +393,7 @@ static int hp_wmi_rfkill2_refresh(void)
- 	int err, i;
+--- a/sound/soc/stm/stm32_i2s.c
++++ b/sound/soc/stm/stm32_i2s.c
+@@ -246,8 +246,8 @@ static irqreturn_t stm32_i2s_isr(int irq
+ 		return IRQ_NONE;
+ 	}
  
- 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
--				   0, sizeof(state));
-+				   sizeof(state), sizeof(state));
- 	if (err)
- 		return err;
+-	regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
+-			   I2S_IFCR_MASK, flags);
++	regmap_write_bits(i2s->regmap, STM32_I2S_IFCR_REG,
++			  I2S_IFCR_MASK, flags);
  
-@@ -790,7 +790,7 @@ static int __init hp_wmi_rfkill2_setup(s
- 	int err, i;
+ 	if (flags & I2S_SR_OVR) {
+ 		dev_dbg(&pdev->dev, "Overrun\n");
+@@ -276,7 +276,6 @@ static bool stm32_i2s_readable_reg(struc
+ 	case STM32_I2S_CFG2_REG:
+ 	case STM32_I2S_IER_REG:
+ 	case STM32_I2S_SR_REG:
+-	case STM32_I2S_IFCR_REG:
+ 	case STM32_I2S_TXDR_REG:
+ 	case STM32_I2S_RXDR_REG:
+ 	case STM32_I2S_CGFR_REG:
+@@ -547,8 +546,8 @@ static int stm32_i2s_startup(struct snd_
+ 	i2s->refcount++;
+ 	spin_unlock(&i2s->lock_fd);
  
- 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
--				   0, sizeof(state));
-+				   sizeof(state), sizeof(state));
- 	if (err)
- 		return err < 0 ? err : -EINVAL;
+-	return regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
+-				  I2S_IFCR_MASK, I2S_IFCR_MASK);
++	return regmap_write_bits(i2s->regmap, STM32_I2S_IFCR_REG,
++				 I2S_IFCR_MASK, I2S_IFCR_MASK);
+ }
  
+ static int stm32_i2s_hw_params(struct snd_pcm_substream *substream,
+@@ -603,8 +602,8 @@ static int stm32_i2s_trigger(struct snd_
+ 			return ret;
+ 		}
+ 
+-		regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
+-				   I2S_IFCR_MASK, I2S_IFCR_MASK);
++		regmap_write_bits(i2s->regmap, STM32_I2S_IFCR_REG,
++				  I2S_IFCR_MASK, I2S_IFCR_MASK);
+ 
+ 		if (playback_flg) {
+ 			ier = I2S_IER_UDRIE;
 
 
