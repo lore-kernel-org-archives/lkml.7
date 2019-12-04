@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3B1C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BA7C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E2F205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF504205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483494;
-	bh=SW33faG0QdwdMLwIaMIhaWkEIxY3MQr5swYVYVOmzg4=;
+	s=default; t=1575483498;
+	bh=rcRyvgju8hmlOroBuuep8muOJXAYQmVth4qHPCzfps8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MDVyqnhRqFCbyfk5VD7vFVHprP1f8JzGm4KjjdlIjQhiChR3v+DXGoqBXTtJRPmL8
-	 KE0yFt2bL29y7+P2wRSykydvXN6I4tMrcoGdJ6rod4M2Qn62Qm2vnZfejLI5fZBvIK
-	 aH72fjKwrh+4BBKjxeyv5zys7aMB3oH5pjxY7Fr8=
+	b=cYHWDY5BSgUOCY0sOzpMAINSSNB6xgBZ0A8ZTkgwu7xsW/XRAssl3VHDsrhOf0J5l
+	 kzYpmkgxKKCE2QEUbA3HbNHlX28hVah2QHm3neJYuSNVpcKhqv3YvnJ/z1cta3Uh4P
+	 DiFryhDR6QRrbZ9zOx6xF714BU8SJZ6UIjj1kFZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731058AbfLDSLN (ORCPT
+        id S1731384AbfLDSLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:11:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39154 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:11:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731387AbfLDSLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:11:10 -0500
+        id S1731375AbfLDSLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:11:05 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40C2420833;
-        Wed,  4 Dec 2019 18:11:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61E8F20865;
+        Wed,  4 Dec 2019 18:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483069;
-        bh=SW33faG0QdwdMLwIaMIhaWkEIxY3MQr5swYVYVOmzg4=;
+        s=default; t=1575483064;
+        bh=rcRyvgju8hmlOroBuuep8muOJXAYQmVth4qHPCzfps8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QeO97zkVFsOdbnO/e1C8hlozu9aYRqnqHvl/k4q/wT2Xtemv8xGwmwkLAYRN8cxbq
-         VN2i6YiBnzyhBQ+DN8eT+7Ha28RA7BbKN5vLO1QxPmm0DAVE1Xoo/5KV1W3rQUcT8F
-         KKL1VDqu2uA7+EG1sowSxuYVZBcN9563ieSBJuaE=
+        b=sfY0t1Zj7G7X24RUj7XLbXGn3QhAEiuOIJh7UBzKeLso5MUbHbIRmUFaLE3wqnG7/
+         0P/N0744gpnGypiQztATSAudqePPb1fLw0hlDWNfe19baq9ZOxP573PpLABrtABDTa
+         khlDk/6mQgSzmy0/OgYVvyZKDszgpHRGJmBXWgd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jeroen Hofstee <jhofstee@victronenergy.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 008/125] can: c_can: D_CAN: c_can_chip_config(): perform a sofware reset on open
-Date:   Wed,  4 Dec 2019 18:55:13 +0100
-Message-Id: <20191204175312.697164970@linuxfoundation.org>
+Subject: [PATCH 4.9 006/125] net: fec: add missed clk_disable_unprepare in remove
+Date:   Wed,  4 Dec 2019 18:55:11 +0100
+Message-Id: <20191204175311.412894730@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,76 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeroen Hofstee <jhofstee@victronenergy.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 23c5a9488f076bab336177cd1d1a366bd8ddf087 ]
+[ Upstream commit c43eab3eddb4c6742ac20138659a9b701822b274 ]
 
-When the CAN interface is closed it the hardwre is put in power down
-mode, but does not reset the error counters / state. Reset the D_CAN on
-open, so the reported state and the actual state match.
+This driver forgets to disable and unprepare clks when remove.
+Add calls to clk_disable_unprepare to fix it.
 
-According to [1], the C_CAN module doesn't have the software reset.
-
-[1] http://www.bosch-semiconductors.com/media/ip_modules/pdf_2/c_can_fd8/users_manual_c_can_fd8_r210_1.pdf
-
-Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/c_can/c_can.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/net/ethernet/freescale/fec_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/can/c_can/c_can.c b/drivers/net/can/c_can/c_can.c
-index 7d35f6737499c..4ead5a18b7940 100644
---- a/drivers/net/can/c_can/c_can.c
-+++ b/drivers/net/can/c_can/c_can.c
-@@ -52,6 +52,7 @@
- #define CONTROL_EX_PDR		BIT(8)
- 
- /* control register */
-+#define CONTROL_SWR		BIT(15)
- #define CONTROL_TEST		BIT(7)
- #define CONTROL_CCE		BIT(6)
- #define CONTROL_DISABLE_AR	BIT(5)
-@@ -572,6 +573,26 @@ static void c_can_configure_msg_objects(struct net_device *dev)
- 				   IF_MCONT_RCV_EOB);
- }
- 
-+static int c_can_software_reset(struct net_device *dev)
-+{
-+	struct c_can_priv *priv = netdev_priv(dev);
-+	int retry = 0;
-+
-+	if (priv->type != BOSCH_D_CAN)
-+		return 0;
-+
-+	priv->write_reg(priv, C_CAN_CTRL_REG, CONTROL_SWR | CONTROL_INIT);
-+	while (priv->read_reg(priv, C_CAN_CTRL_REG) & CONTROL_SWR) {
-+		msleep(20);
-+		if (retry++ > 100) {
-+			netdev_err(dev, "CCTRL: software reset failed\n");
-+			return -EIO;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * Configure C_CAN chip:
-  * - enable/disable auto-retransmission
-@@ -581,6 +602,11 @@ static void c_can_configure_msg_objects(struct net_device *dev)
- static int c_can_chip_config(struct net_device *dev)
- {
- 	struct c_can_priv *priv = netdev_priv(dev);
-+	int err;
-+
-+	err = c_can_software_reset(dev);
-+	if (err)
-+		return err;
- 
- 	/* enable automatic retransmission */
- 	priv->write_reg(priv, C_CAN_CTRL_REG, CONTROL_ENABLE_AR);
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 92ea760c48226..f50ebabd8cc63 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -3539,6 +3539,8 @@ fec_drv_remove(struct platform_device *pdev)
+ 		regulator_disable(fep->reg_phy);
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
++	clk_disable_unprepare(fep->clk_ahb);
++	clk_disable_unprepare(fep->clk_ipg);
+ 	if (of_phy_is_fixed_link(np))
+ 		of_phy_deregister_fixed_link(np);
+ 	of_node_put(fep->phy_node);
 -- 
 2.20.1
 
