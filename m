@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EE7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BC9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54DBA20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA9720675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482895;
-	bh=HyRnJ4hHIIT88R4IE4XWdBuwVdb6Ox6saxvkkrM4gqQ=;
+	s=default; t=1575482901;
+	bh=/n3t1xx4E6vJKYu04wiFuxWUGEF1QQRoib6GpmcHQWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2BW1zfCq2iDznLP5vNv5O5qwojRdbrF8JI+4Byp5XMYonFNKCYYOgoRdQiczJAvNq
-	 54hpvlA7RVKGndHFbTDUCFFEVfkMCfSW8aFhNyGLjmR4iLK9iAg9Peuy/K1jDkh5ZS
-	 9N/uRKv6z/+bXltwSWHXLeNcK2W1DWJLRv9Npebk=
+	b=eUqp2Nq2PYI4WY/ziQeOdwVM8H4qmToqJokT6ITrggmvdgDfQGiw2LxK8GOHcgh+n
+	 Kd3594LAyW5abZEVFckydJ9z1A7678nIKIeu/Csmebm9P+oUX5gm6/X5qJXoEchbQe
+	 ymzX0JZFJ5tPEJzRuHqm3UbaL+eA6ElyRe+ain1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730471AbfLDSIO (ORCPT
+        id S1730892AbfLDSIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:08:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59520 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:08:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730874AbfLDSIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:08:11 -0500
+        id S1730108AbfLDSIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:08:14 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0C5B20674;
-        Wed,  4 Dec 2019 18:08:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 186FD2084B;
+        Wed,  4 Dec 2019 18:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482891;
-        bh=HyRnJ4hHIIT88R4IE4XWdBuwVdb6Ox6saxvkkrM4gqQ=;
+        s=default; t=1575482893;
+        bh=/n3t1xx4E6vJKYu04wiFuxWUGEF1QQRoib6GpmcHQWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gX26a6xjWek+4SldlZWU6w2Y0Sl6cAudjtBvpWPSvGHWOQL6TTVSsgRZOaIF9ifKg
-         1lY+qLUjelm8UtzDMJpDTHiF6CQ65I8yfGmhlPqxqNASumCYw8QpRt7GwTmG7p4SVr
-         Ux1GZkie5hBMcsLPLKwuyou1CI6rxhLTMn49f5Ho=
+        b=ijsM9bnsxXr/H4+Kx0viNVKbHRDhpPDd6NrJOsxh+dfKa2+op6RQ3DlCgW3cVReu2
+         H6NLDOA6S2fGUxHen13Os5IgWHErHbQ8bSmtV9Y51G8mo8fxYq8/v00D8JtBzzCMql
+         eJk+MFdvO9BFe6+Dg3pAWId+qPKH4hJZW5EprAc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        John Rutherford <john.rutherford@dektech.com.au>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 175/209] tipc: fix link name length check
-Date:   Wed,  4 Dec 2019 18:56:27 +0100
-Message-Id: <20191204175335.535746226@linuxfoundation.org>
+        syzbot+e3b35fe7918ff0ee474e@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 4.14 176/209] sctp: cache netns in sctp_ep_common
+Date:   Wed,  4 Dec 2019 18:56:28 +0100
+Message-Id: <20191204175335.604579240@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,45 +62,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Rutherford <john.rutherford@dektech.com.au>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit fd567ac20cb0377ff466d3337e6e9ac5d0cb15e4 ]
+[ Upstream commit 312434617cb16be5166316cf9d08ba760b1042a1 ]
 
-In commit 4f07b80c9733 ("tipc: check msg->req data len in
-tipc_nl_compat_bearer_disable") the same patch code was copied into
-routines: tipc_nl_compat_bearer_disable(),
-tipc_nl_compat_link_stat_dump() and tipc_nl_compat_link_reset_stats().
-The two link routine occurrences should have been modified to check
-the maximum link name length and not bearer name length.
+This patch is to fix a data-race reported by syzbot:
 
-Fixes: 4f07b80c9733 ("tipc: check msg->reg data len in tipc_nl_compat_bearer_disable")
-Signed-off-by: John Rutherford <john.rutherford@dektech.com.au>
-Acked-by: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  BUG: KCSAN: data-race in sctp_assoc_migrate / sctp_hash_obj
+
+  write to 0xffff8880b67c0020 of 8 bytes by task 18908 on cpu 1:
+    sctp_assoc_migrate+0x1a6/0x290 net/sctp/associola.c:1091
+    sctp_sock_migrate+0x8aa/0x9b0 net/sctp/socket.c:9465
+    sctp_accept+0x3c8/0x470 net/sctp/socket.c:4916
+    inet_accept+0x7f/0x360 net/ipv4/af_inet.c:734
+    __sys_accept4+0x224/0x430 net/socket.c:1754
+    __do_sys_accept net/socket.c:1795 [inline]
+    __se_sys_accept net/socket.c:1792 [inline]
+    __x64_sys_accept+0x4e/0x60 net/socket.c:1792
+    do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+  read to 0xffff8880b67c0020 of 8 bytes by task 12003 on cpu 0:
+    sctp_hash_obj+0x4f/0x2d0 net/sctp/input.c:894
+    rht_key_get_hash include/linux/rhashtable.h:133 [inline]
+    rht_key_hashfn include/linux/rhashtable.h:159 [inline]
+    rht_head_hashfn include/linux/rhashtable.h:174 [inline]
+    head_hashfn lib/rhashtable.c:41 [inline]
+    rhashtable_rehash_one lib/rhashtable.c:245 [inline]
+    rhashtable_rehash_chain lib/rhashtable.c:276 [inline]
+    rhashtable_rehash_table lib/rhashtable.c:316 [inline]
+    rht_deferred_worker+0x468/0xab0 lib/rhashtable.c:420
+    process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+    worker_thread+0xa0/0x800 kernel/workqueue.c:2415
+    kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+    ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+
+It was caused by rhashtable access asoc->base.sk when sctp_assoc_migrate
+is changing its value. However, what rhashtable wants is netns from asoc
+base.sk, and for an asoc, its netns won't change once set. So we can
+simply fix it by caching netns since created.
+
+Fixes: d6c0256a60e6 ("sctp: add the rhashtable apis for sctp global transport hashtable")
+Reported-by: syzbot+e3b35fe7918ff0ee474e@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/netlink_compat.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/net/sctp/structs.h |    3 +++
+ net/sctp/associola.c       |    1 +
+ net/sctp/endpointola.c     |    1 +
+ net/sctp/input.c           |    4 ++--
+ 4 files changed, 7 insertions(+), 2 deletions(-)
 
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -539,7 +539,7 @@ static int tipc_nl_compat_link_stat_dump
- 	if (len <= 0)
- 		return -EINVAL;
+--- a/include/net/sctp/structs.h
++++ b/include/net/sctp/structs.h
+@@ -1181,6 +1181,9 @@ struct sctp_ep_common {
+ 	/* What socket does this endpoint belong to?  */
+ 	struct sock *sk;
  
--	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
-+	len = min_t(int, len, TIPC_MAX_LINK_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
++	/* Cache netns and it won't change once set */
++	struct net *net;
++
+ 	/* This is where we receive inbound chunks.  */
+ 	struct sctp_inq	  inqueue;
  
-@@ -821,7 +821,7 @@ static int tipc_nl_compat_link_reset_sta
- 	if (len <= 0)
- 		return -EINVAL;
+--- a/net/sctp/associola.c
++++ b/net/sctp/associola.c
+@@ -80,6 +80,7 @@ static struct sctp_association *sctp_ass
+ 	/* Discarding const is appropriate here.  */
+ 	asoc->ep = (struct sctp_endpoint *)ep;
+ 	asoc->base.sk = (struct sock *)sk;
++	asoc->base.net = sock_net(sk);
  
--	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
-+	len = min_t(int, len, TIPC_MAX_LINK_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
+ 	sctp_endpoint_hold(asoc->ep);
+ 	sock_hold(asoc->base.sk);
+--- a/net/sctp/endpointola.c
++++ b/net/sctp/endpointola.c
+@@ -165,6 +165,7 @@ static struct sctp_endpoint *sctp_endpoi
+ 
+ 	/* Remember who we are attached to.  */
+ 	ep->base.sk = sk;
++	ep->base.net = sock_net(sk);
+ 	sock_hold(ep->base.sk);
+ 
+ 	return ep;
+--- a/net/sctp/input.c
++++ b/net/sctp/input.c
+@@ -813,7 +813,7 @@ static inline int sctp_hash_cmp(struct r
+ 	if (!sctp_transport_hold(t))
+ 		return err;
+ 
+-	if (!net_eq(sock_net(t->asoc->base.sk), x->net))
++	if (!net_eq(t->asoc->base.net, x->net))
+ 		goto out;
+ 	if (x->lport != htons(t->asoc->base.bind_addr.port))
+ 		goto out;
+@@ -828,7 +828,7 @@ static inline __u32 sctp_hash_obj(const
+ {
+ 	const struct sctp_transport *t = data;
+ 	const union sctp_addr *paddr = &t->ipaddr;
+-	const struct net *net = sock_net(t->asoc->base.sk);
++	const struct net *net = t->asoc->base.net;
+ 	__be16 lport = htons(t->asoc->base.bind_addr.port);
+ 	__u32 addr;
  
 
 
