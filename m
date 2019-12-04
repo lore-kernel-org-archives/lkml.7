@@ -2,97 +2,97 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BITCOIN_SPAM_02,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFB4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826B7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1FE20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49D8220862
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:20:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBEQBjUC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfLDKSl (ORCPT
+        id S1727502AbfLDKUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:18:41 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2153 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727351AbfLDKSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:18:41 -0500
-Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 3C3903F29384EB174FB8;
-        Wed,  4 Dec 2019 10:18:39 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 4 Dec 2019 10:18:38 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Wed, 4 Dec 2019
- 10:18:38 +0000
-Subject: Re: [PATCH v2] mtd: spi-nor: Fix the writing of the Status Register
- on micron flashes
-To:     <Tudor.Ambarus@microchip.com>, <vigneshr@ti.com>, <richard@nod.at>,
-        <miquel.raynal@bootlin.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        chenxiang <chenxiang66@hisilicon.com>, <fengsheng5@huawei.com>
-References: <20191203141625.13839-1-tudor.ambarus@microchip.com>
- <20191203144948.15137-1-tudor.ambarus@microchip.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <4d293b14-c0b4-19c4-6a2b-031336937afa@huawei.com>
-Date:   Wed, 4 Dec 2019 10:18:37 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <20191203144948.15137-1-tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Wed, 4 Dec 2019 05:20:09 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:32821 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727408AbfLDKUI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 05:20:08 -0500
+Received: by mail-pj1-f67.google.com with SMTP id r67so2835502pjb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 02:20:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=up7wRNDiQakb25Ld8qipwPlfmty+/izO4vyiWQI+wHE=;
+        b=HBEQBjUC51tDAwFLRg/VzpdIi04E8cnFGwEtaYKjFQ1CmQtkCDovuAMAg1xMqg6qF0
+         WTB158ts4/d5+XtTQ3oBHN/O3SjRWx9O1I5GcpZcwohOdW4RgWBptIioied7PjwkskNx
+         zdf5l4SlcXZvAzmts2+Mju1F9JYV6HsuqntyK4ejeq0Hf1j0rQg9Is5tm8wYdsrb1z2/
+         G5f7duquUNSqTu03sJbwGWKGYPvn0txKq6VIcY1HbgeWh32d0zRZjvncp+d2fG427kK3
+         7mR0ExQZSQjgE3OKKlD4Dd7LD09ky7HRMWGXBP/TgBczL9gMVZJgdh+vUyx5FT/3V3UJ
+         F/mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=up7wRNDiQakb25Ld8qipwPlfmty+/izO4vyiWQI+wHE=;
+        b=Hn4pBTYaWbEav8dfgyxpbJ83dpk3gFkcoX95Py0I/76zouikc2M7Dc21TNCHlx9BEt
+         TaTh5KTP75muj3ZS8WJp0GsyZ73cgRCtLkkVJLAD6C/1iVDh/jfi4mntJS0R/goD6toa
+         By07wxroPRto2bQFHASkZlOBGSrYhzNlOOzLBnbIudKJi+gHl+Ob7LnwPvenVabPvMQ6
+         PU3lAt2LPP2ukRa4PViW7UyPdTBJ0lPS8JHFkzs0COZtgy6ZySZEiCnN0Kv5G5/AArry
+         TZhc2UZFtqbJJzbsocuGHpurw2OPh2KW4fo5tgXgVQ5syDKoOMqQsbAc5y5fWBmc4MLW
+         J9LQ==
+X-Gm-Message-State: APjAAAVOcoLO4Fb6pPdQabS9NoZPrsYmruq0a+BgFyJAx/OOgeZQatP8
+        GYMryD6beo+0nWu2q4DUBSE=
+X-Google-Smtp-Source: APXvYqwL1TM41IFYtBTyi9IDlGtHy7hkPVvUAIXIWa/c+wYFlAB/P7WWIdG0P2n945+R/zGzm1mfuA==
+X-Received: by 2002:a17:90a:cf11:: with SMTP id h17mr2468035pju.103.1575454807763;
+        Wed, 04 Dec 2019 02:20:07 -0800 (PST)
+Received: from localhost.localdomain ([2402:3a80:cdb:94ce:3984:ab1:9b44:803])
+        by smtp.gmail.com with ESMTPSA id d22sm7209393pfn.164.2019.12.04.02.20.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 02:20:07 -0800 (PST)
+From:   madhuparnabhowmik04@gmail.com
+To:     corbet@lwn.net, mchehab@kernel.org
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: [PATCH] Documentation: filesystems: automount-support: Change reference to document autofs.txt to autofs.rst
+Date:   Wed,  4 Dec 2019 15:49:39 +0530
+Message-Id: <20191204101939.6939-1-madhuparnabhowmik04@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/12/2019 14:50, Tudor.Ambarus@microchip.com wrote:
-> From: Tudor Ambarus <tudor.ambarus@microchip.com>
-> 
-> Micron flashes do not support 16 bit writes on the Status Register.
-> According to micron datasheets, when using the Write Status Register
-> (01h) command, the chip select should be driven LOW and held LOW until
-> the eighth bit of the last data byte has been latched in, after which
-> it must be driven HIGH. If CS is not driven HIGH, the command is not
-> executed, flag status register error bits are not set, and the write enable
-> latch remains set to 1. This fixes the lock operations on micron flashes.
-> 
-> Reported-by: John Garry <john.garry@huawei.com>
-> Fixes: 39d1e3340c73 ("mtd: spi-nor: Fix clearing of QE bit on lock()/unlock()")
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-Thanks,
+This patch fixes following documentation build warning:
+Warning: Documentation/filesystems/automount-support.txt references
+a file that doesn't exist: Documentation/filesystems/autofs.txt
 
-Tested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+---
+ Documentation/filesystems/automount-support.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
-> v2: reword commit subject
-> 
->   drivers/mtd/spi-nor/spi-nor.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index f1490c7b5cb9..7e41493f69d8 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -4607,6 +4607,7 @@ static void sst_set_default_init(struct spi_nor *nor)
->   static void st_micron_set_default_init(struct spi_nor *nor)
->   {
->   	nor->flags |= SNOR_F_HAS_LOCK;
-> +	nor->flags &= ~SNOR_F_HAS_16BIT_SR;
->   	nor->params.quad_enable = NULL;
->   	nor->params.set_4byte = st_micron_set_4byte;
->   }
-> 
+diff --git a/Documentation/filesystems/automount-support.txt b/Documentation/filesystems/automount-support.txt
+index b0afd3d55eaf..7d9f82607562 100644
+--- a/Documentation/filesystems/automount-support.txt
++++ b/Documentation/filesystems/automount-support.txt
+@@ -9,7 +9,7 @@ also be requested by userspace.
+ IN-KERNEL AUTOMOUNTING
+ ======================
+ 
+-See section "Mount Traps" of  Documentation/filesystems/autofs.txt
++See section "Mount Traps" of  Documentation/filesystems/autofs.rst
+ 
+ Then from userspace, you can just do something like:
+ 
+-- 
+2.17.1
 
