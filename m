@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3631C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9E3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85AFC20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA7320661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483699;
-	bh=zBPDCyY6Vpcz+D96PO12iW3TKeVfwHVznMWy6CktHIo=;
+	s=default; t=1575483704;
+	bh=/Ilz3DQrQMnik72iidlCKhIT7D03qFszYXIadrSkDLE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dC1bXaIoBVp8rG1GW/ZdKj2n3gTAV1iJJUz1GB9ejDZq7ij+vjqT/VA9hGlj4dBYG
-	 /c8Ji6wu0Rk2oH9U/sk2neNXx3BhmCEPKY8hM/IX75nTm1i8lg3RHuZJ4alHq0pK3q
-	 cON+LndWvPSCp1lC6UPpVz66MMzDNWATP/pVtzz0=
+	b=T4sQAaIdNhcmzBcKoCmSq0yrUloxN+f0p5X8DweQnjbejTU6DbmEUdWrh7WkkvmHB
+	 4GaSNZvxk1eknc5ctw1HTGerxxKfEeDfxRwTZPg9f2ZC/EyQoMAg6JJlMoh+osUYWO
+	 UJ3E0gTJ5/VoKEGDylBWQAtOo5SrwH9c+gYStcvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbfLDSGV (ORCPT
+        id S1730508AbfLDSGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:06:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54320 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:06:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730520AbfLDSGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:06:19 -0500
+        id S1730487AbfLDSGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:06:04 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38E50206DF;
-        Wed,  4 Dec 2019 18:06:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1308320866;
+        Wed,  4 Dec 2019 18:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482777;
-        bh=zBPDCyY6Vpcz+D96PO12iW3TKeVfwHVznMWy6CktHIo=;
+        s=default; t=1575482763;
+        bh=/Ilz3DQrQMnik72iidlCKhIT7D03qFszYXIadrSkDLE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nvQ3H8KagXEwBNHywbIuDe5/0JqizKid+3R6Xobui36dgQMhyGTjMhPXnpyNPYozt
-         E/N8YP4guq3eZ3KCXuvl0dI4Zw5PhrMg6ykA09k5kGoRFmiYX6O5s1TAkTDeZIygCO
-         kKG35cHJSWhZz8p4SQLU7zrSQLXzivXokdZGLDZc=
+        b=ixf/4sNDIUh12dM8Oygq9DiS7W0tWgFy2SSCFwTV6YRvoSxcR0OdjKlxmhI6uneQR
+         TBpXkMPPWMihGrxp1RaCleIcAzv7mVepo6w0nLiY+5Qj0oJSPTaRqfz/4MidwNhghc
+         hz+gQC8iDf5kFslaW0x8QSxrLpdc2pgPlu/zK+9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jens Axboe <axboe@fb.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 129/209] PCI/MSI: Return -ENOSPC from pci_alloc_irq_vectors_affinity()
-Date:   Wed,  4 Dec 2019 18:55:41 +0100
-Message-Id: <20191204175331.999463947@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@gmx.us>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 124/209] drivers/base/platform.c: kmemleak ignore a known leak
+Date:   Wed,  4 Dec 2019 18:55:36 +0100
+Message-Id: <20191204175331.600922320@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,95 +63,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Qian Cai <cai@gmx.us>
 
-[ Upstream commit 77f88abd4a6f73a1a68dbdc0e3f21575fd508fc3 ]
+[ Upstream commit 967d3010df8b6f6f9aa95c198edc5fe3646ebf36 ]
 
-The API of pci_alloc_irq_vectors_affinity() says it returns -ENOSPC if
-fewer than @min_vecs interrupt vectors are available for @dev.
+unreferenced object 0xffff808ec6dc5a80 (size 128):
+  comm "swapper/0", pid 1, jiffies 4294938063 (age 2560.530s)
+  hex dump (first 32 bytes):
+    ff ff ff ff 00 00 00 00 6b 6b 6b 6b 6b 6b 6b 6b  ........kkkkkkkk
+    6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
+  backtrace:
+    [<00000000476dcf8c>] kmem_cache_alloc_trace+0x430/0x500
+    [<000000004f708d37>] platform_device_register_full+0xbc/0x1e8
+    [<000000006c2a7ec7>] acpi_create_platform_device+0x370/0x450
+    [<00000000ef135642>] acpi_default_enumeration+0x34/0x78
+    [<000000003bd9a052>] acpi_bus_attach+0x2dc/0x3e0
+    [<000000003cf4f7f2>] acpi_bus_attach+0x108/0x3e0
+    [<000000003cf4f7f2>] acpi_bus_attach+0x108/0x3e0
+    [<000000002968643e>] acpi_bus_scan+0xb0/0x110
+    [<0000000010dd0bd7>] acpi_scan_init+0x1a8/0x410
+    [<00000000965b3c5a>] acpi_init+0x408/0x49c
+    [<00000000ed4b9fe2>] do_one_initcall+0x178/0x7f4
+    [<00000000a5ac5a74>] kernel_init_freeable+0x9d4/0xa9c
+    [<0000000070ea6c15>] kernel_init+0x18/0x138
+    [<00000000fb8fff06>] ret_from_fork+0x10/0x1c
+    [<0000000041273a0d>] 0xffffffffffffffff
 
-However, if a device supports MSI-X but not MSI and a caller requests
-@min_vecs that can't be satisfied by MSI-X, we previously returned -EINVAL
-(from the failed attempt to enable MSI), not -ENOSPC.
+Then, faddr2line pointed out this line,
 
-When -ENOSPC is returned, callers may reduce the number IRQs they request
-and try again.  Most callers can use the @min_vecs and @max_vecs
-parameters to avoid this retry loop, but that doesn't work when using IRQ
-affinity "nr_sets" because rebalancing the sets is driver-specific.
+/*
+ * This memory isn't freed when the device is put,
+ * I don't have a nice idea for that though.  Conceptually
+ * dma_mask in struct device should not be a pointer.
+ * See http://thread.gmane.org/gmane.linux.kernel.pci/9081
+ */
+pdev->dev.dma_mask =
+	kmalloc(sizeof(*pdev->dev.dma_mask), GFP_KERNEL);
 
-This return value bug has been present since pci_alloc_irq_vectors() was
-added in v4.10 by aff171641d18 ("PCI: Provide sensible IRQ vector
-alloc/free routines"), but it wasn't an issue because @min_vecs/@max_vecs
-removed the need for callers to iteratively reduce the number of IRQs
-requested and retry the allocation, so they didn't need to distinguish
--ENOSPC from -EINVAL.
+Since this leak has existed for more than 8 years and it does not
+reference other parts of the memory, let kmemleak ignore it, so users
+don't need to waste time reporting this in the future.
 
-In v5.0, 6da4b3ab9a6e ("genirq/affinity: Add support for allocating
-interrupt sets") added IRQ sets to the interface, which reintroduced the
-need to check for -ENOSPC and possibly reduce the number of IRQs requested
-and retry the allocation.
-
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-[bhelgaas: changelog]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jens Axboe <axboe@fb.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Christoph Hellwig <hch@lst.de>
+Link: http://lkml.kernel.org/r/20181206160751.36211-1-cai@gmx.us
+Signed-off-by: Qian Cai <cai@gmx.us>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/msi.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/base/platform.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 536e9a5cd2b14..d66ef88e13cf1 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -1156,7 +1156,8 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 				   const struct irq_affinity *affd)
- {
- 	static const struct irq_affinity msi_default_affd;
--	int vecs = -ENOSPC;
-+	int msix_vecs = -ENOSPC;
-+	int msi_vecs = -ENOSPC;
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 9045c5f3734e8..f1105de0d9fed 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -27,6 +27,7 @@
+ #include <linux/clk/clk-conf.h>
+ #include <linux/limits.h>
+ #include <linux/property.h>
++#include <linux/kmemleak.h>
  
- 	if (flags & PCI_IRQ_AFFINITY) {
- 		if (!affd)
-@@ -1167,16 +1168,17 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ #include "base.h"
+ #include "power/power.h"
+@@ -526,6 +527,8 @@ struct platform_device *platform_device_register_full(
+ 		if (!pdev->dev.dma_mask)
+ 			goto err;
+ 
++		kmemleak_ignore(pdev->dev.dma_mask);
++
+ 		*pdev->dev.dma_mask = pdevinfo->dma_mask;
+ 		pdev->dev.coherent_dma_mask = pdevinfo->dma_mask;
  	}
- 
- 	if (flags & PCI_IRQ_MSIX) {
--		vecs = __pci_enable_msix_range(dev, NULL, min_vecs, max_vecs,
--				affd);
--		if (vecs > 0)
--			return vecs;
-+		msix_vecs = __pci_enable_msix_range(dev, NULL, min_vecs,
-+						    max_vecs, affd);
-+		if (msix_vecs > 0)
-+			return msix_vecs;
- 	}
- 
- 	if (flags & PCI_IRQ_MSI) {
--		vecs = __pci_enable_msi_range(dev, min_vecs, max_vecs, affd);
--		if (vecs > 0)
--			return vecs;
-+		msi_vecs = __pci_enable_msi_range(dev, min_vecs, max_vecs,
-+						  affd);
-+		if (msi_vecs > 0)
-+			return msi_vecs;
- 	}
- 
- 	/* use legacy irq if allowed */
-@@ -1187,7 +1189,9 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 		}
- 	}
- 
--	return vecs;
-+	if (msix_vecs == -ENOSPC)
-+		return -ENOSPC;
-+	return msi_vecs;
- }
- EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
- 
 -- 
 2.20.1
 
