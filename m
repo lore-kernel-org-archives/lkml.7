@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D195C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA288C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B4A20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B129206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482707;
-	bh=FN9DNkhjWE4bOqv/LD+u4tQ3YYJgjKGVp+RlCgJQZJ0=;
+	s=default; t=1575482710;
+	bh=3STd+I0ZH/0LNTU+Yvg39crAO7P5nDqtGIPmBwkDu20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aE0orHVCiEucTKEkoUYkmohfl7/Loq2DVlAEOVMpB55evfRDfEd/zU6UPwbWwei0J
-	 9iJcPrA6BJVxbX9ZWDqCzm7bt66h0BMfkOGsHxY+4urhN2Q8HO/lpS3tdprZnRO71a
-	 2WJwt4XOfUFoWcYMmK4jc4n7h6V77EXaFQ6id1Cc=
+	b=FHDU4i3pLFeZ+yPqOXOOFBvLn4AFfUU1LpWv9K4Qkz4qhvdvXGNVwhWtOxljOSM7q
+	 Vt4eqT3Y1wwWoYts7G2JWMknmN0IaZUOEYOsjdmiQ/jyWtyB9bGhLwm4lpqQzq3x/c
+	 EhAgTMVZRI+H9ZuLiSY0I/mPXSXd4yV+gYENVQBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729992AbfLDSFG (ORCPT
+        id S1730013AbfLDSFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:05:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50978 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:05:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730299AbfLDSFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:05:01 -0500
+        id S1730312AbfLDSFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:05:03 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 744B720659;
-        Wed,  4 Dec 2019 18:04:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F326F20675;
+        Wed,  4 Dec 2019 18:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482699;
-        bh=FN9DNkhjWE4bOqv/LD+u4tQ3YYJgjKGVp+RlCgJQZJ0=;
+        s=default; t=1575482702;
+        bh=3STd+I0ZH/0LNTU+Yvg39crAO7P5nDqtGIPmBwkDu20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a/dI/qbOu4iS0C6XbT4n1OqBqHOgiQAUuT8hmMotnslKeSzOZm+buHU+DC4dlCTYN
-         4N7aSEwuU57t+a7xUmpgTwWShzeDaacQtGoNxGNSThm7d0ATJyRNCelxrP4xXdfyut
-         0aj9PgKmaotRQiCwUQ9/Qbh2cosDnYNhHMfH2+mI=
+        b=QzyUhg4vR4yWlfoL74aHnWPMXxN79beYR6EvhelpwPruTFJtkljgC1/ipfIwrer9S
+         Oy1gdTWVkmTbshR0Ni9EASUMf+ON60fleKfEsW3X73R5pbXnfHGIy4flmTOBLllQTJ
+         1TrXKK5GK0Yj0t31AP7QZJbnusP0ILzm8fuO2DRw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 093/209] powerpc/perf: Fix unit_sel/cache_sel checks
-Date:   Wed,  4 Dec 2019 18:55:05 +0100
-Message-Id: <20191204175328.267936724@linuxfoundation.org>
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Roland Kammerer <roland.kammerer@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 102/209] drbd: fix print_st_err()s prototype to match the definition
+Date:   Wed,  4 Dec 2019 18:55:14 +0100
+Message-Id: <20191204175328.883448439@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,96 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-[ Upstream commit 2d46d4877b1afd14059393a48bdb8ce27955174c ]
+[ Upstream commit 2c38f035117331eb78d0504843c79ea7c7fabf37 ]
 
-Raw event code has couple of fields "unit" and "cache" in it, to capture
-the "unit" to monitor for a given pmcxsel and cache reload qualifier to
-program in MMCR1.
+print_st_err() is defined with its 4th argument taking an
+'enum drbd_state_rv' but its prototype use an int for it.
 
-isa207_get_constraint() refers "unit" field to update the MMCRC (L2/L3)
-Event bus control fields with "cache" bits of the raw event code.
-These are power8 specific and not supported by PowerISA v3.0 pmu. So wrap
-the checks to be power8 specific. Also, "cache" bit field is referred to
-update MMCR1[16:17] and this check can be power8 specific.
+Fix this by using 'enum drbd_state_rv' in the prototype too.
 
-Fixes: 7ffd948fae4cd ('powerpc/perf: factor out power8 pmu functions')
-Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Signed-off-by: Roland Kammerer <roland.kammerer@linbit.com>
+Signed-off-by: Lars Ellenberg <lars.ellenberg@linbit.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/isa207-common.c | 25 ++++++++++++++++++-------
- arch/powerpc/perf/isa207-common.h |  4 ++--
- 2 files changed, 20 insertions(+), 9 deletions(-)
+ drivers/block/drbd/drbd_state.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/perf/isa207-common.c b/arch/powerpc/perf/isa207-common.c
-index cf9c35aa0cf45..7ecea7143e587 100644
---- a/arch/powerpc/perf/isa207-common.c
-+++ b/arch/powerpc/perf/isa207-common.c
-@@ -150,6 +150,14 @@ static bool is_thresh_cmp_valid(u64 event)
- 	return true;
- }
+diff --git a/drivers/block/drbd/drbd_state.h b/drivers/block/drbd/drbd_state.h
+index ea58301d0895c..b2a390ba73a05 100644
+--- a/drivers/block/drbd/drbd_state.h
++++ b/drivers/block/drbd/drbd_state.h
+@@ -131,7 +131,7 @@ extern enum drbd_state_rv _drbd_set_state(struct drbd_device *, union drbd_state
+ 					  enum chg_state_flags,
+ 					  struct completion *done);
+ extern void print_st_err(struct drbd_device *, union drbd_state,
+-			union drbd_state, int);
++			union drbd_state, enum drbd_state_rv);
  
-+static unsigned int dc_ic_rld_quad_l1_sel(u64 event)
-+{
-+	unsigned int cache;
-+
-+	cache = (event >> EVENT_CACHE_SEL_SHIFT) & MMCR1_DC_IC_QUAL_MASK;
-+	return cache;
-+}
-+
- static inline u64 isa207_find_source(u64 idx, u32 sub_idx)
- {
- 	u64 ret = PERF_MEM_NA;
-@@ -290,10 +298,10 @@ int isa207_get_constraint(u64 event, unsigned long *maskp, unsigned long *valp)
- 		 * have a cache selector of zero. The bank selector (bit 3) is
- 		 * irrelevant, as long as the rest of the value is 0.
- 		 */
--		if (cache & 0x7)
-+		if (!cpu_has_feature(CPU_FTR_ARCH_300) && (cache & 0x7))
- 			return -1;
- 
--	} else if (event & EVENT_IS_L1) {
-+	} else if (cpu_has_feature(CPU_FTR_ARCH_300) || (event & EVENT_IS_L1)) {
- 		mask  |= CNST_L1_QUAL_MASK;
- 		value |= CNST_L1_QUAL_VAL(cache);
- 	}
-@@ -396,11 +404,14 @@ int isa207_compute_mmcr(u64 event[], int n_ev,
- 		/* In continuous sampling mode, update SDAR on TLB miss */
- 		mmcra_sdar_mode(event[i], &mmcra);
- 
--		if (event[i] & EVENT_IS_L1) {
--			cache = event[i] >> EVENT_CACHE_SEL_SHIFT;
--			mmcr1 |= (cache & 1) << MMCR1_IC_QUAL_SHIFT;
--			cache >>= 1;
--			mmcr1 |= (cache & 1) << MMCR1_DC_QUAL_SHIFT;
-+		if (cpu_has_feature(CPU_FTR_ARCH_300)) {
-+			cache = dc_ic_rld_quad_l1_sel(event[i]);
-+			mmcr1 |= (cache) << MMCR1_DC_IC_QUAL_SHIFT;
-+		} else {
-+			if (event[i] & EVENT_IS_L1) {
-+				cache = dc_ic_rld_quad_l1_sel(event[i]);
-+				mmcr1 |= (cache) << MMCR1_DC_IC_QUAL_SHIFT;
-+			}
- 		}
- 
- 		if (is_event_marked(event[i])) {
-diff --git a/arch/powerpc/perf/isa207-common.h b/arch/powerpc/perf/isa207-common.h
-index 6c737d675792e..493e5cc5fa8a6 100644
---- a/arch/powerpc/perf/isa207-common.h
-+++ b/arch/powerpc/perf/isa207-common.h
-@@ -232,8 +232,8 @@
- #define MMCR1_COMBINE_SHIFT(pmc)	(35 - ((pmc) - 1))
- #define MMCR1_PMCSEL_SHIFT(pmc)		(24 - (((pmc) - 1)) * 8)
- #define MMCR1_FAB_SHIFT			36
--#define MMCR1_DC_QUAL_SHIFT		47
--#define MMCR1_IC_QUAL_SHIFT		46
-+#define MMCR1_DC_IC_QUAL_MASK		0x3
-+#define MMCR1_DC_IC_QUAL_SHIFT		46
- 
- /* MMCR1 Combine bits macro for power9 */
- #define p9_MMCR1_COMBINE_SHIFT(pmc)	(38 - ((pmc - 1) * 2))
+ enum drbd_state_rv
+ _conn_request_state(struct drbd_connection *connection, union drbd_state mask, union drbd_state val,
 -- 
 2.20.1
 
