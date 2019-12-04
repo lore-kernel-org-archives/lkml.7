@@ -2,109 +2,112 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB304C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10286C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4E920675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C902073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:09:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575454167;
+	bh=+vcZT/nr+wvQkboAAcSFVpt9hDwo+WsUeLIrl6pw/Dk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1j9xwpqR1q7Nd/GeOmfvlfm0MCWEEYdtCtTQOQC4JQ8W0Q46G9wcQ2+2LxwHbWJJi
+	 zJY8i2o6t3xD7OLD6ibjfVjuVJiYRkeWw09oQ+Uyd3LUXYWnmXfKC6zMMLlhLZpppP
+	 Oe1K8X4oGCwCF56oHmHiQe610Voqhn/4DfeO3oMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfLDKJY (ORCPT
+        id S1727549AbfLDKJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:09:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:53902 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727408AbfLDKJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Dec 2019 05:09:23 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25FF41FB;
-        Wed,  4 Dec 2019 02:09:22 -0800 (PST)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DEF7C3F52E;
-        Wed,  4 Dec 2019 02:09:20 -0800 (PST)
-Subject: Re: Null pointer crash at find_idlest_group on db845c w/ linus/master
-To:     Qais Yousef <qais.yousef@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Quentin Perret <qperret@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Patrick Bellasi <Patrick.Bellasi@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <CALAqxLXrWWnWi32BR1F8JOtrGt1y2Kzj__zWopLx1ZfRy3EZKA@mail.gmail.com>
- <CAKfTPtAvnLY3brp9iy_aHNu0rMM8nLfgeLc3CXEkMk3bwU1weA@mail.gmail.com>
- <20191204094216.u7yld5r3zelp22lf@e107158-lin.cambridge.arm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <65ff440a-187e-43e9-37b4-52fa381283f2@arm.com>
-Date:   Wed, 4 Dec 2019 10:09:19 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40760 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfLDKJW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 05:09:22 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c14so7779502wrn.7;
+        Wed, 04 Dec 2019 02:09:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=raeCtC+dljo0qv32p8D/VuYe95bGrREsFJM19wAQqc8=;
+        b=KNNpisM7QR9D0AXGY6S7UtWvFsgqwnLg/z6E+LyY7Z/PFWc7kGnrlFu6LchmdcXtYB
+         aGFWUf0fW3q2g4j/4SBrKGBNBUhWnrbisCgGNU+O/SwpJUczZTtjNty4T25ydIG98Gu0
+         9tjFel3etp4TbLMLYVAJvGJ/BCaQguKU3Q3dh1z+kJlCkHV35WqyjNshFNyMS9cS0Ycj
+         6tjRA7/DKcSkDXS+IXLd/FUf4vTKPti5MP+kI0gqdrTwTDhcsKKQVajzp5h4/DqqfJzf
+         wy5VqBQLFm7a2H9Tj5EmLjZ+SXc0gFVn8MlNI8+nmozpPRfnwMOu53xH3mUvHFM6ToJJ
+         VfOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=raeCtC+dljo0qv32p8D/VuYe95bGrREsFJM19wAQqc8=;
+        b=m9P0nEAY+LH079XRoTxkiUt2k0fxCDFz5WK0DVZhGkNJXI4Ca16HHd2lQqOHv7bc/h
+         Gogdv4WNob5rUcBnVDNQfK1dCEjoL2xpdN6i0OxvOZLJpySCWTdvBLUVtkxkeIi/nvy3
+         6jjBjKKMoxlE0qpNuh20jy1sj/odrQII2BLmoFqw7IHz2Z4tsH2x88u1h93TjPwth5lT
+         aihHEod4EioxEjPOCpc1D+iqJFHDN1slT126681LeNSavtR+L4QUuRffjfFNtDesqor1
+         stNvH2WHxOy7t5cBR1oPnPgQj8LJgV+vNLDVT955cJDfzQOh+7BAHOR4S9T1Os+HhvS4
+         PEXg==
+X-Gm-Message-State: APjAAAUBrzPK8PwhsW3dtcfYIFxjQQSuXXqRZIi7E30adN+y7c4XEaA8
+        ILkIsgO6oPQJtEaWCjJxdvZ4weoF
+X-Google-Smtp-Source: APXvYqx/rwFl+MtYvoLLcqkK+aNtlxTL2ZxgvfhoeTj9iJCmEq1E6xWqdoYOZqa5c48gZrbUu0/hyA==
+X-Received: by 2002:adf:f78d:: with SMTP id q13mr3059791wrp.365.1575454160662;
+        Wed, 04 Dec 2019 02:09:20 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id h17sm7904846wrs.18.2019.12.04.02.09.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 02:09:19 -0800 (PST)
+Date:   Wed, 4 Dec 2019 11:09:17 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Dave Young <dyoung@redhat.com>
+Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
+ data to fix kexec breakage
+Message-ID: <20191204100917.GC114697@gmail.com>
+References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+ <20191204075917.GA10587@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191204094216.u7yld5r3zelp22lf@e107158-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204075917.GA10587@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/12/2019 09:42, Qais Yousef wrote:
-> On 12/04/19 09:06, Vincent Guittot wrote:
->> Hi John,
->>
->> On Tue, 3 Dec 2019 at 20:15, John Stultz <john.stultz@linaro.org> wrote:
->>>
->>> With today's linus/master on db845c running android, I'm able to
->>> fairly easily reproduce the following crash. I've not had a chance to
->>> bisect it yet, but I'm suspecting its connected to Vincent's recent
->>> rework.
->>
->> Does the crash happen randomly or after a specific action ?
->> I have a db845 so I can try to reproduce it locally.
+
+* Dave Young <dyoung@redhat.com> wrote:
+
+> On 12/04/19 at 03:52pm, Dave Young wrote:
+> > Michael Weiser reported he got below error during a kexec rebooting:
+> > esrt: Unsupported ESRT version 2904149718861218184.
+> > 
+> > The ESRT memory stays in EFI boot services data, and it was reserved
+> > in kernel via efi_mem_reserve().  The initial purpose of the reservation
+> > is to reuse the EFI boot services data across kexec reboot. For example
+> > the BGRT image data and some ESRT memory like Michael reported. 
+> > 
+> > But although the memory is reserved it is not updated in X86 e820 table.
+> > And kexec_file_load iterate system ram in io resource list to find places
+> > for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+> > initramfs overwritten the ESRT memory and then the failure happened.
 > 
-> Isn't there a chance we use local_sgs without initializing it in that function?
-> AFAICS we define local_sgs on the stack but not always could be populated with
-> the right values. I can't see tmp_sgs being used in the function too. Could
-> this cause the/a problem?
-> 
->  8377         struct sg_lb_stats local_sgs, tmp_sgs;
-> .
-> .
-> .
->  8399                 if (local_group) {
->  8400                         sgs = &local_sgs;
->  8401                         local = group;
->  8402                 } else {
->  8403                         sgs = &tmp_sgs;
->  8404                 }
->  8405
->  8406                 update_sg_wakeup_stats(sd, group, sgs, p);
-> 
+> s/overwritten/overwrote :)  If need a repost please let me know..
 
-local_sgs is initialized in the first update_sg_wakeup_stats() entry
-(the local sched_group is always the first one in the sd->groups list),
-and tmp_sgs is whatever non local group we're iterating over, see:
+No need, I've edited the typo. :)
 
-		if (local_group) {
-			sgs = &local_sgs;
-			local = group;
-		} else {
-			sgs = &tmp_sgs;
-		}
+Thanks,
 
-and that sgs is populated in
-
-		update_sg_wakeup_stats(sd, group, sgs, p);
-
-
-> Cheers
-> 
-> --
-> Qais Youef
-> 
+	Ingo
