@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3581FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B07C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18E220675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB90E2073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482303;
-	bh=u/ht6PC8dTaXSeedqZtbu1SzlGDMXer7QYkbRsHtsc0=;
+	s=default; t=1575482306;
+	bh=2GEVP+XTklP07ZP2wt7K2gymaaWsRpRrMdsz26QNACk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cBbuvMLMKp55GvaPSdBvIsTPHERQkuV0h/4knp1v6iS73z69wnPpvtLtx/FmOrlGx
-	 Vz2JsnYXTbRVqTjqhJlo7BFzz2XxIeiseeek4akSchkJtCVanq6hwxTcOVTupBGArN
-	 BL7zqDQxTVUhLO8tVqqClDgU4iHeFebWWklvBbzA=
+	b=1jl/TaiBcMTFCgGRykxzVWIQmTMZgn23GJ2IQkBkXW4q247MtPAMfqdqGmwWTho23
+	 pTHCdHhmgskdT/mcR/1wSLjmOgMK+NpaxOSiUJmmZjVYVtGI7VKuh4rfdFAEMwnLiU
+	 3gr2fPXjWI4w8SvMtiJqtYXcSyUXAMc6Bv0S7LWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbfLDR6W (ORCPT
+        id S1728705AbfLDR6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:58:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 12:58:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728688AbfLDR6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:58:20 -0500
+        id S1728660AbfLDR6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:58:18 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 979D820675;
-        Wed,  4 Dec 2019 17:58:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34F462073B;
+        Wed,  4 Dec 2019 17:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482300;
-        bh=u/ht6PC8dTaXSeedqZtbu1SzlGDMXer7QYkbRsHtsc0=;
+        s=default; t=1575482297;
+        bh=2GEVP+XTklP07ZP2wt7K2gymaaWsRpRrMdsz26QNACk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCPtbrriwOQuyZE228SrLU/FtK65flwdFyaNJP8Wajv9oexxDOWZaK7JyiXp4en9/
-         C6Llx+cY2ACdgc4tkpcJuP5J3HVJ+0H+JS+UF7D7HWZEDLWtfEqQ9T5hLmWxjo/4NQ
-         4I+38FwfRtH79dyLlqW0ChiAxrIcibU4trLFc3wc=
+        b=bd23QiyIciyPOG431l1iwMsRZ78yjlzxmbVHrxu3rlxv/O1GAc0e7naZwGpzaQpge
+         YwkulK2ULvZPM0YEyMzQG2Hib7STPK4jVAPM8YUvnarZDTtsZ3PoOuSLQvsGHkEe1F
+         C6Y1f7Qxq+pgiMH517oj6fZrDJ7p15FBZIbMJOkk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Mueller <mimu@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
+        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 31/92] KVM: s390: unregister debug feature on failing arch init
-Date:   Wed,  4 Dec 2019 18:49:31 +0100
-Message-Id: <20191204174332.469715228@linuxfoundation.org>
+Subject: [PATCH 4.4 30/92] xen/pciback: Check dev_data before using it
+Date:   Wed,  4 Dec 2019 18:49:30 +0100
+Message-Id: <20191204174332.418933245@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -63,63 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Mueller <mimu@linux.ibm.com>
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
 
-[ Upstream commit 308c3e6673b012beecb96ef04cc65f4a0e7cdd99 ]
+[ Upstream commit 1669907e3d1abfa3f7586e2d55dbbc117b5adba2 ]
 
-Make sure the debug feature and its allocated resources get
-released upon unsuccessful architecture initialization.
+If pcistub_init_device fails, the release function will be called with
+dev_data set to NULL.  Check it before using it to avoid a NULL pointer
+dereference.
 
-A related indication of the issue will be reported as kernel
-message.
-
-Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Message-Id: <20181130143215.69496-2-mimu@linux.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kvm/kvm-s390.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/xen/xen-pciback/pci_stub.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 3e46f62d32adf..b4032d625d225 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -185,17 +185,28 @@ void kvm_arch_hardware_unsetup(void)
- 
- int kvm_arch_init(void *opaque)
- {
-+	int rc;
-+
- 	kvm_s390_dbf = debug_register("kvm-trace", 32, 1, 7 * sizeof(long));
- 	if (!kvm_s390_dbf)
- 		return -ENOMEM;
- 
- 	if (debug_register_view(kvm_s390_dbf, &debug_sprintf_view)) {
--		debug_unregister(kvm_s390_dbf);
--		return -ENOMEM;
-+		rc = -ENOMEM;
-+		goto out_debug_unreg;
- 	}
- 
- 	/* Register floating interrupt controller interface. */
--	return kvm_register_device_ops(&kvm_flic_ops, KVM_DEV_TYPE_FLIC);
-+	rc = kvm_register_device_ops(&kvm_flic_ops, KVM_DEV_TYPE_FLIC);
-+	if (rc) {
-+		pr_err("Failed to register FLIC rc=%d\n", rc);
-+		goto out_debug_unreg;
-+	}
-+	return 0;
-+
-+out_debug_unreg:
-+	debug_unregister(kvm_s390_dbf);
-+	return rc;
- }
- 
- void kvm_arch_exit(void)
+diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
+index 258b7c3256499..47c6df53cabfb 100644
+--- a/drivers/xen/xen-pciback/pci_stub.c
++++ b/drivers/xen/xen-pciback/pci_stub.c
+@@ -104,7 +104,8 @@ static void pcistub_device_release(struct kref *kref)
+ 	 * is called from "unbind" which takes a device_lock mutex.
+ 	 */
+ 	__pci_reset_function_locked(dev);
+-	if (pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
++	if (dev_data &&
++	    pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
+ 		dev_info(&dev->dev, "Could not reload PCI state\n");
+ 	else
+ 		pci_restore_state(dev);
 -- 
 2.20.1
 
