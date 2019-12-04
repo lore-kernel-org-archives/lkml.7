@@ -2,168 +2,180 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D56BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190CEC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57702073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C0B2084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:49:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ez5AGVog"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbfLDPsS (ORCPT
+        id S1728162AbfLDPt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:48:18 -0500
-Received: from smtp.gentoo.org ([140.211.166.183]:44894 "EHLO smtp.gentoo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbfLDPsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:48:18 -0500
-Received: from [IPv6:2601:2c1:380:2390:953d:2f64:f809:46b1] (unknown [IPv6:2601:2c1:380:2390:953d:2f64:f809:46b1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: anarchy)
-        by smtp.gentoo.org (Postfix) with ESMTPSA id 021CC34D7C4
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 15:48:16 +0000 (UTC)
-To:     linux-kernel@vger.kernel.org
-From:   "Jory A. Pratt" <anarchy@gentoo.org>
-Subject: [PATCH]gen_initramfs_list.sh
-Autocrypt: addr=anarchy@gentoo.org; keydata=
- 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
- ywhqU77N5mk6PLfTTfg=
-Message-ID: <0e13a1b9-c1f7-5255-e7cd-507c62ed767f@gentoo.org>
-Date:   Wed, 4 Dec 2019 09:48:14 -0600
+        Wed, 4 Dec 2019 10:49:59 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34650 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728031AbfLDPt6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 10:49:58 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t2so9237026wrr.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:49:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hx7LEUWHU6YuMIbJZ+bvxfeQHzoMVMCbLHMFnb4eAkY=;
+        b=ez5AGVogZLLUW+1M1OX9mmnZJS22zA7jQ3evWk8K0ayuTu+Uzw552jnHaygpWIB3J0
+         80EO9PLNfAh/RY/h5IjRyhyv047QTtqSOOO2JfrCi5f/lI1M7hfYF6oI9SVx7qqte3vu
+         B4Gksclok5T2DnioedWnu4Je1aen7RIEjjfsLTz41kzj50x6dx2DWaqYm9yigioWacVn
+         mZXASlz8FkTFukXBoo9mm5+eFh4jhjGAaJX5dEujCtfXTVN7e/MWKTHw81cq6Qh/pkRt
+         zmYj1d4SI8cruFvSojGiwwujA7Faiep1PiwVLLOyONiTJM09VJS1XeJoHCaaefjCKwz2
+         kiBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=hx7LEUWHU6YuMIbJZ+bvxfeQHzoMVMCbLHMFnb4eAkY=;
+        b=nHQYEy8TxFDSavC/F3+rrOw6bPAlvkNklxocmspHvAKMHQ9iWJCvNvleqwsJH+dj3X
+         pieGH9Ym9Gn5MNkvBQTwlmnUsJ5ynCiSsu3Bo355Pysg6ZhcIXoqnMOHT5l7oZW/E+lk
+         ywxk/5cugAs5BW+AsoWuGMkC9nJ6rM/H1Y/68BCGEuzFa0nYqLcwo8conJMH+tqkMzGP
+         YGvziG13YlQHowHdRWMQugvwuMIB1+Mr24O7P/aQS9z2OXvtZEPhBt6oWB32Rmyms9bk
+         GOchIzEUuuUv2GASV5djyWAoSQf6FXNteVpsSQaoQv8+qvXufMnaTocALZh4+f/HcFuC
+         hv8Q==
+X-Gm-Message-State: APjAAAWsHtJ65s6S0ICfCO206YATFHx5AsJ10uQFYnn/+GK7rjFlcALl
+        7Mvp25tenKRpMh9Ck/CgVag2uBQa6nI=
+X-Google-Smtp-Source: APXvYqxdmLan/eMPlIFR0XHhUC1SGj0S+7JmF1sV9ajVbZcNGUDpupJf3Tiq7ugw4aeIj9wUbGc6Ng==
+X-Received: by 2002:a5d:43c7:: with SMTP id v7mr4538732wrr.32.1575474595466;
+        Wed, 04 Dec 2019 07:49:55 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:d965:ceae:a314:6edb? ([2a01:e34:ed2f:f020:d965:ceae:a314:6edb])
+        by smtp.googlemail.com with ESMTPSA id o4sm8724114wrx.25.2019.12.04.07.49.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 07:49:54 -0800 (PST)
+Subject: Re: [PATCH v2 -next] thermal: power_allocator: Fix Kconfig warning
+To:     YueHaibing <yuehaibing@huawei.com>, rui.zhang@intel.com,
+        edubezval@gmail.com, amit.kucheria@verdurent.com,
+        qperret@google.com, viresh.kumar@linaro.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191112152801.GA247051@google.com>
+ <20191113105313.41616-1-yuehaibing@huawei.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f89d6a79-2ac6-0bea-f2a0-bd376835e785@linaro.org>
+Date:   Wed, 4 Dec 2019 16:49:53 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------9514A1770210466D433AF779"
+In-Reply-To: <20191113105313.41616-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------9514A1770210466D433AF779
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+On 13/11/2019 11:53, YueHaibing wrote:
+> When do randbuiding, we got this:
+> 
+> WARNING: unmet direct dependencies detected for THERMAL_GOV_POWER_ALLOCATOR
+>   Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
+>   Selected by [y]:
+>   - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
+> 
+> Make THERMAL_DEFAULT_GOV_POWER_ALLOCATOR depend on
+> THERMAL_DEFAULT_GOV_POWER_ALLOCATOR to fix this warning.
+> 
+> Suggested-by: Quentin Perret <qperret@google.com>
+> Fixes: a4e893e802e6 ("thermal: cpu_cooling: Migrate to using the EM framework")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-As stated in patch the script is a non posix bash script and should use
-bash instead of config_shell
+Applied with a slight message clarification.
+
+Thanks for the fix.
+
+> ---
+>  drivers/thermal/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 59b79fc..79b2786 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -108,7 +108,7 @@ config THERMAL_DEFAULT_GOV_USER_SPACE
+>  
+>  config THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
+>  	bool "power_allocator"
+> -	select THERMAL_GOV_POWER_ALLOCATOR
+> +	depends on THERMAL_GOV_POWER_ALLOCATOR
+>  	help
+>  	  Select this if you want to control temperature based on
+>  	  system and device power allocation. This governor can only
+> 
 
 
-
-
---------------9514A1770210466D433AF779
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-gen_initramfs_list.sh-is-a-bash-script-that-isn-t-po.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename*0="0001-gen_initramfs_list.sh-is-a-bash-script-that-isn-t-po.pa";
- filename*1="tch"
-
-From 6a7ef73882393e23e966e7b53e7b03397ad18e63 Mon Sep 17 00:00:00 2001
-From: Jory Pratt <anarchy@gentoo.org>
-Date: Wed, 4 Dec 2019 09:30:17 -0600
-Subject: [PATCH] gen_initramfs_list.sh is a bash script that isn't posix
- compliant.
-
-This ensures we call bash instead of sh which could be dash or any other
-shell that is not compatible with the script.
-
-Signed-off-by: Jory Pratt <anarchy@gentoo.org>
----
- usr/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/usr/Makefile b/usr/Makefile
-index e6f7cb2f81db..27987f18eb20 100644
---- a/usr/Makefile
-+++ b/usr/Makefile
-@@ -27,7 +27,7 @@ $(obj)/initramfs_data.o: $(obj)/$(datafile_y) FORCE
- # Generate the initramfs cpio archive
- 
- hostprogs-y := gen_init_cpio
--initramfs   := $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs_list.sh
-+initramfs   := $(BASH) $(srctree)/$(src)/gen_initramfs_list.sh
- ramfs-input := $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
- 			$(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
- ramfs-args  := \
 -- 
-2.24.0
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
---------------9514A1770210466D433AF779--
