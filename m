@@ -2,210 +2,184 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8F8C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6F0C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D012073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:01:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="zvKuifqq"
+	by mail.kernel.org (Postfix) with ESMTP id ADDB92077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:02:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbfLDTBY (ORCPT
+        id S1728572AbfLDTCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 14:01:24 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:40025 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728389AbfLDTBX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 14:01:23 -0500
-Received: by mail-ua1-f66.google.com with SMTP id p18so185073uar.7
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 11:01:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kLLyy4J1Ke9PrZQ4Qj04E9LcGP1qYhIJ+e8+Ik/qzcQ=;
-        b=zvKuifqq2fTHKGaaySG8Ii7zKmTTY9KKpiGE8IyRXZiOwcFumS4AWFjMNkscTipP8G
-         gTGDombWwvw1Z+YF38r87v7LJjM4hOMwpNu4XSvVd0lAcMpkab47C1XxotXliGl0Yzu5
-         l8tWJhjBrk7Mwbr0JGLCsugek5MhtWEZD0zFOIsavSkPrJUkk2ouWFD+IHjYjfJAR/3W
-         RO54ryk3Fh90qb1ZPrAw7iAxKkWDad/YNn3tiA6Cgf9XwVzZv3WoF4r+rbkV9YR8OiG7
-         ojNZMcczVKCGSzgnwC3IzyYr8c84tPdMij/fTS9Qcr+GaM2OTnLw2USSCLIgrP1HBYLt
-         8HVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kLLyy4J1Ke9PrZQ4Qj04E9LcGP1qYhIJ+e8+Ik/qzcQ=;
-        b=oYpyT92GcWlbektH5FvXEA1SVJIcxfSTx9Y/oR56CcHkPND7bpn51xbRtkSyH1OLmH
-         7Qh71qBcjfYUkC0MniT/UCLyGH/JNQR4Uc0oXHWBvQ+FiK5+v50MUNGY9xY1mOKt8if8
-         HJbipWhHRjxrvxer8cdqj1Tfx0++D+fg5Ov/AZsRFnU6iwilSyYwTfQlPzUxmXIx+YyM
-         UZx8+UQl02SgYAtks0kdWFos//x8YdFDDQgnXsfYMg7JuU8jXfs+mDPd00olzTJH6c7p
-         CFsOW0rt5si4/1f+/MmpFTtrbpCfu2UCdYv8s5JF1FgGCBQ78a2xha2yFV8DesIzTBrd
-         hQIQ==
-X-Gm-Message-State: APjAAAVWl6K1pIQ12hnx9wlzGZX8ciRRNZNe8iI9LaZQVmoZ9vgwIiwF
-        s1bM4hsYruY9dsGmK16dW/dU2MAnF+lRZYncC2eyOg==
-X-Google-Smtp-Source: APXvYqxXFbilFYCqRDvgO+JIAEXdda9SxuFIcHboobOrP9MObrVUHhvF1mZrUcbPZchI10idx8MMEc5SqXHZ02Drnoc=
-X-Received: by 2002:a9f:3f46:: with SMTP id i6mr3792634uaj.60.1575486082135;
- Wed, 04 Dec 2019 11:01:22 -0800 (PST)
+        Wed, 4 Dec 2019 14:02:08 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44306 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728114AbfLDTCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 14:02:08 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3B16EB2F9;
+        Wed,  4 Dec 2019 19:02:04 +0000 (UTC)
+Date:   Wed, 4 Dec 2019 20:01:54 +0100
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biggers <ebiggers@google.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Hou Tao <houtao1@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Jan Kara <jack@suse.cz>, Hannes Reinecke <hare@suse.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v4 rebase 00/10] Fix cdrom autoclose
+Message-ID: <20191204190154.GA28406@kitsune.suse.cz>
+References: <cover.1574797504.git.msuchanek@suse.de>
+ <c6fe572c-530e-93eb-d62a-cb2f89c7b4ec@kernel.dk>
+ <20191126202151.GY11661@kitsune.suse.cz>
+ <08bcfd0a-7433-2fa4-9ca2-ea008836b747@kernel.dk>
+ <20191127081144.GZ11661@kitsune.suse.cz>
 MIME-Version: 1.0
-References: <20191030182132.25763-1-f.fainelli@gmail.com> <20191030182132.25763-2-f.fainelli@gmail.com>
- <CAHLCerP6ricempeG=x-a2_aA6__YqADPKAEG5y7qPYNcD2=47Q@mail.gmail.com> <9adf0bd8-99ee-0f38-4608-67c92ba42c88@gmail.com>
-In-Reply-To: <9adf0bd8-99ee-0f38-4608-67c92ba42c88@gmail.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Thu, 5 Dec 2019 00:31:11 +0530
-Message-ID: <CAHLCerN0bJC0sMtZ2DneZSStkeTjQKHZeTNjJ4A31yV07hPb_A@mail.gmail.com>
-Subject: Re: [PATCH 1/6] thermal: brcmstb_thermal: Do not use DT coefficients
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Markus Mayer <mmayer@broadcom.com>,
-        "maintainer:BROADCOM STB AVS TMON DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:BROADCOM STB AVS TMON DRIVER" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191127081144.GZ11661@kitsune.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 11:12 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> On 12/4/19 12:41 AM, Amit Kucheria wrote:
-> > On Wed, Oct 30, 2019 at 11:51 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >>
-> >> At the time the brcmstb_thermal driver and its binding were merged, the
-> >> DT binding did not make the coefficients properties a mandatory one,
-> >> therefore all users of the brcmstb_thermal driver out there have a non
-> >> functional implementation with zero coefficients. Even if these
-> >> properties were provided, the formula used for computation is incorrect.
-> >>
-> >> The coefficients are entirely process specific (right now, only 28nm is
-> >> supported) and not board or SoC specific, it is therefore appropriate to
-> >> hard code them in the driver given the compatibility string we are
-> >> probed with which has to be updated whenever a new process is
-> >> introduced.
-> >>
-> >> We remove the existing coefficients definition since subsequent patches
-> >> are going to add support for a new process and will introduce new
-> >> coefficients as well.
-> >>
-> >> Fixes: 9e03cf1b2dd5 ("thermal: add brcmstb AVS TMON driver")
-> >
-> > I think you should fix the computation formula as the first patch and
-> > then merge the rest of this patch into your second patch.
-> >
-> > I don't think the intermediate state of converting named constants to
-> > magic numbers is needed just to convert it over to another set of
-> > parameters.
->
-> ok, so you would rather see this patch using the defined constants while
-> fixing the formula, and in a subsequent patch getting rid of the
-> constant names since they are going to be added to a per-process table,
-> does that sound reasonable?
+On Wed, Nov 27, 2019 at 09:11:44AM +0100, Michal Suchánek wrote:
+> On Tue, Nov 26, 2019 at 04:13:32PM -0700, Jens Axboe wrote:
+> > On 11/26/19 1:21 PM, Michal Suchánek wrote:
+> > > On Tue, Nov 26, 2019 at 01:01:42PM -0700, Jens Axboe wrote:
+> > >> On 11/26/19 12:54 PM, Michal Suchanek wrote:
+> > >>> Hello,
+> > >>>
+> > >>> there is cdrom autoclose feature that is supposed to close the tray,
+> > >>> wait for the disc to become ready, and then open the device.
+> > >>>
+> > >>> This used to work in ancient times. Then in old times there was a hack
+> > >>> in util-linux which worked around the breakage which probably resulted
+> > >>> from switching to scsi emulation.
+> > >>>
+> > >>> Currently util-linux maintainer refuses to merge another hack on the
+> > >>> basis that kernel still has the feature so it should be fixed there.
+> > >>> The code needs not be replicated in every userspace utility like mount
+> > >>> or dd which has no business knowing which devices are CD-roms and where
+> > >>> the autoclose setting is in the kernel.
+> > >>>
+> > >>> This is rebase on top of current master.
+> > >>>
+> > >>> Also it seems that most people think that this is fix for WMware because
+> > >>> there is one patch dealing with WMware.
+> > >>
+> > >> I think the main complaint with this is that it's kind of a stretch to
+> > >> add core functionality for a device type that's barely being
+> > >> manufactured anymore and is mostly used in a virtualized fashion. I
 
-Yes, that way the first patch would fix a bug (and with a Fixes tag
-potentially gets backported to stable), the second would convert over
-to the per-process table.
+That optical drives are hardly manufactured is kind of a stretch. I have
+no problem obtaining drives from a few manufacturers in any nearby
+computer store. While using DVDs may be slowly getting out of fashion
+the same applies to all optical drives, including Blueray. Some of these
+will stay for forseeable future.
 
-Regards,
-Amit
+> > >> think it you could fix this without 10 patches of churn and without
+> > >> adding a new ->open() addition to fops, then people would be a lot more
+> > >> receptive to the idea of improving cdrom auto-close.
+> > > 
+> > > I see no way to do that cleanly.
+> > > 
+> > > There are two open modes for cdrom devices - blocking and
+> > > non-blocking.
+> > > 
+> > > In blocking mode open() should analyze the medium so that it's ready
+> > > when it returns. In non-blocking mode it should return immediately so
+> > > long as you can talk to the device.
+> > > 
+> > > When waiting in open() with locks held the processes trying to open
+> > > the device are locked out regradless of the mode they use.
+> > > 
+> > > The only way to solve this is to pretend that the device is open and
+> > > do the wait afterwards with the device unlocked.
+> > 
+> > How is this any different from an open on a file that needs to bring in
+> > meta data on a busy rotating device, which can also take seconds?
+> 
+> First, accessing a file will take seconds only when your system is
+> seriously overloaded or misconfigured. The access time for rotational
+> storage is tens of milliseconds. With cdrom the access time after
+> closing the door is measured in tens of seconds on common hardware. It
+> can be shorter but also possibly longer. I am not aware of any limit
+> there. It may be reasonable to want to get device status during this
+> time.
+> 
+> Second, fetching the metadata for the file does not block operations that
+> don't need the metadata. Here waiting for the drive to get ready blocks
+> all access. You could get drive status if you did not try to open it
+> but once you do you can no longer talk to it.
 
-> >
-> > Regards,
-> > Amit
-> >
-> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> >> ---
-> >>  drivers/thermal/broadcom/brcmstb_thermal.c | 37 ++++------------------
-> >>  1 file changed, 6 insertions(+), 31 deletions(-)
-> >>
-> >> diff --git a/drivers/thermal/broadcom/brcmstb_thermal.c b/drivers/thermal/broadcom/brcmstb_thermal.c
-> >> index 5825ac581f56..42482af0422e 100644
-> >> --- a/drivers/thermal/broadcom/brcmstb_thermal.c
-> >> +++ b/drivers/thermal/broadcom/brcmstb_thermal.c
-> >> @@ -48,15 +48,6 @@
-> >>  #define AVS_TMON_TEMP_INT_CODE         0x1c
-> >>  #define AVS_TMON_TP_TEST_ENABLE                0x20
-> >>
-> >> -/* Default coefficients */
-> >> -#define AVS_TMON_TEMP_SLOPE            -487
-> >> -#define AVS_TMON_TEMP_OFFSET           410040
-> >> -
-> >> -/* HW related temperature constants */
-> >> -#define AVS_TMON_TEMP_MAX              0x3ff
-> >> -#define AVS_TMON_TEMP_MIN              -88161
-> >> -#define AVS_TMON_TEMP_MASK             AVS_TMON_TEMP_MAX
-> >> -
-> >>  enum avs_tmon_trip_type {
-> >>         TMON_TRIP_TYPE_LOW = 0,
-> >>         TMON_TRIP_TYPE_HIGH,
-> >> @@ -108,23 +99,11 @@ struct brcmstb_thermal_priv {
-> >>         struct thermal_zone_device *thermal;
-> >>  };
-> >>
-> >> -static void avs_tmon_get_coeffs(struct thermal_zone_device *tz, int *slope,
-> >> -                               int *offset)
-> >> -{
-> >> -       *slope = thermal_zone_get_slope(tz);
-> >> -       *offset = thermal_zone_get_offset(tz);
-> >> -}
-> >> -
-> >>  /* Convert a HW code to a temperature reading (millidegree celsius) */
-> >>  static inline int avs_tmon_code_to_temp(struct thermal_zone_device *tz,
-> >>                                         u32 code)
-> >>  {
-> >> -       const int val = code & AVS_TMON_TEMP_MASK;
-> >> -       int slope, offset;
-> >> -
-> >> -       avs_tmon_get_coeffs(tz, &slope, &offset);
-> >> -
-> >> -       return slope * val + offset;
-> >> +       return (410040 - (int)((code & 0x3FF) * 487));
-> >>  }
-> >>l
-> >>  /*
-> >> @@ -136,20 +115,16 @@ static inline int avs_tmon_code_to_temp(struct thermal_zone_device *tz,
-> >>  static inline u32 avs_tmon_temp_to_code(struct thermal_zone_device *tz,
-> >>                                         int temp, bool low)
-> >>  {
-> >> -       int slope, offset;
-> >> -
-> >> -       if (temp < AVS_TMON_TEMP_MIN)
-> >> -               return AVS_TMON_TEMP_MAX; /* Maximum code value */
-> >> -
-> >> -       avs_tmon_get_coeffs(tz, &slope, &offset);
-> >> +       if (temp < -88161)
-> >> +               return 0x3FF;   /* Maximum code value */
-> >>
-> >> -       if (temp >= offset)
-> >> +       if (temp >= 410040)
-> >>                 return 0;       /* Minimum code value */
-> >>
-> >>         if (low)
-> >> -               return (u32)(DIV_ROUND_UP(offset - temp, abs(slope)));
-> >> +               return (u32)(DIV_ROUND_UP(410040 - temp, 487));
-> >>         else
-> >> -               return (u32)((offset - temp) / abs(slope));
-> >> +               return (u32)((410040 - temp) / 487);
-> >>  }
-> >>
-> >>  static int brcmstb_get_temp(void *data, int *temp)
-> >> --
-> >> 2.17.1
-> >>
->
->
-> --
-> Florian
+So let's look at the alternatives. One proposed alternative was to
+change the locking calls to the locks that are held while waiting in
+open() to interuptible so that impatient users can at least kill
+processes waiting on their CD medium to become ready.
+
+What is held are sr_mutex and bd_mutex.
+
+bd_mutex is per_device so any open() or close() on the same CD-ROM
+device is blocked. There are a number of other sites where bd_mutex is
+locked and it will be needed to figure out which of these can be called
+with a cd-rom device and change them to killable so that processes
+waiting on the lock to don't get uninterriptibly stuck. This may be more
+code churn than this patchset. I think we can exclude loop.c and
+zram-dev.c but ioctl.c, xen-blkfront.c, and block_dev.c apply. Don't
+know about dasd.
+
+The bd_mutex is held in iterate_bdevs so all bets are off wrt being able
+to operate the system.  Once a process is stuck waiting in blkdev_get()
+which calls open() on the cdrom you cannot iterate block devices. With
+boot times measured in seconds and medium analysis times measured in
+tens of seconds users will not be amused.
+
+autoclose defaults to on, and blkid reads deviced in blocking mode
+causing all the fun stuff to trigger (patch pending to change that).
+Nonetheless any number of utilities still not aware of this nonblock
+quirk out there will try to open the device sooner or later blocking all
+operations that require iterating the list of block devices.
+
+Adding tens of seconds to block device opening time (which I assume
+might need iterating list of block devices) might even overflow some
+systemd timeout and fail boot.  There is timeout for each particular job
+but there are also cumulative timeouts for something like 'locate device
+with this UUID' which are fixed regardles of the number of layers (LVM,
+md, ..) involved.
+
+The other approach is to do like harddisks. With a harddisk a medium is
+'fixed' - that is assumed to be present always. Any error accessing the
+medium is reported on read() or write() and not necessarily on open().
+This would require hooking the autoclose to the operations that require
+actual medium - probably something like count_tracks(), and eschew
+calling these from open(). That would work but breaks the contract
+described in the current API documentation - that is if you don't open
+with O_NONBLOCK and there is obvious medium error like no medium at all
+or no usable track you get the error on open() rather than on whatever
+opration that tries to use the track.
+
+Thanks
+
+Michal
