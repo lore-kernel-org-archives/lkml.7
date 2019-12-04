@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 698A2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDE6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 406A32084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FB920865
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483072;
-	bh=WbqjUggnJDh4A988fik+6/iGaJLlVSosFqW9yVNwscw=;
+	s=default; t=1575483076;
+	bh=zei5XXSiJlVh0aRUkaleW2khLyQEpR2YizO3Ith2k/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RpfdsbyTEclZUm8/coQWTVX4JXmrnlj5N/LwgVacSW4BS4XjQHjpGEsfKRB1EMFuX
-	 3xdIVLK+pl8lfAlrnijjNrpLnp1JQp889xTX5J4IVC8yk4sUjoFUtIWK6vt9g0J5Ib
-	 YFfTa7CtmNzch54YoAP24KyLV1aQT5A4zGBw5fYI=
+	b=XiL+92nyNcsU1MSinIdDccARihgi2hab5RORGxOPjewVoHgoDVpsMHDYZj1ePprby
+	 JQ3rrxza9HA5c6X6gCtLEbrkAfpcnOG4B8NGhk3e/9kyyp7eAGraqOfyIiHYjfsTWR
+	 mXA485BuMJxg3iZ9ogfGQPXvM59nGn3pp41AHwg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731397AbfLDSLL (ORCPT
+        id S1731415AbfLDSLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:11:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39106 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:11:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731382AbfLDSLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:11:07 -0500
+        id S1731403AbfLDSLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:11:12 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C87E920865;
-        Wed,  4 Dec 2019 18:11:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99F3920863;
+        Wed,  4 Dec 2019 18:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483067;
-        bh=WbqjUggnJDh4A988fik+6/iGaJLlVSosFqW9yVNwscw=;
+        s=default; t=1575483072;
+        bh=zei5XXSiJlVh0aRUkaleW2khLyQEpR2YizO3Ith2k/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RmGrkZghHZeUhTQgVtPzM0G0UktqPJ7PmdBDq3PR+pXPqM5izVhIegwC+Ce7uKrZn
-         TwlqBJCMl8oulNVo+lq04TCoF6tVZaBqiDf09f7j3M7nb1ON+3JAiXMyXNRI3i5rAh
-         84RpMm6TsL8Ja2LOESvf4Dld8xE3HG+0FVAlX70k=
+        b=V7PCSDGZCEdMDxIPPB6C9fpUiqZYgW+xK9KBMEXzSop1dxwn2wqrxfdCzMlhGyJpQ
+         VOeYgDbWJzxKvBjkORM3f/9lHQoLOZZjaqUsmiHhIBEC5ziiReAb4SVEY3F2cN5Krg
+         7GVvDsJNr/0D8sxYsb/yKOaLJc7MniyrK2SBlFQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jeroen Hofstee <jhofstee@victronenergy.com>,
-        Stephane Grosjean <s.grosjean@peak-system.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org, Xingyu Chen <xingyu.chen@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 007/125] can: peak_usb: report bus recovery as well
-Date:   Wed,  4 Dec 2019 18:55:12 +0100
-Message-Id: <20191204175312.017613060@linuxfoundation.org>
+Subject: [PATCH 4.9 009/125] watchdog: meson: Fix the wrong value of left time
+Date:   Wed,  4 Dec 2019 18:55:14 +0100
+Message-Id: <20191204175313.361413674@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -62,65 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeroen Hofstee <jhofstee@victronenergy.com>
+From: Xingyu Chen <xingyu.chen@amlogic.com>
 
-[ Upstream commit 128a1b87d3ceb2ba449d5aadb222fe22395adeb0 ]
+[ Upstream commit 2c77734642d52448aca673e889b39f981110828b ]
 
-While the state changes are reported when the error counters increase
-and decrease, there is no event when the bus recovers and the error
-counters decrease again. So add those as well.
+The left time value is wrong when we get it by sysfs. The left time value
+should be equal to preset timeout value minus elapsed time value. According
+to the Meson-GXB/GXL datasheets which can be found at [0], the timeout value
+is saved to BIT[0-15] of the WATCHDOG_TCNT, and elapsed time value is saved
+to BIT[16-31] of the WATCHDOG_TCNT.
 
-Change the state going downward to be ERROR_PASSIVE -> ERROR_WARNING ->
-ERROR_ACTIVE instead of directly to ERROR_ACTIVE again.
+[0]: http://linux-meson.com
 
-Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
-Cc: Stephane Grosjean <s.grosjean@peak-system.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Fixes: 683fa50f0e18 ("watchdog: Add Meson GXBB Watchdog Driver")
+Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/usb/peak_usb/pcan_usb.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/watchdog/meson_gxbb_wdt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/can/usb/peak_usb/pcan_usb.c b/drivers/net/can/usb/peak_usb/pcan_usb.c
-index e626c2afbbb11..0e1fc6c4360e7 100644
---- a/drivers/net/can/usb/peak_usb/pcan_usb.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb.c
-@@ -441,8 +441,8 @@ static int pcan_usb_decode_error(struct pcan_usb_msg_context *mc, u8 n,
- 		}
- 		if ((n & PCAN_USB_ERROR_BUS_LIGHT) == 0) {
- 			/* no error (back to active state) */
--			mc->pdev->dev.can.state = CAN_STATE_ERROR_ACTIVE;
--			return 0;
-+			new_state = CAN_STATE_ERROR_ACTIVE;
-+			break;
- 		}
- 		break;
+diff --git a/drivers/watchdog/meson_gxbb_wdt.c b/drivers/watchdog/meson_gxbb_wdt.c
+index 44d180a2c5e57..58e06f059e673 100644
+--- a/drivers/watchdog/meson_gxbb_wdt.c
++++ b/drivers/watchdog/meson_gxbb_wdt.c
+@@ -137,8 +137,8 @@ static unsigned int meson_gxbb_wdt_get_timeleft(struct watchdog_device *wdt_dev)
  
-@@ -465,9 +465,9 @@ static int pcan_usb_decode_error(struct pcan_usb_msg_context *mc, u8 n,
- 		}
+ 	reg = readl(data->reg_base + GXBB_WDT_TCNT_REG);
  
- 		if ((n & PCAN_USB_ERROR_BUS_HEAVY) == 0) {
--			/* no error (back to active state) */
--			mc->pdev->dev.can.state = CAN_STATE_ERROR_ACTIVE;
--			return 0;
-+			/* no error (back to warning state) */
-+			new_state = CAN_STATE_ERROR_WARNING;
-+			break;
- 		}
- 		break;
+-	return ((reg >> GXBB_WDT_TCNT_CNT_SHIFT) -
+-		(reg & GXBB_WDT_TCNT_SETUP_MASK)) / 1000;
++	return ((reg & GXBB_WDT_TCNT_SETUP_MASK) -
++		(reg >> GXBB_WDT_TCNT_CNT_SHIFT)) / 1000;
+ }
  
-@@ -506,6 +506,11 @@ static int pcan_usb_decode_error(struct pcan_usb_msg_context *mc, u8 n,
- 		mc->pdev->dev.can.can_stats.error_warning++;
- 		break;
- 
-+	case CAN_STATE_ERROR_ACTIVE:
-+		cf->can_id |= CAN_ERR_CRTL;
-+		cf->data[1] = CAN_ERR_CRTL_ACTIVE;
-+		break;
-+
- 	default:
- 		/* CAN_STATE_MAX (trick to handle other errors) */
- 		cf->can_id |= CAN_ERR_CRTL;
+ static const struct watchdog_ops meson_gxbb_wdt_ops = {
 -- 
 2.20.1
 
