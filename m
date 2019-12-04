@@ -2,180 +2,130 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D631C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B97C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E23DD20656
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:32:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="E0M3GOom"
+	by mail.kernel.org (Postfix) with ESMTP id 1213020661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575484398;
+	bh=br61MmbqNzyL0zQQ9ZbnyNvUPNjXO7jzCtUUCCg/cZQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MdYAhQJCeSaUSwaQTYdOFYTOLohl/LyXRXG7Cn6i+O6Ow2xMWn/Bl0MWu1Xm9xazU
+	 bgExan2QWHULx+p1QZk1MAUYY6FdpwBSTZwDUIpvWf3M7Trro73ZULI6Z/ns+PZQmc
+	 +SMC0x+aoovf1kJdXeQAeKc22+GbKgLIQgo1Lsgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbfLDScB (ORCPT
+        id S1728558AbfLDSdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:32:01 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:34916 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728274AbfLDScA (ORCPT
+        Wed, 4 Dec 2019 13:33:16 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46854 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728204AbfLDSdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:32:00 -0500
-Received: by mail-pj1-f65.google.com with SMTP id w23so164994pjd.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:32:00 -0800 (PST)
+        Wed, 4 Dec 2019 13:33:16 -0500
+Received: by mail-lf1-f66.google.com with SMTP id a17so317272lfi.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:33:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=xKr4sE6dEN+r+0kQ3EZBQMimlSGfH5cfmp2nYCABRlc=;
-        b=E0M3GOomCYtZmEJ82tRl5Js7fdBtuFlFdMq/KX+ceyYzlpr6jRnd7tROzghqefxgAJ
-         D7BR5Mu+zflyGgem81vPw6TCr5uW2AKuHficePOa6RpGdhy+H8H3wpJ+EurUQGZDDDUY
-         M4UOjtS65FFdZRjnVxZ/vg+bVNn+UI+TM2oTnzmHBnTo44nt47L5HuTqUYnEjlETFoku
-         YILAbKqYY3eFmj49YvpSxJMT5GY6Ac7hx+FcABepR3ubunnDp1EVdgK95O6NeGGauAS2
-         KHGHzNTxNdnRf8pc+oI+2uu2iBcBgN9CifY6qa7xw2KK/SS8U/C5BjXRxVDn28/o9ek8
-         4mEA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FPiBy3e3zUg0m4K/nRiHT6Vw6UdUbtEDAqlj3R5valo=;
+        b=Djtns5IVsjsKkjqXlXecLgmq7TLzrMkrPSgPEVr/ZvwmJI4iaDca3o5iA6ZgsfgxEU
+         Hpfx40UcKXq7pbBcMond4TGqgXSpVLfIVObpgFXwaKdlBXgs60PfyOM2EclUBrVxZy+I
+         VKVVd/1vx0Caofr6kXg8TOm9f33WEMkE4r42w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=xKr4sE6dEN+r+0kQ3EZBQMimlSGfH5cfmp2nYCABRlc=;
-        b=q6GncvwowVflajeHsH9BjX6P+vhMXOk4KhbTlGiUL+NZ8J9Z897kZGyBTVopoB3ITd
-         9CEkIUry2VflALNH0B8yDkkpPQPLMfFnhg/uE9uthe5O1TO60D2vZoWyz6abgHKejn5E
-         nEWbRRBbD6eZc2pdC777iPJGu1uj3YVaBarctbegwS2eHrzkfgUHQrJmKO5Xv2fbEyeh
-         x+i3rrHAW2T0HvUI/lajKf6b+xmqWK+CydynzrLxhEgiGGEJOdMWdN23jRGyAzWKlsB0
-         CVhJpUx1Db3pCrxvPlptQa4lQ5oQcHLpVnAQO341LnbYitX7AbGStMhv/TvTF1AnMO4Y
-         438Q==
-X-Gm-Message-State: APjAAAUW9X7lyJTeyquKgTLS9++t4f//vXdbdOfzNuRDqG5tmc5dqoEn
-        WoD/Wxk3VgKwfsa2mrDZP1ax+lG2smVlgw==
-X-Google-Smtp-Source: APXvYqxSKfBQOnG76aGXKyB6X52I6K4bMHdueAby/SHJUCxV9Al6Z2HVRDrHLKVsVYHWZzazlhHCTQ==
-X-Received: by 2002:a17:90a:f005:: with SMTP id bt5mr4788603pjb.16.1575484319602;
-        Wed, 04 Dec 2019 10:31:59 -0800 (PST)
-Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id u24sm8641357pfh.48.2019.12.04.10.31.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Dec 2019 10:31:57 -0800 (PST)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <23F33101-065E-445A-AE5C-D05E35E2B78B@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_444EEA50-3065-49C0-A153-021AF493BF2F";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
-Date:   Wed, 4 Dec 2019 11:31:50 -0700
-In-Reply-To: <76ddbdba-55ba-3426-2e29-0fa17db9b6d8@phunq.net>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To:     Daniel Phillips <daniel@phunq.net>
-References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
- <20191127142508.GB5143@mit.edu>
- <c3636a43-6ae9-25d4-9483-34770b6929d0@phunq.net>
- <20191128022817.GE22921@mit.edu>
- <3b5f28e5-2b88-47bb-1b32-5c2fed989f0b@phunq.net>
- <20191130175046.GA6655@mit.edu>
- <76ddbdba-55ba-3426-2e29-0fa17db9b6d8@phunq.net>
-X-Mailer: Apple Mail (2.3273)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FPiBy3e3zUg0m4K/nRiHT6Vw6UdUbtEDAqlj3R5valo=;
+        b=OFPe8nXhcY+p0Blgwy3zwS86/eWT7mY3ThgRfz9PmsbS72Up8bxiENX/TrLMmBA3GX
+         qg8I7RR8yLRreBKbaAlYVejLS1YDBXHl+Ci1L+34Uj2I4JZQUX3TiIiH4va7ZL6uuHGJ
+         7+vO7Hi0TQ1NKfjrR2yAJ3piKA2onMU1E3vvkpmwxBopaPjgHTVby1f4y6lwgu3133QF
+         SUnPYy0XYcFl6lkpkuEBCPDRk8pts0oFuy1JLG5itfwO0VWur+J9ZO6Yb/5Vy4OpEcTJ
+         bBryKHgKJisbnvYRmtNT/AeI0W5hlVi6uygeDFDA+xOmlcGj85pS88vgIX7KcGqHMW8I
+         R6HQ==
+X-Gm-Message-State: APjAAAXyKk2f6As8pUkh/PCKrA+V6KijuyS4yKFjZPuCdslzJxlh6miN
+        IaqMFLrMbdnwv/Wa61aSEqvD7vuJMB8=
+X-Google-Smtp-Source: APXvYqxouT5tmRrnaUixeMIu03inSa3eCDamlFpbmmTVOVZCiKy5cS2Gxwa0L/2qVTEF2x5pe0phZw==
+X-Received: by 2002:ac2:5ec3:: with SMTP id d3mr2946745lfq.176.1575484394290;
+        Wed, 04 Dec 2019 10:33:14 -0800 (PST)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id f7sm3589090ljp.62.2019.12.04.10.33.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 10:33:13 -0800 (PST)
+Received: by mail-lf1-f50.google.com with SMTP id a17so317210lfi.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:33:13 -0800 (PST)
+X-Received: by 2002:ac2:555c:: with SMTP id l28mr2926109lfk.52.1575484392762;
+ Wed, 04 Dec 2019 10:33:12 -0800 (PST)
+MIME-Version: 1.0
+References: <CAK8P3a33oETbN-60VjpNNeuW1U1Wzb4juVzdiw1ESdses6m3bw@mail.gmail.com>
+ <20191204140812.2761761-1-arnd@arndb.de>
+In-Reply-To: <20191204140812.2761761-1-arnd@arndb.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 4 Dec 2019 10:32:56 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjBbi2xJZw+7Wqtt3W_mOUSPU2N4w-OES9WUUyXt-DnCg@mail.gmail.com>
+Message-ID: <CAHk-=wjBbi2xJZw+7Wqtt3W_mOUSPU2N4w-OES9WUUyXt-DnCg@mail.gmail.com>
+Subject: Re: [PATCH] scsi: sg: fix v3 compat read/write interface
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Doug Gilbert <dgilbert@interlog.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 4, 2019 at 6:08 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> To address both of these, move the definition of compat_sg_io_hdr
+> into a scsi/sg.h to make it visible to sg.c and rewrite the logic
+> for reading req_pack_id as well as the size check to a simpler
+> version that gets the expected results.
 
---Apple-Mail=_444EEA50-3065-49C0-A153-021AF493BF2F
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+I think the patch is a good thing, except for this part:
 
-On Dec 1, 2019, at 1:21 AM, Daniel Phillips <daniel@phunq.net> wrote:
->>> Important example: how is atomic directory commit going to work for
->>> Ext4?
->>=20
->> The same way all metadata updates work in ext4.  Which is to say, you
->> need to declare the maximum number of 4k metadata blocks that an
->> operation might need to change when calling ext4_journal_start() to
->> create a handle; and before modifying a 4k block, you need to call
->> ext4_journal_get_write_access(), passing in the handle and the =
-block's
->> buffer_head.  After modifying the block, you must call
->> ext4_handle_dirty_metadata() on the buffer_head.  And when you are
->> doing with the changes in an atomic metadata operation, you call
->> ext4_journal_stop() on the handle.
->>=20
->> This hasn't changed since the days of ext3 and htree.
->=20
-> OK good. And I presume that directory updates are prevented until
-> the journal transaction is at least fully written to buffers. Maybe
-> delayed until the journal transaction is actually committed?
->=20
-> In Tux3 we don't block directory updates during backend commit, and I
-> just assumed that Ext4 and others also do that now, so thanks for the
-> correction. As far I can see, there will be no new issue with =
-Shardmap,
-> as you say. My current plan is that user space mmap will become kmap =
-in
-> kernel. I am starting on this part for Tux3 right now. My goal is to
-> refine the current Shardmap data access api to hide the fact that mmap
-> is used in user space but kmap in kernel. Again, I wish we actually =
-had
-> mmap in kernel and maybe we should consider properly supporting it in
-> the future, perhaps by improving kmalloc.
->=20
-> One thing we do a bit differently frou our traditional fs is, in the
-> common, unfragmented case, mass inserts go into the same block until
-> the block is full. So we get a significant speedup by avoiding a page
-> cache lookup and kmap per insert. Borrowing a bit of mechanism from
-> the persistent memory version of Shardmap, we create the new entries
-> in a separate cache page. Then, on commit, copy this "front buffer" to
-> the page cache. I think that will translate pretty well to Ext4 also.
+> @@ -575,6 +561,14 @@ sg_new_read(Sg_fd * sfp, char __user *buf, size_t count, Sg_request * srp)
+>         int err = 0, err2;
+>         int len;
+>
+> +#ifdef CONFIG_COMPAT
+> +       if (in_compat_syscall()) {
+> +               if (count < sizeof(struct compat_sg_io_hdr)) {
+> +                       err = -EINVAL;
+> +                       goto err_out;
+> +               }
+> +       } else
+> +#endif
+>         if (count < SZ_SG_IO_HDR) {
+>                 err = -EINVAL;
+>                 goto err_out;
 
-One important use case that we have for Lustre that is not yet in the
-upstream ext4[*] is the ability to do parallel directory operations.
-This means we can create, lookup, and/or unlink entries in the same
-directory concurrently, to increase parallelism for large directories.
+Yes, yes, I know we do things like that in some other places too, but
+I really detest this kind of ifdeffery.
 
-This is implemented by progressively locking the htree root and index
-blocks (typically read-only), then leaf blocks (read-only for lookup,
-read-write for insert/delete).  This provides improved parallelism
-as the directory grows in size.
+That
 
-Will there be some similar ability in Shardmap to have parallel ops?
-Also, does Shardmap have the ability to shrink as entries are removed?
+         } else
+  #endif
+         if (count < SZ_SG_IO_HDR) {
 
-Cheers, Andreas
+is just evil. Please don't add things like this where the #ifdef
+section has subtle semantic continuations outside of it. If somebody
+adds a statement in between there, it now acts completely wrong.
 
-[*] we've tried to submit the pdirops patch a couple of times, but the
-main blocker is that the VFS has a single directory mutex and couldn't
-use the added functionality without significant VFS changes.
-Patch at =
-https://git.whamcloud.com/?p=3Dfs/lustre-release.git;f=3Dldiskfs/kernel_pa=
-tches/patches/rhel8/ext4-pdirop.patch;hb=3DHEAD
+I think you can remove the #ifdef entirely. If CONFIG_COMPAT isn't
+set, I think in_compat_syscall() just turns to 0, and the code gets
+optimized away.
 
+Hmm?
 
---Apple-Mail=_444EEA50-3065-49C0-A153-021AF493BF2F
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl3n+5cACgkQcqXauRfM
-H+A/DQ//WqdN82NF1pjjP1M2v8Zb0W4X2lctDcL9xqIXRh1wzu1EpiKzTn754OWs
-Wi7KfHBxSwa6yh9qfx2/DrzuGy38ion7gncucx+CdN0r2ykvM52kp1mMN+LC4Mtm
-pmIPMui+hDkYRi6RnUVa4l/MNOVBiuXLjAu+NhwHZvzPJTvHvogoRRoMOZx+Ll+i
-Y1Lpo7AGIhCNo8ois1uaiU0JkjU8JwTkX7RcKHOlWChD6esBWXJPhZ/s4R8NS1Yo
-89B7sUgs9OA6JaKz2S9lRAQtLbUiLN3YfZa9ELtAH0SXI+iWZRbXnUE8ly8+tcN2
-b/vjd+HwqAYHus1kCmMR1Te4I/059d3YjBKZtqah8CAWiU3SjqQwLApi/VJbWA0D
-RGjH2pwlUOZIZStzsA9t2UEFWWqoWGs52W3rdJWJNftVErWhrzN2S/WCZHO5EWLA
-QbuHbfa1TrKZPTv61kPRnwMQ1YNHNxsXg341SlUnGBu1JduT1JXk+ZebGhiESG1n
-SSrpLgEATk05xqNDXIhN9gala9FVf1J6DQp3tC7Wa5JmpyKz6Lt+VHuywOiIqFR4
-nItNg/LENhVjpJc69fA4SQnvHPu8Bh2EZYQKQ+/JLrBN+CtCFt5uFWgc2h+twO3d
-hwsbgUULa2NL0MnjLu91zFkityCyBfpEz5HIKRzMn3XWUJqA4Hk=
-=Wb6G
------END PGP SIGNATURE-----
-
---Apple-Mail=_444EEA50-3065-49C0-A153-021AF493BF2F--
+               Linus
