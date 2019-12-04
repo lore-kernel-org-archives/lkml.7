@@ -2,84 +2,81 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E49C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F81DC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CED52073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47CB420833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:55:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575489301;
+	bh=Ao9A6fwKRphfp8H3l/bqioHRuRuABwqg+XXqd5pCUIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nvecEX1neMospWXdDRxKFhZBJpUsoiQBUcg25gq8IVoFTvTivzP5EaBy556pJsax1
+	 BAyrK9jI4KaXPqDvgqfNEFDZkj6rswXonAZnwwm8r1W5vXdG7p1+dvkFnMInUFOS4p
+	 T5u6RJ2FPzXxdR2L/t6VqsLQIY1VxqbBXys0WbYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbfLDTxs (ORCPT
+        id S1728059AbfLDTzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 14:53:48 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:39628 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727887AbfLDTxp (ORCPT
+        Wed, 4 Dec 2019 14:55:00 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39670 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfLDTy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 14:53:45 -0500
-Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <cascardo@canonical.com>)
-        id 1icaiU-0007wL-Kk; Wed, 04 Dec 2019 19:53:43 +0000
-From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-To:     netdev@vger.kernel.org
-Cc:     davem@davemloft.net, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        posk@google.com, cascardo@canonical.com
-Subject: [PATCH] selftests: net: ip_defrag: increase netdev_max_backlog
-Date:   Wed,  4 Dec 2019 16:53:21 -0300
-Message-Id: <20191204195321.406365-1-cascardo@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 4 Dec 2019 14:54:59 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a67so413535oib.6;
+        Wed, 04 Dec 2019 11:54:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OPmJQ+fyJlkP3BfGVuuBfX22U36bspS/c0JjyT/n6XY=;
+        b=Pdagauj/mQ0HGJqSQGNN0WbTlXNN18Nx/VUbKDSwJEkzwLk795x6pq7Hfcw1jWe9pZ
+         L52YH3RoJJ+9XCe5TgrUCULbj4Gl55+ynZUzzT0ZFbFkBZSWd/rNYXa/yoqJurNR0IAv
+         E0FWhJQKQgyfir949JtfydFJkmYQ/wlwkUJ2j3hoJayNIqCsMtWhpD01y+3QV0PQDNr0
+         JVYMGOANdxA/Rm89bqNwuQu/19cV/z6l9VyHuuI5FX1yHRupLswr3/w7LXd8p7hylhar
+         vT9fK/U6maAifTvFpB1N2XTAvwJd0V55LsI8qDTpENlfxLSc4VZuBW/ZYksx5rBeqsXJ
+         pV/w==
+X-Gm-Message-State: APjAAAXMDvcTFHWmDsqEHkAtz5sh3o6GKghvKcH5g79jQxEYA2CpGWXD
+        ZTR5Eux1blE+lUUrZ7TUfg==
+X-Google-Smtp-Source: APXvYqxd3fK9jhwjpyiSCh7faZowBYmsINV1Az1SfSXSPdjh2kqdLN95svGwJT4zf5QfC8ZsOqEirw==
+X-Received: by 2002:aca:190b:: with SMTP id l11mr4217896oii.65.1575489298861;
+        Wed, 04 Dec 2019 11:54:58 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 64sm2543076oth.31.2019.12.04.11.54.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 11:54:58 -0800 (PST)
+Date:   Wed, 4 Dec 2019 13:54:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH] dt-bindings: arm: stm32: Convert stm32-syscon to
+ json-schema
+Message-ID: <20191204195457.GA18882@bogus>
+References: <20191122103942.23572-1-alexandre.torgue@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122103942.23572-1-alexandre.torgue@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using fragments with size 8 and payload larger than 8000, the backlog
-might fill up and packets will be dropped, causing the test to fail. This
-happens often enough when conntrack is on during the IPv6 test.
+On Fri, 22 Nov 2019 11:39:42 +0100, Alexandre Torgue wrote:
+> Convert the STM32 syscon binding to DT schema format using json-schema.
+> 
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> 
 
-As the larger payload in the test is 10000, using a backlog of 1250 allow
-the test to run repeatedly without failure. At least a 1000 runs were
-possible with no failures, when usually less than 50 runs were good enough
-for showing a failure.
+Applied, thanks.
 
-As netdev_max_backlog is not a pernet setting, this sets the backlog to
-1000 during exit to prevent disturbing following tests.
-
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Fixes: 4c3510483d26 (selftests: net: ip_defrag: cover new IPv6 defrag behavior)
----
- tools/testing/selftests/net/ip_defrag.sh | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/tools/testing/selftests/net/ip_defrag.sh b/tools/testing/selftests/net/ip_defrag.sh
-index 15d3489ecd9c..c91cfecfa245 100755
---- a/tools/testing/selftests/net/ip_defrag.sh
-+++ b/tools/testing/selftests/net/ip_defrag.sh
-@@ -12,6 +12,8 @@ setup() {
- 	ip netns add "${NETNS}"
- 	ip -netns "${NETNS}" link set lo up
- 
-+	sysctl -w net.core.netdev_max_backlog=1250 >/dev/null 2>&1
-+
- 	ip netns exec "${NETNS}" sysctl -w net.ipv4.ipfrag_high_thresh=9000000 >/dev/null 2>&1
- 	ip netns exec "${NETNS}" sysctl -w net.ipv4.ipfrag_low_thresh=7000000 >/dev/null 2>&1
- 	ip netns exec "${NETNS}" sysctl -w net.ipv4.ipfrag_time=1 >/dev/null 2>&1
-@@ -30,6 +32,7 @@ setup() {
- 
- cleanup() {
- 	ip netns del "${NETNS}"
-+	sysctl -w net.core.netdev_max_backlog=1000 >/dev/null 2>&1
- }
- 
- trap cleanup EXIT
--- 
-2.24.0
-
+Rob
