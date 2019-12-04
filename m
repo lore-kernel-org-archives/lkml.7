@@ -2,203 +2,371 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258A7C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D164C43215
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7952068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2694F2068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:25:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQqSCHpz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fdC3HliY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfLDEWX (ORCPT
+        id S1727064AbfLDEZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 23:22:23 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:46569 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbfLDEWX (ORCPT
+        Tue, 3 Dec 2019 23:25:05 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42137 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbfLDEZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 23:22:23 -0500
-Received: by mail-pj1-f67.google.com with SMTP id z21so2402078pjq.13;
-        Tue, 03 Dec 2019 20:22:22 -0800 (PST)
+        Tue, 3 Dec 2019 23:25:04 -0500
+Received: by mail-qt1-f194.google.com with SMTP id j5so6364417qtq.9
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 20:25:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/pkZzpK23dmwIi5+edhnCbw3h8UFfRYOpvCOiH4IOdI=;
-        b=kQqSCHpzyBi9y0eweJ323UfFfnnjl7xC2pgzwEbjwDPIMsYGcjRW9s6++GHocmeyh5
-         JKmtYUMGQgyINZH8+Y7k43RrqDgz+gXKEX0G75i8F/S7opMshK1UEqa6O82wLA4UDY7H
-         WqePkPOuWstFQMh00MIz4fOLfZRgyaZKugOEEdXlx7etrVtjI/JCh3hje9/O/gK6prdH
-         0HrNMrim4pIhS1HcKPw5RkfgtjPfRvlg0+BI9aJ+w1IusEDmVEQgdDIYW+Y3+wAa+DKO
-         qt22xJbvyZkAe4lM+JcmJH5nA6C3SBjpyHPVd3n85S4niU/CaXn2yPV31lT7SpjrFJzs
-         8KCg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=B9MmqnRWtIVp3fWfwFCcQm9pMRp0v8IC2cGtCdVC9mo=;
+        b=fdC3HliYjNYkiWW8//bSAD7lm5j9z97Yiv0EvZ6ncNzaC6UMQx4ZFw5zc+ETAygLIL
+         mQv3ZgTo0/EvsBukCSUbHP0oiR26oHJHuEqPS182nyW5zsePj12uSH11H/9fENjbOKU4
+         6oYq4o+htkCpvM3yAWGJMMAeMRPiFTLKQlVI5QA3H/OJaF7QDVQD1oDWN667IYisSWpY
+         NgRuEbSBy4kqhH3n2Nj4GhEJgmoxMTD65D6le4YYhR/S4mGTIqL5PRHtbEkllEjGH2ja
+         7jmEFYiHeBw/5QofkfbI6w6I/NKBrQk71uGFSqncF/DxDTk9QArkUt7Los03XmLqUd5c
+         Y/Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=/pkZzpK23dmwIi5+edhnCbw3h8UFfRYOpvCOiH4IOdI=;
-        b=FP+VNmKdqtbIUfcZJ1ZGxxVwd1dGQwpJasMMhAu/T1c1KCV1lRGhG4PSumOiWUyVUe
-         4bQDbqhJwwTOUYueahxp/VhP9+ubx/pLMQrgnemQ/f+3VVOIfCVtSvS91FMjHJDtpD0t
-         RiFExOC19xA5B5/g9ouJ8EAfsOlo+/uHOck2Oy0zVJYuU7PqyQ8OC2nw+K8k3lU6Z/Oi
-         ou96DnaZNQUF/uZiV+bR/H+FHGqV6tb40EJ+EyVgC3bjHGpFztszc661QhQPjDDRRwbk
-         AhasnYDnAcvKVzmcFVuFIXtVkyABf9XqdjL2LtgGjWsKahHj2AhD3LswYCshTcdNdsnN
-         /Tzw==
-X-Gm-Message-State: APjAAAWbeZp/Njzh54GApm8isUWbzvyainUMgf74aGVrHzr6QljGbggx
-        AwqxWMq4U/AiFPFpLa4q5y8=
-X-Google-Smtp-Source: APXvYqyfHwid5XXLbjTCd0bG4ZOVKPciFFswFQQxlS/PRPdYcgijCKFvKG+D7VKpK2fR6Jc3tfkL3A==
-X-Received: by 2002:a17:90a:fb87:: with SMTP id cp7mr1208391pjb.56.1575433342375;
-        Tue, 03 Dec 2019 20:22:22 -0800 (PST)
-Received: from ArchLinux ([103.231.91.34])
-        by smtp.gmail.com with ESMTPSA id l11sm5333608pff.120.2019.12.03.20.22.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 20:22:21 -0800 (PST)
-Date:   Wed, 4 Dec 2019 09:52:07 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] Enlist running kernel modules information
-Message-ID: <20191204041543.GA1086470@ArchLinux>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191203094845.610692-1-unixbhaskar@gmail.com>
- <CAK7LNASyrYv+pufwe4CfiNvd7NtriLw=FRdLOtu7CrbmZDSVHg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=B9MmqnRWtIVp3fWfwFCcQm9pMRp0v8IC2cGtCdVC9mo=;
+        b=WeNXBqndovFyYOkJoVdTz3+JUF0F4iu18FyT9UV9adrKKTTX8YgnzEQMGbd08Wbg1t
+         KSfQdCoNIh8dJAOX1NioJCR8zL6xSkw61VbeMW45eHZpwUpHQC5zgCvpLJ58exTNTbG9
+         H6Znsy/gKLukgAZdd0c2MxO3f5SlUovS+KHuoicWdNgvlc7iZfexiZtGe6/vrSdYrBzH
+         XBnndZFTSZo33rv2QPlGmgN6xOLpaqQfrdzkzeCmJlrEUjwdxXsTgsE8YNfcdvZd77r2
+         ZdfembvQM/Cj8n+bOruODbSjRENi09bDwMyo03508w9VY8SdgYBgDzd+ta+G3A2AgarQ
+         HmdA==
+X-Gm-Message-State: APjAAAXiWa2kjDlqfSp1YQhq0t4oXuQCCXHY8NNPzUPM+p2pBqVYPi7I
+        5nrMnhriDPs5GfsxDM/LDOxGxkMhkB3FB53F8dhhQD3nmMDeqQ==
+X-Google-Smtp-Source: APXvYqydGfQv0uEelxFJkSBYHU7qx8JzqjgefaZW1j0Obon9Qa2gCm+oYB1TDeYFAZ6xkXCjqD6Ce3GBLetwNkYvVVc=
+X-Received: by 2002:ac8:3177:: with SMTP id h52mr1082749qtb.264.1575433502917;
+ Tue, 03 Dec 2019 20:25:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="St7VIuEGZ6dlpu13"
-Content-Disposition: inline
-In-Reply-To: <CAK7LNASyrYv+pufwe4CfiNvd7NtriLw=FRdLOtu7CrbmZDSVHg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191203093704.7037-1-daniel.lezcano@linaro.org> <20191203093704.7037-2-daniel.lezcano@linaro.org>
+In-Reply-To: <20191203093704.7037-2-daniel.lezcano@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Wed, 4 Dec 2019 09:54:51 +0530
+Message-ID: <CAP245DV=kd=LdvgZ2x1Q8-ZahpS3423Z9vHXw91N20aQ6DKxAQ@mail.gmail.com>
+Subject: Re: [PATCH V3 2/4] thermal/drivers/cpu_cooling: Add idle cooling
+ device documentation
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---St7VIuEGZ6dlpu13
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 12:10 Wed 04 Dec 2019, Masahiro Yamada wrote:
->On Tue, Dec 3, 2019 at 6:49 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> w=
+On Tue, Dec 3, 2019 at 3:07 PM Daniel Lezcano <daniel.lezcano@linaro.org> w=
 rote:
->>
->> This is new file to show running kernel modules list.One line bash
->> script.
->>
->> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
->> ---
->>  scripts/kernel_modules_info.sh | 23 +++++++++++++++++++++++
->>  1 file changed, 23 insertions(+)
->>  create mode 100755 scripts/kernel_modules_info.sh
->>
->> diff --git a/scripts/kernel_modules_info.sh b/scripts/kernel_modules_inf=
-o.sh
->> new file mode 100755
->> index 000000000000..f005c47a3aa6
->> --- /dev/null
->> +++ b/scripts/kernel_modules_info.sh
->> @@ -0,0 +1,23 @@
->> +#!/bin/bash -
->> +#SPDX-License-Identifier: GPL-2.0
->> +#=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
->> +#
->> +#          FILE: kernel_modules_info.sh
->> +#
->> +#         USAGE: ./kernel_modules_info.sh
->> +#
->> +#   DESCRIPTION:  Running kernel modules information.
->> +#
->> +#       OPTIONS: ---
->> +#  REQUIREMENTS: awk
->> +#          BUGS: ---
->> +#         NOTES: ---
->> +#        AUTHOR: Bhaskar Chowdhury (https://about.me/unixbhaskar), unix=
-bhaskar@gmail.com
->> +#  ORGANIZATION: Independent
->> +#       CREATED: 12/03/2019 13:52
->> +#      REVISION:  ---
->> +#=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
->> +
->> +set -o nounset                              # Treat unset variables as =
-an error
->> +
->> +awk '{print $1}' "/proc/modules" | xargs modinfo | awk '/^(filename|des=
-c|depends)/'
 >
+> Provide some documentation for the idle injection cooling effect in
+> order to let people to understand the rational of the approach for the
+
+s/rational/rationale
+
+> idle injection CPU cooling device.
 >
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  .../driver-api/thermal/cpu-idle-cooling.rst   | 166 ++++++++++++++++++
+>  1 file changed, 166 insertions(+)
+>  create mode 100644 Documentation/driver-api/thermal/cpu-idle-cooling.rst
 >
->I want to see a good reason (e.g. useful for other developers) for upstrea=
-ming.
->This script looks like your custom script, which you can maintain locally.
+> diff --git a/Documentation/driver-api/thermal/cpu-idle-cooling.rst b/Docu=
+mentation/driver-api/thermal/cpu-idle-cooling.rst
+> new file mode 100644
+> index 000000000000..457cd9979ddb
+> --- /dev/null
+> +++ b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
+> @@ -0,0 +1,166 @@
+> +
+> +Situation:
+> +----------
+> +
+> +Under certain circumstances a SoC can reach the maximum temperature
+> +limit or is unable to stabilize the temperature around a temperature
 
-I think the usefulness comes from developers wants to see what are the
-modules are using by the running kernel in formatted way.=20
+s/the maximum/a critical/
 
-This is very simple way to enlist all the modules with descriptions of
-it.So , they can easily parse it with other scripts.
+s/or/and/
 
-I believe you have already copy and paste the single line on your
-terminal to see the output it produces, if not, I have already sent a
-mail which includes the out of it.
+> +control. When the SoC has to stabilize the temperature, the kernel can
+> +act on a cooling device to mitigate the dissipated power. When the
+> +maximum temperature is reached and to prevent a reboot or a shutdown,
+> +a decision must be taken to reduce the temperature under the critical
+> +threshold, that impacts the performance.
 
-If and only if, no other tool or mechanism(which might have skips my
-eyes and knowledge) to find and display information this way.
+Consider replacing above paragraph with:
 
-Kindly, share me the other way , you can achieve that. This is a generic
-script,and expecting stuff in common place, so everybody can use it.No,
-special requirement is needed.
+When the critical temperature is reached, a decision must be taken to
+reduce the temperature, that, in turn impacts performance.
 
-Here is little output,if you missed my other mail with it...
+> +
+> +Another situation is when the silicon reaches a certain temperature
+> +which continues to increase even if the dynamic leakage is reduced to
+> +its minimum by clock gating the component. The runaway phenomena will
 
-filename:/lib/modules/5.4.1-arch1-1ArchLinux-5.4.1/kernel/drivers/usb/host/=
-xhci-pci.ko.xz
-description:    xHCI PCI Host Controller Driver
-depends:        xhci-hcd
+s/phenomena/phenomenon/
 
-These output can be parse by other scripts too(cliche...sorry) ..
+> +continue with the static leakage and only powering down the component,
+> +thus dropping the dynamic and static leakage will allow the component
+> +to cool down.
+> +
 
-Thanks,
-Bhaskar
+Consider rephrasing as,
 
+Another situation is when the silicon temperature continues to
+increase even after the dynamic leakage is reduced to its minimum by
+clock gating the component. This runaway phenomenon can continue due
+to the static leakage. The only solution is to power down the
+component, thus dropping the dynamic and static leakage that will
+allow the component to cool down.
+
+
+> +Last but not least, the system can ask for a specific power budget but
+> +because of the OPP density, we can only choose an OPP with a power
+> +budget lower than the requested one and underuse the CPU, thus losing
+> +performances. In other words, one OPP under uses the CPU with a power
+
+s/performances/performance.
+
+s/underuse/under-utlilize/
+s/under use/under-utlilizes/
+
+> +lesser than the power budget and the next OPP exceed the power budget,
+
+s/lesser than the/less than the requested/
+s/exceed/exceeds/
+
+> +an intermediate OPP could have been used if it were present.
+
+Make this a new sentence.
+
+> +
+> +Solutions:
+> +----------
+> +
+> +If we can remove the static and the dynamic leakage for a specific
+> +duration in a controlled period, the SoC temperature will
+> +decrease. Acting at the idle state duration or the idle cycle
+
+s/at/for/ ?
+
+> +injection period, we can mitigate the temperature by modulating the
+> +power budget.
+> +
+> +The Operating Performance Point (OPP) density has a great influence on
+> +the control precision of cpufreq, however different vendors have a
+> +plethora of OPP density, and some have large power gap between OPPs,
+> +that will result in loss of performance during thermal control and
+> +loss of power in other scenes.
+
+s/scenes/scenarios/
+
+> +
+> +At a specific OPP, we can assume injecting idle cycle on all CPUs,
+> +belonging to the same cluster, with a duration greater than the
+
+Change to "we can assume that injecting idle cycles on all CPUs belong
+to the same cluster"
+
+> +cluster idle state target residency, we drop the static and the
+
+s/we drop/will lead to dropping/
+
+> +dynamic leakage for this period (modulo the energy needed to enter
+> +this state). So the sustainable power with idle cycles has a linear
+> +relation with the OPP=E2=80=99s sustainable power and can be computed wi=
+th a
+> +coefficient similar to:
+> +
+> +           Power(IdleCycle) =3D Coef x Power(OPP)
+> +
+> +Idle Injection:
+> +---------------
+> +
+> +The base concept of the idle injection is to force the CPU to go to an
+> +idle state for a specified time each control cycle, it provides
+> +another way to control CPU power and heat in addition to
+> +cpufreq. Ideally, if all CPUs belonging to the same cluster, inject
+> +their idle cycle synchronously, the cluster can reach its power down
+
+cycles
+
+> +state with a minimum power consumption and static leakage
+> +drop. However, these idle cycles injection will add extra latencies as
+
+s/static leakage drop/reduce static leakage to (almost) zero/
+
+> +the CPUs will have to wakeup from a deep sleep state.
+> +
+> +     ^
+> +     |
+> +     |
+> +     |-------       -------       -------
+> +     |_______|_____|_______|_____|_______|___________
+> +
+> +      <----->
+> +       idle  <---->
+> +              running
+> +
+> +With the fixed idle injection duration, we can give a value which is
+> +an acceptable performance drop off or latency when we reach a specific
+> +temperature and we begin to mitigate by varying the Idle injection
+> +period.
+> +
+
+I'm not sure what it the purpose of this statement. You've described
+how the period value starts at a maximum and is adjusted dynamically
+below.
+
+> +The mitigation begins with a maximum period value which decrease when
+
+Shouldn't the idle injection period increase to get more cooling effect?
+
+> +more cooling effect is requested. When the period duration is equal to
+> +the idle duration, then we are in a situation the platform can=E2=80=99t
+> +dissipate the heat enough and the mitigation fails. In this case the
+> +situation is considered critical and there is nothing to do. The idle
+> +injection duration must be changed by configuration and until we reach
+> +the cooling effect, otherwise an additionnal cooling device must be
+
+typo: additional
+
+> +used or ultimately decrease the SoC performance by dropping the
+> +highest OPP point of the SoC.
+> +
+> +The idle injection duration value must comply with the constraints:
+> +
+> +- It is lesser or equal to the latency we tolerate when the mitigation
+
+s/lesser/less than/
+
+> +  begins. It is platform dependent and will depend on the user
+> +  experience, reactivity vs performance trade off we want. This value
+> +  should be specified.
+> +
+> +- It is greater than the idle state=E2=80=99s target residency we want t=
+o go
+> +  for thermal mitigation, otherwise we end up consuming more energy.
+> +
+> +Minimum period
+> +--------------
+> +
+> +The idle injection duration being fixed, it is obvious the minimum
+
+Change to:
+When the idle injection duration is fixed,
+
+> +period can=E2=80=99t be lesser than that, otherwise we will be schedulin=
+g the
+> +idle injection task right before the idle injection duration is
+> +complete, so waking up the CPU to put it asleep again.
+> +
+> +Maximum period
+> +--------------
+> +
+> +The maximum period is the initial period when the mitigation
+> +begins. Theoretically when we reach the thermal trip point, we have to
+> +sustain a specified power for specific temperature but at this time we
+> +consume:
+> +
+> + Power =3D Capacitance x Voltage^2 x Frequency x Utilisation
+> +
+> +... which is more than the sustainable power (or there is something
+> +wrong on the system setup). The =E2=80=98Capacitance=E2=80=99 and =E2=80=
+=98Utilisation=E2=80=99 are a
+
+s/on/in/
+
+> +fixed value, =E2=80=98Voltage=E2=80=99 and the =E2=80=98Frequency=E2=80=
+=99 are fixed artificially
+> +because we don=E2=80=99t want to change the OPP. We can group the
+> +=E2=80=98Capacitance=E2=80=99 and the =E2=80=98Utilisation=E2=80=99 into=
+ a single term which is the
+> +=E2=80=98Dynamic Power Coefficient (Cdyn)=E2=80=99 Simplifying the above=
+, we have:
+> +
+> + Pdyn =3D Cdyn x Voltage^2 x Frequency
+> +
+> +The IPA will ask us somehow to reduce our power in order to target the
+
+s/IPA/power allocator governor/
+
+> +sustainable power defined in the device tree. So with the idle
+> +injection mechanism, we want an average power (Ptarget) resulting on
+
+s/on/in
+
+> +an amount of time running at full power on a specific OPP and idle
+> +another amount of time. That could be put in a equation:
+> +
+> + P(opp)target =3D ((trunning x (P(opp)running) + (tidle P(opp)idle)) /
+
+missed a 'x' after tidle.
+
+Suggest using capital T for time everwhere to make it easier to read.
+
+> +                       (trunning + tidle)
+> +  ...
+> +
+> + tidle =3D trunning x ((P(opp)running / P(opp)target) - 1)
+> +
+> +At this point if we know the running period for the CPU, that gives us
+> +the idle injection, we need. Alternatively if we have the idle
+
+Lose the comma.
+
+> +injection duration, we can compute the running duration with:
+> +
+> + trunning =3D tidle / ((P(opp)running / P(opp)target) - 1)
+> +
+> +Practically, if the running power is lesses than the targeted power,
+
+s/lesses/less/
+
+> +we end up with a negative time value, so obviously the equation usage
+> +is bound to a power reduction, hence a higher OPP is needed to have
+> +the running power greater than the targeted power.
+> +
+> +However, in this demonstration we ignore three aspects:
+> +
+> + * The static leakage is not defined here, we can introduce it in the
+> +   equation but assuming it will be zero most of the time as it is
+> +   difficult to get the values from the SoC vendors
+> +
+> + * The idle state wake up latency (or entry + exit latency) is not
+> +   taken into account, it must be added in the equation in order to
+> +   rigorously compute the idle injection
+> +
+> + * The injected idle duration must be greater than the idle state
+> +   target residency, otherwise we end up consuming more energy and
+> +   potentially invert the mitigation effect
+> +
+> +So the final equation is:
+> +
+> + trunning =3D (tidle - twakeup ) x
+> +               (((P(opp)dyn + P(opp)static ) - P(opp)target) / P(opp)tar=
+get )
+> --
+> 2.17.1
 >
->
->--=20
->Best Regards
->Masahiro Yamada
-
---St7VIuEGZ6dlpu13
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3nNGgACgkQsjqdtxFL
-KRUypggAgIbmgqA3OMg2FO8KR1Gn+rCPNkMTaekoI8YBpZyZEEriWb8zKTE6cYKQ
-T2SG2dtpKbCu8ZLchEcvhb3ZZtzhFkZvfHEFvn/adauqY6l/O1RqlJZq3Q+SggVz
-w42ceTdLu0O8NOdR2EKG0LhuL43g74By7RhmMMV+iR3H52OtCKyw5rV+z9n/K5dL
-opmGSpF9iH4NleHChPTy3ePUjJxFNXycOhM8PrtkenQ72Cdr34NkAP38eR7XDQVY
-7oZ5BEx+3O6B1KvypOI1e1+hmzypt7DfKwHSN+xifZu6YlvPJG4lV+2bFwhcDKfi
-xWbsPT0Rz4frny9krhnKBI2CZ0MQYg==
-=3QSx
------END PGP SIGNATURE-----
-
---St7VIuEGZ6dlpu13--
