@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4793FC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6F1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D907205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72AD9205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483871;
-	bh=PEHjJTX3goR5S8NOTB+zfkPx9jqMQFf45kBx9Ncjojk=;
+	s=default; t=1575483875;
+	bh=l9yHDJcal3aq3sI6P1LeEpTZuLYipVHXnMG2ZNDim2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c7Egwq5ZKH8fLOqL2mvNK+An1JP9oKXGC5sJYridGjIFGBz2DMUOxcBPS9Xh9lgrr
-	 cT9eChkzx/ob4YG7XxQ31h65v+DnzAGJcx+dbCstzCV+lIfYQ45b6ykKV1xvTLoIoO
-	 G7pz8TXNJwI4Nwhl7ikAO84CyFP6Ge1Wnpu+H1qg=
+	b=GWmY1Ng5hC1TQVAVZDElwy+HHdrA+/RFy12yGJ7bctZn/BGcrdyVt3xuwB1SUVgSG
+	 ySNvYTbZ8MOrB340+cTIZYd5Wbc4MlN8B9QBE5qlO2J+kdE41B6Zua7+48XZhyUvIi
+	 PL5WVNWPd0ciBDLdZOm81ZGHprGhv9oXzDUq0V18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729820AbfLDSCV (ORCPT
+        id S1730187AbfLDSYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:02:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43918 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:24:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729796AbfLDSCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:02:12 -0500
+        id S1729817AbfLDSCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:02:21 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19BB720659;
-        Wed,  4 Dec 2019 18:02:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E9642073B;
+        Wed,  4 Dec 2019 18:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482532;
-        bh=PEHjJTX3goR5S8NOTB+zfkPx9jqMQFf45kBx9Ncjojk=;
+        s=default; t=1575482540;
+        bh=l9yHDJcal3aq3sI6P1LeEpTZuLYipVHXnMG2ZNDim2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LWr8uXDSfRYyCOx6O9vT6M3T3KJaw/67uxo2M/lKS2q5IgG/clMNFC70SDAJElWfB
-         mzfMxGz3f/WtUisuTsre0at5Jz5uLXBZlE8MJu9iMjk/Ff7D0DXuntcex31lYng19v
-         kGpmvFHNKoSXRyGCQiyC3ADewU8mWB3bjuk2Kayw=
+        b=I2kmDTnSnJ4HhcmgMF43VgLVtiloGeQb2uNqKdyj2oRrC1THahrK+Oaqz+mX8k8Kn
+         4jRtQjlT726Gy/gkBBcAz1Q5y6NSCJS2j/vPuEI89Htbe+MI4IJ4O9Fw5LPZ2mqlI4
+         qOE3BIPk62VswibToVewhJK6UCcC5uJE9kVm3zXA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 033/209] ARM: debug-imx: only define DEBUG_IMX_UART_PORT if needed
-Date:   Wed,  4 Dec 2019 18:54:05 +0100
-Message-Id: <20191204175323.746447116@linuxfoundation.org>
+Subject: [PATCH 4.14 036/209] parisc: Fix HP SDC hpa address output
+Date:   Wed,  4 Dec 2019 18:54:08 +0100
+Message-Id: <20191204175323.921464877@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,65 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit 7c41ea57beb2aee96fa63091a457b1a2826f3c42 ]
+[ Upstream commit c4bff35ca1bfba886da6223c9fed76a2b1382b8e ]
 
-If debugging on i.MX is enabled DEBUG_IMX_UART_PORT defines which UART
-is used for the debug output. If however debugging is off don't only
-hide the then unused config item but drop it completely by using a
-dependency instead of a conditional prompt.
+Show the hpa address of the HP SDC instead of a hashed value, e.g.:
+HP SDC: HP SDC at 0xf0201000, IRQ 23 (NMI IRQ 24)
 
-This fixes DEBUG_IMX_UART_PORT being present in the kernel config even
-if DEBUG_LL is disabled.
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig.debug | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/input/serio/hp_sdc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 954ba8b810521..fd4b679945d3a 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -1376,21 +1376,21 @@ config DEBUG_OMAP2PLUS_UART
- 	depends on ARCH_OMAP2PLUS
+diff --git a/drivers/input/serio/hp_sdc.c b/drivers/input/serio/hp_sdc.c
+index 8eef6849d0660..5585823ced19d 100644
+--- a/drivers/input/serio/hp_sdc.c
++++ b/drivers/input/serio/hp_sdc.c
+@@ -887,8 +887,8 @@ static int __init hp_sdc_init(void)
+ 			"HP SDC NMI", &hp_sdc))
+ 		goto err2;
  
- config DEBUG_IMX_UART_PORT
--	int "i.MX Debug UART Port Selection" if DEBUG_IMX1_UART || \
--						DEBUG_IMX25_UART || \
--						DEBUG_IMX21_IMX27_UART || \
--						DEBUG_IMX31_UART || \
--						DEBUG_IMX35_UART || \
--						DEBUG_IMX50_UART || \
--						DEBUG_IMX51_UART || \
--						DEBUG_IMX53_UART || \
--						DEBUG_IMX6Q_UART || \
--						DEBUG_IMX6SL_UART || \
--						DEBUG_IMX6SX_UART || \
--						DEBUG_IMX6UL_UART || \
--						DEBUG_IMX7D_UART
-+	int "i.MX Debug UART Port Selection"
-+	depends on DEBUG_IMX1_UART || \
-+		   DEBUG_IMX25_UART || \
-+		   DEBUG_IMX21_IMX27_UART || \
-+		   DEBUG_IMX31_UART || \
-+		   DEBUG_IMX35_UART || \
-+		   DEBUG_IMX50_UART || \
-+		   DEBUG_IMX51_UART || \
-+		   DEBUG_IMX53_UART || \
-+		   DEBUG_IMX6Q_UART || \
-+		   DEBUG_IMX6SL_UART || \
-+		   DEBUG_IMX6SX_UART || \
-+		   DEBUG_IMX6UL_UART || \
-+		   DEBUG_IMX7D_UART
- 	default 1
--	depends on ARCH_MXC
- 	help
- 	  Choose UART port on which kernel low-level debug messages
- 	  should be output.
+-	printk(KERN_INFO PREFIX "HP SDC at 0x%p, IRQ %d (NMI IRQ %d)\n",
+-	       (void *)hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
++	pr_info(PREFIX "HP SDC at 0x%08lx, IRQ %d (NMI IRQ %d)\n",
++	       hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
+ 
+ 	hp_sdc_status_in8();
+ 	hp_sdc_data_in8();
 -- 
 2.20.1
 
