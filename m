@@ -3,75 +3,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32BBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85136C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A402F2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52AB2206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="a8S4mBC3"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="BBMUbwY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbfLDP7w (ORCPT
+        id S1728725AbfLDP7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:59:52 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37006 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728669AbfLDP7r (ORCPT
+        Wed, 4 Dec 2019 10:59:54 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37184 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728652AbfLDP7t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:59:47 -0500
-Received: by mail-qt1-f196.google.com with SMTP id w47so238055qtk.4
+        Wed, 4 Dec 2019 10:59:49 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w15so9268530wru.4
         for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:59:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=2gHoWz5U3gDvwOIWS+f4ZdY50s/vcrKHXb/YTJoNTqU=;
-        b=a8S4mBC3Dt23xxnDE1I9wz9WiyUF1CmXE2b5cIfPza4Al587zhEJsQ3/UfRwm9U+G/
-         rRRqctcvpDnT6sJ4PjIsg0jEuIdwrHHFaf9DZrY+XcZa5X5HqfADC4/ZE/fK2jOaAWgU
-         W2eTwrnf5+BiTNu9IleEmtU0sXaYA1ww/f2Z04R08eCD67sNZB4PEOIQ3156ZCKhqt1Q
-         F/b9ovj2Jub3p4xim85ROV4ZHUG0gj54u/9VbLyh6qveLWICy/KpXEvfQm/MlfKFqDLS
-         8vFiPKLYJ57TxShn7SFwh0QWW3AfkDec3XUS+DjVhJwEFPhmbNHzu28bBSQFiNURWkoT
-         4eLA==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3vOhxME4oM+fCXvGw9SeZO8ZtZ/Y7PIxuNLc7TEy6Us=;
+        b=BBMUbwY67rlDFQzYeKhhMrURjvq+SV00mi/aBQLu2XUm4f46pIt+flDS2ZdL34ILWA
+         DzDRxfz3Yse3rm5oSdZzFW6HbJOmk/562LaDsoSkah9MDpnNm6FirJxpYFPL19eTT5XO
+         cYgZWpYU/4cQcK2Vyv9QkBmwzwB3XE6JXTh9hU5vQ2WV1i6ExBsOUVUUh5Z9j+uOHmh4
+         f+Kvl8kbcALtFF3IEXsIDRhybsXftUPA+95fNvPhs/VZsBUY9y8HXjmpAUiWUbWxVJT8
+         7cMQILfswsNcQuk1QkzOzoHcVacLpetKWDxSOH2geHB+fbAOo159sxgUmbSf1Qjljkq6
+         kcGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2gHoWz5U3gDvwOIWS+f4ZdY50s/vcrKHXb/YTJoNTqU=;
-        b=fTd6JIRjGyvOckWcrXllUlzUBt6eJXJOrfaB7M6QjktHAH2YoOvpmBxDX5N7Yde2/a
-         rkC3UG830dBBA+o35THvZOrqrmpHWhu1KdmP0rOPqznYAvFA8XRQdltBEe2Yt2ZSK3Gi
-         2H2UodustRR/LCJ0pjClIns+MylCKpOmkPGcAv8S8TWElqtilv38fMAs55bcSWwEfEF/
-         lLYUYtaWwlKurA+vyOQU0r36gxp0UX+dP0elJV5409IBTytHfWdVsg3fEDdVxCUdyTEi
-         kYedQFKJyRWqaLfEam+vaUo7h0SyDm66heqv4ogHPM6m+xBiWAmgaVjPNJTA3N1llEZZ
-         iBrw==
-X-Gm-Message-State: APjAAAWSjYgVzFl6ZSD+uU3LuuRr9YVU7bouNEapdg4urE+9E0BtGAdJ
-        CFrl+KHqDneU8lTF91ZoS6J1FA==
-X-Google-Smtp-Source: APXvYqx9KAIwGf5i0C+05hdOsoH1Qz53bF4Ua1D78Kp4D5OsFHhBK4l+6RncFcIz1n4N/yJalTasNg==
-X-Received: by 2002:ac8:5319:: with SMTP id t25mr3419613qtn.242.1575475186888;
+        bh=3vOhxME4oM+fCXvGw9SeZO8ZtZ/Y7PIxuNLc7TEy6Us=;
+        b=DMITyOhujZ43xPmQhX0WNPz0qtW2cn2FaIYkPVTn8vff6w807exg9XC6wEM4BuBTRz
+         TnoAEV3uPhDilYoeDb9ekjZZ6dqqMp9M7aq6seETjIasaQKbtnNyhU+JnSyTum1TDawD
+         fIKk15T9rJt2a2sNsZFFEDUASc6aguuzWNOJg7GedOSx2JN1YXjkMqwMHuX8hchvV5tU
+         z0OXgDXdBBViKZsgAPUi5KJvgK0Q/wL/9FpzshZ1gJi7nDOznwdX3TxSUd4IAyF4P6OV
+         SFgyzRIcl4PLVHqUwG8KSeJ7EIEINRGMNeohH7ISRF46JfewtwoFsOK+nruBqeyw8h9A
+         xpEQ==
+X-Gm-Message-State: APjAAAX6JnRFp743gUB67O1aMu951kKdiNYCq8cBrAYtt+iUDnhxX/0h
+        IDRGJIeYgb8XQ2kVbN3UDICKkw==
+X-Google-Smtp-Source: APXvYqxDIY/iXDiy3QJ88E3DR3VBqpPxQnwpJM1KGnR56oJlEtM54rx1fvuTnHc5kW24DTAt+3ceSQ==
+X-Received: by 2002:adf:dcc2:: with SMTP id x2mr4555036wrm.24.1575475186930;
         Wed, 04 Dec 2019 07:59:46 -0800 (PST)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id w21sm4177585qth.17.2019.12.04.07.59.45
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id s10sm8769070wrw.12.2019.12.04.07.59.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:59:46 -0800 (PST)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        ebiederm@xmission.com, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        james.morse@arm.com, vladimir.murzin@arm.com,
-        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
-        mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com,
-        tglx@linutronix.de
-Subject: [PATCH v8 04/25] arm64: kexec: make dtb_mem always enabled
-Date:   Wed,  4 Dec 2019 10:59:17 -0500
-Message-Id: <20191204155938.2279686-5-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
-References: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
+        Wed, 04 Dec 2019 07:59:45 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 11/11] tools: gpio: implement gpio-watch
+Date:   Wed,  4 Dec 2019 16:59:41 +0100
+Message-Id: <20191204155941.17814-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191204155941.17814-1-brgl@bgdev.pl>
+References: <20191204155941.17814-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,56 +74,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, dtb_mem is enabled only when CONFIG_KEXEC_FILE is
-enabled. This adds ugly ifdefs to c files.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Always enabled dtb_mem, when it is not used, it is NULL.
-Change the dtb_mem to phys_addr_t, as it is a physical address.
+Add a simple program that allows to test the new LINECHANGED_FD ioctl().
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm64/include/asm/kexec.h    | 4 ++--
- arch/arm64/kernel/machine_kexec.c | 6 +-----
- 2 files changed, 3 insertions(+), 7 deletions(-)
+ tools/gpio/.gitignore   |   1 +
+ tools/gpio/Build        |   1 +
+ tools/gpio/Makefile     |  11 +++-
+ tools/gpio/gpio-watch.c | 112 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 124 insertions(+), 1 deletion(-)
+ create mode 100644 tools/gpio/gpio-watch.c
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 12a561a54128..ad6afed69078 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -90,14 +90,14 @@ static inline void crash_prepare_suspend(void) {}
- static inline void crash_post_resume(void) {}
- #endif
+diff --git a/tools/gpio/.gitignore b/tools/gpio/.gitignore
+index a94c0e83b209..fffd32969d62 100644
+--- a/tools/gpio/.gitignore
++++ b/tools/gpio/.gitignore
+@@ -1,4 +1,5 @@
+ gpio-event-mon
+ gpio-hammer
+ lsgpio
++gpio-watch
+ include/linux/gpio.h
+diff --git a/tools/gpio/Build b/tools/gpio/Build
+index 4141f35837db..67c7b7f6a717 100644
+--- a/tools/gpio/Build
++++ b/tools/gpio/Build
+@@ -2,3 +2,4 @@ gpio-utils-y += gpio-utils.o
+ lsgpio-y += lsgpio.o gpio-utils.o
+ gpio-hammer-y += gpio-hammer.o gpio-utils.o
+ gpio-event-mon-y += gpio-event-mon.o gpio-utils.o
++gpio-watch-y += gpio-watch.o
+diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
+index 6080de58861f..842287e42c83 100644
+--- a/tools/gpio/Makefile
++++ b/tools/gpio/Makefile
+@@ -18,7 +18,7 @@ MAKEFLAGS += -r
  
--#ifdef CONFIG_KEXEC_FILE
- #define ARCH_HAS_KIMAGE_ARCH
+ override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
  
- struct kimage_arch {
- 	void *dtb;
--	unsigned long dtb_mem;
-+	phys_addr_t dtb_mem;
- };
+-ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon
++ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon gpio-watch
+ ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
  
-+#ifdef CONFIG_KEXEC_FILE
- extern const struct kexec_file_ops kexec_image_ops;
+ all: $(ALL_PROGRAMS)
+@@ -66,6 +66,15 @@ $(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
+ $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
+ 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
  
- struct kimage;
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 8e9c924423b4..ae1bad0156cd 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -203,11 +203,7 @@ void machine_kexec(struct kimage *kimage)
- 	 * In kexec_file case, the kernel starts directly without purgatory.
- 	 */
- 	cpu_soft_restart(reboot_code_buffer_phys, kimage->head, kimage->start,
--#ifdef CONFIG_KEXEC_FILE
--						kimage->arch.dtb_mem);
--#else
--						0);
--#endif
-+			 kimage->arch.dtb_mem);
- 
- 	BUG(); /* Should never get here. */
- }
++#
++# gpio-watch
++#
++GPIO_WATCH_IN := $(OUTPUT)gpio-watch-in.o
++$(GPIO_WATCH_IN): prepare FORCE
++	$(Q)$(MAKE) $(build)=gpio-watch
++$(OUTPUT)gpio-watch: $(GPIO_WATCH_IN)
++	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
++
+ clean:
+ 	rm -f $(ALL_PROGRAMS)
+ 	rm -f $(OUTPUT)include/linux/gpio.h
+diff --git a/tools/gpio/gpio-watch.c b/tools/gpio/gpio-watch.c
+new file mode 100644
+index 000000000000..69aee43655ae
+--- /dev/null
++++ b/tools/gpio/gpio-watch.c
+@@ -0,0 +1,112 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * gpio-watch - monitor unrequested lines for property changes using the
++ *              character device
++ *
++ * Copyright (C) 2019 BayLibre SAS
++ * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
++ */
++
++#include <ctype.h>
++#include <errno.h>
++#include <fcntl.h>
++#include <linux/gpio.h>
++#include <poll.h>
++#include <stdbool.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/ioctl.h>
++#include <unistd.h>
++
++static bool isnumber(const char *str)
++{
++	size_t sz = strlen(str);
++	int i;
++
++	for (i = 0; i < sz; i++) {
++		if (!isdigit(str[i]))
++			return false;
++	}
++
++	return true;
++}
++
++int main(int argc, char **argv)
++{
++	struct gpioline_info_changed chg;
++	struct gpioline_info req;
++	struct pollfd pfd;
++	int fd, i, j, ret;
++	char *event;
++	ssize_t rd;
++
++	if (argc < 3)
++		goto err_usage;
++
++	fd = open(argv[1], O_RDWR | O_CLOEXEC);
++	if (fd < 0) {
++		perror("unable to open gpiochip");
++		return EXIT_FAILURE;
++	}
++
++	for (i = 0, j = 2; i < argc - 2; i++, j++) {
++		if (!isnumber(argv[j]))
++			goto err_usage;
++
++		memset(&req, 0, sizeof(req));
++		req.line_offset = atoi(argv[j]);
++
++		ret = ioctl(fd, GPIO_GET_LINEINFO_WATCH_IOCTL, &req);
++		if (ret) {
++			perror("unable to set up line watch");
++			return EXIT_FAILURE;
++		}
++	}
++
++	pfd.fd = fd;
++	pfd.events = POLLIN | POLLPRI;
++
++	for (;;) {
++		ret = poll(&pfd, 1, 5000);
++		if (ret < 0) {
++			perror("error polling the linechanged fd");
++			return EXIT_FAILURE;
++		} else if (ret > 0) {
++			memset(&chg, 0, sizeof(chg));
++			rd = read(pfd.fd, &chg, sizeof(chg));
++			if (rd < 0 || rd != sizeof(chg)) {
++				if (rd != sizeof(chg))
++					errno = EIO;
++
++				perror("error reading line change event");
++				return EXIT_FAILURE;
++			}
++
++			switch (chg.event_type) {
++			case GPIOLINE_CHANGED_REQUESTED:
++				event = "requested";
++				break;
++			case GPIOLINE_CHANGED_RELEASED:
++				event = "released";
++				break;
++			case GPIOLINE_CHANGED_CONFIG:
++				event = "config changed";
++				break;
++			default:
++				fprintf(stderr,
++					"invalid event type received from the kernel\n");
++				return EXIT_FAILURE;
++			}
++
++			printf("line %u: %s at %llu\n",
++			       chg.info.line_offset, event, chg.timestamp);
++		}
++	}
++
++	return 0;
++
++err_usage:
++	printf("%s: <gpiochip> <line0> <line1> ...\n", argv[0]);
++	return EXIT_FAILURE;
++}
 -- 
-2.24.0
+2.23.0
 
