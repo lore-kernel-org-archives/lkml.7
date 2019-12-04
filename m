@@ -2,147 +2,142 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA96FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377E2C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B05A82081B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E40F2084F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:54:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TRXATRf5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqtUE1no"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbfLDRxZ (ORCPT
+        id S1728258AbfLDRyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:53:25 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50742 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbfLDRxW (ORCPT
+        Wed, 4 Dec 2019 12:54:06 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34366 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727852AbfLDRyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:53:22 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrFpX079687;
-        Wed, 4 Dec 2019 11:53:15 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575481995;
-        bh=AnC853RFFoxs00i8fMk3eDa7i0nyPwZrTi1e2WCpjj8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=TRXATRf5F6o/rVNB7WveJsgTC6EOTmznGk1WH/p4zF4NDAyRamYyJetXDo2rKhno6
-         4/ohZEpEXJPbR8fYIXHx4OGUwf5nZJZem5qYJc6gUY2hMpsGuWp/UHT1RhHp/JWQqb
-         VtNMDs2gU38WZxfEeiZoHTqzA+5/NoG85pOMxIXk=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4HrF2D040848
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Dec 2019 11:53:15 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
- 2019 11:53:15 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Dec 2019 11:53:15 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrFp4034157;
-        Wed, 4 Dec 2019 11:53:15 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <mkl@pengutronix.de>
-CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Sean Nyekjaer <sean@geanix.com>
-Subject: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
-Date:   Wed, 4 Dec 2019 11:51:12 -0600
-Message-ID: <20191204175112.7308-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191204175112.7308-1-dmurphy@ti.com>
-References: <20191204175112.7308-1-dmurphy@ti.com>
+        Wed, 4 Dec 2019 12:54:05 -0500
+Received: by mail-io1-f68.google.com with SMTP id z193so584289iof.1;
+        Wed, 04 Dec 2019 09:54:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7Rhu4aVTP3SHJymoOSE6jn6lAKDbkxhTckaz9ubCxMc=;
+        b=eqtUE1noyuM8BxzbDMxzyqdljYKTzHhyFZRNmOiuWMgZ7/Dr9BJ6CwwpM8gaqipYeg
+         eZNhT3kxzMmcW6y0XsPp0JfxvYLVyKdDag+IjBXVTUmEyZfAjBOnjPPSeaqKmSDx/du7
+         rD00G0LPwfAnW17G3uCcucTdP61PcA4umlRWKthIIsFoZmOD5zsiELRq2GAZXI5YUrlb
+         2XSou9VQOQ8JxMxWYgsArcGdXoPUPg8oSJBFSNQsXbxqaQC5Eu62hl1g50owCRU7sQx3
+         sUPDUX/RP+p86a4V4BKSBgJxAyNOlLFiOSBnmOfwMIYVxKgwqWePihu36s741Lt/ohkO
+         T6+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7Rhu4aVTP3SHJymoOSE6jn6lAKDbkxhTckaz9ubCxMc=;
+        b=NjYzGl5Z6slTX2JIuF+Smgw9Iv97K3uMarvat9P/n0LOeH7OfDeNi2LvY5wHI48UZ8
+         JtWkWQ/5VJ338s3vf41lA769Iuf92+U4NXTyEMWJ8Es6tlKq6J3LAmSwd+BrUBVHcfJK
+         WC6eXRt639JPLIl2L9kQ+XiGn/oSQFBxgVEkyi6QjWod8S7enL5UtPIkRDrDawyg2grj
+         ksKKCBhNVrxVR0qkt6Tu1949ZHBcoknS/dvuPHhCAuFoOlpOB2Z+r5vsIQeQrhiDfUkb
+         LnYgXqqteSjauhiM1AksLNEZAFIvVqQcIJywuyDFnhQo/lx2HkLsfUOpzVQ7QlIyWMoY
+         Cc7A==
+X-Gm-Message-State: APjAAAWkKRedlqIpF/X7nblLkKl0aPtn8VQ16e7b16CpyIy0EjXFyLti
+        3+ZYCJy47zeSQJSAsfLtmI+XFfXcjmG2l4g8Hak=
+X-Google-Smtp-Source: APXvYqx0MZtv/TGr10HI8jDueGeBFRhkkLZ13EEYZPAiEPm8WPvXJzc4BDvj9q4//gK0ifWQqzWKIq0tSN5YXkqt7O4=
+X-Received: by 2002:a02:7f54:: with SMTP id r81mr4224567jac.121.1575482044379;
+ Wed, 04 Dec 2019 09:54:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191119214454.24996.66289.stgit@localhost.localdomain>
+ <20191119214653.24996.90695.stgit@localhost.localdomain> <65de00cf-5969-ea2e-545b-2228a4c859b0@redhat.com>
+ <20191128115436-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20191128115436-mutt-send-email-mst@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 4 Dec 2019 09:53:53 -0800
+Message-ID: <CAKgT0Uf3uhm5B6_aYphJEMLvWicMpnygfE=vYMDx7T4KSpMp-A@mail.gmail.com>
+Subject: Re: [PATCH v14 6/6] virtio-balloon: Add support for providing unused
+ page reports to host
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Oscar Salvador <osalvador@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The device has the ability to disable the wake-up pin option.
-The wake-up pin can be either force to GND or Vsup and does not have to
-be tied to a GPIO.  In order for the device to not use the wake-up feature
-write the register to disable the WAKE_CONFIG option.
+On Thu, Nov 28, 2019 at 9:00 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Thu, Nov 28, 2019 at 04:25:54PM +0100, David Hildenbrand wrote:
+> > On 19.11.19 22:46, Alexander Duyck wrote:
+> > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > >
+> > > Add support for the page reporting feature provided by virtio-balloon.
+> > > Reporting differs from the regular balloon functionality in that is is
+> > > much less durable than a standard memory balloon. Instead of creating a
+> > > list of pages that cannot be accessed the pages are only inaccessible
+> > > while they are being indicated to the virtio interface. Once the
+> > > interface has acknowledged them they are placed back into their respective
+> > > free lists and are once again accessible by the guest system.
+> >
+> > Maybe add something like "In contrast to ordinary balloon
+> > inflation/deflation, the guest can reuse all reported pages immediately
+> > after reporting has finished, without having to notify the hypervisor
+> > about it (e.g., VIRTIO_BALLOON_F_MUST_TELL_HOST does not apply)."
+>
+> Maybe we can make apply. The effect of reporting a page is effectively
+> putting it in a balloon then immediately taking it out. Maybe without
+> VIRTIO_BALLOON_F_MUST_TELL_HOST the pages can be reused before host
+> marked buffers used?
+>
+> We didn't teach existing page hinting to behave like this, but maybe we
+> should, and maybe it's not too late, not a long time passed
+> since it was merged, and the whole shrinker based thing
+> seems to have been broken ...
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Sean Nyekjaer <sean@geanix.com>
----
- drivers/net/can/m_can/tcan4x5x.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+The problem is the existing hinting implementation relies on pushing
+the memory to the point of OOM in order to avoid having to re-hint on
+pages. What it is looking for is a snapshot rather than a running
+tally. The page reporting bit approach would only work for the first
+migration. The problem is the bit is persistent and would leave unused
+pages flagged as reported if another migration starts so it wouldn't
+re-report those pages.
 
-diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
-index 3db619209fe1..6e37c3fd87af 100644
---- a/drivers/net/can/m_can/tcan4x5x.c
-+++ b/drivers/net/can/m_can/tcan4x5x.c
-@@ -101,6 +101,8 @@
- #define TCAN4X5X_MODE_STANDBY BIT(6)
- #define TCAN4X5X_MODE_NORMAL BIT(7)
- 
-+#define TCAN4X5X_DISABLE_WAKE_MSK	(BIT(31) | BIT(30))
-+
- #define TCAN4X5X_SW_RESET BIT(2)
- 
- #define TCAN4X5X_MCAN_CONFIGURED BIT(5)
-@@ -338,6 +340,15 @@ static int tcan4x5x_init(struct m_can_classdev *cdev)
- 	return ret;
- }
- 
-+static int tcan4x5x_disable_wake(struct m_can_classdev *cdev)
-+{
-+	struct tcan4x5x_priv *tcan4x5x = cdev->device_data;
-+
-+	return regmap_update_bits(tcan4x5x->regmap, TCAN4X5X_CONFIG,
-+				  TCAN4X5X_DISABLE_WAKE_MSK, 0x00);
-+
-+}
-+
- static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
- {
- 	struct tcan4x5x_priv *tcan4x5x = cdev->device_data;
-@@ -345,8 +356,10 @@ static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
- 	tcan4x5x->device_wake_gpio = devm_gpiod_get(cdev->dev, "device-wake",
- 						    GPIOD_OUT_HIGH);
- 	if (IS_ERR(tcan4x5x->device_wake_gpio)) {
--		dev_err(cdev->dev, "device-wake gpio not defined\n");
--		return -EINVAL;
-+		if (PTR_ERR(tcan4x5x->power) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		tcan4x5x_disable_wake(cdev);
- 	}
- 
- 	tcan4x5x->reset_gpio = devm_gpiod_get_optional(cdev->dev, "reset",
-@@ -428,10 +441,6 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
- 
- 	spi_set_drvdata(spi, priv);
- 
--	ret = tcan4x5x_parse_config(mcan_class);
--	if (ret)
--		goto out_clk;
--
- 	/* Configure the SPI bus */
- 	spi->bits_per_word = 32;
- 	ret = spi_setup(spi);
-@@ -441,6 +450,10 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
- 	priv->regmap = devm_regmap_init(&spi->dev, &tcan4x5x_bus,
- 					&spi->dev, &tcan4x5x_regmap);
- 
-+	ret = tcan4x5x_parse_config(mcan_class);
-+	if (ret)
-+		goto out_clk;
-+
- 	tcan4x5x_power_enable(priv->power, 1);
- 
- 	ret = m_can_class_register(mcan_class);
--- 
-2.23.0
+> BTW generally UAPI patches will have to be sent to virtio-dev
+> mailing list before they are merged.
 
+Do you need just the QEMU patches submitted to virtio-dev or both the
+virtio kernel patches and the QEMU patches?
+
+One piece of feedback I got was that it was annoying that I was
+including virtio-dev since it requires a subscription to send to it.
+If you would like I could apply it on the QEMU patches which would
+make the changes more visible at least.
+
+Thanks.
+
+- Alex
