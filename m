@@ -2,52 +2,52 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_BTC_ID,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A597C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633B0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121C020862
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E0FC20833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482970;
-	bh=SvzaFeAxpeoL+zdlUG6I1lgdAc3aDHVgtvV/3KsVv38=;
+	s=default; t=1575482973;
+	bh=tC/v4kvpKzq8JCffXM+a2Ma95LXY4yFKygP+qixgxVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=afQBrVIeGc2h+1pm7VkBjDTALeL/iF5W3SdqSxyY96T43o1KgA5WrlB+wanIVjndJ
-	 7FL4Z+S42qeYPLIqEWBrBn1bd5BBMlVw6HVaOlRc+G79ApadrYvtn4Y5rOEo2yGOZ9
-	 bFhLd/LrxCUoKXi8nLIzMeZIJcTnMzz9J/GwPR2E=
+	b=BBWUvVreqzu6tx2iCMExEA4QpAI7bJfFLFSnWZOKri2t/68FlcCcVmMkSJd52i/Ns
+	 plsy3RmlYfXqiucnoHNQsRY2G3kdI/xA6F5BnWudk4mbMwA4G1aABFvF612C3+CFxC
+	 qcO36mQLzLq6o0r+iLQ9ztxTG+zrAF3hJiCq9NX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731062AbfLDSJ3 (ORCPT
+        id S1731072AbfLDSJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:09:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:09:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731037AbfLDSJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:09:21 -0500
+        id S1730778AbfLDSJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:09:24 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2571720833;
-        Wed,  4 Dec 2019 18:09:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C64720674;
+        Wed,  4 Dec 2019 18:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482960;
-        bh=SvzaFeAxpeoL+zdlUG6I1lgdAc3aDHVgtvV/3KsVv38=;
+        s=default; t=1575482963;
+        bh=tC/v4kvpKzq8JCffXM+a2Ma95LXY4yFKygP+qixgxVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1eBdQBwR7+1o/0JstZIYwcdGl3ROPr57r3oVxah2+nbtjQqcbt3lHb4QIoihSlHwB
-         4RMoUaUshJSrCmgsXtRdVjWofCP2lC5Z6ZD5x0Fpo0khGjRtZ+zESOwY8plSfm6yox
-         +ponyiTQPGW8hdJe0e5Lq30ZSPWK0xoL4WBqRZtQ=
+        b=K3F3kKHWEdgxxdf4lucQ3noTjZXEdHMB7mwT7dVxkENQGgAps2YPAENUWFM/7OKmL
+         UELiYVUaLT6Tqgye8wz9Np8ZVSpN+sBBJJAPKyXLsKmpqlkXYLEb7JIFWFq5f1G9A5
+         CLY3gVpZMFYkWPa/OZ/PKdO6i8OOiMbAXXKmFKZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.14 205/209] ASoC: stm32: i2s: fix 16 bit format support
-Date:   Wed,  4 Dec 2019 18:56:57 +0100
-Message-Id: <20191204175337.600265937@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 4.14 188/209] futex: Replace PF_EXITPIDONE with a state
+Date:   Wed,  4 Dec 2019 18:56:40 +0100
+Message-Id: <20191204175336.430670266@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,33 +60,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 0c4c68d6fa1bae74d450e50823c24fcc3cd0b171 upstream.
+commit 3d4775df0a89240f671861c6ab6e8d59af8e9e41 upstream.
 
-I2S supports 16 bits data in 32 channel length.
-However the expected driver behavior, is to
-set channel length to 16 bits when data format is 16 bits.
+The futex exit handling relies on PF_ flags. That's suboptimal as it
+requires a smp_mb() and an ugly lock/unlock of the exiting tasks pi_lock in
+the middle of do_exit() to enforce the observability of PF_EXITING in the
+futex code.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Add a futex_state member to task_struct and convert the PF_EXITPIDONE logic
+over to the new state. The PF_EXITING dependency will be cleaned up in a
+later step.
+
+This prepares for handling various futex exit issues later.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20191106224556.149449274@linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/stm/stm32_i2s.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/futex.h |   33 +++++++++++++++++++++++++++++++++
+ include/linux/sched.h |    2 +-
+ kernel/exit.c         |   18 ++----------------
+ kernel/futex.c        |   25 +++++++++++++------------
+ 4 files changed, 49 insertions(+), 29 deletions(-)
 
---- a/sound/soc/stm/stm32_i2s.c
-+++ b/sound/soc/stm/stm32_i2s.c
-@@ -501,7 +501,7 @@ static int stm32_i2s_configure(struct sn
- 	switch (format) {
- 	case 16:
- 		cfgr = I2S_CGFR_DATLEN_SET(I2S_I2SMOD_DATLEN_16);
--		cfgr_mask = I2S_CGFR_DATLEN_MASK;
-+		cfgr_mask = I2S_CGFR_DATLEN_MASK | I2S_CGFR_CHLEN;
- 		break;
- 	case 32:
- 		cfgr = I2S_CGFR_DATLEN_SET(I2S_I2SMOD_DATLEN_32) |
+--- a/include/linux/futex.h
++++ b/include/linux/futex.h
+@@ -53,6 +53,10 @@ union futex_key {
+ #define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = NULL } }
+ 
+ #ifdef CONFIG_FUTEX
++enum {
++	FUTEX_STATE_OK,
++	FUTEX_STATE_DEAD,
++};
+ 
+ static inline void futex_init_task(struct task_struct *tsk)
+ {
+@@ -62,6 +66,34 @@ static inline void futex_init_task(struc
+ #endif
+ 	INIT_LIST_HEAD(&tsk->pi_state_list);
+ 	tsk->pi_state_cache = NULL;
++	tsk->futex_state = FUTEX_STATE_OK;
++}
++
++/**
++ * futex_exit_done - Sets the tasks futex state to FUTEX_STATE_DEAD
++ * @tsk:	task to set the state on
++ *
++ * Set the futex exit state of the task lockless. The futex waiter code
++ * observes that state when a task is exiting and loops until the task has
++ * actually finished the futex cleanup. The worst case for this is that the
++ * waiter runs through the wait loop until the state becomes visible.
++ *
++ * This has two callers:
++ *
++ * - futex_mm_release() after the futex exit cleanup has been done
++ *
++ * - do_exit() from the recursive fault handling path.
++ *
++ * In case of a recursive fault this is best effort. Either the futex exit
++ * code has run already or not. If the OWNER_DIED bit has been set on the
++ * futex then the waiter can take it over. If not, the problem is pushed
++ * back to user space. If the futex exit code did not run yet, then an
++ * already queued waiter might block forever, but there is nothing which
++ * can be done about that.
++ */
++static inline void futex_exit_done(struct task_struct *tsk)
++{
++	tsk->futex_state = FUTEX_STATE_DEAD;
+ }
+ 
+ void futex_mm_release(struct task_struct *tsk);
+@@ -71,6 +103,7 @@ long do_futex(u32 __user *uaddr, int op,
+ #else
+ static inline void futex_init_task(struct task_struct *tsk) { }
+ static inline void futex_mm_release(struct task_struct *tsk) { }
++static inline void futex_exit_done(struct task_struct *tsk) { }
+ #endif
+ 
+ #endif
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -959,6 +959,7 @@ struct task_struct {
+ #endif
+ 	struct list_head		pi_state_list;
+ 	struct futex_pi_state		*pi_state_cache;
++	unsigned int			futex_state;
+ #endif
+ #ifdef CONFIG_PERF_EVENTS
+ 	struct perf_event_context	*perf_event_ctxp[perf_nr_task_contexts];
+@@ -1334,7 +1335,6 @@ extern struct pid *cad_pid;
+  */
+ #define PF_IDLE			0x00000002	/* I am an IDLE thread */
+ #define PF_EXITING		0x00000004	/* Getting shut down */
+-#define PF_EXITPIDONE		0x00000008	/* PI exit done on shut down */
+ #define PF_VCPU			0x00000010	/* I'm a virtual CPU */
+ #define PF_WQ_WORKER		0x00000020	/* I'm a workqueue worker */
+ #define PF_FORKNOEXEC		0x00000040	/* Forked but didn't exec */
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -803,16 +803,7 @@ void __noreturn do_exit(long code)
+ 	 */
+ 	if (unlikely(tsk->flags & PF_EXITING)) {
+ 		pr_alert("Fixing recursive fault but reboot is needed!\n");
+-		/*
+-		 * We can do this unlocked here. The futex code uses
+-		 * this flag just to verify whether the pi state
+-		 * cleanup has been done or not. In the worst case it
+-		 * loops once more. We pretend that the cleanup was
+-		 * done as there is no way to return. Either the
+-		 * OWNER_DIED bit is set by now or we push the blocked
+-		 * task into the wait for ever nirwana as well.
+-		 */
+-		tsk->flags |= PF_EXITPIDONE;
++		futex_exit_done(tsk);
+ 		set_current_state(TASK_UNINTERRUPTIBLE);
+ 		schedule();
+ 	}
+@@ -902,12 +893,7 @@ void __noreturn do_exit(long code)
+ 	 * Make sure we are holding no locks:
+ 	 */
+ 	debug_check_no_locks_held();
+-	/*
+-	 * We can do this unlocked here. The futex code uses this flag
+-	 * just to verify whether the pi state cleanup has been done
+-	 * or not. In the worst case it loops once more.
+-	 */
+-	tsk->flags |= PF_EXITPIDONE;
++	futex_exit_done(tsk);
+ 
+ 	if (tsk->io_context)
+ 		exit_io_context(tsk);
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -1182,9 +1182,10 @@ static int handle_exit_race(u32 __user *
+ 	u32 uval2;
+ 
+ 	/*
+-	 * If PF_EXITPIDONE is not yet set, then try again.
++	 * If the futex exit state is not yet FUTEX_STATE_DEAD, wait
++	 * for it to finish.
+ 	 */
+-	if (tsk && !(tsk->flags & PF_EXITPIDONE))
++	if (tsk && tsk->futex_state != FUTEX_STATE_DEAD)
+ 		return -EAGAIN;
+ 
+ 	/*
+@@ -1203,8 +1204,9 @@ static int handle_exit_race(u32 __user *
+ 	 *    *uaddr = 0xC0000000;	     tsk = get_task(PID);
+ 	 *   }				     if (!tsk->flags & PF_EXITING) {
+ 	 *  ...				       attach();
+-	 *  tsk->flags |= PF_EXITPIDONE;     } else {
+-	 *				       if (!(tsk->flags & PF_EXITPIDONE))
++	 *  tsk->futex_state =               } else {
++	 *	FUTEX_STATE_DEAD;              if (tsk->futex_state !=
++	 *					  FUTEX_STATE_DEAD)
+ 	 *				         return -EAGAIN;
+ 	 *				       return -ESRCH; <--- FAIL
+ 	 *				     }
+@@ -1260,17 +1262,16 @@ static int attach_to_pi_owner(u32 __user
+ 	}
+ 
+ 	/*
+-	 * We need to look at the task state flags to figure out,
+-	 * whether the task is exiting. To protect against the do_exit
+-	 * change of the task flags, we do this protected by
+-	 * p->pi_lock:
++	 * We need to look at the task state to figure out, whether the
++	 * task is exiting. To protect against the change of the task state
++	 * in futex_exit_release(), we do this protected by p->pi_lock:
+ 	 */
+ 	raw_spin_lock_irq(&p->pi_lock);
+-	if (unlikely(p->flags & PF_EXITING)) {
++	if (unlikely(p->futex_state != FUTEX_STATE_OK)) {
+ 		/*
+-		 * The task is on the way out. When PF_EXITPIDONE is
+-		 * set, we know that the task has finished the
+-		 * cleanup:
++		 * The task is on the way out. When the futex state is
++		 * FUTEX_STATE_DEAD, we know that the task has finished
++		 * the cleanup:
+ 		 */
+ 		int ret = handle_exit_race(uaddr, uval, p);
+ 
 
 
