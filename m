@@ -2,220 +2,171 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBE9C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025A4C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCAEF206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3B1206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:29:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="FpspMFIl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SFaE4RCI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbfLDQ0Y (ORCPT
+        id S1728781AbfLDQ3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 11:26:24 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:41474 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbfLDQ0Y (ORCPT
+        Wed, 4 Dec 2019 11:29:09 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38437 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728203AbfLDQ3I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 11:26:24 -0500
-Received: by mail-il1-f195.google.com with SMTP id z90so76026ilc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 08:26:23 -0800 (PST)
+        Wed, 4 Dec 2019 11:29:08 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so9361777wrh.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 08:29:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=l5BvKTHM/zoTz4seGXHHfrWbsY5sP3TzOHZKpnPr4Mo=;
-        b=FpspMFIlGeZrqDF2/XJE4b4HJ2yZBDfWcQJBST1ER6ZNGPsXmpnJ/HpY9cZLdEsskL
-         h4W+ZdGRCAeboYcjWYYNcurqXIXr3YrZUItWge2R6BS63miR5/uT0hquIlPrAskCaraC
-         F/DKpQLq5M4tSh8Hu/TleOG1As1Ar4yjOfhwzbPet7mTRU5Z5tQFu+e6808Nys17zrEU
-         /HQ84hTzSa7VDlYrnvgpJIIdOk8yBjDDPv/WpFq323NP/QuEF2Zs32x4wOcKGcqXv3Jy
-         FkXgZWrRdeKcxk1909chNv8vLCzg1gRoQ+0vyt5ox6uZNtKFwQRECrykjFtn3f7eza7o
-         T/PA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=D5rUamk1jRqETnVA6xkEMUx0o5lujMHw5GXFxHClaJw=;
+        b=SFaE4RCIwmDDdSz0C9bhzC30iU+zd/w4XXJA2AzOeR1+ARZdOgtzcuyR8IgqmWT2jr
+         tSSIBBgYdwJy+/ScbAlBPFWNkTK5zh7Y/ct8qIaiYNn9lVK1tx/vArTZQid8RjWdegbl
+         a6qEI4wvQ8/vObbkP8VJTj5sdoP2gWv5Rpx+mD4sYJ93Ourf2fY+UNjuPlpkWwxmVt1F
+         xjqG1DGqj6SRLZQIsx1L5atT/n2VnIRD8QsjKYU+LOcMZOMoHKFLdwMswSd69zGe307B
+         jrZ5NPTADNQj7SBcsI+MKqmlaF8QQGO5cUVZ8qF7e62rsZ5an0gr68EpJrPrfZu55APL
+         7xhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=l5BvKTHM/zoTz4seGXHHfrWbsY5sP3TzOHZKpnPr4Mo=;
-        b=C+bfzjLsWCz/GkM/UMmTGCo1AKWv+FsVW0ZmZD/w2kUU2WhCpyw/QRdumxWZkbjLk6
-         dly2JoYxXJbW+IdPsQvUKw7KkaeBJtdq5uVBadRmxQ9Tay9/iT9HZNl5Phbes8k4f9kU
-         8+2bZwYSnd1lKGxlkNSco6fL45kTY7/KB4QA73kjC7V0FANfR9zd8qdWh600M63y+9RX
-         jFijw3Un7JS6zbMaXI8rHDrv7ci366kXmW7/gv4i+s5DWGo7MFF1+cj5Ddf/n3bn1yu4
-         Nefd6TLFjKSl1BzgbFgPfJPETnoLVRGDR0xNAKrUggwEpL8IZRXiDeee5vXjY2mo3aah
-         NpNg==
-X-Gm-Message-State: APjAAAVyXJuvz461a7urj6QujCrhjY334E4RZ9xeAwA4QoZd27kqOLMf
-        8zyPSvmghTmrssUJ6FZk6bkvefJzImd6meod9M2gAto/
-X-Google-Smtp-Source: APXvYqzPnzayZZW5JRkkCppKF13E27EKBv1MEhtf+GTBW7j/ktWbB/BIUkqH0asHGgA+VpuYb17oyKaxhfT+vVkEJYs=
-X-Received: by 2002:a92:96c2:: with SMTP id g185mr4335869ilh.40.1575476782926;
- Wed, 04 Dec 2019 08:26:22 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=D5rUamk1jRqETnVA6xkEMUx0o5lujMHw5GXFxHClaJw=;
+        b=OIoUUgGJcjpnWtBkfmt6RT7en4mDbH+jRh5QLnMMBSJqNG9+BKCMSxtqAGP/zxwIfc
+         Fz9FNcD16XCePJEPOGWdFvjNbsT678M65Fmxh1c8j/yHLOAApirU3ClzZemFsxA03d45
+         wE2QBFddyI4Bq3M+TmrQYkS095Hdpyj+dCe8QKDhVGVjtkUDYbX/EIFnlJKGuXPgMEaE
+         mj2r61bEpKrMVHNCxuCTrFoQFw+gZ8ecEQYU6ZQ0MJqt8W883FVUBfVMXJdWa16npf7L
+         s6yxaQDobBqj4gwtT1SMMBdiHR4zyZLMvsPeYgVLO08xB5tbpfkldhkPp7zjckKDnXMk
+         APIg==
+X-Gm-Message-State: APjAAAU6pGq7kUXQR60fAWYDOWv/hpGk8Hdj5ihqno6H7ne8elwphQrL
+        1SC7tm4ezD5FCTz6OgBQgA+hvA==
+X-Google-Smtp-Source: APXvYqxITTt4HxwKJDBAdAOuT1oxKRnN7NiezOH1hmqfYsbbHcZe+pn3Eyw/7aP7Lev4C3+bqA0x/g==
+X-Received: by 2002:a5d:4ec2:: with SMTP id s2mr4801350wrv.291.1575476945208;
+        Wed, 04 Dec 2019 08:29:05 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:d965:ceae:a314:6edb? ([2a01:e34:ed2f:f020:d965:ceae:a314:6edb])
+        by smtp.googlemail.com with ESMTPSA id f24sm7269260wmb.37.2019.12.04.08.29.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 08:29:04 -0800 (PST)
+Subject: Re: [PATCH v2 00/11] thermal: clean up output of make W=1
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, edubezval@gmail.com,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Javi Merino <javi.merino@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jun Nie <jun.nie@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <cover.1574242756.git.amit.kucheria@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4318ca22-2e7c-c529-e97d-73eec7266376@linaro.org>
+Date:   Wed, 4 Dec 2019 17:29:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191127133510.10614-1-brgl@bgdev.pl> <CACRpkdZ6e0GaE9KBJ1-E+cS_KnPY-EKLNxJFqjArr28hYMQqOg@mail.gmail.com>
- <CAMRc=McH6m3Lsvz8g1JSD_c-QNdb-Kh0+8BH5EKcEW2vM2VYJA@mail.gmail.com> <0058e57c-5765-3944-3137-10b780985a36@metux.net>
-In-Reply-To: <0058e57c-5765-3944-3137-10b780985a36@metux.net>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 4 Dec 2019 17:26:11 +0100
-Message-ID: <CAMRc=McHdtrvkLvT67ew1+88iPtRpd+MO1+5Tr3YsuLceQor1A@mail.gmail.com>
-Subject: Re: [PATCH 0/8] gpiolib: add an ioctl() for monitoring line status changes
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <cover.1574242756.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 4 gru 2019 o 13:06 Enrico Weigelt, metux IT consult
-<lkml@metux.net> napisa=C5=82(a):
->
-> On 29.11.19 11:58, Bartosz Golaszewski wrote:
->
-> Hi folks,
->
->
-> missed much of this thread, so please excuse me if I'm going to say
-> something stupid ;-)
->
-> > No, it really is just about keeping the line information in user-space
-> > synchronized with the one in the kernel without re-reading the line
-> > info periodically. Whether it's the kernel that requests the line or
-> > other user-space process doesn't matter. We just want to stay
-> > up-to-date with the information we already do have access to.
->
-> In that case, why not just using inotify+friends or some blocking read
-> for that ?
->
-> Personally, I'm a really big friend of synthentic filesystems instead of
-> ioctl()s, because they're so simple to use (don't wanna repeat the whole
-> Plan9 literature here ;-)), so I'd do it in this way:
->
-> * have a file in /sys/class/gpio/... holding the current gpio
->   information, in some easily parsable format. (either one file
->   globally or one per chip)
-> * a) this file can be monitored via inotify (just one event when
->      something had changed, or maybe have mtime reflect the time of
->      last change)
-> * b) allow read after EOF, which is blocking, until something changes
->
-> That way, userland implementation would be trivial enough to do it
-> in a simple shell script.
->
-> > It may seem like a feature-creep because this is the third new feature
-> > being added to the character device in a short span of time.
->
-> Personally, I'm not a fan of such chardevs at all, but this raises
-> another interesting pretty general topic: sidechannel/out-of-band data
-> of chardevs.
->
-> Originally, Unix chardevs have been designed as something operates on
-> streams of bytes, maybe with some extra operations (eg. setting baud
-> rate, etc). ioctl()s have been implemented as some escape route for such
-> extra functions. Over the many years, there's been a massive ioctl()
-> inflation, even hardware specific ones. IMHO, this is a huge mess, which
-> requires to lots of extra work for userland applications, which should
-> instead get generic interfaces, even leading to ridiculous things like
-> HAL, etc.
->
-> Seriously, we should lean back and think of better ways. One idea would
-> be making devices more directly-like, where things like oob-streams
-> or config attributes can be enumerated and addressed by names.
-> (actually, if I could change history, I'd make them actual directories)
->
-> > But at
-> > the same time: user-space wants to use GPIOs and they're mostly doing
-> > it over sysfs. If you want people to switch over to the character
-> > device - we must make it at least as useful as sysfs.
->
-> Personally, I don't see any practical reason, why I should use the
-> chardev at all - sysfs is much simpler. The only reason I see is when
-> needing to set several lines at once - but I haven't seen practical a
-> usecase where there isn't some specific device behind them, that
-> deservers it's own driver, attaching to some suitable subsystem.
-> (actually, I rarely talk to gpios directly from userland - except for
-> some lowlevel debugging purposes).
->
-> > These new features are not unjustified: I receive a significant amount
-> > of mail with feature-requests for libgpiod (also from people who are
-> > not well aware that I can only support features exposed by mainline
-> > kernel).
->
-> Do you have more detailed information on what these folks are really
-> up to, what their actual usecases are ?
->
-> > Last thing that users often complain about is the fact that with the
-> > character device, the state of GPIO lines used by user-space needs to
-> > be kept by the process using them. This unfortunately often comes from
-> > the lack of understanding of how a character device functions, but it
-> > really seems users want to have a centralized agent that takes control
-> > of the lines, provides standardized interface to interact with them
-> > and exports their metadata.
->
-> Yeah, I also sometimes have those kinds of clients. So far, in all cases
-> turned out that they actually needed a more high level device driver
-> (or extend an existing one) instead of touching gpios directly from
-> within the application. (usually things like relais or extra uart
-> signalling lines, power control, etc, via gpio, etc).
->
-> > Recognizing this fact, I implemented a proof-of-concept dbus daemon,
-> > but one thing that it could really
-> > benefit from is dynamic, event-based synchronization and this series
-> > tries to add just that (BTW please take a look at the discussion under
-> > patch 7/8 - the code in this series will probably change a lot).
->
-> Oh, no, I've been afraid that this would be coming ... desktop bus in
-> embedded system is a real nightmare. (yes, some people are even insane
-> enough to put that thing on an public IP interface and so make critical
-> machinery like cards easily remote controllable by average school kids)
->
+On 20/11/2019 16:45, Amit Kucheria wrote:
+> Cleanup output of make W=1 inside drivers/thermal. This should allow us to
+> focus on real issues that tend to get lost in the noise much better.
+> 
+> There is no functional change. This series was generate on top of
+> linux-next from 20191119.
+> 
+> Changes since v1:
+> - Add review tags
+> - Fixed up commit message for devfreq_cooling and samsung changes
 
-Nah, you're overreacting, nobody is putting anything on the network.
-Most of my work isn't in upstream kernel development - it's actually
-launching CE products. And it's been a long time since I've worked
-with a client that could be convinced not to use systemd and dbus on
-an embedded system. This just makes things so easy for people writing
-high-level application code that it's become de-facto standard -
-whether we like it or not.
+Applied, thanks!
 
-> Seriously, I've seen a lot of similar constructs in the field, all of
-> them have quickly turned out as complete crap - usually coming from
-> folks who need >50kLoc ontop of trivial cansocket with silly excuses
-> like formal certification :o). Please, don't give these kids a machine
-> gun, they will just hurt innocent people with it :P
->
 
-This is just your personal anecdote. I could bring up several examples
-of good implementations of event-based, dbus-oriented systems all
-right. Bad programmers don't make tools they're using bad.
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-As for the sysfs vs chardev: this has been discussed a lot. We won't
-be adding any new features to the sysfs interface. I want to add this
-new feature to allow for creating a central entity controlling GPIO
-lines in the user-space. In case of sysfs - IT IS such a central
-entity except that it lives in the kernel. It doesn't need to be
-notified about changes in line properties.
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-Bartosz
-
-> > We should probably start a new thread on this. I'll play the
-> > user-space's advocate and say: has anyone ever needed this? Do other
-> > kernel sub-systems do this?
->
-> Hotplug could lead to such situations.
->
-> Playing the kernel advocate here: better don't even consider opening
-> this apocalypse box and focus on clean kernel drivers instead :p
->
->
-> --mtx
->
-> ---
-> Enrico Weigelt, metux IT consult
-> Free software and Linux embedded engineering
-> info@metux.net -- +49-151-27565287
