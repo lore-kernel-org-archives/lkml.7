@@ -2,142 +2,237 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6976C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E33C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACBB32077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB3D20833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="D1ekevAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbfLDMoj (ORCPT
+        id S1727855AbfLDMpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:44:39 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34966 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726832AbfLDMoj (ORCPT
+        Wed, 4 Dec 2019 07:45:19 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:45811 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbfLDMpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:44:39 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4CgJnU085212;
-        Wed, 4 Dec 2019 07:44:31 -0500
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wnjeb0a5m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Dec 2019 07:44:30 -0500
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB4CZ8p3022319;
-        Wed, 4 Dec 2019 12:37:30 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma01dal.us.ibm.com with ESMTP id 2wkg26xf7u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Dec 2019 12:37:30 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB4CbT5J40632730
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Dec 2019 12:37:29 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D4C8A2805A;
-        Wed,  4 Dec 2019 12:37:29 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 97A812805C;
-        Wed,  4 Dec 2019 12:37:29 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.124.31.190])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Dec 2019 12:37:29 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id ACABD2E2EB4; Wed,  4 Dec 2019 18:07:28 +0530 (IST)
-Date:   Wed, 4 Dec 2019 18:07:28 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] powerpc/sysfs: Show idle_purr and idle_spurr for
- every CPU
-Message-ID: <20191204123728.GD5197@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <1574856072-30972-1-git-send-email-ego@linux.vnet.ibm.com>
- <1574856072-30972-3-git-send-email-ego@linux.vnet.ibm.com>
- <9b8f82b0-86dd-d524-aae6-34f8c33bd2c2@linux.vnet.ibm.com>
+        Wed, 4 Dec 2019 07:45:19 -0500
+Received: by mail-ua1-f66.google.com with SMTP id w10so2683584uar.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 04:45:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I9943LC2W7GsN2VUvqciqhs/8irYc/Qkc8ElGhd6zWY=;
+        b=D1ekevAWvG+e76RI65wfYbzcBE//kYMXdoapAplUlqEKsH4lspdwwbuzCIsIT2rtnh
+         teHLwE8FcjmIdJ49WoIO3Bf/vg4AcQL7Yv79j4W0JTj/5Rx7UxGyWPInSerl/AM+bSvW
+         orZxCtyqnmw2Qq/FMPznXPj0oUldse3cTNv7YVtcHf5lhwwN/LN57yq1yI8lYTuEngev
+         VkDvmAwvtRUgHtsdWqsAYP27U9sCFGQVBeHYsA2CwWd92QIjCLCq7Mm1k9EIlW1+xtDs
+         qpsKc57ER7izsMdTaHgEOanMx2naxLKsqvXDiCbBFL3YS7pS4HlBCNYocQ/XzbAvnz83
+         ykGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I9943LC2W7GsN2VUvqciqhs/8irYc/Qkc8ElGhd6zWY=;
+        b=HWaBppUJBosDSaFvKm2eblhUpOejvKm+mvsROYmOlzZeUQQ3NE2gFpdQQtbXTKL2Ee
+         DtP8Q/L4tcUkj41x60xI0dHkUVGOZFmq/PzQzwjo9urvINDInqj/0QEPVgOccrl70n9L
+         7EzRcihTDxEs51fkCBaaKPMon5Xb3XndHUD0Gz3Vm8a4fyH0IJ3RVsmr9gmNE6MQimkg
+         7g04umULLy/eTJB/v2nU1tdJNMDYDeUSYCzxnxMGYaDLjz18exqucY+a+PYT6/olJ+Tu
+         EWLZxpnot3+tO8lppVSTrw+U+M/uh9fQLRli9vh04xzzpwJKipsyJX8uke+wdbxDuTeW
+         5wqg==
+X-Gm-Message-State: APjAAAXKtwJcEpMzvyZBVtRZ9y93Odtk3XkRDqa/bT/c0NePX1Ouyy0H
+        GBNWcz2M8YXDoKukS0rx1GOA/CCJm3X5uCboJE5YS45kmF0qJQ==
+X-Google-Smtp-Source: APXvYqzuDbb/FE6aisnhUS4N4Cr5qvRQgmOLAGnNdex1jh+7Kfj7K66vq/MMKaXX5/JENpgqwfDSOBiCzC2R8WXXQus=
+X-Received: by 2002:ab0:7027:: with SMTP id u7mr2326314ual.94.1575463517590;
+ Wed, 04 Dec 2019 04:45:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9b8f82b0-86dd-d524-aae6-34f8c33bd2c2@linux.vnet.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 adultscore=0 spamscore=0 mlxlogscore=999 clxscore=1015
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912040103
+References: <20191015061349.141448-1-wvw@google.com> <CAHLCerNffKDgJKqaVTH3Kp_QfBLtm2M4H80xFDy=2fGXTVQR+w@mail.gmail.com>
+ <CAHLCerN0CWOox-_=ywVO40R9LCahBRoU6Myg3Ca3p_TkZyJAMw@mail.gmail.com>
+ <CAGXk5yp4uSCESvve5j_LbCr7b_55DqBagjNr_Dsdi=HppSpBPg@mail.gmail.com>
+ <CAHLCerN4ymf7LOGQPRLuAwirwCUaQGynrnUMfgU6+frDswey5A@mail.gmail.com> <CAGXk5ypP0qSm-GMbHJy+hQtYN1hw6Ow6XgeO9JDni0bD1bFSVg@mail.gmail.com>
+In-Reply-To: <CAGXk5ypP0qSm-GMbHJy+hQtYN1hw6Ow6XgeO9JDni0bD1bFSVg@mail.gmail.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Wed, 4 Dec 2019 18:15:06 +0530
+Message-ID: <CAHLCerOD2wOJq7QNGBOcLvkMz4wvc1+6Hk2+ZD__NFged3tLcw@mail.gmail.com>
+Subject: Re: [PATCH] thermal: create softlink by name for thermal_zone and cooling_device
+To:     Wei Wang <wvw@google.com>
+Cc:     Wei Wang <wei.vince.wang@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kamalesh,
+On Mon, Nov 11, 2019 at 11:22 PM Wei Wang <wvw@google.com> wrote:
+>
+> On Sun, Nov 10, 2019 at 9:26 PM Amit Kucheria
+> <amit.kucheria@verdurent.com> wrote:
+> >
+> > On Thu, Oct 17, 2019 at 3:04 AM Wei Wang <wvw@google.com> wrote:
+> > >
+> > > On Wed, Oct 16, 2019 at 10:16 AM Amit Kucheria
+> > > <amit.kucheria@verdurent.com> wrote:
+> > > >
+> > > > On Wed, Oct 16, 2019 at 10:20 PM Amit Kucheria
+> > > > <amit.kucheria@verdurent.com> wrote:
+> > > > >
+> > > > > On Tue, Oct 15, 2019 at 11:43 AM Wei Wang <wvw@google.com> wrote:
+> > > > > >
+> > > > > > The paths thermal_zone%d and cooling_device%d are not intuitive and the
+> > > > > > numbers are subject to change due to device tree change. This usually
+> > > > > > leads to tree traversal in userspace code.
+> > > > > > The patch creates `tz-by-name' and `cdev-by-name' for thermal zone and
+> > > > > > cooling_device respectively.
+> > > > >
+> > > > > I like this.
+> > > > >
+> > > > > > Signed-off-by: Wei Wang <wvw@google.com>
+> > > > > > ---
+> > > > > >  drivers/thermal/thermal_core.c | 23 +++++++++++++++++++++--
+> > > > > >  1 file changed, 21 insertions(+), 2 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> > > > > > index d4481cc8958f..0ff8fb1d7b0a 100644
+> > > > > > --- a/drivers/thermal/thermal_core.c
+> > > > > > +++ b/drivers/thermal/thermal_core.c
+> > > > > > @@ -22,6 +22,7 @@
+> > > > > >  #include <net/netlink.h>
+> > > > > >  #include <net/genetlink.h>
+> > > > > >  #include <linux/suspend.h>
+> > > > > > +#include <linux/kobject.h>
+> > > > > >
+> > > > > >  #define CREATE_TRACE_POINTS
+> > > > > >  #include <trace/events/thermal.h>
+> > > > > > @@ -46,6 +47,8 @@ static DEFINE_MUTEX(poweroff_lock);
+> > > > > >
+> > > > > >  static atomic_t in_suspend;
+> > > > > >  static bool power_off_triggered;
+> > > > > > +static struct kobject *cdev_link_kobj;
+> > > > > > +static struct kobject *tz_link_kobj;
+> > > > > >
+> > > > > >  static struct thermal_governor *def_governor;
+> > > > > >
+> > > > > > @@ -954,7 +957,7 @@ __thermal_cooling_device_register(struct device_node *np,
+> > > > > >         struct thermal_zone_device *pos = NULL;
+> > > > > >         int result;
+> > > > > >
+> > > > > > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH)
+> > > > > > +       if (!type || !type[0] || strlen(type) >= THERMAL_NAME_LENGTH)
+> > > > > >                 return ERR_PTR(-EINVAL);
+> > > > >
+> > > > > This should be a separate fix, if needed.
+> > > Agree, but the link now requires that "" as invalid _type_.
+> >
+> > I'm not sure I understand. What does this change have to do with
+> > adding symlinks below?
+> >
+>
+> cdev->type will be used later in sysfs_create_link and adding "" as
+> symlink is kind of bad practise AIUI.
+>
 
-On Tue, Dec 03, 2019 at 07:07:53PM +0530, Kamalesh Babulal wrote:
-> On 11/27/19 5:31 PM, Gautham R. Shenoy wrote:
-> > From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-> > 
-> > On Pseries LPARs, to calculate utilization, we need to know the
-> > [S]PURR ticks when the CPUs were busy or idle.
-> > 
-> > The total PURR and SPURR ticks are already exposed via the per-cpu
-> > sysfs files /sys/devices/system/cpu/cpuX/purr and
-> > /sys/devices/system/cpu/cpuX/spurr.
-> > 
-> > This patch adds support for exposing the idle PURR and SPURR ticks via
-> > /sys/devices/system/cpu/cpuX/idle_purr and
-> > /sys/devices/system/cpu/cpuX/idle_spurr.
-> 
-> The patch looks good to me, with a minor file mode nit pick mentioned below.
-> 
-> > 
-> > Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-> > ---
-> >  arch/powerpc/kernel/sysfs.c | 32 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> > 
-> > diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
-> > index 80a676d..42ade55 100644
-> > --- a/arch/powerpc/kernel/sysfs.c
-> > +++ b/arch/powerpc/kernel/sysfs.c
-> > @@ -1044,6 +1044,36 @@ static ssize_t show_physical_id(struct device *dev,
-> >  }
-> >  static DEVICE_ATTR(physical_id, 0444, show_physical_id, NULL);
-> > 
-> > +static ssize_t idle_purr_show(struct device *dev,
-> > +			      struct device_attribute *attr, char *buf)
-> > +{
-> > +	struct cpu *cpu = container_of(dev, struct cpu, dev);
-> > +	unsigned int cpuid = cpu->dev.id;
-> > +	struct lppaca *cpu_lppaca_ptr = paca_ptrs[cpuid]->lppaca_ptr;
-> > +	u64 idle_purr_cycles = be64_to_cpu(cpu_lppaca_ptr->wait_state_cycles);
-> > +
-> > +	return sprintf(buf, "%llx\n", idle_purr_cycles);
-> > +}
-> > +static DEVICE_ATTR_RO(idle_purr);
-> 
-> per cpu purr/spurr sysfs file is created with file mode 0400. Using
-> DEVICE_ATTR_RO for their idle_* variants will create sysfs files with 0444 as
-> their file mode, you should probably use DEVICE_ATTR() with file mode 0400 to
-> have consist permission for both variants.
+Perhaps I'm being dense here, in which case my apologies.
 
-Thanks for catching this. I missed checking the permissions of purr
-and spurr. Will send another version.
+But what stops us from splitting the patch into two?
+1. Make type == "" as invalid by using your change above and fixing up
+the strlcpy(cdev->type....) further down.
+2. Create the actual symlinks in a separate patch.
 
+Regards,
+Amit
 
-> 
-> -- 
-> Kamalesh
+> > > > >
+> > > > > >         if (!ops || !ops->get_max_state || !ops->get_cur_state ||
+> > > > > > @@ -989,9 +992,15 @@ __thermal_cooling_device_register(struct device_node *np,
+> > > > > >                 return ERR_PTR(result);
+> > > > > >         }
+> > > > > >
+> > > > > > -       /* Add 'this' new cdev to the global cdev list */
+> > > > > > +       /* Add 'this' new cdev to the global cdev list and create link*/
+> > > > > >         mutex_lock(&thermal_list_lock);
+> > > > > >         list_add(&cdev->node, &thermal_cdev_list);
+> > > > > > +       if (!cdev_link_kobj)
+> > > > > > +               cdev_link_kobj = kobject_create_and_add("cdev-by-name",
+> > > > > > +                                               cdev->device.kobj.parent);
+> > > > > > +       if (!cdev_link_kobj || sysfs_create_link(cdev_link_kobj,
+> > > > > > +                                               &cdev->device.kobj, cdev->type))
+> > > > > > +               dev_err(&cdev->device, "Failed to create cdev-by-name link\n");
+> > > > >
+> > > > > Any reason not to use the following form instead? It seems easier to read.
+> > > > >
+> > > > > if (!cdev_link_kobj) {
+> > > > >                cdev_link_kobj = kobject_create_and_add("cdev-by-name",
+> > > > >                                                cdev->device.kobj.parent);
+> > > > >               ret = sysfs_create_link(cdev_link_kobj,
+> > > > >                                               &cdev->device.kobj, cdev->type))
+> > > > >               if (ret)
+> > > > >                        dev_err(&cdev->device, "Failed to create
+> > > > > cdev-by-name link\n");
+> > > > > }
+> > > >
+> > > > I can now see why you had to do that - none of the other links would
+> > > > get created after the first one.
+> > > >
+> > > > Perhaps create the directories in the __init functions and only create
+> > > > the links here?
+> > > >
+> > > AFAICT, this is no such API except the private get_device_parent()
+> > > under driver/base/. Also the lazy initialization makes sense in such
+> > > case when there is no thermal device attached. Looks like the class
+> > > dir is also lazy-initialized when first device registered
+> > > https://elixir.bootlin.com/linux/v5.3.5/source/drivers/base/core.c#L1790.
+> >
+> > OK.
+> >
+> > > >
+> > > > > >         mutex_unlock(&thermal_list_lock);
+> > > > > >
+> > > > > >         /* Update binding information for 'this' new cdev */
+> > > > > > @@ -1157,6 +1166,8 @@ void thermal_cooling_device_unregister(struct thermal_cooling_device *cdev)
+> > > > > >                         }
+> > > > > >                 }
+> > > > > >         }
+> > > > > > +       if (cdev_link_kobj)
+> > > > > > +               sysfs_remove_link(cdev_link_kobj, cdev->type);
+> > > > > >
+> > > > > >         mutex_unlock(&thermal_list_lock);
+> > > > > >
+> > > > > > @@ -1340,6 +1351,12 @@ thermal_zone_device_register(const char *type, int trips, int mask,
+> > > > > >
+> > > > > >         mutex_lock(&thermal_list_lock);
+> > > > > >         list_add_tail(&tz->node, &thermal_tz_list);
+> > > > > > +       if (!tz_link_kobj)
+> > > > > > +               tz_link_kobj = kobject_create_and_add("tz-by-name",
+> > > > > > +                                               tz->device.kobj.parent);
+> > > > > > +       if (!tz_link_kobj || sysfs_create_link(tz_link_kobj,
+> > > > > > +                                               &tz->device.kobj, tz->type))
+> > > > > > +               dev_err(&tz->device, "Failed to create tz-by-name link\n");
+> > > > >
+> > > > > Same as above.
+> > > > >
+> > > > > >         mutex_unlock(&thermal_list_lock);
+> > > > > >
+> > > > > >         /* Bind cooling devices for this zone */
+> > > > > > @@ -1411,6 +1428,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
+> > > > > >                         }
+> > > > > >                 }
+> > > > > >         }
+> > > > > > +       if (tz_link_kobj)
+> > > > > > +               sysfs_remove_link(tz_link_kobj, tz->type);
+> > > > > >
+> > > > > >         mutex_unlock(&thermal_list_lock);
+> > > > > >
+> > > > > > --
+> > > > > > 2.23.0.700.g56cf767bdb-goog
+> > > > > >
