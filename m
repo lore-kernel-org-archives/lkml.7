@@ -2,151 +2,204 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202C9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A565C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E841420675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF5A20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:35:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfLDJdt (ORCPT
+        id S1727370AbfLDJf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:33:49 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12936 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726632AbfLDJdr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:33:47 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB49VrMo134776
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Dec 2019 04:33:46 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wkrj6pu9r-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 04:33:41 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Wed, 4 Dec 2019 09:33:09 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Dec 2019 09:33:06 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB49X5Xv27918376
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Dec 2019 09:33:05 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7616A4064;
-        Wed,  4 Dec 2019 09:33:04 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DE422A405B;
-        Wed,  4 Dec 2019 09:33:02 +0000 (GMT)
-Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.83.83])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Dec 2019 09:33:02 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
-        linuxram@us.ibm.com, psampat@linux.ibm.com,
-        pratik.sampat@in.ibm.com
-Subject: [RFC 2/3] powerpc/powernv: Introduce Self save support
-Date:   Wed,  4 Dec 2019 15:02:54 +0530
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191204093255.11849-1-psampat@linux.ibm.com>
-References: <20191204093255.11849-1-psampat@linux.ibm.com>
+        Wed, 4 Dec 2019 04:35:57 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53710 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725922AbfLDJf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 04:35:57 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 37E3EAEE9;
+        Wed,  4 Dec 2019 09:35:54 +0000 (UTC)
+Subject: Re: [PATCH] drm/modes: remove unused variables
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20191119134706.10893-1-benjamin.gaignard@st.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <8056f838-3ebf-26db-f5be-3e78d61aa512@suse.de>
+Date:   Wed, 4 Dec 2019 10:35:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120409-0008-0000-0000-0000033CDDC9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120409-0009-0000-0000-00004A5BFC48
-Message-Id: <20191204093255.11849-3-psampat@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-04_02:2019-12-04,2019-12-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- suspectscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
- mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0 impostorscore=0
- mlxlogscore=909 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912040073
+In-Reply-To: <20191119134706.10893-1-benjamin.gaignard@st.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="sfffbartdCm1Hzdfhnc51iGLfbb1MgGtC"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit introduces and leverages the Self save API which OPAL now
-supports.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--sfffbartdCm1Hzdfhnc51iGLfbb1MgGtC
+Content-Type: multipart/mixed; boundary="lZmjsAE54TEvtdZz45WVLMIwSBvAYr6Mu";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Benjamin Gaignard <benjamin.gaignard@st.com>,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, sean@poorly.run,
+ airlied@linux.ie, daniel@ffwll.ch
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Message-ID: <8056f838-3ebf-26db-f5be-3e78d61aa512@suse.de>
+Subject: Re: [PATCH] drm/modes: remove unused variables
+References: <20191119134706.10893-1-benjamin.gaignard@st.com>
+In-Reply-To: <20191119134706.10893-1-benjamin.gaignard@st.com>
 
-Add the new Self Save OPAL API call in the list of OPAL calls.
-Implement the self saving of the SPRs based on the support populated
-while respecting it's preferences.
+--lZmjsAE54TEvtdZz45WVLMIwSBvAYr6Mu
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-This implementation allows mixing of support for the SPRs, which
-means that a SPR can be self restored while another SPR be self saved if
-they support and prefer it to be so.
+Hi
 
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
----
- arch/powerpc/include/asm/opal-api.h        | 3 ++-
- arch/powerpc/include/asm/opal.h            | 1 +
- arch/powerpc/platforms/powernv/idle.c      | 2 ++
- arch/powerpc/platforms/powernv/opal-call.c | 1 +
- 4 files changed, 6 insertions(+), 1 deletion(-)
+Am 19.11.19 um 14:47 schrieb Benjamin Gaignard:
+> When compiling with W=3D1 few warnings about unused variables show up.
+> This patch removes all the involved variables.
+>=20
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  drivers/gpu/drm/drm_modes.c | 22 +++-------------------
+>  1 file changed, 3 insertions(+), 19 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
+> index 88232698d7a0..aca901aff042 100644
+> --- a/drivers/gpu/drm/drm_modes.c
+> +++ b/drivers/gpu/drm/drm_modes.c
+> @@ -233,7 +233,7 @@ struct drm_display_mode *drm_cvt_mode(struct drm_de=
+vice *dev, int hdisplay,
+>  		/* 3) Nominal HSync width (% of line period) - default 8 */
+>  #define CVT_HSYNC_PERCENTAGE	8
+>  		unsigned int hblank_percentage;
+> -		int vsyncandback_porch, vback_porch, hblank;
+> +		int vsyncandback_porch, hblank;
+> =20
+>  		/* estimated the horizontal period */
+>  		tmp1 =3D HV_FACTOR * 1000000  -
+> @@ -249,7 +249,6 @@ struct drm_display_mode *drm_cvt_mode(struct drm_de=
+vice *dev, int hdisplay,
+>  		else
+>  			vsyncandback_porch =3D tmp1;
+>  		/* 10. Find number of lines in back porch */
+> -		vback_porch =3D vsyncandback_porch - vsync;
+>  		drm_mode->vtotal =3D vdisplay_rnd + 2 * vmargin +
+>  				vsyncandback_porch + CVT_MIN_V_PORCH;
+>  		/* 5) Definition of Horizontal blanking time limitation */
+> @@ -386,9 +385,8 @@ drm_gtf_mode_complex(struct drm_device *dev, int hd=
+isplay, int vdisplay,
+>  	int top_margin, bottom_margin;
+>  	int interlace;
+>  	unsigned int hfreq_est;
+> -	int vsync_plus_bp, vback_porch;
+> -	unsigned int vtotal_lines, vfieldrate_est, hperiod;
+> -	unsigned int vfield_rate, vframe_rate;
+> +	int vsync_plus_bp;
+> +	unsigned int vtotal_lines;
+>  	int left_margin, right_margin;
+>  	unsigned int total_active_pixels, ideal_duty_cycle;
+>  	unsigned int hblank, total_pixels, pixel_freq;
+> @@ -451,23 +449,9 @@ drm_gtf_mode_complex(struct drm_device *dev, int h=
+display, int vdisplay,
+>  	/* [V SYNC+BP] =3D RINT(([MIN VSYNC+BP] * hfreq_est / 1000000)) */
+>  	vsync_plus_bp =3D MIN_VSYNC_PLUS_BP * hfreq_est / 1000;
+>  	vsync_plus_bp =3D (vsync_plus_bp + 500) / 1000;
+> -	/*  9. Find the number of lines in V back porch alone: */
+> -	vback_porch =3D vsync_plus_bp - V_SYNC_RQD;
+>  	/*  10. Find the total number of lines in Vertical field period: */
+>  	vtotal_lines =3D vdisplay_rnd + top_margin + bottom_margin +
+>  			vsync_plus_bp + GTF_MIN_V_PORCH;
+> -	/*  11. Estimate the Vertical field frequency: */
+> -	vfieldrate_est =3D hfreq_est / vtotal_lines;
+> -	/*  12. Find the actual horizontal period: */
+> -	hperiod =3D 1000000 / (vfieldrate_rqd * vtotal_lines);
+> -
+> -	/*  13. Find the actual Vertical field frequency: */
+> -	vfield_rate =3D hfreq_est / vtotal_lines;
+> -	/*  14. Find the Vertical frame frequency: */
+> -	if (interlaced)
+> -		vframe_rate =3D vfield_rate / 2;
+> -	else
+> -		vframe_rate =3D vfield_rate;
 
-diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-index c1f25a760eb1..89b7c44124e6 100644
---- a/arch/powerpc/include/asm/opal-api.h
-+++ b/arch/powerpc/include/asm/opal-api.h
-@@ -214,7 +214,8 @@
- #define OPAL_SECVAR_GET				176
- #define OPAL_SECVAR_GET_NEXT			177
- #define OPAL_SECVAR_ENQUEUE_UPDATE		178
--#define OPAL_LAST				178
-+#define OPAL_SLW_SELF_SAVE_REG			179
-+#define OPAL_LAST				179
- 
- #define QUIESCE_HOLD			1 /* Spin all calls at entry */
- #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
-diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-index 9986ac34b8e2..389a85b63805 100644
---- a/arch/powerpc/include/asm/opal.h
-+++ b/arch/powerpc/include/asm/opal.h
-@@ -203,6 +203,7 @@ int64_t opal_handle_hmi(void);
- int64_t opal_handle_hmi2(__be64 *out_flags);
- int64_t opal_register_dump_region(uint32_t id, uint64_t start, uint64_t end);
- int64_t opal_unregister_dump_region(uint32_t id);
-+int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn);
- int64_t opal_slw_set_reg(uint64_t cpu_pir, uint64_t sprn, uint64_t val);
- int64_t opal_config_cpu_idle_state(uint64_t state, uint64_t flag);
- int64_t opal_pci_set_phb_cxl_mode(uint64_t phb_id, uint64_t mode, uint64_t pe_number);
-diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-index d38b8b6dcbce..e33bb3fd88ac 100644
---- a/arch/powerpc/platforms/powernv/idle.c
-+++ b/arch/powerpc/platforms/powernv/idle.c
-@@ -1170,6 +1170,8 @@ void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
- 		if (!is_lpcr_self_save)
- 			opal_slw_set_reg(pir, SPRN_LPCR,
- 					 lpcr_val);
-+		else
-+			opal_slw_self_save_reg(pir, SPRN_LPCR);
- 	}
- }
- 
-diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-index 5cd0f52d258f..11e0ceb90de0 100644
---- a/arch/powerpc/platforms/powernv/opal-call.c
-+++ b/arch/powerpc/platforms/powernv/opal-call.c
-@@ -223,6 +223,7 @@ OPAL_CALL(opal_handle_hmi,			OPAL_HANDLE_HMI);
- OPAL_CALL(opal_handle_hmi2,			OPAL_HANDLE_HMI2);
- OPAL_CALL(opal_config_cpu_idle_state,		OPAL_CONFIG_CPU_IDLE_STATE);
- OPAL_CALL(opal_slw_set_reg,			OPAL_SLW_SET_REG);
-+OPAL_CALL(opal_slw_self_save_reg,		OPAL_SLW_SELF_SAVE_REG);
- OPAL_CALL(opal_register_dump_region,		OPAL_REGISTER_DUMP_REGION);
- OPAL_CALL(opal_unregister_dump_region,		OPAL_UNREGISTER_DUMP_REGION);
- OPAL_CALL(opal_pci_set_phb_cxl_mode,		OPAL_PCI_SET_PHB_CAPI_MODE);
--- 
-2.21.0
+The amount of unused code is quite large, which makes me wonder if
+there's something missing below where these variables are supposed to be
+used.
 
+If these variables can be removed, comments should mention that steps 9
+and 11 to 14 are being left out. After all, the function is fairly
+explicit about implementing the GTF algorithm step by step.
+
+Best regards
+Thomas
+
+>  	/*  15. Find number of pixels in left margin: */
+>  	if (margins)
+>  		left_margin =3D (hdisplay_rnd * GTF_MARGIN_PERCENTAGE + 500) /
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--lZmjsAE54TEvtdZz45WVLMIwSBvAYr6Mu--
+
+--sfffbartdCm1Hzdfhnc51iGLfbb1MgGtC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl3nffYACgkQaA3BHVML
+eiMuxQgAujArLx8zCUeLyffw6jwoRdIykRccpQ9vIcfalO67kjMBvuLH4TuYkhxa
+TMzgqIViKE9QeQzYuSMtrY+Csvys7Rpy7AF0NgxyrdeQ0cNT/MGlJvdxYpmtxxrz
+gpSLC7U4wyPnDbK1co0EIT5FJlIhJ05gQbmd6QAkkFFeBAFHHJ/3eiDsjGptYQIG
+pF0OQaDcCDopr8U8f3ZRhySpTXZp1juSDVXTDbIRZpWhgOy8nG8cOXjKhvPQxkuH
+8COEua8l9tK+6Cdvd/u7sONBp6envrZxDFqv/TYLmvueGzwYvKXw8SmSyuAhbMI3
+sfz+5ROOL9VnH2o7UlF+YLs4q5EUNQ==
+=+FHY
+-----END PGP SIGNATURE-----
+
+--sfffbartdCm1Hzdfhnc51iGLfbb1MgGtC--
