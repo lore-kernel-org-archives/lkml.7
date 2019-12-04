@@ -2,129 +2,115 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0DAC2D0BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB011C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC3C20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:02:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="jTQIKrnx"
+	by mail.kernel.org (Postfix) with ESMTP id B963E206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:02:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbfLDXB7 (ORCPT
+        id S1728427AbfLDXCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 18:01:59 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41415 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbfLDXB6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 18:01:58 -0500
-Received: by mail-lf1-f68.google.com with SMTP id m30so879633lfp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 15:01:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=J0ucEi1G0QnviAHmx5pW9x6HCfetITK2+jAEtIBDfrI=;
-        b=jTQIKrnxHb/vY1zX7oguKswg6y2Sv/0RLFLCXXLBLnXxv+Mq8gGIViTnbLaifwF8QS
-         bS8o2l7KJnVGLsbTPSvJb7yzHApIt8X2ZaFyq1q16oumzSWVOQfAP4HC9mv868ouRM1O
-         05f2cS+n8ZB3TdYJs/drIK67c8yWqvSHYXL237lZ9Em8Jeqz8+8xjf9QVxXj78tpLNrQ
-         jKJdSboYvAK38WOwwmzbbMBXwTACGNAKA5d3Xd7ErwNM+eqOhGKs6HOJvEG3+KCzU6go
-         FWjQ0SUcpBy5SyPBhfw+YJ/jbD6rehZCIApmSBUOvapgn0rKsUKeB51W9ToTF+tXypv+
-         gZjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=J0ucEi1G0QnviAHmx5pW9x6HCfetITK2+jAEtIBDfrI=;
-        b=XqkO47s3XRQqHVQsfkCDkkEUS2aKI2EmpPAXqjTMBHocye84T8jQ+ZvxLxj5dJyvey
-         YKynNrBfx+iUUa8TZmjapEdowhXWlZAoKZrB6kLyEBu9i60CCpPkIuxNZy9pMr7em6NR
-         WN/8GYE0a1Mz0IPXyIeqGKBbYbtKKAKw2NSd5IN9Jg/xPOEmdx9M6kddMqzYGtRIZ7mS
-         JTDG9C2j1mL0rI5Kebq04U3aKVk5SWXru7eUr4zJuJa9ccKbGU3vlM6BdNh8DXnxIKu7
-         LRyqSdiKOIBefJTzq06HAuHMLdrjYkPKDdLOuYnCvKSIt8aUVQhtW9Ac35JmXT+lOQVE
-         qWBg==
-X-Gm-Message-State: APjAAAX9r59e3/J7B372mBzG1HoiFTOfPahjQ0/64Oxr8G2cnMlguC2/
-        sDjPtlPPEuU5UJ8MilKxEVtJ6w==
-X-Google-Smtp-Source: APXvYqxySJ7CXdTZalDskjNmsGdbbjR3D5tX2IaT+1GugoeOTw3GDKdUgKpg4BA7d25Cv6FtxtJ9WA==
-X-Received: by 2002:ac2:5107:: with SMTP id q7mr3389886lfb.177.1575500516805;
-        Wed, 04 Dec 2019 15:01:56 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id 138sm4101307lfa.76.2019.12.04.15.01.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 15:01:56 -0800 (PST)
-Date:   Wed, 4 Dec 2019 15:01:36 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     willemdebruijn.kernel@gmail.com, vvidic@valentin-vidic.from.hr,
-        borisp@mellanox.com, aviadye@mellanox.com,
-        john.fastabend@gmail.com, daniel@iogearbox.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net/tls: Fix return values for setsockopt
-Message-ID: <20191204150136.2f001242@cakuba.netronome.com>
-In-Reply-To: <20191204.125135.750458923752225025.davem@davemloft.net>
-References: <CA+FuTSdcDW1oJU=BK-rifxm1n4kh0tkj0qQQfOGSoUOkkBKrFg@mail.gmail.com>
-        <20191204113544.2d537bf7@cakuba.netronome.com>
-        <CA+FuTSdhtGZtTnuncpYaoOROF7L=coGawCPSLv7jzos2Q+Tb=Q@mail.gmail.com>
-        <20191204.125135.750458923752225025.davem@davemloft.net>
-Organization: Netronome Systems, Ltd.
+        Wed, 4 Dec 2019 18:02:37 -0500
+Received: from mga01.intel.com ([192.55.52.88]:58110 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728011AbfLDXCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 18:02:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 15:02:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,278,1571727600"; 
+   d="scan'208";a="243024489"
+Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.135.23]) ([10.249.135.23])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Dec 2019 15:02:35 -0800
+Subject: Re: [PATCH 4.19 082/321] ACPI / LPSS: Ignore
+ acpi_device_fix_up_power() return value
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+References: <20191203223427.103571230@linuxfoundation.org>
+ <20191203223431.423864271@linuxfoundation.org> <20191204212735.GC7678@amd>
+From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
+ 173, 80-298 Gdansk
+Message-ID: <d9ac8b3a-39f7-c9c2-5bb5-9aa774a2de45@intel.com>
+Date:   Thu, 5 Dec 2019 00:02:34 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191204212735.GC7678@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 04 Dec 2019 12:51:35 -0800 (PST), David Miller wrote:
-> From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> Date: Wed, 4 Dec 2019 15:43:00 -0500
-> > On Wed, Dec 4, 2019 at 2:36 PM Jakub Kicinski wrote:  
-> >> On Wed, 4 Dec 2019 14:22:55 -0500, Willem de Bruijn wrote:  
-> >> > On Tue, Dec 3, 2019 at 6:08 PM Jakub Kicinski wrote:  
-> >> > > On Tue,  3 Dec 2019 23:44:58 +0100, Valentin Vidic wrote:  
-> >> > > > ENOTSUPP is not available in userspace:
-> >> > > >
-> >> > > >   setsockopt failed, 524, Unknown error 524
-> >> > > >
-> >> > > > Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>  
-> >> > >
-> >> > > I'm not 100% clear on whether we can change the return codes after they
-> >> > > had been exposed to user space for numerous releases..  
-> >> >
-> >> > This has also come up in the context of SO_ZEROCOPY in the past. In my
-> >> > opinion the answer is no. A quick grep | wc -l in net/ shows 99
-> >> > matches for this error code. Only a fraction of those probably make it
-> >> > to userspace, but definitely more than this single case.
-> >> >
-> >> > If anything, it may be time to define it in uapi?  
-> >>
-> >> No opinion but FWIW I'm toying with some CI for netdev, I've added a
-> >> check for use of ENOTSUPP, apparently checkpatch already sniffs out
-> >> uses of ENOSYS, so seems appropriate to add this one.  
-> > 
-> > Good idea if not exposing this in UAPI.  
-> 
-> I'm trying to understand this part of the discussion.
-> 
-> If we have been returning a non-valid error code, this 524 internal
-> kernel thing, it is _NOT_ an exposed UAPI.
-> 
-> It is a kernel bug and we should fix it.
+On 12/4/2019 10:27 PM, Pavel Machek wrote:
+> Hi!
+>
+>> From: Hans de Goede <hdegoede@redhat.com>
+>>
+>> [ Upstream commit 1a2fa02f7489dc4d746f2a15fb77b3ce1affade8 ]
+>>
+>> Ignore acpi_device_fix_up_power() return value. If we return an error
+>> we end up with acpi_default_enumeration() still creating a platform-
+>> device for the device and we end up with the device still being used
+>> but without the special LPSS related handling which is not useful.
+>>
+>> Specicifically ignoring the error fixes the touchscreen no longer
+>> working after a suspend/resume on a Prowise PT301 tablet.
+> I'm pretty sure it does, but:
+>
+> a) do you believe this is right patch for -stable?
 
-I agree. We should just fix this.
+Yes.
 
-As Willem points out the use of this error code has spread, but in
-theory I'm a co-maintainer of the TLS code now, and my maintainer 
-gut says "just fix it" :)
 
-> If userspace anywhere is checking for 524, that is what needs to be fixed.
+>   Should it get lot more testing in mainline
 
-FWIW I did a quick grep through openssl and gnutls and fbthrift and I
-see no references to ENOTSUPP or 524.
+It's been in the mainline since 5.0 and I'm not aware of any bug reports 
+against it.
 
-Valentin, what's the strategy you're using for this fix? There's a
-bunch of ENOTSUPP in net/tls/tls_sw.c as well, could you convert those,
-too?
+
+>   as it.... may change things in a wrong way
+> for someone else?
+>
+> b) if we are ignoring errors now, should we at least printk() to let
+> the user know that something is wrong with the ACPI tables?
+
+The question whether or not to print a message is orthogonal to this 
+patch.   Perhaps it would be useful to print a message on an error 
+regardless of whether or not the error is ignored, but then users would 
+need to know what to do about that error message.
+
+
+>> diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+>> index b21c241aaab9f..30ccd94f87d24 100644
+>> --- a/drivers/acpi/acpi_lpss.c
+>> +++ b/drivers/acpi/acpi_lpss.c
+>> @@ -665,12 +665,7 @@ static int acpi_lpss_create_device(struct acpi_device *adev,
+>>   	 * have _PS0 and _PS3 without _PSC (and no power resources), so
+>>   	 * acpi_bus_init_power() will assume that the BIOS has put them into D0.
+>>   	 */
+>> -	ret = acpi_device_fix_up_power(adev);
+>> -	if (ret) {
+>> -		/* Skip the device, but continue the namespace scan. */
+>> -		ret = 0;
+>> -		goto err_out;
+>> -	}
+>> +	acpi_device_fix_up_power(adev);
+>
+>
+>>   	adev->driver_data = pdata;
+>>   	pdev = acpi_create_platform_device(adev, dev_desc->properties);
+
+
