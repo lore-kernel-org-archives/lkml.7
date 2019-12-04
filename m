@@ -2,150 +2,151 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69885C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202C9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A9D920675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:33:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VikpHcZ/"
+	by mail.kernel.org (Postfix) with ESMTP id E841420675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfLDJdp (ORCPT
+        id S1727541AbfLDJdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:33:45 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37824 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbfLDJdp (ORCPT
+        Wed, 4 Dec 2019 04:33:49 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12936 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726632AbfLDJdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:33:45 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f129so7064833wmf.2;
-        Wed, 04 Dec 2019 01:33:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YeNtWDC9yu11do01uPKTJ8tyebtIOy7shSOEQ51fT68=;
-        b=VikpHcZ/reaArIFbOLJ3gQSRFkNOPGrLauDrC0fLeiR21Fz+fUOrdyW99c3Aqxnp3L
-         1CCnO5O00SzkOX5S1XBhBhW/eg1MGxf0L1QCpHNEF9UTzJVddG5cE4+vpbbGQIs1jsGf
-         AOo600Ba5zeGMQyRTUdWbN+ybT8r1odwz2vP6DKqqj4Kxlj0+hw4LUDPfCGYU1bYeDdY
-         y3IsxOiRk1pyqrJAzDS4E7/V7ZEBg7dWPHKsqA9fFP+GzGdyLb+yG37FJr3L4B38+HY4
-         UcCa7GLc2OEhCcAMr1MbF506qY3IxDMbRguqTHjkwpJd1UwOdgSVoz8Z3+mjAyGUcEEc
-         nU+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YeNtWDC9yu11do01uPKTJ8tyebtIOy7shSOEQ51fT68=;
-        b=aLVjKUA+4joYxjvY6Tv2FYmdsySCX3a1fM7HlpxHkWP0im/2pRHrIN8FYhNKHpG0sz
-         gg4J7XKv95/crMvYvJdcGLpsgHDDtJ5T1nCOlAWiJtqUkRshRvGPRxL/cfZaz+EIECIx
-         +1768QD9qt3+lCL+Wnh66TbIcP6MVQFG0mJh5Hf8zR9mm3pESQz+aSCbqfcZmFFL0dTj
-         6Y9Vv0wvzMWZqSiOM4lefW3SLj/72CWnwC0jSQ2e0VdHMqfDg80Fs2ZO68mVTijKgX9L
-         9SwJ30fs84a9g+6e1bO7DqAuNYu5PvqYzu/waHPozflmvc4yCKMbJcGc74GdPw088iyh
-         2i4Q==
-X-Gm-Message-State: APjAAAWPQIV2ZN+Qe+t1EYblAoavr0TT4AQl4KVPKr7Zuty/Q8kTp0N9
-        BdFLroGgOXDx2umn3K1BTVo=
-X-Google-Smtp-Source: APXvYqxBP76BkvTJP+49l9MBIT/rXI0NnxazAIoLHMw/CZzKXZCC4KbLPemmwIXB7IIi+kePIhR6dQ==
-X-Received: by 2002:a05:600c:24ce:: with SMTP id 14mr36627444wmu.122.1575452022150;
-        Wed, 04 Dec 2019 01:33:42 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id c6sm5947752wmb.9.2019.12.04.01.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 01:33:40 -0800 (PST)
-Date:   Wed, 4 Dec 2019 10:33:39 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Mikko Perttunen <cyndis@kapsi.fi>, Sumit Gupta <sumitg@nvidia.com>,
-        rjw@rjwysocki.net, catalin.marinas@arm.com, will@kernel.org,
-        jonathanh@nvidia.com, talho@nvidia.com, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
-        mperttunen@nvidia.com, devicetree@vger.kernel.org
-Subject: Re: [TEGRA194_CPUFREQ Patch 1/3] firmware: tegra: adding function to
- get BPMP data
-Message-ID: <20191204093339.GA2784830@ulmo>
-References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
- <20191203174229.GA1721849@ulmo>
- <9404232d-84ce-a117-89dd-f2d8de80993e@kapsi.fi>
- <20191204091703.d32to5omdm3eynon@vireshk-i7>
+        Wed, 4 Dec 2019 04:33:47 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB49VrMo134776
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Dec 2019 04:33:46 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wkrj6pu9r-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 04:33:41 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
+        Wed, 4 Dec 2019 09:33:09 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Dec 2019 09:33:06 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB49X5Xv27918376
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Dec 2019 09:33:05 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E7616A4064;
+        Wed,  4 Dec 2019 09:33:04 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE422A405B;
+        Wed,  4 Dec 2019 09:33:02 +0000 (GMT)
+Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.83.83])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Dec 2019 09:33:02 +0000 (GMT)
+From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
+        linuxram@us.ibm.com, psampat@linux.ibm.com,
+        pratik.sampat@in.ibm.com
+Subject: [RFC 2/3] powerpc/powernv: Introduce Self save support
+Date:   Wed,  4 Dec 2019 15:02:54 +0530
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191204093255.11849-1-psampat@linux.ibm.com>
+References: <20191204093255.11849-1-psampat@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
-Content-Disposition: inline
-In-Reply-To: <20191204091703.d32to5omdm3eynon@vireshk-i7>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120409-0008-0000-0000-0000033CDDC9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120409-0009-0000-0000-00004A5BFC48
+Message-Id: <20191204093255.11849-3-psampat@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_02:2019-12-04,2019-12-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ suspectscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0 impostorscore=0
+ mlxlogscore=909 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912040073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This commit introduces and leverages the Self save API which OPAL now
+supports.
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add the new Self Save OPAL API call in the list of OPAL calls.
+Implement the self saving of the SPRs based on the support populated
+while respecting it's preferences.
 
-On Wed, Dec 04, 2019 at 02:47:03PM +0530, Viresh Kumar wrote:
-> On 04-12-19, 10:45, Mikko Perttunen wrote:
-> > Now, my original patchset (which this series is based on) did add
-> > nvidia,bpmp properties on the CPU DT nodes itself and query BPMP based =
-on
-> > that. A change is still required for that since tegra_bpmp_get() curren=
-tly
-> > takes a 'struct device *' which we don't have for a CPU DT node.
->=20
-> I may be missing the context, but the CPUs always have a struct device
-> * for them, which we get via a call to get_cpu_device(cpu), isn't ?
+This implementation allows mixing of support for the SPRs, which
+means that a SPR can be self restored while another SPR be self saved if
+they support and prefer it to be so.
 
-Yeah, the code that registers this device is in drivers/base/cpu.c in
-register_cpu(). It even retrieves the device tree node for the CPU from
-device tree and stores it in cpu->dev.of_node, so we should be able to
-just pass &cpu->dev to tegra_bpmp_get() in order to retrieve a reference
-to the BPMP.
+Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+---
+ arch/powerpc/include/asm/opal-api.h        | 3 ++-
+ arch/powerpc/include/asm/opal.h            | 1 +
+ arch/powerpc/platforms/powernv/idle.c      | 2 ++
+ arch/powerpc/platforms/powernv/opal-call.c | 1 +
+ 4 files changed, 6 insertions(+), 1 deletion(-)
 
-That said, I'm wondering if perhaps we could just add a compatible
-string to the /cpus node for cases like this where we don't have an
-actual device representing the CPU complex. There are a number of CPU
-frequency drivers that register dummy devices just so that they have
-something to bind a driver to.
+diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
+index c1f25a760eb1..89b7c44124e6 100644
+--- a/arch/powerpc/include/asm/opal-api.h
++++ b/arch/powerpc/include/asm/opal-api.h
+@@ -214,7 +214,8 @@
+ #define OPAL_SECVAR_GET				176
+ #define OPAL_SECVAR_GET_NEXT			177
+ #define OPAL_SECVAR_ENQUEUE_UPDATE		178
+-#define OPAL_LAST				178
++#define OPAL_SLW_SELF_SAVE_REG			179
++#define OPAL_LAST				179
+ 
+ #define QUIESCE_HOLD			1 /* Spin all calls at entry */
+ #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
+diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+index 9986ac34b8e2..389a85b63805 100644
+--- a/arch/powerpc/include/asm/opal.h
++++ b/arch/powerpc/include/asm/opal.h
+@@ -203,6 +203,7 @@ int64_t opal_handle_hmi(void);
+ int64_t opal_handle_hmi2(__be64 *out_flags);
+ int64_t opal_register_dump_region(uint32_t id, uint64_t start, uint64_t end);
+ int64_t opal_unregister_dump_region(uint32_t id);
++int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn);
+ int64_t opal_slw_set_reg(uint64_t cpu_pir, uint64_t sprn, uint64_t val);
+ int64_t opal_config_cpu_idle_state(uint64_t state, uint64_t flag);
+ int64_t opal_pci_set_phb_cxl_mode(uint64_t phb_id, uint64_t mode, uint64_t pe_number);
+diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+index d38b8b6dcbce..e33bb3fd88ac 100644
+--- a/arch/powerpc/platforms/powernv/idle.c
++++ b/arch/powerpc/platforms/powernv/idle.c
+@@ -1170,6 +1170,8 @@ void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
+ 		if (!is_lpcr_self_save)
+ 			opal_slw_set_reg(pir, SPRN_LPCR,
+ 					 lpcr_val);
++		else
++			opal_slw_self_save_reg(pir, SPRN_LPCR);
+ 	}
+ }
+ 
+diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
+index 5cd0f52d258f..11e0ceb90de0 100644
+--- a/arch/powerpc/platforms/powernv/opal-call.c
++++ b/arch/powerpc/platforms/powernv/opal-call.c
+@@ -223,6 +223,7 @@ OPAL_CALL(opal_handle_hmi,			OPAL_HANDLE_HMI);
+ OPAL_CALL(opal_handle_hmi2,			OPAL_HANDLE_HMI2);
+ OPAL_CALL(opal_config_cpu_idle_state,		OPAL_CONFIG_CPU_IDLE_STATE);
+ OPAL_CALL(opal_slw_set_reg,			OPAL_SLW_SET_REG);
++OPAL_CALL(opal_slw_self_save_reg,		OPAL_SLW_SELF_SAVE_REG);
+ OPAL_CALL(opal_register_dump_region,		OPAL_REGISTER_DUMP_REGION);
+ OPAL_CALL(opal_unregister_dump_region,		OPAL_UNREGISTER_DUMP_REGION);
+ OPAL_CALL(opal_pci_set_phb_cxl_mode,		OPAL_PCI_SET_PHB_CAPI_MODE);
+-- 
+2.21.0
 
-If we allow the /cpus node to represent the CPU complex (if no other
-"device" does that yet), we can add a compatible string and have the
-cpufreq driver match on that.
-
-Of course this would be slightly difficult to retrofit into existing
-drivers because they'd need to remain backwards compatible with existing
-device trees. But it would allow future drivers to do this a little more
-elegantly. For some SoCs this may not matter, but especially once you
-start depending on additional resources this would come in handy.
-
-Adding Rob and the device tree mailing list for feedback on this idea.
-
-Thierry
-
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3nfW4ACgkQ3SOs138+
-s6EIBg//a33VPigHL3zRzIUiZIv2SFgdhCGaVV3e7V9z0U/4X7XG5IjvjUG7ISo6
-9/GToldoBLjsmrJ9RmHniEBjuR9af4X3MwnqjRwXMkCKIU64wV70CmTluzFsjV79
-SLwNhFLHqkjQlBXyuk6/DTvTcouVR2jlmQqffGDCzI7ZYmlHI/Xy9aLR6bdmwtgU
-TfaGwkRbI7uzy1QOWQv5Ed/02JJUT/vWoeL77SN7lBIY39ublmVSO9rB7Y+ZMnpJ
-bv2oxl8Gfq0Re5Qfv+vU/aigDlzg8E3aKlHKv7B0yfKcYexN6q3zP3kAwWlwiybn
-XYhKfO7BUnocYKojIUKnufQa4Zh3DIvseivUmSVPchNEcyUPNyDY+kr9ENcrxO18
-Nim4nwnVPtOq8IXVnAtl+96AMp5bsrDDJIbTkhRAX4+A16y3BWtxcpVE1oxXdBVc
-itup4GIYycanGGdlrkVwtbvehoZGVnleMiJ47naJBZK6HnRqp9T46H50i2SEXp7V
-kJHhLpSFaiCqxfSAHcjLnm+rpc4S0aNJ0s4W9Q2NKGpZvfpEid4a+sW5L7pWPL56
-Q5ozI4pP8STS2DsbMRtiXYXYHoG9NQFtfWQwhWgtNHQgqlVKnJc2wGAE4lLQx0dU
-aEDCx5ImpUEngi26C7Zd+8ja0Y1FHbg+tELsHWytryF+YfUNmUI=
-=uBL9
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
