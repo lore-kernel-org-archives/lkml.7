@@ -2,87 +2,110 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1559DC2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACB5C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63012077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575476296;
-	bh=XAYw3r/MyBXD+GXFcfYyithBTDzIi7TzntZhGIyVoWs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z2lMenIw8emQxok2TwfjJZnYbGdp4q4SkZV2EWJJUnl1QCl4r4pYOdZlMWu1Zwj2T
-	 8pUNrBWXMOJHnxH1DDNyoiHnCxKEP6BhuM1RxNQLMHoWcec/yacyofrAExEnDjrjux
-	 0UtDT3dmYC5CRoMzCt3TqnlOks6qS9B0HL+wRz9s=
+	by mail.kernel.org (Postfix) with ESMTP id 8AC822077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:18:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbfLDQSP (ORCPT
+        id S1728749AbfLDQS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 11:18:15 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42214 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728301AbfLDQSO (ORCPT
+        Wed, 4 Dec 2019 11:18:56 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:52596 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727912AbfLDQS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 11:18:14 -0500
-Received: by mail-oi1-f196.google.com with SMTP id j22so7350478oij.9;
-        Wed, 04 Dec 2019 08:18:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aTWv2kRnd2I8BNSkWTbrYY8IgWPRpV337Nl/skN4/18=;
-        b=Pov2/Uu0Wn+RGb0oRFVcvaXGdawCspT7n2TFV5PpPzZjn8HGRribsfMFV2bA4jZgOL
-         tXUrjAClXE7PcjZHHe0Lcj998kRKPiq95B7zHGlAyVC7GnmVvOUmPCIJmRc9IePGCxat
-         Tzfa2u2eCV+Gr1Qyi0CMaMl/l1HaXhmjuWmJyhBBysM9iFRr9zn15+MdKloyjMgFbigh
-         Xi12JmfXaK5hrq55fNC5AvLveVo71RI0+HE7PjteCXC3CPMjDbMSz1ZYYz9iqA0funqA
-         92u5kke1zFY5YUQSKDETKFv7uabWhYFB5w41zeAvNEBm/6kDEhJbUZN+M/lBJji5W4mC
-         BOnw==
-X-Gm-Message-State: APjAAAWEjQFcYqr70XF5fEcOuIa62z2GbQIxFKbGM16w7Ew7QKsfOEeM
-        AaWS1HYeko9nBMJKXxZojg==
-X-Google-Smtp-Source: APXvYqyt+h8GQhsCVeuL82IwwTbvEJ0hmhypUlSo8ZBJTW/VpJLHjXYM59W/NvvtbyQw4yw2F1MCCw==
-X-Received: by 2002:aca:530e:: with SMTP id h14mr2986671oib.105.1575476293512;
-        Wed, 04 Dec 2019 08:18:13 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h22sm1588639otl.73.2019.12.04.08.18.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 08:18:12 -0800 (PST)
-Date:   Wed, 4 Dec 2019 10:18:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
-        wens@csie.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: crypto: add new compatible for A33 SS
-Message-ID: <20191204161812.GA24881@bogus>
-References: <20191120152833.20443-1-clabbe.montjoie@gmail.com>
- <20191120152833.20443-2-clabbe.montjoie@gmail.com>
+        Wed, 4 Dec 2019 11:18:56 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-51-1dN_2ZUoNVmFbAyoH-JP6g-1; Wed, 04 Dec 2019 16:18:52 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 4 Dec 2019 16:18:52 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 4 Dec 2019 16:18:52 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Paul Burton' <paulburton@kernel.org>
+CC:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] MIPS: Use __copy_{to,from}_user() for emulated FP
+ loads/stores
+Thread-Topic: [PATCH] MIPS: Use __copy_{to,from}_user() for emulated FP
+ loads/stores
+Thread-Index: AQHVqhshCXVq7CTTBEufX7LGTbPWHKep0u6ggABLQQCAAAO1QA==
+Date:   Wed, 4 Dec 2019 16:18:52 +0000
+Message-ID: <e220ba9a19da41abba599b5873afa494@AcuMS.aculab.com>
+References: <20191203204933.1642259-1-paulburton@kernel.org>
+ <f5e09155580d417e9dcd07b1c20786ed@AcuMS.aculab.com>
+ <20191204154048.eotzglp4rdlx4yzl@lantea.localdomain>
+In-Reply-To: <20191204154048.eotzglp4rdlx4yzl@lantea.localdomain>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120152833.20443-2-clabbe.montjoie@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: 1dN_2ZUoNVmFbAyoH-JP6g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 16:28:31 +0100, Corentin Labbe wrote:
-> The A33 SS has a difference with all other SS, it give SHA1 digest
-> directly in BE.
-> This difference need to be handlded by the driver and so need a new
-> compatible.
-> 
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> ---
->  .../devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml  | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+RnJvbTogUGF1bCBCdXJ0b24NCj4gU2VudDogMDQgRGVjZW1iZXIgMjAxOSAxNTo0MQ0KPiBPbiBX
+ZWQsIERlYyAwNCwgMjAxOSBhdCAxMToxNDowOEFNICswMDAwLCBEYXZpZCBMYWlnaHQgd3JvdGU6
+DQo+ID4gRnJvbTogUGF1bCBCdXJ0b24NCj4gPiA+IFNlbnQ6IDAzIERlY2VtYmVyIDIwMTkgMjA6
+NTANCj4gPiA+IE91ciBGUFUgZW11bGF0b3IgY3VycmVudGx5IHVzZXMgX19nZXRfdXNlcigpICYg
+X19wdXRfdXNlcigpIHRvIHBlcmZvcm0NCj4gPiA+IGVtdWxhdGVkIGxvYWRzICYgc3RvcmVzLiBU
+aGlzIGlzIHByb2JsZW1hdGljIGJlY2F1c2UgX19nZXRfdXNlcigpICYNCj4gPiA+IF9fcHV0X3Vz
+ZXIoKSBhcmUgb25seSBzdWl0YWJsZSBmb3IgbmF0dXJhbGx5IGFsaWduZWQgbWVtb3J5IGFjY2Vz
+c2VzLA0KPiA+ID4gYW5kIHRoZSBhZGRyZXNzIHdlJ3JlIGFjY2Vzc2luZyBpcyBlbnRpcmVseSB1
+bmRlciB0aGUgY29udHJvbCBvZg0KPiA+ID4gdXNlcmxhbmQuDQo+ID4gPg0KPiA+ID4gVGhpcyBh
+bGxvd3MgdXNlcmxhbmQgdG8gY2F1c2UgYSBrZXJuZWwgcGFuaWMgYnkgc2ltcGx5IHBlcmZvcm1p
+bmcgYW4NCj4gPiA+IHVuYWxpZ25lZCBmbG9hdGluZyBwb2ludCBsb2FkIG9yIHN0b3JlIC0gdGhl
+IGtlcm5lbCB3aWxsIGhhbmRsZSB0aGUNCj4gPiA+IGFkZHJlc3MgZXJyb3IgZXhjZXB0aW9uIGJ5
+IGF0dGVtcHRpbmcgdG8gZW11bGF0ZSB0aGUgaW5zdHJ1Y3Rpb24sIGFuZCBpbg0KPiA+ID4gdGhl
+IHByb2Nlc3MgaXQgbWF5IGdlbmVyYXRlIGFub3RoZXIgYWRkcmVzcyBlcnJvciBleGNlcHRpb24g
+aXRzZWxmLg0KPiA+ID4gVGhpcyB0aW1lIHRoZSBleGNlcHRpb24gaXMgdGFrZW4gd2l0aCBFUEMg
+cG9pbnRpbmcgYXQgdGhlIGtlcm5lbHMgRlBVDQo+ID4gPiBlbXVsYXRpb24gY29kZSwgYW5kIHdl
+IGhpdCBhIGRpZV9pZl9rZXJuZWwoKSBpbg0KPiA+ID4gZW11bGF0ZV9sb2FkX3N0b3JlX2luc24o
+KS4NCj4gPg0KPiA+IFdvbid0IHRoaXMgYmUgdHJ1ZSBvZiBhbG1vc3QgYWxsIGNvZGUgdGhhdCB1
+c2VzIGdldF91c2VyKCkgYW5kIHB1dF91c2VyKCkNCj4gPiAod2l0aCBvciB3aXRob3V0IHRoZSBs
+ZWFkaW5nIF9fKS4NCj4gDQo+IE9ubHkgaWYgdGhlIGFkZHJlc3MgYmVpbmcgYWNjZXNzZWQgaXMg
+dW5kZXIgdGhlIGNvbnRyb2wgb2YgdXNlcmxhbmQgdG8NCj4gdGhlIGV4dGVudCB0aGF0IGl0IGNh
+biBjcmVhdGUgYW4gdW5hbGlnbmVkIGFkZHJlc3MuIFlvdSdyZSByaWdodCB0aGF0DQo+IG1heSBi
+ZSBtb3JlIHdpZGVzcHJlYWQgdGhvdWdoOyBpdCBuZWVkcyBjaGVja2luZy4uLg0KDQpMb29rIGF0
+IChmb3IgZXhhbXBsZSkgdGhlIHJlY3ZtbXNnKCkgY29kZSBvciBlcG9sbF93YWl0KCkuDQoNCkkn
+ZCBleHBlY3QgYWxsIGdldC9wdXRfdXNlcigpIHRvIGJlIHBvdGVudGlhbGx5IHVuYWxpZ25lZC4N
+ClRoZSB1c2VyIG1pZ2h0IGhhdmUgdG8gdHJ5IGhhcmQgKHRvIGF2b2lkIGFsbCB0aGUgZmF1bHRz
+IGluIHVzZXJzcGFjZSkNCmJ1dCBhbnkgYnVmZmVyIHBhc3NlZCB0byB0aGUga2VybmVsIGNhbiBw
+b3RlbnRpYWxseSBiZSBtaXNhbGlnbmVkIGFuZA0Kbm90aGluZyAoSSd2ZSBzZWVuKSBpcyBkb2N1
+bWVudGVkIGFzIHJldHVybmluZyBFRkFVTFQvU0lHU0VHVg0KZm9yIHN1Y2ggdW5hbGlnbmVkIGJ1
+ZmZlcnMuDQoNCkluICdkYXlzIG9mIHlvcmUuLi4nIFNQQVJDIHN5c3RlbXMgd291bGQgaGF2ZSBk
+b25lIGEgU0lHU0VHViBmb3INCmFueSBtaXNhbGlnbmVkIGFjY2VzcyBpbiB1c2Vyc3BhY2UuDQpO
+b3Qgc3VyZSB3aHkgTGludXggZXZlciB0aG91Z2h0IGl0IHdhcyBuZWNlc3NhcnkgdG8gJ2ZpeHVw
+JyBzdWNoIGZhdWx0cy4NCk9UT0ggaXQgaXMgdG9vIGxhdGUgdG8gY2hhbmdlIHRoYXQgYmVoYXZp
+b3VyIChhdCBsZWFzdCBmb3IgZXhpc3RpbmcgcG9ydHMpLg0KDQo+IFdlIHVzZWQgdG8gaGF2ZSBz
+ZXBhcmF0ZSBnZXRfdXNlcl91bmFsaWduZWQoKSAmIHB1dF91c2VyX3VuYWxpZ25lZCgpDQo+IHdo
+aWNoIHdvdWxkIHN1Z2dlc3QgdGhhdCBpdCdzIGV4cGVjdGVkIHRoYXQgZ2V0X3VzZXIoKSAmIHB1
+dF91c2VyKCkNCj4gcmVxdWlyZSB0aGVpciBhY2Nlc3NlcyBiZSBhbGlnbmVkLCBidXQgdGhleSB3
+ZXJlIHJlbW92ZWQgYnkgY29tbWl0DQo+IDMxNzBkOGQyMjZjMiAoImtpbGwge19fLH17Z2V0LHB1
+dH1fdXNlcl91bmFsaWduZWQoKSIpIGluIHY0LjEzLg0KPiANCj4gQnV0IHBlcmhhcHMgd2Ugc2hv
+dWxkIGp1c3QgdGFrZSB0aGUgc2Vjb25kIEFkRUwgZXhjZXB0aW9uICYgcmVjb3ZlciB2aWENCj4g
+dGhlIGZpeHVwcyB0YWJsZS4gV2UgZGVmaW5pdGVseSBkb24ndCByaWdodCBub3cuLi4gTmVlZHMg
+ZnVydGhlcg0KPiBpbnZlc3RpZ2F0aW9uLi4uDQoNCmdldC9wdXRfdXNlciBjYW4gZmF1bHQgYmVj
+YXVzZSB0aGUgdXNlciBwYWdlIGlzIGFic2VudCAoZXRjKS4NClNvIHRoZXJlIG11c3QgYmUgY29k
+ZSB0byAnZXhwZWN0JyBhIGZhdWx0IG9uIHRob3NlIGluc3RydWN0aW9ucy4NCg0KCURhdmlkDQoN
+Ci0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJt
+LCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChX
+YWxlcykNCg==
 
-Acked-by: Rob Herring <robh@kernel.org>
