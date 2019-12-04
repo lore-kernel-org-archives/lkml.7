@@ -2,97 +2,148 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826B7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABBAC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49D8220862
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:20:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBEQBjUC"
+	by mail.kernel.org (Postfix) with ESMTP id 7F80C20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfLDKUJ (ORCPT
+        id S1727510AbfLDKV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:20:09 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:32821 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727408AbfLDKUI (ORCPT
+        Wed, 4 Dec 2019 05:21:28 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56697 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbfLDKV1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:20:08 -0500
-Received: by mail-pj1-f67.google.com with SMTP id r67so2835502pjb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 02:20:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=up7wRNDiQakb25Ld8qipwPlfmty+/izO4vyiWQI+wHE=;
-        b=HBEQBjUC51tDAwFLRg/VzpdIi04E8cnFGwEtaYKjFQ1CmQtkCDovuAMAg1xMqg6qF0
-         WTB158ts4/d5+XtTQ3oBHN/O3SjRWx9O1I5GcpZcwohOdW4RgWBptIioied7PjwkskNx
-         zdf5l4SlcXZvAzmts2+Mju1F9JYV6HsuqntyK4ejeq0Hf1j0rQg9Is5tm8wYdsrb1z2/
-         G5f7duquUNSqTu03sJbwGWKGYPvn0txKq6VIcY1HbgeWh32d0zRZjvncp+d2fG427kK3
-         7mR0ExQZSQjgE3OKKlD4Dd7LD09ky7HRMWGXBP/TgBczL9gMVZJgdh+vUyx5FT/3V3UJ
-         F/mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=up7wRNDiQakb25Ld8qipwPlfmty+/izO4vyiWQI+wHE=;
-        b=Hn4pBTYaWbEav8dfgyxpbJ83dpk3gFkcoX95Py0I/76zouikc2M7Dc21TNCHlx9BEt
-         TaTh5KTP75muj3ZS8WJp0GsyZ73cgRCtLkkVJLAD6C/1iVDh/jfi4mntJS0R/goD6toa
-         By07wxroPRto2bQFHASkZlOBGSrYhzNlOOzLBnbIudKJi+gHl+Ob7LnwPvenVabPvMQ6
-         PU3lAt2LPP2ukRa4PViW7UyPdTBJ0lPS8JHFkzs0COZtgy6ZySZEiCnN0Kv5G5/AArry
-         TZhc2UZFtqbJJzbsocuGHpurw2OPh2KW4fo5tgXgVQ5syDKoOMqQsbAc5y5fWBmc4MLW
-         J9LQ==
-X-Gm-Message-State: APjAAAVOcoLO4Fb6pPdQabS9NoZPrsYmruq0a+BgFyJAx/OOgeZQatP8
-        GYMryD6beo+0nWu2q4DUBSE=
-X-Google-Smtp-Source: APXvYqwL1TM41IFYtBTyi9IDlGtHy7hkPVvUAIXIWa/c+wYFlAB/P7WWIdG0P2n945+R/zGzm1mfuA==
-X-Received: by 2002:a17:90a:cf11:: with SMTP id h17mr2468035pju.103.1575454807763;
-        Wed, 04 Dec 2019 02:20:07 -0800 (PST)
-Received: from localhost.localdomain ([2402:3a80:cdb:94ce:3984:ab1:9b44:803])
-        by smtp.gmail.com with ESMTPSA id d22sm7209393pfn.164.2019.12.04.02.20.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 02:20:07 -0800 (PST)
-From:   madhuparnabhowmik04@gmail.com
-To:     corbet@lwn.net, mchehab@kernel.org
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: [PATCH] Documentation: filesystems: automount-support: Change reference to document autofs.txt to autofs.rst
-Date:   Wed,  4 Dec 2019 15:49:39 +0530
-Message-Id: <20191204101939.6939-1-madhuparnabhowmik04@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Dec 2019 05:21:27 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1icRmU-0006v8-1R; Wed, 04 Dec 2019 11:21:14 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A21A21C2667;
+        Wed,  4 Dec 2019 11:21:13 +0100 (CET)
+Date:   Wed, 04 Dec 2019 10:21:13 -0000
+From:   "tip-bot2 for Dave Young" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/efi: Update e820 with reserved EFI boot
+ services data to fix kexec breakage
+Cc:     Michael Weiser <michael@weiser.dinsnail.net>,
+        Dave Young <dyoung@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+MIME-Version: 1.0
+Message-ID: <157545487347.21853.1786279419838113209.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+The following commit has been merged into the x86/urgent branch of tip:
 
-This patch fixes following documentation build warning:
-Warning: Documentation/filesystems/automount-support.txt references
-a file that doesn't exist: Documentation/filesystems/autofs.txt
+Commit-ID:     af164898482817a1d487964b68f3c21bae7a1beb
+Gitweb:        https://git.kernel.org/tip/af164898482817a1d487964b68f3c21bae7a1beb
+Author:        Dave Young <dyoung@redhat.com>
+AuthorDate:    Wed, 04 Dec 2019 15:52:33 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 04 Dec 2019 11:15:30 +01:00
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+x86/efi: Update e820 with reserved EFI boot services data to fix kexec breakage
+
+Michael Weiser reported that he got this error during a kexec rebooting:
+
+  esrt: Unsupported ESRT version 2904149718861218184.
+
+The ESRT memory stays in EFI boot services data, and it was reserved
+in kernel via efi_mem_reserve().  The initial purpose of the reservation
+is to reuse the EFI boot services data across kexec reboot. For example
+the BGRT image data and some ESRT memory like Michael reported.
+
+But although the memory is reserved it is not updated in the X86 E820 table,
+and kexec_file_load() iterates system RAM in the IO resource list to find places
+for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+initramfs overwrote the ESRT memory and then the failure happened.
+
+Since kexec_file_load() depends on the E820 table being updated, just fix this
+by updating the reserved EFI boot services memory as reserved type in E820.
+
+Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
+bypassed in the reservation code path because they are assumed as reserved.
+
+But the reservation is still needed for multiple kexec reboots,
+and it is the only possible case we come here thus just drop the code
+chunk, then everything works without side effects.
+
+On my machine the ESRT memory sits in an EFI runtime data range, it does
+not trigger the problem, but I successfully tested with BGRT instead.
+both kexec_load() and kexec_file_load() work and kdump works as well.
+
+[ mingo: Edited the changelog. ]
+
+Reported-by: Michael Weiser <michael@weiser.dinsnail.net>
+Tested-by: Michael Weiser <michael@weiser.dinsnail.net>
+Signed-off-by: Dave Young <dyoung@redhat.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: kexec@lists.infradead.org
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191204075233.GA10520@dhcp-128-65.nay.redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- Documentation/filesystems/automount-support.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/platform/efi/quirks.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/filesystems/automount-support.txt b/Documentation/filesystems/automount-support.txt
-index b0afd3d55eaf..7d9f82607562 100644
---- a/Documentation/filesystems/automount-support.txt
-+++ b/Documentation/filesystems/automount-support.txt
-@@ -9,7 +9,7 @@ also be requested by userspace.
- IN-KERNEL AUTOMOUNTING
- ======================
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 7675cf7..f8f0220 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+ 		return;
+ 	}
  
--See section "Mount Traps" of  Documentation/filesystems/autofs.txt
-+See section "Mount Traps" of  Documentation/filesystems/autofs.rst
+-	/* No need to reserve regions that will never be freed. */
+-	if (md.attribute & EFI_MEMORY_RUNTIME)
+-		return;
+-
+ 	size += addr % EFI_PAGE_SIZE;
+ 	size = round_up(size, EFI_PAGE_SIZE);
+ 	addr = round_down(addr, EFI_PAGE_SIZE);
+@@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+ 	early_memunmap(new, new_size);
  
- Then from userspace, you can just do something like:
+ 	efi_memmap_install(new_phys, num_entries);
++	e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
++	e820__update_table(e820_table);
+ }
  
--- 
-2.17.1
-
+ /*
