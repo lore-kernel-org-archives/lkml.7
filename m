@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891D8C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23091C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E62220409
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA07420409
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483667;
-	bh=XOT+X/DKPEi5dZaEYS+gn3/ARlU0Jl/JFo1hv2SUL3U=;
+	s=default; t=1575483671;
+	bh=HS84tFKpKufgsJQxZKLcluRkNCzY3Fs/Uh0TZmuPb40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u3mc2A/plNMn62UGKB24mcdaatwo6MQurIOAVZ2TI11x7klSRLQLzw49Wfq/Oh2Vy
-	 y0PaorwPn3bNeyZKUcgXFJbRE/wRyRH+MyUVEIiL6EL+hdomMrq5RsxfW/WA1tCPEp
-	 Q4IUyHdh2J9Y2HDjhx8M8hszXzL+5WM3ZlZBpWFs=
+	b=V3H6kwjSG7P32iUfDrR/eKl860VxwX56l/hapEx8eT5Qw05nB//XRiQFtRBqSscId
+	 Qcg0q98ciHbW1L+TehiySyOIJJJBDkYiT/ZbewXuz0yMG5rHjHlISul4VCQr3i+dk6
+	 hNGN+AxXY38b3B6ZKtXheSyLY5TWUZmWQXn97nSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730754AbfLDSHV (ORCPT
+        id S1730714AbfLDSHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:07:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:07:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730737AbfLDSHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:07:18 -0500
+        id S1730700AbfLDSHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:07:08 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B090020675;
-        Wed,  4 Dec 2019 18:07:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3BDC20674;
+        Wed,  4 Dec 2019 18:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482837;
-        bh=XOT+X/DKPEi5dZaEYS+gn3/ARlU0Jl/JFo1hv2SUL3U=;
+        s=default; t=1575482827;
+        bh=HS84tFKpKufgsJQxZKLcluRkNCzY3Fs/Uh0TZmuPb40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lDCZe4hy0JCCggl8/0GCLeCOzypJVFbuslUzE/g2dK6VGwl+WezOCZDLlpJ/F3evA
-         A4o3KRqKGUKc/D3GGib2pNjvhXo5UtONfceY4Cv0tcHn51CIdaUzh9oUxg0ylsusvX
-         SGsaFj3zoGVSpqtGbo/776hpMoKHie289ENqS+lo=
+        b=gf7sqid04AhN/kQPJmtiHQobhxig0zqaeGyP15SVa29iXwvagQ7FMztT74vt7TMCg
+         zf5VvFK1WI1K9SuZmvlGlr8vyp/QXdWjF2eb+mpGkijLlSg6rt7DrC+pzYm0qfvV6M
+         2aTy6PTJ+ePC3WM8YCc0YiC1T4vEuyn426cEkPEo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 155/209] mm, gup: add missing refcount overflow checks on s390
-Date:   Wed,  4 Dec 2019 18:56:07 +0100
-Message-Id: <20191204175334.154600538@linuxfoundation.org>
+Subject: [PATCH 4.14 151/209] ACPI / APEI: Switch estatus pool to use vmalloc memory
+Date:   Wed,  4 Dec 2019 18:56:03 +0100
+Message-Id: <20191204175333.892862473@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -59,62 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlastimil Babka <vbabka@suse.cz>
+From: James Morse <james.morse@arm.com>
 
-The mainline commit 8fde12ca79af ("mm: prevent get_user_pages() from
-overflowing page refcount") was backported to 4.14.y stable as commit
-04198de24771. The backport however missed that in 4.14, there are several
-arch-specific gup.c versions with fast gup implementations, so these do not
-prevent refcount overflow.
+[ Upstream commit 0ac234be1a9497498e57d958f4251f5257b116b4 ]
 
-This stable-only commit fixes the s390 version, and is based on the backport in
-SUSE SLES/openSUSE 4.12-based kernels.
+The ghes code is careful to parse and round firmware's advertised
+memory requirements for CPER records, up to a maximum of 64K.
+However when ghes_estatus_pool_expand() does its work, it splits
+the requested size into PAGE_SIZE granules.
 
-The remaining architectures with own gup.c are sparc, mips, sh. It's unlikely
-the known overflow scenario based on FUSE, which needs 140GB of RAM, is a
-problem for those architectures, and I don't feel confident enough to patch
-them.
+This means if firmware generates 5K of CPER records, and correctly
+describes this in the table, __process_error() will silently fail as it
+is unable to allocate more than PAGE_SIZE.
 
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Switch the estatus pool to vmalloc() memory. On x86 vmalloc() memory
+may fault and be fixed up by vmalloc_fault(). To prevent this call
+vmalloc_sync_all() before an NMI handler could discover the memory.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/mm/gup.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/acpi/apei/ghes.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/arch/s390/mm/gup.c b/arch/s390/mm/gup.c
-index 05c8abd864f1d..9bce54eac0b07 100644
---- a/arch/s390/mm/gup.c
-+++ b/arch/s390/mm/gup.c
-@@ -39,7 +39,8 @@ static inline int gup_pte_range(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
- 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
- 		page = pte_page(pte);
- 		head = compound_head(page);
--		if (!page_cache_get_speculative(head))
-+		if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
-+		    || !page_cache_get_speculative(head)))
- 			return 0;
- 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
- 			put_page(head);
-@@ -77,7 +78,8 @@ static inline int gup_huge_pmd(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
- 		refs++;
- 	} while (addr += PAGE_SIZE, addr != end);
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index 9c31c7cd5cb5e..cd6fae6ad4c2a 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -170,40 +170,40 @@ static int ghes_estatus_pool_init(void)
+ 	return 0;
+ }
  
--	if (!page_cache_add_speculative(head, refs)) {
-+	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
-+	    || !page_cache_add_speculative(head, refs))) {
- 		*nr -= refs;
- 		return 0;
- 	}
-@@ -151,7 +153,8 @@ static int gup_huge_pud(pud_t *pudp, pud_t pud, unsigned long addr,
- 		refs++;
- 	} while (addr += PAGE_SIZE, addr != end);
+-static void ghes_estatus_pool_free_chunk_page(struct gen_pool *pool,
++static void ghes_estatus_pool_free_chunk(struct gen_pool *pool,
+ 					      struct gen_pool_chunk *chunk,
+ 					      void *data)
+ {
+-	free_page(chunk->start_addr);
++	vfree((void *)chunk->start_addr);
+ }
  
--	if (!page_cache_add_speculative(head, refs)) {
-+	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
-+	    || !page_cache_add_speculative(head, refs))) {
- 		*nr -= refs;
+ static void ghes_estatus_pool_exit(void)
+ {
+ 	gen_pool_for_each_chunk(ghes_estatus_pool,
+-				ghes_estatus_pool_free_chunk_page, NULL);
++				ghes_estatus_pool_free_chunk, NULL);
+ 	gen_pool_destroy(ghes_estatus_pool);
+ }
+ 
+ static int ghes_estatus_pool_expand(unsigned long len)
+ {
+-	unsigned long i, pages, size, addr;
+-	int ret;
++	unsigned long size, addr;
+ 
+ 	ghes_estatus_pool_size_request += PAGE_ALIGN(len);
+ 	size = gen_pool_size(ghes_estatus_pool);
+ 	if (size >= ghes_estatus_pool_size_request)
  		return 0;
- 	}
+-	pages = (ghes_estatus_pool_size_request - size) / PAGE_SIZE;
+-	for (i = 0; i < pages; i++) {
+-		addr = __get_free_page(GFP_KERNEL);
+-		if (!addr)
+-			return -ENOMEM;
+-		ret = gen_pool_add(ghes_estatus_pool, addr, PAGE_SIZE, -1);
+-		if (ret)
+-			return ret;
+-	}
+ 
+-	return 0;
++	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
++	if (!addr)
++		return -ENOMEM;
++
++	/*
++	 * New allocation must be visible in all pgd before it can be found by
++	 * an NMI allocating from the pool.
++	 */
++	vmalloc_sync_all();
++
++	return gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
+ }
+ 
+ static int map_gen_v2(struct ghes *ghes)
 -- 
 2.20.1
 
