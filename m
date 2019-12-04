@@ -4,61 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DD7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B1BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4669214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE45C20863
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482928;
-	bh=pCxU9ztKsCtCx8/QKDQjzo6lHnRXALAXnR6WF2WF5DQ=;
+	s=default; t=1575482930;
+	bh=bs5/xyBHOfej+Iw29Cr0qxNf9qYZqmH7Je52HSZx7Pg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zDcHMAdREeO/gXQOAdLSNuzNF3PPYr/Pjs+6tOcsZjF/oRXiYuJvSLtqqZo0TXY1S
-	 lrLPorW8+q1UvBfcbNLlbFfbeib9+slGQRHJ97tDFd0x6+7hj9pReyd1wsZyuoDqhP
-	 ncv4hMDdigAgOyDi5d9MjVkv37lBHDZrgCHVTZoE=
+	b=jtA9IU8dD2X+j0E07JcvD10NH4ClsehARxyoLRQzCfsrzroNmVKy5hmrEgsZPxUzt
+	 3KjK90QDMqTh1Qp5EGTYEau0Xufwpgffvz0XYm3Jn5ShLQkC67U0S0d3+jEMPVlapo
+	 CesTnAyqpa/TULozKNhROBEhOttz7Rj9tde3kk0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730636AbfLDSIr (ORCPT
+        id S1730692AbfLDSIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:08:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60664 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:08:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730925AbfLDSId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:08:33 -0500
+        id S1730018AbfLDSIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:08:35 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC212084B;
-        Wed,  4 Dec 2019 18:08:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9CA02089C;
+        Wed,  4 Dec 2019 18:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482912;
-        bh=pCxU9ztKsCtCx8/QKDQjzo6lHnRXALAXnR6WF2WF5DQ=;
+        s=default; t=1575482915;
+        bh=bs5/xyBHOfej+Iw29Cr0qxNf9qYZqmH7Je52HSZx7Pg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R3FHDa598IaSu3Z02MJykR/goTUAHxYTkEfwjdmTe5+E6AMxG1Vv8XQxHsbRntWE1
-         aQwyiAbvbROr9FWxI3t9Osqu/stJ9X9rIUkoSA2msnAf5/gFLbCnb30Yt4UV3C+uqQ
-         0vfPzn+Uh1FmFStbKKidMuQjyxScYRxhFxCstDVg=
+        b=AqgTkTwnsmVEkRNfiOy58zCCVjXQ7osseV400aDK8zmovWXPq/giPnPeFt2zNepsv
+         pEhJRwrKqBx/6Ya9HkoiGi5D6N0pWPCFqmDPY/WzVCQcQT6S0TNBrZ4PSIdAsb1/BH
+         kPMNPdROXZSCZHKxMsuDfN4nVS8ENc1OTXA8l62M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <yellowriver2010@hotmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
+        stable@vger.kernel.org, "huijin.park" <huijin.park@samsung.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 183/209] mtd: rawnand: atmel: fix possible object reference leak
-Date:   Wed,  4 Dec 2019 18:56:35 +0100
-Message-Id: <20191204175336.087792101@linuxfoundation.org>
+Subject: [PATCH 4.14 184/209] mtd: spi-nor: cast to u64 to avoid uint overflows
+Date:   Wed,  4 Dec 2019 18:56:36 +0100
+Message-Id: <20191204175336.157081208@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -71,83 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <yellowriver2010@hotmail.com>
+From: huijin.park <huijin.park@samsung.com>
 
-commit a12085d13997ed15f745f33a0e01002541160179 upstream.
+commit 84a1c2109d23df3543d96231c4fee1757299bb1a upstream.
 
-of_find_device_by_node() takes a reference to the struct device
-when it finds a match via get_device, there is no need to call
-get_device() twice.
-We also should make sure to drop the reference to the device
-taken by of_find_device_by_node() on driver unbind.
+The "params->size" is defined as "u64".
+And "info->sector_size" and "info->n_sectors" are defined as
+unsigned int and u16.
+Thus, u64 data might have strange data(loss data) if the result
+overflows an unsigned int.
+This patch casts "info->sector_size" to an u64.
 
-Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
-Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
-Suggested-by: Boris Brezillon <bbrezillon@kernel.org>
-Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Brian Norris <computersforpeace@gmail.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: huijin.park <huijin.park@samsung.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/atmel/pmecc.c |   21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ drivers/mtd/spi-nor/spi-nor.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mtd/nand/atmel/pmecc.c
-+++ b/drivers/mtd/nand/atmel/pmecc.c
-@@ -875,23 +875,32 @@ static struct atmel_pmecc *atmel_pmecc_g
- {
- 	struct platform_device *pdev;
- 	struct atmel_pmecc *pmecc, **ptr;
-+	int ret;
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -2382,7 +2382,7 @@ static int spi_nor_init_params(struct sp
+ 	memset(params, 0, sizeof(*params));
  
- 	pdev = of_find_device_by_node(np);
--	if (!pdev || !platform_get_drvdata(pdev))
-+	if (!pdev)
- 		return ERR_PTR(-EPROBE_DEFER);
-+	pmecc = platform_get_drvdata(pdev);
-+	if (!pmecc) {
-+		ret = -EPROBE_DEFER;
-+		goto err_put_device;
-+	}
+ 	/* Set SPI NOR sizes. */
+-	params->size = info->sector_size * info->n_sectors;
++	params->size = (u64)info->sector_size * info->n_sectors;
+ 	params->page_size = info->page_size;
  
- 	ptr = devres_alloc(devm_atmel_pmecc_put, sizeof(*ptr), GFP_KERNEL);
--	if (!ptr)
--		return ERR_PTR(-ENOMEM);
--
--	get_device(&pdev->dev);
--	pmecc = platform_get_drvdata(pdev);
-+	if (!ptr) {
-+		ret = -ENOMEM;
-+		goto err_put_device;
-+	}
- 
- 	*ptr = pmecc;
- 
- 	devres_add(userdev, ptr);
- 
- 	return pmecc;
-+
-+err_put_device:
-+	put_device(&pdev->dev);
-+	return ERR_PTR(ret);
- }
- 
- static const int atmel_pmecc_strengths[] = { 2, 4, 8, 12, 24, 32 };
+ 	/* (Fast) Read settings. */
 
 
