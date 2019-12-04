@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBF8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E30C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A5320675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839A320661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483885;
-	bh=0i8+MroQvcCp4W7iTdzxkMdymi9RZSRFAFVF573fmOI=;
+	s=default; t=1575483897;
+	bh=cC+AaLKi1MCjWftMUPCXFQDUqGCKEaeipBYcLrwOllI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ioe+sgAcAoioxfLAQp9/Q65ubxPMWfxQmG5KxtZIJQ4+blz9BiWLxhYQ6gmtvv8WX
-	 XyuegecegJ1piMpLj8MbJX8J+m9eLlBeTdWBUXPoEq2qLiXK5fR5PMqiT7eKoT5ivE
-	 l1+ptXH6FQqf3YHfugn+VJOu8FC+OQr3CrUWBdQ8=
+	b=VoK8s3qvqpEfe7OebUSst4QNH7D8QvpEY7zb9zxpYoVu0eyNSNWR+VsIyyLxHATBK
+	 0Cvuxnpw4b+j+QnSuhI+hvVEGzsa//lUF0vjI7F36b6z5uYsWHGPEkA737W41og5fN
+	 xbhIHGub130pLaPOUYgC6Uthz+Maie5gOn9nbBMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbfLDSYo (ORCPT
+        id S1729674AbfLDSBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:24:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43348 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:01:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729741AbfLDSCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:02:00 -0500
+        id S1729245AbfLDSBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:01:46 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19D2920865;
-        Wed,  4 Dec 2019 18:01:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D08F20675;
+        Wed,  4 Dec 2019 18:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482520;
-        bh=0i8+MroQvcCp4W7iTdzxkMdymi9RZSRFAFVF573fmOI=;
+        s=default; t=1575482505;
+        bh=cC+AaLKi1MCjWftMUPCXFQDUqGCKEaeipBYcLrwOllI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V9Ikz3dICrj2Il0B9vz9tf4nOMnkqLXTshtNsIiT2ffrKb1QGKeRQw3jSBVzD4xN1
-         c+uYEcJVFCe7+MjHJ4Nu8YwJRZuJzW9PkKWX5LeQWb/uEB+1ir/tht4VbBvGDczBns
-         BNDhmaC5e5I5UHAefs1DA0qcKVmFrUqKO0DX4snM=
+        b=MihOl13B/b3AW9QXmwtVTkk4E6nDqJ5lb0gAACYuRFd5Hht7RHKD2CRpUsXezDSt5
+         zpKXgnzh4LhfKtzDXL72Vh4HAbv3uRhVE+iV+8qOtxUtWcNEcK38sjZ6hinLRPRr14
+         9700sppUiLAGm8EG4Prq33W6kUfIJlUU2SqbneFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, Xingyu Chen <xingyu.chen@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 029/209] pwm: bcm-iproc: Prevent unloading the driver module while in use
-Date:   Wed,  4 Dec 2019 18:54:01 +0100
-Message-Id: <20191204175323.512644946@linuxfoundation.org>
+Subject: [PATCH 4.14 023/209] watchdog: meson: Fix the wrong value of left time
+Date:   Wed,  4 Dec 2019 18:53:55 +0100
+Message-Id: <20191204175323.096279200@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -63,35 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Xingyu Chen <xingyu.chen@amlogic.com>
 
-[ Upstream commit 24906a41eecb73d51974ade0847c21e429beec60 ]
+[ Upstream commit 2c77734642d52448aca673e889b39f981110828b ]
 
-The owner member of struct pwm_ops must be set to THIS_MODULE to
-increase the reference count of the module such that the module cannot
-be removed while its code is in use.
+The left time value is wrong when we get it by sysfs. The left time value
+should be equal to preset timeout value minus elapsed time value. According
+to the Meson-GXB/GXL datasheets which can be found at [0], the timeout value
+is saved to BIT[0-15] of the WATCHDOG_TCNT, and elapsed time value is saved
+to BIT[16-31] of the WATCHDOG_TCNT.
 
-Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+[0]: http://linux-meson.com
+
+Fixes: 683fa50f0e18 ("watchdog: Add Meson GXBB Watchdog Driver")
+Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-bcm-iproc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/watchdog/meson_gxbb_wdt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-index d961a8207b1cb..31b01035d0ab3 100644
---- a/drivers/pwm/pwm-bcm-iproc.c
-+++ b/drivers/pwm/pwm-bcm-iproc.c
-@@ -187,6 +187,7 @@ static int iproc_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- static const struct pwm_ops iproc_pwm_ops = {
- 	.apply = iproc_pwmc_apply,
- 	.get_state = iproc_pwmc_get_state,
-+	.owner = THIS_MODULE,
- };
+diff --git a/drivers/watchdog/meson_gxbb_wdt.c b/drivers/watchdog/meson_gxbb_wdt.c
+index 69a5a57f14462..61297a6ab43a0 100644
+--- a/drivers/watchdog/meson_gxbb_wdt.c
++++ b/drivers/watchdog/meson_gxbb_wdt.c
+@@ -137,8 +137,8 @@ static unsigned int meson_gxbb_wdt_get_timeleft(struct watchdog_device *wdt_dev)
  
- static int iproc_pwmc_probe(struct platform_device *pdev)
+ 	reg = readl(data->reg_base + GXBB_WDT_TCNT_REG);
+ 
+-	return ((reg >> GXBB_WDT_TCNT_CNT_SHIFT) -
+-		(reg & GXBB_WDT_TCNT_SETUP_MASK)) / 1000;
++	return ((reg & GXBB_WDT_TCNT_SETUP_MASK) -
++		(reg >> GXBB_WDT_TCNT_CNT_SHIFT)) / 1000;
+ }
+ 
+ static const struct watchdog_ops meson_gxbb_wdt_ops = {
 -- 
 2.20.1
 
