@@ -2,53 +2,55 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F34C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9FDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4559620674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA9E20833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483274;
-	bh=cft3eriOLCjXp/E4K4Z63jWyDhfa/m7BrWbUAAMJ7RQ=;
+	s=default; t=1575483277;
+	bh=cvFZvCXWVi56kGin9wBixbYsa4vDrv6sQdpsJCuvV0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a0qhG3R2d40HAeuVNXoMm0n1oXTJK1fBgDc0Rdr7M5uJwkL38ArNzwdjYN83CFCCE
-	 lci5QPN4PKAjFdLlsLOQvDzTN8zF1yrDxwicL+QeCPtSfJH/9tn6LgnE8wlmM+NQSi
-	 XPccpB1yfztqPuQaqkSS+TJ96lpzL1k8XHdEiAKI=
+	b=2rloGo1SKyIQSk0swTIZVOf89kkt4ID8ARCzhs+JXncY8zl/QXCUWOryQqhZTZXDc
+	 f0i+wXKzaVm3oVdiYeysGEdMRUMoRD614IasgIjZQyfRvsBKpVXkqaTNV2Gb5YMMbU
+	 TR/Yf1hzcrwj+58118tUi+ZA61BOZxqSyZG0LsFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731933AbfLDSOc (ORCPT
+        id S1731935AbfLDSOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:14:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43874 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:14:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731919AbfLDSOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:14:31 -0500
+        id S1731642AbfLDSOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:14:33 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B32B20674;
-        Wed,  4 Dec 2019 18:14:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A4EA206DF;
+        Wed,  4 Dec 2019 18:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483270;
-        bh=cft3eriOLCjXp/E4K4Z63jWyDhfa/m7BrWbUAAMJ7RQ=;
+        s=default; t=1575483272;
+        bh=cvFZvCXWVi56kGin9wBixbYsa4vDrv6sQdpsJCuvV0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E7e5QQZ7Sl41Vj+H1Sv5It2fBsPmY4ExpGKJ0KGTJVjJjjRWJ5YfFaTEmVfAEtijs
-         jXyu3KYtNtifBEQ0e8BQLJOEMJcRU0wZq8dM3bSzISZzwroU9y3R2f7Ew6yFLkYaWV
-         kvBDEnv+pQKtYH0QAoRNaEL2RtL2+Xc5dwoDm7v0=
+        b=dK3ywxi6RjMq5+89+77QQYywgTL3bvOvI60F3yvsQYXnTuPj8XZX+L4w1MktBYLFc
+         0r9QTd/wS7SmaanZTdwOmv1I17fu9YxxXEclPTdE2gYnGUdXpLExEqg9+PggFj+T0+
+         aKfaRP6NxXxtt5fm6cxhed9OlXdkRP5RqZ4NNdKw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dust Li <dust.li@linux.alibaba.com>,
-        Tony Lu <tonylu@linux.alibaba.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 121/125] net: sched: fix `tc -s class show` no bstats on class with nolock subqueues
-Date:   Wed,  4 Dec 2019 18:57:06 +0100
-Message-Id: <20191204175326.682613206@linuxfoundation.org>
+        stable@vger.kernel.org, Huang Shijie <sjhuang@iluvatar.ai>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Skidanov <alexey.skidanov@intel.com>,
+        Olof Johansson <olof@lixom.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 086/125] lib/genalloc.c: include vmalloc.h
+Date:   Wed,  4 Dec 2019 18:56:31 +0100
+Message-Id: <20191204175324.299603591@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,83 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dust Li <dust.li@linux.alibaba.com>
+From: Olof Johansson <olof@lixom.net>
 
-[ Upstream commit 14e54ab9143fa60794d13ea0a66c792a2046a8f3 ]
+[ Upstream commit 35004f2e55807a1a1491db24ab512dd2f770a130 ]
 
-When a classful qdisc's child qdisc has set the flag
-TCQ_F_CPUSTATS (pfifo_fast for example), the child qdisc's
-cpu_bstats should be passed to gnet_stats_copy_basic(),
-but many classful qdisc didn't do that. As a result,
-`tc -s class show dev DEV` always return 0 for bytes and
-packets in this case.
+Fixes build break on most ARM/ARM64 defconfigs:
 
-Pass the child qdisc's cpu_bstats to gnet_stats_copy_basic()
-to fix this issue.
+  lib/genalloc.c: In function 'gen_pool_add_virt':
+  lib/genalloc.c:190:10: error: implicit declaration of function 'vzalloc_node'; did you mean 'kzalloc_node'?
+  lib/genalloc.c:190:8: warning: assignment to 'struct gen_pool_chunk *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+  lib/genalloc.c: In function 'gen_pool_destroy':
+  lib/genalloc.c:254:3: error: implicit declaration of function 'vfree'; did you mean 'kfree'?
 
-The qstats also has this problem, but it has been fixed
-in 5dd431b6b9 ("net: sched: introduce and use qstats read...")
-and bstats still remains buggy.
-
-Fixes: 22e0f8b9322c ("net: sched: make bstats per cpu and estimator RCU safe")
-Signed-off-by: Dust Li <dust.li@linux.alibaba.com>
-Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
-Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 6862d2fc8185 ('lib/genalloc.c: use vzalloc_node() to allocate the bitmap')
+Cc: Huang Shijie <sjhuang@iluvatar.ai>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexey Skidanov <alexey.skidanov@intel.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_mq.c     |    3 ++-
- net/sched/sch_mqprio.c |    4 ++--
- net/sched/sch_multiq.c |    2 +-
- net/sched/sch_prio.c   |    2 +-
- 4 files changed, 6 insertions(+), 5 deletions(-)
+ lib/genalloc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/sched/sch_mq.c
-+++ b/net/sched/sch_mq.c
-@@ -195,7 +195,8 @@ static int mq_dump_class_stats(struct Qd
- 	struct netdev_queue *dev_queue = mq_queue_get(sch, cl);
+diff --git a/lib/genalloc.c b/lib/genalloc.c
+index f365d71cdc774..7e85d1e37a6ea 100644
+--- a/lib/genalloc.c
++++ b/lib/genalloc.c
+@@ -35,6 +35,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/genalloc.h>
+ #include <linux/of_device.h>
++#include <linux/vmalloc.h>
  
- 	sch = dev_queue->qdisc_sleeping;
--	if (gnet_stats_copy_basic(&sch->running, d, NULL, &sch->bstats) < 0 ||
-+	if (gnet_stats_copy_basic(&sch->running, d, sch->cpu_bstats,
-+				  &sch->bstats) < 0 ||
- 	    gnet_stats_copy_queue(d, NULL, &sch->qstats, sch->q.qlen) < 0)
- 		return -1;
- 	return 0;
---- a/net/sched/sch_mqprio.c
-+++ b/net/sched/sch_mqprio.c
-@@ -362,8 +362,8 @@ static int mqprio_dump_class_stats(struc
- 		struct netdev_queue *dev_queue = mqprio_queue_get(sch, cl);
- 
- 		sch = dev_queue->qdisc_sleeping;
--		if (gnet_stats_copy_basic(qdisc_root_sleeping_running(sch),
--					  d, NULL, &sch->bstats) < 0 ||
-+		if (gnet_stats_copy_basic(qdisc_root_sleeping_running(sch), d,
-+					  sch->cpu_bstats, &sch->bstats) < 0 ||
- 		    gnet_stats_copy_queue(d, NULL,
- 					  &sch->qstats, sch->q.qlen) < 0)
- 			return -1;
---- a/net/sched/sch_multiq.c
-+++ b/net/sched/sch_multiq.c
-@@ -332,7 +332,7 @@ static int multiq_dump_class_stats(struc
- 
- 	cl_q = q->queues[cl - 1];
- 	if (gnet_stats_copy_basic(qdisc_root_sleeping_running(sch),
--				  d, NULL, &cl_q->bstats) < 0 ||
-+				  d, cl_q->cpu_bstats, &cl_q->bstats) < 0 ||
- 	    gnet_stats_copy_queue(d, NULL, &cl_q->qstats, cl_q->q.qlen) < 0)
- 		return -1;
- 
---- a/net/sched/sch_prio.c
-+++ b/net/sched/sch_prio.c
-@@ -286,7 +286,7 @@ static int prio_dump_class_stats(struct
- 
- 	cl_q = q->queues[cl - 1];
- 	if (gnet_stats_copy_basic(qdisc_root_sleeping_running(sch),
--				  d, NULL, &cl_q->bstats) < 0 ||
-+				  d, cl_q->cpu_bstats, &cl_q->bstats) < 0 ||
- 	    gnet_stats_copy_queue(d, NULL, &cl_q->qstats, cl_q->q.qlen) < 0)
- 		return -1;
- 
+ static inline size_t chunk_size(const struct gen_pool_chunk *chunk)
+ {
+-- 
+2.20.1
+
 
 
