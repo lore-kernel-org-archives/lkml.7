@@ -2,59 +2,60 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3A0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091D2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA52A20656
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1C7C20656
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:21:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="XFyzL5rT"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="NkJEU/yt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbfLDXVC (ORCPT
+        id S1728422AbfLDXVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 18:21:02 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:37799 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbfLDXVC (ORCPT
+        Wed, 4 Dec 2019 18:21:05 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:41078 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbfLDXVE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 18:21:02 -0500
-Received: by mail-qv1-f65.google.com with SMTP id t7so577683qve.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 15:21:01 -0800 (PST)
+        Wed, 4 Dec 2019 18:21:04 -0500
+Received: by mail-qv1-f68.google.com with SMTP id b18so570067qvo.8
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 15:21:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=GKIfn1X+i6X56lqVXfyDzwPMZCzheNRzcKTaF4L1NP0=;
-        b=XFyzL5rTBwrAztY5nL0Ms1sPvQucTdFNTX8M14EOWrh36IgXf4zoI522rtxEKRoa52
-         iLqCy/91jRbUTDBGb3bllaMoyeqCln4xl1FZqj+b3eCzWUr5TgFGFbAmfZ/qpae4CijU
-         35EW4FQh7ww/prBUP0rcMSvO++mJcfO+k+fB3+BP0A1lGoquComcKT6UDiDreQjckSUg
-         k2hjQvUPo2N86qG8pbxlMAC6Kn6AAxDYJsEGt+O6B9zeTaxWSo/9qm7e42sxKv/Xabey
-         MFKaBloUYjQUJ5KZCxkfZDaZn+HAuOoWlPpNu3Gh25wuUFzC7MSzHyNs/Xar9ayJQjzK
-         BvGw==
+        bh=eby1Z/q7U+7Sxm/O/Jl7zP2rKdfik8y03EjcrV9rvuY=;
+        b=NkJEU/yt/blJhAPAwm0//b+ZWq1n7s4JlJ6JP+qdBGuTQCQuHFZ8PMWe00iEhl9sXR
+         D5h+fsIE0OGIVs9vXL4gpNLeOVHliEVsqZGstR3wOREMlUTyHMBjBqiiJN9XSmUHGnl9
+         E029DgxCUKX3rVs0qGMWaVjtplCdTxiZQYRP12zEURRSXHIzCN4n9ZW6ehybuzzr5UNJ
+         Zl0SICIsfPNpjp6MCNV3XJOhgzPiqFDsK+MaqCJejfrOaTmcJDz3S6PSEcE5G1+/Jk4t
+         F2m0xoYu1kjAU9N6m6iUSEwzBQ39xf3hLWime1T3P66/AhdOKcdyJZrg+K7Z5WCheUkf
+         kIJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GKIfn1X+i6X56lqVXfyDzwPMZCzheNRzcKTaF4L1NP0=;
-        b=tqatoBQobvBedum+QK0tB7xUUHxhYaZg/t+841DG0mzjrtSLkJi3yysGizt+1F5qEa
-         ggH5m4EJxDG+Vko92x6R0q05Ra4SPr9uSrzvEKPjIGtw059gkBtZ1JPRyxV6CG7zop6W
-         UTxeKpQ7gtGs4gccFEI2gq/dPE8U8T9kdWKcdW/b/zXMEk0NcCewLcrclmIMgaa9I4EC
-         1gr+Oy0IajsfBXv4+edKrRPp3BjDtAlkJz040FaaN41Ql8PnyD8/NR0fR0xPZFH+H7cM
-         o0MDWjgbmHUwN2OSXu8l0TP3luV1vQAXrBqz3IgQhiMvv3AgV2hSQ2GTTkNNYe9cps3r
-         iEWQ==
-X-Gm-Message-State: APjAAAWEf9UWfOi1TkfzB8JlilOHZufNlVsiqQUBke72ovWI93j15OAd
-        +JBIiEE7W76Uqfjn4x6XxUv3gA==
-X-Google-Smtp-Source: APXvYqwN8rVvbdjEWOZ3Dsr7ynba65KMLwXI/KiByr8BhvRWV22aS+4kNOZAN22diwAm+JbXcarUcQ==
-X-Received: by 2002:ad4:4949:: with SMTP id o9mr4823945qvy.189.1575501661393;
-        Wed, 04 Dec 2019 15:21:01 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=eby1Z/q7U+7Sxm/O/Jl7zP2rKdfik8y03EjcrV9rvuY=;
+        b=kKmJSjAW1wq1PLksZQrIibz42HsHidI27pMsDj5mlsUzhvswterbqPNf721+Pyi7S5
+         vdEnVMczT86HopJ3pAsbQpYKW80tTx/DD1jGxQhVKljdtgYk93e48MlOUts7lSNiKrDE
+         5CMtFNJm8V9Vqnbeqsf/AxaW/yc+7C09ta8OQVjJlNBP7rNH6jmlhIX6a+Ltq8PLhJzo
+         5sLBoZp5GVqNdIdNNaz22mF0Hl1VspyjRTLeHqKKbqsUubzVfmLYKB7CasgnMpXnwVDH
+         Cuq/UDFGiCg+yVrtxXPX/EYUG4Dc6FVNMoROUPY1x57xmvd4YpILzlAaOE8I2XEm+04y
+         HY9A==
+X-Gm-Message-State: APjAAAUln3dh+381redRLzYjiqGC5qG2Lf/BtEKRWog3TIYLCG/IzkA0
+        8NPZSeHUpbxoW5HT7bmaVQhCqQ==
+X-Google-Smtp-Source: APXvYqwCGhoOs0wEUWkqNpwRHUAKwjbY4ROZeLY1H9ddt2HeC0y/qK9F5ZFbRQ+FLH5XluAaaaKK8A==
+X-Received: by 2002:a0c:ef91:: with SMTP id w17mr5033755qvr.202.1575501663211;
+        Wed, 04 Dec 2019 15:21:03 -0800 (PST)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id t38sm4667864qta.78.2019.12.04.15.20.59
+        by smtp.gmail.com with ESMTPSA id t38sm4667864qta.78.2019.12.04.15.21.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 15:21:00 -0800 (PST)
+        Wed, 04 Dec 2019 15:21:02 -0800 (PST)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
@@ -67,10 +68,12 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         jgross@suse.com, stefan@agner.ch, yamada.masahiro@socionext.com,
         xen-devel@lists.xenproject.org, linux@armlinux.org.uk,
         andrew.cooper3@citrix.com, julien@xen.org
-Subject: [PATCH v4 0/6] Use C inlines for uaccess
-Date:   Wed,  4 Dec 2019 18:20:52 -0500
-Message-Id: <20191204232058.2500117-1-pasha.tatashin@soleen.com>
+Subject: [PATCH v4 1/6] arm/arm64/xen: hypercall.h add includes guards
+Date:   Wed,  4 Dec 2019 18:20:53 -0500
+Message-Id: <20191204232058.2500117-2-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191204232058.2500117-1-pasha.tatashin@soleen.com>
+References: <20191204232058.2500117-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,57 +81,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changelog:
+The arm and arm64 versions of hypercall.h are missing the include
+guards. This is needed because C inlines for privcmd_call are going to
+be added to the files.
 
-v4:
-	- Split the first patch into two as Julien Grall 
-	- Also as Mark Rutland suggested removed alternatives
-	  from __asm_flush_cache_user_range.
-v3:
-	- Added Acked-by from Stefano Stabellini
-	- Addressed comments from Mark Rutland
-v2:
-	- Addressed Russell King's concern by not adding
-	  uaccess_* to ARM.
-	- Removed the accidental change to xtensa
+Also fix a comment.
 
-Convert the remaining uaccess_* calls from ASM macros to C inlines.
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+---
+ arch/arm/include/asm/assembler.h       | 2 +-
+ arch/arm/include/asm/xen/hypercall.h   | 4 ++++
+ arch/arm64/include/asm/xen/hypercall.h | 4 ++++
+ include/xen/arm/hypercall.h            | 6 +++---
+ 4 files changed, 12 insertions(+), 4 deletions(-)
 
-These patches apply against linux-next. I boot tested ARM64, and
-compile tested ARM change
-
-Previous discussions:
-v3: https://lore.kernel.org/lkml/20191127184453.229321-1-pasha.tatashin@soleen.com
-v2: https://lore.kernel.org/lkml/20191122022406.590141-1-pasha.tatashin@soleen.com
-v1: https://lore.kernel.org/lkml/20191121184805.414758-1-pasha.tatashin@soleen.com
-
-Pavel Tatashin (6):
-  arm/arm64/xen: hypercall.h add includes guards
-  arm/arm64/xen: use C inlines for privcmd_call
-  arm64: remove uaccess_ttbr0 asm macros from cache functions
-  arm64: remove __asm_flush_icache_range
-  arm64: move ARM64_HAS_CACHE_DIC/_IDC from asm to C
-  arm64: remove the rest of asm-uaccess.h
-
- arch/arm/include/asm/assembler.h       |  2 +-
- arch/arm/include/asm/xen/hypercall.h   | 10 ++++
- arch/arm/xen/enlighten.c               |  2 +-
- arch/arm/xen/hypercall.S               |  4 +-
- arch/arm64/include/asm/asm-uaccess.h   | 61 -----------------------
- arch/arm64/include/asm/cacheflush.h    | 51 +++++++++++++++++--
- arch/arm64/include/asm/xen/hypercall.h | 28 +++++++++++
- arch/arm64/kernel/entry.S              | 27 +++++++++-
- arch/arm64/lib/clear_user.S            |  2 +-
- arch/arm64/lib/copy_from_user.S        |  2 +-
- arch/arm64/lib/copy_in_user.S          |  2 +-
- arch/arm64/lib/copy_to_user.S          |  2 +-
- arch/arm64/mm/cache.S                  | 68 +++++---------------------
- arch/arm64/mm/flush.c                  |  3 +-
- arch/arm64/xen/hypercall.S             | 19 +------
- include/xen/arm/hypercall.h            | 12 ++---
- 16 files changed, 143 insertions(+), 152 deletions(-)
- delete mode 100644 arch/arm64/include/asm/asm-uaccess.h
-
+diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
+index 99929122dad7..8e9262a0f016 100644
+--- a/arch/arm/include/asm/assembler.h
++++ b/arch/arm/include/asm/assembler.h
+@@ -480,7 +480,7 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
+ 	.macro	uaccess_disable, tmp, isb=1
+ #ifdef CONFIG_CPU_SW_DOMAIN_PAN
+ 	/*
+-	 * Whenever we re-enter userspace, the domains should always be
++	 * Whenever we re-enter kernel, the domains should always be
+ 	 * set appropriately.
+ 	 */
+ 	mov	\tmp, #DACR_UACCESS_DISABLE
+diff --git a/arch/arm/include/asm/xen/hypercall.h b/arch/arm/include/asm/xen/hypercall.h
+index 3522cbaed316..c6882bba5284 100644
+--- a/arch/arm/include/asm/xen/hypercall.h
++++ b/arch/arm/include/asm/xen/hypercall.h
+@@ -1 +1,5 @@
++#ifndef _ASM_ARM_XEN_HYPERCALL_H
++#define _ASM_ARM_XEN_HYPERCALL_H
+ #include <xen/arm/hypercall.h>
++
++#endif /* _ASM_ARM_XEN_HYPERCALL_H */
+diff --git a/arch/arm64/include/asm/xen/hypercall.h b/arch/arm64/include/asm/xen/hypercall.h
+index 3522cbaed316..c3198f9ccd2e 100644
+--- a/arch/arm64/include/asm/xen/hypercall.h
++++ b/arch/arm64/include/asm/xen/hypercall.h
+@@ -1 +1,5 @@
++#ifndef _ASM_ARM64_XEN_HYPERCALL_H
++#define _ASM_ARM64_XEN_HYPERCALL_H
+ #include <xen/arm/hypercall.h>
++
++#endif /* _ASM_ARM64_XEN_HYPERCALL_H */
+diff --git a/include/xen/arm/hypercall.h b/include/xen/arm/hypercall.h
+index b40485e54d80..babcc08af965 100644
+--- a/include/xen/arm/hypercall.h
++++ b/include/xen/arm/hypercall.h
+@@ -30,8 +30,8 @@
+  * IN THE SOFTWARE.
+  */
+ 
+-#ifndef _ASM_ARM_XEN_HYPERCALL_H
+-#define _ASM_ARM_XEN_HYPERCALL_H
++#ifndef _ARM_XEN_HYPERCALL_H
++#define _ARM_XEN_HYPERCALL_H
+ 
+ #include <linux/bug.h>
+ 
+@@ -88,4 +88,4 @@ MULTI_mmu_update(struct multicall_entry *mcl, struct mmu_update *req,
+ 	BUG();
+ }
+ 
+-#endif /* _ASM_ARM_XEN_HYPERCALL_H */
++#endif /* _ARM_XEN_HYPERCALL_H */
 -- 
 2.24.0
 
