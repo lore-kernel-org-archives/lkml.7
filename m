@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBBDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81362C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32FD920674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575EA206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483315;
-	bh=Ei5tQVIeRmqV5Most0Nt45YuJ+JcLbWOWCdSTlLFX5w=;
+	s=default; t=1575483321;
+	bh=ycSVelOkcqZCD0lukS7rz4z4GGxVf3q/dhudLRDsIgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AKnvqQFUogN1kRjn5T+qySP/xnz404NEm7ifqlICX4T0Mq9JXfV97Bqidu5MOVrxq
-	 TGKxhHAB1pSvBLOH3masOQhO2ivnTKfYiv977LOUQkkUreaoE469FyrMVuS4i6J1if
-	 eCYjCs/DIpKMMFTbveNl0N5MccwlbfTQzXeM5vfM=
+	b=KoBzJ/ACYw+jx9uyL+cN2GYzd+5gI+cYJiKHPG62oPJnelC1EsyvuaVJrJeAsTsQY
+	 uAIZAxGmZfHO22AkAB7d6ZutJmt1Ze+cC4MF13tww3px2K05d/y+x/O6p+5EC6xm0F
+	 zowRgS3tONo5oHywru7avfgWDR9P/tVmTAQVxzcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732005AbfLDSPO (ORCPT
+        id S1731912AbfLDSOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:15:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44154 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:14:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730466AbfLDSOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:14:43 -0500
+        id S1731332AbfLDSO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:14:29 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0010E20866;
-        Wed,  4 Dec 2019 18:14:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0A2E206DF;
+        Wed,  4 Dec 2019 18:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483282;
-        bh=Ei5tQVIeRmqV5Most0Nt45YuJ+JcLbWOWCdSTlLFX5w=;
+        s=default; t=1575483268;
+        bh=ycSVelOkcqZCD0lukS7rz4z4GGxVf3q/dhudLRDsIgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o/ITI/fIx/DogVGrqv2qWMIW5rsZhbOuJlBypVIWXJvgfDTZbvzJ9mfKjMFfvxYTA
-         6ANEZ5rDRU8F9RQiLChhReCig2htDfLsgoUfNRVrTZ3wVkxnyR1nZSoJqIwEQyrloQ
-         OJnaupBCdDcDwWVSj4niAdY8foR/z2t6NAq6SmWc=
+        b=GZJpukY3JigA3bADG+qd/KkLbq7mJK5fMbEI0RZx9iNdFwA4a5tvrOLqkVVdQEDzU
+         Ah0JKninOsDaaLjXEIJg6Q+nve/h9Dkj0SGyPfFRfOpWECLj9nzkUuKS9UKOBDPxML
+         TbGWPxV2CoA8za5j+mUF8ueLb15J6BLrjT6R88D0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.9 125/125] net: fec: fix clock count mis-match
-Date:   Wed,  4 Dec 2019 18:57:10 +0100
-Message-Id: <20191204175327.061631078@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+e3b35fe7918ff0ee474e@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 4.9 120/125] sctp: cache netns in sctp_ep_common
+Date:   Wed,  4 Dec 2019 18:57:05 +0100
+Message-Id: <20191204175326.598303866@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,68 +62,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit a31eda65ba210741b598044d045480494d0ed52a upstream.
+[ Upstream commit 312434617cb16be5166316cf9d08ba760b1042a1 ]
 
-pm_runtime_put_autosuspend in probe will call runtime suspend to
-disable clks automatically if CONFIG_PM is defined. (If CONFIG_PM
-is not defined, its implementation will be empty, then runtime
-suspend will not be called.)
+This patch is to fix a data-race reported by syzbot:
 
-Therefore, we can call pm_runtime_get_sync to runtime resume it
-first to enable clks, which matches the runtime suspend. (Only when
-CONFIG_PM is defined, otherwise pm_runtime_get_sync will also be
-empty, then runtime resume will not be called.)
+  BUG: KCSAN: data-race in sctp_assoc_migrate / sctp_hash_obj
 
-Then it is fine to disable clks without causing clock count mis-match.
+  write to 0xffff8880b67c0020 of 8 bytes by task 18908 on cpu 1:
+    sctp_assoc_migrate+0x1a6/0x290 net/sctp/associola.c:1091
+    sctp_sock_migrate+0x8aa/0x9b0 net/sctp/socket.c:9465
+    sctp_accept+0x3c8/0x470 net/sctp/socket.c:4916
+    inet_accept+0x7f/0x360 net/ipv4/af_inet.c:734
+    __sys_accept4+0x224/0x430 net/socket.c:1754
+    __do_sys_accept net/socket.c:1795 [inline]
+    __se_sys_accept net/socket.c:1792 [inline]
+    __x64_sys_accept+0x4e/0x60 net/socket.c:1792
+    do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+    entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Fixes: c43eab3eddb4 ("net: fec: add missed clk_disable_unprepare in remove")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Acked-by: Fugang Duan <fugang.duan@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+  read to 0xffff8880b67c0020 of 8 bytes by task 12003 on cpu 0:
+    sctp_hash_obj+0x4f/0x2d0 net/sctp/input.c:894
+    rht_key_get_hash include/linux/rhashtable.h:133 [inline]
+    rht_key_hashfn include/linux/rhashtable.h:159 [inline]
+    rht_head_hashfn include/linux/rhashtable.h:174 [inline]
+    head_hashfn lib/rhashtable.c:41 [inline]
+    rhashtable_rehash_one lib/rhashtable.c:245 [inline]
+    rhashtable_rehash_chain lib/rhashtable.c:276 [inline]
+    rhashtable_rehash_table lib/rhashtable.c:316 [inline]
+    rht_deferred_worker+0x468/0xab0 lib/rhashtable.c:420
+    process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+    worker_thread+0xa0/0x800 kernel/workqueue.c:2415
+    kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+    ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+
+It was caused by rhashtable access asoc->base.sk when sctp_assoc_migrate
+is changing its value. However, what rhashtable wants is netns from asoc
+base.sk, and for an asoc, its netns won't change once set. So we can
+simply fix it by caching netns since created.
+
+Fixes: d6c0256a60e6 ("sctp: add the rhashtable apis for sctp global transport hashtable")
+Reported-by: syzbot+e3b35fe7918ff0ee474e@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/freescale/fec_main.c |   15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ include/net/sctp/structs.h |    3 +++
+ net/sctp/associola.c       |    1 +
+ net/sctp/endpointola.c     |    1 +
+ net/sctp/input.c           |    4 ++--
+ 4 files changed, 7 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -3530,6 +3530,11 @@ fec_drv_remove(struct platform_device *p
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 	struct fec_enet_private *fep = netdev_priv(ndev);
- 	struct device_node *np = pdev->dev.of_node;
-+	int ret;
-+
-+	ret = pm_runtime_get_sync(&pdev->dev);
-+	if (ret < 0)
-+		return ret;
+--- a/include/net/sctp/structs.h
++++ b/include/net/sctp/structs.h
+@@ -1202,6 +1202,9 @@ struct sctp_ep_common {
+ 	/* What socket does this endpoint belong to?  */
+ 	struct sock *sk;
  
- 	cancel_work_sync(&fep->tx_timeout_work);
- 	fec_ptp_stop(pdev);
-@@ -3537,15 +3542,17 @@ fec_drv_remove(struct platform_device *p
- 	fec_enet_mii_remove(fep);
- 	if (fep->reg_phy)
- 		regulator_disable(fep->reg_phy);
--	pm_runtime_put(&pdev->dev);
--	pm_runtime_disable(&pdev->dev);
--	clk_disable_unprepare(fep->clk_ahb);
--	clk_disable_unprepare(fep->clk_ipg);
++	/* Cache netns and it won't change once set */
++	struct net *net;
 +
- 	if (of_phy_is_fixed_link(np))
- 		of_phy_deregister_fixed_link(np);
- 	of_node_put(fep->phy_node);
- 	free_netdev(ndev);
+ 	/* This is where we receive inbound chunks.  */
+ 	struct sctp_inq	  inqueue;
  
-+	clk_disable_unprepare(fep->clk_ahb);
-+	clk_disable_unprepare(fep->clk_ipg);
-+	pm_runtime_put_noidle(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+
- 	return 0;
- }
+--- a/net/sctp/associola.c
++++ b/net/sctp/associola.c
+@@ -81,6 +81,7 @@ static struct sctp_association *sctp_ass
+ 	/* Discarding const is appropriate here.  */
+ 	asoc->ep = (struct sctp_endpoint *)ep;
+ 	asoc->base.sk = (struct sock *)sk;
++	asoc->base.net = sock_net(sk);
+ 
+ 	sctp_endpoint_hold(asoc->ep);
+ 	sock_hold(asoc->base.sk);
+--- a/net/sctp/endpointola.c
++++ b/net/sctp/endpointola.c
+@@ -163,6 +163,7 @@ static struct sctp_endpoint *sctp_endpoi
+ 
+ 	/* Remember who we are attached to.  */
+ 	ep->base.sk = sk;
++	ep->base.net = sock_net(sk);
+ 	sock_hold(ep->base.sk);
+ 
+ 	return ep;
+--- a/net/sctp/input.c
++++ b/net/sctp/input.c
+@@ -812,7 +812,7 @@ static inline int sctp_hash_cmp(struct r
+ 		return err;
+ 
+ 	asoc = t->asoc;
+-	if (!net_eq(sock_net(asoc->base.sk), x->net))
++	if (!net_eq(asoc->base.net, x->net))
+ 		goto out;
+ 	if (x->ep) {
+ 		if (x->ep != asoc->ep)
+@@ -835,7 +835,7 @@ static inline u32 sctp_hash_obj(const vo
+ {
+ 	const struct sctp_transport *t = data;
+ 	const union sctp_addr *paddr = &t->ipaddr;
+-	const struct net *net = sock_net(t->asoc->base.sk);
++	const struct net *net = t->asoc->base.net;
+ 	u16 lport = htons(t->asoc->base.bind_addr.port);
+ 	u32 addr;
  
 
 
