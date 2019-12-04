@@ -2,220 +2,265 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AA8C432C0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D49C432C3
 	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF0D20659
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EEEE207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:44:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="Ky1DOXdY"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eXPSEYjb";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="fEpjbAGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfLDEnr (ORCPT
+        id S1727085AbfLDEor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 23:43:47 -0500
-Received: from ozlabs.org ([203.11.71.1]:53171 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726835AbfLDEnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 23:43:47 -0500
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 47SR7h0Jhfz9sR8; Wed,  4 Dec 2019 15:43:43 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1575434624;
-        bh=0ftyPdnyKfQDnu98YNE3xbdhD7agELawu01H6mP95Lg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ky1DOXdYVtCpC5d0qcti91YI0bdeBD2fIKsbHOMcDGQOiJfZ4xu4AzrEyMH5cD1Os
-         T+mAfdqlKTX+hMSvTaTVpSjCqPJpw6FbHB5EddfRBnBpOWjTu85RRyaUuh9ZdmvTxd
-         UCbY0E5bEH8hvB7ssamFhTqc/ymW+lIdBW6T2wgU=
-Date:   Wed, 4 Dec 2019 14:36:18 +1100
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     Ram Pai <linuxram@us.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@ozlabs.org,
-        mdroth@linux.vnet.ibm.com, hch@lst.de, andmike@us.ibm.com,
-        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
-        cai@lca.pw, tglx@linutronix.de, bauerman@linux.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page
- with the hypervisor.
-Message-ID: <20191204033618.GA5031@umbus.fritz.box>
-References: <1575269124-17885-2-git-send-email-linuxram@us.ibm.com>
- <f08ace25-fa94-990b-1b6d-a1c0f30d6348@ozlabs.ru>
- <20191203020850.GA12354@oc0525413822.ibm.com>
- <0b56ce3e-6c32-5f3b-e7cc-0d419a61d71d@ozlabs.ru>
- <20191203040509.GB12354@oc0525413822.ibm.com>
- <a0f19e65-81eb-37bd-928b-7a57a8660e3d@ozlabs.ru>
- <20191203165204.GA5079@oc0525413822.ibm.com>
- <3a17372a-fcee-efbf-0a05-282ffb1adc90@ozlabs.ru>
- <20191204004958.GB5063@oc0525413822.ibm.com>
- <5963ff32-2119-be7c-d1e5-63457888a73b@ozlabs.ru>
+        Tue, 3 Dec 2019 23:44:47 -0500
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:60480
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726835AbfLDEor (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 23:44:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575434685;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=zAymBj0qljq36AYwpOoPUKnQHXL9qCoC9DaonkK2R/4=;
+        b=eXPSEYjbh/uxWrb9qQq8BbgdooEtS1nSgroUyQlC5unt9TS+OGkd2/XVnQoQ+hx5
+        CVik02/Y9RANsrMPEHJLrAb8RUE5Gl15j/hGk6/FMbAAoNIivLQChix6nht8IID277Q
+        7z7qlunI35/aN4rhByGS3GZ5sdBKFqYPBsy2a0PY=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575434685;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+        bh=zAymBj0qljq36AYwpOoPUKnQHXL9qCoC9DaonkK2R/4=;
+        b=fEpjbAGH26YLsTUCB9Ek3FN1GaMavGX3d1IKswYQqiS75FaD3ERgBu4CX2v4kN3N
+        +iVuQdw1DYfM8knk5rNc2zk/WluxpMlYfw9uL2wZMnnU2r4BU1/X2Qx1ShYUU/MXyO7
+        r5xrZR40+j+6pkp9Ql7t+rksFy8cbzhOxh8bS4FQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DF7F4C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
+Subject: Re: [PATCH] trace: circular dependency for trace_types_lock and
+ event_mutex
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        kaushalk@codeaurora.org
+References: <0101016ecc80a1fa-27cc3e87-c16d-4cd6-b3c6-9c893010fdef-000000@us-west-2.amazonses.com>
+ <20191203112730.77b334f6@gandalf.local.home>
+From:   Prateek Sood <prsood@codeaurora.org>
+Message-ID: <0101016ecf398cfb-7361e722-7792-423a-85cf-7dd2fe048e9d-000000@us-west-2.amazonses.com>
+Date:   Wed, 4 Dec 2019 04:44:45 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
-Content-Disposition: inline
-In-Reply-To: <5963ff32-2119-be7c-d1e5-63457888a73b@ozlabs.ru>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191203112730.77b334f6@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SES-Outgoing: 2019.12.04-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/3/19 9:57 PM, Steven Rostedt wrote:
+> 
+> Hi Prateek,
+> 
+> Thanks for the patch. Note, I think a better subject is:
+> 
+>  tracing: Fix lock inversion caused by trace_event_enable_tgid_record()
+Ok, I will update and send with updated subject.
 
---IS0zKkzwUGydFO0o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> 
+> On Tue, 3 Dec 2019 16:03:32 +0000
+> Prateek Sood <prsood@codeaurora.org> wrote:
+> 
+>>        Task T2                             Task T3
+>> trace_options_core_write()            subsystem_open()
+>>
+>>  mutex_lock(trace_types_lock)           mutex_lock(event_mutex)
+>>
+>>  set_tracer_flag()
+>>
+>>    trace_event_enable_tgid_record()       mutex_lock(trace_types_lock)
+>>
+>>     mutex_lock(event_mutex)
+>>
+>> This gives a circular dependency deadlock between trace_types_lock and
+>> event_mutex. To fix this invert the usage of trace_types_lock and event_mutex
+>> in trace_options_core_write(). This keeps the sequence of lock usage consistent.
+>>
+>> Change-Id: I3752a77c59555852c2241f7775ec4a1960c15c15
+> 
+> What's this Change-Id? Something internal?
 
-On Wed, Dec 04, 2019 at 12:08:09PM +1100, Alexey Kardashevskiy wrote:
->=20
->=20
-> On 04/12/2019 11:49, Ram Pai wrote:
-> > On Wed, Dec 04, 2019 at 11:04:04AM +1100, Alexey Kardashevskiy wrote:
-> >>
-> >>
-> >> On 04/12/2019 03:52, Ram Pai wrote:
-> >>> On Tue, Dec 03, 2019 at 03:24:37PM +1100, Alexey Kardashevskiy wrote:
-> >>>>
-> >>>>
-> >>>> On 03/12/2019 15:05, Ram Pai wrote:
-> >>>>> On Tue, Dec 03, 2019 at 01:15:04PM +1100, Alexey Kardashevskiy wrot=
-e:
-> >>>>>>
-> >>>>>>
-> >>>>>> On 03/12/2019 13:08, Ram Pai wrote:
-> >>>>>>> On Tue, Dec 03, 2019 at 11:56:43AM +1100, Alexey Kardashevskiy wr=
-ote:
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>> On 02/12/2019 17:45, Ram Pai wrote:
-> >>>>>>>>> H_PUT_TCE_INDIRECT hcall uses a page filled with TCE entries, a=
-s one of
-> >>>>>>>>> its parameters. One page is dedicated per cpu, for the lifetime=
- of the
-> >>>>>>>>> kernel for this purpose. On secure VMs, contents of this page, =
-when
-> >>>>>>>>> accessed by the hypervisor, retrieves encrypted TCE entries.  H=
-ypervisor
-> >>>>>>>>> needs to know the unencrypted entries, to update the TCE table
-> >>>>>>>>> accordingly.  There is nothing secret or sensitive about these =
-entries.
-> >>>>>>>>> Hence share the page with the hypervisor.
-> >>>>>>>>
-> >>>>>>>> This unsecures a page in the guest in a random place which creat=
-es an
-> >>>>>>>> additional attack surface which is hard to exploit indeed but
-> >>>>>>>> nevertheless it is there.
-> >>>>>>>> A safer option would be not to use the
-> >>>>>>>> hcall-multi-tce hyperrtas option (which translates FW_FEATURE_MU=
-LTITCE
-> >>>>>>>> in the guest).
-> >>>>>>>
-> >>>>>>>
-> >>>>>>> Hmm... How do we not use it?  AFAICT hcall-multi-tce option gets =
-invoked
-> >>>>>>> automatically when IOMMU option is enabled.
-> >>>>>>
-> >>>>>> It is advertised by QEMU but the guest does not have to use it.
-> >>>>>
-> >>>>> Are you suggesting that even normal-guest, not use hcall-multi-tce?
-> >>>>> or just secure-guest? =20
-> >>>>
-> >>>>
-> >>>> Just secure.
-> >>>
-> >>> hmm..  how are the TCE entries communicated to the hypervisor, if
-> >>> hcall-multi-tce is disabled?
-> >>
-> >> Via H_PUT_TCE which updates 1 entry at once (sets or clears).
-> >> hcall-multi-tce  enables H_PUT_TCE_INDIRECT (512 entries at once) and
-> >> H_STUFF_TCE (clearing, up to 4bln at once? many), these are simply an
-> >> optimization.
-> >=20
-> > Do you still think, secure-VM should use H_PUT_TCE and not
-> > H_PUT_TCE_INDIRECT?  And normal VM should use H_PUT_TCE_INDIRECT?
-> > Is there any advantage of special casing it for secure-VMs.
->=20
->=20
-> Reducing the amount of insecure memory at random location.
+Apologies, this is something internal which I missed to remove
 
-The other approach we could use for that - which would still allow
-H_PUT_TCE_INDIRECT, would be to allocate the TCE buffer page from the
-same pool that we use for the bounce buffers.  I assume there must
-already be some sort of allocator for that?
+> 
+> I'll be adding:
+> 
+>  Link: http://lkml.kernel.org/r/0101016ecc80a1fa-27cc3e87-c16d-4cd6-b3c6-9c893010fdef-000000@us-west-2.amazonses.com
+> 
+> I'll test this out, and probably even add a stable tag.
 
-> > In fact, we could make use of as much optimization as possible.
-> >=20
-> >=20
-> >>
-> >>>>>> Is not this for pci+swiotlb?=20
-> > ..snip..
-> >>>>> This patch is purely to help the hypervisor setup the TCE table, in=
- the
-> >>>>> presence of a IOMMU.
-> >>>>
-> >>>> Then the hypervisor should be able to access the guest pages mapped =
-for
-> >>>> DMA and these pages should be made unsecure for this to work. Where/=
-when
-> >>>> does this happen?
-> >>>
-> >>> This happens in the SWIOTLB code.  The code to do that is already
-> >>> upstream. =20
-> >>>
-> >>> The sharing of the pages containing the SWIOTLB bounce buffers is done
-> >>> in init_svm() which calls swiotlb_update_mem_attributes() which calls
-> >>> set_memory_decrypted().  In the case of pseries, set_memory_decrypted=
-() calls=20
-> >>> uv_share_page().
-> >>
-> >>
-> >> This does not seem enough as when you enforce iommu_platform=3Don, QEMU
-> >> starts accessing virtio buffers via IOMMU so bounce buffers have to be
-> >> mapped explicitly, via H_PUT_TCE&co, where does this happen?
-> >>
-> >=20
-> > I think, it happens at boot time. Every page of the guest memory is TCE
-> > mapped, if iommu is enabled. SWIOTLB pages get implicitly TCE-mapped
-> > as part of that operation.
->=20
->=20
-> Ah I see. This works via the huge dma window. Ok, makes sense now.
->=20
-> It just seems like a waste that we could map swiotlb 1:1 via the always
-> existing small DMA window but instead we rely on a huge window to map
-> these small buffers. This way we are wasting the entire 32bit window and
-> most of the huge window. We may fix it in the future (not right now) but
-> for now I would still avoid unsecuring additional memory. Thanks,
->=20
->=20
+Ok
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Thanks for reviewing it!!
 
---IS0zKkzwUGydFO0o
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> -- Steve
+> 
+> 
+> 
+>> Signed-off-by: Prateek Sood <prsood@codeaurora.org>
+>> ---
+>>  kernel/trace/trace.c              | 6 ++++++
+>>  kernel/trace/trace_events.c       | 8 ++++----
+>>  kernel/trace/trace_irqsoff.c      | 4 ++++
+>>  kernel/trace/trace_sched_wakeup.c | 4 ++++
+>>  4 files changed, 18 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+>> index 6a0ee91..2c09aa1 100644
+>> --- a/kernel/trace/trace.c
+>> +++ b/kernel/trace/trace.c
+>> @@ -4590,6 +4590,8 @@ int trace_keep_overwrite(struct tracer *tracer, u32 mask, int set)
+>>  
+>>  int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+>>  {
+>> +	lockdep_assert_held(&event_mutex);
+>> +
+>>  	/* do nothing if flag is already set */
+>>  	if (!!(tr->trace_flags & mask) == !!enabled)
+>>  		return 0;
+>> @@ -4657,6 +4659,7 @@ static int trace_set_options(struct trace_array *tr, char *option)
+>>  
+>>  	cmp += len;
+>>  
+>> +	mutex_lock(&event_mutex);
+>>  	mutex_lock(&trace_types_lock);
+>>  
+>>  	ret = match_string(trace_options, -1, cmp);
+>> @@ -4667,6 +4670,7 @@ static int trace_set_options(struct trace_array *tr, char *option)
+>>  		ret = set_tracer_flag(tr, 1 << ret, !neg);
+>>  
+>>  	mutex_unlock(&trace_types_lock);
+>> +	mutex_unlock(&event_mutex);
+>>  
+>>  	/*
+>>  	 * If the first trailing whitespace is replaced with '\0' by strstrip,
+>> @@ -7972,9 +7976,11 @@ static void get_tr_index(void *data, struct trace_array **ptr,
+>>  	if (val != 0 && val != 1)
+>>  		return -EINVAL;
+>>  
+>> +	mutex_lock(&event_mutex);
+>>  	mutex_lock(&trace_types_lock);
+>>  	ret = set_tracer_flag(tr, 1 << index, val);
+>>  	mutex_unlock(&trace_types_lock);
+>> +	mutex_unlock(&event_mutex);
+>>  
+>>  	if (ret < 0)
+>>  		return ret;
+>> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+>> index fba87d1..995061b 100644
+>> --- a/kernel/trace/trace_events.c
+>> +++ b/kernel/trace/trace_events.c
+>> @@ -320,7 +320,8 @@ void trace_event_enable_cmd_record(bool enable)
+>>  	struct trace_event_file *file;
+>>  	struct trace_array *tr;
+>>  
+>> -	mutex_lock(&event_mutex);
+>> +	lockdep_assert_held(&event_mutex);
+>> +
+>>  	do_for_each_event_file(tr, file) {
+>>  
+>>  		if (!(file->flags & EVENT_FILE_FL_ENABLED))
+>> @@ -334,7 +335,6 @@ void trace_event_enable_cmd_record(bool enable)
+>>  			clear_bit(EVENT_FILE_FL_RECORDED_CMD_BIT, &file->flags);
+>>  		}
+>>  	} while_for_each_event_file();
+>> -	mutex_unlock(&event_mutex);
+>>  }
+>>  
+>>  void trace_event_enable_tgid_record(bool enable)
+>> @@ -342,7 +342,8 @@ void trace_event_enable_tgid_record(bool enable)
+>>  	struct trace_event_file *file;
+>>  	struct trace_array *tr;
+>>  
+>> -	mutex_lock(&event_mutex);
+>> +	lockdep_assert_held(&event_mutex);
+>> +
+>>  	do_for_each_event_file(tr, file) {
+>>  		if (!(file->flags & EVENT_FILE_FL_ENABLED))
+>>  			continue;
+>> @@ -356,7 +357,6 @@ void trace_event_enable_tgid_record(bool enable)
+>>  				  &file->flags);
+>>  		}
+>>  	} while_for_each_event_file();
+>> -	mutex_unlock(&event_mutex);
+>>  }
+>>  
+>>  static int __ftrace_event_enable_disable(struct trace_event_file *file,
+>> diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
+>> index a745b0c..887cdb5 100644
+>> --- a/kernel/trace/trace_irqsoff.c
+>> +++ b/kernel/trace/trace_irqsoff.c
+>> @@ -560,8 +560,10 @@ static int __irqsoff_tracer_init(struct trace_array *tr)
+>>  	save_flags = tr->trace_flags;
+>>  
+>>  	/* non overwrite screws up the latency tracers */
+>> +	mutex_lock(&event_mutex);
+>>  	set_tracer_flag(tr, TRACE_ITER_OVERWRITE, 1);
+>>  	set_tracer_flag(tr, TRACE_ITER_LATENCY_FMT, 1);
+>> +	mutex_unlock(&event_mutex);
+>>  
+>>  	tr->max_latency = 0;
+>>  	irqsoff_trace = tr;
+>> @@ -586,8 +588,10 @@ static void __irqsoff_tracer_reset(struct trace_array *tr)
+>>  
+>>  	stop_irqsoff_tracer(tr, is_graph(tr));
+>>  
+>> +	mutex_lock(&event_mutex);
+>>  	set_tracer_flag(tr, TRACE_ITER_LATENCY_FMT, lat_flag);
+>>  	set_tracer_flag(tr, TRACE_ITER_OVERWRITE, overwrite_flag);
+>> +	mutex_unlock(&event_mutex);
+>>  	ftrace_reset_array_ops(tr);
+>>  
+>>  	irqsoff_busy = false;
+>> diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
+>> index 5e43b96..0bc67d1 100644
+>> --- a/kernel/trace/trace_sched_wakeup.c
+>> +++ b/kernel/trace/trace_sched_wakeup.c
+>> @@ -671,8 +671,10 @@ static int __wakeup_tracer_init(struct trace_array *tr)
+>>  	save_flags = tr->trace_flags;
+>>  
+>>  	/* non overwrite screws up the latency tracers */
+>> +	mutex_lock(&event_mutex);
+>>  	set_tracer_flag(tr, TRACE_ITER_OVERWRITE, 1);
+>>  	set_tracer_flag(tr, TRACE_ITER_LATENCY_FMT, 1);
+>> +	mutex_unlock(&event_mutex);
+>>  
+>>  	tr->max_latency = 0;
+>>  	wakeup_trace = tr;
+>> @@ -722,8 +724,10 @@ static void wakeup_tracer_reset(struct trace_array *tr)
+>>  	/* make sure we put back any tasks we are tracing */
+>>  	wakeup_reset(tr);
+>>  
+>> +	mutex_lock(&event_mutex);
+>>  	set_tracer_flag(tr, TRACE_ITER_LATENCY_FMT, lat_flag);
+>>  	set_tracer_flag(tr, TRACE_ITER_OVERWRITE, overwrite_flag);
+>> +	mutex_unlock(&event_mutex);
+>>  	ftrace_reset_array_ops(tr);
+>>  	wakeup_busy = false;
+>>  }
+> 
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl3nKbAACgkQbDjKyiDZ
-s5KMexAAllYYsecO3NDQbhy2gO0VyzjwweSDd5tosdQl/Knkeu7XeCBfKQN3mIrG
-fO8k2+HZHX2LLPyopjnit5VOwKgIigv2y4HKHRrAKWrLsbFVYpm1M/VC2Dz3TBmt
-v0RYeiaVtXtpHEJcPHRj6WmKjiEG2DwiAFQoT76PjTj4HTQBAp9GYEfddPKbjhhF
-wrxR5h3SOOuLaaP1o8lkWTTkUCkUTfMNUiKBeC3xedeAsvUldXihSUgENeAKjxMS
-nOvMcA8JJ6M7acLILT6/xOrrLPkjn+wWfbo0B40c9GQfnSWGbb+OZRwaIoefowKk
-1IgSXJtM3aYqJadcObgTD0MCp0PaEBpKEe66QxTP2gxKKgpD71TMG5kYqYbqTs2t
-LHUGq7HegCQe5aOZ4hBHvCHb4VqztxNz0woJTD3GjtxmFiwlsrQ1FCK51OT+s0rr
-Ga5inejhc+BTuho7XFPxNyQ0piFq3uBGTRJ5vIkygMUWnxVMSVi0DYSxbqC9J5qm
-M7Ezhlca7c5m7sh5LG1ULrh+GZEZx/Li5iUWytolJnuV12v4eGAyEcux14mik8wh
-pa/1OmU+7K+tCIP3lTzzcPqMNjRDbOhYIVahaByzAvztET4x2uj4AadGHCdhTUsu
-AaKRc+4helF5D6sbcsxwY1h2VrR7c7ZrTlFdHa7Xd+LXlepo+OY=
-=k2sc
------END PGP SIGNATURE-----
-
---IS0zKkzwUGydFO0o--
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation
+Center, Inc., is a member of Code Aurora Forum, a Linux Foundation
+Collaborative Project
