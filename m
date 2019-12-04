@@ -2,51 +2,55 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C61F1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1DAC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB2820409
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EDE820409
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483656;
-	bh=xN/rKSd6vn+vMQ3g11/LLfqRX9ym0pzwVRcA2VE9quI=;
+	s=default; t=1575483662;
+	bh=em/d8aYF1bMtjXSLVU4kj2JcBOP0Eed2tRCO1S+7JDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hcqDkZE2T4EHK8ZIyqDsh5/M0OdO0ajFAK5RWLXBM68Ui+73YPBXqqpMStHinfCI4
-	 921fRVh7Bh5fG/cNq47l42Tdh2FoE2xLShyL0kqvOgna4eyorNSUBAwDJiZPnDfzC9
-	 UmvYWzwEyVf+Q2qOvw6jKWjvX9jWj7abKwsz/ND0=
+	b=mduMFvWlSlI36fCWXMBLqiEfNqRd3fWdkHzWiYRvfyj2Rl93Y9eno49OgSkKiN1q4
+	 2Me9vP9VR/ny2pjPp/TbhOFvBAtU9rR3kulSHT/lD5uFOcpFpLSil8RAP3aWfCjM0b
+	 nXs9UuA7GyOQH7yh1FBQvfumVoW1RLF7IHHpTJ0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbfLDSUz (ORCPT
+        id S1731572AbfLDSVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:20:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57752 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:21:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728812AbfLDSHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:07:35 -0500
+        id S1730162AbfLDSH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:07:27 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14F5520674;
-        Wed,  4 Dec 2019 18:07:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A0C120675;
+        Wed,  4 Dec 2019 18:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482854;
-        bh=xN/rKSd6vn+vMQ3g11/LLfqRX9ym0pzwVRcA2VE9quI=;
+        s=default; t=1575482847;
+        bh=em/d8aYF1bMtjXSLVU4kj2JcBOP0Eed2tRCO1S+7JDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1VTi44t5NP+h9ep1GPkjNFNuvbqvFrq6RAnYTqM5pmNBN6tUzdRTXCvcDti7NKSAW
-         9Zn0acWDlKm6sxpYAKliz6wBpBEkqKBydEWI677xxIpRavbHcCeNtLWNP32BXkTI7h
-         xusFqGTkfKafmpmxb4FMIqQ7fct6XU6EYpUR3hfE=
+        b=bukLjOdVPzrVA3NsJkT+23QIR14Cuv64vUMuHOSI+1Qp894+Hx+8GkSghbTUDY37z
+         OKay1JR9NO8ihUt75MwD/fiAFqOt7X5VouPHJCO2Axfv64Vv2zcs8jcwNRQhuCv0x8
+         w/9hZ54XrUXnJqgaisBcCnJUBUPq3RLnoF96ke6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio DUrso <fabiodurso@hotmail.it>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 161/209] USB: serial: ftdi_sio: add device IDs for U-Blox C099-F9P
-Date:   Wed,  4 Dec 2019 18:56:13 +0100
-Message-Id: <20191204175334.567296991@linuxfoundation.org>
+        stable@vger.kernel.org, Marcin Stojek <marcin.stojek@nokia.com>,
+        Maciej Kwiecien <maciej.kwiecien@nokia.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 141/209] sctp: dont compare hb_timer expire date before starting it
+Date:   Wed,  4 Dec 2019 18:55:53 +0100
+Message-Id: <20191204175333.019542367@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -59,56 +63,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio D'Urso <fabiodurso@hotmail.it>
+From: Maciej Kwiecien <maciej.kwiecien@nokia.com>
 
-commit c1a1f273d0825774c80896b8deb1c9ea1d0b91e3 upstream.
+[ Upstream commit d1f20c03f48102e52eb98b8651d129b83134cae4 ]
 
-This device presents itself as a USB hub with three attached devices:
- - An ACM serial port connected to the GPS module (not affected by this
-   commit)
- - An FTDI serial port connected to the GPS module (1546:0502)
- - Another FTDI serial port connected to the ODIN-W2 radio module
-   (1546:0503)
+hb_timer might not start at all for a particular transport because its
+start is conditional. In a result a node is not sending heartbeats.
 
-This commit registers U-Blox's VID and the PIDs of the second and third
-devices.
+Function sctp_transport_reset_hb_timer has two roles:
+    - initial start of hb_timer for a given transport,
+    - update expire date of hb_timer for a given transport.
+The function is optimized to update timer's expire only if it is before
+a new calculated one but this comparison is invalid for a timer which
+has not yet started. Such a timer has expire == 0 and if a new expire
+value is bigger than (MAX_JIFFIES / 2 + 2) then "time_before" macro will
+fail and timer will not start resulting in no heartbeat packets send by
+the node.
 
-Datasheet: https://www.u-blox.com/sites/default/files/C099-F9P-AppBoard-Mbed-OS3-FW_UserGuide_%28UBX-18063024%29.pdf
+This was found when association was initialized within first 5 mins
+after system boot due to jiffies init value which is near to MAX_JIFFIES.
 
-Signed-off-by: Fabio D'Urso <fabiodurso@hotmail.it>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Test kernel version: 4.9.154 (ARCH=arm)
+hb_timer.expire = 0;                //initialized, not started timer
+new_expire = MAX_JIFFIES / 2 + 2;   //or more
+time_before(hb_timer.expire, new_expire) == false
 
+Fixes: ba6f5e33bdbb ("sctp: avoid refreshing heartbeat timer too often")
+Reported-by: Marcin Stojek <marcin.stojek@nokia.com>
+Tested-by: Marcin Stojek <marcin.stojek@nokia.com>
+Signed-off-by: Maciej Kwiecien <maciej.kwiecien@nokia.com>
+Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/ftdi_sio.c     |    3 +++
- drivers/usb/serial/ftdi_sio_ids.h |    7 +++++++
- 2 files changed, 10 insertions(+)
+ net/sctp/transport.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -1028,6 +1028,9 @@ static const struct usb_device_id id_tab
- 	/* Sienna devices */
- 	{ USB_DEVICE(FTDI_VID, FTDI_SIENNA_PID) },
- 	{ USB_DEVICE(ECHELON_VID, ECHELON_U20_PID) },
-+	/* U-Blox devices */
-+	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ZED_PID) },
-+	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ODIN_PID) },
- 	{ }					/* Terminating entry */
- };
+diff --git a/net/sctp/transport.c b/net/sctp/transport.c
+index 43105cf04bc45..274df899e7bfa 100644
+--- a/net/sctp/transport.c
++++ b/net/sctp/transport.c
+@@ -210,7 +210,8 @@ void sctp_transport_reset_hb_timer(struct sctp_transport *transport)
  
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -1558,3 +1558,10 @@
-  */
- #define UNJO_VID			0x22B7
- #define UNJO_ISODEBUG_V1_PID		0x150D
-+
-+/*
-+ * U-Blox products (http://www.u-blox.com).
-+ */
-+#define UBLOX_VID			0x1546
-+#define UBLOX_C099F9P_ZED_PID		0x0502
-+#define UBLOX_C099F9P_ODIN_PID		0x0503
+ 	/* When a data chunk is sent, reset the heartbeat interval.  */
+ 	expires = jiffies + sctp_transport_timeout(transport);
+-	if (time_before(transport->hb_timer.expires, expires) &&
++	if ((time_before(transport->hb_timer.expires, expires) ||
++	     !timer_pending(&transport->hb_timer)) &&
+ 	    !mod_timer(&transport->hb_timer,
+ 		       expires + prandom_u32_max(transport->rto)))
+ 		sctp_transport_hold(transport);
+-- 
+2.20.1
+
 
 
