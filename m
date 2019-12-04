@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B42C2C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29494C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCB32068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBBD206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:34:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfLDIef (ORCPT
+        id S1727675AbfLDIek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:34:35 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56437 "EHLO
+        Wed, 4 Dec 2019 03:34:40 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56395 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbfLDId7 (ORCPT
+        with ESMTP id S1727333AbfLDIdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:33:59 -0500
+        Wed, 4 Dec 2019 03:33:52 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1icQ6P-0005JL-RL; Wed, 04 Dec 2019 09:33:41 +0100
+        id 1icQ6P-0005Ms-Q3; Wed, 04 Dec 2019 09:33:41 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 69FBA1C2659;
-        Wed,  4 Dec 2019 09:33:36 +0100 (CET)
-Date:   Wed, 04 Dec 2019 08:33:36 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 28DC51C265C;
+        Wed,  4 Dec 2019 09:33:37 +0100 (CET)
+Date:   Wed, 04 Dec 2019 08:33:37 -0000
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/kprobes] x86/alternative: Shrink text_poke_loc
+Subject: [tip: core/kprobes] x86/mm: Remove set_kernel_text_r[ow]()
 Cc:     Alexei Starovoitov <ast@kernel.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
@@ -45,10 +45,10 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191111132458.047052889@infradead.org>
-References: <20191111132458.047052889@infradead.org>
+In-Reply-To: <20191111132457.819095320@infradead.org>
+References: <20191111132457.819095320@infradead.org>
 MIME-Version: 1.0
-Message-ID: <157544841633.21853.4174660841263079781.tip-bot2@tip-bot2>
+Message-ID: <157544841706.21853.11020187045809244802.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,21 +64,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/kprobes branch of tip:
 
-Commit-ID:     4531ef6a8aaf132aa32e2e26670c652942540633
-Gitweb:        https://git.kernel.org/tip/4531ef6a8aaf132aa32e2e26670c652942540633
+Commit-ID:     c12af4407fa5a3fc6396bde379e0882a132df49b
+Gitweb:        https://git.kernel.org/tip/c12af4407fa5a3fc6396bde379e0882a132df49b
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 09 Oct 2019 12:26:53 +02:00
+AuthorDate:    Mon, 02 Sep 2019 10:16:12 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Wed, 27 Nov 2019 07:44:24 +01:00
 
-x86/alternative: Shrink text_poke_loc
+x86/mm: Remove set_kernel_text_r[ow]()
 
-Employ the fact that all text must be within a s32 displacement of one
-another to shrink the text_poke_loc::addr field. Make it relative to
-_stext.
-
-This then shrinks struct text_poke_loc to 16 bytes, and consequently
-increases TP_VEC_MAX from 170 to 256.
+With the last and only user of these functions gone (ftrace) remove
+them as well to avoid ever growing new users.
 
 Tested-by: Alexei Starovoitov <ast@kernel.org>
 Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
@@ -90,97 +86,110 @@ Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191111132458.047052889@infradead.org
+Link: https://lkml.kernel.org/r/20191111132457.819095320@infradead.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/alternative.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ arch/x86/include/asm/set_memory.h |  2 +--
+ arch/x86/mm/init_32.c             | 28 +-----------------------
+ arch/x86/mm/init_64.c             | 36 +------------------------------
+ 3 files changed, 66 deletions(-)
 
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 6e3ee73..526cc5f 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -937,7 +937,7 @@ static void do_sync_core(void *info)
- }
+diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
+index 2ee8e46..64c3dce 100644
+--- a/arch/x86/include/asm/set_memory.h
++++ b/arch/x86/include/asm/set_memory.h
+@@ -81,8 +81,6 @@ int set_direct_map_invalid_noflush(struct page *page);
+ int set_direct_map_default_noflush(struct page *page);
  
- struct text_poke_loc {
--	void *addr;
-+	s32 rel_addr; /* addr := _stext + rel_addr */
- 	s32 rel32;
- 	u8 opcode;
- 	const u8 text[POKE_MAX_OPCODE_SIZE];
-@@ -948,13 +948,18 @@ static struct bp_patching_desc {
- 	int nr_entries;
- } bp_patching;
+ extern int kernel_set_to_readonly;
+-void set_kernel_text_rw(void);
+-void set_kernel_text_ro(void);
  
-+static inline void *text_poke_addr(struct text_poke_loc *tp)
-+{
-+	return _stext + tp->rel_addr;
-+}
-+
- static int notrace patch_cmp(const void *key, const void *elt)
+ #ifdef CONFIG_X86_64
+ static inline int set_mce_nospec(unsigned long pfn)
+diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+index 930edeb..e9f239e 100644
+--- a/arch/x86/mm/init_32.c
++++ b/arch/x86/mm/init_32.c
+@@ -874,34 +874,6 @@ void arch_remove_memory(int nid, u64 start, u64 size,
+ 
+ int kernel_set_to_readonly __read_mostly;
+ 
+-void set_kernel_text_rw(void)
+-{
+-	unsigned long start = PFN_ALIGN(_text);
+-	unsigned long size = PFN_ALIGN(_etext) - start;
+-
+-	if (!kernel_set_to_readonly)
+-		return;
+-
+-	pr_debug("Set kernel text: %lx - %lx for read write\n",
+-		 start, start+size);
+-
+-	set_pages_rw(virt_to_page(start), size >> PAGE_SHIFT);
+-}
+-
+-void set_kernel_text_ro(void)
+-{
+-	unsigned long start = PFN_ALIGN(_text);
+-	unsigned long size = PFN_ALIGN(_etext) - start;
+-
+-	if (!kernel_set_to_readonly)
+-		return;
+-
+-	pr_debug("Set kernel text: %lx - %lx for read only\n",
+-		 start, start+size);
+-
+-	set_pages_ro(virt_to_page(start), size >> PAGE_SHIFT);
+-}
+-
+ static void mark_nxdata_nx(void)
  {
- 	struct text_poke_loc *tp = (struct text_poke_loc *) elt;
+ 	/*
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index dcb9bc9..b326f14 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1260,42 +1260,6 @@ void __init mem_init(void)
  
--	if (key < tp->addr)
-+	if (key < text_poke_addr(tp))
- 		return -1;
--	if (key > tp->addr)
-+	if (key > text_poke_addr(tp))
- 		return 1;
- 	return 0;
- }
-@@ -1000,7 +1005,7 @@ int notrace poke_int3_handler(struct pt_regs *regs)
- 			return 0;
- 	} else {
- 		tp = bp_patching.vec;
--		if (tp->addr != ip)
-+		if (text_poke_addr(tp) != ip)
- 			return 0;
- 	}
+ int kernel_set_to_readonly;
  
-@@ -1078,7 +1083,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
- 	 * First step: add a int3 trap to the address that will be patched.
- 	 */
- 	for (i = 0; i < nr_entries; i++)
--		text_poke(tp[i].addr, &int3, sizeof(int3));
-+		text_poke(text_poke_addr(&tp[i]), &int3, sizeof(int3));
- 
- 	on_each_cpu(do_sync_core, NULL, 1);
- 
-@@ -1089,7 +1094,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
- 		int len = text_opcode_size(tp[i].opcode);
- 
- 		if (len - sizeof(int3) > 0) {
--			text_poke((char *)tp[i].addr + sizeof(int3),
-+			text_poke(text_poke_addr(&tp[i]) + sizeof(int3),
- 				  (const char *)tp[i].text + sizeof(int3),
- 				  len - sizeof(int3));
- 			do_sync++;
-@@ -1113,7 +1118,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
- 		if (tp[i].text[0] == INT3_INSN_OPCODE)
- 			continue;
- 
--		text_poke(tp[i].addr, tp[i].text, sizeof(int3));
-+		text_poke(text_poke_addr(&tp[i]), tp[i].text, sizeof(int3));
- 		do_sync++;
- 	}
- 
-@@ -1143,7 +1148,7 @@ void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
- 	BUG_ON(!insn_complete(&insn));
- 	BUG_ON(len != insn.length);
- 
--	tp->addr = addr;
-+	tp->rel_addr = addr - (void *)_stext;
- 	tp->opcode = insn.opcode.bytes[0];
- 
- 	switch (tp->opcode) {
-@@ -1192,7 +1197,7 @@ static bool tp_order_fail(void *addr)
- 		return true;
- 
- 	tp = &tp_vec[tp_vec_nr - 1];
--	if ((unsigned long)tp->addr > (unsigned long)addr)
-+	if ((unsigned long)text_poke_addr(tp) > (unsigned long)addr)
- 		return true;
- 
- 	return false;
+-void set_kernel_text_rw(void)
+-{
+-	unsigned long start = PFN_ALIGN(_text);
+-	unsigned long end = PFN_ALIGN(_etext);
+-
+-	if (!kernel_set_to_readonly)
+-		return;
+-
+-	pr_debug("Set kernel text: %lx - %lx for read write\n",
+-		 start, end);
+-
+-	/*
+-	 * Make the kernel identity mapping for text RW. Kernel text
+-	 * mapping will always be RO. Refer to the comment in
+-	 * static_protections() in pageattr.c
+-	 */
+-	set_memory_rw(start, (end - start) >> PAGE_SHIFT);
+-}
+-
+-void set_kernel_text_ro(void)
+-{
+-	unsigned long start = PFN_ALIGN(_text);
+-	unsigned long end = PFN_ALIGN(_etext);
+-
+-	if (!kernel_set_to_readonly)
+-		return;
+-
+-	pr_debug("Set kernel text: %lx - %lx for read only\n",
+-		 start, end);
+-
+-	/*
+-	 * Set the kernel identity mapping for text RO.
+-	 */
+-	set_memory_ro(start, (end - start) >> PAGE_SHIFT);
+-}
+-
+ void mark_rodata_ro(void)
+ {
+ 	unsigned long start = PFN_ALIGN(_text);
