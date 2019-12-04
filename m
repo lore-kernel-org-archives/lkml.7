@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B58EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02708C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D725A205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3768205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483926;
-	bh=BaDNO1DIXNOXEwsttBOGtCsin7DuO1+IanV1X3Qh7dM=;
+	s=default; t=1575483928;
+	bh=O4H8gKKIofBTYa/ahR2HGrSqNn62ReqrOkWXmkecmG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kbWWXZks6IEZT3PIfDbKLR4ysEE3ihPPGCVYmC/+pDWDOaF+UDmHYPpPz4Z4+LDCf
-	 1rJhHu780h2jtf78bwr2kw5ObBaJa+lP+X//0V+56YHOyAhiKtD9pdQBOiBQTwGRai
-	 ANzLOJyQ1zVoeN8cLsWXFi307N8SNyFxmGAgS5N4=
+	b=UPib2FXYE4JGOuDKm4ex1w//BIaF/kUSFOXU8i61Z/tIh6Qx5cfO4k61LlUyYmip3
+	 XI23sR1SmzVm4kWd+PBqdzwSSwDjnXdSX+s3OgsB8+uJQTPJfp+LKQUDyLvSAxipyj
+	 2+aMeqy9ferUGXiGxCz3Zu4ghOgV2a7aO++UI+u4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729516AbfLDSBK (ORCPT
+        id S1728381AbfLDSBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:01:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:01:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729507AbfLDSBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:01:07 -0500
+        id S1729483AbfLDSBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:01:02 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA66320659;
-        Wed,  4 Dec 2019 18:01:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04E2B20659;
+        Wed,  4 Dec 2019 18:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482467;
-        bh=BaDNO1DIXNOXEwsttBOGtCsin7DuO1+IanV1X3Qh7dM=;
+        s=default; t=1575482462;
+        bh=O4H8gKKIofBTYa/ahR2HGrSqNn62ReqrOkWXmkecmG8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dr9VJbX3XDJGyLzqGcTivDETjTx6BCq6clTv6mLYdXd1M1ef7MF7ZABikE0W1iT3p
-         TaMa/X8mkvK8fQgxCiF8BCPoQZAahicIlWvR4hkzzyBAgENWNUUmhG163rmeTIFxnM
-         ZP3o9bcHksUYKWWmC/KiizovFTQAxqox/a+10FKY=
+        b=AM9dGkt+kmr0nHI4qgkoQnE580QpO/sjIQW2hg+lOe9dmffVAVQ+CMl8WY97eD7PC
+         l+fwJh28t89sSwHvgjP/zHFvl7GJxTrZ2Z19Pu+MR7UeEGImW4CUnwO5NowPvMtDRp
+         /SQHl/KY0HwXBXmMDmDwmVlC5P2K8htpIQRFTv2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qi Jun Ding <qding@redhat.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 84/92] openvswitch: fix flow command message size
-Date:   Wed,  4 Dec 2019 18:50:24 +0100
-Message-Id: <20191204174335.238995400@linuxfoundation.org>
+        stable@vger.kernel.org, Lionel Debieve <lionel.debieve@st.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.4 91/92] hwrng: stm32 - fix unbalanced pm_runtime_enable
+Date:   Wed,  4 Dec 2019 18:50:31 +0100
+Message-Id: <20191204174335.613659568@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -60,42 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Lionel Debieve <lionel.debieve@st.com>
 
-[ Upstream commit 4e81c0b3fa93d07653e2415fa71656b080a112fd ]
+commit af0d4442dd6813de6e77309063beb064fa8e89ae upstream.
 
-When user-space sets the OVS_UFID_F_OMIT_* flags, and the relevant
-flow has no UFID, we can exceed the computed size, as
-ovs_nla_put_identifier() will always dump an OVS_FLOW_ATTR_KEY
-attribute.
-Take the above in account when computing the flow command message
-size.
+No remove function implemented yet in the driver.
+Without remove function, the pm_runtime implementation
+complains when removing and probing again the driver.
 
-Fixes: 74ed7ab9264c ("openvswitch: Add support for unique flow IDs.")
-Reported-by: Qi Jun Ding <qding@redhat.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/openvswitch/datapath.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/openvswitch/datapath.c
-+++ b/net/openvswitch/datapath.c
-@@ -725,9 +725,13 @@ static size_t ovs_flow_cmd_msg_size(cons
+---
+ drivers/char/hw_random/stm32-rng.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+--- a/drivers/char/hw_random/stm32-rng.c
++++ b/drivers/char/hw_random/stm32-rng.c
+@@ -166,6 +166,13 @@ static int stm32_rng_probe(struct platfo
+ 	return devm_hwrng_register(dev, &priv->rng);
+ }
+ 
++static int stm32_rng_remove(struct platform_device *ofdev)
++{
++	pm_runtime_disable(&ofdev->dev);
++
++	return 0;
++}
++
+ #ifdef CONFIG_PM
+ static int stm32_rng_runtime_suspend(struct device *dev)
  {
- 	size_t len = NLMSG_ALIGN(sizeof(struct ovs_header));
+@@ -202,6 +209,7 @@ static struct platform_driver stm32_rng_
+ 		.of_match_table = stm32_rng_match,
+ 	},
+ 	.probe = stm32_rng_probe,
++	.remove = stm32_rng_remove,
+ };
  
--	/* OVS_FLOW_ATTR_UFID */
-+	/* OVS_FLOW_ATTR_UFID, or unmasked flow key as fallback
-+	 * see ovs_nla_put_identifier()
-+	 */
- 	if (sfid && ovs_identifier_is_ufid(sfid))
- 		len += nla_total_size(sfid->ufid_len);
-+	else
-+		len += nla_total_size(ovs_key_attr_size());
- 
- 	/* OVS_FLOW_ATTR_KEY */
- 	if (!sfid || should_fill_key(sfid, ufid_flags))
+ module_platform_driver(stm32_rng_driver);
 
 
