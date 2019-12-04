@@ -2,88 +2,109 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5DCC2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB304C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1D720675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:08:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Yd8WukcX"
+	by mail.kernel.org (Postfix) with ESMTP id BE4E920675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfLDKIy (ORCPT
+        id S1727574AbfLDKJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:08:54 -0500
-Received: from ozlabs.org ([203.11.71.1]:49463 "EHLO ozlabs.org"
+        Wed, 4 Dec 2019 05:09:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:53902 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbfLDKIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:08:54 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47SZLm3vv0z9sPJ;
-        Wed,  4 Dec 2019 21:08:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1575454131;
-        bh=xnBjDSr0aSFVeB7maxwFPpkGfOtz3BGCfA4g+lvQdxU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Yd8WukcXSECKwdjb2Z71Ixl9wSMNnzOZKyH1Iwrev/qnnb9keNJl+EhY3ghPINILi
-         XxnHrZWBE20aZXnffp1nyMRqn8lJ8Xtr0Dc7QBaLkY/PmW5OTF6ddg98nYBbDMy9on
-         nItgAMk6jpLdI/Wv4vOkJgtAafikedAy8r3KrOk32GwVetJhZ+YfDGlzj53hchxLTV
-         uKypy1N8cpT+qCskd7uMCRR4oQyKvyLwg0Vp3gmPUd/bjxHOXVlaICN4cjM7x/VSFC
-         W17sMf/t0K34WM2aTTqJxbibXImDbYRrKkFpm24IiQ6o+GgwnLve2s3CZd+nMoEJLQ
-         MdvB+pk9ozxgA==
-Date:   Wed, 4 Dec 2019 21:08:08 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the tip tree
-Message-ID: <20191204210808.7d34299e@canb.auug.org.au>
+        id S1727408AbfLDKJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 05:09:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25FF41FB;
+        Wed,  4 Dec 2019 02:09:22 -0800 (PST)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DEF7C3F52E;
+        Wed,  4 Dec 2019 02:09:20 -0800 (PST)
+Subject: Re: Null pointer crash at find_idlest_group on db845c w/ linus/master
+To:     Qais Yousef <qais.yousef@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Quentin Perret <qperret@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Patrick Bellasi <Patrick.Bellasi@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <CALAqxLXrWWnWi32BR1F8JOtrGt1y2Kzj__zWopLx1ZfRy3EZKA@mail.gmail.com>
+ <CAKfTPtAvnLY3brp9iy_aHNu0rMM8nLfgeLc3CXEkMk3bwU1weA@mail.gmail.com>
+ <20191204094216.u7yld5r3zelp22lf@e107158-lin.cambridge.arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <65ff440a-187e-43e9-37b4-52fa381283f2@arm.com>
+Date:   Wed, 4 Dec 2019 10:09:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/iVrY7I571Rjc10A=Y9W93ll";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20191204094216.u7yld5r3zelp22lf@e107158-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/iVrY7I571Rjc10A=Y9W93ll
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 04/12/2019 09:42, Qais Yousef wrote:
+> On 12/04/19 09:06, Vincent Guittot wrote:
+>> Hi John,
+>>
+>> On Tue, 3 Dec 2019 at 20:15, John Stultz <john.stultz@linaro.org> wrote:
+>>>
+>>> With today's linus/master on db845c running android, I'm able to
+>>> fairly easily reproduce the following crash. I've not had a chance to
+>>> bisect it yet, but I'm suspecting its connected to Vincent's recent
+>>> rework.
+>>
+>> Does the crash happen randomly or after a specific action ?
+>> I have a db845 so I can try to reproduce it locally.
+> 
+> Isn't there a chance we use local_sgs without initializing it in that function?
+> AFAICS we define local_sgs on the stack but not always could be populated with
+> the right values. I can't see tmp_sgs being used in the function too. Could
+> this cause the/a problem?
+> 
+>  8377         struct sg_lb_stats local_sgs, tmp_sgs;
+> .
+> .
+> .
+>  8399                 if (local_group) {
+>  8400                         sgs = &local_sgs;
+>  8401                         local = group;
+>  8402                 } else {
+>  8403                         sgs = &tmp_sgs;
+>  8404                 }
+>  8405
+>  8406                 update_sg_wakeup_stats(sd, group, sgs, p);
+> 
 
-Hi all,
+local_sgs is initialized in the first update_sg_wakeup_stats() entry
+(the local sched_group is always the first one in the sd->groups list),
+and tmp_sgs is whatever non local group we're iterating over, see:
 
-Commit
+		if (local_group) {
+			sgs = &local_sgs;
+			local = group;
+		} else {
+			sgs = &tmp_sgs;
+		}
 
-  38ebd8d11924 ("x86/ftrace: Mark ftrace_modify_code_direct() __ref")
+and that sgs is populated in
 
-is missing a Signed-off-by from its committer.
+		update_sg_wakeup_stats(sd, group, sgs, p);
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/iVrY7I571Rjc10A=Y9W93ll
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3nhYgACgkQAVBC80lX
-0Gz4aQf/QJ3ZxJNsJ3lwNSdE1Tn+eR6P4S2t2pOav2lk9jA50AVp5dcp0GEx/hmC
-fGQPoSaKI49qZwM5HGQAs8uNuatbN3QvRbtiZ5zdSPQJ71h1juw1DGXiHHUNgTSY
-Mo7BQ0iAsxfkOLgBPN2P83lfDRLbgiMFJDiUrMKCIfNeOk2Cimg1+Nmm2CO+00vP
-5tbDfkyGP29LiHpyCTFScPgB+EKNtO9HNQ6mgpVke2TRYYAq2uwZWxfuEgq9tWwZ
-ARbRCg0m/Ui3X3ae+r8m9xP+w0GIr2Y/qtnWQlKD1cP9lNbmbP+zHPhEZGSHz2Mn
-h2GjgmT6+g1CJtVVhOvQvjbGsh7juQ==
-=/MfH
------END PGP SIGNATURE-----
-
---Sig_/iVrY7I571Rjc10A=Y9W93ll--
+> Cheers
+> 
+> --
+> Qais Youef
+> 
