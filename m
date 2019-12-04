@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43286C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50175C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF132073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1D92073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482403;
-	bh=rQ5ldQcxVnKsALniRRUFyzeOtkp1YGSrRvd9GjrfY3w=;
+	s=default; t=1575482407;
+	bh=Oq84LTVSVC75WPxhcTGPrRuAJow9CRZ9cyQfe033SG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rj9binHhDg/NS3SodMK4Lw+WNcs8TtncX4d59JG9g0VHsn5x4KzsJGhciA770n5d7
-	 q5xKc0c3maaI5mWhgorBtk8hoqRB9dwYwIe9h/T0iIWue85Of5guwmYQ4a+1KLH9Xg
-	 PCqKz6eCecHdCryBqj1VNy/TSD0YiUzSOqeJ6us8=
+	b=nPSC9ADow+QnsPSo6h8gAnY8N5boqkIHUoG7K/fECyuWsGfrKZMnxpAwIaJJnbAEg
+	 vu3FoDmDrNcw3rma0Jvbt9KFeRfLboW/xHMJN3Til/qz/7oqgKyJ7YLUNx1vjP6XRr
+	 EsyaMt6n8Px5zFpBFh9AYPRnK2oT9+HSsxvSCiWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbfLDSAC (ORCPT
+        id S1729268AbfLDSAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:00:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37518 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:00:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729220AbfLDR75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:59:57 -0500
+        id S1729254AbfLDSAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:00:02 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CD2F2073B;
-        Wed,  4 Dec 2019 17:59:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79B5520675;
+        Wed,  4 Dec 2019 18:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482397;
-        bh=rQ5ldQcxVnKsALniRRUFyzeOtkp1YGSrRvd9GjrfY3w=;
+        s=default; t=1575482401;
+        bh=Oq84LTVSVC75WPxhcTGPrRuAJow9CRZ9cyQfe033SG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMk95Z780lR5msphRm0cfobc7Hov/vS5mqtz9vWL19eQ8Amxv8dXIrkl5yNjBKPF5
-         Z4fhCqxYazbiS1pHyS3w+fQw699dIOqxbXEUNMnxROvJXpBq+pEAYGlItfJgQ7hFOK
-         jV9ZX6qtUQtlEpfqsubgyxBE5MVPvskqvUIyZ8c4=
+        b=fuqsMjr52jxmmUmMfAQCooJv67JsXWzwf9v5NoPqgMZ5lY/Qhhybk6cmFafHHy1hq
+         2tyhVdntwd+gu3DDDvMsHL40YhX/MdYcq4wuDnZV4AwMNV4iur6ccN0q0y96xGC31h
+         yeRbLj5kqgWV4xVlPephn5VvlWlCXs1p1T6pPaYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jian Luo <luojian5@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 70/92] net: fix possible overflow in __sk_mem_raise_allocated()
-Date:   Wed,  4 Dec 2019 18:50:10 +0100
-Message-Id: <20191204174334.516953712@linuxfoundation.org>
+Subject: [PATCH 4.4 72/92] scsi: libsas: Support SATA PHY connection rate unmatch fixing during discovery
+Date:   Wed,  4 Dec 2019 18:50:12 +0100
+Message-Id: <20191204174334.620697720@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -60,50 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit 5bf325a53202b8728cf7013b72688c46071e212e ]
+[ Upstream commit cec9771d2e954650095aa37a6a97722c8194e7d2 ]
 
-With many active TCP sockets, fat TCP sockets could fool
-__sk_mem_raise_allocated() thanks to an overflow.
+   +----------+             +----------+
+   |          |             |          |
+   |          |--- 3.0 G ---|          |--- 6.0 G --- SAS  disk
+   |          |             |          |
+   |          |--- 3.0 G ---|          |--- 6.0 G --- SAS  disk
+   |initiator |             |          |
+   | device   |--- 3.0 G ---| Expander |--- 6.0 G --- SAS  disk
+   |          |             |          |
+   |          |--- 3.0 G ---|          |--- 6.0 G --- SATA disk  -->failed to connect
+   |          |             |          |
+   |          |             |          |--- 6.0 G --- SATA disk  -->failed to connect
+   |          |             |          |
+   +----------+             +----------+
 
-They would increase their share of the memory, instead
-of decreasing it.
+According to Serial Attached SCSI - 1.1 (SAS-1.1):
+If an expander PHY attached to a SATA PHY is using a physical link rate
+greater than the maximum connection rate supported by the pathway from an
+STP initiator port, a management application client should use the SMP PHY
+CONTROL function (see 10.4.3.10) to set the PROGRAMMED MAXIMUM PHYSICAL
+LINK RATE field of the expander PHY to the maximum connection rate
+supported by the pathway from that STP initiator port.
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Currently libsas does not support checking if this condition occurs, nor
+rectifying when it does.
+
+Such a condition is not at all common, however it has been seen on some
+pre-silicon environments where the initiator PHY only supports a 1.5 Gbit
+maximum linkrate, mated with 12G expander PHYs and 3/6G SATA phy.
+
+This patch adds support for checking and rectifying this condition during
+initial device discovery only.
+
+We do support checking min pathway connection rate during revalidation phase,
+when new devices can be detected in the topology. However we do not
+support in the case of the the user reprogramming PHY linkrates, such that
+min pathway condition is not met/maintained.
+
+A note on root port PHY rates:
+The libsas root port PHY rates calculation is broken. Libsas sets the
+rates (min, max, and current linkrate) of a root port to the same linkrate
+of the first PHY member of that same port. In doing so, it assumes that
+all other PHYs which subsequently join the port to have the same
+negotiated linkrate, when they could actually be different.
+
+In practice this doesn't happen, as initiator and expander PHYs are
+normally initialised with consistent min/max linkrates.
+
+This has not caused an issue so far, so leave alone for now.
+
+Tested-by: Jian Luo <luojian5@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/sock.h | 2 +-
- net/core/sock.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/libsas/sas_expander.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 5ed4786a2058b..de4434284a34b 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -1282,7 +1282,7 @@ static inline void sk_sockets_allocated_inc(struct sock *sk)
- 	percpu_counter_inc(prot->sockets_allocated);
- }
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index d44f18f773c0f..b7e4493d3dc16 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -806,6 +806,26 @@ static struct domain_device *sas_ex_discover_end_dev(
  
--static inline int
-+static inline u64
- sk_sockets_allocated_read_positive(struct sock *sk)
- {
- 	struct proto *prot = sk->sk_prot;
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 8aa4a5f895723..0f4c15fcd87d3 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2122,7 +2122,7 @@ int __sk_mem_schedule(struct sock *sk, int size, int kind)
- 	}
- 
- 	if (sk_has_memory_pressure(sk)) {
--		int alloc;
-+		u64 alloc;
- 
- 		if (!sk_under_memory_pressure(sk))
- 			return 1;
+ #ifdef CONFIG_SCSI_SAS_ATA
+ 	if ((phy->attached_tproto & SAS_PROTOCOL_STP) || phy->attached_sata_dev) {
++		if (child->linkrate > parent->min_linkrate) {
++			struct sas_phy_linkrates rates = {
++				.maximum_linkrate = parent->min_linkrate,
++				.minimum_linkrate = parent->min_linkrate,
++			};
++			int ret;
++
++			pr_notice("ex %016llx phy%02d SATA device linkrate > min pathway connection rate, attempting to lower device linkrate\n",
++				   SAS_ADDR(child->sas_addr), phy_id);
++			ret = sas_smp_phy_control(parent, phy_id,
++						  PHY_FUNC_LINK_RESET, &rates);
++			if (ret) {
++				pr_err("ex %016llx phy%02d SATA device could not set linkrate (%d)\n",
++				       SAS_ADDR(child->sas_addr), phy_id, ret);
++				goto out_free;
++			}
++			pr_notice("ex %016llx phy%02d SATA device set linkrate successfully\n",
++				  SAS_ADDR(child->sas_addr), phy_id);
++			child->linkrate = child->min_linkrate;
++		}
+ 		res = sas_get_ata_info(child, phy);
+ 		if (res)
+ 			goto out_free;
 -- 
 2.20.1
 
