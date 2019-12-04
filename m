@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6A2C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA01C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBAF8216C8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2EDA24653
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfLDHyA (ORCPT
+        id S1727338AbfLDHyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:54:00 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56063 "EHLO
+        Wed, 4 Dec 2019 02:54:04 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56087 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfLDHyA (ORCPT
+        with ESMTP id S1726166AbfLDHyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:54:00 -0500
+        Wed, 4 Dec 2019 02:54:01 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1icPTr-0004Qe-OC; Wed, 04 Dec 2019 08:53:51 +0100
+        id 1icPTv-0004St-Gu; Wed, 04 Dec 2019 08:53:55 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5F3391C2217;
-        Wed,  4 Dec 2019 08:53:51 +0100 (CET)
-Date:   Wed, 04 Dec 2019 07:53:51 -0000
-From:   "tip-bot2 for Sudip Mukherjee" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C06FF1C2648;
+        Wed,  4 Dec 2019 08:53:53 +0100 (CET)
+Date:   Wed, 04 Dec 2019 07:53:53 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] libtraceevent: Copy pkg-config file to output
- folder when using O=
-Cc:     Sudipm Mukherjee <sudipm.mukherjee@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        linux-trace-devel@vger.kernel.org,
+Subject: [tip: perf/urgent] perf machine: Fill map_symbol->maps in
+ append_inlines() to fix segfault
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191115113610.21493-2-sudipm.mukherjee@gmail.com>
-References: <20191115113610.21493-2-sudipm.mukherjee@gmail.com>
+In-Reply-To: <20191129160631.GD26963@kernel.org>
+References: <20191129160631.GD26963@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157544603119.21853.10423466148117634135.tip-bot2@tip-bot2>
+Message-ID: <157544603366.21853.9385477064122064495.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,44 +59,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     15b3904f8e884e0d34d5f09906cf6526d0b889a2
-Gitweb:        https://git.kernel.org/tip/15b3904f8e884e0d34d5f09906cf6526d0b889a2
-Author:        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-AuthorDate:    Fri, 15 Nov 2019 11:36:10 
+Commit-ID:     77b91c1a525d84cb560a4baef6f5f548b5c23f80
+Gitweb:        https://git.kernel.org/tip/77b91c1a525d84cb560a4baef6f5f548b5c23f80
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Fri, 29 Nov 2019 15:47:51 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 02 Dec 2019 21:58:20 -03:00
+CommitterDate: Fri, 29 Nov 2019 16:11:06 -03:00
 
-libtraceevent: Copy pkg-config file to output folder when using O=
+perf machine: Fill map_symbol->maps in append_inlines() to fix segfault
 
-When we use 'O=' with make to build libtraceevent in a separate folder
-it still copies 'libtraceevent.pc' to its source folder. Modify the
-Makefile so that it uses the output folder to copy the pkg-config file
-and install from there.
+I forgot to fill in the map_symbol->maps field in append_inlines() which
+then makes code down the line segfault when trying to deref it.
 
-Signed-off-by: Sudipm Mukherjee <sudipm.mukherjee@gmail.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191115113610.21493-2-sudipm.mukherjee@gmail.com
+It doesn't make any sense to have an addr_location with its 'map' member
+not NULL while its 'maps' is NULL, after all al->maps is where al->map
+is in.
+
+It is done that way so that we don't have to have in each 'struct map' a
+pointer to the 'struct maps' it is in, as we had in the past when we
+would have 'map->mg', before 'struct maps' was combined with 'struct
+map_groups', because there was always a one-to-one relationship for
+these structs.
+
+This fixes a segfault when processing DWARF callgraphs in 'perf report'.
+
+Reported-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 08f6680e627e ("perf tools: Add a 'struct map_groups' pointer to 'struct map_symbol'")
+Link: http://lore.kernel.org/lkml/20191129160631.GD26963@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/Makefile | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/util/machine.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index 83446fe..c5a0335 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -208,10 +208,11 @@ define do_install
- 	$(INSTALL) $(if $3,-m $3,) $1 '$(DESTDIR_SQ)$2'
- endef
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 416d174..c8c5410 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2446,6 +2446,7 @@ static int append_inlines(struct callchain_cursor *cursor, struct map_symbol *ms
  
--PKG_CONFIG_FILE = libtraceevent.pc
-+PKG_CONFIG_SOURCE_FILE = libtraceevent.pc
-+PKG_CONFIG_FILE := $(addprefix $(OUTPUT),$(PKG_CONFIG_SOURCE_FILE))
- define do_install_pkgconfig_file
- 	if [ -n "${pkgconfig_dir}" ]; then 					\
--		cp -f ${PKG_CONFIG_FILE}.template ${PKG_CONFIG_FILE}; 		\
-+		cp -f ${PKG_CONFIG_SOURCE_FILE}.template ${PKG_CONFIG_FILE};	\
- 		sed -i "s|INSTALL_PREFIX|${1}|g" ${PKG_CONFIG_FILE}; 		\
- 		sed -i "s|LIB_VERSION|${EVENT_PARSE_VERSION}|g" ${PKG_CONFIG_FILE}; \
- 		sed -i "s|LIB_DIR|${libdir}|g" ${PKG_CONFIG_FILE}; \
+ 	list_for_each_entry(ilist, &inline_node->val, list) {
+ 		struct map_symbol ilist_ms = {
++			.maps = ms->maps,
+ 			.map = map,
+ 			.sym = ilist->symbol,
+ 		};
