@@ -2,112 +2,96 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC74C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFA1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B10B20637
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38142077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:32:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVqTmIfX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfLDLcI (ORCPT
+        id S1727739AbfLDLcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 06:32:08 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:53882 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfLDLcI (ORCPT
+        Wed, 4 Dec 2019 06:32:52 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41392 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbfLDLcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 06:32:08 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1icSt3-0005mp-Bd; Wed, 04 Dec 2019 11:32:05 +0000
-Subject: Re: [PATCH] i2400m/USB: fix error return when rx_size is too large
-To:     David Miller <davem@davemloft.net>
-Cc:     inaky@linux.intel.com, linux-wimax@intel.com,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191202174246.77305-1-colin.king@canonical.com>
- <20191202.131327.1991319206654704992.davem@davemloft.net>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <11a3e023-0b8d-ce2f-8fc0-567d0d3c1980@canonical.com>
-Date:   Wed, 4 Dec 2019 11:32:04 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 4 Dec 2019 06:32:52 -0500
+Received: by mail-pf1-f196.google.com with SMTP id s18so3514889pfd.8
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 03:32:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=t1DNzLMJtRK+goiDA70Uvm7c9OsVkgyBu0B8lDewBf0=;
+        b=bVqTmIfX+5To8Hzb9tiG2XmeGwX/wUqkaRAOOn9y3KPdfJ7KW4pPLD4KkVv0IemBFG
+         6fV/IMQC5x9znOHp25Rzk3hkjmQz0218q3cSSqzwAERRFlYrVYQcFeJtgNN0T/40b7+r
+         eEhFvcN15b66DK+zeVvUt4rmAuQL2bXSec1WopyLM4oP9Ss0xhIighqlUK9KHZ53xw8h
+         bOyDFhKPpVv0nDEWBWFrSAX2EhpXu8f8B8CjY8XBlb6xQSg0JASCyF0F92PVFLdZfjlI
+         WAb5O1vJinSNG/quGFQw+U5vQQlrLLpWAUlZzKsb/o7qTLtGNiQNWrm2ZQnxND1469qs
+         l7Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t1DNzLMJtRK+goiDA70Uvm7c9OsVkgyBu0B8lDewBf0=;
+        b=oEEMZuttgQLSWVi9Km3akvPUC7i8BsgSD1e8MC06MLtTE3eR1nRbM8il3S3JI2PwM3
+         IozldG5aEySP5EEW7J7USsu2Ko5x+ogiDkz6eBlT626fC+LQCHpQCx2gBXhQHCb7N8U+
+         i7nlbcL4i7IJWfzME8nbJ8Y4s+uMWGchYmOa88JaoXHyE2A0FJzTE24itIqsdltX5Wyz
+         Kh/rBy487xOevgIUq9m5dASUDcrCEQRbG5xp1IfDk4JXL8ydQhMl358gfBOhrUh9+r7t
+         hMjmr8VsY0+t/tUp/+nk+vRxopGEla9TwHYuSVCaPZ9ew1K8pycO920NUw+Mt4sfIwgO
+         a86A==
+X-Gm-Message-State: APjAAAXsHPb5fFtemYd3YRQQxnhMwNVA4rgFJ9B1OL4cdZW44IrgPs5m
+        p7DLr4LldSMZ2DuHTEPeTMw=
+X-Google-Smtp-Source: APXvYqzq95ioH2qN4ePv+7uUmsmEIMr371avMs3koxwAhMQn9lRexIrHOHUuFHnRoDxdxv6Wdj8+ug==
+X-Received: by 2002:aa7:8d44:: with SMTP id s4mr3049884pfe.152.1575459171882;
+        Wed, 04 Dec 2019 03:32:51 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id in19sm6219355pjb.11.2019.12.04.03.32.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 04 Dec 2019 03:32:50 -0800 (PST)
+Date:   Wed, 4 Dec 2019 03:32:49 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Tuowen Zhao <ztuowen@gmail.com>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [PATCH v4 1/2] lib: devres: add a helper function for ioremap_uc
+Message-ID: <20191204113249.GA2277@roeck-us.net>
+References: <20191014153344.8996-1-ztuowen@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191202.131327.1991319206654704992.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014153344.8996-1-ztuowen@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/12/2019 21:13, David Miller wrote:
-> From: Colin King <colin.king@canonical.com>
-> Date: Mon,  2 Dec 2019 17:42:46 +0000
+On Mon, Oct 14, 2019 at 09:33:43AM -0600, Tuowen Zhao wrote:
+> Implement a resource managed strongly uncachable ioremap function.
 > 
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> Currently when the rx_size is too large the intended error
->> -EINVAL is not being returned as this is being assigned to
->> result rather than rx_skb. Fix this be setting rx_skb
->> to ERR_PTR(-EINVAL) so that the error is returned in rx_skb
->> as originally intended.
->>
->> Addresses-Coverity: ("Unused value")
->> Fixes: a8ebf98f5414 ("i2400m/USB: TX and RX path backends")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> 
-> This leaks rx_skb, the caller is supposed to clean up rx_skb
-> by freeing it if this function doesn't transmit it successfully.
-> 
-Oops, yes. Ignore this fix.
+> Cc: <stable@vger.kernel.org>
 
-Colin
+Really ?
+
+> Tested-by: AceLan Kao <acelan.kao@canonical.com>
+> Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+This patch results in hard build failures when building hexagon images.
+
+lib/devres.c:44:3: error: implicit declaration of function 'ioremap_uc'
+
+Guenter
