@@ -2,143 +2,228 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89895C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8633FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 586B22073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E629206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:49:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vvoOr97X"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ni5bNSDF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbfLDXqe (ORCPT
+        id S1728420AbfLDXty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 18:46:34 -0500
-Received: from mail-pj1-f73.google.com ([209.85.216.73]:48276 "EHLO
-        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728053AbfLDXqe (ORCPT
+        Wed, 4 Dec 2019 18:49:54 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:34919 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbfLDXty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 18:46:34 -0500
-Received: by mail-pj1-f73.google.com with SMTP id o34so738748pjb.15
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 15:46:33 -0800 (PST)
+        Wed, 4 Dec 2019 18:49:54 -0500
+Received: by mail-il1-f193.google.com with SMTP id g12so1294274ild.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 15:49:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=XbMDMBiURPy3ztmL5BAB2zOV5tyLvPs4cZrgza5Nb04=;
-        b=vvoOr97XSjgqRQXRYI8xsRGNB6sMUmPJTH35AVLEBHzUCUIf4TKeH576HHqX2DdT0w
-         DhkNeyy0KVEz2UHvNOJCElCM2pXaipK4dATie/v1T8VW/ccwD1N0GFTfowS08R32R1SI
-         +apUVj/M3+8f8mDGLFFC94QGu82UmZUQrHi0cMEPAnZ9V/l7nxaNUos7BqQ8bONSu77b
-         elzOYuGfWpDdmLcLjbijtSEn/4qf5nzJdt1AFxRQsf3rOyD09xoS07pye9fewtGQ/USy
-         M9kZ2gfcTq7zc9Bwb/bv3Z0+6u7faqvqCb6Zr0iadYYGSy5kwc/GvSJ90Btej1GZgtnk
-         2m1w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h5X4f/AmLuxg/+orpbQ8vNVjOBBpqULuDh6/v91vlCw=;
+        b=Ni5bNSDFaGBs291vzHt85pwFJADVa/O6oYLrtdNMUO5SDSZTZ6zOtF3YoeVPYc2O5H
+         t0ajMLuauJ5myzsSZWGyhIoj70+PtfrXh0EeDyAWaz9TOFsvMkKApJ2Ys6FWOVK/Rq4g
+         ANqJxch4RSQy4dkK2bvugSwofH2GSn2XQ02d8fcXPcGOg+wwA/rR78Nl3D/9nebyHOQd
+         UIi8+QnKMHt39CS8GzQcNzcgY7g/9OxBMRulJuUBaJesF8mUprIIdvXQvfj8I/zxwbEs
+         wGbIrb+aKC/UaOhEyahbc9mAeFQrpnEiJKyVfRZggN08jyYDDqefdCZx1iVH4p+gUez2
+         urbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=XbMDMBiURPy3ztmL5BAB2zOV5tyLvPs4cZrgza5Nb04=;
-        b=akovUNlmvNseieFnuF5AITZ760cVt4LvdmfCxomYHOhbXD3lGuombZPEe+zSL9/K+s
-         14D8k64IiD9yct4Xc2ufSwnbM/21yf/z9X5v+AUZ40YLTPCJyenXNERdqq3M4eiw5AbS
-         3vZnSibekVf7nSL0b23y6Wn7Ax2V1ouRUMmzvJAkH3pe7Dc3DUauk2GSLmHPQ62GetOD
-         tH56Ua6bIVdcpe0lSVVhwu05FeD05Xlf5DoymINIPXL97i1hetVQPAnOdawn9eo6byBy
-         XxaiiiCAaWKM9SoezHCzCEjANFz2bchLu+JQa/2Vmw70As24Hzyiq9R7UudFYRorKiMJ
-         eYaw==
-X-Gm-Message-State: APjAAAXi9/wI9gFlu5H5LKhg0PEt/NPalIof3r61wUcgnGEb5JWVPAUT
-        4gbaaqYeVYjuZNTTHvknJu88e9RjWii7SP1QMEuYpQ==
-X-Google-Smtp-Source: APXvYqz47avrpcjXVQ+1KDiyygY87m+93a0IsuajGxXEGgl8sxMDZj0iTIaMcFs25SnHdkR0uy27q47QcmEbuf3o5rKViw==
-X-Received: by 2002:a65:56c9:: with SMTP id w9mr6061182pgs.296.1575503193275;
- Wed, 04 Dec 2019 15:46:33 -0800 (PST)
-Date:   Wed,  4 Dec 2019 15:45:22 -0800
-Message-Id: <20191204234522.42855-1-brendanhiggins@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [PATCH v1] staging: exfat: fix multiple definition error of `rename_file'
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     valdis.kletnieks@vt.edu
-Cc:     linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, davidgow@google.com,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h5X4f/AmLuxg/+orpbQ8vNVjOBBpqULuDh6/v91vlCw=;
+        b=a/OMgjpbVHWqP/WwycmPSq5EFQsTUku4TKTfGzxbGgBbv3em1HKQSAMKouJhmL27fu
+         J/r7Q7n4pRKp68gFZ+rxq6VewPZebAOfbCgEaaoQWp3arIEAveKqFRzqXwog/u0JOw0O
+         j+cFBSvUVfFMAiGp9XX9rKrEPMT3J5UNZkcC0sfcwDvGdDf/lHC23x5zqGhO5Z9g8u9G
+         x9Gfpbj/h8YxmoJaIacGEDa0WZ7pb7npTRqP2pPRmyR62rQ+zZBNyoxeVsgqZk5TOYh/
+         cBDEr4plOjSbsAgWbPHJRQDjJH3XYB34qW9HN560hbP1FygFe3c/FfHJw4NAltLGCLGv
+         zy7Q==
+X-Gm-Message-State: APjAAAVr8+6L/buP0sEvte84RjXxQeXdw2fNSltzEeRulZLWFAlaEcO1
+        XiNgJFho+v2T/NimVQGAOL/B3IEUXs9Ia/131fassg==
+X-Google-Smtp-Source: APXvYqyUDfNhYgze0SOXXeC77kbbQ3925dDTt7baEElbwCJs4ZcpDLSv5wVcJfRDgbe4SUyY8UTdtmb3PCESziZc6ac=
+X-Received: by 2002:a92:8141:: with SMTP id e62mr5916069ild.119.1575503390644;
+ Wed, 04 Dec 2019 15:49:50 -0800 (PST)
+MIME-Version: 1.0
+References: <1574101067-5638-1-git-send-email-pbonzini@redhat.com> <1574101067-5638-5-git-send-email-pbonzini@redhat.com>
+In-Reply-To: <1574101067-5638-5-git-send-email-pbonzini@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Wed, 4 Dec 2019 15:49:39 -0800
+Message-ID: <CALMp9eTKMzg2pNEZxhqAejAquFg8NxKRrBzzNUKRY78JLGjS5A@mail.gmail.com>
+Subject: Re: [PATCH 4/5] KVM: vmx: implement MSR_IA32_TSX_CTRL disable RTM functionality
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`rename_file' was exported but not properly namespaced causing a
-multiple definition error because `rename_file' is already defined in
-fs/hostfs/hostfs_user.c:
+On Mon, Nov 18, 2019 at 10:17 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> The current guest mitigation of TAA is both too heavy and not really
+> sufficient.  It is too heavy because it will cause some affected CPUs
+> (those that have MDS_NO but lack TAA_NO) to fall back to VERW and
+> get the corresponding slowdown.  It is not really sufficient because
+> it will cause the MDS_NO bit to disappear upon microcode update, so
+> that VMs started before the microcode update will not be runnable
+> anymore afterwards, even with tsx=on.
+>
+> Instead, if tsx=on on the host, we can emulate MSR_IA32_TSX_CTRL for
+> the guest and let it run without the VERW mitigation.  Even though
+> MSR_IA32_TSX_CTRL is quite heavyweight, and we do not want to write
+> it on every vmentry, we can use the shared MSR functionality because
+> the host kernel need not protect itself from TSX-based side-channels.
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 34 +++++++++++++++++++++++++++++++---
+>  arch/x86/kvm/x86.c     | 23 +++++------------------
+>  2 files changed, 36 insertions(+), 21 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 04a8212704c1..ed25fe7d5234 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -450,6 +450,7 @@ noinline void invept_error(unsigned long ext, u64 eptp, gpa_t gpa)
+>         MSR_SYSCALL_MASK, MSR_LSTAR, MSR_CSTAR,
+>  #endif
+>         MSR_EFER, MSR_TSC_AUX, MSR_STAR,
+> +       MSR_IA32_TSX_CTRL,
+>  };
+>
+>  #if IS_ENABLED(CONFIG_HYPERV)
+> @@ -1683,6 +1684,9 @@ static void setup_msrs(struct vcpu_vmx *vmx)
+>         index = __find_msr_index(vmx, MSR_TSC_AUX);
+>         if (index >= 0 && guest_cpuid_has(&vmx->vcpu, X86_FEATURE_RDTSCP))
+>                 move_msr_up(vmx, index, save_nmsrs++);
+> +       index = __find_msr_index(vmx, MSR_IA32_TSX_CTRL);
+> +       if (index >= 0)
+> +               move_msr_up(vmx, index, save_nmsrs++);
+>
+>         vmx->save_nmsrs = save_nmsrs;
+>         vmx->guest_msrs_ready = false;
+> @@ -1782,6 +1786,11 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  #endif
+>         case MSR_EFER:
+>                 return kvm_get_msr_common(vcpu, msr_info);
+> +       case MSR_IA32_TSX_CTRL:
+> +               if (!msr_info->host_initiated &&
+> +                   !(vcpu->arch.arch_capabilities & ARCH_CAP_TSX_CTRL_MSR))
+> +                       return 1;
+> +               goto find_shared_msr;
+>         case MSR_IA32_UMWAIT_CONTROL:
+>                 if (!msr_info->host_initiated && !vmx_has_waitpkg(vmx))
+>                         return 1;
+> @@ -1884,8 +1893,9 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>                 if (!msr_info->host_initiated &&
+>                     !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
+>                         return 1;
+> -               /* Else, falls through */
+> +               goto find_shared_msr;
+>         default:
+> +       find_shared_msr:
+>                 msr = find_msr_entry(vmx, msr_info->index);
+>                 if (msr) {
+>                         msr_info->data = msr->data;
+> @@ -2001,6 +2011,13 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>                                               MSR_IA32_SPEC_CTRL,
+>                                               MSR_TYPE_RW);
+>                 break;
+> +       case MSR_IA32_TSX_CTRL:
+> +               if (!msr_info->host_initiated &&
+> +                   !(vcpu->arch.arch_capabilities & ARCH_CAP_TSX_CTRL_MSR))
+> +                       return 1;
+> +               if (data & ~(TSX_CTRL_RTM_DISABLE | TSX_CTRL_CPUID_CLEAR))
+> +                       return 1;
+> +               goto find_shared_msr;
+>         case MSR_IA32_PRED_CMD:
+>                 if (!msr_info->host_initiated &&
+>                     !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
+> @@ -2152,8 +2169,10 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>                 /* Check reserved bit, higher 32 bits should be zero */
+>                 if ((data >> 32) != 0)
+>                         return 1;
+> -               /* Else, falls through */
+> +               goto find_shared_msr;
+> +
+>         default:
+> +       find_shared_msr:
+>                 msr = find_msr_entry(vmx, msr_index);
+>                 if (msr) {
+>                         u64 old_msr_data = msr->data;
+> @@ -4234,7 +4253,16 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
+>                         continue;
+>                 vmx->guest_msrs[j].index = i;
+>                 vmx->guest_msrs[j].data = 0;
+> -               vmx->guest_msrs[j].mask = -1ull;
+> +
+> +               switch (index) {
+> +               case MSR_IA32_TSX_CTRL:
+> +                       /* No need to pass TSX_CTRL_CPUID_CLEAR through.  */
+> +                       vmx->guest_msrs[j].mask = ~(u64)TSX_CTRL_CPUID_CLEAR;
+> +                       break;
+> +               default:
+> +                       vmx->guest_msrs[j].mask = -1ull;
+> +                       break;
+> +               }
+>                 ++vmx->nmsrs;
+>         }
+>
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 648e84e728fc..fc54e3905fe3 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1314,29 +1314,16 @@ static u64 kvm_get_arch_capabilities(void)
+>                 data |= ARCH_CAP_MDS_NO;
+>
+>         /*
+> -        * On TAA affected systems, export MDS_NO=0 when:
+> -        *      - TSX is enabled on the host, i.e. X86_FEATURE_RTM=1.
+> -        *      - Updated microcode is present. This is detected by
+> -        *        the presence of ARCH_CAP_TSX_CTRL_MSR and ensures
+> -        *        that VERW clears CPU buffers.
+> -        *
+> -        * When MDS_NO=0 is exported, guests deploy clear CPU buffer
+> -        * mitigation and don't complain:
+> -        *
+> -        *      "Vulnerable: Clear CPU buffers attempted, no microcode"
+> -        *
+> -        * If TSX is disabled on the system, guests are also mitigated against
+> -        * TAA and clear CPU buffer mitigation is not required for guests.
+> +        * On TAA affected systems:
+> +        *      - nothing to do if TSX is disabled on the host.
+> +        *      - we emulate TSX_CTRL if present on the host.
+> +        *        This lets the guest use VERW to clear CPU buffers.
+>          */
+>         if (!boot_cpu_has(X86_FEATURE_RTM))
+> -               data &= ~ARCH_CAP_TAA_NO;
+> +               data &= ~(ARCH_CAP_TAA_NO | ARCH_CAP_TSX_CTRL_MSR);
+>         else if (!boot_cpu_has_bug(X86_BUG_TAA))
+>                 data |= ARCH_CAP_TAA_NO;
+> -       else if (data & ARCH_CAP_TSX_CTRL_MSR)
+> -               data &= ~ARCH_CAP_MDS_NO;
+>
+> -       /* KVM does not emulate MSR_IA32_TSX_CTRL.  */
+> -       data &= ~ARCH_CAP_TSX_CTRL_MSR;
 
-ld: drivers/staging/exfat/exfat_core.o: in function `rename_file':
-drivers/staging/exfat/exfat_core.c:2327: multiple definition of
-`rename_file'; fs/hostfs/hostfs_user.o:fs/hostfs/hostfs_user.c:350:
-first defined here
-make: *** [Makefile:1077: vmlinux] Error 1
+Shouldn't kvm be masking off any bits that it doesn't know about here?
+Who knows what future features we may claim to support?
 
-This error can be reproduced on ARCH=um by selecting:
-
-CONFIG_EXFAT_FS=y
-CONFIG_HOSTFS=y
-
-Add a namespace prefix exfat_* to fix this error.
-
-Reported-by: Brendan Higgins <brendanhiggins@google.com>
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Cc: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/staging/exfat/exfat.h       | 4 ++--
- drivers/staging/exfat/exfat_core.c  | 4 ++--
- drivers/staging/exfat/exfat_super.c | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-index 2aac1e000977e..51c665a924b76 100644
---- a/drivers/staging/exfat/exfat.h
-+++ b/drivers/staging/exfat/exfat.h
-@@ -805,8 +805,8 @@ s32 create_dir(struct inode *inode, struct chain_t *p_dir,
- s32 create_file(struct inode *inode, struct chain_t *p_dir,
- 		struct uni_name_t *p_uniname, u8 mode, struct file_id_t *fid);
- void remove_file(struct inode *inode, struct chain_t *p_dir, s32 entry);
--s32 rename_file(struct inode *inode, struct chain_t *p_dir, s32 old_entry,
--		struct uni_name_t *p_uniname, struct file_id_t *fid);
-+s32 exfat_rename_file(struct inode *inode, struct chain_t *p_dir, s32 old_entry,
-+		      struct uni_name_t *p_uniname, struct file_id_t *fid);
- s32 move_file(struct inode *inode, struct chain_t *p_olddir, s32 oldentry,
- 	      struct chain_t *p_newdir, struct uni_name_t *p_uniname,
- 	      struct file_id_t *fid);
-diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-index d2d3447083c7b..7017e22b0f7a8 100644
---- a/drivers/staging/exfat/exfat_core.c
-+++ b/drivers/staging/exfat/exfat_core.c
-@@ -2322,8 +2322,8 @@ void remove_file(struct inode *inode, struct chain_t *p_dir, s32 entry)
- 	fs_func->delete_dir_entry(sb, p_dir, entry, 0, num_entries);
- }
- 
--s32 rename_file(struct inode *inode, struct chain_t *p_dir, s32 oldentry,
--		struct uni_name_t *p_uniname, struct file_id_t *fid)
-+s32 exfat_rename_file(struct inode *inode, struct chain_t *p_dir, s32 oldentry,
-+		      struct uni_name_t *p_uniname, struct file_id_t *fid)
- {
- 	s32 ret, newentry = -1, num_old_entries, num_new_entries;
- 	sector_t sector_old, sector_new;
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index 6e481908c59f6..9f91853b189b0 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -1262,8 +1262,8 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
- 	fs_set_vol_flags(sb, VOL_DIRTY);
- 
- 	if (olddir.dir == newdir.dir)
--		ret = rename_file(new_parent_inode, &olddir, dentry, &uni_name,
--				  fid);
-+		ret = exfat_rename_file(new_parent_inode, &olddir, dentry,
-+					&uni_name, fid);
- 	else
- 		ret = move_file(new_parent_inode, &olddir, dentry, &newdir,
- 				&uni_name, fid);
--- 
-2.24.0.393.g34dc348eaf-goog
-
+>         return data;
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_get_arch_capabilities);
+> --
+> 1.8.3.1
+>
+>
