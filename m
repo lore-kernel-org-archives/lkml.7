@@ -2,100 +2,69 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41668C43215
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 05:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A777EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113B8206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 05:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9E82469D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfLDF5x (ORCPT
+        id S1727096AbfLDGpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 00:57:53 -0500
-Received: from mo-csw1516.securemx.jp ([210.130.202.155]:51566 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbfLDF5w (ORCPT
+        Wed, 4 Dec 2019 01:45:40 -0500
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:31834 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfLDGpk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 00:57:52 -0500
-Received: by mo-csw.securemx.jp (mx-mo-csw1516) id xB45vfEV000828; Wed, 4 Dec 2019 14:57:41 +0900
-X-Iguazu-Qid: 34trMIO5KbHSsEZMoA
-X-Iguazu-QSIG: v=2; s=0; t=1575439061; q=34trMIO5KbHSsEZMoA; m=V2vpPc3Sm8twmhncTu+7E1ruTxjV6fReYAEGcFjdpzc=
-Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1512) id xB45veRP011189;
-        Wed, 4 Dec 2019 14:57:40 +0900
-Received: from enc01.localdomain ([106.186.93.100])
-        by imx2.toshiba.co.jp  with ESMTP id xB45vecE019581;
-        Wed, 4 Dec 2019 14:57:40 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.localdomain  with ESMTP id xB45vdwX011619;
-        Wed, 4 Dec 2019 14:57:40 +0900
-Date:   Wed, 4 Dec 2019 14:57:38 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 024/321] net: fec: add missed clk_disable_unprepare
- in remove
-X-TSB-HOP: ON
-Message-ID: <20191204055738.nl5db2xtigoamtbk@toshiba.co.jp>
-References: <20191203223427.103571230@linuxfoundation.org>
- <20191203223428.376628375@linuxfoundation.org>
+        Wed, 4 Dec 2019 01:45:40 -0500
+Received: from localhost.localdomain ([90.126.97.183])
+        by mwinf5d51 with ME
+        id Zilc210093xPcdm03ilcDj; Wed, 04 Dec 2019 07:45:38 +0100
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 04 Dec 2019 07:45:38 +0100
+X-ME-IP: 90.126.97.183
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, justinpopo6@gmail.com, linus.walleij@linaro.org
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] iio: adc: ti-ads7950: Fix a typo in an error message
+Date:   Wed,  4 Dec 2019 07:45:35 +0100
+Message-Id: <20191204064535.13025-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203223428.376628375@linuxfoundation.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Fix a typo:
+   s/get get/to get/
 
-On Tue, Dec 03, 2019 at 11:31:30PM +0100, Greg Kroah-Hartman wrote:
-> From: Chuhong Yuan <hslester96@gmail.com>
-> 
-> [ Upstream commit c43eab3eddb4c6742ac20138659a9b701822b274 ]
-> 
-> This driver forgets to disable and unprepare clks when remove.
-> Add calls to clk_disable_unprepare to fix it.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/iio/adc/ti-ads7950.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
+index 2e66e4d586ff..f9edc1207f75 100644
+--- a/drivers/iio/adc/ti-ads7950.c
++++ b/drivers/iio/adc/ti-ads7950.c
+@@ -602,7 +602,7 @@ static int ti_ads7950_probe(struct spi_device *spi)
+ 
+ 	st->reg = devm_regulator_get(&spi->dev, "vref");
+ 	if (IS_ERR(st->reg)) {
+-		dev_err(&spi->dev, "Failed get get regulator \"vref\"\n");
++		dev_err(&spi->dev, "Failed to get regulator \"vref\"\n");
+ 		ret = PTR_ERR(st->reg);
+ 		goto error_destroy_mutex;
+ 	}
+-- 
+2.20.1
 
-This commit also requires the following commit:
-
-commit a31eda65ba210741b598044d045480494d0ed52a
-Author: Chuhong Yuan <hslester96@gmail.com>
-Date:   Wed Nov 20 09:25:13 2019 +0800
-
-    net: fec: fix clock count mis-match
-
-    pm_runtime_put_autosuspend in probe will call runtime suspend to
-    disable clks automatically if CONFIG_PM is defined. (If CONFIG_PM
-    is not defined, its implementation will be empty, then runtime
-    suspend will not be called.)
-
-    Therefore, we can call pm_runtime_get_sync to runtime resume it
-    first to enable clks, which matches the runtime suspend. (Only when
-    CONFIG_PM is defined, otherwise pm_runtime_get_sync will also be
-    empty, then runtime resume will not be called.)
-
-    Then it is fine to disable clks without causing clock count mis-match.
-
-    Fixes: c43eab3eddb4 ("net: fec: add missed clk_disable_unprepare in remove")
-    Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-    Acked-by: Fugang Duan <fugang.duan@nxp.com>
-    Signed-off-by: David S. Miller <davem@davemloft.net>
-
-
-And this should also apply to 5.3.
-
-Best regards,
-  Nobuhiro
