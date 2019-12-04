@@ -2,144 +2,147 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D22BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AE3C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 152D420674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9068420674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:55:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e6TfccCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfLDMyz (ORCPT
+        id S1727845AbfLDMzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:54:55 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36264 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726010AbfLDMyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:54:54 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 29F11B202;
-        Wed,  4 Dec 2019 12:54:52 +0000 (UTC)
-Date:   Wed, 4 Dec 2019 13:54:50 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kexec@lists.infradead.org
-Subject: Re: [RFC PATCH v5 2/3] printk-rb: new printk ringbuffer
- implementation (reader)
-Message-ID: <20191204125450.ob5b7xi3gevor4qz@pathway.suse.cz>
-References: <20191128015235.12940-1-john.ogness@linutronix.de>
- <20191128015235.12940-3-john.ogness@linutronix.de>
- <20191203120622.zux33do54rmjafns@pathway.suse.cz>
- <87pnh5bjz4.fsf@linutronix.de>
+        Wed, 4 Dec 2019 07:55:48 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44210 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfLDMzs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 07:55:48 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4CtLla021288;
+        Wed, 4 Dec 2019 06:55:21 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575464121;
+        bh=75OBmJFI3hpuZ4Q6xPCszXW82HOFGTHmHSHourpUJo0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=e6TfccCfOlRHdE4aRiwj/c6mLAfsJvVI9jtvB241LwZYg12Kb3nKITmZXXAim2ENg
+         mW4d9tz8/BHbqG9JyHgltecYvf8lGeGhYvn9gFVZQc8708HiuZU95x8HqXVPQd0Czd
+         vr1tYpTKdDAeilTspVpALfyteFa87pBEN0Os9fPI=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4CtLqc057283;
+        Wed, 4 Dec 2019 06:55:21 -0600
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
+ 2019 06:55:21 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Dec 2019 06:55:21 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4CtHYT006688;
+        Wed, 4 Dec 2019 06:55:18 -0600
+Subject: Re: [PATCH v5 4/4] mtd: Add driver for concatenating devices
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+CC:     Richard Weinberger <richard@nod.at>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-mtd@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Bernhard Frauendienst <kernel@nospam.obeliks.de>
+References: <20191127105522.31445-1-miquel.raynal@bootlin.com>
+ <20191127105522.31445-5-miquel.raynal@bootlin.com>
+ <690065a2-619d-3f97-30c6-5dea76896d78@ti.com> <20191204111751.5383b426@xps13>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <431e7345-ee60-6d79-7a0c-9396da93029c@ti.com>
+Date:   Wed, 4 Dec 2019 18:25:48 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pnh5bjz4.fsf@linutronix.de>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20191204111751.5383b426@xps13>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-12-03 14:46:07, John Ogness wrote:
-> On 2019-12-03, Petr Mladek <pmladek@suse.com> wrote:
-> >> Add the reader implementation for the new ringbuffer.
-> >> 
-> >> Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> >> ---
-> >>  kernel/printk/printk_ringbuffer.c | 234 ++++++++++++++++++++++++++++++
-> >>  kernel/printk/printk_ringbuffer.h |  12 +-
-> >>  2 files changed, 245 insertions(+), 1 deletion(-)
-> >> 
-> >> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-> >> index 09c32e52fd40..f85762713583 100644
-> >> --- a/kernel/printk/printk_ringbuffer.c
-> >> +++ b/kernel/printk/printk_ringbuffer.c
-> >> @@ -674,3 +674,237 @@ void prb_commit(struct prb_reserved_entry *e)
-> >>  	local_irq_restore(e->irqflags);
-> >>  }
-> >>  EXPORT_SYMBOL(prb_commit);
-> >> +
-> >> +/*
-> >> + * Given @blk_lpos, return a pointer to the raw data from the data block
-> >> + * and calculate the size of the data part. A NULL pointer is returned
-> >> + * if @blk_lpos specifies values that could never be legal.
-> >> + *
-> >> + * This function (used by readers) performs strict validation on the lpos
-> >> + * values to possibly detect bugs in the writer code. A WARN_ON_ONCE() is
-> >> + * triggered if an internal error is detected.
-> >> + */
-> >> +static char *get_data(struct prb_data_ring *data_ring,
-> >> +		      struct prb_data_blk_lpos *blk_lpos,
-> >> +		      unsigned long *data_size)
-> >> +{
-> >> +	struct prb_data_block *db;
-> >> +
-> >> +	if (blk_lpos->begin == INVALID_LPOS &&
-> >> +	    blk_lpos->next == INVALID_LPOS) {
-> >> +		/* descriptor without a data block */
-> >> +		return NULL;
-> >> +	} else if (DATA_WRAPS(data_ring, blk_lpos->begin) ==
-> >> +		   DATA_WRAPS(data_ring, blk_lpos->next)) {
-> >> +		/* regular data block */
-> >> +		if (WARN_ON_ONCE(blk_lpos->next <= blk_lpos->begin))
-> >> +			return NULL;
-> >> +		db = to_block(data_ring, blk_lpos->begin);
-> >> +		*data_size = blk_lpos->next - blk_lpos->begin;
-> >> +
-> >> +	} else if ((DATA_WRAPS(data_ring, blk_lpos->begin) + 1 ==
-> >> +		    DATA_WRAPS(data_ring, blk_lpos->next)) ||
-> >> +		   ((DATA_WRAPS(data_ring, blk_lpos->begin) ==
-> >> +		     DATA_WRAPS(data_ring, -1UL)) &&
-> >> +		    (DATA_WRAPS(data_ring, blk_lpos->next) == 0))) {
-> >
-> > I am a bit confused. I would expect that (-1UL + 1) = 0. So the second
-> > condition after || looks just like a special variant of the first
-> > valid condition.
-> >
-> > Or do I miss anything? Is there a problems with type casting?
-> 
-> Sorry, this code deserves a comment.
-> 
-> Here we are only comparing the number of wraps. For a wrapping data
-> block, @begin will be 1 wrap less than @next. The first part of the
-> check is checking the typical case, making sure that:
-> 
->    1 + WRAPS(@begin) == WRAPS(@next)
-> 
-> There is also the case when the lpos overflows. In that case the number
-> of wraps starts over at zero (without having overflowed). (Note: The
-> lpos overflows, _not_ the number of wraps. This is why the first check
-> is not enough.) In this case, the number of wraps of the highest
-> possible lpos value (-1UL) should be the same as the number of wraps of
-> @begin. And the number of wraps of @next should be 0. The simplified
-> pseudo-code check is:
-> 
->    WRAPS(@begin) == WRAPS(-1UL)
->       &&
->    WRAPS(@next) == 0
 
-Got it. I knew that it must have been something like this but I did
-not see it.
 
-I wonder if the following might be easier to understand even for
-people like me ;-)
+On 04/12/19 3:47 pm, Miquel Raynal wrote:
+> Hi Vignesh,
+> 
+> Vignesh Raghavendra <vigneshr@ti.com> wrote on Wed, 4 Dec 2019 15:28:46
+> +0530:
+> 
+[...]
+>> IIUC flash0 and flash1 are subnodes of a SPI master node?
+>> And I believe flash0 node's compatible is "jedec,spi-nor"?
+> 
+> Indeed this is one possibility (probably the most common) but in theory
+> this should work for any kind of MTD device, hence I voluntarily
+> dropped the hardware-specific properties to focus on the partitions
+> description here.
+> 
 
-	} else if (DATA_WRAPS(data_ring, blk_lpos->begin + DATA_SIZE(data_ring)) ==
-		    DATA_WRAPS(data_ring, blk_lpos->next)) {
+Ah, make sense...
 
-Best Regards,
-Petr
+>>
+>>
+>>>
+>>>         flash1 {
+>>>                 partitions {
+>>>                         compatible = "fixed-partitions";
+>>>
+>>> 			flash0_part1: part1@0 {  
+>>
+>> s/flash0_part1/flash1_part0?
+> 
+> Right!
+> 
+>>
+>>> 				label = "part1_0";
+>>> 				reg = <0x0 0x800000>;
+>>> 			};
+>>>
+>>> 			part0@800000 {
+>>> 				label = "part1_1";
+>>> 				reg = <0x800000 0x800000>;
+>>> 			};
+>>>                 };
+>>>         };
+>>>   
+>>
+>> For my understanding, how many /dev/mtdX entries would this create?
+> 
+> If the master is retained (Kconfig option) and thanks to the common
+> partitioning scheme, we would have:
+> * flash0 (mtd0)
+> *   part0_0 (mtd1)
+> *   part0_1 (mtd2)
+> * flash1 (mtd3)
+> *   part1_0 (mtd4)
+> *   part1_1 (mtd5)
+> 
+> If we enable this driver, we would also get an additional device:
+> * mtd2-mtd4-concat (or part0_1-part1_0-concat, I don't recall the exact
+>   name) being mtd6.
+
+Ok, thanks for the clarification!
+
+
+-- 
+Regards
+Vignesh
