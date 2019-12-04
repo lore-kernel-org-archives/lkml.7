@@ -2,118 +2,137 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3819CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E19FC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C82206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1181F206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:53:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kqxgzo71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbfLDOvc (ORCPT
+        id S1728043AbfLDOxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 09:51:32 -0500
-Received: from foss.arm.com ([217.140.110.172]:56832 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728022AbfLDOvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 09:51:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E56031FB;
-        Wed,  4 Dec 2019 06:51:30 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C0573F52E;
-        Wed,  4 Dec 2019 06:51:26 -0800 (PST)
-Subject: Re: perf record doesn't work on rtd129x SoC
-From:   Robin Murphy <robin.murphy@arm.com>
-To:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        Wang YanQing <udknight@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        linux-realtek-soc@lists.infradead.org,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20191204045559.GA10458@udknight>
- <f90748d0-8112-3aa8-0c88-e35a8d6e72d3@suse.de>
- <1b2d2bc3-afcf-02c3-ccd6-e2a227c23fd3@arm.com>
-Message-ID: <b9788139-d2cb-9ed4-e887-04651968e5b1@arm.com>
-Date:   Wed, 4 Dec 2019 14:51:24 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 4 Dec 2019 09:53:30 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10230 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727889AbfLDOx3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 09:53:29 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de7c8640000>; Wed, 04 Dec 2019 06:53:25 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 04 Dec 2019 06:53:28 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 04 Dec 2019 06:53:28 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Dec
+ 2019 14:53:26 +0000
+Subject: Re: [PATCH 4.19 000/321] 4.19.88-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
+        <akpm@linux-foundation.org>, <linux@roeck-us.net>,
+        <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191203223427.103571230@linuxfoundation.org>
+ <79c636e7-145b-3062-04a3-f03c78d51318@nvidia.com>
+ <20191204112936.GA3565947@kroah.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4f1552b1-ff6b-7342-b66e-04685aacf6ea@nvidia.com>
+Date:   Wed, 4 Dec 2019 14:53:24 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <1b2d2bc3-afcf-02c3-ccd6-e2a227c23fd3@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191204112936.GA3565947@kroah.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575471205; bh=pKQ4dcP1Vhq7519pIbBUF5wIUt54ljjOZI1JZjZzBpA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=kqxgzo71shZdTNaZbvnM0+x+fnWmZn5TbLgZO1InYj3brllXzFQSUnuPIRZDrYrQb
+         Ir4YqZ+lriKcvLrmTHS5r0HvlE1stBlo+zJ6n/85rvO4BFmXYKPEZWycKM8AO4JBFm
+         hJq63SlU0MYQXNYYSr4IFuh6yUnrStunXbGmfh9es7tvJ68tyJETKU4iH2Ok0qi1hm
+         rHKiLghwuPoK9OWyOzAMsu8DNdsAfpIX7q+Bi9MJf/ZcK91h931nq+2ktvQQtsbmjY
+         a19FJaax48W4TxHmzx8k14t7H+4iZXSc+u/x3ozuEt95dgOosw9siqXFMyNhscpXQE
+         VXlbfU2wD1YYw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/12/2019 11:20 am, Robin Murphy wrote:
-> On 2019-12-04 7:28 am, Andreas Färber wrote:
->> Hi YanQing,
->>
->> + LAKML + Mark + Will
->>
->> Am 04.12.19 um 05:55 schrieb Wang YanQing:
->>> I use "perf record" to debug performance issue on RTD1296 SOC, it 
->>> does't work, but
->>> the "perf stat" is ok!
->>
->> Thanks for the report - which board, branch and (base) tag are you
->> testing against? And are you building perf yourself from kernel sources,
->> or are you using some distro package?
->>
->> I only have Busybox in my initrd on DS418; I have not tested perf.
->>
->>> After some dig in the kernel, I find the reason is no pmu overflow 
->>> interrupt, I think
->>> below pmu configuration isn't right for RTD1296:
->>> "
->>>          arm_pmu: arm-pmu {
->>>                  compatible = "arm,cortex-a53-pmu";
->>>                  interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
->>>          };
->>> "
->>>
->>> We need 4 PMU SPI for RTD1296 (4 cores), and I guess the 48 isn't 
->>> right too.
->>
->> Note that above rtd129x.dtsi snippet is not complete. See rtd1296.dtsi:
->>
->> &arm_pmu {
->>     interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
->> };
-> 
-> That doesn't help much, since 4 affinities for one SPI is rather 
-> nonsensical.
-> 
->> 48 and high/4 match what I see in the latest BSP:
->>
->> https://github.com/BPI-SINOVOIP/BPI-M4-bsp/blob/master/linux-rtk/arch/arm64/boot/dts/realtek/rtd129x/rtd-1296.dtsi#L116 
->>
->>
->>> Any suggestion is welcome.
->>>
->>> Thanks!
->>
->> The only difference I see is "arm,cortex-a53-pmu" vs. "arm,armv8-pmuv3".
->> By my reading of arch/arm64/kernel/perf_event.c the only difference
->> between the two should be the name and an extra cache_map. You could try
->> the other compatible string in your .dts, but I doubt it'll help.
->>
->> Hopefully the Realtek or Arm guys can shed some light.
-> 
-> If the SoC really has all 4 overflow interrupts combined into a single 
-> SPI line, then sampling just isn't going to be supported - it's 
-> unreasonably difficult to handle overflow when the IRQ may be taken on 
-> the wrong CPU.
 
-On closer inspection, that BSP kernel implements a whole hrtimer-based 
-bodge in arm_pmu to apparently work around not having usable interrupts, 
-so yeah, this isn't going to be usable, sorry.
+On 04/12/2019 11:29, Greg Kroah-Hartman wrote:
+> On Wed, Dec 04, 2019 at 09:45:31AM +0000, Jon Hunter wrote:
+>>
+>> On 03/12/2019 22:31, Greg Kroah-Hartman wrote:
+>>> This is the start of the stable review cycle for the 4.19.88 release.
+>>> There are 321 patches in this series, all will be posted as a response
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Thu, 05 Dec 2019 22:30:32 +0000.
+>>> Anything received after that time might be too late.
+>>>
+>>> The whole patch series can be found in one patch at:
+>>> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.88-rc1.gz
+>>> or in the git tree and branch at:
+>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+>>> and the diffstat can be found below.
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>>
+>>> -------------
+>>> Pseudo-Shortlog of commits:
+>>
+>> ...
+>>
+>>> Ding Tao <miyatsu@qq.com>
+>>>     arm64: dts: marvell: armada-37xx: Enable emmc on espressobin
+>>
+>> The above commit is causing the following build failure for ARM64 ...
+>>
+>>   DTC     arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtb
+>> arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtb: ERROR
+>> (phandle_references): /soc/internal-regs@d0000000/sdhci@d0000: Reference
+>> to non-existent node or label "sdio_pins"
+>>
+>> arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtb: ERROR
+>> (phandle_references): /soc/internal-regs@d0000000/sdhci@d8000: Reference
+>> to non-existent node or label "mmc_pins"
+> 
+> Thanks for letting me know, I'll go drop this one and push out a -rc2
+> with that removed.
 
-Robin.
+
+Great! All tests now passing for Tegra ...
+
+Test results for stable-v4.19:
+    13 builds:	13 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    32 tests:	32 pass, 0 fail
+
+Linux version:	4.19.88-rc2-gba731ec12c66
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
+
+-- 
+nvpublic
