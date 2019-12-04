@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369A3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2309C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32682081B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E35D206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482784;
-	bh=gsezTrwdiq3nD9JRIcpdArOxVKjnR8lRYMoWPJV6N7g=;
+	s=default; t=1575482787;
+	bh=M3ojh6xd7Sh422K7jc7cJuoAtbq2AUgs1fVwY82uxaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nOGIzqmXqC8vceiqC3ceH/VbW7INE9MQAZT9njJ5VqmADjg0fSoj+iDedMk56eBYO
-	 8UAVFyeIKUs10EqT3KG2a5AiXzdHnSHP78PCsEmzFb7bLLN/CPG023bjWDsb81WeM7
-	 t/1un0KBj4ZIl3/ygtT8mYYHx+/Xo06cnKlEGWKY=
+	b=X0t72QejLa0QxwrJDxTzHHGv0JXIy3DPuKVP6iaKK8lkkfWBzZERbH1EznhNbXzpn
+	 9npSrJgNEir1H2oeTl4HfwMPFe+9zdQz7qgOXyZJ3pNhn5MTi20go6PQ2GI65wR38e
+	 CIMsuhutwb/Stj7l6eDI+HMfrvlR3g3fmrph6Yak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbfLDSGX (ORCPT
+        id S1729694AbfLDSG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:06:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54460 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:06:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729540AbfLDSGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:06:20 -0500
+        id S1730539AbfLDSGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:06:23 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5D352081B;
-        Wed,  4 Dec 2019 18:06:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66F0C206DF;
+        Wed,  4 Dec 2019 18:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482780;
-        bh=gsezTrwdiq3nD9JRIcpdArOxVKjnR8lRYMoWPJV6N7g=;
+        s=default; t=1575482782;
+        bh=M3ojh6xd7Sh422K7jc7cJuoAtbq2AUgs1fVwY82uxaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zGOz9UalFvhyLLmAdCQnbbVTrYKNB0NQKN0lj8zvqX1i3Yn1xuKX2ELI/UFi6Voci
-         XQNTp8PDZldeI9TQbelGLETnGtkn/4jinIWZbloT4ZLEYhUiUdl96Aw8U0iFLK3EW7
-         zI6ygNMtn3RqXT7X2Ug9TP5Z15qto7Wwv5kfixU4=
+        b=wX+se30i9E5lwFCSREDEhHP5tlZDfQcMFtwfDUAgdYFPdnsqZdnx11y1pP8qa99F9
+         o+tvFFqfHIJOOUXv+N0tf0p4cAyhGKuPeHLTqlZvQnuKNXvvYc7qG8bMDpkbQjluUK
+         gb4lrYaz2W/1VVHbhIqE31ajiEPCqdNUx+R6toNk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, He Zhe <zhe.he@windriver.com>,
+        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 130/209] net/core/neighbour: fix kmemleak minimal reference count for hash tables
-Date:   Wed,  4 Dec 2019 18:55:42 +0100
-Message-Id: <20191204175332.089424655@linuxfoundation.org>
+Subject: [PATCH 4.14 131/209] serial: 8250: Fix serial8250 initialization crash
+Date:   Wed,  4 Dec 2019 18:55:43 +0100
+Message-Id: <20191204175332.178927173@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -62,34 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: He Zhe <zhe.he@windriver.com>
 
-[ Upstream commit 01b833ab44c9e484060aad72267fc7e71beb559b ]
+[ Upstream commit 352c4cf40c4a7d439fa5d30aa2160f54b394da82 ]
 
-This should be 1 for normal allocations, 0 disables leak reporting.
+The initialization code of interrupt backoff work might reference NULL
+pointer and cause the following crash, if no port was found.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
-Fixes: 85704cb8dcfd ("net/core/neighbour: tell kmemleak about hash tables")
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[   10.017727] CPU 0 Unable to handle kernel paging request at virtual address 000001b0, epc == 807088e0, ra == 8070863c
+---- snip ----
+[   11.704470] [<807088e0>] serial8250_register_8250_port+0x318/0x4ac
+[   11.747251] [<80708d74>] serial8250_probe+0x148/0x1c0
+[   11.789301] [<80728450>] platform_drv_probe+0x40/0x94
+[   11.830515] [<807264f8>] really_probe+0xf8/0x318
+[   11.870876] [<80726b7c>] __driver_attach+0x110/0x12c
+[   11.910960] [<80724374>] bus_for_each_dev+0x78/0xcc
+[   11.951134] [<80725958>] bus_add_driver+0x200/0x234
+[   11.989756] [<807273d8>] driver_register+0x84/0x148
+[   12.029832] [<80d72f84>] serial8250_init+0x138/0x198
+[   12.070447] [<80100e6c>] do_one_initcall+0x5c/0x2a0
+[   12.110104] [<80d3a208>] kernel_init_freeable+0x370/0x484
+[   12.150722] [<80a49420>] kernel_init+0x10/0xf8
+[   12.191517] [<8010756c>] ret_from_kernel_thread+0x14/0x1c
+
+This patch makes sure the initialization code can be reached only if a port
+is found.
+
+Fixes: 6d7f677a2afa ("serial: 8250: Rate limit serial port rx interrupts during input overruns")
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Reviewed-by: Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/neighbour.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/8250/8250_core.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-index 9a28a21a51f05..2664ad58e5c01 100644
---- a/net/core/neighbour.c
-+++ b/net/core/neighbour.c
-@@ -368,7 +368,7 @@ static struct neigh_hash_table *neigh_hash_alloc(unsigned int shift)
- 		buckets = (struct neighbour __rcu **)
- 			  __get_free_pages(GFP_ATOMIC | __GFP_ZERO,
- 					   get_order(size));
--		kmemleak_alloc(buckets, size, 0, GFP_ATOMIC);
-+		kmemleak_alloc(buckets, size, 1, GFP_ATOMIC);
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+index ceeea4b159c4b..c698ebab6d3bd 100644
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -1077,15 +1077,16 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
+ 
+ 			ret = 0;
+ 		}
+-	}
+ 
+-	/* Initialise interrupt backoff work if required */
+-	if (up->overrun_backoff_time_ms > 0) {
+-		uart->overrun_backoff_time_ms = up->overrun_backoff_time_ms;
+-		INIT_DELAYED_WORK(&uart->overrun_backoff,
+-				  serial_8250_overrun_backoff_work);
+-	} else {
+-		uart->overrun_backoff_time_ms = 0;
++		/* Initialise interrupt backoff work if required */
++		if (up->overrun_backoff_time_ms > 0) {
++			uart->overrun_backoff_time_ms =
++				up->overrun_backoff_time_ms;
++			INIT_DELAYED_WORK(&uart->overrun_backoff,
++					serial_8250_overrun_backoff_work);
++		} else {
++			uart->overrun_backoff_time_ms = 0;
++		}
  	}
- 	if (!buckets) {
- 		kfree(ret);
+ 
+ 	mutex_unlock(&serial_mutex);
 -- 
 2.20.1
 
