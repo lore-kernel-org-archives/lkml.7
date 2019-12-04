@@ -2,130 +2,174 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B97C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33280C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1213020661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575484398;
-	bh=br61MmbqNzyL0zQQ9ZbnyNvUPNjXO7jzCtUUCCg/cZQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MdYAhQJCeSaUSwaQTYdOFYTOLohl/LyXRXG7Cn6i+O6Ow2xMWn/Bl0MWu1Xm9xazU
-	 bgExan2QWHULx+p1QZk1MAUYY6FdpwBSTZwDUIpvWf3M7Trro73ZULI6Z/ns+PZQmc
-	 +SMC0x+aoovf1kJdXeQAeKc22+GbKgLIQgo1Lsgs=
+	by mail.kernel.org (Postfix) with ESMTP id 02F8A20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:36:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TBoXeX0L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfLDSdQ (ORCPT
+        id S1728358AbfLDSgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:33:16 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46854 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728204AbfLDSdQ (ORCPT
+        Wed, 4 Dec 2019 13:36:43 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54418 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728244AbfLDSgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:33:16 -0500
-Received: by mail-lf1-f66.google.com with SMTP id a17so317272lfi.13
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:33:15 -0800 (PST)
+        Wed, 4 Dec 2019 13:36:42 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b11so788662wmj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:36:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FPiBy3e3zUg0m4K/nRiHT6Vw6UdUbtEDAqlj3R5valo=;
-        b=Djtns5IVsjsKkjqXlXecLgmq7TLzrMkrPSgPEVr/ZvwmJI4iaDca3o5iA6ZgsfgxEU
-         Hpfx40UcKXq7pbBcMond4TGqgXSpVLfIVObpgFXwaKdlBXgs60PfyOM2EclUBrVxZy+I
-         VKVVd/1vx0Caofr6kXg8TOm9f33WEMkE4r42w=
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wK9NstZxWCZ4fUNQKTAEIPBZ++U8z5OdNqnEeiQMgbs=;
+        b=TBoXeX0LWp6vtluo0nZrXJ+HWtp6RtDGftL1htkZ25cbrFAgcczcvS6SGQxLQ/S9DF
+         U6C+bJHCD9Nw5DYneQ5qat7aDKfmutIcMCWejKtLDLpb1WQGzCauCHqoCOTKbO7g7Seu
+         LC6j8E+J3jdAHjZ2AfyyQ7Cb+CO2t6UECM2cw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FPiBy3e3zUg0m4K/nRiHT6Vw6UdUbtEDAqlj3R5valo=;
-        b=OFPe8nXhcY+p0Blgwy3zwS86/eWT7mY3ThgRfz9PmsbS72Up8bxiENX/TrLMmBA3GX
-         qg8I7RR8yLRreBKbaAlYVejLS1YDBXHl+Ci1L+34Uj2I4JZQUX3TiIiH4va7ZL6uuHGJ
-         7+vO7Hi0TQ1NKfjrR2yAJ3piKA2onMU1E3vvkpmwxBopaPjgHTVby1f4y6lwgu3133QF
-         SUnPYy0XYcFl6lkpkuEBCPDRk8pts0oFuy1JLG5itfwO0VWur+J9ZO6Yb/5Vy4OpEcTJ
-         bBryKHgKJisbnvYRmtNT/AeI0W5hlVi6uygeDFDA+xOmlcGj85pS88vgIX7KcGqHMW8I
-         R6HQ==
-X-Gm-Message-State: APjAAAXyKk2f6As8pUkh/PCKrA+V6KijuyS4yKFjZPuCdslzJxlh6miN
-        IaqMFLrMbdnwv/Wa61aSEqvD7vuJMB8=
-X-Google-Smtp-Source: APXvYqxouT5tmRrnaUixeMIu03inSa3eCDamlFpbmmTVOVZCiKy5cS2Gxwa0L/2qVTEF2x5pe0phZw==
-X-Received: by 2002:ac2:5ec3:: with SMTP id d3mr2946745lfq.176.1575484394290;
-        Wed, 04 Dec 2019 10:33:14 -0800 (PST)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id f7sm3589090ljp.62.2019.12.04.10.33.13
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wK9NstZxWCZ4fUNQKTAEIPBZ++U8z5OdNqnEeiQMgbs=;
+        b=l5wY/VdIqKm2EkkaLTRNht9T+5doW3SISY2NeblQ0Q5V/Mf/EARCvpeHu091Ssk4dM
+         aEos1Hfv8xYELEz7rZ1QI+kT/VrvptjjiSQX9QaP6pvMDF5X0k88WruR4nRxeQpOOfYP
+         EDYIJ51NCFyiVsUiHlWTDNx/bWKSRm61GRqx+wHmEvLVTpHr16GkaqY/UySh/E2BAKuf
+         QAVoWhv8WulDmvi7XW3IstpHMfpiZKKnjLjqBennUp0TfstCF1iLrD5SVjA2ayVJmoQg
+         dt5gk4WA6yp3Wc/v5eZWVZxbQBwJDryEm7A0EnEcsheHbb98C9A1VN5oHCTB1DahCKGK
+         SUbA==
+X-Gm-Message-State: APjAAAUVNDE1SyNuhQATqfg+m9cTYZyNpccWwMnk0vFv3SoUgbKlZM/E
+        Cefpc1pMQ9GshSw42gw+obJOa6FGXJMH7wpvCqi7NmzSYnsf84wmgSdAclPTNUFwSvLZ+frXTaf
+        yw+Y4pzs4io9g3CiB08CTW1SDcZCR2sZkNdr98p9osa1h3hHwXhYW2Zy1HqmQcZlkqlmNuYexS/
+        hm
+X-Google-Smtp-Source: APXvYqz+06y7g6bDkQSJIocMFzOIfNFtedSXUAM0Vi8Dq5sgC91y+7beIJR+jMAFvOyXeJK38vDwgg==
+X-Received: by 2002:a1c:7f4e:: with SMTP id a75mr1044364wmd.128.1575484598710;
+        Wed, 04 Dec 2019 10:36:38 -0800 (PST)
+Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id n1sm9145299wrw.52.2019.12.04.10.36.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 10:33:13 -0800 (PST)
-Received: by mail-lf1-f50.google.com with SMTP id a17so317210lfi.13
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:33:13 -0800 (PST)
-X-Received: by 2002:ac2:555c:: with SMTP id l28mr2926109lfk.52.1575484392762;
- Wed, 04 Dec 2019 10:33:12 -0800 (PST)
+        Wed, 04 Dec 2019 10:36:37 -0800 (PST)
+Subject: Re: [PATCH v3 2/6] PCI: iproc: Add INTx support with better modeling
+To:     Andrew Murray <andrew.murray@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
+ <1575349026-8743-3-git-send-email-srinath.mannam@broadcom.com>
+ <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
+ <CAHp75Vf7d=Gw24MTq2q3BKspkLEDDM24GVK4Zh_4zfZEzVuZjw@mail.gmail.com>
+ <40fffa66-4b06-a851-84c2-4de36d5c6777@broadcom.com>
+ <CAHp75VfyKAg4OhzUa4swGXOGTvJ5fVO8mhGSG=5HAUP__M-URQ@mail.gmail.com>
+ <20191204160729.GJ18399@e119886-lin.cambridge.arm.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <d07d22bc-5ec2-8a0f-22af-6eb89cd68e55@broadcom.com>
+Date:   Wed, 4 Dec 2019 10:36:31 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <CAK8P3a33oETbN-60VjpNNeuW1U1Wzb4juVzdiw1ESdses6m3bw@mail.gmail.com>
- <20191204140812.2761761-1-arnd@arndb.de>
-In-Reply-To: <20191204140812.2761761-1-arnd@arndb.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 4 Dec 2019 10:32:56 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjBbi2xJZw+7Wqtt3W_mOUSPU2N4w-OES9WUUyXt-DnCg@mail.gmail.com>
-Message-ID: <CAHk-=wjBbi2xJZw+7Wqtt3W_mOUSPU2N4w-OES9WUUyXt-DnCg@mail.gmail.com>
-Subject: Re: [PATCH] scsi: sg: fix v3 compat read/write interface
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Doug Gilbert <dgilbert@interlog.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191204160729.GJ18399@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 6:08 AM Arnd Bergmann <arnd@arndb.de> wrote:
+
+
+On 12/4/19 8:07 AM, Andrew Murray wrote:
+> On Wed, Dec 04, 2019 at 10:29:51AM +0200, Andy Shevchenko wrote:
+>> On Wed, Dec 4, 2019 at 12:09 AM Ray Jui <ray.jui@broadcom.com> wrote:
+>>> On 12/3/19 11:27 AM, Andy Shevchenko wrote:
+>>>> On Tue, Dec 3, 2019 at 5:55 PM Andrew Murray <andrew.murray@arm.com> wrote:
+>>>>> On Tue, Dec 03, 2019 at 10:27:02AM +0530, Srinath Mannam wrote:
+>>>>
+>>>>>> +     /* go through INTx A, B, C, D until all interrupts are handled */
+>>>>>> +     do {
+>>>>>> +             status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
+>>>>>
+>>>>> By performing this read once and outside of the do/while loop you may improve
+>>>>> performance. I wonder how probable it is to get another INTx whilst handling
+>>>>> one?
+>>>>
+>>>> May I ask how it can be improved?
+>>>> One read will be needed any way, and so does this code.
+>>>>
+>>>
+>>> I guess the current code will cause the IPROC_PCIE_INTX_CSR register to
+>>> be read TWICE, if it's ever set to start with.
+>>>
+>>> But then if we do it outside of the while loop, if we ever receive an
+>>> interrupt while servicing one, the interrupt will still need to be
+>>> serviced, and in this case, it will cause additional context switch
+>>> overhead by going out and back in the interrupt context.
+> 
+> Yes it's a trade off - if you dropped the do/while loop and thus had a single
+> read you'd reduce the overhead on interrupt handling in every case except
+> where another INTx is received whilst in this function. But as you point out
+> each time that does happen you'll pay the penalty of a context switch.
 >
-> To address both of these, move the definition of compat_sg_io_hdr
-> into a scsi/sg.h to make it visible to sg.c and rewrite the logic
-> for reading req_pack_id as well as the size check to a simpler
-> version that gets the expected results.
 
-I think the patch is a good thing, except for this part:
+Exactly, it's a tradeoff between: 1) saving one register read (which is 
+likely in the 10th of nanosecond range) in all INTx handling; and 2) 
+saving context switches (which is likely in 10th of microsecond range) 
+in cases when we have multiple INTx when servicing it.
 
-> @@ -575,6 +561,14 @@ sg_new_read(Sg_fd * sfp, char __user *buf, size_t count, Sg_request * srp)
->         int err = 0, err2;
->         int len;
->
-> +#ifdef CONFIG_COMPAT
-> +       if (in_compat_syscall()) {
-> +               if (count < sizeof(struct compat_sg_io_hdr)) {
-> +                       err = -EINVAL;
-> +                       goto err_out;
-> +               }
-> +       } else
-> +#endif
->         if (count < SZ_SG_IO_HDR) {
->                 err = -EINVAL;
->                 goto err_out;
+The current implementation takes 2), which I thought it makes sense.
 
-Yes, yes, I know we do things like that in some other places too, but
-I really detest this kind of ifdeffery.
+> I don't have any knowledge of this platform so I have no idea if such a change
+> would be good/bad or material. However I thought I'd point it out. Looking at
+> the other controller drivers, some handle in a loop and some don't.
+> 
+> 
+>>>
+>>> My take is that it's probably more ideal to leave this portion of code
+>>> as it is.
+>>
+>> Can't we simple drop a do-while completely and leave only
+>> for_each_set_bit() loop?
+>>
 
-That
+Like both Andrew and I pointed out. There's a tradeoff here. Could you 
+please help to justify why you favor 1) than 2)?
 
-         } else
-  #endif
-         if (count < SZ_SG_IO_HDR) {
-
-is just evil. Please don't add things like this where the #ifdef
-section has subtle semantic continuations outside of it. If somebody
-adds a statement in between there, it now acts completely wrong.
-
-I think you can remove the #ifdef entirely. If CONFIG_COMPAT isn't
-set, I think in_compat_syscall() just turns to 0, and the code gets
-optimized away.
-
-Hmm?
-
-               Linus
+> 
+> I'm happy either way.
+> 
+> Thanks,
+> 
+> Andrew Murray
+> 
+>>>
+>>>>>> +             for_each_set_bit(bit, &status, PCI_NUM_INTX) {
+>>>>>> +                     virq = irq_find_mapping(pcie->irq_domain, bit);
+>>>>>> +                     if (virq)
+>>>>>> +                             generic_handle_irq(virq);
+>>>>>> +                     else
+>>>>>> +                             dev_err(dev, "unexpected INTx%u\n", bit);
+>>>>>> +             }
+>>>>>> +     } while ((status & SYS_RC_INTX_MASK) != 0);
+>>>>
+>>
+>>
+>>
+>> -- 
+>> With Best Regards,
+>> Andy Shevchenko
