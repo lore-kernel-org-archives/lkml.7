@@ -2,345 +2,122 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BF6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09C3C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBFA2245C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8508920661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:26:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hcGC+PTf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btLVHaGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbfLDWZm (ORCPT
+        id S1728377AbfLDWZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 17:25:42 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40310 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728434AbfLDWZm (ORCPT
+        Wed, 4 Dec 2019 17:25:59 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40605 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728213AbfLDWZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 17:25:42 -0500
-Received: by mail-pf1-f194.google.com with SMTP id q8so537831pfh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 14:25:41 -0800 (PST)
+        Wed, 4 Dec 2019 17:25:59 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k25so542143pgt.7;
+        Wed, 04 Dec 2019 14:25:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZuactyN4A4dYRUXhDIHCeCkwIm9yVEkpFLsO07TsWMo=;
-        b=hcGC+PTfEADAtTpYV00IwDi7gGhJIwdIxxVncPtNp+naLQKD2GcpYgCONjuPUWGrJT
-         68ZVoPyMrQfOz2k71HZP7CWGXwSIi9yPcJgpbY2RRsxIlml5I+q7OjSqyRlL8dBmsImq
-         XxXOFa8gzp1XgaOyd1HtMn5Qm8zU6pqGmri1M=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tAFoA1pfXHfuh5IVrrebPzs6UPD54i8tJnf9BhA9zqY=;
+        b=btLVHaGLK7ZZyT7Ik0vJTBBHaUjTSw26/Q4xnulPc2WD+wQAy0/CKV4cLwcwo7SRkR
+         /7FvnLN/mQ5Uq21IPDhMV9uOs9gu10UI6xJYliNWS1Hu+snT8F18jn0bOCTtuEslB8SV
+         5LT6RCoiO9+ZpvNZt5LGV6ZC0Wh2VLcjrqmLoJrbvVH3TDzG8f2PGcQtb5JT/n+D1iVr
+         DNCfNt6Y8QtISX2NBt4fSsDs5haqAN161+AigO0A90mKL5GwKXJO+nVMMw3tJ+QGBxpk
+         X5eMiIZWxrNXYeXonhvFrbf1mgHTXWh030Pky632jnf1zd/K2L13KRrYMUL6YKd05/R5
+         sBGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZuactyN4A4dYRUXhDIHCeCkwIm9yVEkpFLsO07TsWMo=;
-        b=okyB9YJqHQ2SPOyMVp/aBt/DwTHIZHBHrTOCCjJi3BWe3JVbs/djkY2SFpOCr5emmq
-         0Ruo/aZKHq9eDAgzDtQuh/l4+Bc81Wzf5UAGrbAsuy7KMTsscH92RIb8cY5EiDKS4Ohr
-         InQbD/qvN3vCmtIkwx+RBN7teSEga1tgW5J7WngXYYJTfU/NaPYxGx9B47kx2MyhovNq
-         zrFBUZCVdLF0WuFiijPmMnF5DBmyEUFduA8S7D2t+Rqg7OZY4o62wJbLeaGLsj709uny
-         4KQ5a2Zj51CJdPznmdQZb/FRuvRH9q4EiAhpRhiYW3TorkQ9r57Spp1Y/psUzRlbxvAe
-         VU+w==
-X-Gm-Message-State: APjAAAWpooH3CpuPepXO7qv8FVtQnwq4kNNqkASN+UdSefzSuk8dj1YX
-        H7V150crZ09ePxK9I4EVYKOl2g==
-X-Google-Smtp-Source: APXvYqxBaAsAuBqWN6ofTztH1Ft6RofDpKfxbvrSawqVadU1ETT+uPUdPcG4iBOR1iaX0suaxHQU4Q==
-X-Received: by 2002:a63:d748:: with SMTP id w8mr5349746pgi.334.1575498340922;
-        Wed, 04 Dec 2019 14:25:40 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id j7sm9359067pgn.0.2019.12.04.14.25.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 14:25:40 -0800 (PST)
-Date:   Wed, 4 Dec 2019 14:25:38 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, asutoshd@codeaurora.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        cang@codeaurora.org, rampraka@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V1 2/2] arm64: dts: qcom: sc7180: Add nodes for eMMC and
- SD card
-Message-ID: <20191204222538.GI228856@google.com>
-References: <1574855381-15193-1-git-send-email-vbadigan@codeaurora.org>
- <0101016eacb27366-31803877-9137-4c0e-922b-6a71a0e63ab3-000000@us-west-2.amazonses.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tAFoA1pfXHfuh5IVrrebPzs6UPD54i8tJnf9BhA9zqY=;
+        b=U9MDH566iZ7AlnngzW031JsYWiuG/mUMsPXBmi8nxdUNFkDnBleraV5UueB4my2+ZB
+         9HS3gU5AgfMYETK1qsiAyR6kdww8GgdAgkvCprmL5nFHWG4HR51JHeMggoPgVNrwBTIH
+         dvxvwuKrJAGgqqWizA0ULbzcg7J/yDGLNaVL7bRdLfxmUJPNo51+aU6HIjQt0sDfA+y2
+         kl30ZCPaxbbP6npbYSwPdjkKW114uWmXUnAz8mbKZ02+PsNdr7BPvS4owgBw2Tn702P4
+         RmyHHARQRl/GgOJzaFxdWlT0vm3nkaFYl5+/mE94CzWSt7GU2gR7/lDLn3G3+DV56z0d
+         Jxng==
+X-Gm-Message-State: APjAAAVsI4oAHmeeIaWoSSq+1SO1S8sM7T0UGxyuyxmjGNU2cLa1PYSK
+        +jAPXO5ytgXspE1C73cwB6QSVnbJRnetXIzXexo=
+X-Google-Smtp-Source: APXvYqzPOjIHijkjh5DGuImeVKvFjiVmEyesruPfagYaeR8UYU/gIxivSZAHoYxtDyM35LC6AIZdtfSaTRTMbHWEtuI=
+X-Received: by 2002:a62:7590:: with SMTP id q138mr5641663pfc.241.1575498358358;
+ Wed, 04 Dec 2019 14:25:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0101016eacb27366-31803877-9137-4c0e-922b-6a71a0e63ab3-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191204155912.17590-1-brgl@bgdev.pl> <20191204155912.17590-8-brgl@bgdev.pl>
+In-Reply-To: <20191204155912.17590-8-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 5 Dec 2019 00:25:46 +0200
+Message-ID: <CAHp75Vf7+XY8rnrbMfMgNO25EHSemjZVUgvFFp+zvj4vvJ1B8g@mail.gmail.com>
+Subject: Re: [PATCH v2 07/11] gpiolib: rework the locking mechanism for
+ lineevent kfifo
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Dec 4, 2019 at 6:01 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> The read_lock mutex is supposed to prevent collisions between reading
+> and writing to the line event kfifo but it's actually only taken when
+> the events are being read from it.
+>
+> Drop the mutex entirely and reuse the spinlock made available to us in
+> the waitqueue struct. Take the lock whenever the fifo is modified or
+> inspected. Drop the call to kfifo_to_user() and instead first extract
+> the new element from kfifo when the lock is taken and only then pass
+> it on to the user after the spinlock is released.
+>
 
-On Wed, Nov 27, 2019 at 11:50:06AM +0000, Veerabhadrarao Badiganti wrote:
+My comments below.
 
-> Add sdhc instances for supporting eMMC and SD-card on sc7180.
-> The regulators should be in HPM state for proper functionality of
-> eMMC and SD-card. Updating corresponding regulators accordingly.
-> 
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> ---
-> 
-> This depends on the patch series (dt support for sc7180):
-> https://lkml.org/lkml/2019/11/8/149
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  32 +++++++-
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 136 ++++++++++++++++++++++++++++++++
->  2 files changed, 164 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 189254f..583c42c 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -11,6 +11,7 @@
->  #include "sc7180.dtsi"
->  #include "pm6150.dtsi"
->  #include "pm6150l.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
+> +       spin_lock(&le->wait.lock);
+>         if (!kfifo_is_empty(&le->events))
+>                 events = EPOLLIN | EPOLLRDNORM;
+> +       spin_unlock(&le->wait.lock);
 
-I think this should be above, together with
-'dt-bindings/regulator/qcom,rpmh-regulator.h'
+Sound like a candidate to have kfifo_is_empty_spinlocked().
 
->  
->  / {
->  	model = "Qualcomm Technologies, Inc. SC7180 IDP";
-> @@ -103,7 +104,7 @@
->  		vreg_l12a_1p8: ldo12 {
->  			regulator-min-microvolt = <1696000>;
->  			regulator-max-microvolt = <1952000>;
-> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
->  		vreg_l13a_1p8: ldo13 {
-> @@ -145,7 +146,7 @@
->  		vreg_l19a_2p9: ldo19 {
->  			regulator-min-microvolt = <2696000>;
->  			regulator-max-microvolt = <3304000>;
-> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  	};
->  
-> @@ -191,7 +192,7 @@
->  		vreg_l6c_2p9: ldo6 {
->  			regulator-min-microvolt = <2696000>;
->  			regulator-max-microvolt = <3304000>;
-> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
->  		vreg_l7c_3p0: ldo7 {
-> @@ -209,7 +210,7 @@
->  		vreg_l9c_2p9: ldo9 {
->  			regulator-min-microvolt = <2952000>;
->  			regulator-max-microvolt = <3304000>;
-> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
->  		vreg_l10c_3p3: ldo10 {
-> @@ -400,3 +401,26 @@
->  			bias-pull-up;
->  		};
->  };
-> +
-> +&sdhc_1 {
-> +	status = "ok";
-> +
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&sdc1_on>;
-> +	pinctrl-1 = <&sdc1_off>;
-> +	vmmc-supply = <&vreg_l19a_2p9>;
-> +	vqmmc-supply = <&vreg_l12a_1p8>;
-> +
 
-remove empty line
+>         struct lineevent_state *le = filep->private_data;
+> -       unsigned int copied;
+> +       struct gpioevent_data event;
+>         int ret;
 
-> +};
-> +
-> +&sdhc_2 {
-> +	status = "ok";
-> +
-> +	pinctrl-names = "default","sleep";
-> +	pinctrl-0 = <&sdc2_on>;
-> +	pinctrl-1 = <&sdc2_off>;
-> +	vmmc-supply  = <&vreg_l9c_2p9>;
-> +	vqmmc-supply = <&vreg_l6c_2p9>;
-> +
-> +	cd-gpios = <&tlmm 69 GPIO_ACTIVE_LOW>;
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 666e9b9..207d44f 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -897,6 +897,100 @@
->  					function = "qup15";
->  				};
->  			};
-> +
-> +			sdc1_on: sdc1-on {
-> +				clk {
-> +					pins = "sdc1_clk";
-> +					bias-disable;
-> +					drive-strength = <16>;
-> +				};
-> +
-> +				cmd {
-> +					pins = "sdc1_cmd";
-> +					bias-pull-up;
-> +					drive-strength = <10>;
-> +				};
-> +
-> +				data {
-> +					pins = "sdc1_data";
-> +					bias-pull-up;
-> +					drive-strength = <10>;
-> +				};
-> +
-> +				rclk {
-> +					pins = "sdc1_rclk";
-> +					bias-pull-down;
-> +				};
-> +			};
-> +
-> +			sdc1_off: sdc1-off {
-> +				clk {
-> +					pins = "sdc1_clk";
-> +					bias-disable;
-> +					drive-strength = <2>;
-> +				};
-> +
-> +				cmd {
-> +					pins = "sdc1_cmd";
-> +					bias-pull-up;
-> +					drive-strength = <2>;
-> +				};
-> +
-> +				data {
-> +					pins = "sdc1_data";
-> +					bias-pull-up;
-> +					drive-strength = <2>;
-> +				};
-> +
-> +				rclk {
-> +					pins = "sdc1_rclk";
-> +					bias-pull-down;
-> +				};
-> +			};
-> +
-> +			sdc2_on: sdc2_on {
-> +				clk {
-> +					pins = "sdc2_clk";
-> +					bias-disable;
-> +					drive-strength = <16>;
-> +				};
+> +       if (count < sizeof(event))
+>                 return -EINVAL;
 
-nit: add blank lines, consistent with the other pinconf entries.
+This still has an issue with compatible syscalls. See patch I have
+sent recently.
+I dunno how you see is the better way: a) apply mine and rebase your
+series, or b) otherwise.
+I can do b) if you think it shouldn't be backported.
 
-> +				cmd {
-> +					pins = "sdc2_cmd";
-> +					bias-pull-up;
-> +					drive-strength = <10>;
-> +				};
-> +				data {
-> +					pins = "sdc2_data";
-> +					bias-pull-up;
-> +					drive-strength = <10>;
-> +				};
-> +				sd-cd {
-> +					pins = "gpio69";
-> +					bias-pull-down;
-> +				};
-> +			};
-> +
-> +			sdc2_off: sdc2_off {
-> +				clk {
-> +					pins = "sdc2_clk";
-> +					bias-disable;
-> +					drive-strength = <2>;
-> +				};
-> +				cmd {
-> +					pins = "sdc2_cmd";
-> +					bias-pull-up;
-> +					drive-strength = <2>;
-> +				};
-> +				data {
-> +					pins = "sdc2_data";
-> +					bias-pull-up;
-> +					drive-strength = <2>;
-> +				};
-> +				sd-cd {
-> +					pins = "gpio69";
-> +					bias-pull-down;
-> +				};
-> +			};
->  		};
->  
->  		qspi: spi@88dc000 {
-> @@ -911,6 +1005,48 @@
->  			status = "disabled";
->  		};
->  
-> +		sdhc_1: sdhci@7c4000 {
+Btw, either way we have a benifits for the following one (I see you
+drop kfifo_to_user() and add event variable on stack).
 
-IIUC the nodes are ordered by address, hence this one should be between
-'clock-controller@100000' and 'geniqup@8c0000'.
+> +       return sizeof(event);
 
-> +			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
-> +			reg = <0 0x7c4000 0 0x1000>;
-> +			reg-names = "hc_mem";
-> +
-> +			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "hc_irq", "pwr_irq";
-> +
-> +			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
-> +					<&gcc GCC_SDCC1_AHB_CLK>;
-> +			clock-names = "core", "iface";
-> +
-> +			bus-width = <8>;
-> +			non-removable;
-> +
-> +			mmc-ddr-1_8v;
-> +			mmc-hs200-1_8v;
-> +			mmc-hs400-1_8v;
-> +			mmc-hs400-enhanced-strobe;
-> +
-> +			status = "disabled";
-> +		};
-> +
-> +		sdhc_2: sdhci@8804000 {
+Also see comments in my patch regarding the event handling.
 
-nodes are ordered by address: this one should be between 'pinctrl@3500000'
-and 'spi@88dc000´.
-
-> +			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
-> +			reg = <0 0x08804000 0 0x1000>;
-> +			reg-names = "hc_mem";
-> +
-> +			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "hc_irq", "pwr_irq";
-> +
-> +			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
-> +					<&gcc GCC_SDCC2_AHB_CLK>;
-> +			clock-names = "core","iface";
-
-nit: add a blank after the comma.
-
-Thanks
-
-Matthias
+-- 
+With Best Regards,
+Andy Shevchenko
