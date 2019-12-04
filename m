@@ -2,135 +2,187 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAA7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C471EC2BBE2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4D820675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dW1k409H"
+	by mail.kernel.org (Postfix) with ESMTP id 8B33D207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575447239;
+	bh=yguauI0IayAymFt04WWVObdEb9zbkaHw3KCapf9TULg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=v/ulTePXSWlWNIMl0JxfjhBNzUvf8IE8QRcdu2zkKwveP0bsWjvxn+pgftsg5iT6b
+	 oT0rnjI/kMfw04cbA88DegT0S43haX0r3kYNWdKSdAAKPSSj3HCeYjwh+4bxzvu9zw
+	 6z0Olt/rohR1xN96VKpxQRC1cfhx/MpfUzT6ga0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfLDINR (ORCPT
+        id S1727257AbfLDIN6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:13:17 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:41956 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfLDINR (ORCPT
+        Wed, 4 Dec 2019 03:13:58 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:45862 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726053AbfLDIN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:13:17 -0500
-Received: by mail-pj1-f66.google.com with SMTP id ca19so2667277pjb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 00:13:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kLVVGHNKvob9eoQ/kiwi8Hd5PvOTq3zBu7HFDYNsI7o=;
-        b=dW1k409Hwpne9y4cOUDwoaNXf/m2bg6wig4H+wPSOt+LKkQuKohHtDTRe/0bMYvJqF
-         Ge1sTZ2HM81RJdZ+b8CZff1kARp2NNdFi5h05eIfpIDzXQtSocCRxTdz31Fbplc6Hnb2
-         hVrkIx9Vu+3hSP+y5rBGNsyIP9YCtvGdj6QXw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kLVVGHNKvob9eoQ/kiwi8Hd5PvOTq3zBu7HFDYNsI7o=;
-        b=QfmyrQaUZ1EhxN6Vvl5A9NidIlBGrrn9KCrQJ3OVNmSmV8HyqYeVFHvUG6+chFYIYz
-         TZDhH/pffssgwlJku15IIic0SQXiPDHQ0CjnQtocsyHJzulZMLEjffCnSi5Z8SvPM1Pq
-         cNpGqPBlB9FbGWRTFZg3spIWHIXLT23x4/P4fPuffD9qk509tiR0S6xpKTKYaomAD94z
-         C3TCKTLQ87UuhDs3+Ma6DNTe/5mtoi+SG2eryPLsa9fBfntugYWBzsEIcjLXxjkSnxFa
-         lzSuhU0BmQ79gAiaDmD6KH1aiuWwkhI6DixpdvLAr3tXKQ8yUrWyJfO82xT5Y+nkoa+5
-         CKdg==
-X-Gm-Message-State: APjAAAVLJGtytjMKdEvvW2WjP1JgQB9ddS1C2hlgLCVrI6kEEIhcILFh
-        7bsD9/NlO9NMtDzYMPvxLBuMYQ==
-X-Google-Smtp-Source: APXvYqyB1iRYmu9NxaK6tXmRL7wMYwxaJcR0mPrBrRqMo+4sZPD2J7OZJ1+Ll2NMDetAC7/eMFOkGg==
-X-Received: by 2002:a17:902:b095:: with SMTP id p21mr2149106plr.313.1575447196552;
-        Wed, 04 Dec 2019 00:13:16 -0800 (PST)
-Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
-        by smtp.googlemail.com with ESMTPSA id a3sm5435699pjh.31.2019.12.04.00.13.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 00:13:15 -0800 (PST)
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>, linux-wireless@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org (open list),
-        clang-built-linux@googlegroups.com (open list:CLANG/LLVM BUILD SUPPORT)
-Subject: [PATCH v2] wireless: Use offsetof instead of custom macro.
-Date:   Wed,  4 Dec 2019 16:13:07 +0800
-Message-Id: <20191204081307.138765-1-pihsun@chromium.org>
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 4 Dec 2019 03:13:58 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1icPnH-000632-3q; Wed, 04 Dec 2019 09:13:55 +0100
+Date:   Wed, 04 Dec 2019 08:13:53 +0000
+Message-ID: <86k17czewu.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, Roy Zang <roy.zang@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "frowand.list@gmail.com" <frowand.list@gmail.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>
+Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+In-Reply-To: <AM5PR04MB3299BFC34A4666B7A9C12B13F55D0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
+        <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
+        <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
+        <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
+        <8f56c2d9-ab01-a91e-902f-a61def0e8ce8@arm.com>
+        <AM5PR04MB3299BFC34A4666B7A9C12B13F55D0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: xiaowei.bao@nxp.com, robin.murphy@arm.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, zhiqiang.hou@nxp.com, linux-kernel@vger.kernel.org, minghuan.lian@nxp.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, bhelgaas@google.com, andrew.murray@arm.com, frowand.list@gmail.com, mingkai.hu@nxp.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use offsetof to calculate offset of a field to take advantage of
-compiler built-in version when possible, and avoid UBSAN warning when
-compiling with Clang:
+On Wed, 04 Dec 2019 04:34:32 +0000,
+Xiaowei Bao <xiaowei.bao@nxp.com> wrote:
+> 
+> 
+> 
+> > -----Original Message-----
+> > From: Robin Murphy <robin.murphy@arm.com>
+> > Sent: 2019年12月3日 23:20
+> > To: Marc Zyngier <maz@kernel.org>; Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: Roy Zang <roy.zang@nxp.com>; lorenzo.pieralisi@arm.com;
+> > devicetree@vger.kernel.org; linux-pci@vger.kernel.org; Z.q. Hou
+> > <zhiqiang.hou@nxp.com>; linux-kernel@vger.kernel.org; M.h. Lian
+> > <minghuan.lian@nxp.com>; robh+dt@kernel.org;
+> > linux-arm-kernel@lists.infradead.org; bhelgaas@google.com;
+> > andrew.murray@arm.com; frowand.list@gmail.com; Mingkai Hu
+> > <mingkai.hu@nxp.com>
+> > Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+> > 
+> > On 03/12/2019 11:51 am, Marc Zyngier wrote:
+> > > On 2019-12-03 01:42, Xiaowei Bao wrote:
+> > >>> -----Original Message-----
+> > >>> From: Marc Zyngier <maz@misterjones.org>
+> > >>> Sent: 2019年12月2日 20:48
+> > >>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > >>> Cc: robh+dt@kernel.org; frowand.list@gmail.com; M.h. Lian
+> > >>> <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > Zang
+> > >>> <roy.zang@nxp.com>; lorenzo.pieralisi@arm.com;
+> > >>> andrew.murray@arm.com; bhelgaas@google.com;
+> > >>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > >>> linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > >>> Z.q. Hou <zhiqiang.hou@nxp.com>
+> > >>> Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host
+> > >>> side
+> > >>>
+> > >>> On 2019-12-02 10:45, Xiaowei Bao wrote:
+> > >>> > GIC get the map relations of devid and stream id from the msi-map
+> > >>> > property of DTS, our platform add this property in u-boot base on
+> > >>> > the PCIe device in the bus, but if enable the vf device in kernel,
+> > >>> > the vf device msi-map will not set, so the vf device can't work,
+> > >>> > this patch purpose is that manage the stream id and device id map
+> > >>> > relations dynamically in kernel, and make the new PCIe device work in
+> > kernel.
+> > >>> >
+> > >>> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > >>> > ---
+> > >>> >  drivers/of/irq.c                            |  9 +++
+> > >>> >  drivers/pci/controller/dwc/pci-layerscape.c | 94
+> > >>> > +++++++++++++++++++++++++++++
+> > >>> >  drivers/pci/probe.c                         |  6 ++
+> > >>> >  drivers/pci/remove.c                        |  6 ++
+> > >>> >  4 files changed, 115 insertions(+)
+> > >>> >
+> > >>> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c index
+> > >>> > a296eaf..791e609 100644
+> > >>> > --- a/drivers/of/irq.c
+> > >>> > +++ b/drivers/of/irq.c
+> > >>> > @@ -576,6 +576,11 @@ void __init of_irq_init(const struct
+> > >>> >of_device_id
+> > >>> > *matches)
+> > >>> >      }
+> > >>> >  }
+> > >>> >
+> > >>> > +u32 __weak ls_pcie_streamid_fix(struct device *dev, u32 rid) {
+> > >>> > +    return rid;
+> > >>> > +}
+> > >>> > +
+> > >>> >  static u32 __of_msi_map_rid(struct device *dev, struct
+> > >>> >device_node  **np,
+> > >>> >                  u32 rid_in)
+> > >>> >  {
+> > >>> > @@ -590,6 +595,10 @@ static u32 __of_msi_map_rid(struct device
+> > >>> >*dev,  struct device_node **np,
+> > >>> >          if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
+> > >>> >                  "msi-map-mask", np, &rid_out))
+> > >>> >              break;
+> > >>> > +
+> > >>> > +    if (rid_out == rid_in)
+> > >>> > +        rid_out = ls_pcie_streamid_fix(parent_dev, rid_in);
+> > >>>
+> > >>> Over my dead body. Get your firmware to properly program the LUT so
+> > >>> that it presents the ITS with a reasonable topology. There is
+> > >>> absolutely no way this kind of change makes it into the kernel.
+> > >>
+> > >> Sorry for this, I know it is not reasonable, but I have no other way,
+> > >> as I know, ARM get the mapping of stream ID to request ID from the
+> > >> msi-map property of DTS, if add a new device which need the stream ID
+> > >> and try to get it from the msi-map of DTS, it will failed and not
+> > >> work, yes? So could you give me a better advice to fix this issue, I
+> > >> would really appreciate any comments or suggestions, thanks a lot.
+> > >
+> > > Why can't firmware expose an msi-map/msi-map-mask that has a large
+> > > enough range to ensure mapping of VFs? What are the limitations of the
+> > > LUT that would prevent this from being configured before the kernel
+> > > boots?
+> 
+> Thanks for your comments, yes, this is the root cause, we only have
+> 16 stream IDs for PCIe domain, this is the hardware limitation, if
+> there have enough stream IDs, we can expose an msi-map/msi-map-mask
+> for all PCIe devices in system, unfortunately, the stream IDs is not
+> enough, I think other ARM vendor have same issue that they don't
+> have enough stream IDs.
 
-==================================================================
-UBSAN: Undefined behaviour in net/wireless/wext-core.c:525:14
-member access within null pointer of type 'struct iw_point'
-CPU: 3 PID: 165 Comm: kworker/u16:3 Tainted: G S      W         4.19.23 #43
-Workqueue: cfg80211 __cfg80211_scan_done [cfg80211]
-Call trace:
- dump_backtrace+0x0/0x194
- show_stack+0x20/0x2c
- __dump_stack+0x20/0x28
- dump_stack+0x70/0x94
- ubsan_epilogue+0x14/0x44
- ubsan_type_mismatch_common+0xf4/0xfc
- __ubsan_handle_type_mismatch_v1+0x34/0x54
- wireless_send_event+0x3cc/0x470
- ___cfg80211_scan_done+0x13c/0x220 [cfg80211]
- __cfg80211_scan_done+0x28/0x34 [cfg80211]
- process_one_work+0x170/0x35c
- worker_thread+0x254/0x380
- kthread+0x13c/0x158
- ret_from_fork+0x10/0x18
-===================================================================
+Not that I know off.
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
----
+I'm using a number of ARM-based, SMMU-equipped HW that works just
+fine. SR-IOV is perfectly functional on these platforms, and it seems
+that only FSL/NXP HW requires hacks of this sort.
 
-Change since v1:
- * Add #include <stddef.h>
+	M.
 
----
- include/uapi/linux/wireless.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/include/uapi/linux/wireless.h b/include/uapi/linux/wireless.h
-index 86eca3208b6b..a2c006a364e0 100644
---- a/include/uapi/linux/wireless.h
-+++ b/include/uapi/linux/wireless.h
-@@ -74,6 +74,8 @@
- #include <linux/socket.h>		/* for "struct sockaddr" et al	*/
- #include <linux/if.h>			/* for IFNAMSIZ and co... */
- 
-+#include <stddef.h>                     /* for offsetof */
-+
- /***************************** VERSION *****************************/
- /*
-  * This constant is used to know the availability of the wireless
-@@ -1090,8 +1092,7 @@ struct iw_event {
- /* iw_point events are special. First, the payload (extra data) come at
-  * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
-  * we omit the pointer, so start at an offset. */
--#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
--			  (char *) NULL)
-+#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
- #define IW_EV_POINT_LEN	(IW_EV_LCP_LEN + sizeof(struct iw_point) - \
- 			 IW_EV_POINT_OFF)
- 
-
-base-commit: c5db92909beddadddb705b92d3388ea50b01e1a2
 -- 
-2.24.0.393.g34dc348eaf-goog
-
+Jazz is not dead, it just smells funny.
