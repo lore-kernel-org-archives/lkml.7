@@ -2,114 +2,140 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B03C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FD1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 656F02054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01B272054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:40:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Me/qyZBS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfLDLiu (ORCPT
+        id S1727747AbfLDLk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 06:38:50 -0500
-Received: from skedge03.snt-world.com ([91.208.41.68]:34632 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfLDLiu (ORCPT
+        Wed, 4 Dec 2019 06:40:26 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36479 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbfLDLk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 06:38:50 -0500
-Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id A91FB67B181;
-        Wed,  4 Dec 2019 12:38:46 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
- (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 4 Dec 2019
- 12:38:46 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Wed, 4 Dec 2019 12:38:46 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Adam Ford <aford173@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        =?utf-8?B?SG9yaWEgR2VhbnTEgw==?= <horia.geanta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/2] crypto: caam: Change the i.MX8MQ check support all
- i.MX8M variants
-Thread-Topic: [PATCH 1/2] crypto: caam: Change the i.MX8MQ check support all
- i.MX8M variants
-Thread-Index: AQHVp9kQe4CI+Rf8yUmun0IOEuspVqepzk4A
-Date:   Wed, 4 Dec 2019 11:38:46 +0000
-Message-ID: <e8e429dd-4508-9835-fd01-825d2de8871e@kontron.de>
-References: <20191130225153.30111-1-aford173@gmail.com>
-In-Reply-To: <20191130225153.30111-1-aford173@gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E8132CB5151D4E48A2A1202728C1E995@snt-world.com>
-Content-Transfer-Encoding: base64
+        Wed, 4 Dec 2019 06:40:26 -0500
+Received: by mail-pl1-f195.google.com with SMTP id k20so3081441pls.3;
+        Wed, 04 Dec 2019 03:40:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MiINZFBs6khm8b6mMvNgRfbiNCwT+6tcCMZMlP4kWDc=;
+        b=Me/qyZBSUoJ5Yl8xik+dzd9PoLPKurXbWAK5IuDKz16oS33rkFiSIjiWXmBze6iCsM
+         Jne5T9ATfzpHc0zuyNlxcV2tYKp2hGvA/Myv0d8Gvp5qbMUKaf+oOagxtRN1AoRl8h1s
+         c4joqbPyJ052UENlBmxfA4VQ2/6uJWt0Gh9t5W+92GX0KaASvJlU8WhF0BgDhlYgfooM
+         SgH7MMcdlpMUl5tFPFWAYynyVbZelnR8rpoBMOGouSryqhbGJjl3/1RzkPd4snbzGTf9
+         QF2RjmVYtu8MJ/uNZjUBIrrTPQaJNY3r6ISAM1Uiwpd0+ckOtHBh0/erxbzJcJLSHcJy
+         aQhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MiINZFBs6khm8b6mMvNgRfbiNCwT+6tcCMZMlP4kWDc=;
+        b=ToIQl5DV/kDORP0dmg/isBqo7lF0RENvnjV18boivBhFm85GM+QrZNdRPydAgNKYj7
+         vkZXpL5waWazawu9Fhcx68bSdoKt62JlcUXVZX6GJhSMTUqqcYoblVfWcps5V1Yyakpc
+         +wldZ3G7TNne7m+MlrKF70A7eCFWFhuUwJdYVSHo+fB8qmFQL6Yxvx5XQ5PwqVNPtxiS
+         e7qCicOh42mj7Wermi4D7WVLqyX4v9NTZvKIy6b/V7W+b71iQOL65QDGWkDwtvHUWkvj
+         9+2ReDN82zLwjNMiLF+VTLZKxLBjb3x7KZbuOeLp+2ezeGMCGXpwwHtkWUPkAoowo7tX
+         E4Ow==
+X-Gm-Message-State: APjAAAUZqpTsEF3jnNTisy6bRcospF/4lgtuzq4sTNITeQhvrjx9lMEN
+        2qq6LVhIFOT0ug0ubpcelzY=
+X-Google-Smtp-Source: APXvYqxbyKEe4NNTHMvIbBya6nrH5aA6meS8Jca0dWLee3ljlkLjOW9+RLRsuqUHi4HkvCGin53VnA==
+X-Received: by 2002:a17:902:aa49:: with SMTP id c9mr3007884plr.220.1575459625813;
+        Wed, 04 Dec 2019 03:40:25 -0800 (PST)
+Received: from localhost.localdomain ([2402:3a80:6ac:96e0:e497:614f:d1b6:6930])
+        by smtp.googlemail.com with ESMTPSA id s2sm8162694pfb.109.2019.12.04.03.40.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 03:40:25 -0800 (PST)
+From:   Jaskaran Singh <jaskaransingh7654321@gmail.com>
+To:     aelior@marvell.com
+Cc:     GR-everest-linux-l2@marvell.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH] drivers: net: qlogic: apply alloc_cast.cocci to qlogic/qed/qed_roce.c
+Date:   Wed,  4 Dec 2019 17:10:13 +0530
+Message-Id: <20191204114013.31726-1-jaskaransingh7654321@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: A91FB67B181.A1F6F
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: aford173@gmail.com, aymen.sghaier@nxp.com,
-        davem@davemloft.net, devicetree@vger.kernel.org, festevam@gmail.com,
-        herbert@gondor.apana.org.au, horia.geanta@nxp.com,
-        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWRhbSwNCg0KT24gMzAuMTEuMTkgMjM6NTEsIEFkYW0gRm9yZCB3cm90ZToNCj4gVGhlIGku
-TVg4TSBNaW5pIHVzZXMgdGhlIHNhbWUgY3J5cHRvIGVuZ2luZSBhcyB0aGUgaS5NWDhNUSwgYnV0
-DQo+IHRoZSBkcml2ZXIgaXMgcmVzdHJpY3RpbmcgdGhlIGNoZWNrIHRvIGp1c3QgdGhlIGkuTVg4
-TVEuDQo+IA0KPiBUaGlzIHBhdGNoIGxldHMgdGhlIGRyaXZlciBzdXBwb3J0IGFsbCBpLk1YOE0g
-VmFyaWFudHMgaWYgZW5hYmxlZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFkYW0gRm9yZCA8YWZv
-cmQxNzNAZ21haWwuY29tPg0KDQpXaGF0IGFib3V0IHRoZSBmb2xsb3dpbmcgbGluZXMgaW4gcnVu
-X2Rlc2NyaXB0b3JfZGVjbzAoKT8gRG9lcyB0aGlzIA0KY29uZGl0aW9uIGFsc28gYXBwbHkgdG8g
-aS5NWDhNTT8NCg0KZHJpdmVycy9jcnlwdG8vY2FhbS9jdHJsLmM6DQoNCglpZiAoY3RybHByaXYt
-PnZpcnRfZW4gPT0gMSB8fA0KCSAgICAvKg0KCSAgICAgKiBBcHBhcmVudGx5IG9uIGkuTVg4TVEg
-aXQgZG9lc24ndCBtYXR0ZXIgaWYgdmlydF9lbiA9PSAxDQoJICAgICAqIGFuZCB0aGUgZm9sbG93
-aW5nIHN0ZXBzIHNob3VsZCBiZSBwZXJmb3JtZWQgcmVnYXJkbGVzcw0KCSAgICAgKi8NCgkgICAg
-b2ZfbWFjaGluZV9pc19jb21wYXRpYmxlKCJmc2wsaW14OG1xIikpIHsNCgkJY2xyc2V0Yml0c18z
-MigmY3RybC0+ZGVjb19yc3IsIDAsIERFQ09SU1JfSlIwKTsNCg0KCQl3aGlsZSAoIShyZF9yZWcz
-MigmY3RybC0+ZGVjb19yc3IpICYgREVDT1JTUl9WQUxJRCkgJiYNCgkJICAgICAgIC0tdGltZW91
-dCkNCgkJCWNwdV9yZWxheCgpOw0KDQoJCXRpbWVvdXQgPSAxMDAwMDA7DQoJfQ0KDQpSZWdhcmRz
-LA0KRnJpZWRlcg0KDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jcnlwdG8vY2FhbS9jdHJs
-LmMgYi9kcml2ZXJzL2NyeXB0by9jYWFtL2N0cmwuYw0KPiBpbmRleCBkYjIyNzc3ZDU5YjQuLjFj
-ZTAzZjg5NjFiNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9jcnlwdG8vY2FhbS9jdHJsLmMNCj4g
-KysrIGIvZHJpdmVycy9jcnlwdG8vY2FhbS9jdHJsLmMNCj4gQEAgLTUyNyw3ICs1MjcsNyBAQCBz
-dGF0aWMgY29uc3Qgc3RydWN0IHNvY19kZXZpY2VfYXR0cmlidXRlIGNhYW1faW14X3NvY190YWJs
-ZVtdID0gew0KPiAgIAl7IC5zb2NfaWQgPSAiaS5NWDZVTCIsIC5kYXRhID0gJmNhYW1faW14NnVs
-X2RhdGEgfSwNCj4gICAJeyAuc29jX2lkID0gImkuTVg2KiIsICAuZGF0YSA9ICZjYWFtX2lteDZf
-ZGF0YSB9LA0KPiAgIAl7IC5zb2NfaWQgPSAiaS5NWDcqIiwgIC5kYXRhID0gJmNhYW1faW14N19k
-YXRhIH0sDQo+IC0JeyAuc29jX2lkID0gImkuTVg4TVEiLCAuZGF0YSA9ICZjYWFtX2lteDdfZGF0
-YSB9LA0KPiArCXsgLnNvY19pZCA9ICJpLk1YOE0qIiwgLmRhdGEgPSAmY2FhbV9pbXg3X2RhdGEg
-fSwNCj4gICAJeyAuZmFtaWx5ID0gIkZyZWVzY2FsZSBpLk1YIiB9LA0KPiAgIAl7IC8qIHNlbnRp
-bmVsICovIH0NCj4gICB9Ow0KPiA=
+coccicheck reports that qlogic/qed/qed_roce.c can be patched with the
+semantic patch alloc_cast.cocci. The casts on the function
+dma_alloc_coherent can be removed. Apply the semantic patch and perform
+formatting changes as required.
+
+Signed-off-by: Jaskaran Singh <jaskaransingh7654321@gmail.com>
+---
+ drivers/net/ethernet/qlogic/qed/qed_roce.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_roce.c b/drivers/net/ethernet/qlogic/qed/qed_roce.c
+index e49fada85410..5fbdab8b6fcd 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_roce.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_roce.c
+@@ -736,9 +736,9 @@ static int qed_roce_sp_destroy_qp_responder(struct qed_hwfn *p_hwfn,
+ 
+ 	p_ramrod = &p_ent->ramrod.roce_destroy_qp_resp;
+ 
+-	p_ramrod_res = (struct roce_destroy_qp_resp_output_params *)
+-	    dma_alloc_coherent(&p_hwfn->cdev->pdev->dev, sizeof(*p_ramrod_res),
+-			       &ramrod_res_phys, GFP_KERNEL);
++	p_ramrod_res = dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
++					  sizeof(*p_ramrod_res),
++					  &ramrod_res_phys, GFP_KERNEL);
+ 
+ 	if (!p_ramrod_res) {
+ 		rc = -ENOMEM;
+@@ -790,8 +790,7 @@ static int qed_roce_sp_destroy_qp_requester(struct qed_hwfn *p_hwfn,
+ 	if (!qp->req_offloaded)
+ 		return 0;
+ 
+-	p_ramrod_res = (struct roce_destroy_qp_req_output_params *)
+-		       dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
++	p_ramrod_res = dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
+ 					  sizeof(*p_ramrod_res),
+ 					  &ramrod_res_phys, GFP_KERNEL);
+ 	if (!p_ramrod_res) {
+@@ -872,10 +871,10 @@ int qed_roce_query_qp(struct qed_hwfn *p_hwfn,
+ 	}
+ 
+ 	/* Send a query responder ramrod to FW to get RQ-PSN and state */
+-	p_resp_ramrod_res = (struct roce_query_qp_resp_output_params *)
+-	    dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
+-			       sizeof(*p_resp_ramrod_res),
+-			       &resp_ramrod_res_phys, GFP_KERNEL);
++	p_resp_ramrod_res =
++		dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
++				   sizeof(*p_resp_ramrod_res),
++				   &resp_ramrod_res_phys, GFP_KERNEL);
+ 	if (!p_resp_ramrod_res) {
+ 		DP_NOTICE(p_hwfn,
+ 			  "qed query qp failed: cannot allocate memory (ramrod)\n");
+@@ -920,8 +919,7 @@ int qed_roce_query_qp(struct qed_hwfn *p_hwfn,
+ 	}
+ 
+ 	/* Send a query requester ramrod to FW to get SQ-PSN and state */
+-	p_req_ramrod_res = (struct roce_query_qp_req_output_params *)
+-			   dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
++	p_req_ramrod_res = dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
+ 					      sizeof(*p_req_ramrod_res),
+ 					      &req_ramrod_res_phys,
+ 					      GFP_KERNEL);
+-- 
+2.21.0
+
