@@ -7,52 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88201C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9677C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEE9205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0C920833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483549;
-	bh=vAnPksW0U2gh/kfgefM3vVRIFgL1xdGj0P8wJE6kLOE=;
+	s=default; t=1575483555;
+	bh=olpRWpc1GqqmjX4xtToiGs6SgZGZO9jL77wfwEn4XNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jefIaDFx3S00p9pkIQd+iduj2M4oJhGLuhBBoY4IzysU7OjM9FQI8Y9aZ0dSl8U+4
-	 svswA1zBCUsi10DeuQNNTAaiwYgCCDV7f1hxmx/XwJpTZDFtfVHpq2THiN4woS6+8A
-	 O7ivH/kZs5sD8us3tAJnmCKon1hcXvthNkn4HmyY=
+	b=dp8W0t2pOi3oFvAH9OB3IaBsZpytZfevCyB5CANom7XJLog78I8ZZZYdv4e1LYzaU
+	 fKXflBNYyapvZWg31aMs+7LKNgIVOOHFf4jCn+9tbSXsEGt3ZcFeVDBjdCkOOVxX2C
+	 Xi2zNUQ/PbiL8U8MnjFfktD7MduenjSQFTblR1fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731194AbfLDSKF (ORCPT
+        id S1731443AbfLDSTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:10:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36498 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:19:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731154AbfLDSJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:09:57 -0500
+        id S1731180AbfLDSKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:10:02 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EAE820674;
-        Wed,  4 Dec 2019 18:09:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5953720675;
+        Wed,  4 Dec 2019 18:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482997;
-        bh=vAnPksW0U2gh/kfgefM3vVRIFgL1xdGj0P8wJE6kLOE=;
+        s=default; t=1575483001;
+        bh=olpRWpc1GqqmjX4xtToiGs6SgZGZO9jL77wfwEn4XNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GvomKAyUeaun0WjaMumI5jeqDVhAsjtczato01pOjDJ77ZsgqiJpNfxBnDHqwl9bG
-         HDPbcO9stTtK1FThEtbLgrp39kCvH4BwkBguwk/BMfJGeZICqNWXM9qEpbY8tYWDFs
-         JL1MlUikQ4M/1t+GqiDm5W/tX0fai7Tz/+VF73fw=
+        b=UiXfuUTSaRPC+h2zYk1kDkAK2L8QdxcuH5pxKBO5r2QA+u7KqF/kww3aGZu+g6G3w
+         1sBYI5Be3jOfYQfYTqBMeZBT+QOtYDQMTEjKZAcafy+2KxmbtZBcw+5+zADUUNZxoq
+         ArW9SNxMe4Cf/n+OpVusGn4iSHG9g8YaJ3821268=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 010/125] scripts/gdb: fix debugging modules compiled with hot/cold partitioning
-Date:   Wed,  4 Dec 2019 18:55:15 +0100
-Message-Id: <20191204175313.652097284@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 012/125] block: drbd: remove a stray unlock in __drbd_send_protocol()
+Date:   Wed,  4 Dec 2019 18:55:17 +0100
+Message-Id: <20191204175314.961180636@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -65,56 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 8731acc5068eb3f422a45c760d32198175c756f8 ]
+[ Upstream commit 8e9c523016cf9983b295e4bc659183d1fa6ef8e0 ]
 
-gcc's -freorder-blocks-and-partition option makes it group frequently
-and infrequently used code in .text.hot and .text.unlikely sections
-respectively.  At least when building modules on s390, this option is
-used by default.
+There are two callers of this function and they both unlock the mutex so
+this ends up being a double unlock.
 
-gdb assumes that all code is located in .text section, and that .text
-section is located at module load address.  With such modules this is no
-longer the case: there is code in .text.hot and .text.unlikely, and
-either of them might precede .text.
-
-Fix by explicitly telling gdb the addresses of code sections.
-
-It might be tempting to do this for all sections, not only the ones in
-the white list.  Unfortunately, gdb appears to have an issue, when
-telling it about e.g. loadable .note.gnu.build-id section causes it to
-think that non-loadable .note.Linux section is loaded at address 0,
-which in turn causes NULL pointers to be resolved to bogus symbols.  So
-keep using the white list approach for the time being.
-
-Link: http://lkml.kernel.org/r/20191028152734.13065-1-iii@linux.ibm.com
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Kieran Bingham <kbingham@kernel.org>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 44ed167da748 ("drbd: rcu_read_lock() and rcu_dereference() for tconn->net_conf")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/gdb/linux/symbols.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/drbd/drbd_main.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
-index 004b0ac7fa72d..4644f1a83b578 100644
---- a/scripts/gdb/linux/symbols.py
-+++ b/scripts/gdb/linux/symbols.py
-@@ -99,7 +99,8 @@ lx-symbols command."""
-             attrs[n]['name'].string(): attrs[n]['address']
-             for n in range(int(sect_attrs['nsections']))}
-         args = []
--        for section_name in [".data", ".data..read_mostly", ".rodata", ".bss"]:
-+        for section_name in [".data", ".data..read_mostly", ".rodata", ".bss",
-+                             ".text", ".text.hot", ".text.unlikely"]:
-             address = section_name_to_address.get(section_name)
-             if address:
-                 args.append(" -s {name} {addr}".format(
+diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
+index 83482721bc012..f5c24459fc5c1 100644
+--- a/drivers/block/drbd/drbd_main.c
++++ b/drivers/block/drbd/drbd_main.c
+@@ -793,7 +793,6 @@ int __drbd_send_protocol(struct drbd_connection *connection, enum drbd_packet cm
+ 
+ 	if (nc->tentative && connection->agreed_pro_version < 92) {
+ 		rcu_read_unlock();
+-		mutex_unlock(&sock->mutex);
+ 		drbd_err(connection, "--dry-run is not supported by peer");
+ 		return -EOPNOTSUPP;
+ 	}
 -- 
 2.20.1
 
