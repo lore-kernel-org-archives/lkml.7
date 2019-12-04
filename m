@@ -2,110 +2,105 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E11C4C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6EFC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0ABD2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:53:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="FPxnmvX/"
+	by mail.kernel.org (Postfix) with ESMTP id C24B32073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:55:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfLDNxB (ORCPT
+        id S1727935AbfLDNz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:53:01 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:45892 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727849AbfLDNxB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:53:01 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id E665927E06C1;
-        Wed,  4 Dec 2019 14:52:59 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id AXnIOwQeJpuJ; Wed,  4 Dec 2019 14:52:59 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 6571027E1514;
-        Wed,  4 Dec 2019 14:52:59 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 6571027E1514
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1575467579;
-        bh=l+sKtua1XQcGeyC5IHvScFDmfWCdcMfwZhdZEKd20y8=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=FPxnmvX/7mQY7hzhONZ5AQctLwUL5cCyFuyZSoaKqfQpT2V4V2BHx36FhxL2fkoUy
-         /1v63znvh7sOuaRt+5DHR1JXFL+4NvoFr46S2tEwOY6xpvvYQiGvZ8Vw0O5r+Qts4x
-         lwc3LiT0SPxR7vvWNOypzGzw4usO1atEA+WMaWp8=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 2LF3YxJNRt_T; Wed,  4 Dec 2019 14:52:59 +0100 (CET)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 4BD8127E06C1;
-        Wed,  4 Dec 2019 14:52:59 +0100 (CET)
-Date:   Wed, 4 Dec 2019 14:52:59 +0100 (CET)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        "open list, GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Message-ID: <696316719.95315119.1575467579136.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <CAHp75VcqqqAv1iiwjNqGVcadmdzbjHt8f_ap7DKd3LWC=wwkhw@mail.gmail.com>
-References: <20191204101042.4275-6-cleger@kalray.eu> <CAHp75VcqqqAv1iiwjNqGVcadmdzbjHt8f_ap7DKd3LWC=wwkhw@mail.gmail.com>
-Subject: Re: [PATCH 5/5] dt-bindings: pinctrl: dw: move sps,dwapb-gpio.txt
- to pinctrl
+        Wed, 4 Dec 2019 08:55:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:56142 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727828AbfLDNz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 08:55:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5E0A1FB;
+        Wed,  4 Dec 2019 05:55:57 -0800 (PST)
+Received: from [192.168.1.18] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EB5A3F68E;
+        Wed,  4 Dec 2019 05:55:53 -0800 (PST)
+Subject: Re: [PATCH v7 16/25] arm: Add support for generic vDSO (causing
+ crash)
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Andre Przywara <andre.przywara@arm.com>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <20190621095252.32307-17-vincenzo.frascino@arm.com>
+ <20191204135159.GA7210@roeck-us.net>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <6cdf4734-4065-09c1-8623-1bf523b38c1b@arm.com>
+Date:   Wed, 4 Dec 2019 13:58:25 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191204135159.GA7210@roeck-us.net>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - GC75 (Linux)/8.8.12_GA_3794)
-Thread-Topic: dt-bindings: pinctrl: dw: move sps,dwapb-gpio.txt to pinctrl
-Thread-Index: G/WlHVySL02P41vqPDBPH0jBOUDTkw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Guenter,
 
------ On 4 Dec, 2019, at 13:45, Andy Shevchenko andy.shevchenko@gmail.com wrote:
-
-> On Wed, Dec 4, 2019 at 12:13 PM Clement Leger <cleger@kalray.eu> wrote:
+On 12/4/19 1:51 PM, Guenter Roeck wrote:
+> On Fri, Jun 21, 2019 at 10:52:43AM +0100, Vincenzo Frascino wrote:
+>> The arm vDSO library requires some adaptations to use to take advantage
+>> of the newly introduced generic vDSO library.
 >>
->> Since the driver has been moved to pinctrl and now supports it, move the
->> documentation into pinctrl folder. In the same time, add documentation
->> for pinctrl properties such has snps,has-pinctrl and description of pin
->> alternate functions.
+>> Introduce the following changes:
+>>  - Modification vdso.c to be compliant with the common vdso datapage
+>>  - Use of lib/vdso for gettimeofday
+>>  - Implementation of elf note
+>>
+>> Cc: Russell King <linux@armlinux.org.uk>
+>> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 > 
->> +- snps,has-pinctrl : If present, register the pinctrl controller.
+> This patch causes a crash with qemu's mcimx6ul-evk emulation while running
+> imx_v6_v7_defconfig.
 > 
-> I'm wondering why we can't always assume pin control?
 
-This hardware IP is configured when instantiated to include support for
-muxing. If configured without support, the registers will exists but won't
-configure anything.
-I guess that it's not really a problem but it will lead to unusable
-pin muxing.
+Thank you for reporting this. Could you please provide some details on how I can
+reproduce the scenario you are describing?
 
+> [   19.976852] Run /sbin/init as init process
+> [   20.044931] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000004
 > 
->> -F:     Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
->> +F:     Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
+> There is nothing else useful in the log, unfortunately.
 > 
-> I guess this should be a part of patch 2 when you move driver w/o
-> changes to a new folder.
-
-Agreed. I will do that,
-
-Thanks
-
+> Reverting the following three patches fixes the problem.
 > 
-> --
-> With Best Regards,
-> Andy Shevchenko
+> 74d06efb9c2f ARM: 8932/1: Add clock_gettime64 entry point
+> 052e76a31b4a ARM: 8931/1: Add clock_getres entry point
+> 20e2fc42312f ARM: 8930/1: Add support for generic vDSO
+> 
+> Guenter
+> 
+
+-- 
+Regards,
+Vincenzo
