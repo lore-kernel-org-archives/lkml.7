@@ -2,155 +2,132 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2096DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DED8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99B5206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A4C206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:11:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="n7O0ZN76"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EYkrsiJ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfLDHLh (ORCPT
+        id S1727263AbfLDHLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:11:37 -0500
-Received: from mail-eopbgr680074.outbound.protection.outlook.com ([40.107.68.74]:51470
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725958AbfLDHLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:11:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EGteV2PxuQyQy7FgoDDbtmlwGcJb2HUTOiWWXirXRnkpyQrQEkRIWd8CnN0x+vR13wDZvDTbKuh7tAThyoxDDtFvWyTlzoWHqP4mO+oNSy3Sdo6I7WloxgC7ygG3JTvusI5UFJUM7ErVsqYTg8lIhDVWOTpxKFMV/9UO7iePKRVCRuaNuhX+UCeZnrj59PZ285gTsDBxI8QR4cV0T+ddnfqF9i5Agl0Kgye+46Vwf3iBcshpAWRsEP2BEqKjCdisf0cAwDyDAhzrQT/qBXXR9f5t7RENgPLEkMfNdjYTfknDJKe/Z7ppNx9syjE+1VJVGRUQ3mNj8MSTW6Jxsb0ueQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ISyUCZL8RpTJ1zgQiaPCB/kDas2VKZifHvvznAdk6AE=;
- b=oHyXjr15C/FWyUIjQ6cIYB12333PRlcreg8HS2/RPQTjxb4xvc1CZ+/wiqP/u846fYYpRcF3Ewev15+7Hi62lUqzoRk+VXH7SwHy1jtScxlaDLEItH7sibv04/i1N1T4hVkdwnBA4V4y0tGl0WTKsXl9Mv2Kfx8OyoeaEPZxHSHBfjIJIwBg7Natvz00CkLgwUHYrTN+z07YIhDWCQdSrnBAbeJHJ1ZVfnE9xm/4e+mnurBXnsXg13/2PmkqWfn9j3V+m2fL5ief7GEELqjr3X9OUqE2HZqNX4CyFK9WCYnNMiHFAh/lHkCxG4wT+0drr8dzgQjNiyc2ZSa6SPZQtw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ISyUCZL8RpTJ1zgQiaPCB/kDas2VKZifHvvznAdk6AE=;
- b=n7O0ZN76lm1vastHlIXelrP1eu8db2NQSTs5ENf0HY5gbpFnir7ha4K1roW/YogEwJommMW5unNkaHgGLkD72AnzoVMWxfHjAGMHuESUzB83qR9PQ6E3Jaleb7MIDaL+188j8lgb9P2emRqFGHky5l2fLbjrHKdswEoUzfu3KDc=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Rijo-john.Thomas@amd.com; 
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
- CY4PR12MB1400.namprd12.prod.outlook.com (10.168.165.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.12; Wed, 4 Dec 2019 07:11:34 +0000
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::cd8b:1d7e:31c2:e8b4]) by CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::cd8b:1d7e:31c2:e8b4%7]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
- 07:11:34 +0000
-From:   Rijo Thomas <Rijo-john.Thomas@amd.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
-Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
-        Nimesh Easow <Nimesh.Easow@amd.com>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
+        Wed, 4 Dec 2019 02:11:46 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39104 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725958AbfLDHLp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 02:11:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575443504;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=a3GIPUfE5I/ZyJJRgqWyUDcz6F8Tn8l5oMVwt7sXiPo=;
+        b=EYkrsiJ2gPNCRrqnmh6zt8P7DtfyQajaUpPbEDyofmvBp7PN85hlt7c95yOss8krXt3oLO
+        h/wNwaLxstrN1FM+DPU72fYgouUrKm1F8jzlw/vrIJwdM3zqmtn46fTpYYeEEjDX6XMyuv
+        fqighRxYd+NFiSDGBec1EPCewSPy15U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-338-7Dzj02e6PQOVam7-eHRalg-1; Wed, 04 Dec 2019 02:11:41 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F13C418A8CA1;
+        Wed,  4 Dec 2019 07:11:39 +0000 (UTC)
+Received: from lacos-laptop-7.usersys.redhat.com (ovpn-116-154.ams2.redhat.com [10.36.116.154])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2870860C85;
+        Wed,  4 Dec 2019 07:11:37 +0000 (UTC)
+Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
+ during boot
+To:     Matthew Garrett <mjg59@google.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [RFC PATCH v3 0/6] Add TEE interface support to AMD Secure Processor driver
-Date:   Wed,  4 Dec 2019 11:48:57 +0530
-Message-Id: <cover.1575438845.git.Rijo-john.Thomas@amd.com>
-X-Mailer: git-send-email 1.9.1
-Content-Type: text/plain
-X-ClientProxiedBy: MAXPR0101CA0065.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:e::27) To CY4PR12MB1925.namprd12.prod.outlook.com
- (2603:10b6:903:120::7)
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191203004043.174977-1-matthewgarrett@google.com>
+ <CACdnJus7nHdr4p4H1j5as9eB=FG-uX+wy_tjvTQ5ObErDJHdow@mail.gmail.com>
+ <CAKv+Gu8emrf7WbTyGc8QDykX_hZbrVtxJKkRVbGFhd8rd13yww@mail.gmail.com>
+ <CACdnJusMeC+G3wq_oDGTYi1CBMWDiuq4NdANTBmhNBTDu5zCug@mail.gmail.com>
+From:   Laszlo Ersek <lersek@redhat.com>
+Message-ID: <41cecdd8-f411-00c4-be82-be5d4d13fcb1@redhat.com>
+Date:   Wed, 4 Dec 2019 08:11:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-Mailer: git-send-email 1.9.1
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 375bf922-5d02-4a9d-0aaf-08d778893197
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1400:|CY4PR12MB1400:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB1400B9EB9474EEF51789D5DACF5D0@CY4PR12MB1400.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2150;
-X-Forefront-PRVS: 0241D5F98C
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(199004)(189003)(2616005)(66556008)(2906002)(66476007)(50466002)(48376002)(478600001)(14454004)(50226002)(36756003)(81156014)(26005)(54906003)(110136005)(81166006)(3846002)(66946007)(8936002)(8676002)(5660300002)(6486002)(6116002)(386003)(186003)(6436002)(4326008)(99286004)(25786009)(6506007)(14444005)(16586007)(316002)(86362001)(52116002)(7736002)(51416003)(6666004)(6512007)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1400;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: i6rziHalWpc7pIdR59QBqdqD1jTYn9VP8TFy+P+lTNMAwFRS/eRnudoywsF2Vg0ZnkezmiUHsf2V/GnVlyyljoSICC2UmrYohFsn8qPYRaRQ3cvfQwC+e0xwO5xfY0Qb08NJAKnzYcME80wGvV6iYW3muyZaG7Gc/2jM2GcEAddmG+XoTy3TSQIwVurfoGeWUKxKCEKaQJdZkIkmowYqts9EwbJ2o3DWgZu8boHYax5BobK/OAiETl10W5rR6c7HKy/YFIVWO382nTywT4QV1RA1LlQyp90bPUDnzyh6L19SlPI66A2JbwXmTASUrzpmWzwo71I7OPVbZ7TWxXUcArM0/3WlLsAkO2jix6PWz4DsBGmvT3XbgWcg4ZK8oSL2UWlrvHnVLfttsEKVVrfVb9h1iuN05r+lSvDnBSDNXEadu42J39Q0kMQ6FOKi62Bm
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 375bf922-5d02-4a9d-0aaf-08d778893197
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 07:11:33.9387
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +DUgwjVakkZqwmoLS/iIga9bcrWv8XbsopIsHdXhGMRXVLrMSxLe5udRWkWSGF2Afxv/gcHwutBMjkmH4lVfUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1400
+In-Reply-To: <CACdnJusMeC+G3wq_oDGTYi1CBMWDiuq4NdANTBmhNBTDu5zCug@mail.gmail.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: 7Dzj02e6PQOVam7-eHRalg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The goal of this patch series is to introduce TEE (Trusted Execution
-Environment) interface support to AMD Secure Processor driver. The
-TEE is a secure area of a processor which ensures that sensitive data
-is stored, processed and protected in an isolated and trusted
-environment. The Platform Security Processor (PSP) is a dedicated
-processor which provides TEE to enable HW platform security. It offers
-protection against software attacks generated in Rich Operating System
-(Rich OS) such as Linux running on x86.
+On 12/03/19 20:40, Matthew Garrett wrote:
+> On Tue, Dec 3, 2019 at 3:54 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> 
+>> There is no reason this shouldn't apply to ARM, but disabling bus
+>> mastering like that before the drivers themselves get a chance to do
+>> so is likely to cause trouble. Network devices or storage controllers
+>> that are still running and have live descriptor rings in DMA memory
+>> shouldn't get the rug pulled from under their feet like that by
+>> blindly disabling the BM attribute on all root ports before their
+>> drivers have had the opportunity to do this cleanly.
+> 
+> Yes, whether this causes problems is going to be influenced by the
+> behaviour of the hardware on the system. That's why I'm not defaulting
+> it to being enabled :)
+> 
+>> One trick we implemented in EDK2 for memory encryption was to do the
+>> following (Laszlo, mind correcting me here if I am remembering this
+>> wrong?)
+>> - create an event X
+>> - register an AtExitBootServices event that signals event X in its handler
+>> - in the handler of event X, iterate over all PPBs to clear the bus
+>> master attribute
+>> - for bonus points, do the same for the PCIe devices themselves,
+>> because root ports are known to exist that entirely ignore the BM
+>> attribute
+>>
+>> This way, event X should get handled after all the drivers' EBS event
+>> handlers have been called.
+> 
+> Can we guarantee that this happens before IOMMU state teardown?
 
-Based on the platform feature support, the PSP is capable of supporting
-either SEV (Secure Encrypted Virtualization) and/or TEE. The first three
-patches in this series is about moving SEV specific functions and data
-structures from PSP device driver file to a dedicated SEV interface
-driver file. The last two patches add TEE interface support to AMD
-Secure Processor driver. This TEE interface will be used by AMD-TEE
-driver to submit command buffers for processing in PSP Trusted Execution
-Environment.
+In OVMF, the handler of "event X" is in the IOMMU driver itself, so it's
+the IOMMU driver that takes care of blacklisting everything *after*
+other drivers had a chance to clean up.
 
-v3:
-* Rebased the patches onto cryptodev-2.6 tree with base commit
-  4ee812f6143d (crypto: vmx - Avoid weird build failures)
+But in this case, we'd have to insert the PPB clearing *before* the
+(platform's) IOMMU driver's EBS handler (because the latter is going to
+deny, not permit, everything); and we can't modify the IOMMU driver.
 
-v2:
-* Rebased the patches on cryptodev-2.6 tree with base commit
-  d158367682cd (crypto: atmel - Fix selection of CRYPTO_AUTHENC)
-* Regenerated patch with correct diff-stat to show file rename
-* Used Co-developed-by: tag to give proper credit to co-author
+I guess we could install an EBS handler with TPL_NOTIFY (PciIo usage
+appears permitted at TPL_NOTIFY, from "Table 27. TPL Restrictions"). But:
+- if the IOMMU driver's EBS handler is also to be enqueued at
+TPL_NOTIFY, then the order will be unspecified
+- if a PCI driver sets up an EBS handler at TPL_CALLBACK, then in our
+handler we could shut down a PPB in front of a device bound by that
+driver too early.
 
-Rijo Thomas (6):
-  crypto: ccp - rename psp-dev files to sev-dev
-  crypto: ccp - create a generic psp-dev file
-  crypto: ccp - move SEV vdata to a dedicated data structure
-  crypto: ccp - check whether PSP supports SEV or TEE before
-    initialization
-  crypto: ccp - add TEE support for Raven Ridge
-  crypto: ccp - provide in-kernel API to submit TEE commands
+Handling dependencies between event notification functions is a
+never-ending struggle in UEFI, AFAICT.
 
- drivers/crypto/ccp/Makefile  |    4 +-
- drivers/crypto/ccp/psp-dev.c | 1033 ++++------------------------------------
- drivers/crypto/ccp/psp-dev.h |   51 +-
- drivers/crypto/ccp/sev-dev.c | 1068 ++++++++++++++++++++++++++++++++++++++++++
- drivers/crypto/ccp/sev-dev.h |   63 +++
- drivers/crypto/ccp/sp-dev.h  |   17 +-
- drivers/crypto/ccp/sp-pci.c  |   43 +-
- drivers/crypto/ccp/tee-dev.c |  364 ++++++++++++++
- drivers/crypto/ccp/tee-dev.h |  110 +++++
- include/linux/psp-tee.h      |   73 +++
- 10 files changed, 1842 insertions(+), 984 deletions(-)
- create mode 100644 drivers/crypto/ccp/sev-dev.c
- create mode 100644 drivers/crypto/ccp/sev-dev.h
- create mode 100644 drivers/crypto/ccp/tee-dev.c
- create mode 100644 drivers/crypto/ccp/tee-dev.h
- create mode 100644 include/linux/psp-tee.h
+> I don't think there's a benefit to clearing the bit on endpoint devices,
+> if they're malicious they're just going to turn it back on anyway.
+> 
 
---
-1.9.1
+Thanks
+Laszlo
 
