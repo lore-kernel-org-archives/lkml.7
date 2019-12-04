@@ -2,165 +2,143 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D21C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDC6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBA82068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BBB22068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:35:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575448520;
+	bh=+pqnkE/apkOsnurZ7uTJ6pjC4WpRH/az4J/xsaoNCzY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mHUKSEBShr0CEcomF9tzo17JUkh7WiT/SERHCLHw8oHa9kv2iqgcE/0AoVi6AufTd
+	 T9QY7jTTrOaMLRtN2PoyvjLhz5IxSCLk5rpt8kffcEDXdfrPelBatwLcP9nx/3o6ol
+	 lfZlpeqSkqt6Zd6hBJzxomc2JR8U72dRiF/qGZCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbfLDIex (ORCPT
+        id S1727732AbfLDIfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:34:53 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56350 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbfLDIds (ORCPT
+        Wed, 4 Dec 2019 03:35:19 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43511 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfLDIfS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:33:48 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1icQ6K-0005G1-3Y; Wed, 04 Dec 2019 09:33:36 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B47C11C2657;
-        Wed,  4 Dec 2019 09:33:35 +0100 (CET)
-Date:   Wed, 04 Dec 2019 08:33:35 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/kprobes] arm/ftrace: Use __patch_text()
-Cc:     Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Wed, 4 Dec 2019 03:35:18 -0500
+Received: by mail-wr1-f65.google.com with SMTP id d16so2804122wre.10;
+        Wed, 04 Dec 2019 00:35:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qV8BnIZcKdGe8g/B3hjF/qhzHGhiwqhh1CS3JHi7+oY=;
+        b=dJ+iOk0nrjo08ouSvTi9Phu9bYVfP8B8lGOK/FxWccFa2S09GSt6sHQiSJDY6in7o5
+         NToXPggo/i+sF+YzJiwmccXWyU+Nwx9BjbqbIt0WMJtYpj9FMaSf2LWoiCJ7bBKk+s+1
+         l3uNBaMfXJ4dRGOuTYXJv/10g0JbwUAtA+DJFdWRDi3J/OAW7STpDI3BYwRDopvI3TFD
+         utOyn4i/biUJEO6L3RcgQFatG/yOPY9NZ8Tf/m4jo4V5OJCPPyEiq0QqAi1YFjn2xjf9
+         t53xVNVBrBnXNoGaay+S2E9Zw47aeJKCia6EA1t4MVsOZipgiEeDhpUosN8Y25K2232K
+         y4zg==
+X-Gm-Message-State: APjAAAUIrOt11L1Fbxzp80aAYKzvADJKdr4um+qZ3F2u1bphyq4cgagH
+        gvUcxW5vYkJrnhSnxDv7ZHE=
+X-Google-Smtp-Source: APXvYqzFdwhcGWtledJWcOOqneG+EdFvBn9gWujUMfZNGoZusAuGEFf87XEmN8KRoxRmuwTOLCbijA==
+X-Received: by 2002:adf:dd52:: with SMTP id u18mr2622697wrm.131.1575448515963;
+        Wed, 04 Dec 2019 00:35:15 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id w13sm7529074wru.38.2019.12.04.00.35.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 00:35:15 -0800 (PST)
+Date:   Wed, 4 Dec 2019 09:35:14 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        ard.biesheuvel@linaro.org, james.morse@arm.com, rabin@rab.in,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191113092636.GG4131@hirez.programming.kicks-ass.net>
-References: <20191113092636.GG4131@hirez.programming.kicks-ass.net>
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: Re: [PATCH] mm: fix hanging shrinker management on long
+ do_shrink_slab
+Message-ID: <20191204083514.GC25242@dhcp22.suse.cz>
+References: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
 MIME-Version: 1.0
-Message-ID: <157544841563.21853.2859696202562513480.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/kprobes branch of tip:
+On Sat 30-11-19 00:45:41, Pavel Tikhomirov wrote:
+> We have a problem that shrinker_rwsem can be held for a long time for
+> read in shrink_slab, at the same time any process which is trying to
+> manage shrinkers hangs.
+> 
+> The shrinker_rwsem is taken in shrink_slab while traversing shrinker_list.
+> It tries to shrink something on nfs (hard) but nfs server is dead at
+> these moment already and rpc will never succeed. Generally any shrinker
+> can take significant time to do_shrink_slab, so it's a bad idea to hold
+> the list lock here.
 
-Commit-ID:     5a735583b764750726621b0396d03e4782911b77
-Gitweb:        https://git.kernel.org/tip/5a735583b764750726621b0396d03e4782911b77
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Tue, 15 Oct 2019 21:07:35 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 27 Nov 2019 07:44:25 +01:00
+Yes, this is a known problem and people have already tried to address it
+in the past. Have you checked previous attempts? SRCU based one
+http://lkml.kernel.org/r/153365347929.19074.12509495712735843805.stgit@localhost.localdomain
+but I believe there were others (I only had this one in my notes).
+Please make sure to Cc Dave Chinner when posting a next version because
+he had some concerns about the change of the behavior.
 
-arm/ftrace: Use __patch_text()
+> We have a similar problem in shrink_slab_memcg, except that we are
+> traversing shrinker_map+shrinker_idr there.
+> 
+> The idea of the patch is to inc a refcount to the chosen shrinker so it
+> won't disappear and release shrinker_rwsem while we are in
+> do_shrink_slab, after that we will reacquire shrinker_rwsem, dec
+> the refcount and continue the traversal.
 
-Instead of flipping text protection, use the patch_text infrastructure
-that uses a fixmap alias where required.
+The reference count part makes sense to me. RCU role needs a better
+explanation. Also do you have any reason to not use completion for
+the final step? Openconding essentially the same concept sounds a bit
+awkward to me.
 
-This removes the last user of set_all_modules_text_*().
+> We also need a wait_queue so that unregister_shrinker can wait for the
+> refcnt to become zero. Only after these we can safely remove the
+> shrinker from list and idr, and free the shrinker.
+[...]
+>   crash> bt ...
+>   PID: 18739  TASK: ...  CPU: 3   COMMAND: "bash"
+>    #0 [...] __schedule at ...
+>    #1 [...] schedule at ...
+>    #2 [...] rpc_wait_bit_killable at ... [sunrpc]
+>    #3 [...] __wait_on_bit at ...
+>    #4 [...] out_of_line_wait_on_bit at ...
+>    #5 [...] _nfs4_proc_delegreturn at ... [nfsv4]
+>    #6 [...] nfs4_proc_delegreturn at ... [nfsv4]
+>    #7 [...] nfs_do_return_delegation at ... [nfsv4]
+>    #8 [...] nfs4_evict_inode at ... [nfsv4]
+>    #9 [...] evict at ...
+>   #10 [...] dispose_list at ...
+>   #11 [...] prune_icache_sb at ...
+>   #12 [...] super_cache_scan at ...
+>   #13 [...] do_shrink_slab at ...
 
-Tested-by: Will Deacon <will@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: ard.biesheuvel@linaro.org
-Cc: james.morse@arm.com
-Cc: rabin@rab.in
-Link: https://lkml.kernel.org/r/20191113092636.GG4131@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/arm/kernel/Makefile |  4 ++--
- arch/arm/kernel/ftrace.c | 10 ++--------
- 2 files changed, 4 insertions(+), 10 deletions(-)
+Are NFS people aware of this? Because this is simply not acceptable
+behavior. Memory reclaim cannot be block indefinitely or for a long
+time. There must be a way to simply give up if the underlying inode
+cannot be reclaimed.
 
-diff --git a/arch/arm/kernel/Makefile b/arch/arm/kernel/Makefile
-index 8cad594..a885172 100644
---- a/arch/arm/kernel/Makefile
-+++ b/arch/arm/kernel/Makefile
-@@ -49,8 +49,8 @@ obj-$(CONFIG_HAVE_ARM_SCU)	+= smp_scu.o
- obj-$(CONFIG_HAVE_ARM_TWD)	+= smp_twd.o
- obj-$(CONFIG_ARM_ARCH_TIMER)	+= arch_timer.o
- obj-$(CONFIG_FUNCTION_TRACER)	+= entry-ftrace.o
--obj-$(CONFIG_DYNAMIC_FTRACE)	+= ftrace.o insn.o
--obj-$(CONFIG_FUNCTION_GRAPH_TRACER)	+= ftrace.o insn.o
-+obj-$(CONFIG_DYNAMIC_FTRACE)	+= ftrace.o insn.o patch.o
-+obj-$(CONFIG_FUNCTION_GRAPH_TRACER)	+= ftrace.o insn.o patch.o
- obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o insn.o patch.o
- obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o
- # Main staffs in KPROBES are in arch/arm/probes/ .
-diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
-index bda949f..2a5ff69 100644
---- a/arch/arm/kernel/ftrace.c
-+++ b/arch/arm/kernel/ftrace.c
-@@ -22,6 +22,7 @@
- #include <asm/ftrace.h>
- #include <asm/insn.h>
- #include <asm/set_memory.h>
-+#include <asm/patch.h>
- 
- #ifdef CONFIG_THUMB2_KERNEL
- #define	NOP		0xf85deb04	/* pop.w {lr} */
-@@ -35,9 +36,7 @@ static int __ftrace_modify_code(void *data)
- {
- 	int *command = data;
- 
--	set_kernel_text_rw();
- 	ftrace_modify_all_code(*command);
--	set_kernel_text_ro();
- 
- 	return 0;
- }
-@@ -59,13 +58,11 @@ static unsigned long adjust_address(struct dyn_ftrace *rec, unsigned long addr)
- 
- int ftrace_arch_code_modify_prepare(void)
- {
--	set_all_modules_text_rw();
- 	return 0;
- }
- 
- int ftrace_arch_code_modify_post_process(void)
- {
--	set_all_modules_text_ro();
- 	/* Make sure any TLB misses during machine stop are cleared. */
- 	flush_tlb_all();
- 	return 0;
-@@ -97,10 +94,7 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
- 			return -EINVAL;
- 	}
- 
--	if (probe_kernel_write((void *)pc, &new, MCOUNT_INSN_SIZE))
--		return -EPERM;
--
--	flush_icache_range(pc, pc + MCOUNT_INSN_SIZE);
-+	__patch_text((void *)pc, new);
- 
- 	return 0;
- }
+I still have to think about the proposed solution. It sounds a bit over
+complicated to me.
+-- 
+Michal Hocko
+SUSE Labs
