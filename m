@@ -7,40 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692D7C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291EEC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401BE2084F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 029AB2084F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbfLDHyT (ORCPT
+        id S1727480AbfLDHyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:54:19 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56169 "EHLO
+        Wed, 4 Dec 2019 02:54:18 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56144 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727429AbfLDHyL (ORCPT
+        with ESMTP id S1726166AbfLDHyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:54:11 -0500
+        Wed, 4 Dec 2019 02:54:06 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1icPU4-0004Wu-C5; Wed, 04 Dec 2019 08:54:04 +0100
+        id 1icPU1-0004Xq-LX; Wed, 04 Dec 2019 08:54:01 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 340AB1C264F;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5AB9C1C2650;
         Wed,  4 Dec 2019 08:53:55 +0100 (CET)
 Date:   Wed, 04 Dec 2019 07:53:55 -0000
 From:   "tip-bot2 for Andi Kleen" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf evsel: Add functions to close evsel on a CPU
+Subject: [tip: perf/urgent] perf evsel: Add iterator to iterate over events
+ ordered by CPU
 Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191121001522.180827-7-andi@firstfloor.org>
-References: <20191121001522.180827-7-andi@firstfloor.org>
+In-Reply-To: <20191121001522.180827-6-andi@firstfloor.org>
+References: <20191121001522.180827-6-andi@firstfloor.org>
 MIME-Version: 1.0
-Message-ID: <157544603512.21853.17683771347871037830.tip-bot2@tip-bot2>
+Message-ID: <157544603527.21853.4588479986568202605.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,87 +57,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     99d6141d677a8cd0b35390a29527c8def42538b1
-Gitweb:        https://git.kernel.org/tip/99d6141d677a8cd0b35390a29527c8def42538b1
+Commit-ID:     a8cbe40fe9f4ba499cc60b8b6a6851c2c1963797
+Gitweb:        https://git.kernel.org/tip/a8cbe40fe9f4ba499cc60b8b6a6851c2c1963797
 Author:        Andi Kleen <ak@linux.intel.com>
-AuthorDate:    Wed, 20 Nov 2019 16:15:16 -08:00
+AuthorDate:    Wed, 20 Nov 2019 16:15:15 -08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Fri, 29 Nov 2019 12:20:45 -03:00
 
-perf evsel: Add functions to close evsel on a CPU
+perf evsel: Add iterator to iterate over events ordered by CPU
 
-Refactor the existing all CPU function to use the per CPU close
-internally.
-
-Export APIs to close per CPU.
+Add some common code that is needed to iterate over all events
+in CPU order. Used in followon patches
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20191121001522.180827-7-andi@firstfloor.org
+Link: http://lore.kernel.org/lkml/20191121001522.180827-6-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evsel.c              | 27 +++++++++++++++++++++------
- tools/perf/lib/include/perf/evsel.h |  1 +
- 2 files changed, 22 insertions(+), 6 deletions(-)
+ tools/perf/util/cpumap.h |  1 +
+ tools/perf/util/evlist.c | 32 ++++++++++++++++++++++++++++++++
+ tools/perf/util/evlist.h |  8 ++++++++
+ tools/perf/util/evsel.h  |  1 +
+ 4 files changed, 42 insertions(+)
 
-diff --git a/tools/perf/lib/evsel.c b/tools/perf/lib/evsel.c
-index 5a89857..ea775da 100644
---- a/tools/perf/lib/evsel.c
-+++ b/tools/perf/lib/evsel.c
-@@ -114,16 +114,23 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
- 	return err;
+diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+index 57943f3..3a442f0 100644
+--- a/tools/perf/util/cpumap.h
++++ b/tools/perf/util/cpumap.h
+@@ -63,4 +63,5 @@ int cpu_map__build_map(struct perf_cpu_map *cpus, struct perf_cpu_map **res,
+ 
+ int cpu_map__cpu(struct perf_cpu_map *cpus, int idx);
+ bool cpu_map__has(struct perf_cpu_map *cpus, int cpu);
++
+ #endif /* __PERF_CPUMAP_H */
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index fdce590..dae6e84 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -342,6 +342,38 @@ static int perf_evlist__nr_threads(struct evlist *evlist,
+ 		return perf_thread_map__nr(evlist->core.threads);
  }
  
-+static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, int cpu)
++void evlist__cpu_iter_start(struct evlist *evlist)
 +{
-+	int thread;
++	struct evsel *pos;
 +
-+	for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
-+		if (FD(evsel, cpu, thread) >= 0)
-+			close(FD(evsel, cpu, thread));
-+		FD(evsel, cpu, thread) = -1;
++	/*
++	 * Reset the per evsel cpu_iter. This is needed because
++	 * each evsel's cpumap may have a different index space,
++	 * and some operations need the index to modify
++	 * the FD xyarray (e.g. open, close)
++	 */
++	evlist__for_each_entry(evlist, pos)
++		pos->cpu_iter = 0;
++}
++
++bool evsel__cpu_iter_skip_no_inc(struct evsel *ev, int cpu)
++{
++	if (ev->cpu_iter >= ev->core.cpus->nr)
++		return true;
++	if (cpu >= 0 && ev->core.cpus->map[ev->cpu_iter] != cpu)
++		return true;
++	return false;
++}
++
++bool evsel__cpu_iter_skip(struct evsel *ev, int cpu)
++{
++	if (!evsel__cpu_iter_skip_no_inc(ev, cpu)) {
++		ev->cpu_iter++;
++		return false;
 +	}
++	return true;
 +}
 +
- void perf_evsel__close_fd(struct perf_evsel *evsel)
+ void evlist__disable(struct evlist *evlist)
  {
--	int cpu, thread;
-+	int cpu;
+ 	struct evsel *pos;
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 3655b9e..22e2f58 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -334,9 +334,17 @@ void perf_evlist__to_front(struct evlist *evlist,
+ #define evlist__for_each_entry_safe(evlist, tmp, evsel) \
+ 	__evlist__for_each_entry_safe(&(evlist)->core.entries, tmp, evsel)
  
- 	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++)
--		for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
--			if (FD(evsel, cpu, thread) >= 0)
--				close(FD(evsel, cpu, thread));
--			FD(evsel, cpu, thread) = -1;
--		}
-+		perf_evsel__close_fd_cpu(evsel, cpu);
- }
- 
- void perf_evsel__free_fd(struct perf_evsel *evsel)
-@@ -141,6 +148,14 @@ void perf_evsel__close(struct perf_evsel *evsel)
- 	perf_evsel__free_fd(evsel);
- }
- 
-+void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu)
-+{
-+	if (evsel->fd == NULL)
-+		return;
++#define evlist__for_each_cpu(evlist, index, cpu)	\
++	evlist__cpu_iter_start(evlist);			\
++	perf_cpu_map__for_each_cpu (cpu, index, (evlist)->core.all_cpus)
 +
-+	perf_evsel__close_fd_cpu(evsel, cpu);
-+}
+ void perf_evlist__set_tracking_event(struct evlist *evlist,
+ 				     struct evsel *tracking_evsel);
+ 
++void evlist__cpu_iter_start(struct evlist *evlist);
++bool evsel__cpu_iter_skip(struct evsel *ev, int cpu);
++bool evsel__cpu_iter_skip_no_inc(struct evsel *ev, int cpu);
 +
- int perf_evsel__read_size(struct perf_evsel *evsel)
- {
- 	u64 read_format = evsel->attr.read_format;
-diff --git a/tools/perf/lib/include/perf/evsel.h b/tools/perf/lib/include/perf/evsel.h
-index 557f581..e7add55 100644
---- a/tools/perf/lib/include/perf/evsel.h
-+++ b/tools/perf/lib/include/perf/evsel.h
-@@ -26,6 +26,7 @@ LIBPERF_API void perf_evsel__delete(struct perf_evsel *evsel);
- LIBPERF_API int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
- 				 struct perf_thread_map *threads);
- LIBPERF_API void perf_evsel__close(struct perf_evsel *evsel);
-+LIBPERF_API void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu);
- LIBPERF_API int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
- 				 struct perf_counts_values *count);
- LIBPERF_API int perf_evsel__enable(struct perf_evsel *evsel);
+ struct evsel *
+ perf_evlist__find_evsel_by_str(struct evlist *evlist, const char *str);
+ 
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index ddc5ee6..b10d5ba 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -95,6 +95,7 @@ struct evsel {
+ 	bool			collect_stat;
+ 	bool			weak_group;
+ 	bool			percore;
++	int			cpu_iter;
+ 	const char		*pmu_name;
+ 	struct {
+ 		perf_evsel__sb_cb_t	*cb;
