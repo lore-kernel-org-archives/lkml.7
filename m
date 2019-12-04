@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D567C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895E1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0006D205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 602D0205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483567;
-	bh=0tJvrCfW3bpP7zzlMrl5a0A/G33lDyFmyoXU2iUME0o=;
+	s=default; t=1575483571;
+	bh=HLzYD/HbGyf9vZgF+em7Xrr/GbFuua27gc0B8hIZUeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Conl9dXAbTVJkMtA/JEMVzrkutmKXo5/FCqX3yBsbRxNfxT7r/JYyozPptOcPZbLS
-	 B4R77z/fF9bK86UFR34JhLgxica/oezZzoWnbB/JHEyBrdrd6oxo8n5S4lBn1P6J5q
-	 zZ7bfw+eBXHttOjcsRmD3EzdiBWKb/K9W6cpJbBM=
+	b=kwbvj1tM/ahpyi3+zaWyS13n2K9X9Y1FPWacSkezcuqkd0hU/81gO/kuUk/B8V4PO
+	 t93pfqn7acqmZVXgXs36dvtYoKJfZtzQmvU2DHe1P3QIgFwp0vBvhquRE8fR5xcEja
+	 yCNX/W1MJMZzvfBDlfXMokdY8yhTie2EJ4IdRx5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731112AbfLDSJl (ORCPT
+        id S1730817AbfLDSJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:09:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731090AbfLDSJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Dec 2019 13:09:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731069AbfLDSJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:09:31 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF6CA20833;
-        Wed,  4 Dec 2019 18:09:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2D7420833;
+        Wed,  4 Dec 2019 18:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482975;
-        bh=0tJvrCfW3bpP7zzlMrl5a0A/G33lDyFmyoXU2iUME0o=;
+        s=default; t=1575482970;
+        bh=HLzYD/HbGyf9vZgF+em7Xrr/GbFuua27gc0B8hIZUeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i3Rvk/5kvUNmtGigWTYeCqnFBnLCRNrXujpMLgEBZoYU/8x/MQfUfHoVMgSFMSggP
-         aEIUFei/1kmbP3NZHjYjViRvx5xRYt7MVT6UK7xt8NrGfuRTETFWQtKxFIIHO6XzQ0
-         AkBCGxpRja9ArxyW4CjCF3SMNASEOxTejHqg9bek=
+        b=tAODdpRmvUj+C0q4Hgi6OdJbcSey+4Jp2Bzy9QToiyc6qduo3HKGnY4INg9B7Vyk/
+         oKtZOAH7UGImJBxY/le5WoSNW4ts4ieu1r3I6FVG0vxOofhade5K/qSLIRJ6ZWs3Be
+         00EQU4NyddFWeOhe14DmaIcV2KV2wZ4cQdPh0wgo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 4.14 189/209] exit/exec: Seperate mm_release()
-Date:   Wed,  4 Dec 2019 18:56:41 +0100
-Message-Id: <20191204175336.499583786@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.14 208/209] platform/x86: hp-wmi: Fix ACPI errors caused by passing 0 as input size
+Date:   Wed,  4 Dec 2019 18:57:00 +0100
+Message-Id: <20191204175337.805782234@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,98 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 4610ba7ad877fafc0a25a30c6c82015304120426 upstream.
+commit f3e4f3fc8ee9729c4b1b27a478c68b713df53c0c upstream.
 
-mm_release() contains the futex exit handling. mm_release() is called from
-do_exit()->exit_mm() and from exec()->exec_mm().
+The AML code implementing the WMI methods creates a variable length
+field to hold the input data we pass like this:
 
-In the exit_mm() case PF_EXITING and the futex state is updated. In the
-exec_mm() case these states are not touched.
+        CreateDWordField (Arg1, 0x0C, DSZI)
+        Local5 = DSZI /* \HWMC.DSZI */
+        CreateField (Arg1, 0x80, (Local5 * 0x08), DAIN)
 
-As the futex exit code needs further protections against exit races, this
-needs to be split into two functions.
+If we pass 0 as bios_args.datasize argument then (Local5 * 0x08)
+is 0 which results in these errors:
 
-Preparatory only, no functional change.
+[   71.973305] ACPI BIOS Error (bug): Attempt to CreateField of length zero (20190816/dsopcode-133)
+[   71.973332] ACPI Error: Aborting method \HWMC due to previous error (AE_AML_OPERAND_VALUE) (20190816/psparse-529)
+[   71.973413] ACPI Error: Aborting method \_SB.WMID.WMAA due to previous error (AE_AML_OPERAND_VALUE) (20190816/psparse-529)
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20191106224556.240518241@linutronix.de
+And in our HPWMI_WIRELESS2_QUERY calls always failing. for read commands
+like HPWMI_WIRELESS2_QUERY the DSZI value is not used / checked, except for
+read commands where extra input is needed to specify exactly what to read.
+
+So for HPWMI_WIRELESS2_QUERY we can safely pass the size of the expected
+output as insize to hp_wmi_perform_query(), as we are already doing for all
+other HPWMI_READ commands we send. Doing so fixes these errors.
+
+Cc: stable@vger.kernel.org
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197007
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=201981
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1520703
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/exec.c                |    2 +-
- include/linux/sched/mm.h |    6 ++++--
- kernel/exit.c            |    2 +-
- kernel/fork.c            |   12 +++++++++++-
- 4 files changed, 17 insertions(+), 5 deletions(-)
+ drivers/platform/x86/hp-wmi.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1007,7 +1007,7 @@ static int exec_mmap(struct mm_struct *m
- 	/* Notify parent that we're no longer interested in the old VM */
- 	tsk = current;
- 	old_mm = current->mm;
--	mm_release(tsk, old_mm);
-+	exec_mm_release(tsk, old_mm);
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -393,7 +393,7 @@ static int hp_wmi_rfkill2_refresh(void)
+ 	int err, i;
  
- 	if (old_mm) {
- 		sync_mm_rss(old_mm);
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -125,8 +125,10 @@ extern struct mm_struct *get_task_mm(str
-  * succeeds.
-  */
- extern struct mm_struct *mm_access(struct task_struct *task, unsigned int mode);
--/* Remove the current tasks stale references to the old mm_struct */
--extern void mm_release(struct task_struct *, struct mm_struct *);
-+/* Remove the current tasks stale references to the old mm_struct on exit() */
-+extern void exit_mm_release(struct task_struct *, struct mm_struct *);
-+/* Remove the current tasks stale references to the old mm_struct on exec() */
-+extern void exec_mm_release(struct task_struct *, struct mm_struct *);
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+-				   0, sizeof(state));
++				   sizeof(state), sizeof(state));
+ 	if (err)
+ 		return err;
  
- #ifdef CONFIG_MEMCG
- extern void mm_update_next_owner(struct mm_struct *mm);
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -497,7 +497,7 @@ static void exit_mm(void)
- 	struct mm_struct *mm = current->mm;
- 	struct core_state *core_state;
+@@ -790,7 +790,7 @@ static int __init hp_wmi_rfkill2_setup(s
+ 	int err, i;
  
--	mm_release(current, mm);
-+	exit_mm_release(current, mm);
- 	if (!mm)
- 		return;
- 	sync_mm_rss(mm);
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1132,7 +1132,7 @@ static int wait_for_vfork_done(struct ta
-  * restoring the old one. . .
-  * Eric Biederman 10 January 1998
-  */
--void mm_release(struct task_struct *tsk, struct mm_struct *mm)
-+static void mm_release(struct task_struct *tsk, struct mm_struct *mm)
- {
- 	/* Get rid of any futexes when releasing the mm */
- 	futex_mm_release(tsk);
-@@ -1169,6 +1169,16 @@ void mm_release(struct task_struct *tsk,
- 		complete_vfork_done(tsk);
- }
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+-				   0, sizeof(state));
++				   sizeof(state), sizeof(state));
+ 	if (err)
+ 		return err < 0 ? err : -EINVAL;
  
-+void exit_mm_release(struct task_struct *tsk, struct mm_struct *mm)
-+{
-+	mm_release(tsk, mm);
-+}
-+
-+void exec_mm_release(struct task_struct *tsk, struct mm_struct *mm)
-+{
-+	mm_release(tsk, mm);
-+}
-+
- /*
-  * Allocate a new mm structure and copy contents from the
-  * mm structure of the passed in task structure.
 
 
