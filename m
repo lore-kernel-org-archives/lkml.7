@@ -2,182 +2,250 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49988C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CB7C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182FC20833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5981F20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AWTRPIh4"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="rPpnFb1z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbfLDRuh (ORCPT
+        id S1728198AbfLDRvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:50:37 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:34611 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727852AbfLDRuh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:50:37 -0500
-Received: by mail-yb1-f193.google.com with SMTP id k17so318376ybp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 09:50:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=TeAcDw9r1twHj7MlWZVEGGHkOn4NNgX/nZFZTFL2GrY=;
-        b=AWTRPIh4806nX1sp0olNxaEw/rTmOJaREKiTvC1dn2tylnhBSeGXRUkrYHT/rLfXIm
-         WbwEW3tQb78Povu626dqPs/7SgaZ1Fmb+ohDR8JDU4G/sqlcDY6mY1yN9UVuEhUa2E5t
-         j4RFDFze86uCm6XSdS2okkq/WG5iLetbSt0QhXgpYlSOETKHtvZurAxaqX2eZM1v40GS
-         ohC7J6DfKODtzAsxDGUhb5NK/Ul1E1vWXlMP79VQOwnmeY6NOnR+85t1vCph1kUt8bXS
-         yYkaKCR0Qo91Oze2L8BxNZNWmag6FHHtkRJkBl7dTWmPgazCCLAywqullgN/I8g5ubN1
-         Ys6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=TeAcDw9r1twHj7MlWZVEGGHkOn4NNgX/nZFZTFL2GrY=;
-        b=Q2kFY4dsR5qTGIekM5bOjs4vWhHh2CJKfmkLKv2h5FDkhsazz/NlZzwDhHfEsogzbJ
-         YQvrXXePpmC2t2nBKJRiL4oefKT4Cn+UZFlXZsFu4GEKXxbXEGFJ3XHpD8Jf61JEOPKP
-         zSNVp/9gbWs8CjekBdufJOi/0hdpxbEOxpu0s3UPFzTA8ffRMt2zwkSe7UtWdewHzArX
-         ReQ8XHqsT1QmqVOSRed/cNWeewMLCt+mywT12mC91d67qiR8h9hfn5LDkW2YGvAuhjaU
-         DS1E2MMCydN6op7xMdvUdWb75QxLTA+obPBQATh3OMSg09oZBsCvxFrtvbPehzSza0jh
-         Nkew==
-X-Gm-Message-State: APjAAAWsJ6KPwRgfDJ64RtSIisu+S8fIUrPJMBlngs7JlbA89Bs69f8g
-        PTHSOyTq4iyUDoXNphM8k+VohQ==
-X-Google-Smtp-Source: APXvYqxwLwRW/7lCyqzNc5i9t/sg5MCcYRL0P3XngRtppb275Umm4dzEVA+W5qS0KgLrdlT/zjUCgg==
-X-Received: by 2002:a25:b3ce:: with SMTP id x14mr3291798ybf.251.1575481835367;
-        Wed, 04 Dec 2019 09:50:35 -0800 (PST)
-Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
-        by smtp.gmail.com with ESMTPSA id y9sm3298731ywc.19.2019.12.04.09.50.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 09:50:34 -0800 (PST)
-Date:   Wed, 4 Dec 2019 11:50:33 -0600
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Jack Wang <jack.wang.usish@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 067/306] KVM: nVMX: move check_vmentry_postreqs()
- call to nested_vmx_enter_non_root_mode()
-Message-ID: <20191204175033.smve4dleem2ht7st@xps.therub.org>
-Mail-Followup-To: Jack Wang <jack.wang.usish@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-References: <20191127203114.766709977@linuxfoundation.org>
- <20191127203119.676489279@linuxfoundation.org>
- <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
+        Wed, 4 Dec 2019 12:51:12 -0500
+Received: from mail-eopbgr690054.outbound.protection.outlook.com ([40.107.69.54]:21204
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727852AbfLDRvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:51:11 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Moz9WYazWrVbRcRjn7BEIGoKcDvqIpS2Y9/9eT7Dvk/jGL8VsM3tkgLmXAdCjzfsRezIOPiDnK5XODOaTlzPoz+bVKtBBd6LFtxW6NeO8IVEPWasQbjBLUq+6fNq417pXq80tQnrEUtICjLrZPRmZr+Ufs9Z5TcHgAM+wjAExd8/NCRpPNiG0yTA4RIET3bOnpFToG5IgPfLwU386CXIDwoyNlBnbE9LVHxBeFqMVz7tWHiLm3L+W9az6jir8pKPgQZl4F9EAPVVXqXVmhHrNg2LVuRxeAIrTYLcUmziVTYYQSNz8bLanPNrT3kSqad5h8JkREiNkuv96AEueQJLrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=resmRhbbEdLQiaABkrvWa7UP0bKuajx8zrPkJ7jGyEY=;
+ b=RLOIo2O9jCIv5K1mp2DNT1bavg2sTWDx8k/mlGGN5K7cNh24//mZIDXBza4aYQyjguHHw5RRYO6PBnZLUr+i/pVSaaOHVeIblvZFQdV2mMRZbPheEUniFvlRQSu4l5lFIvARQ+m6Di+JIYXUOs7rZGEj6ytABfDCzf+0I5GsvTTmAVt4ajUzrRaHba27xSqJF0ns3yUuOXj13n6cedEpWgTXW6BV07DpIMQPCvV+GwNdvyBtf8aeqdSdIovnZpbte1l1lDciFcjvEsmSd18MYHwJ8y4lL9aEysZzNFN/L8q3pe7JuG00AD2TqxJlsAgcmHtGx+Blf1JTGLYv2Yp/CQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=resmRhbbEdLQiaABkrvWa7UP0bKuajx8zrPkJ7jGyEY=;
+ b=rPpnFb1z0BrL2i/CtPpIowXppmzE+RFBwCy20iOA6KYgnUb6VY61TlHSn8ElnbiSP/VkG+yIpnO6+DdzvvMIYHikdYZnXz7FQdjMHQO93iw4EgPnZEvApsTOIZ+OFa2p1RTYJFArh4gYuALyT9tcwKOu9rFZBqwJtodLgqWed6k=
+Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
+ MN2PR05MB6111.namprd05.prod.outlook.com (20.178.240.97) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.5; Wed, 4 Dec 2019 17:51:06 +0000
+Received: from MN2PR05MB6141.namprd05.prod.outlook.com
+ ([fe80::611e:6a6b:9109:5aa8]) by MN2PR05MB6141.namprd05.prod.outlook.com
+ ([fe80::611e:6a6b:9109:5aa8%7]) with mapi id 15.20.2516.003; Wed, 4 Dec 2019
+ 17:51:06 +0000
+From:   Thomas Hellstrom <thellstrom@vmware.com>
+To:     Steven Price <steven.price@arm.com>,
+        David Hildenbrand <david@redhat.com>
+CC:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <James.Morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v15 00/23] Generic page walk and ptdump
+Thread-Topic: [PATCH v15 00/23] Generic page walk and ptdump
+Thread-Index: AQHVqsB6USxvVndKC0O+X8JyjIw6Ng==
+Date:   Wed, 4 Dec 2019 17:51:06 +0000
+Message-ID: <MN2PR05MB61416E0CF8A99C91CD69FC43A15D0@MN2PR05MB6141.namprd05.prod.outlook.com>
+References: <20191101140942.51554-1-steven.price@arm.com>
+ <1572896147.5937.116.camel@lca.pw>
+ <7B040741-EC8A-4CC0-964B-4046AE2E617A@lca.pw>
+ <16da6118-ac4d-a165-6202-0731a776ac72@arm.com>
+ <911fac4a-2204-f994-a101-16a60fba12e8@redhat.com>
+ <0FA196FD-3FCD-431A-AA3E-21BF00EA07DC@lca.pw>
+ <9d5f1689-db82-a6da-d51d-08070aa4bad5@redhat.com>
+ <20191204163235.GA1597@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=thellstrom@vmware.com; 
+x-originating-ip: [155.4.205.35]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 19d7ffd5-9909-4955-959f-08d778e289b5
+x-ms-traffictypediagnostic: MN2PR05MB6111:
+x-microsoft-antispam-prvs: <MN2PR05MB611135ED1D2BF841A8BBA04CA15D0@MN2PR05MB6111.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(136003)(366004)(376002)(55674003)(43544003)(189003)(199004)(76176011)(7696005)(45080400002)(229853002)(14454004)(6436002)(81166006)(81156014)(66476007)(66556008)(64756008)(66946007)(4326008)(86362001)(33656002)(8676002)(2906002)(76116006)(91956017)(55016002)(66446008)(966005)(6246003)(6306002)(14444005)(3846002)(71200400001)(102836004)(478600001)(6116002)(9686003)(71190400001)(8936002)(7416002)(316002)(52536014)(6506007)(53546011)(26005)(186003)(74316002)(5660300002)(99286004)(305945005)(7736002)(110136005)(25786009)(54906003)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6111;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: x2OLX0yjNFcT1EEx1vxWzhLV6rn+WQMnWMeFUDRfUFmrprXvctVTrM+BhE2JgyiF5jm3z2ebXQ0633TH+uiv/exSE2q7qjruCikK1YTzU8Yp07nwIu7UJBOOZBGjWQKDzoiv9aMZnMKu+8+r9GgY7Yk/mldpIu2oy4acLge/muez80rj6PNPpN0NXvup1TWG+jlwv5ZZ2HJcZBIik8HLqq5rmjSjzUe+lBL8C4qRwCwyLgNhFFjBie/svI+CvhfQBlTNy26LVcQHoUe7FIElOijQlquHNrepPpZg8NdUGsSO/Ofl4ihW5HttLhVaW3CYNIuDT6uInGD7H8wzVKk4xCQnimdyjdJ8L+FC7/G+H1n0fHqVKxhwMwRqzsdMSra//tG92L4A9jxhs764r6W0coz33xOsa1nVO1nzfL7Ksz8S/VW2CxNJRl4l3jsY93hvn75o+vMkO7nw88Ib6FtlhtmkoKgw0lLaL3manGu+vigH/YlIkfo7bTdluV04jJYExvzt/hlhBZWvnOo4QsephwVWD/oA4/YPh8UpKEEZBqoSrGLfxVAKng9bMF7bU4WuybOycYCiMe4k4PPg5UsTHw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19d7ffd5-9909-4955-959f-08d778e289b5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 17:51:06.2246
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 777infu+mfbHdoYbtVmWIen0OrDr1SrCuKCYq9XkVJogJMTS+a3y30aoVSkccATQUyXI1p5ZxHTnUAAU+DPn/w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 03:40:04PM +0100, Jack Wang wrote:
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> 于2019年11月27日周三 下午10:30写道：
-> >
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> >
-> > [ Upstream commit 7671ce21b13b9596163a29f4712cb2451a9b97dc ]
-> >
-> > In preparation of supporting checkpoint/restore for nested state,
-> > commit ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
-> > modified check_vmentry_postreqs() to only perform the guest EFER
-> > consistency checks when nested_run_pending is true.  But, in the
-> > normal nested VMEntry flow, nested_run_pending is only set after
-> > check_vmentry_postreqs(), i.e. the consistency check is being skipped.
-> >
-> > Alternatively, nested_run_pending could be set prior to calling
-> > check_vmentry_postreqs() in nested_vmx_run(), but placing the
-> > consistency checks in nested_vmx_enter_non_root_mode() allows us
-> > to split prepare_vmcs02() and interleave the preparation with
-> > the consistency checks without having to change the call sites
-> > of nested_vmx_enter_non_root_mode().  In other words, the rest
-> > of the consistency check code in nested_vmx_run() will be joining
-> > the postreqs checks in future patches.
-> >
-> > Fixes: ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Cc: Jim Mattson <jmattson@google.com>
-> > Reviewed-by: Jim Mattson <jmattson@google.com>
-> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  arch/x86/kvm/vmx.c | 10 +++-------
-> >  1 file changed, 3 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> > index fe7fdd666f091..bdf019f322117 100644
-> > --- a/arch/x86/kvm/vmx.c
-> > +++ b/arch/x86/kvm/vmx.c
-> > @@ -12694,6 +12694,9 @@ static int enter_vmx_non_root_mode(struct kvm_vcpu *vcpu, u32 *exit_qual)
-> >         if (likely(!evaluate_pending_interrupts) && kvm_vcpu_apicv_active(vcpu))
-> >                 evaluate_pending_interrupts |= vmx_has_apicv_interrupt(vcpu);
-> >
-> > +       if (from_vmentry && check_vmentry_postreqs(vcpu, vmcs12, exit_qual))
-> > +               return EXIT_REASON_INVALID_STATE;
-> > +
-> >         enter_guest_mode(vcpu);
-> >
-> >         if (!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS))
-> > @@ -12836,13 +12839,6 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
-> >          */
-> >         skip_emulated_instruction(vcpu);
-> >
-> > -       ret = check_vmentry_postreqs(vcpu, vmcs12, &exit_qual);
-> > -       if (ret) {
-> > -               nested_vmx_entry_failure(vcpu, vmcs12,
-> > -                                        EXIT_REASON_INVALID_STATE, exit_qual);
-> > -               return 1;
-> > -       }
-> > -
-> >         /*
-> >          * We're finally done with prerequisite checking, and can start with
-> >          * the nested entry.
-> > --
-> > 2.20.1
-> >
-> >
-> >
-> Hi all,
-> 
-> This commit caused many kvm-unit-tests regression, cherry-pick
-> following commits from 4.20 fix the regression:
-
-Hi Jack - can you be more specific about the failing tests? What type of
-environment and which tests failed, which version of kvm-unit-tests? Do
-you have any logs available? I ask because we do run kvm-unit-tests on
-x86 and arm64 but we did not see these regressions.
-
-Thanks,
-Dan
-
-> d63907dc7dd1 ("KVM: nVMX: rename enter_vmx_non_root_mode to
-> nested_vmx_enter_non_root_mode")
-> a633e41e7362 ("KVM: nVMX: assimilate nested_vmx_entry_failure() into
-> nested_vmx_enter_non_root_mode()")
-> 
-> Regards,
-> Jack Wang
-> 1 & 1 IONOS SE
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
+On 12/4/19 5:32 PM, Steven Price wrote:=0A=
+> On Wed, Dec 04, 2019 at 02:56:58PM +0000, David Hildenbrand wrote:=0A=
+>> On 04.12.19 15:54, Qian Cai wrote:=0A=
+>>>=0A=
+>>>> On Dec 3, 2019, at 6:02 AM, David Hildenbrand <david@redhat.com> wrote=
+:=0A=
+>>>>=0A=
+>>>> On 06.11.19 16:05, Steven Price wrote:=0A=
+>>>>> On 06/11/2019 13:31, Qian Cai wrote:=0A=
+>>>>>>=0A=
+>>>>>>> On Nov 4, 2019, at 2:35 PM, Qian Cai <cai@lca.pw> wrote:=0A=
+>>>>>>>=0A=
+>>>>>>> On Fri, 2019-11-01 at 14:09 +0000, Steven Price wrote:=0A=
+>>>>> [...]=0A=
+>>>>>>>> Changes since v14:=0A=
+>>>>>>>> https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%=
+2Flore.kernel.org%2Flkml%2F20191028135910.33253-1-steven.price%40arm.com%2F=
+&amp;data=3D02%7C01%7Cthellstrom%40vmware.com%7C9f50ca595f81432eff5b08d778d=
+7968a%7Cb39138ca3cee4b4aa4d6cd83d9dd62f0%7C0%7C1%7C637110739727088799&amp;s=
+data=3DB3n6TFU7hluQyAXUOEaHBAGNC8mhscMfxSJi%2FrFr%2Flo%3D&amp;reserved=3D0=
+=0A=
+>>>>>>>> * Switch walk_page_range() into two functions, the existing=0A=
+>>>>>>>>   walk_page_range() now still requires VMAs (and treats areas with=
+out a=0A=
+>>>>>>>>   VMA as a 'hole'). The new walk_page_range_novma() ignores VMAs a=
+nd=0A=
+>>>>>>>>   will report the actual page table layout. This fixes the previou=
+s=0A=
+>>>>>>>>   breakage of /proc/<pid>/pagemap=0A=
+>>>>>>>> * New patch at the end of the series which reduces the 'level' num=
+bers=0A=
+>>>>>>>>   by 1 to simplify the code slightly=0A=
+>>>>>>>> * Added tags=0A=
+>>>>>>> Does this new version also take care of this boot crash seen with v=
+14? Suppose=0A=
+>>>>>>> it is now breaking CONFIG_EFI_PGT_DUMP=3Dy? The full config is,=0A=
+>>>>>>>=0A=
+>>>>>>> https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
+Fraw.githubusercontent.com%2Fcailca%2Flinux-mm%2Fmaster%2Fx86.config&amp;da=
+ta=3D02%7C01%7Cthellstrom%40vmware.com%7C9f50ca595f81432eff5b08d778d7968a%7=
+Cb39138ca3cee4b4aa4d6cd83d9dd62f0%7C0%7C1%7C637110739727088799&amp;sdata=3D=
+ymVh49kh7VL9yseRdkjSbTwRh%2B7yBXxhK7QMTUzwn4U%3D&amp;reserved=3D0=0A=
+>>>>>>>=0A=
+>>>>>> V15 is indeed DOA here.=0A=
+>>>>> Thanks for finding this, it looks like EFI causes issues here. The be=
+low fixes=0A=
+>>>>> this for me (booting in QEMU).=0A=
+>>>>>=0A=
+>>>>> Andrew: do you want me to send out the entire series again for this f=
+ix, or=0A=
+>>>>> can you squash this into mm-pagewalk-allow-walking-without-vma.patch?=
+=0A=
+>>>>>=0A=
+>>>>> Thanks,=0A=
+>>>>>=0A=
+>>>>> Steve=0A=
+>>>>>=0A=
+>>>>> ---8<---=0A=
+>>>>> diff --git a/mm/pagewalk.c b/mm/pagewalk.c=0A=
+>>>>> index c7529dc4f82b..70dcaa23598f 100644=0A=
+>>>>> --- a/mm/pagewalk.c=0A=
+>>>>> +++ b/mm/pagewalk.c=0A=
+>>>>> @@ -90,7 +90,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long=
+ addr, unsigned long end,=0A=
+>>>>>  			split_huge_pmd(walk->vma, pmd, addr);=0A=
+>>>>>  			if (pmd_trans_unstable(pmd))=0A=
+>>>>>  				goto again;=0A=
+>>>>> -		} else if (pmd_leaf(*pmd)) {=0A=
+>>>>> +		} else if (pmd_leaf(*pmd) || !pmd_present(*pmd)) {=0A=
+>>>>>  			continue;=0A=
+>>>>>  		}=0A=
+>>>>>=0A=
+>>>>> @@ -141,7 +141,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned lo=
+ng addr, unsigned long end,=0A=
+>>>>>  			split_huge_pud(walk->vma, pud, addr);=0A=
+>>>>>  			if (pud_none(*pud))=0A=
+>>>>>  				goto again;=0A=
+>>>>> -		} else if (pud_leaf(*pud)) {=0A=
+>>>>> +		} else if (pud_leaf(*pud) || !pud_present(*pud)) {=0A=
+>>>>>  			continue;=0A=
+>>>>>  		}=0A=
+>>>>>=0A=
+>>>>>=0A=
+>>>> Even with this fix, booting for me under QEMU fails. See=0A=
+>>>>=0A=
+>>>> https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flo=
+re.kernel.org%2Flinux-mm%2Fb7ce62f2-9a48-6e48-6685-003431e521aa%40redhat.co=
+m%2F&amp;data=3D02%7C01%7Cthellstrom%40vmware.com%7C9f50ca595f81432eff5b08d=
+778d7968a%7Cb39138ca3cee4b4aa4d6cd83d9dd62f0%7C0%7C1%7C637110739727088799&a=
+mp;sdata=3DfRuLrmrzNEkU2MFzSVdyVyXyRoyZ95yZOYuy7aMSi7A%3D&amp;reserved=3D0=
+=0A=
+>>>>=0A=
+>>> Yes, for some reasons, this starts to crash on almost all arches here, =
+so it might be worth=0A=
+>>> for Andrew to revert those in the meantime while allowing Steven to rew=
+ork.=0A=
+>> I agree, this produces too much noise.=0A=
+> I've bisected this problem and it's a merge conflict with:=0A=
+>=0A=
+> ace88f1018b8 ("mm: pagewalk: Take the pagetable lock in walk_pte_range()"=
+)=0A=
+>=0A=
+> Reverting that commit "fixes" the problem. That commit adds a call to=0A=
+> pte_offset_map_lock(), however that isn't necessarily safe when=0A=
+> considering an "unusual" mapping in the kernel. Combined with my patch=0A=
+> set this leads to the BUG when walking the kernel's page tables.=0A=
+>=0A=
+> At this stage I think it's best if Andrew drops my series and I'll try=0A=
+> to rework it on top -rc1 fixing up this conflict and the other x86=0A=
+> 32-bit issue that has cropped up.=0A=
+=0A=
+Hi,=0A=
+=0A=
+Unfortunately I wasn't aware of that conflict.=0A=
+=0A=
+Perhaps something similar to this=0A=
+=0A=
+https://elixir.bootlin.com/linux/v5.4/source/mm/memory.c#L2012=0A=
+=0A=
+would fix at least this particular issue?=0A=
+=0A=
+/Thomas=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+>=0A=
+> Steve=0A=
+>=0A=
+=0A=
