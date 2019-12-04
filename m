@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C40C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C6FC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2252154A
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5241820674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482920;
-	bh=gqjFT9aKmKHprUvbapiJKhGv5mDYLdxXn0tiKyUo1bI=;
+	s=default; t=1575482924;
+	bh=dg2MU6IFSs3G0S+mmM3T6HFFRjpfRxxzHPcgk4BIABU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=It9iffyxH7klN8RT7lB51FqDjEjYSWAf+mYN85HUPmE6mXp4g0LqaLso2h/hPayKL
-	 kZs1lBORvwkq1Pz7fj2BtOIgTmlxWNalUM5nsBtWFDnPqIhi5sZYRFQiwrDyxxyG1R
-	 A2jsWzFz8nPOj6ZQXMAcILC5q8mBSznWHvskkZaE=
+	b=R3h0cQpiAENqui3jqlStfpyRPvZIa1D3LB4+wjEF+iwUdCcBxvX0n1AcLjAbr7Mw4
+	 lFPEPI+ZsrOrpSwSR3MSOMX9YL+bpp8KGoEArhrc7kjFwYw62x7ZEaIPdI0ssva9cL
+	 BG30H6itS/PluXyxJhYgQiD4eUkrc7qu9ogCg+qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730939AbfLDSIj (ORCPT
+        id S1730952AbfLDSIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:08:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60430 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:08:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730911AbfLDSI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:08:28 -0500
+        id S1730915AbfLDSIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:08:31 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B23F12084B;
-        Wed,  4 Dec 2019 18:08:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 214AB20833;
+        Wed,  4 Dec 2019 18:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482908;
-        bh=gqjFT9aKmKHprUvbapiJKhGv5mDYLdxXn0tiKyUo1bI=;
+        s=default; t=1575482910;
+        bh=dg2MU6IFSs3G0S+mmM3T6HFFRjpfRxxzHPcgk4BIABU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UfBsEHy67ryGg70bLCCNN7347RZteGAsJmtgDEDVoy/KTg+1jUbcwrBhB5KgxtMHQ
-         DqqHLyP1XAouSoOPp/ai+LvrUj9p5pNVfDBLWLghpceT6LTn1lG3dwjBgYnXqi4qBN
-         GK1u5LXHJIYACbYP6A36+Bbh0k7kwZ6jIvhbqAro=
+        b=nBOEO4MqImdn1SdqV+FBxj1DIlh++wQJbXBPpI1dFLJ1blyeaKPe209VvZJZfcyY1
+         dap+v0YWfXgMbPPTVH05ESCs342hQki+kM+hmYGdOVDjDuVPVsnno9yKn/Rm2yGn1e
+         l05GWPHUT8j5yogT33j6kWeUe04ne/WOtkiePjrc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Thomas <pthomas8589@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 181/209] net: macb driver, check for SKBTX_HW_TSTAMP
-Date:   Wed,  4 Dec 2019 18:56:33 +0100
-Message-Id: <20191204175335.949831743@linuxfoundation.org>
+Subject: [PATCH 4.14 182/209] mtd: rawnand: atmel: Fix spelling mistake in error message
+Date:   Wed,  4 Dec 2019 18:56:34 +0100
+Message-Id: <20191204175336.018549369@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,36 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Thomas <pthomas8589@gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit a62520473f15750cd1432d36b377a06cd7cff8d2 upstream.
+commit e39bb786816453788836c367caefd72eceea380c upstream.
 
-Make sure SKBTX_HW_TSTAMP (i.e. SOF_TIMESTAMPING_TX_HARDWARE) has been
-enabled for this skb. It does fix the issue where normal socks that
-aren't expecting a timestamp will not wake up on select, but when a
-user does want a SOF_TIMESTAMPING_TX_HARDWARE it does work.
+Wrong copy/paste from the previous block, the error message should
+refer to #size-cells instead of #address-cells.
 
-Signed-off-by: Paul Thomas <pthomas8589@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/cadence/macb_main.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/mtd/nand/atmel/nand-controller.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -852,7 +852,9 @@ static void macb_tx_interrupt(struct mac
+--- a/drivers/mtd/nand/atmel/nand-controller.c
++++ b/drivers/mtd/nand/atmel/nand-controller.c
+@@ -1888,7 +1888,7 @@ static int atmel_nand_controller_add_nan
  
- 			/* First, update TX stats if needed */
- 			if (skb) {
--				if (gem_ptp_do_txstamp(queue, skb, desc) == 0) {
-+				if (unlikely(skb_shinfo(skb)->tx_flags &
-+					     SKBTX_HW_TSTAMP) &&
-+				    gem_ptp_do_txstamp(queue, skb, desc) == 0) {
- 					/* skb now belongs to timestamp buffer
- 					 * and will be removed later
- 					 */
+ 	ret = of_property_read_u32(np, "#size-cells", &val);
+ 	if (ret) {
+-		dev_err(dev, "missing #address-cells property\n");
++		dev_err(dev, "missing #size-cells property\n");
+ 		return ret;
+ 	}
+ 
 
 
