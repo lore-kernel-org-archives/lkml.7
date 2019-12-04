@@ -2,281 +2,212 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A56C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E26C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 258F32073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3BD2073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:06:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AjWT/abc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=laposte.net header.i=@laposte.net header.b="IVjMPm63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfLDNED (ORCPT
+        id S1727816AbfLDNGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:04:03 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39182 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfLDNEC (ORCPT
+        Wed, 4 Dec 2019 08:06:35 -0500
+Received: from smtpoutz24.laposte.net ([194.117.213.99]:34996 "EHLO
+        smtp.laposte.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726215AbfLDNGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:04:02 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4D3MCh042037;
-        Wed, 4 Dec 2019 07:03:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575464603;
-        bh=a648Q8PR7Fd9pDqZhKY3IibCqOE8UuutHYsZW4LNa+o=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=AjWT/abcZk2gtbwVTyszweomFn8doLCGhBZcFQBek6PfBMkB2YyI0d1gTDHxz7sVi
-         blsnHbbtXOJsdBysgnj3goSRNJa/xWHNkAJTmTyeU9foaYM36b0cGkCfhwYscGhHo7
-         h9JaItthgWioy3XiBISRlz0w/7b6r4vRCHbLCfTw=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4D3MSp094535
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Dec 2019 07:03:22 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
- 2019 07:03:22 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Dec 2019 07:03:22 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4D3I8p028973;
-        Wed, 4 Dec 2019 07:03:18 -0600
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH 3/4] mtd: spi-nor: Add Octal 8D-8D-8D mode support for
- Macronix mx25uw51245g
-To:     Mason Yang <masonccyang@mxic.com.tw>, <broonie@kernel.org>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <marek.vasut@gmail.com>, <dwmw2@infradead.org>,
-        <computersforpeace@gmail.com>, <bbrezillon@kernel.org>,
-        <tudor.ambarus@microchip.com>
-CC:     <juliensu@mxic.com.tw>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        Boris Brezillon <boris.brezillon@bootlin.com>
-References: <1573808288-19365-1-git-send-email-masonccyang@mxic.com.tw>
- <1573808288-19365-4-git-send-email-masonccyang@mxic.com.tw>
-Message-ID: <1f1a368a-e3d3-4e58-819e-b4dffc3212ef@ti.com>
-Date:   Wed, 4 Dec 2019 18:33:49 +0530
+        Wed, 4 Dec 2019 08:06:34 -0500
+Received: from smtp.laposte.net (localhost [127.0.0.1])
+        by lpn-prd-vrout012 (Postfix) with ESMTP id DC70F16543C
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 14:06:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=laposte.net; s=mail0;
+        t=1575464790; bh=QoIoJNvQPoGhf1mEusSBQCFVb/hmuGDTkK983LBNhUA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=IVjMPm635PtB2Yl7mYU30crQdS480bPi7jOE3zVI1J9Xa55WFhJQYQ87r5VIZ2qny
+         QYI8Fwe5PpySZWTBSyzmtuS4BYB2cGQCQaUGt9zABQuvyEM5d4CLHDoZ+PiI3cXFV1
+         fEbSqLB8Y1fGWVe6DonfAoI8eJ0laFwDU2H2sflNp405NQyyZ2Cy1UKXdi4e1vEJaW
+         n4m3bcglSXgT74zsTVnI6l3IYI7li5HROizHwu9s9iNjQG75TbZwD7qAyxPJyMOP8Q
+         UvlYgKDRtmZPguV2rA8+fYRbKXqawoyAgqTsISfYiYTdmYMQ2SreNRPiDShLS3xKXG
+         +JYSYp4V+F35Q==
+Received: from smtp.laposte.net (localhost [127.0.0.1])
+        by lpn-prd-vrout012 (Postfix) with ESMTP id CC4E4165467
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 14:06:30 +0100 (CET)
+Received: from lpn-prd-vrin003 (lpn-prd-vrin003.prosodie [10.128.63.4])
+        by lpn-prd-vrout012 (Postfix) with ESMTP id C563716543C
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 14:06:30 +0100 (CET)
+Received: from lpn-prd-vrin003 (localhost [127.0.0.1])
+        by lpn-prd-vrin003 (Postfix) with ESMTP id B2DA64A726C
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 14:06:30 +0100 (CET)
+Received: from [192.168.1.18] (lfbn-mar-1-801-152.w92-150.abo.wanadoo.fr [92.150.127.152])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by lpn-prd-vrin003 (Postfix) with ESMTPSA id 4C5A04A7228;
+        Wed,  4 Dec 2019 14:06:29 +0100 (CET)
+Subject: Re: [PATCH] fs: introduce is_dot_dotdot helper for cleanup
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+References: <1575281413-6753-1-git-send-email-yangtiezhu@loongson.cn>
+ <20191202200302.GN20752@bombadil.infradead.org>
+ <357ad021-a58c-ad46-42bd-d5012126276f@loongson.cn>
+From:   Jean-Louis Biasini <jl.biasini@laposte.net>
+X-Pep-Version: 2.0
+Message-ID: <12554a8e-2899-f03f-ec3d-d4cf35c4dd71@laposte.net>
+Date:   Wed, 4 Dec 2019 14:06:28 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1573808288-19365-4-git-send-email-masonccyang@mxic.com.tw>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <357ad021-a58c-ad46-42bd-d5012126276f@loongson.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-VR-FullState: 0
+X-VR-Score: -100
+X-VR-Cause-1: gggruggvucftvghtrhhoucdtuddrgedufedrudejledggeejucetufdoteggodetrfdotffvucfrrhho
+X-VR-Cause-2: fhhilhgvmecunfetrffquffvgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhht
+X-VR-Cause-3: shculddquddttddmnecujfgurhepuffvfhfhkffffgggjggtgfesthhqredttdefjeenucfhrhhomhep
+X-VR-Cause-4: lfgvrghnqdfnohhuihhsuceuihgrshhinhhiuceojhhlrdgsihgrshhinhhisehlrghpohhsthgvrdhn
+X-VR-Cause-5: vghtqeenucfkphepledvrdduhedtrdduvdejrdduhedvnecurfgrrhgrmhepmhhouggvpehsmhhtphho
+X-VR-Cause-6: uhhtpdhinhgvthepledvrdduhedtrdduvdejrdduhedvpdhhvghloheplgduledvrdduieekrddurddu
+X-VR-Cause-7: kegnpdhmrghilhhfrhhomhepjhhlrdgsihgrshhinhhisehlrghpohhsthgvrdhnvghtpdhrtghpthht
+X-VR-Cause-8: oheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhi
+X-VR-Cause-9: nhhugidqfhdvfhhsqdguvghvvghlsehlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghp
+X-VR-Cause-10: thhtoheplhhinhhugidqfhhstghrhihpthesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
+X-VR-Cause-11: pegvtghrhihpthhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhf
+X-VR-Cause-12: shguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthihhhhitghkshestggr
+X-VR-Cause-13: nhhonhhitggrlhdrtghomhdprhgtphhtthhopegvsghighhgvghrsheskhgvrhhnvghlrdhorhhgpdhr
+X-VR-Cause-14: tghpthhtohephihutghhrghotdeshhhurgifvghirdgtohhmpdhrtghpthhtohepjhgrvghgvghukhes
+X-VR-Cause-15: khgvrhhnvghlrdhorhhgpdhrtghpthhtohepthihthhsohesmhhithdrvgguuhdprhgtphhtthhopehv
+X-VR-Cause-16: ihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepfihilhhlhiesihhnfhhr
+X-VR-Cause-17: rgguvggrugdrohhrghdprhgtphhtthhopeihrghnghhtihgviihhuheslhhoohhnghhsohhnrdgtnhen
+X-VR-Cause-18: ucevlhhushhtvghrufhiiigvpedt
+X-VR-AvState: No
+X-VR-State: 0
+X-VR-State: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Please UNSUBSCRIBE ME from this list of tell how to!!!
 
+Le 03/12/2019 =C3=A0 03:07, Tiezhu Yang a =C3=A9crit=C2=A0:
+> On 12/03/2019 04:03 AM, Matthew Wilcox wrote:
+>> On Mon, Dec 02, 2019 at 06:10:13PM +0800, Tiezhu Yang wrote:
+>>> There exists many similar and duplicate codes to check "." and "..",
+>>> so introduce is_dot_dotdot helper to make the code more clean.
+>> The idea is good.=C2=A0 The implementation is, I'm afraid, badly chose=
+n.
+>> Did you benchmark this change at all?=C2=A0 In general, you should pre=
+fer the
+>> core kernel implementation to that of some less-interesting filesystem=
+s.
+>> I measured the performance with the attached test program on my laptop=
 
-On 15/11/19 2:28 pm, Mason Yang wrote:
-> mx25uw51245g is a SPI NOR that supports 1-1-1/8-8-8 mode and the SFDPRD
-> command but returns an empty SFDP page. This forces us to add a new entry
-> in the flash_info table and patch spi_nor_fixups hooks to tweak flash
-> parameters for spi_nor_read/pp_setting() and then to enter
-> Octal 8D-8D-8D modes.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  drivers/mtd/spi-nor/spi-nor.c | 114 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mtd/spi-nor.h   |   3 ++
->  2 files changed, 117 insertions(+)
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index 4cdf52d..9013590 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -615,6 +615,56 @@ static int write_disable(struct spi_nor *nor)
->  }
->  
->  /*
-> + * Read configuration register 2, returning its value in the
-> + * location. Return the configuration register 2 value.
-> + * Returns negative if error occurred.
-> + */
-> +static int read_cr2(struct spi_nor *nor, u32 addr)
+>> (Core-i7 Kaby Lake):
+>>
+>> qstr . time_1 0.020531 time_2 0.005786
+>> qstr .. time_1 0.017892 time_2 0.008798
+>> qstr a time_1 0.017633 time_2 0.003634
+>> qstr matthew time_1 0.011820 time_2 0.003605
+>> qstr .a time_1 0.017909 time_2 0.008710
+>> qstr , time_1 0.017631 time_2 0.003619
+>>
+>> The results are quite stable:
+>>
+>> qstr . time_1 0.021137 time_2 0.005780
+>> qstr .. time_1 0.017964 time_2 0.008675
+>> qstr a time_1 0.017899 time_2 0.003654
+>> qstr matthew time_1 0.011821 time_2 0.003620
+>> qstr .a time_1 0.017889 time_2 0.008662
+>> qstr , time_1 0.017764 time_2 0.003613
+>>
+>> Feel free to suggest some different strings we could use for testing.
+>> These seemed like interesting strings to test with.=C2=A0 It's always
+>> possible
+>> I've messed up something with this benchmark that causes it to not
+>> accurately represent the performance of each algorithm, so please chec=
+k
+>> that too.
+>
+> [Sorry to resend this email because the mail list server
+> was denied due to it is not plain text.]
+>
+> Hi Matthew,
+>
+> Thanks for your reply and suggestion. I measured the
+> performance with the test program, the following
+> implementation is better for various of test cases:
+>
+> bool is_dot_dotdot(const struct qstr *str)
+> {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (unlikely(str->name[0] =3D=
+=3D '.')) {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 if (str->len < 2 || (str->len =3D=3D 2 && str->name[1]=
+ =3D=3D
+> '.'))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return=
+ true;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return false;
+> }
+>
+> I will send a v2 patch used with this implementation.
+>
+> Thanks,
+>
+> Tiezhu Yang
+>
+>>
+>>> +bool is_dot_dotdot(const struct qstr *str)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 if (str->len =3D=3D 1 && str->name[0] =3D=3D '.')=
 
-Please prefix spi_nor_* for all new functions. 
-Also, include manf name if its vendor specific.
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return true;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (str->len =3D=3D 2 && str->name[0] =3D=3D '.' =
+&& str->name[1] =3D=3D '.')
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return true;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return false;
+>>> +}
+>>> +EXPORT_SYMBOL(is_dot_dotdot);
+>>> diff --git a/fs/namei.c b/fs/namei.c
+>>> index 2dda552..7730a3b 100644
+>>> --- a/fs/namei.c
+>>> +++ b/fs/namei.c
+>>> @@ -2458,10 +2458,8 @@ static int lookup_one_len_common(const char
+>>> *name, struct dentry *base,
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!len)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EACCES=
+;
+>>> =C2=A0 -=C2=A0=C2=A0=C2=A0 if (unlikely(name[0] =3D=3D '.')) {
+>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (len < 2 || (len =3D=3D=
+ 2 && name[1] =3D=3D '.'))
+>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
+eturn -EACCES;
+>>> -=C2=A0=C2=A0=C2=A0 }
+>>> +=C2=A0=C2=A0=C2=A0 if (unlikely(is_dot_dotdot(this)))
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EACCES;
+>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 while (len--) {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int c=
+ =3D *(const unsigned char *)name++;
+>
 
-> +{
-> +	int ret;
-> +
-> +	if (nor->spimem) {
-> +		struct spi_mem_op op =
-> +			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_RDCR2, 1),
-> +				   SPI_MEM_OP_ADDR(4, addr, 1),
-> +				   SPI_MEM_OP_DUMMY(4, 1),
-> +				   SPI_MEM_OP_DATA_IN(1, nor->bouncebuf, 1));
-> +
-> +		if (spi_nor_protocol_is_8_8_8(nor->read_proto)) {
-> +			op.cmd.buswidth = 8;
-> +			op.addr.buswidth = 8;
-> +			op.dummy.buswidth = 8;
-> +			op.data.buswidth = 8;
-> +			op.cmd.nbytes = 2;
-> +
-> +			if (spi_nor_protocol_is_8D_8D_8D(nor->read_proto)) {
-> +				op.dummy.nbytes *= 2;
-> +				op.cmd.dtr = true;
-> +				op.addr.dtr = true;
-> +				op.dummy.dtr = true;
-> +				op.data.dtr = true;
-> +			}
-> +
-> +			if (nor->ext_cmd_mode == EXT_CMD_IS_INVERSE)
-> +				op.cmd.ext_opcode = ~SPINOR_OP_RDCR2;
-> +			else
-> +				op.cmd.ext_opcode = SPINOR_OP_RDCR2;
-> +		}
-> +
-> +		ret = spi_mem_exec_op(nor->spimem, &op);
-> +	} else {
-> +		ret = -ENOTSUPP;
-> +	}
-> +
-> +	if (ret < 0) {
-> +		dev_err(nor->dev, "error %d reading CR\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return nor->bouncebuf[0];
-> +}
-> +
-> +/*
->   * Write configuration register 2 one byte
->   * Returns negative if error occurred.
->   */
-> @@ -2275,10 +2325,72 @@ static int spi_nor_spansion_clear_sr_bp(struct spi_nor *nor)
->  	return 0;
->  }
->  
-> +static void
-> +spi_nor_set_read_settings(struct spi_nor_read_command *read,
-> +			  u8 num_mode_clocks,
-> +			  u8 num_wait_states,
-> +			  u8 opcode,
-> +			  enum spi_nor_protocol proto);
-> +
-> +static void
-> +spi_nor_set_pp_settings(struct spi_nor_pp_command *pp,
-> +			u8 opcode,
-> +			enum spi_nor_protocol proto);
-> +
-> +static void
-> +mx25uw51245g_default_init(struct spi_nor *nor)
-> +{
-> +	struct spi_nor_flash_parameter *params = &nor->params;
-> +
-> +	if (!(nor->spimem->spi->mode & (SPI_RX_OCTAL | SPI_TX_OCTAL)))
-> +		return;
-> +
-> +	/* Octal 8S-8S-8S mode */
-> +	params->hwcaps.mask |= SNOR_HWCAPS_OPI_FULL_STR;
-> +	spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_8_8_8],
-> +				  0, 20, SPINOR_OP_READ_8_8_8,
-> +				  SNOR_PROTO_8_8_8);
-> +
-> +	spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_8_8_8],
-> +				SPINOR_OP_PP_8_8_8, SNOR_PROTO_8_8_8);
-> +
-> +	/* Octal 8D-8D-8D mode */
-> +	params->hwcaps.mask |= SNOR_HWCAPS_OPI_FULL_DTR;
-> +	spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_8D_8D_8D],
-> +				  0, 20, SPINOR_OP_READ_8D_8D_8D,
-> +				  SNOR_PROTO_8_8_8_DTR);
-> +
-> +	spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_8D_8D_8D],
-> +				SPINOR_OP_PP_8D_8D_8D, SNOR_PROTO_8_8_8_DTR);
-> +
-> +	nor->ext_cmd_mode = EXT_CMD_IS_INVERSE;
-> +}
-
-I don't see anything that is macronix specific here.. Can this be moved to
-generic code with information parsed from SFDP table?
-
-> +
-> +static void
-> +mx25uw51245g_post_sfdp_fixups(struct spi_nor *nor)
-> +{
-> +	struct spi_nor_flash_parameter *params = &nor->params;
-> +	u8 cr2;
-> +
-> +	cr2 = read_cr2(nor, CR2_REG0) & CR2_REG0_MODE_MASK;
-> +
-> +	if (params->hwcaps.mask & SNOR_HWCAPS_OPI_FULL_DTR)
-> +		cr2 |= CR2_REG0_MODE_OPI_DTR;
-> +	else if (params->hwcaps.mask & SNOR_HWCAPS_OPI_FULL_STR)
-> +		cr2 |= CR2_REG0_MODE_OPI_STR;
-> +
-> +	write_cr2(nor, CR2_REG0, cr2);
-> +}
-> +
-
-I see this as a misuse of sfdp_fixups hook:
-
- * @post_sfdp: called after SFDP has been parsed (is also called for SPI NORs
- *             that do not support RDSFDP). Typically used to tweak various
- *             parameters that could not be extracted by other means (i.e.
- *             when information provided by the SFDP/flash_info tables are
- *             incomplete or wrong).
- *
-
-
-This should only tweak options parsed by SFDP and not be used to
-configure flash to a different mode. Please add a separate function 
-to do so. See https://patchwork.kernel.org/patch/10638085/
-
-Also, I guess JESD216C provides a way to discover command sequence 
-to enter OPI mode?
-
->  static struct spi_nor_fixups mx25l25635_fixups = {
->  	.post_bfpt = mx25l25635_post_bfpt_fixups,
->  };
->  
-> +static struct spi_nor_fixups mx25uw51245g_fixups = {
-> +	.default_init = mx25uw51245g_default_init,
-> +	.post_sfdp = mx25uw51245g_post_sfdp_fixups,
-> +};
-> +
->  static void gd25q256_default_init(struct spi_nor *nor)
->  {
->  	/*
-> @@ -2442,6 +2554,8 @@ static void gd25q256_default_init(struct spi_nor *nor)
->  			 SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ)
->  			 .fixups = &mx25l25635_fixups },
->  	{ "mx25u25635f", INFO(0xc22539, 0, 64 * 1024, 512, SECT_4K | SPI_NOR_4B_OPCODES) },
-> +	{ "mx25uw51245g", INFO(0xc2813a, 0, 64 * 1024, 1024, SECT_4K | SPI_NOR_4B_OPCODES)
-> +				.fixups = &mx25uw51245g_fixups},
->  	{ "mx25v8035f",  INFO(0xc22314, 0, 64 * 1024,  16,
->  			 SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
->  	{ "mx25l25655e", INFO(0xc22619, 0, 64 * 1024, 512, 0) },
-> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> index 2e720ca..3aa54dd 100644
-> --- a/include/linux/mtd/spi-nor.h
-> +++ b/include/linux/mtd/spi-nor.h
-> @@ -114,6 +114,9 @@
->  /* Write CFG Reg 2 - defined in JEDEC JESD216C. */
->  #define SPINOR_OP_WRCR2		0x72	/* Write configuration register 2 */
->  
-> +/* Used for Macronix flashes only */
-> +#define SPINOR_OP_RDCR2		0x71	/* Read configuration register 2 */
-> +
->  /* Used for Macronix and Winbond flashes. */
->  #define SPINOR_OP_EN4B		0xb7	/* Enter 4-byte mode */
->  #define SPINOR_OP_EX4B		0xe9	/* Exit 4-byte mode */
-> 
-
--- 
-Regards
-Vignesh
