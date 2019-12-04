@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02708C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86919C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3768205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53553205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483928;
-	bh=O4H8gKKIofBTYa/ahR2HGrSqNn62ReqrOkWXmkecmG8=;
+	s=default; t=1575483937;
+	bh=NiyhNSjeY2QPTLhCpR5U2r+9OKL6jNarrXVPeFdcUUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UPib2FXYE4JGOuDKm4ex1w//BIaF/kUSFOXU8i61Z/tIh6Qx5cfO4k61LlUyYmip3
-	 XI23sR1SmzVm4kWd+PBqdzwSSwDjnXdSX+s3OgsB8+uJQTPJfp+LKQUDyLvSAxipyj
-	 2+aMeqy9ferUGXiGxCz3Zu4ghOgV2a7aO++UI+u4=
+	b=csXpJUFdbwLiPyV6E6Ee6+7kn4QxVo/O15Bzm58huJZ0a+UBjr0jGKLV7OHI2EzGy
+	 AFEhc8JiUqx4uyPYIUInjETXkteXft92X1in+AyCKa2fpRcf5txLy97xfRLzk2pkVx
+	 v0n79pRo+4m/MHzriPoEmMxq6djoCx4i6XPcgT18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbfLDSBG (ORCPT
+        id S1729947AbfLDSZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:01:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40756 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:25:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729483AbfLDSBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:01:02 -0500
+        id S1728326AbfLDSAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:00:55 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04E2B20659;
-        Wed,  4 Dec 2019 18:01:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA27B20675;
+        Wed,  4 Dec 2019 18:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482462;
-        bh=O4H8gKKIofBTYa/ahR2HGrSqNn62ReqrOkWXmkecmG8=;
+        s=default; t=1575482455;
+        bh=NiyhNSjeY2QPTLhCpR5U2r+9OKL6jNarrXVPeFdcUUM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AM9dGkt+kmr0nHI4qgkoQnE580QpO/sjIQW2hg+lOe9dmffVAVQ+CMl8WY97eD7PC
-         l+fwJh28t89sSwHvgjP/zHFvl7GJxTrZ2Z19Pu+MR7UeEGImW4CUnwO5NowPvMtDRp
-         /SQHl/KY0HwXBXmMDmDwmVlC5P2K8htpIQRFTv2o=
+        b=zVYFF4iviyGKVZnnlwhJISa52NAN7i8BLQzE8XzXLqIV8JCxnmPFiVG/hdzv5KtVr
+         3OFzGXTbyiTTLjcvumjRWqqsreMWgD93Yj7CWq4i/fkzZ75/97jgu+UgDleYjE8V0N
+         /u6dZoNV97lUZJ+VdxGP2S5UWPK2edT5LzoXw3aE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lionel Debieve <lionel.debieve@st.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.4 91/92] hwrng: stm32 - fix unbalanced pm_runtime_enable
-Date:   Wed,  4 Dec 2019 18:50:31 +0100
-Message-Id: <20191204174335.613659568@linuxfoundation.org>
+        stable@vger.kernel.org,
+        John Rutherford <john.rutherford@dektech.com.au>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 88/92] tipc: fix link name length check
+Date:   Wed,  4 Dec 2019 18:50:28 +0100
+Message-Id: <20191204174335.459025400@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -60,46 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lionel Debieve <lionel.debieve@st.com>
+From: John Rutherford <john.rutherford@dektech.com.au>
 
-commit af0d4442dd6813de6e77309063beb064fa8e89ae upstream.
+[ Upstream commit fd567ac20cb0377ff466d3337e6e9ac5d0cb15e4 ]
 
-No remove function implemented yet in the driver.
-Without remove function, the pm_runtime implementation
-complains when removing and probing again the driver.
+In commit 4f07b80c9733 ("tipc: check msg->req data len in
+tipc_nl_compat_bearer_disable") the same patch code was copied into
+routines: tipc_nl_compat_bearer_disable(),
+tipc_nl_compat_link_stat_dump() and tipc_nl_compat_link_reset_stats().
+The two link routine occurrences should have been modified to check
+the maximum link name length and not bearer name length.
 
-Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Fixes: 4f07b80c9733 ("tipc: check msg->reg data len in tipc_nl_compat_bearer_disable")
+Signed-off-by: John Rutherford <john.rutherford@dektech.com.au>
+Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/char/hw_random/stm32-rng.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/tipc/netlink_compat.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/char/hw_random/stm32-rng.c
-+++ b/drivers/char/hw_random/stm32-rng.c
-@@ -166,6 +166,13 @@ static int stm32_rng_probe(struct platfo
- 	return devm_hwrng_register(dev, &priv->rng);
- }
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -516,7 +516,7 @@ static int tipc_nl_compat_link_stat_dump
+ 	if (len <= 0)
+ 		return -EINVAL;
  
-+static int stm32_rng_remove(struct platform_device *ofdev)
-+{
-+	pm_runtime_disable(&ofdev->dev);
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_PM
- static int stm32_rng_runtime_suspend(struct device *dev)
- {
-@@ -202,6 +209,7 @@ static struct platform_driver stm32_rng_
- 		.of_match_table = stm32_rng_match,
- 	},
- 	.probe = stm32_rng_probe,
-+	.remove = stm32_rng_remove,
- };
+-	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
++	len = min_t(int, len, TIPC_MAX_LINK_NAME);
+ 	if (!string_is_valid(name, len))
+ 		return -EINVAL;
  
- module_platform_driver(stm32_rng_driver);
+@@ -791,7 +791,7 @@ static int tipc_nl_compat_link_reset_sta
+ 	if (len <= 0)
+ 		return -EINVAL;
+ 
+-	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
++	len = min_t(int, len, TIPC_MAX_LINK_NAME);
+ 	if (!string_is_valid(name, len))
+ 		return -EINVAL;
+ 
 
 
