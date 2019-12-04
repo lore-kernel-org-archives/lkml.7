@@ -2,86 +2,132 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4ADC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7F7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B120205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127AF2073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:01:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eXjNzFA5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfLDJBQ (ORCPT
+        id S1727312AbfLDJBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:01:16 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7631 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726166AbfLDJBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:01:16 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5852DDA47E66650A345A;
-        Wed,  4 Dec 2019 17:01:13 +0800 (CST)
-Received: from [127.0.0.1] (10.133.216.73) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Dec 2019
- 17:01:07 +0800
-Subject: Re: firmware: dmi-sysfs: why is the access mode of dmi sysfs entries
- restricted to 0400?
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Mike Waychison <mikew@google.com>, <linux-kernel@vger.kernel.org>,
-        wanghaibin 00208455 <wanghaibin.wang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <42bb2db8-66e0-3df4-75b7-98b2b2bcfca8@huawei.com>
- <20191204074133.GA3548765@kroah.com>
-From:   Guoheyi <guoheyi@huawei.com>
-Message-ID: <dac22bed-f138-471e-c19a-e31c5c910d48@huawei.com>
-Date:   Wed, 4 Dec 2019 17:01:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 4 Dec 2019 04:01:48 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36260 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727009AbfLDJBp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 04:01:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575450104;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RN/l+ytAzaNhoJcK3/jpshrBdeMaQLMrqTK8LFIbtHY=;
+        b=eXjNzFA5swYkW2iXOK74t3sAObY5Ht6t9VToNEw/gs+zq0PHwa/bhkUUf3ZCgxNdOP8pK6
+        1lCs7dY9oHOceXbBt27NDQSKbwphf8E0pet8Zs1DzdzVDH/xMl4BxeW292juTcIVWoO8SA
+        6/XuGOFCRtI3RvOe5VCbTH5T/DDqqWQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-187-T7xi4hn_Nv2nC2A-iPYaew-1; Wed, 04 Dec 2019 04:01:43 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A4774107ACC7;
+        Wed,  4 Dec 2019 09:01:39 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A81031D1;
+        Wed,  4 Dec 2019 09:01:30 +0000 (UTC)
+Date:   Wed, 4 Dec 2019 10:01:28 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
+Message-ID: <20191204090128.GA20746@krava>
+References: <20191202131847.30837-1-jolsa@kernel.org>
+ <CAEf4BzY_D9JHjuU6K=ciS70NSy2UvSm_uf1NfN_tmFz1445Jiw@mail.gmail.com>
+ <87wobepgy0.fsf@toke.dk>
+ <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191204074133.GA3548765@kroah.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.216.73]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: T7xi4hn_Nv2nC2A-iPYaew-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 03, 2019 at 09:52:11PM -0800, Alexei Starovoitov wrote:
+> On Mon, Dec 2, 2019 at 1:15 PM Toke H=F8iland-J=F8rgensen <toke@redhat.co=
+m> wrote:
+> >
+> > Ah, that is my mistake: I was getting dynamic libbpf symbols with this
+> > approach, but that was because I had the version of libbpf.so in my
+> > $LIBDIR that had the patch to expose the netlink APIs as versioned
+> > symbols; so it was just pulling in everything from the shared library.
+> >
+> > So what I was going for was exactly what you described above; but it
+> > seems that doesn't actually work. Too bad, and sorry for wasting your
+> > time on this :/
+>=20
+> bpftool is currently tightly coupled with libbpf and very likely
+> in the future the dependency will be even tighter.
+> In that sense bpftool is an extension of libbpf and libbpf is an extensio=
+n
+> of bpftool.
+> Andrii is working on set of patches to generate user space .c code
+> from bpf program.
+> bpftool will be generating the code that is specific for the version
+> bpftool and for
+> the version of libbpf. There will be compatibility layers as usual.
+> But in general the situation where a bug in libbpf is so criticial
+> that bpftool needs to repackaged is imo less likely than a bug in
+> bpftool that will require re-packaging of libbpf.
+> bpftool is quite special. It's not a typical user of libbpf.
+> The other way around is more correct. libbpf is a user of the code
+> that bpftool generates and both depend on each other.
+> perf on the other side is what typical user space app that uses
+> libbpf will look like.
+> I think keeping bpftool in the kernel while packaging libbpf
+> out of github was an oversight.
+> I think we need to mirror bpftool into github/libbpf as well
+> and make sure they stay together. The version of libbpf =3D=3D version of=
+ bpftool.
+> Both should come from the same package and so on.
+> May be they can be two different packages but
+> upgrading one should trigger upgrade of another and vice versa.
+> I think one package would be easier though.
+> Thoughts?
 
-ÔÚ 2019/12/4 15:41, Greg Kroah-Hartman Ð´µÀ:
-> On Wed, Dec 04, 2019 at 03:31:22PM +0800, Guoheyi wrote:
->> Hi,
->>
->> Why is the access mode of dmi sysfs entries restricted to 0400? Is it for
->> security concern? If it is, which information do we consider as privacy?
-> There's lots of "interesting" information in dmi entries that you
-> probably do not want all processes reading, which is why they are
-> restricted.
->
->> We would like to fetch CPU information from non-root application, is there
->> feasible way to do that?
-> What specific CPU information is not currently exported in /proc/cpuinfo
-> that only shows up in DMI entries that you are interested in?
+great, makes sense.. Toke already mentioned we might need to move
+bpftool to libbpf package to solve our issues, now when you guys
+have already plans for that, it works for us ;-)
 
-We'd like to get processor manufacturer, speed and version, and pass the 
-information to qemu virtual machine, for users of VM might be happy to 
-see this instead of "unknown xxx", while qemu may run as non-root.
-
->
-> You can always have root change the permissions of a sysfs file if you
-> have a service that wants to allow non-root programs to read specific
-> entries.
-
-Thanks; we'll try it.
-
-Heyi
-
->
-> thanks,
->
-> greg k-h
->
-> .
+thanks for sharing the plan,
+jirka
 
