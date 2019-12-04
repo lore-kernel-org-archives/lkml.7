@@ -2,122 +2,227 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA95C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D05C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC14216C8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD6820661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:50:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ubAR+keA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfLDGCE (ORCPT
+        id S1727123AbfLDGuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 01:02:04 -0500
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.113]:38183 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725791AbfLDGCD (ORCPT
+        Wed, 4 Dec 2019 01:50:20 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36937 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfLDGuT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 01:02:03 -0500
-Received: from [85.158.142.201] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-b.eu-central-1.aws.symcld.net id 87/F4-12310-7DB47ED5; Wed, 04 Dec 2019 06:01:59 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFKsWRWlGSWpSXmKPExsVy8IPnUd3r3s9
-  jDbp6RC3mnG9hsZh/5ByrxeFFLxgtmhevZ7O4+ekbq8XlXXPYLJZev8hk0br3CLvF/z072C12
-  793I5MDlsWbeGkaPLStvMnnsnHWX3WPTqk42j/1z17B7fN4kF8AWxZqZl5RfkcCasf3wKvaCy
-  ZwVLxYtY25gnMLRxcjFISSwjlHi6d6N7F2MnEBOhcTG14eYQGxegQiJJbPes4HYnAJmEn29Bx
-  ghakwlGuZ1soDYbAI6Eo9mrgerZxFQkfjYehKsRlggVuLI+6MsIAtEBPYySmz595odxGEW2M0
-  o8eHCAWaIDYISJ2c+AZvELCAhcfDFC2aIDVoS59asApskIWAvMf39VaA4B5CtL9F4LBYibCjx
-  fdY3FgjbXGLXuutMExgFZyGZOgvJ1AWMTKsYLZOKMtMzSnITM3N0DQ0MdA0NjXVNdI2MTPQSq
-  3ST9FJLdZNT80qKEoGyeonlxXrFlbnJOSl6eaklmxiB0ZRSyPJgB2PH17d6hxglOZiURHk3P3
-  4WK8SXlJ9SmZFYnBFfVJqTWnyIUYaDQ0mC18rzeayQYFFqempFWmYOMLJh0hIcPEoivAxeQGn
-  e4oLE3OLMdIjUKUZdjp1H5y1iFmLJy89LlRLn5QApEgApyijNgxsBSzKXGGWlhHkZGRgYhHgK
-  UotyM0tQ5V8xinMwKgnzKoFM4cnMK4Hb9AroCCagIw5UPgM5oiQRISXVwLT6ony/j/qVbwnrO
-  Y7qvbHbfp3z/abriWflfW2Pf9reO9tL9kzCQ5nly6fYWy3663HXaAnrrVOvVTc0va4XSSv6tv
-  Re9iFRNnvePeL7tst2cqWHH5WpuXshr61N+5/DpK9Se5mcIs4/4fxtdlfvfdlh2VvVOqvtTqU
-  pl0uUmte5yG6zehnBu+GhEafJz0+xDhxq4UUrGUVfntmW+lhV+Y9wB0fp40a7Y6Yr2IubXKft
-  853pZfN7TuHuWiHb9tZrDB6bviwRanwieinX441UYdV8i2tKD0ovH5HxrHutLPTkru4nhtbrB
-  f+0pYIu7xcVXS58zrhGfJvKLSsZwW9sVhv4XOLSU0X/+e0sP7k0RomlOCPRUIu5qDgRAJrpJN
-  KtAwAA
-X-Env-Sender: roy.im.opensource@diasemi.com
-X-Msg-Ref: server-10.tower-246.messagelabs.com!1575439318!946274!1
-X-Originating-IP: [193.240.73.197]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.22; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 30465 invoked from network); 4 Dec 2019 06:01:59 -0000
-Received: from unknown (HELO sw-ex-cashub01.diasemi.com) (193.240.73.197)
-  by server-10.tower-246.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 4 Dec 2019 06:01:59 -0000
-Received: from swsrvapps-01.diasemi.com (10.20.28.141) by
- SW-EX-CASHUB01.diasemi.com (10.20.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Wed, 4 Dec 2019 06:01:56 +0000
-Received: by swsrvapps-01.diasemi.com (Postfix, from userid 22266)      id
- 1270A3FC0F; Tue,  3 Dec 2019 07:11:54 +0000 (GMT)
-Message-ID: <0e2b1bf7e5d5868cf7437ec7f347352420ba65ea.1575344415.git.Roy.Im@diasemi.com>
-In-Reply-To: <cover.1575344415.git.Roy.Im@diasemi.com>
-References: <cover.1575344415.git.Roy.Im@diasemi.com>
-From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Tue, 3 Dec 2019 12:40:15 +0900
-Subject: [PATCH V8 1/3] MAINTAINERS: da7280 updates to the Dialog
- Semiconductor search terms
-To:     <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <samsung@kernel.org>, Rob Herring <robh@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
+        Wed, 4 Dec 2019 01:50:19 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f129so6570300wmf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 22:50:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VMtFfNaDx2oQbuDbsEhYc0lGTSp37MnP2fz0v39AX38=;
+        b=ubAR+keAfnqKsKRDax35KDypRtW1p4omzCQbjDV0j6l5ZWClhQonZQ3XJZ6+WJPigv
+         JR57d2F9hBaspWrC7wXL3RtPnKSBzz6sOtSRVN/77+c+0BLe9q+2Byl16C35ykFdLa9F
+         6Z/zvGFvmPrYD17rtWxc/+Qgk8v24ivMiCz0ViX6mj581M6ACT4mY9ORLPirq4y72iXY
+         fMwqrB98LQ4iKFTfxm6u1K3SKdf4TtAzWW/NVTjf8BKyAzPWuawNBFXIIjS073kUy6Z8
+         sSz8HYgeTN/BkiUAbe1fpV97JhSMyKyZQALPzTWNsZ2kBqAVRr/7xC8SSynPoMwntVKI
+         nBbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VMtFfNaDx2oQbuDbsEhYc0lGTSp37MnP2fz0v39AX38=;
+        b=b2cev61qZ7WhF3+CryY7Nbh/kMXcCljOP66RT7MoJ4RkdCNtwIe1ch/93xjhybE1wX
+         lV4pzPisJ0u111f8OnO19M3GmVsrvG7mxBt3xVqd+REOjMpj13f77pSK76GogwjdRbdX
+         jhWhUsIIdHl5e6rWikT+avLfXr8QkmXtejfp+BPe9o+G3LpizMxb9YhvXCY5LVY/hsvN
+         uk12kdgV20rOKcd/Q4P7hP8hdUUQVy30iLi1SozLiWAYrl2fx8E28qkrP6XlKVeUnUD4
+         llW0iTjM/0Mcl/Pyd6/S/tAdNXL1gHkQYZVIL2JBDx4pG+2r70dZLNo9GFmyINwza7Or
+         gbIw==
+X-Gm-Message-State: APjAAAVlt6D5W1Y6qcT4Xrr4v+W4587Z9tYePS9oacz44m//XYI4cM4D
+        6jtOWamdeig2pWOwu8ZdMqeAhxxTBVA=
+X-Google-Smtp-Source: APXvYqzODzsaM1aq4feIQfYsxRLRXvV+5Nl/RsGmQqd9AUtp5aYNvfTSQD6LHYKGokZZMY4/NYOYQg==
+X-Received: by 2002:a1c:ed05:: with SMTP id l5mr40539160wmh.161.1575442216099;
+        Tue, 03 Dec 2019 22:50:16 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:b5a4:1c65:b54:363a? ([2a01:e34:ed2f:f020:b5a4:1c65:b54:363a])
+        by smtp.googlemail.com with ESMTPSA id n14sm5529954wmi.26.2019.12.03.22.50.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Dec 2019 22:50:15 -0800 (PST)
+Subject: Re: [PATCH V3 2/4] thermal/drivers/cpu_cooling: Add idle cooling
+ device documentation
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191203093704.7037-1-daniel.lezcano@linaro.org>
+ <20191203093704.7037-2-daniel.lezcano@linaro.org>
+ <CAP245DV=kd=LdvgZ2x1Q8-ZahpS3423Z9vHXw91N20aQ6DKxAQ@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7e851d43-ecb5-179a-ebfd-847dffd29636@linaro.org>
+Date:   Wed, 4 Dec 2019 07:50:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-KSE-AttachmentFiltering-Interceptor-Info: protection disabled
-X-KSE-ServerInfo: sw-ex-cashub01.diasemi.com, 9
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 04/12/2019 05:22:00
+In-Reply-To: <CAP245DV=kd=LdvgZ2x1Q8-ZahpS3423Z9vHXw91N20aQ6DKxAQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the da7280 bindings doc and driver to the Dialog
-Semiconductor support list.
 
-Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+Hi Amit,
 
----
-v8: No changes.
-v7: No changes.
-v6: No changes.
-v5: No changes.
-v4: No changes.
-v3: No changes.
-v2: No changes.
+thanks for the review.
 
 
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+On 04/12/2019 05:24, Amit Kucheria wrote:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9d3a5c5..def5e3e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4819,6 +4819,7 @@ S:	Supported
- F:	Documentation/hwmon/da90??.rst
- F:	Documentation/devicetree/bindings/mfd/da90*.txt
- F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
-+F:	Documentation/devicetree/bindings/input/dlg,da72??.txt
- F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
- F:	Documentation/devicetree/bindings/regulator/da92*.txt
- F:	Documentation/devicetree/bindings/regulator/slg51000.txt
-@@ -4828,6 +4829,7 @@ F:	drivers/gpio/gpio-da90??.c
- F:	drivers/hwmon/da90??-hwmon.c
- F:	drivers/iio/adc/da91??-*.c
- F:	drivers/input/misc/da90??_onkey.c
-+F:	drivers/input/misc/da72??.[ch]
- F:	drivers/input/touchscreen/da9052_tsi.c
- F:	drivers/leds/leds-da90??.c
- F:	drivers/mfd/da903x.c
+[ ... ]
+
+>> +the CPUs will have to wakeup from a deep sleep state.
+>> +
+>> +     ^
+>> +     |
+>> +     |
+>> +     |-------       -------       -------
+>> +     |_______|_____|_______|_____|_______|___________
+>> +
+>> +      <----->
+>> +       idle  <---->
+>> +              running
+>> +
+>> +With the fixed idle injection duration, we can give a value which is
+>> +an acceptable performance drop off or latency when we reach a specific
+>> +temperature and we begin to mitigate by varying the Idle injection
+>> +period.
+>> +
+> 
+> I'm not sure what it the purpose of this statement. You've described
+> how the period value starts at a maximum and is adjusted dynamically
+> below.
+
+We can have different way to inject idle periods. We can increase the
+idle duration and/or keep this duration constant but make a variation of
+the period. This statement clarify the method which is the latter
+because we want to have a constant latency per period easier to deal with.
+
+>> +The mitigation begins with a maximum period value which decrease when
+> 
+> Shouldn't the idle injection period increase to get more cooling effect?
+
+The period is the opposite of the frequency. The highest the period, the
+lowest the frequency, thus less idle cycles and lesser cooling effect.
+
+>> +more cooling effect is requested. When the period duration is equal to
+>> +the idle duration, then we are in a situation the platform can’t
+>> +dissipate the heat enough and the mitigation fails. In this case the
+>> +situation is considered critical and there is nothing to do. The idle
+>> +injection duration must be changed by configuration and until we reach
+>> +the cooling effect, otherwise an additionnal cooling device must be
+> 
+> typo: additional
+> 
+>> +used or ultimately decrease the SoC performance by dropping the
+>> +highest OPP point of the SoC.
+>> +
+>> +The idle injection duration value must comply with the constraints:
+>> +
+>> +- It is lesser or equal to the latency we tolerate when the mitigation
+> 
+> s/lesser/less than/
+> 
+>> +  begins. It is platform dependent and will depend on the user
+>> +  experience, reactivity vs performance trade off we want. This value
+>> +  should be specified.
+>> +
+>> +- It is greater than the idle state’s target residency we want to go
+>> +  for thermal mitigation, otherwise we end up consuming more energy.
+>> +
+>> +Minimum period
+>> +--------------
+>> +
+>> +The idle injection duration being fixed, it is obvious the minimum
+> 
+> Change to:
+> When the idle injection duration is fixed,
+> 
+
+The idle duration is always fixed in the cpuidle cooling device, why do
+you want to add the sentence above?
+
+
 -- 
-end-of-patch for PATCH V8
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
