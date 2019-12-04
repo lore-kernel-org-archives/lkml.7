@@ -2,108 +2,156 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7D6C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E97C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABD32081B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D8A2081B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:12:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vVJG7FXF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aGSA02pw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbfLDQMt (ORCPT
+        id S1728697AbfLDQMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 4 Dec 2019 11:12:49 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37582 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728618AbfLDQMm (ORCPT
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26052 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728663AbfLDQMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 11:12:42 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f129so342325wmf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 08:12:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=uNltmXqrTHCnNf+qBYAGd5VIRrUeGqmibGRaqa9yu1Q=;
-        b=vVJG7FXFHlTEExX4Hsqsesxz4BcR7uE4KGZOnfgsx+3n4+/1kENEs5eO1w8pO8spjs
-         lj6/5OWVTWddVehZBTAVSONnQb1q3ia2F95diaguJ4YDwXL/zF5VGSYttpVWIqLAX9J2
-         CqGz/ziX+vHOc4IGwAH5yR0QoZZbOUML64Z/VbmvKmIqzLZsWuslfm8LhvKrVfwoFx21
-         Vgqb1DffRv/n/1QEX+SdwLAAPrh40LjSXj3GlgunQemerCnGJsgMhacS1cSMaY9H4iMR
-         jK84L0Y3WjgRJcVF6c6YEciDjOL5hl80MnV0nM9KPDjqfCjeUjLWK7lZVRNngpU8LpGU
-         yB7A==
+        Wed, 4 Dec 2019 11:12:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575475967;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iBPKZZ1S6h+pflfRLsbt4YQvZfduXk93viwFWwQMor4=;
+        b=aGSA02pwwzytN8y3tE4HRa5Prop91D5RQcHkzqEKQUWG74dsOjwZ4mWy7xvt5ul9pgrsvu
+        q3Y/8oTQNQPGZPab2R6sVXq+r4pAM1V5gyOClhxVwFpP8Rgh/IRwdNm29YW7yTIZziO5OE
+        ToWQA/EM+SdH1wscfLqvnH237NX7JBQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-171-xhApEHU3NRav-i6UB4POgA-1; Wed, 04 Dec 2019 11:12:46 -0500
+Received: by mail-wr1-f72.google.com with SMTP id z15so83001wrw.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 08:12:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uNltmXqrTHCnNf+qBYAGd5VIRrUeGqmibGRaqa9yu1Q=;
-        b=t24Qh6gOa8YgbkyfM3cqiwdw4Wm9XoS5vktncL0BspKam8TuGj55BYpFty7XipMVW9
-         ZT7orBE8YqiURWEg6BKnho0ExoN8klLp2Ljinpa8Ljv9/MlJhYtvHkDXp/4kM+ojZGKB
-         yoyq0hPI3J8zc0ByXxfLwhBXSJFFpAu2K3YuT+00tSnzbGxiYrvxmAu2xPmOQZy5+row
-         WQvpTh+UE21Uk4SwYxmvEvFyGuQyqlf67HBe0ZiIdQ5sf9bEnnzGqQ4MMviGQB72UfpI
-         GSb22rww2TXUIxoZD/uwHfPggaUY05DiHzuUTN7aEblfZKPX94a9bLY42rnloFbqPCGN
-         9TIw==
-X-Gm-Message-State: APjAAAViGTZ+eDQbYkJx+vFoccqIjh+L7VGB/wqO51p8y2fIeuh6pl9E
-        prpZ3f6rBm2hW2CO23Nqh7KUAg==
-X-Google-Smtp-Source: APXvYqxrriJxLsMfieNeOg4mz1DuduSGtrjOq7RZ4bPDbDfGq+BAPK1gy4x1qgM2SsGWth1VIbi0gg==
-X-Received: by 2002:a1c:7203:: with SMTP id n3mr229261wmc.119.1575475960961;
-        Wed, 04 Dec 2019 08:12:40 -0800 (PST)
-Received: from glaroque-ThinkPad-T480.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id l3sm8747238wrt.29.2019.12.04.08.12.39
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=az7yGx5mjj6saclgmtqUq3bomG8Y9h4yXQPUO7zazjU=;
+        b=KJFAcsM8lUSWLmJ+Fasfy1L+7fVHy8x5ZIFUxpjOO/f+8yZO24iY9uGJPwf/bO2M5r
+         po3t43+Hg6wlMJ8oSBkkE0kZRPZN8DmFNcEbWojwLUC6Rr2SJ+oLNuz+Oj8/bYRMj2xW
+         aBAJQGSFNdNkMYq6X/t7Z96GwOIg4SYjYFWS5rinf26k/G5e86BFaJ3jUcP78SBOzjFm
+         u41YFcIP6eLmVBEk2M2H8d6jzonE92QQYRMR+V2l6uZERNRIgpMERLNCrXKucJXuThls
+         KHX7uO/zBMuxxPIhPrtfsex12oDmh4nD5CuezKgMP0TO9tTwdk50kHyM5YU1RLVnE3T2
+         WRSg==
+X-Gm-Message-State: APjAAAX8hDR+n1cPJP4MwtbGt5PH2PHpkDSTYlcALoSZe4p5x7IhmiHg
+        24gQ3R0HzCiE/D8JFlM28Xsh/bSRGz/AWD8tmGfPsADajaYTQmZlHmis1hG6DKyLwQhbE8O2f8V
+        61KZcLmJFLrkGnP7/5uRqKpri
+X-Received: by 2002:adf:f18b:: with SMTP id h11mr4779046wro.56.1575475964972;
+        Wed, 04 Dec 2019 08:12:44 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxTJH5SA3fe8QAEzL29ciROHFyN3zU3Fi4M6fp77QL0tF0/UnHDFahXlLgvuujaCUbQPRN9pw==
+X-Received: by 2002:adf:f18b:: with SMTP id h11mr4779023wro.56.1575475964785;
+        Wed, 04 Dec 2019 08:12:44 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id f1sm8745843wrp.93.2019.12.04.08.12.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 08:12:40 -0800 (PST)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, khilman@baylibre.com
-Subject: [PATCH v2] bluetooth: hci_bcm: enable IRQ capability from node
-Date:   Wed,  4 Dec 2019 17:12:39 +0100
-Message-Id: <20191204161239.16653-1-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 04 Dec 2019 08:12:44 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 6/6] KVM: X86: Conert the last users of "shorthand = 0" to use macros
+In-Reply-To: <20191203165903.22917-7-peterx@redhat.com>
+References: <20191203165903.22917-1-peterx@redhat.com> <20191203165903.22917-7-peterx@redhat.com>
+Date:   Wed, 04 Dec 2019 17:12:43 +0100
+Message-ID: <875ziwt6h0.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+X-MC-Unique: xhApEHU3NRav-i6UB4POgA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Actually IRQ can be found from GPIO but all platorms don't support
-gpiod_to_irq, it's the case on amlogic chip.
-so to have possibility to use interrupt mode we need to add interrupts
-field in node and support it in driver.
+Peter Xu <peterx@redhat.com> writes:
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
-sorry for noise,
+> Change the last users of "shorthand =3D 0" to use APIC_DEST_NOSHORT.
+>
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  arch/x86/kvm/ioapic.c   | 4 ++--
+>  arch/x86/kvm/irq_comm.c | 2 +-
+>  arch/x86/kvm/x86.c      | 2 +-
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+> index f53daeaaeb37..77538fd77dc2 100644
+> --- a/arch/x86/kvm/ioapic.c
+> +++ b/arch/x86/kvm/ioapic.c
+> @@ -330,7 +330,7 @@ static void ioapic_write_indirect(struct kvm_ioapic *=
+ioapic, u32 val)
+>  =09=09if (e->fields.delivery_mode =3D=3D APIC_DM_FIXED) {
+>  =09=09=09struct kvm_lapic_irq irq;
+> =20
+> -=09=09=09irq.shorthand =3D 0;
+> +=09=09=09irq.shorthand =3D APIC_DEST_NOSHORT;
+>  =09=09=09irq.vector =3D e->fields.vector;
+>  =09=09=09irq.delivery_mode =3D e->fields.delivery_mode << 8;
+>  =09=09=09irq.dest_id =3D e->fields.dest_id;
+> @@ -379,7 +379,7 @@ static int ioapic_service(struct kvm_ioapic *ioapic, =
+int irq, bool line_status)
+>  =09irqe.trig_mode =3D entry->fields.trig_mode;
+>  =09irqe.delivery_mode =3D entry->fields.delivery_mode << 8;
+>  =09irqe.level =3D 1;
+> -=09irqe.shorthand =3D 0;
+> +=09irqe.shorthand =3D APIC_DEST_NOSHORT;
+>  =09irqe.msi_redir_hint =3D false;
+> =20
+>  =09if (irqe.trig_mode =3D=3D IOAPIC_EDGE_TRIG)
+> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+> index 7d083f71fc8e..9d711c2451c7 100644
+> --- a/arch/x86/kvm/irq_comm.c
+> +++ b/arch/x86/kvm/irq_comm.c
+> @@ -121,7 +121,7 @@ void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kern=
+el_irq_routing_entry *e,
+>  =09irq->msi_redir_hint =3D ((e->msi.address_lo
+>  =09=09& MSI_ADDR_REDIRECTION_LOWPRI) > 0);
+>  =09irq->level =3D 1;
+> -=09irq->shorthand =3D 0;
+> +=09irq->shorthand =3D APIC_DEST_NOSHORT;
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_set_msi_irq);
+> =20
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 3b00d662dc14..f6d778436e15 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -7355,7 +7355,7 @@ static void kvm_pv_kick_cpu_op(struct kvm *kvm, uns=
+igned long flags, int apicid)
+>  {
+>  =09struct kvm_lapic_irq lapic_irq;
+> =20
+> -=09lapic_irq.shorthand =3D 0;
+> +=09lapic_irq.shorthand =3D APIC_DEST_NOSHORT;
+>  =09lapic_irq.dest_mode =3D APIC_DEST_PHYSICAL;
+>  =09lapic_irq.level =3D 0;
+>  =09lapic_irq.dest_id =3D apicid;
 
-v2 is for rebasing on master branch
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-guillaume
+And, while on it, and if you're not yet tired I just noticed that
+kvm_apic_match_dest()'s parameter is called 'short_hand' while
+everywhere else we use 'shorthand'. Value the consistency we should :-)
 
- drivers/bluetooth/hci_bcm.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index f8f5c593a05c..9f52d57c56de 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -1409,6 +1409,7 @@ static int bcm_serdev_probe(struct serdev_device *serdev)
- {
- 	struct bcm_device *bcmdev;
- 	const struct bcm_device_data *data;
-+	struct platform_device *pdev;
- 	int err;
- 
- 	bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
-@@ -1421,6 +1422,8 @@ static int bcm_serdev_probe(struct serdev_device *serdev)
- #endif
- 	bcmdev->serdev_hu.serdev = serdev;
- 	serdev_device_set_drvdata(serdev, bcmdev);
-+	pdev = to_platform_device(bcmdev->dev);
-+	bcmdev->irq = platform_get_irq(pdev, 0);
- 
- 	/* Initialize routing field to an unused value */
- 	bcmdev->pcm_int_params[0] = 0xff;
--- 
-2.17.1
+--=20
+Vitaly
 
