@@ -2,114 +2,200 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7829BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9A6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3865920661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:54:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BOkMzCMz"
+	by mail.kernel.org (Postfix) with ESMTP id 5E74A2465C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfLDGyH (ORCPT
+        id S1726989AbfLDGQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 01:54:07 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35557 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfLDGyG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 01:54:06 -0500
-Received: by mail-qk1-f194.google.com with SMTP id v23so6185637qkg.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 22:54:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NPK31KT4fxLwD0F1AZDz2V/fu+xIHdUgpNu7HrMjbFw=;
-        b=BOkMzCMzR5sKMnF42GmwGVTEJc+LOb23dsZlRHel6sRqIWvouhTx3uSjuj56W+eI6i
-         WKFjyajdaq7/klhycZJpOZ1C5uY21UsOGiG3SpNpVOEnp0+cjCk+LYKRMS3fgkriAub8
-         nlHDa2FMR8/XmMhwk20tOkMU7HMQ5vmevU7ui4yNMQ51MSLv6jRXrtVe2iukGrm6XIBU
-         vGbD2kLuak4JrxMh1o/1pLHbGaeWJKVG7AbvqgJWVtMDRZkN1JqlAgO8mU4Ox2Exa1tC
-         Mj5rKh2JP3pCY5Jxm8w4XU444Krqs9wk1QO+o+2WiulmzqgHnVKwfLTC/2Na+ibHlTMY
-         OeNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NPK31KT4fxLwD0F1AZDz2V/fu+xIHdUgpNu7HrMjbFw=;
-        b=sdwLBcUWQTpjtTi9RKCDbiAYGDRIin35/SDkfUwHJJl9BMdR6ZMaXkxiZ6PoHYdtq/
-         i8TLlY2uv2LyGFVLnvEXjxqS1t0N0QqZGFSymhPc8HLMvttIvyQDC07bIDn3ADl9xmRa
-         6GsyjekGtme8vaFID1Zxf2l8l8GKeotqFcVauMUSrT21UNagvKbIac/222bfO8NVnhV5
-         Gryzau8WZaOPlNPNlZ7i32npg+uj7K60pmnlHmpGqWKg5UaVvp2tSeWjn6PfRpr7vEX3
-         HcF07HOJ+GmjSXsLcF6IJL0b5/CHuMOX2+4dIj62kjudMSJSLpnI69Ao4AJuiryBO2NY
-         4hhw==
-X-Gm-Message-State: APjAAAWRUGSOXFr2sIb4kbQhvCUPTzWp6YItlclOCO5xvi7hNR4SzTlw
-        mCmCKS8a+FwIe5mIZMHoC0OnWfx9OtRoSv42OLbAfQ==
-X-Google-Smtp-Source: APXvYqyKONKPMM3S6T9nyyBFpC5NnDRt2Bm9tOCUttMMCINdvVilsB2+tf+V3DS0oKZWvWvW5H/afsAEiU8hht6KyQ0=
-X-Received: by 2002:a37:9d12:: with SMTP id g18mr1356251qke.43.1575442445437;
- Tue, 03 Dec 2019 22:54:05 -0800 (PST)
-MIME-Version: 1.0
-References: <000000000000dd04830598d50133@google.com> <0000000000009574da0598d7ccfa@google.com>
-In-Reply-To: <0000000000009574da0598d7ccfa@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 4 Dec 2019 07:53:54 +0100
-Message-ID: <CACT4Y+aEzDb2r=wjAD=qWyE=_JCfH8pzdoWCdLQsCmWmahLhaw@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in tty_open
-To:     syzbot <syzbot+9af6d43c1beabec8fd05@syzkaller.appspotmail.com>
-Cc:     Gleb Natapov <gleb@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        gwshan@linux.vnet.ibm.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Jiri Slaby <jslaby@suse.com>, KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Russell Currey <ruscur@russell.cc>, stewart@linux.vnet.ibm.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>
+        Wed, 4 Dec 2019 01:16:59 -0500
+Received: from mga07.intel.com ([134.134.136.100]:59519 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725791AbfLDGQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 01:16:58 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 22:16:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,276,1571727600"; 
+   d="scan'208";a="412469165"
+Received: from yuanwan1-mobl.ccr.corp.intel.com ([10.249.174.225])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Dec 2019 22:16:56 -0800
+Message-ID: <7f4da1c663268f53f2123424c1b8abdbe8316556.camel@intel.com>
+Subject: [GIT PULL] Thermal management updates for v5.5-rc1
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Zhang, Rui" <rui.zhang@intel.com>
+Date:   Wed, 04 Dec 2019 14:16:55 +0800
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 3:45 AM syzbot
-<syzbot+9af6d43c1beabec8fd05@syzkaller.appspotmail.com> wrote:
->
-> syzbot has bisected this bug to:
->
-> commit 2de50e9674fc4ca3c6174b04477f69eb26b4ee31
-> Author: Russell Currey <ruscur@russell.cc>
-> Date:   Mon Feb 8 04:08:20 2016 +0000
->
->      powerpc/powernv: Remove support for p5ioc2
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15e5fc32e00000
-> start commit:   76bb8b05 Merge tag 'kbuild-v5.5' of git://git.kernel.org/p..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=17e5fc32e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13e5fc32e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=dd226651cb0f364b
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9af6d43c1beabec8fd05
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d15061e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14b69aeae00000
->
-> Reported-by: syzbot+9af6d43c1beabec8fd05@syzkaller.appspotmail.com
-> Fixes: 2de50e9674fc ("powerpc/powernv: Remove support for p5ioc2")
->
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Hi, Linus,
 
-This should have been detected as "does not affect binary", but there
-is something I don't understand/missing:
-This is bisected to 2de50e9674fc4ca3c6174b04477f69eb26b4ee31
-and it has this parent:
-$ git log -n 1 --format="%P" 2de50e9674fc4ca3c6174b04477f69eb26b4ee31
-388f7b1d6e8ca06762e2454d28d6c3c55ad0fe95
-But the parent was never tested during bisection... how is this possible?
-Mentioned this here:
-https://github.com/google/syzkaller/issues/1271#issuecomment-561504032
+Please pull from
+  git://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
+thermal/next
+
+to receive the latest Thermal Management updates for v5.5-rc1 with
+top-most commit 163b00cde7cf2206e248789d2780121ad5e6a70b:
+
+  thermal: Fix deadlock in thermal thermal_zone_device_check (2019-11-
+14 22:41:09 +0800)
+
+on top of commit a99d8080aaf358d5d23581244e5da23b35e340b9:
+
+  Linux 5.4-rc6 (2019-11-03 14:07:26 -0800)
+
+Specifics:
+
+- Fix a deadlock regression in thermal core framework, which is
+introduced in 5.3. (Wei Wang)
+
+- Initialize thermal control framework earlier to enable thermal
+mitigation during boot. (Amit Kucheria)
+
+- Convert the Intelligent Power Allocator (IPA) thermal governor to
+follow the generic PM_EM instead of its own Energy Model. (Quentin
+Perret)
+
+- Introduce a new Amlogic soc thermal driver. (Guillaume La Roque)
+
+- Add interrupt support for tsens thermal driver. (Amit Kucheria)
+
+- Add support for MSM8956/8976 in tsens thermal driver.
+(AngeloGioacchino Del Regno)
+
+- Add support for r8a774b1 in rcar thermal driver. (Biju Das)
+
+- Add support for Thermal Monitor Unit v2 in qoriq thermal driver.
+(Yuantian Tang)
+
+- Some other fixes/cleanups on thermal core framework and soc thermal
+drivers. (Colin Ian King, Daniel Lezcano, Hsin-Yi Wang, Tian Tao)
+
+thanks,
+rui
+
+----------------------------------------------------------------
+Amit Kucheria (13):
+      drivers: thermal: tsens: Get rid of id field in tsens_sensor
+      drivers: thermal: tsens: Simplify code flow in tsens_probe
+      drivers: thermal: tsens: Add __func__ identifier to debug
+statements
+      drivers: thermal: tsens: Add debugfs support
+      dt-bindings: thermal: tsens: Convert over to a yaml schema
+      drivers: thermal: tsens: Create function to return sign-extended
+temperature
+      drivers: thermal: tsens: Add interrupt support
+      thermal: Remove netlink support
+      thermal: Initialize thermal subsystem earlier
+      cpufreq: Initialize the governors in core_initcall
+      cpufreq: Initialize cpufreq-dt driver earlier
+      clk: qcom: Initialize clock drivers earlier
+      cpufreq: qcom-hw: Move driver initialization earlier
+
+AngeloGioacchino Del Regno (2):
+      thermal: qcom: tsens-v1: Add support for MSM8956 and MSM8976
+      dt: thermal: tsens: Document compatible for MSM8976/56
+
+Biju Das (2):
+      thermal: rcar_gen3_thermal: Add r8a774b1 support
+      dt-bindings: thermal: rcar-gen3-thermal: Add r8a774b1 support
+
+Colin Ian King (2):
+      thermal: qcom: tsens-v1: Fix kfree of a non-pointer value
+      drivers: thermal: tsens: fix potential integer overflow on
+multiply
+
+Daniel Lezcano (2):
+      thermal: cpu_cooling: Remove pointless dependency on CONFIG_OF
+      thermal: cpu_cooling: Reorder the header file
+
+Guillaume La Roque (3):
+      dt-bindings: thermal: Add DT bindings documentation for Amlogic
+Thermal
+      thermal: amlogic: Add thermal driver to support G12 SoCs
+      MAINTAINERS: add entry for Amlogic Thermal driver
+
+Hsin-Yi Wang (1):
+      thermal-generic-adc: Silent error message for EPROBE_DEFER
+
+Quentin Perret (4):
+      arm64: defconfig: Enable CONFIG_ENERGY_MODEL
+      PM / EM: Declare EM data types unconditionally
+      thermal: cpu_cooling: Make the power-related code depend on IPA
+      thermal: cpu_cooling: Migrate to using the EM framework
+
+Tian Tao (1):
+      thermal: no need to set .owner when using module_platform_driver
+
+Wei Wang (1):
+      thermal: Fix deadlock in thermal thermal_zone_device_check
+
+Yuantian Tang (1):
+      thermal: qoriq: add thermal monitor unit version 2 support
+
+ .../bindings/thermal/amlogic,thermal.yaml          |  54 +++
+ .../devicetree/bindings/thermal/qcom-tsens.txt     |  55 ---
+ .../devicetree/bindings/thermal/qcom-tsens.yaml    | 170 +++++++
+ .../bindings/thermal/rcar-gen3-thermal.txt         |   1 +
+ Documentation/driver-api/thermal/sysfs-api.rst     |  26 +-
+ MAINTAINERS                                        |  10 +
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/clk/qcom/clk-rpmh.c                        |   2 +-
+ drivers/clk/qcom/gcc-qcs404.c                      |   2 +-
+ drivers/clk/qcom/gcc-sdm845.c                      |   2 +-
+ drivers/cpufreq/cpufreq-dt-platdev.c               |   2 +-
+ drivers/cpufreq/cpufreq_conservative.c             |   2 +-
+ drivers/cpufreq/cpufreq_ondemand.c                 |   2 +-
+ drivers/cpufreq/cpufreq_performance.c              |   2 +-
+ drivers/cpufreq/cpufreq_powersave.c                |   2 +-
+ drivers/cpufreq/cpufreq_userspace.c                |   2 +-
+ drivers/cpufreq/qcom-cpufreq-hw.c                  |   2 +-
+ drivers/thermal/Kconfig                            |  12 +
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/amlogic_thermal.c                  | 333 +++++++++++++
+ drivers/thermal/cpu_cooling.c                      | 404 +++++++----
+-----
+ drivers/thermal/qcom/tsens-8960.c                  |   4 +-
+ drivers/thermal/qcom/tsens-common.c                | 529
++++++++++++++++++++--
+ drivers/thermal/qcom/tsens-v0_1.c                  |  11 +
+ drivers/thermal/qcom/tsens-v1.c                    | 198 +++++++-
+ drivers/thermal/qcom/tsens-v2.c                    |  13 +
+ drivers/thermal/qcom/tsens.c                       |  62 ++-
+ drivers/thermal/qcom/tsens.h                       | 288 +++++++++--
+ drivers/thermal/qoriq_thermal.c                    | 120 ++++-
+ drivers/thermal/rcar_gen3_thermal.c                |   4 +
+ drivers/thermal/thermal-generic-adc.c              |   9 +-
+ drivers/thermal/thermal_core.c                     | 107 +----
+ drivers/thermal/thermal_mmio.c                     |   1 -
+ include/linux/cpu_cooling.h                        |  18 +-
+ include/linux/energy_model.h                       |   3 +-
+ include/linux/thermal.h                            |  11 -
+ kernel/sched/cpufreq_schedutil.c                   |   2 +-
+ 37 files changed, 1878 insertions(+), 589 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+ delete mode 100644 Documentation/devicetree/bindings/thermal/qcom-
+tsens.txt
+ create mode 100644 Documentation/devicetree/bindings/thermal/qcom-
+tsens.yaml
+ create mode 100644 drivers/thermal/amlogic_thermal.c
+
