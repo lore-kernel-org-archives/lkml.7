@@ -2,123 +2,194 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA65CC2D0BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E7AC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA28B206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47993206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:42:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Buek2F9l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7CxIZRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfLDWmB (ORCPT
+        id S1728408AbfLDWmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 17:42:01 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:50140 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728284AbfLDWli (ORCPT
+        Wed, 4 Dec 2019 17:42:53 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39325 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfLDWmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 17:41:38 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5003120B4762;
-        Wed,  4 Dec 2019 14:41:37 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5003120B4762
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1575499297;
-        bh=L4puKXt7OmrSagN42Huxd1vQTKOco/JYM8kKj45zf2k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Buek2F9ll8/bUHrhBgsViGYaRaAayGefcfg1p/6jSG8lGyFdn74jFOjDhLIGv0lth
-         OCPEHjH59CUe33w0Kp3t+PNuLKCkzSWHVmQK6EA+cY937+VB3Qmwbh8V/Le2lpN222
-         FfYcp8C8jRBqumLtEZyRmM/sWX8Hp6ameMe8rhPo=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Subject: [PATCH v10 2/6] IMA: Add KEY_CHECK func to measure keys
-Date:   Wed,  4 Dec 2019 14:41:27 -0800
-Message-Id: <20191204224131.3384-3-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191204224131.3384-1-nramas@linux.microsoft.com>
-References: <20191204224131.3384-1-nramas@linux.microsoft.com>
+        Wed, 4 Dec 2019 17:42:52 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so562874pfx.6;
+        Wed, 04 Dec 2019 14:42:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pF5bjopQFQ3A+SmApS9xhaC/5lZoT7rSCk2k4/K0fE4=;
+        b=Q7CxIZRtAxRwNYXgAnY2x8ZSABqYYcEYAir0rRuMfUunI+Fxerl//0q8FcT1DVmfjn
+         XzXlJHh5j9uevlTyhz8h7q0o/RYfQjR0ZjoUo1D/1KGJJTkieQNF5JZ4NqchzW7b0e5o
+         qcz616/VCrszZCijm1L7szNpT5eayAgJDHDiTgul0LaYivT7+p5yYoaZAhQSSY8UL+VK
+         dakBEb/CPTPdW4tJVWL77/zTSxlTzK6E7k+j7lqiksgGkRFYf8y5NXzocpls2ycBrtWl
+         XM37VPKiRXfJW9osEbPEDJKsDKQKdFjQuH40qCYHeXzudpIzHdVg84WYRO24o04dPWeK
+         fS+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pF5bjopQFQ3A+SmApS9xhaC/5lZoT7rSCk2k4/K0fE4=;
+        b=gfr8SyQ6eryTJiXeTI3RsVZ3ymNKNsL8U3wwJxBlBN0EwOWder0msdmdpQODlZ5/br
+         YEW+OZYM5PNchoY5SBEY/EpBD7OCPck5iu6memrdsAIdpLtCYHDGXJpdu6EJJB65US3l
+         117Q9GBWNKp+wAXgDlB1Df8DjEwNcjO5PSpIXnOE/suMglT2qagRQLYji7AfRedxg8e7
+         gX/oRleLnR9seubuHieZnuE/xrnkSAQC9TV4vOZzRVdieIPEGQ5QvjtMP5S4yqPoG+XP
+         RqpPln6/pk1ZYLuWFcekAkVG5VjF4WRzLTert+z0I5pcYbufmPq+oS/h5lILsaX6ohgv
+         WLTA==
+X-Gm-Message-State: APjAAAWbiatoC5da41dZNRCmE0hkCn6m76UEH6s3qQdwPi7pzctqbVyw
+        kOye8bjSmiQRX1Ohae0emKM/PYGb2WCubev8rYs=
+X-Google-Smtp-Source: APXvYqymNpUaoVnbcqpxgLX98vJUDKoclbK7ri5vX4NtbmNr3chcTbHAfQl60OLoWW3pvhXgQw4moYc5eOJhW+lBB58=
+X-Received: by 2002:a63:e14a:: with SMTP id h10mr5900277pgk.74.1575499371944;
+ Wed, 04 Dec 2019 14:42:51 -0800 (PST)
+MIME-Version: 1.0
+References: <20191204155941.17814-1-brgl@bgdev.pl> <20191204155941.17814-2-brgl@bgdev.pl>
+In-Reply-To: <20191204155941.17814-2-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 5 Dec 2019 00:42:39 +0200
+Message-ID: <CAHp75VcqYsKUzxGUhn8aHg_u-B=FkqmTU2YS+yyVNfAPu+715w@mail.gmail.com>
+Subject: Re: [PATCH v2 11/11] tools: gpio: implement gpio-watch
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Measure keys loaded onto any keyring.
+On Wed, Dec 4, 2019 at 7:19 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> Add a simple program that allows to test the new LINECHANGED_FD ioctl().
 
-This patch defines a new IMA policy func namely KEY_CHECK to
-measure keys. Updated ima_match_rules() to check for KEY_CHECK
-and ima_parse_rule() to handle KEY_CHECK.
+> --- a/tools/gpio/.gitignore
+> +++ b/tools/gpio/.gitignore
+> @@ -1,4 +1,5 @@
+>  gpio-event-mon
+>  gpio-hammer
+>  lsgpio
+> +gpio-watch
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
----
- Documentation/ABI/testing/ima_policy | 6 +++++-
- security/integrity/ima/ima.h         | 1 +
- security/integrity/ima/ima_policy.c  | 4 +++-
- 3 files changed, 9 insertions(+), 2 deletions(-)
+Perhaps keep it sorted?
 
-diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
-index 29aaedf33246..066d32797500 100644
---- a/Documentation/ABI/testing/ima_policy
-+++ b/Documentation/ABI/testing/ima_policy
-@@ -29,7 +29,7 @@ Description:
- 		base: 	func:= [BPRM_CHECK][MMAP_CHECK][CREDS_CHECK][FILE_CHECK][MODULE_CHECK]
- 				[FIRMWARE_CHECK]
- 				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
--				[KEXEC_CMDLINE]
-+				[KEXEC_CMDLINE] [KEY_CHECK]
- 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
- 			       [[^]MAY_EXEC]
- 			fsmagic:= hex value
-@@ -113,3 +113,7 @@ Description:
- 		Example of appraise rule allowing modsig appended signatures:
- 
- 			appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig
-+
-+		Example of measure rule using KEY_CHECK to measure all keys:
-+
-+			measure func=KEY_CHECK
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index df4ca482fb53..fe6c698617bd 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -193,6 +193,7 @@ static inline unsigned long ima_hash_key(u8 *digest)
- 	hook(KEXEC_INITRAMFS_CHECK)	\
- 	hook(POLICY_CHECK)		\
- 	hook(KEXEC_CMDLINE)		\
-+	hook(KEY_CHECK)			\
- 	hook(MAX_CHECK)
- #define __ima_hook_enumify(ENUM)	ENUM,
- 
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index f19a895ad7cd..1525a28fd705 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -373,7 +373,7 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
- {
- 	int i;
- 
--	if (func == KEXEC_CMDLINE) {
-+	if ((func == KEXEC_CMDLINE) || (func == KEY_CHECK)) {
- 		if ((rule->flags & IMA_FUNC) && (rule->func == func))
- 			return true;
- 		return false;
-@@ -997,6 +997,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 				entry->func = POLICY_CHECK;
- 			else if (strcmp(args[0].from, "KEXEC_CMDLINE") == 0)
- 				entry->func = KEXEC_CMDLINE;
-+			else if (strcmp(args[0].from, "KEY_CHECK") == 0)
-+				entry->func = KEY_CHECK;
- 			else
- 				result = -EINVAL;
- 			if (!result)
+> +++ b/tools/gpio/gpio-watch.c
+> @@ -0,0 +1,112 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * gpio-watch - monitor unrequested lines for property changes using the
+> + *              character device
+> + *
+> + * Copyright (C) 2019 BayLibre SAS
+> + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> + */
+> +
+> +#include <ctype.h>
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <linux/gpio.h>
+> +#include <poll.h>
+> +#include <stdbool.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <sys/ioctl.h>
+> +#include <unistd.h>
+> +
+> +static bool isnumber(const char *str)
+> +{
+> +       size_t sz = strlen(str);
+> +       int i;
+> +
+> +       for (i = 0; i < sz; i++) {
+> +               if (!isdigit(str[i]))
+> +                       return false;
+> +       }
+> +
+> +       return true;
+> +}
+
+strtoul() will do the same.
+
+char *p;
+unsigned long dummy; // do we need it?
+dummy = strtoul(..., &p);
+return *p == '\0';
+
+> +int main(int argc, char **argv)
+> +{
+> +       struct gpioline_info_changed chg;
+> +       struct gpioline_info req;
+> +       struct pollfd pfd;
+> +       int fd, i, j, ret;
+> +       char *event;
+> +       ssize_t rd;
+> +
+> +       if (argc < 3)
+> +               goto err_usage;
+> +
+> +       fd = open(argv[1], O_RDWR | O_CLOEXEC);
+> +       if (fd < 0) {
+> +               perror("unable to open gpiochip");
+> +               return EXIT_FAILURE;
+> +       }
+> +
+> +       for (i = 0, j = 2; i < argc - 2; i++, j++) {
+> +               if (!isnumber(argv[j]))
+> +                       goto err_usage;
+> +
+> +               memset(&req, 0, sizeof(req));
+> +               req.line_offset = atoi(argv[j]);
+
+Oh, why not to call strtoul() directly?
+
+> +
+> +               ret = ioctl(fd, GPIO_GET_LINEINFO_WATCH_IOCTL, &req);
+> +               if (ret) {
+> +                       perror("unable to set up line watch");
+
+Don't you need to unwatch previously added ones?
+
+> +                       return EXIT_FAILURE;
+> +               }
+> +       }
+
+> +       for (;;) {
+> +               ret = poll(&pfd, 1, 5000);
+> +               if (ret < 0) {
+> +                       perror("error polling the linechanged fd");
+> +                       return EXIT_FAILURE;
+> +               } else if (ret > 0) {
+> +                       memset(&chg, 0, sizeof(chg));
+
+> +                       rd = read(pfd.fd, &chg, sizeof(chg));
+> +                       if (rd < 0 || rd != sizeof(chg)) {
+> +                               if (rd != sizeof(chg))
+> +                                       errno = EIO;
+> +
+> +                               perror("error reading line change event");
+> +                               return EXIT_FAILURE;
+> +                       }
+
+Shouldn't we handle the -EINTR?
+
+> +               }
+> +       }
+> +
+> +       return 0;
+
+
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
