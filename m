@@ -2,59 +2,56 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6278AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A4BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B71C2089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2770D2086D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482757;
-	bh=PJgEEjbp1H8Kosvd8hBCuPEx4y/bSeGp4cUM17V5jY0=;
+	s=default; t=1575482761;
+	bh=/cepJ60ECB47VYqqRBNMGpJeFX5CEY5bxz87y5OpgDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Csurf/Mih4M8R6J+LPL4qjlR2RpGyVbqshqNBPD3JXkfPMPAxEGBfeu5kEPIK5Gun
-	 RVhgArTS7KjY2Gfr/SX+h/N7DyOpHjp7ZplY5F8zXjZBziGr0lb+nIPIMOJVlbshfy
-	 rNRfB8Y/YhodOwA8vZ6RrQm1lFlMcwK26tgtzQn4=
+	b=iSH14wifwiZYumBKoLkeB3iZ4cwhY9Jqg4uFO9P21AW0gZbZwxWfHUCJu4f4bvEBU
+	 yaQZaiVMHJk3wDTeefVW8cvD3QJ9LiAc8lrGGurbYXYduzXiMBn9bj7RFQHr8+q37c
+	 ALl2lgt3f2gRal0E/G2zASbaR9A/90tHCSpbovnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730470AbfLDSFz (ORCPT
+        id S1730476AbfLDSF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:05:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53002 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:05:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730447AbfLDSFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:05:48 -0500
+        id S1729860AbfLDSFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:05:51 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A509D2073B;
-        Wed,  4 Dec 2019 18:05:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62FE520675;
+        Wed,  4 Dec 2019 18:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482748;
-        bh=PJgEEjbp1H8Kosvd8hBCuPEx4y/bSeGp4cUM17V5jY0=;
+        s=default; t=1575482750;
+        bh=/cepJ60ECB47VYqqRBNMGpJeFX5CEY5bxz87y5OpgDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R2hIR3ej53Kj0syEVOHwf3sm1PlM7DmR7B35xgymA3gW7lfgkUZk6d0oijv/woixK
-         4hn02ZD5/7pO94XS0hPR4aC5Xt63Fnpav722HqyBmxpkh3hATBytU+q05hqDkp+nb0
-         iJA3IK4MWN7Rgj/5VnSsktWjLyhB4iHsNg6Rx6QM=
+        b=rpGbKawHEPp3RFAWr9k03JvecrSIYipLGfRxwPRZSb67qS3He40uQGTJtZ8gE2I7r
+         0lpB4biQrOmH0r4nfS6yVnwKktFxWxQaw+VNu9Jk0BLLYIercD4b3WnHM4PE2vtY69
+         QWDYZsh0WLiGpT6H6Lj6Tj7BRH5Vak6X4NDZpoFA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junxiao Bi <junxiao.bi@oracle.com>,
-        Yiwen Jiang <jiangyiwen@huawei.com>,
-        Joseph Qi <jiangqi903@gmail.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Changwei Ge <ge.changwei@h3c.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Mark Fasheh <mfasheh@versity.com>,
+        stable@vger.kernel.org, Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 119/209] ocfs2: clear journal dirty flag after shutdown journal
-Date:   Wed,  4 Dec 2019 18:55:31 +0100
-Message-Id: <20191204175331.300579581@linuxfoundation.org>
+Subject: [PATCH 4.14 120/209] vmscan: return NODE_RECLAIM_NOSCAN in node_reclaim() when CONFIG_NUMA is n
+Date:   Wed,  4 Dec 2019 18:55:32 +0100
+Message-Id: <20191204175331.355185057@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -67,55 +64,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Wei Yang <richard.weiyang@gmail.com>
 
-[ Upstream commit d85400af790dba2aa294f0a77e712f166681f977 ]
+[ Upstream commit 8b09549c2bfd9f3f8f4cdad74107ef4f4ff9cdd7 ]
 
-Dirty flag of the journal should be cleared at the last stage of umount,
-if do it before jbd2_journal_destroy(), then some metadata in uncommitted
-transaction could be lost due to io error, but as dirty flag of journal
-was already cleared, we can't find that until run a full fsck.  This may
-cause system panic or other corruption.
+Commit fa5e084e43eb ("vmscan: do not unconditionally treat zones that
+fail zone_reclaim() as full") changed the return value of
+node_reclaim().  The original return value 0 means NODE_RECLAIM_SOME
+after this commit.
 
-Link: http://lkml.kernel.org/r/20181121020023.3034-3-junxiao.bi@oracle.com
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Reviewed-by: Yiwen Jiang <jiangyiwen@huawei.com>
-Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: Changwei Ge <ge.changwei@h3c.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Mark Fasheh <mfasheh@versity.com>
+While the return value of node_reclaim() when CONFIG_NUMA is n is not
+changed.  This will leads to call zone_watermark_ok() again.
+
+This patch fixes the return value by adjusting to NODE_RECLAIM_NOSCAN.
+Since node_reclaim() is only called in page_alloc.c, move it to
+mm/internal.h.
+
+Link: http://lkml.kernel.org/r/20181113080436.22078-1-richard.weiyang@gmail.com
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Matthew Wilcox <willy@infradead.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/journal.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ include/linux/swap.h |  6 ------
+ mm/internal.h        | 10 ++++++++++
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
-index f7fba58618ef3..2459ae9d2234f 100644
---- a/fs/ocfs2/journal.c
-+++ b/fs/ocfs2/journal.c
-@@ -1018,7 +1018,8 @@ void ocfs2_journal_shutdown(struct ocfs2_super *osb)
- 			mlog_errno(status);
- 	}
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index e643866912b70..411953964c345 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -363,14 +363,8 @@ extern unsigned long vm_total_pages;
+ extern int node_reclaim_mode;
+ extern int sysctl_min_unmapped_ratio;
+ extern int sysctl_min_slab_ratio;
+-extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
+ #else
+ #define node_reclaim_mode 0
+-static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
+-				unsigned int order)
+-{
+-	return 0;
+-}
+ #endif
  
--	if (status == 0) {
-+	/* Shutdown the kernel journal system */
-+	if (!jbd2_journal_destroy(journal->j_journal) && !status) {
- 		/*
- 		 * Do not toggle if flush was unsuccessful otherwise
- 		 * will leave dirty metadata in a "clean" journal
-@@ -1027,9 +1028,6 @@ void ocfs2_journal_shutdown(struct ocfs2_super *osb)
- 		if (status < 0)
- 			mlog_errno(status);
- 	}
--
--	/* Shutdown the kernel journal system */
--	jbd2_journal_destroy(journal->j_journal);
- 	journal->j_journal = NULL;
+ extern int page_evictable(struct page *page);
+diff --git a/mm/internal.h b/mm/internal.h
+index 1df011f624801..a182506242c43 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -455,6 +455,16 @@ static inline void mminit_validate_memmodel_limits(unsigned long *start_pfn,
+ #define NODE_RECLAIM_SOME	0
+ #define NODE_RECLAIM_SUCCESS	1
  
- 	OCFS2_I(inode)->ip_open_count--;
++#ifdef CONFIG_NUMA
++extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
++#else
++static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
++				unsigned int order)
++{
++	return NODE_RECLAIM_NOSCAN;
++}
++#endif
++
+ extern int hwpoison_filter(struct page *p);
+ 
+ extern u32 hwpoison_filter_dev_major;
 -- 
 2.20.1
 
