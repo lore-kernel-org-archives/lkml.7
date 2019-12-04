@@ -6,85 +6,94 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7509AC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A3EC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5148E2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BCE2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfLDJgo (ORCPT
+        id S1727272AbfLDJiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:36:44 -0500
-Received: from mga14.intel.com ([192.55.52.115]:27867 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbfLDJgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:36:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 01:36:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,277,1571727600"; 
-   d="scan'208";a="294118284"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 04 Dec 2019 01:36:43 -0800
-Received: from [10.226.38.71] (unknown [10.226.38.71])
-        by linux.intel.com (Postfix) with ESMTP id BF149580AC4;
-        Wed,  4 Dec 2019 01:36:41 -0800 (PST)
-Subject: Re: linux-next: Tree for Dec 3 (pinctrl-equilibrium)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <20191203155405.31404722@canb.auug.org.au>
- <1a78124d-bef9-46da-aef4-60f85fddfceb@infradead.org>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <1c54235b-545c-db3e-4225-ec6824ac6003@linux.intel.com>
-Date:   Wed, 4 Dec 2019 17:36:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Dec 2019 04:38:04 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:56304 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfLDJiE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 04:38:04 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 74A261C25FD; Wed,  4 Dec 2019 10:38:02 +0100 (CET)
+Date:   Wed, 4 Dec 2019 10:38:01 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 012/321] reset: fix reset_control_ops kerneldoc
+ comment
+Message-ID: <20191204093801.GB7678@amd>
+References: <20191203223427.103571230@linuxfoundation.org>
+ <20191203223427.758333833@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <1a78124d-bef9-46da-aef4-60f85fddfceb@infradead.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="6sX45UoQRIJXqkqR"
+Content-Disposition: inline
+In-Reply-To: <20191203223427.758333833@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Randy,
+--6sX45UoQRIJXqkqR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 4/12/2019 12:33 AM, Randy Dunlap wrote:
-> On 12/2/19 8:54 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> Please do not add any material for v5.6 to your linux-next included
->> trees until after v5.5-rc1 has been released.
->>
->> Changes since 20191202:
->>
-> on x86_64:
-> # CONFIG_OF is not set
->
->
-> ld: drivers/pinctrl/pinctrl-equilibrium.o: in function `pinconf_generic_dt_node_to_map_all':
-> pinctrl-equilibrium.c:(.text+0xb): undefined reference to `pinconf_generic_dt_node_to_map'
->
-> Probably depends on OF.
+On Tue 2019-12-03 23:31:18, Greg Kroah-Hartman wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+>=20
+> [ Upstream commit f430c7ed8bc22992ed528b518da465b060b9223f ]
+>=20
+> Add a missing short description to the reset_control_ops
+> documentation.
 
-Can you please tell the compiler/toolchain details that you used when you see
-above error ?I tried few versions of gcc and i never see this linker error.
-Build always passed successfully.
+Why is it pending for stable? It does not break anything, but neither
+it fixes anything, it adds to reviewer load...
 
-I have a patch that adds 'depends on OF' in the Kconfig to resolve this but i
-want to ensure that i recreate this error first & confirm resolution with the
-patch before posting it. Thanks.
+Sasha, what is your process for selecting commits for stable?
 
-Regards,
-Rahul
+Best regards,
 
+							Pavel
 
+> +++ b/include/linux/reset-controller.h
+> @@ -7,7 +7,7 @@
+>  struct reset_controller_dev;
+> =20
+>  /**
+> - * struct reset_control_ops
+> + * struct reset_control_ops - reset controller driver callbacks
+>   *
+>   * @reset: for self-deasserting resets, does all necessary
+>   *         things to reset the device
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--6sX45UoQRIJXqkqR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl3nfnkACgkQMOfwapXb+vJvBACgl2X2MqD8ooBF9KXrkQFMeFpy
+QHEAn1PQZYiX4C+gJZGXQQYtVjiKRzpV
+=RbuH
+-----END PGP SIGNATURE-----
+
+--6sX45UoQRIJXqkqR--
