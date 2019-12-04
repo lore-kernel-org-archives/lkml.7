@@ -2,110 +2,94 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EE6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B689C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD182073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB532073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:06:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b7NmR+qF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fspiSdQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbfLDUES (ORCPT
+        id S1728165AbfLDUGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 15:04:18 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38046 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727887AbfLDUER (ORCPT
+        Wed, 4 Dec 2019 15:06:16 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37218 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727867AbfLDUGQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 15:04:17 -0500
-Received: by mail-pl1-f195.google.com with SMTP id o8so173941pls.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 12:04:17 -0800 (PST)
+        Wed, 4 Dec 2019 15:06:16 -0500
+Received: by mail-pl1-f194.google.com with SMTP id bb5so179429plb.4;
+        Wed, 04 Dec 2019 12:06:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ELTAmH9zkiQxFiFkiHdPx6vGU7gbG/ie/I1ns5+Qwf0=;
-        b=b7NmR+qF+vnxWm4yIdm9VpajCEJKepEQB55cnHNpOMHIokAoPr34EBknlvq7Rx4SIX
-         HzzkF1H2mla69oKJZOjib3KdC1hLFVpPt6/JB3wIyoX+7CcRy7GXBX2cIo7YYAbL4QIm
-         SkECYLq/nhBcSmvVpJtYpE5Y67vz0aRAWHz14=
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=nAAemCfKXeNgaOb0ZS9qFXJo3PaIk8Vnx3DCMlOb9ek=;
+        b=fspiSdQXI0ngXKDfo55Qu91rVSzABysaewgWJER8kGhIPaShQeZV3QbpsYfpszFFhq
+         aWfUNfQCbB2iiFXipSH2/FKc6gjiATFt+syJzv1fMoASaEr9xCRgLRfIU22iY6bjEkL4
+         LzVmLMfDvD0OuhfwFlpCgVr3Ehp2/PGGJZSKChOA3DfFC4dsZXx6DI1q8O7fAnYhel5j
+         LJkyNMTKH3EUpzsDW38Ieh7cAn8L4rs1ekJooQeh62Yv9GWx3b7kn5AUwBMo2bKXuPlZ
+         4gwM1XfabmbnI7d+9CffS9I20Dj8b3HcJKmWjFJPS5DmM73fiDlyS6nl6WVuEiKP+Nbf
+         DpCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ELTAmH9zkiQxFiFkiHdPx6vGU7gbG/ie/I1ns5+Qwf0=;
-        b=sqo/Nb2/a3Hz8a8LTxCQFotdzP+E6nlEiiedeH274XZFn+U2KWdA4vgHSr+6ZkcG5b
-         9rjIsJJeODL6D5SMjgWsHPYw50Nl50nCQqQKYKEQbRD2affnAf+Ufn8Xhb3+5xWg34dH
-         4RvG0zL/CrNB69GHNplVp0uRNJpD0i6yyR8v9q5VFtf5P26UH+fmfv/pGqXDLziT5bO7
-         G8aXfNJ6e5lE8K8sRElXArlbVvaI0qAMBTOAsAkfQtXZLztOb5P1g3IXcjPrnlthNZiX
-         IVjDMEYaRYrOZBTs3MZDh6NFP0t+/bzoJCXI285GSk81xIllI3s2FeJb8q+TIcDm5jg3
-         Mecw==
-X-Gm-Message-State: APjAAAV9QshuqIiEq0W5SSGDFh02lMSYXX29QzQt/EHQN/kujgoSgHwX
-        e2gV2HmK1oBexV0OZSzbPVfV/w==
-X-Google-Smtp-Source: APXvYqyvlVyp3wP4RGPm+o/Ndrxy5XeKmjPozpw3mhNrwwRc7fTWujDUcpkjGLkMlZTIn4J60g5EhA==
-X-Received: by 2002:a17:90a:366e:: with SMTP id s101mr5231134pjb.18.1575489857123;
-        Wed, 04 Dec 2019 12:04:17 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id z23sm8423636pgj.43.2019.12.04.12.04.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 12:04:16 -0800 (PST)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Andy Gross <agross@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-arm-msm@vger.kernel.org, Taniya Das <tdas@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] clk: qcom: gcc-sc7180: Fix setting flag for votable GDSCs
-Date:   Wed,  4 Dec 2019 12:04:12 -0800
-Message-Id: <20191204120341.1.I9971817e83ee890d1096c43c5a6ce6ced53d5bd3@changeid>
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=nAAemCfKXeNgaOb0ZS9qFXJo3PaIk8Vnx3DCMlOb9ek=;
+        b=NOlC1c69SrVUhAhJ+njqYshVQpPGb9aWJQj/mVU2Mp6tdlnmNYzEsaf6WYbg71AnMa
+         y4GE6Du7Ep+biEFPw81BbucUc0JY+4UzIeD8aGRnM1f3JMpTMHkdseCLpvCpHmNY3fPk
+         dz9HiyYXQhn0J4wq59tlpBaoq0D/3NmfEvI+bzIyCtUbvgQzUepOPGpUgdABcKAuIAg/
+         wluYD0uJXNdLlHmUXKWfTbM6w8M4C3aIcJURPaH5IwTSvcKUe77dd3eVyB1TnxNUn1VJ
+         z7FQbgIFk3FmNTiMXiRaPglscO/IUJQP4hGIcONh3qH7w+MuyD0xnmfxZDuK8bELosQY
+         babA==
+X-Gm-Message-State: APjAAAWPR5SRvxERzte+HyTYpk7436pxJz06KaE4YeqHGXlc9wobb2Lq
+        uh2CYU4AE8jJcONqKlvnWis=
+X-Google-Smtp-Source: APXvYqzgvLsZiubKSytCTZgreAzXSJaGG75yPgOMtR+kwKa4oWxY1F6isMlE5LKK8U0lTdMu8OFbiw==
+X-Received: by 2002:a17:90a:2808:: with SMTP id e8mr5160718pjd.63.1575489975157;
+        Wed, 04 Dec 2019 12:06:15 -0800 (PST)
+Received: from iclxps ([155.98.131.2])
+        by smtp.gmail.com with ESMTPSA id s11sm8552564pfe.163.2019.12.04.12.06.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 12:06:14 -0800 (PST)
+Message-ID: <076ff5f0165c5271f999da70d30f73501c15c72c.camel@gmail.com>
+Subject: Re: [PATCH v5 2/4] lib: devres: add a helper function for ioremap_uc
+From:   Tuowen Zhao <ztuowen@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Sasha Levin <sashal@kernel.org>, lee.jones@linaro.org,
+        linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com,
+        stable@vger.kernel.org, linux@roeck-us.net,
+        Luis Chamberlain <mcgrof@kernel.org>
+Date:   Wed, 04 Dec 2019 13:06:13 -0700
+In-Reply-To: <20191204195456.GR32742@smile.fi.intel.com>
+References: <20191016210629.1005086-3-ztuowen@gmail.com>
+         <20191017143144.9985421848@mail.kernel.org>
+         <b113dd8da86934acc90859dc592e0234fa88cfdc.camel@gmail.com>
+         <20191018164738.GY31224@sasha-vm>
+         <7eb0ed7d51b53f7d720a78d9b959c462adb850d4.camel@gmail.com>
+         <20191204195456.GR32742@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 17269568f7267 ("clk: qcom: Add Global Clock controller (GCC)
-driver for SC7180") sets the VOTABLE flag in .pwrsts, but it needs
-to be set in .flags, fix this.
+On Wed, 2019-12-04 at 21:54 +0200, Andy Shevchenko wrote:
+> 
+> Since Guenter submitted a fix, we can leave with these ones and fix
+> applied together.
+> 
 
-Fixes: 17269568f7267 ("clk: qcom: Add Global Clock controller (GCC) driver for SC7180")
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
+Since I have apparently missed something with hexagon, I don't feel
+comfortable with messing with stable with this. I'm not sure as before
+that this series is self-contained.
 
- drivers/clk/qcom/gcc-sc7180.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
-index 38424e63bcae2..7f59fb8da0337 100644
---- a/drivers/clk/qcom/gcc-sc7180.c
-+++ b/drivers/clk/qcom/gcc-sc7180.c
-@@ -2186,7 +2186,8 @@ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc = {
- 	.pd = {
- 		.name = "hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc",
- 	},
--	.pwrsts = PWRSTS_OFF_ON | VOTABLE,
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
- 
- static struct gdsc hlos1_vote_mmnoc_mmu_tbu_sf_gdsc = {
-@@ -2194,7 +2195,8 @@ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_sf_gdsc = {
- 	.pd = {
- 		.name = "hlos1_vote_mmnoc_mmu_tbu_sf_gdsc",
- 	},
--	.pwrsts = PWRSTS_OFF_ON | VOTABLE,
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
- 
- static struct gdsc *gcc_sc7180_gdscs[] = {
--- 
-2.24.0.393.g34dc348eaf-goog
+Tuowen
 
