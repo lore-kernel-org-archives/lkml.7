@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06F1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D80C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E56E20833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0DDB20863
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482364;
-	bh=KUH5PvAtEDM8Bcex0Fg/46Vum8Vpxq1Gj4WDcrOMttw=;
+	s=default; t=1575482367;
+	bh=P9GYmps93i2okIbNbc/AK4prQ0fNyA3k4l8pKlYRpCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZVANK87xe9AUxE5p+g4sSvk6kQlKEF0s7w0H1nlOsv76xcL0bQCD6COmXZfX8Z+kV
-	 I03qq0OrS6vrKkigBb+CXd2ucevIIvYulf2Cq+wymWyncPh0+09UxLmM7PlD7zXl8r
-	 73unSNb8uELwo59ucJ3theJBg4zwJoL+OF9zjgI0=
+	b=WvEBbUelWYCYaYKtXoeS+OTJ2B9J3iHQp1rjMalFzTYVF1770WbzwPgx8FTRJSHI2
+	 0EAHJKgjhcJOL1Dn0IBFMep4qcP2lcQ5P6IUCc/YCZSWaZ5eHpNOrQPJMntMeZSx1C
+	 GbhyVA9PKkSBZIx9oMG2SHgojHdJAB1ztvJg07QY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbfLDR7X (ORCPT
+        id S1729071AbfLDR70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:59:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35566 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 12:59:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729071AbfLDR7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:59:18 -0500
+        id S1729077AbfLDR7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:59:21 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C14FE2073B;
-        Wed,  4 Dec 2019 17:59:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E4D42073B;
+        Wed,  4 Dec 2019 17:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482358;
-        bh=KUH5PvAtEDM8Bcex0Fg/46Vum8Vpxq1Gj4WDcrOMttw=;
+        s=default; t=1575482360;
+        bh=P9GYmps93i2okIbNbc/AK4prQ0fNyA3k4l8pKlYRpCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lKxSgn5O9P8nEK0ia5hP9aqrt6zE6Wt7dQRX+zs1fok+Tunk46AC9/5X6IrLz9oA9
-         UBXeu0Gv0REjDYVB85fV2yql3XbJamQywV9apgyMzjCSLQrQzlUF8fjQ4Imz5XnmBH
-         fVWb767pRo+/hWNedRLJNk+8slFFACaAiDfPrvb8=
+        b=ZX3yeE/1PavtiUJalcfjdg8tgATzw4uRY0ndJr1t3G6BPgMKQf7oTbTn9BMhSKCwx
+         erZFJWhnbdyvgXLn38KiLwq5bL3m9pCroRk0ziW3NJMl3BxNEKtzQV1cP0xFfmiREu
+         fSjzhfOFsqaHvkDR8DH/8tSnCN9dhplpZFj+DJ4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 56/92] net: stmicro: fix a missing check of clk_prepare
-Date:   Wed,  4 Dec 2019 18:49:56 +0100
-Message-Id: <20191204174333.791534686@linuxfoundation.org>
+Subject: [PATCH 4.4 57/92] atl1e: checking the status of atl1e_write_phy_reg
+Date:   Wed,  4 Dec 2019 18:49:57 +0100
+Message-Id: <20191204174333.842636116@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -62,33 +62,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit f86a3b83833e7cfe558ca4d70b64ebc48903efec ]
+[ Upstream commit ff07d48d7bc0974d4f96a85a4df14564fb09f1ef ]
 
-clk_prepare() could fail, so let's check its status, and if it fails,
-return its error code upstream.
+atl1e_write_phy_reg() could fail. The fix issues an error message when
+it fails.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c | 4 +++-
+ drivers/net/ethernet/atheros/atl1e/atl1e_main.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-index adff46375a322..6e56c4e5ecec5 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-@@ -59,7 +59,9 @@ static int sun7i_gmac_init(struct platform_device *pdev, void *priv)
- 		gmac->clk_enabled = 1;
- 	} else {
- 		clk_set_rate(gmac->tx_clk, SUN7I_GMAC_MII_RATE);
--		clk_prepare(gmac->tx_clk);
-+		ret = clk_prepare(gmac->tx_clk);
-+		if (ret)
-+			return ret;
- 	}
+diff --git a/drivers/net/ethernet/atheros/atl1e/atl1e_main.c b/drivers/net/ethernet/atheros/atl1e/atl1e_main.c
+index 59a03a193e835..4384b2b4d2382 100644
+--- a/drivers/net/ethernet/atheros/atl1e/atl1e_main.c
++++ b/drivers/net/ethernet/atheros/atl1e/atl1e_main.c
+@@ -478,7 +478,9 @@ static void atl1e_mdio_write(struct net_device *netdev, int phy_id,
+ {
+ 	struct atl1e_adapter *adapter = netdev_priv(netdev);
  
- 	return 0;
+-	atl1e_write_phy_reg(&adapter->hw, reg_num & MDIO_REG_ADDR_MASK, val);
++	if (atl1e_write_phy_reg(&adapter->hw,
++				reg_num & MDIO_REG_ADDR_MASK, val))
++		netdev_err(netdev, "write phy register failed\n");
+ }
+ 
+ static int atl1e_mii_ioctl(struct net_device *netdev,
 -- 
 2.20.1
 
