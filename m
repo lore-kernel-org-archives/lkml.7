@@ -2,126 +2,134 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB014C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCA5C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB1220833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD5D20833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="VtOUQDUS"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m6yfe3kY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbfLDMcP (ORCPT
+        id S1727826AbfLDMcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:32:15 -0500
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:39275 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfLDMcP (ORCPT
+        Wed, 4 Dec 2019 07:32:35 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35682 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfLDMcf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:32:15 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 5B7EE48749;
-        Wed,  4 Dec 2019 13:32:13 +0100 (CET)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=VtOUQDUS;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CXe1WEAFpsSI; Wed,  4 Dec 2019 13:32:12 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 4CEC048748;
-        Wed,  4 Dec 2019 13:32:08 +0100 (CET)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 4B4E2360608;
-        Wed,  4 Dec 2019 13:32:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1575462728; bh=LYhit8ToubKk0QgCgXtdE9QywuXKbd7AYpsvoNTHpF8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=VtOUQDUSHGDnRjVQQTOXPWOKG1GPg7X3aXX24xXApU5wpb2efYc4q2cjNC507RBm2
-         H7vQ2x06V5nvSi44lD232WnoVbZmVpnYArHV9VkQX0vv6yRGUDzXpWuV/2v7uP60cu
-         acj+1pbggGd0tzLuFJhSWXOo3pL6Ds2HANrQiE8o=
-Subject: Re: [PATCH 6/8] drm: Add a drm_get_unmapped_area() helper
-To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-References: <20191203132239.5910-1-thomas_os@shipmail.org>
- <20191203132239.5910-7-thomas_os@shipmail.org>
- <e091063c-2c4a-866e-acdb-9efb1e20d737@amd.com>
- <98af5b11-1034-91fa-aa38-5730f116d1cd@shipmail.org>
- <3cc5b796-20c6-9f4c-3f62-d844f34d81b7@amd.com>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <90a8d09a-b3ab-cd00-0cfb-1a4c72e91836@shipmail.org>
-Date:   Wed, 4 Dec 2019 13:32:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 4 Dec 2019 07:32:35 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4CWXoF033651;
+        Wed, 4 Dec 2019 06:32:33 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575462753;
+        bh=6G/9MRzKyVc1RjmQv1A+jIRb9kngu1DhAJbeluXOOKQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=m6yfe3kY/NEtb7u7K6Ev7IBbFJKxUXBdHIXUmzS7vm6991ZdIyMikG2DaXHe8DTgH
+         R4ZGVcJBqoLHBNg3kj4AucB0LqXGuGjQpvagZZ7+ams3WvI3V9NtB0i+amHbvAhMeF
+         EDuYGGieeLWdMICKoxUstgjIm+JNGMIWsftNVcD8=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4CWX8B052924
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 4 Dec 2019 06:32:33 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
+ 2019 06:32:33 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Dec 2019 06:32:33 -0600
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4CWWuq119399;
+        Wed, 4 Dec 2019 06:32:32 -0600
+Subject: Re: [PATCH v2] phy: ti-pipe3: make clk operations symmetric in probe
+ and remove
+To:     Chuhong Yuan <hslester96@gmail.com>
+CC:     Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-kernel@vger.kernel.org>
+References: <20191204114759.3754-1-hslester96@gmail.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <2dd4749d-edca-3b63-4804-d51b13f3724d@ti.com>
+Date:   Wed, 4 Dec 2019 14:32:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <3cc5b796-20c6-9f4c-3f62-d844f34d81b7@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191204114759.3754-1-hslester96@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/4/19 1:08 PM, Christian König wrote:
-> Am 04.12.19 um 12:36 schrieb Thomas Hellström (VMware):
->> On 12/4/19 12:11 PM, Christian König wrote:
->>> Am 03.12.19 um 14:22 schrieb Thomas Hellström (VMware):
->>>> From: Thomas Hellstrom <thellstrom@vmware.com>
->>>>
->>>> This helper is used to align user-space buffer object addresses to
->>>> huge page boundaries, minimizing the chance of alignment mismatch
->>>> between user-space addresses and physical addresses.
->>>
->>> Mhm, I'm wondering if that is really such a good idea.
->>
->> Could you elaborate? What drawbacks do you see?
->
-> Main problem for me seems to be that I don't fully understand what the 
-> get_unmapped_area callback is doing.
-
-It makes sure that, if there is a chance that we could use huge 
-page-table entries, virtual address huge page boundaries are perfectly 
-aligned to physical address huge page boundaries, which is if not a CPU 
-hardware requirement, at least a kernel requirement currently.
 
 
->
-> For example why do we need to use drm_vma_offset_lookup_locked() to 
-> adjust the pgoff?
->
-> The mapped offset should be completely irrelevant for finding some 
-> piece of userspace address space or am I totally off here?
+On 04/12/2019 13:47, Chuhong Yuan wrote:
+> The driver calls clk_prepare_enable in probe but the corresponding
+> clk_disable_unprepare() is in ti_pipe3_disable_clocks().
+> Move clk_disable_unprepare() to remove to make them symmetric.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
+Acked-by: Roger Quadros <rogerq@ti.com>
 
-Because the unmodified pgoff assumes that physical address boundaries 
-are perfectly aligned with file offset boundaries, which is typical for 
-all other subsystems.
+> ---
+> Changes in v2:
+>    - Modify commit message.
+>    - Delete the clk_disable_unprepare() in ti_pipe3_disable_clocks().
+> 
+>   drivers/phy/ti/phy-ti-pipe3.c | 18 +++++++-----------
+>   1 file changed, 7 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/phy/ti/phy-ti-pipe3.c b/drivers/phy/ti/phy-ti-pipe3.c
+> index edd6859afba8..a87946589eb7 100644
+> --- a/drivers/phy/ti/phy-ti-pipe3.c
+> +++ b/drivers/phy/ti/phy-ti-pipe3.c
+> @@ -850,6 +850,12 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+>   
+>   static int ti_pipe3_remove(struct platform_device *pdev)
+>   {
+> +	struct ti_pipe3 *phy = platform_get_drvdata(pdev);
+> +
+> +	if (phy->mode == PIPE3_MODE_SATA) {
+> +		clk_disable_unprepare(phy->refclk);
+> +		phy->sata_refclk_enabled = false;
+> +	}
+>   	pm_runtime_disable(&pdev->dev);
+>   
+>   	return 0;
+> @@ -900,18 +906,8 @@ static void ti_pipe3_disable_clocks(struct ti_pipe3 *phy)
+>   {
+>   	if (!IS_ERR(phy->wkupclk))
+>   		clk_disable_unprepare(phy->wkupclk);
+> -	if (!IS_ERR(phy->refclk)) {
+> +	if (!IS_ERR(phy->refclk))
+>   		clk_disable_unprepare(phy->refclk);
+> -		/*
+> -		 * SATA refclk needs an additional disable as we left it
+> -		 * on in probe to avoid Errata i783
+> -		 */
+> -		if (phy->sata_refclk_enabled) {
+> -			clk_disable_unprepare(phy->refclk);
+> -			phy->sata_refclk_enabled = false;
+> -		}
+> -	}
+> -
+>   	if (!IS_ERR(phy->div_clk))
+>   		clk_disable_unprepare(phy->div_clk);
+>   }
+> 
 
-That's not true for TTM, however, where a buffer object start physical 
-address may be huge page aligned, but the file offset is always page 
-aligned. We could of course change that to align also file offsets to 
-huge page size boundaries, but with the above adjustment, that's not 
-needed. I opted for the adjustment.
-
-Thanks,
-
-Thomas
-
-
+-- 
+cheers,
+-roger
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
