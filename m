@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC505C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B42C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5DDA206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFD8A2084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483241;
-	bh=cueQGwTJzKMnybTitCNUDt6EM2FPr7moBV5XwMFcdug=;
+	s=default; t=1575483244;
+	bh=EBU95pZ5uKXBZyqQnkyuXOQNp3CjOgzLTvsnaQegq20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CAzXGG9U3bsHYkNZrT3EOHrQ0MNXs3X9Ih7QgVzYokYn5RgKdOTeHYyK40YE+L5WL
-	 mB+L/AGxsyhRRkvZ4gt4i2MJAlZK4dxYHUOhF9fwR2475kygztHfcsigeh95JtVcgi
-	 +Xlp9vp5kVS/HaGtgJGkOdSIHBRgw7fAYYmU78TM=
+	b=hc3MWYqVBC9resKjOPuWOpQMBfh6kqFjke1M6NAku7/Vn0qbszkjSiks0ekiBUIZ2
+	 je9qpe8gpnn/nXUQcQrOXYcnVTk/pWOpOQPztP7ZjxWFp4+tXpBKmM/LT32Qy3E0Eo
+	 GrLxk9iD99SdRHnMQzy0e2a15cRMe/33KN5KtHuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731394AbfLDSOA (ORCPT
+        id S1731864AbfLDSOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:14:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43186 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:14:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731038AbfLDSNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:13:55 -0500
+        id S1731847AbfLDSN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:13:59 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCB4E20675;
-        Wed,  4 Dec 2019 18:13:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94B1820675;
+        Wed,  4 Dec 2019 18:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483234;
-        bh=cueQGwTJzKMnybTitCNUDt6EM2FPr7moBV5XwMFcdug=;
+        s=default; t=1575483239;
+        bh=EBU95pZ5uKXBZyqQnkyuXOQNp3CjOgzLTvsnaQegq20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VESSUy/OGoUwfL4oOg40MrxO+DletO6N6I6JBOtpglH84MSlWd+Ru56s+DI5SUIFd
-         n/jlZSEsoiFzA1GkwWHthJz6HGMRWrrIRUy9ZXgFaq0wogK9mEIFWxIwjdMAxUTfYr
-         DyuJ2p7lzwEPJ1zEpkTsm/aAhcUpmH77jVRCPePI=
+        b=LrsmY3qC7wlVmb7lvdlQSTO+PRj89yPvn9LQG9b6XnTp5AxAgPRspNDm6FONN2VXm
+         mpZAe+xt0x44omrJtwCphGnM5kmmRLRfwGa2oTwGKTdx1Us2xMDVs3QDXBa+pcel+Y
+         dgvZEqa6s3WMnc8ZtvHRyksFEhuAzGMp4PHjB3kE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 4.9 107/125] staging: rtl8192e: fix potential use after free
-Date:   Wed,  4 Dec 2019 18:56:52 +0100
-Message-Id: <20191204175325.626083193@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 4.9 109/125] mei: bus: prefix device names on bus with the bus name
+Date:   Wed,  4 Dec 2019 18:56:54 +0100
+Message-Id: <20191204175325.733951455@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -59,45 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit b7aa39a2ed0112d07fc277ebd24a08a7b2368ab9 upstream.
+commit 7a2b9e6ec84588b0be65cc0ae45a65bac431496b upstream.
 
-The variable skb is released via kfree_skb() when the return value of
-_rtl92e_tx is not zero. However, after that, skb is accessed again to
-read its length, which may result in a use after free bug. This patch
-fixes the bug by moving the release operation to where skb is never
-used later.
+Add parent device name to the name of devices on bus to avoid
+device names collisions for same client UUID available
+from different MEI heads. Namely this prevents sysfs collision under
+/sys/bus/mei/device/
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1572965351-6745-1-git-send-email-bianpan2016@163.com
+In the device part leave just UUID other parameters that are
+required for device matching are not required here and are
+just bloating the name.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20191105150514.14010-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8192e/rtl8192e/rtl_core.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/misc/mei/bus.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-@@ -1630,14 +1630,15 @@ static void _rtl92e_hard_data_xmit(struc
- 	memcpy((unsigned char *)(skb->cb), &dev, sizeof(dev));
- 	skb_push(skb, priv->rtllib->tx_headroom);
- 	ret = _rtl92e_tx(dev, skb);
--	if (ret != 0)
--		kfree_skb(skb);
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -765,15 +765,16 @@ static struct device_type mei_cl_device_
  
- 	if (queue_index != MGNT_QUEUE) {
- 		priv->rtllib->stats.tx_bytes += (skb->len -
- 						 priv->rtllib->tx_headroom);
- 		priv->rtllib->stats.tx_packets++;
- 	}
-+
-+	if (ret != 0)
-+		kfree_skb(skb);
+ /**
+  * mei_cl_bus_set_name - set device name for me client device
++ *  <controller>-<client device>
++ *  Example: 0000:00:16.0-55213584-9a29-4916-badf-0fb7ed682aeb
+  *
+  * @cldev: me client device
+  */
+ static inline void mei_cl_bus_set_name(struct mei_cl_device *cldev)
+ {
+-	dev_set_name(&cldev->dev, "mei:%s:%pUl:%02X",
+-		     cldev->name,
+-		     mei_me_cl_uuid(cldev->me_cl),
+-		     mei_me_cl_ver(cldev->me_cl));
++	dev_set_name(&cldev->dev, "%s-%pUl",
++		     dev_name(cldev->bus->dev),
++		     mei_me_cl_uuid(cldev->me_cl));
  }
  
- static int _rtl92e_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ /**
 
 
