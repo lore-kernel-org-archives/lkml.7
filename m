@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E75C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB512C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 722E5205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B78072073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483688;
-	bh=8m/MqRha1T/Gf1VwXx+GBM1pGru1K/qiMgwuwyeqJvE=;
+	s=default; t=1575483690;
+	bh=OUxMEqaedTerczHBI7WUPaEO4Ds7NoVMV/fIilPn1tk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IJ2aFVgAYyH1wN2HQOgWfrlYtCXiffaHMd6mWe3oI8sZfXnf4AKUqAFQqEwFv83cO
-	 es9CUbqWvdN3jb48FTM49GLi9vSxe+QjNUGcQ9i2ad53VYnoiXLTp4DW+eFu8noa57
-	 Jm9u2f6gsMcJGqynLWTqmEHIPeylKY/hOq/rGEFA=
+	b=wssDbI3dVUsSQJMXNdqh0mCLLZT7+eO/4s8wBS0GlJEzAbbzYO5D8NokhccAAfH7I
+	 A43bKUpo6qDuscBg6vJfY619DDUNIp7P2PgN8QbeijHMB2h/Os5ECp3mEQNtpf32DI
+	 YZ6oOOgfYxnyTQRBkD5bD7FfUJ7liz2k0wwsXkow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730590AbfLDSGl (ORCPT
+        id S1729822AbfLDSGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:06:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55268 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:06:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729976AbfLDSGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:06:38 -0500
+        id S1730024AbfLDSGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:06:33 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68BBA20674;
-        Wed,  4 Dec 2019 18:06:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B02D20674;
+        Wed,  4 Dec 2019 18:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482797;
-        bh=8m/MqRha1T/Gf1VwXx+GBM1pGru1K/qiMgwuwyeqJvE=;
+        s=default; t=1575482792;
+        bh=OUxMEqaedTerczHBI7WUPaEO4Ds7NoVMV/fIilPn1tk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RTeOLKVe0+HqPJSgcbGhNLbUrFXOHEF30K8Uej6Pmx60vb7SBXeFlAF1pcUQgXxFI
-         iWMDJd/LJxwLSf6lUrucisA5hrnf5Jx77StnJvp+d03xwQYs28TnsOm/IXLzzCuUhM
-         GIzXeWsqDTU9I+Mr+cgLNjjDYOTEtAHNE7/6r0vo=
+        b=NjRdYUI3pDktxWO/aXFyQcHeCIuOaxWsSnohMGjiZLuc7iFz1zbcVNo+r6gqdkOow
+         Fz0PHarssx32tcpOwbRde0KBVfPzc6GWxud2z85SAxCgmv7TYfNZ6mixTIW1T72VJW
+         Y3wjrcaXfaEowfNvobKTTHwD50jwGNFIP9H1kX1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
+        stable@vger.kernel.org, wenxu <wenxu@ucloud.cn>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 136/209] net/smc: prevent races between smc_lgr_terminate() and smc_conn_free()
-Date:   Wed,  4 Dec 2019 18:55:48 +0100
-Message-Id: <20191204175332.612859920@linuxfoundation.org>
+Subject: [PATCH 4.14 134/209] ip_tunnel: Make none-tunnel-dst tunnel port work with lwtunnel
+Date:   Wed,  4 Dec 2019 18:55:46 +0100
+Message-Id: <20191204175332.445673372@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,45 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
+From: wenxu <wenxu@ucloud.cn>
 
-[ Upstream commit 77f838ace755d2f466536c44dac6c856f62cd901 ]
+[ Upstream commit d71b57532d70c03f4671dd04e84157ac6bf021b0 ]
 
-To prevent races between smc_lgr_terminate() and smc_conn_free() add an
-extra check of the lgr field before accessing it, and cancel a delayed
-free_work when a new smc connection is created.
-This fixes the problem that free_work cleared the lgr variable but
-smc_lgr_terminate() or smc_conn_free() still access it in parallel.
+ip l add dev tun type gretap key 1000
+ip a a dev tun 10.0.0.1/24
 
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Packets with tun-id 1000 can be recived by tun dev. But packet can't
+be sent through dev tun for non-tunnel-dst
+
+With this patch: tunnel-dst can be get through lwtunnel like beflow:
+ip r a 10.0.0.7 encap ip dst 172.168.0.11 dev tun
+
+Signed-off-by: wenxu <wenxu@ucloud.cn>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/smc/smc_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/ipv4/ip_tunnel.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index f04a037dc9677..0de788fa43e95 100644
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -103,6 +103,8 @@ static void smc_lgr_unregister_conn(struct smc_connection *conn)
- 	struct smc_link_group *lgr = conn->lgr;
- 	int reduced = 0;
+diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
+index fabc299cb875f..7a31287ff1232 100644
+--- a/net/ipv4/ip_tunnel.c
++++ b/net/ipv4/ip_tunnel.c
+@@ -661,13 +661,19 @@ void ip_tunnel_xmit(struct sk_buff *skb, struct net_device *dev,
+ 	dst = tnl_params->daddr;
+ 	if (dst == 0) {
+ 		/* NBMA tunnel */
++		struct ip_tunnel_info *tun_info;
  
-+	if (!lgr)
-+		return;
- 	write_lock_bh(&lgr->conns_lock);
- 	if (conn->alert_token_local) {
- 		reduced = 1;
-@@ -431,6 +433,8 @@ int smc_conn_create(struct smc_sock *smc, __be32 peer_in_addr,
- 			local_contact = SMC_REUSE_CONTACT;
- 			conn->lgr = lgr;
- 			smc_lgr_register_conn(conn); /* add smc conn to lgr */
-+			if (delayed_work_pending(&lgr->free_work))
-+				cancel_delayed_work(&lgr->free_work);
- 			write_unlock_bh(&lgr->conns_lock);
- 			break;
+ 		if (!skb_dst(skb)) {
+ 			dev->stats.tx_fifo_errors++;
+ 			goto tx_error;
+ 		}
+ 
+-		if (skb->protocol == htons(ETH_P_IP)) {
++		tun_info = skb_tunnel_info(skb);
++		if (tun_info && (tun_info->mode & IP_TUNNEL_INFO_TX) &&
++		    ip_tunnel_info_af(tun_info) == AF_INET &&
++		    tun_info->key.u.ipv4.dst)
++			dst = tun_info->key.u.ipv4.dst;
++		else if (skb->protocol == htons(ETH_P_IP)) {
+ 			rt = skb_rtable(skb);
+ 			dst = rt_nexthop(rt, inner_iph->daddr);
  		}
 -- 
 2.20.1
