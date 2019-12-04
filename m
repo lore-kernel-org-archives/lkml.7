@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA0AC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88201C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D6320675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EEE9205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483543;
-	bh=lhL1UpcXPjZuPgvTxh6qj4Kz7MUW0YwV4aqksO/IBvo=;
+	s=default; t=1575483549;
+	bh=vAnPksW0U2gh/kfgefM3vVRIFgL1xdGj0P8wJE6kLOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q181fGQtCWpCQcS1hSTpuxV1kGERDi4PI7R+EXF2Pu7NL5zIDT7Uh80ScpFPXACzv
-	 9z+Jgg8x6Bp0PvKtxsrhnqHAjUvqf69YBjrsUNNyvKNP+ha3aGLwS83VFMbkbCUA4u
-	 GccCZE1ZE2kdC0+i2vamNfN/oWSJtN7EVDYBjW5I=
+	b=jefIaDFx3S00p9pkIQd+iduj2M4oJhGLuhBBoY4IzysU7OjM9FQI8Y9aZ0dSl8U+4
+	 svswA1zBCUsi10DeuQNNTAaiwYgCCDV7f1hxmx/XwJpTZDFtfVHpq2THiN4woS6+8A
+	 O7ivH/kZs5sD8us3tAJnmCKon1hcXvthNkn4HmyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731218AbfLDSKM (ORCPT
+        id S1731194AbfLDSKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:10:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36924 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:10:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731200AbfLDSKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:10:07 -0500
+        id S1731154AbfLDSJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:09:57 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BF2D20674;
-        Wed,  4 Dec 2019 18:10:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EAE820674;
+        Wed,  4 Dec 2019 18:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483006;
-        bh=lhL1UpcXPjZuPgvTxh6qj4Kz7MUW0YwV4aqksO/IBvo=;
+        s=default; t=1575482997;
+        bh=vAnPksW0U2gh/kfgefM3vVRIFgL1xdGj0P8wJE6kLOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pkwtwum39lqgrWuEzRB1SW6g2dDMHFj67ACTfNIWAnihMgJjOYkJH8ijgLvoBo0W4
-         ECmDO2NbhkN4XWL8FznMrUxW3qZlL3sgVHLj4k+voDzs9ppVksCT9ZCmG+xbVOenUo
-         qDnx7Eu8ebRrSw5yHXYhO455ethYkzGstg5k+3HQ=
+        b=GvomKAyUeaun0WjaMumI5jeqDVhAsjtczato01pOjDJ77ZsgqiJpNfxBnDHqwl9bG
+         HDPbcO9stTtK1FThEtbLgrp39kCvH4BwkBguwk/BMfJGeZICqNWXM9qEpbY8tYWDFs
+         JL1MlUikQ4M/1t+GqiDm5W/tX0fai7Tz/+VF73fw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 014/125] scsi: lpfc: Fix dif and first burst use in write commands
-Date:   Wed,  4 Dec 2019 18:55:19 +0100
-Message-Id: <20191204175315.751431529@linuxfoundation.org>
+Subject: [PATCH 4.9 010/125] scripts/gdb: fix debugging modules compiled with hot/cold partitioning
+Date:   Wed,  4 Dec 2019 18:55:15 +0100
+Message-Id: <20191204175313.652097284@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,75 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 7c4042a4d0b7532cfbc90478fd3084b2dab5849e ]
+[ Upstream commit 8731acc5068eb3f422a45c760d32198175c756f8 ]
 
-When dif and first burst is used in a write command wqe, the driver was not
-properly setting fields in the io command request. This resulted in no dif
-bytes being sent and invalid xfer_rdy's, resulting in the io being aborted
-by the hardware.
+gcc's -freorder-blocks-and-partition option makes it group frequently
+and infrequently used code in .text.hot and .text.unlikely sections
+respectively.  At least when building modules on s390, this option is
+used by default.
 
-Correct the wqe initializaton when both dif and first burst are used.
+gdb assumes that all code is located in .text section, and that .text
+section is located at module load address.  With such modules this is no
+longer the case: there is code in .text.hot and .text.unlikely, and
+either of them might precede .text.
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fix by explicitly telling gdb the addresses of code sections.
+
+It might be tempting to do this for all sections, not only the ones in
+the white list.  Unfortunately, gdb appears to have an issue, when
+telling it about e.g. loadable .note.gnu.build-id section causes it to
+think that non-loadable .note.Linux section is loaded at address 0,
+which in turn causes NULL pointers to be resolved to bogus symbols.  So
+keep using the white list approach for the time being.
+
+Link: http://lkml.kernel.org/r/20191028152734.13065-1-iii@linux.ibm.com
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Kieran Bingham <kbingham@kernel.org>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_scsi.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ scripts/gdb/linux/symbols.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
-index d197aa176dee3..d489cc1018b5c 100644
---- a/drivers/scsi/lpfc/lpfc_scsi.c
-+++ b/drivers/scsi/lpfc/lpfc_scsi.c
-@@ -2707,6 +2707,7 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
- 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
- 	int prot_group_type = 0;
- 	int fcpdl;
-+	struct lpfc_vport *vport = phba->pport;
- 
- 	/*
- 	 * Start the lpfc command prep by bumping the bpl beyond fcp_cmnd
-@@ -2812,6 +2813,14 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
- 	 */
- 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
- 
-+	/*
-+	 * For First burst, we may need to adjust the initial transfer
-+	 * length for DIF
-+	 */
-+	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
-+	    (fcpdl < vport->cfg_first_burst_size))
-+		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
-+
- 	return 0;
- err:
- 	if (lpfc_cmd->seg_cnt)
-@@ -3364,6 +3373,7 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
- 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
- 	int prot_group_type = 0;
- 	int fcpdl;
-+	struct lpfc_vport *vport = phba->pport;
- 
- 	/*
- 	 * Start the lpfc command prep by bumping the sgl beyond fcp_cmnd
-@@ -3479,6 +3489,14 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
- 	 */
- 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
- 
-+	/*
-+	 * For First burst, we may need to adjust the initial transfer
-+	 * length for DIF
-+	 */
-+	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
-+	    (fcpdl < vport->cfg_first_burst_size))
-+		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
-+
- 	/*
- 	 * If the OAS driver feature is enabled and the lun is enabled for
- 	 * OAS, set the oas iocb related flags.
+diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
+index 004b0ac7fa72d..4644f1a83b578 100644
+--- a/scripts/gdb/linux/symbols.py
++++ b/scripts/gdb/linux/symbols.py
+@@ -99,7 +99,8 @@ lx-symbols command."""
+             attrs[n]['name'].string(): attrs[n]['address']
+             for n in range(int(sect_attrs['nsections']))}
+         args = []
+-        for section_name in [".data", ".data..read_mostly", ".rodata", ".bss"]:
++        for section_name in [".data", ".data..read_mostly", ".rodata", ".bss",
++                             ".text", ".text.hot", ".text.unlikely"]:
+             address = section_name_to_address.get(section_name)
+             if address:
+                 args.append(" -s {name} {addr}".format(
 -- 
 2.20.1
 
