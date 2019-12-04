@@ -2,135 +2,117 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8625DC2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8794C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB2E2073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575468897;
-	bh=NqBGe6Sv6wTyUXzOxX9rDh/sNVl/hYS/XAALT4ejUXI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rNSnMFKo8h6FTRjiQPffZZAS82M5YSar8XHel76sLxOWVzpv57kTD6yRAcmdlYnEo
-	 V+axxyoqZublTmSSYkZV5eg0wzC4POR9rD98vLW5ShA/6Ca6o1m1dZDOqYRmXqaGTv
-	 SHDDft7xXDp+G5wpF1UQjhiIEJ+iNSNis4WH9uKI=
+	by mail.kernel.org (Postfix) with ESMTP id 7F6FA20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:16:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="rZAHpK0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbfLDOO4 (ORCPT
+        id S1727972AbfLDOQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 09:14:56 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55236 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbfLDOOz (ORCPT
+        Wed, 4 Dec 2019 09:16:19 -0500
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:39368 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbfLDOQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 09:14:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NqBGe6Sv6wTyUXzOxX9rDh/sNVl/hYS/XAALT4ejUXI=; b=Apkm/2we9LPbnYBcBOrJgyc0O
-        NbgXGmUd9oQMVhO4Fpez4qiBbjt3MgJbAbGNYNtO1mIiFm7Uz5joyJkKgug1+3FBKPpXP+obwEvPk
-        kruNQwoeQbblSr9iuI2BoIUxKTKE6FEDdeIIezL1vutBt0K+8qrAOz0TKaEluLLCKTQns=;
-Received: from fw-tnat-cam6.arm.com ([217.140.106.54] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1icVQH-0000he-IS; Wed, 04 Dec 2019 14:14:33 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 4977BD003B4; Wed,  4 Dec 2019 14:14:33 +0000 (GMT)
-Date:   Wed, 4 Dec 2019 14:14:33 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Message-ID: <20191204141433.GU1998@sirena.org.uk>
-References: <20191119181325.GD3634@sirena.org.uk>
- <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
- <20191119193636.GH3634@sirena.org.uk>
- <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
- <20191129120925.GA5747@sirena.org.uk>
- <297fa021fb243072dbbb7bca455e57c13e8c6843.camel@fi.rohmeurope.com>
- <20191202131140.GD1998@sirena.org.uk>
- <72a1f4c5768b8c08c2669ea01e60d1b614095a43.camel@fi.rohmeurope.com>
- <20191204124717.GR1998@sirena.org.uk>
- <6f7b96c71bd1257b0b218a092f8aca7f32ef5468.camel@fi.rohmeurope.com>
+        Wed, 4 Dec 2019 09:16:19 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 404F63F47A;
+        Wed,  4 Dec 2019 15:16:16 +0100 (CET)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=rZAHpK0e;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Km9YbJabySxh; Wed,  4 Dec 2019 15:16:15 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id B12EC3F435;
+        Wed,  4 Dec 2019 15:16:10 +0100 (CET)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id CC96A360608;
+        Wed,  4 Dec 2019 15:16:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1575468969; bh=6lPiouUhoiffGwUD7wWb3htpX7yUG7AcztUp9kFYLLI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=rZAHpK0eBRbwsu388vybVwAbkZPQbHLOKHyty+7r1UkSH/04RpXI227bMqMFVxlRP
+         UrWX6Ijp3UQj9Wj1JrcokDlB6PmEsywz/A8GWJ0k+N90X8OolmzmVQX97MzB97QuBG
+         Cuz7tDkgVF3SLv9OwcbU14195XaWJKO0qK8uDafY=
+Subject: Re: [PATCH v2 2/2] drm/ttm: Fix vm page protection handling
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, pv-drivers@vmware.com,
+        linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+References: <20191203104853.4378-1-thomas_os@shipmail.org>
+ <20191203104853.4378-3-thomas_os@shipmail.org>
+ <20191204135219.GH25242@dhcp22.suse.cz>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <b29b166c-e9fe-f829-f533-b39f98b334a9@shipmail.org>
+Date:   Wed, 4 Dec 2019 15:16:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="b9dEYEwnDXkv9lSy"
-Content-Disposition: inline
-In-Reply-To: <6f7b96c71bd1257b0b218a092f8aca7f32ef5468.camel@fi.rohmeurope.com>
-X-Cookie: Cleanliness is next to impossible.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191204135219.GH25242@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/4/19 2:52 PM, Michal Hocko wrote:
+> On Tue 03-12-19 11:48:53, Thomas Hellström (VMware) wrote:
+>> From: Thomas Hellstrom <thellstrom@vmware.com>
+>>
+>> TTM graphics buffer objects may, transparently to user-space,  move
+>> between IO and system memory. When that happens, all PTEs pointing to the
+>> old location are zapped before the move and then faulted in again if
+>> needed. When that happens, the page protection caching mode- and
+>> encryption bits may change and be different from those of
+>> struct vm_area_struct::vm_page_prot.
+>>
+>> We were using an ugly hack to set the page protection correctly.
+>> Fix that and instead use vmf_insert_mixed_prot() and / or
+>> vmf_insert_pfn_prot().
+>> Also get the default page protection from
+>> struct vm_area_struct::vm_page_prot rather than using vm_get_page_prot().
+>> This way we catch modifications done by the vm system for drivers that
+>> want write-notification.
+> So essentially this should have any new side effect on functionality it
+> is just making a hacky/ugly code less so?
 
---b9dEYEwnDXkv9lSy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Functionality is unchanged. The use of a on-stack vma copy was severely 
+frowned upon in an earlier thread, which also points to another similar 
+example using vmf_insert_pfn_prot().
 
-On Wed, Dec 04, 2019 at 01:13:08PM +0000, Vaittinen, Matti wrote:
+https://lore.kernel.org/lkml/20190905103541.4161-2-thomas_os@shipmail.org/
 
-> I think I once again explained myself badly. There can be only one
-> group with 4 RUN states selected by combination of 2 GPIO lines. bucks
-> 1,2,6 and 7 can each either be assigned into this one group or
-> controlled individually via I2C. But I doubt assigning only one of the
-> bucks in this group is the typical use-case. What we would need would
+> In other words what are the
+> consequences of having page protection inconsistent from vma's?
 
-I don't think this is as unusual as you're thinking - the
-regulators people want to control quickly are usually the main
-CPU supply regulators and these often vary independently of
-anything else.
+During the years, it looks like the caching- and encryption flags of 
+vma::vm_page_prot have been largely removed from usage. From what I can 
+tell, there are no more places left that can affect TTM. We discussed 
+__split_huge_pmd_locked() towards the end of that thread, but that 
+doesn't affect TTM even with huge page-table entries.
 
---b9dEYEwnDXkv9lSy
-Content-Type: application/pgp-signature; name="signature.asc"
+/Thomas
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3nv0gACgkQJNaLcl1U
-h9Bidgf+JmJlmuyYk4HvvR+RXTF/LJMH+3BvZucpl9loKpF5zI4HySCJdL/apiLp
-N5OogFNqhJpzh/RoOiZOncfXinT/nO8ZE9sv5Xfq+2gXb9fcReutNFi71oYuBQoX
-SeihA1H/gvu9WEp0JGNZ4qn/mfxLSa5ZV5PsBZOTYihLVw6GsSnP1uZeb6EuvKSN
-3zecgHr5LDb8xdqfomgPLSP70jvkkX/0Mlk1LjaS0uCo3ozHi9Gg9NP4yS1hIOjo
-9z6f4jNleLrQ9YGV+OjfpXOsx4QuyDg5Tvk9CNd7Oy522ZCWbBHu78Y4IoKzLrgw
-R61Ph6IhTgRyzufu4R0X2Y62I+X8yQ==
-=+XL6
------END PGP SIGNATURE-----
-
---b9dEYEwnDXkv9lSy--
