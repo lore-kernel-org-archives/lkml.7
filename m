@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D012C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6FFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E602D2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07E7020674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483305;
-	bh=YBmn3/Vt4SXeeCCxdUnbFSsQrjzvI2/wa7gF+wvhn00=;
+	s=default; t=1575483310;
+	bh=tI+Me4l/Tp44n2yNMTP+jfpnQPT4d2ccg/rfEF2XdTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z7XgKtxYmjFk51WRYfThtJfEJwwC7EIlZACW9ldCzF0R7tWtIGhteOYpKLELji8Ll
-	 A3OHsuownQltEYCK4lZPpCrAm3aIYfQCSRsaXePQS/9P1nM7ZAfBXe4CTqaQYLDyhM
-	 LTNtNq81meTUqPzcipUsvwJ5J4tPrxMedISzpni8=
+	b=2cBc9i7BL1D1MTj0s8WtXnYhLbthLknZDbxOTpwsGhwQiKbQstuCOIpxHS1gVapIV
+	 4q7JPMI2sndbiuG0WHnkQHM8Eh8ajo0UHhrcE4pm9+dBddeZfSn7oSa4vOE9Onz2Ll
+	 vnqi86Y7Iy3aiHk+qIwrnoOgHf4WfdUa6EOAA1O8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731999AbfLDSPD (ORCPT
+        id S1731657AbfLDSOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:15:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44434 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:14:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731695AbfLDSO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:14:57 -0500
+        id S1731633AbfLDSOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:14:46 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07A9820675;
-        Wed,  4 Dec 2019 18:14:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DC592086D;
+        Wed,  4 Dec 2019 18:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483297;
-        bh=YBmn3/Vt4SXeeCCxdUnbFSsQrjzvI2/wa7gF+wvhn00=;
+        s=default; t=1575483284;
+        bh=tI+Me4l/Tp44n2yNMTP+jfpnQPT4d2ccg/rfEF2XdTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AyOnZW8hmSa967RD8Xk9VV6kK6IPG5bw7QsPXafMBlYlNyKbXDT+heYYbYMK+W9vm
-         DVsYTpdzrVR5wqlrB65691pWMulJmsmNAFGVXIRWS+MgYKWEZOwn/3hWTZvrOqquj7
-         z+0CMD2Dh6lDLHcZiBgAY56sTfsW6DQ8pO3Y/8S4=
+        b=Axl/VnrwHKklqtNdpPFAxqGhY4IcY19SIea/JhBQRWV6ylkzDyeRGMQtIMqT4l9yt
+         NpKU6Tn9vq7prJciYu7B4Fn4ZZxAvjgrM5OQXlBIeYoGsMNpl/XUq8jCHEr7LU7lVA
+         mF224i5sPXyoxP8D/sv9qPuQ8Z/AKkLbDxPa3puA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yang <richard.weiyang@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Boris Brezillon <bbrezillon@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 082/125] vmscan: return NODE_RECLAIM_NOSCAN in node_reclaim() when CONFIG_NUMA is n
-Date:   Wed,  4 Dec 2019 18:56:27 +0100
-Message-Id: <20191204175324.022451822@linuxfoundation.org>
+Subject: [PATCH 4.9 087/125] mtd: Check add_mtd_device() ret code
+Date:   Wed,  4 Dec 2019 18:56:32 +0100
+Message-Id: <20191204175324.363622246@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -64,75 +59,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yang <richard.weiyang@gmail.com>
+From: Boris Brezillon <bbrezillon@kernel.org>
 
-[ Upstream commit 8b09549c2bfd9f3f8f4cdad74107ef4f4ff9cdd7 ]
+[ Upstream commit 2b6f0090a3335b7bdd03ca520c35591159463041 ]
 
-Commit fa5e084e43eb ("vmscan: do not unconditionally treat zones that
-fail zone_reclaim() as full") changed the return value of
-node_reclaim().  The original return value 0 means NODE_RECLAIM_SOME
-after this commit.
+add_mtd_device() can fail. We should always check its return value
+and gracefully handle the failure case. Fix the call sites where this
+not done (in mtdpart.c) and add a __must_check attribute to the
+prototype to avoid this kind of mistakes.
 
-While the return value of node_reclaim() when CONFIG_NUMA is n is not
-changed.  This will leads to call zone_watermark_ok() again.
-
-This patch fixes the return value by adjusting to NODE_RECLAIM_NOSCAN.
-Since node_reclaim() is only called in page_alloc.c, move it to
-mm/internal.h.
-
-Link: http://lkml.kernel.org/r/20181113080436.22078-1-richard.weiyang@gmail.com
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Matthew Wilcox <willy@infradead.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/swap.h |  6 ------
- mm/internal.h        | 10 ++++++++++
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ drivers/mtd/mtdcore.h |  2 +-
+ drivers/mtd/mtdpart.c | 36 +++++++++++++++++++++++++++++++-----
+ 2 files changed, 32 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 2228907d08ffd..d13617c7bcc4f 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -335,14 +335,8 @@ extern unsigned long vm_total_pages;
- extern int node_reclaim_mode;
- extern int sysctl_min_unmapped_ratio;
- extern int sysctl_min_slab_ratio;
--extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
- #else
- #define node_reclaim_mode 0
--static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
--				unsigned int order)
--{
--	return 0;
--}
- #endif
+diff --git a/drivers/mtd/mtdcore.h b/drivers/mtd/mtdcore.h
+index 55fdb8e1fd2a8..488b652ba9e63 100644
+--- a/drivers/mtd/mtdcore.h
++++ b/drivers/mtd/mtdcore.h
+@@ -6,7 +6,7 @@
+ extern struct mutex mtd_table_mutex;
  
- extern int page_evictable(struct page *page);
-diff --git a/mm/internal.h b/mm/internal.h
-index 3e2d016947479..f6df7cb8cbc0a 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -442,6 +442,16 @@ static inline void mminit_validate_memmodel_limits(unsigned long *start_pfn,
- #define NODE_RECLAIM_SOME	0
- #define NODE_RECLAIM_SUCCESS	1
+ struct mtd_info *__mtd_next_device(int i);
+-int add_mtd_device(struct mtd_info *mtd);
++int __must_check add_mtd_device(struct mtd_info *mtd);
+ int del_mtd_device(struct mtd_info *mtd);
+ int add_mtd_partitions(struct mtd_info *, const struct mtd_partition *, int);
+ int del_mtd_partitions(struct mtd_info *);
+diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+index fccdd49bb9640..70e476c1c474d 100644
+--- a/drivers/mtd/mtdpart.c
++++ b/drivers/mtd/mtdpart.c
+@@ -648,10 +648,22 @@ int mtd_add_partition(struct mtd_info *master, const char *name,
+ 	list_add(&new->list, &mtd_partitions);
+ 	mutex_unlock(&mtd_partitions_mutex);
  
-+#ifdef CONFIG_NUMA
-+extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
-+#else
-+static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
-+				unsigned int order)
-+{
-+	return NODE_RECLAIM_NOSCAN;
-+}
-+#endif
+-	add_mtd_device(&new->mtd);
++	ret = add_mtd_device(&new->mtd);
++	if (ret)
++		goto err_remove_part;
+ 
+ 	mtd_add_partition_attrs(new);
+ 
++	return 0;
 +
- extern int hwpoison_filter(struct page *p);
++err_remove_part:
++	mutex_lock(&mtd_partitions_mutex);
++	list_del(&new->list);
++	mutex_unlock(&mtd_partitions_mutex);
++
++	free_partition(new);
++	pr_info("%s:%i\n", __func__, __LINE__);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(mtd_add_partition);
+@@ -696,28 +708,42 @@ int add_mtd_partitions(struct mtd_info *master,
+ {
+ 	struct mtd_part *slave;
+ 	uint64_t cur_offset = 0;
+-	int i;
++	int i, ret;
  
- extern u32 hwpoison_filter_dev_major;
+ 	printk(KERN_NOTICE "Creating %d MTD partitions on \"%s\":\n", nbparts, master->name);
+ 
+ 	for (i = 0; i < nbparts; i++) {
+ 		slave = allocate_partition(master, parts + i, i, cur_offset);
+ 		if (IS_ERR(slave)) {
+-			del_mtd_partitions(master);
+-			return PTR_ERR(slave);
++			ret = PTR_ERR(slave);
++			goto err_del_partitions;
+ 		}
+ 
+ 		mutex_lock(&mtd_partitions_mutex);
+ 		list_add(&slave->list, &mtd_partitions);
+ 		mutex_unlock(&mtd_partitions_mutex);
+ 
+-		add_mtd_device(&slave->mtd);
++		ret = add_mtd_device(&slave->mtd);
++		if (ret) {
++			mutex_lock(&mtd_partitions_mutex);
++			list_del(&slave->list);
++			mutex_unlock(&mtd_partitions_mutex);
++
++			free_partition(slave);
++			goto err_del_partitions;
++		}
++
+ 		mtd_add_partition_attrs(slave);
+ 
+ 		cur_offset = slave->offset + slave->mtd.size;
+ 	}
+ 
+ 	return 0;
++
++err_del_partitions:
++	del_mtd_partitions(master);
++
++	return ret;
+ }
+ 
+ static DEFINE_SPINLOCK(part_parser_lock);
 -- 
 2.20.1
 
