@@ -2,151 +2,223 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E24C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0C6C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8088320659
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D3772068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:08:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kaxcDrSj"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="9iFIUxYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfLDIGo (ORCPT
+        id S1727205AbfLDIIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:06:44 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42266 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfLDIGo (ORCPT
+        Wed, 4 Dec 2019 03:08:01 -0500
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:18478 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725951AbfLDIIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:06:44 -0500
-Received: by mail-lj1-f196.google.com with SMTP id e28so6935856ljo.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 00:06:42 -0800 (PST)
+        Wed, 4 Dec 2019 03:08:00 -0500
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB483CCk010923;
+        Wed, 4 Dec 2019 03:07:57 -0500
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2170.outbound.protection.outlook.com [104.47.56.170])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2wkk2c35hp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 04 Dec 2019 03:07:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BA3uI6VxT3rzQlCfl+nXTDtOF/mJYxWL3uLltpxiKRIz4mPrqbhme85p5qRCDd1C26oEFELMqOYHQHR3qNxYtx4ZV7Ee0LcdcJ7ELk38UA3EVq9YZ9iB1VljsMDLKVyDV3G2m1HtuB0rgYGyjqO1C7MFuoPM6uE/T77YZPNJ4FBO1Lh9kFGn3qFndYaCsCcqkSdHjN6xI8aMLv74vYF2Cx7kQAO3WQlx/yQRkWTihReRBkRdY8eKgqUHFuuTqtBDKANybwIKGGZ1GOb5xn3JKQYBpy3ZrI2k1xi7QEAuHBmUit1ZEWsrJtmN6iA36kOFxW1giAgnWqEGOBJiaYK3TQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OTjuKytSgvOPCZNfbtdpCZmFP8CqZjkODaDIuxSbPv4=;
+ b=Tv0v72f5WqPgayyyDdD9wUVaLUM781Aa4JIXdAQN/rrdMgJd4ZdmPcKOPEd38+yK4KjgGRPxjp2qB35zdgPaCmt+zNeSqQGUmRb4Pt+qdet38OEuyC5ixNlBLELERKPDnUKrapNHw2d6Du2KzbXlgAfnxbfghckvfpaH3WHfGHeHqs1dD0vEj2/MTzGL6/wLDi2sgyOQ/jhrATkHG54W4/1QfLKyMVRjbtT5twzWGpjGdDmSL57FVq0u9FmD9kjAdBOGexI6wYOLYZimjTzFWSCwmq+xkCMks3p4ye+WYtn/E5jjoDrAucW6XVHV0ctW68We4oeTf0h0wGckAHvPpw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z35jQ7RUTBYlGTWaAX5Qsptk6KxjQifiDNPSX1mkD6o=;
-        b=kaxcDrSjizEWyBFrFOMstWK51gUABgdq683eaSYkDUt7NWqPd2AjUehn8wiV8kbYcm
-         qdTi914OZARpw3un8uH66m20bJjJHMEa4FqtbFZ3MLtgCWIV2OTZjDWHa2OWFWgNAgE+
-         h1lSexprfgiB4BGXaJJY3R5gIFWhFoVP1e8egUr9TLV6Q7GAnNfS0dJkTZauUtpepy1s
-         Xioar33zLVkEmYPnUa5VNgjYNjr5o/YNgFnCHFDBgefllR/HZBaMcKoCg5C3o4p/04tM
-         ITBnRb+h62tHOnOTMRg78UMPm0QaY3T0zxrGLovZ3pl1FYF5/xrY+Xah2nO0RJed7Grb
-         ANlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z35jQ7RUTBYlGTWaAX5Qsptk6KxjQifiDNPSX1mkD6o=;
-        b=uhB2hP+uE4DBtKpLlneYeAwJ/yu88q8zzdWaIImK5G7lD3qH094tBA0u6tSqGx5J70
-         IAbBlYouEO6ouWH4v4sqGMD21sravq9J7trHAhWL1bh8a5OMXHMR5/rLnYBQRvhhx8Os
-         CZIBzPFv40snIoNjt/FEbOO/0JIu0fJT0xf2LVOYSxDMqevWCOOF/R1/sQvhcydrlOCX
-         8eu8kBR1vG0YV7vLEpllZKDzGOveGkJ5S7AIxSRtxsPpuzGnMAgsVmiUJLAWI6XR8+BA
-         sfPOrOcGF41QiIAE3eAtgR1ubwWlNwTJTCwkfv+NQX7E3XbO8komT0bPqIoPJbpdy+wQ
-         MJDA==
-X-Gm-Message-State: APjAAAV/fJTHJ20jTuyoFeH20ihEA/z+ccJ2YP5yjBGkMA7ficcnO4JS
-        AEDl9zR86O4SWTzX0vPR9he01PNCcewgjcySrhU9fkAp
-X-Google-Smtp-Source: APXvYqzt++sihRdLcnlYHBs7rEtMol78F6WcvpY3PVq57/n+Z5aRq7gNAmiLSSwAcMHJdJyXs80hlyvjz3ccpvVsWeA=
-X-Received: by 2002:a2e:9a04:: with SMTP id o4mr1157186lji.214.1575446801534;
- Wed, 04 Dec 2019 00:06:41 -0800 (PST)
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OTjuKytSgvOPCZNfbtdpCZmFP8CqZjkODaDIuxSbPv4=;
+ b=9iFIUxYY/sTnhKjBGgRJaNH2k9H6hDB0mimxR45lrvh1s2h2C2cQBZCj+dJefY1KkRVT/oWuhyAcWdYWXQZyos9TKvPqau6RUlJble4//P7gAP+bG38iwnls7n65nwMcSxYSH7/W+1vWP2QPRmFbzHvpWsaZg1AWhu9hVDplhjU=
+Received: from BN6PR03CA0082.namprd03.prod.outlook.com (2603:10b6:405:6f::20)
+ by BYAPR03MB4280.namprd03.prod.outlook.com (2603:10b6:a03:75::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.18; Wed, 4 Dec
+ 2019 08:07:55 +0000
+Received: from CY1NAM02FT045.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::204) by BN6PR03CA0082.outlook.office365.com
+ (2603:10b6:405:6f::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12 via Frontend
+ Transport; Wed, 4 Dec 2019 08:07:54 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ CY1NAM02FT045.mail.protection.outlook.com (10.152.75.111) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
+ via Frontend Transport; Wed, 4 Dec 2019 08:07:54 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id xB487i0F014425
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Wed, 4 Dec 2019 00:07:44 -0800
+Received: from saturn.ad.analog.com (10.48.65.119) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 4 Dec 2019 03:07:53 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: imu: adis: use new `delay` structure for SPI transfer delays
+Date:   Wed, 4 Dec 2019 10:09:04 +0200
+Message-ID: <20191204080904.2557-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <CALAqxLXrWWnWi32BR1F8JOtrGt1y2Kzj__zWopLx1ZfRy3EZKA@mail.gmail.com>
-In-Reply-To: <CALAqxLXrWWnWi32BR1F8JOtrGt1y2Kzj__zWopLx1ZfRy3EZKA@mail.gmail.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 4 Dec 2019 09:06:29 +0100
-Message-ID: <CAKfTPtAvnLY3brp9iy_aHNu0rMM8nLfgeLc3CXEkMk3bwU1weA@mail.gmail.com>
-Subject: Re: Null pointer crash at find_idlest_group on db845c w/ linus/master
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Quentin Perret <qperret@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <Patrick.Bellasi@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(376002)(396003)(199004)(189003)(110136005)(51416003)(8936002)(36756003)(8676002)(106002)(107886003)(1076003)(54906003)(316002)(7636002)(70586007)(70206006)(14444005)(50226002)(5660300002)(4326008)(246002)(2616005)(2870700001)(2906002)(478600001)(86362001)(44832011)(186003)(7696005)(6666004)(356004)(50466002)(336012)(48376002)(26005)(305945005)(426003)(81973001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4280;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 03a44bfe-beca-41b1-20f7-08d7789110d0
+X-MS-TrafficTypeDiagnostic: BYAPR03MB4280:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB42802C4638261F0F37726765F95D0@BYAPR03MB4280.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:632;
+X-Forefront-PRVS: 0241D5F98C
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: BLVcqM2mhi+Dl9qyijmoLzmSkNBurG51H0I1spel2Q07yjcPbt8o15ffEkf/rYUD882Lib8VX3xEh5K8Zt0dPk1igvJiG3tQb7u4zFKSLZgOESo1o2yQziHlXJZHI6V3FdcM3u809i3T0KgZcurU6LDREnAlZatffSx26MRRpFtdGSTYgx6PNQdSkNtjugnKInetVIgb3j+Ru8KKOglMTCVpYK/j7G3sVMirDWWMouz44vLJD2LJPrgVR5R2q83fM2e+wzQwdq//XQ+orJNxKg351J4UxIAj8tauGJv2JLKuZF9sifxZw4lo98KfyGFoaLYFV0KU157edCpWa3QD2vSvrlQ3n7t6qQGt3vxU8tpAHM8hbpm8CRUq7R+2ZFb9zHYY5VNvqg2aBEFSo/SJ6YDRgqoAtZcbbgRh6DcTFM+m7N4EdxMhdhJEiep1+xi1pBj64fRuZOkE2vOvUDHWWSDMXe1Rnqh60rYlMH8VhW8PeK2ISryJ4fmU7h1pPM3L
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 08:07:54.2549
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03a44bfe-beca-41b1-20f7-08d7789110d0
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4280
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_01:2019-12-04,2019-12-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 lowpriorityscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
+ spamscore=0 bulkscore=0 adultscore=0 malwarescore=0 impostorscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912040059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+In a recent change to the SPI subsystem [1], a new `delay` struct was added
+to replace the `delay_usecs`. This change replaces the current `delay_secs`
+with `delay` for this driver.
 
-On Tue, 3 Dec 2019 at 20:15, John Stultz <john.stultz@linaro.org> wrote:
->
-> With today's linus/master on db845c running android, I'm able to
-> fairly easily reproduce the following crash. I've not had a chance to
-> bisect it yet, but I'm suspecting its connected to Vincent's recent
-> rework.
+The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+that both `delay_usecs` & `delay` are used (in this order to preserve
+backwards compatibility).
 
-Does the crash happen randomly or after a specific action ?
-I have a db845 so I can try to reproduce it locally.
+[1] commit bebcfd272df6485 ("spi: introduce `delay` field for
+`spi_transfer` + spi_transfer_delay_exec()")
 
->
-> If you have any suggestions, or need me to test anything, please let me know.
->
-> thanks
-> -john
->
-> [  136.157069] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000010
-> [  136.165937] Mem abort info:
-> [  136.168765]   ESR = 0x96000005
-> [  136.171862]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [  136.177229]   SET = 0, FnV = 0
-> [  136.180320]   EA = 0, S1PTW = 0
-> [  136.183502] Data abort info:
-> [  136.186426]   ISV = 0, ISS = 0x00000005
-> [  136.190302]   CM = 0, WnR = 0
-> [  136.193316] user pgtable: 4k pages, 39-bit VAs, pgdp=0000000175f7e000
-> [  136.199814] [0000000000000010] pgd=0000000000000000, pud=0000000000000000
-> [  136.206666] Internal error: Oops: 96000005 [#1] PREEMPT SMP
-> [  136.212295] Modules linked in:
-> [  136.215397] CPU: 7 PID: 50 Comm: kauditd Tainted: G        W
->  5.4.0-mainline-11225-g9c5add21ff63 #1252
-> [  136.225390] Hardware name: Thundercomm Dragonboard 845c (DT)
-> [  136.231111] pstate: 60c00085 (nZCv daIf +PAN +UAO)
-> [  136.235971] pc : find_idlest_group.isra.95+0x368/0x690
-> [  136.241159] lr : find_idlest_group.isra.95+0x210/0x690
-> [  136.246347] sp : ffffffc01036b890
-> [  136.249708] x29: ffffffc01036b890 x28: ffffffe7d7450480
-> [  136.255077] x27: ffffff80f81f0000 x26: 0000000000000000
-> [  136.260445] x25: 0000000000000000 x24: ffffffc01036b998
-> [  136.265810] x23: ffffff80f8e40a00 x22: ffffffe7d7719e30
-> [  136.271175] x21: ffffff80f8f16520 x20: ffffff80f8f16180
-> [  136.276539] x19: ffffffe7d771a610 x18: ffffffe7d71d1ef0
-> [  136.281908] x17: 0000000000000000 x16: 0000000000000000
-> [  136.287274] x15: 0000000000000001 x14: 6f3a753d74786574
-> [  136.292644] x13: 6e6f637420383637 x12: 632c323135633a30
-> [  136.298007] x11: 0000000000000070 x10: 0000000000000002
-> [  136.303371] x9 : 0000000000000000 x8 : 0000000000000075
-> [  136.308737] x7 : ffffff80f8f16000 x6 : ffffffe7d7450000
-> [  136.314099] x5 : 0000000000000004 x4 : 0000000000000000
-> [  136.319465] x3 : 000000000000025c x2 : ffffff80f8f16780
-> [  136.324836] x1 : 0000000000000000 x0 : 0000000000000002
-> [  136.330198] Call trace:
-> [  136.332680]  find_idlest_group.isra.95+0x368/0x690
-> [  136.337528]  select_task_rq_fair+0x4e4/0xd88
-> [  136.341848]  try_to_wake_up+0x21c/0x7f8
-> [  136.345735]  default_wake_function+0x34/0x48
-> [  136.350053]  pollwake+0x98/0xc8
-> [  136.353233]  __wake_up_common+0x90/0x158
-> [  136.357202]  __wake_up_common_lock+0x88/0xd0
-> [  136.361519]  __wake_up_sync_key+0x40/0x50
-> [  136.365584]  sock_def_readable+0x44/0x78
-> [  136.369560]  __netlink_sendskb+0x44/0x58
-> [  136.373525]  netlink_unicast+0x220/0x258
-> [  136.377496]  kauditd_send_queue+0xa4/0x158
-> [  136.381643]  kauditd_thread+0xf4/0x248
-> [  136.385438]  kthread+0x130/0x138
-> [  136.388706]  ret_from_fork+0x10/0x1c
-> [  136.392332] Code: 54001340 7100081f 540016e1 a9478ba1 (f9400821)
-> [  136.398493] ---[ end trace 47d254973801b2c4 ]---
-> [  136.403162] Kernel panic - not syncing: Fatal exception
-> [  136.408445] SMP: stopping secondary CPUs
-> [  136.412440] Kernel Offset: 0x27c6200000 from 0xffffffc010000000
-> [  136.418417] PHYS_OFFSET: 0xffffffe140000000
-> [  136.422655] CPU features: 0x00002,2a80a218
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/imu/adis.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
+index 2cd2cc2316c6..95af67470668 100644
+--- a/drivers/iio/imu/adis.c
++++ b/drivers/iio/imu/adis.c
+@@ -38,7 +38,8 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+-			.delay_usecs = adis->data->write_delay,
++			.delay.value = adis->data->write_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 			.cs_change_delay.value = adis->data->cs_change_delay,
+ 			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+@@ -46,7 +47,8 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+-			.delay_usecs = adis->data->write_delay,
++			.delay.value = adis->data->write_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 			.cs_change_delay.value = adis->data->cs_change_delay,
+ 			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+@@ -54,19 +56,22 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+-			.delay_usecs = adis->data->write_delay,
++			.delay.value = adis->data->write_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 			.cs_change_delay.value = adis->data->cs_change_delay,
+ 			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+ 			.tx_buf = adis->tx + 6,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+-			.delay_usecs = adis->data->write_delay,
++			.delay.value = adis->data->write_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+ 			.tx_buf = adis->tx + 8,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+-			.delay_usecs = adis->data->write_delay,
++			.delay.value = adis->data->write_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 		},
+ 	};
+ 
+@@ -138,7 +143,8 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+-			.delay_usecs = adis->data->write_delay,
++			.delay.value = adis->data->write_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 			.cs_change_delay.value = adis->data->cs_change_delay,
+ 			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+@@ -146,7 +152,8 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+-			.delay_usecs = adis->data->read_delay,
++			.delay.value = adis->data->read_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 			.cs_change_delay.value = adis->data->cs_change_delay,
+ 			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+@@ -155,14 +162,16 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+-			.delay_usecs = adis->data->read_delay,
++			.delay.value = adis->data->read_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 			.cs_change_delay.value = adis->data->cs_change_delay,
+ 			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+ 			.rx_buf = adis->rx + 2,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+-			.delay_usecs = adis->data->read_delay,
++			.delay.value = adis->data->read_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 		},
+ 	};
+ 
+-- 
+2.20.1
+
