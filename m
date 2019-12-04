@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8E4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28F2C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22E9322464
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC4321823
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:29:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="YpiG2PrP"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Yc55Vgm1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbfLDX3r (ORCPT
+        id S1728598AbfLDX3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 18:29:47 -0500
-Received: from mail-eopbgr690073.outbound.protection.outlook.com ([40.107.69.73]:36750
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        Wed, 4 Dec 2019 18:29:49 -0500
+Received: from mail-eopbgr770051.outbound.protection.outlook.com ([40.107.77.51]:6838
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728060AbfLDX3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 18:29:43 -0500
+        id S1728512AbfLDX3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 18:29:45 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J6pn1kCD8W2Ajt/yPDz8tWdbmz973yEvfoq9GpydAbcwUG6L4GLXd/d9wska0IoWo5ocHKoNVvUWfC/zrm/jCZvuqeXBS3saxYU6UBUh3sKl7xI3cNNGMN86yJRQqqj4zENyJamauK8RCoRRoQYt9+jj9cjV5Y5gjtueBOXM+WeBIwr3u19PHy8KTmOf1Dfb2t2EjOOsZ842Hd2pdagzUSKmeyGvF4qmA6Df2/Yxf/u16E8248TnEbulfhpM5XQpiNBmFCwjmqvHFjEFcw6fwY33CtPU6zuUDgjlmTBsli7YE6g2VWAdD9ijSRueqebtz4kSD5v3vl/PlDi1UoZZnA==
+ b=avVzedjKQKMmhkIYXKW5Z2o8R6aD/s3wEGAKRcPYqH1fXKW6TnkQLF0qBsHk5o4UCRw/xa8kPE6SivGj+teLoQiT45BQ3L4fWCwQ501Ai+ptXKnB0EZzxx6arTwNUkIdcNX1lHM5UA0GxYe9/80wfHINFfGLM700JpoXsnrGnQ3HLuEBwfarsNS6vfHMYFRj1n2+HBH7J8Isetu8Oea4EIVT1HC+pvkpH0QpcvuiQXHonuFLGbTK9XJdNVj4fuO2dNoy1C+GyzJKy2SZRN0TiNCGSXDa9atIpghucnxvoBvprwkkoXWbQJ5pBOTXCaSr8aP/NxB69mPDWTX72zen8g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PS1iBmLZ6KRIKxIxwTNBJnyVuN9IEZnmnGOV+WnukGc=;
- b=FnvOQUErkvOJef/1/Vvp9RHZbpaw4zvAIBi7hi9AWdNZAr5YLxJG8RiV0Fo8gHUqAI1KrIhTmbBW2Ac4PukVwwAXTeSjr230/5+DHyXbjJrG4MXUyi9tmZtcSRrtmO/GRdGqaazYribahu3Vytmkb3cGmPoQi/PR9tX79Boz43VwymA4IGOpmKGmy+jYCZG+nHbwJ1x/FiyYF0uLo3nNYWaVi1TEkAMgEUskC+ET4WHGoWCr5UsUWox327OmFI5NzZeJB0noET74SSv1brtvDS2ek/kD1KVegOuaS+OMcSOfE5NHDgXpFbgdd6s2fmqyvHuPGGxPobJ0/DbFTm5giw==
+ bh=LCmv5qdk/zn8urgjXqF1Eaewb0TJHAmOdvVOYypLALA=;
+ b=Ddjk/I4RLEJ8YKVDR+wClxA59Zfh37dYsF4MAIlxFX+OYM538ikBcpv4l/0oweUHZ2cbpof+xCPnPwuu1ItZujWT4AcIa5fx8Hkm2aKKo+i3LgnyRYfVBWHOoDleXYQcjXJThOke+tytfRs7ODT44ArLYZm1B3stPnw2JY+xIhZ5i3VjqSoYJBof07LAgsID6mcFHonoASmEgofS29A3SmsbXNyE4PpCWDXMELOxiO0V7TLsCZzuY9eTswe/l32pW6KFHxK6hgp2K0u5rHUibKajuBypVh/77bTOs2ZnWKW86g9AB8WkaXkvQ1cRdx5jbTZMFGMIowc/iOieULcDJA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PS1iBmLZ6KRIKxIxwTNBJnyVuN9IEZnmnGOV+WnukGc=;
- b=YpiG2PrP9N6z76CwVbx0YD5vxe6noWUzFSob6uL6VPA4uHeP5GV+8w8Fgw6mZ/L5Nw1kytcpWkzIYLN56hzyG39JY1/90hMPA+9/vUfXA6SulHlLCVHpLgRjjDBkcDFetXprjfd6vyHH+sE/utn2bskYc1dw396rCg+1k6YvK3Q=
-Received: from BYAPR02CA0004.namprd02.prod.outlook.com (2603:10b6:a02:ee::17)
- by MWHPR02MB2495.namprd02.prod.outlook.com (2603:10b6:300:42::9) with
+ bh=LCmv5qdk/zn8urgjXqF1Eaewb0TJHAmOdvVOYypLALA=;
+ b=Yc55Vgm1gwJ9Z8A1UD4wQ0vxapQSTRN9YTo+ZHJvJS9CZL0xhiqTceA3iqHYRV+7xTYLMNvO09jD7zFWKLPIMVvTlm0KpAZjylCoDvqoVx04zxe6FNa+Ok1iwgHFuUU6fH0m7iTirE88FiP8Tcm27VuqeM0QK4C5lxF3TD7rufU=
+Received: from CY4PR02CA0033.namprd02.prod.outlook.com (2603:10b6:903:117::19)
+ by BN7PR02MB3921.namprd02.prod.outlook.com (2603:10b6:406:f3::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.21; Wed, 4 Dec
- 2019 23:29:37 +0000
-Received: from BL2NAM02FT042.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::204) by BYAPR02CA0004.outlook.office365.com
- (2603:10b6:a02:ee::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.18 via Frontend
- Transport; Wed, 4 Dec 2019 23:29:36 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.22; Wed, 4 Dec
+ 2019 23:29:39 +0000
+Received: from BL2NAM02FT011.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::209) by CY4PR02CA0033.outlook.office365.com
+ (2603:10b6:903:117::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13 via Frontend
+ Transport; Wed, 4 Dec 2019 23:29:39 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
@@ -57,24 +57,24 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT042.mail.protection.outlook.com (10.152.76.193) with Microsoft SMTP
+ BL2NAM02FT011.mail.protection.outlook.com (10.152.77.5) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Wed, 4 Dec 2019 23:29:35 +0000
+ via Frontend Transport; Wed, 4 Dec 2019 23:29:36 +0000
 Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1ice5O-0005aE-V7; Wed, 04 Dec 2019 15:29:34 -0800
+        id 1ice5O-0005aB-PU; Wed, 04 Dec 2019 15:29:34 -0800
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1ice5J-00080R-Rp; Wed, 04 Dec 2019 15:29:29 -0800
-Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB4NTRV6024869;
+        id 1ice5J-00080R-M1; Wed, 04 Dec 2019 15:29:29 -0800
+Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB4NTR6U024871;
         Wed, 4 Dec 2019 15:29:27 -0800
 Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1ice5H-000802-Ig; Wed, 04 Dec 2019 15:29:27 -0800
+        id 1ice5H-000802-Mq; Wed, 04 Dec 2019 15:29:27 -0800
 From:   Jolly Shah <jolly.shah@xilinx.com>
 To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
@@ -83,9 +83,9 @@ To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
 Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
         Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH 3/5] firmware: xilinx: Add system shutdown API interface
-Date:   Wed,  4 Dec 2019 15:29:17 -0800
-Message-Id: <1575502159-11327-4-git-send-email-jolly.shah@xilinx.com>
+Subject: [PATCH 5/5] firmware: xilinx: Add sysfs and IOCTL to set boot health status
+Date:   Wed,  4 Dec 2019 15:29:19 -0800
+Message-Id: <1575502159-11327-6-git-send-email-jolly.shah@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1575502159-11327-1-git-send-email-jolly.shah@xilinx.com>
 References: <1575502159-11327-1-git-send-email-jolly.shah@xilinx.com>
@@ -94,27 +94,27 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(39860400002)(136003)(396003)(199004)(189003)(8936002)(9786002)(6636002)(316002)(186003)(44832011)(50226002)(36756003)(14444005)(2616005)(54906003)(81166006)(8676002)(81156014)(2906002)(11346002)(426003)(26005)(5660300002)(7696005)(76176011)(4326008)(478600001)(51416003)(36386004)(356004)(305945005)(6666004)(107886003)(48376002)(336012)(50466002)(7416002)(70206006)(16586007)(70586007);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB2495;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(199004)(189003)(498600001)(6666004)(36386004)(356004)(5660300002)(51416003)(7696005)(81156014)(8676002)(305945005)(2906002)(81166006)(9786002)(44832011)(6636002)(76176011)(26005)(107886003)(11346002)(14444005)(50466002)(16586007)(336012)(4326008)(8936002)(7416002)(426003)(54906003)(50226002)(36756003)(2616005)(70206006)(70586007)(48376002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB3921;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6c35cdc5-b898-4751-36ca-08d77911d388
-X-MS-TrafficTypeDiagnostic: MWHPR02MB2495:
-X-Microsoft-Antispam-PRVS: <MWHPR02MB24955785C377EF5FFFA5606FB85D0@MWHPR02MB2495.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: a2a7cc52-c5d0-4380-9a83-08d77911d465
+X-MS-TrafficTypeDiagnostic: BN7PR02MB3921:
+X-Microsoft-Antispam-PRVS: <BN7PR02MB3921DFE0E35AD5D1E86605E9B85D0@BN7PR02MB3921.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:556;
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
 X-Forefront-PRVS: 0241D5F98C
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IBkHnWl3G32cxnNKaASdx2/THmVzKXat5BZhQt+DBwhs0A2zPRV9ANQElvZqkOI+boFPRAc8lMmeI4Z2C77fVRaqm+L6QSCG7w8JUdjWZF09Z4tl16CPKfAgXTPh9owgQ6OF8Zp8QjyhzxQynhi9bph10/MxMYVnxgd/8up7nfD+bBOjhxAVXe++nm7GKCSar8+kV5bEDI4nDEp2uR9AotHrPUvjbo3YH3cvaEwo5V1IsVMUmmOn+qbdgDg8G39FAMXWq9vDneygU2dEobpSKlp6zGrlAz2BAVsPCcQez4UEirgUKZrOh7aVrHcsmW778oRGU/Ij/d5YGDpVscsUQ1CPPAiUMMiBFCMSLJcmpru5LLbbbxwDDy1r9ihGZYOITwo80S4FQBAxIeaPTVtL+xVFF3+PeBaBEBk98wxhpax1DoPZxJcNp/52VoXmiH2k
+X-Microsoft-Antispam-Message-Info: yAehIwUhrh2ZiSgzFcbkB9c6H7iZ0lwsg7vMh326/ZjiLZ4s1Ee+LJVkE6kSKTcpeQq82oDjBwt0Cv4MCXNPj8z0f4cZcpvfCsVM7eJN/5qH6Iy0dDvA1Z32Hk45GyjH8QcgY25TQWNZFNEl5/iRosg1v9mZLeBaKpu7jcHQto485bueeRwxwhMwPAYWT8A3NfUkdjkTM9Btvt+2/6k12KRoxrQ1GW1jdDjsekcZoNB9b0xOSF3QdlDzlUDgE5tICQ3QYpbzVGXVVmboweVbSuQzjpvg5ZNNthQA/ITCLIkTSqLN+cKsAeBT2d2C5av76cKHz4jkdL2GOb6ZyR/J8Rmi0D6m1zUGjCLdidSUpv0DYuldEEgC42BnN4i3y+5zUn+Y33kOuMkDgzwmbZODVh6I7JsQcpzJBCFuF/+0iEpWhoWUMs1pbVZOTWAp3ERe
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 23:29:35.5700
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 23:29:36.9728
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c35cdc5-b898-4751-36ca-08d77911d388
+X-MS-Exchange-CrossTenant-Network-Message-Id: a2a7cc52-c5d0-4380-9a83-08d77911d465
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2495
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB3921
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -122,71 +122,133 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-Add system shutdown API interface which asks firmware to
-perform system shutdown/restart.
+Add sysfs interface to set boot health status from userspace.
+Add IOCTL ID used by this interface to communicate with firmware.
+
+If PMUFW is compiled with CHECK_HEALTHY_BOOT, it will check the
+healthy bit on FPD WDT expiration. If healthy bit is set by a user
+application running in Linux, PMUFW will do APU only restart. If
+healthy bit is not set during FPD WDT expiration, PMUFW will do
+system restart.
 
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
 Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
 ---
- drivers/firmware/xilinx/zynqmp.c     | 14 ++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h |  4 +++-
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ Documentation/ABI/stable/sysfs-firmware-zynqmp | 21 +++++++++++++
+ drivers/firmware/xilinx/zynqmp.c               | 42 ++++++++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h           |  2 ++
+ 3 files changed, 65 insertions(+)
 
+diff --git a/Documentation/ABI/stable/sysfs-firmware-zynqmp b/Documentation/ABI/stable/sysfs-firmware-zynqmp
+index 13e4fd2..eeae291 100644
+--- a/Documentation/ABI/stable/sysfs-firmware-zynqmp
++++ b/Documentation/ABI/stable/sysfs-firmware-zynqmp
+@@ -80,3 +80,24 @@ Description:
+ 		# echo "subsystem" > /sys/firmware/zynqmp/shutdown_scope
+ 
+ Users:		Xilinx
++
++What:		/sys/firmware/zynqmp/health_status
++Date:		April 2018
++KernelVersion:	4.14.0
++Contact:	"Rajan Vaja" <rajanv@xilinx.com>
++Description:
++		This sysfs interface allows to set the health status. If PMUFW
++		is compiled with CHECK_HEALTHY_BOOT, it will check the healthy
++		bit on FPD WDT expiration. If healthy bit is set by a user
++		application running in Linux, PMUFW will do APU only restart. If
++		healthy bit is not set during FPD WDT expiration, PMUFW will do
++		system restart.
++
++		Usage:
++		Set healty bit
++		# echo 1 > /sys/firmware/zynqmp/health_status
++
++		Unset healty bit
++		# echo 0 > /sys/firmware/zynqmp/health_status
++
++Users:		Xilinx
 diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 9836174..8dcf5a4 100644
+index b23bda4..4e497a3 100644
 --- a/drivers/firmware/xilinx/zynqmp.c
 +++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -690,6 +690,19 @@ static int zynqmp_pm_config_reg_access(u32 register_access_id, u32 address,
- 				   address, mask, value, out);
- }
- 
-+/**
-+ * zynqmp_pm_system_shutdown - PM call to request a system shutdown or restart
-+ * @type:	Shutdown or restart? 0 for shutdown, 1 for restart
-+ * @subtype:	Specifies which system should be restarted or shut down
-+ *
-+ * Return:	Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_system_shutdown(const u32 type, const u32 subtype)
-+{
-+	return zynqmp_pm_invoke_fn(PM_SYSTEM_SHUTDOWN, type, subtype,
-+				   0, 0, NULL);
-+}
-+
- static const struct zynqmp_eemi_ops eemi_ops = {
- 	.get_api_version = zynqmp_pm_get_api_version,
- 	.get_chipid = zynqmp_pm_get_chipid,
-@@ -714,6 +727,7 @@ static const struct zynqmp_eemi_ops eemi_ops = {
- 	.fpga_load = zynqmp_pm_fpga_load,
- 	.fpga_get_status = zynqmp_pm_fpga_get_status,
- 	.register_access = zynqmp_pm_config_reg_access,
-+	.system_shutdown = zynqmp_pm_system_shutdown,
- };
+@@ -479,6 +479,7 @@ static inline int zynqmp_is_valid_ioctl(u32 ioctl_id)
+ 	case IOCTL_READ_GGS:
+ 	case IOCTL_WRITE_PGGS:
+ 	case IOCTL_READ_PGGS:
++	case IOCTL_SET_BOOT_HEALTH_STATUS:
+ 		return 1;
+ 	default:
+ 		return 0;
+@@ -886,6 +887,46 @@ static struct kobj_attribute zynqmp_attr_shutdown_scope =
+ 						__ATTR_RW(shutdown_scope);
  
  /**
++ * health_status_store - Store health_status sysfs attribute
++ * @kobj:	Kobject structure
++ * @attr:	Kobject attribute structure
++ * @buf:	User entered health_status attribute string
++ * @count:	Buffer size
++ *
++ * User-space interface for setting the boot health status.
++ * Usage: echo <value> > /sys/firmware/zynqmp/health_status
++ *
++ * Value:
++ *	1 - Set healthy bit to 1
++ *	0 - Unset healthy bit
++ *
++ * Return:	count argument if request succeeds, the corresponding error
++ *		code otherwise
++ */
++static ssize_t health_status_store(struct kobject *kobj,
++				   struct kobj_attribute *attr,
++				   const char *buf, size_t count)
++{
++	int ret;
++	unsigned int value;
++
++	ret = kstrtouint(buf, 10, &value);
++	if (ret)
++		return ret;
++
++	ret = zynqmp_pm_ioctl(0, IOCTL_SET_BOOT_HEALTH_STATUS, value, 0, NULL);
++	if (ret) {
++		pr_err("unable to set healthy bit value to %u\n", value);
++		return ret;
++	}
++
++	return count;
++}
++
++static struct kobj_attribute zynqmp_attr_health_status =
++						__ATTR_WO(health_status);
++
++/**
+  * config_reg_store - Write config_reg sysfs attribute
+  * @kobj:	Kobject structure
+  * @attr:	Kobject attribute structure
+@@ -1011,6 +1052,7 @@ static struct kobj_attribute zynqmp_attr_config_reg =
+ 
+ static struct attribute *attrs[] = {
+ 	&zynqmp_attr_shutdown_scope.attr,
++	&zynqmp_attr_health_status.attr,
+ 	&zynqmp_attr_config_reg.attr,
+ 	NULL,
+ };
 diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index bf6e9db..b96ea5d 100644
+index 54061de..c6f3c50 100644
 --- a/include/linux/firmware/xlnx-zynqmp.h
 +++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -61,7 +61,8 @@
- 
- enum pm_api_id {
- 	PM_GET_API_VERSION = 1,
--	PM_REQUEST_NODE = 13,
-+	PM_SYSTEM_SHUTDOWN = 12,
-+	PM_REQUEST_NODE,
- 	PM_RELEASE_NODE,
- 	PM_SET_REQUIREMENT,
- 	PM_RESET_ASSERT = 17,
-@@ -322,6 +323,7 @@ struct zynqmp_eemi_ops {
- 			       const enum zynqmp_pm_request_ack ack);
- 	int (*register_access)(u32 register_access_id, u32 address,
- 			       u32 mask, u32 value, u32 *out);
-+	int (*system_shutdown)(const u32 type, const u32 subtype);
+@@ -107,6 +107,8 @@ enum pm_ioctl_id {
+ 	IOCTL_READ_GGS,
+ 	IOCTL_WRITE_PGGS,
+ 	IOCTL_READ_PGGS,
++	/* Set healthy bit value*/
++	IOCTL_SET_BOOT_HEALTH_STATUS = 17,
  };
  
- int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
+ enum pm_query_id {
 -- 
 2.7.4
 
