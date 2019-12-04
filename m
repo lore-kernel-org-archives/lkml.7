@@ -2,154 +2,112 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78569C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE73C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309EF20833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6143C2084F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="Rzdema0g"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NzzfLl3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbfLDP3R (ORCPT
+        id S1728448AbfLDP3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:29:17 -0500
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:40841 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728293AbfLDP3R (ORCPT
+        Wed, 4 Dec 2019 10:29:21 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34703 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728293AbfLDP3U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:29:17 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 7270D3F8F3;
-        Wed,  4 Dec 2019 16:29:14 +0100 (CET)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=Rzdema0g;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id LxC5UGT91HcE; Wed,  4 Dec 2019 16:29:13 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 111443F8A2;
-        Wed,  4 Dec 2019 16:29:10 +0100 (CET)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 4081F360608;
-        Wed,  4 Dec 2019 16:29:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1575473350; bh=yHBICBBNQ0xElpVdR6AIUN8r0Xt8fA+KemiJ+/fl3xo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Rzdema0gbT4sovNyPVOJezOySXEW3YILI0pE4CjzAeyAuHOWqcJbymOFlOqPY2adU
-         EBEAuAiIOZ52jwTe8zy/g3MMIbv2bv1j3OIW7Ls9NxtMFOyvsmNNSOIF6AnTMFXLl9
-         +WWSDCbGDRd76MwdlkHEzVuWOQ2msjKXixkIN7cw=
-Subject: Re: [PATCH v2 2/2] drm/ttm: Fix vm page protection handling
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, pv-drivers@vmware.com,
-        linux-graphics-maintainer@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-References: <20191203104853.4378-1-thomas_os@shipmail.org>
- <20191203104853.4378-3-thomas_os@shipmail.org>
- <20191204135219.GH25242@dhcp22.suse.cz>
- <b29b166c-e9fe-f829-f533-b39f98b334a9@shipmail.org>
- <20191204143521.GJ25242@dhcp22.suse.cz>
- <5c2658b6-b5ec-5747-c360-fada54d759ed@shipmail.org>
- <20191204144248.GK25242@dhcp22.suse.cz>
- <b7b3ba5a-f625-36bc-d9cf-d537ec60e592@shipmail.org>
- <20191204152644.GL25242@dhcp22.suse.cz>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <70d8fe46-2703-d0d4-d70e-abccf07e64b5@shipmail.org>
-Date:   Wed, 4 Dec 2019 16:29:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 4 Dec 2019 10:29:20 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m6so8623274ljc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:29:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JXuW32MEVpBGX+oYxjJlbOSqN8m13R4+8nxsyFB6KSo=;
+        b=NzzfLl3Ft2yWy0eGxjDMMRdiFd9HpDaDtBPQfI86Ry+T74t9MJJzS/nEUjgdDWH+Ns
+         l5vCfZPTel14OWP7F4RgXtKZ2zcVC/WkIJrrR5/y2iP5Z59vNoyKfiNMHsYMYn+0a15s
+         svTEJ7nYtBcG1pazF6M7+QWi49eVyFJbT/gSY3vzZRpipA9dPG3Cr25byAsuUX9m295C
+         CG2HjYw45+R+1Ev/YiQ6pwGOQLvypadluuGeWp/CTlcUd6xP56SQ9EY59CPIQXbZLhWv
+         AyYEHBYvLW5GjHaXQhvFWFcKRyl0jkKUlqXg8LGEAHbmyedWQ8ga7zTeo8rF/hP1yzRL
+         8X2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JXuW32MEVpBGX+oYxjJlbOSqN8m13R4+8nxsyFB6KSo=;
+        b=DQp7tuZXn9RvT7xMfPej3qj84fMuNRQz/fbr9ePpWIUIXhBz9VPGYqHYVzOf2qWStP
+         Hvx+9NGfybmHRR73sAWVMHTBRz0WJx0O9oHVlOEZrj63OV+BhclUOUHY2iDijJqP5IS2
+         RTp+4SMRNCQTZcKlZRPmoJkl99RiX5lZype1Wss7HSl24u6AgZLCh5d7lcePDrbnhWtx
+         fMBgEQEYrRy/3mV5+H7GgOSxGOZs6oybsgEzFlO4uWR4k3Cm3br8vuWjwNfvuDg61Bwa
+         2eSIoOc8bgxZBpMmPN8QBcnZqihdO23Z7ezLHOPRfiM/4hZ2P2Twf8StG03DVV/rVZp7
+         B73g==
+X-Gm-Message-State: APjAAAWduIMkXYsJFSXqo9eZqv90dy5LUl+wJF4jheLbB3mIK0a2BUQN
+        q8wxVKPoUzbzGNe8xkFXq+YLEcQv7Ay0nA==
+X-Google-Smtp-Source: APXvYqyWK4G41MaUOKkT9fJC8zvVih/07GuHxet3dUH/XaSUTa7hbcaHBPLzkHpRlp5QcLkBwkbNQA==
+X-Received: by 2002:a2e:294e:: with SMTP id u75mr2399912lje.173.1575473359152;
+        Wed, 04 Dec 2019 07:29:19 -0800 (PST)
+Received: from localhost.localdomain (c-21cd225c.014-348-6c756e10.bbcust.telenor.se. [92.34.205.33])
+        by smtp.gmail.com with ESMTPSA id n11sm3266870ljg.15.2019.12.04.07.29.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 07:29:17 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     lee.jones@linaro.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH] mfd: mc13xxx-spi: Do not hardcode SPI mode flags
+Date:   Wed,  4 Dec 2019 16:27:15 +0100
+Message-Id: <20191204152715.12553-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191204152644.GL25242@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/4/19 4:26 PM, Michal Hocko wrote:
-> On Wed 04-12-19 16:19:27, Thomas Hellström (VMware) wrote:
->> On 12/4/19 3:42 PM, Michal Hocko wrote:
->>> On Wed 04-12-19 15:36:58, Thomas Hellström (VMware) wrote:
->>>> On 12/4/19 3:35 PM, Michal Hocko wrote:
->>>>> On Wed 04-12-19 15:16:09, Thomas Hellström (VMware) wrote:
->>>>>> On 12/4/19 2:52 PM, Michal Hocko wrote:
->>>>>>> On Tue 03-12-19 11:48:53, Thomas Hellström (VMware) wrote:
->>>>>>>> From: Thomas Hellstrom <thellstrom@vmware.com>
->>>>>>>>
->>>>>>>> TTM graphics buffer objects may, transparently to user-space,  move
->>>>>>>> between IO and system memory. When that happens, all PTEs pointing to the
->>>>>>>> old location are zapped before the move and then faulted in again if
->>>>>>>> needed. When that happens, the page protection caching mode- and
->>>>>>>> encryption bits may change and be different from those of
->>>>>>>> struct vm_area_struct::vm_page_prot.
->>>>>>>>
->>>>>>>> We were using an ugly hack to set the page protection correctly.
->>>>>>>> Fix that and instead use vmf_insert_mixed_prot() and / or
->>>>>>>> vmf_insert_pfn_prot().
->>>>>>>> Also get the default page protection from
->>>>>>>> struct vm_area_struct::vm_page_prot rather than using vm_get_page_prot().
->>>>>>>> This way we catch modifications done by the vm system for drivers that
->>>>>>>> want write-notification.
->>>>>>> So essentially this should have any new side effect on functionality it
->>>>>>> is just making a hacky/ugly code less so?
->>>>>> Functionality is unchanged. The use of a on-stack vma copy was severely
->>>>>> frowned upon in an earlier thread, which also points to another similar
->>>>>> example using vmf_insert_pfn_prot().
->>>>>>
->>>>>> https://lore.kernel.org/lkml/20190905103541.4161-2-thomas_os@shipmail.org/
->>>>>>
->>>>>>> In other words what are the
->>>>>>> consequences of having page protection inconsistent from vma's?
->>>>>> During the years, it looks like the caching- and encryption flags of
->>>>>> vma::vm_page_prot have been largely removed from usage. From what I can
->>>>>> tell, there are no more places left that can affect TTM. We discussed
->>>>>> __split_huge_pmd_locked() towards the end of that thread, but that doesn't
->>>>>> affect TTM even with huge page-table entries.
->>>>> Please state all those details/assumptions you are operating on in the
->>>>> changelog.
->>>> Thanks. I'll update the patchset and add that.
->>> And thinking about that this also begs for a comment in the code to
->>> explain that some (which?) mappings might have a mismatch and the
->>> generic code have to be careful. Because as things stand now this seems
->>> to be really subtle and happen to work _now_ and might break in the future.
->>> Or what does prevent a generic code to stumble over this discrepancy?
->> Yes we had that discussion in the thread I pointed to. I initially suggested
->> and argued for updating the vma::vm_page_prot using a WRITE_ONCE() (we only
->> have the mmap_sem in read mode), there seems to be other places in generic
->> code that does the same.
->>
->> But I was convinced by Andy that this was the right way and also was used
->> elsewhere.
->>
->> (See also https://elixir.bootlin.com/linux/latest/source/arch/x86/entry/vdso/vma.c#L116)
->>
->> I guess to have this properly formulated, what's required is that generic
->> code doesn't build page-table entries using vma::vm_page_prot for VM_PFNMAP
->> and VM_MIXEDMAP outside of driver control.
-> Let me repeat that this belongs to a code somewhere everybody can see it
-> rather than a "random" discussion at mailing list.
->
-> Thanks!
+The current use of mode flags to us SPI_MODE_0 and
+SPI_CS_HIGH is fragile: it overwrites anything already
+assigned by the SPI core. Change it thusly:
 
-Yes, I agree. I'll of course follow up with the comments added to the code.
+- Just |= the SPI_MODE_0 so we keep other flags
+- Assign ^= SPI_CS_HIGH since we might be active high
+  already, and that is usually the case with GPIOs used
+  for chip select, even if they are in practice active low.
 
-Thomas
+Add a comment clarifying why ^= SPI_CS_HIGH is the right
+choice here.
 
+Reported-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/mfd/mc13xxx-spi.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mfd/mc13xxx-spi.c b/drivers/mfd/mc13xxx-spi.c
+index 286ddcf5ddc6..9885e5f8210a 100644
+--- a/drivers/mfd/mc13xxx-spi.c
++++ b/drivers/mfd/mc13xxx-spi.c
+@@ -134,7 +134,13 @@ static int mc13xxx_spi_probe(struct spi_device *spi)
+ 
+ 	dev_set_drvdata(&spi->dev, mc13xxx);
+ 
+-	spi->mode = SPI_MODE_0 | SPI_CS_HIGH;
++	spi->mode |= SPI_MODE_0;
++	/*
++	 * We want the inverse of what is set in the SPI core, if this
++	 * is accomplished with a GPIO line then inversion semantics may
++	 * be handled in the GPIO library.
++	 */
++	spi->mode ^= SPI_CS_HIGH;
+ 
+ 	mc13xxx->irq = spi->irq;
+ 
+-- 
+2.23.0
 
