@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2CEC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E9FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4490D20640
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086D220803
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:12:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="cdl/5cAO"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Xhv8lg75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfLDHMJ (ORCPT
+        id S1727318AbfLDHMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:12:09 -0500
+        Wed, 4 Dec 2019 02:12:14 -0500
 Received: from mail-eopbgr680043.outbound.protection.outlook.com ([40.107.68.43]:59426
         "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725958AbfLDHMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:12:08 -0500
+        id S1727307AbfLDHML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 02:12:11 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nPpwN5jidQ8QYDFtHJCKUQ6IZLh95QzWZLSInifdg8kuksjF50gs68gOpWyE2gg09xhehLxjWOWDtZXaY0dILdOcNNHKWvIxKl/vU2uRGK7Kb3EJsfpx9Lzo3HnRTH65r7Uu8uzaSVkhQ6f/l/aQMnUAD+sh5LG2HJUbtDa7andthb8nmojyEQrGIM/3H3bMeKWFbn55NruK4XRgJKYp38e1kh5xOtETp6qXhpKGfnlQbpkGfQ82DWvFsudjlTzUtSoaq6vrko8p61x19EL4m1vS9kZK9MhfDaOpNY9bSVvv9XmnNjx2TM/LeIIWV+GryWj13TZ17BtnkBrN23UFEA==
+ b=mf9dhc/4OWSLDOFk/b/E0qMAqM93VJ2bUwVWyzZ/+Y0qb/Ljt7TvhjksARFGW041EKU6qkKhDbodyS4v6Qa1lEhpHkcmzeB4A+VTHPSvrSyaHF3V3nVt90H0hauM3Qh8roWRhb0LYVRodPCidmdXlF/9+ybsk6Rd5iQ98/av1P2LbawXv7H3buO5yYsBE8Dk/oSVy7jSScl+iu3zmFYWdd82146tfNTYw+HTuwDtT5HFXJLkdsMDN0d2MCjZBe02WgQxDH2xzaONEcslVCJxBB+ookp7qgNVgWDMONhwyPh4g0zn4TsFa401YqrVuUIrhTQxwbA7o8t1rIV2ZfTWIA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pLipGE6X8uREktgkwJekUndCo2pr+VSpv1KArsZl2tM=;
- b=IY0Z9b6y0SsDVUZnnRKE1RBz78ooEL6jdljoMSGlRU7/3op/gTne/68FYD+LUujcyDy2hoqfPs4dSkyV8qXre4AhrkEg07ABX0VCbfhaZTxqNUZaIKMGFXaBXYVtSoPkEwYpqQSNf75RYtBqu7IV1dwU62Zp2PWoLWxlgBKuxbTOHf3/fXg3vNS4BO2lOb2l8+E+rU9gYmKW5piaSIl/7I+oq06G7lZtNPf0dFoRVL/idnbYvY9cp/71PzdcLNXSGUuqRJUNbqwMlykCB7w/z++SDPnmvpoVsnAhXm9qUjbaouqNGHQvFp6vTm5Im8MLgyvwHD9TlAmr+YXY6s+cmA==
+ bh=OnAiw7g3v04HWn3G+BPKHKgTcmNcjDd10XpybQlzZGQ=;
+ b=NNvq5Ygv8U4V+bASRBixfoVVLqp0eA12QKeuOsZPbK7J3fcM6osF/vAAfJ9X5l8IAFwgwK4uKtEpNEFW5ZpdYlJyjY1Fo9bZJe+u1dWLln353DahQMhvSInBBh5E3Ng7iwYMLfeUePNVMoX6ezpfeiTKftH0MxnNF8J0A0Q9cJ/3WgGUlpVxl24hwJEoaMatxKp2butktxQdRYV22BXbCdbO16KsekjK6EWeYLNUaP/8FWoQWkdApLg0lI+COB1MrEmu8+zmLlUQKshsDascpI7kj+es743R5AisA12xStDy1sSR+2mnxBhwphZCzGiqhLabLiXoex80S8HEit7RQg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pLipGE6X8uREktgkwJekUndCo2pr+VSpv1KArsZl2tM=;
- b=cdl/5cAOZyouca6zWNG4v+3YJEGlimbwU0M8uowjlbgQflJA85u1VqUEKyRYR7h4036/U3IgQQOZM1is1NIK62vfU7Vpw2sONAnhoXlUqioOhjquRnQ0fDn6NjCnoHbKVcMN7zEGob79emgFiLQQgmx0G/w0VFYP50cV+4WWK6k=
+ bh=OnAiw7g3v04HWn3G+BPKHKgTcmNcjDd10XpybQlzZGQ=;
+ b=Xhv8lg75ZzshUQgsevmUvRwHX2cG2ZNapediWi60wHtctitAv71hOfoiGSDsHyjrAThLtFmdEMR4p1I8L/hqQHz4XVR37RwORuuUGvaljHyANbAbJ8R2Tt12ZynzlFz7/lcogtgo4zQYQ0KAbQ/Ds5+2jctqXn+zm/76LeA0j9c=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=Rijo-john.Thomas@amd.com; 
 Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
  CY4PR12MB1400.namprd12.prod.outlook.com (10.168.165.138) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.12; Wed, 4 Dec 2019 07:11:45 +0000
+ 15.20.2516.12; Wed, 4 Dec 2019 07:11:48 +0000
 Received: from CY4PR12MB1925.namprd12.prod.outlook.com
  ([fe80::cd8b:1d7e:31c2:e8b4]) by CY4PR12MB1925.namprd12.prod.outlook.com
  ([fe80::cd8b:1d7e:31c2:e8b4%7]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
- 07:11:44 +0000
+ 07:11:48 +0000
 From:   Rijo Thomas <Rijo-john.Thomas@amd.com>
 To:     Tom Lendacky <thomas.lendacky@amd.com>,
         Gary Hook <gary.hook@amd.com>,
@@ -59,9 +59,9 @@ Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
         Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
         Jens Wiklander <jens.wiklander@linaro.org>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [RFC PATCH v3 3/6] crypto: ccp - move SEV vdata to a dedicated data structure
-Date:   Wed,  4 Dec 2019 11:49:00 +0530
-Message-Id: <f1ce9dbeb28ba2adfe9ad205d59f0a91fefd5a33.1575438845.git.Rijo-john.Thomas@amd.com>
+Subject: [RFC PATCH v3 4/6] crypto: ccp - check whether PSP supports SEV or TEE before initialization
+Date:   Wed,  4 Dec 2019 11:49:01 +0530
+Message-Id: <6a7be399d095373d2677440ff1fef406f97bf0d0.1575438845.git.Rijo-john.Thomas@amd.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1575438845.git.Rijo-john.Thomas@amd.com>
 References: <cover.1575438845.git.Rijo-john.Thomas@amd.com>
@@ -74,174 +74,131 @@ X-Mailer: git-send-email 1.9.1
 X-Originating-IP: [165.204.156.251]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3cae8dce-876b-4337-bfde-08d778893826
+X-MS-Office365-Filtering-Correlation-Id: 841953a6-dd65-4871-5c99-08d778893a66
 X-MS-TrafficTypeDiagnostic: CY4PR12MB1400:|CY4PR12MB1400:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB140032530E11196CABDCC9E0CF5D0@CY4PR12MB1400.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2582;
+X-Microsoft-Antispam-PRVS: <CY4PR12MB14003207F959818E6319C25FCF5D0@CY4PR12MB1400.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
 X-Forefront-PRVS: 0241D5F98C
 X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(199004)(189003)(2616005)(66556008)(2906002)(66476007)(50466002)(48376002)(478600001)(14454004)(50226002)(11346002)(36756003)(81156014)(26005)(54906003)(110136005)(81166006)(3846002)(66946007)(8936002)(446003)(8676002)(5660300002)(6486002)(6116002)(386003)(186003)(6436002)(4326008)(99286004)(25786009)(6506007)(14444005)(118296001)(76176011)(16586007)(316002)(86362001)(52116002)(7736002)(51416003)(6666004)(6512007)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1400;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 Received-SPF: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KsSjM21K7HUyY1IaLq9dKxdTlz8T8HB8LVviMsgS9lCNOfypI2plut5sjOMt1c8/9vGLbQB0UjllRIQf5AiNiSt9cYhYxpVaFztTx3KKHG1vD9sB7mcefJa2m5A7c4iWeYOtO+A+5BPahGnQKTAhWBENps/fmpVjNfSjIH0j5wYKyATETLqLf6Rv3zWL0RjiaWW9H5LmB1Wcgd2Gy/MZxpDo+3oOI329JtIJ7v2fDvOPIHKUhB6wlebCUdJEt93Ld3j66bX7YweI080LBCB4TGsLPaVAXt5F09vslrOmmUXuY2JgPEfSXcX0OUCJ7g839L2aHRMI1F6m0SOmqlxr4xbFEdGEhAbIAEjja6hpUMljg3sa/ZI0lJRJxyghC3/krL4EKIdT88+VCDJ6MuLh/hK3TGzq6EmqPnJ7aHGvwpK8WpF5a6FfYKUWIo87Ly2V
+X-Microsoft-Antispam-Message-Info: Fg2BtF++/cW2XsqE5I3O4NSxz7pRMMc7XbxKdMbue6ely1gVLfLKxdI2XGJW2kmUNdWE68vIL9QsthQyS4VJjrCyGlPGv9/3p2sAjgiDcQoY9TBqJCrvJgD7sg59adUf7okaN2+b1OrSfca1YXiQMHleYI4Ylhsk+0efAyGCpGY6aAcv1v9vVNGxFzw2FpqLXazd1TOhlEGG53yPyBOk/oDX3sXj1IWhHqGuoQfCLDme98HATOPFDz0scjBpJVl/cAfdTrG8UtMv1gvMsM0BXlGx+eg/1clrMZv8tN9R+YAxj7ukiGhkLuExgYF4n8A6qROetil54oI/BASqYkdPD/9Fa0zCQtFL68GRSXQI7B3aTOOy2edX280/SQJpNS+ZoQcAE9poBrcCrNkWV3tGLY7/sV0Lgq+5sqIqJ70rePiZK2zvzcqsWAvNklS+atOK
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3cae8dce-876b-4337-bfde-08d778893826
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 07:11:44.8079
+X-MS-Exchange-CrossTenant-Network-Message-Id: 841953a6-dd65-4871-5c99-08d778893a66
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 07:11:48.5922
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bujRD0uqSn5D5fOm9wITW+sJBu71tphTXPl86TQTiMJqmk6HeUOsdH7M7OR97a6Fjh+2Gu4EWz1hE9xeCQcB4g==
+X-MS-Exchange-CrossTenant-UserPrincipalName: dR3MxSywOgvdajB22cgP5bpAjjUdI9tx8A3JQuOgB1ZxHxCq8wSSKKZh3Y1mwGwg0ryH/S7WPxE515XFPDLKTw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1400
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PSP can support both SEV and TEE interface. Therefore, move
-SEV specific registers to a dedicated data structure.
-TEE interface specific registers will be added in a later
-patch.
+Read PSP feature register to check for TEE (Trusted Execution Environment)
+support.
 
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+If neither SEV nor TEE is supported by PSP, then skip PSP initialization.
+
 Cc: Tom Lendacky <thomas.lendacky@amd.com>
 Cc: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Co-developed-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
 Signed-off-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
 Signed-off-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
 ---
- drivers/crypto/ccp/sev-dev.c | 17 ++++++++++++-----
- drivers/crypto/ccp/sev-dev.h |  2 ++
- drivers/crypto/ccp/sp-dev.h  |  6 +++++-
- drivers/crypto/ccp/sp-pci.c  | 16 ++++++++++++----
- 4 files changed, 31 insertions(+), 10 deletions(-)
+ drivers/crypto/ccp/psp-dev.c | 46 +++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 41 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
-index a608b52..e68fa48 100644
---- a/drivers/crypto/ccp/sev-dev.c
-+++ b/drivers/crypto/ccp/sev-dev.c
-@@ -65,7 +65,7 @@ static void sev_irq_handler(int irq, void *data, unsigned int status)
- 		return;
+diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
+index 2cd7a5e..3bedf72 100644
+--- a/drivers/crypto/ccp/psp-dev.c
++++ b/drivers/crypto/ccp/psp-dev.c
+@@ -53,7 +53,7 @@ static irqreturn_t psp_irq_handler(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
  
- 	/* Check if it is SEV command completion: */
--	reg = ioread32(sev->io_regs + sev->psp->vdata->cmdresp_reg);
-+	reg = ioread32(sev->io_regs + sev->vdata->cmdresp_reg);
- 	if (reg & PSP_CMDRESP_RESP) {
- 		sev->int_rcvd = 1;
- 		wake_up(&sev->int_queue);
-@@ -82,7 +82,7 @@ static int sev_wait_cmd_ioc(struct sev_device *sev,
- 	if (!ret)
- 		return -ETIMEDOUT;
+-static int psp_check_sev_support(struct psp_device *psp)
++static unsigned int psp_get_capability(struct psp_device *psp)
+ {
+ 	unsigned int val = ioread32(psp->io_regs + psp->vdata->feature_reg);
  
--	*reg = ioread32(sev->io_regs + sev->psp->vdata->cmdresp_reg);
-+	*reg = ioread32(sev->io_regs + sev->vdata->cmdresp_reg);
+@@ -66,11 +66,17 @@ static int psp_check_sev_support(struct psp_device *psp)
+ 	 */
+ 	if (val == 0xffffffff) {
+ 		dev_notice(psp->dev, "psp: unable to access the device: you might be running a broken BIOS.\n");
+-		return -ENODEV;
++		return 0;
+ 	}
  
+-	if (!(val & 1)) {
+-		/* Device does not support the SEV feature */
++	return val;
++}
++
++static int psp_check_sev_support(struct psp_device *psp,
++				 unsigned int capability)
++{
++	/* Check if device supports SEV feature */
++	if (!(capability & 1)) {
+ 		dev_dbg(psp->dev, "psp does not support SEV\n");
+ 		return -ENODEV;
+ 	}
+@@ -78,10 +84,36 @@ static int psp_check_sev_support(struct psp_device *psp)
  	return 0;
  }
-@@ -148,15 +148,15 @@ static int __sev_do_cmd_locked(int cmd, void *data, int *psp_ret)
- 	print_hex_dump_debug("(in):  ", DUMP_PREFIX_OFFSET, 16, 2, data,
- 			     sev_cmd_buffer_len(cmd), false);
  
--	iowrite32(phys_lsb, sev->io_regs + psp->vdata->cmdbuff_addr_lo_reg);
--	iowrite32(phys_msb, sev->io_regs + psp->vdata->cmdbuff_addr_hi_reg);
-+	iowrite32(phys_lsb, sev->io_regs + sev->vdata->cmdbuff_addr_lo_reg);
-+	iowrite32(phys_msb, sev->io_regs + sev->vdata->cmdbuff_addr_hi_reg);
- 
- 	sev->int_rcvd = 0;
- 
- 	reg = cmd;
- 	reg <<= SEV_CMDRESP_CMD_SHIFT;
- 	reg |= SEV_CMDRESP_IOC;
--	iowrite32(reg, sev->io_regs + psp->vdata->cmdresp_reg);
-+	iowrite32(reg, sev->io_regs + sev->vdata->cmdresp_reg);
- 
- 	/* wait for command completion */
- 	ret = sev_wait_cmd_ioc(sev, &reg, psp_timeout);
-@@ -949,6 +949,13 @@ int sev_dev_init(struct psp_device *psp)
- 
- 	sev->io_regs = psp->io_regs;
- 
-+	sev->vdata = (struct sev_vdata *)psp->vdata->sev;
-+	if (!sev->vdata) {
-+		ret = -ENODEV;
-+		dev_err(dev, "sev: missing driver data\n");
-+		goto e_err;
++static int psp_check_tee_support(struct psp_device *psp,
++				 unsigned int capability)
++{
++	/* Check if device supports TEE feature */
++	if (!(capability & 2)) {
++		dev_dbg(psp->dev, "psp does not support TEE\n");
++		return -ENODEV;
 +	}
 +
- 	psp_set_sev_irq_handler(psp, sev_irq_handler, sev);
- 
- 	ret = sev_misc_init(sev);
-diff --git a/drivers/crypto/ccp/sev-dev.h b/drivers/crypto/ccp/sev-dev.h
-index 3d84ac3..dd5c4fe 100644
---- a/drivers/crypto/ccp/sev-dev.h
-+++ b/drivers/crypto/ccp/sev-dev.h
-@@ -40,6 +40,8 @@ struct sev_device {
- 
- 	void __iomem *io_regs;
- 
-+	struct sev_vdata *vdata;
++	return 0;
++}
 +
- 	int state;
- 	unsigned int int_rcvd;
- 	wait_queue_head_t int_queue;
-diff --git a/drivers/crypto/ccp/sp-dev.h b/drivers/crypto/ccp/sp-dev.h
-index 53c1256..0394c75 100644
---- a/drivers/crypto/ccp/sp-dev.h
-+++ b/drivers/crypto/ccp/sp-dev.h
-@@ -39,10 +39,14 @@ struct ccp_vdata {
- 	const unsigned int rsamax;
- };
- 
--struct psp_vdata {
-+struct sev_vdata {
- 	const unsigned int cmdresp_reg;
- 	const unsigned int cmdbuff_addr_lo_reg;
- 	const unsigned int cmdbuff_addr_hi_reg;
-+};
++static int psp_check_support(struct psp_device *psp,
++			     unsigned int capability)
++{
++	int sev_support = psp_check_sev_support(psp, capability);
++	int tee_support = psp_check_tee_support(psp, capability);
 +
-+struct psp_vdata {
-+	const struct sev_vdata *sev;
- 	const unsigned int feature_reg;
- 	const unsigned int inten_reg;
- 	const unsigned int intsts_reg;
-diff --git a/drivers/crypto/ccp/sp-pci.c b/drivers/crypto/ccp/sp-pci.c
-index b29d2e6..733693d 100644
---- a/drivers/crypto/ccp/sp-pci.c
-+++ b/drivers/crypto/ccp/sp-pci.c
-@@ -262,19 +262,27 @@ static int sp_pci_resume(struct pci_dev *pdev)
- #endif
- 
- #ifdef CONFIG_CRYPTO_DEV_SP_PSP
--static const struct psp_vdata pspv1 = {
-+static const struct sev_vdata sevv1 = {
- 	.cmdresp_reg		= 0x10580,
- 	.cmdbuff_addr_lo_reg	= 0x105e0,
- 	.cmdbuff_addr_hi_reg	= 0x105e4,
-+};
++	/* Return error if device neither supports SEV nor TEE */
++	if (sev_support && tee_support)
++		return -ENODEV;
 +
-+static const struct sev_vdata sevv2 = {
-+	.cmdresp_reg		= 0x10980,
-+	.cmdbuff_addr_lo_reg	= 0x109e0,
-+	.cmdbuff_addr_hi_reg	= 0x109e4,
-+};
++	return 0;
++}
 +
-+static const struct psp_vdata pspv1 = {
-+	.sev			= &sevv1,
- 	.feature_reg		= 0x105fc,
- 	.inten_reg		= 0x10610,
- 	.intsts_reg		= 0x10614,
- };
+ int psp_dev_init(struct sp_device *sp)
+ {
+ 	struct device *dev = sp->dev;
+ 	struct psp_device *psp;
++	unsigned int capability;
+ 	int ret;
  
- static const struct psp_vdata pspv2 = {
--	.cmdresp_reg		= 0x10980,
--	.cmdbuff_addr_lo_reg	= 0x109e0,
--	.cmdbuff_addr_hi_reg	= 0x109e4,
-+	.sev			= &sevv2,
- 	.feature_reg		= 0x109fc,
- 	.inten_reg		= 0x10690,
- 	.intsts_reg		= 0x10694,
+ 	ret = -ENOMEM;
+@@ -100,7 +132,11 @@ int psp_dev_init(struct sp_device *sp)
+ 
+ 	psp->io_regs = sp->io_map;
+ 
+-	ret = psp_check_sev_support(psp);
++	capability = psp_get_capability(psp);
++	if (!capability)
++		goto e_disable;
++
++	ret = psp_check_support(psp, capability);
+ 	if (ret)
+ 		goto e_disable;
+ 
 -- 
 1.9.1
 
