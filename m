@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6F1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A21C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72AD9205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DB76205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483875;
-	bh=l9yHDJcal3aq3sI6P1LeEpTZuLYipVHXnMG2ZNDim2g=;
+	s=default; t=1575483880;
+	bh=DFBgrIvg0BuTOOkN8cvpbyIpAt5L15g4xAD3vpifjs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GWmY1Ng5hC1TQVAVZDElwy+HHdrA+/RFy12yGJ7bctZn/BGcrdyVt3xuwB1SUVgSG
-	 ySNvYTbZ8MOrB340+cTIZYd5Wbc4MlN8B9QBE5qlO2J+kdE41B6Zua7+48XZhyUvIi
-	 PL5WVNWPd0ciBDLdZOm81ZGHprGhv9oXzDUq0V18=
+	b=RB2Tqb0PbgVFp+ZywCOFjvU5Fx7+LdP9RYlCgXSFUynCo7dRddNjwAj9wWEsnJ32b
+	 gMBLzURD78DV0o9XiVOR6B6liSda06Rr3TbgyfFE/Du72LJKIm3I3DoV8DwdVNtH1v
+	 viWVokDkpQcYCiVu39Bht//HzlfIV/uSim7z3/p0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730187AbfLDSYe (ORCPT
+        id S1728880AbfLDSCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:24:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44228 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:02:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729817AbfLDSCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:02:21 -0500
+        id S1729219AbfLDSCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:02:03 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E9642073B;
-        Wed,  4 Dec 2019 18:02:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 682E5206DF;
+        Wed,  4 Dec 2019 18:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482540;
-        bh=l9yHDJcal3aq3sI6P1LeEpTZuLYipVHXnMG2ZNDim2g=;
+        s=default; t=1575482522;
+        bh=DFBgrIvg0BuTOOkN8cvpbyIpAt5L15g4xAD3vpifjs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I2kmDTnSnJ4HhcmgMF43VgLVtiloGeQb2uNqKdyj2oRrC1THahrK+Oaqz+mX8k8Kn
-         4jRtQjlT726Gy/gkBBcAz1Q5y6NSCJS2j/vPuEI89Htbe+MI4IJ4O9Fw5LPZ2mqlI4
-         qOE3BIPk62VswibToVewhJK6UCcC5uJE9kVm3zXA=
+        b=gzNd93WAIS/6+g9CmDA8qCr99t4XOd+9JkwmUhRVlLGz3kF7QmI56JFp5DqDPmN6V
+         dO+VR10y8dglUYaI2jqnjBcWrizqknlxA2ueHfadzQhAG+7Qetb64u9eFG4whpRzsF
+         WMrDqZv4GW1IbkDDlRYONnWsNjf4orCt013Rbxrs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        stable@vger.kernel.org, Xiaojun Sang <xsang@codeaurora.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 036/209] parisc: Fix HP SDC hpa address output
-Date:   Wed,  4 Dec 2019 18:54:08 +0100
-Message-Id: <20191204175323.921464877@linuxfoundation.org>
+Subject: [PATCH 4.14 003/209] ASoC: compress: fix unsigned integer overflow check
+Date:   Wed,  4 Dec 2019 18:53:35 +0100
+Message-Id: <20191204175321.829108804@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -59,34 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Xiaojun Sang <xsang@codeaurora.org>
 
-[ Upstream commit c4bff35ca1bfba886da6223c9fed76a2b1382b8e ]
+[ Upstream commit d3645b055399538415586ebaacaedebc1e5899b0 ]
 
-Show the hpa address of the HP SDC instead of a hashed value, e.g.:
-HP SDC: HP SDC at 0xf0201000, IRQ 23 (NMI IRQ 24)
+Parameter fragments and fragment_size are type of u32. U32_MAX is
+the correct check.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Xiaojun Sang <xsang@codeaurora.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Acked-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/20191021095432.5639-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/serio/hp_sdc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/core/compress_offload.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/serio/hp_sdc.c b/drivers/input/serio/hp_sdc.c
-index 8eef6849d0660..5585823ced19d 100644
---- a/drivers/input/serio/hp_sdc.c
-+++ b/drivers/input/serio/hp_sdc.c
-@@ -887,8 +887,8 @@ static int __init hp_sdc_init(void)
- 			"HP SDC NMI", &hp_sdc))
- 		goto err2;
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index 2e2d184684911..7ae8e24dc1e61 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -529,7 +529,7 @@ static int snd_compress_check_input(struct snd_compr_params *params)
+ {
+ 	/* first let's check the buffer parameter's */
+ 	if (params->buffer.fragment_size == 0 ||
+-	    params->buffer.fragments > INT_MAX / params->buffer.fragment_size ||
++	    params->buffer.fragments > U32_MAX / params->buffer.fragment_size ||
+ 	    params->buffer.fragments == 0)
+ 		return -EINVAL;
  
--	printk(KERN_INFO PREFIX "HP SDC at 0x%p, IRQ %d (NMI IRQ %d)\n",
--	       (void *)hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
-+	pr_info(PREFIX "HP SDC at 0x%08lx, IRQ %d (NMI IRQ %d)\n",
-+	       hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
- 
- 	hp_sdc_status_in8();
- 	hp_sdc_data_in8();
 -- 
 2.20.1
 
