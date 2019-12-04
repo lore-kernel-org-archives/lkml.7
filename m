@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E50BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50514C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC85B205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1870A205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483982;
-	bh=5h0OygXDoZNLicE0SwzE2o2UOc4LtmIgD5yjgZUBFkM=;
+	s=default; t=1575483994;
+	bh=KfUUKl4OJ/iRiB6WP0nLVctzTrRXlSgHQu7Wc1fD4IY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M4sZYbW5yBknakcc4s4xCqi12ok1n7MeUD0YI5yYMAg8x+YJ1k0P2yJc5Tux00NH4
-	 JZFTrH15xr6Izqi45sJv7Kt0lq3qS4srbJ+otrTqAgvTnn+lyOrHeMfGG8m6RL/XMw
-	 jOaTFcKvY/EsUFpdtWWwhB59EJ3JcE86VhiA2mfc=
+	b=HJOENvCiNHYWc19UJ6bsUZnsz/9FtSK34EYM3MaIlOln0ELCV/pdJxx0C+aXkLvFk
+	 QIXj2OypClpec3jvRIvOCfmh+e0OxuNCi+h72l4wZ/ynU63n/rYLtWnuznCuugOo+N
+	 BMBADEGPh/8KUQMh6CXUU8VB+NXlLR24ptJV4/TA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbfLDS0W (ORCPT
+        id S1730147AbfLDS0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:26:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36698 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:26:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729167AbfLDR7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:59:42 -0500
+        id S1729106AbfLDR72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:59:28 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E699E20866;
-        Wed,  4 Dec 2019 17:59:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 604E22084F;
+        Wed,  4 Dec 2019 17:59:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482382;
-        bh=5h0OygXDoZNLicE0SwzE2o2UOc4LtmIgD5yjgZUBFkM=;
+        s=default; t=1575482367;
+        bh=KfUUKl4OJ/iRiB6WP0nLVctzTrRXlSgHQu7Wc1fD4IY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kKA0vYGNpeL8Q1RnEwx1hTtHjbY1noQljRX8+hE9bwV++qqUdwY2nWbjcYgWzkG8I
-         Cz6S+eT6w1XY4NWZHvL98qm3q5BAxQJSfFk04KBT+kWdnjqiYvfzIxuQ/Qr5IDc4N/
-         8PIob6EoT/SD+38v6IhRW7hfmGf9j6rC2ChLgfeQ=
+        b=0OIZ8I4xoJZJHUHpcXC8dPDTfmIKU6JlCyUbzMhBWDJRQVXii4bEm/YNR4w+qY87m
+         wHxV9CwDWbyv1jfYok/n06OBHIyBYrC1s65nH4lXLvyAguMxBxnkE2Z3jq4rVtBNj/
+         eU+X1oN6ccTyXeL94rJm1u3jfGAyDmqsc+4UrjGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stafford Horne <shorne@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 65/92] net/core/neighbour: fix kmemleak minimal reference count for hash tables
-Date:   Wed,  4 Dec 2019 18:50:05 +0100
-Message-Id: <20191204174334.256959625@linuxfoundation.org>
+Subject: [PATCH 4.4 42/92] openrisc: Fix broken paths to arch/or32
+Date:   Wed,  4 Dec 2019 18:49:42 +0100
+Message-Id: <20191204174333.056751048@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -62,34 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit 01b833ab44c9e484060aad72267fc7e71beb559b ]
+[ Upstream commit 57ce8ba0fd3a95bf29ed741df1c52bd591bf43ff ]
 
-This should be 1 for normal allocations, 0 disables leak reporting.
+OpenRISC was mainlined as "openrisc", not "or32".
+vmlinux.lds is generated from vmlinux.lds.S.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
-Fixes: 85704cb8dcfd ("net/core/neighbour: tell kmemleak about hash tables")
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/neighbour.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/openrisc/kernel/entry.S | 2 +-
+ arch/openrisc/kernel/head.S  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-index bba672482a0ef..8aef689b8f32d 100644
---- a/net/core/neighbour.c
-+++ b/net/core/neighbour.c
-@@ -332,7 +332,7 @@ static struct neigh_hash_table *neigh_hash_alloc(unsigned int shift)
- 		buckets = (struct neighbour __rcu **)
- 			  __get_free_pages(GFP_ATOMIC | __GFP_ZERO,
- 					   get_order(size));
--		kmemleak_alloc(buckets, size, 0, GFP_ATOMIC);
-+		kmemleak_alloc(buckets, size, 1, GFP_ATOMIC);
- 	}
- 	if (!buckets) {
- 		kfree(ret);
+diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
+index fec8bf97d8064..c17e8451d9978 100644
+--- a/arch/openrisc/kernel/entry.S
++++ b/arch/openrisc/kernel/entry.S
+@@ -179,7 +179,7 @@ handler:							;\
+  *	 occured. in fact they never do. if you need them use
+  *	 values saved on stack (for SPR_EPC, SPR_ESR) or content
+  *       of r4 (for SPR_EEAR). for details look at EXCEPTION_HANDLE()
+- *       in 'arch/or32/kernel/head.S'
++ *       in 'arch/openrisc/kernel/head.S'
+  */
+ 
+ /* =====================================================[ exceptions] === */
+diff --git a/arch/openrisc/kernel/head.S b/arch/openrisc/kernel/head.S
+index f14793306b03f..98dd6860bc0b9 100644
+--- a/arch/openrisc/kernel/head.S
++++ b/arch/openrisc/kernel/head.S
+@@ -1596,7 +1596,7 @@ _string_esr_irq_bug:
+ 
+ /*
+  * .data section should be page aligned
+- *	(look into arch/or32/kernel/vmlinux.lds)
++ *	(look into arch/openrisc/kernel/vmlinux.lds.S)
+  */
+ 	.section .data,"aw"
+ 	.align	8192
 -- 
 2.20.1
 
