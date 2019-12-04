@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D540C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5450CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEA1F2081B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2269320659
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482612;
-	bh=jQHII3kekIjKGDfMOcLc7BNncRQEMcbsFHnnxjyp1vE=;
+	s=default; t=1575482614;
+	bh=+101NAiM32AfaI/JI1P5ZDUUQ7lZCyxXo7+NbrFvf4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1bspnVzMfc5EA85X4h691MtwWzcUHxzo3mkY8EuyaKnj05ga4uZDfCDyEF8WJjTFD
-	 xJj0BAMuCNjPd11hZ3E/cKHILNCa5WzxJBi4WRc0MMuGKjociJas2atttad0G1tgKB
-	 pJ7fYmsv90lnGk8bbp0XNEo9M+6R5eklQj47dVlY=
+	b=r7lG8upqBuOaDrcj4dIDcFj4TAxjk4NrJVeUIJFCQzrlkwqUQfVn2iNbShRueVl27
+	 H2i0eBE/0ApodIZKIFuwxieIyjpD1GmUOz+mPICcrbdYUmLM4GV2/YJqNxh4VgkrE3
+	 t4GgTli/nNzA70Sd1Iugn1PSkMzSO9pcHrUwXYhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730063AbfLDSDa (ORCPT
+        id S1730072AbfLDSDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:03:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47256 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:03:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729513AbfLDSD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:03:27 -0500
+        id S1730061AbfLDSDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:03:30 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BCE72081B;
-        Wed,  4 Dec 2019 18:03:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19FA620659;
+        Wed,  4 Dec 2019 18:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482606;
-        bh=jQHII3kekIjKGDfMOcLc7BNncRQEMcbsFHnnxjyp1vE=;
+        s=default; t=1575482609;
+        bh=+101NAiM32AfaI/JI1P5ZDUUQ7lZCyxXo7+NbrFvf4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VOX6zUOorq9pq5S1GrcfTHkRnWoojnkbmxkV9JCZKd1FX+7mPU/lyEMsdqEFhZuil
-         Z0iZ3UXa9+Dq3GDBeyOZdnSLE/53bmX1br8gnI035GAMCgVZ3MNbOIsN6sK2Rf7g2t
-         zbXjXHkcbz+auW0K1CZwsLjUhK2Yyxkbhi/8/3v0=
+        b=ioVxT41OcHk3S3zK2GsZoL4sqOzUkIlkJNWv6F4VeAP7y8Meofed9NZWlrJ3/97xw
+         rzHYBgnKReewHZ+oW+sCr1T5Ck4yy+WnL3q4iUokEkVawg2nCAp6JD4C+qANo3Xeyp
+         8xxwzwBxlh5bJWcyrMqOqrtfOQw8AU30HKqBwN/w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 064/209] xen/pciback: Check dev_data before using it
-Date:   Wed,  4 Dec 2019 18:54:36 +0100
-Message-Id: <20191204175325.706205649@linuxfoundation.org>
+Subject: [PATCH 4.14 047/209] mwifiex: debugfs: correct histogram spacing, formatting
+Date:   Wed,  4 Dec 2019 18:54:19 +0100
+Message-Id: <20191204175324.623121841@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,36 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ross Lagerwall <ross.lagerwall@citrix.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit 1669907e3d1abfa3f7586e2d55dbbc117b5adba2 ]
+[ Upstream commit 4cb777c64e030778c569f605398d7604d8aabc0f ]
 
-If pcistub_init_device fails, the release function will be called with
-dev_data set to NULL.  Check it before using it to avoid a NULL pointer
-dereference.
+Currently, snippets of this file look like:
 
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+rx rates (in Mbps): 0=1M   1=2M2=5.5M  3=11M   4=6M   5=9M  6=12M
+7=18M  8=24M  9=36M  10=48M  11=54M12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)
+44-53=MCS0-9(VHT:BW20)54-63=MCS0-9(VHT:BW40)64-73=MCS0-9(VHT:BW80)
+...
+noise_flr[--96dBm] = 22
+noise_flr[--95dBm] = 149
+noise_flr[--94dBm] = 9
+noise_flr[--93dBm] = 2
+
+We're missing some spaces, and we're adding a minus sign ('-') on values
+that are already negative signed integers.
+
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xen-pciback/pci_stub.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/debugfs.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
-index 9e480fdebe1f0..8c250f4a3a97a 100644
---- a/drivers/xen/xen-pciback/pci_stub.c
-+++ b/drivers/xen/xen-pciback/pci_stub.c
-@@ -106,7 +106,8 @@ static void pcistub_device_release(struct kref *kref)
- 	 * is called from "unbind" which takes a device_lock mutex.
- 	 */
- 	__pci_reset_function_locked(dev);
--	if (pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
-+	if (dev_data &&
-+	    pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
- 		dev_info(&dev->dev, "Could not reload PCI state\n");
- 	else
- 		pci_restore_state(dev);
+diff --git a/drivers/net/wireless/marvell/mwifiex/debugfs.c b/drivers/net/wireless/marvell/mwifiex/debugfs.c
+index 6f4239be609d0..49ca84ef1a992 100644
+--- a/drivers/net/wireless/marvell/mwifiex/debugfs.c
++++ b/drivers/net/wireless/marvell/mwifiex/debugfs.c
+@@ -296,15 +296,13 @@ mwifiex_histogram_read(struct file *file, char __user *ubuf,
+ 		     "total samples = %d\n",
+ 		     atomic_read(&phist_data->num_samples));
+ 
+-	p += sprintf(p, "rx rates (in Mbps): 0=1M   1=2M");
+-	p += sprintf(p, "2=5.5M  3=11M   4=6M   5=9M  6=12M\n");
+-	p += sprintf(p, "7=18M  8=24M  9=36M  10=48M  11=54M");
+-	p += sprintf(p, "12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)\n");
++	p += sprintf(p,
++		     "rx rates (in Mbps): 0=1M   1=2M 2=5.5M  3=11M   4=6M   5=9M  6=12M\n"
++		     "7=18M  8=24M  9=36M  10=48M  11=54M 12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)\n");
+ 
+ 	if (ISSUPP_11ACENABLED(priv->adapter->fw_cap_info)) {
+-		p += sprintf(p, "44-53=MCS0-9(VHT:BW20)");
+-		p += sprintf(p, "54-63=MCS0-9(VHT:BW40)");
+-		p += sprintf(p, "64-73=MCS0-9(VHT:BW80)\n\n");
++		p += sprintf(p,
++			     "44-53=MCS0-9(VHT:BW20) 54-63=MCS0-9(VHT:BW40) 64-73=MCS0-9(VHT:BW80)\n\n");
+ 	} else {
+ 		p += sprintf(p, "\n");
+ 	}
+@@ -333,7 +331,7 @@ mwifiex_histogram_read(struct file *file, char __user *ubuf,
+ 	for (i = 0; i < MWIFIEX_MAX_NOISE_FLR; i++) {
+ 		value = atomic_read(&phist_data->noise_flr[i]);
+ 		if (value)
+-			p += sprintf(p, "noise_flr[-%02ddBm] = %d\n",
++			p += sprintf(p, "noise_flr[%02ddBm] = %d\n",
+ 				(int)(i-128), value);
+ 	}
+ 	for (i = 0; i < MWIFIEX_MAX_SIG_STRENGTH; i++) {
 -- 
 2.20.1
 
