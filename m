@@ -2,131 +2,136 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1D1C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2549C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7AE206E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575419535;
-	bh=8ZaeCwEq+6xIABYU+SGqp6hX6Y6XpUzqAIOiEL+4ptk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BD4XVXkzf+BrvdE9nO9sftDjgCi3DeDzwKqr91I8oAd+0xNj6JSlPS7SLJG5GxrwO
-	 4GT2YerR9Gk6oDBKsLO5YUuIMUlsvGLMfWW0O9Dc3XMo1opgGY1s48MZbfP6jqqR9+
-	 S0oR77JIMpqFO5KdOYCPYBrq11DGt6flqVPto47o=
+	by mail.kernel.org (Postfix) with ESMTP id 71C4B20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:32:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfLDAcO (ORCPT
+        id S1726469AbfLDAc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 19:32:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37848 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 19:32:57 -0500
+Received: from mga17.intel.com ([192.55.52.151]:29488 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbfLDAcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 19:32:14 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F59820674;
-        Wed,  4 Dec 2019 00:32:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575419533;
-        bh=8ZaeCwEq+6xIABYU+SGqp6hX6Y6XpUzqAIOiEL+4ptk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H+JHr/MY13+OR7Xg3FnTUgq77Cu2JRb/F5u+aykghFc6qGYlML4b6ddbV54qHYV0C
-         HkJpYWB7n8o3CzDTRpPQ6YK/SIfmqLJ7ehkznxzeKGCk0Je1hCzegtpse65co4wjGM
-         dAdXmhvWd1VFRWMfustTw3Kz4aCxFW4LVjSG3khk=
-Date:   Tue, 3 Dec 2019 16:32:11 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     Gao Xiang <gaoxiang25@huawei.com>,
-        Daniel Rosenberg <drosen@google.com>,
-        Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH 4/8] vfs: Fold casefolding into vfs
-Message-ID: <20191204003211.GE727@sol.localdomain>
-References: <20191203051049.44573-1-drosen@google.com>
- <20191203051049.44573-5-drosen@google.com>
- <20191203074154.GA216261@architecture4>
- <85wobdb3hp.fsf@collabora.com>
- <20191203203414.GA727@sol.localdomain>
- <85zhg96r7l.fsf@collabora.com>
+        id S1726008AbfLDAc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 19:32:57 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 16:32:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,275,1571727600"; 
+   d="scan'208";a="223029646"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 03 Dec 2019 16:32:54 -0800
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
+        kevin.tian@intel.com, Eric Auger <eric.auger@redhat.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] iommu/vt-d: Consolidate various cache flush ops
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+References: <20191122030449.28892-1-baolu.lu@linux.intel.com>
+ <20191202120252.45606c47@jacob-builder>
+ <f703c267-c946-30cf-7e0e-4de16edcde18@linux.intel.com>
+ <20191203085026.1785292b@jacob-builder>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <d6ff346e-6b6b-d9cd-c7c8-0e54614c1b37@linux.intel.com>
+Date:   Wed, 4 Dec 2019 08:32:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <85zhg96r7l.fsf@collabora.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191203085026.1785292b@jacob-builder>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 04:21:02PM -0500, Gabriel Krisman Bertazi wrote:
-> Eric Biggers <ebiggers@kernel.org> writes:
-> 
-> > On Tue, Dec 03, 2019 at 02:42:10PM -0500, Gabriel Krisman Bertazi wrote:
-> >> Gao Xiang <gaoxiang25@huawei.com> writes:
-> 
-> >> I think Daniel's approach of moving this into VFS is the simplest way to
-> >> actually solve the issue, instead of extending and duplicating a lot of
-> >> functionality into filesystem hooks to support the possible mixes of
-> >> case-insensitive, overlayfs and fscrypt.
-> >> 
-> >
-> > I think we can actually get everything we want using dentry_operations only,
-> > since the filesystem can set ->d_op during ->lookup() (like what is done for
-> > encrypted filenames now) rather than at dentry allocation time.  And fs/crypto/
-> > can export fscrypt_d_revalidate() rather than setting ->d_op itself.
-> 
-> Problem is, differently from fscrypt, case-insensitive uses the d_hash()
-> hook and for a lookup, we actually use
-> dentry->d_parent->d_ops->d_hash().  Which works well, until you are flipping the
-> casefold flag.  Then the dentry already exists and you need to modify
-> the d_ops on the fly, which I couldn't find precedent anywhere.  I tried
-> invalidating the dentry whenever we flip the flag, but then if it has
-> negative dentries as children,I wasn't able to reliably invalidate it,
-> and that's when I reached the limit of my knowledge in VFS.  In
-> particular, in every attempt I made to implement it like this, I was
-> able to race and do a case-insensitive lookup on a directory that was
-> just made case sensitive.
-> 
-> I'm not saying there isn't a way.  But it is a bit harder than this
-> proposal. I tried it already and still didn't manage to make it work.
-> Maybe someone who better understands vfs.
+Hi Jacob,
 
-Yes you're right, I forgot that for ->d_hash() and ->d_compare() it's actually
-the parent's directory dentry_operations that are used.
+On 12/4/19 12:50 AM, Jacob Pan wrote:
+> On Tue, 3 Dec 2019 10:44:45 +0800
+> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> 
+>> Hi Jacob,
+>>
+>> On 12/3/19 4:02 AM, Jacob Pan wrote:
+>>> On Fri, 22 Nov 2019 11:04:44 +0800
+>>> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+>>>    
+>>>> Intel VT-d 3.0 introduces more caches and interfaces for software
+>>>> to flush when it runs in the scalable mode. Currently various
+>>>> cache flush helpers are scattered around. This consolidates them
+>>>> by putting them in the existing iommu_flush structure.
+>>>>
+>>>> /* struct iommu_flush - Intel IOMMU cache invalidation ops
+>>>>    *
+>>>>    * @cc_inv: invalidate context cache
+>>>>    * @iotlb_inv: Invalidate IOTLB and paging structure caches when
+>>>> software
+>>>>    *             has changed second-level tables.
+>>>>    * @p_iotlb_inv: Invalidate IOTLB and paging structure caches when
+>>>> software
+>>>>    *               has changed first-level tables.
+>>>>    * @pc_inv: invalidate pasid cache
+>>>>    * @dev_tlb_inv: invalidate cached mappings used by
+>>>> requests-without-PASID
+>>>>    *               from the Device-TLB on a endpoint device.
+>>>>    * @p_dev_tlb_inv: invalidate cached mappings used by
+>>>> requests-with-PASID
+>>>>    *                 from the Device-TLB on an endpoint device
+>>>>    */
+>>>> struct iommu_flush {
+>>>>           void (*cc_inv)(struct intel_iommu *iommu, u16 did,
+>>>>                          u16 sid, u8 fm, u64 type);
+>>>>           void (*iotlb_inv)(struct intel_iommu *iommu, u16 did, u64
+>>>> addr, unsigned int size_order, u64 type);
+>>>>           void (*p_iotlb_inv)(struct intel_iommu *iommu, u16 did,
+>>>> u32 pasid, u64 addr, unsigned long npages, bool ih);
+>>>>           void (*pc_inv)(struct intel_iommu *iommu, u16 did, u32
+>>>> pasid, u64 granu);
+>>>>           void (*dev_tlb_inv)(struct intel_iommu *iommu, u16 sid,
+>>>> u16 pfsid, u16 qdep, u64 addr, unsigned int mask);
+>>>>           void (*p_dev_tlb_inv)(struct intel_iommu *iommu, u16 sid,
+>>>> u16 pfsid, u32 pasid, u16 qdep, u64 addr,
+>>>>                                 unsigned long npages);
+>>>> };
+>>>>
+>>>> The name of each cache flush ops is defined according to the spec
+>>>> section 6.5 so that people are easy to look up them in the spec.
+>>>>   
+>>> Nice consolidation. For nested SVM, I also introduced cache flushed
+>>> helpers as needed.
+>>> https://lkml.org/lkml/2019/10/24/857
+>>>
+>>> Should I wait for yours to be merged or you want to extend the this
+>>> consolidation after SVA/SVM cache flush? I expect to send my v8
+>>> shortly.
+>>
+>> Please base your v8 patch on this series. So it could get more chances
+>> for test.
+>>
+> Sounds good.
+
+I am sorry I need to spend more time on this patch series. Please go
+ahead without it.
+
+Best regards,
+baolu
 
 > 
-> > It's definitely ugly to have to handle the 3 cases of encrypt, casefold, and
-> > encrypt+casefold separately -- and this will need to be duplicated for each
-> > filesystem.  But we do have to weigh that against adding additional complexity
-> > and overhead to the VFS for everyone.  If we do go with the VFS changes, please
-> > try to make them as simple and unobtrusive as possible.
+>> I will queue this patch series for internal test after 5.5-rc1 and if
+>> everything goes well, I will forward it to Joerg around rc4 for linux-
+>> next.
+>>
+>> Best regards,
+>> baolu
 > 
-> Well, it is just not case-insensitive+fscrypt. Also overlayfs
-> there. Probably more.  So we have much more cases.  I understand the VFS
-> changes need to be very well thought, but when I worked on this it
-> started to look a more correct solution than using the hooks.
-
-Well the point of my proof-of-concept patch having separate ext4_ci_dentry_ops,
-ext4_encrypted_dentry_ops, and ext4_encrypted_ci_dentry_ops is supposed to be
-for overlayfs support -- since overlayfs requires that some operations are not
-present.  If we didn't need overlayfs support, we could just use a single
-ext4_dentry_ops for all dentries instead.
-
-I think we could still support fscrypt, casefold, fscrypt+casefold, and
-fscrypt+overlayfs with dentry_operations only.  It's casefold+overlayfs that's
-the biggest problem, due to the possibility of the casefold flag being set on a
-directory later as you pointed out.
-
-- Eric
+> [Jacob Pan]
+> 
