@@ -2,173 +2,145 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CD6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3D7C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9E62077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD442073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:25:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cmEl7UJP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isOkK7jE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfLDUXA (ORCPT
+        id S1728086AbfLDUZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 15:23:00 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36306 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727889AbfLDUW7 (ORCPT
+        Wed, 4 Dec 2019 15:25:51 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43059 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727887AbfLDUZv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 15:22:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575490978;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=B6501AeuCH09kqXayTpJahOroJlNswm8cYGVnammuGQ=;
-        b=cmEl7UJPtZNkOCFgzByuvji/lxGXZTLTxng4mY4MiVrRJBR2Fe2yjIhGXDEr7u3gmW6NaC
-        8PzCCpwJzMGwFcFj8sxEKsWoahfPGhsc+9C1zd5OxyvHrlX4RzVDHw5TQEAtKKAIqCZdFC
-        wT7YRqj4PZBpBamwxI4X0PKw7c1LYXo=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-386-ikl-MifKNlC-sjD-Y9LFSg-1; Wed, 04 Dec 2019 15:22:57 -0500
-Received: by mail-lf1-f72.google.com with SMTP id l2so98102lfk.23
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 12:22:56 -0800 (PST)
+        Wed, 4 Dec 2019 15:25:51 -0500
+Received: by mail-lj1-f195.google.com with SMTP id a13so770714ljm.10;
+        Wed, 04 Dec 2019 12:25:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q1HDbNtziDmWn+nZrAorGFLczK81PnzJXfxFuv+uGos=;
+        b=isOkK7jEUsiIbE8op5mEt0BDkQUXYQSgX5LoWkkU1yYu/SjbiwRiNC1dN67TJA65YZ
+         gFeLozQOWBjANrnXjwVGEQt3Jk7S0nnBIkrFAr/KK8Icnf0EvLx11Mg6pccdLVVi1dTB
+         /lCb8fMVvusHsMfkVAozHtwwaIGJ/ODtWjFWlIwXKsgDo1duf95yEic776rUJZl1YPFa
+         nwUzmWgRR7d+JtNL3EUP7UqnZnpJ41Q820pawJ2l08WnHbAW5ShTchPJUOz+882BmieP
+         Y6mv2Kt5V7Fh3I3V9OGmiQfwRshEUSr1s745kp6JAuxB8ATVbMRBTbkohDPrV9HeiRRf
+         WjvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=bWGBRGftecl1TELE+NPWJSQpPs1ATjeROtIx8QlzOM4=;
-        b=oJMnUikiXL3kMZtiTYEgOwYAVHKy9BT7Z4STcMrA6e7+c/yXfkYBY7A6wQYNIezBfA
-         d5dDI71602f1GiSDJQmixmSmMurWtk4UvL8HFikaAcnJoEGH/8jqq5n8/Yy1LrbxaR/X
-         ZsnBr0Gq4Qu5JtqUX81JxcX1DSZ9fIYMvo+7UDEGo/AGKD1KZ4FaqdjzZZbX8TG9QpOu
-         gXn6QKTwh4pFMePBk12E4xi66H494lXF/rd4460DdqggHIAsSWEJab1Pqxe9ybHOo9X+
-         eXJ37tPOdqxxd/0E/2VO3jTBU1clBKPkqI8pePlhQ1UXMczobIg/QxrPulPX6OLlzN3b
-         qDKQ==
-X-Gm-Message-State: APjAAAXqJap9ZwEp0Xk0KNOzj9MRlPr/1yc6Nu/gh6ByC5RKR57DZ6ST
-        oIhv6lkYscio3hLOgLhaIvWx8zO8fr4UuCHk2d2aZ7KdfOe3sh+QNjomkkKMFkXp9h5b1Hgri8t
-        rjioJGdeu1SYjUUvmyR38wjOz
-X-Received: by 2002:ac2:4553:: with SMTP id j19mr3393447lfm.142.1575490975583;
-        Wed, 04 Dec 2019 12:22:55 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy2XgLJTxeJZ2xtK1286GgeuYjhYemj4/KIs3cLvmOYe+qrHgZQ6tFFdNaXHi7b1nLifRHVpA==
-X-Received: by 2002:ac2:4553:: with SMTP id j19mr3393421lfm.142.1575490975321;
-        Wed, 04 Dec 2019 12:22:55 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id o19sm4417121lji.54.2019.12.04.12.22.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 12:22:54 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id C9CAC18193A; Wed,  4 Dec 2019 21:22:53 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
-In-Reply-To: <20191204182727.GA29780@localhost.localdomain>
-References: <20191202131847.30837-1-jolsa@kernel.org> <CAEf4BzY_D9JHjuU6K=ciS70NSy2UvSm_uf1NfN_tmFz1445Jiw@mail.gmail.com> <87wobepgy0.fsf@toke.dk> <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com> <877e3cpdc9.fsf@toke.dk> <CAADnVQJeC9FQDXhv34KTiFSRq-=x4cBaspj-bTXdQ1=7prphcA@mail.gmail.com> <20191204182727.GA29780@localhost.localdomain>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Wed, 04 Dec 2019 21:22:53 +0100
-Message-ID: <874kyfon6q.fsf@toke.dk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q1HDbNtziDmWn+nZrAorGFLczK81PnzJXfxFuv+uGos=;
+        b=f/7JyJYXwtktx1qWlW6J9kyiQdPtNKBALbfiqk5wdWsUVNerxhv0W5j4W1F+MhoJ92
+         W/tOhs4C/7gvnN7VRLvOCP/0/XDwQ7JxneoMDLSi1KvYS4uoPRSZyRh/FuotWFRBXx1O
+         zUPfXyBe+wLZa6kOzlCoYPu/f+aJdPINU4i/Vil4oTgBtwYgZ42dNT6LPiomhsrdbf0l
+         W9NuoAaZ6mnD/K0QmW0ot9BUkGjCECb9W+/w+G3FbOgqxDMC9G3ExrTO4VFQMhZyRat1
+         4rPFsJkT6qzJG3X2fdWCKcQf1b2h3T+H1E6o/23VNJnlwiuL3j5PHi10GlCRWsyUdsU0
+         b60w==
+X-Gm-Message-State: APjAAAXGoOxw7x3riUvGlFD3qMRrnJXvslPaZMEeYkj0lrc81+6rYAyF
+        m6j6jR2B82dipMvnCgHsHF9y6qpR0vcXB+uIUI8=
+X-Google-Smtp-Source: APXvYqyYSPA5OmBseF+oP2/0KobwdsYBxyGBDH8F5+DbyooGjfmL7VhNSK+UhPKxR+9+i4OiUYWjZl5/B5HSUHar5Og=
+X-Received: by 2002:a2e:8953:: with SMTP id b19mr2947176ljk.249.1575491148522;
+ Wed, 04 Dec 2019 12:25:48 -0800 (PST)
 MIME-Version: 1.0
-X-MC-Unique: ikl-MifKNlC-sjD-Y9LFSg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <1575396508-21480-1-git-send-email-sj38.park@gmail.com>
+ <CAFd5g46X9WK-xKJFF5AVYXXmM4a2dYD3fy=oi1CGJM1gc9RzuA@mail.gmail.com> <20191204192141.GA247851@google.com>
+In-Reply-To: <20191204192141.GA247851@google.com>
+From:   SeongJae Park <sj38.park@gmail.com>
+Date:   Wed, 4 Dec 2019 21:25:21 +0100
+Message-ID: <CAEjAshrXG3GmNMAS6Upu0=cCe9KJxchQWeiqLg0b8kif9ivNTg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] Fix nits in the kunit
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, shuah <shuah@kernel.org>,
+        SeongJae Park <sjpark@amazon.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Borkmann <daniel@iogearbox.net> writes:
-
-> On Wed, Dec 04, 2019 at 09:39:59AM -0800, Alexei Starovoitov wrote:
->> On Wed, Dec 4, 2019 at 2:58 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@re=
-dhat.com> wrote:
->> > Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
->> > > On Mon, Dec 2, 2019 at 1:15 PM Toke H=C3=B8iland-J=C3=B8rgensen <tok=
-e@redhat.com> wrote:
->> > >>
->> > >> Ah, that is my mistake: I was getting dynamic libbpf symbols with t=
-his
->> > >> approach, but that was because I had the version of libbpf.so in my
->> > >> $LIBDIR that had the patch to expose the netlink APIs as versioned
->> > >> symbols; so it was just pulling in everything from the shared libra=
-ry.
->> > >>
->> > >> So what I was going for was exactly what you described above; but i=
-t
->> > >> seems that doesn't actually work. Too bad, and sorry for wasting yo=
-ur
->> > >> time on this :/
->> > >
->> > > bpftool is currently tightly coupled with libbpf and very likely
->> > > in the future the dependency will be even tighter.
->> > > In that sense bpftool is an extension of libbpf and libbpf is an ext=
-ension
->> > > of bpftool.
->> > > Andrii is working on set of patches to generate user space .c code
->> > > from bpf program.
->> > > bpftool will be generating the code that is specific for the version
->> > > bpftool and for
->> > > the version of libbpf. There will be compatibility layers as usual.
->> > > But in general the situation where a bug in libbpf is so criticial
->> > > that bpftool needs to repackaged is imo less likely than a bug in
->> > > bpftool that will require re-packaging of libbpf.
->> > > bpftool is quite special. It's not a typical user of libbpf.
->> > > The other way around is more correct. libbpf is a user of the code
->> > > that bpftool generates and both depend on each other.
->> > > perf on the other side is what typical user space app that uses
->> > > libbpf will look like.
->> > > I think keeping bpftool in the kernel while packaging libbpf
->> > > out of github was an oversight.
->> > > I think we need to mirror bpftool into github/libbpf as well
->> > > and make sure they stay together. The version of libbpf =3D=3D versi=
-on of bpftool.
->> > > Both should come from the same package and so on.
->> > > May be they can be two different packages but
->> > > upgrading one should trigger upgrade of another and vice versa.
->> > > I think one package would be easier though.
->> > > Thoughts?
->> >
->> > Yup, making bpftool explicitly the "libbpf command line interface" mak=
-es
->> > sense and would help clarify the relationship between the two. As Jiri
->> > said, we are already moving in that direction packaging-wise...
->>=20
->> Awesome. Let's figure out the logistics.
->> Should we do:
->> git mv tools/bpf/bpftool/ tools/lib/bpf/
->> and appropriate adjustment to Makefiles ?
->> or keep it where it is and only add to
->> https://github.com/libbpf/libbpf/blob/master/scripts/sync-kernel.sh ?
+On Wed, Dec 4, 2019 at 8:21 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
 >
-> I'd be in preference of the latter aka keeping where it is.
+> On Tue, Dec 03, 2019 at 02:41:26PM -0800, Brendan Higgins wrote:
+> > On Tue, Dec 3, 2019 at 10:08 AM SeongJae Park <sj38.park@gmail.com> wrote:
+> > >
+> > > This patchset contains trivial fixes for the kunit documentations and the
+> > > wrapper python scripts.
+> > >
+> > > Changes from v2 (https://lore.kernel.org/linux-kselftest/1575361141-6806-1-git-send-email-sj38.park@gmail.com/T/#t):
+> > >  - Make 'build_dir' if not exists (missed from v3 by mistake)
+> > >
+> > > SeongJae Park (5):
+> > >   docs/kunit/start: Use in-tree 'kunit_defconfig'
+> > >   kunit: Remove duplicated defconfig creation
+> > >   kunit: Create default config in '--build_dir'
+> > >   kunit: Place 'test.log' under the 'build_dir'
+> > >   kunit: Rename 'kunitconfig' to '.kunitconfig'
+> > >
+> > >  Documentation/dev-tools/kunit/start.rst | 13 +++++--------
+> > >  tools/testing/kunit/kunit.py            | 16 ++++++++++------
+> > >  tools/testing/kunit/kunit_kernel.py     |  8 ++++----
+> > >  3 files changed, 19 insertions(+), 18 deletions(-)
+> >
+> > Tested-by: Brendan Higgins <brendanhiggins@google.com>
+>
+> I just realized that I forgot to test for something...
+>
+> The following command fails:
+>
+> ./tools/testing/kunit/kunit.py run --timeout=60 --jobs=12 --defconfig
+>
+> [11:17:13] Building KUnit Kernel ...
+> [11:17:16] Starting KUnit Kernel ...
+> Traceback (most recent call last):
+>   File "tools/testing/kunit/kunit.py", line 142, in <module>
+>     main(sys.argv[1:])
+>   File "tools/testing/kunit/kunit.py", line 135, in main
+>     result = run_tests(linux, request)
+>   File "tools/testing/kunit/kunit.py", line 67, in run_tests
+>     test_result = kunit_parser.parse_run_tests(kunit_output)
+>   File "/usr/local/google/home/brendanhiggins/gbmc-linux/tools/testing/kunit/kunit_parser.py", line 283, in parse_run_tests
+>     test_result = parse_test_result(list(isolate_kunit_output(kernel_output)))
+>   File "/usr/local/google/home/brendanhiggins/gbmc-linux/tools/testing/kunit/kunit_parser.py", line 54, in isolate_kunit_output
+>     for line in kernel_output:
+>   File "/usr/local/google/home/brendanhiggins/gbmc-linux/tools/testing/kunit/kunit_kernel.py", line 146, in run_kernel
+>     with open(os.path.join(build_dir, 'test.log'), 'w') as f:
+>   File "/usr/lib/python3.7/posixpath.py", line 80, in join
+>     a = os.fspath(a)
+> TypeError: expected str, bytes or os.PathLike object, not NoneType
+>
+> It seems as though you assume that build_dir is always populated by the flag.
 
-I don't have any strong preference either way. It would make sense to
-move it to make clear the interdependency (and that bpftool is really
-the "libbpf cli interface"); but it could also just be kept separate and
-just document this in the existing bpftool dir.
+Sorry for not checking the case.  The 4th patch, "kunit: Place 'test.log' under
+the 'build_dir'" made the bug.  I fixed the 4th patch and tested with below
+commands:
 
-The github repository may need some surgery, though. So maybe let the
-changes in the kernel tree depend on what's easiest for that? IDK?
+    ./tools/testing/kunit/kunit.py run --timeout=60 --jobs=12
+--defconfig --build_dir .kunit
+    ./tools/testing/kunit/kunit.py run --timeout=60 --jobs=12 --defconfig
 
--Toke
+Just sent the 4th version patchset including the fix:
+    http://lkml.kernel.org/r/1575490683-13015-1-git-send-email-sj38.park@gmail.com
 
+I will consider adding some tests that can check such cases in the
+'kunit_tools_test.py' later.
+
+
+Thanks,
+SeongJae Park
