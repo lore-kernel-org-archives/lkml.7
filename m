@@ -2,108 +2,98 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4205CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2856C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F1E2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:14:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575443662;
-	bh=Cwv1kql4NHvUwwQgzVHWaWKIlK5ISRIKAetwzq4MSnE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f3l4JIzIhi6rISUkOdbDlitItF+8LXZsFQ1gVpkc34+OLGxmgAr9ddkPz/xfRJiph
-	 3G5yVlwF3ngUpIJV0sb8KTa7Xxy+ylGfN+f8nnIpuKV6pSb7EKPRLMMQKrdzMBoycw
-	 7IDxyK7hcTy/lQIHyeiY+1itTTAs0z92sWAyrcqE=
+	by mail.kernel.org (Postfix) with ESMTP id 961312073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:14:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NWPoNEpr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfLDHOU (ORCPT
+        id S1727319AbfLDHOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:14:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbfLDHOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:14:20 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DD82206DF;
-        Wed,  4 Dec 2019 07:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575443659;
-        bh=Cwv1kql4NHvUwwQgzVHWaWKIlK5ISRIKAetwzq4MSnE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O2BvOavbnZnLGfNrzYPOt8r3wb3gV/o5U95NoWdokw+R3FiRIWnc84L75hC75OFpc
-         fA/eBnwD4CeOj8d3qh0RhGcLOABAfSdqqjaO9V9v7TasyRqIFrr3reoKIRbSwdA8ie
-         RJmlLjuRtCYFvw9RIE5rOPiwtP9/jT6F89Yez+KU=
-Date:   Wed, 4 Dec 2019 08:14:16 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 024/321] net: fec: add missed clk_disable_unprepare
- in remove
-Message-ID: <20191204071416.GB3513626@kroah.com>
-References: <20191203223427.103571230@linuxfoundation.org>
- <20191203223428.376628375@linuxfoundation.org>
- <20191204055738.nl5db2xtigoamtbk@toshiba.co.jp>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204055738.nl5db2xtigoamtbk@toshiba.co.jp>
+        Wed, 4 Dec 2019 02:14:42 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43561 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727286AbfLDHOm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 02:14:42 -0500
+Received: by mail-pf1-f195.google.com with SMTP id h14so3154629pfe.10;
+        Tue, 03 Dec 2019 23:14:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=yyLimGD4f12DqzRTDHXGiQPmCcJPxnl3/Nn96acsv98=;
+        b=NWPoNEpr+2n1OE+peRK1EqCGnArK/SkCMhZR0QpNKiiv3Rd8vMTzfibhm9vtm1wYK2
+         YqmiYIM2+V/DhvZ/2flVIAn5iHxC7BmgV83d8Aj+YMnmBYH0oRBEFSEeUDPnEby2WtsK
+         owk1Kd4goB65oRfx++EoLTN5ecczZvhZfFFXm4VAKo+QEZ4H63MfEoZ8isDCZ+dEO2oS
+         yPl1tRK/OeDHEW0+onwKbT7CagyjBrAiGWQ+UEzjaserorjprekSAs5fvY0gYpdRcc0r
+         RBEKq6NZNFTR6aC7S7sDs8yFpxZXR8Zte4V00deAY4OQP/7KH3+M8vcFhlimtUAHTiN6
+         BjtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yyLimGD4f12DqzRTDHXGiQPmCcJPxnl3/Nn96acsv98=;
+        b=PKoJ505LvqgaDnk+WgEaFnUIJSiZXvuVg0qguQaAaYRMi2FSXfPucQcfFTO1UiO248
+         n2Y7gTu6H0LWxfd82pJxS3w7Ro8BqRG8ZWbB2St5h8AqsmOC2lBPx7cWrJVNOjrFCUYi
+         S95Mmepd0fUPXpDyxuVs1xEbu6pZlwz8hzW6aELjlapua1h2V9ltCDwyZo0xOwC01o6P
+         n/m8WvmFh7X5oZg9v3/VRO6nrPxbZR4lP73pACyElKbi70GB8FvhjHfVcmR3I3Vavr5l
+         QqV/5AZyEkNFF78s97/YcA003Ah7JE4n7Jr5wlD9iXWsQDND7x1WZwQci/ZlgROEPNxR
+         S0yw==
+X-Gm-Message-State: APjAAAWzSAZFuEGomEmqmIukqqomrxbya8Emq57TlGl80z5Z+DAx+RJC
+        l7juo6z3/aZAxmOasfaZ8UI=
+X-Google-Smtp-Source: APXvYqwmiSTz4VuzXFxIWjnodDj3ScjphNtZmai9HxMeTn/1ZOshDjZamXqvEzddOsc1Teq19EcqcQ==
+X-Received: by 2002:a62:7b46:: with SMTP id w67mr2080477pfc.113.1575443681576;
+        Tue, 03 Dec 2019 23:14:41 -0800 (PST)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id q12sm848316pfh.158.2019.12.03.23.14.38
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 03 Dec 2019 23:14:40 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     broonie@kernel.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
+        huanpeng.xin@unisoc.com, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] spi: sprd: Fix the incorrect SPI register
+Date:   Wed,  4 Dec 2019 15:13:59 +0800
+Message-Id: <b4f7f89ec0fdc595335687bfbd9f962213bc4a1d.1575443510.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 02:57:38PM +0900, Nobuhiro Iwamatsu wrote:
-> Hi,
-> 
-> On Tue, Dec 03, 2019 at 11:31:30PM +0100, Greg Kroah-Hartman wrote:
-> > From: Chuhong Yuan <hslester96@gmail.com>
-> > 
-> > [ Upstream commit c43eab3eddb4c6742ac20138659a9b701822b274 ]
-> > 
-> > This driver forgets to disable and unprepare clks when remove.
-> > Add calls to clk_disable_unprepare to fix it.
-> > 
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > Signed-off-by: David S. Miller <davem@davemloft.net>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> 
-> This commit also requires the following commit:
-> 
-> commit a31eda65ba210741b598044d045480494d0ed52a
-> Author: Chuhong Yuan <hslester96@gmail.com>
-> Date:   Wed Nov 20 09:25:13 2019 +0800
-> 
->     net: fec: fix clock count mis-match
-> 
->     pm_runtime_put_autosuspend in probe will call runtime suspend to
->     disable clks automatically if CONFIG_PM is defined. (If CONFIG_PM
->     is not defined, its implementation will be empty, then runtime
->     suspend will not be called.)
-> 
->     Therefore, we can call pm_runtime_get_sync to runtime resume it
->     first to enable clks, which matches the runtime suspend. (Only when
->     CONFIG_PM is defined, otherwise pm_runtime_get_sync will also be
->     empty, then runtime resume will not be called.)
-> 
->     Then it is fine to disable clks without causing clock count mis-match.
-> 
->     Fixes: c43eab3eddb4 ("net: fec: add missed clk_disable_unprepare in remove")
->     Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
->     Acked-by: Fugang Duan <fugang.duan@nxp.com>
->     Signed-off-by: David S. Miller <davem@davemloft.net>
-> 
-> 
-> And this should also apply to 5.3.
+From: Huanpeng Xin <huanpeng.xin@unisoc.com>
 
-Thanks, now queued up.
+The original code used an incorrect SPI register to initialize the SPI
+controller in sprd_spi_init_hw(), thus fix it.
 
-greg k-h
+Fixes: e7d973a31c24 ("spi: sprd: Add SPI driver for Spreadtrum SC9860")
+Signed-off-by: Huanpeng Xin <huanpeng.xin@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+---
+ drivers/spi/spi-sprd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-sprd.c b/drivers/spi/spi-sprd.c
+index 2ee1feb..6678f1c 100644
+--- a/drivers/spi/spi-sprd.c
++++ b/drivers/spi/spi-sprd.c
+@@ -678,7 +678,7 @@ static int sprd_spi_init_hw(struct sprd_spi *ss, struct spi_transfer *t)
+ 	if (d->unit != SPI_DELAY_UNIT_SCK)
+ 		return -EINVAL;
+ 
+-	val = readl_relaxed(ss->base + SPRD_SPI_CTL7);
++	val = readl_relaxed(ss->base + SPRD_SPI_CTL0);
+ 	val &= ~(SPRD_SPI_SCK_REV | SPRD_SPI_NG_TX | SPRD_SPI_NG_RX);
+ 	/* Set default chip selection, clock phase and clock polarity */
+ 	val |= ss->hw_mode & SPI_CPHA ? SPRD_SPI_NG_RX : SPRD_SPI_NG_TX;
+-- 
+1.7.9.5
+
