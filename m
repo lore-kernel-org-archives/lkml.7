@@ -2,143 +2,113 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A67C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C89C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42A520637
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8DA020637
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:22:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Zaj+n2q2";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="HaQ7ApvH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfLDIWK (ORCPT
+        id S1727614AbfLDIWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:22:10 -0500
-Received: from lucky1.263xmail.com ([211.157.147.130]:57640 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727337AbfLDIWI (ORCPT
+        Wed, 4 Dec 2019 03:22:09 -0500
+Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:43002
+        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727554AbfLDIWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:22:08 -0500
-Received: from localhost (unknown [192.168.167.13])
-        by lucky1.263xmail.com (Postfix) with ESMTP id D91BF79906;
-        Wed,  4 Dec 2019 16:21:59 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P8551T139845177427712S1575447579673282_;
-        Wed, 04 Dec 2019 16:19:43 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <0747cfb5f6f826420574473ff9633a35>
-X-RL-SENDER: zhangqing@rock-chips.com
-X-SENDER: zhangqing@rock-chips.com
-X-LOGIN-NAME: zhangqing@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Elaine Zhang <zhangqing@rock-chips.com>
-To:     heiko@sntech.de
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
-        Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v4 3/5] clk: rockchip: add a clock-type for muxes based in the pmugrf
-Date:   Wed,  4 Dec 2019 16:18:57 +0800
-Message-Id: <20191204081859.19454-4-zhangqing@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191204081859.19454-1-zhangqing@rock-chips.com>
-References: <20191204081859.19454-1-zhangqing@rock-chips.com>
+        Wed, 4 Dec 2019 03:22:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575447726;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=Dq97TvmgaKZQ1oiFU/swup0kCMjgQ3PAvX8O6jTarTQ=;
+        b=Zaj+n2q2i0DsZZ5/DW/O58OQ1OPPII10jRnyin3pRGFAOJMohM5jlr6uVJh3d1g3
+        maUe4YdN7kHuNefxw9zbN5dKawNfcDM1wPw1nKMm9yLtlPvy1xoegHyKfFyOCEyORsc
+        vQj6QgcfdpCOIlFRkX21Ak+y7ZRZmFTB0n+CwpZE=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575447726;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
+        bh=Dq97TvmgaKZQ1oiFU/swup0kCMjgQ3PAvX8O6jTarTQ=;
+        b=HaQ7ApvHWQb2wUU7bfmdKJShLtRX2G23tgFtUr5uSU6k6T7mdarot/7nuqj3jdS0
+        5Uq/63IPy9ayHL0YklHEPYdMN+txv0w0MNCzXENWkrJPjVt3nniL9Hp8yZJ9taKy2hf
+        HBYduBVTIpky+PaZX83zZo7XQjFvhwkuaykHOzsU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 12FD6C447B5
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>,
+        robh+dt@kernel.org
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 2/3] dt-bindings: clock: Introduce QCOM Modem clock  bindings
+Date:   Wed, 4 Dec 2019 08:22:06 +0000
+Message-ID: <0101016ed0008a4d-e7c6d3fc-1020-48e6-a515-762c71bcedff-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1575447687-9296-1-git-send-email-tdas@codeaurora.org>
+References: <1575447687-9296-1-git-send-email-tdas@codeaurora.org>
+X-SES-Outgoing: 2019.12.04-54.240.27.55
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rockchip socs often have some tiny number of muxes not controlled from
-the core clock controller but through bits set in the pmugrf.
-Use MUXPMUGRF() to cover this special clock-type.
+Add device tree bindings for modem clock controller for
+Qualcomm Technology Inc's SC7180 SoCs.
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
 ---
- drivers/clk/rockchip/clk.c |  9 +++++++++
- drivers/clk/rockchip/clk.h | 17 +++++++++++++++++
- 2 files changed, 26 insertions(+)
+ include/dt-bindings/clock/qcom,gcc-sc7180.h |  5 +++++
+ include/dt-bindings/clock/qcom,mss-sc7180.h | 12 ++++++++++++
+ 2 files changed, 17 insertions(+)
+ create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
 
-diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
-index 8f77c3f9fab7..4f238f2851ac 100644
---- a/drivers/clk/rockchip/clk.c
-+++ b/drivers/clk/rockchip/clk.c
-@@ -407,6 +407,8 @@ struct rockchip_clk_provider * __init rockchip_clk_init(struct device_node *np,
- 
- 	ctx->grf = syscon_regmap_lookup_by_phandle(ctx->cru_node,
- 						   "rockchip,grf");
-+	ctx->pmugrf = syscon_regmap_lookup_by_phandle(ctx->cru_node,
-+						   "rockchip,pmugrf");
- 
- 	return ctx;
- 
-@@ -482,6 +484,13 @@ void __init rockchip_clk_register_branches(
- 				list->mux_shift, list->mux_width,
- 				list->mux_flags);
- 			break;
-+		case branch_muxpmugrf:
-+			clk = rockchip_clk_register_muxgrf(list->name,
-+				list->parent_names, list->num_parents,
-+				flags, ctx->pmugrf, list->muxdiv_offset,
-+				list->mux_shift, list->mux_width,
-+				list->mux_flags);
-+			break;
- 		case branch_divider:
- 			if (list->div_table)
- 				clk = clk_register_divider_table(NULL,
-diff --git a/drivers/clk/rockchip/clk.h b/drivers/clk/rockchip/clk.h
-index 0d401ce09a54..ae059b7744f9 100644
---- a/drivers/clk/rockchip/clk.h
-+++ b/drivers/clk/rockchip/clk.h
-@@ -238,6 +238,7 @@ struct rockchip_clk_provider {
- 	struct clk_onecell_data clk_data;
- 	struct device_node *cru_node;
- 	struct regmap *grf;
-+	struct regmap *pmugrf;
- 	spinlock_t lock;
- };
- 
-@@ -390,6 +391,7 @@ enum rockchip_clk_branch_type {
- 	branch_composite,
- 	branch_mux,
- 	branch_muxgrf,
-+	branch_muxpmugrf,
- 	branch_divider,
- 	branch_fraction_divider,
- 	branch_gate,
-@@ -662,6 +664,21 @@ struct rockchip_clk_branch {
- 		.gate_offset	= -1,				\
- 	}
- 
-+#define MUXPMUGRF(_id, cname, pnames, f, o, s, w, mf)		\
-+	{							\
-+		.id		= _id,				\
-+		.branch_type	= branch_muxpmugrf,		\
-+		.name		= cname,			\
-+		.parent_names	= pnames,			\
-+		.num_parents	= ARRAY_SIZE(pnames),		\
-+		.flags		= f,				\
-+		.muxdiv_offset	= o,				\
-+		.mux_shift	= s,				\
-+		.mux_width	= w,				\
-+		.mux_flags	= mf,				\
-+		.gate_offset	= -1,				\
-+	}
+diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+index e8029b2e..08c1a7b 100644
+--- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
++++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+@@ -132,6 +132,11 @@
+ #define GCC_VIDEO_GPLL0_DIV_CLK_SRC				122
+ #define GCC_VIDEO_THROTTLE_AXI_CLK				123
+ #define GCC_VIDEO_XO_CLK					124
++#define GCC_MSS_CFG_AHB_CBCR					125
++#define GCC_MSS_MFAB_AXIS_CBCR					126
++#define GCC_MSS_NAV_AXI_CBCR					127
++#define GCC_MSS_Q6_MEMNOC_AXI_CBCR				128
++#define GCC_MSS_SNOC_AXI_CBCR					129
+
+ /* GCC resets */
+ #define GCC_QUSB2PHY_PRIM_BCR					0
+diff --git a/include/dt-bindings/clock/qcom,mss-sc7180.h b/include/dt-bindings/clock/qcom,mss-sc7180.h
+new file mode 100644
+index 0000000..8ad63ed
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,mss-sc7180.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
++ */
 +
- #define DIV(_id, cname, pname, f, o, s, w, df)			\
- 	{							\
- 		.id		= _id,				\
--- 
-2.17.1
-
-
++#ifndef _DT_BINDINGS_CLK_QCOM_MSS_SC7180_H
++#define _DT_BINDINGS_CLK_QCOM_MSS_SC7180_H
++
++#define MSS_AXI_CRYPTO_CLK	0
++#define MSS_AXI_NAV_CLK		1
++
++#endif
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
 
