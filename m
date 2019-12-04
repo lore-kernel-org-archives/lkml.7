@@ -2,173 +2,198 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_BTC_ID,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC37C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B63C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5652068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:42:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cf9gX9S3"
+	by mail.kernel.org (Postfix) with ESMTP id D10912073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:45:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfLDDm0 (ORCPT
+        id S1727016AbfLDDpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 22:42:26 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44818 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbfLDDmZ (ORCPT
+        Tue, 3 Dec 2019 22:45:08 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:45845 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbfLDDpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 22:42:25 -0500
-Received: by mail-il1-f193.google.com with SMTP id z12so5327157iln.11;
-        Tue, 03 Dec 2019 19:42:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ExIWnawdKF70agAdo5JVD422cp6pCtZ9lw7kUZGa1FU=;
-        b=Cf9gX9S3qrLYmV7m/6SHzqliu6YENpTGUyUE4pX1i7bs8EJlZxtNPkQ5dzY98CQjsM
-         Fum1blKgKPNts6/635cpTig9uePC1/vFL6y8M6jVhtZ5d6kmWnw6NFdFY1dEGWTqBjgL
-         md1E2i7PTA5dM+JV+Zy9ske5zDyEeGl57Wr/xoFdu5tmEhef2j63pfBGPc59EWhZ6ZvQ
-         4lYQtrQ/rCsCMxVNEwUrw4hlVIRoOQF2bYaCW9CMCMhbjeU3pYjq+Fwj+uQNCe5FglIo
-         aNSKif3Dp7/wF8AQjgNzfSTPv997Pwj75MX8FUJALQMu1LVGJtUHXJ7CKXAYseFIYGd+
-         AzmA==
+        Tue, 3 Dec 2019 22:45:08 -0500
+Received: by mail-io1-f72.google.com with SMTP id m18so4084189ioj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 19:45:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ExIWnawdKF70agAdo5JVD422cp6pCtZ9lw7kUZGa1FU=;
-        b=i9a2mywLxACurB1P5j9wOQTz34wUJRD+lmjj7GdD74iAKALlNzSBe6JIPIlm9Qy7Vs
-         PAsLY4zoOkMf+zNQ5651frpInY5UZ5ryvIIbeVYDl/OGU9V6rHnY94wsLe0hRRFWbd7f
-         ibEhlexoH5Mntjq+e3QLsVAzw4NlMNFzy4DQPJcmWhPpWfl7PF+MD9JAbAUcEtrynlMW
-         azOk5+/gKt3S0xT0PMqgmc/4uz6xHTUzlvyDDxQoDcYxsGkQNDGj13JGZ+wg0ZlxZR4R
-         pTbOPn1pstanngR91lo31ijpFijU5AgwIHZl6OZNl6F7zUmUUwxUFwtp2gzywSNFHqj6
-         47sw==
-X-Gm-Message-State: APjAAAW5rX5LkBp1nM+3E6AAomqteaQ6Hg796vyFbo3GFYX4TNHB1LFY
-        dBbbppZK6dAHrVkYjmj0+lREj5RZbmaW18ijjL4=
-X-Google-Smtp-Source: APXvYqyxQ5jL8sVwLhQNqvFEVB6V+hXobWVcBj6xjKMw4Rz99e0kASbdfNa05PQQF4hckZkfqLCxmT7mOOeoFFlzuoU=
-X-Received: by 2002:a05:6e02:c2c:: with SMTP id q12mr1620093ilg.205.1575430944433;
- Tue, 03 Dec 2019 19:42:24 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ybWV5ERE2DFFaXeFE6rBJTbeTy1J3ud09wZZavV8FC8=;
+        b=B4gcPhfaDP7XCehf8rT974/IZRv6aPjZ7Cmf+24owIa4owYc5FhbGeCP4Rln3OzWjc
+         m+sPwWsw6SSzqn0eMwuxnH7cI0CJ0nYsgAFoytUWO5gF0h8jr+0TcoTd1Qq2QUk6wJdu
+         hoUiq26Vse/jUlZ+akC5H8DDFBewREJR9ft04WyHGwEH/2CrnBCz8UPRYmm+PTHV5gGy
+         LjDc9w81RarEidIDxowqGQeHZHX27HQRaBbdoveMtyNrvdepsa/w+QcKeed05Q99elN5
+         Uvyql1UJFl+OOC16dCoFymVadJiTQluqGiSexq2fDMAao1DXVkNbC2Lo8keC2/O0BpKg
+         ziGA==
+X-Gm-Message-State: APjAAAUFy8cTbk7sFoQpABod2VIq+vSe0W0HlODG7w7/4j6IM3CuNJ9Q
+        XFW12DMgNa76GYL2JMfVZcyoCfC+P7rQepStGrpQmqaAXJaH
+X-Google-Smtp-Source: APXvYqxtt4ikt2dqLQsg3nRKS4nKfvjThwSLubcbtBlgQg0k6rxaj1SOfgc0nk89IVYO/OwyKXv8rxT3+6rVbdy6L20yAzYfpfTk
 MIME-Version: 1.0
-References: <20191129234108.12732-1-aford173@gmail.com> <3dff516c16dbb8c654293e16c49b4c59d29fd707.camel@pengutronix.de>
- <CAHCN7x+LLBci7BJNGHkoGK7Ljgn0NbVJKitv9vR+vonrO9r2tg@mail.gmail.com>
-In-Reply-To: <CAHCN7x+LLBci7BJNGHkoGK7Ljgn0NbVJKitv9vR+vonrO9r2tg@mail.gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 3 Dec 2019 21:42:13 -0600
-Message-ID: <CAHCN7xLZt4QVZgH9zwZYprmmYyhVN=d7zc9-PUPdknOErwPX2g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] soc: imx: gpcv2: Add support for imx8mm
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a5e:8f04:: with SMTP id c4mr684206iok.50.1575431107219;
+ Tue, 03 Dec 2019 19:45:07 -0800 (PST)
+Date:   Tue, 03 Dec 2019 19:45:07 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008399d40598d8a34d@google.com>
+Subject: KASAN: vmalloc-out-of-bounds Write in pcpu_alloc
+From:   syzbot <syzbot+59b7daa4315e07a994f1@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 9:17 AM Adam Ford <aford173@gmail.com> wrote:
->
-> On Mon, Dec 2, 2019 at 8:28 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> >
-> > On Fri, 2019-11-29 at 17:41 -0600, Adam Ford wrote:
-> > > The technical reference manual for both the i.MX8MQ and i.MX8M Mini
-> > > appear to show the same register definitions and locations for the
-> > > General Power Controller (GPC).
-> > >
-> > > This patch expands the table of compatible SoC's to include
-> > > the i.MX8m Mini
-> > >
-> > > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > >
-> > > diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
-> > > index b0dffb06c05d..67c54cbb6c81 100644
-> > > --- a/drivers/soc/imx/gpcv2.c
-> > > +++ b/drivers/soc/imx/gpcv2.c
-> > > @@ -641,6 +641,7 @@ static int imx_gpcv2_probe(struct platform_device *pdev)
-> > >  static const struct of_device_id imx_gpcv2_dt_ids[] = {
-> > >       { .compatible = "fsl,imx7d-gpc", .data = &imx7_pgc_domain_data, },
-> > >       { .compatible = "fsl,imx8mq-gpc", .data = &imx8m_pgc_domain_data, },
-> > > +     { .compatible = "fsl,imx8mm-gpc", .data = &imx8m_pgc_domain_data, },
-> >
-> > According to the 5.2.5.1 "PGC power domains" chapters in both the i.MX
-> > 8M Dual/8M QuadLite/8M Quad and i.MX 8M Mini Applications Processor
-> > Reference Manuals (Rev.1), the two SoCs have a different list of power
-> > domains:
->
-> Shoot.  I needed to go further down in the table.  I stopped after the
-> first four.
->
-> Sorry for the noise.
->
-> adam
-> >
-> > i.MX8MQ:
-> >         PGC_C0
-> >         PGC_C1
-> >         PGC_C2
-> >         PGC_C3
-> >         PGC_SCU
-> >         PGC_MF
-> >         PGC_OTG1
-> >         PGC_OTG2
-> >         PGC_PCIE
-> >         PGC_MIPI
-> >         PGC_DDR1
-> >         PGC_DDR2
-> >         PGC_VPU
-> >         PGC_GPU
-> >         PGC_HDMI
-> >         PGC_DISP
-> >         PGC_MIPI_CSI1
-> >         PGC_MIPI_CSI2
-> >         PGC_PCIE2
-> >
-> > i.MX8MM:
-> >         PGC_C0
-> >         PGC_C1
-> >         PGC_C2
-> >         PGC_C3
-> >         PGC_SCU
-> >         PGC_NOC
-> >         PGC_PCIE
-> >         PGC_OTG1
-> >         PGC_OTG2
-> >         PGC_DDR1
-> >         PGC_DISPMIX
-> >         GPC_MIPI
-> >         PGC_GPUMIX
-> >         PGC_GPU_3D
-> >         PGC_GPU_2D
-> >         PGC_VPUMIX
-> >         PGC_VPU_G1
-> >         PGC_VPU_G2
-> >         PGC_VPU_H1
-Philipp,
+Hello,
 
-Thanks for reviewing it and catching my mistake.
+syzbot found the following crash on:
 
-I went though the datasheet more thoroughly, and I think I have the
-table correct for the i.MX8M Mini.  With that and a small tweak to the
-OTG nodes, I was able to use USB OTG1 and OTG2 ports.
+HEAD commit:    b3c424eb sch_cake: Add missing NLA policy entry TCA_CAKE_S..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=129c042ae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7d8ab2e0e09c2a82
+dashboard link: https://syzkaller.appspot.com/bug?extid=59b7daa4315e07a994f1
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=140df641e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147dcc2ae00000
 
-I am going to submit a V2 fix tomorrow after I clean it up.  I'll do a
-multi-part series where part 1 is the GPC, part 2 will be the OTG
-updates, and if I get more peripherals working, I'll add them as
-additional parts to the series.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+59b7daa4315e07a994f1@syzkaller.appspotmail.com
 
-adam
-> >
-> > regards
-> > Philipp
-> >
+RBP: 00007fff1c60f370 R08: 0000000000000002 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
+R13: 0000000000000003 R14: 00007fff1c60f370 R15: 0000000000000000
+==================================================================
+BUG: KASAN: vmalloc-out-of-bounds in memset include/linux/string.h:365  
+[inline]
+BUG: KASAN: vmalloc-out-of-bounds in pcpu_alloc+0x589/0x1380  
+mm/percpu.c:1734
+Write of size 32768 at addr ffffe8ffff800000 by task syz-executor940/9026
+
+CPU: 1 PID: 9026 Comm: syz-executor940 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:638
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+  memset+0x24/0x40 mm/kasan/common.c:107
+  memset include/linux/string.h:365 [inline]
+  pcpu_alloc+0x589/0x1380 mm/percpu.c:1734
+  __alloc_percpu_gfp+0x28/0x30 mm/percpu.c:1783
+  prealloc_init kernel/bpf/hashtab.c:154 [inline]
+  htab_map_alloc+0xdb9/0x11c0 kernel/bpf/hashtab.c:378
+  find_and_alloc_map kernel/bpf/syscall.c:123 [inline]
+  map_create kernel/bpf/syscall.c:654 [inline]
+  __do_sys_bpf+0x478/0x37b0 kernel/bpf/syscall.c:3012
+  __se_sys_bpf kernel/bpf/syscall.c:2989 [inline]
+  __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:2989
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441b99
+Code: e8 ec 03 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 1b 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff1c60f318 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441b99
+RDX: 000000000000003c RSI: 0000000020000380 RDI: 0000000000000000
+RBP: 00007fff1c60f370 R08: 0000000000000002 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
+R13: 0000000000000003 R14: 00007fff1c60f370 R15: 0000000000000000
+
+
+Memory state around the buggy address:
+BUG: unable to handle page fault for address: fffff91fffefffe0
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 21ffe6067 P4D 21ffe6067 PUD aa56b067 PMD aa56c067 PTE 0
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 9026 Comm: syz-executor940 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:memcpy_erms+0x6/0x10 arch/x86/lib/memcpy_64.S:56
+Code: cc cc cc cc eb 1e 0f 1f 00 48 89 f8 48 89 d1 48 c1 e9 03 83 e2 07 f3  
+48 a5 89 d1 f3 a4 c3 66 0f 1f 44 00 00 48 89 f8 48 89 d1 <f3> a4 c3 0f 1f  
+80 00 00 00 00 48 89 f8 48 83 fa 20 72 7e 40 38 fe
+RSP: 0018:ffffc90001fa7990 EFLAGS: 00010082
+RAX: ffffc90001fa799c RBX: fffff91fffefffe0 RCX: 0000000000000010
+RDX: 0000000000000010 RSI: fffff91fffefffe0 RDI: ffffc90001fa799c
+RBP: ffffc90001fa79f0 R08: ffff888091714400 R09: fffff520003f4f38
+R10: fffff520003f4f37 R11: ffffc90001fa79be R12: fffff91ffff00000
+R13: 0000200000000000 R14: 00000000fffffffe R15: ffff88821fffd100
+FS:  0000000000d10880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff91fffefffe0 CR3: 0000000099ba1000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  __kasan_report.cold+0x30/0x41 mm/kasan/report.c:508
+  kasan_report+0x12/0x20 mm/kasan/common.c:638
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+  memset+0x24/0x40 mm/kasan/common.c:107
+  memset include/linux/string.h:365 [inline]
+  pcpu_alloc+0x589/0x1380 mm/percpu.c:1734
+  __alloc_percpu_gfp+0x28/0x30 mm/percpu.c:1783
+  prealloc_init kernel/bpf/hashtab.c:154 [inline]
+  htab_map_alloc+0xdb9/0x11c0 kernel/bpf/hashtab.c:378
+  find_and_alloc_map kernel/bpf/syscall.c:123 [inline]
+  map_create kernel/bpf/syscall.c:654 [inline]
+  __do_sys_bpf+0x478/0x37b0 kernel/bpf/syscall.c:3012
+  __se_sys_bpf kernel/bpf/syscall.c:2989 [inline]
+  __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:2989
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441b99
+Code: e8 ec 03 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 1b 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff1c60f318 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441b99
+RDX: 000000000000003c RSI: 0000000020000380 RDI: 0000000000000000
+RBP: 00007fff1c60f370 R08: 0000000000000002 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
+R13: 0000000000000003 R14: 00007fff1c60f370 R15: 0000000000000000
+Modules linked in:
+CR2: fffff91fffefffe0
+---[ end trace 28e1dfa4887d81a1 ]---
+RIP: 0010:memcpy_erms+0x6/0x10 arch/x86/lib/memcpy_64.S:56
+Code: cc cc cc cc eb 1e 0f 1f 00 48 89 f8 48 89 d1 48 c1 e9 03 83 e2 07 f3  
+48 a5 89 d1 f3 a4 c3 66 0f 1f 44 00 00 48 89 f8 48 89 d1 <f3> a4 c3 0f 1f  
+80 00 00 00 00 48 89 f8 48 83 fa 20 72 7e 40 38 fe
+RSP: 0018:ffffc90001fa7990 EFLAGS: 00010082
+RAX: ffffc90001fa799c RBX: fffff91fffefffe0 RCX: 0000000000000010
+RDX: 0000000000000010 RSI: fffff91fffefffe0 RDI: ffffc90001fa799c
+RBP: ffffc90001fa79f0 R08: ffff888091714400 R09: fffff520003f4f38
+R10: fffff520003f4f37 R11: ffffc90001fa79be R12: fffff91ffff00000
+R13: 0000200000000000 R14: 00000000fffffffe R15: ffff88821fffd100
+FS:  0000000000d10880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff91fffefffe0 CR3: 0000000099ba1000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
