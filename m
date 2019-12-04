@@ -2,301 +2,143 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2E0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58746C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2906B20833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB302084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575462715;
+	bh=BqmufO685yzxrGMkexQbTJa/wGdgpCJGHEB1cLv5CEg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FgAAQYb+kbnlpwHvbrZc9TcVzaohDfZqAox293icZXX4rwFjmT4kOhAFn9oMIdg/4
+	 CcxdBErlvxVssbutZ6fCLleHoICECo+RnMw3GdTQP84ZlPNzAPpbpjLY6lFMWVXSZB
+	 vVYAPc1FMMpNBq32t6CAXFvaEH6bMGITODHSVWRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbfLDM3t (ORCPT
+        id S1727744AbfLDMby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:29:49 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:36823 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726604AbfLDM3t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:29:49 -0500
-Received: from [109.168.11.45] (port=60292 helo=pc-ceresoli.dev.aim)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1icTms-00DmHO-1W; Wed, 04 Dec 2019 13:29:46 +0100
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-i2c@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: remove unneeded 'extern' from function declatations
-Date:   Wed,  4 Dec 2019 13:29:36 +0100
-Message-Id: <20191204122936.20101-1-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.24.0
+        Wed, 4 Dec 2019 07:31:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726604AbfLDMbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 07:31:53 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B738420833;
+        Wed,  4 Dec 2019 12:31:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575462712;
+        bh=BqmufO685yzxrGMkexQbTJa/wGdgpCJGHEB1cLv5CEg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=w653gOaA/Kti/YNygsEQd45vn9R/cMuK4nEMFi9bhVIt2aDRiaj++apNi/2c0+AVx
+         rIqYyyUrwPaR82ufsCa7CjqBxvo/G7+e6Da6dSkK3q5DUsNQupgkc+fImV4R1GpG+h
+         zaucSmROx+KhRWRIpcfxCSQvwxofT/K9Tm2zGer8=
+Date:   Wed, 4 Dec 2019 13:31:48 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     syzbot <syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        hdanton@sina.com, akpm@linux-foundation.org
+Subject: Re: WARNING: refcount bug in cdev_get
+Message-ID: <20191204123148.GA3626092@kroah.com>
+References: <000000000000bf410005909463ff@google.com>
+ <20191204115055.GA24783@willie-the-truck>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204115055.GA24783@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to coding-style.rst, extern should not be specified for
-exported functions.
+On Wed, Dec 04, 2019 at 11:50:56AM +0000, Will Deacon wrote:
+> Hi all,
+> 
+> [+Hillf, +akpm, +Greg]
+> 
+> On Tue, Aug 20, 2019 at 03:58:06PM -0700, syzbot wrote:
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    2d63ba3e Merge tag 'pm-5.3-rc5' of git://git.kernel.org/pu..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=165d3302600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3ff364e429585cf2
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=82defefbbd8527e1c2cb
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16c8ab3c600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16be0c4c600000
+> > 
+> > Bisection is inconclusive: the bug happens on the oldest tested release.
+> > 
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11de3622600000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=15de3622600000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
+> > 
+> > ------------[ cut here ]------------
+> > refcount_t: increment on 0; use-after-free.
+> > WARNING: CPU: 1 PID: 11828 at lib/refcount.c:156 refcount_inc_checked
+> > lib/refcount.c:156 [inline]
+> > WARNING: CPU: 1 PID: 11828 at lib/refcount.c:156
+> > refcount_inc_checked+0x61/0x70 lib/refcount.c:154
+> > Kernel panic - not syncing: panic_on_warn set ...
+> 
+> [...]
+> 
+> > RIP: 0010:refcount_inc_checked lib/refcount.c:156 [inline]
+> > RIP: 0010:refcount_inc_checked+0x61/0x70 lib/refcount.c:154
+> > Code: 1d 8e c6 64 06 31 ff 89 de e8 ab 9c 35 fe 84 db 75 dd e8 62 9b 35 fe
+> > 48 c7 c7 00 05 c6 87 c6 05 6e c6 64 06 01 e8 67 26 07 fe <0f> 0b eb c1 90 90
+> > 90 90 90 90 90 90 90 90 90 55 48 89 e5 41 57 41
+> > RSP: 0018:ffff8880907d78b8 EFLAGS: 00010282
+> > RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+> > RDX: 0000000000000000 RSI: ffffffff815c2466 RDI: ffffed10120faf09
+> > RBP: ffff8880907d78c8 R08: ffff8880a771a200 R09: fffffbfff134ae48
+> > R10: fffffbfff134ae47 R11: ffffffff89a5723f R12: ffff88809ea2bb80
+> > R13: 0000000000000000 R14: ffff88809ff6cd40 R15: ffff8880a1c56480
+> >  kref_get include/linux/kref.h:45 [inline]
+> >  kobject_get+0x66/0xc0 lib/kobject.c:644
+> >  cdev_get+0x60/0xb0 fs/char_dev.c:355
+> >  chrdev_open+0xb0/0x6b0 fs/char_dev.c:400
+> >  do_dentry_open+0x4df/0x1250 fs/open.c:797
+> >  vfs_open+0xa0/0xd0 fs/open.c:906
+> >  do_last fs/namei.c:3416 [inline]
+> >  path_openat+0x10e9/0x4630 fs/namei.c:3533
+> >  do_filp_open+0x1a1/0x280 fs/namei.c:3563
+> >  do_sys_open+0x3fe/0x5d0 fs/open.c:1089
+> 
+> FWIW, we've run into this same crash on arm64 so it would be nice to see it
+> fixed upstream. It looks like Hillf's reply (which included a patch) didn't
+> make it to the kernel mailing lists for some reason, but it is available
+> here:
+> 
+> https://groups.google.com/forum/#!original/syzkaller-bugs/PnQNxBrWv_8/X1ygj8d8DgAJ
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
----
- include/linux/i2c.h | 117 +++++++++++++++++++++-----------------------
- 1 file changed, 56 insertions(+), 61 deletions(-)
+No one is going to go and dig a patch out of google groups :(
 
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index d2f786706657..ee5bd19e0b00 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -50,8 +50,8 @@ struct property_entry;
-  * transmit an arbitrary number of messages without interruption.
-  * @count must be be less than 64k since msg.len is u16.
-  */
--extern int i2c_transfer_buffer_flags(const struct i2c_client *client,
--				     char *buf, int count, u16 flags);
-+int i2c_transfer_buffer_flags(const struct i2c_client *client,
-+			      char *buf, int count, u16 flags);
- 
- /**
-  * i2c_master_recv - issue a single I2C message in master receive mode
-@@ -115,11 +115,9 @@ static inline int i2c_master_send_dmasafe(const struct i2c_client *client,
- 
- /* Transfer num messages.
-  */
--extern int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
--			int num);
-+int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num);
- /* Unlocked flavor */
--extern int __i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
--			  int num);
-+int __i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num);
- 
- /* This is the very generalized SMBus access routine. You probably do not
-    want to use this, though; one of the functions below may be much easier,
-@@ -138,16 +136,14 @@ s32 __i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
- /* Now follow the 'nice' access routines. These also document the calling
-    conventions of i2c_smbus_xfer. */
- 
--extern s32 i2c_smbus_read_byte(const struct i2c_client *client);
--extern s32 i2c_smbus_write_byte(const struct i2c_client *client, u8 value);
--extern s32 i2c_smbus_read_byte_data(const struct i2c_client *client,
--				    u8 command);
--extern s32 i2c_smbus_write_byte_data(const struct i2c_client *client,
--				     u8 command, u8 value);
--extern s32 i2c_smbus_read_word_data(const struct i2c_client *client,
--				    u8 command);
--extern s32 i2c_smbus_write_word_data(const struct i2c_client *client,
--				     u8 command, u16 value);
-+s32 i2c_smbus_read_byte(const struct i2c_client *client);
-+s32 i2c_smbus_write_byte(const struct i2c_client *client, u8 value);
-+s32 i2c_smbus_read_byte_data(const struct i2c_client *client, u8 command);
-+s32 i2c_smbus_write_byte_data(const struct i2c_client *client,
-+			      u8 command, u8 value);
-+s32 i2c_smbus_read_word_data(const struct i2c_client *client, u8 command);
-+s32 i2c_smbus_write_word_data(const struct i2c_client *client,
-+			      u8 command, u16 value);
- 
- static inline s32
- i2c_smbus_read_word_swapped(const struct i2c_client *client, u8 command)
-@@ -165,19 +161,18 @@ i2c_smbus_write_word_swapped(const struct i2c_client *client,
- }
- 
- /* Returns the number of read bytes */
--extern s32 i2c_smbus_read_block_data(const struct i2c_client *client,
--				     u8 command, u8 *values);
--extern s32 i2c_smbus_write_block_data(const struct i2c_client *client,
--				      u8 command, u8 length, const u8 *values);
-+s32 i2c_smbus_read_block_data(const struct i2c_client *client,
-+			      u8 command, u8 *values);
-+s32 i2c_smbus_write_block_data(const struct i2c_client *client,
-+			       u8 command, u8 length, const u8 *values);
- /* Returns the number of read bytes */
--extern s32 i2c_smbus_read_i2c_block_data(const struct i2c_client *client,
--					 u8 command, u8 length, u8 *values);
--extern s32 i2c_smbus_write_i2c_block_data(const struct i2c_client *client,
--					  u8 command, u8 length,
--					  const u8 *values);
--extern s32
--i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
--					  u8 command, u8 length, u8 *values);
-+s32 i2c_smbus_read_i2c_block_data(const struct i2c_client *client,
-+				  u8 command, u8 length, u8 *values);
-+s32 i2c_smbus_write_i2c_block_data(const struct i2c_client *client,
-+				   u8 command, u8 length, const u8 *values);
-+s32 i2c_smbus_read_i2c_block_data_or_emulated(const struct i2c_client *client,
-+					      u8 command, u8 length,
-+					      u8 *values);
- int i2c_get_device_id(const struct i2c_client *client,
- 		      struct i2c_device_identity *id);
- #endif /* I2C */
-@@ -336,10 +331,10 @@ struct i2c_client {
- };
- #define to_i2c_client(d) container_of(d, struct i2c_client, dev)
- 
--extern struct i2c_client *i2c_verify_client(struct device *dev);
--extern struct i2c_adapter *i2c_verify_adapter(struct device *dev);
--extern const struct i2c_device_id *i2c_match_id(const struct i2c_device_id *id,
--					const struct i2c_client *client);
-+struct i2c_client *i2c_verify_client(struct device *dev);
-+struct i2c_adapter *i2c_verify_adapter(struct device *dev);
-+const struct i2c_device_id *i2c_match_id(const struct i2c_device_id *id,
-+					 const struct i2c_client *client);
- 
- static inline struct i2c_client *kobj_to_i2c_client(struct kobject *kobj)
- {
-@@ -368,9 +363,9 @@ enum i2c_slave_event {
- 	I2C_SLAVE_STOP,
- };
- 
--extern int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb);
--extern int i2c_slave_unregister(struct i2c_client *client);
--extern bool i2c_detect_slave_mode(struct device *dev);
-+int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb);
-+int i2c_slave_unregister(struct i2c_client *client);
-+bool i2c_detect_slave_mode(struct device *dev);
- 
- static inline int i2c_slave_event(struct i2c_client *client,
- 				  enum i2c_slave_event event, u8 *val)
-@@ -439,10 +434,10 @@ struct i2c_board_info {
-  * with integrated I2C, a config eeprom, sensors, and a codec that's
-  * used in conjunction with the primary hardware.
-  */
--extern struct i2c_client *
-+struct i2c_client *
- i2c_new_device(struct i2c_adapter *adap, struct i2c_board_info const *info);
- 
--extern struct i2c_client *
-+struct i2c_client *
- i2c_new_client_device(struct i2c_adapter *adap, struct i2c_board_info const *info);
- 
- /* If you don't know the exact address of an I2C device, use this variant
-@@ -451,39 +446,39 @@ i2c_new_client_device(struct i2c_adapter *adap, struct i2c_board_info const *inf
-  * it must return 1 on successful probe, 0 otherwise. If it is not provided,
-  * a default probing method is used.
-  */
--extern struct i2c_client *
-+struct i2c_client *
- i2c_new_scanned_device(struct i2c_adapter *adap,
- 		       struct i2c_board_info *info,
- 		       unsigned short const *addr_list,
- 		       int (*probe)(struct i2c_adapter *adap, unsigned short addr));
- 
--extern struct i2c_client *
-+struct i2c_client *
- i2c_new_probed_device(struct i2c_adapter *adap,
- 		       struct i2c_board_info *info,
- 		       unsigned short const *addr_list,
- 		       int (*probe)(struct i2c_adapter *adap, unsigned short addr));
- 
- /* Common custom probe functions */
--extern int i2c_probe_func_quick_read(struct i2c_adapter *adap, unsigned short addr);
-+int i2c_probe_func_quick_read(struct i2c_adapter *adap, unsigned short addr);
- 
- /* For devices that use several addresses, use i2c_new_dummy() to make
-  * client handles for the extra addresses.
-  */
--extern struct i2c_client *
-+struct i2c_client *
- i2c_new_dummy(struct i2c_adapter *adap, u16 address);
- 
--extern struct i2c_client *
-+struct i2c_client *
- i2c_new_dummy_device(struct i2c_adapter *adapter, u16 address);
- 
--extern struct i2c_client *
-+struct i2c_client *
- devm_i2c_new_dummy_device(struct device *dev, struct i2c_adapter *adap, u16 address);
- 
--extern struct i2c_client *
-+struct i2c_client *
- i2c_new_ancillary_device(struct i2c_client *client,
--				const char *name,
--				u16 default_addr);
-+			 const char *name,
-+			 u16 default_addr);
- 
--extern void i2c_unregister_device(struct i2c_client *client);
-+void i2c_unregister_device(struct i2c_client *client);
- #endif /* I2C */
- 
- /* Mainboard arch_initcall() code should register all its I2C devices.
-@@ -491,7 +486,7 @@ extern void i2c_unregister_device(struct i2c_client *client);
-  * Modules for add-on boards must use other calls.
-  */
- #ifdef CONFIG_I2C_BOARDINFO
--extern int
-+int
- i2c_register_board_info(int busnum, struct i2c_board_info const *info,
- 			unsigned n);
- #else
-@@ -845,12 +840,12 @@ static inline void i2c_mark_adapter_resumed(struct i2c_adapter *adap)
- /* administration...
-  */
- #if IS_ENABLED(CONFIG_I2C)
--extern int i2c_add_adapter(struct i2c_adapter *adap);
--extern void i2c_del_adapter(struct i2c_adapter *adap);
--extern int i2c_add_numbered_adapter(struct i2c_adapter *adap);
-+int i2c_add_adapter(struct i2c_adapter *adap);
-+void i2c_del_adapter(struct i2c_adapter *adap);
-+int i2c_add_numbered_adapter(struct i2c_adapter *adap);
- 
--extern int i2c_register_driver(struct module *owner, struct i2c_driver *driver);
--extern void i2c_del_driver(struct i2c_driver *driver);
-+int i2c_register_driver(struct module *owner, struct i2c_driver *driver);
-+void i2c_del_driver(struct i2c_driver *driver);
- 
- /* use a define to avoid include chaining to get THIS_MODULE */
- #define i2c_add_driver(driver) \
-@@ -858,12 +853,12 @@ extern void i2c_del_driver(struct i2c_driver *driver);
- 
- /* call the i2c_client->command() of all attached clients with
-  * the given arguments */
--extern void i2c_clients_command(struct i2c_adapter *adap,
--				unsigned int cmd, void *arg);
-+void i2c_clients_command(struct i2c_adapter *adap,
-+			 unsigned int cmd, void *arg);
- 
--extern struct i2c_adapter *i2c_get_adapter(int nr);
--extern void i2c_put_adapter(struct i2c_adapter *adap);
--extern unsigned int i2c_adapter_depth(struct i2c_adapter *adapter);
-+struct i2c_adapter *i2c_get_adapter(int nr);
-+void i2c_put_adapter(struct i2c_adapter *adap);
-+unsigned int i2c_adapter_depth(struct i2c_adapter *adapter);
- 
- void i2c_parse_fw_timings(struct device *dev, struct i2c_timings *t, bool use_defaults);
- 
-@@ -935,15 +930,15 @@ int i2c_handle_smbus_host_notify(struct i2c_adapter *adap, unsigned short addr);
- 
- #if IS_ENABLED(CONFIG_OF)
- /* must call put_device() when done with returned i2c_client device */
--extern struct i2c_client *of_find_i2c_device_by_node(struct device_node *node);
-+struct i2c_client *of_find_i2c_device_by_node(struct device_node *node);
- 
- /* must call put_device() when done with returned i2c_adapter device */
--extern struct i2c_adapter *of_find_i2c_adapter_by_node(struct device_node *node);
-+struct i2c_adapter *of_find_i2c_adapter_by_node(struct device_node *node);
- 
- /* must call i2c_put_adapter() when done with returned i2c_adapter device */
- struct i2c_adapter *of_get_i2c_adapter_by_node(struct device_node *node);
- 
--extern const struct of_device_id
-+const struct of_device_id
- *i2c_of_match_device(const struct of_device_id *matches,
- 		     struct i2c_client *client);
- 
--- 
-2.24.0
+> A simpler fix would just be to use kobject_get_unless_zero() directly in
+> cdev_get(), but that looks odd in this specific case because chrdev_open()
+> holds the 'cdev_lock' and you'd hope that finding the kobject in the inode
+> with that held would mean that it's not being freed at the same time.
 
+When using kref_get_unless_zero() that implies that a lock is not being
+used and you are relying on the kobject only instead.
+
+But I thought we had a lock in play here, so why would changing this
+actually fix anything?
+
+This code hasn't changed in 15+ years, what suddenly changed that causes
+problems here?
+
+thanks,
+
+greg k-h
