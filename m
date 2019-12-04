@@ -2,52 +2,52 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543E8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 909ADC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A07F20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5C3206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483383;
-	bh=3pT4tzAQDoCWy1rARRfevvK6RgLlOffebbAAx/Ips6Y=;
+	s=default; t=1575483388;
+	bh=8rpbA/I/vOJX++ZcZmL05DkRyFxZUOMgDCs+tabDovA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UaRP1jfsnb+Oop6AaVX3cv1QpWRSiP2M0RVc9txCoSkMUl6fE1Ip8RQYozaSKgkwV
-	 GTKsbxVzmVcsHQZF4KOmvXLCrvbjd8NVr91BKm990uuBe8NMTiLjyoyKAWEtIj7bzn
-	 2Y7myEa8GNovLq2js9fEnKI02nzx7JUXN6CQVdOc=
+	b=FAabsTVTF0JkG7VbUdGmm01GSAYIrKbuWDYshc90RDlHXQ8tiOvmaFQI2y1tL2cd9
+	 1BqhCENvlYIEmTn5qQL1BrcW+kAKL2Zh763KCnaG0JogzC0wx2ZhhpmgASrxyk9l4I
+	 niT4Nd+PVtji4LyZFFK5DWkHRbxXmlfymq5pvPfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731177AbfLDSQW (ORCPT
+        id S1730274AbfLDSNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:16:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42344 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:13:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729434AbfLDSNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:13:18 -0500
+        id S1731353AbfLDSNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:13:01 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5503820862;
-        Wed,  4 Dec 2019 18:13:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B353620674;
+        Wed,  4 Dec 2019 18:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483197;
-        bh=3pT4tzAQDoCWy1rARRfevvK6RgLlOffebbAAx/Ips6Y=;
+        s=default; t=1575483181;
+        bh=8rpbA/I/vOJX++ZcZmL05DkRyFxZUOMgDCs+tabDovA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y26ukgRNIeclXz6jVGpjWFVc9jZnDUpJOGlJ++Eh+wvk8zEK9EfC6/jM59s1e/d9/
-         KYP2dEQkhtYdcKm5y9s7cbcxAOPpoZlyFS1pJhO/qC2UI3te5ZGtn+8SH0i3nembuG
-         pik7rcURSFNE2qME/+++gQemtMObVtK8u+Klck9E=
+        b=qxtoLOQYsZEEfzdJMyW5qo9N+kbdSmVza8qC2b/z56s9kTlAL/TTPojVvbOQEEzmF
+         84WdD7hkSMqiNPNgHdRxcvUx8gzy7jlguCgvM6Eu7pBlPr4lzGKZJHuVsg1FiD4GMz
+         IyW6w2SLgSdOJtdjfZErDJasvdEYdfLTm0IAhvdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 093/125] decnet: fix DN_IFREQ_SIZE
-Date:   Wed,  4 Dec 2019 18:56:38 +0100
-Message-Id: <20191204175324.726824069@linuxfoundation.org>
+Subject: [PATCH 4.9 040/125] net/mlx5: Continue driver initialization despite debugfs failure
+Date:   Wed,  4 Dec 2019 18:55:45 +0100
+Message-Id: <20191204175321.407733280@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -60,65 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit 50c2936634bcb1db78a8ca63249236810c11a80f ]
+[ Upstream commit 199fa087dc6b503baad06712716fac645a983e8a ]
 
-Digging through the ioctls with Al because of the previous
-patches, we found that on 64-bit decnet's dn_dev_ioctl()
-is wrong, because struct ifreq::ifr_ifru is actually 24
-bytes (not 16 as expected from struct sockaddr) due to the
-ifru_map and ifru_settings members.
+The failure to create debugfs entry is unpleasant event, but not enough
+to abort drier initialization. Align the mlx5_core code to debugfs design
+and continue execution whenever debugfs_create_dir() successes or not.
 
-Clearly, decnet expects the ioctl to be called with a struct
-like
-  struct ifreq_dn {
-    char ifr_name[IFNAMSIZ];
-    struct sockaddr_dn ifr_addr;
-  };
-
-since it does
-  struct ifreq *ifr = ...;
-  struct sockaddr_dn *sdn = (struct sockaddr_dn *)&ifr->ifr_addr;
-
-This means that DN_IFREQ_SIZE is too big for what it wants on
-64-bit, as it is
-  sizeof(struct ifreq) - sizeof(struct sockaddr) +
-  sizeof(struct sockaddr_dn)
-
-This assumes that sizeof(struct sockaddr) is the size of ifr_ifru
-but that isn't true.
-
-Fix this to use offsetof(struct ifreq, ifr_ifru).
-
-This indeed doesn't really matter much - the result is that we
-copy in/out 8 bytes more than we should on 64-bit platforms. In
-case the "struct ifreq_dn" lands just on the end of a page though
-it might lead to faults.
-
-As far as I can tell, it has been like this forever, so it seems
-very likely that nobody cares.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
+Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/decnet/dn_dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/main.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/net/decnet/dn_dev.c b/net/decnet/dn_dev.c
-index b2c26b081134a..80554e7e9a0f6 100644
---- a/net/decnet/dn_dev.c
-+++ b/net/decnet/dn_dev.c
-@@ -55,7 +55,7 @@
- #include <net/dn_neigh.h>
- #include <net/dn_fib.h>
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+index d676088512cf8..c9fb589690ee9 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+@@ -786,11 +786,9 @@ static int mlx5_pci_init(struct mlx5_core_dev *dev, struct mlx5_priv *priv)
  
--#define DN_IFREQ_SIZE (sizeof(struct ifreq) - sizeof(struct sockaddr) + sizeof(struct sockaddr_dn))
-+#define DN_IFREQ_SIZE (offsetof(struct ifreq, ifr_ifru) + sizeof(struct sockaddr_dn))
+ 	priv->numa_node = dev_to_node(&dev->pdev->dev);
  
- static char dn_rt_all_end_mcast[ETH_ALEN] = {0xAB,0x00,0x00,0x04,0x00,0x00};
- static char dn_rt_all_rt_mcast[ETH_ALEN]  = {0xAB,0x00,0x00,0x03,0x00,0x00};
+-	priv->dbg_root = debugfs_create_dir(dev_name(&pdev->dev), mlx5_debugfs_root);
+-	if (!priv->dbg_root) {
+-		dev_err(&pdev->dev, "Cannot create debugfs dir, aborting\n");
+-		return -ENOMEM;
+-	}
++	if (mlx5_debugfs_root)
++		priv->dbg_root =
++			debugfs_create_dir(pci_name(pdev), mlx5_debugfs_root);
+ 
+ 	err = mlx5_pci_enable_device(dev);
+ 	if (err) {
 -- 
 2.20.1
 
