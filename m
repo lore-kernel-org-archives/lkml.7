@@ -2,154 +2,130 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAECC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEA3C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFCC206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16442073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="aLhgRbbK"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="UAi+kAvz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbfLDP5V (ORCPT
+        id S1728528AbfLDP7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:57:21 -0500
-Received: from mail-eopbgr790042.outbound.protection.outlook.com ([40.107.79.42]:23589
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727008AbfLDP5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:57:21 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FK+9OuQo9dgLfVhWdzuMK/ZnuzzQuakph2Ck5vODusXKejxHN05cDQ4aNfcdnVN0c0mK3VW7SVkxn9JJi5tIWZIDSSVdm71gJFkNQny6s7zJ9KxseKitM/PVwP2x2Dma43W/mMVVvMUl9two5ZvYWfoqeBwZVc5ZDK5xD6c5ywXg95oip6CiobUfS0AEjgadJpg9TVJK/Lq/0GYxhbH2v0L0OFs+DdWjtNGOBKipqKn9s0Es6vanLzsUc4KMHVHFtcpB+RPxIbc3/p6BJQbHwEnfkhmtGDM4noilU43JxAn3/h2M6L9DybcM2DZWCUsI7Rj1Lp7of7PJR1hpL75W9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hbfMhQG78o8HkyaGhiYpQ6euyVURvLChY/j7nT0OEpc=;
- b=ffdd9muenqWj1nFGqrUHchSc2hO5soXxrEDGj7yTD3o6Sw5bv3vfqUOJoejbYM0r2vk8w3W8OTMcZ+j733U/ZF3ip3Ia59pBcm32ME46PqGWvlIHgLT2o5Ivh1WapxBBbQshIAc8ptXeFUYtovi6q0hupYciQX7UzGmh7aiSmFzneHuSVyOklgrJYgdxSfBujzC6HBuV+lpzY2v1QMpv7D/81gVMjrigFlz4fCvF6P+PhdmwyGeiGJhMvksvUqB2xxZIlrRnKWodT5/ePnCGzXg3TPpREM5h7GdbPlHxjHT3zataDAJZo+PHR7jsfMskt4fMe7WBIQHJtdgeAXbPWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 4 Dec 2019 10:59:18 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40844 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728319AbfLDP7S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 10:59:18 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t14so263991wmi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:59:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hbfMhQG78o8HkyaGhiYpQ6euyVURvLChY/j7nT0OEpc=;
- b=aLhgRbbKdYfiZctL3/6KsG9VdeMcfrv4n8k7FsHthSVoRcr20Lfy9VeTTf61fG5iJQ3nFT1l2N9DvnR0aIVqZ1ycIETjXnBT5YHDcbOgZgm61n3uenZyE7AIDpkl79y8jD2FYyiQCI/pZtgkYpGlgHR1IzulbKnHycbLZH8GKRE=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
- DM6PR12MB3257.namprd12.prod.outlook.com (20.179.105.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.19; Wed, 4 Dec 2019 15:57:18 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::dd0c:8e53:4913:8ef4]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::dd0c:8e53:4913:8ef4%5]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
- 15:57:18 +0000
-Subject: Re: [PATCH v2] KVM: x86: use CPUID to locate host page table reserved
- bits
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     sean.j.christopherson@intel.com, stable@vger.kernel.org
-References: <1575474037-7903-1-git-send-email-pbonzini@redhat.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <8f7e3e87-15dc-2269-f5ee-c3155f91983c@amd.com>
-Date:   Wed, 4 Dec 2019 09:57:16 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-In-Reply-To: <1575474037-7903-1-git-send-email-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR21CA0014.namprd21.prod.outlook.com
- (2603:10b6:5:174::24) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:15e::26)
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gcnVUdR29UxwFfF+4peEvbJCZXVfquVpbSzjGOYyB/k=;
+        b=UAi+kAvzNZUpXADzXjfUk7rcpjuV/aD1lCp03zOGH9LgLUmZ7/LbHlRp/6d9czpLmJ
+         Kv3cPU87viUWR2hpwwi8eYPFTl3PKXjBZ1v3J81LFege/Gf4MtqHLa14KTf3qOEBAKVi
+         g3f6RYLR5UOuFxYbLWtYCgsccZsXwUOvKd/V7ByX+jHEnw5/HOWklHiWKeiuIk+4PFXg
+         VeYZamORZOtN0iOq8Eu7ubLrhPxqjMWgYOocEe8gtCnco1vBlhmDbpO9oBhRlKTYD8PD
+         pwXCY3bNvAkwtM/9ETOdsWdEB83FzEV+a/EXND4XtOVc4Bryvr4rj6085cwrVYshnCzi
+         jRHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gcnVUdR29UxwFfF+4peEvbJCZXVfquVpbSzjGOYyB/k=;
+        b=BUPRMgniLlK0Po7nNyrZNIwbSypIgdJHBniIllXv3N72Z7OoLBenoCamT1BJe/+LSZ
+         EjJ9bHKMoBfIXXEt9tnyprt8aucN3ScFfR9oEp3VrMCyX111JV72/mwyf2Cjg7gRCg4H
+         mSRCinySHcRCeatGxLENxMJYcjNNX7GaZHeyANmV6BBMxi/bD9uKL5jA8SGKHjs3GLd5
+         nEX5OB/V9ah1pcF+NJnisEv9kB2HgZ7cLQTNS5dyiaWcu4mP6STXA9coayqIcWWFIjX4
+         0cB/gfk9pu/m682ktRGmFclPdGd/xLhV6aypC5EWlZDJz9bZKpIJ7yyot0wIvH4LVFtH
+         e5vw==
+X-Gm-Message-State: APjAAAUrUlbyLEMCj97r7Q2fxj6ihPPaugf2Ly/FpIsbxezuEW4gUB8Y
+        ESF8hTtaGlBpWtEFYKQuq6Xq8Q==
+X-Google-Smtp-Source: APXvYqzzsN13FsCBZ3Ye6wWBQjJCUsWc1ne2GPnkOQarVzbskWk3iFCXxPFVYGB07mj+tp3tYNmL8Q==
+X-Received: by 2002:a1c:4d03:: with SMTP id o3mr201872wmh.164.1575475156340;
+        Wed, 04 Dec 2019 07:59:16 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id u18sm8640508wrt.26.2019.12.04.07.59.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 07:59:15 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 00/11] gpiolib: add an ioctl() for monitoring line status changes
+Date:   Wed,  4 Dec 2019 16:59:03 +0100
+Message-Id: <20191204155912.17590-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9a79e736-6e92-4ab0-82ea-08d778d2a38d
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3257:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3257C3B919C13B03D90CDDCBEC5D0@DM6PR12MB3257.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0241D5F98C
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(346002)(366004)(396003)(189003)(199004)(66476007)(66556008)(31696002)(6116002)(230700001)(8936002)(6512007)(3846002)(31686004)(25786009)(36756003)(4326008)(14454004)(5660300002)(6246003)(2906002)(478600001)(99286004)(81156014)(26005)(6506007)(2616005)(23676004)(53546011)(81166006)(186003)(229853002)(305945005)(50466002)(66946007)(65956001)(58126008)(8676002)(6436002)(7736002)(6486002)(52116002)(76176011)(86362001)(11346002)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3257;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FOs8OvRqZnhTn4XQ5rCJy8PUFFmWD7xMVFxFz9b3oiP1WdSTX53VTiqcMpjnL6CNHMLub5+cGp6TtEwuamGtoMZgJmnFDQYAck4KP8EENxjktsvR6jsAEdB7+mgpCiW2n/fo1loPMx4F3DPUabIGGGos44n1ILAEb3eRpxzrLlXJ+YQtjc1TG8LGeHkgHGiG4srvt81hZf+uaJPqKI9QvqLWxaRAsmH68v4balpmoaF3DN5SDNdGfo/OVrDWLo//9/YMlPxxpZX6UmgY2LCY8vL1vRmDdqciu/xwmC1wSZLLR3Wno6fDmjdIkrPRHscsOHeNdDIXkOl4BXfo0Hiktus6C4W/Axd4y8ZsyLJibm8FUyFWVlb/TZltaYacnAoJpsOlxu8x5qLrKuJMOS5lSGTrVN/LO4P2hi1rYfbkbiJ/3UZs29wtYSbKEoyz0xlm
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a79e736-6e92-4ab0-82ea-08d778d2a38d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 15:57:18.0768
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: F95ax/b/2ti/O4VU/eyRFiqem7n/ovS48pz2+29kUTNaM0aELmOnXsri27YZs2JdbPO3XssMF6Tr7ERsGMErHw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3257
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/4/19 9:40 AM, Paolo Bonzini wrote:
-> The comment in kvm_get_shadow_phys_bits refers to MKTME, but the same is actually
-> true of SME and SEV.  Just use CPUID[0x8000_0008].EAX[7:0] unconditionally if
-> available, it is simplest and works even if memory is not encrypted.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This isn't correct for AMD. The reduction in physical addressing is
-correct. You can't set, e.g. bit 45, in the nested page table, because
-that will be considered a reserved bit and generate an NPF. When memory
-encryption is enabled today, bit 47 is the encryption indicator bit and
-bits 46:43 must be zero or else an NPF is generated. The hardware uses
-these bits internally based on the whether running as the hypervisor or
-based on the ASID of the guest.
+When discussing the recent user-space changes with Kent and while working
+on dbus API for libgpiod I noticed that we really don't have any way of
+keeping the line info synchronized between the kernel and user-space
+processes. We can of course periodically re-read the line information or
+even do it every time we want to read a property but this isn't optimal.
 
-Thanks,
-Tom
+This series adds a new ioctl() that allows user-space to set up a watch on
+the GPIO chardev file-descriptor which can then be polled for events
+emitted by the kernel when the line is requested, released or its status
+changed. This of course doesn't require the line to be requested. Multiple
+user-space processes can watch the same lines.
 
-> 
-> Cc: stable@vger.kernel.org
-> Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c | 20 ++++++++++++--------
->  1 file changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 6f92b40d798c..1e4ee4f8de5f 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -538,16 +538,20 @@ void kvm_mmu_set_mask_ptes(u64 user_mask, u64 accessed_mask,
->  static u8 kvm_get_shadow_phys_bits(void)
->  {
->  	/*
-> -	 * boot_cpu_data.x86_phys_bits is reduced when MKTME is detected
-> -	 * in CPU detection code, but MKTME treats those reduced bits as
-> -	 * 'keyID' thus they are not reserved bits. Therefore for MKTME
-> -	 * we should still return physical address bits reported by CPUID.
-> +	 * boot_cpu_data.x86_phys_bits is reduced when MKTME or SME are detected
-> +	 * in CPU detection code, but the processor treats those reduced bits as
-> +	 * 'keyID' thus they are not reserved bits. Therefore KVM needs to look at
-> +	 * the physical address bits reported by CPUID.
->  	 */
-> -	if (!boot_cpu_has(X86_FEATURE_TME) ||
-> -	    WARN_ON_ONCE(boot_cpu_data.extended_cpuid_level < 0x80000008))
-> -		return boot_cpu_data.x86_phys_bits;
-> +	if (likely(boot_cpu_data.extended_cpuid_level >= 0x80000008))
-> +		return cpuid_eax(0x80000008) & 0xff;
->  
-> -	return cpuid_eax(0x80000008) & 0xff;
-> +	/*
-> +	 * Quite weird to have VMX or SVM but not MAXPHYADDR; probably a VM with
-> +	 * custom CPUID.  Proceed with whatever the kernel found since these features
-> +	 * aren't virtualizable (SME/SEV also require CPUIDs higher than 0x80000008).
-> +	 */
-> +	return boot_cpu_data.x86_phys_bits;
->  }
->  
->  static void kvm_mmu_reset_all_pte_masks(void)
-> 
+The first couple patches just fix some issues I noticed when implementing
+the new interface. Patch 10/11 provides the actual ioctl() implementation
+while patch 11/11 adds a simple user-space program to tools that can be
+used to watch the line info changes.
+
+v1: https://lkml.org/lkml/2019/11/27/327
+
+v1 -> v2:
+- rework the main patch of the series: re-use the existing file-descriptor
+  associated with an open character device
+- add a patch adding a debug message when the line event kfifo is full and
+  we're discarding another event
+- rework the locking mechanism for lineevent kfifo: reuse the spinlock
+  from the waitqueue structure
+- other minor changes
+
+Bartosz Golaszewski (11):
+  gpiolib: use 'unsigned int' instead of 'unsigned' in gpio_set_config()
+  gpiolib: have a single place of calling set_config()
+  gpiolib: convert the type of hwnum to unsigned int in
+    gpiochip_get_desc()
+  gpiolib: use gpiochip_get_desc() in linehandle_create()
+  gpiolib: use gpiochip_get_desc() in lineevent_create()
+  gpiolib: use gpiochip_get_desc() in gpio_ioctl()
+  gpiolib: rework the locking mechanism for lineevent kfifo
+  gpiolib: emit a debug message when adding events to a full kfifo
+  gpiolib: provide a dedicated function for setting lineinfo
+  gpiolib: add new ioctl() for monitoring changes in line info
+  tools: gpio: implement gpio-watch
+
+ drivers/gpio/gpiolib.c      | 378 ++++++++++++++++++++++++++----------
+ drivers/gpio/gpiolib.h      |   5 +-
+ include/linux/gpio/driver.h |   3 +-
+ include/uapi/linux/gpio.h   |  24 +++
+ tools/gpio/.gitignore       |   1 +
+ tools/gpio/Build            |   1 +
+ tools/gpio/Makefile         |  11 +-
+ tools/gpio/gpio-watch.c     | 112 +++++++++++
+ 8 files changed, 434 insertions(+), 101 deletions(-)
+ create mode 100644 tools/gpio/gpio-watch.c
+
+-- 
+2.23.0
+
