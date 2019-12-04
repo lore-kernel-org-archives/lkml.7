@@ -2,108 +2,77 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E52A6C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 02:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921DAC43215
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 02:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B32DD2068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 02:33:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h7d2D8DD"
+	by mail.kernel.org (Postfix) with ESMTP id 6FDAC20640
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 02:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfLDCdS (ORCPT
+        id S1726823AbfLDChU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 21:33:18 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:49826 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfLDCdS (ORCPT
+        Tue, 3 Dec 2019 21:37:20 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:52842 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfLDChU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 21:33:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KEvl8E2uqYzHXXBcWxExEanjkQOayE/IO/ACRjvE+vk=; b=h7d2D8DDkM4aY5V970X2F32Wt
-        XYLmNR6BcaCV/zpo0sxeqEN3Ogl0N9JjO4hS7WplSX8z9qhvTYS2adrRqOQym2ZWt+zMfHD7nHWGM
-        1FQd4U3M44atyYGl36B3+tJXwbHjTbdF7Qezv41U7P1+hejdPlu2TZJ7+ktsRczuJFwHP8zy2wlGq
-        gdiEU3FG3mOD38i35RvphKQrEcdS71RMkzxF9VA+RAdFD5a0GwliNP/l4UWB6ZBrtDD0cm9wXsO4s
-        i/OKq3AxhgY6HyJ/oszTumKybPWYqxKc4zkr7xSgBxjpkDLWHimU5Q3zTg9O6WgTsDrtISrfU3UOs
-        Z+76RA0eQ==;
-Received: from [2601:1c0:6280:3f0::5a22]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1icKTT-0001ej-Ge; Wed, 04 Dec 2019 02:33:13 +0000
-Subject: Re: [PATCH v3 1/2] sched/numa: introduce per-cgroup NUMA locality
- info
-To:     =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
- <2398e8a4-a3ad-3660-3aba-298730d209b2@linux.alibaba.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d5f109b8-be26-c025-1d6d-ec3b3354c4b1@infradead.org>
-Date:   Tue, 3 Dec 2019 18:33:06 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 3 Dec 2019 21:37:20 -0500
+Received: from localhost.localdomain (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 0174FCEC92;
+        Wed,  4 Dec 2019 03:46:27 +0100 (CET)
+From:   Marcel Holtmann <marcel@holtmann.org>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Fabian Henneke <fabian.henneke@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] hidraw: Fix returning EPOLLOUT from hidraw_poll
+Date:   Wed,  4 Dec 2019 03:37:13 +0100
+Message-Id: <20191204023713.3983-1-marcel@holtmann.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <2398e8a4-a3ad-3660-3aba-298730d209b2@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/2/19 10:00 PM, 王贇 wrote:
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 4d8d145c41d2..9c086f716a6d 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -817,6 +817,15 @@ config NUMA_BALANCING_DEFAULT_ENABLED
->  	  If set, automatic NUMA balancing will be enabled if running on a NUMA
->  	  machine.
-> 
-> +config CGROUP_NUMA_LOCALITY
-> +	bool "The per-cgroup NUMA Locality"
+When polling a connected /dev/hidrawX device, it is useful to get the
+EPOLLOUT when writing is possible. Since writing is possible as soon as
+the device is connected, always return it.
 
-I would drop "The".
+Right now EPOLLOUT is only returned when there are also input reports
+are available. This works if devices start sending reports when
+connected, but some HID devices might need an output report first before
+sending any input reports. This change will allow using EPOLLOUT here as
+well.
 
-> +	default n
-> +	depends on CGROUP_SCHED && NUMA_BALANCING
-> +	help
-> +	  This option enable the collection of per-cgroup NUMA locality info,
+Fixes: 378b80370aa1 ("hidraw: Return EPOLLOUT from hidraw_poll")
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: stable@vger.kernel.org
+---
+ drivers/hid/hidraw.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-	              enables
-
-> +	  to tell whether NUMA Balancing is working well for a particular
-> +	  workload.
-> +
->  menuconfig CGROUPS
->  	bool "Control Group support"
->  	select KERNFS
-
-
+diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
+index bbc6ec1aa5cb..c25e95c19cad 100644
+--- a/drivers/hid/hidraw.c
++++ b/drivers/hid/hidraw.c
+@@ -252,10 +252,10 @@ static __poll_t hidraw_poll(struct file *file, poll_table *wait)
+ 
+ 	poll_wait(file, &list->hidraw->wait, wait);
+ 	if (list->head != list->tail)
+-		return EPOLLIN | EPOLLRDNORM | EPOLLOUT;
++		return EPOLLIN | EPOLLRDNORM;
+ 	if (!list->hidraw->exist)
+ 		return EPOLLERR | EPOLLHUP;
+-	return 0;
++	return EPOLLOUT | EPOLLWRNORM;
+ }
+ 
+ static int hidraw_open(struct inode *inode, struct file *file)
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+2.23.0
+
