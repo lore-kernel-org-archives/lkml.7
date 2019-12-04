@@ -2,169 +2,135 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F8EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72098C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C47D320661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35550206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:56:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hlkiDoNO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LXRQoSCX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbfLDSxW (ORCPT
+        id S1728739AbfLDS4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:53:22 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24761 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728664AbfLDSxU (ORCPT
+        Wed, 4 Dec 2019 13:56:30 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44528 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728153AbfLDS43 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:53:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575485598;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ylffdwtbjoTKiYnhI88q00B3s6s1C9NrFz3gX3cTcXw=;
-        b=hlkiDoNOwEGo/9xlSp7uh/a8PITM4qLE30otqZF5uy3y+HaqKClB8vG621a/CSzlBx+v/2
-        rG7bUFZZWOn6J9tZgiI6w7c5hwf6sr/TXwNRkR1mDpi3XYw7b4mSNEtpwI3N0S14JOQUd2
-        SwMm1dYAepYgriRabBl2LL4w9RJm7t0=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-74-eVLQ74X4N2KxtGvfCetV1g-1; Wed, 04 Dec 2019 13:53:15 -0500
-Received: by mail-qv1-f72.google.com with SMTP id g15so438298qvk.11
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:53:15 -0800 (PST)
+        Wed, 4 Dec 2019 13:56:29 -0500
+Received: by mail-pg1-f193.google.com with SMTP id x7so278508pgl.11
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:56:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:subject:in-reply-to:cc:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GrTDw7KQHR9Zr6li1nTe2wl4QZFVN56MIBJeTe4Eo8k=;
+        b=LXRQoSCXDDzGjopeIkIgLn0pJfsK8cqywHU+y97e1KdZyOyYx/gPKaZyxcIpuPXupx
+         ymgBf/yz1Ar9s52nRWKEQViqQDQDRnLWuNuPEMvYiSuJ5ltwTer2wA11zDeygYopmzWC
+         AT0a6zOZ5KJ4z90fM1BSRk4BPfgPxlJZtAn7yfhY8qnnYlP69/lnHC/NYnb5RIn5zk6p
+         RhpaRjpQyzFafVefqQz1v0JP4ooQTefm8NvFYKqzPrpvYSsnnDyUyqHUGDyBUGvbbNRO
+         94IEDAIs9KGpGB1STeLpNZvMzz73MVed+6HZTj/aBiDzpCydD/dbjsiPvi+mpdapgbe7
+         yfsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QE7M96G6hP/Dieos/ar87q4l5wVk9fT08cIHBcKEU2o=;
-        b=HeeIfdTYHizo2wwPWJEg8X6NALAYmd3h8f0pslAeL2wiTdl0NfRfpNE2kJQJ8LMAAm
-         Ah8JTqhGdKG0Cy9juIjgsu7NudesgvXTiQxSx1XKM2ieygwA1UdSfl414/xs4lIYQgPE
-         1XMpP5MHdADROLMQp1ucIRl9kNlyyXRwO5ZFk9oejkNe0+b5efJqkV9hkDzMDtHwrMXe
-         Y9I1vDcqIoBlFpOaQJPbR0dS42Yl4kpHFqawnLohxz3Q93Pzl0p9wSrWt4iD89aStBCt
-         XmJeOtdMfkNbhSTJYOBVS2SvdTM+z28n3lhesKuOMCEnI0TXQjAiRQyfC/dMolpgPuKE
-         wwSQ==
-X-Gm-Message-State: APjAAAXro32M2ubBiP4larDz5EJsBcA4fJwmSneyC/dFDbQt3OEr/59d
-        kYX9m8oMlspA1ZBrszPAWpGBDrnoKCSK9owjAIdB7+C08JhotawP5a8IJZwuJx9PHWsPpiejQnp
-        wYNIAkoQ9N41w+38pmOWUhQLi
-X-Received: by 2002:a0c:f792:: with SMTP id s18mr4136670qvn.118.1575485595122;
-        Wed, 04 Dec 2019 10:53:15 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzvwYYBHj/QDu51rlcQf/1bgxIm5FMgSWJmtAUSnpJ5yS/d77kuSitTNjjGdnfb0E7G4R3ekw==
-X-Received: by 2002:a0c:f792:: with SMTP id s18mr4136654qvn.118.1575485594857;
-        Wed, 04 Dec 2019 10:53:14 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id z6sm4029638qkz.101.2019.12.04.10.53.13
+        h=x-gm-message-state:date:from:subject:in-reply-to:cc:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=GrTDw7KQHR9Zr6li1nTe2wl4QZFVN56MIBJeTe4Eo8k=;
+        b=pIdMR/dNbUzq63OhXYYDZB/nc4c+lY08dD+zr6ssM6R7UdPaJPHOxprRp6bx1TbKVQ
+         0HGPBycFUpQyt6zOpylCUY7HuKTpCrX/uNP7iVewwvbtgagFKCn5GVl4ECq/MbgeduwD
+         F5YMJ3fKANhbpmzUHkEBq8YgDcJDBUMIdTg0NaHJyJyiQs2AsKlG9LMVhm3vIs4vyt/k
+         MBBeyq5mzAbbueOo2tKvgNJ7xN1/e0EALX9flpLQ/UHRDtJ46h2TQXz5n5n6QAAIVS19
+         90OT1dVYJdQ1j33ewCCZ1zx2vhB2s/gGwkmOnR13E64xNk8O03WswpvX0+EZNfmzU3z/
+         t4Qw==
+X-Gm-Message-State: APjAAAUAqV5rGuR/t38QzQZvRPUQohHxTET0aWzPqRJro57mzj8VqWdf
+        j5+PwmihVEDdc761a7G2cJNH4n0Dw3s=
+X-Google-Smtp-Source: APXvYqzldcvtOJEAnDxB1swtWUECL8KXNDu21UIbDRV+iIzG32ZNOnlVsAiwtPDsWhDU9jnDN64qzw==
+X-Received: by 2002:a63:ca4d:: with SMTP id o13mr5025430pgi.360.1575485788875;
+        Wed, 04 Dec 2019 10:56:28 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:7f69:cd98:a2a2:a03d])
+        by smtp.gmail.com with ESMTPSA id f13sm9160328pfa.57.2019.12.04.10.56.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 10:53:14 -0800 (PST)
-Date:   Wed, 4 Dec 2019 13:53:13 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Nitesh Narayan Lal <nitesh@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 6/6] KVM: X86: Conert the last users of "shorthand =
- 0" to use macros
-Message-ID: <20191204185313.GB19939@xz-x1>
-References: <20191203165903.22917-1-peterx@redhat.com>
- <20191203165903.22917-7-peterx@redhat.com>
- <875ziwt6h0.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-In-Reply-To: <875ziwt6h0.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-MC-Unique: eVLQ74X4N2KxtGvfCetV1g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+        Wed, 04 Dec 2019 10:56:28 -0800 (PST)
+Date:   Wed, 04 Dec 2019 10:56:28 -0800 (PST)
+X-Google-Original-Date: Wed, 04 Dec 2019 10:56:12 PST (-0800)
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
+Subject:     Re: [PATCH v5 0/4] Add support for SBI v0.2 
+In-Reply-To: <20191126190503.19303-1-atish.patra@wdc.com>
+CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
+        aou@eecs.berkeley.edu, alexios.zavras@intel.com,
+        anup@brainfault.org, linux-riscv@lists.infradead.org,
+        han_mao@c-sky.com, rppt@linux.ibm.com,
+        Paul Walmsley <paul.walmsley@sifive.com>, tglx@linutronix.de
+To:     Atish Patra <Atish.Patra@wdc.com>
+Message-ID: <mhng-fc56738d-7643-4125-b6f7-486afb948a53@palmerdabbelt-glaptop>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 05:12:43PM +0100, Vitaly Kuznetsov wrote:
-> Peter Xu <peterx@redhat.com> writes:
->=20
-> > Change the last users of "shorthand =3D 0" to use APIC_DEST_NOSHORT.
-> >
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > ---
-> >  arch/x86/kvm/ioapic.c   | 4 ++--
-> >  arch/x86/kvm/irq_comm.c | 2 +-
-> >  arch/x86/kvm/x86.c      | 2 +-
-> >  3 files changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-> > index f53daeaaeb37..77538fd77dc2 100644
-> > --- a/arch/x86/kvm/ioapic.c
-> > +++ b/arch/x86/kvm/ioapic.c
-> > @@ -330,7 +330,7 @@ static void ioapic_write_indirect(struct kvm_ioapic=
- *ioapic, u32 val)
-> >  =09=09if (e->fields.delivery_mode =3D=3D APIC_DM_FIXED) {
-> >  =09=09=09struct kvm_lapic_irq irq;
-> > =20
-> > -=09=09=09irq.shorthand =3D 0;
-> > +=09=09=09irq.shorthand =3D APIC_DEST_NOSHORT;
-> >  =09=09=09irq.vector =3D e->fields.vector;
-> >  =09=09=09irq.delivery_mode =3D e->fields.delivery_mode << 8;
-> >  =09=09=09irq.dest_id =3D e->fields.dest_id;
-> > @@ -379,7 +379,7 @@ static int ioapic_service(struct kvm_ioapic *ioapic=
-, int irq, bool line_status)
-> >  =09irqe.trig_mode =3D entry->fields.trig_mode;
-> >  =09irqe.delivery_mode =3D entry->fields.delivery_mode << 8;
-> >  =09irqe.level =3D 1;
-> > -=09irqe.shorthand =3D 0;
-> > +=09irqe.shorthand =3D APIC_DEST_NOSHORT;
-> >  =09irqe.msi_redir_hint =3D false;
-> > =20
-> >  =09if (irqe.trig_mode =3D=3D IOAPIC_EDGE_TRIG)
-> > diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-> > index 7d083f71fc8e..9d711c2451c7 100644
-> > --- a/arch/x86/kvm/irq_comm.c
-> > +++ b/arch/x86/kvm/irq_comm.c
-> > @@ -121,7 +121,7 @@ void kvm_set_msi_irq(struct kvm *kvm, struct kvm_ke=
-rnel_irq_routing_entry *e,
-> >  =09irq->msi_redir_hint =3D ((e->msi.address_lo
-> >  =09=09& MSI_ADDR_REDIRECTION_LOWPRI) > 0);
-> >  =09irq->level =3D 1;
-> > -=09irq->shorthand =3D 0;
-> > +=09irq->shorthand =3D APIC_DEST_NOSHORT;
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_set_msi_irq);
-> > =20
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 3b00d662dc14..f6d778436e15 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -7355,7 +7355,7 @@ static void kvm_pv_kick_cpu_op(struct kvm *kvm, u=
-nsigned long flags, int apicid)
-> >  {
-> >  =09struct kvm_lapic_irq lapic_irq;
-> > =20
-> > -=09lapic_irq.shorthand =3D 0;
-> > +=09lapic_irq.shorthand =3D APIC_DEST_NOSHORT;
-> >  =09lapic_irq.dest_mode =3D APIC_DEST_PHYSICAL;
-> >  =09lapic_irq.level =3D 0;
-> >  =09lapic_irq.dest_id =3D apicid;
->=20
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->=20
-> And, while on it, and if you're not yet tired I just noticed that
-> kvm_apic_match_dest()'s parameter is called 'short_hand' while
-> everywhere else we use 'shorthand'. Value the consistency we should :-)
+On Tue, 26 Nov 2019 11:04:59 PST (-0800), Atish Patra wrote:
+> The Supervisor Binary Interface(SBI) specification[1] now defines a
+> base extension that provides extendability to add future extensions
+> while maintaining backward compatibility with previous versions.
+> The new version is defined as 0.2 and older version is marked as 0.1.
+>
+> This series adds support v0.2 and a unified calling convention
+> implementation between 0.1 and 0.2. It also add other SBI v0.2
+> functionality defined in [2]. The base support for SBI v0.2 is already
+> available in OpenSBI v0.5. This series needs additional patches[3] in
+> OpenSBI.
+>
+> Tested on both BBL, OpenSBI with/without the above patch series.
+>
+> [1] https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
+> [2] https://github.com/riscv/riscv-sbi-doc/pull/27
+> [3] http://lists.infradead.org/pipermail/opensbi/2019-November/000738.html
+>
+> Changes from v4->v5
+> 1. Fixed few minor comments related to static & inline.
+> 2. Make sure that every patch is boot tested individually.
+>
+> Changes from v3->v4.
+> 1. Rebased on top of for-next.
+> 2. Fixed issuses with checkpatch --strict.
+> 3. Unfied all IPI/fence related functions.
+> 4. Added Hfence related SBI calls.
+> 5. Moved to function pointer based boot time switch between v01 and v02 calls.
+> Changes from v2->v3.
+> 1. Moved v0.1 extensions to a new config.
+> 2. Added support for relacement extensions of v0.1 extensions.
+>
+> Changes from v1->v2
+> 1. Removed the legacy calling convention.
+> 2. Moved all SBI related calls to sbi.c.
+> 3. Moved all SBI related macros to uapi.
+>
+> Atish Patra (4):
+> RISC-V: Mark existing SBI as 0.1 SBI.
+> RISC-V: Add basic support for SBI v0.2
+> RISC-V: Introduce a new config for SBI v0.1
+> RISC-V: Implement new SBI v0.2 extensions
+>
+> arch/riscv/Kconfig           |   6 +
+> arch/riscv/include/asm/sbi.h | 177 +++++++-----
+> arch/riscv/kernel/Makefile   |   1 +
+> arch/riscv/kernel/sbi.c      | 547 ++++++++++++++++++++++++++++++++++-
+> arch/riscv/kernel/setup.c    |   2 +
+> 5 files changed, 660 insertions(+), 73 deletions(-)
 
-I'll aquash your suggested change into previous patch ("KVM: X86: Fix
-callers of kvm_apic_match_dest() to use correct macros") and keep your
-r-b for that, otherwise I'm afraid the change could be too trivial to
-stand as itself..
-
-Thanks,
-
---=20
-Peter Xu
-
+There's a few issues with the implementation, but I think the bigger question
+is what do to with the spec.  The SBI stuff sort of snuck in to Linux without
+actually having a proper spec written down, so I'm happy to just say "let's
+take the 0.2 stuff as soon as it's frozen" as we're at least in a better spot
+than with the legacy stuff.  Nominally we'd need to wait for a ratified
+specification here, which probably means a 1.0 specification, but that's a way
+off and I don't want to just sit around on the legacy stuff.
