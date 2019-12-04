@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A164C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 450D0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1074820675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C8020675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482386;
-	bh=ZqhmHdJec/fQf7pPzyr/UMoumkzN9Rp2eK3BlGc4qY0=;
+	s=default; t=1575482389;
+	bh=JaxSkdQU9drF9NAFcq84ecGj6j1VMqzal0aXjbJtgIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bNjeucNLPwCjqs/4QLSh9wfb0hksyQVKOE3qbaDbmeOtuc5IT2GnGmGl4nkMj1kyJ
-	 5BRn0pwNsNC8Q46zMLgB5k7dIlHfeoEjyCgdX4hyt2ibU4sRC6PR03gz3qzyNIujNq
-	 NjZ5XeltZHBqrZCZsNsBpWgBCtiAz5160o/bcT8U=
+	b=NMFGLPmiqfS+w8wAPEDvrPsNdEoOOrJ5sgTcTzyqIyCNNuSAbbdU1cMS4sSozByUm
+	 TpNTbFa1Ec9s1RGrAXYNUs698yI4FLHF9mQW1PHkKIQ1BuBVgG3m6NsiS3fsNtFhrX
+	 X4IYvi+Y3dPuRo2U3wJ97beI6H1LIoHZ8BCgOYpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbfLDR7o (ORCPT
+        id S1729193AbfLDR7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:59:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36560 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 12:59:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728598AbfLDR7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:59:40 -0500
+        id S1728598AbfLDR7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:59:46 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 809F520863;
-        Wed,  4 Dec 2019 17:59:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E1BA20863;
+        Wed,  4 Dec 2019 17:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482380;
-        bh=ZqhmHdJec/fQf7pPzyr/UMoumkzN9Rp2eK3BlGc4qY0=;
+        s=default; t=1575482384;
+        bh=JaxSkdQU9drF9NAFcq84ecGj6j1VMqzal0aXjbJtgIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LdDylDUHz6d7hcBZYEPHK+VIA9ht4eOBCxI2/I7btbNw55/RrKcvez696TnkJJYVL
-         dGJPNKzu13OzTlc1tLxwQJT2akKHSl4KEwPA59uVmPMHXo6f8R+GZNJi0PNyd9xXB3
-         y/bKiUzWSxJwNHCVbVd8EcV4HcW0rm+cUTD9/LLw=
+        b=N7rDtwbQbk+vCcHlMvJFdFtg+Oej3vYCe4hfcqf6DBcaQsy4l0v2WJXu+3UUUFpgy
+         PviuqnUG8ppoJ4DChRjxgNjN2n1I4MyWx14g6PZvCvoAIUCWqjvOuBVKTpGmWjOAEk
+         Mx8ShVejGKFyTrgDNc1VJ0928M8OM15qpVaL9V7s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 64/92] net/core/neighbour: tell kmemleak about hash tables
-Date:   Wed,  4 Dec 2019 18:50:04 +0100
-Message-Id: <20191204174334.204047938@linuxfoundation.org>
+Subject: [PATCH 4.4 66/92] sfc: suppress duplicate nvmem partition types in efx_ef10_mtd_probe
+Date:   Wed,  4 Dec 2019 18:50:06 +0100
+Message-Id: <20191204174334.308725761@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -61,81 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Edward Cree <ecree@solarflare.com>
 
-[ Upstream commit 85704cb8dcfd88d351bfc87faaeba1c8214f3177 ]
+[ Upstream commit 3366463513f544c12c6b88c13da4462ee9e7a1a1 ]
 
-This fixes false-positive kmemleak reports about leaked neighbour entries:
+Use a bitmap to keep track of which partition types we've already seen;
+ for duplicates, return -EEXIST from efx_ef10_mtd_probe_partition() and
+ thus skip adding that partition.
+Duplicate partitions occur because of the A/B backup scheme used by newer
+ sfc NICs.  Prior to this patch they cause sysfs_warn_dup errors because
+ they have the same name, causing us not to expose any MTDs at all.
 
-unreferenced object 0xffff8885c6e4d0a8 (size 1024):
-  comm "softirq", pid 0, jiffies 4294922664 (age 167640.804s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 20 2c f3 83 ff ff ff ff  ........ ,......
-    08 c0 ef 5f 84 88 ff ff 01 8c 7d 02 01 00 00 00  ..._......}.....
-  backtrace:
-    [<00000000748509fe>] ip6_finish_output2+0x887/0x1e40
-    [<0000000036d7a0d8>] ip6_output+0x1ba/0x600
-    [<0000000027ea7dba>] ip6_send_skb+0x92/0x2f0
-    [<00000000d6e2111d>] udp_v6_send_skb.isra.24+0x680/0x15e0
-    [<000000000668a8be>] udpv6_sendmsg+0x18c9/0x27a0
-    [<000000004bd5fa90>] sock_sendmsg+0xb3/0xf0
-    [<000000008227b29f>] ___sys_sendmsg+0x745/0x8f0
-    [<000000008698009d>] __sys_sendmsg+0xde/0x170
-    [<00000000889dacf1>] do_syscall_64+0x9b/0x400
-    [<0000000081cdb353>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<000000005767ed39>] 0xffffffffffffffff
-
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Edward Cree <ecree@solarflare.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/neighbour.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/sfc/ef10.c | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
 
-diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-index b3b242f7ecfd2..bba672482a0ef 100644
---- a/net/core/neighbour.c
-+++ b/net/core/neighbour.c
-@@ -18,6 +18,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
+index 063aca17e698b..79a1031c3ef77 100644
+--- a/drivers/net/ethernet/sfc/ef10.c
++++ b/drivers/net/ethernet/sfc/ef10.c
+@@ -4433,22 +4433,25 @@ static const struct efx_ef10_nvram_type_info efx_ef10_nvram_types[] = {
+ 	{ NVRAM_PARTITION_TYPE_LICENSE,		   0,    0, "sfc_license" },
+ 	{ NVRAM_PARTITION_TYPE_PHY_MIN,		   0xff, 0, "sfc_phy_fw" },
+ };
++#define EF10_NVRAM_PARTITION_COUNT	ARRAY_SIZE(efx_ef10_nvram_types)
  
- #include <linux/slab.h>
-+#include <linux/kmemleak.h>
- #include <linux/types.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -325,12 +326,14 @@ static struct neigh_hash_table *neigh_hash_alloc(unsigned int shift)
- 	ret = kmalloc(sizeof(*ret), GFP_ATOMIC);
- 	if (!ret)
- 		return NULL;
--	if (size <= PAGE_SIZE)
-+	if (size <= PAGE_SIZE) {
- 		buckets = kzalloc(size, GFP_ATOMIC);
--	else
-+	} else {
- 		buckets = (struct neighbour __rcu **)
- 			  __get_free_pages(GFP_ATOMIC | __GFP_ZERO,
- 					   get_order(size));
-+		kmemleak_alloc(buckets, size, 0, GFP_ATOMIC);
-+	}
- 	if (!buckets) {
- 		kfree(ret);
- 		return NULL;
-@@ -350,10 +353,12 @@ static void neigh_hash_free_rcu(struct rcu_head *head)
- 	size_t size = (1 << nht->hash_shift) * sizeof(struct neighbour *);
- 	struct neighbour __rcu **buckets = nht->hash_buckets;
+ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
+ 					struct efx_mcdi_mtd_partition *part,
+-					unsigned int type)
++					unsigned int type,
++					unsigned long *found)
+ {
+ 	MCDI_DECLARE_BUF(inbuf, MC_CMD_NVRAM_METADATA_IN_LEN);
+ 	MCDI_DECLARE_BUF(outbuf, MC_CMD_NVRAM_METADATA_OUT_LENMAX);
+ 	const struct efx_ef10_nvram_type_info *info;
+ 	size_t size, erase_size, outlen;
++	int type_idx = 0;
+ 	bool protected;
+ 	int rc;
  
--	if (size <= PAGE_SIZE)
-+	if (size <= PAGE_SIZE) {
- 		kfree(buckets);
--	else
-+	} else {
-+		kmemleak_free(buckets);
- 		free_pages((unsigned long)buckets, get_order(size));
-+	}
- 	kfree(nht);
- }
+-	for (info = efx_ef10_nvram_types; ; info++) {
+-		if (info ==
+-		    efx_ef10_nvram_types + ARRAY_SIZE(efx_ef10_nvram_types))
++	for (type_idx = 0; ; type_idx++) {
++		if (type_idx == EF10_NVRAM_PARTITION_COUNT)
+ 			return -ENODEV;
++		info = efx_ef10_nvram_types + type_idx;
+ 		if ((type & ~info->type_mask) == info->type)
+ 			break;
+ 	}
+@@ -4461,6 +4464,13 @@ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
+ 	if (protected)
+ 		return -ENODEV; /* hide it */
  
++	/* If we've already exposed a partition of this type, hide this
++	 * duplicate.  All operations on MTDs are keyed by the type anyway,
++	 * so we can't act on the duplicate.
++	 */
++	if (__test_and_set_bit(type_idx, found))
++		return -EEXIST;
++
+ 	part->nvram_type = type;
+ 
+ 	MCDI_SET_DWORD(inbuf, NVRAM_METADATA_IN_TYPE, type);
+@@ -4489,6 +4499,7 @@ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
+ static int efx_ef10_mtd_probe(struct efx_nic *efx)
+ {
+ 	MCDI_DECLARE_BUF(outbuf, MC_CMD_NVRAM_PARTITIONS_OUT_LENMAX);
++	DECLARE_BITMAP(found, EF10_NVRAM_PARTITION_COUNT);
+ 	struct efx_mcdi_mtd_partition *parts;
+ 	size_t outlen, n_parts_total, i, n_parts;
+ 	unsigned int type;
+@@ -4517,11 +4528,13 @@ static int efx_ef10_mtd_probe(struct efx_nic *efx)
+ 	for (i = 0; i < n_parts_total; i++) {
+ 		type = MCDI_ARRAY_DWORD(outbuf, NVRAM_PARTITIONS_OUT_TYPE_ID,
+ 					i);
+-		rc = efx_ef10_mtd_probe_partition(efx, &parts[n_parts], type);
+-		if (rc == 0)
+-			n_parts++;
+-		else if (rc != -ENODEV)
++		rc = efx_ef10_mtd_probe_partition(efx, &parts[n_parts], type,
++						  found);
++		if (rc == -EEXIST || rc == -ENODEV)
++			continue;
++		if (rc)
+ 			goto fail;
++		n_parts++;
+ 	}
+ 
+ 	rc = efx_mtd_add(efx, &parts[0].common, n_parts, sizeof(*parts));
 -- 
 2.20.1
 
