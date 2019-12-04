@@ -2,161 +2,95 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270E3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72FBC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99FA20803
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7901820803
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:30:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r5Y4qMl1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OfTsMSij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbfLDT2u (ORCPT
+        id S1728154AbfLDTaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 14:28:50 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:44183 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbfLDT2u (ORCPT
+        Wed, 4 Dec 2019 14:30:03 -0500
+Received: from mail-io1-f51.google.com ([209.85.166.51]:42625 "EHLO
+        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727982AbfLDTaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 14:28:50 -0500
-Received: by mail-vk1-f196.google.com with SMTP id u189so311556vkf.11;
-        Wed, 04 Dec 2019 11:28:49 -0800 (PST)
+        Wed, 4 Dec 2019 14:30:03 -0500
+Received: by mail-io1-f51.google.com with SMTP id f82so845112ioa.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 11:30:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=U48Nsp+iuLn/a6IVMZqwHN50uHWNqwUuuVCArBdZ0cI=;
-        b=r5Y4qMl19yS/UMe3oUk9+919vbZH+VLUeaPtfi+M/iI8V39a4AaUWiPLzmgP0TaJ3S
-         gidLJMOjtjtSxUqwg+Typnq4ZNlAskBeNYdkp3KCt/AAz5YLJ1QaKFeZIumn0g8l1ftc
-         9SVcaf61ND7oghu+m8G0BD0kwM3T0LxALDcH8I68OOLNYzD+pnpOUCWE1NfjSbsZMPlR
-         LQf5SkJZhpR16oSDCsqlxXyZkv9LiMVS/6/d5C0A4b2xBrJ7acXA4qrEWDbkBw4+4Iiq
-         Aq6Okgg8g5zjoreXo+VK7pJsr2NS2YsIly1T1HXFCQzoNT+8s0DismK11G6AZZ1iE+pw
-         kQIQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eHZxpeTMFmIGKyX/u6Ck5ynkwqdqFqF88hy62xK7Ow0=;
+        b=OfTsMSijIx5iDrE4MnefnhvZ+b7PAIFi7aycruSOY+czu8tdUMowgRXwWw4/bF8H5O
+         Ms852QSI76/0YKXmx47+KdTOx6C70xf1FcZhmXAgIZjbQdvzpTHrK+SqRlyuXh5iJedZ
+         sIl5S0NraNkCvtwIC7Sr/K9sh9nGezYjl6U7gv+gPoWX8ozE5fKwF9wBZeff3fW+WbbR
+         WlK7F/sIQQX6xWIDYdQ72y0FPyoL8vLIc+6ZiGf/4SCkqw0rSX8wxPq/3MyHTE/BPlbb
+         xdjsB8IPxpfwl3xYWudiWVcbzntzTrcPC84Jx9nLvv+1X66yHwTzJqn01NI4dlkniZ0J
+         m63A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=U48Nsp+iuLn/a6IVMZqwHN50uHWNqwUuuVCArBdZ0cI=;
-        b=H86cYzw5J3iKHFAL4nCMcT6z+wdT8+rmXgbA9gKtWwFX6ehTEowQGmTYYMnCpPkAdN
-         a0Kd1nYWVb83wQR0u3mObvDvxzyms6nsYOpKOrYm5Nj69CJjr5vF8vsvMO4nLoc5Joc6
-         PhFcJP9YtayfFEY//j8MJ0016uRcz49UDtXhvss5/iRAoYu43/etUuohsd4XetnnrJuj
-         W42HT+AWMpk5FkB3MOXzc7lscHoOu3ZDIp509vztoyba8wa9Ld/MWSWnR9r9chkPM7oJ
-         iZ+JtYU3q+/kRCNXdxQoRVE3kv0+cGr9fS/FTM+EpAY8d8oT1xN4/lgBxp/5ulAQtt/S
-         qy9Q==
-X-Gm-Message-State: APjAAAWuzfR+aoeHxcV9tj8TaVGh8mKVo4c1foQuDX75R1b+1VcbzzKd
-        x8JFptkG1XX1ErMUJUY1XrA=
-X-Google-Smtp-Source: APXvYqz1rYriR9n/y/r9Ws786faGQYqDA2rlVeNDvdbHTvsGTPatNI4kXnLbBhUOpzawnGtBx73Dwg==
-X-Received: by 2002:a1f:a752:: with SMTP id q79mr3329251vke.67.1575487729110;
-        Wed, 04 Dec 2019 11:28:49 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([177.195.214.134])
-        by smtp.gmail.com with ESMTPSA id h4sm2311054vkg.23.2019.12.04.11.28.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 11:28:48 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 12D1D405E2; Wed,  4 Dec 2019 16:28:45 -0300 (-03)
-Date:   Wed, 4 Dec 2019 16:28:44 -0300
-To:     David Ahern <dsahern@kernel.org>
-Cc:     namhyung@kernel.org, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        David Ahern <dsahern@gmail.com>
-Subject: Re: [PATCH] perf sched timehist: Add support for filtering on CPU
-Message-ID: <20191204192844.GA8535@kernel.org>
-References: <20191204173925.66976-1-dsahern@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eHZxpeTMFmIGKyX/u6Ck5ynkwqdqFqF88hy62xK7Ow0=;
+        b=QopEpn1CotC4U67zn2j7407h1Fciegw0+AAbXd+tGGswWECZ2O5AlQo5vTcUucbq0A
+         UqSvwoszpVzp+kFftuMvgIWVpjxQQrxtZdKh40mDXAeddcARXAfrv5fiRm7z4MU43CSe
+         UV/CnGeUnRT4ukF3wx16y2fhsd3g7i65ynjQEY8hfQy7zMn4CFxImH1bMbZtgqCQbqrd
+         /BO+FSLsNaEYD2rWkCwA3GmOFk5nuBCCw7DyDdrdcSb7FkOdBU8TBU+vNiZL2ek5fDdN
+         NM7hskK1ZksjvqgiOeQwAJTZ/r/IrHgewzddMY5/mT7lyq8Pgh1/gLXAck2Sit35C8e0
+         XDkw==
+X-Gm-Message-State: APjAAAVESSTRv3sPxKvAIARdzGhgnYfYRe71kxeihUdxMehvBhmO3TNq
+        1n/fdXq4QOuRGUD0WyMmPgrsqczTQBAWnTKESPXYEg==
+X-Google-Smtp-Source: APXvYqzrM6NiXcvbWHGmW+JQbnsF7zJDXp/ejaF1clWOLxX3z66xb2R736KZxc6Wf6gbbFELvGSztwLpl1blxyS/v5U=
+X-Received: by 2002:a5e:880a:: with SMTP id l10mr3349954ioj.64.1575487801709;
+ Wed, 04 Dec 2019 11:30:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204173925.66976-1-dsahern@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20191203004043.174977-1-matthewgarrett@google.com>
+ <CACdnJus7nHdr4p4H1j5as9eB=FG-uX+wy_tjvTQ5ObErDJHdow@mail.gmail.com>
+ <CAKv+Gu8emrf7WbTyGc8QDykX_hZbrVtxJKkRVbGFhd8rd13yww@mail.gmail.com>
+ <CACdnJusMeC+G3wq_oDGTYi1CBMWDiuq4NdANTBmhNBTDu5zCug@mail.gmail.com> <41cecdd8-f411-00c4-be82-be5d4d13fcb1@redhat.com>
+In-Reply-To: <41cecdd8-f411-00c4-be82-be5d4d13fcb1@redhat.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Wed, 4 Dec 2019 11:29:48 -0800
+Message-ID: <CACdnJuum5as_U1exNUOBqvXMq-cT_6vzYh7XvW-CteG5AqueqA@mail.gmail.com>
+Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
+ during boot
+To:     Laszlo Ersek <lersek@redhat.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Dec 04, 2019 at 10:39:25AM -0700, David Ahern escreveu:
-> From: David Ahern <dsahern@gmail.com>
-> 
-> Allow user to limit output to one or more CPUs. Really helpful on systems
-> with a large number of cpus.
+On Tue, Dec 3, 2019 at 11:11 PM Laszlo Ersek <lersek@redhat.com> wrote:
+> But in this case, we'd have to insert the PPB clearing *before* the
+> (platform's) IOMMU driver's EBS handler (because the latter is going to
+> deny, not permit, everything); and we can't modify the IOMMU driver.
+>
+> I guess we could install an EBS handler with TPL_NOTIFY (PciIo usage
+> appears permitted at TPL_NOTIFY, from "Table 27. TPL Restrictions"). But:
+> - if the IOMMU driver's EBS handler is also to be enqueued at
+> TPL_NOTIFY, then the order will be unspecified
+> - if a PCI driver sets up an EBS handler at TPL_CALLBACK, then in our
+> handler we could shut down a PPB in front of a device bound by that
+> driver too early.
 
-Thanks, tested and applied to perf/core, for 5.6.
-
-- Arnaldo
-
-> Signed-off-by: David Ahern <dsahern@gmail.com>
-> ---
->  tools/perf/Documentation/perf-sched.txt |  4 ++++
->  tools/perf/builtin-sched.c              | 13 +++++++++++++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-> index 63f938b887dd..5fbe42bd599b 100644
-> --- a/tools/perf/Documentation/perf-sched.txt
-> +++ b/tools/perf/Documentation/perf-sched.txt
-> @@ -110,6 +110,10 @@ OPTIONS for 'perf sched timehist'
->  --max-stack::
->  	Maximum number of functions to display in backtrace, default 5.
->  
-> +-C=::
-> +--cpu=::
-> +	Only show events for the given CPU(s) (comma separated list).
-> +
->  -p=::
->  --pid=::
->  	Only show events for given process ID (comma separated list).
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 8a12d71364c3..82fcc2c15fe4 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -51,6 +51,9 @@
->  #define SYM_LEN			129
->  #define MAX_PID			1024000
->  
-> +static const char *cpu_list;
-> +static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
-> +
->  struct sched_atom;
->  
->  struct task_desc {
-> @@ -2008,6 +2011,9 @@ static void timehist_print_sample(struct perf_sched *sched,
->  	char nstr[30];
->  	u64 wait_time;
->  
-> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> +		return;
-> +
->  	timestamp__scnprintf_usec(t, tstr, sizeof(tstr));
->  	printf("%15s [%04d] ", tstr, sample->cpu);
->  
-> @@ -2994,6 +3000,12 @@ static int perf_sched__timehist(struct perf_sched *sched)
->  	if (IS_ERR(session))
->  		return PTR_ERR(session);
->  
-> +	if (cpu_list) {
-> +		err = perf_session__cpu_bitmap(session, cpu_list, cpu_bitmap);
-> +		if (err < 0)
-> +			goto out;
-> +	}
-> +
->  	evlist = session->evlist;
->  
->  	symbol__init(&session->header.env);
-> @@ -3429,6 +3441,7 @@ int cmd_sched(int argc, const char **argv)
->  		   "analyze events only for given process id(s)"),
->  	OPT_STRING('t', "tid", &symbol_conf.tid_list_str, "tid[,tid...]",
->  		   "analyze events only for given thread id(s)"),
-> +	OPT_STRING('C', "cpu", &cpu_list, "cpu", "list of cpus to profile"),
->  	OPT_PARENT(sched_options)
->  	};
->  
-> -- 
-> 2.20.1
-
--- 
-
-- Arnaldo
+Yeah, that's my concern - doing this more correctly seems to leave us
+in a situation where we're no longer able to make guarantees about the
+security properties of the feature. I think I prefer going with
+something that's guaranteed to give us the properties we want, even at
+the expense of some compatibility - users who want this can validate
+it against their platform.
