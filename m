@@ -2,95 +2,142 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7A3C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93C7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA3220637
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD7A2077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:46:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hk5xGXTl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="G0vR/kSG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbfLDMqC (ORCPT
+        id S1727891AbfLDMqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:46:02 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35246 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727848AbfLDMqB (ORCPT
+        Wed, 4 Dec 2019 07:46:33 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42812 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727445AbfLDMqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:46:01 -0500
-Received: by mail-pl1-f193.google.com with SMTP id s10so3149349plp.2;
-        Wed, 04 Dec 2019 04:46:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7KRyugQkUo1uugWvFUnJA54Xc08BpIiKwl8qPG7HyXI=;
-        b=Hk5xGXTlyDmBDUPDKmXASJB5PmhzzcuKE+nEmqt9PciCUeNJJQVFgIl7W7TGqr17GR
-         a49gzV5UP20H961EF6e+CNubW4ctF5diI8L2q3bQ4z/FW9/t7hHZ+M28MJmSATQhYdy2
-         CieHfUXgz7glYYd27j4iQRiniB5IGXdpdmVCw7mOgX4MW6xVAexnZdYxDYUhWmMOrqOe
-         bCZeZ0fNCqR4x7+Q+WWEfExljhS0pTapWWerIrf9eb5EOTw0upfUhgOz9O8rcVUcucxz
-         /g9PbIK0mMHTrP6nZOTtdlsg0CSTKoR6pxn7WrMlt7XWd5r2J61KjTxYiWlr8FslOy8q
-         WKrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7KRyugQkUo1uugWvFUnJA54Xc08BpIiKwl8qPG7HyXI=;
-        b=Qd5YTX8flTEeyA2B9bnIPuceGq8/LYKF9VJTBrHGi2l/n5gM2FQ0arJQsZay4IOkh+
-         8QF5GkeIoNiqQJiWkeyJxwkrYD0cwP21Uwp9P3wn7f7KBNVrk2gsPeT0of9dicsy1oia
-         WMWkwDpmfAwct98Qy65wBRgwoYXfKN7HcugGKbaAjNAkQflCoH6K/lkaantL7P9R7dkV
-         FxGppZGRt1ylXex7EGXW+PSM3lZ2l/C3RlSbhfE/aalOtkXW0rb3dnHprewqr8NX591c
-         rRILQZa3YYT46EXm5VpAK2pa9vmHb1bfe5GvW5wipLt5ndFqsJTOV1GjPGaukyf2EM5f
-         jENw==
-X-Gm-Message-State: APjAAAWKWrRoz+vnDv/oObWceOblUCDU96Ufch7hHyAniiQMWzOzFULR
-        WO10kPNqfLjKnrP6HfTngEXLfCtJzxeCGYPdcFg=
-X-Google-Smtp-Source: APXvYqx5iQSiV1wQnkV4BNF3rmbOCPq+eI8fHf5jbJrBDG2+C4r89XluCNntE3UR+ht2Yoe7YWM3aa6is42jDhhTFKg=
-X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr3195916pjq.132.1575463560991;
- Wed, 04 Dec 2019 04:46:00 -0800 (PST)
+        Wed, 4 Dec 2019 07:46:33 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4CkTDW018131;
+        Wed, 4 Dec 2019 06:46:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575463589;
+        bh=Sa8r52CALQskJiWK9y+jozhJvZVk/6tzlulxQC0hLRg=;
+        h=From:To:CC:Subject:Date;
+        b=G0vR/kSGDrnKrxg36PKYVz2nYoEgDVHz8GkuYc9vnKFdedf2e3DlBevrddlQYWK5l
+         S588W6/7IA2d1EAtXEupCy9EKZVRaAmM5Cc0gxyt+D+QFq3W6Z4J8dMkCq1k3x3QXR
+         buVKyJzzGQPwRIco1urplZMscWB7uTr1XtTlvOw0=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4CkTr4071490
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 4 Dec 2019 06:46:29 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
+ 2019 06:46:29 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Dec 2019 06:46:29 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4CkS0F123554;
+        Wed, 4 Dec 2019 06:46:29 -0600
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] net: ethernet: ti: davinci_cpdma: fix warning "device driver frees DMA memory with different size"
+Date:   Wed, 4 Dec 2019 14:46:18 +0200
+Message-ID: <20191204124618.18774-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20191204101042.4275-6-cleger@kalray.eu>
-In-Reply-To: <20191204101042.4275-6-cleger@kalray.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Dec 2019 14:45:51 +0200
-Message-ID: <CAHp75VcqqqAv1iiwjNqGVcadmdzbjHt8f_ap7DKd3LWC=wwkhw@mail.gmail.com>
-Subject: Re: [PATCH 5/5] dt-bindings: pinctrl: dw: move sps,dwapb-gpio.txt to pinctrl
-To:     Clement Leger <cleger@kalray.eu>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 12:13 PM Clement Leger <cleger@kalray.eu> wrote:
->
-> Since the driver has been moved to pinctrl and now supports it, move the
-> documentation into pinctrl folder. In the same time, add documentation
-> for pinctrl properties such has snps,has-pinctrl and description of pin
-> alternate functions.
+The TI CPSW(s) driver produces warning with DMA API debug options enabled:
 
-> +- snps,has-pinctrl : If present, register the pinctrl controller.
+WARNING: CPU: 0 PID: 1033 at kernel/dma/debug.c:1025 check_unmap+0x4a8/0x968
+DMA-API: cpsw 48484000.ethernet: device driver frees DMA memory with different size
+ [device address=0x00000000abc6aa02] [map size=64 bytes] [unmap size=42 bytes]
+CPU: 0 PID: 1033 Comm: ping Not tainted 5.3.0-dirty #41
+Hardware name: Generic DRA72X (Flattened Device Tree)
+[<c0112c60>] (unwind_backtrace) from [<c010d270>] (show_stack+0x10/0x14)
+[<c010d270>] (show_stack) from [<c09bc564>] (dump_stack+0xd8/0x110)
+[<c09bc564>] (dump_stack) from [<c013b93c>] (__warn+0xe0/0x10c)
+[<c013b93c>] (__warn) from [<c013b9ac>] (warn_slowpath_fmt+0x44/0x6c)
+[<c013b9ac>] (warn_slowpath_fmt) from [<c01e0368>] (check_unmap+0x4a8/0x968)
+[<c01e0368>] (check_unmap) from [<c01e08a8>] (debug_dma_unmap_page+0x80/0x90)
+[<c01e08a8>] (debug_dma_unmap_page) from [<c0752414>] (__cpdma_chan_free+0x114/0x16c)
+[<c0752414>] (__cpdma_chan_free) from [<c07525c4>] (__cpdma_chan_process+0x158/0x17c)
+[<c07525c4>] (__cpdma_chan_process) from [<c0753690>] (cpdma_chan_process+0x3c/0x5c)
+[<c0753690>] (cpdma_chan_process) from [<c0758660>] (cpsw_tx_mq_poll+0x48/0x94)
+[<c0758660>] (cpsw_tx_mq_poll) from [<c0803018>] (net_rx_action+0x108/0x4e4)
+[<c0803018>] (net_rx_action) from [<c010230c>] (__do_softirq+0xec/0x598)
+[<c010230c>] (__do_softirq) from [<c0143914>] (do_softirq.part.4+0x68/0x74)
+[<c0143914>] (do_softirq.part.4) from [<c0143a44>] (__local_bh_enable_ip+0x124/0x17c)
+[<c0143a44>] (__local_bh_enable_ip) from [<c0871590>] (ip_finish_output2+0x294/0xb7c)
+[<c0871590>] (ip_finish_output2) from [<c0875440>] (ip_output+0x210/0x364)
+[<c0875440>] (ip_output) from [<c0875e2c>] (ip_send_skb+0x1c/0xf8)
+[<c0875e2c>] (ip_send_skb) from [<c08a7fd4>] (raw_sendmsg+0x9a8/0xc74)
+[<c08a7fd4>] (raw_sendmsg) from [<c07d6b90>] (sock_sendmsg+0x14/0x24)
+[<c07d6b90>] (sock_sendmsg) from [<c07d8260>] (__sys_sendto+0xbc/0x100)
+[<c07d8260>] (__sys_sendto) from [<c01011ac>] (__sys_trace_return+0x0/0x14)
+Exception stack(0xea9a7fa8 to 0xea9a7ff0)
+...
 
-I'm wondering why we can't always assume pin control?
+The reason is that cpdma_chan_submit_si() now stores original buffer length
+(sw_len) in CPDMA descriptor instead of adjusted buffer length (hw_len)
+used to map the buffer.
 
-> -F:     Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-> +F:     Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
+Hence, fix an issue by using adjusted buffer length (hw_len) to unmap
+packet buffer.
 
-I guess this should be a part of patch 2 when you move driver w/o
-changes to a new folder.
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Fixes: 6670acacd59e ("net: ethernet: ti: davinci_cpdma: add dma mapped submit")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/net/ethernet/ti/davinci_cpdma.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
+index 37ba708ac781..6be5a514d5b1 100644
+--- a/drivers/net/ethernet/ti/davinci_cpdma.c
++++ b/drivers/net/ethernet/ti/davinci_cpdma.c
+@@ -1197,12 +1197,13 @@ static void __cpdma_chan_free(struct cpdma_chan *chan,
+ {
+ 	struct cpdma_ctlr		*ctlr = chan->ctlr;
+ 	struct cpdma_desc_pool		*pool = ctlr->pool;
++	int				origlen, hw_len;
+ 	dma_addr_t			buff_dma;
+-	int				origlen;
+ 	uintptr_t			token;
+ 
+ 	token      = desc_read(desc, sw_token);
+ 	origlen    = desc_read(desc, sw_len);
++	hw_len = desc_read(desc, hw_len);
+ 
+ 	buff_dma   = desc_read(desc, sw_buffer);
+ 	if (origlen & CPDMA_DMA_EXT_MAP) {
+@@ -1210,7 +1211,7 @@ static void __cpdma_chan_free(struct cpdma_chan *chan,
+ 		dma_sync_single_for_cpu(ctlr->dev, buff_dma, origlen,
+ 					chan->dir);
+ 	} else {
+-		dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
++		dma_unmap_single(ctlr->dev, buff_dma, hw_len, chan->dir);
+ 	}
+ 
+ 	cpdma_desc_free(pool, desc, 1);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
