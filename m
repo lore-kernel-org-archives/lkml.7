@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D64C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF1EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8972084F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 669A02073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482290;
-	bh=ZCOYm7uvTGNlci+Nc06dmUObDmY7JSDWXNomo+BzJS4=;
+	s=default; t=1575482296;
+	bh=4p/gyj2qvuKUImwhJLlJyPMVzrfpz0Q0/esrhrsDW6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mLvYgebdFz6NMDBmx4OPpDJ2Ssab++HYo0VmJzHEVwqdUwHcLnzZ7ZZghLq1fNNz+
-	 txgL5Rrdsg8kKIT9iy6oOGDBulAGRnNI6IuJ+mpCYSQDrCXTS3K+8SY3IZ3EfNr0rD
-	 Dv7RlEc19XIVhBdJMDIV2EX/VXOU1+LAgO8youm4=
+	b=aZhLSsHIpwggKqTUPOjjW2/pn3pwExB3mBzDphs/v9x6UKl6q1/R6nLH92OnExzxQ
+	 1A5pplwjgn3daRpqkoXNy8xry8g391h8FR7tUgF0Wp078r3WmSesxAmNZ+l3+Z5OGm
+	 fd0tOY+c8Igmk8X8Pmt9+03BFPdeqW0pvS3vV2W4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728603AbfLDR6J (ORCPT
+        id S1728661AbfLDR6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:58:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60122 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 12:58:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728564AbfLDR6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:58:05 -0500
+        id S1728629AbfLDR6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:58:13 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F37422073B;
-        Wed,  4 Dec 2019 17:58:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E1CB2081B;
+        Wed,  4 Dec 2019 17:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482285;
-        bh=ZCOYm7uvTGNlci+Nc06dmUObDmY7JSDWXNomo+BzJS4=;
+        s=default; t=1575482292;
+        bh=4p/gyj2qvuKUImwhJLlJyPMVzrfpz0Q0/esrhrsDW6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h7FKRRAp+N52pvgHIeHzwirZbqVLLwhdFgH2wvUeYt3nE7oCNX+yZG5QwwOMc3ZtD
-         rZ7GLeWI1lQC6Ba/YiQZene4kNmVTMi3KlYCqrUNeoCXLybZjbpzTKNtJ8YeDRNtGz
-         9xFrdD/pcZ6UQ2XZHxP5AKW55aVy7yvHuzoEGaG0=
+        b=dl4xZVkE8Tdn9o1ku+spNNRIvAbDLdTYr4W928tNJ/BNk13t8TiQ+sihQuOAtRw99
+         ZI+e5rFpMsd7hmCtdofNdcVBtT5Fwpvqv+2dYjk73bmoRatRJGkeELAaoDLknIuzNL
+         biljHTFxA6JePykPRj0Z3CnDYH/Sqc1gG/hQdgdc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Simek <michal.simek@xilinx.com>,
+        stable@vger.kernel.org, Lepton Wu <ytht.net@gmail.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 25/92] microblaze: adjust the help to the real behavior
-Date:   Wed,  4 Dec 2019 18:49:25 +0100
-Message-Id: <20191204174331.839678014@linuxfoundation.org>
+Subject: [PATCH 4.4 28/92] VSOCK: bind to random port for VMADDR_PORT_ANY
+Date:   Wed,  4 Dec 2019 18:49:28 +0100
+Message-Id: <20191204174332.317108068@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -61,59 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Lepton Wu <ytht.net@gmail.com>
 
-[ Upstream commit bafcc61d998c1ca18f556d92a0e95335ac68c7da ]
+[ Upstream commit 8236b08cf50f85bbfaf48910a0b3ee68318b7c4b ]
 
-"make ARCH=microblaze help" mentions simpleImage.<dt>.unstrip,
-but it is not a real Make target. It does not work because Makefile
-assumes "system.unstrip" is the name of DT.
+The old code always starts from fixed port for VMADDR_PORT_ANY. Sometimes
+when VMM crashed, there is still orphaned vsock which is waiting for
+close timer, then it could cause connection time out for new started VM
+if they are trying to connect to same port with same guest cid since the
+new packets could hit that orphaned vsock. We could also fix this by doing
+more in vhost_vsock_reset_orphans, but any way, it should be better to start
+from a random local port instead of a fixed one.
 
-$ make ARCH=microblaze CROSS_COMPILE=microblaze-linux- simpleImage.system.unstrip
-  [ snip ]
-make[1]: *** No rule to make target 'arch/microblaze/boot/dts/system.unstrip.dtb', needed by 'arch/microblaze/boot/dts/system.dtb'.  Stop.
-make: *** [Makefile;1060: arch/microblaze/boot/dts] Error 2
-make: *** Waiting for unfinished jobs....
-
-simpleImage.<dt> works like a phony target that generates multiple
-images. Reflect the real behavior. I removed the DT directory path
-information because it is already explained a few lines below.
-
-While I am here, I deleted the redundant *_defconfig explanation.
-
-The top-level Makefile caters to list available defconfig files:
-
-  mmu_defconfig            - Build for mmu
-  nommu_defconfig          - Build for nommu
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Lepton Wu <ytht.net@gmail.com>
+Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/microblaze/Makefile | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ net/vmw_vsock/af_vsock.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/microblaze/Makefile b/arch/microblaze/Makefile
-index 740f2b82a182a..5e1e18540a571 100644
---- a/arch/microblaze/Makefile
-+++ b/arch/microblaze/Makefile
-@@ -83,11 +83,11 @@ define archhelp
-   echo '* linux.bin    - Create raw binary'
-   echo '  linux.bin.gz - Create compressed raw binary'
-   echo '  linux.bin.ub - Create U-Boot wrapped raw binary'
--  echo '  simpleImage.<dt> - ELF image with $(arch)/boot/dts/<dt>.dts linked in'
--  echo '                   - stripped elf with fdt blob'
--  echo '  simpleImage.<dt>.unstrip - full ELF image with fdt blob'
--  echo '  *_defconfig      - Select default config from arch/microblaze/configs'
--  echo ''
-+  echo '  simpleImage.<dt> - Create the following images with <dt>.dtb linked in'
-+  echo '                    simpleImage.<dt>        : raw image'
-+  echo '                    simpleImage.<dt>.ub     : raw image with U-Boot header'
-+  echo '                    simpleImage.<dt>.unstrip: ELF (identical to vmlinux)'
-+  echo '                    simpleImage.<dt>.strip  : stripped ELF'
-   echo '  Targets with <dt> embed a device tree blob inside the image'
-   echo '  These targets support board with firmware that does not'
-   echo '  support passing a device tree directly. Replace <dt> with the'
+diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+index 7f1d166ce6128..412d56614fd5e 100644
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -89,6 +89,7 @@
+ #include <linux/mutex.h>
+ #include <linux/net.h>
+ #include <linux/poll.h>
++#include <linux/random.h>
+ #include <linux/skbuff.h>
+ #include <linux/smp.h>
+ #include <linux/socket.h>
+@@ -483,9 +484,13 @@ out:
+ static int __vsock_bind_stream(struct vsock_sock *vsk,
+ 			       struct sockaddr_vm *addr)
+ {
+-	static u32 port = LAST_RESERVED_PORT + 1;
++	static u32 port = 0;
+ 	struct sockaddr_vm new_addr;
+ 
++	if (!port)
++		port = LAST_RESERVED_PORT + 1 +
++			prandom_u32_max(U32_MAX - LAST_RESERVED_PORT);
++
+ 	vsock_addr_init(&new_addr, addr->svm_cid, addr->svm_port);
+ 
+ 	if (addr->svm_port == VMADDR_PORT_ANY) {
 -- 
 2.20.1
 
