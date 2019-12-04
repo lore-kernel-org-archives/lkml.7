@@ -2,92 +2,124 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF614C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53F2C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C942820656
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2D820656
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:09:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="a3RVxmLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbfLDMJB (ORCPT
+        id S1727807AbfLDMJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:09:01 -0500
-Received: from mga03.intel.com ([134.134.136.65]:14982 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727445AbfLDMJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:09:01 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 04:08:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,277,1571727600"; 
-   d="scan'208";a="412563600"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.95])
-  by fmsmga006.fm.intel.com with ESMTP; 04 Dec 2019 04:08:55 -0800
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf inject: Fix processing of ID index for injected instruction tracing
-Date:   Wed,  4 Dec 2019 14:08:00 +0200
-Message-Id: <20191204120800.8138-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Wed, 4 Dec 2019 07:09:33 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:46507 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727445AbfLDMJd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 07:09:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1575461372; x=1606997372;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=0XU4I7wfx1XBSj0BFbZC9Xa7eD2pt9HXv+vFrvgGosk=;
+  b=a3RVxmLZJ+QxCLCZlYVTFQDTFxjReRRcSMKyx2VCUIJP2OhJvugZfhZm
+   kOABMbEsKxc5DpJOe+AH5T1rw7v835nZn3dgwAWUnPcmgmAEoC4orkNLV
+   DdV4xQ6WXJR8EGjzJr5StI93RhxJM31E21b+DvQyYGNW38qxzDRptK2y0
+   A=;
+IronPort-SDR: pPAh3VyOKYzmvWOsJiLjzYBAm32158CHQmvaLASrfxIVhw/Vd2V9GFkK4QdemQZ6v2teZ/0XXt
+ hOgcUUWlP9RQ==
+X-IronPort-AV: E=Sophos;i="5.69,277,1571702400"; 
+   d="scan'208";a="11545631"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 04 Dec 2019 12:09:19 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id 86FCCA26C9;
+        Wed,  4 Dec 2019 12:09:17 +0000 (UTC)
+Received: from EX13D32EUC002.ant.amazon.com (10.43.164.94) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 4 Dec 2019 12:09:16 +0000
+Received: from EX13MTAUEE001.ant.amazon.com (10.43.62.200) by
+ EX13D32EUC002.ant.amazon.com (10.43.164.94) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 4 Dec 2019 12:09:15 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.28.85.76) by
+ mail-relay.amazon.com (10.43.62.226) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 4 Dec 2019 12:09:13 +0000
+Subject: Re: [Xen-devel] [PATCH 0/2] xen/blkback: Aggressively shrink page
+ pools if a memory pressure is detected
+To:     "Durrant, Paul" <pdurrant@amazon.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "roger.pau@citrix.com" <roger.pau@citrix.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>
+CC:     "sj38.park@gmail.com" <sj38.park@gmail.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191204113419.2298-1-sjpark@amazon.com>
+ <62c68f53cc0145ad9d0dfb167b50eac4@EX13D32EUC003.ant.amazon.com>
+From:   <sjpark@amazon.com>
+Message-ID: <fcf414ab-4ee4-bafc-6683-5527df7a9731@amazon.com>
+Date:   Wed, 4 Dec 2019 13:09:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <62c68f53cc0145ad9d0dfb167b50eac4@EX13D32EUC003.ant.amazon.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ID index event is used when decoding, but can result in the
-following error:
+On 04.12.19 12:52, Durrant, Paul wrote:
+>> -----Original Message-----
+>> From: Xen-devel <xen-devel-bounces@lists.xenproject.org> On Behalf Of
+>> SeongJae Park
+>> Sent: 04 December 2019 11:34
+>> To: konrad.wilk@oracle.com; roger.pau@citrix.com; axboe@kernel.dk
+>> Cc: sj38.park@gmail.com; xen-devel@lists.xenproject.org; linux-
+>> block@vger.kernel.org; linux-kernel@vger.kernel.org; Park, Seongjae
+>> <sjpark@amazon.com>
+>> Subject: [Xen-devel] [PATCH 0/2] xen/blkback: Aggressively shrink page
+>> pools if a memory pressure is detected
+>>
+>> Each `blkif` has a free pages pool for the grant mapping.  The size of
+>> the pool starts from zero and be increased on demand while processing
+>> the I/O requests.  If current I/O requests handling is finished or 100
+>> milliseconds has passed since last I/O requests handling, it checks and
+>> shrinks the pool to not exceed the size limit, `max_buffer_pages`.
+>>
+>> Therefore, `blkfront` running guests can cause a memory pressure in the
+>> `blkback` running guest by attaching arbitrarily large number of block
+>> devices and inducing I/O.
+> OOI... How do guests unilaterally cause the attachment of arbitrary numbers of PV devices?
+Good point.  Many systems have their limit for the maximum number of the
+devices.  Thus, 'arbitrarily' large number of devices cannot be attached.  So,
+there is the upperbound.  System administrators might be able to avoid the
+memory pressure problem by setting the limit low enough or giving more memory
+to the 'blkback' running guest.
 
- $ perf record --aux-sample -e '{intel_pt//,branch-misses}:u' ls
- $ perf inject -i perf.data -o perf.data.inj --itrace=be
- $ perf script -i perf.data.inj
- 0x1020 [0x410]: failed to process type: 69 [No such file or directory]
+However, many systems also tempt to set the limit high enough so that guests
+can satisfy and to give minimal memory to the 'blkback' running guest for cost
+efficiency.
 
-Fix by having 'perf inject' drop the ID index event.
+I believe this patchset can be helpful for such situations.
 
-Fixes: c0a6de06c446 ("perf record: Add support for AUX area sampling")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/builtin-inject.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+Anyway, using the term 'arbitrarily' is obvisously my fault.  I will update the
+description in the next version of patchset.
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 9664a72a089d..7e124a7b8bfd 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -403,17 +403,6 @@ static int perf_event__repipe_tracing_data(struct perf_session *session,
- 	return err;
- }
- 
--static int perf_event__repipe_id_index(struct perf_session *session,
--				       union perf_event *event)
--{
--	int err;
--
--	perf_event__repipe_synth(session->tool, event);
--	err = perf_event__process_id_index(session, event);
--
--	return err;
--}
--
- static int dso__read_build_id(struct dso *dso)
- {
- 	if (dso->has_build_id)
-@@ -651,7 +640,7 @@ static int __cmd_inject(struct perf_inject *inject)
- 		inject->tool.comm	    = perf_event__repipe_comm;
- 		inject->tool.namespaces	    = perf_event__repipe_namespaces;
- 		inject->tool.exit	    = perf_event__repipe_exit;
--		inject->tool.id_index	    = perf_event__repipe_id_index;
-+		inject->tool.id_index	    = perf_event__process_id_index;
- 		inject->tool.auxtrace_info  = perf_event__process_auxtrace_info;
- 		inject->tool.auxtrace	    = perf_event__process_auxtrace;
- 		inject->tool.aux	    = perf_event__drop_aux;
--- 
-2.17.1
+
+Thanks,
+SeongJae Park
+
+>
+>   Paul
+>
 
