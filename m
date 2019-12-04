@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774F5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5592C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8EE2154A
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9984521556
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483294;
-	bh=2ZVyibIZCxCA4me68bfaUGPbiVt+g8vV96PXqS++DR8=;
+	s=default; t=1575483297;
+	bh=m6/UddO3uVeswlhu7e7/QS+bGiHCMuf33iWbMXmEGOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DcrsAG8aqHOClfKd5hmSlRUs7auF5K9YAWCQNkJU4cAPmnIeczO3iiK/nSzbj6IAj
-	 w6toHpoByaFqmtaGe4sV6Cry93r08zPHnohgH4MXgMgVtdOGb9kFtFIp5ZyZrsE4JY
-	 B6CeEt5kjhHaNpIHduG+6r0vYGSj/3Pa1OG05nF0=
+	b=bdFwBeHCmngqWsE3TWVmDwWDg5wTU4xhfakoFkPIfQQ9+smIBqI+cGCE5eWOSoqTn
+	 UiYPywjmgXu136q0uaTuY6shIPSMcEDiV/+z/nGCRn9VkZMrFc5dvieXkkOLerDBEv
+	 bS1uQtG6TImL6AOFY3AxmUdLRawbpGmZXJAUkmZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731979AbfLDSOx (ORCPT
+        id S1731969AbfLDSO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:14:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44268 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:14:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731969AbfLDSOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:14:51 -0500
+        id S1731975AbfLDSOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:14:53 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C517820863;
-        Wed,  4 Dec 2019 18:14:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33CF9206DF;
+        Wed,  4 Dec 2019 18:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483290;
-        bh=2ZVyibIZCxCA4me68bfaUGPbiVt+g8vV96PXqS++DR8=;
+        s=default; t=1575483292;
+        bh=m6/UddO3uVeswlhu7e7/QS+bGiHCMuf33iWbMXmEGOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gx89ZtXb3efF6WcYrdObg5NRtvS1KxjRrVyWN8fRdIGuYnXSxbK/ol92sW3IQqYeF
-         p2jvHTRnYTR2/tkjt3gskBGWKplzNOfCkNB7XXAn8SbZhyc98sWSumFW+I8B1aliPq
-         5TydMZ49+qSEjfXp5HWsHIQ91dXf1S1GTkMsiGhU=
+        b=oHVWrA8R/6QAXoEsff8u4/c/pzrowCpFUllObeXLUEeO34AIrMVTIqBBucBiGX2bg
+         EaT0cayV5IvLNtcS9VBIVp149PKcJW7BdZG/cCZKcfXjskHKVOZgp3xuFFeFZcG+ew
+         lNOFkJPxQjmyr54hTvBEdAbPHvW/BvWn0IhKIVlQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 089/125] net/core/neighbour: tell kmemleak about hash tables
-Date:   Wed,  4 Dec 2019 18:56:34 +0100
-Message-Id: <20191204175324.478809919@linuxfoundation.org>
+Subject: [PATCH 4.9 090/125] net/core/neighbour: fix kmemleak minimal reference count for hash tables
+Date:   Wed,  4 Dec 2019 18:56:35 +0100
+Message-Id: <20191204175324.535271210@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -63,79 +64,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 85704cb8dcfd88d351bfc87faaeba1c8214f3177 ]
+[ Upstream commit 01b833ab44c9e484060aad72267fc7e71beb559b ]
 
-This fixes false-positive kmemleak reports about leaked neighbour entries:
-
-unreferenced object 0xffff8885c6e4d0a8 (size 1024):
-  comm "softirq", pid 0, jiffies 4294922664 (age 167640.804s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 20 2c f3 83 ff ff ff ff  ........ ,......
-    08 c0 ef 5f 84 88 ff ff 01 8c 7d 02 01 00 00 00  ..._......}.....
-  backtrace:
-    [<00000000748509fe>] ip6_finish_output2+0x887/0x1e40
-    [<0000000036d7a0d8>] ip6_output+0x1ba/0x600
-    [<0000000027ea7dba>] ip6_send_skb+0x92/0x2f0
-    [<00000000d6e2111d>] udp_v6_send_skb.isra.24+0x680/0x15e0
-    [<000000000668a8be>] udpv6_sendmsg+0x18c9/0x27a0
-    [<000000004bd5fa90>] sock_sendmsg+0xb3/0xf0
-    [<000000008227b29f>] ___sys_sendmsg+0x745/0x8f0
-    [<000000008698009d>] __sys_sendmsg+0xde/0x170
-    [<00000000889dacf1>] do_syscall_64+0x9b/0x400
-    [<0000000081cdb353>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<000000005767ed39>] 0xffffffffffffffff
+This should be 1 for normal allocations, 0 disables leak reporting.
 
 Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 85704cb8dcfd ("net/core/neighbour: tell kmemleak about hash tables")
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/neighbour.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ net/core/neighbour.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-index 6e964fec45cf8..1e2b0c258aa88 100644
+index 1e2b0c258aa88..44a29be7bfff3 100644
 --- a/net/core/neighbour.c
 +++ b/net/core/neighbour.c
-@@ -18,6 +18,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/slab.h>
-+#include <linux/kmemleak.h>
- #include <linux/types.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -325,12 +326,14 @@ static struct neigh_hash_table *neigh_hash_alloc(unsigned int shift)
- 	ret = kmalloc(sizeof(*ret), GFP_ATOMIC);
- 	if (!ret)
- 		return NULL;
--	if (size <= PAGE_SIZE)
-+	if (size <= PAGE_SIZE) {
- 		buckets = kzalloc(size, GFP_ATOMIC);
--	else
-+	} else {
+@@ -332,7 +332,7 @@ static struct neigh_hash_table *neigh_hash_alloc(unsigned int shift)
  		buckets = (struct neighbour __rcu **)
  			  __get_free_pages(GFP_ATOMIC | __GFP_ZERO,
  					   get_order(size));
-+		kmemleak_alloc(buckets, size, 0, GFP_ATOMIC);
-+	}
+-		kmemleak_alloc(buckets, size, 0, GFP_ATOMIC);
++		kmemleak_alloc(buckets, size, 1, GFP_ATOMIC);
+ 	}
  	if (!buckets) {
  		kfree(ret);
- 		return NULL;
-@@ -350,10 +353,12 @@ static void neigh_hash_free_rcu(struct rcu_head *head)
- 	size_t size = (1 << nht->hash_shift) * sizeof(struct neighbour *);
- 	struct neighbour __rcu **buckets = nht->hash_buckets;
- 
--	if (size <= PAGE_SIZE)
-+	if (size <= PAGE_SIZE) {
- 		kfree(buckets);
--	else
-+	} else {
-+		kmemleak_free(buckets);
- 		free_pages((unsigned long)buckets, get_order(size));
-+	}
- 	kfree(nht);
- }
- 
 -- 
 2.20.1
 
