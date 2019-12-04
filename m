@@ -2,95 +2,63 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA1EC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D02C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9349B20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC13F20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:03:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V9NFCvdS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbfLDNAJ (ORCPT
+        id S1727649AbfLDNDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:00:09 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:56672 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbfLDNAJ (ORCPT
+        Wed, 4 Dec 2019 08:03:47 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52458 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfLDNDr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:00:09 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 8E02E1C246E; Wed,  4 Dec 2019 14:00:07 +0100 (CET)
-Date:   Wed, 4 Dec 2019 14:00:07 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 073/321] bus: ti-sysc: Check for no-reset and
- no-idle flags at the child level
-Message-ID: <20191204130007.GB25176@duo.ucw.cz>
-References: <20191203223427.103571230@linuxfoundation.org>
- <20191203223430.961774111@linuxfoundation.org>
+        Wed, 4 Dec 2019 08:03:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VAw+exV6zFNd79GLsJ/i683SHwBX9ctSDVhWZEuWOOo=; b=V9NFCvdSmtkVG2Erzr/1Lg4wA
+        WPk5PvNGR+PQCfY+6HS/6i3CBsIjfOt6+DqPNrwPgGaILBpaSAkNwQZfiGFUaB395Bw1IhWlq6RUz
+        R3w7Z94R6RpKPBBGEzWa8KS1dfIgd1C1Sqg6a8HFsNgQcP9hE3s1/ufXIdaFr81MhT0h+YzUlQleV
+        pPyNAzssNUd0iT3dSLt71WgPiSL/hnwhYhosH3jrPywToVGSq96EJXlYPYLtqlQZLCnHn2wF1vf2J
+        R3oHrIsvK2sKKA3k0Eh2MY75cpD1mqJu3LQ6Zr0I/MDcGmpgTRK90NOWRIy6E6duNqMMR5OJigo7m
+        AACJbWy5A==;
+Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1icUJi-000462-KO; Wed, 04 Dec 2019 13:03:43 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Thomas Hellstrom <thellstrom@vmware.com>
+Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        iommu@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: make dma_addressing_limited work for memory encryption setups v2
+Date:   Wed,  4 Dec 2019 14:03:37 +0100
+Message-Id: <20191204130339.22804-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="St7VIuEGZ6dlpu13"
-Content-Disposition: inline
-In-Reply-To: <20191203223430.961774111@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
---St7VIuEGZ6dlpu13
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+this little series fixes dma_addressing_limited to return true for
+systems that use bounce buffers due to memory encryption.
 
-On Tue 2019-12-03 23:32:19, Greg Kroah-Hartman wrote:
-> From: Tony Lindgren <tony@atomide.com>
->=20
-> [ Upstream commit 4014c08ba39476a18af546186da625a6833a1529 ]
->=20
-> With ti-sysc, we need to now have the device tree properties for
-> ti,no-reset-on-init and ti,no-idle-on-init at the module level instead
-> of the child device level.
->=20
-> Let's check for these properties at the child device level to enable
-> quirks, and warn about moving the properties to the module level.
->=20
-> Otherwise am335x-evm based boards tagging gpio1 with ti,no-reset-on-init
-> will have their DDR power disabled if wired up in such a tricky way.
->=20
-> Note that this should not be an issue for earlier kernels as we don't
-> rely on this until the dts files have been updated to probe with ti-sysc
-> interconnect target driver.
-
-This is queued for 4.19-stable, but the comment seems to say it is not
-needed in the older kernels.
-
-Tony, do we want this in 4.19?
-
-Best regards,
-							Pavel
-						=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---St7VIuEGZ6dlpu13
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXeet1wAKCRAw5/Bqldv6
-8ukEAKCxbTfOmsBX9h7gTCQD+NhQM6N2SwCePPnbgcNyJZVhJvwwHX7aARNci/w=
-=VUBL
------END PGP SIGNATURE-----
-
---St7VIuEGZ6dlpu13--
+Changes since v1:
+ - take SWIOTLB_FORCE into account
