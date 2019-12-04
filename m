@@ -2,105 +2,79 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6EFC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6924C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C24B32073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8825E20640
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfLDNz7 (ORCPT
+        id S1727977AbfLDN4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:55:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:56142 "EHLO foss.arm.com"
+        Wed, 4 Dec 2019 08:56:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:56176 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727828AbfLDNz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:55:58 -0500
+        id S1727828AbfLDN4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 08:56:01 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5E0A1FB;
-        Wed,  4 Dec 2019 05:55:57 -0800 (PST)
-Received: from [192.168.1.18] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EB5A3F68E;
-        Wed,  4 Dec 2019 05:55:53 -0800 (PST)
-Subject: Re: [PATCH v7 16/25] arm: Add support for generic vDSO (causing
- crash)
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
- <20190621095252.32307-17-vincenzo.frascino@arm.com>
- <20191204135159.GA7210@roeck-us.net>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <6cdf4734-4065-09c1-8623-1bf523b38c1b@arm.com>
-Date:   Wed, 4 Dec 2019 13:58:25 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3C9A328;
+        Wed,  4 Dec 2019 05:56:00 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A48CB3F68E;
+        Wed,  4 Dec 2019 05:55:59 -0800 (PST)
+Date:   Wed, 4 Dec 2019 13:55:57 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Quentin Perret <qperret@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Patrick Bellasi <Patrick.Bellasi@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Null pointer crash at find_idlest_group on db845c w/ linus/master
+Message-ID: <20191204135556.w7xsog6oywrfkaqj@e107158-lin.cambridge.arm.com>
+References: <CALAqxLXrWWnWi32BR1F8JOtrGt1y2Kzj__zWopLx1ZfRy3EZKA@mail.gmail.com>
+ <CAKfTPtAvnLY3brp9iy_aHNu0rMM8nLfgeLc3CXEkMk3bwU1weA@mail.gmail.com>
+ <20191204094216.u7yld5r3zelp22lf@e107158-lin.cambridge.arm.com>
+ <20191204100925.GA15727@linaro.org>
+ <629cca09-dde7-5d77-42e1-c68f2c1820d2@arm.com>
+ <CAKfTPtDZLFn7msw88pTE_wr-BJo2ErqxpOW+ah0Jjcg6vE3SLw@mail.gmail.com>
+ <20191204133224.uiqbkbpseree7xou@e107158-lin.cambridge.arm.com>
+ <CAKfTPtBP1wm706ZjZhW+BV5XUcONfJcGteeyoJQUhQsYPsY4tg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191204135159.GA7210@roeck-us.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtBP1wm706ZjZhW+BV5XUcONfJcGteeyoJQUhQsYPsY4tg@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
+On 12/04/19 14:48, Vincent Guittot wrote:
+> if we want to initialize local_sgs, it should be something like
+> local_sgs =  {
+> .avg_load = UINT_MAX,
+> .group_type = group_overloaded,
+> };
 
-On 12/4/19 1:51 PM, Guenter Roeck wrote:
-> On Fri, Jun 21, 2019 at 10:52:43AM +0100, Vincenzo Frascino wrote:
->> The arm vDSO library requires some adaptations to use to take advantage
->> of the newly introduced generic vDSO library.
->>
->> Introduce the following changes:
->>  - Modification vdso.c to be compliant with the common vdso datapage
->>  - Use of lib/vdso for gettimeofday
->>  - Implementation of elf note
->>
->> Cc: Russell King <linux@armlinux.org.uk>
->> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> 
-> This patch causes a crash with qemu's mcimx6ul-evk emulation while running
-> imx_v6_v7_defconfig.
-> 
++1
 
-Thank you for reporting this. Could you please provide some details on how I can
-reproduce the scenario you are describing?
+> 
+> to make sure that we will not select local. This doesn't reflect any
+> kind of reality whereas local=NULL is more meaningful and more robust
+> IMO
 
-> [   19.976852] Run /sbin/init as init process
-> [   20.044931] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000004
-> 
-> There is nothing else useful in the log, unfortunately.
-> 
-> Reverting the following three patches fixes the problem.
-> 
-> 74d06efb9c2f ARM: 8932/1: Add clock_gettime64 entry point
-> 052e76a31b4a ARM: 8931/1: Add clock_getres entry point
-> 20e2fc42312f ARM: 8930/1: Add support for generic vDSO
-> 
-> Guenter
-> 
+It's just defensive programming from my side :) I don't feel strongly about it
+though.
 
--- 
-Regards,
-Vincenzo
+Thanks
+
+--
+Qais Yousef
