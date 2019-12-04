@@ -2,143 +2,134 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F245C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D60C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3094E20833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0C92084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbfLDMc7 (ORCPT
+        id S1727862AbfLDMdV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:32:59 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:38765 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfLDMc7 (ORCPT
+        Wed, 4 Dec 2019 07:33:21 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45354 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfLDMdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:32:59 -0500
-Received: from [192.168.1.155] ([77.9.37.28]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M8QBa-1igtgG0OFE-004VLl; Wed, 04 Dec 2019 13:32:56 +0100
-Subject: Re: [PATCH 0/8] gpiolib: add an ioctl() for monitoring line status
- changes
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20191127133510.10614-1-brgl@bgdev.pl>
- <CACRpkdZ6e0GaE9KBJ1-E+cS_KnPY-EKLNxJFqjArr28hYMQqOg@mail.gmail.com>
- <CAMRc=McH6m3Lsvz8g1JSD_c-QNdb-Kh0+8BH5EKcEW2vM2VYJA@mail.gmail.com>
- <CACRpkdaW8YxjEBN0jX5AYmzGyftGv=b-KOCsjMMxoqqESBDsyA@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <d0f29707-cbb6-fbee-3d54-f336a11442ad@metux.net>
-Date:   Wed, 4 Dec 2019 13:32:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 4 Dec 2019 07:33:21 -0500
+Received: by mail-oi1-f195.google.com with SMTP id v10so4597557oiv.12;
+        Wed, 04 Dec 2019 04:33:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=S0UWQ5eiPole4dtyMpW+QWxdEfHVw9PtKgJf/N5G9BE=;
+        b=SonrTHC0vp7Sgvtcx4CF3OKoS2va/b1Qcq7FYck7P2eQIFF19+VITPX511q2sKk26I
+         qTzToMfleDujWMCFeSusEjeGAUpQ/9eMGYmiNr++UhC3swkJ6OUXIRXakQOajp7+Xcz4
+         kP1h4HI9rT0cBTu/Yj38v2hUP3bxNQwiKeGZ6QWordh9i4IX6iTWTPcIeITnrWjomlyQ
+         KYzOmsU6ut7sOVkStBDoDTmHCZQnHBV892u4jUZmvuoMJqPHWNzBeJHswsyoSltLIhEO
+         XRohnK4aFMZX+rSIL0ODpM6kCii7cwzxSxDi1yunwX+ZxZ/SX4aXth6CA5ss299eLStp
+         Kgig==
+X-Gm-Message-State: APjAAAXeoMexw2L4p4g1Q4VZwcjCQinlLQSsBxo0xonglcqpoESDIjMc
+        PIfyArQRPa4BbfC3L+X86nPao5r++wC3vXm6pVM=
+X-Google-Smtp-Source: APXvYqzb0EPNSu3UgjjKauWV01/SR7f84yg5f0P7XG0wUME17ghX3UNDGcccyOdk37JFXAIVeBt6IZuJXPTA7xlaSIc=
+X-Received: by 2002:aca:36c5:: with SMTP id d188mr2423967oia.54.1575462799999;
+ Wed, 04 Dec 2019 04:33:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdaW8YxjEBN0jX5AYmzGyftGv=b-KOCsjMMxoqqESBDsyA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:P8p5gsbkmlK/nhLLbj0OHfS7vEIZ0B4Q+tmfhuq8IxroMZsY0LD
- t+plKHAAFYyxPRPgNydEkfvfRQWNFdouboKN0KldW2NpMlYe413aRSCer8b1vceSQelt2B+
- jGdgmoBPHsntoZkDLRqTpQdu+FR+QvLidio40ITdTiVzOCud2fC2yfDTeoemcF2gUCLjNrk
- KBe8l4e6xU6f+4JfN/3cQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1OPu09XnPTQ=:W0M7J3XICdpFopuXx7+PWK
- 94WS0KcLpc0tP68teJNRmXdbsxwZCOjEnE7PZRkN+ft0cN9dIsr2gPoddwjDYCnFUSjsXz8I9
- w2pnlhOPDq6I+CqoaaJ5UncKrra2bcX5ZW+C68Nfn9fmHcXppr+gY7kE2UC+Itc267Z9e+p6I
- 1M8xmycWJzE20MYBBEa5w1Bnxgm1Hea7B8UAEN6/1XYCsz++U2azMM813Rbwq5eu4Lc9P8P0w
- RYZYvqSSX/rsHBZmMajELzr108Cs+Re8/uqsxmnE2dOa/WaohnpyMMwa6fuGNext6Ty7GNDxQ
- moB+0D5osuGDppo4Tg9vp+j90EGGh9bVj3kvX5mO4tWo3AAirmND+Y5MS735F1uQnkUTwhZte
- eb9nGiEFhTWH31+L87V8tXzQFPuO+h0HPU+F7/eGtS5+i4q/HW3UPa+pAv+AKrlALPx04JwU5
- IaydQh0eGlKxlhyfxC397kaCIjqk6tqPGYq2pxUZ22CmOJN46z3GqCjBKUHPmeURPtdoHmh4j
- vVza9cUCp8j91ioNRfVrbgqnWrN/PHO/2QKF1YnOPfdHQUk8DvSzVp53Z14pj8b/pK2gBZfKs
- hBO9irNo0g4VsCW30UylXrto938wupc0IE0qKBACs9uvmwNZ3s0QENdcFNbPUsvV0hwHSe9+D
- cCabNWueL8O88P6laIJXCslYOe0tOABs0ScA3RgUtrwb09HenH8a+g9QpbjBmeTZgx8N1VR57
- FAYDNwE4NqyZv8XEbW0w4XY8tvVS9hoM59OsmlsglLwZqymJn5a2UB3zyAmLJgQ92gkg90zde
- b7IFpC+kSiKIS4qrXR12nFJ58TbiW5FgbeGa2cbE5aI4svQsrvtTG+i8hmFFcnVRnudKGoEFJ
- JMlU+TzcIY0d4DcUp/fQ==
+References: <20190219103148.192029670@infradead.org> <20190219103233.443069009@infradead.org>
+ <CAMuHMdW3nwckjA9Bt-_Dmf50B__sZH+9E5s0_ziK1U_y9onN=g@mail.gmail.com> <20191204104733.GR2844@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191204104733.GR2844@hirez.programming.kicks-ass.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 4 Dec 2019 13:32:58 +0100
+Message-ID: <CAMuHMdXs_Fm93t=O9jJPLxcREZy-T53Z_U_RtHcvaWyV+ESdjg@mail.gmail.com>
+Subject: Re: [PATCH v6 10/18] sh/tlb: Convert SH to generic mmu_gather
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.11.19 13:57, Linus Walleij wrote:
+Hoi Peter,
 
-Hi,
+On Wed, Dec 4, 2019 at 11:48 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> On Tue, Dec 03, 2019 at 12:19:00PM +0100, Geert Uytterhoeven wrote:
+> > On Tue, Feb 19, 2019 at 11:35 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > Generic mmu_gather provides everything SH needs (range tracking and
+> > > cache coherency).
+> > >
+> > > Cc: Will Deacon <will.deacon@arm.com>
+> > > Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
+> > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > Cc: Nick Piggin <npiggin@gmail.com>
+> > > Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> > > Cc: Rich Felker <dalias@libc.org>
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >
+> > I got remote access to an SH7722-based Migo-R again, which spews a long
+> > sequence of BUGs during userspace startup.  I've bisected this to commit
+> > c5b27a889da92f4a ("sh/tlb: Convert SH to generic mmu_gather").
+>
+> Whoopsy.. also, is this really the first time anybody booted an SH
+> kernel in over a year ?!?
 
-> My own pet peeve is the industrial automation and control use
-> case: here we have the design space where people today use
-> either PLC:s or RaspberryPi's or Beagle boards, or even some
-> custom computers.
-> 
-> For me personally that is a design space we should cover and
-> if this helps the RaspberryPi to do that better I'm all for it.
+Nah, but the v5.4-rc3 I booted recently on qemu -M r2d had
+CONFIG_PGTABLE_LEVELS=2, so it didn't show the problem.
 
-Yeah, I also have clients in that field. The main problem here,
-IMHO is their way of thinking: no device abstraction at all, but all
-pretty much hardwired for specific installations (also the reason,
-why they'll fail miserable on the new IOT field :p). These folks are
-still used to the ancient pure PLC way, where there isn't even anything
-like an operating system.
+> > Do you have a clue?
+>
+> Does the below help?
 
-IMHO, it's an educational problem: people need to understand that
-there're device abstractions for good reasons, and they should respect
-and use them. Basically, they have to understand the concept of
-modularization and abstractions. IEC 1131-3 obviously isn't made for
-that.
+Unfortunately not.
 
-For example, take simple heating installation. Pumps won't be controlled
-by raw inverter configuration anymore, but rpm or m²/sec. Temp or flow
-sensors don't give raw numbers, but degress Kelvin or m^/sec, etc.
-In that case, the corresponding subsystem would be IIO - no need to ever
-care about gpios, pwms, etc, directly.
+> diff --git a/arch/sh/include/asm/pgalloc.h b/arch/sh/include/asm/pgalloc.h
+> index 22d968bfe9bb..73a2c00de6c5 100644
+> --- a/arch/sh/include/asm/pgalloc.h
+> +++ b/arch/sh/include/asm/pgalloc.h
+> @@ -36,9 +36,8 @@ do {                                                  \
+>  #if CONFIG_PGTABLE_LEVELS > 2
+>  #define __pmd_free_tlb(tlb, pmdp, addr)                        \
+>  do {                                                   \
+> -       struct page *page = virt_to_page(pmdp);         \
+> -       pgtable_pmd_page_dtor(page);                    \
+> -       tlb_remove_page((tlb), page);                   \
+> +       pgtable_pmd_page_dtor(pmdp);                    \
 
-Following this modular approach, everything suddenly gets much easier,
-eg. replacing a pump by a different model just requires a minor
-reconfiguration instead of rewriting huge parts of the plc code.
+expected ‘struct page *’ but argument is of type ‘pmd_t * {aka struct
+<anonymous> *}’
 
-I've managed to teach this to an Siemens field technician in one evening
-with a few beers, so it can't be that hard to understand.
+> +       tlb_remove_page((tlb), (pmdp));                 \
 
-> An especially interesting case is multiple GPIO expanders
-> plugged in on pluggable busses such as PCI or USB. I think
-> that kind of discoverability and dynamically expandable GPIO
-> blocks is something people in the industry are quite keen to
-> get.
+likewise
 
-Smells like a case for oftree overlays ...
+>  } while (0);
+>  #endif
 
-> What we need to do is to make it dirt simple to use GPIOs for
-> custom hacks and construction of factories and doorstops
-> and what not, while at the same time strongly discouraging
-> it to be used to manage hardware such as laptops, tablets
-> or phones from userspace. That's maybe hard, and we might
-> be victims of our own success ...
+Gr{oetje,eeting}s,
 
-I contradict. We should encourage industrial/construction folks to
-do decently structured, professional engineering - IOW: use
-modularization and highlevel drivers, instead of tinkering with
-raw gpios directly like a school kid.
-
-
---mtx
+                        Geert
 
 -- 
-Dringender Hinweis: aufgrund existenzieller Bedrohung durch "Emotet"
-sollten Sie *niemals* MS-Office-Dokumente via E-Mail annehmen/öffenen,
-selbst wenn diese von vermeintlich vertrauenswürdigen Absendern zu
-stammen scheinen. Andernfalls droht Totalschaden.
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
