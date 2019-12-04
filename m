@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2781AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559EFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFBF02073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2055E20862
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482260;
-	bh=+4ZYxgp6JPeEo+Ag+AOKVeFQr15T9Pdm9jbIOQcVegU=;
+	s=default; t=1575482266;
+	bh=cxbX40+yMebtvgtypjYfDbKSAlYOdV5SCSC0zAhdyaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RaVaxXzBxYnjPJhrfQnbztrjsnGpsSvPpi31I8xEwcbGXychIyTAtgcG3+3/OS90z
-	 H3QB8DmELbMILQ3y3PEumdpWRnk5fAz+Q6OeAyVC8TbPwLkDJT7bFCMNEkrkLI9FYa
-	 1zfX/7UzgwlvF3mn7O4U6GAMJyrmgX1mQo1g1hp4=
+	b=kbX0oytvgukMin4R8HbJBQ2mn4O9Al8tY0Yjtc8jGhhjHw/jkhjGIYDsrEZT4qw1L
+	 LPCYHfLpF421nshoaZf3yEmLWszMoLQmamFyshgcNj8Nwj/hgOkIZgQwpNBzK7BUmT
+	 GeJNvfaRcBoJCZeKGMnro/ziI60aa4h10LIPtATI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbfLDR5i (ORCPT
+        id S1728369AbfLDR5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:57:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58612 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 12:57:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728311AbfLDR5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:57:36 -0500
+        id S1728342AbfLDR5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:57:41 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B370D2081B;
-        Wed,  4 Dec 2019 17:57:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AD1F2073B;
+        Wed,  4 Dec 2019 17:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482256;
-        bh=+4ZYxgp6JPeEo+Ag+AOKVeFQr15T9Pdm9jbIOQcVegU=;
+        s=default; t=1575482261;
+        bh=cxbX40+yMebtvgtypjYfDbKSAlYOdV5SCSC0zAhdyaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=joItWs5kKSpB99nZCpMWH63l1R3FRvun2eUrFQyP6WTIJFGGEbbXmqarfmGsyjjXh
-         8dDxu+lu9n6bNCBrQNnOtfFWc2sn3JRY0JpEVaAlkkBJIsb4aPsECVoxrQiG5ctYva
-         XWWcr99ZHc55KnzIWoWt8bT4+T+ErWN6iaeKReqE=
+        b=PU/tJQioApDfddDF0sWOivRVBjjIWyg+eKwolAu9Un25n8WHvd7k9eMAkAxvB8zo4
+         BbFq1dnEvCPNOpOGPEz+RdJlmCL5b0o4Mn80isRZdcJ2lQiwHP8vI2yBZ99SQZ6f5e
+         T3sYhBEkg8BvVlpBnA6gpMM8+KFv5FtxCTFlqlJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Capper <steve.capper@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 14/92] arm64: smp: Handle errors reported by the firmware
-Date:   Wed,  4 Dec 2019 18:49:14 +0100
-Message-Id: <20191204174330.241834671@linuxfoundation.org>
+Subject: [PATCH 4.4 16/92] ARM: ks8695: fix section mismatch warning
+Date:   Wed,  4 Dec 2019 18:49:16 +0100
+Message-Id: <20191204174330.411393155@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -61,37 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit f357b3a7e17af7736d67d8267edc1ed3d1dd9391 ]
+[ Upstream commit 4aa64677330beeeed721b4b122884dabad845d66 ]
 
-The __cpu_up() routine ignores the errors reported by the firmware
-for a CPU bringup operation and looks for the error status set by the
-booting CPU. If the CPU never entered the kernel, we could end up
-in assuming stale error status, which otherwise would have been
-set/cleared appropriately by the booting CPU.
+WARNING: vmlinux.o(.text+0x13250): Section mismatch in reference from the function acs5k_i2c_init() to the (unknown reference) .init.data:(unknown)
+The function acs5k_i2c_init() references
+the (unknown reference) __initdata (unknown).
+This is often because acs5k_i2c_init lacks a __initdata
+annotation or the annotation of (unknown) is wrong.
 
-Reported-by: Steve Capper <steve.capper@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/smp.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-ks8695/board-acs5k.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 03c0946b79d20..7e90f429f7e5c 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -115,6 +115,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
- 		}
- 	} else {
- 		pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
-+		return ret;
- 	}
+diff --git a/arch/arm/mach-ks8695/board-acs5k.c b/arch/arm/mach-ks8695/board-acs5k.c
+index 9f9c0441a9175..e372609c48dd0 100644
+--- a/arch/arm/mach-ks8695/board-acs5k.c
++++ b/arch/arm/mach-ks8695/board-acs5k.c
+@@ -92,7 +92,7 @@ static struct i2c_board_info acs5k_i2c_devs[] __initdata = {
+ 	},
+ };
  
- 	secondary_data.stack = NULL;
+-static void acs5k_i2c_init(void)
++static void __init acs5k_i2c_init(void)
+ {
+ 	/* The gpio interface */
+ 	platform_device_register(&acs5k_i2c_device);
 -- 
 2.20.1
 
