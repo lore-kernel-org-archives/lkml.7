@@ -2,115 +2,92 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608DFC2D0BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112A4C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2349E2073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:21:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9HjnBCx"
+	by mail.kernel.org (Postfix) with ESMTP id DA8A92073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575498108;
+	bh=fsW26aMycBRY177JsvJe4tBpzShaxZImXYUauAILfBA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J6ePsmUqiEzCo2F/G9czAf9Uzm0Z1hXhN4MhhOoxntbVYjvjwyMIqoYGUB9JQkCRN
+	 xMW4xeEStEBqhlx59rb580ADPBZ2Xvp4ibPTp2hjZ5L3fDcIs69o28DIOThFFGkmRJ
+	 1FQ33/gRqdTOZMMuriEYKj3+QE+Q2vGKmGn1nHew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbfLDWVa (ORCPT
+        id S1728406AbfLDWVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 17:21:30 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:40412 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfLDWVa (ORCPT
+        Wed, 4 Dec 2019 17:21:47 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41598 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfLDWVr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 17:21:30 -0500
-Received: by mail-pj1-f65.google.com with SMTP id s35so385147pjb.7;
-        Wed, 04 Dec 2019 14:21:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7uOomMuI9mkDudH3/Tq6vnvg4y88VOc+n31E0loZH7M=;
-        b=Q9HjnBCxmvtNN8zxZWRDX8eLbJV4OsaK5gxztSXJYkHjTHmyIpNvLrI0NHllqHts5c
-         xyrM4D+RoPqMBdeSto4J++yqHZB9xXrznc87VYDtPsx0Clm88S85PBpaLb52mkBqAvAh
-         sTboRlR75EDz6iPZGMjhGrfnFUvLW47CqDPo/5OIYyH4HxvLV3dTwZSprxXchio0OaHt
-         AktQN+DoraG71O2+hZVnXkPIFiF4j4nxRHEcwVqltSufoE6tJcf9wSHYF9h10/b9yBtB
-         PZxBoHxoD65eKVfjWBdbJ+GmntIXP0mnbJ22Mhonc896p1hGgLxN3r6b+T5pVBnJTn+C
-         ajDA==
+        Wed, 4 Dec 2019 17:21:47 -0500
+Received: by mail-oi1-f193.google.com with SMTP id i1so793042oie.8;
+        Wed, 04 Dec 2019 14:21:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7uOomMuI9mkDudH3/Tq6vnvg4y88VOc+n31E0loZH7M=;
-        b=eQLdF65BUuPQ1SL/Ftc/YMmcm6QDyGm5d145159823uLAaqvT5cFn4Q0K+BuADkHmV
-         ruML5GfcoKTZ5Dv2C6ILmvHbsJHLBjRvHnDQ1VWHUtVCaDEfUPSKIA9j7MyesTgVsbWt
-         BLtNtJb7W1UOAF46hs+ansm7gwhDcGyGMEiKJP6+i3HOqI1tBwArUzQvwNXHoCZmZwBO
-         yZNO1MLazqsHWUfR6NHR7atc4/U3UqD+/4d9P+qapHTrUZ1iU3/N1gR3W1AIbCBNCABV
-         U3lMRhmAswtBPAhnS0TiVKIHxLxEcSNRnq0tyH3w7eWB30pI2Dx/Saf5rV9qzgPkQN78
-         XLsA==
-X-Gm-Message-State: APjAAAWK/jJuB/2/7UVGSPKok/bd8qbNtc++5kW1QTLVahcArSyRZPhx
-        QO33vaM0LgdfAcn232oVHXsL1vCaINyyMXx1xGC+0GbjaVw=
-X-Google-Smtp-Source: APXvYqzD5GzHOaXAQ/z8VrRalXeZYbNVadalCl/ap48T7RwiTRRlKy35Rxp/hvF2rcRRw0/MO2zggU6fUWh7uChFCLA=
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr5773604pjb.30.1575498089340;
- Wed, 04 Dec 2019 14:21:29 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0YMXPK0MWLWyfIyxG2mVwtUXfMBfXzC4dJTyDwiUSCI=;
+        b=EsvFcgw+93ewHXAgf2a+xrCmFjfD1lHaL2vFNhL4VhLs9NlMsNqkU+fx3qANdzhuUN
+         FWkyRIdSZUgsXRD0nj12/zucWRIGCp3/U+atoHtH7NszlS6U5YZx2ydh9vm8VD7Imx3t
+         MolPCt7Xewu/VH1jMlmj2UqZg6wkHNmHK+uemZjKkljFnhIUjdrDnGXD6Pr6ycJSpljF
+         S2el8wZCjtnhI8U0jwhyH47mc18PouiUNtACc/fhWPgX5O6j/m5orKsi11rF+5FS6Zgh
+         LlgW2zqa+DJM2ArDisLSwZiTpL+n1xsrwm+kLJoBwKoo8SYYATU0M/hL2RIbxFrEw4sx
+         tmDA==
+X-Gm-Message-State: APjAAAXou1Z1aekDg0A0GhllmeFD+tqqnBtFWE6UIRgUjyyLSu/KmYub
+        FG4/ILFojb2jU9VpC9CLBqozyys=
+X-Google-Smtp-Source: APXvYqxd6OOdNmobqARjtlfaN0LLudPr5TKfnJ4uyLbrkH6cblTCYO0/yUZjNuu/J1TAHun4I2prDQ==
+X-Received: by 2002:aca:d5d3:: with SMTP id m202mr4421120oig.161.1575498106026;
+        Wed, 04 Dec 2019 14:21:46 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y24sm2784605oix.31.2019.12.04.14.21.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 14:21:45 -0800 (PST)
+Date:   Wed, 4 Dec 2019 16:21:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH] dt-bindings: remoteproc: stm32: add wakeup-source
+ property
+Message-ID: <20191204222144.GA25718@bogus>
+References: <20191122125402.14730-1-arnaud.pouliquen@st.com>
 MIME-Version: 1.0
-References: <20191204155912.17590-1-brgl@bgdev.pl> <20191204155912.17590-7-brgl@bgdev.pl>
-In-Reply-To: <20191204155912.17590-7-brgl@bgdev.pl>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Dec 2019 00:21:17 +0200
-Message-ID: <CAHp75Ve00HXD6Zm6Ypy4oapAZTJk99tzDSu-=c5NG4iOjK8KzQ@mail.gmail.com>
-Subject: Re: [PATCH v2 06/11] gpiolib: use gpiochip_get_desc() in gpio_ioctl()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122125402.14730-1-arnaud.pouliquen@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 6:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Unduplicate the offset check by simply calling gpiochip_get_desc() and
-> checking its return value.
->
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, 22 Nov 2019 13:54:02 +0100, Arnaud Pouliquen wrote:
+> If the optional wdg interrupt is defined, then this property
+> may be defined.
+> 
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 > ---
->  drivers/gpio/gpiolib.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 17796437d7be..b7043946c029 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1175,10 +1175,11 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->
->                 if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
->                         return -EFAULT;
-> -               if (lineinfo.line_offset >= gdev->ngpio)
-> -                       return -EINVAL;
->
-> -               desc = &gdev->descs[lineinfo.line_offset];
-> +               desc = gpiochip_get_desc(chip, lineinfo.line_offset);
-> +               if (IS_ERR(desc))
-> +                       return PTR_ERR(desc);
-> +
->                 if (desc->name) {
->                         strncpy(lineinfo.name, desc->name,
->                                 sizeof(lineinfo.name));
-> --
-> 2.23.0
->
+> This commit is related to the merge conflict issue reported by
+> Stephen Rothwell: https://lkml.org/lkml/2019/11/21/1168
+> ---
+>  .../devicetree/bindings/remoteproc/st,stm32-rproc.yaml          | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
+Applied, thanks.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Rob
