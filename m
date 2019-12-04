@@ -2,212 +2,103 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E26C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A10C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC3BD2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0CA2073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:09:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=laposte.net header.i=@laposte.net header.b="IVjMPm63"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZnKMm7NV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbfLDNGf (ORCPT
+        id S1727846AbfLDNJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:06:35 -0500
-Received: from smtpoutz24.laposte.net ([194.117.213.99]:34996 "EHLO
-        smtp.laposte.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726215AbfLDNGe (ORCPT
+        Wed, 4 Dec 2019 08:09:21 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:44374 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfLDNJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:06:34 -0500
-Received: from smtp.laposte.net (localhost [127.0.0.1])
-        by lpn-prd-vrout012 (Postfix) with ESMTP id DC70F16543C
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 14:06:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=laposte.net; s=mail0;
-        t=1575464790; bh=QoIoJNvQPoGhf1mEusSBQCFVb/hmuGDTkK983LBNhUA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=IVjMPm635PtB2Yl7mYU30crQdS480bPi7jOE3zVI1J9Xa55WFhJQYQ87r5VIZ2qny
-         QYI8Fwe5PpySZWTBSyzmtuS4BYB2cGQCQaUGt9zABQuvyEM5d4CLHDoZ+PiI3cXFV1
-         fEbSqLB8Y1fGWVe6DonfAoI8eJ0laFwDU2H2sflNp405NQyyZ2Cy1UKXdi4e1vEJaW
-         n4m3bcglSXgT74zsTVnI6l3IYI7li5HROizHwu9s9iNjQG75TbZwD7qAyxPJyMOP8Q
-         UvlYgKDRtmZPguV2rA8+fYRbKXqawoyAgqTsISfYiYTdmYMQ2SreNRPiDShLS3xKXG
-         +JYSYp4V+F35Q==
-Received: from smtp.laposte.net (localhost [127.0.0.1])
-        by lpn-prd-vrout012 (Postfix) with ESMTP id CC4E4165467
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 14:06:30 +0100 (CET)
-Received: from lpn-prd-vrin003 (lpn-prd-vrin003.prosodie [10.128.63.4])
-        by lpn-prd-vrout012 (Postfix) with ESMTP id C563716543C
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 14:06:30 +0100 (CET)
-Received: from lpn-prd-vrin003 (localhost [127.0.0.1])
-        by lpn-prd-vrin003 (Postfix) with ESMTP id B2DA64A726C
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 14:06:30 +0100 (CET)
-Received: from [192.168.1.18] (lfbn-mar-1-801-152.w92-150.abo.wanadoo.fr [92.150.127.152])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by lpn-prd-vrin003 (Postfix) with ESMTPSA id 4C5A04A7228;
-        Wed,  4 Dec 2019 14:06:29 +0100 (CET)
-Subject: Re: [PATCH] fs: introduce is_dot_dotdot helper for cleanup
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
+        Wed, 4 Dec 2019 08:09:20 -0500
+Received: by mail-yw1-f65.google.com with SMTP id t141so2728292ywc.11;
+        Wed, 04 Dec 2019 05:09:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6M5H4D4X2AsOiYboIpdgi6cfmrBnb91azdYQdJ9k7uE=;
+        b=ZnKMm7NV37u/pTdxfH6NqTWY4rZ/we6M/bzSCnakVlwVPvqtmHaasJVzLKXG3zu/qQ
+         Q5U5Kz9QaBaaTlCeXIURQehZupgHp9oQOh60nZTGEub81x3a+1VJN7Zio+mPNYzWh9KI
+         /2vVBvS37+OSQV19yMnLG2K0IrtJHEsfZOJKOrO6r+3WCIp3DCVwPkxrmYzXc+lOpO4u
+         +7ez/feDqTKF4dozCL1liXtJS5/1mEwWysHo4ZoXidZN5cwLByhOBWqj2/2hRw18ie8+
+         nwuf6/rQxBLh+zn+Y3DabHcFdFaUom7vFSeShMx5626b+fNn5vWR0I2E+yh4hJ+yfMOV
+         T6YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6M5H4D4X2AsOiYboIpdgi6cfmrBnb91azdYQdJ9k7uE=;
+        b=aZW1kmMyOhhTWF3SdAOiuvCg/wJIN0vq3NxdWtEIs8RAihvPKpaV6LuYYRnDJB1vOe
+         udgYuoQI77KN9i2TwoGsiq31f/NWCN+FrzVeG4v7EM6uMck0tL2ZPA7Y7005fNxssnU5
+         gKC4ehf+G1K1ItUNQrTJJp1Cs3tNaM2L/Dr07l2n6EXstd6UOsC3ggm8ejy/epDgGmmc
+         rbNDDsnZFkCIzm0WHJ7oEdk7vhqWcwE2ikwU9Yt50ARTprEBv3beH01K8vUmkpulInY7
+         0E7HUOPs/wj/ux2dvVoVXBBQE0MWFxiSc/OsaWwoc0v06fh4Xsu4HCsBplKFAsZSjPW3
+         8a5Q==
+X-Gm-Message-State: APjAAAWvTzZKrFPm4sC+qzI3sPs19vTxzp9pxqKz7WVbSbssjFDxNzb+
+        0h8ESKMbfLaIHRwABZ7UhYAL9sJwclA=
+X-Google-Smtp-Source: APXvYqzUC2NwCkByPnF1pFnKQUfDQa9+9llgOQYxTcPuo1Y3zs2vYlHkYcBrgO2ha9dwjLhpC4rJcA==
+X-Received: by 2002:a81:65c4:: with SMTP id z187mr1722227ywb.191.1575464959075;
+        Wed, 04 Dec 2019 05:09:19 -0800 (PST)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id y189sm2906385ywf.53.2019.12.04.05.09.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 05:09:18 -0800 (PST)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-media@vger.kernel.org
+Cc:     adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-kernel@vger.kernel.org
-References: <1575281413-6753-1-git-send-email-yangtiezhu@loongson.cn>
- <20191202200302.GN20752@bombadil.infradead.org>
- <357ad021-a58c-ad46-42bd-d5012126276f@loongson.cn>
-From:   Jean-Louis Biasini <jl.biasini@laposte.net>
-X-Pep-Version: 2.0
-Message-ID: <12554a8e-2899-f03f-ec3d-d4cf35c4dd71@laposte.net>
-Date:   Wed, 4 Dec 2019 14:06:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+Subject: [PATCH V2] media: ov5640: Fix check for PLL1 exceeding max allowed rate
+Date:   Wed,  4 Dec 2019 07:09:07 -0600
+Message-Id: <20191204130907.19799-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <357ad021-a58c-ad46-42bd-d5012126276f@loongson.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-VR-FullState: 0
-X-VR-Score: -100
-X-VR-Cause-1: gggruggvucftvghtrhhoucdtuddrgedufedrudejledggeejucetufdoteggodetrfdotffvucfrrhho
-X-VR-Cause-2: fhhilhgvmecunfetrffquffvgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhht
-X-VR-Cause-3: shculddquddttddmnecujfgurhepuffvfhfhkffffgggjggtgfesthhqredttdefjeenucfhrhhomhep
-X-VR-Cause-4: lfgvrghnqdfnohhuihhsuceuihgrshhinhhiuceojhhlrdgsihgrshhinhhisehlrghpohhsthgvrdhn
-X-VR-Cause-5: vghtqeenucfkphepledvrdduhedtrdduvdejrdduhedvnecurfgrrhgrmhepmhhouggvpehsmhhtphho
-X-VR-Cause-6: uhhtpdhinhgvthepledvrdduhedtrdduvdejrdduhedvpdhhvghloheplgduledvrdduieekrddurddu
-X-VR-Cause-7: kegnpdhmrghilhhfrhhomhepjhhlrdgsihgrshhinhhisehlrghpohhsthgvrdhnvghtpdhrtghpthht
-X-VR-Cause-8: oheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhi
-X-VR-Cause-9: nhhugidqfhdvfhhsqdguvghvvghlsehlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghp
-X-VR-Cause-10: thhtoheplhhinhhugidqfhhstghrhihpthesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
-X-VR-Cause-11: pegvtghrhihpthhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhf
-X-VR-Cause-12: shguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthihhhhitghkshestggr
-X-VR-Cause-13: nhhonhhitggrlhdrtghomhdprhgtphhtthhopegvsghighhgvghrsheskhgvrhhnvghlrdhorhhgpdhr
-X-VR-Cause-14: tghpthhtohephihutghhrghotdeshhhurgifvghirdgtohhmpdhrtghpthhtohepjhgrvghgvghukhes
-X-VR-Cause-15: khgvrhhnvghlrdhorhhgpdhrtghpthhtohepthihthhsohesmhhithdrvgguuhdprhgtphhtthhopehv
-X-VR-Cause-16: ihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepfihilhhlhiesihhnfhhr
-X-VR-Cause-17: rgguvggrugdrohhrghdprhgtphhtthhopeihrghnghhtihgviihhuheslhhoohhnghhsohhnrdgtnhen
-X-VR-Cause-18: ucevlhhushhtvghrufhiiigvpedt
-X-VR-AvState: No
-X-VR-State: 0
-X-VR-State: 0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please UNSUBSCRIBE ME from this list of tell how to!!!
+The PLL calculation routine checks the wrong variable name 'rate'
+when it should be called '_rate' when checking to see whether or
+not the PLL1 output frequency exceeds 1GHz.
 
-Le 03/12/2019 =C3=A0 03:07, Tiezhu Yang a =C3=A9crit=C2=A0:
-> On 12/03/2019 04:03 AM, Matthew Wilcox wrote:
->> On Mon, Dec 02, 2019 at 06:10:13PM +0800, Tiezhu Yang wrote:
->>> There exists many similar and duplicate codes to check "." and "..",
->>> so introduce is_dot_dotdot helper to make the code more clean.
->> The idea is good.=C2=A0 The implementation is, I'm afraid, badly chose=
-n.
->> Did you benchmark this change at all?=C2=A0 In general, you should pre=
-fer the
->> core kernel implementation to that of some less-interesting filesystem=
-s.
->> I measured the performance with the attached test program on my laptop=
+This patch changes it to the correct variable '_rate'
 
->> (Core-i7 Kaby Lake):
->>
->> qstr . time_1 0.020531 time_2 0.005786
->> qstr .. time_1 0.017892 time_2 0.008798
->> qstr a time_1 0.017633 time_2 0.003634
->> qstr matthew time_1 0.011820 time_2 0.003605
->> qstr .a time_1 0.017909 time_2 0.008710
->> qstr , time_1 0.017631 time_2 0.003619
->>
->> The results are quite stable:
->>
->> qstr . time_1 0.021137 time_2 0.005780
->> qstr .. time_1 0.017964 time_2 0.008675
->> qstr a time_1 0.017899 time_2 0.003654
->> qstr matthew time_1 0.011821 time_2 0.003620
->> qstr .a time_1 0.017889 time_2 0.008662
->> qstr , time_1 0.017764 time_2 0.003613
->>
->> Feel free to suggest some different strings we could use for testing.
->> These seemed like interesting strings to test with.=C2=A0 It's always
->> possible
->> I've messed up something with this benchmark that causes it to not
->> accurately represent the performance of each algorithm, so please chec=
-k
->> that too.
->
-> [Sorry to resend this email because the mail list server
-> was denied due to it is not plain text.]
->
-> Hi Matthew,
->
-> Thanks for your reply and suggestion. I measured the
-> performance with the test program, the following
-> implementation is better for various of test cases:
->
-> bool is_dot_dotdot(const struct qstr *str)
-> {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (unlikely(str->name[0] =3D=
-=3D '.')) {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if (str->len < 2 || (str->len =3D=3D 2 && str->name[1]=
- =3D=3D
-> '.'))
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return=
- true;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return false;
-> }
->
-> I will send a v2 patch used with this implementation.
->
-> Thanks,
->
-> Tiezhu Yang
->
->>
->>> +bool is_dot_dotdot(const struct qstr *str)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 if (str->len =3D=3D 1 && str->name[0] =3D=3D '.')=
+Acked-by: Jacopo Mondi <jacopo@jmondi.org>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+---
+V2:  No code change.  Only change commit description to be less confusing.
 
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return true;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 if (str->len =3D=3D 2 && str->name[0] =3D=3D '.' =
-&& str->name[1] =3D=3D '.')
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return true;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return false;
->>> +}
->>> +EXPORT_SYMBOL(is_dot_dotdot);
->>> diff --git a/fs/namei.c b/fs/namei.c
->>> index 2dda552..7730a3b 100644
->>> --- a/fs/namei.c
->>> +++ b/fs/namei.c
->>> @@ -2458,10 +2458,8 @@ static int lookup_one_len_common(const char
->>> *name, struct dentry *base,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!len)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EACCES=
-;
->>> =C2=A0 -=C2=A0=C2=A0=C2=A0 if (unlikely(name[0] =3D=3D '.')) {
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (len < 2 || (len =3D=3D=
- 2 && name[1] =3D=3D '.'))
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn -EACCES;
->>> -=C2=A0=C2=A0=C2=A0 }
->>> +=C2=A0=C2=A0=C2=A0 if (unlikely(is_dot_dotdot(this)))
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EACCES;
->>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 while (len--) {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int c=
- =3D *(const unsigned char *)name++;
->
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index 5e495c833d32..bb968e764f31 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -874,7 +874,7 @@ static unsigned long ov5640_calc_sys_clk(struct ov5640_dev *sensor,
+ 			 * We have reached the maximum allowed PLL1 output,
+ 			 * increase sysdiv.
+ 			 */
+-			if (!rate)
++			if (!_rate)
+ 				break;
+ 
+ 			/*
+-- 
+2.20.1
 
