@@ -2,193 +2,172 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEF3C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B131C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B083F2073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A16206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:59:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oYG5iTO2"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="eh38D/dz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfLDDqZ (ORCPT
+        id S1727044AbfLDD74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 22:46:25 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45108 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbfLDDqZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 22:46:25 -0500
-Received: by mail-oi1-f195.google.com with SMTP id v10so3495488oiv.12
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 19:46:24 -0800 (PST)
+        Tue, 3 Dec 2019 22:59:56 -0500
+Received: from mail-mw2nam10on2084.outbound.protection.outlook.com ([40.107.94.84]:6216
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726804AbfLDD7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 22:59:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z6XIA0tNkiwrPS3UBDbhW5c4VZFnmgzyVN4niX0jxXqNw/gXpp/8fMtzbc/CkKErOZAsVXxsx3WETqlOQHORfkZcFLb5hhTmuGoKr0xF1PyHwWtsWl3BjNa7jInJlK/Ie4pJ5h7w+F9++wmAH1ICTeaZfbwtcxdJHr626ejrEBinFlS99pfEP5fTB8BxQtjk+/xjfV+a8vpIBwUC0XkunK9cu3T3a+3AmveAUeza2xkOYubb2dcPBZtyqbeoES+dpXeGX4WHFEpQ8nCwQPknrJnL3FHygByfHrT0u3X+2XcQ/YDj25QHj+KcU6uXa2NRvHmVe3lN8A8V29hVvzwSlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QXexEJVnl/xEIpKkqq1x6epAL1V3IDl57gkiOME/5po=;
+ b=aE0s9IH9go3xsPHdMEwgfD3y2EtWDFcZhIPUSkpH3NIg9/jPCNfqrMwJ1NfU+/ITrd6tUyL39Xr1SN4WvU7e/RyLvIKuxVK11FzYHL6gBYCGOImv7TheiQg2lUVREZ9A5bCdKroMAzSEyK9p7c1UdGlqCuRsMc4vE2lXizWLZN9jYPNW1EC1L48N4wNak+R86Fs6tJrvthmsHf+uJ+OMuOFAU6JIrHNIDRhtaB2FizhJ4vQ1Vj24/09+fMOcNfxNLcQlLh7PvW0/lE5crQz6N3HTTm0Pyd+hqW/XFcxePaBzCstVymCIRrwjudETwZd7JbesqeMYyseP/woLZGQfYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JCC0P6sewyoGc9ajO655j+2un+o+YPosg6IwylBf0ig=;
-        b=oYG5iTO2umQI4lTtVN3JCvwMMgGXrMOi+Uvkw++7E14mlCpl8AY7x1+8ObCOBsxDIJ
-         CbyVrqz1AKkICa32ERW4Q0Qh1EHjt0vijU4iLoaNwNJ83P+fUWZjQtLtBGJ/iKiqgstd
-         O9rgW+zUQrLmcVs4cJ1V40fwoE+KGyn1E16E58w/ZplkNDYl3cV+9D0EM+g0lY4KwWgL
-         YdQXzmSOkqUlBxG5rNdIQLRk3wpLWVwJNPk5ukBR3F30rIRuvyCvM1LV2UFicNcFzvbH
-         KFsvNcthTFWFXdj9Pga+w4LyHvpCKlTjD9xqfNQ5pndA89pYlDhPvu/ZCdsB9dRDLXUI
-         AdIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JCC0P6sewyoGc9ajO655j+2un+o+YPosg6IwylBf0ig=;
-        b=HAAsANAifFAZVSXD5Jequp4neaO1i4v7FkACl7CwlAPrxbZe1lv/tWkQt4BvAQix4A
-         +Pfk27SzOZ+M9fjJPJCILXt8wWY0NcMKxaTja1cH/TMqLLuxfFJUPRqcSG/EWMdJ6WO6
-         lMJuPF90kyKTa5wHGqg6xkMjc+kzKltcu+k7wTumKpRs9D/rhLE13DBGbOPyFmf+4oCD
-         1+CHUGjs+/xOtrwNbxJfHqBYF505hBvKTaWF7iEtgur5ul+BvLpRzsjuaQhiJQSPWDBx
-         aArPo3iSS/0CiquaugxK/jyDdG1ca2QCojgyM1Cs715lYXN0llJ+tVAvrJ2UOoICZoYl
-         Ni9Q==
-X-Gm-Message-State: APjAAAWmu3JXwOYb27QPYcpIEH/Z8e+EUlTD/C+mY0RtqrS1HBMf1ISU
-        3uPci3eMp63hfOFyJlPBYztXLSXIkXXoEEBpD3IWBg==
-X-Google-Smtp-Source: APXvYqzVBcm0/ioRNXWoP9xvCyOHRPmgECgeMJZZA53BLvAeGcSs4XlRj9Lq/YQg0xmv6W3J9tAT4H3tgVFZAzd1ywE=
-X-Received: by 2002:aca:ab95:: with SMTP id u143mr965585oie.128.1575431183889;
- Tue, 03 Dec 2019 19:46:23 -0800 (PST)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QXexEJVnl/xEIpKkqq1x6epAL1V3IDl57gkiOME/5po=;
+ b=eh38D/dzYFeMZtv6DZ7xOc/u6UofG8pO83I9Q3KEcT/NscU68TfEb5pefbw384b/Js5LkemNAeE2Bf6a8Po154dZZed1iO0N7eEF8CrUYxrlc2RiXMI6S5TQZHmImfyEku17/fmqOE/jnizJMTWTZK+fw4zC83jdyxaWO1jSIkc=
+Received: from MN2PR02MB5727.namprd02.prod.outlook.com (20.179.85.153) by
+ MN2PR02MB6813.namprd02.prod.outlook.com (52.135.50.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.20; Wed, 4 Dec 2019 03:59:39 +0000
+Received: from MN2PR02MB5727.namprd02.prod.outlook.com
+ ([fe80::948:464d:e305:9adc]) by MN2PR02MB5727.namprd02.prod.outlook.com
+ ([fe80::948:464d:e305:9adc%5]) with mapi id 15.20.2516.003; Wed, 4 Dec 2019
+ 03:59:39 +0000
+From:   Naga Sureshkumar Relli <nagasure@xilinx.com>
+To:     Srinivas Neeli <sneeli@xilinx.com>,
+        "wg@grandegger.com" <wg@grandegger.com>,
+        "mkl@pengutronix.de" <mkl@pengutronix.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Michal Simek <michals@xilinx.com>,
+        Appana Durga Kedareswara Rao <appanad@xilinx.com>
+CC:     "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        git <git@xilinx.com>, Srinivas Neeli <sneeli@xilinx.com>
+Subject: RE: [PATCH V2] can: xilinx_can: Fix missing Rx can packets on
+ CANFD2.0
+Thread-Topic: [PATCH V2] can: xilinx_can: Fix missing Rx can packets on
+ CANFD2.0
+Thread-Index: AQHVqdOPUv7+hq6CjUSnDAohvbmmXKepWmLg
+Date:   Wed, 4 Dec 2019 03:59:38 +0000
+Message-ID: <MN2PR02MB5727E5E2BF394AC2898D5E1FAF5D0@MN2PR02MB5727.namprd02.prod.outlook.com>
+References: <1575375396-3403-1-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1575375396-3403-1-git-send-email-srinivas.neeli@xilinx.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=nagasure@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b377bdd3-2a0c-4805-bbe5-08d7786e628d
+x-ms-traffictypediagnostic: MN2PR02MB6813:|MN2PR02MB6813:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR02MB6813C7BD94430386A3ED4E13AF5D0@MN2PR02MB6813.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(346002)(366004)(396003)(13464003)(199004)(189003)(478600001)(6116002)(53546011)(11346002)(6436002)(54906003)(99286004)(107886003)(64756008)(26005)(25786009)(71190400001)(446003)(229853002)(14454004)(66446008)(55016002)(186003)(102836004)(4326008)(2501003)(8676002)(9686003)(74316002)(6246003)(71200400001)(2906002)(81166006)(3846002)(6506007)(33656002)(110136005)(86362001)(6636002)(7736002)(256004)(7696005)(305945005)(66476007)(316002)(66946007)(2201001)(66556008)(8936002)(5660300002)(81156014)(76176011)(52536014)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6813;H:MN2PR02MB5727.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: cPSu2VKPAILvtkzf4cU3Nmbtf+UtMN7uvrzs1J5BDIbLgk5EFiKhgrnWpflg/z8Mn6TAMlMERBmU4CEyuiijl6S2Sa1VOiivfszCEGPAWZwDlRyuFX0qZO2LcptTCtUb5QRXkKg3A9+sOSHOKNI5aeICjYkucnd+BYC0K9t5XoaROHB9e3QmsBf4+Hs2tq1a+0pJbHeDzQUiV4V8d6NNBkkTa9TcAz4iRIkkZq00rxbmXaF0AgbrrFuzRH3o5LM3IM5DJL9dTwscCiBuaEd1SGkMfhoF8wxnnpgxroWA85MbUqw6p/vlyfZZIgMJ3vYfbOLjxB1tXb9uVrCdaHpAbp7X9An9t2VSvla5x4se+VuX58sxcoU/hqU9LavjYNi+Zo0J5EG0wrhmFltAM5xZp1KdBxhQcH/SvnuwcyK1moiqEuQ9BSdqWgMD5X/AXYR+QUkui0XK1C1ebbZD+qh6AXWaKQiIjh/sUpIowHnWL1pwdf8nsEiDMeb5kmSWaQdi
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CALAqxLXrWWnWi32BR1F8JOtrGt1y2Kzj__zWopLx1ZfRy3EZKA@mail.gmail.com>
- <c61cf647-ecb6-b9fa-51f2-8efa36134757@arm.com> <14a8e456-1f89-0dff-ae89-61e8b6d5593b@arm.com>
- <7548a890-d32b-7e7d-4f84-4ebf635c3e8a@arm.com>
-In-Reply-To: <7548a890-d32b-7e7d-4f84-4ebf635c3e8a@arm.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 3 Dec 2019 19:46:12 -0800
-Message-ID: <CALAqxLVDaiJWd7W5+FBKs=Mq8AHw52fApPc_Xu2gTq9DTn0vgQ@mail.gmail.com>
-Subject: Re: Null pointer crash at find_idlest_group on db845c w/ linus/master
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Patrick Bellasi <Patrick.Bellasi@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b377bdd3-2a0c-4805-bbe5-08d7786e628d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 03:59:39.0446
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: N39VlpqxBGrIlMGauCvZS9BpQaD1zyD28g3RnbspcDV6pAK+nJWkCoXwiR2c5ZOmL4A38WRFVc0FNCZQJvm2Ig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6813
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 4:13 PM Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
-> On 03/12/2019 23:49, Valentin Schneider wrote:
-> > On 03/12/2019 23:20, Valentin Schneider wrote:
-> >> Looking at the code, I think I got it. In find_idlest_group() we do
-> >> initialize 'idlest_sgs' (just like busiest_stat in LB) but 'idlest' is just
-> >> NULL. The latter is dereferenced in update_pick_idlest() just for the misfit
-> >> case, which goes boom. And I reviewed the damn thing... Bleh.
-> >>
-> >> Fixup looks easy enough, lemme write one up.
-> >>
-> >
-> > Wait no, that can't be right. We can only get in there if both 'group' and
-> > 'idlest' have the same group_type, which can't be true on the first pass.
-> > So if we go through the misfit stuff, idlest *has* to be set to something.
-> > Bah.
-> >
->
-> So I think the thing really is dying on a sched_group->sgc deref (pahole says
-> sgc is at offset #16), which means we have a NULL sched_group somewhere, but
-> I don't see how. That can either be 'local' (can't be, first group we visit
-> and doesn't go through update_pick_idlest()) or 'idlest' (see previous email).
->
-> Now, it's bedtime for me, if you get the chance in the meantime can you give
-> this a shot? I was about to send it out but realized it didn't really make
-> sense, but you never know...
->
-> Also, if it is indeed misfit related, I'm surprised we (Arm folks) haven't
-> hit it sooner. We've had our scheduler tests running on the LB rework for at
-> least a month, so we should've hit it.
->
+Reviewed-by: Naga Sureshkumar Relli	<naga.sureshkumar.relli@xilinx.com>
+
+> -----Original Message-----
+> From: Srinivas Neeli <srinivas.neeli@xilinx.com>
+> Sent: Tuesday, December 3, 2019 5:47 PM
+> To: wg@grandegger.com; mkl@pengutronix.de; davem@davemloft.net; Michal Si=
+mek
+> <michals@xilinx.com>; Appana Durga Kedareswara Rao <appanad@xilinx.com>
+> Cc: linux-can@vger.kernel.org; netdev@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; git <git@xilinx=
+.com>; Naga
+> Sureshkumar Relli <nagasure@xilinx.com>; Srinivas Neeli <sneeli@xilinx.co=
+m>
+> Subject: [PATCH V2] can: xilinx_can: Fix missing Rx can packets on CANFD2=
+.0
+>=20
+> CANFD2.0 core uses BRAM for storing acceptance filter ID(AFID) and MASK
+> (AFMASK)registers. So by default AFID and AFMASK registers contain random=
+ data. Due to
+> random data, we are not able to receive all CAN ids.
+>=20
+> Initializing AFID and AFMASK registers with Zero before enabling acceptan=
+ce filter to
+> receive all packets irrespective of ID and Mask.
+>=20
+> Fixes: 0db9071353a0 ("can: xilinx: add can 2.0 support")
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
 > ---
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 08a233e97a01..e19ab7bff0f3 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8348,7 +8348,14 @@ static bool update_pick_idlest(struct sched_group *idlest,
->                 return false;
->
->         case group_misfit_task:
-> -               /* Select group with the highest max capacity */
-> +               /*
-> +                * Select group with the highest max capacity. First group we
-> +                * visit gets picked as idlest to allow later capacity
-> +                * comparisons.
-> +                */
-> +               if (!idlest)
-> +                       return true;
+>  drivers/net/can/xilinx_can.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>=20
+> diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c =
+index
+> 464af939cd8a..c1dbab8c896d 100644
+> --- a/drivers/net/can/xilinx_can.c
+> +++ b/drivers/net/can/xilinx_can.c
+> @@ -60,6 +60,8 @@ enum xcan_reg {
+>  	XCAN_TXMSG_BASE_OFFSET	=3D 0x0100, /* TX Message Space */
+>  	XCAN_RXMSG_BASE_OFFSET	=3D 0x1100, /* RX Message Space */
+>  	XCAN_RXMSG_2_BASE_OFFSET	=3D 0x2100, /* RX Message Space */
+> +	XCAN_AFR_2_MASK_OFFSET	=3D 0x0A00, /* Acceptance Filter MASK */
+> +	XCAN_AFR_2_ID_OFFSET	=3D 0x0A04, /* Acceptance Filter ID */
+>  };
+>=20
+>  #define XCAN_FRAME_ID_OFFSET(frame_base)	((frame_base) + 0x00)
+> @@ -1809,6 +1811,11 @@ static int xcan_probe(struct platform_device *pdev=
+)
+>=20
+>  	pm_runtime_put(&pdev->dev);
+>=20
+> +	if (priv->devtype.flags & XCAN_FLAG_CANFD_2) {
+> +		priv->write_reg(priv, XCAN_AFR_2_ID_OFFSET, 0x00000000);
+> +		priv->write_reg(priv, XCAN_AFR_2_MASK_OFFSET, 0x00000000);
+> +	}
 > +
->                 if (idlest->sgc->max_capacity >= group->sgc->max_capacity)
->                         return false;
->                 break;
+>  	netdev_dbg(ndev, "reg_base=3D0x%p irq=3D%d clock=3D%d, tx buffers: actu=
+al %d, using
+> %d\n",
+>  		   priv->reg_base, ndev->irq, priv->can.clock.freq,
+>  		   hw_tx_max, priv->tx_max);
+> --
+> 2.7.4
 
-Thanks for the quick patch! Unfortunately I still managed to trip it
-with this patch :(
-
-thanks
--john
-
-[  191.807900] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000010
-[  191.814822] audit: audit_lost=284 audit_rate_limit=5 audit_backlog_limit=64
-[  191.816779] Mem abort info:
-[  191.816782]   ESR = 0x96000005
-[  191.816786]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  191.816789]   SET = 0, FnV = 0
-[  191.816791]   EA = 0, S1PTW = 0
-[  191.816793] Data abort info:
-[  191.816797]   ISV = 0, ISS = 0x00000005
-[  191.816799]   CM = 0, WnR = 0
-[  191.816804] user pgtable: 4k pages, 39-bit VAs, pgdp=00000001719fc000
-[  191.816809] [0000000000000010] pgd=0000000000000000, pud=0000000000000000
-[  191.823849] audit: rate limit exceeded
-[  191.826660] Internal error: Oops: 96000005 [#1] PREEMPT SMP
-[  191.873941] Modules linked in:
-[  191.877043] CPU: 7 PID: 50 Comm: kauditd Tainted: G        W
- 5.4.0-mainline-11226-g81d7081fb03e #1276
-[  191.887039] Hardware name: Thundercomm Dragonboard 845c (DT)
-[  191.892751] pstate: 60c00085 (nZCv daIf +PAN +UAO)
-[  191.897612] pc : find_idlest_group.isra.95+0x368/0x690
-[  191.902809] lr : find_idlest_group.isra.95+0x104/0x690
-[  191.908002] sp : ffffffc01036b890
-[  191.911356] x29: ffffffc01036b890 x28: ffffffe471250480
-[  191.916720] x27: ffffff80f1828000 x26: 0000000000000001
-[  191.922082] x25: 0000000000000000 x24: ffffffc01036b998
-[  191.927447] x23: ffffff80f8e41a00 x22: ffffffe471519e30
-[  191.932811] x21: ffffff80f8f16aa0 x20: ffffff80f8f16e80
-[  191.938173] x19: ffffffe47151a610 x18: ffffffe470fd1ef0
-[  191.943543] x17: 0000000000000000 x16: 0000000000000000
-[  191.948912] x15: 0000000000000001 x14: 632c323135633a30
-[  191.954275] x13: 733a656c69665f61 x12: 7461645f7070613a
-[  191.959636] x11: 0000000000000730 x10: 000000000000025d
-[  191.964998] x9 : 0000000000003b15 x8 : 0000000000000075
-[  191.970361] x7 : ffffff80f8f16200 x6 : ffffffe471250000
-[  191.975728] x5 : 0000000000000000 x4 : 0000000000000008
-[  191.981090] x3 : ffffff80f8f16100 x2 : ffffff80f8f16d00
-[  191.986452] x1 : 0000000000000000 x0 : 0000000000000002
-[  191.991815] Call trace:
-[  191.994309]  find_idlest_group.isra.95+0x368/0x690
-[  191.999155]  select_task_rq_fair+0x4e4/0xd88
-[  192.003476]  try_to_wake_up+0x21c/0x7f8
-[  192.007353]  default_wake_function+0x34/0x48
-[  192.011675]  pollwake+0x98/0xc8
-[  192.014863]  __wake_up_common+0x90/0x158
-[  192.018838]  __wake_up_common_lock+0x88/0xd0
-[  192.023163]  __wake_up_sync_key+0x40/0x50
-[  192.027228]  sock_def_readable+0x44/0x78
-[  192.031197]  __netlink_sendskb+0x44/0x58
-[  192.035170]  netlink_unicast+0x220/0x258
-[  192.039143]  kauditd_send_queue+0xa4/0x158
-[  192.043292]  kauditd_thread+0xf4/0x248
-[  192.047085]  kthread+0x130/0x138
-[  192.050355]  ret_from_fork+0x10/0x1c
-[  192.053984] Code: 54001260 7100081f 54001601 a9478ba1 (f9400821)
-[  192.060141] ---[ end trace c650b8d609e54a39 ]---
-[  192.064812] Kernel panic - not syncing: Fatal exception
