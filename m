@@ -2,130 +2,85 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A596EC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4E8C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A6C2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:39:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575430755;
-	bh=Ky6bsT95qtRty+Gu8aLwwJEri2buBfTIALVlR4MSuHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YbL2gWsCvyxJcZdgZXzdfvP9l/yp6izUF1QCL2cqgecE9rAhJ9wwCEzLm1wUHBTWT
-	 9ATw+A9lNljq7FRbvMqWrre9JDJNRz59vxpqcibf83hiYsbmLJd0h9iqyWIbC4aJk0
-	 eHnlA+q0j/1daE6w54aF6Ic/1/Zeof83vQH1v378=
+	by mail.kernel.org (Postfix) with ESMTP id 5B8732068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:41:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfLDDjO (ORCPT
+        id S1727007AbfLDDlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 22:39:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726804AbfLDDjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 22:39:14 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BCEC2068E;
-        Wed,  4 Dec 2019 03:39:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575430753;
-        bh=Ky6bsT95qtRty+Gu8aLwwJEri2buBfTIALVlR4MSuHw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XoxJiwxD8uWYFJuQIdSZ3Z/qxFfj6napAEMB5UEQuuoKTNw5QzVbAHMWTyi5qHFIQ
-         3HEgJ/TAS/sVWDiTTdwcW7YnhlhG0WyNYn2vra2Ouql2RO3VuhcovLzqNHFrLPD6IW
-         y/cmK3TplVD7kfhaI7p/ygSowbyXdES+F1W3z7zw=
-Date:   Wed, 4 Dec 2019 11:39:05 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 3/3] ARM: dts: imx6sll: Add Rev A board support
-Message-ID: <20191204033904.GA3365@dragon>
-References: <1573033650-11848-1-git-send-email-Anson.Huang@nxp.com>
- <1573033650-11848-3-git-send-email-Anson.Huang@nxp.com>
- <20191204023920.GO9767@dragon>
- <AM6PR0402MB39111817A837FD03558B0E79F55D0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+        Tue, 3 Dec 2019 22:41:17 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:57383 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbfLDDlR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 22:41:17 -0500
+Received: from localhost.localdomain (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 564CBCEC92;
+        Wed,  4 Dec 2019 04:50:24 +0100 (CET)
+From:   Marcel Holtmann <marcel@holtmann.org>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     abhishekpandit@chromium.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] HID: hidraw: add support uniq ioctl
+Date:   Wed,  4 Dec 2019 04:41:09 +0100
+Message-Id: <20191204034109.21944-1-marcel@holtmann.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR0402MB39111817A837FD03558B0E79F55D0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 02:52:11AM +0000, Anson Huang wrote:
-> 
-> 
-> > Subject: Re: [PATCH 3/3] ARM: dts: imx6sll: Add Rev A board support
-> > 
-> > On Wed, Nov 06, 2019 at 05:47:30PM +0800, Anson Huang wrote:
-> > > i.MX6SLL EVK Rev A board is same with latest i.MX6SLL EVK board except
-> > > eMMC can ONLY run at HS200 mode, add support for this board.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > >  arch/arm/boot/dts/Makefile             |  1 +
-> > >  arch/arm/boot/dts/imx6sll-evk-reva.dts | 12 ++++++++++++
-> > >  2 files changed, 13 insertions(+)
-> > >  create mode 100644 arch/arm/boot/dts/imx6sll-evk-reva.dts
-> > >
-> > > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > > index 71f08e7..3845bbf 100644
-> > > --- a/arch/arm/boot/dts/Makefile
-> > > +++ b/arch/arm/boot/dts/Makefile
-> > > @@ -557,6 +557,7 @@ dtb-$(CONFIG_SOC_IMX6SL) += \
-> > >  	imx6sl-warp.dtb
-> > >  dtb-$(CONFIG_SOC_IMX6SLL) += \
-> > >  	imx6sll-evk.dtb \
-> > > +	imx6sll-evk-reva.dtb \
-> > >  	imx6sll-kobo-clarahd.dtb
-> > >  dtb-$(CONFIG_SOC_IMX6SX) += \
-> > >  	imx6sx-nitrogen6sx.dtb \
-> > > diff --git a/arch/arm/boot/dts/imx6sll-evk-reva.dts
-> > > b/arch/arm/boot/dts/imx6sll-evk-reva.dts
-> > > new file mode 100644
-> > > index 0000000..7ca2563
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/imx6sll-evk-reva.dts
-> > > @@ -0,0 +1,12 @@
-> > > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> > > +/*
-> > > + * Copyright 2016 Freescale Semiconductor, Inc.
-> > > + * Copyright 2017-2019 NXP.
-> > > + *
-> > > + */
-> > > +
-> > > +#include "imx6sll-evk.dts"
-> > > +
-> > > +&usdhc2 {
-> > > +	compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
-> > 
-> > It looks odd to me that we need to deal with a board level difference with a
-> > SoC level compatible.  The USDHC compatible should be solely determined by
-> > the IP programming model, not the board level capability.
-> 
-> So how to handle such scenario? Current usdhc driver uses SoC compatible to distinguish
-> different functions of uSDHC IP, if some boards can NOT support dedicated function due to
-> board design regardless of the IP inside, the easy way is just to downgrade the SoC compatible,
-> or need uSDHC driver to provide some DT properties for such case? 
+Add support for reading out the uniq information from the underlying HID
+device. This might be the iSerialNumber in case of USB or the BD_ADDR in
+case of Bluetooth.
 
-So you are saying this is a complete board design limitation, not SoC/IP
-related?  In that case, IMO, we need a board level DT property to deal
-with it.
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+---
+ drivers/hid/hidraw.c        | 9 +++++++++
+ include/uapi/linux/hidraw.h | 1 +
+ 2 files changed, 10 insertions(+)
 
-Shawn
+diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
+index bbc6ec1aa5cb..039304069fd0 100644
+--- a/drivers/hid/hidraw.c
++++ b/drivers/hid/hidraw.c
+@@ -450,6 +450,15 @@ static long hidraw_ioctl(struct file *file, unsigned int cmd,
+ 						-EFAULT : len;
+ 					break;
+ 				}
++
++				if (_IOC_NR(cmd) == _IOC_NR(HIDIOCGRAWUNIQ(0))) {
++					int len = strlen(hid->uniq) + 1;
++					if (len > _IOC_SIZE(cmd))
++						len = _IOC_SIZE(cmd);
++					ret = copy_to_user(user_arg, hid->uniq, len) ?
++						-EFAULT : len;
++					break;
++				}
+ 			}
+ 
+ 		ret = -ENOTTY;
+diff --git a/include/uapi/linux/hidraw.h b/include/uapi/linux/hidraw.h
+index 98e2c493de85..4913539e5bcc 100644
+--- a/include/uapi/linux/hidraw.h
++++ b/include/uapi/linux/hidraw.h
+@@ -39,6 +39,7 @@ struct hidraw_devinfo {
+ /* The first byte of SFEATURE and GFEATURE is the report number */
+ #define HIDIOCSFEATURE(len)    _IOC(_IOC_WRITE|_IOC_READ, 'H', 0x06, len)
+ #define HIDIOCGFEATURE(len)    _IOC(_IOC_WRITE|_IOC_READ, 'H', 0x07, len)
++#define HIDIOCGRAWUNIQ(len)     _IOC(_IOC_READ, 'H', 0x08, len)
+ 
+ #define HIDRAW_FIRST_MINOR 0
+ #define HIDRAW_MAX_DEVICES 64
+-- 
+2.23.0
+
