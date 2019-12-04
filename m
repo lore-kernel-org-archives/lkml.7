@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9812EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2840CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA3720862
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02D920833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482979;
-	bh=dbyZp+xybfQ+kEBZ9QafyIkcBlBHcHxTME3B22Hds74=;
+	s=default; t=1575482983;
+	bh=wjIAeldskLilIvaoK2XJFjAhvpCuqT460oTLXStuPl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MHA111Kp//9lycbLOBmxproyXZwly3RXlbpxKlwR3myJ0IoipZBkbdy1Z7jWy03BO
-	 RH4weGaeUbIOFoxx9Q/385GEjA1n+mdWRwhyXzOQdggwPwFRw5F1AETlceZk6yrgOF
-	 cTBEvjHor1ak2Pz44Akx4+QRRVjBOaV3/1p/0vro=
+	b=A/dMDuHr73425TnQKJCSOYRWk7krp7C738TCms2d40aABGxoGzjD6jLbwYKn1SXx5
+	 4G9vzlLxCDsXcaLpow8GmjV4Q5gf96UKjx5tEL8lD+Xc6yvkLM7UmLb1gzxKqJxR7T
+	 LzykNibfYCbJ+gRReFUzXjWCUkPMZTor0LjvlRK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731104AbfLDSJi (ORCPT
+        id S1731121AbfLDSJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:09:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35416 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:09:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731076AbfLDSJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:09:33 -0500
+        id S1730607AbfLDSJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:09:38 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5453320674;
-        Wed,  4 Dec 2019 18:09:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 313A320674;
+        Wed,  4 Dec 2019 18:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482972;
-        bh=dbyZp+xybfQ+kEBZ9QafyIkcBlBHcHxTME3B22Hds74=;
+        s=default; t=1575482977;
+        bh=wjIAeldskLilIvaoK2XJFjAhvpCuqT460oTLXStuPl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=14y6ceWTOafVBSuoOEIKtisyiFjYdm7BmowtppvT2Rr5VXg4yO5888LD266NIJPON
-         lCKkU5wEDtfOvpY+Rtx8cV68pg/CcBxtA8f+R56Cu+4GICkVp9uluKSK6v2zGaGk5w
-         pLjkwtX3XBOjN6p7oXbvtpeTo/qjlOOglpL9wD34=
+        b=yL9/FuaMr6OhAOX8yNjHyCzNAHQ7FNOm7MXRavnu5JlgzHWrKW8eG9zBZTB81uT/1
+         Pvpkr99Xq81OnI4TcwyWdzm9v7AMofctxpVi32lgiUVePJ2/2FUzzvqhGdun4m5/Ii
+         bVC1URyKdSsV16EOHLkZHDnH0QG1ykr8PZZgSLoE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.14 209/209] net: fec: fix clock count mis-match
-Date:   Wed,  4 Dec 2019 18:57:01 +0100
-Message-Id: <20191204175337.873317389@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 4.14 190/209] futex: Split futex_mm_release() for exit/exec
+Date:   Wed,  4 Dec 2019 18:56:42 +0100
+Message-Id: <20191204175336.567830543@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,68 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit a31eda65ba210741b598044d045480494d0ed52a upstream.
+commit 150d71584b12809144b8145b817e83b81158ae5f upstream.
 
-pm_runtime_put_autosuspend in probe will call runtime suspend to
-disable clks automatically if CONFIG_PM is defined. (If CONFIG_PM
-is not defined, its implementation will be empty, then runtime
-suspend will not be called.)
+To allow separate handling of the futex exit state in the futex exit code
+for exit and exec, split futex_mm_release() into two functions and invoke
+them from the corresponding exit/exec_mm_release() callsites.
 
-Therefore, we can call pm_runtime_get_sync to runtime resume it
-first to enable clks, which matches the runtime suspend. (Only when
-CONFIG_PM is defined, otherwise pm_runtime_get_sync will also be
-empty, then runtime resume will not be called.)
+Preparatory only, no functional change.
 
-Then it is fine to disable clks without causing clock count mis-match.
-
-Fixes: c43eab3eddb4 ("net: fec: add missed clk_disable_unprepare in remove")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Acked-by: Fugang Duan <fugang.duan@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20191106224556.332094221@linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/freescale/fec_main.c |   15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ include/linux/futex.h |    6 ++++--
+ kernel/fork.c         |    5 ++---
+ kernel/futex.c        |    7 ++++++-
+ 3 files changed, 12 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -3565,6 +3565,11 @@ fec_drv_remove(struct platform_device *p
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 	struct fec_enet_private *fep = netdev_priv(ndev);
- 	struct device_node *np = pdev->dev.of_node;
-+	int ret;
-+
-+	ret = pm_runtime_get_sync(&pdev->dev);
-+	if (ret < 0)
-+		return ret;
- 
- 	cancel_work_sync(&fep->tx_timeout_work);
- 	fec_ptp_stop(pdev);
-@@ -3572,15 +3577,17 @@ fec_drv_remove(struct platform_device *p
- 	fec_enet_mii_remove(fep);
- 	if (fep->reg_phy)
- 		regulator_disable(fep->reg_phy);
--	pm_runtime_put(&pdev->dev);
--	pm_runtime_disable(&pdev->dev);
--	clk_disable_unprepare(fep->clk_ahb);
--	clk_disable_unprepare(fep->clk_ipg);
-+
- 	if (of_phy_is_fixed_link(np))
- 		of_phy_deregister_fixed_link(np);
- 	of_node_put(fep->phy_node);
- 	free_netdev(ndev);
- 
-+	clk_disable_unprepare(fep->clk_ahb);
-+	clk_disable_unprepare(fep->clk_ipg);
-+	pm_runtime_put_noidle(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+
- 	return 0;
+--- a/include/linux/futex.h
++++ b/include/linux/futex.h
+@@ -96,14 +96,16 @@ static inline void futex_exit_done(struc
+ 	tsk->futex_state = FUTEX_STATE_DEAD;
  }
  
+-void futex_mm_release(struct task_struct *tsk);
++void futex_exit_release(struct task_struct *tsk);
++void futex_exec_release(struct task_struct *tsk);
+ 
+ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
+ 	      u32 __user *uaddr2, u32 val2, u32 val3);
+ #else
+ static inline void futex_init_task(struct task_struct *tsk) { }
+-static inline void futex_mm_release(struct task_struct *tsk) { }
+ static inline void futex_exit_done(struct task_struct *tsk) { }
++static inline void futex_exit_release(struct task_struct *tsk) { }
++static inline void futex_exec_release(struct task_struct *tsk) { }
+ #endif
+ 
+ #endif
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1134,9 +1134,6 @@ static int wait_for_vfork_done(struct ta
+  */
+ static void mm_release(struct task_struct *tsk, struct mm_struct *mm)
+ {
+-	/* Get rid of any futexes when releasing the mm */
+-	futex_mm_release(tsk);
+-
+ 	uprobe_free_utask(tsk);
+ 
+ 	/* Get rid of any cached register state */
+@@ -1171,11 +1168,13 @@ static void mm_release(struct task_struc
+ 
+ void exit_mm_release(struct task_struct *tsk, struct mm_struct *mm)
+ {
++	futex_exit_release(tsk);
+ 	mm_release(tsk, mm);
+ }
+ 
+ void exec_mm_release(struct task_struct *tsk, struct mm_struct *mm)
+ {
++	futex_exec_release(tsk);
+ 	mm_release(tsk, mm);
+ }
+ 
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -3684,7 +3684,7 @@ static void exit_robust_list(struct task
+ 	}
+ }
+ 
+-void futex_mm_release(struct task_struct *tsk)
++void futex_exec_release(struct task_struct *tsk)
+ {
+ 	if (unlikely(tsk->robust_list)) {
+ 		exit_robust_list(tsk);
+@@ -3702,6 +3702,11 @@ void futex_mm_release(struct task_struct
+ 		exit_pi_state_list(tsk);
+ }
+ 
++void futex_exit_release(struct task_struct *tsk)
++{
++	futex_exec_release(tsk);
++}
++
+ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
+ 		u32 __user *uaddr2, u32 val2, u32 val3)
+ {
 
 
