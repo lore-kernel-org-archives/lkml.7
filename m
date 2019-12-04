@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA125C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAD0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E352068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0142068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbfLDIeE (ORCPT
+        id S1727519AbfLDIeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:34:04 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56396 "EHLO
+        Wed, 4 Dec 2019 03:34:06 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56441 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727337AbfLDIdx (ORCPT
+        with ESMTP id S1727438AbfLDIeA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:33:53 -0500
+        Wed, 4 Dec 2019 03:34:00 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1icQ6J-0005Fq-GE; Wed, 04 Dec 2019 09:33:35 +0100
+        id 1icQ6P-0005JD-Ij; Wed, 04 Dec 2019 09:33:41 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 220FB1C2658;
-        Wed,  4 Dec 2019 09:33:35 +0100 (CET)
-Date:   Wed, 04 Dec 2019 08:33:35 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 42FFD1C2656;
+        Wed,  4 Dec 2019 09:33:36 +0100 (CET)
+Date:   Wed, 04 Dec 2019 08:33:36 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/kprobes] x86/kprobe: Add comments to arch_{,un}optimize_kprobes()
-Cc:     Alexei Starovoitov <ast@kernel.org>,
+Subject: [tip: core/kprobes] x86/ftrace: Mark ftrace_modify_code_direct() __ref
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
         Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191111132458.401696663@infradead.org>
-References: <20191111132458.401696663@infradead.org>
+In-Reply-To: <20191116204607.GC23231@zn.tnic>
+References: <20191116204607.GC23231@zn.tnic>
 MIME-Version: 1.0
-Message-ID: <157544841504.21853.14009303480737761897.tip-bot2@tip-bot2>
+Message-ID: <157544841616.21853.11033937966281103251.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,67 +64,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/kprobes branch of tip:
 
-Commit-ID:     f2cb4f95b7571f2bebcf226cd92b448fd58950ca
-Gitweb:        https://git.kernel.org/tip/f2cb4f95b7571f2bebcf226cd92b448fd58950ca
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Mon, 11 Nov 2019 14:02:10 +01:00
+Commit-ID:     38ebd8d119245eecb99fe00b0f57e269baf22767
+Gitweb:        https://git.kernel.org/tip/38ebd8d119245eecb99fe00b0f57e269baf22767
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Mon, 18 Nov 2019 18:20:12 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 27 Nov 2019 07:44:25 +01:00
+CommitterDate: Wed, 27 Nov 2019 07:44:24 +01:00
 
-x86/kprobe: Add comments to arch_{,un}optimize_kprobes()
+x86/ftrace: Mark ftrace_modify_code_direct() __ref
 
-Add a few words describing how it is safe to overwrite the 4 bytes
-after a kprobe. In specific it is possible the JMP.d32 required for
-the optimized kprobe overwrites multiple instructions.
+... because it calls the .init.text function text_poke_early(). That is
+ok because it does call that function early, during boot.
 
-Tested-by: Alexei Starovoitov <ast@kernel.org>
-Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 9706f7c3531f ("x86/ftrace: Use text_poke()")
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
 Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191111132458.401696663@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20191116204607.GC23231@zn.tnic
 ---
- arch/x86/kernel/kprobes/opt.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ arch/x86/kernel/ftrace.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
-index 26e0d6c..3f45b5c 100644
---- a/arch/x86/kernel/kprobes/opt.c
-+++ b/arch/x86/kernel/kprobes/opt.c
-@@ -414,8 +414,12 @@ err:
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 2a179fb..108ee96 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -99,7 +99,12 @@ static int ftrace_verify_code(unsigned long ip, const char *old_code)
+ 	return 0;
  }
  
- /*
-- * Replace breakpoints (int3) with relative jumps.
-+ * Replace breakpoints (INT3) with relative jumps (JMP.d32).
-  * Caller must call with locking kprobe_mutex and text_mutex.
-+ *
-+ * The caller will have installed a regular kprobe and after that issued
-+ * syncrhonize_rcu_tasks(), this ensures that the instruction(s) that live in
-+ * the 4 bytes after the INT3 are unused and can now be overwritten.
-  */
- void arch_optimize_kprobes(struct list_head *oplist)
- {
-@@ -441,7 +445,13 @@ void arch_optimize_kprobes(struct list_head *oplist)
- 	}
- }
- 
--/* Replace a relative jump with a breakpoint (int3).  */
+-static int
 +/*
-+ * Replace a relative jump (JMP.d32) with a breakpoint (INT3).
-+ *
-+ * After that, we can restore the 4 bytes after the INT3 to undo what
-+ * arch_optimize_kprobes() scribbled. This is safe since those bytes will be
-+ * unused once the INT3 lands.
++ * Marked __ref because it calls text_poke_early() which is .init.text. That is
++ * ok because that call will happen early, during boot, when .init sections are
++ * still present.
 + */
- void arch_unoptimize_kprobe(struct optimized_kprobe *op)
++static int __ref
+ ftrace_modify_code_direct(unsigned long ip, const char *old_code,
+ 			  const char *new_code)
  {
- 	arch_arm_kprobe(&op->kp);
