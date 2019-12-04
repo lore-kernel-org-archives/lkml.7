@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DEAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6CFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC342073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F2720865
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482508;
-	bh=Q1BI4t7VuryP7jp7IngtWsjMIyxCI9X1WHqqjjPUh1s=;
+	s=default; t=1575482513;
+	bh=vAnPksW0U2gh/kfgefM3vVRIFgL1xdGj0P8wJE6kLOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZNzbe5DUdJuWp+CX66EtJEVt9aYldW3oCGmJBQjBDdFCYgmsGX5RWlDaYUctDRap5
-	 A93XIO8kjz/LcSGmUwyBAVaT422C8ikZOmw4gRA8kMB3yK4lDuWagr/9DrC/DDi0yl
-	 5gi06xG6AD3q7y6DG3okcGLfNeSAGMvkFl/++AGc=
+	b=p8DjvS2BUysIUgNTBypUYnbwNd7obFyXKE8T4lqYm44y4jtcw4axmZW5Kbonlz78C
+	 8vkS1DGdXq8/mDnkwmVnG7KO9+KV/PygVeyda4etOSCViThegLngbWyd1kYrJ8fKBA
+	 prjeLtCDKlVvplCYt0WrgZQc2LBSIRAPWu+1m99o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbfLDSBs (ORCPT
+        id S1729271AbfLDSBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:01:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42572 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:01:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729644AbfLDSBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:01:41 -0500
+        id S1729666AbfLDSBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:01:48 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C2CA20675;
-        Wed,  4 Dec 2019 18:01:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5F39206DF;
+        Wed,  4 Dec 2019 18:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482501;
-        bh=Q1BI4t7VuryP7jp7IngtWsjMIyxCI9X1WHqqjjPUh1s=;
+        s=default; t=1575482508;
+        bh=vAnPksW0U2gh/kfgefM3vVRIFgL1xdGj0P8wJE6kLOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hyT9FL4n4xUAxPyk5j+aLZx3JQcImKFF/Yd8PsfLlvoIJXntC7qPYQp1jEMUd5HM3
-         xi0oAtRXP/QVSUVpScJxqGzC1H0ITLEGij5PyozXRW8pvgR12NkiepaSQ48j3Fx55f
-         q3dzFRI/MhkcsTG65eHUsdo75qxcyY8KW9yVKhI4=
+        b=Cj9RACtobwi7KlJHMe02V5tmUrue1WI4WqzgSn00RTdIoq7qDm+sfyT2PRMPw6jEp
+         teShqBKuQjSCaLm02aFQnUr5pJqS/gB4HpUpXA0/q0HAZNrIRXzpwcIy/wtsliJMWD
+         7do5rxKDNI2N0/zXBkoNv9CjtNKz7fmN+oy3c5xw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jeroen Hofstee <jhofstee@victronenergy.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 021/209] can: rx-offload: can_rx_offload_irq_offload_timestamp(): continue on error
-Date:   Wed,  4 Dec 2019 18:53:53 +0100
-Message-Id: <20191204175322.977400077@linuxfoundation.org>
+Subject: [PATCH 4.14 024/209] scripts/gdb: fix debugging modules compiled with hot/cold partitioning
+Date:   Wed,  4 Dec 2019 18:53:56 +0100
+Message-Id: <20191204175323.160831516@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,43 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeroen Hofstee <jhofstee@victronenergy.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit c2a9f74c9d18acfdcabd3361adc7eac82c537a66 ]
+[ Upstream commit 8731acc5068eb3f422a45c760d32198175c756f8 ]
 
-In case of a resource shortage, i.e. the rx_offload queue will overflow
-or a skb fails to be allocated (due to OOM),
-can_rx_offload_offload_one() will call mailbox_read() to discard the
-mailbox and return an ERR_PTR.
+gcc's -freorder-blocks-and-partition option makes it group frequently
+and infrequently used code in .text.hot and .text.unlikely sections
+respectively.  At least when building modules on s390, this option is
+used by default.
 
-However can_rx_offload_irq_offload_timestamp() bails out in the error
-case. In case of a resource shortage all mailboxes should be discarded,
-to avoid an IRQ storm and give the system some time to recover.
+gdb assumes that all code is located in .text section, and that .text
+section is located at module load address.  With such modules this is no
+longer the case: there is code in .text.hot and .text.unlikely, and
+either of them might precede .text.
 
-Since can_rx_offload_irq_offload_timestamp() is typically called from a
-while loop, all message will eventually be discarded. So let's continue
-on error instead to discard them directly.
+Fix by explicitly telling gdb the addresses of code sections.
 
-Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+It might be tempting to do this for all sections, not only the ones in
+the white list.  Unfortunately, gdb appears to have an issue, when
+telling it about e.g. loadable .note.gnu.build-id section causes it to
+think that non-loadable .note.Linux section is loaded at address 0,
+which in turn causes NULL pointers to be resolved to bogus symbols.  So
+keep using the white list approach for the time being.
+
+Link: http://lkml.kernel.org/r/20191028152734.13065-1-iii@linux.ibm.com
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Kieran Bingham <kbingham@kernel.org>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/rx-offload.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/gdb/linux/symbols.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/can/rx-offload.c b/drivers/net/can/rx-offload.c
-index 840aef094f208..fef6534f163b7 100644
---- a/drivers/net/can/rx-offload.c
-+++ b/drivers/net/can/rx-offload.c
-@@ -225,7 +225,7 @@ int can_rx_offload_irq_offload_timestamp(struct can_rx_offload *offload, u64 pen
- 
- 		skb = can_rx_offload_offload_one(offload, i);
- 		if (IS_ERR_OR_NULL(skb))
--			break;
-+			continue;
- 
- 		__skb_queue_add_sort(&skb_queue, skb, can_rx_offload_compare);
- 	}
+diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
+index 004b0ac7fa72d..4644f1a83b578 100644
+--- a/scripts/gdb/linux/symbols.py
++++ b/scripts/gdb/linux/symbols.py
+@@ -99,7 +99,8 @@ lx-symbols command."""
+             attrs[n]['name'].string(): attrs[n]['address']
+             for n in range(int(sect_attrs['nsections']))}
+         args = []
+-        for section_name in [".data", ".data..read_mostly", ".rodata", ".bss"]:
++        for section_name in [".data", ".data..read_mostly", ".rodata", ".bss",
++                             ".text", ".text.hot", ".text.unlikely"]:
+             address = section_name_to_address.get(section_name)
+             if address:
+                 args.append(" -s {name} {addr}".format(
 -- 
 2.20.1
 
