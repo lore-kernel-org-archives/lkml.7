@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA6DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 658F8C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C332F2086D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3095D2086D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483196;
-	bh=7B2zsv4wmb26jk/t27o3Uj0Jm6oJDggdc1ltkcsGrAc=;
+	s=default; t=1575483198;
+	bh=rkaZ7GFBTezRs+c1psX1fLT4Sv2NwyXuvcK7sz8Rltk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LCT4Dt9mDRaNfbowdfarBUQXYTS5y96ie0K70pM354SY7RB4+savN1tOwUE/UpHXY
-	 uxNYEdjJDW9Wfp55yGpHme1ESnKzye0HnoNioJChX7SQ95tt0d7kmGlidNAcY0IGP9
-	 3SylWV/bq60Hwsp11X4dSIfGnvWEbET7dMwpgQbI=
+	b=l15+ykyae8hMQ0Z/vQq3TSyVclDkHAPmbcr1S2ocQUGOFwDo/Lt7yAlhmiLQfmUUg
+	 Dn2cb9zTq3IbRy4G4jCFMDR0uh4L7Puo1FzPV58nDfGwZatJi5U2wEBOqMFp2G6o99
+	 51gmndFFGOpkUB6/TUsPNa61AnYYfViK+Ba5Lp+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731728AbfLDSNP (ORCPT
+        id S1731736AbfLDSNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:13:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42190 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:13:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731714AbfLDSNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:13:11 -0500
+        id S1731721AbfLDSNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:13:14 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4442E20675;
-        Wed,  4 Dec 2019 18:13:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80BCC20674;
+        Wed,  4 Dec 2019 18:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483190;
-        bh=7B2zsv4wmb26jk/t27o3Uj0Jm6oJDggdc1ltkcsGrAc=;
+        s=default; t=1575483193;
+        bh=rkaZ7GFBTezRs+c1psX1fLT4Sv2NwyXuvcK7sz8Rltk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AIitDm7o9WlDatRUvQrd8u4C7PUf5+aRBl8ZR1GxR3X3nGXyygsbz8ajIps0by3dD
-         2ee/XrMm/93LbC4fTTJCpfqF9EWPPhs2QXElOogzoa/0ZLWBvd+KpQx53VPwi53PYP
-         UWcOF3UPeGNhxnRmdeF9VXcyE5BTF9KoE0ce+g1Q=
+        b=qtAZe80FOGRJCMxvrbnx6FvN7Vng0HcBiYae+ITk01PhO2+BELQeL/jW6m/69L9qd
+         aOTS83v57BniLwtt2r1X8yLv3Z1HHJBUiDWYK9CMslWsezBC8NNp4z4ECXyC7F0vmg
+         qf1qpegPbC7MckHvNbJa3hERdnTCYetd9QQ1XDmA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lepton Wu <ytht.net@gmail.com>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Alexey Skidanov <alexey.skidanov@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Daniel Mentz <danielmentz@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 034/125] VSOCK: bind to random port for VMADDR_PORT_ANY
-Date:   Wed,  4 Dec 2019 18:55:39 +0100
-Message-Id: <20191204175321.062982160@linuxfoundation.org>
+Subject: [PATCH 4.9 083/125] lib/genalloc.c: fix allocation of aligned buffer from non-aligned chunk
+Date:   Wed,  4 Dec 2019 18:56:28 +0100
+Message-Id: <20191204175324.082049865@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,53 +66,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lepton Wu <ytht.net@gmail.com>
+From: Alexey Skidanov <alexey.skidanov@intel.com>
 
-[ Upstream commit 8236b08cf50f85bbfaf48910a0b3ee68318b7c4b ]
+[ Upstream commit 52fbf1134d479234d7e64ba9dcbaea23405f229e ]
 
-The old code always starts from fixed port for VMADDR_PORT_ANY. Sometimes
-when VMM crashed, there is still orphaned vsock which is waiting for
-close timer, then it could cause connection time out for new started VM
-if they are trying to connect to same port with same guest cid since the
-new packets could hit that orphaned vsock. We could also fix this by doing
-more in vhost_vsock_reset_orphans, but any way, it should be better to start
-from a random local port instead of a fixed one.
+gen_pool_alloc_algo() uses different allocation functions implementing
+different allocation algorithms.  With gen_pool_first_fit_align()
+allocation function, the returned address should be aligned on the
+requested boundary.
 
-Signed-off-by: Lepton Wu <ytht.net@gmail.com>
-Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+If chunk start address isn't aligned on the requested boundary, the
+returned address isn't aligned too.  The only way to get properly
+aligned address is to initialize the pool with chunks aligned on the
+requested boundary.  If want to have an ability to allocate buffers
+aligned on different boundaries (for example, 4K, 1MB, ...), the chunk
+start address should be aligned on the max possible alignment.
+
+This happens because gen_pool_first_fit_align() looks for properly
+aligned memory block without taking into account the chunk start address
+alignment.
+
+To fix this, we provide chunk start address to
+gen_pool_first_fit_align() and change its implementation such that it
+starts looking for properly aligned block with appropriate offset
+(exactly as is done in CMA).
+
+Link: https://lkml.kernel.org/lkml/a170cf65-6884-3592-1de9-4c235888cc8a@intel.com
+Link: http://lkml.kernel.org/r/1541690953-4623-1-git-send-email-alexey.skidanov@intel.com
+Signed-off-by: Alexey Skidanov <alexey.skidanov@intel.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: Daniel Mentz <danielmentz@google.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/vmw_vsock/af_vsock.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ include/linux/genalloc.h | 13 +++++++------
+ lib/genalloc.c           | 20 ++++++++++++--------
+ 2 files changed, 19 insertions(+), 14 deletions(-)
 
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index 7566395e526d2..18f377306884b 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -97,6 +97,7 @@
- #include <linux/mutex.h>
- #include <linux/net.h>
- #include <linux/poll.h>
-+#include <linux/random.h>
- #include <linux/skbuff.h>
- #include <linux/smp.h>
- #include <linux/socket.h>
-@@ -501,9 +502,13 @@ out:
- static int __vsock_bind_stream(struct vsock_sock *vsk,
- 			       struct sockaddr_vm *addr)
+diff --git a/include/linux/genalloc.h b/include/linux/genalloc.h
+index 206fe3bcccccd..575f2dee8cf71 100644
+--- a/include/linux/genalloc.h
++++ b/include/linux/genalloc.h
+@@ -50,7 +50,8 @@ typedef unsigned long (*genpool_algo_t)(unsigned long *map,
+ 			unsigned long size,
+ 			unsigned long start,
+ 			unsigned int nr,
+-			void *data, struct gen_pool *pool);
++			void *data, struct gen_pool *pool,
++			unsigned long start_addr);
+ 
+ /*
+  *  General purpose special memory pool descriptor.
+@@ -130,24 +131,24 @@ extern void gen_pool_set_algo(struct gen_pool *pool, genpool_algo_t algo,
+ 
+ extern unsigned long gen_pool_first_fit(unsigned long *map, unsigned long size,
+ 		unsigned long start, unsigned int nr, void *data,
+-		struct gen_pool *pool);
++		struct gen_pool *pool, unsigned long start_addr);
+ 
+ extern unsigned long gen_pool_fixed_alloc(unsigned long *map,
+ 		unsigned long size, unsigned long start, unsigned int nr,
+-		void *data, struct gen_pool *pool);
++		void *data, struct gen_pool *pool, unsigned long start_addr);
+ 
+ extern unsigned long gen_pool_first_fit_align(unsigned long *map,
+ 		unsigned long size, unsigned long start, unsigned int nr,
+-		void *data, struct gen_pool *pool);
++		void *data, struct gen_pool *pool, unsigned long start_addr);
+ 
+ 
+ extern unsigned long gen_pool_first_fit_order_align(unsigned long *map,
+ 		unsigned long size, unsigned long start, unsigned int nr,
+-		void *data, struct gen_pool *pool);
++		void *data, struct gen_pool *pool, unsigned long start_addr);
+ 
+ extern unsigned long gen_pool_best_fit(unsigned long *map, unsigned long size,
+ 		unsigned long start, unsigned int nr, void *data,
+-		struct gen_pool *pool);
++		struct gen_pool *pool, unsigned long start_addr);
+ 
+ 
+ extern struct gen_pool *devm_gen_pool_create(struct device *dev,
+diff --git a/lib/genalloc.c b/lib/genalloc.c
+index ca06adc4f4451..5deb25c40a5a1 100644
+--- a/lib/genalloc.c
++++ b/lib/genalloc.c
+@@ -311,7 +311,7 @@ unsigned long gen_pool_alloc_algo(struct gen_pool *pool, size_t size,
+ 		end_bit = chunk_size(chunk) >> order;
+ retry:
+ 		start_bit = algo(chunk->bits, end_bit, start_bit,
+-				 nbits, data, pool);
++				 nbits, data, pool, chunk->start_addr);
+ 		if (start_bit >= end_bit)
+ 			continue;
+ 		remain = bitmap_set_ll(chunk->bits, start_bit, nbits);
+@@ -525,7 +525,7 @@ EXPORT_SYMBOL(gen_pool_set_algo);
+  */
+ unsigned long gen_pool_first_fit(unsigned long *map, unsigned long size,
+ 		unsigned long start, unsigned int nr, void *data,
+-		struct gen_pool *pool)
++		struct gen_pool *pool, unsigned long start_addr)
  {
--	static u32 port = LAST_RESERVED_PORT + 1;
-+	static u32 port = 0;
- 	struct sockaddr_vm new_addr;
+ 	return bitmap_find_next_zero_area(map, size, start, nr, 0);
+ }
+@@ -543,16 +543,19 @@ EXPORT_SYMBOL(gen_pool_first_fit);
+  */
+ unsigned long gen_pool_first_fit_align(unsigned long *map, unsigned long size,
+ 		unsigned long start, unsigned int nr, void *data,
+-		struct gen_pool *pool)
++		struct gen_pool *pool, unsigned long start_addr)
+ {
+ 	struct genpool_data_align *alignment;
+-	unsigned long align_mask;
++	unsigned long align_mask, align_off;
+ 	int order;
  
-+	if (!port)
-+		port = LAST_RESERVED_PORT + 1 +
-+			prandom_u32_max(U32_MAX - LAST_RESERVED_PORT);
+ 	alignment = data;
+ 	order = pool->min_alloc_order;
+ 	align_mask = ((alignment->align + (1UL << order) - 1) >> order) - 1;
+-	return bitmap_find_next_zero_area(map, size, start, nr, align_mask);
++	align_off = (start_addr & (alignment->align - 1)) >> order;
 +
- 	vsock_addr_init(&new_addr, addr->svm_cid, addr->svm_port);
++	return bitmap_find_next_zero_area_off(map, size, start, nr,
++					      align_mask, align_off);
+ }
+ EXPORT_SYMBOL(gen_pool_first_fit_align);
  
- 	if (addr->svm_port == VMADDR_PORT_ANY) {
+@@ -567,7 +570,7 @@ EXPORT_SYMBOL(gen_pool_first_fit_align);
+  */
+ unsigned long gen_pool_fixed_alloc(unsigned long *map, unsigned long size,
+ 		unsigned long start, unsigned int nr, void *data,
+-		struct gen_pool *pool)
++		struct gen_pool *pool, unsigned long start_addr)
+ {
+ 	struct genpool_data_fixed *fixed_data;
+ 	int order;
+@@ -601,7 +604,8 @@ EXPORT_SYMBOL(gen_pool_fixed_alloc);
+  */
+ unsigned long gen_pool_first_fit_order_align(unsigned long *map,
+ 		unsigned long size, unsigned long start,
+-		unsigned int nr, void *data, struct gen_pool *pool)
++		unsigned int nr, void *data, struct gen_pool *pool,
++		unsigned long start_addr)
+ {
+ 	unsigned long align_mask = roundup_pow_of_two(nr) - 1;
+ 
+@@ -624,7 +628,7 @@ EXPORT_SYMBOL(gen_pool_first_fit_order_align);
+  */
+ unsigned long gen_pool_best_fit(unsigned long *map, unsigned long size,
+ 		unsigned long start, unsigned int nr, void *data,
+-		struct gen_pool *pool)
++		struct gen_pool *pool, unsigned long start_addr)
+ {
+ 	unsigned long start_bit = size;
+ 	unsigned long len = size + 1;
 -- 
 2.20.1
 
