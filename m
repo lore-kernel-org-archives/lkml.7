@@ -2,205 +2,103 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB88C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731C7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1FFD206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459FE20863
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="X+uook1k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rk5spJZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbfLDP7e (ORCPT
+        id S1728643AbfLDP7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:59:34 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39810 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728608AbfLDP7c (ORCPT
+        Wed, 4 Dec 2019 10:59:37 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40151 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728621AbfLDP7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:59:32 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y11so9227006wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:59:30 -0800 (PST)
+        Wed, 4 Dec 2019 10:59:33 -0500
+Received: by mail-qk1-f193.google.com with SMTP id a137so344971qkc.7;
+        Wed, 04 Dec 2019 07:59:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UOWwdCy6TVkju/XVgGYrNAwqmnFLPpHnEAl2yx/CBt8=;
-        b=X+uook1kRgRvmE3McO9/BVwAAZr04AoodqHjOIAmN5n2dNHYyv9wnrCFc7p4ZfwIUq
-         aIftfQ1yxXnKD2DorRPeTA2RzHIg7M+efba4oCK6k8QdovXqUfPIwq9AJ2Qcs8h/38P1
-         Gb3TB4LynazhBAZfqLQitm3PilyB3+RxPvaZNs5PmTNpwaxAWxLT9Tz0Sv7q3jdT2JrL
-         oA8c6D9J6F9wE4DAaC4/mcXHOBgKvTBV0uPpCsUHd6W3tCXuuZR0onSsA3vSQ3+aAgDP
-         ABki0FN/bur1VoZtBz0Pou7Aijz60w1Sw0jkPp5WxVj2yH3ry+Qsrkk6WVwfFsBcXoK3
-         JQIw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=yRIWo7lKKgqJCu/aBUPmRsLV0Wkkk5/DYmont9tq1qI=;
+        b=rk5spJZk1saeoY744UNyx+wXqmmNfCrwihWJBMslEhpdRoRXMOEL/weiPQc+ZajJfI
+         nIv2riK0GB72szsbYLQZbOdoE3KqvkEO+c9yvtS1s70+mXQ3A/wQoZyYfG6x2zP3AnCk
+         k5dwdXNyuRDyTqmI0V7qpvZgwhbZexcldeZEyOdHYqF+J45z00RZD7eZI+UL1lMdWbPV
+         Vn4wzxXB84/vPmNHM2qnuUnRcFs/YZLW32es3UCXvBi1zcL3ftsu2c/nmeNEvjrv2o+N
+         9Usucm3+1n5m/eJzYWQIEAfRdpwg2QfFyplmuat1byjjOZ1a5PegX7i3fmaWMH4LHGsJ
+         ShyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UOWwdCy6TVkju/XVgGYrNAwqmnFLPpHnEAl2yx/CBt8=;
-        b=lZs/qVAMZId9V9kayYYu9JjnwHUBy8momXbDxNi7d+XmLXMXZJoHXtxrgwrgAOt6O+
-         xKu+q9Gs90ntoAlCiz7bxQ8nG36MOE4Plcb362MqzSx2wW8uCx5+Y/Dhkothm2bmrJ0F
-         x4bmHGZVdONXdjC2JCTwXmoRArhEwC8P2obcGdh/bFNgXCiZz0pfETvXmlR3rPJVLZ+a
-         FSnKD8dXHGV5c9SXBRh0vzAto+afemgMMt0U2mzUS32s2Ir0TPiM9EvpA7IXoPI/4/Iu
-         j2lSdUYjC+UOzHDj50SQIo1WIAdf7c/pTkZceF5Zke7CL6KfC3qDEa9v/WYEq4WUyKXE
-         oVdw==
-X-Gm-Message-State: APjAAAV3O/OArnEUaJ9fMQ1gv4GThuDhv2n9cZ9e5jWjUcnDWMA+gXUM
-        cE3autMAzivQsNBDtchf4E+CKw==
-X-Google-Smtp-Source: APXvYqyuvpUu6t8eK96hpQZQvg2O8GUu1xSz5TTabWxuZMWlPkfAxDcV1SufBPt83Rn9kt6rWiUy0A==
-X-Received: by 2002:a05:6000:160d:: with SMTP id u13mr5041318wrb.22.1575475169910;
-        Wed, 04 Dec 2019 07:59:29 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id u18sm8640508wrt.26.2019.12.04.07.59.28
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=yRIWo7lKKgqJCu/aBUPmRsLV0Wkkk5/DYmont9tq1qI=;
+        b=X4Q5kk9bkehYWGbGpxOdaCP8t3eR3A7xibV1HlhmRhDiOtpkayxs9Q83cA3ZhZAqpW
+         aASUtyzB73EbuKfIGjzbDd9qg3ancbmHbDmXXaubBYB1E7/yVtA57Ls2AM9styCYhrKa
+         6fhcva+Io/9TtS0rRJjaPCLs1E7Og0XZ8QcN3T8uFRym1jUSgN65mSpH0UflICc1UIBI
+         qgP9z7uhT1Z5r1laeTv8qGypK1QHJmd01DL4aCXwXlezhhfrLfauE1cn/+3MQgOD2xQM
+         k+CgsbN1nILxyqSo8Yt3Xs7d+0ARs+h1cAhIcvrIhX203ZFAzYQzTsxst98XPXW6agnd
+         JEBg==
+X-Gm-Message-State: APjAAAWpA0A9R6x0kRzJBh1KQYGxVOjgfUCn/8G5GnsuR9yPAOtNUffz
+        Altyk/99uoVAa/Fu3qJ0KzA=
+X-Google-Smtp-Source: APXvYqw6YVY5BvKuYFjKrTa10B9ON4/0NJEdCx3hp8wekexd4CoYPvPrdFofnV0kKgvQRFItAs68eg==
+X-Received: by 2002:a37:7bc7:: with SMTP id w190mr3680024qkc.132.1575475172496;
+        Wed, 04 Dec 2019 07:59:32 -0800 (PST)
+Received: from smtp.gmail.com (gwcrusp.semfio.usp.br. [143.107.150.86])
+        by smtp.gmail.com with ESMTPSA id c16sm4002902qtm.48.2019.12.04.07.59.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:59:28 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 09/11] gpiolib: provide a dedicated function for setting lineinfo
-Date:   Wed,  4 Dec 2019 16:59:12 +0100
-Message-Id: <20191204155912.17590-10-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191204155912.17590-1-brgl@bgdev.pl>
-References: <20191204155912.17590-1-brgl@bgdev.pl>
+        Wed, 04 Dec 2019 07:59:31 -0800 (PST)
+Date:   Wed, 4 Dec 2019 12:59:23 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     jic23@kernel.org, robh@kernel.org
+Cc:     dragos.bogdan@analog.com, alexandru.ardelean@analog.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: [PATCH v2 1/2] dt-bindings: iio: adc: ad7292: fix channel constraint
+Message-ID: <20191204155918.5ot4tplceqjeul6a@smtp.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Change items property of AD7292 channels to correctly constrain their
+quantity.
 
-We'll soon be filling out the gpioline_info structure in multiple
-places. Add a separate function that given a gpio_desc sets all relevant
-fields.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 ---
- drivers/gpio/gpiolib.c | 98 ++++++++++++++++++++++++------------------
- 1 file changed, 55 insertions(+), 43 deletions(-)
+Changelog V2
+- Shortened the message to make it closer to 50 columns.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index c89d297da270..711963aa9239 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1145,6 +1145,60 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
- 	return ret;
- }
+ Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+index b68be3aaf587..18f1032b86f3 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+@@ -53,7 +53,8 @@ patternProperties:
+         description: |
+           The channel number. It can have up to 8 channels numbered from 0 to 7.
+         items:
+-          maximum: 7
++          - minimum: 0
++            maximum: 7
  
-+static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
-+				  struct gpioline_info *info)
-+{
-+	struct gpio_chip *chip = desc->gdev->chip;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&gpio_lock, flags);
-+
-+	if (desc->name) {
-+		strncpy(info->name, desc->name, sizeof(info->name));
-+		info->name[sizeof(info->name) - 1] = '\0';
-+	} else {
-+		info->name[0] = '\0';
-+	}
-+
-+	if (desc->label) {
-+		strncpy(info->consumer, desc->label, sizeof(info->consumer));
-+		info->consumer[sizeof(info->consumer) - 1] = '\0';
-+	} else {
-+		info->consumer[0] = '\0';
-+	}
-+
-+	/*
-+	 * Userspace only need to know that the kernel is using this GPIO so
-+	 * it can't use it.
-+	 */
-+	info->flags = 0;
-+	if (test_bit(FLAG_REQUESTED, &desc->flags) ||
-+	    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
-+	    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
-+	    test_bit(FLAG_EXPORT, &desc->flags) ||
-+	    test_bit(FLAG_SYSFS, &desc->flags) ||
-+	    !pinctrl_gpio_can_use_line(chip->base + info->line_offset))
-+		info->flags |= GPIOLINE_FLAG_KERNEL;
-+	if (test_bit(FLAG_IS_OUT, &desc->flags))
-+		info->flags |= GPIOLINE_FLAG_IS_OUT;
-+	if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
-+		info->flags |= GPIOLINE_FLAG_ACTIVE_LOW;
-+	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
-+		info->flags |= (GPIOLINE_FLAG_OPEN_DRAIN |
-+				GPIOLINE_FLAG_IS_OUT);
-+	if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
-+		info->flags |= (GPIOLINE_FLAG_OPEN_SOURCE |
-+				GPIOLINE_FLAG_IS_OUT);
-+	if (test_bit(FLAG_BIAS_DISABLE, &desc->flags))
-+		info->flags |= GPIOLINE_FLAG_BIAS_DISABLE;
-+	if (test_bit(FLAG_PULL_DOWN, &desc->flags))
-+		info->flags |= GPIOLINE_FLAG_BIAS_PULL_DOWN;
-+	if (test_bit(FLAG_PULL_UP, &desc->flags))
-+		info->flags |= GPIOLINE_FLAG_BIAS_PULL_UP;
-+
-+	spin_unlock_irqrestore(&gpio_lock, flags);
-+}
-+
- /*
-  * gpio_ioctl() - ioctl handler for the GPIO chardev
-  */
-@@ -1185,49 +1239,7 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		if (IS_ERR(desc))
- 			return PTR_ERR(desc);
- 
--		if (desc->name) {
--			strncpy(lineinfo.name, desc->name,
--				sizeof(lineinfo.name));
--			lineinfo.name[sizeof(lineinfo.name)-1] = '\0';
--		} else {
--			lineinfo.name[0] = '\0';
--		}
--		if (desc->label) {
--			strncpy(lineinfo.consumer, desc->label,
--				sizeof(lineinfo.consumer));
--			lineinfo.consumer[sizeof(lineinfo.consumer)-1] = '\0';
--		} else {
--			lineinfo.consumer[0] = '\0';
--		}
--
--		/*
--		 * Userspace only need to know that the kernel is using
--		 * this GPIO so it can't use it.
--		 */
--		lineinfo.flags = 0;
--		if (test_bit(FLAG_REQUESTED, &desc->flags) ||
--		    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
--		    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
--		    test_bit(FLAG_EXPORT, &desc->flags) ||
--		    test_bit(FLAG_SYSFS, &desc->flags) ||
--		    !pinctrl_gpio_can_use_line(chip->base + lineinfo.line_offset))
--			lineinfo.flags |= GPIOLINE_FLAG_KERNEL;
--		if (test_bit(FLAG_IS_OUT, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_IS_OUT;
--		if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_ACTIVE_LOW;
--		if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
--			lineinfo.flags |= (GPIOLINE_FLAG_OPEN_DRAIN |
--					   GPIOLINE_FLAG_IS_OUT);
--		if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
--			lineinfo.flags |= (GPIOLINE_FLAG_OPEN_SOURCE |
--					   GPIOLINE_FLAG_IS_OUT);
--		if (test_bit(FLAG_BIAS_DISABLE, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_BIAS_DISABLE;
--		if (test_bit(FLAG_PULL_DOWN, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_BIAS_PULL_DOWN;
--		if (test_bit(FLAG_PULL_UP, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_BIAS_PULL_UP;
-+		gpio_desc_to_lineinfo(desc, &lineinfo);
- 
- 		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
- 			return -EFAULT;
+       diff-channels:
+         description: see Documentation/devicetree/bindings/iio/adc/adc.txt
 -- 
 2.23.0
 
