@@ -2,59 +2,60 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 512C1C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D04C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 286A42084F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1726E206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="kl4D5bwq"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="MnN7qOb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbfLDPkm (ORCPT
+        id S1728568AbfLDPkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:40:42 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36415 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728366AbfLDPkl (ORCPT
+        Wed, 4 Dec 2019 10:40:45 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43817 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728366AbfLDPkn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:40:41 -0500
-Received: by mail-qk1-f195.google.com with SMTP id v19so307486qkv.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:40:41 -0800 (PST)
+        Wed, 4 Dec 2019 10:40:43 -0500
+Received: by mail-qk1-f196.google.com with SMTP id q28so256094qkn.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:40:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=FzcsaP9w6MtdwnTCcp16VdCAYOhvH887rp/95iRWQVQ=;
-        b=kl4D5bwqnbSucJmMwroPQGUi8vdiy/KN3BwAawDv0FO/VVAdiPtbDITjYyGGah4BF3
-         a/73mNg8kI48HQdaNb1QKKqoPvqL5X2enjy0liqn2PB7ZmacHQldTWntbtMxCGCwtr8e
-         kh7MayOaGH8NXvoKfqDpMI0d8WB64uuz6gkOx6vbgndE8NqHbqLnG5uruiE+iRaT1JHW
-         LsKNr6Dj4ztOWcJHsrBalH4XlKVwrsTkMSdODFciIRV2DiBhoxF7lpzYJA+mhSiGK3He
-         yQQMOyZckfKmtublkzjnoCNEzCnsghEFqEPafDb7NUZ/UowQA2yBG5dQ3pdsMYN4F+xj
-         knLw==
+        bh=TKYIamcANZtYnmd1DLMg7mRBVJgMxnDC2sAqJEPIU6o=;
+        b=MnN7qOb/Aw5hzyId41e+MvM96sCf/2c9FL9dits2novfdCy38l1/jJBsE1+wc4CuQQ
+         wJ6Niv+OzgPFjhdWNvF5jLiIqcA7oN//EoCsfCB2ZNOzcq2M0zI0Orgz+dmeNVH+GvJA
+         gOc3ooWHdDMsuUfWywZwnY2gzvT3IzCIpuqxFfrlccfJKdFW91lXLM9Y1u/dy9s7T3KN
+         I6AgMBz1p0Pf1QQ+UK8fEJlZv5SO1z74BKGRINlVNqAT55wfRmGFV5SECzpLWjlYfb2b
+         FCgn29hXTwL/HXrrQzMlDGu/tGJqh/6IB/UcRDvmaC1OeHDCYh5IHIA7Z096X8tbng5F
+         Wmyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FzcsaP9w6MtdwnTCcp16VdCAYOhvH887rp/95iRWQVQ=;
-        b=KVvw3EvlqPfvAGx3l2dG5En21FUSkMbzm1w44QJ9TOfX8fWfCuDLUG4dHZXCKFPpE/
-         UW+ikM9XRAJnsxMzQAsuk+HrbruIdsXvhbVO87TYMxiOYyqsdz5NnMy+odv7vnDjXV6F
-         5vWBH4kFaXnfP10uagvRTi6WlVuEFXII/dlTdF9k9232gjii1y9+W0fDoH/Ag9pCleHu
-         f2jortpb1i8SVW4qbaYPj+W5xPG5hAQVQjrnzccrjWsOOEuZdvtOsVBeT0ba/YCG898e
-         DmKkuBOCa2pTF6rFDCXyUuhYickqzMcHNXsS95pyPMrnkZsMQU5ZVwNkkD2pfS9mWiS/
-         PmEg==
-X-Gm-Message-State: APjAAAUHnVmPUJ2clyTZkF/4GjOeEzOS4j+4LAYWO3joiQf3YSCOXN7T
-        hOrFkPO0TiI9H2hvlkgMwcdUFQ==
-X-Google-Smtp-Source: APXvYqwbHqmSIMaGHCldLdUxFkVwopIpvrtZm5CXX9fnNsfkRpFdzeM155lG9p5Sq1HX4dEysXr66g==
-X-Received: by 2002:a37:27cf:: with SMTP id n198mr3600708qkn.188.1575474040601;
-        Wed, 04 Dec 2019 07:40:40 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TKYIamcANZtYnmd1DLMg7mRBVJgMxnDC2sAqJEPIU6o=;
+        b=TATWlqhTsjIoLxAyOtX1YqTF1eKnTI17FWUUp3kzGnzV3j/hGT+kH37jM5ZpNf6pv4
+         oa25y2j5nZWwCJSpNihLW7fvanbe3OixyQ6mqW1BA/Qmq3ozBMWb9DtCYke09EQhHkIY
+         WXI7v3GWBTWcuhbfyReuTkuu/aMjDiwL667oW5Fq3i5nErDbzQJqtEkb8LULW4DDWCDS
+         VuVWg7/AEtkTBCxnvg1mD8/phrSpk51yKFmGd3lM0ivZzPiyZdY6P+Zzu/kpkydhF6RD
+         r4Q6uQG8D8hSMl09vTMawvOv7hzu0cHFcWv/zxgK0AEPm6OwZ0KYMRG5v29SgNAuvc9J
+         2M1g==
+X-Gm-Message-State: APjAAAUK03IsEP5RbD/RPzTSvvWpp6rFcQa6PJpAhEisgHswXttUj4Q+
+        Lppv43DJiacpSiQ91MD6BhA73w==
+X-Google-Smtp-Source: APXvYqzaHMZ7ljtRRla518W1B2GOaSGHFhofv7ElsnTVyzHk/MSaxlYFr3gvMJQ2QFU6avcGGFW/IA==
+X-Received: by 2002:a37:7186:: with SMTP id m128mr3526332qkc.384.1575474042150;
+        Wed, 04 Dec 2019 07:40:42 -0800 (PST)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id y28sm3937692qtk.65.2019.12.04.07.40.39
+        by smtp.gmail.com with ESMTPSA id y28sm3937692qtk.65.2019.12.04.07.40.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:40:39 -0800 (PST)
+        Wed, 04 Dec 2019 07:40:41 -0800 (PST)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
@@ -63,10 +64,12 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         thiruan@microsoft.com, bryankel@microsoft.com,
         tee-dev@lists.linaro.org, ilias.apalodimas@linaro.org,
         sumit.garg@linaro.org, rdunlap@infradead.org
-Subject: [PATCH v4 0/1] tpm/tpm_ftpm_tee: add shutdown call back
-Date:   Wed,  4 Dec 2019 10:40:37 -0500
-Message-Id: <20191204154038.2276810-1-pasha.tatashin@soleen.com>
+Subject: [PATCH v4 1/1] tpm/tpm_ftpm_tee: add shutdown call back
+Date:   Wed,  4 Dec 2019 10:40:38 -0500
+Message-Id: <20191204154038.2276810-2-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191204154038.2276810-1-pasha.tatashin@soleen.com>
+References: <20191204154038.2276810-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,25 +77,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes from v3:
- - Synced with mainline
- - Added Tested-by Sasha Levin, and Reviewed-by: Jarkko Sakkinen.
+Add shutdown call back to close existing session with fTPM TA
+to support kexec scenario.
 
-Previous versions:
-v3:
-https://lore.kernel.org/lkml/20191016163114.985542-1-pasha.tatashin@soleen.com
-v2:
-https://lore.kernel.org/lkml/20191014202135.429009-1-pasha.tatashin@soleen.com
-v1:
-https://lore.kernel.org/lkml/20191011145721.59257-1-pasha.tatashin@soleen.com
+Add parentheses to function names in comments as specified in kdoc.
 
-
-Pavel Tatashin (1):
-  tpm/tpm_ftpm_tee: add shutdown call back
-
+Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Tested-by: Sasha Levin <sashal@kernel.org>
+---
  drivers/char/tpm/tpm_ftpm_tee.c | 22 ++++++++++++++++++----
  1 file changed, 18 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+index 6640a14dbe48..22bf553ccf9d 100644
+--- a/drivers/char/tpm/tpm_ftpm_tee.c
++++ b/drivers/char/tpm/tpm_ftpm_tee.c
+@@ -32,7 +32,7 @@ static const uuid_t ftpm_ta_uuid =
+ 		  0x82, 0xCB, 0x34, 0x3F, 0xB7, 0xF3, 0x78, 0x96);
+ 
+ /**
+- * ftpm_tee_tpm_op_recv - retrieve fTPM response.
++ * ftpm_tee_tpm_op_recv() - retrieve fTPM response.
+  * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h.
+  * @buf:	the buffer to store data.
+  * @count:	the number of bytes to read.
+@@ -61,7 +61,7 @@ static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+ }
+ 
+ /**
+- * ftpm_tee_tpm_op_send - send TPM commands through the TEE shared memory.
++ * ftpm_tee_tpm_op_send() - send TPM commands through the TEE shared memory.
+  * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h
+  * @buf:	the buffer to send.
+  * @len:	the number of bytes to send.
+@@ -208,7 +208,7 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
+ }
+ 
+ /**
+- * ftpm_tee_probe - initialize the fTPM
++ * ftpm_tee_probe() - initialize the fTPM
+  * @pdev: the platform_device description.
+  *
+  * Return:
+@@ -298,7 +298,7 @@ static int ftpm_tee_probe(struct platform_device *pdev)
+ }
+ 
+ /**
+- * ftpm_tee_remove - remove the TPM device
++ * ftpm_tee_remove() - remove the TPM device
+  * @pdev: the platform_device description.
+  *
+  * Return:
+@@ -328,6 +328,19 @@ static int ftpm_tee_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++/**
++ * ftpm_tee_shutdown() - shutdown the TPM device
++ * @pdev: the platform_device description.
++ */
++static void ftpm_tee_shutdown(struct platform_device *pdev)
++{
++	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
++
++	tee_shm_free(pvt_data->shm);
++	tee_client_close_session(pvt_data->ctx, pvt_data->session);
++	tee_client_close_context(pvt_data->ctx);
++}
++
+ static const struct of_device_id of_ftpm_tee_ids[] = {
+ 	{ .compatible = "microsoft,ftpm" },
+ 	{ }
+@@ -341,6 +354,7 @@ static struct platform_driver ftpm_tee_driver = {
+ 	},
+ 	.probe = ftpm_tee_probe,
+ 	.remove = ftpm_tee_remove,
++	.shutdown = ftpm_tee_shutdown,
+ };
+ 
+ module_platform_driver(ftpm_tee_driver);
 -- 
 2.24.0
 
