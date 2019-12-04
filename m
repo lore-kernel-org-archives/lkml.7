@@ -2,150 +2,202 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7347CC43215
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F97C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 470C220661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:01:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nDMijWZj"
+	by mail.kernel.org (Postfix) with ESMTP id 57A4120661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:01:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfLDDBK (ORCPT
+        id S1726971AbfLDDBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 22:01:10 -0500
-Received: from ozlabs.org ([203.11.71.1]:35801 "EHLO ozlabs.org"
+        Tue, 3 Dec 2019 22:01:55 -0500
+Received: from mga05.intel.com ([192.55.52.43]:36485 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726482AbfLDDBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 22:01:09 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47SNsF3HKFz9sP3;
-        Wed,  4 Dec 2019 14:01:05 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1575428466;
-        bh=uD790YV9lLc8UOd6dYTKCT9GhFlkeZ7msSgxLLS2K9s=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nDMijWZjI45a/5P2ZADfoa3YxKKbYq7g045tMnZyfGkGAfG/Stn2cC8KDhcfxfHm5
-         Moea0EfwzCd/36DrBA772cOWNbPrddkVNBWQ2vAAmX+SrbrYGg6J0kdOzEJLK2ybjO
-         RGUIXBJ1fISxUZirBy+FBu8HQrnT9V815iBOsyXtDPoJymgapU1iQG5KZCyFihIGx2
-         j4q7IJbLglNxzP7KNVm9Mkp5NMDJg5IcD52L9/MUv9TxmVIMuYFKpheBdl2FBmZh+d
-         xkgVXIIe1nnyxpdZsDL/r84Av8MmZLDk7qoSqoaO1mUDkMOz2s9V4QxrwSgBqQCFlf
-         gRBkWGCPQ9sYA==
-Date:   Wed, 4 Dec 2019 14:00:52 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: linux-next: manual merge of the vhost tree with Linus' tree
-Message-ID: <20191204140052.69d4b164@canb.auug.org.au>
+        id S1726549AbfLDDBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 22:01:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 19:01:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,275,1571727600"; 
+   d="scan'208";a="205227855"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga008.jf.intel.com with ESMTP; 03 Dec 2019 19:01:53 -0800
+Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 3 Dec 2019 19:01:52 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.109]) by
+ SHSMSX152.ccr.corp.intel.com ([169.254.6.222]) with mapi id 14.03.0439.000;
+ Wed, 4 Dec 2019 11:01:50 +0800
+From:   "Zhao, Shirley" <shirley.zhao@intel.com>
+To:     James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Subject: RE: One question about trusted key of keyring in Linux kernel.
+Thread-Topic: One question about trusted key of keyring in Linux kernel.
+Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMAAOKaagABSSevwABZzFQAAgRP1kP//pW0A//9ftMCAAMH6gP//eLrAgACO1ID//3k2UAAqYIQA//8FitD//nrPAP/64XgQ
+Date:   Wed, 4 Dec 2019 03:01:50 +0000
+Message-ID: <A888B25CD99C1141B7C254171A953E8E4909E877@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+         <1573659978.17949.83.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
+         <1574877977.3551.5.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
+         <1575057916.6220.7.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
+         <1575260220.4080.17.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
+         <1575267453.4080.26.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
+         <1575269075.4080.31.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909E399@shsmsx102.ccr.corp.intel.com>
+         <1575312932.24227.13.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909E62E@shsmsx102.ccr.corp.intel.com>
+ <1575342724.24227.41.camel@linux.ibm.com>
+In-Reply-To: <1575342724.24227.41.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTYzYzVkMWQtYWNlMC00MjA3LWE2YjAtMGZjZDcxZWZjOTY1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiN29pKzRYNEZSV0NSSU5idkZcLzJRanhtSE1tcWJQQk5ZUmZVZGxlNEo1K0g0eDk0akZRWGhqZlFlRWpBM055bGsifQ==
+x-ctpclassification: CTP_NT
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/mn0WCoZc9syp/B/hk4q3FrI";
- protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/mn0WCoZc9syp/B/hk4q3FrI
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-Today's linux-next merge of the vhost tree got a conflict in:
-
-  drivers/net/ethernet/ti/cpsw.c
-
-between commit:
-
-  c5013ac1dd0e ("net: ethernet: ti: cpsw: move set of common functions in c=
-psw_priv")
-
-from Linus' tree and commit:
-
-  29fd1db09264 ("netdev: pass the stuck queue to the timeout handler")
-
-from the vhost tree.
-
-I fixed it up (the code has been moved, so I applied the following merge
-fix patch) and can carry the fix as necessary. This is now fixed as far as
-linux-next is concerned, but any non trivial conflicts should be mentioned
-to your upstream maintainer when your tree is submitted for merging.
-You may also want to consider cooperating with the maintainer of the
-conflicting tree to minimise any particularly complex conflicts.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 4 Dec 2019 13:55:43 +1100
-Subject: [PATCH] netdev: fix up for "pass the stuck queue to the timeout
- handler"
-
-cpsw_ndo_tx_timeout() was moved
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/net/ethernet/ti/cpsw_priv.c | 2 +-
- drivers/net/ethernet/ti/cpsw_priv.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/=
-cpsw_priv.c
-index b833cc1d188c..4205c52ea86b 100644
---- a/drivers/net/ethernet/ti/cpsw_priv.c
-+++ b/drivers/net/ethernet/ti/cpsw_priv.c
-@@ -272,7 +272,7 @@ void soft_reset(const char *module, void __iomem *reg)
- 	WARN(readl_relaxed(reg) & 1, "failed to soft-reset %s\n", module);
- }
-=20
--void cpsw_ndo_tx_timeout(struct net_device *ndev)
-+void cpsw_ndo_tx_timeout(struct net_device *ndev, unsigned int txqueue)
- {
- 	struct cpsw_priv *priv =3D netdev_priv(ndev);
- 	struct cpsw_common *cpsw =3D priv->cpsw;
-diff --git a/drivers/net/ethernet/ti/cpsw_priv.h b/drivers/net/ethernet/ti/=
-cpsw_priv.h
-index bc726356a72c..b8d7b924ee3d 100644
---- a/drivers/net/ethernet/ti/cpsw_priv.h
-+++ b/drivers/net/ethernet/ti/cpsw_priv.h
-@@ -449,7 +449,7 @@ int cpsw_rx_poll(struct napi_struct *napi_rx, int budge=
-t);
- void cpsw_rx_vlan_encap(struct sk_buff *skb);
- void soft_reset(const char *module, void __iomem *reg);
- void cpsw_set_slave_mac(struct cpsw_slave *slave, struct cpsw_priv *priv);
--void cpsw_ndo_tx_timeout(struct net_device *ndev);
-+void cpsw_ndo_tx_timeout(struct net_device *ndev, unsigned int txqueue);
- int cpsw_need_resplit(struct cpsw_common *cpsw);
- int cpsw_ndo_ioctl(struct net_device *dev, struct ifreq *req, int cmd);
- int cpsw_ndo_set_tx_maxrate(struct net_device *ndev, int queue, u32 rate);
---=20
-2.24.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/mn0WCoZc9syp/B/hk4q3FrI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3nIWQACgkQAVBC80lX
-0GwNVAf/RJIsa2GxVJUsyIhjVIZYyzLBX9NHukT+jzMWIh1R4ZIIoXEoRwQlNa0d
-qfDkVTtibdsWkpnnAsjDLIx7OVIkL05UPZJMNFM5NSWj6mmauxll6QbyALdL/Qpx
-R9fZ8otf8myPvA4O/DGVlFPI7Amr0iT77mJEA5WDZI0nDzVjq4ihwuhP44WMHdDJ
-hgs65nq2TUjUm6skxKgbMLFENuRuAikhwAcOcjy+oP1VvNjDULK0ljGzl1nZJnro
-gHF4m+e1X9Apow2Pd/F6Thx3UidxWvIzK5E0HlrpLL/Bw+c7EOQk1f6coBN1yWK7
-pv7/YHjst8S2ImxqzM3dvUEp7N78Cg==
-=+oaZ
------END PGP SIGNATURE-----
-
---Sig_/mn0WCoZc9syp/B/hk4q3FrI--
+SGksIEphbWVzLCANCg0KVXNpbmcgcG9saWN5IGRpZ2VzdCB0byByZWxvYWQgdHJ1c3RlZCBrZXks
+IGRvZXNuJ3Qgd29yaywgZWl0aGVyLiANClBsZWFzZSBjaGVjayB0aGUgc3RlcHMgYmVsb3cuIA0K
+SSB0aGluayBwb2xpY3kgZGlnZXN0IHNob3VsZCBiZSBjYWxjdWxhdGVkIGJ5IFRQTSB3aGVuIHZl
+cmlmeWluZyB0aGUgcG9saWN5IHRvIHJlbG9hZCBrZXkuIA0KDQovLy8vLy8vIGJ1aWxkIHBvbGlj
+eQ0KIyB0cG0yX3Bjcmxpc3QgLUwgc2hhMjU2OjcgLW8gcGNyNy5zaGEyNTYNCnNoYTI1NjoNCiAg
+NyA6IDB4MDYxQUFEMDcwNUE2MjM2MUFEMThFNThCNjVEM0Q3MzgzRjREMTBGN0Y1QTdFNzg5MjRC
+RTA1N0FDNjc5NzQwOA0KIyB0cG0yX2NyZWF0ZXBvbGljeSAtLXBvbGljeS1wY3IgLS1wY3ItbGlz
+dCBzaGEyNTY6NyAtLXBvbGljeSBwY3I3X2Jpbi5wb2xpY3kgPiBwY3I3LnBvbGljeQ0KIyBjYXQg
+cGNyNy5wb2xpY3kNCjMyMWZiZDI4YjYwZmNjMjMwMTdkNTAxYjEzM2JkNWRiZjI4ODk4MTQ1ODhl
+OGEyMzUxMGZlMTAxMDVjYjJjYzkNCg0KLy8vLy8vLyBuZXcgdHJ1c3RlZCBrZXkgYW5kIHVzZSBw
+b2xpY3kgdG8gcHJvdGVjdA0KIyBrZXljdGwgYWRkIHRydXN0ZWQga21rICJuZXcgMzIga2V5aGFu
+ZGxlPTB4ODEwMDAwMDEgaGFzaD1zaGEyNTYgcG9saWN5ZGlnZXN0PWBjYXQgcGNyNy5wb2xpY3lg
+IiBAdQ0KNDY2MTA3NTc4DQojIGtleWN0bCBwaXBlIDQ2NjEwNzU3OCA+IGttay5ibG9iDQojIGtl
+eWN0bCBwcmludCA0NjYxMDc1NzgNCjAwN2YwMDIwYTkyMmNhNzY0ZDNhZTlmZWFlNGMzYTFiMTQw
+YzYxMGFkMWRmODM2ZGY2ZDcwNTQ5NTdmM2Y1ZGExNDA0MmYyOTAwMTBkM2NhODNhY2EwOGVkMTBh
+NDMzYmE1ODVhNTE0NzEyNmQyMDdmMGM1MmU1M2ExZWRiZmMzMWI4OWIzMDk4ODA1Mzg3MDU1M2Vm
+NjkyYzc3YzI4YjJjN2FkYjYzZTFmYzY5ODY5ZDdmMmU4YWIyYjlkODkwNmUwMmJkOTUzZGM1OGMz
+YTViMWRlMDg1OGVjMzhhNmRjYjU1MTM4NGYzOGQ2ODM0ODQyZmQyMmI0YTljNjFjMDMyMDAwNGUw
+MDA4MDAwYjAwMDAwMDAwMDAyMDMyMWZiZDI4YjYwZmNjMjMwMTdkNTAxYjEzM2JkNWRiZjI4ODk4
+MTQ1ODhlOGEyMzUxMGZlMTAxMDVjYjJjYzkwMDEwMDAyMDAyODAzMjE4MTBhNjZkZjYzOTA1ZDQ4
+NDZlMzllNmFkM2VjNjliNzdkZWFjMzM5ZjQyMDlmMjkxMDc4NDgzYzEwMDczMDAwMDAwMDAwMDIw
+ZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3
+ODUyYjg1NTAxMDAwYjAwMjIwMDBiZGNkYjY5NGUxMDJlMTNhMGZiYTUxMTEwODFjYjZjZjYxNmMx
+MThkNDA0OTM2Y2FjM2U4NGRiMjRjNzFlNDdkNTAwMjIwMDBiMDRiNWRiMWFhNTI2MzVkZmIyNDJl
+NzZmNmJkZThlMjE3NmFlNDhmYzY4Mjk0NmM2Yzc2ZDk2ZjYwODA3OWQxZjAwMDAwMDIwMzZiNmZj
+Y2E4MjA2YzdmNzIyZGU4NTgyMWQ3ZWNiNDc4NTk3NmZkZDY0MmJjNzUzODUwNWEyYTgxOGM4YTIz
+ODgwMjE0MDAwMDAwMTAwMjAxNGI0MzlkYTliOTQ5MGQ5YmI2ZTVhOTNlN2U2ZWQ0MDhiMWQ1MWFl
+NDVhYmNjZDVkNWRjYzYyNWQ5NjgyODJkDQojIGNhdCBrbWsuYmxvYg0KMDA3ZjAwMjBhOTIyY2E3
+NjRkM2FlOWZlYWU0YzNhMWIxNDBjNjEwYWQxZGY4MzZkZjZkNzA1NDk1N2YzZjVkYTE0MDQyZjI5
+MDAxMGQzY2E4M2FjYTA4ZWQxMGE0MzNiYTU4NWE1MTQ3MTI2ZDIwN2YwYzUyZTUzYTFlZGJmYzMx
+Yjg5YjMwOTg4MDUzODcwNTUzZWY2OTJjNzdjMjhiMmM3YWRiNjNlMWZjNjk4NjlkN2YyZThhYjJi
+OWQ4OTA2ZTAyYmQ5NTNkYzU4YzNhNWIxZGUwODU4ZWMzOGE2ZGNiNTUxMzg0ZjM4ZDY4MzQ4NDJm
+ZDIyYjRhOWM2MWMwMzIwMDA0ZTAwMDgwMDBiMDAwMDAwMDAwMDIwMzIxZmJkMjhiNjBmY2MyMzAx
+N2Q1MDFiMTMzYmQ1ZGJmMjg4OTgxNDU4OGU4YTIzNTEwZmUxMDEwNWNiMmNjOTAwMTAwMDIwMDI4
+MDMyMTgxMGE2NmRmNjM5MDVkNDg0NmUzOWU2YWQzZWM2OWI3N2RlYWMzMzlmNDIwOWYyOTEwNzg0
+ODNjMTAwNzMwMDAwMDAwMDAwMjBlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0
+MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1MDEwMDBiMDAyMjAwMGJkY2RiNjk0ZTEwMmUxM2Ew
+ZmJhNTExMTA4MWNiNmNmNjE2YzExOGQ0MDQ5MzZjYWMzZTg0ZGIyNGM3MWU0N2Q1MDAyMjAwMGIw
+NGI1ZGIxYWE1MjYzNWRmYjI0MmU3NmY2YmRlOGUyMTc2YWU0OGZjNjgyOTQ2YzZjNzZkOTZmNjA4
+MDc5ZDFmMDAwMDAwMjAzNmI2ZmNjYTgyMDZjN2Y3MjJkZTg1ODIxZDdlY2I0Nzg1OTc2ZmRkNjQy
+YmM3NTM4NTA1YTJhODE4YzhhMjM4ODAyMTQwMDAwMDAxMDAyMDE0YjQzOWRhOWI5NDkwZDliYjZl
+NWE5M2U3ZTZlZDQwOGIxZDUxYWU0NWFiY2NkNWQ1ZGNjNjI1ZDk2ODI4MmQNCg0KLy8vLy8vLy8v
+L2NsZWFyIHRydXN0ZWQga2V5IGFuZCByZWxvYWQNCiMga2V5Y3RsIGNsZWFyIEB1DQprZXljdGwg
+bGlzdCBAdQ0Ka2V5cmluZyBpcyBlbXB0eQ0KIyBrZXljdGwgYWRkIHRydXN0ZWQga21rICJsb2Fk
+IGBjYXQga21rLmJsb2JgIGtleWhhbmRsZT0weDgxMDAwMDAxIGhhc2g9c2hhMjU2IHBvbGljeWRp
+Z2VzdD1gY2F0IHBjcjcucG9saWN5YCIgQHUNCmFkZF9rZXk6IE9wZXJhdGlvbiBub3QgcGVybWl0
+dGVkDQoNCg0KVGhhbmtzLiANCg0KLSBTaGlybGV5IA0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2Ut
+LS0tLQ0KRnJvbTogSmFtZXMgQm90dG9tbGV5IDxqZWpiQGxpbnV4LmlibS5jb20+IA0KU2VudDog
+VHVlc2RheSwgRGVjZW1iZXIgMywgMjAxOSAxMToxMiBBTQ0KVG86IFpoYW8sIFNoaXJsZXkgPHNo
+aXJsZXkuemhhb0BpbnRlbC5jb20+OyBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29tPjsg
+SmFya2tvIFNha2tpbmVuIDxqYXJra28uc2Fra2luZW5AbGludXguaW50ZWwuY29tPjsgSm9uYXRo
+YW4gQ29yYmV0IDxjb3JiZXRAbHduLm5ldD4NCkNjOiBsaW51eC1pbnRlZ3JpdHlAdmdlci5rZXJu
+ZWwub3JnOyBrZXlyaW5nc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWRvY0B2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7ICdNYXVybyBDYXJ2YWxobyBDaGVoYWIn
+IDxtY2hlaGFiK3NhbXN1bmdAa2VybmVsLm9yZz47IFpodSwgQmluZyA8YmluZy56aHVAaW50ZWwu
+Y29tPjsgQ2hlbiwgTHVoYWkgPGx1aGFpLmNoZW5AaW50ZWwuY29tPg0KU3ViamVjdDogUmU6IE9u
+ZSBxdWVzdGlvbiBhYm91dCB0cnVzdGVkIGtleSBvZiBrZXlyaW5nIGluIExpbnV4IGtlcm5lbC4N
+Cg0KT24gVHVlLCAyMDE5LTEyLTAzIGF0IDAyOjExICswMDAwLCBaaGFvLCBTaGlybGV5IHdyb3Rl
+Og0KPiBUaGFua3Mgc28gbXVjaCBmb3IgeW91IGZlZWRiYWNrLCBKYW1lcy4gDQo+IEFuZCBnbGFk
+IHRvIGhlYXIgdGhhdCB0aGUgQVBJIHdpbGwgYmUgbWFkZSBtb3JlIGZyaWVuZGx5LiANCj4gDQo+
+IEJ1dCBJIGhhdmUgYSBsaXR0bGUgY29uZnVzZWQgYWJvdXQgdGhlIGNhbGwgc3RhY2suIA0KPiBG
+cm9tIHRoZSBkb2N1bWVudCwgaHR0cHM6Ly9naXRodWIuY29tL3RvcnZhbGRzL2xpbnV4L2Jsb2Iv
+bWFzdGVyL0RvY3UNCj4gbWVudGF0aW9uL3NlY3VyaXR5L2tleXMvdHJ1c3RlZC1lbmNyeXB0ZWQu
+cnN0IGFuZCANCj4gaHR0cHM6Ly9naXRodWIuY29tL3pmc29ubGludXgvZHJhY3V0L3RyZWUvbWFz
+dGVyL21vZHVsZXMuZC85N21hc3RlcmtlDQo+IHksIHRoZSB0cnVzdGVkIGtleSBpcyBhIHJhbmRv
+bSBudW1iZXIgYW5kIGdlbmVyYXRlZCBieSBUUE0yLjAgYW5kIA0KPiBzZWFsZWQgd2l0aCBUUE0y
+LjAgMjA0OCBSU0Ega2V5Lg0KDQpXZWxsLCB1bSwgdGhhdCBkb2N1bWVudCBzZWVtcyB0byBiZSBi
+YXNlZCBvbiBUUE0gMS4yIC4uLiBhIGxvdCBvZiB3aGF0IGl0IHNheXMgaXNuJ3QgcXVpdGUgdHJ1
+ZSBmb3IgVFBNIDIuMC4gIEZvciBpbnN0YW5jZSBhbGwgVFBNIDIuMCBwcmltYXJ5IGtleXMgY29t
+ZSB3aXRoIGEgc3ltbWV0cmljIGNvbXBvbmVudCwgc28gdGhlIHNlYWxlZCBkYXRhIGluIFRQTSAy
+LjAgaXMgYWN0dWFsbHkgc3ltbWV0cmljYWxseSBlbmNyeXB0ZWQgdG8gYSBwcmltYXJ5IGtleS4N
+Cg0KPiBUaGUgMjA0OCBSU0Ega2V5IGlzIGdlbmVyYXRlZCBieSB0cG0yX2NyZWF0ZXByaW1hcnks
+IGFuZCBpdCBjYW4gYmUgZ290IA0KPiBieSB0aGUgVFBNMi4wIGhhbmRsZSwganVzdCB0aGUgImtl
+eWhhbmRsZSIgdXNlZCBpbiB0aGUgZm9sbG93aW5nIA0KPiBrZXljdGwgY29tbWFuZC4NCj4gJCBr
+ZXljdGwgYWRkIHRydXN0ZWQga21rICJuZXcgMzIga2V5aGFuZGxlPTB4ODEwMDAwMDEgaGFzaD1z
+aGEyNTYgDQo+IHBvbGljeWRpZ2VzdD1gY2F0IHBjcjcucG9saWN5YCIgQHUNCg0KVGhlIHByb2Js
+ZW0gVFBNIDIuMCBoYXMgaXMgdGhhdCBtb3N0IG9mIHRoZW0gY2FuJ3QgZ2VuZXJhdGUgcHJpbWUg
+bnVtYmVycyB2ZXJ5IGZhc3QsIHNvIGV2ZW4gdGhyb3VnaCB0aGUga2VybmVsIGNvdWxkIGdlbmVy
+YXRlIHRoZSBSU0EgcHJpbWFyeSwgaXQgd291bGQgdXN1YWxseSB0YWtlIGZhciB0b28gbG9uZywg
+c28gaWYgeW91IHdhbnQgdG8gdXNlIGEgUlNBIHByaW1hcnkgeW91IGhhdmUgdG8gcHJlLWdlbmVy
+YXRlIG9uZSBhbmQgcGxhY2UgaXQgaW4gTlYgc3RvcmFnZTsgdGhlIFRDRyByZWNvbW1lbmRzIGRv
+aW5nIHRoaXMgYXQgaGFuZGxlIDgxMDAwMDAxLCB3aGljaCBpcyB3aGF0IHlvdSBoYXZlIGFib3Zl
+LiAgSG93ZXZlciwgdGhlIG1vcmUgbW9kZXJuIHdheSBpcyB0byBkZXJpdmUgYW4gZWxsaXB0aWMg
+Y3VydmUga2V5IHByaW1hcnkga2V5IGV2ZXJ5IHRpbWUgLi4uIEVDIGtleXMgY2FuIGJlIGdlbmVy
+YXRlZCBieSBtb3N0IFRQTXMgaW4gMTBzIG9mIG1pbGxpc2Vjb25kcywgc28gdGhlIHByaW1hcnkg
+ZG9lc24ndCBuZWVkIHRvIGJlIHByZXNlbnQgaW4gTlZSQU0uDQoNClRIZSBrZXJuZWwgc2hvdWxk
+IGJlIHVzaW5nIHRoZSBFQyBwcmltYXJ5IG1ldGhvZCBmb3IgdGhlIHBhcmVudC4gIFRoZSBvbmx5
+IGV4Y2VwdGlvbiBpcyB3aGVuIHRoZSBrZXkgaGFzIGFuIGludGVybWVkaWF0ZSBwYXJlbnQsIGFu
+ZCB0aGVuIGl0IGNhbiBiZSBzaW1wbHkgbG9hZGVkIGZyb20gYSBmaWxlLg0KDQo+IElmIHJlYm9v
+dCwgdG8gcmUtbG9hZCB0aGUgdHJ1c3RlZCBrZXkgYmFjayB0byBrZXlyaW5nLCBqdXN0IGNhbGwg
+DQo+IHRwbTJfdW5zZWFsIGlzIGVub3VnaCwgZG9uJ3QgbmVlZCB0byBjYWxsIHRwbTJfbG9hZCB0
+byBsb2FkIHRoZQ0KPiBUUE0yLjAgMjA0OCBSU0Ega2V5Lg0KPiBJZiB0aGUgdHJ1c3RlZCBrZXkg
+aXMgYWxzbyBwcm90ZWN0ZWQgYnkgcG9saWN5LCB0aGVuIHRoZSBwb2xpY3kgd2lsbCANCj4gYmUg
+Y2hlY2tlZCBkdXJpbmcgdHBtMl91bnNlYWwuDQo+IA0KPiBBZnRlciBjaGVjayB0aGUgc291cmNl
+IGNvZGUsIHRoZSBjYWxsIHN0YWNrIGlzIG1vc3RseSBsaWtlOiANCj4gU1lTQ0FMTF9ERUZJTkU1
+KGFkZF9rZXksLi4uKSAtLT4ga2V5X2NyZWF0ZV9vcl91cGRhdGUoKSAtLT4NCj4gX19rZXlfaW5z
+dGFudGlhdGVfYW5kX2xpbmsoKSAtLT4gIHRydXN0ZWRfaW5zdGFudGlhdGUoKSAtLT4NCj4gdHBt
+Ml91bnNlYWxfdHJ1c3RlZCgpIC0tPiB0cG0yX3Vuc2VhbF9jbWQoKS4NCg0KV2VsbCwgdGhlIEFQ
+SSBpcyBjb25mdXNpbmcsIGJ1dCB0aGUgY29kZSBzZWVtcyB0byBpbXBseSB0aGUgcGFyZW50IHNo
+b3VsZCBiZSBwcmVzZW50IHNvbWVob3cuICBBIGtleSBpbiBOVlJBTSwgbGlrZSA4MTAwMDAwMSBp
+cyBhbHdheXMgcHJlc2VudCBzbyBpdCBkb2Vzbid0IG5lZWQgdG8gYmUgbG9hZGVkIGl0IGNhbiBq
+dXN0IGJlIHVzZWQgYXMgaXMuDQoNCj4gQW5vdGhlciBwcm9ibGVtIGhlcmUgaXMsIHRvIGJ1aWxk
+IHRoZSBwb2xpY3kgdG8gdW5zZWFsIHRoZSBrZXksIGl0IA0KPiBuZWVkIHRvIHN0YXJ0IGFuIHBv
+bGljeSBzZXNzaW9uLCBhbmQgdHJhbnNmZXIgdGhlIHNlc3Npb24gaGFuZGxlIHRvDQo+IFRQTTIu
+MCB1bnNlYWwgY29tbWFuZC4gDQo+IEluIG15IGtleWN0bCBjb21tYW5kLCBJIHVzZSB0cG0yLjAg
+Y29tbWFuZCB0byBzdGFydCB0aGUgc2Vzc2lvbiBhbmQgDQo+IGdldCB0aGUgaGFuZGxlLCBwdXQg
+aXQgaW50byB0aGUga2V5Y3RsIGNvbW1hbmQgbGlrZToNCj4ga2V5Y3RsIGFkZCB0cnVzdGVkIGtt
+ayAibG9hZCBgY2F0IGttay5ibG9iYCBrZXloYW5kbGU9MHg4MTAwMDAwMSANCj4gcG9saWN5aGFu
+ZGxlPTB4MzAwMDAwMCIgQHUNCg0KQXMgSSBzYWlkLCB1c2luZyBwb2xpY3kgaGFuZGxlcyBzaW1w
+bHkgd29uJ3Qgc2NhbGUsIHNvIHdlIG5lZWQgdG8gdXNlIHRoZSBhY3R1YWwgcG9saWN5IGluc3Rl
+YWQgLi4uIHRodXMgdGhlIHBvbGljeSBzaG91bGQgYmUgcGFzc2VkIGludG8gdGhlIGtlcm5lbCAg
+YXMgcGFydCBvZiB0aGUgdHJ1c3RlZCBrZXkgYW5kIHRoZSBrZXJuZWwgaXRzZWxmIHdvdWxkIGdl
+bmVyYXRlIGEgcG9saWN5IHNlc3Npb24gZnJvbSB0aGUgcG9saWN5IHN0YXRlbWVudHMgLi4uIHRo
+aXMgYXBwcm9hY2ggaXMgYXJlYWR5IHByb3ZlbiB0byBiZSB1c2VmdWwgYW5kIGZ1bmN0aW9uYWwg
+aW4gdGhlIHRwbTIgb3BlbnNzbCBlbmdpbmUgY29kZS4NCg0KSmFtZXMNCg0K
