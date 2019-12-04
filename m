@@ -2,132 +2,73 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7F7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41BDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127AF2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:01:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eXjNzFA5"
+	by mail.kernel.org (Postfix) with ESMTP id B441D2073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfLDJBs (ORCPT
+        id S1726824AbfLDJFT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:01:48 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36260 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727009AbfLDJBp (ORCPT
+        Wed, 4 Dec 2019 04:05:19 -0500
+Received: from lithops.sigma-star.at ([195.201.40.130]:37162 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfLDJFT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:01:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575450104;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RN/l+ytAzaNhoJcK3/jpshrBdeMaQLMrqTK8LFIbtHY=;
-        b=eXjNzFA5swYkW2iXOK74t3sAObY5Ht6t9VToNEw/gs+zq0PHwa/bhkUUf3ZCgxNdOP8pK6
-        1lCs7dY9oHOceXbBt27NDQSKbwphf8E0pet8Zs1DzdzVDH/xMl4BxeW292juTcIVWoO8SA
-        6/XuGOFCRtI3RvOe5VCbTH5T/DDqqWQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-187-T7xi4hn_Nv2nC2A-iPYaew-1; Wed, 04 Dec 2019 04:01:43 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A4774107ACC7;
-        Wed,  4 Dec 2019 09:01:39 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A81031D1;
-        Wed,  4 Dec 2019 09:01:30 +0000 (UTC)
-Date:   Wed, 4 Dec 2019 10:01:28 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
-Message-ID: <20191204090128.GA20746@krava>
-References: <20191202131847.30837-1-jolsa@kernel.org>
- <CAEf4BzY_D9JHjuU6K=ciS70NSy2UvSm_uf1NfN_tmFz1445Jiw@mail.gmail.com>
- <87wobepgy0.fsf@toke.dk>
- <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
+        Wed, 4 Dec 2019 04:05:19 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id B2B2E60B302D;
+        Wed,  4 Dec 2019 10:05:16 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id wBeuTBKAYkpa; Wed,  4 Dec 2019 10:05:15 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 32AED6126B4B;
+        Wed,  4 Dec 2019 10:05:15 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id Cz8CAp_kOJsR; Wed,  4 Dec 2019 10:05:15 +0100 (CET)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id B283B60B302D;
+        Wed,  4 Dec 2019 10:05:14 +0100 (CET)
+Date:   Wed, 4 Dec 2019 10:05:14 +0100 (CET)
+From:   Richard Weinberger <richard@nod.at>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Richard Weinberger <richard.weinberger@gmail.com>,
+        naga suresh kumar <nagasureshkumarrelli@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Michal Simek <michals@xilinx.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        siva durga paladugu <siva.durga.paladugu@xililnx.com>,
+        Naga Sureshkumar Relli <nagasure@xilinx.com>
+Message-ID: <944646339.106336.1575450314655.JavaMail.zimbra@nod.at>
+In-Reply-To: <20191204071746.kfdflui4ziladmjg@pengutronix.de>
+References: <MN2PR02MB5727000CBE70BAF31F60FEE4AF420@MN2PR02MB5727.namprd02.prod.outlook.com> <20191203084134.tgzir4mtekpm5xbs@pengutronix.de> <MN2PR02MB57272E3343CA62ADBA0F97E5AF420@MN2PR02MB5727.namprd02.prod.outlook.com> <614898763.105471.1575364223372.JavaMail.zimbra@nod.at> <CALgLF9KPAk_AsecnTMmbdF5qbgqXe7HNOrNariNVbhSr6FVN2g@mail.gmail.com> <20191203104558.vpqav3oxsydoe4aw@pengutronix.de> <CAFLxGvywFxSrDLLGnLDW6+rMLVUA9Yoi=3sn7wdxqWMydy-w0g@mail.gmail.com> <20191204071746.kfdflui4ziladmjg@pengutronix.de>
+Subject: Re: ubifs mount failure
 MIME-Version: 1.0
-In-Reply-To: <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: T7xi4hn_Nv2nC2A-iPYaew-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
+Thread-Topic: ubifs mount failure
+Thread-Index: 9APKbxAFaVpw2zMCYjv1IuV9dZ0ZGw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 09:52:11PM -0800, Alexei Starovoitov wrote:
-> On Mon, Dec 2, 2019 at 1:15 PM Toke H=F8iland-J=F8rgensen <toke@redhat.co=
-m> wrote:
-> >
-> > Ah, that is my mistake: I was getting dynamic libbpf symbols with this
-> > approach, but that was because I had the version of libbpf.so in my
-> > $LIBDIR that had the patch to expose the netlink APIs as versioned
-> > symbols; so it was just pulling in everything from the shared library.
-> >
-> > So what I was going for was exactly what you described above; but it
-> > seems that doesn't actually work. Too bad, and sorry for wasting your
-> > time on this :/
->=20
-> bpftool is currently tightly coupled with libbpf and very likely
-> in the future the dependency will be even tighter.
-> In that sense bpftool is an extension of libbpf and libbpf is an extensio=
-n
-> of bpftool.
-> Andrii is working on set of patches to generate user space .c code
-> from bpf program.
-> bpftool will be generating the code that is specific for the version
-> bpftool and for
-> the version of libbpf. There will be compatibility layers as usual.
-> But in general the situation where a bug in libbpf is so criticial
-> that bpftool needs to repackaged is imo less likely than a bug in
-> bpftool that will require re-packaging of libbpf.
-> bpftool is quite special. It's not a typical user of libbpf.
-> The other way around is more correct. libbpf is a user of the code
-> that bpftool generates and both depend on each other.
-> perf on the other side is what typical user space app that uses
-> libbpf will look like.
-> I think keeping bpftool in the kernel while packaging libbpf
-> out of github was an oversight.
-> I think we need to mirror bpftool into github/libbpf as well
-> and make sure they stay together. The version of libbpf =3D=3D version of=
- bpftool.
-> Both should come from the same package and so on.
-> May be they can be two different packages but
-> upgrading one should trigger upgrade of another and vice versa.
-> I think one package would be easier though.
-> Thoughts?
+----- Ursprüngliche Mail -----
+> Von: "Sascha Hauer" <s.hauer@pengutronix.de>
+>> Oh, looks good! Thanks for fixing, Sascha!
+> 
+> Will you apply this one? Otherwise I resend with the proper tags added.
 
-great, makes sense.. Toke already mentioned we might need to move
-bpftool to libbpf package to solve our issues, now when you guys
-have already plans for that, it works for us ;-)
+Just checked in patchwork. It is unable to detect the patch, please resend. :-)
 
-thanks for sharing the plan,
-jirka
-
+Thanks,
+//richard
