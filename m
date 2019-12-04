@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B910C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45E6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D760920675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C4920675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483516;
-	bh=9FiMZ05AyP9vz7NADwi6aGobRVfRNQnwiHXVl7PW3TM=;
+	s=default; t=1575483528;
+	bh=AfZKqJHeZ2R2QINf8sSlLG5/pEKH8/9gZ7eadsA2v0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VODJl14j6AD5BS6ihOYUhH6Jp4NhsiB8TGh/2Vv9fb0XO2NoGxLT4IU6//68BJmwT
-	 X/tHVyDEvqnp5kQTJNxYQ+tVhJaQcMoQC4xuGXC/nZKy81Cp7HuqgKVFM3PrywzWtW
-	 wKAjwak+pK4yPiVSR2wzrJ0Vkzr3UkImVCDoU0Xw=
+	b=HkuZ4+I+cmb6EyXUASS25swr6XLHaoYUsa8dFCmBHPTRe9tqoEiqVls6+moQY0aIZ
+	 EqlVbghnDGN3jzxOTI5VBzboRcka1asfHmyH+GWC+rymq/rPTh+6mElechq3rSCYvg
+	 5h24HY1v4eEBZVjixuWbwsM8eXSoC7TCv2lPqoS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731840AbfLDSSe (ORCPT
+        id S1729943AbfLDSSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:18:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38604 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:18:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731324AbfLDSKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:10:50 -0500
+        id S1731274AbfLDSKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:10:34 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B755220674;
-        Wed,  4 Dec 2019 18:10:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C94E820675;
+        Wed,  4 Dec 2019 18:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483050;
-        bh=9FiMZ05AyP9vz7NADwi6aGobRVfRNQnwiHXVl7PW3TM=;
+        s=default; t=1575483033;
+        bh=AfZKqJHeZ2R2QINf8sSlLG5/pEKH8/9gZ7eadsA2v0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rszgw9KYMNuK8mhNTu4sh6yg/9SPYWKZwfjh+TQiiMKLOS43DfnvPKwo+fLWdNihP
-         0oWObN/ezM61MYAH6ziM4p3CEl9+48GMMp3xL+qJ8QIwrOZfq1bCSpISyVr3gkwk0r
-         5Q0y450NhibkZovc+IWkhLhmu0DpLzB8gjhvEVeQ=
+        b=LGOyeImDmHLlXEkKmDmMZ+ovmSbFqmFfFMjfvybqjkiZ66Kq730FaQwSJQhouj6+5
+         H9UWMbrsyldUo452EpTaqgYX6g3KdhW+Um6Pr6k2HJGywQ4bimz0q//R+3KoRhHBCI
+         6c8vfHn11ydw23jMncTHG6/0zzA6WWG9/0zlIDDM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 030/125] ubi: Do not drop UBI device reference before using
-Date:   Wed,  4 Dec 2019 18:55:35 +0100
-Message-Id: <20191204175320.478059871@linuxfoundation.org>
+Subject: [PATCH 4.9 024/125] crypto: user - support incremental algorithm dumps
+Date:   Wed,  4 Dec 2019 18:55:29 +0100
+Message-Id: <20191204175319.287249039@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,39 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit e542087701f09418702673631a908429feb3eae0 ]
+[ Upstream commit 0ac6b8fb23c724b015d9ca70a89126e8d1563166 ]
 
-The UBI device reference is dropped but then the device is used as a
-parameter of ubi_err. The bug is introduced in changing ubi_err's
-behavior. The old ubi_err does not require a UBI device as its first
-parameter, but the new one does.
+CRYPTO_MSG_GETALG in NLM_F_DUMP mode sometimes doesn't return all
+registered crypto algorithms, because it doesn't support incremental
+dumps.  crypto_dump_report() only permits itself to be called once, yet
+the netlink subsystem allocates at most ~64 KiB for the skb being dumped
+to.  Thus only the first recvmsg() returns data, and it may only include
+a subset of the crypto algorithms even if the user buffer passed to
+recvmsg() is large enough to hold all of them.
 
-Fixes: 32608703310 ("UBI: Extend UBI layer debug/messaging capabilities")
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fix this by using one of the arguments in the netlink_callback structure
+to keep track of the current position in the algorithm list.  Then
+userspace can do multiple recvmsg() on the socket after sending the dump
+request.  This is the way netlink dumps work elsewhere in the kernel;
+it's unclear why this was different (probably just an oversight).
+
+Also fix an integer overflow when calculating the dump buffer size hint.
+
+Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/ubi/kapi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ crypto/crypto_user.c | 37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/mtd/ubi/kapi.c b/drivers/mtd/ubi/kapi.c
-index 88b1897aeb40f..7826f7c4ec2fb 100644
---- a/drivers/mtd/ubi/kapi.c
-+++ b/drivers/mtd/ubi/kapi.c
-@@ -227,9 +227,9 @@ out_unlock:
- out_free:
- 	kfree(desc);
- out_put_ubi:
--	ubi_put_device(ubi);
- 	ubi_err(ubi, "cannot open device %d, volume %d, error %d",
- 		ubi_num, vol_id, err);
-+	ubi_put_device(ubi);
- 	return ERR_PTR(err);
+diff --git a/crypto/crypto_user.c b/crypto/crypto_user.c
+index c90a1727cd2c6..60cf7d163731b 100644
+--- a/crypto/crypto_user.c
++++ b/crypto/crypto_user.c
+@@ -277,30 +277,33 @@ drop_alg:
+ 
+ static int crypto_dump_report(struct sk_buff *skb, struct netlink_callback *cb)
+ {
+-	struct crypto_alg *alg;
++	const size_t start_pos = cb->args[0];
++	size_t pos = 0;
+ 	struct crypto_dump_info info;
+-	int err;
+-
+-	if (cb->args[0])
+-		goto out;
+-
+-	cb->args[0] = 1;
++	struct crypto_alg *alg;
++	int res;
+ 
+ 	info.in_skb = cb->skb;
+ 	info.out_skb = skb;
+ 	info.nlmsg_seq = cb->nlh->nlmsg_seq;
+ 	info.nlmsg_flags = NLM_F_MULTI;
+ 
++	down_read(&crypto_alg_sem);
+ 	list_for_each_entry(alg, &crypto_alg_list, cra_list) {
+-		err = crypto_report_alg(alg, &info);
+-		if (err)
+-			goto out_err;
++		if (pos >= start_pos) {
++			res = crypto_report_alg(alg, &info);
++			if (res == -EMSGSIZE)
++				break;
++			if (res)
++				goto out;
++		}
++		pos++;
+ 	}
+-
++	cb->args[0] = pos;
++	res = skb->len;
+ out:
+-	return skb->len;
+-out_err:
+-	return err;
++	up_read(&crypto_alg_sem);
++	return res;
  }
- EXPORT_SYMBOL_GPL(ubi_open_volume);
+ 
+ static int crypto_dump_report_done(struct netlink_callback *cb)
+@@ -483,7 +486,7 @@ static int crypto_user_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 	if ((type == (CRYPTO_MSG_GETALG - CRYPTO_MSG_BASE) &&
+ 	    (nlh->nlmsg_flags & NLM_F_DUMP))) {
+ 		struct crypto_alg *alg;
+-		u16 dump_alloc = 0;
++		unsigned long dump_alloc = 0;
+ 
+ 		if (link->dump == NULL)
+ 			return -EINVAL;
+@@ -491,16 +494,16 @@ static int crypto_user_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 		down_read(&crypto_alg_sem);
+ 		list_for_each_entry(alg, &crypto_alg_list, cra_list)
+ 			dump_alloc += CRYPTO_REPORT_MAXSIZE;
++		up_read(&crypto_alg_sem);
+ 
+ 		{
+ 			struct netlink_dump_control c = {
+ 				.dump = link->dump,
+ 				.done = link->done,
+-				.min_dump_alloc = dump_alloc,
++				.min_dump_alloc = min(dump_alloc, 65535UL),
+ 			};
+ 			err = netlink_dump_start(crypto_nlsk, skb, nlh, &c);
+ 		}
+-		up_read(&crypto_alg_sem);
+ 
+ 		return err;
+ 	}
 -- 
 2.20.1
 
