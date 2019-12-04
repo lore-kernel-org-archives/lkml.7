@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CDEC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC07CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E32220865
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 917D42073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:00:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Ex89ONXq"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Fj3acjtI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbfLDQAs (ORCPT
+        id S1728898AbfLDQAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 11:00:48 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35134 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728798AbfLDQAK (ORCPT
+        Wed, 4 Dec 2019 11:00:53 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34563 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728323AbfLDQAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 11:00:10 -0500
-Received: by mail-qk1-f194.google.com with SMTP id v23so383869qkg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 08:00:09 -0800 (PST)
+        Wed, 4 Dec 2019 11:00:07 -0500
+Received: by mail-qt1-f195.google.com with SMTP id 5so261814qtz.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 08:00:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=dqtgvoRdMawEKh+xykZ1VqYMRicExyc/MR9wF15sbHw=;
-        b=Ex89ONXqJCjErir/CSjvl4mBDjlt4VxRe8WcaAYsgMxni+4Rr3afXkK/SCnmpvCS+r
-         CYrew3webB+wFVwwpeB0eVsnktSmlCCoNUSL2Pnnp0KjEe4oWMsL6no4bK6wo3DUInMA
-         HE7gd3XjA51lMruvsscVz/TwtVLMWVOQMlcoyExnU/25fpveSdADWsJ+0VDpYAizwvsp
-         Gv1nN3tZyoTkFwr/N58bbS/C3oHGE/kgeB/pxI95M3rcCAiJMLprGEN7zWUYK/Qq3Ax9
-         cParO33UFyIsQpW5hSvZJRWf5fgppuQr986piZ8w9qPr7Ooo0TTQDuZ9448rRyZv7T4j
-         acGw==
+        bh=BVZcqc2Z6644/Az5ve2InTrOD+vzGwRmsPVnGeCmQZQ=;
+        b=Fj3acjtI0vF/2X6yAmVOkmQPOiJyiV9R1DOf9Hh1yWS9xj0L6CWNj0ZtAnLVKoPhIs
+         kr5rHc9BhzZ/NPjlNQXew0gPTqMzLA/+7Xhdea9q5VvzWwMNYEDlYxrk9aM8uMZJEzrG
+         BW7fWabMXHQvQ1jTAKW0/oblb2GGkJ0omqgeJHeTMISryzpinMo8Z3RE2Hv5fpm5r2er
+         OATbxcGcHrWxiXL+/9WEAcpxZ0/hNy+RgRLEPvSDsU6SU/8VfjRdcKjJodiit2Z48uj5
+         X77AQQG5YgY7qWKZ3E49twAsmXWIVCUJibwk3iVT++AMRf8Eu7VGPuWmf3AuSJdsZkmD
+         QpLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dqtgvoRdMawEKh+xykZ1VqYMRicExyc/MR9wF15sbHw=;
-        b=YiZv502pxOi3nwC9muWIWTlwHjBjT6SJqrqV4aUYgvxPOYAHWtIjhpFMmJ8TDTX8DJ
-         +DvosfFbxfVmZf2G7J2pkjO/oOk7MPbBnbtjJZiQ5HM/diKb6EpfHoMe7VkLgFwaPMYf
-         6LE/WUgNwERl2oLYph5TTCzg7uwP0S9KCF7+1+d+eFHCmeMClhfTNpVTzv6TyaoZmvDz
-         UBgLaCksCYOqwcEnOgP7bF2TT2eDUFvjDlCqPQLpeIAtut6CfMRM0KNAgeUoNUsESuBk
-         ZNpy4fanLd3bp3y+zFwdL3R21NftVaAVL/nya2+IRcXVieJf0R9awg/WW2MsWeiD5M/V
-         Y7Lg==
-X-Gm-Message-State: APjAAAUtUQb8fPgbUOcg+qmCiR/U3lpeP53kqi6ZpAG93kdCIav7xysN
-        FkIZs1duc8/lGUlTmxUy/dbthg==
-X-Google-Smtp-Source: APXvYqwJuTv1+brNarCqrfi93wNDwS5RdOuPajdDtgQaRMjcuOxzMm2jiZSYAFlmf5mRNTazIaIUmA==
-X-Received: by 2002:a37:4c8e:: with SMTP id z136mr3750671qka.177.1575475209021;
-        Wed, 04 Dec 2019 08:00:09 -0800 (PST)
+        bh=BVZcqc2Z6644/Az5ve2InTrOD+vzGwRmsPVnGeCmQZQ=;
+        b=DmIfK12cfuLWNPh8PQKOK8JiU6dPRdam6SsBzrUh8m2FgqDGaxkwrRP06AYQ3AAe4K
+         KmsHa8XvWDVzJJckcVthz1KQR25ZuCGXdEHP+SxW/YdLEaKwDR2Xw9oNTs2WHJ4VX9MF
+         bSKnK7/wJ3VOFh4KNOqcWBWsEws55Gx0o0yjqS7ozcINqoefLDVPorDVHNcXSSvJ68hW
+         zEdJW72KFZUKcI+Is5vNkllZwxJ3aOJ9CafXwTYXZdE8Ypq1BZr2lKZ8q53gEhNGxBdn
+         LAGPTVWgbiEf3LRPoa3B6yYmm+wU4B5LPxe9e5l+UKbDPbUVJ3vvmcBelPv9qBplmX6J
+         OZCA==
+X-Gm-Message-State: APjAAAXxbLWZbAcx7278pPVlqE1+Pa46gwi9UqxL68kcGiJ50APjbwXl
+        WulHqJT3Mm2ZUJmCXRz6VyD0qQ==
+X-Google-Smtp-Source: APXvYqzB+ZcjsuLUod5A2CrdZ5P4hqO77xakVo3euDVIPD3hBa71g2vCu7CIOGElQwxDhATyXOXEjA==
+X-Received: by 2002:ac8:7443:: with SMTP id h3mr3298187qtr.202.1575475206050;
+        Wed, 04 Dec 2019 08:00:06 -0800 (PST)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id w21sm4177585qth.17.2019.12.04.08.00.07
+        by smtp.gmail.com with ESMTPSA id w21sm4177585qth.17.2019.12.04.08.00.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 08:00:08 -0800 (PST)
+        Wed, 04 Dec 2019 08:00:05 -0800 (PST)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         ebiederm@xmission.com, kexec@lists.infradead.org,
@@ -66,9 +66,9 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
         mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com,
         tglx@linutronix.de
-Subject: [PATCH v8 19/25] arm64: kexec: arm64_relocate_new_kernel don't use x0 as temp
-Date:   Wed,  4 Dec 2019 10:59:32 -0500
-Message-Id: <20191204155938.2279686-20-pasha.tatashin@soleen.com>
+Subject: [PATCH v8 17/25] arm64: kexec: cpu_soft_restart change argument types
+Date:   Wed,  4 Dec 2019 10:59:30 -0500
+Message-Id: <20191204155938.2279686-18-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
 References: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
@@ -79,63 +79,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-x0 will contain the only argument to arm64_relocate_new_kernel; don't
-use it as a temp. Reassigned registers to free-up x0.
+Change argument types from unsigned long to a more descriptive
+phys_addr_t.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/relocate_kernel.S | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ arch/arm64/kernel/cpu-reset.h | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index e9c974ea4717..41f9c95fabe8 100644
---- a/arch/arm64/kernel/relocate_kernel.S
-+++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -32,14 +32,14 @@ ENTRY(arm64_relocate_new_kernel)
- 	mov	x14, xzr			/* x14 = entry ptr */
- 	mov	x13, xzr			/* x13 = copy dest */
- 	/* Clear the sctlr_el2 flags. */
--	mrs	x0, CurrentEL
--	cmp	x0, #CurrentEL_EL2
-+	mrs	x2, CurrentEL
-+	cmp	x2, #CurrentEL_EL2
- 	b.ne	1f
--	mrs	x0, sctlr_el2
-+	mrs	x2, sctlr_el2
- 	ldr	x1, =SCTLR_ELx_FLAGS
--	bic	x0, x0, x1
-+	bic	x2, x2, x1
- 	pre_disable_mmu_workaround
--	msr	sctlr_el2, x0
-+	msr	sctlr_el2, x2
- 	isb
- 1:	/* Check if the new image needs relocation. */
- 	tbnz	x16, IND_DONE_BIT, .Ldone
-@@ -51,17 +51,17 @@ ENTRY(arm64_relocate_new_kernel)
- 	tbz	x16, IND_SOURCE_BIT, .Ltest_indirection
+diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
+index ed50e9587ad8..3a54c4d987f3 100644
+--- a/arch/arm64/kernel/cpu-reset.h
++++ b/arch/arm64/kernel/cpu-reset.h
+@@ -10,17 +10,17 @@
  
- 	/* Invalidate dest page to PoC. */
--	mov     x0, x13
--	add     x20, x0, #PAGE_SIZE
-+	mov     x2, x13
-+	add     x20, x2, #PAGE_SIZE
- 	sub     x1, x15, #1
--	bic     x0, x0, x1
--2:	dc      ivac, x0
--	add     x0, x0, x15
--	cmp     x0, x20
-+	bic     x2, x2, x1
-+2:	dc      ivac, x2
-+	add     x2, x2, x15
-+	cmp     x2, x20
- 	b.lo    2b
- 	dsb     sy
+ #include <asm/virt.h>
  
--	copy_page x13, x12, x0, x1, x2, x3, x4, x5, x6, x7
-+	copy_page x13, x12, x1, x2, x3, x4, x5, x6, x7, x8
- 	b	.Lnext
- .Ltest_indirection:
- 	tbz	x16, IND_INDIRECTION_BIT, .Ltest_destination
+-void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
+-	unsigned long arg0, unsigned long arg1, unsigned long arg2);
++void __cpu_soft_restart(phys_addr_t el2_switch, phys_addr_t entry,
++	phys_addr_t arg0, phys_addr_t arg1, phys_addr_t arg2);
+ 
+-static inline void __noreturn cpu_soft_restart(unsigned long entry,
+-					       unsigned long arg0,
+-					       unsigned long arg1,
+-					       unsigned long arg2)
++static inline void __noreturn cpu_soft_restart(phys_addr_t entry,
++					       phys_addr_t arg0,
++					       phys_addr_t arg1,
++					       phys_addr_t arg2)
+ {
+ 	typeof(__cpu_soft_restart) *restart;
+ 
+-	unsigned long el2_switch = !is_kernel_in_hyp_mode() &&
++	phys_addr_t el2_switch = !is_kernel_in_hyp_mode() &&
+ 		is_hyp_mode_available();
+ 	restart = (void *)__pa_symbol(__cpu_soft_restart);
+ 
 -- 
 2.24.0
 
