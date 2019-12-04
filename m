@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427EBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5534FC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F64720675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2209120675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483532;
-	bh=wwf59jvlmgAHxBsSVCN3Drer6FJuWS1VyOrFqmPPIZI=;
+	s=default; t=1575483536;
+	bh=TOV0UK0piw0Hanyoyx8YpCbQcv2tT6LiX7Adeaopczg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yjeqnBFS3Pe/ld4dc08A8j8ZILX9GSbTcSmSbHYzXKYLiHQ5NSgokIpbmooqOf1Dm
-	 9OaiNoWPA7ybz7KXMlbhH7drQ8hhUhAW6QAWSCZBsrbGIbeT9XyKFZ6FXI4K1NwoVw
-	 2OORbL7wxbut3gEckSSzJrncM6r2ZLR5qLSgGce4=
+	b=ezBxoguSWxO1T9BySmOtj2HC6NPw9F36+biX9joSO0yRXKNfC4wyFGoO+5f5s0mT5
+	 bsEro6YWejhZy+f9K5PwuqE46gWKEkdiNKH7uhIZtfG7A3xKfoIv7g49T02xe/TmeG
+	 FL+DPQdEKtY5MzaQml2o4JZ+Ho07UMrEWTTjuFxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731264AbfLDSK1 (ORCPT
+        id S1729600AbfLDSKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:10:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37576 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:10:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731257AbfLDSKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:10:24 -0500
+        id S1731217AbfLDSKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:10:12 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F0DE206DF;
-        Wed,  4 Dec 2019 18:10:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17D46206DF;
+        Wed,  4 Dec 2019 18:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483023;
-        bh=wwf59jvlmgAHxBsSVCN3Drer6FJuWS1VyOrFqmPPIZI=;
+        s=default; t=1575483011;
+        bh=TOV0UK0piw0Hanyoyx8YpCbQcv2tT6LiX7Adeaopczg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XA2ID4PgNDqMfteUxfkxqkwsTtwjWrVTOQAE+9bgegOT8qDOu1pv2BO5UbqnjqOlF
-         5oFr9RUCloEGzMqa9cQFGDPmivLltw5MTP7vLjILhQoCHHq9N+4kgyt0ZPq6bjTK/x
-         efbdK/UVLhqgxtWR9ap0lg9dEvufgf12DQS3WXsI=
+        b=kp3A5f9poFn2JXEuaRY+NriqnQrZkiyYCN9tunn21L4ugDbvxkY7PZcz6xXBzbSWx
+         9a1HwvzSm9kZ2LtLkkkW3Cg1huKUEo+5kLmu3pnWAlrLWoZQyG0rWPDxS1AG4eRbOr
+         tAk2Lg164MDauU4XAO2jONsA8bUBLsWT6HubQQiw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Capper <steve.capper@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        stable@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 020/125] arm64: smp: Handle errors reported by the firmware
-Date:   Wed,  4 Dec 2019 18:55:25 +0100
-Message-Id: <20191204175318.319074728@linuxfoundation.org>
+Subject: [PATCH 4.9 016/125] ARM: dts: imx53-voipac-dmm-668: Fix memory node duplication
+Date:   Wed,  4 Dec 2019 18:55:21 +0100
+Message-Id: <20191204175316.606197462@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,37 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit f357b3a7e17af7736d67d8267edc1ed3d1dd9391 ]
+[ Upstream commit 998a84c27a7f3f9133d32af64e19c05cec161a1a ]
 
-The __cpu_up() routine ignores the errors reported by the firmware
-for a CPU bringup operation and looks for the error status set by the
-booting CPU. If the CPU never entered the kernel, we could end up
-in assuming stale error status, which otherwise would have been
-set/cleared appropriately by the booting CPU.
+imx53-voipac-dmm-668 has two memory nodes, but the correct representation
+would be to use a single one with two reg entries - one for each RAM chip
+select, so fix it accordingly.
 
-Reported-by: Steve Capper <steve.capper@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Reported-by: Marco Franchi <marco.franchi@nxp.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/smp.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index f0c41524b052f..b2d6de9f6f4fb 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -173,6 +173,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
- 		}
- 	} else {
- 		pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
-+		return ret;
- 	}
+diff --git a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+index ba689fbd0e413..301cf8d45947f 100644
+--- a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
++++ b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+@@ -17,12 +17,8 @@
  
- 	secondary_data.stack = NULL;
+ 	memory@70000000 {
+ 		device_type = "memory";
+-		reg = <0x70000000 0x20000000>;
+-	};
+-
+-	memory@b0000000 {
+-		device_type = "memory";
+-		reg = <0xb0000000 0x20000000>;
++		reg = <0x70000000 0x20000000>,
++		      <0xb0000000 0x20000000>;
+ 	};
+ 
+ 	regulators {
 -- 
 2.20.1
 
