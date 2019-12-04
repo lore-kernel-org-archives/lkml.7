@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92628C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8513C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A38F205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEAAC20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483742;
-	bh=uAYZUiGgVZVA8TdMU5/qfdvQ0kgDh1SXmr8vRZKpNZc=;
+	s=default; t=1575483745;
+	bh=pd3AeSBtOZjnIaMKLxGwzgSveNiz/pmLImr/pfQFtRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=17ZA5bhdJF2WUWa4apCQD0LFoZ/wqcu65XBq5/eMqkSkhYQpTPB5r6W6bDlrDqOko
-	 7uWftJhKOyDbT14+DMujqMeTThdlQiGR2JDaQUZAqHOAE7zTOTXURW7xzpf5vQo855
-	 spocd/PwKa0t8Ej1lhmAPBDTCEZCMho908UFtZ3o=
+	b=TV9hsNur5ZJVXb7hHPqpRYy2+B0CeCbCA9egdUSq1FqE6t1bUV6AHpYJfE6E3gm0q
+	 fnq/dazcu/Pm7iaRSxCo64z15Ce/ECRckHKDy3Xjb1yX2mIZpy4NPEN66UJOaS3ZM5
+	 W9LFvc0H5Py1gUOqkxXgSJhKWKOZHzmKbAkrue/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730875AbfLDSWV (ORCPT
+        id S1730918AbfLDSWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:22:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52050 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:22:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729824AbfLDSFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:05:25 -0500
+        id S1729597AbfLDSFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:05:16 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D510B2081B;
-        Wed,  4 Dec 2019 18:05:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B06D220659;
+        Wed,  4 Dec 2019 18:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482725;
-        bh=uAYZUiGgVZVA8TdMU5/qfdvQ0kgDh1SXmr8vRZKpNZc=;
+        s=default; t=1575482715;
+        bh=pd3AeSBtOZjnIaMKLxGwzgSveNiz/pmLImr/pfQFtRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YeBiyh0mGR2RmO67ujwV4NQaxPZ1L32Cq8UID0RTD9wWi73l9w5T/GdO8tyeD3SjO
-         uIqse54dka3idgXMtuRbORrTt/NdyVepuTO2oL1zmhMKe70JdruhVN86pREuL2pMNS
-         KpJQMi7qxWzpsQJ2hZWK+NkUOWANG0kPXiVSRyjA=
+        b=D9Vbh0Ent7/87OO9Ekr1y2SSjyMHPb2yqXj3cVH0Sace0LAutIZAR3Nv/Cu947yU3
+         CpdfshucXcVDsJe+ojTG5k2G+qNgaDH+BOkOncWjW8gB6lb6AiiLn+Jaj4mo06x8y1
+         sN7S0HPhcWk/L/EgOEKF3dHEuw2PXv56QFzKroTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 111/209] f2fs: fix to dirty inode synchronously
-Date:   Wed,  4 Dec 2019 18:55:23 +0100
-Message-Id: <20191204175329.699008290@linuxfoundation.org>
+Subject: [PATCH 4.14 107/209] crypto: mxc-scc - fix build warnings on ARM64
+Date:   Wed,  4 Dec 2019 18:55:19 +0100
+Message-Id: <20191204175329.247840601@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,34 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit b32e019049e959ee10ec359893c9dd5d057dad55 ]
+[ Upstream commit 2326828ee40357b3d2b1359b8ca7526af201495b ]
 
-If user change inode's i_flags via ioctl, let's add it into global
-dirty list, so that checkpoint can guarantee its persistence before
-fsync, it can make checkpoint keeping strong consistency.
+The following build warnings are seen when building for ARM64 allmodconfig:
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+drivers/crypto/mxc-scc.c:181:20: warning: format '%d' expects argument of type 'int', but argument 5 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
+drivers/crypto/mxc-scc.c:186:21: warning: format '%d' expects argument of type 'int', but argument 4 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
+drivers/crypto/mxc-scc.c:277:21: warning: format '%d' expects argument of type 'int', but argument 4 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
+drivers/crypto/mxc-scc.c:339:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+drivers/crypto/mxc-scc.c:340:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+
+Fix them by using the %zu specifier to print a size_t variable and using
+a plain %x to print the result of a readl().
+
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/mxc-scc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 1b17921994459..d68b0132718a6 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1593,7 +1593,7 @@ static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
+diff --git a/drivers/crypto/mxc-scc.c b/drivers/crypto/mxc-scc.c
+index e01c46387df8d..519086730791b 100644
+--- a/drivers/crypto/mxc-scc.c
++++ b/drivers/crypto/mxc-scc.c
+@@ -178,12 +178,12 @@ static int mxc_scc_get_data(struct mxc_scc_ctx *ctx,
+ 	else
+ 		from = scc->black_memory;
  
- 	inode->i_ctime = current_time(inode);
- 	f2fs_set_inode_flags(inode);
--	f2fs_mark_inode_dirty_sync(inode, false);
-+	f2fs_mark_inode_dirty_sync(inode, true);
- 	return 0;
- }
+-	dev_dbg(scc->dev, "pcopy: from 0x%p %d bytes\n", from,
++	dev_dbg(scc->dev, "pcopy: from 0x%p %zu bytes\n", from,
+ 		ctx->dst_nents * 8);
+ 	len = sg_pcopy_from_buffer(ablkreq->dst, ctx->dst_nents,
+ 				   from, ctx->size, ctx->offset);
+ 	if (!len) {
+-		dev_err(scc->dev, "pcopy err from 0x%p (len=%d)\n", from, len);
++		dev_err(scc->dev, "pcopy err from 0x%p (len=%zu)\n", from, len);
+ 		return -EINVAL;
+ 	}
  
+@@ -274,7 +274,7 @@ static int mxc_scc_put_data(struct mxc_scc_ctx *ctx,
+ 	len = sg_pcopy_to_buffer(req->src, ctx->src_nents,
+ 				 to, len, ctx->offset);
+ 	if (!len) {
+-		dev_err(scc->dev, "pcopy err to 0x%p (len=%d)\n", to, len);
++		dev_err(scc->dev, "pcopy err to 0x%p (len=%zu)\n", to, len);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -335,9 +335,9 @@ static void mxc_scc_ablkcipher_next(struct mxc_scc_ctx *ctx,
+ 		return;
+ 	}
+ 
+-	dev_dbg(scc->dev, "Start encryption (0x%p/0x%p)\n",
+-		(void *)readl(scc->base + SCC_SCM_RED_START),
+-		(void *)readl(scc->base + SCC_SCM_BLACK_START));
++	dev_dbg(scc->dev, "Start encryption (0x%x/0x%x)\n",
++		readl(scc->base + SCC_SCM_RED_START),
++		readl(scc->base + SCC_SCM_BLACK_START));
+ 
+ 	/* clear interrupt control registers */
+ 	writel(SCC_SCM_INTR_CTRL_CLR_INTR,
 -- 
 2.20.1
 
