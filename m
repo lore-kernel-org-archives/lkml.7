@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73194C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E8AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B35B20659
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D058F2073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482575;
-	bh=YmhnP20tpsgPx29MUewJ8NBV4qA6cgOJYoQR7Abm1bg=;
+	s=default; t=1575482577;
+	bh=cUBxm5bpX3BNZcvYOv8A70HiYFqDP/A/TSE0hj9URx0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F5y24Z5pYp4DEtf1VoCUadvYGFzbIcYAzmA1EkizUq6JpmIt8EzQyMA4iYEvGNGDM
-	 2RgaUW/1xnMHErnNONtRGV1aI65iuHRbtAAk/HVitDHCoNy+zjB+daFHkCO534pJan
-	 RpKKMGhLmskoAxXGdKnsPwtxDIe223iRzvRlQZp4=
+	b=BpjZDDlFrjkb/CsIvEfiZ8FcDGl1x/AAuCEluOjRDhA/+anub6zXjPyvUO+jw2ouF
+	 iSKmB0Z8UvWn2r/+tCOm73zbBclmlgn/Bf1q3uSLFh/iwiORhZtQGDbdHxxTJRpc8I
+	 VcWFasmcUltQc7Gf5Hpy5L05UHE+KhbMLGd+v1xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbfLDSCx (ORCPT
+        id S1729952AbfLDSC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:02:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45476 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:02:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729931AbfLDSCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:02:49 -0500
+        id S1729944AbfLDSCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:02:54 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E01E20675;
-        Wed,  4 Dec 2019 18:02:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3680C206DF;
+        Wed,  4 Dec 2019 18:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482568;
-        bh=YmhnP20tpsgPx29MUewJ8NBV4qA6cgOJYoQR7Abm1bg=;
+        s=default; t=1575482573;
+        bh=cUBxm5bpX3BNZcvYOv8A70HiYFqDP/A/TSE0hj9URx0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LYLRgp/9MpQafErpsO+2tLvVo9x6WYoUbXBiL/riXWMc6rkrlhCGSP+vd6EvWTZWH
-         VRT0NwK9eZEBT8YY6eB5ApQTkl8r4FJc5/AzRHCfZr8mQ9AcHcX3K5mcTw7D/mASn/
-         iOxci4/AyS5xGE/bEBymKby4wUfhtwm0Nu5aJXFk=
+        b=ooGSiKPoBClAUwwsDayXXRIMKCCIXLF2IpjOrokfnEXc7sYH5fJ2tl6tHhFFumQgh
+         Obl0i0aN7AUTCztom4nw1CJ3xmY+iZsVIoFSOFZwpSjzOcIG+r21gi6JZGdZMuW4w4
+         hXbxXH66ZLms8bqS8CYhiHmsNYCTDaYXoRCP+zCU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Reported-by: Marian Mihailescu" <mihailescu2m@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 006/209] clk: samsung: exynos5420: Preserve PLL configuration during suspend/resume
-Date:   Wed,  4 Dec 2019 18:53:38 +0100
-Message-Id: <20191204175322.047825199@linuxfoundation.org>
+Subject: [PATCH 4.14 008/209] clk: at91: avoid sleeping early
+Date:   Wed,  4 Dec 2019 18:53:40 +0100
+Message-Id: <20191204175322.181704522@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -62,48 +63,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit e9323b664ce29547d996195e8a6129a351c39108 ]
+[ Upstream commit 658fd65cf0b0d511de1718e48d9a28844c385ae0 ]
 
-Properly save and restore all top PLL related configuration registers
-during suspend/resume cycle. So far driver only handled EPLL and RPLL
-clocks, all other were reset to default values after suspend/resume cycle.
-This caused for example lower G3D (MALI Panfrost) performance after system
-resume, even if performance governor has been selected.
+It is not allowed to sleep to early in the boot process and this may lead
+to kernel issues if the bootloader didn't prepare the slow clock and main
+clock.
 
-Reported-by: Reported-by: Marian Mihailescu <mihailescu2m@gmail.com>
-Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+This results in the following error and dump stack on the AriettaG25:
+   bad: scheduling from the idle thread!
+
+Ensure it is possible to sleep, else simply have a delay.
+
+Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lkml.kernel.org/r/20190920153906.20887-1-alexandre.belloni@bootlin.com
+Fixes: 80eded6ce8bb ("clk: at91: add slow clks driver")
+Tested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5420.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/clk/at91/clk-main.c |  5 ++++-
+ drivers/clk/at91/sckc.c     | 20 ++++++++++++++++----
+ 2 files changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index a882f7038bcec..47a14f93f8693 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -170,12 +170,18 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
- 	GATE_BUS_CPU,
- 	GATE_SCLK_CPU,
- 	CLKOUT_CMU_CPU,
-+	CPLL_CON0,
-+	DPLL_CON0,
- 	EPLL_CON0,
- 	EPLL_CON1,
- 	EPLL_CON2,
- 	RPLL_CON0,
- 	RPLL_CON1,
- 	RPLL_CON2,
-+	IPLL_CON0,
-+	SPLL_CON0,
-+	VPLL_CON0,
-+	MPLL_CON0,
- 	SRC_TOP0,
- 	SRC_TOP1,
- 	SRC_TOP2,
+diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
+index 2f97a843d6d6b..fb5c14af8cc8d 100644
+--- a/drivers/clk/at91/clk-main.c
++++ b/drivers/clk/at91/clk-main.c
+@@ -354,7 +354,10 @@ static int clk_main_probe_frequency(struct regmap *regmap)
+ 		regmap_read(regmap, AT91_CKGR_MCFR, &mcfr);
+ 		if (mcfr & AT91_PMC_MAINRDY)
+ 			return 0;
+-		usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
++		if (system_state < SYSTEM_RUNNING)
++			udelay(MAINF_LOOP_MIN_WAIT);
++		else
++			usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
+ 	} while (time_before(prep_time, timeout));
+ 
+ 	return -ETIMEDOUT;
+diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
+index ab6ecefc49ad8..43ba2a8b03faf 100644
+--- a/drivers/clk/at91/sckc.c
++++ b/drivers/clk/at91/sckc.c
+@@ -74,7 +74,10 @@ static int clk_slow_osc_prepare(struct clk_hw *hw)
+ 
+ 	writel(tmp | AT91_SCKC_OSC32EN, sckcr);
+ 
+-	usleep_range(osc->startup_usec, osc->startup_usec + 1);
++	if (system_state < SYSTEM_RUNNING)
++		udelay(osc->startup_usec);
++	else
++		usleep_range(osc->startup_usec, osc->startup_usec + 1);
+ 
+ 	return 0;
+ }
+@@ -197,7 +200,10 @@ static int clk_slow_rc_osc_prepare(struct clk_hw *hw)
+ 
+ 	writel(readl(sckcr) | AT91_SCKC_RCEN, sckcr);
+ 
+-	usleep_range(osc->startup_usec, osc->startup_usec + 1);
++	if (system_state < SYSTEM_RUNNING)
++		udelay(osc->startup_usec);
++	else
++		usleep_range(osc->startup_usec, osc->startup_usec + 1);
+ 
+ 	return 0;
+ }
+@@ -310,7 +316,10 @@ static int clk_sam9x5_slow_set_parent(struct clk_hw *hw, u8 index)
+ 
+ 	writel(tmp, sckcr);
+ 
+-	usleep_range(SLOWCK_SW_TIME_USEC, SLOWCK_SW_TIME_USEC + 1);
++	if (system_state < SYSTEM_RUNNING)
++		udelay(SLOWCK_SW_TIME_USEC);
++	else
++		usleep_range(SLOWCK_SW_TIME_USEC, SLOWCK_SW_TIME_USEC + 1);
+ 
+ 	return 0;
+ }
+@@ -443,7 +452,10 @@ static int clk_sama5d4_slow_osc_prepare(struct clk_hw *hw)
+ 		return 0;
+ 	}
+ 
+-	usleep_range(osc->startup_usec, osc->startup_usec + 1);
++	if (system_state < SYSTEM_RUNNING)
++		udelay(osc->startup_usec);
++	else
++		usleep_range(osc->startup_usec, osc->startup_usec + 1);
+ 	osc->prepared = true;
+ 
+ 	return 0;
 -- 
 2.20.1
 
