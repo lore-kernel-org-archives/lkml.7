@@ -2,136 +2,113 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2549C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4E8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C4B20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8A222073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbfLDAc5 (ORCPT
+        id S1726251AbfLDAjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 19:32:57 -0500
-Received: from mga17.intel.com ([192.55.52.151]:29488 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbfLDAc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 19:32:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 16:32:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,275,1571727600"; 
-   d="scan'208";a="223029646"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 03 Dec 2019 16:32:54 -0800
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
-        kevin.tian@intel.com, Eric Auger <eric.auger@redhat.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] iommu/vt-d: Consolidate various cache flush ops
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <20191122030449.28892-1-baolu.lu@linux.intel.com>
- <20191202120252.45606c47@jacob-builder>
- <f703c267-c946-30cf-7e0e-4de16edcde18@linux.intel.com>
- <20191203085026.1785292b@jacob-builder>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <d6ff346e-6b6b-d9cd-c7c8-0e54614c1b37@linux.intel.com>
-Date:   Wed, 4 Dec 2019 08:32:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 3 Dec 2019 19:39:24 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47416 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726008AbfLDAjY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 19:39:24 -0500
+Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xB40cpqi007825
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 3 Dec 2019 19:38:52 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 2474D421A48; Tue,  3 Dec 2019 19:38:51 -0500 (EST)
+Date:   Tue, 3 Dec 2019 19:38:51 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Alan Maguire <alan.maguire@oracle.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        David Gow <davidgow@google.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
+        andriy.shevchenko@linux.intel.com,
+        Jonathan Corbet <corbet@lwn.net>, adilger.kernel@dilger.ca,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Knut Omang <knut.omang@oracle.com>
+Subject: Re: [PATCH v5 linux-kselftest-test 3/6] kunit: allow kunit tests to
+ be loaded as a module
+Message-ID: <20191204003851.GF86484@mit.edu>
+References: <1575374868-32601-1-git-send-email-alan.maguire@oracle.com>
+ <1575374868-32601-4-git-send-email-alan.maguire@oracle.com>
+ <CAFd5g47dRP9HvsZD3sqzzfbAthNq8gxEdh57owo3CqVHLNOf6w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191203085026.1785292b@jacob-builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFd5g47dRP9HvsZD3sqzzfbAthNq8gxEdh57owo3CqVHLNOf6w@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
-
-On 12/4/19 12:50 AM, Jacob Pan wrote:
-> On Tue, 3 Dec 2019 10:44:45 +0800
-> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+On Tue, Dec 03, 2019 at 09:54:25AM -0800, Brendan Higgins wrote:
+> On Tue, Dec 3, 2019 at 4:08 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+> >
+> > As tests are added to kunit, it will become less feasible to execute
+> > all built tests together.  By supporting modular tests we provide
+> > a simple way to do selective execution on a running system; specifying
+> >
+> > CONFIG_KUNIT=y
+> > CONFIG_KUNIT_EXAMPLE_TEST=m
+> >
+> > ...means we can simply "insmod example-test.ko" to run the tests.
+> >
+> > To achieve this we need to do the following:
+> >
+> > o export the required symbols in kunit
+> > o string-stream tests utilize non-exported symbols so for now we skip
+> >   building them when CONFIG_KUNIT_TEST=m.
+> > o support a new way of declaring test suites.  Because a module cannot
+> >   do multiple late_initcall()s, we provide a kunit_test_suites() macro
+> >   to declare multiple suites within the same module at once.
+> > o some test module names would have been too general ("test-test"
+> >   and "example-test" for kunit tests, "inode-test" for ext4 tests);
+> >   rename these as appropriate ("kunit-test", "kunit-example-test"
+> >   and "ext4-inode-test" respectively).
+> >
+> > Co-developed-by: Knut Omang <knut.omang@oracle.com>
+> > Signed-off-by: Knut Omang <knut.omang@oracle.com>
+> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 > 
->> Hi Jacob,
->>
->> On 12/3/19 4:02 AM, Jacob Pan wrote:
->>> On Fri, 22 Nov 2019 11:04:44 +0800
->>> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
->>>    
->>>> Intel VT-d 3.0 introduces more caches and interfaces for software
->>>> to flush when it runs in the scalable mode. Currently various
->>>> cache flush helpers are scattered around. This consolidates them
->>>> by putting them in the existing iommu_flush structure.
->>>>
->>>> /* struct iommu_flush - Intel IOMMU cache invalidation ops
->>>>    *
->>>>    * @cc_inv: invalidate context cache
->>>>    * @iotlb_inv: Invalidate IOTLB and paging structure caches when
->>>> software
->>>>    *             has changed second-level tables.
->>>>    * @p_iotlb_inv: Invalidate IOTLB and paging structure caches when
->>>> software
->>>>    *               has changed first-level tables.
->>>>    * @pc_inv: invalidate pasid cache
->>>>    * @dev_tlb_inv: invalidate cached mappings used by
->>>> requests-without-PASID
->>>>    *               from the Device-TLB on a endpoint device.
->>>>    * @p_dev_tlb_inv: invalidate cached mappings used by
->>>> requests-with-PASID
->>>>    *                 from the Device-TLB on an endpoint device
->>>>    */
->>>> struct iommu_flush {
->>>>           void (*cc_inv)(struct intel_iommu *iommu, u16 did,
->>>>                          u16 sid, u8 fm, u64 type);
->>>>           void (*iotlb_inv)(struct intel_iommu *iommu, u16 did, u64
->>>> addr, unsigned int size_order, u64 type);
->>>>           void (*p_iotlb_inv)(struct intel_iommu *iommu, u16 did,
->>>> u32 pasid, u64 addr, unsigned long npages, bool ih);
->>>>           void (*pc_inv)(struct intel_iommu *iommu, u16 did, u32
->>>> pasid, u64 granu);
->>>>           void (*dev_tlb_inv)(struct intel_iommu *iommu, u16 sid,
->>>> u16 pfsid, u16 qdep, u64 addr, unsigned int mask);
->>>>           void (*p_dev_tlb_inv)(struct intel_iommu *iommu, u16 sid,
->>>> u16 pfsid, u32 pasid, u16 qdep, u64 addr,
->>>>                                 unsigned long npages);
->>>> };
->>>>
->>>> The name of each cache flush ops is defined according to the spec
->>>> section 6.5 so that people are easy to look up them in the spec.
->>>>   
->>> Nice consolidation. For nested SVM, I also introduced cache flushed
->>> helpers as needed.
->>> https://lkml.org/lkml/2019/10/24/857
->>>
->>> Should I wait for yours to be merged or you want to extend the this
->>> consolidation after SVA/SVM cache flush? I expect to send my v8
->>> shortly.
->>
->> Please base your v8 patch on this series. So it could get more chances
->> for test.
->>
-> Sounds good.
+> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 
-I am sorry I need to spend more time on this patch series. Please go
-ahead without it.
+Acked-by: Theodore Ts'o <tytso@mit.edu> # for ext4 bits
 
-Best regards,
-baolu
 
-> 
->> I will queue this patch series for internal test after 5.5-rc1 and if
->> everything goes well, I will forward it to Joerg around rc4 for linux-
->> next.
->>
->> Best regards,
->> baolu
-> 
-> [Jacob Pan]
-> 
+I do have one question, out of curiosity --- for people who aren't
+using UML to run Kunit tests, and are either running the kunit tests
+during boot, or when the module is loaded, is there the test framework
+to automatically extract the test reports out of dmesg?
+
+I can boot a kernel with kunit tests enabled using kvm, and I see it
+splatted intermixed with the rest of the kernel boot messages.  This
+is how I tested the 32-bit ext4 inode test fix.  But I had to manually
+find the test output.  Is that the expected way people are supposed to
+be using Kunit tests w/o using UML and the python runner?
+
+Thanks,
+
+						- Ted
