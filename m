@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA288C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D494C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B129206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C10C2081B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482710;
-	bh=3STd+I0ZH/0LNTU+Yvg39crAO7P5nDqtGIPmBwkDu20=;
+	s=default; t=1575482715;
+	bh=tmPBE1L64k7gFUNouMWYajVti7VOhZkUSGOVv4eEhyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FHDU4i3pLFeZ+yPqOXOOFBvLn4AFfUU1LpWv9K4Qkz4qhvdvXGNVwhWtOxljOSM7q
-	 Vt4eqT3Y1wwWoYts7G2JWMknmN0IaZUOEYOsjdmiQ/jyWtyB9bGhLwm4lpqQzq3x/c
-	 EhAgTMVZRI+H9ZuLiSY0I/mPXSXd4yV+gYENVQBc=
+	b=p7tj1wJY60TgrYlFLAnv3ov8MMH4zF6x0LD6sIb0IZvKbIOTNIpy2XyMkyB0elip4
+	 4Ayo58xGIu4kvn9ADzxHNU0+yThcCAFNAJOhT735YJzLpNOQjU18oJYjUgiRM2tbbs
+	 wfkaPlhhxbFUDDDVLy6Jwir1g9pBGIbLcUW8ElRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730013AbfLDSFJ (ORCPT
+        id S1730337AbfLDSFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:05:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51080 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:05:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730312AbfLDSFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:05:03 -0500
+        id S1730327AbfLDSFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:05:08 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F326F20675;
-        Wed,  4 Dec 2019 18:05:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2210A20659;
+        Wed,  4 Dec 2019 18:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482702;
-        bh=3STd+I0ZH/0LNTU+Yvg39crAO7P5nDqtGIPmBwkDu20=;
+        s=default; t=1575482707;
+        bh=tmPBE1L64k7gFUNouMWYajVti7VOhZkUSGOVv4eEhyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QzyUhg4vR4yWlfoL74aHnWPMXxN79beYR6EvhelpwPruTFJtkljgC1/ipfIwrer9S
-         Oy1gdTWVkmTbshR0Ni9EASUMf+ON60fleKfEsW3X73R5pbXnfHGIy4flmTOBLllQTJ
-         1TrXKK5GK0Yj0t31AP7QZJbnusP0ILzm8fuO2DRw=
+        b=qefD5XYMAtRy5IIp+fhB7kWtS7PkAMkwe0j9CM1507GmBGi0AmnE4edWFH2FKSNxD
+         GqCCfbbCLkc2Tugo3qOWLx+NIoZaAEWW4AofbNHF3EkJuxXFvtl4BSVZr3yS07fRyJ
+         oylB7B55yD8GyBRYzusIif3SOLge+KgqWEypZo8k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Roland Kammerer <roland.kammerer@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 102/209] drbd: fix print_st_err()s prototype to match the definition
-Date:   Wed,  4 Dec 2019 18:55:14 +0100
-Message-Id: <20191204175328.883448439@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 104/209] regulator: tps65910: fix a missing check of return value
+Date:   Wed,  4 Dec 2019 18:55:16 +0100
+Message-Id: <20191204175329.020935217@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -62,37 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 2c38f035117331eb78d0504843c79ea7c7fabf37 ]
+[ Upstream commit cd07e3701fa6a4c68f8493ee1d12caa18d46ec6a ]
 
-print_st_err() is defined with its 4th argument taking an
-'enum drbd_state_rv' but its prototype use an int for it.
+tps65910_reg_set_bits() may fail. The fix checks if it fails, and if so,
+returns with its error code.
 
-Fix this by using 'enum drbd_state_rv' in the prototype too.
-
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Signed-off-by: Roland Kammerer <roland.kammerer@linbit.com>
-Signed-off-by: Lars Ellenberg <lars.ellenberg@linbit.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/drbd/drbd_state.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/tps65910-regulator.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/drbd/drbd_state.h b/drivers/block/drbd/drbd_state.h
-index ea58301d0895c..b2a390ba73a05 100644
---- a/drivers/block/drbd/drbd_state.h
-+++ b/drivers/block/drbd/drbd_state.h
-@@ -131,7 +131,7 @@ extern enum drbd_state_rv _drbd_set_state(struct drbd_device *, union drbd_state
- 					  enum chg_state_flags,
- 					  struct completion *done);
- extern void print_st_err(struct drbd_device *, union drbd_state,
--			union drbd_state, int);
-+			union drbd_state, enum drbd_state_rv);
+diff --git a/drivers/regulator/tps65910-regulator.c b/drivers/regulator/tps65910-regulator.c
+index 81672a58fcc23..194fa0cbbc048 100644
+--- a/drivers/regulator/tps65910-regulator.c
++++ b/drivers/regulator/tps65910-regulator.c
+@@ -1102,8 +1102,10 @@ static int tps65910_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, pmic);
  
- enum drbd_state_rv
- _conn_request_state(struct drbd_connection *connection, union drbd_state mask, union drbd_state val,
+ 	/* Give control of all register to control port */
+-	tps65910_reg_set_bits(pmic->mfd, TPS65910_DEVCTRL,
++	err = tps65910_reg_set_bits(pmic->mfd, TPS65910_DEVCTRL,
+ 				DEVCTRL_SR_CTL_I2C_SEL_MASK);
++	if (err < 0)
++		return err;
+ 
+ 	switch (tps65910_chip_id(tps65910)) {
+ 	case TPS65910:
 -- 
 2.20.1
 
