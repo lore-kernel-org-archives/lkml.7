@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 672A3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C30AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF5120863
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC9520833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482872;
-	bh=Nyk+2Is+5yTrW7bgCbDpJPRVHk3eBtaas59ZWBHLOfs=;
+	s=default; t=1575482876;
+	bh=UJx54vdG3tFb4q1AmYj1EaZK+XwrpJW+5MD9xgrC2a0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rHkuQyMjJvdzxF6hi4oGSVKyIzo66NtUHnwYB+o+QQjRmknWFFQA3BuPpJtfEzlko
-	 Se2UoNyqFjDe+w5QtCxK7CsE/z+XyftxSG5ELrevZ/+jGq0QqTYlBHRvSjBvLVEVYa
-	 2MICFpjjzG9QR/Ou+i1x+ed5d0Gg3J/Cogl9umcw=
+	b=mRvhmjsgektebTcWnmnMEzvR2XIfNPuDhYt/PAxeOQ3DMr/CNtNGlA0YkEPWhYC+T
+	 okQuK//ADwNjNMbGUV/4uf1hHcKQ+j1v26gNAU+KbLd6Dd49/6OHCcjJGFokrlO5Ge
+	 oRht7lGFKCIzToOk8wqAigYHtXO7bdI2rTE469mY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730820AbfLDSHv (ORCPT
+        id S1730827AbfLDSHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:07:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58390 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:07:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730233AbfLDSHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:07:47 -0500
+        id S1730233AbfLDSHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:07:52 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52CCF20675;
-        Wed,  4 Dec 2019 18:07:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3998D206DF;
+        Wed,  4 Dec 2019 18:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482866;
-        bh=Nyk+2Is+5yTrW7bgCbDpJPRVHk3eBtaas59ZWBHLOfs=;
+        s=default; t=1575482871;
+        bh=UJx54vdG3tFb4q1AmYj1EaZK+XwrpJW+5MD9xgrC2a0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mS6+s8p5eIYAkJNqwkWGJTVvN6+IIG0dl1mQY1Dl7L1iF3T+PEAun63wz8vwyt24G
-         wXgOnzFcAwPhILN8yQyFH8Wyv3rtITKfwGYaO4IgvRZxxzjhKzD+gveCBdbOpC2gnx
-         nM4CaydaNyW/PvzpscFBx7iDTYl5wtIOq1Nx9F34=
+        b=jcOTcM8Kl+1HYgt2SN8qqd05rQdywD6bpJf7v3P6N/XKaCfe1VI/2YJbk9T7glXLt
+         OPy5Lh8ECNGVVu8+HhgJPkjKik86hj/8x+rU12vOFHDah0ITN7BEbzjFMjxKMv0pWS
+         L70oXvtYrJbw3cQABxV8rmWcSYsZJwaSUf1kLr/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 166/209] pwm: Clear chip_data in pwm_put()
-Date:   Wed,  4 Dec 2019 18:56:18 +0100
-Message-Id: <20191204175334.909576588@linuxfoundation.org>
+Subject: [PATCH 4.14 168/209] media: atmel: atmel-isc: fix INIT_WORK misplacement
+Date:   Wed,  4 Dec 2019 18:56:20 +0100
+Message-Id: <20191204175335.047586485@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -62,66 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-commit e926b12c611c2095c7976e2ed31753ad6eb5ff1a upstream.
+commit 79199002db5c571e335131856b3ff057ffd9f3c0 upstream.
 
-After a PWM is disposed by its user the per chip data becomes invalid.
-Clear the data in common code instead of the device drivers to get
-consistent behaviour. Before this patch only three of nine drivers
-cleaned up here.
+In case the completion function failes, unbind will be called
+which will call cancel_work for awb_work.
+This will trigger a WARN message from the workqueue.
+To avoid this, move the INIT_WORK call at the start of the completion
+function. This way the work is always initialized, which corresponds
+to the 'always canceled' unbind code.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Fixes: 93d4a26c3d ("[media] atmel-isc: add the isc pipeline function")
+
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pwm/core.c        |    1 +
- drivers/pwm/pwm-berlin.c  |    1 -
- drivers/pwm/pwm-pca9685.c |    1 -
- drivers/pwm/pwm-samsung.c |    1 -
- 4 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/media/platform/atmel/atmel-isc.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -874,6 +874,7 @@ void pwm_put(struct pwm_device *pwm)
- 	if (pwm->chip->ops->free)
- 		pwm->chip->ops->free(pwm->chip, pwm);
+--- a/drivers/media/platform/atmel/atmel-isc.c
++++ b/drivers/media/platform/atmel/atmel-isc.c
+@@ -1555,6 +1555,8 @@ static int isc_async_complete(struct v4l
+ 	struct vb2_queue *q = &isc->vb2_vidq;
+ 	int ret;
  
-+	pwm_set_chip_data(pwm, NULL);
- 	pwm->label = NULL;
++	INIT_WORK(&isc->awb_work, isc_awb_work);
++
+ 	ret = v4l2_device_register_subdev_nodes(&isc->v4l2_dev);
+ 	if (ret < 0) {
+ 		v4l2_err(&isc->v4l2_dev, "Failed to register subdev nodes\n");
+@@ -1614,8 +1616,6 @@ static int isc_async_complete(struct v4l
+ 		return ret;
+ 	}
  
- 	module_put(pwm->chip->ops->owner);
---- a/drivers/pwm/pwm-berlin.c
-+++ b/drivers/pwm/pwm-berlin.c
-@@ -78,7 +78,6 @@ static void berlin_pwm_free(struct pwm_c
- {
- 	struct berlin_pwm_channel *channel = pwm_get_chip_data(pwm);
- 
--	pwm_set_chip_data(pwm, NULL);
- 	kfree(channel);
- }
- 
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -176,7 +176,6 @@ static void pca9685_pwm_gpio_free(struct
- 	pm_runtime_put(pca->chip.dev);
- 	mutex_lock(&pca->lock);
- 	pwm = &pca->chip.pwms[offset];
--	pwm_set_chip_data(pwm, NULL);
- 	mutex_unlock(&pca->lock);
- }
- 
---- a/drivers/pwm/pwm-samsung.c
-+++ b/drivers/pwm/pwm-samsung.c
-@@ -238,7 +238,6 @@ static int pwm_samsung_request(struct pw
- static void pwm_samsung_free(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	devm_kfree(chip->dev, pwm_get_chip_data(pwm));
--	pwm_set_chip_data(pwm, NULL);
- }
- 
- static int pwm_samsung_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+-	INIT_WORK(&isc->awb_work, isc_awb_work);
+-
+ 	/* Register video device */
+ 	strlcpy(vdev->name, ATMEL_ISC_NAME, sizeof(vdev->name));
+ 	vdev->release		= video_device_release_empty;
 
 
