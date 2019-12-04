@@ -2,88 +2,162 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 547D6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53F5C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACAB2073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E0120675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L3+CGCuj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyRyiRJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbfLDNVX (ORCPT
+        id S1727884AbfLDNWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:21:23 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44118 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbfLDNVW (ORCPT
+        Wed, 4 Dec 2019 08:22:32 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:32891 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727503AbfLDNWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:21:22 -0500
-Received: by mail-lj1-f196.google.com with SMTP id c19so8017773lji.11;
-        Wed, 04 Dec 2019 05:21:20 -0800 (PST)
+        Wed, 4 Dec 2019 08:22:32 -0500
+Received: by mail-pf1-f195.google.com with SMTP id y206so3666328pfb.0;
+        Wed, 04 Dec 2019 05:22:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y33AlJcYvO1OmVMuMYOOm75WFOxK3BGRBIJ5MgkStJU=;
-        b=L3+CGCujvAvJ3rIxKujwSWlcL0ZeX+ftnnWN/2v4qqnCgP3De2nUxaIw2P42tByoGj
-         AdQSL8EP+U03ogcxjZbZyXtYDjPMue36mb9lGqd2pIIhiXUWDVsOzqgNSSDhAjvzaQ4A
-         ceon6/mIUT+GG1/JWXsYTID9U0h0Y8aUOYQ0JLgXl6cW8fRKoHKhGHGutfig5d5ER8zE
-         fh4clHbDqVgQ9VJu7qBeO1B14jaZknJ11C0gu1Ivei9s6+ZvoxYrVZmBrD2STdfcHDAK
-         j5UjJA21bRyDMZGGcLEbXno5w4m7fNRt5+72Sa3FVjDOHHYdl3uAMrqDfDwPBEJTOinZ
-         im2Q==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wZJOF5sLAkP6Lj5JLT4j1oHbVGDdAKwvCkWIUq+dheE=;
+        b=pyRyiRJsR/LSFSgykNDNtWvgkjb/xDhjdWYPO4bvDoYwIrAiXaC8Q9Mfe1qKKmYaYR
+         JGPz6eDAEudYkUKAeATKN7m8fsMYj1DteNEskTvJFGYJ/At5faDtqSL/RU12cSxucLnA
+         RrbwncZHxyOUZ6HvOlL/m+ImhQucJU7j0tMmCXkom+JkJkQJJcg0/2JiLLTYBFhrYNX2
+         ZRhSs1k59HQ9adQyGfpYEk2vMSekJHU9onLCDZyH8bdnlj6UzaUbsTkXclR6XB+ik+1m
+         dflGFJf6R4P6X7Ct5JDhiuAiIqObkM0FdrlxMLHxzgMiyfo83v/ANwBZVNjQ358K8BkO
+         TxiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y33AlJcYvO1OmVMuMYOOm75WFOxK3BGRBIJ5MgkStJU=;
-        b=aXPXEgEaQ/y8YNQSqBqwR+uEUuYlrZ9lYR/RsyPpNeWxmpmN2RymhFTgz4hBryI1PW
-         bpLGn4hh7rY4Do35JgriN8LlVE2p4GX8+Yz2ioIw4LDu6zNnUnpmwoxVlx7nUWEQkV9O
-         AEM96+sdy3DNKwlzudnZZYUHBO0D8e/gvxfaLUM0TSykY7mo4YosgY95HPbZHdehSI2X
-         oMgdZ75t6qsvuyjGzUzCewQKrYkkI8SSYg0YCOWu++XTVCuhTjir0Aq3yUWovUzB2gGn
-         ImSsSkGogWkf1R3H7I5rHKLEXjb+fZvxteHwpRTtcrVNXwEXDSWFHzOHAjgycS/kC1Pl
-         M1yw==
-X-Gm-Message-State: APjAAAWPF22nMz1ZcdjYewwTtyJ89rxkKLokBfG/HPTHkm/8rUATVYyK
-        dwDasoANocl+DVBQRht1A74YBSlrHV+2d02XDkWWFg==
-X-Google-Smtp-Source: APXvYqwNA8Vu62EU+m5WgUKPateXfyTPiRq1VdPKGeU0ICcgTODLvKHdV6qlqEf1qISGTAM/xbjRpiD9HjRCi7Ng+cs=
-X-Received: by 2002:a2e:b532:: with SMTP id z18mr2024773ljm.239.1575465680089;
- Wed, 04 Dec 2019 05:21:20 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wZJOF5sLAkP6Lj5JLT4j1oHbVGDdAKwvCkWIUq+dheE=;
+        b=jflCQXiOv7+nLXKn1YlY6cF/4OqdpBthPswq6VHKIaxAwDlJpdprXoIJzwO9m3X3+p
+         jzgDBL915P4/P9r76qeVC2f1GC8TXvq5n68Le1DgRE1sam8IcwekcYxWVBxLF+4nIB3N
+         qRwDdlvva5fFi5anU6oi1oJnYZCND0SIpXYlmymLqJ+WTE9wRW/t/l3omc0zSqLyfFTl
+         w+uOuteupy4o7BJQ3KAvr8vBq8MULKPylUvgqdDxArRDrm/cRXLbROSFiwVPofMzcGaQ
+         vwfIFNBGmKI/ddEQ05vWsCX8mmDWJ7qm6IvBdrjZx3oi229htzJTxhfHi3uwRRNGdHsb
+         4mmA==
+X-Gm-Message-State: APjAAAUt/VA/InQSXCCx1aN6R0x1dowIFVxiV7nGvnSi/mJzxjJQmE79
+        tyVC5viUDx34xRjkVgrwnIjONQFq
+X-Google-Smtp-Source: APXvYqwkk/5MouzqntAeuXQGGYrBHHJiqg16oYZsk0XxEdxvjahSNBUzsQvvraKzr9vzruaDkgwQtw==
+X-Received: by 2002:aa7:8ad3:: with SMTP id b19mr3489646pfd.134.1575465751097;
+        Wed, 04 Dec 2019 05:22:31 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s7sm7911105pfe.22.2019.12.04.05.22.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 05:22:30 -0800 (PST)
+Subject: Re: [PATCH v6 10/18] sh/tlb: Convert SH to generic mmu_gather
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+References: <20190219103148.192029670@infradead.org>
+ <20190219103233.443069009@infradead.org>
+ <CAMuHMdW3nwckjA9Bt-_Dmf50B__sZH+9E5s0_ziK1U_y9onN=g@mail.gmail.com>
+ <20191204104733.GR2844@hirez.programming.kicks-ass.net>
+ <CAMuHMdXs_Fm93t=O9jJPLxcREZy-T53Z_U_RtHcvaWyV+ESdjg@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <156fa92f-4c5a-08bd-bcda-20029724c0de@roeck-us.net>
+Date:   Wed, 4 Dec 2019 05:22:28 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191204130907.19799-1-aford173@gmail.com>
-In-Reply-To: <20191204130907.19799-1-aford173@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 4 Dec 2019 10:21:35 -0300
-Message-ID: <CAOMZO5A0XGRYmOj2Gg=b5XhVX1FYJPpu1Cs788pJLVV4TA6QiA@mail.gmail.com>
-Subject: Re: [PATCH V2] media: ov5640: Fix check for PLL1 exceeding max
- allowed rate
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-media <linux-media@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMuHMdXs_Fm93t=O9jJPLxcREZy-T53Z_U_RtHcvaWyV+ESdjg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+On 12/4/19 4:32 AM, Geert Uytterhoeven wrote:
+> Hoi Peter,
+> 
+> On Wed, Dec 4, 2019 at 11:48 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>> On Tue, Dec 03, 2019 at 12:19:00PM +0100, Geert Uytterhoeven wrote:
+>>> On Tue, Feb 19, 2019 at 11:35 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>>>> Generic mmu_gather provides everything SH needs (range tracking and
+>>>> cache coherency).
+>>>>
+>>>> Cc: Will Deacon <will.deacon@arm.com>
+>>>> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>> Cc: Nick Piggin <npiggin@gmail.com>
+>>>> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+>>>> Cc: Rich Felker <dalias@libc.org>
+>>>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>>
+>>> I got remote access to an SH7722-based Migo-R again, which spews a long
+>>> sequence of BUGs during userspace startup.  I've bisected this to commit
+>>> c5b27a889da92f4a ("sh/tlb: Convert SH to generic mmu_gather").
+>>
+>> Whoopsy.. also, is this really the first time anybody booted an SH
+>> kernel in over a year ?!?
+> 
+> Nah, but the v5.4-rc3 I booted recently on qemu -M r2d had
+> CONFIG_PGTABLE_LEVELS=2, so it didn't show the problem.
+> 
 
-On Wed, Dec 4, 2019 at 10:11 AM Adam Ford <aford173@gmail.com> wrote:
->
-> The PLL calculation routine checks the wrong variable name 'rate'
-> when it should be called '_rate' when checking to see whether or
-> not the PLL1 output frequency exceeds 1GHz.
->
-> This patch changes it to the correct variable '_rate'
->
-> Acked-by: Jacopo Mondi <jacopo@jmondi.org>
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+Guess that explains why I do not see the problem with my qemu boots.
+I use rts7751r2dplus_defconfig. Is it possible to reproduce the problem
+with qemu ? I don't think so, but maybe I am missing something.
 
-Maybe add a Fixes tag too?
+Guenter
+
+>>> Do you have a clue?
+>>
+>> Does the below help?
+> 
+> Unfortunately not.
+> 
+>> diff --git a/arch/sh/include/asm/pgalloc.h b/arch/sh/include/asm/pgalloc.h
+>> index 22d968bfe9bb..73a2c00de6c5 100644
+>> --- a/arch/sh/include/asm/pgalloc.h
+>> +++ b/arch/sh/include/asm/pgalloc.h
+>> @@ -36,9 +36,8 @@ do {                                                  \
+>>   #if CONFIG_PGTABLE_LEVELS > 2
+>>   #define __pmd_free_tlb(tlb, pmdp, addr)                        \
+>>   do {                                                   \
+>> -       struct page *page = virt_to_page(pmdp);         \
+>> -       pgtable_pmd_page_dtor(page);                    \
+>> -       tlb_remove_page((tlb), page);                   \
+>> +       pgtable_pmd_page_dtor(pmdp);                    \
+> 
+> expected ‘struct page *’ but argument is of type ‘pmd_t * {aka struct
+> <anonymous> *}’
+> 
+>> +       tlb_remove_page((tlb), (pmdp));                 \
+> 
+> likewise
+> 
+>>   } while (0);
+>>   #endif
+> 
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
+> 
+
