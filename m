@@ -2,111 +2,96 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBA1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51ECDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8EE20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483204;
-	bh=DgcQXiIgyHSxGbSxUc51xg1P7nmKC/rS5icNxdhZ+EU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RVlS1ReLMYVdjPfAITTx3vVkNGraH6/omJv36QasLF2N/5MuRnKsAB1Oj1CNIUDjm
-	 cDv/823UbDIpRDuMduj97kcntBg3t1g6Uhd9bAgImp4ib4WYWdnSDsq/gZ9kwGfrFF
-	 NzlmzeGrHunT4S25+pg8NAFSTc7e16tt9hkMoK28=
+	by mail.kernel.org (Postfix) with ESMTP id 266BE2084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rvfdm8IA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731504AbfLDSNW (ORCPT
+        id S1731519AbfLDSN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:13:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731727AbfLDSNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:13:16 -0500
-Received: from localhost (unknown [217.68.49.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1533206DF;
-        Wed,  4 Dec 2019 18:13:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483195;
-        bh=DgcQXiIgyHSxGbSxUc51xg1P7nmKC/rS5icNxdhZ+EU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CbWN/u5fbQ+QidC1SUk89vWwsCcqgkZWOsVYt6G3i7c7pnP4DdpNaNtb3NLebr9PH
-         0e+KYARz5Ma8KSDrWiYPJXnWEp85RhEvSJqFHuytN4nizbhMKuBiwBcUz5O7J394CD
-         MwMOHe2d0fL0Gjur468bcv2ZxcmXwkyTJSorFJZg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, wenxu <wenxu@ucloud.cn>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 092/125] ip_tunnel: Make none-tunnel-dst tunnel port work with lwtunnel
-Date:   Wed,  4 Dec 2019 18:56:37 +0100
-Message-Id: <20191204175324.656279180@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
-References: <20191204175308.377746305@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 4 Dec 2019 13:13:26 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38404 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730848AbfLDSNT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:13:19 -0500
+Received: by mail-io1-f66.google.com with SMTP id u7so621046iop.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:13:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KbjMhMLQ8ZXCsns4nZuVxnFXeq+4FdUf6xW1nrBKHDw=;
+        b=Rvfdm8IAQbF27G90nuZjBxEtcEwJxiB+bs/eGLAXjvZ3cwULZ8T/egv/YLoZKttmIj
+         o1UWTzyXjGfnAMRtOhBpUqnTaJP57qFcUyVVwmBiTDAs5V6Zhw8PuczWhc03XzKEtNSZ
+         8vJVYsZKIQpZn4jXmdJBTjqCcmM6WRAm+LTyZvla3DgF+BexG/WPMWfQNgP9XBWhEGRC
+         SR+miCcfuOkXH+qpUZ4L3/+E0wZ2WHflhUTlS7EgoOwhWMSiNhnpwRLi7xOZKojlV4Kw
+         2QzONISlvHJdT/DQE+/uFSGIvTNWqGVS/y/1LKJr/wxuCC8AU3AavkB4gcEpPngiZ5Rg
+         jBpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KbjMhMLQ8ZXCsns4nZuVxnFXeq+4FdUf6xW1nrBKHDw=;
+        b=cVpEBePu0vUF23DYvWfeOf1HcWpL7Lk0qw7WlL1cstEL+yUzgYvZWeo/5xTyO8fB6f
+         W5RpRW5LI2w4QP/UT2NUlN8x0K6wEylFoR5PQj6+xCg4aVxzWUBG67Smwm/OlLOswQ+P
+         umCP/FEsizoVOndCFUBTumuGaYPpM24CZTWZFYYZ7G0nhl682sCWdJ0ESFLiY1iR99dA
+         JARWeOESkfhtPHt8DVwbj8s7dNxyQg+j19cpnZYbi3l1IWw2tcczf/7z14a0jqKeM1/H
+         YYyWXf73EfLl8ygdMHJ2KEiF7tZtgYLpASa7K5AM6AQvd3/LJQIT7zYWfRAVzi1sRa/T
+         Oz7g==
+X-Gm-Message-State: APjAAAX27Bp+uNdyrDjF1V3+HoLgkXcxx2ixOg46Ml3jcsGDQLaAHzr1
+        5722/aE3AzGEJbZVdmDw4gl1eW3lg4fz3NbXtay+VA==
+X-Google-Smtp-Source: APXvYqxckBA87s67w7YakD4b8GgZOryNfAxTyy+qPNdE82bEdoxtjPjZlJ/tt5IIpRik/K/Mqv7mj95v0hKcPAjDjZo=
+X-Received: by 2002:a02:3309:: with SMTP id c9mr4378013jae.52.1575483198285;
+ Wed, 04 Dec 2019 10:13:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191128165002.6234-1-mathieu.poirier@linaro.org>
+ <20191128165002.6234-7-mathieu.poirier@linaro.org> <20191203194330.GA2847072@kroah.com>
+In-Reply-To: <20191203194330.GA2847072@kroah.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 4 Dec 2019 11:13:05 -0700
+Message-ID: <CANLsYkyBBp_bAjsEuS=ZDY=Qza67PrwyWJUaDdBHTe1ZM1=2jw@mail.gmail.com>
+Subject: Re: [stable 4.19][PATCH 06/17] remoteproc: fix rproc_da_to_va in case
+ of unallocated carveout
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "# 4 . 7" <stable@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wenxu <wenxu@ucloud.cn>
+On Tue, 3 Dec 2019 at 12:43, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Nov 28, 2019 at 09:49:51AM -0700, Mathieu Poirier wrote:
+> > From: Loic Pallardy <loic.pallardy@st.com>
+> >
+> > commit 74457c40f97a98142bb13153395d304ad3c85cdd upstream
+> >
+> > With introduction of rproc_alloc_registered_carveouts() which
+> > delays carveout allocation just before the start of the remote
+> > processor, rproc_da_to_va() could be called before all carveouts
+> > are allocated.
+> > This patch adds a check in rproc_da_to_va() to return NULL if
+> > carveout is not allocated.
+> >
+> > Fixes: d7c51706d095 ("remoteproc: add alloc ops in rproc_mem_entry struct")
+>
+> This commit only shows up in 4.20, not 4.19, so why is this patch
+> relevant for 4.19?
 
-[ Upstream commit d71b57532d70c03f4671dd04e84157ac6bf021b0 ]
+Your scripts are better than mine...
 
-ip l add dev tun type gretap key 1000
-ip a a dev tun 10.0.0.1/24
-
-Packets with tun-id 1000 can be recived by tun dev. But packet can't
-be sent through dev tun for non-tunnel-dst
-
-With this patch: tunnel-dst can be get through lwtunnel like beflow:
-ip r a 10.0.0.7 encap ip dst 172.168.0.11 dev tun
-
-Signed-off-by: wenxu <wenxu@ucloud.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/ipv4/ip_tunnel.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
-index e6ee6acac80c4..a4db2d79b9134 100644
---- a/net/ipv4/ip_tunnel.c
-+++ b/net/ipv4/ip_tunnel.c
-@@ -653,13 +653,19 @@ void ip_tunnel_xmit(struct sk_buff *skb, struct net_device *dev,
- 	dst = tnl_params->daddr;
- 	if (dst == 0) {
- 		/* NBMA tunnel */
-+		struct ip_tunnel_info *tun_info;
- 
- 		if (!skb_dst(skb)) {
- 			dev->stats.tx_fifo_errors++;
- 			goto tx_error;
- 		}
- 
--		if (skb->protocol == htons(ETH_P_IP)) {
-+		tun_info = skb_tunnel_info(skb);
-+		if (tun_info && (tun_info->mode & IP_TUNNEL_INFO_TX) &&
-+		    ip_tunnel_info_af(tun_info) == AF_INET &&
-+		    tun_info->key.u.ipv4.dst)
-+			dst = tun_info->key.u.ipv4.dst;
-+		else if (skb->protocol == htons(ETH_P_IP)) {
- 			rt = skb_rtable(skb);
- 			dst = rt_nexthop(rt, inner_iph->daddr);
- 		}
--- 
-2.20.1
-
-
-
+>
+> thanks,
+>
+> greg k-h
