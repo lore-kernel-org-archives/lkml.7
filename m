@@ -2,95 +2,100 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA880C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 05:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41668C43215
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 05:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80BD020833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 05:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 113B8206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 05:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbfLDFwn (ORCPT
+        id S1726287AbfLDF5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 00:52:43 -0500
-Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:35212 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbfLDFwn (ORCPT
+        Wed, 4 Dec 2019 00:57:53 -0500
+Received: from mo-csw1516.securemx.jp ([210.130.202.155]:51566 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfLDF5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 00:52:43 -0500
-Received: from localhost.localdomain ([90.126.97.183])
-        by mwinf5d51 with ME
-        id Zhsd210043xPcdm03hsday; Wed, 04 Dec 2019 06:52:41 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 04 Dec 2019 06:52:41 +0100
-X-ME-IP: 90.126.97.183
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     kvalo@codeaurora.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, davem@davemloft.net
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] ath10k: Fix some typo in some warning messages
-Date:   Wed,  4 Dec 2019 06:52:35 +0100
-Message-Id: <20191204055235.11989-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Wed, 4 Dec 2019 00:57:52 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1516) id xB45vfEV000828; Wed, 4 Dec 2019 14:57:41 +0900
+X-Iguazu-Qid: 34trMIO5KbHSsEZMoA
+X-Iguazu-QSIG: v=2; s=0; t=1575439061; q=34trMIO5KbHSsEZMoA; m=V2vpPc3Sm8twmhncTu+7E1ruTxjV6fReYAEGcFjdpzc=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1512) id xB45veRP011189;
+        Wed, 4 Dec 2019 14:57:40 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id xB45vecE019581;
+        Wed, 4 Dec 2019 14:57:40 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id xB45vdwX011619;
+        Wed, 4 Dec 2019 14:57:40 +0900
+Date:   Wed, 4 Dec 2019 14:57:38 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 024/321] net: fec: add missed clk_disable_unprepare
+ in remove
+X-TSB-HOP: ON
+Message-ID: <20191204055738.nl5db2xtigoamtbk@toshiba.co.jp>
+References: <20191203223427.103571230@linuxfoundation.org>
+ <20191203223428.376628375@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203223428.376628375@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix some typo:
-  s/to to/to/
-  s/even/event/
+Hi,
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/net/wireless/ath/ath10k/mac.c      | 2 +-
- drivers/net/wireless/ath/ath10k/testmode.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+On Tue, Dec 03, 2019 at 11:31:30PM +0100, Greg Kroah-Hartman wrote:
+> From: Chuhong Yuan <hslester96@gmail.com>
+> 
+> [ Upstream commit c43eab3eddb4c6742ac20138659a9b701822b274 ]
+> 
+> This driver forgets to disable and unprepare clks when remove.
+> Add calls to clk_disable_unprepare to fix it.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index e8bdb2ba9b18..5faa43cd7fef 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -1098,7 +1098,7 @@ static int ath10k_monitor_vdev_stop(struct ath10k *ar)
- 
- 	ret = ath10k_wmi_vdev_stop(ar, ar->monitor_vdev_id);
- 	if (ret)
--		ath10k_warn(ar, "failed to to request monitor vdev %i stop: %d\n",
-+		ath10k_warn(ar, "failed to request monitor vdev %i stop: %d\n",
- 			    ar->monitor_vdev_id, ret);
- 
- 	ret = ath10k_vdev_setup_sync(ar);
-diff --git a/drivers/net/wireless/ath/ath10k/testmode.c b/drivers/net/wireless/ath/ath10k/testmode.c
-index 1bffe3fbea3f..7a9b9bbcdbfc 100644
---- a/drivers/net/wireless/ath/ath10k/testmode.c
-+++ b/drivers/net/wireless/ath/ath10k/testmode.c
-@@ -65,7 +65,7 @@ bool ath10k_tm_event_wmi(struct ath10k *ar, u32 cmd_id, struct sk_buff *skb)
- 	ret = nla_put_u32(nl_skb, ATH10K_TM_ATTR_CMD, ATH10K_TM_CMD_WMI);
- 	if (ret) {
- 		ath10k_warn(ar,
--			    "failed to to put testmode wmi event cmd attribute: %d\n",
-+			    "failed to put testmode wmi event cmd attribute: %d\n",
- 			    ret);
- 		kfree_skb(nl_skb);
- 		goto out;
-@@ -74,7 +74,7 @@ bool ath10k_tm_event_wmi(struct ath10k *ar, u32 cmd_id, struct sk_buff *skb)
- 	ret = nla_put_u32(nl_skb, ATH10K_TM_ATTR_WMI_CMDID, cmd_id);
- 	if (ret) {
- 		ath10k_warn(ar,
--			    "failed to to put testmode wmi even cmd_id: %d\n",
-+			    "failed to put testmode wmi event cmd_id: %d\n",
- 			    ret);
- 		kfree_skb(nl_skb);
- 		goto out;
--- 
-2.20.1
 
+This commit also requires the following commit:
+
+commit a31eda65ba210741b598044d045480494d0ed52a
+Author: Chuhong Yuan <hslester96@gmail.com>
+Date:   Wed Nov 20 09:25:13 2019 +0800
+
+    net: fec: fix clock count mis-match
+
+    pm_runtime_put_autosuspend in probe will call runtime suspend to
+    disable clks automatically if CONFIG_PM is defined. (If CONFIG_PM
+    is not defined, its implementation will be empty, then runtime
+    suspend will not be called.)
+
+    Therefore, we can call pm_runtime_get_sync to runtime resume it
+    first to enable clks, which matches the runtime suspend. (Only when
+    CONFIG_PM is defined, otherwise pm_runtime_get_sync will also be
+    empty, then runtime resume will not be called.)
+
+    Then it is fine to disable clks without causing clock count mis-match.
+
+    Fixes: c43eab3eddb4 ("net: fec: add missed clk_disable_unprepare in remove")
+    Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+    Acked-by: Fugang Duan <fugang.duan@nxp.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+
+And this should also apply to 5.3.
+
+Best regards,
+  Nobuhiro
