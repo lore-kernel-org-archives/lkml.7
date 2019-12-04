@@ -2,28 +2,29 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB62C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B2BC43215
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB23207DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B7D8207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfLDAqt (ORCPT
+        id S1726743AbfLDAqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 19:46:49 -0500
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:47854 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726086AbfLDAqr (ORCPT
+        Tue, 3 Dec 2019 19:46:52 -0500
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:54159 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726363AbfLDAqs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 19:46:47 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0Tjr6d8u_1575420394;
+        Tue, 3 Dec 2019 19:46:48 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0Tjr6d8u_1575420394;
 Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0Tjr6d8u_1575420394)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 04 Dec 2019 08:46:42 +0800
+          Wed, 04 Dec 2019 08:46:45 +0800
 From:   Shile Zhang <shile.zhang@linux.alibaba.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -35,10 +36,12 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
         linux-kbuild@vger.kernel.org,
         Shile Zhang <shile.zhang@linux.alibaba.com>
-Subject: [RFC PATCH v6 0/7] Speed booting by sorting ORC unwind tables at build time
-Date:   Wed,  4 Dec 2019 08:46:26 +0800
-Message-Id: <20191204004633.88660-1-shile.zhang@linux.alibaba.com>
+Subject: [RFC PATCH v6 7/7] x86/unwind/orc: remove run-time ORC unwind tables sort
+Date:   Wed,  4 Dec 2019 08:46:33 +0800
+Message-Id: <20191204004633.88660-8-shile.zhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.0.rc2
+In-Reply-To: <20191204004633.88660-1-shile.zhang@linux.alibaba.com>
+References: <20191204004633.88660-1-shile.zhang@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,80 +49,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The orc_unwind and orc_unwind_ip tables are sorted in vmlinux link phase
+at build time, just remove the run-time sort.
 
-Sorry, update for compile error fix, reported by Intel's kbuild test robot.
-Any comments or suggestions are welcome!
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/kernel/unwind_orc.c | 8 +++++---
+ scripts/link-vmlinux.sh      | 5 ++++-
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-Thanks!
-
-Changelog:
-==========
-v5->v6:
-- fix compile error reported by kbuild test robot;
-
-v4->v5:
-- replace sort with qsort, suggested by Andy Lutomirski <luto@amacapital.net>;
-- add error handling in link scripts;
-- fixed some review findings;
-https://lore.kernel.org/lkml/20191128110206.2107-1-shile.zhang@linux.alibaba.com/
-
-v3->v4:
-- Code refactored for Peter's review findings and suggestions.
-https://lore.kernel.org/lkml/20191115164539.57930-1-shile.zhang@linux.alibaba.com/
-
-v2->v3:
-- Discard new added sortorctable tool and related Kconfig changes.
-- Refactored sortextable, makes it more readable and extendable.
-- Rename 'sortextable' to 'sorttable', for more kernel tables extend.
-- Add ORC unwind tables sort into sorttable.
-- Remove the runtime ORC tables sort.
-https://lore.kernel.org/lkml/20191115064750.47888-1-shile.zhang@linux.alibaba.com/
-
-v1->v2:
-- Removed new added Kconfig and runtime sort code, advised by Josh Poimboeuf.
-- Some minor refactoring.
-https://lore.kernel.org/lkml/20191108071108.72132-1-shile.zhang@linux.alibaba.com/
-
-v1:
-- Added a new sortorctable tool to sort ORC unwind tables at build time,
-  same as sortextable.
-- Add a new Kconfigure to control if ORC unwind tables sort at build
-  time.
-https://lore.kernel.org/lkml/20191107143205.206606-1-shile.zhang@linux.alibaba.com/
-
-Shile Zhang (7):
-  scripts/sortextable: Rewrite error/success handling
-  scripts/sortextable: kernel coding style formating
-  scripts/sortextable: Remove dead code
-  scripts/sortextable: refactor do_func() function
-  scripts/sorttable: rename sortextable to sorttable
-  scripts/sorttable: Add ORC unwind tables sort concurrently
-  x86/unwind/orc: remove run-time ORC unwind tables sort
-
- arch/arc/Kconfig                       |   2 +-
- arch/arm/Kconfig                       |   2 +-
- arch/arm64/Kconfig                     |   2 +-
- arch/microblaze/Kconfig                |   2 +-
- arch/mips/Kconfig                      |   2 +-
- arch/parisc/Kconfig                    |   2 +-
- arch/powerpc/Kconfig                   |   2 +-
- arch/s390/Kconfig                      |   2 +-
- arch/x86/Kconfig                       |   2 +-
- arch/x86/kernel/unwind_orc.c           |   8 +-
- arch/xtensa/Kconfig                    |   2 +-
- init/Kconfig                           |   2 +-
- scripts/.gitignore                     |   2 +-
- scripts/Makefile                       |  13 +-
- scripts/link-vmlinux.sh                |  13 +-
- scripts/sortextable.h                  | 209 --------------
- scripts/{sortextable.c => sorttable.c} | 305 +++++++++-----------
- scripts/sorttable.h                    | 380 +++++++++++++++++++++++++
- 18 files changed, 557 insertions(+), 395 deletions(-)
- delete mode 100644 scripts/sortextable.h
- rename scripts/{sortextable.c => sorttable.c} (67%)
- create mode 100644 scripts/sorttable.h
-
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 332ae6530fa8..280da6fa9922 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -273,9 +273,11 @@ void __init unwind_init(void)
+ 		return;
+ 	}
+ 
+-	/* Sort the .orc_unwind and .orc_unwind_ip tables: */
+-	sort(__start_orc_unwind_ip, num_entries, sizeof(int), orc_sort_cmp,
+-	     orc_sort_swap);
++	/*
++	 * Note, orc_unwind and orc_unwind_ip tables has been sorted in
++	 * vmlinux link phase by sorttable tool at build time.
++	 * Its ready for binary search now.
++	 */
+ 
+ 	/* Initialize the fast lookup table: */
+ 	lookup_num_blocks = orc_lookup_end - orc_lookup;
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index 01978d1e4c13..f0f08e2bbcd5 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -300,7 +300,10 @@ vmlinux_link vmlinux "${kallsymso}" ${btf_vmlinux_bin_o}
+ 
+ if [ -n "${CONFIG_BUILDTIME_TABLE_SORT}" ]; then
+ 	info SORTTAB vmlinux
+-	sorttable vmlinux
++	if ! sorttable vmlinux; then
++		echo >&2 Failed to sort kernel tables
++		exit 1
++	fi
+ fi
+ 
+ info SYSMAP System.map
 -- 
 2.24.0.rc2
 
