@@ -2,125 +2,210 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45995C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968A2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A97A20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575484069;
-	bh=H1WBjtuVHU+q1pByMDCrOf3M0NmQW+pm/fk8+btGKfY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nVd+74GtiON+GuQPXOnvHy/3OWP9x3QcrQZrAtk/TfdZlZwQyM5C/xywkOAWFlYdu
-	 mHLQFktwiSGIlh51uSQ4lyqmxmleQE/YGndDOHS43M5oveN2ZorCQ3oGjwZtvkHZ5B
-	 Mr9Z+Xqh4BwyH6yP/nfSK+4HoQkRvykfWAv3uAIU=
+	by mail.kernel.org (Postfix) with ESMTP id 696D1205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:27:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbfLDR6N (ORCPT
+        id S1729361AbfLDS1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:58:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728512AbfLDR6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:58:08 -0500
-Received: from localhost (unknown [217.68.49.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 632B120675;
-        Wed,  4 Dec 2019 17:58:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482287;
-        bh=H1WBjtuVHU+q1pByMDCrOf3M0NmQW+pm/fk8+btGKfY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N0ONHXjFaMUWRXiAX6TYNJumSNatMdPxDbDsEKIgZ9cTka3NLXkNrTVx2kZlryfvF
-         PxZbc+JFiQce6jzjS3osxPXMXo43VeSRvUYE/fAfc2HzKljGNj2ze94ygm+PlPkrvD
-         FmNWkUKV3jTmhdNN4b/EeBctz+0TWuq+ehZxCmbg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 26/92] microblaze: move "... is ready" messages to arch/microblaze/Makefile
-Date:   Wed,  4 Dec 2019 18:49:26 +0100
-Message-Id: <20191204174332.091899977@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
-References: <20191204174327.215426506@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 4 Dec 2019 13:27:52 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60136 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728328AbfLDS1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:27:50 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9D3CDB256;
+        Wed,  4 Dec 2019 18:27:46 +0000 (UTC)
+Subject: Re: [PATCH 4.9 105/125] mm, gup: add missing refcount overflow checks
+ on x86 and s390
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+References: <20191204175308.377746305@linuxfoundation.org>
+ <20191204175325.500930880@linuxfoundation.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7ca516fa-c526-b5e6-4b7c-855f229112ac@suse.cz>
+Date:   Wed, 4 Dec 2019 19:27:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191204175325.500930880@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+On 12/4/19 6:56 PM, Greg Kroah-Hartman wrote:
+> From: Vlastimil Babka <vbabka@suse.cz>
+> 
+> The mainline commit 8fde12ca79af ("mm: prevent get_user_pages() from
+> overflowing page refcount") was backported to 4.9.y stable as commit
+> 2ed768cfd895. The backport however missed that in 4.9, there are several
+> arch-specific gup.c versions with fast gup implementations, so these do not
+> prevent refcount overflow.
+> 
+> This is partially fixed for x86 in stable-only commit d73af79742e7 ("x86, mm,
+> gup: prevent get_page() race with munmap in paravirt guest"). This stable-only
+> commit adds missing parts to x86 version, as well as s390 version, both taken
+> from the SUSE SLES/openSUSE 4.12-based kernels.
+> 
+> The remaining architectures with own gup.c are sparc, mips, sh. It's unlikely
+> the known overflow scenario based on FUSE, which needs 140GB of RAM, is a
+> problem for those architectures, and I don't feel confident enough to patch
+> them.
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-[ Upstream commit 2e14f94cf4bc2f15ca5362e81ca3a987c79e3062 ]
+No, this one had a leak bug and I've sent updated version:
+https://lore.kernel.org/linux-mm/e274291b-054f-2fad-28e8-59fabf312e61@suse.cz/
 
-To prepare for more fixes, move this to arch/microblaze/Makefile.
-Otherwise, the same "... is ready" would be printed multiple times.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/microblaze/Makefile      | 2 ++
- arch/microblaze/boot/Makefile | 4 ----
- 2 files changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/arch/microblaze/Makefile b/arch/microblaze/Makefile
-index 5e1e18540a571..491676a6cde57 100644
---- a/arch/microblaze/Makefile
-+++ b/arch/microblaze/Makefile
-@@ -75,9 +75,11 @@ archclean:
- 
- linux.bin linux.bin.gz linux.bin.ub: vmlinux
- 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
-+	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`cat .version`')'
- 
- simpleImage.%: vmlinux
- 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
-+	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`cat .version`')'
- 
- define archhelp
-   echo '* linux.bin    - Create raw binary'
-diff --git a/arch/microblaze/boot/Makefile b/arch/microblaze/boot/Makefile
-index 0f3fe6a151dce..22bed08ec7f28 100644
---- a/arch/microblaze/boot/Makefile
-+++ b/arch/microblaze/boot/Makefile
-@@ -8,15 +8,12 @@ OBJCOPYFLAGS := -R .note -R .comment -R .note.gnu.build-id -O binary
- 
- $(obj)/linux.bin: vmlinux FORCE
- 	$(call if_changed,objcopy)
--	@echo 'Kernel: $@ is ready' ' (#'`cat .version`')'
- 
- $(obj)/linux.bin.ub: $(obj)/linux.bin FORCE
- 	$(call if_changed,uimage)
--	@echo 'Kernel: $@ is ready' ' (#'`cat .version`')'
- 
- $(obj)/linux.bin.gz: $(obj)/linux.bin FORCE
- 	$(call if_changed,gzip)
--	@echo 'Kernel: $@ is ready' ' (#'`cat .version`')'
- 
- quiet_cmd_cp = CP      $< $@$2
- 	cmd_cp = cat $< >$@$2 || (rm -f $@ && echo false)
-@@ -34,6 +31,5 @@ $(obj)/simpleImage.%: vmlinux FORCE
- 	$(call if_changed,objcopy)
- 	$(call if_changed,uimage)
- 	$(call if_changed,strip,.strip)
--	@echo 'Kernel: $(UIMAGE_OUT) is ready' ' (#'`cat .version`')'
- 
- clean-files += simpleImage.*.unstrip linux.bin.ub dts/*.dtb
--- 
-2.20.1
-
-
+> ---
+>  arch/s390/mm/gup.c |  9 ++++++---
+>  arch/x86/mm/gup.c  | 10 ++++++++--
+>  2 files changed, 14 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/s390/mm/gup.c b/arch/s390/mm/gup.c
+> index 97fc449a74707..33a940389a6d1 100644
+> --- a/arch/s390/mm/gup.c
+> +++ b/arch/s390/mm/gup.c
+> @@ -38,7 +38,8 @@ static inline int gup_pte_range(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
+>  		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+>  		page = pte_page(pte);
+>  		head = compound_head(page);
+> -		if (!page_cache_get_speculative(head))
+> +		if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
+> +		    || !page_cache_get_speculative(head)))
+>  			return 0;
+>  		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+>  			put_page(head);
+> @@ -76,7 +77,8 @@ static inline int gup_huge_pmd(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
+>  		refs++;
+>  	} while (addr += PAGE_SIZE, addr != end);
+>  
+> -	if (!page_cache_add_speculative(head, refs)) {
+> +	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
+> +	    || !page_cache_add_speculative(head, refs))) {
+>  		*nr -= refs;
+>  		return 0;
+>  	}
+> @@ -150,7 +152,8 @@ static int gup_huge_pud(pud_t *pudp, pud_t pud, unsigned long addr,
+>  		refs++;
+>  	} while (addr += PAGE_SIZE, addr != end);
+>  
+> -	if (!page_cache_add_speculative(head, refs)) {
+> +	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
+> +	    || !page_cache_add_speculative(head, refs))) {
+>  		*nr -= refs;
+>  		return 0;
+>  	}
+> diff --git a/arch/x86/mm/gup.c b/arch/x86/mm/gup.c
+> index d7db45bdfb3bd..551fc7fea046d 100644
+> --- a/arch/x86/mm/gup.c
+> +++ b/arch/x86/mm/gup.c
+> @@ -202,10 +202,12 @@ static int __gup_device_huge_pmd(pmd_t pmd, unsigned long addr,
+>  			undo_dev_pagemap(nr, nr_start, pages);
+>  			return 0;
+>  		}
+> +		if (unlikely(!try_get_page(page))) {
+> +			put_dev_pagemap(pgmap);
+> +			return 0;
+> +		}
+>  		SetPageReferenced(page);
+>  		pages[*nr] = page;
+> -		get_page(page);
+> -		put_dev_pagemap(pgmap);
+>  		(*nr)++;
+>  		pfn++;
+>  	} while (addr += PAGE_SIZE, addr != end);
+> @@ -230,6 +232,8 @@ static noinline int gup_huge_pmd(pmd_t pmd, unsigned long addr,
+>  
+>  	refs = 0;
+>  	head = pmd_page(pmd);
+> +	if (WARN_ON_ONCE(page_ref_count(head) <= 0))
+> +		return 0;
+>  	page = head + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+>  	do {
+>  		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+> @@ -289,6 +293,8 @@ static noinline int gup_huge_pud(pud_t pud, unsigned long addr,
+>  
+>  	refs = 0;
+>  	head = pud_page(pud);
+> +	if (WARN_ON_ONCE(page_ref_count(head) <= 0))
+> +		return 0;
+>  	page = head + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+>  	do {
+>  		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+> 
 
