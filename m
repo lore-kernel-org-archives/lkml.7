@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FD8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7318CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A485F20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38EE920833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483047;
-	bh=Zz6q1n7jhjgnIr65Qd6fTf3oWuooO9oeyz8MIF+nWd4=;
+	s=default; t=1575483055;
+	bh=GNrThHvp51OQUW6thM0FBK86TAxOtmVirBWYAuPFsDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=puVUaj4HgqEg7zo2mIL1tgKhQ4IJzDE1iz/mMzWlmv8B0xFaEzHP2CqVNnwrQu+Wn
-	 xg9HBv2OsBrPQ5nE4/bV6uL5g2QPj4L1yLyLS3t9aS3Z34VC1E8o7vUS4v0obL8OCM
-	 ijWpBXm5HDwR29JwgBmdRnu1Iq0gA2IzeSq73c6Y=
+	b=1OSPCkEBtroQk6sO6bw1raR1HQSRk8wDM1ryA9PHkCZ4o8U0mCsfcI6FQxAnw1Ogc
+	 Y2ST6B3ig3nR+t6DRu2ezYfGoKmBAFFq0UTXlUqvkGsxIMVOlG4YhpWkGB+eDYS7YH
+	 WMKaQZ1dDo4UupeSE6DysrM/1U5nriNdHwXnQxtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731323AbfLDSKp (ORCPT
+        id S1730993AbfLDSKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:10:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38322 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:10:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730606AbfLDSKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:10:43 -0500
+        id S1731325AbfLDSKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:10:48 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 701BE206DF;
-        Wed,  4 Dec 2019 18:10:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54C9120833;
+        Wed,  4 Dec 2019 18:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483042;
-        bh=Zz6q1n7jhjgnIr65Qd6fTf3oWuooO9oeyz8MIF+nWd4=;
+        s=default; t=1575483047;
+        bh=GNrThHvp51OQUW6thM0FBK86TAxOtmVirBWYAuPFsDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n7I5b9DOpJ+wzWuCsvOL2aCGCFjlsFdi5F/5yhYGOEzCA6iNo1Q7CsU8Vo/htln7p
-         hO3+hTRm91uhQljjq01vIL2E/ISYW8aaOM/EnMtq4bx0CRBHWz+ewgpOH1qxuQn3BM
-         eqlsPIGLa1rZtmAshBh1aIwsydGFuoz/njPPfXIA=
+        b=SeqAPmI+A8yJmeFpIU4VjpsLHdg2W86VahPFY1bn+ZcPIKLg8B4BDhUkShCUSmkGz
+         YCwfzVn3SkAKdnODVyFuLzEF8cLlZb7fKoSGTPBqU5TwtSK5bTFBmizS3i75c5JbqU
+         uZrwPADCkh3cppkdHXFJ2eawNgrJL1tloxUMAC9g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Bill ODonnell <billodo@redhat.com>,
+        "Reported-by: Marian Mihailescu" <mihailescu2m@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 028/125] xfs: require both realtime inodes to mount
-Date:   Wed,  4 Dec 2019 18:55:33 +0100
-Message-Id: <20191204175320.091647445@linuxfoundation.org>
+Subject: [PATCH 4.9 003/125] clk: samsung: exynos5420: Preserve PLL configuration during suspend/resume
+Date:   Wed,  4 Dec 2019 18:55:08 +0100
+Message-Id: <20191204175310.136962421@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,43 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 64bafd2f1e484e27071e7584642005d56516cb77 ]
+[ Upstream commit e9323b664ce29547d996195e8a6129a351c39108 ]
 
-Since mkfs always formats the filesystem with the realtime bitmap and
-summary inodes immediately after the root directory, we should expect
-that both of them are present and loadable, even if there isn't a
-realtime volume attached.  There's no reason to skip this if rbmino ==
-NULLFSINO; in fact, this causes an immediate crash if the there /is/ a
-realtime volume and someone writes to it.
+Properly save and restore all top PLL related configuration registers
+during suspend/resume cycle. So far driver only handled EPLL and RPLL
+clocks, all other were reset to default values after suspend/resume cycle.
+This caused for example lower G3D (MALI Panfrost) performance after system
+resume, even if performance governor has been selected.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Bill O'Donnell <billodo@redhat.com>
+Reported-by: Reported-by: Marian Mihailescu <mihailescu2m@gmail.com>
+Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_rtalloc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/clk/samsung/clk-exynos5420.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 802bcc326d9fb..0d93d3c10fcc4 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -1222,13 +1222,11 @@ xfs_rtmount_inodes(
- 	xfs_sb_t	*sbp;
- 
- 	sbp = &mp->m_sb;
--	if (sbp->sb_rbmino == NULLFSINO)
--		return 0;
- 	error = xfs_iget(mp, NULL, sbp->sb_rbmino, 0, 0, &mp->m_rbmip);
- 	if (error)
- 		return error;
- 	ASSERT(mp->m_rbmip != NULL);
--	ASSERT(sbp->sb_rsumino != NULLFSINO);
-+
- 	error = xfs_iget(mp, NULL, sbp->sb_rsumino, 0, 0, &mp->m_rsumip);
- 	if (error) {
- 		IRELE(mp->m_rbmip);
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index 13c09a740840b..2bb88d1251136 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -170,12 +170,18 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
+ 	GATE_BUS_CPU,
+ 	GATE_SCLK_CPU,
+ 	CLKOUT_CMU_CPU,
++	CPLL_CON0,
++	DPLL_CON0,
+ 	EPLL_CON0,
+ 	EPLL_CON1,
+ 	EPLL_CON2,
+ 	RPLL_CON0,
+ 	RPLL_CON1,
+ 	RPLL_CON2,
++	IPLL_CON0,
++	SPLL_CON0,
++	VPLL_CON0,
++	MPLL_CON0,
+ 	SRC_TOP0,
+ 	SRC_TOP1,
+ 	SRC_TOP2,
 -- 
 2.20.1
 
