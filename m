@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31E2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EABC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8607820862
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1346420674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482862;
-	bh=ZmRfeg7mG/o18B/qAwsmClWkZP/Qip4Ex6AAyRlF5J4=;
+	s=default; t=1575482866;
+	bh=a447VtLoBcHspGJtXTLPnO8EL1HGKQ6WjUQ/PY3aloY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RfxLRUlClE7xgwyvKfuWE895jgy83g9RX4Vq4eVlXum+tvLMrgZSGgCatrsShHVQy
-	 QqJpWjAS2Sx0FjGMW4j0TUeCSI/D0AZ8kJpQx9PQ2hjqkkinG3n2cCiuIyoLl9ka9R
-	 SS52V0J0j9kuk39vvUXF6GyG24hBriOqhoKbxXOY=
+	b=jERgMNkmdhyohAAmFF02WGuStjVi95A1yijawn/kgETWmsHGMz739WMvndO9h4e3z
+	 R8jjRonU6fPIpymV/nW9pbR0Tq2SHnbrFvcmItA8gm+7tKP680ocg91LbnPgy50dUH
+	 WxjexS9Guvj8uOf3lX4PcBBc1mTXziVWD2FZ1FxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbfLDSHl (ORCPT
+        id S1730805AbfLDSHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:07:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57900 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:07:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730789AbfLDSHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:07:37 -0500
+        id S1730233AbfLDSHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:07:39 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D3FF20862;
-        Wed,  4 Dec 2019 18:07:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02B4020833;
+        Wed,  4 Dec 2019 18:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482857;
-        bh=ZmRfeg7mG/o18B/qAwsmClWkZP/Qip4Ex6AAyRlF5J4=;
+        s=default; t=1575482859;
+        bh=a447VtLoBcHspGJtXTLPnO8EL1HGKQ6WjUQ/PY3aloY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iVxcouETYJtWvbbi4tYuUYZaNNkI9GFSUVkgWf3Ukl+3ARr3Zyu/OmGcPm0zOrJ8r
-         sjxArUqj9X6WcXFEvkGm1yFlWN5u6i74iQm5LiX7afvqzh+NWLiIpENQPO5pXor06U
-         kQgFUmevePBG774vfKGZtn782UVMjrDC6QKhfUCA=
+        b=Iho0DmX3aOeh2j17CEIL1BNtzIjNp01GL56OGZzq/v0FFGs5eutxXZI2Rq5dSZYAS
+         27b99GaEHS6OZepssPaoowMhbSdI/JlgNjF+/NeEpmfQ0XXDzkTtGbGCSqrD8NueVg
+         N9BDytPatP0UvGwLTnSojQ3cLu0w0MllA7mfWCYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 4.14 162/209] mei: bus: prefix device names on bus with the bus name
-Date:   Wed,  4 Dec 2019 18:56:14 +0100
-Message-Id: <20191204175334.636738550@linuxfoundation.org>
+        stable@vger.kernel.org, JD <jdtxs00@gmail.com>,
+        Paul Wouters <paul@nohats.ca>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.14 163/209] xfrm: Fix memleak on xfrm state destroy
+Date:   Wed,  4 Dec 2019 18:56:15 +0100
+Message-Id: <20191204175334.705921054@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,51 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+From: Steffen Klassert <steffen.klassert@secunet.com>
 
-commit 7a2b9e6ec84588b0be65cc0ae45a65bac431496b upstream.
+commit 86c6739eda7d2a03f2db30cbee67a5fb81afa8ba upstream.
 
-Add parent device name to the name of devices on bus to avoid
-device names collisions for same client UUID available
-from different MEI heads. Namely this prevents sysfs collision under
-/sys/bus/mei/device/
+We leak the page that we use to create skb page fragments
+when destroying the xfrm_state. Fix this by dropping a
+page reference if a page was assigned to the xfrm_state.
 
-In the device part leave just UUID other parameters that are
-required for device matching are not required here and are
-just bloating the name.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20191105150514.14010-1-tomas.winkler@intel.com
+Fixes: cac2661c53f3 ("esp4: Avoid skb_cow_data whenever possible")
+Reported-by: JD <jdtxs00@gmail.com>
+Reported-by: Paul Wouters <paul@nohats.ca>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/bus.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ net/xfrm/xfrm_state.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/misc/mei/bus.c
-+++ b/drivers/misc/mei/bus.c
-@@ -850,15 +850,16 @@ static const struct device_type mei_cl_d
- 
- /**
-  * mei_cl_bus_set_name - set device name for me client device
-+ *  <controller>-<client device>
-+ *  Example: 0000:00:16.0-55213584-9a29-4916-badf-0fb7ed682aeb
-  *
-  * @cldev: me client device
-  */
- static inline void mei_cl_bus_set_name(struct mei_cl_device *cldev)
- {
--	dev_set_name(&cldev->dev, "mei:%s:%pUl:%02X",
--		     cldev->name,
--		     mei_me_cl_uuid(cldev->me_cl),
--		     mei_me_cl_ver(cldev->me_cl));
-+	dev_set_name(&cldev->dev, "%s-%pUl",
-+		     dev_name(cldev->bus->dev),
-+		     mei_me_cl_uuid(cldev->me_cl));
- }
- 
- /**
+--- a/net/xfrm/xfrm_state.c
++++ b/net/xfrm/xfrm_state.c
+@@ -449,6 +449,8 @@ static void xfrm_state_gc_destroy(struct
+ 		x->type->destructor(x);
+ 		xfrm_put_type(x->type);
+ 	}
++	if (x->xfrag.page)
++		put_page(x->xfrag.page);
+ 	xfrm_dev_state_free(x);
+ 	security_xfrm_state_free(x);
+ 	kfree(x);
 
 
