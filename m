@@ -2,152 +2,161 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA54C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57432C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A70A2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:02:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QmoH0Uex"
+	by mail.kernel.org (Postfix) with ESMTP id 2F4702081B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbfLDRCn (ORCPT
+        id S1728952AbfLDRNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:02:43 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:34930 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728801AbfLDRCm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:02:42 -0500
-Received: by mail-pj1-f66.google.com with SMTP id w23so72661pjd.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 09:02:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Eu3IyJHMQvuKhJZsYp2g7JJil3jVEh0AYfjqL0o1IiE=;
-        b=QmoH0UexrWMCC1IIRTlz1PwJWQ6h2dxtiUk7KvO3NzCeEmPQZo3S3GKwDDa6xuwAso
-         ZamUti0ojZ3jtqWW1PT1k+GCtau2iCzY1JRJUI0N8JxzE1f+lOz6PBNx/rzMdlcinqBu
-         1FTP8v36bHZVo/GlZYEGqdFxUWCYxHdxSBbOLJd/LUD/6raGJRBjaqyKOaUD5jl4EJJ/
-         LcOJkKnLuCMX9N2XsR2bssttYgqtw8euGbU2mPp3gb7dtbXQoKEwXT2/WxxVMFAVyV+Z
-         eipg2msnalCwO17Uhru4JhR0Q+VWryVf0Dh0SAwjZ4ITsQPp8csF1Co1ivCPwxes6CcB
-         qn/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Eu3IyJHMQvuKhJZsYp2g7JJil3jVEh0AYfjqL0o1IiE=;
-        b=p899SyXhZhdcql8Z8kYj5CpfsTFiREHUR8JNNCG9OB5UOHe10QgaIdYam71M5/DS9L
-         uchvtoYlKWk2Dm81etOcC2u9jbob/NWoCcAKDp3ugI6i+Oa7GXWumicCNgw4ypUXHZ6u
-         iadhNpChCbI4CTNWcsTe2Oqg+Pw5xROFXj/kjhJGfYTC1QQAnEhoajbGhKv+/sk5uxCl
-         ist3G+tE4XRHuF8zMOpY4sBuXgJMHfD1MDV9f7X+Mmu48VdmjR9EA05d4+Int/fuisZm
-         e/wfqRwQj302udR6vVvmzh4AbkcWx88AzZ3DqNyFWfwtOVBhywAW014jxkgaevx8otzw
-         u/3w==
-X-Gm-Message-State: APjAAAV4NSxgeDnSXA0vuelgbacupesBDr/yx11MPKktMcuX6hS/qAVL
-        aV44th3mHYpF2rzGA3UO0lEoZB5QKTgNhaQUAmOeaA==
-X-Google-Smtp-Source: APXvYqzrNQd3LocGGri7/gY6Hv0QqlU+RA0bb+qoQL4Gk6NCjiROT8Lilv2qq9FysgmHO6jzOSBR6S18uymGHTubEZg=
-X-Received: by 2002:a17:90a:1f4b:: with SMTP id y11mr4270989pjy.123.1575478961561;
- Wed, 04 Dec 2019 09:02:41 -0800 (PST)
+        Wed, 4 Dec 2019 12:13:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:59112 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726934AbfLDRNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:13:00 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FB7231B;
+        Wed,  4 Dec 2019 09:12:58 -0800 (PST)
+Received: from [10.37.12.197] (unknown [10.37.12.197])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B509D3F52E;
+        Wed,  4 Dec 2019 09:12:54 -0800 (PST)
+Subject: Re: [PATCH v7 16/25] arm: Add support for generic vDSO (causing
+ crash)
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Andre Przywara <andre.przywara@arm.com>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <20190621095252.32307-17-vincenzo.frascino@arm.com>
+ <20191204135159.GA7210@roeck-us.net>
+ <6cdf4734-4065-09c1-8623-1bf523b38c1b@arm.com>
+ <20191204161641.GA28130@roeck-us.net>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <e35a7f71-2477-fa52-01e4-301199e99c2e@arm.com>
+Date:   Wed, 4 Dec 2019 17:15:26 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191204081307.138765-1-pihsun@chromium.org>
-In-Reply-To: <20191204081307.138765-1-pihsun@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 4 Dec 2019 09:02:30 -0800
-Message-ID: <CAKwvOdnLxXeGYfEL+fgVts3cW71gMsP42mysQYtKse_STUErzQ@mail.gmail.com>
-Subject: Re: [PATCH v2] wireless: Use offsetof instead of custom macro.
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     linux-wireless@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:CLANG/LLVM BUILD SUPPORT" 
-        <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191204161641.GA28130@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 12:13 AM Pi-Hsun Shih <pihsun@chromium.org> wrote:
->
-> Use offsetof to calculate offset of a field to take advantage of
-> compiler built-in version when possible, and avoid UBSAN warning when
-> compiling with Clang:
->
-> ==================================================================
-> UBSAN: Undefined behaviour in net/wireless/wext-core.c:525:14
-> member access within null pointer of type 'struct iw_point'
-> CPU: 3 PID: 165 Comm: kworker/u16:3 Tainted: G S      W         4.19.23 #43
-> Workqueue: cfg80211 __cfg80211_scan_done [cfg80211]
-> Call trace:
->  dump_backtrace+0x0/0x194
->  show_stack+0x20/0x2c
->  __dump_stack+0x20/0x28
->  dump_stack+0x70/0x94
->  ubsan_epilogue+0x14/0x44
->  ubsan_type_mismatch_common+0xf4/0xfc
->  __ubsan_handle_type_mismatch_v1+0x34/0x54
->  wireless_send_event+0x3cc/0x470
->  ___cfg80211_scan_done+0x13c/0x220 [cfg80211]
->  __cfg80211_scan_done+0x28/0x34 [cfg80211]
->  process_one_work+0x170/0x35c
->  worker_thread+0x254/0x380
->  kthread+0x13c/0x158
->  ret_from_fork+0x10/0x18
-> ===================================================================
->
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> ---
->
-> Change since v1:
->  * Add #include <stddef.h>
+Hi Guenter,
 
-Thanks for following up on the feedback.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+On 12/4/19 4:16 PM, Guenter Roeck wrote:
+> On Wed, Dec 04, 2019 at 01:58:25PM +0000, Vincenzo Frascino wrote:
+>> Hi Guenter,
+>>
+>> On 12/4/19 1:51 PM, Guenter Roeck wrote:
+>>> On Fri, Jun 21, 2019 at 10:52:43AM +0100, Vincenzo Frascino wrote:
+>>>> The arm vDSO library requires some adaptations to use to take advantage
+>>>> of the newly introduced generic vDSO library.
+>>>>
+>>>> Introduce the following changes:
+>>>>  - Modification vdso.c to be compliant with the common vdso datapage
+>>>>  - Use of lib/vdso for gettimeofday
+>>>>  - Implementation of elf note
+>>>>
+>>>> Cc: Russell King <linux@armlinux.org.uk>
+>>>> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+>>>
+>>> This patch causes a crash with qemu's mcimx6ul-evk emulation while running
+>>> imx_v6_v7_defconfig.
+>>>
+>>
+>> Thank you for reporting this. Could you please provide some details on how I can
+>> reproduce the scenario you are describing?
+>>
+> - Build imx_v6_v7_defconfig
+> - Get root file system or initrd, for example from
+>   https://github.com/groeck/linux-build-test/tree/master/rootfs/arm
+> - Run image. Example, with initrd:
+> 	qemu-system-arm -M mcimx6ul-evk -kernel arch/arm/boot/zImage \
+> 		-no-reboot -initrd rootfs-armv7a.cpio \
+> 		-m 256 -display none -serial null \
+> 		--append 'rdinit=/sbin/init earlycon=ec_imx6q,mmio,0x21e8000,115200n8 console=ttymxc1,115200'
+> 		-dtb arch/arm/boot/dts/imx6ul-14x14-evk.dtb \
+> 		-nographic -monitor null -serial stdio
+> 
+> qemu has to be v3.1 or later to support the machine.
+> 
 
->
-> ---
->  include/uapi/linux/wireless.h | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/include/uapi/linux/wireless.h b/include/uapi/linux/wireless.h
-> index 86eca3208b6b..a2c006a364e0 100644
-> --- a/include/uapi/linux/wireless.h
-> +++ b/include/uapi/linux/wireless.h
-> @@ -74,6 +74,8 @@
->  #include <linux/socket.h>              /* for "struct sockaddr" et al  */
->  #include <linux/if.h>                  /* for IFNAMSIZ and co... */
->
-> +#include <stddef.h>                     /* for offsetof */
-> +
->  /***************************** VERSION *****************************/
->  /*
->   * This constant is used to know the availability of the wireless
-> @@ -1090,8 +1092,7 @@ struct iw_event {
->  /* iw_point events are special. First, the payload (extra data) come at
->   * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
->   * we omit the pointer, so start at an offset. */
-> -#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
-> -                         (char *) NULL)
-> +#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
->  #define IW_EV_POINT_LEN        (IW_EV_LCP_LEN + sizeof(struct iw_point) - \
->                          IW_EV_POINT_OFF)
->
->
-> base-commit: c5db92909beddadddb705b92d3388ea50b01e1a2
-> --
-> 2.24.0.393.g34dc348eaf-goog
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20191204081307.138765-1-pihsun%40chromium.org.
+Thanks for this. Could you please try the patch below the scissors? Seems fixing
+the issue for me.
 
-
+> Hope this helps,
+> Guenter
+> 
 
 -- 
-Thanks,
-~Nick Desaulniers
+Regards,
+Vincenzo
+
+--->8---
+
+Author: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Date:   Wed Dec 4 16:58:55 2019 +0000
+
+    arm: Fix __arch_get_hw_counter() access to CNTVCT
+
+    __arch_get_hw_counter() should check clock_mode to see if it can access
+    CNTVCT. With the conversion to unified vDSO this check has been left out.
+
+    This causes on imx v6 and v7 (imx_v6_v7_defconfig) and other platforms to
+    hang at boot during the execution of the init process as per below:
+
+    [   19.976852] Run /sbin/init as init process
+    [   20.044931] Kernel panic - not syncing: Attempted to kill init!
+    exitcode=0x00000004
+
+    Fix the problem verifying that clock_mode is set coherently before
+    accessing CNTVCT.
+
+    Cc: Russell King <linux@armlinux.org.uk>
+    Reported-by: Guenter Roeck <linux@roeck-us.net>
+    Investigated-by: Arnd Bergmann <arnd@arndb.de>
+    Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
+diff --git a/arch/arm/include/asm/vdso/gettimeofday.h
+b/arch/arm/include/asm/vdso/gettimeofday.h
+index 5b879ae7afc1..0ad2429c324f 100644
+--- a/arch/arm/include/asm/vdso/gettimeofday.h
++++ b/arch/arm/include/asm/vdso/gettimeofday.h
+@@ -75,6 +75,9 @@ static __always_inline u64 __arch_get_hw_counter(int clock_mode)
+ #ifdef CONFIG_ARM_ARCH_TIMER
+        u64 cycle_now;
+
++       if (!clock_mode)
++               return -EINVAL;
++
+        isb();
+        cycle_now = read_sysreg(CNTVCT);
+
+
