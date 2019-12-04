@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7936C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB728C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DA720833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80FC20863
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482914;
-	bh=1DUZ4/SRYVLn8adnb6JLa3/MVMs1tGobVah7ENH7hKg=;
+	s=default; t=1575482917;
+	bh=RL3VTwoYNaMQ2dxJNaxQX5/1piSs+VnP9B2rKEvymJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kbOAtjiC7xVAbhw+F14vnIHuR+89RI92DoAMd5hCZwa/C/KIrPOsDeULfOipELCOl
-	 jCS4CdvjgKWSn7WJy+ayR5QuGeInCzPVl6a9Ez0v17EvHNcEFZXAMsP8Rs6hsZFKE4
-	 L8qyGE4gn5NFuEpwJ54XklS8XYPDI7Jj8+kJkMm4=
+	b=pcNlm8/UlzIaHICWjK0+btlZMWahiri4Z+gwaSe/3LeloiGrrKlYY+Ph3RhQ7WdFn
+	 d1txyLoqVqX9zC/isXqdSz1Ws+2UJgR8/lydHSpschCjaCIYqZsv4hDXLLvMOsSg7W
+	 aQITvlSRnqIXy0sutfgPdHl+XoTDigElqz5UYgUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730440AbfLDSId (ORCPT
+        id S1730931AbfLDSIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:08:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60164 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:08:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730896AbfLDSIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:08:24 -0500
+        id S1730904AbfLDSI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:08:26 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDDE420674;
-        Wed,  4 Dec 2019 18:08:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A5642084B;
+        Wed,  4 Dec 2019 18:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482903;
-        bh=1DUZ4/SRYVLn8adnb6JLa3/MVMs1tGobVah7ENH7hKg=;
+        s=default; t=1575482905;
+        bh=RL3VTwoYNaMQ2dxJNaxQX5/1piSs+VnP9B2rKEvymJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gst50i9lK84zberQLDazzUeCc0Ao6BDfefw6d0bCfRKyr1aNc2e3TxiG5g07HfGj5
-         tSNezsQDMnEA/d7AXFAHPg7TDSmV+uUhYT72O55BBD2yFIW951yKTX928c5diw1/PW
-         XqFf/EBKLck+8TyoAsteB5Wt6u/wP+crGxVM6rCc=
+        b=SoIUKhabt5k1QnXK38QANDBOBiGqU59MMBLLJZtm9f0+XpGOuHx5bU9r98VIpHy5g
+         p1kgob7ZCQ8ULxC8u8PwaKdbAyFgGVTmAiYQ7L2zZZwS2y2QTCXooCKqNLU3kT9ikV
+         B9RX9TFcGFDmQH5A3/BAYkXZyKuFeladmb4zSSDM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 179/209] watchdog: sama5d4: fix WDD value to be always set to max
-Date:   Wed,  4 Dec 2019 18:56:31 +0100
-Message-Id: <20191204175335.812989624@linuxfoundation.org>
+Subject: [PATCH 4.14 180/209] net: macb: Fix SUBNS increment and increase resolution
+Date:   Wed,  4 Dec 2019 18:56:32 +0100
+Message-Id: <20191204175335.881089154@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -62,44 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Harini Katakam <harini.katakam@xilinx.com>
 
-commit 8632944841d41a36d77dd1fa88d4201b5291100f upstream.
+commit 7ad342bc58cc5197cd2f12a3c30b3949528c6d83 upstream.
 
-WDD value must be always set to max (0xFFF) otherwise the hardware
-block will reset the board on the first ping of the watchdog.
+The subns increment register has 24 bits as follows:
+RegBit[15:0] = Subns[23:8]; RegBit[31:24] = Subns[7:0]
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Fix the same in the driver and increase sub ns resolution to the
+best capable, 24 bits. This should be the case on all GEM versions
+that this PTP driver supports.
+
+Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/sama5d4_wdt.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ethernet/cadence/macb.h     |    6 +++++-
+ drivers/net/ethernet/cadence/macb_ptp.c |    5 ++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
---- a/drivers/watchdog/sama5d4_wdt.c
-+++ b/drivers/watchdog/sama5d4_wdt.c
-@@ -111,9 +111,7 @@ static int sama5d4_wdt_set_timeout(struc
- 	u32 value = WDT_SEC2TICKS(timeout);
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -457,7 +457,11 @@
  
- 	wdt->mr &= ~AT91_WDT_WDV;
--	wdt->mr &= ~AT91_WDT_WDD;
- 	wdt->mr |= AT91_WDT_SET_WDV(value);
--	wdt->mr |= AT91_WDT_SET_WDD(value);
+ /* Bitfields in TISUBN */
+ #define GEM_SUBNSINCR_OFFSET			0
+-#define GEM_SUBNSINCR_SIZE			16
++#define GEM_SUBNSINCRL_OFFSET			24
++#define GEM_SUBNSINCRL_SIZE			8
++#define GEM_SUBNSINCRH_OFFSET			0
++#define GEM_SUBNSINCRH_SIZE			16
++#define GEM_SUBNSINCR_SIZE			24
  
- 	/*
- 	 * WDDIS has to be 0 when updating WDD/WDV. The datasheet states: When
-@@ -255,7 +253,7 @@ static int sama5d4_wdt_probe(struct plat
+ /* Bitfields in TI */
+ #define GEM_NSINCR_OFFSET			0
+--- a/drivers/net/ethernet/cadence/macb_ptp.c
++++ b/drivers/net/ethernet/cadence/macb_ptp.c
+@@ -115,7 +115,10 @@ static int gem_tsu_incr_set(struct macb
+ 	 * to take effect.
+ 	 */
+ 	spin_lock_irqsave(&bp->tsu_clk_lock, flags);
+-	gem_writel(bp, TISUBN, GEM_BF(SUBNSINCR, incr_spec->sub_ns));
++	/* RegBit[15:0] = Subns[23:8]; RegBit[31:24] = Subns[7:0] */
++	gem_writel(bp, TISUBN, GEM_BF(SUBNSINCRL, incr_spec->sub_ns) |
++		   GEM_BF(SUBNSINCRH, (incr_spec->sub_ns >>
++			  GEM_SUBNSINCRL_SIZE)));
+ 	gem_writel(bp, TI, GEM_BF(NSINCR, incr_spec->ns));
+ 	spin_unlock_irqrestore(&bp->tsu_clk_lock, flags);
  
- 	timeout = WDT_SEC2TICKS(wdd->timeout);
- 
--	wdt->mr |= AT91_WDT_SET_WDD(timeout);
-+	wdt->mr |= AT91_WDT_SET_WDD(WDT_SEC2TICKS(MAX_WDT_TIMEOUT));
- 	wdt->mr |= AT91_WDT_SET_WDV(timeout);
- 
- 	ret = sama5d4_wdt_init(wdt);
 
 
