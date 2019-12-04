@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B20CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1283FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3002020675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE4020409
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483647;
-	bh=MWk4AQ2+jYOB29Ok4FHSgOcoisrRJU+A2AKBEoWaLeU=;
+	s=default; t=1575483652;
+	bh=ZT9hE5sgcjgxC6yyVZcf8H6SE6UHbXRxc6/y6fFDXhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ZO0ST/rFUk3CifEIPhQXU7No1vOQTGArRL2gAX9Y4VTjbODcXBjcHWBlp8hYWX+h
-	 lSPMcnYzXlD0oOfIX6vw2HvPf9qHguNq38W3UNQtzDtnvUD4FuxYdZtoRxBuaVFiS2
-	 X+LWmEDUa5B31cMtXJgwFLT/NWuGIvXEuJ5a8O3U=
+	b=01uuln+GcACS3kRFEdkGyluEscdY6m8whIfIsRFj4dntIl/uXnyGpXl+X5U4Jouew
+	 dgVzy5Rb+tFMjcMRnezv+IvSzCL5yHnC95GQfu+z/tweDplNIIME6+Isk33u/RwiF8
+	 u3THeu1DEpjjSiJxk+rI2KD1ZV7eWpUUjc00NtfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbfLDSUq (ORCPT
+        id S1731304AbfLDSUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:20:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58526 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:20:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729950AbfLDSHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:07:50 -0500
+        id S1728285AbfLDSHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:07:42 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBBD320674;
-        Wed,  4 Dec 2019 18:07:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73E1820674;
+        Wed,  4 Dec 2019 18:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482869;
-        bh=MWk4AQ2+jYOB29Ok4FHSgOcoisrRJU+A2AKBEoWaLeU=;
+        s=default; t=1575482861;
+        bh=ZT9hE5sgcjgxC6yyVZcf8H6SE6UHbXRxc6/y6fFDXhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jAzaupUc78orKBgsxaswk8ra6e2W4Gt+fMFiXvKKwjagJ/6XVPaC2raQd86xDsfq5
-         viCxT+T+7VtOe6Naj0IbRBLdMsAEqZ9m9sqBZpSYhWyjN5ijjQ16YZN1bc7eeDIqM+
-         7dYq6WyQSAprQJdl+f7+mgfwjKPsnTJXZCeJYBUk=
+        b=mQhV5e1JJoWEzI8Mt1LQOO1ExE5i9mRJ8xyk66SWKrg/zq7bBC7S/wqaa+QUaz79K
+         mHrRSsGUD20gcHOxfPcRIk+OXK3cUdplDfjvb7FBkpFK00QCafUlP+lA75lp4oWgro
+         tTkz1WTg/s4XR0gE55aSIiPBvmupCaRkAkwzVOSQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 167/209] media: atmel: atmel-isc: fix asd memory allocation
-Date:   Wed,  4 Dec 2019 18:56:19 +0100
-Message-Id: <20191204175334.976840781@linuxfoundation.org>
+Subject: [PATCH 4.14 164/209] media: v4l2-ctrl: fix flags for DO_WHITE_BALANCE
+Date:   Wed,  4 Dec 2019 18:56:16 +0100
+Message-Id: <20191204175334.773732457@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -64,17 +64,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eugen Hristev <eugen.hristev@microchip.com>
 
-commit 1e4e25c4959c10728fbfcc6a286f9503d32dfe02 upstream.
+commit a0816e5088baab82aa738d61a55513114a673c8e upstream.
 
-The subsystem will free the asd memory on notifier cleanup, if the asd is
-added to the notifier.
-However the memory is freed using kfree.
-Thus, we cannot allocate the asd using devm_*
-This can lead to crashes and problems.
-To test this issue, just return an error at probe, but cleanup the
-notifier beforehand.
+Control DO_WHITE_BALANCE is a button, with read only and execute-on-write flags.
+Adding this control in the proper list in the fill function.
 
-Fixes: 106267444f ("[media] atmel-isc: add the Image Sensor Controller code")
+After adding it here, we can see output of v4l2-ctl -L
+do_white_balance 0x0098090d (button) : flags=write-only, execute-on-write
 
 Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
@@ -83,32 +79,18 @@ Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/atmel/atmel-isc.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/media/v4l2-core/v4l2-ctrls.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/platform/atmel/atmel-isc.c
-+++ b/drivers/media/platform/atmel/atmel-isc.c
-@@ -1722,8 +1722,11 @@ static int isc_parse_dt(struct device *d
- 			break;
- 		}
- 
--		subdev_entity->asd = devm_kzalloc(dev,
--				     sizeof(*subdev_entity->asd), GFP_KERNEL);
-+		/* asd will be freed by the subsystem once it's added to the
-+		 * notifier list
-+		 */
-+		subdev_entity->asd = kzalloc(sizeof(*subdev_entity->asd),
-+					     GFP_KERNEL);
- 		if (subdev_entity->asd == NULL) {
- 			of_node_put(rem);
- 			ret = -ENOMEM;
-@@ -1859,6 +1862,7 @@ static int atmel_isc_probe(struct platfo
- 						   &subdev_entity->notifier);
- 		if (ret) {
- 			dev_err(dev, "fail to register async notifier\n");
-+			kfree(subdev_entity->asd);
- 			goto cleanup_subdev;
- 		}
- 
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -1014,6 +1014,7 @@ void v4l2_ctrl_fill(u32 id, const char *
+ 	case V4L2_CID_FLASH_STROBE_STOP:
+ 	case V4L2_CID_AUTO_FOCUS_START:
+ 	case V4L2_CID_AUTO_FOCUS_STOP:
++	case V4L2_CID_DO_WHITE_BALANCE:
+ 		*type = V4L2_CTRL_TYPE_BUTTON;
+ 		*flags |= V4L2_CTRL_FLAG_WRITE_ONLY |
+ 			  V4L2_CTRL_FLAG_EXECUTE_ON_WRITE;
 
 
