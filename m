@@ -2,111 +2,159 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EDAC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38C7C43215
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D492073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD2C2073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:56:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KYrLvwGW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZpzPsT1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfLDEzp (ORCPT
+        id S1727126AbfLDE46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 23:55:45 -0500
-Received: from ozlabs.org ([203.11.71.1]:51627 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726835AbfLDEzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 23:55:45 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47SRPV0CdLz9sPL;
-        Wed,  4 Dec 2019 15:55:41 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1575435342;
-        bh=rDUkeei1YOQxn1Hp53Kly6XG+HdunoRuoeJpeOPrmAc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KYrLvwGWKEUGt5aIgQb37gzt/+EKjCoLgA2jLUvPhrFFw//Qn970omW8H8rEPx1oy
-         U89cCjd2eahtYR6vJrnq/D6kCanvgtZ9NLnynoh7SFi8H1Pu+8mUAs2LlHqUrlMa0h
-         9Ogs2Xn027KT/KWuCZOXgKmlwDoIS2+rsqAB5Cp4nsGYN6wD1J4jn0g+6aceM102R7
-         +N0phNKgmvY++IIx7L+R3mmAQbX9O7dHW1Rwd7gYnbdg4iNS6kxFe+xlNIkPk9Wwd1
-         pg1t9BEXrwyi1tgNWq89g5hIO7aaOquaUApH9NNfoIOJz8jD1PYzWAjc7/yK5xx5oB
-         EHIQGE7XKG/KQ==
-Date:   Wed, 4 Dec 2019 15:55:40 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: linux-next: manual merge of the sh tree with Linus' tree
-Message-ID: <20191204155540.4d43df45@canb.auug.org.au>
-In-Reply-To: <20190729092510.5e269cac@canb.auug.org.au>
-References: <20190729092510.5e269cac@canb.auug.org.au>
+        Tue, 3 Dec 2019 23:56:58 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37353 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbfLDE46 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 23:56:58 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w15so6880957wru.4;
+        Tue, 03 Dec 2019 20:56:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CnIIvZdjetrsPY1pNPlkJgq0Tq74S1PoEGRx2YMzRNM=;
+        b=ZpzPsT1Cn7YFRm/9ch0AtsXpjX+s1CfsL69hUxt3tMQz5y1baey5+icsEmRdJvE/Jl
+         lSzTFWoxLYvrBFatUxstfwOlhGaNHcMYw8Eifah+dWBljtwFS2g3g6xLufpIP8/iomkd
+         2NYhymeTL+0L6nIvT6W5iYbyoiGJ7FGNR90WfiHJJzbELP8v7OIR3UImeI2rMJ4x0deK
+         3+Irwmj1LIaLIt0XHPfmXwYn8HstFV0E0FwoDcDQfuUm3cydI0GeHRCeufb7FhI0okqW
+         1veSYsP8DXyqSDBiSWXOE3l7qY5mzAacYhPgGOPnkNGoqQ2q8Sydn/HMuV4S+FA8+N3r
+         +mGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=CnIIvZdjetrsPY1pNPlkJgq0Tq74S1PoEGRx2YMzRNM=;
+        b=F/CqzB2Mzui7uaJF3kzzciPt/bHCUMvG1t5kEVxMApsJjl3Zd9ObYZuDnGPTU1VTUK
+         rDi+dUZ9p4A2Obr/7C9vKYD5V6LUaJBHqqY6hjbu83YCSBQ7v1UV/Yp263qU8bg1MsBV
+         d2LuzxqbqSwTEfD9wwIv9TS+Q9tpT6EsItQ4BsodvOwZv3aO3ksJYqsjxlDmA2MlSmOh
+         Em9up+5ubk9dPYGHjqPzArMtu9tl9WzeUhhEzarOr1bYb7Nuo1TkVji4j/ZhuwbeYs0R
+         59pIcHOhesc3mblGbwaVLKBe7gFkuF6QAgIp4lC1JCLVDiQsZCnFySLk+/OUPmlyfZe0
+         WJ/g==
+X-Gm-Message-State: APjAAAVUj1HL7wnZ4+OLMWpl5AaxUHwlVyv5RLexO6ke2Eg5XDl6oCbE
+        UqbB4nANjZ6aS70zTSAXpCBqt0TL
+X-Google-Smtp-Source: APXvYqxrggUGHpdcwnhTjHWVtWQK8qDwwwMsHl5/X17zIBO1enYfBdIs9UC8gF3tem+ZR+mfvRX5eQ==
+X-Received: by 2002:a05:6000:1047:: with SMTP id c7mr1710582wrx.341.1575435415044;
+        Tue, 03 Dec 2019 20:56:55 -0800 (PST)
+Received: from [10.230.28.123] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id t5sm6633124wrr.35.2019.12.03.20.56.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Dec 2019 20:56:54 -0800 (PST)
+Subject: Re: [PATCH] MAINTAINERS: thermal: Eduardo's email is bouncing
+To:     "Zhang, Rui" <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "eduval@amazon.com" <eduval@amazon.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+References: <20191123154303.2202-1-f.fainelli@gmail.com>
+ <CAHLCerPKQSLrgybYhhFDxjXu56BD+iAyz1OYF14rTbjotEkD7g@mail.gmail.com>
+ <b146b35e4434a0bf57dfd8052b2b455f06fa46ab.camel@intel.com>
+ <744357E9AAD1214791ACBA4B0B90926377666A90@SHSMSX108.ccr.corp.intel.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <c4c94fc3-2b57-188a-1b91-c0889e593049@gmail.com>
+Date:   Tue, 3 Dec 2019 20:56:51 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/JLsn/=pmCh.e0eJj8EP_sW0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <744357E9AAD1214791ACBA4B0B90926377666A90@SHSMSX108.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/JLsn/=pmCh.e0eJj8EP_sW0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-On Mon, 29 Jul 2019 09:25:10 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the sh tree got conflicts in:
->=20
->   arch/sh/include/uapi/asm/setup.h
->   arch/sh/include/uapi/asm/types.h
->=20
-> between commit:
->=20
->   d9c525229521 ("treewide: add "WITH Linux-syscall-note" to SPDX tag of u=
-api headers")
->=20
-> from Linus' tree and commit:
->=20
->   cd10afbc932d ("sh: remove unneeded uapi asm-generic wrappers")
->=20
-> from the sh tree.
->=20
-> I fixed it up (I just removed the files) and can carry the fix as
-> necessary. This is now fixed as far as linux-next is concerned, but any
-> non trivial conflicts should be mentioned to your upstream maintainer
-> when your tree is submitted for merging.  You may also want to consider
-> cooperating with the maintainer of the conflicting tree to minimise any
-> particularly complex conflicts.
+On 11/26/2019 7:34 AM, Zhang, Rui wrote:
+> Let's try Eduardo' Amazon email account before applying this one.
 
-Ping?
---=20
-Cheers,
-Stephen Rothwell
+How much longer do you want to give Eduardo a chance to respond?
 
---Sig_/JLsn/=pmCh.e0eJj8EP_sW0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+I would like to draw your attention towards the response time of the
+thermal subsystem maintainers for a subsystem that is say medium in traffic.
 
------BEGIN PGP SIGNATURE-----
+You guys need to step up your game and give some feedback within days
+and not weeks of patches being submitted, especially if this is after 2
+or 3 requests to get feedback.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3nPEwACgkQAVBC80lX
-0GxcqQf+Jb8b5yDDnLPaiiJqge2/eoJOOyoW2nolK1xOA6zbx2Hi6Yr9286W2okK
-0+/aU3M42DIa4PqjapptcgPtUq2+RqqbIg4NII3yIliwZHuRimNdxR2AU7kRXjxm
-te4iac/UyQgQqpqeMw5S5r1EPKYy8zoX1QSwkFQiVQkKBoJqIfYeOpH2wjDqAjm0
-doK2Ic2g0kqk3JYSe8uuVHFBO1FS8DlioR2aGC6eZX1PI+VUYCj40sF+6FevCaL6
-bVAINRr1AkA9swu2TfFPXUKcArK1hHzXXg+33qmQ8EKRujzGqWBzr1ZmYZGsla0Y
-LoCu8Tt+XMBhyvpanwLp5xyuKBMgNQ==
-=B6Ao
------END PGP SIGNATURE-----
+If all of you are busy which is completely understandable then maybe it
+is time to seek help from someone else (Daniel?) who gives timely
+feedback to patches submissions.
 
---Sig_/JLsn/=pmCh.e0eJj8EP_sW0--
+Thank you
+-- 
+Florian
