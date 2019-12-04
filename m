@@ -2,142 +2,137 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2F1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C9AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D4FC20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E08C5207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="MIsRZrhb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcc9/JwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfLDKLI (ORCPT
+        id S1727745AbfLDKLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:11:08 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:56818 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727606AbfLDKLF (ORCPT
+        Wed, 4 Dec 2019 05:11:24 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46552 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbfLDKLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:11:05 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 43E8B27E1514;
-        Wed,  4 Dec 2019 11:11:04 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 91PZJiDiSQRY; Wed,  4 Dec 2019 11:11:03 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 9FBF327E0E3A;
-        Wed,  4 Dec 2019 11:11:03 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 9FBF327E0E3A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1575454263;
-        bh=49GmeuQtl5iQNzkiGn2NTlC0kJCfQvjsNi37acIHiZU=;
-        h=From:To:Date:Message-Id;
-        b=MIsRZrhbuhD4YYRWSmWNJQ9Z/+VlYRcCOHZMAQlWqr6F89Xjmc4Dq3ogSHvH7iEJB
-         zyzQzUKNkX5kijbEZ3togmASSYAvIU8ETTegK+Jur8AVWL+4HE4e7beW9LV2B9S5aL
-         iD6vNxCEKxOg0bOHSbQg2bBxAnu8lKkzyGXjyj5w=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id x_Wo29Vgnq5b; Wed,  4 Dec 2019 11:11:03 +0100 (CET)
-Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
-        by zimbra2.kalray.eu (Postfix) with ESMTPSA id 7DB6C27E0A05;
-        Wed,  4 Dec 2019 11:11:03 +0100 (CET)
-From:   Clement Leger <cleger@kalray.eu>
-To:     linux-kernel@vger.kernel.org
-Cc:     Clement Leger <cleger@kalray.eu>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 5/5] dt-bindings: pinctrl: dw: move sps,dwapb-gpio.txt to pinctrl
-Date:   Wed,  4 Dec 2019 11:10:39 +0100
-Message-Id: <20191204101042.4275-6-cleger@kalray.eu>
-X-Mailer: git-send-email 2.15.0.276.g89ea799
+        Wed, 4 Dec 2019 05:11:23 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y14so2950378pfm.13;
+        Wed, 04 Dec 2019 02:11:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=X78/UEM1JDrsz2wbO1IYinDOnIrG936f4cZHAjiIgwM=;
+        b=mcc9/JwGLQwm7ZMNhOYcNdyWvi4LosHbEB0fgv3GqhEDPCaay5uNwBREPTBg07YQIz
+         qHnMQ92JxpZEGfkH162ZJj9Z+saw0h/pchkStOt9lIu9kziZWopAZbOcZwMyxCYlQarv
+         ZmsRJN158PNPPcdNxF9tpswG9cyhXDpe5p/5bsCFvuqeCzDRs/KQcSJzGafpisXqu41U
+         A9wbUDdNtbjrP9qLkHTsQgQH/mDuuexx/hLCz8bKoMgUJdAU1cfmLg7QHT74tu6mmVJc
+         vC+A/KeqBbIfSAk18SVw5KRc1OCoQGcUDPKEQ7RjhBYluUsVZhEI9NNT2YYg4KitrjgL
+         UEpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=X78/UEM1JDrsz2wbO1IYinDOnIrG936f4cZHAjiIgwM=;
+        b=Ns6MwYB8oL62VBX/CIfVZm8jwQfFptcB7Saoghbtwi086/7eS5r0ttqhzkHdAOo8YS
+         S7CcnHz+HEivXisSvYmLXMAhyBica1gKfSfE832LxUNc66uSAdXrPUVVnp3Zt6TTDQIi
+         +DnFQuTbiM6JAhcx5icpB1kkqxOjGOAbgsKLDTO5tCJjwa6uI3jf4IGEo311Hl+oBcgQ
+         M4blqSDgK6IHdnEPr50V0l3jLbRKQHOCyeepdxA2hToh/OamrDeZLXQuIRdEzW9zsrfB
+         +l9uMfr0Jwj+lxK8XAPtWG4yXZd5K2UXuLcOZATiHCL8MPR7+9fs9lbMUoJpR9Xytlxe
+         nhoQ==
+X-Gm-Message-State: APjAAAUCxoo9DuEh+yZlfNXSr29Eq7aXOoYtFuzoSA+ABLJmhSmFlDVb
+        S9eSwluvctJJsGDBnr2h+vQ=
+X-Google-Smtp-Source: APXvYqyQuejC9ZsUSUtbnXdBdGeaFPuJgXkyfY8REXrYqG3MRu37xdNd4frWw3z4ixxam7xsojBTqg==
+X-Received: by 2002:a63:5056:: with SMTP id q22mr2641312pgl.20.1575454282892;
+        Wed, 04 Dec 2019 02:11:22 -0800 (PST)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id 67sm7664259pfw.82.2019.12.04.02.11.20
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 04 Dec 2019 02:11:22 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org
+Cc:     baolin.wang7@gmail.com, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] hwspinlock: Allow drivers to be built with COMPILE_TEST
+Date:   Wed,  4 Dec 2019 18:10:40 +0800
+Message-Id: <808692052649aa2e80693a2734cb392e5eddd83c.1575454108.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the driver has been moved to pinctrl and now supports it, move the
-documentation into pinctrl folder. In the same time, add documentation
-for pinctrl properties such has snps,has-pinctrl and description of pin
-alternate functions.
+Allow drivers to be built with COMPILE_TEST.
 
-Signed-off-by: Clement Leger <cleger@kalray.eu>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 ---
- .../bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt  | 21 ++++++++++++++++++++-
- MAINTAINERS                                         |  2 +-
- 2 files changed, 21 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt (76%)
+ drivers/hwspinlock/Kconfig |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
-similarity index 76%
-rename from Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-rename to Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
-index 839dd32ffe11..4fb1b754a2bd 100644
---- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
-@@ -1,4 +1,4 @@
--* Synopsys DesignWare APB GPIO controller
-+* Synopsys DesignWare APB GPIO & pinmux controller
+diff --git a/drivers/hwspinlock/Kconfig b/drivers/hwspinlock/Kconfig
+index 37740e9..cefaa4f 100644
+--- a/drivers/hwspinlock/Kconfig
++++ b/drivers/hwspinlock/Kconfig
+@@ -9,7 +9,7 @@ menuconfig HWSPINLOCK
+ config HWSPINLOCK_OMAP
+ 	tristate "OMAP Hardware Spinlock device"
+ 	depends on HWSPINLOCK
+-	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX || SOC_AM33XX || SOC_AM43XX || ARCH_K3
++	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX || SOC_AM33XX || SOC_AM43XX || ARCH_K3 || COMPILE_TEST
+ 	help
+ 	  Say y here to support the OMAP Hardware Spinlock device (firstly
+ 	  introduced in OMAP4).
+@@ -19,7 +19,7 @@ config HWSPINLOCK_OMAP
+ config HWSPINLOCK_QCOM
+ 	tristate "Qualcomm Hardware Spinlock device"
+ 	depends on HWSPINLOCK
+-	depends on ARCH_QCOM
++	depends on ARCH_QCOM || COMPILE_TEST
+ 	select MFD_SYSCON
+ 	help
+ 	  Say y here to support the Qualcomm Hardware Mutex functionality, which
+@@ -31,7 +31,7 @@ config HWSPINLOCK_QCOM
+ config HWSPINLOCK_SIRF
+ 	tristate "SIRF Hardware Spinlock device"
+ 	depends on HWSPINLOCK
+-	depends on ARCH_SIRF
++	depends on ARCH_SIRF || COMPILE_TEST
+ 	help
+ 	  Say y here to support the SIRF Hardware Spinlock device, which
+ 	  provides a synchronisation mechanism for the various processors
+@@ -43,7 +43,7 @@ config HWSPINLOCK_SIRF
+ config HWSPINLOCK_SPRD
+ 	tristate "SPRD Hardware Spinlock device"
+ 	depends on ARCH_SPRD
+-	depends on HWSPINLOCK
++	depends on HWSPINLOCK || COMPILE_TEST
+ 	help
+ 	  Say y here to support the SPRD Hardware Spinlock device.
  
- Required properties:
- - compatible : Should contain "snps,dw-apb-gpio"
-@@ -33,8 +33,16 @@ controller.
-   use the interrupts-extended property to specify the interrupts and set the
-   interrupt controller handle for unused interrupts to 0.
- - snps,nr-gpios : The number of pins in the port, a single cell.
-+- snps,has-pinctrl : If present, register the pinctrl controller.
- - resets : Reset line for the controller.
+@@ -52,7 +52,7 @@ config HWSPINLOCK_SPRD
+ config HWSPINLOCK_STM32
+ 	tristate "STM32 Hardware Spinlock device"
+ 	depends on MACH_STM32MP157
+-	depends on HWSPINLOCK
++	depends on HWSPINLOCK || COMPILE_TEST
+ 	help
+ 	  Say y here to support the STM32 Hardware Spinlock device.
  
-+Required properties for pin configuration node:
-+- function: string representing a function to mux for pins
-+    dw apb controller only has two functions for each pins (sw and hw). When set
-+    in software mode, the gpio controller controls the pin output. When
-+    configured in hardware mode, an external peripheral controls the pin signal.
-+- pins: string array of pins to be muxed.
-+
- Example:
- 
- gpio: gpio@20000 {
-@@ -60,6 +68,17 @@ gpio: gpio@20000 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		snps,nr-gpios = <8>;
-+		snps,has-pinctrl;
- 		reg = <1>;
-+
-+		uart0_pins: pinmux_uart0_pins {
-+			function = "hw";
-+			pins = "pin0", "pin1";
-+		};
-+
-+		uart1_pins: pinmux_uart1_pins {
-+			function = "hw";
-+			pins = "pin2", "pin3";
-+		};
- 	};
- };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 35b90ad9f594..e8f9e827d687 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15873,7 +15873,7 @@ M:	Hoan Tran <hoan@os.amperecomputing.com>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
- F:	drivers/pinctrl/dw/pinctrl-dwapb.c
--F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-+F:	Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
- 
- SYNOPSYS DESIGNWARE AXI DMAC DRIVER
- M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+@@ -61,7 +61,7 @@ config HWSPINLOCK_STM32
+ config HSEM_U8500
+ 	tristate "STE Hardware Semaphore functionality"
+ 	depends on HWSPINLOCK
+-	depends on ARCH_U8500
++	depends on ARCH_U8500 || COMPILE_TEST
+ 	help
+ 	  Say y here to support the STE Hardware Semaphore functionality, which
+ 	  provides a synchronisation mechanism for the various processor on the
 -- 
-2.15.0.276.g89ea799
+1.7.9.5
 
