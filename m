@@ -2,89 +2,83 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269CCC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA031C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69E42073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575451788;
-	bh=olCGYBNqUiviVWQIvUISVF1ya1mFuGUwBKcuWe02w5A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LVK03dxWOj3kjV6+DWUi6dDhkZLjrKy3NEgTpnvMg514Y/5KJuVDfYjSAss/jyk7m
-	 t1+mHDRBdT+LvKYK+V4R+M1rApxpn6031i7g9jF6krRye60Nhceb8A9gdUZ3reyyXV
-	 v6FL50lEVKx0+7rTLAkC2bLDl/TZ0kAmQQlVwjdM=
+	by mail.kernel.org (Postfix) with ESMTP id 90F1020675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:32:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ezOeH3YY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbfLDJ3q (ORCPT
+        id S1727398AbfLDJcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:29:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbfLDJ3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:29:46 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A18820675;
-        Wed,  4 Dec 2019 09:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575451785;
-        bh=olCGYBNqUiviVWQIvUISVF1ya1mFuGUwBKcuWe02w5A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RgpthHgQ4pZiPs1SeA4WN16ryXE8z7kGsS2Nfg7w3eSzy8phuZ/jczqJAkJdcoh+F
-         dNfVPuA/3+EK+uS6fT4q+QMRDTKv7tQHPYYUkBX1K8f+C/22B1TPZB+KsJZCePobXH
-         KmL81FjgHZO/PVDLHr4aRz1gYeqf8G+PSYwxrK6g=
-Date:   Wed, 4 Dec 2019 10:29:42 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guoheyi <guoheyi@huawei.com>
-Cc:     Mike Waychison <mikew@google.com>, linux-kernel@vger.kernel.org,
-        wanghaibin 00208455 <wanghaibin.wang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: firmware: dmi-sysfs: why is the access mode of dmi sysfs entries
- restricted to 0400?
-Message-ID: <20191204092942.GA3557583@kroah.com>
-References: <42bb2db8-66e0-3df4-75b7-98b2b2bcfca8@huawei.com>
- <20191204074133.GA3548765@kroah.com>
- <dac22bed-f138-471e-c19a-e31c5c910d48@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dac22bed-f138-471e-c19a-e31c5c910d48@huawei.com>
+        Wed, 4 Dec 2019 04:32:10 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41602 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfLDJcK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 04:32:10 -0500
+Received: by mail-pl1-f193.google.com with SMTP id bd4so2928719plb.8;
+        Wed, 04 Dec 2019 01:32:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=wapcydPDKs4ATem7apogb2hwKUnmiMIRnx3wrHpv2Vc=;
+        b=ezOeH3YYam2iUzv7wncBkreQa5cVfhsq88wp5aX7kHDawBuYAyk02wiajKY/a3tYZf
+         nqZH5CS0cD5Z9XL9uyNsr4SONOZaqWfYHBI+5ds/PXu/WEqRaFSMxWXiY2UkFaQiDPv2
+         WyxMGf8e6L4nnM0SYrLWDlP+NkhLChoNycut0X5Eh1rNsAr7Cx4pkelmwJ6bTKm6I4ew
+         Gus02MFRm/t8pyNWchfUL+2CaaEJJrxrbbma1XmKuk3Le94kxxHm+WUk62zmp9goiF43
+         MqaVirKdj2CV9KSVKJYb027BHx01/jnolBp60CX66F/6sC+Lehn0fovuCV2TZ/2ualxl
+         wq+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wapcydPDKs4ATem7apogb2hwKUnmiMIRnx3wrHpv2Vc=;
+        b=l4CCM3q7zyGKo5Cpiooy6zsmbEBCYK3pX90vP3WhE1t3Lpp5qmNx3e5CM9ACbuhNFb
+         snme/a/Q81cVgcFx9KrNZmkpfzojzRC+06czvEJbgADPWXI5zAxuXK+F2jatXreK3tDt
+         7N9i+t8fSgV0UIxwTwIRX5mXqP/0uo5RMlT7qmOnr7v8rcXt/ykRC5A7mtIowcD9UKSg
+         XoA0E+zlulamCQXw6IpGtVHlKttnXid/TzNz8bXmS61Onv1Kx5Z+m5U16eT2SgDwFUO0
+         tUhcksLrbq6m9wDUxsgQOXFus3fiO8HFMF7gHaBVEXlQ0SBWKGRSAMdns/9EAyrLFobO
+         6rBA==
+X-Gm-Message-State: APjAAAUxxtlvIrQl5WBVqr54z0P6UYnJiLZT3V5vhBwlNEHGD3NNmFau
+        9bP8XqvwEOAgQ0LWkFjywD0=
+X-Google-Smtp-Source: APXvYqyNYdgVXBoEpnbiHKkCqyjVhkl9ihFNqVY0Nj8cxidpirtNd/dNbz+JiJz5+xZEBMaslDtqsw==
+X-Received: by 2002:a17:902:fe98:: with SMTP id x24mr2471710plm.155.1575451929660;
+        Wed, 04 Dec 2019 01:32:09 -0800 (PST)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id 91sm2380086pjq.18.2019.12.04.01.32.07
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 04 Dec 2019 01:32:09 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org
+Cc:     baolin.wang7@gmail.com, linux-omap@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Some improvements for OMAP hwspinlock
+Date:   Wed,  4 Dec 2019 17:31:28 +0800
+Message-Id: <cover.1575451463.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 05:01:06PM +0800, Guoheyi wrote:
-> 
-> 在 2019/12/4 15:41, Greg Kroah-Hartman 写道:
-> > On Wed, Dec 04, 2019 at 03:31:22PM +0800, Guoheyi wrote:
-> > > Hi,
-> > > 
-> > > Why is the access mode of dmi sysfs entries restricted to 0400? Is it for
-> > > security concern? If it is, which information do we consider as privacy?
-> > There's lots of "interesting" information in dmi entries that you
-> > probably do not want all processes reading, which is why they are
-> > restricted.
-> > 
-> > > We would like to fetch CPU information from non-root application, is there
-> > > feasible way to do that?
-> > What specific CPU information is not currently exported in /proc/cpuinfo
-> > that only shows up in DMI entries that you are interested in?
-> 
-> We'd like to get processor manufacturer, speed and version, and pass the
-> information to qemu virtual machine, for users of VM might be happy to see
-> this instead of "unknown xxx", while qemu may run as non-root.
+This patch set did some optimization for OMAP hwlock controller with
+changing to use some devm_xxx APIs to simplify code.
 
-Careful about this as if you move that virtual machine around, those
-values will change and if userspace was depending on them being static
-(set up at program start time), then you might have problems.
+Baolin Wang (3):
+  hwspinlock: omap: Change to use devm_platform_ioremap_resource()
+  hwspinlock: omap: Use devm_kzalloc() to allocate memory
+  hwspinlock: omap: Use devm_hwspin_lock_register() to register hwlock
+    controller
 
-good luck!
+ drivers/hwspinlock/omap_hwspinlock.c |   45 ++++++++++------------------------
+ 1 file changed, 13 insertions(+), 32 deletions(-)
 
-greg k-h
+-- 
+1.7.9.5
+
