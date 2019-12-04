@@ -2,55 +2,51 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4189C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 891D8C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1F31205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E62220409
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483665;
-	bh=Nf0DVFVuptbAyQMUFY7AZ2jp/QtCcsFowue809GM62E=;
+	s=default; t=1575483667;
+	bh=XOT+X/DKPEi5dZaEYS+gn3/ARlU0Jl/JFo1hv2SUL3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1BkdnV3PIycrDcrDqfJfvd68Xr0MrwFGNhYaRQYm2StdFnaQjfeBZC42o7WDABXBh
-	 +nFD6XiFuUaZkpeyZgvX9KNSXAFQZfLlU6KbXAn6Rp++00t5+oCnpaYVAN+C6c9HNd
-	 ZlL3ztq4gYagSttzp/kawtkzHsqxoGo+9elfXpX8=
+	b=u3mc2A/plNMn62UGKB24mcdaatwo6MQurIOAVZ2TI11x7klSRLQLzw49Wfq/Oh2Vy
+	 y0PaorwPn3bNeyZKUcgXFJbRE/wRyRH+MyUVEIiL6EL+hdomMrq5RsxfW/WA1tCPEp
+	 Q4IUyHdh2J9Y2HDjhx8M8hszXzL+5WM3ZlZBpWFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730765AbfLDSHY (ORCPT
+        id S1730754AbfLDSHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:07:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57036 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:07:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728812AbfLDSHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:07:20 -0500
+        id S1730737AbfLDSHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:07:18 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A04420674;
-        Wed,  4 Dec 2019 18:07:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B090020675;
+        Wed,  4 Dec 2019 18:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482839;
-        bh=Nf0DVFVuptbAyQMUFY7AZ2jp/QtCcsFowue809GM62E=;
+        s=default; t=1575482837;
+        bh=XOT+X/DKPEi5dZaEYS+gn3/ARlU0Jl/JFo1hv2SUL3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZwdvSzBpxPrqF52e3BmzvYIhsDtoULoG3p4CVnseW9BDLGTmeOuwtuagz3dFYQCsy
-         M71WU6D4EPC/ULVDRN+u+O8OHd7p2UJlwZ33tjkmOqQb8QAjpH3nGLhVFmIaHI/ZSb
-         +CuIgiFlhML3B9HkdS4zFUJnR5fcVIi4sOzEtjQk=
+        b=lDCZe4hy0JCCggl8/0GCLeCOzypJVFbuslUzE/g2dK6VGwl+WezOCZDLlpJ/F3evA
+         A4o3KRqKGUKc/D3GGib2pNjvhXo5UtONfceY4Cv0tcHn51CIdaUzh9oUxg0ylsusvX
+         SGsaFj3zoGVSpqtGbo/776hpMoKHie289ENqS+lo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 156/209] clk: at91: fix update bit maps on CFG_MOR write
-Date:   Wed,  4 Dec 2019 18:56:08 +0100
-Message-Id: <20191204175334.223122318@linuxfoundation.org>
+        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 155/209] mm, gup: add missing refcount overflow checks on s390
+Date:   Wed,  4 Dec 2019 18:56:07 +0100
+Message-Id: <20191204175334.154600538@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -63,38 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Vlastimil Babka <vbabka@suse.cz>
 
-commit 263eaf8f172d9f44e15d6aca85fe40ec18d2c477 upstream.
+The mainline commit 8fde12ca79af ("mm: prevent get_user_pages() from
+overflowing page refcount") was backported to 4.14.y stable as commit
+04198de24771. The backport however missed that in 4.14, there are several
+arch-specific gup.c versions with fast gup implementations, so these do not
+prevent refcount overflow.
 
-The regmap update bits call was not selecting the proper mask, considering
-the bits which was updating.
-Update the mask from call to also include OSCBYPASS.
-Removed MOSCEN which was not updated.
+This stable-only commit fixes the s390 version, and is based on the backport in
+SUSE SLES/openSUSE 4.12-based kernels.
 
-Fixes: 1bdf02326b71 ("clk: at91: make use of syscon/regmap internally")
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Link: https://lkml.kernel.org/r/1568042692-11784-1-git-send-email-eugen.hristev@microchip.com
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The remaining architectures with own gup.c are sparc, mips, sh. It's unlikely
+the known overflow scenario based on FUSE, which needs 140GB of RAM, is a
+problem for those architectures, and I don't feel confident enough to patch
+them.
 
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/at91/clk-main.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/mm/gup.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/clk/at91/clk-main.c
-+++ b/drivers/clk/at91/clk-main.c
-@@ -162,7 +162,7 @@ at91_clk_register_main_osc(struct regmap
- 	if (bypass)
- 		regmap_update_bits(regmap,
- 				   AT91_CKGR_MOR, MOR_KEY_MASK |
--				   AT91_PMC_MOSCEN,
-+				   AT91_PMC_OSCBYPASS,
- 				   AT91_PMC_OSCBYPASS | AT91_PMC_KEY);
+diff --git a/arch/s390/mm/gup.c b/arch/s390/mm/gup.c
+index 05c8abd864f1d..9bce54eac0b07 100644
+--- a/arch/s390/mm/gup.c
++++ b/arch/s390/mm/gup.c
+@@ -39,7 +39,8 @@ static inline int gup_pte_range(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
+ 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+ 		page = pte_page(pte);
+ 		head = compound_head(page);
+-		if (!page_cache_get_speculative(head))
++		if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
++		    || !page_cache_get_speculative(head)))
+ 			return 0;
+ 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+ 			put_page(head);
+@@ -77,7 +78,8 @@ static inline int gup_huge_pmd(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
  
- 	hw = &osc->hw;
+-	if (!page_cache_add_speculative(head, refs)) {
++	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
++	    || !page_cache_add_speculative(head, refs))) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+@@ -151,7 +153,8 @@ static int gup_huge_pud(pud_t *pudp, pud_t pud, unsigned long addr,
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	if (!page_cache_add_speculative(head, refs)) {
++	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
++	    || !page_cache_add_speculative(head, refs))) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+-- 
+2.20.1
+
 
 
