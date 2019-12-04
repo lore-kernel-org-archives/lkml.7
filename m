@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87ABEC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D261C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57DF52073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40C02081B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482309;
-	bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
+	s=default; t=1575482312;
+	bh=SW33faG0QdwdMLwIaMIhaWkEIxY3MQr5swYVYVOmzg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fseHLtAe4RjLT005ZeSfrFIZHd/IFS4WDGtaU7EsqxaUmfH1jF8IvD6BnEBU+6Thw
-	 iwXdFkAMzyJgNCq56yZC6T2dASYQRrOwnyyo7D+4ATOWxJ9hu3Td4hOBGkNT8v4GhY
-	 sEC0lz549hDQJCmr6yDZgXRdfTP7UT+RxFyZcmk0=
+	b=Ap1PpTEosXG92lSyOUunEVoBSaXEqwiS6waflWFCP2ZwTOJT+NmKE5xFpBGwkIhTx
+	 vEPTCNgcDRmAzXo7DXR7EHZIjPGqcWcxn9raOqckrRzyGFf/JXPlAcnGj/SXY0w8op
+	 jD87fU11wwJIKJUyy2BlBCAG1pI18FqATcsJYBgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbfLDR61 (ORCPT
+        id S1728773AbfLDR6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:58:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32806 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 12:58:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728688AbfLDR6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:58:23 -0500
+        id S1728720AbfLDR6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:58:25 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B6EE2073B;
-        Wed,  4 Dec 2019 17:58:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E9A620675;
+        Wed,  4 Dec 2019 17:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482302;
-        bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
+        s=default; t=1575482305;
+        bh=SW33faG0QdwdMLwIaMIhaWkEIxY3MQr5swYVYVOmzg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QqFQZExxfGOBNJ06yoThk2aHR9etQlXEaaismbjICYVgtvSBvxxYCkTP1wdeaQCq2
-         iq6vAPGkshVtMHilYhiOm8VVO4sudz3vqBCGLFSI3ShoyoJDzO7ocmMc2a99gYvTbO
-         jX18xP1oIFTKDVB4ERw0/hsbrCR8sHJB3MtNBvJw=
+        b=Fq/EFgZLha7gnUG5jvl/V6YIdfg0V0xEj0UZ97I6jRWFpLzqk2Hj9ru2hdi2XvvCS
+         el32U5W9tDIOUYQ7hsyL+JFB9dqA+gkMHQsGfvPxS9cXeeWYbuYEUGlVZjxf6CLL2W
+         KLe4/5Eg6cBcdp7kOzmdl1pEd49iydXhz9k0JCIs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        Jeroen Hofstee <jhofstee@victronenergy.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 32/92] pinctrl: sh-pfc: sh7264: Fix PFCR3 and PFCR0 register configuration
-Date:   Wed,  4 Dec 2019 18:49:32 +0100
-Message-Id: <20191204174332.533260362@linuxfoundation.org>
+Subject: [PATCH 4.4 06/92] can: c_can: D_CAN: c_can_chip_config(): perform a sofware reset on open
+Date:   Wed,  4 Dec 2019 18:49:06 +0100
+Message-Id: <20191204174329.171128563@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -61,55 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
 
-[ Upstream commit 1b99d0c80bbe1810572c2cb77b90f67886adfa8d ]
+[ Upstream commit 23c5a9488f076bab336177cd1d1a366bd8ddf087 ]
 
-The Port F Control Register 3 (PFCR3) contains only a single field.
-However, counting from left to right, it is the fourth field, not the
-first field.
-Insert the missing dummy configuration values (3 fields of 16 values) to
-fix this.
+When the CAN interface is closed it the hardwre is put in power down
+mode, but does not reset the error counters / state. Reset the D_CAN on
+open, so the reported state and the actual state match.
 
-The descriptor for the Port F Control Register 0 (PFCR0) lacks the
-description for the 4th field (PF0 Mode, PF0MD[2:0]).
-Add the missing configuration values to fix this.
+According to [1], the C_CAN module doesn't have the software reset.
 
-Fixes: a8d42fc4217b1ea1 ("sh-pfc: Add sh7264 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+[1] http://www.bosch-semiconductors.com/media/ip_modules/pdf_2/c_can_fd8/users_manual_c_can_fd8_r210_1.pdf
+
+Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/can/c_can/c_can.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-index 8070765311dbf..e1c34e19222ee 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-@@ -1716,6 +1716,9 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	},
+diff --git a/drivers/net/can/c_can/c_can.c b/drivers/net/can/c_can/c_can.c
+index 7d35f6737499c..4ead5a18b7940 100644
+--- a/drivers/net/can/c_can/c_can.c
++++ b/drivers/net/can/c_can/c_can.c
+@@ -52,6 +52,7 @@
+ #define CONTROL_EX_PDR		BIT(8)
  
- 	{ PINMUX_CFG_REG("PFCR3", 0xfffe38a8, 16, 4) {
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 		PF12MD_000, PF12MD_001, 0, PF12MD_011,
- 		PF12MD_100, PF12MD_101, 0, 0,
- 		0, 0, 0, 0, 0, 0, 0, 0 }
-@@ -1759,8 +1762,10 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		0, 0, 0, 0, 0, 0, 0, 0,
- 		PF1MD_000, PF1MD_001, PF1MD_010, PF1MD_011,
- 		PF1MD_100, PF1MD_101, 0, 0,
--		0, 0, 0, 0, 0, 0, 0, 0
--	 }
-+		0, 0, 0, 0, 0, 0, 0, 0,
-+		PF0MD_000, PF0MD_001, PF0MD_010, PF0MD_011,
-+		PF0MD_100, PF0MD_101, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0 }
- 	},
+ /* control register */
++#define CONTROL_SWR		BIT(15)
+ #define CONTROL_TEST		BIT(7)
+ #define CONTROL_CCE		BIT(6)
+ #define CONTROL_DISABLE_AR	BIT(5)
+@@ -572,6 +573,26 @@ static void c_can_configure_msg_objects(struct net_device *dev)
+ 				   IF_MCONT_RCV_EOB);
+ }
  
- 	{ PINMUX_CFG_REG("PFIOR0", 0xfffe38b2, 16, 1) {
++static int c_can_software_reset(struct net_device *dev)
++{
++	struct c_can_priv *priv = netdev_priv(dev);
++	int retry = 0;
++
++	if (priv->type != BOSCH_D_CAN)
++		return 0;
++
++	priv->write_reg(priv, C_CAN_CTRL_REG, CONTROL_SWR | CONTROL_INIT);
++	while (priv->read_reg(priv, C_CAN_CTRL_REG) & CONTROL_SWR) {
++		msleep(20);
++		if (retry++ > 100) {
++			netdev_err(dev, "CCTRL: software reset failed\n");
++			return -EIO;
++		}
++	}
++
++	return 0;
++}
++
+ /*
+  * Configure C_CAN chip:
+  * - enable/disable auto-retransmission
+@@ -581,6 +602,11 @@ static void c_can_configure_msg_objects(struct net_device *dev)
+ static int c_can_chip_config(struct net_device *dev)
+ {
+ 	struct c_can_priv *priv = netdev_priv(dev);
++	int err;
++
++	err = c_can_software_reset(dev);
++	if (err)
++		return err;
+ 
+ 	/* enable automatic retransmission */
+ 	priv->write_reg(priv, C_CAN_CTRL_REG, CONTROL_ENABLE_AR);
 -- 
 2.20.1
 
