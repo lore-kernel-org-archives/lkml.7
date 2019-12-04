@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FA5C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D16C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8425320674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC0720862
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483159;
-	bh=wLBO30qA8tZlK3OT5pGv0t3ty/ImslmbiEW2j4YjAG0=;
+	s=default; t=1575483162;
+	bh=5jl7WjR50OO6i+g7GO919wc/XN7O/dXxQlD9dBJXDhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sAmhRnt9jtsa/7miEXQN+nm8WM+7F3JBjNhZeS04NdQzWKIHk+06utbSINA172RRs
-	 MDAaRLAi0zvib20dAIr2GwcktAUWY75z5Oj14YAn7HipGNTykHMT6WQ/IQ1NblNJa4
-	 9gmxYxwiDyZ3rb2PNAo/3615OqsjHOeVYhmIR8Aw=
+	b=dEpOA9TFU/0NV+vqid8N6KzJ+WoZLgR4/DEPL3dz92uSvQmpxtImliM//e+7hnT09
+	 KAM9XfKD5v9dWDbm5CWIyT2UHksbNwcgQqDCRRqTD8xXjXZK7Wzzzps6hy0gJSofsd
+	 s9y4iRtOZleND170RTZrFh9iBQ+1Qgb8HQPrQA3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731630AbfLDSMi (ORCPT
+        id S1730663AbfLDSMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:12:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:12:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731614AbfLDSMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:12:35 -0500
+        id S1731624AbfLDSMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:12:37 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3599220863;
-        Wed,  4 Dec 2019 18:12:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D4D820674;
+        Wed,  4 Dec 2019 18:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483154;
-        bh=wLBO30qA8tZlK3OT5pGv0t3ty/ImslmbiEW2j4YjAG0=;
+        s=default; t=1575483157;
+        bh=5jl7WjR50OO6i+g7GO919wc/XN7O/dXxQlD9dBJXDhM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F1HvRGwzkKWRq0d5ns+cTCDtY6Y8G/mX4l06CnvbrMHTeKxjt1hjNbXzWtRRCSBQe
-         tsH1fZkWnidw431fmSI6jhaDg/cNUqB+4PcalsbIG5HM/tnBXN/YPbDWnY8zvJdT+T
-         DDvzoNqySIqx1jIKyjnshQVME+lGXYKPJXrDo8QY=
+        b=s72Wcq9x4Ddc5gopNJZQ4NC1IrDaqtyY1gS70ySexPv33Uj3/MSVhELcyJIXxCHVD
+         ETwznpYTSizz2AIkMOAjvBzrs0H+0EEg+Fbiglo+EXpkTi2KEuIU3tt7ywkAdJGJ7C
+         ksKBGfF7GpF9BUK3Xu1xpIokNlqPpJrVD2rgzsxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 073/125] pwm: clps711x: Fix period calculation
-Date:   Wed,  4 Dec 2019 18:56:18 +0100
-Message-Id: <20191204175323.471018208@linuxfoundation.org>
+Subject: [PATCH 4.9 038/125] xen/pciback: Check dev_data before using it
+Date:   Wed,  4 Dec 2019 18:55:43 +0100
+Message-Id: <20191204175321.291260266@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -60,45 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shiyan <shc_work@mail.ru>
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
 
-[ Upstream commit b0f17570b8203c22f139459c86cfbaa0311313ed ]
+[ Upstream commit 1669907e3d1abfa3f7586e2d55dbbc117b5adba2 ]
 
-Commit e39c0df1be5a ("pwm: Introduce the pwm_args concept") has
-changed the variable for the period for clps711x-pwm driver, so now
-pwm_get/set_period() works with pwm->state.period variable instead
-of pwm->args.period.
-This patch changes the period variable in other places where it is used.
+If pcistub_init_device fails, the release function will be called with
+dev_data set to NULL.  Check it before using it to avoid a NULL pointer
+dereference.
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-clps711x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/xen/xen-pciback/pci_stub.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-index 26ec24e457b12..7e16b7def0dcb 100644
---- a/drivers/pwm/pwm-clps711x.c
-+++ b/drivers/pwm/pwm-clps711x.c
-@@ -48,7 +48,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
- static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
- {
- 	/* Duty cycle 0..15 max */
--	return DIV_ROUND_CLOSEST(v * 0xf, pwm_get_period(pwm));
-+	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
- }
- 
- static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-@@ -71,7 +71,7 @@ static int clps711x_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	struct clps711x_chip *priv = to_clps711x_chip(chip);
- 	unsigned int duty;
- 
--	if (period_ns != pwm_get_period(pwm))
-+	if (period_ns != pwm->args.period)
- 		return -EINVAL;
- 
- 	duty = clps711x_get_duty(pwm, duty_ns);
+diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
+index 6331a95691a44..ee5ce9286d613 100644
+--- a/drivers/xen/xen-pciback/pci_stub.c
++++ b/drivers/xen/xen-pciback/pci_stub.c
+@@ -106,7 +106,8 @@ static void pcistub_device_release(struct kref *kref)
+ 	 * is called from "unbind" which takes a device_lock mutex.
+ 	 */
+ 	__pci_reset_function_locked(dev);
+-	if (pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
++	if (dev_data &&
++	    pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
+ 		dev_info(&dev->dev, "Could not reload PCI state\n");
+ 	else
+ 		pci_restore_state(dev);
 -- 
 2.20.1
 
