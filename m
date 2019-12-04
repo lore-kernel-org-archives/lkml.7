@@ -2,245 +2,400 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75777C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F63C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FCCD2073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B0C02073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:59:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sPM/fSNU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DPe+k9NM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfLDV64 (ORCPT
+        id S1728294AbfLDV7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 16:58:56 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33179 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfLDV6z (ORCPT
+        Wed, 4 Dec 2019 16:59:53 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42571 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfLDV7x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 16:58:55 -0500
-Received: by mail-ed1-f65.google.com with SMTP id l63so855160ede.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 13:58:53 -0800 (PST)
+        Wed, 4 Dec 2019 16:59:53 -0500
+Received: by mail-qk1-f196.google.com with SMTP id a10so1462650qko.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 13:59:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=834X6enFsR+krNoNr0e4709pAh8Q2+irN0s0KLWbKdY=;
-        b=sPM/fSNUtqQcSP7CWF7NsVFpZb0O/fwkH6QMYfP4/5MBhsR1iYWl7ktf1NtM1E9wus
-         sgx86dcRhjC3zXVM4P4m3LrN9TwYy0JZ5xZA8r1jifNGH2qJXysVovAqaHvVwl9/xxHY
-         nZ1wQNfZghdYIqvM8jJS8ijSTFdYzX9YJMfqQRCIm/rphFi9dgRRt7PNul+4OUH1G8By
-         ElWJ9rMcl4rIYxWVPNcDMzsJkb0kJS6CRYBZaud39U/idiWl1Tnxyg4H5J/bgS7aG2bt
-         7UbEIt45Yc53CcCqFvTS37y2PEJ5imCCpg8K/92zuB4ZhjoLhyci3W+y/ai/c3ffwjHl
-         9uOg==
+         :cc:content-transfer-encoding;
+        bh=Xhsb/454JtQYlTd/19xK0PIFn/uzrhAWOQqSoQzRQM8=;
+        b=DPe+k9NMt1Bx9v57Bz90nNDhp4QUVISBllZgLdoSwyBI+XohoTL31bs/mbBkxbTZpQ
+         CqssGsUQkqrzslTzAXnKBWgrCJHo65jhcwyY8yY707Wsa+vHk7qWrml1AEmHpQBTDW3b
+         DzoCEQLtA9y0+XRvdYy1bFBoPQK4WjdLZw0ok=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=834X6enFsR+krNoNr0e4709pAh8Q2+irN0s0KLWbKdY=;
-        b=UfYyRRP3ayKWWkcTxZUG05e+oshpgMD7EiH8MKgYhwLJ2yDzH411hwA08NIFYsKkG1
-         W8dg/QCvsmdqHKzngrMu9543YWNYZKg81fSbti8yj6IQU6JVud+t0i0v/Pb8WqWHQ/Uy
-         qCwF/ErIQxiS/7W4m9QsMstfYe4NlcgjTdO2AszHi8vtbDa4cctQ7Nynu6b8/o8HcfM8
-         KhAiXGnGy/1vDS4bHCXRJEDN6GFF7thMKZeFYuQ7dsjUFlxMRrEmNM7fkVjDm0mVwBGi
-         U4Z68A9EagOMzV/lq35OI6mPpLJ6sWDnsSHneze4/+dM1lOpH9Dp3tj8jnWHUdgmoa0V
-         XjMQ==
-X-Gm-Message-State: APjAAAWbAyAmE7wCiB4EDajM/MllgajMmyhQi2b9qF2aYHtXr2+hezWi
-        TiVeycASPWMK471PyegsdiAZFjV36F8HqyxfLCITww==
-X-Google-Smtp-Source: APXvYqy/Ks8cCcfmSZFk7CgBt9JjE5OX2CyjdQWADUUGHLoLTj7qI2gKdo0JtHG5d1MJruFqD+aZgNinpBN5Aq0pgbw=
-X-Received: by 2002:a50:8d52:: with SMTP id t18mr6921117edt.26.1575496732591;
- Wed, 04 Dec 2019 13:58:52 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Xhsb/454JtQYlTd/19xK0PIFn/uzrhAWOQqSoQzRQM8=;
+        b=F8ryp1Q9OYSRjTJIIp3f5AzWESHDQc+Q6+Lerl+tyrqf+nfZ9KYR/h1IIegIrGanlu
+         euct1j/zSUDmrNqHSWoz011tbtwMNNodGNQpx7EHWqwxa+WUJzhBBJbuMTixQUgpaZ5w
+         t2Nd9niuCSVu85ygpkXq+9Le968kGnqy5VFdDh3gSWEBc3JjygPJDsdmPnYuUXh+6EBm
+         ZGRgvmrco80vgumj49X2xnaFK70eDd6ee0cLLcl0I9H5PwzRaJLh0ciH2eMsRsCP0zoF
+         NUTYz+rNjFOSwrht9fnHNn+qBnJO79X/y0dMijL7D6Ilil6/NSBaEcdFlv99j0yPTGJ/
+         orqw==
+X-Gm-Message-State: APjAAAUxjCxVY2vtiYOmj4iAw7WzcfTAQ8oQPZoVg6Uj/zHC/zrFhicm
+        INfxrUpbDb2ru2Ahff/IoMaqm/O3yZIIaG69W0p/JA==
+X-Google-Smtp-Source: APXvYqxLeYDvv4dM77hPSxrEpEMbhVRs9zTyT+09pku8yoPYS29T9A90DXN5YEL/ScBYqrfg1onOAhy/2AsNOQDg2fQ=
+X-Received: by 2002:a05:620a:796:: with SMTP id 22mr5199952qka.419.1575496791912;
+ Wed, 04 Dec 2019 13:59:51 -0800 (PST)
 MIME-Version: 1.0
-References: <20191015061349.141448-1-wvw@google.com> <CAHLCerNffKDgJKqaVTH3Kp_QfBLtm2M4H80xFDy=2fGXTVQR+w@mail.gmail.com>
- <CAHLCerN0CWOox-_=ywVO40R9LCahBRoU6Myg3Ca3p_TkZyJAMw@mail.gmail.com>
- <CAGXk5yp4uSCESvve5j_LbCr7b_55DqBagjNr_Dsdi=HppSpBPg@mail.gmail.com>
- <CAHLCerN4ymf7LOGQPRLuAwirwCUaQGynrnUMfgU6+frDswey5A@mail.gmail.com>
- <CAGXk5ypP0qSm-GMbHJy+hQtYN1hw6Ow6XgeO9JDni0bD1bFSVg@mail.gmail.com> <CAHLCerOD2wOJq7QNGBOcLvkMz4wvc1+6Hk2+ZD__NFged3tLcw@mail.gmail.com>
-In-Reply-To: <CAHLCerOD2wOJq7QNGBOcLvkMz4wvc1+6Hk2+ZD__NFged3tLcw@mail.gmail.com>
-From:   Wei Wang <wvw@google.com>
-Date:   Wed, 4 Dec 2019 13:58:41 -0800
-Message-ID: <CAGXk5ypZnh3ndf6ZCPeyvyOTuPgBYF_uPFm8pn1JKxBjqZFgGA@mail.gmail.com>
-Subject: Re: [PATCH] thermal: create softlink by name for thermal_zone and cooling_device
-To:     Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Wei Wang <wei.vince.wang@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20191127185139.65048-1-abhishekpandit@chromium.org>
+ <20191201145357.ybq5gfty4ulnfasq@pali> <20191202012305.GQ248138@dtor-ws>
+ <20191202084750.k7lafzzrf3yq2tqs@pali> <20191202175440.GA50317@dtor-ws>
+ <20191202185340.nae4lljten5jqp3y@pali> <20191202193628.GI50317@dtor-ws>
+ <20191202230947.ld5ibnczdpkekfcm@pali> <20191203173821.4u6uzxeaqnt3gyz3@pali> <20191203191112.GJ50317@dtor-ws>
+In-Reply-To: <20191203191112.GJ50317@dtor-ws>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Wed, 4 Dec 2019 13:59:41 -0800
+Message-ID: <CANFp7mVLJCwaVJGqe899G=3CgWntoG0+A8YgSdSTocVOBwRchg@mail.gmail.com>
+Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        linux-input@vger.kernel.org,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kirill Smelkov <kirr@nexedi.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 4:45 AM Amit Kucheria
-<amit.kucheria@verdurent.com> wrote:
->
-> On Mon, Nov 11, 2019 at 11:22 PM Wei Wang <wvw@google.com> wrote:
-> >
-> > On Sun, Nov 10, 2019 at 9:26 PM Amit Kucheria
-> > <amit.kucheria@verdurent.com> wrote:
-> > >
-> > > On Thu, Oct 17, 2019 at 3:04 AM Wei Wang <wvw@google.com> wrote:
-> > > >
-> > > > On Wed, Oct 16, 2019 at 10:16 AM Amit Kucheria
-> > > > <amit.kucheria@verdurent.com> wrote:
-> > > > >
-> > > > > On Wed, Oct 16, 2019 at 10:20 PM Amit Kucheria
-> > > > > <amit.kucheria@verdurent.com> wrote:
-> > > > > >
-> > > > > > On Tue, Oct 15, 2019 at 11:43 AM Wei Wang <wvw@google.com> wrote:
-> > > > > > >
-> > > > > > > The paths thermal_zone%d and cooling_device%d are not intuitive and the
-> > > > > > > numbers are subject to change due to device tree change. This usually
-> > > > > > > leads to tree traversal in userspace code.
-> > > > > > > The patch creates `tz-by-name' and `cdev-by-name' for thermal zone and
-> > > > > > > cooling_device respectively.
-> > > > > >
-> > > > > > I like this.
-> > > > > >
-> > > > > > > Signed-off-by: Wei Wang <wvw@google.com>
-> > > > > > > ---
-> > > > > > >  drivers/thermal/thermal_core.c | 23 +++++++++++++++++++++--
-> > > > > > >  1 file changed, 21 insertions(+), 2 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> > > > > > > index d4481cc8958f..0ff8fb1d7b0a 100644
-> > > > > > > --- a/drivers/thermal/thermal_core.c
-> > > > > > > +++ b/drivers/thermal/thermal_core.c
-> > > > > > > @@ -22,6 +22,7 @@
-> > > > > > >  #include <net/netlink.h>
-> > > > > > >  #include <net/genetlink.h>
-> > > > > > >  #include <linux/suspend.h>
-> > > > > > > +#include <linux/kobject.h>
-> > > > > > >
-> > > > > > >  #define CREATE_TRACE_POINTS
-> > > > > > >  #include <trace/events/thermal.h>
-> > > > > > > @@ -46,6 +47,8 @@ static DEFINE_MUTEX(poweroff_lock);
-> > > > > > >
-> > > > > > >  static atomic_t in_suspend;
-> > > > > > >  static bool power_off_triggered;
-> > > > > > > +static struct kobject *cdev_link_kobj;
-> > > > > > > +static struct kobject *tz_link_kobj;
-> > > > > > >
-> > > > > > >  static struct thermal_governor *def_governor;
-> > > > > > >
-> > > > > > > @@ -954,7 +957,7 @@ __thermal_cooling_device_register(struct device_node *np,
-> > > > > > >         struct thermal_zone_device *pos = NULL;
-> > > > > > >         int result;
-> > > > > > >
-> > > > > > > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH)
-> > > > > > > +       if (!type || !type[0] || strlen(type) >= THERMAL_NAME_LENGTH)
-> > > > > > >                 return ERR_PTR(-EINVAL);
-> > > > > >
-> > > > > > This should be a separate fix, if needed.
-> > > > Agree, but the link now requires that "" as invalid _type_.
-> > >
-> > > I'm not sure I understand. What does this change have to do with
-> > > adding symlinks below?
-> > >
-> >
-> > cdev->type will be used later in sysfs_create_link and adding "" as
-> > symlink is kind of bad practise AIUI.
-> >
->
-> Perhaps I'm being dense here, in which case my apologies.
->
-> But what stops us from splitting the patch into two?
-> 1. Make type == "" as invalid by using your change above and fixing up
-> the strlcpy(cdev->type....) further down.
-> 2. Create the actual symlinks in a separate patch.
->
-> Regards,
-> Amit
->
-Updated with v2, thanks.
+Hi Dmitry and Pali,
 
+I refactored the ioctl handlers as described above and tested it. It
+seems to be working without any compat changes.
+
+I compiled the following code in both 32-bit (gcc -m32 test.c) and
+64-bit to test.
+
+Please take a look at the new patch.
+
+Thanks
+Abhishek
+
+test.c
+---
+#include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+
+#include "uinput.h"
+
+int foo(int fd) {
+        struct uinput_dev dev;
+        int ret;
+
+        memset(&dev, 0, sizeof(dev));
+
+        dev.id.bustype =3D BUS_BLUETOOTH;
+        dev.id.vendor =3D 0x3;
+        dev.id.product =3D 0x4;
+        dev.id.version =3D 0x5;
+
+        memcpy(dev.name, "Test", 4);
+
+        printf("Setting bus/vendor/product/version\n");
+        if (write(fd, &dev, sizeof(dev)) < 0) {
+                perror("write");
+                return errno;
+        }
+
+        printf("Making ioctl calls\n");
+        ioctl(fd, UI_SET_EVBIT, EV_KEY);
+        ioctl(fd, UI_SET_EVBIT, EV_REL);
+        ioctl(fd, UI_SET_EVBIT, EV_REP);
+        ioctl(fd, UI_SET_EVBIT, EV_SYN);
+
+        /* I also replaced this with UI_SET_PHYS to check for the
+deprecation notice. */
+        if (ioctl(fd, UI_SET_PHYS_STR(18), "00:00:00:33:44:55") < 0) {
+                perror("ioctl UI_SET_PHYS");
+                return errno;
+        }
+
+        if (ioctl(fd, UI_SET_UNIQ_STR(18), "00:11:22:00:00:00") < 0) {
+                perror("ioctl UI_SET_UNIQ");
+                return errno;
+        }
+
+        if (ioctl(fd, UI_DEV_CREATE, NULL) < 0) {
+                perror("ioctl UI_DEV_CREATE");
+                return errno;
+        }
+
+        return 0;
+}
+
+int main() {
+        int fd, ret;
+
+        fd =3D open("/dev/uinput", O_RDWR);
+
+        if (fd < 0) {
+                perror("open");
+                return fd;
+        }
+
+        printf("Opened fd %d for write\n", fd);
+        ret =3D foo(fd);
+
+        if (!ret) {
+                printf("Uinput has been prepared. Check the uniq value.\n")=
+;
+                printf("Sleeping for 15s...\n");
+                sleep(20);
+        }
+
+        close(fd);
+        return ret;
+}
+
+On Tue, Dec 3, 2019 at 11:11 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 >
-> > > > > >
-> > > > > > >         if (!ops || !ops->get_max_state || !ops->get_cur_state ||
-> > > > > > > @@ -989,9 +992,15 @@ __thermal_cooling_device_register(struct device_node *np,
-> > > > > > >                 return ERR_PTR(result);
-> > > > > > >         }
+> On Tue, Dec 03, 2019 at 06:38:21PM +0100, Pali Roh=C3=A1r wrote:
+> > On Tuesday 03 December 2019 00:09:47 Pali Roh=C3=A1r wrote:
+> > > On Monday 02 December 2019 11:36:28 Dmitry Torokhov wrote:
+> > > > On Mon, Dec 02, 2019 at 07:53:40PM +0100, Pali Roh=C3=A1r wrote:
+> > > > > On Monday 02 December 2019 09:54:40 Dmitry Torokhov wrote:
+> > > > > > On Mon, Dec 02, 2019 at 09:47:50AM +0100, Pali Roh=C3=A1r wrote=
+:
+> > > > > > > On Sunday 01 December 2019 17:23:05 Dmitry Torokhov wrote:
+> > > > > > > > Hi Pali,
+> > > > > > > >
+> > > > > > > > On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Roh=C3=A1r w=
+rote:
+> > > > > > > > > Hello!
+> > > > > > > > >
+> > > > > > > > > On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Su=
+bedi wrote:
+> > > > > > > > > > Support setting the uniq attribute of the input device.=
+ The uniq
+> > > > > > > > > > attribute is used as a unique identifier for the connec=
+ted device.
+> > > > > > > > > >
+> > > > > > > > > > For example, uinput devices created by BlueZ will store=
+ the address of
+> > > > > > > > > > the connected device as the uniq property.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@c=
+hromium.org>
+> > > > > > > > >
+> > > > > > > > > ...
+> > > > > > > > >
+> > > > > > > > > > diff --git a/include/uapi/linux/uinput.h b/include/uapi=
+/linux/uinput.h
+> > > > > > > > > > index c9e677e3af1d..d5b7767c1b02 100644
+> > > > > > > > > > --- a/include/uapi/linux/uinput.h
+> > > > > > > > > > +++ b/include/uapi/linux/uinput.h
+> > > > > > > > > > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
+> > > > > > > > > >  #define UI_SET_PHYS          _IOW(UINPUT_IOCTL_BASE, 1=
+08, char*)
+> > > > > > > > > >  #define UI_SET_SWBIT         _IOW(UINPUT_IOCTL_BASE, 1=
+09, int)
+> > > > > > > > > >  #define UI_SET_PROPBIT               _IOW(UINPUT_IOCTL=
+_BASE, 110, int)
+> > > > > > > > > > +#define UI_SET_UNIQ          _IOW(UINPUT_IOCTL_BASE, 1=
+11, char*)
+> > > > > > > > >
+> > > > > > > > > I think that usage of char* as type in _IOW would cause c=
+ompatibility
+> > > > > > > > > problems like it is for UI_SET_PHYS (there is UI_SET_PHYS=
+_COMPAT). Size
+> > > > > > > > > of char* pointer depends on userspace (32 vs 64bit), so 3=
+2bit process on
+> > > > > > > > > 64bit kernel would not be able to call this new UI_SET_UN=
+IQ ioctl.
+> > > > > > > > >
+> > > > > > > > > I would suggest to define this ioctl as e.g.:
+> > > > > > > > >
+> > > > > > > > >   #define UI_SET_UNIQ           _IOW(_IOC_WRITE, UINPUT_I=
+OCTL_BASE, 111, 0)
+> > > > > > > > >
+> > > > > > > > > And then in uinput.c code handle it as:
+> > > > > > > > >
+> > > > > > > > >   case UI_SET_UNIQ & ~IOCSIZE_MASK:
+> > > > > > > > >
+> > > > > > > > > as part of section /* Now check variable-length commands =
+*/
+> > > > > > > >
+> > > > > > > > If we did not have UI_SET_PHYS in its current form, I'd agr=
+ee with you,
+> > > > > > > > but I think there is benefit in having UI_SET_UNIQ be simil=
+ar to
+> > > > > > > > UI_SET_PHYS.
 > > > > > > >
-> > > > > > > -       /* Add 'this' new cdev to the global cdev list */
-> > > > > > > +       /* Add 'this' new cdev to the global cdev list and create link*/
-> > > > > > >         mutex_lock(&thermal_list_lock);
-> > > > > > >         list_add(&cdev->node, &thermal_cdev_list);
-> > > > > > > +       if (!cdev_link_kobj)
-> > > > > > > +               cdev_link_kobj = kobject_create_and_add("cdev-by-name",
-> > > > > > > +                                               cdev->device.kobj.parent);
-> > > > > > > +       if (!cdev_link_kobj || sysfs_create_link(cdev_link_kobj,
-> > > > > > > +                                               &cdev->device.kobj, cdev->type))
-> > > > > > > +               dev_err(&cdev->device, "Failed to create cdev-by-name link\n");
+> > > > > > > I thought that ioctl is just number, so we can define it as w=
+e want. And
+> > > > > > > because uinput.c has already switch for variable-length comma=
+nds it
+> > > > > > > would be easy to use it. Final handling can be in separate fu=
+nction like
+> > > > > > > for UI_SET_PHYS which can look like same.
 > > > > > >
-> > > > > > Any reason not to use the following form instead? It seems easier to read.
+> > > > > > Yes, we can define ioctl number as whatever we want. What I was=
+ trying
+> > > > > > to say, right now users do this:
 > > > > > >
-> > > > > > if (!cdev_link_kobj) {
-> > > > > >                cdev_link_kobj = kobject_create_and_add("cdev-by-name",
-> > > > > >                                                cdev->device.kobj.parent);
-> > > > > >               ret = sysfs_create_link(cdev_link_kobj,
-> > > > > >                                               &cdev->device.kobj, cdev->type))
-> > > > > >               if (ret)
-> > > > > >                        dev_err(&cdev->device, "Failed to create
-> > > > > > cdev-by-name link\n");
-> > > > > > }
+> > > > > >       rc =3D ioctl(fd, UI_SET_PHYS, "whatever");
+> > > > > >       ...
+> > > > > >
+> > > > > > and with UI_SET_UNIQ they expect the following to work:
+> > > > > >
+> > > > > >       rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
+> > > > > >       ...
 > > > > >
-> > > > > I can now see why you had to do that - none of the other links would
-> > > > > get created after the first one.
+> > > > > And would not following definition
 > > > > >
-> > > > > Perhaps create the directories in the __init functions and only create
-> > > > > the links here?
+> > > > >   #define UI_SET_UNIQ _IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
 > > > > >
-> > > > AFAICT, this is no such API except the private get_device_parent()
-> > > > under driver/base/. Also the lazy initialization makes sense in such
-> > > > case when there is no thermal device attached. Looks like the class
-> > > > dir is also lazy-initialized when first device registered
-> > > > https://elixir.bootlin.com/linux/v5.3.5/source/drivers/base/core.c#L1790.
+> > > > > allow userspace to call
+> > > > >
+> > > > >   rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
+> > > > >
+> > > > > as you want?
+> > > >
+> > > > OK, so what you are saying is that we can have whatever in the size
+> > > > portion of ioctl number and simply ignore it in the driver
 > > >
-> > > OK.
+> > > Yes.
 > > >
-> > > > >
-> > > > > > >         mutex_unlock(&thermal_list_lock);
-> > > > > > >
-> > > > > > >         /* Update binding information for 'this' new cdev */
-> > > > > > > @@ -1157,6 +1166,8 @@ void thermal_cooling_device_unregister(struct thermal_cooling_device *cdev)
-> > > > > > >                         }
-> > > > > > >                 }
-> > > > > > >         }
-> > > > > > > +       if (cdev_link_kobj)
-> > > > > > > +               sysfs_remove_link(cdev_link_kobj, cdev->type);
-> > > > > > >
-> > > > > > >         mutex_unlock(&thermal_list_lock);
-> > > > > > >
-> > > > > > > @@ -1340,6 +1351,12 @@ thermal_zone_device_register(const char *type, int trips, int mask,
-> > > > > > >
-> > > > > > >         mutex_lock(&thermal_list_lock);
-> > > > > > >         list_add_tail(&tz->node, &thermal_tz_list);
-> > > > > > > +       if (!tz_link_kobj)
-> > > > > > > +               tz_link_kobj = kobject_create_and_add("tz-by-name",
-> > > > > > > +                                               tz->device.kobj.parent);
-> > > > > > > +       if (!tz_link_kobj || sysfs_create_link(tz_link_kobj,
-> > > > > > > +                                               &tz->device.kobj, tz->type))
-> > > > > > > +               dev_err(&tz->device, "Failed to create tz-by-name link\n");
-> > > > > >
-> > > > > > Same as above.
-> > > > > >
-> > > > > > >         mutex_unlock(&thermal_list_lock);
-> > > > > > >
-> > > > > > >         /* Bind cooling devices for this zone */
-> > > > > > > @@ -1411,6 +1428,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
-> > > > > > >                         }
-> > > > > > >                 }
-> > > > > > >         }
-> > > > > > > +       if (tz_link_kobj)
-> > > > > > > +               sysfs_remove_link(tz_link_kobj, tz->type);
-> > > > > > >
-> > > > > > >         mutex_unlock(&thermal_list_lock);
-> > > > > > >
-> > > > > > > --
-> > > > > > > 2.23.0.700.g56cf767bdb-goog
-> > > > > > >
+> > > > (and I do not
+> > > > think we need to do any of "UI_SET_UNIQ & ~IOCSIZE_MASK" really).
+> > >
+> > > You are right, we do not need to clear any IOCSIZE_MASK. As ioctl num=
+ber
+> > > would be always sam constant number. So it would be really simple. So
+> > > original patch would work if UI_SET_UNIQ define would be changed to
+> > > above with _IOW() macro.
+> > >
+> > > > While this would work, I am not sure it is the best option as I thi=
+nk
+> > > > we'd have to comment extensively why we have arbitrary number in pl=
+ace
+> > > > of the size.
+> > >
+> > > Comment can be added. But this is as ioctl is going to accept variabl=
+e
+> > > length array (not fixed array), zero value make sense for me (zero as=
+ we
+> > > do not know exact size).
+> > >
+> > > > And we still do not really save anything, as we still have to go th=
+rough
+> > > > compat ioctl handler (since we have it already) and it is very simp=
+le to
+> > > > add a case for UI_SET_UNIQ there...
+> > >
+> > > Yes, compat ioctl is still used. But my proposed solution does not
+> > > involve to define a new compact ioctl number just for sizeof(char *).
+> > >
+> > > I'm looking at this particular problem from side, that there is no
+> > > reason to define two new ioctl numbers for UI_SET_UNIQ (one normal
+> > > number and one compat number), when one number is enough. It is one n=
+ew
+> > > ioctl call, so one ioctl number should be enough.
+> > >
+> > > And also with my proposed solution with ioctl size=3D0 it simplify
+> > > implementation of UI_SET_UNIQ as it is not needed to implement also
+> > > UI_SET_UNIQ_COMPAT ioctl nor touch compat ioct code path. Basically
+> > > original patch (with changed UI_SET_UNIQ macro) is enough.
+> > >
+> > > But of of course, this is my view of this problem and I would not be
+> > > against your decision from maintainer position. Both solutions would
+> > > work correctly and bring same behavior for userspace applications.
+> >
+> >
+> > Hi Dmitry!
+> >
+> > I was looking again at those _IOW defines for ioctl calls and I have
+> > another argument why not specify 'char *' in _IOW:
+> >
+> > All ioctls in _IOW() specify as a third macro argument type which is
+> > passed as pointer to the third argument for ioctl() syscall.
+> >
+> > So e.g.:
+> >
+> >   #define EVIOCSCLOCKID _IOW('E', 0xa0, int)
+> >
+> > is called from userspace as:
+> >
+> >   int val;
+> >   ioctl(fd, EVIOCSCLOCKID, &val);
+> >
+> > Or
+> >
+> >   #define EVIOCSMASK _IOW('E', 0x93, struct input_mask)
+> >
+> > is called as:
+> >
+> >   struct input_mask val;
+> >   ioctl(fd, EVIOCSMASK, &val);
+> >
+> > So basically third argument for _IOW specify size of byte buffer passed
+> > as third argument for ioctl(). In _IOW is not specified pointer to
+> > struct input_mask, but struct input_mask itself.
+> >
+> > And in case you define
+> >
+> >   #define MY_NEW_IOCTL _IOW(UINPUT_IOCTL_BASE, 200, char*)
+> >
+> > then you by above usage you should pass data as:
+> >
+> >   char *val =3D "DATA";
+> >   ioctl(fd, MY_NEW_IOCTL, &val);
+> >
+> > Which is not same as just:
+> >
+> >   ioctl(fd, MY_NEW_IOCTL, "DATA");
+> >
+> > As in former case you passed pointer to pointer to data and in later
+> > case you passed only pointer to data.
+> >
+> > It just mean that UI_SET_PHYS is already defined inconsistently which i=
+s
+> > also reason why compat ioctl for it was introduced.
+>
+> Yes, you are right. UI_SET_PHYS is messed up. I guess the question is
+> what to do with all of this...
+>
+> Maybe we should define
+>
+> #define UI_SET_PHYS_STR(len)    _IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, =
+len)
+> #define UI_SET_UNIQ_STR(len)    _IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 112, =
+len)
+>
+> and mark UI_SET_PHYS as deprecated/wrong? This will allow us to specify
+> exactly how much data kernel is supposed to fetch from userspace instead
+> of trying to rely on a null-terminated string.
+>
+> It would also be very helpful if BlueZ did not accept changes that use
+> this brand new ioctl until after we agreed on how it should look like.
+> Luiz, can it be reverted for now please?
+>
+> Thanks.
+>
+> --
+> Dmitry
