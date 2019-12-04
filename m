@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072E4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8CFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE7542084F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7F52073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482343;
-	bh=pBD8D54Jh+aAZ584Gec2gIdMiQfp2n7SefwZdXpySxQ=;
+	s=default; t=1575482346;
+	bh=jzremZJt9uCCXqYmgSJYucLdl1Qtl9dFmP4sQefk5tQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TquaIWCG0mLQKHjW/3yhvdUcn0TumZNAPuPGb6Bry4T9M+Hlf0d6451+igNdm1sHh
-	 7EA11zcVnRk+zD/HVm9pcDqhc6nTh0DMDRi6f2fTpFhhv2+53zkYNHJhNLcQJCeRZy
-	 BRRhigKRPIJ+OR0nDuLK95z0cCm0E3mtwEkkBMUI=
+	b=pTgku/3oxE4QKBEd6aGtC5aIi8vyWDPfa4y+zH+VswMsSDHWvjUrzHgvuXjl8X63M
+	 cfmk6hFFVtXAXXKFjodsPsQp5HeVwc6Wu7tHfY9bGw8qyVV3LyNPMj2CK92hNg6ZuE
+	 8XC+jkfDZ+xZ1+gD0rjpo4JL6QqWNnA8aN882SeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbfLDR7C (ORCPT
+        id S1729025AbfLDR7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:59:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34462 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 12:59:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728982AbfLDR64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:58:56 -0500
+        id S1729008AbfLDR7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:59:01 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD8EE2084B;
-        Wed,  4 Dec 2019 17:58:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAD092073B;
+        Wed,  4 Dec 2019 17:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482336;
-        bh=pBD8D54Jh+aAZ584Gec2gIdMiQfp2n7SefwZdXpySxQ=;
+        s=default; t=1575482341;
+        bh=jzremZJt9uCCXqYmgSJYucLdl1Qtl9dFmP4sQefk5tQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dfAzuyzgEM6lZz5ghdCpWlMRYzVbU9sG5XT/G7JP8Y+AwVd9GJB5nKjZDpbEIHy74
-         jB2vNhl/prNKzRN8bXywC8GLjUf+cCxL6ZbZ3VohW6NjGF3qGjncjTN7zdxuj1tV88
-         8oo6bAuWRTJlGhV2FMSPKp5poG/1ZPCdFMOv5DOU=
+        b=YqO8vHEYdvJ8TmGXkoiktfXAKv6UvNknJjRZg82CvYyQf/jyx0KSRFtNNmTc9GRFr
+         FLa5zAo0lk7E1MWxdjgyG62L2xamtWd4pE+nad7aPaa1ktQgkgISwnXaa2z87UKXeC
+         exQlOb3JthV8Gf81ZZWd4kjXfTaWXXpIPN1P+afU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        stable@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 12/92] parisc: Fix serio address output
-Date:   Wed,  4 Dec 2019 18:49:12 +0100
-Message-Id: <20191204174329.899005301@linuxfoundation.org>
+Subject: [PATCH 4.4 41/92] serial: max310x: Fix tx_empty() callback
+Date:   Wed,  4 Dec 2019 18:49:41 +0100
+Message-Id: <20191204174333.005303985@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -59,38 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Alexander Shiyan <shc_work@mail.ru>
 
-[ Upstream commit 785145171d17af2554128becd6a7c8f89e101141 ]
+[ Upstream commit a8da3c7873ea57acb8f9cea58c0af477522965aa ]
 
-We want the hpa addresses printed in the serio modules, not some
-virtual ioremap()ed address, e.g.:
+Function max310x_tx_empty() accesses the IRQSTS register, which is
+cleared by IC when reading, so if there is an interrupt status, we
+will lose it. This patch implement the transmitter check only by
+the current FIFO level.
 
- serio: gsc-ps2-keyboard port at 0xf0108000 irq 22 @ 2:0:11
- serio: gsc-ps2-mouse port at 0xf0108100 irq 22 @ 2:0:12
-
-Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/serio/gscps2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/max310x.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/input/serio/gscps2.c b/drivers/input/serio/gscps2.c
-index ecba666afadb7..cca26e6f38b36 100644
---- a/drivers/input/serio/gscps2.c
-+++ b/drivers/input/serio/gscps2.c
-@@ -382,9 +382,9 @@ static int gscps2_probe(struct parisc_device *dev)
- 		goto fail;
- #endif
+diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
+index a66fb7afecc71..e13e95733fa3c 100644
+--- a/drivers/tty/serial/max310x.c
++++ b/drivers/tty/serial/max310x.c
+@@ -763,12 +763,9 @@ static void max310x_start_tx(struct uart_port *port)
  
--	printk(KERN_INFO "serio: %s port at 0x%p irq %d @ %s\n",
-+	pr_info("serio: %s port at 0x%08lx irq %d @ %s\n",
- 		ps2port->port->name,
--		ps2port->addr,
-+		hpa,
- 		ps2port->padev->irq,
- 		ps2port->port->phys);
+ static unsigned int max310x_tx_empty(struct uart_port *port)
+ {
+-	unsigned int lvl, sts;
++	u8 lvl = max310x_port_read(port, MAX310X_TXFIFOLVL_REG);
  
+-	lvl = max310x_port_read(port, MAX310X_TXFIFOLVL_REG);
+-	sts = max310x_port_read(port, MAX310X_IRQSTS_REG);
+-
+-	return ((sts & MAX310X_IRQ_TXEMPTY_BIT) && !lvl) ? TIOCSER_TEMT : 0;
++	return lvl ? 0 : TIOCSER_TEMT;
+ }
+ 
+ static unsigned int max310x_get_mctrl(struct uart_port *port)
 -- 
 2.20.1
 
