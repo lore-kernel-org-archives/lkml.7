@@ -2,104 +2,127 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280E1C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85065C43215
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE0C82054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5790920675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:15:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="sjADaI35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfLDANz (ORCPT
+        id S1726640AbfLDAPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 19:13:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:50940 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbfLDANz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 19:13:55 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97AF731B;
-        Tue,  3 Dec 2019 16:13:54 -0800 (PST)
-Received: from [10.0.2.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AE993F718;
-        Tue,  3 Dec 2019 16:13:52 -0800 (PST)
-Subject: Re: Null pointer crash at find_idlest_group on db845c w/ linus/master
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     John Stultz <john.stultz@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Patrick Bellasi <Patrick.Bellasi@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <CALAqxLXrWWnWi32BR1F8JOtrGt1y2Kzj__zWopLx1ZfRy3EZKA@mail.gmail.com>
- <c61cf647-ecb6-b9fa-51f2-8efa36134757@arm.com>
- <14a8e456-1f89-0dff-ae89-61e8b6d5593b@arm.com>
-Message-ID: <7548a890-d32b-7e7d-4f84-4ebf635c3e8a@arm.com>
-Date:   Wed, 4 Dec 2019 00:13:50 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 3 Dec 2019 19:15:21 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34776 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfLDAPU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 19:15:20 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l136so5219699oig.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 16:15:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j9JhZIkY5UYbY9sicT+H9HLXPSEjz22qXNqZGrcjpfw=;
+        b=sjADaI35VirKvqsrqcyE6zHoNPjuN6G2m9ZEfOP0vAzlUcOZatDYa+fY1Lh7TSemxA
+         E9z4+FLH81bsPE7jhKCCKN1DmErGGdIxeh39qCg4GwDB8ZsVx4r61KmTjQwCb/UuucdY
+         MQzoUEuK07SBtKntXdJCpBk0kcT0omifR4aXFxcw7o3rx9lv7uA9aBUSsKzYL5hvmff7
+         VBUsVf8LYZp9bvzGB9w4p+HLgV4aSriJTATl3XEvLqXfP38gMCA0YJngB18JE+aJyc3p
+         AyoPpUAJe7VB1HdvyAHKuhO3bnO22MuhuJUDQ1jhzTpN+/z3jkA188FqW0RuyD6OHbD0
+         B3/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j9JhZIkY5UYbY9sicT+H9HLXPSEjz22qXNqZGrcjpfw=;
+        b=hKWYe7SbhtFdD2LSJrK5yJycB1QgtlnS7XMZTOgleInzpVDSB6VkUz+swAAbY3VL9F
+         pIHydzntlc4YNRwdCja+ienFv+xayWq676j8m3AaZqYVnaxKRuteWmp9uUWag29Zr00B
+         ePVTgoMO0GBYilAOh0ORQ6nOaucoRAYwprzwhyujUV3qbyfqL1AHSvxiZDAa7J6GPT/M
+         28c9UgeJDwpzpB/kanVnhAiCDA0W730WAaVgnp+KgSmbJbd6WD7V791gBkiWY0YYf1Hp
+         FUncm7seZqNpFROAgGzYphJKezM3kLsqHLA1UKfllYhV1rtfRVSoqyiWJSgj2msnV3fm
+         EqNA==
+X-Gm-Message-State: APjAAAVsASoVb4aAIBPdyo8cXRpTaMnpyuQ5bbP3QR51Mq4OEZKXcFvT
+        SgJyLM+BURGQfK70eqPHxnHyjS5B65yjEG5F0pVmAA==
+X-Google-Smtp-Source: APXvYqzZunLuEIN9d3ELG/cd3hfZU5berEzOo2/mUNAdgvjVy3WYCgxi0H9bamLriZ+TeAij+34DEI9woMPAH/4Z6q0=
+X-Received: by 2002:aca:2405:: with SMTP id n5mr318915oic.73.1575418519668;
+ Tue, 03 Dec 2019 16:15:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <14a8e456-1f89-0dff-ae89-61e8b6d5593b@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191203034655.51561-1-alastair@au1.ibm.com> <20191203035057.GR20752@bombadil.infradead.org>
+ <1e3892815b9684e3fb4f84bd1935ea7e68cd07d8.camel@au1.ibm.com> <20191203124240.GT20752@bombadil.infradead.org>
+In-Reply-To: <20191203124240.GT20752@bombadil.infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 3 Dec 2019 16:15:08 -0800
+Message-ID: <CAPcyv4hccpaw5fFdp7u3Z=C0zNZ1oTBtNfyLhJ16C2Dmq+Qp3Q@mail.gmail.com>
+Subject: Re: [PATCH v2 00/27] Add support for OpenCAPI SCM devices
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     "Alastair D'Silva" <alastair@au1.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/12/2019 23:49, Valentin Schneider wrote:
-> On 03/12/2019 23:20, Valentin Schneider wrote:
->> Looking at the code, I think I got it. In find_idlest_group() we do
->> initialize 'idlest_sgs' (just like busiest_stat in LB) but 'idlest' is just
->> NULL. The latter is dereferenced in update_pick_idlest() just for the misfit
->> case, which goes boom. And I reviewed the damn thing... Bleh.
->>
->> Fixup looks easy enough, lemme write one up.
->>
-> 
-> Wait no, that can't be right. We can only get in there if both 'group' and
-> 'idlest' have the same group_type, which can't be true on the first pass.
-> So if we go through the misfit stuff, idlest *has* to be set to something.
-> Bah.
-> 
+On Tue, Dec 3, 2019 at 4:43 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Tue, Dec 03, 2019 at 03:01:17PM +1100, Alastair D'Silva wrote:
+> > On Mon, 2019-12-02 at 19:50 -0800, Matthew Wilcox wrote:
+> > > On Tue, Dec 03, 2019 at 02:46:28PM +1100, Alastair D'Silva wrote:
+> > > > This series adds support for OpenCAPI SCM devices, exposing
+> > >
+> > > Could we _not_ introduce yet another term for persistent memory?
+> > >
+> >
+> > "Storage Class Memory" is an industry wide term, and is used repeatedly
+> > in the device specifications. It's not something that has been pulled
+> > out of thin air.
+>
+> "Somebody else also wrote down Storage Class Memory".  Don't care.
+> Google gets 750k hits for Persistent Memory and 150k hits for
+> Storage Class Memory.  This term lost.
+>
+> > The term is also already in use within the 'papr_scm' driver.
+>
+> The acronym "SCM" is already in use.  Socket Control Messages go back
+> to early Unix (SCM_RIGHTS, SCM_CREDENTIALS, etc).  Really, you're just
+> making the case that IBM already uses the term SCM.  You should stop.
 
-So I think the thing really is dying on a sched_group->sgc deref (pahole says
-sgc is at offset #16), which means we have a NULL sched_group somewhere, but
-I don't see how. That can either be 'local' (can't be, first group we visit
-and doesn't go through update_pick_idlest()) or 'idlest' (see previous email).
-
-Now, it's bedtime for me, if you get the chance in the meantime can you give
-this a shot? I was about to send it out but realized it didn't really make
-sense, but you never know...
-
-Also, if it is indeed misfit related, I'm surprised we (Arm folks) haven't
-hit it sooner. We've had our scheduler tests running on the LB rework for at
-least a month, so we should've hit it.
-
----
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 08a233e97a01..e19ab7bff0f3 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8348,7 +8348,14 @@ static bool update_pick_idlest(struct sched_group *idlest,
- 		return false;
- 
- 	case group_misfit_task:
--		/* Select group with the highest max capacity */
-+		/*
-+		 * Select group with the highest max capacity. First group we
-+		 * visit gets picked as idlest to allow later capacity
-+		 * comparisons.
-+		 */
-+		if (!idlest)
-+			return true;
-+
- 		if (idlest->sgc->max_capacity >= group->sgc->max_capacity)
- 			return false;
- 		break;
+I tend to agree. The naming of things under
+arch/powerpc/platforms/pseries/ is not under my purview, but
+drivers/nvdimm/ is. Since this driver is colocated with the "pmem"
+driver let's not proliferate the "scm" vs "pmem" confusion.
