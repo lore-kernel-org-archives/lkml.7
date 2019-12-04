@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4463C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA6DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7C1020675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C332F2086D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483193;
-	bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
+	s=default; t=1575483196;
+	bh=7B2zsv4wmb26jk/t27o3Uj0Jm6oJDggdc1ltkcsGrAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xzqPe1DuC7NQQKZGDGjDmDNs/Hsy7vpWnFnvjK/MXYwckusDr2rEpBlyozYk5x0v2
-	 pDj99tdmeV5IRYN+16saI+9Gw4oEi+hP887vX7RT04CpKpsAL9I6cujmbsn5GuzHEy
-	 N/OVRSOL7iY8BxwvNO46/cyCXO+5LxrTXEVZLYTc=
+	b=LCT4Dt9mDRaNfbowdfarBUQXYTS5y96ie0K70pM354SY7RB4+savN1tOwUE/UpHXY
+	 uxNYEdjJDW9Wfp55yGpHme1ESnKzye0HnoNioJChX7SQ95tt0d7kmGlidNAcY0IGP9
+	 3SylWV/bq60Hwsp11X4dSIfGnvWEbET7dMwpgQbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731720AbfLDSNM (ORCPT
+        id S1731728AbfLDSNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:13:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:13:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731697AbfLDSNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:13:06 -0500
+        id S1731714AbfLDSNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:13:11 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CD9E206DF;
-        Wed,  4 Dec 2019 18:13:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4442E20675;
+        Wed,  4 Dec 2019 18:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483185;
-        bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
+        s=default; t=1575483190;
+        bh=7B2zsv4wmb26jk/t27o3Uj0Jm6oJDggdc1ltkcsGrAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zaf+4cAtE3cDtAELm1ylCjq0FiB7RmtK3R1wDxVJ2d6Bm/u+GirEhNtKTk7+cjg96
-         DZ8KxxfUTZfzJSYtiUNikGpUvsTW6fX97nhOxTyGrAwYqv5AkIbji+BY88FewYXRrL
-         a+xFHnZaHM5MgPa933JXgLhqdpzXd+9jxshAEkCw=
+        b=AIitDm7o9WlDatRUvQrd8u4C7PUf5+aRBl8ZR1GxR3X3nGXyygsbz8ajIps0by3dD
+         2ee/XrMm/93LbC4fTTJCpfqF9EWPPhs2QXElOogzoa/0ZLWBvd+KpQx53VPwi53PYP
+         UWcOF3UPeGNhxnRmdeF9VXcyE5BTF9KoE0ce+g1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        stable@vger.kernel.org, Lepton Wu <ytht.net@gmail.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 042/125] pinctrl: sh-pfc: sh7264: Fix PFCR3 and PFCR0 register configuration
-Date:   Wed,  4 Dec 2019 18:55:47 +0100
-Message-Id: <20191204175321.521763463@linuxfoundation.org>
+Subject: [PATCH 4.9 034/125] VSOCK: bind to random port for VMADDR_PORT_ANY
+Date:   Wed,  4 Dec 2019 18:55:39 +0100
+Message-Id: <20191204175321.062982160@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,55 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Lepton Wu <ytht.net@gmail.com>
 
-[ Upstream commit 1b99d0c80bbe1810572c2cb77b90f67886adfa8d ]
+[ Upstream commit 8236b08cf50f85bbfaf48910a0b3ee68318b7c4b ]
 
-The Port F Control Register 3 (PFCR3) contains only a single field.
-However, counting from left to right, it is the fourth field, not the
-first field.
-Insert the missing dummy configuration values (3 fields of 16 values) to
-fix this.
+The old code always starts from fixed port for VMADDR_PORT_ANY. Sometimes
+when VMM crashed, there is still orphaned vsock which is waiting for
+close timer, then it could cause connection time out for new started VM
+if they are trying to connect to same port with same guest cid since the
+new packets could hit that orphaned vsock. We could also fix this by doing
+more in vhost_vsock_reset_orphans, but any way, it should be better to start
+from a random local port instead of a fixed one.
 
-The descriptor for the Port F Control Register 0 (PFCR0) lacks the
-description for the 4th field (PF0 Mode, PF0MD[2:0]).
-Add the missing configuration values to fix this.
-
-Fixes: a8d42fc4217b1ea1 ("sh-pfc: Add sh7264 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Lepton Wu <ytht.net@gmail.com>
+Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/vmw_vsock/af_vsock.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-index 8070765311dbf..e1c34e19222ee 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-@@ -1716,6 +1716,9 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	},
+diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+index 7566395e526d2..18f377306884b 100644
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -97,6 +97,7 @@
+ #include <linux/mutex.h>
+ #include <linux/net.h>
+ #include <linux/poll.h>
++#include <linux/random.h>
+ #include <linux/skbuff.h>
+ #include <linux/smp.h>
+ #include <linux/socket.h>
+@@ -501,9 +502,13 @@ out:
+ static int __vsock_bind_stream(struct vsock_sock *vsk,
+ 			       struct sockaddr_vm *addr)
+ {
+-	static u32 port = LAST_RESERVED_PORT + 1;
++	static u32 port = 0;
+ 	struct sockaddr_vm new_addr;
  
- 	{ PINMUX_CFG_REG("PFCR3", 0xfffe38a8, 16, 4) {
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 		PF12MD_000, PF12MD_001, 0, PF12MD_011,
- 		PF12MD_100, PF12MD_101, 0, 0,
- 		0, 0, 0, 0, 0, 0, 0, 0 }
-@@ -1759,8 +1762,10 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		0, 0, 0, 0, 0, 0, 0, 0,
- 		PF1MD_000, PF1MD_001, PF1MD_010, PF1MD_011,
- 		PF1MD_100, PF1MD_101, 0, 0,
--		0, 0, 0, 0, 0, 0, 0, 0
--	 }
-+		0, 0, 0, 0, 0, 0, 0, 0,
-+		PF0MD_000, PF0MD_001, PF0MD_010, PF0MD_011,
-+		PF0MD_100, PF0MD_101, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0 }
- 	},
++	if (!port)
++		port = LAST_RESERVED_PORT + 1 +
++			prandom_u32_max(U32_MAX - LAST_RESERVED_PORT);
++
+ 	vsock_addr_init(&new_addr, addr->svm_cid, addr->svm_port);
  
- 	{ PINMUX_CFG_REG("PFIOR0", 0xfffe38b2, 16, 1) {
+ 	if (addr->svm_port == VMADDR_PORT_ANY) {
 -- 
 2.20.1
 
