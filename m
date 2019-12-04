@@ -2,117 +2,153 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD66C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D09FFC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E494420675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:32:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5K8zGAU"
+	by mail.kernel.org (Postfix) with ESMTP id A567520675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:33:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfLDJcT (ORCPT
+        id S1727484AbfLDJdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:32:19 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35186 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727454AbfLDJcS (ORCPT
+        Wed, 4 Dec 2019 04:33:06 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:65036 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725971AbfLDJdF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:32:18 -0500
-Received: by mail-pj1-f68.google.com with SMTP id w23so1678928pjd.2;
-        Wed, 04 Dec 2019 01:32:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=MEMVCvrI0WADDr1Rd4hdPFBKPBKqjIAdQ9vka/nhGK8=;
-        b=i5K8zGAUTIUpBxiaHwEGM4D2YvA7SW9lgKdvu84Kv7sk9nI3myu3aIGn9ByrlMTlGq
-         FHNTHz9+fW0MMiDYmfQ0pO5F2ByyZ/ILSGS4Te8JT4wi+HtMqTJaChN9dxO2yUZ+ZF3+
-         BFfEbVJRZaxq2gu17xlBlzbGYcJaAB69MnE6h1a9+jVrozrNN1LHCES+jB607D9sH2bZ
-         FxLAEVnunzUWzZrwaJAe8lzVT0dr2EUo8NHbdRLXjmryXoFR3fPPl93iG94yGs9MC5/f
-         mHHMs9sIO13RmpPCmWSACa1Wn9K1cTg0+W29WKz7PwPNNCV06oBUiuCZNQUkHfBNbwlN
-         KwjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=MEMVCvrI0WADDr1Rd4hdPFBKPBKqjIAdQ9vka/nhGK8=;
-        b=tXZ5ULq10iYH6VL4I+fAefzfaseml0nRvZbaPSwiJlUnELoPUU/krGlRdhld63Tlza
-         5+6AnPGZnabdEqMHdBs0ZVWAhU0ZaMZwq+co2uYjQHDr3bSWzOmIsUhWQUBy/hqaoEor
-         NM6EomdZdDiHVJO1L+Ton1D6n3yHHZiy7TCdztz01c6NCWIcV2qCoI1POIGXuKuM0z4R
-         7M3dY/7vxlTIIn5oIyiRNUKtjB6nu2N35PxHxR9awJOjH0pJrvD123cf/2qWi3AvdBM7
-         zavzgmNAajEP8WJ6BqBVDX35959haWzptaT5Xw7zK0DKzPAg231irZ6Ux72CHoO5++Gx
-         ROjA==
-X-Gm-Message-State: APjAAAVid3CHu29vcwhQI/IfZkF1tlN++mzWblYV3URZ700qSp1hcWR5
-        s3GrdtDhvPEsOx+TSAYfkwU=
-X-Google-Smtp-Source: APXvYqwplGcbAvZMr4HiumdgY+xYjz5z42ip0t5oJwiw7gz+o0Z5pkzcOfWT+VscRPzzsiws9aDzuw==
-X-Received: by 2002:a17:90a:94cc:: with SMTP id j12mr2206532pjw.3.1575451937556;
-        Wed, 04 Dec 2019 01:32:17 -0800 (PST)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id 91sm2380086pjq.18.2019.12.04.01.32.15
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 04 Dec 2019 01:32:17 -0800 (PST)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     ohad@wizery.com, bjorn.andersson@linaro.org
-Cc:     baolin.wang7@gmail.com, linux-omap@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] hwspinlock: omap: Use devm_hwspin_lock_register() to register hwlock controller
-Date:   Wed,  4 Dec 2019 17:31:31 +0800
-Message-Id: <84ccc6ffd5269a725359ff42e131c5aedf087546.1575451463.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1575451463.git.baolin.wang7@gmail.com>
-References: <cover.1575451463.git.baolin.wang7@gmail.com>
-In-Reply-To: <cover.1575451463.git.baolin.wang7@gmail.com>
-References: <cover.1575451463.git.baolin.wang7@gmail.com>
+        Wed, 4 Dec 2019 04:33:05 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB49WUjt014396
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Dec 2019 04:33:05 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wn3pevqxb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 04:33:04 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
+        Wed, 4 Dec 2019 09:33:02 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Dec 2019 09:33:00 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB49WxST39845900
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Dec 2019 09:32:59 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1DF0DA405C;
+        Wed,  4 Dec 2019 09:32:59 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED247A405B;
+        Wed,  4 Dec 2019 09:32:56 +0000 (GMT)
+Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.83.83])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Dec 2019 09:32:56 +0000 (GMT)
+From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
+        linuxram@us.ibm.com, psampat@linux.ibm.com,
+        pratik.sampat@in.ibm.com
+Subject: [RFC 0/3] Integrate Support for self-save and determine
+Date:   Wed,  4 Dec 2019 15:02:52 +0530
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120409-0020-0000-0000-0000039397CA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120409-0021-0000-0000-000021EABE17
+Message-Id: <20191204093255.11849-1-psampat@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_02:2019-12-04,2019-12-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 impostorscore=0 suspectscore=0
+ bulkscore=1 lowpriorityscore=1 spamscore=0 clxscore=1011 mlxlogscore=661
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912040073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_hwspin_lock_register() to register the hwlock controller instead of
-unregistering the hwlock controller explicitly when removing the device.
+Currently the stop-api supports a mechanism called as self-restore
+which allows us to restore the values of certain SPRs on wakeup from a
+deep-stop state to a desired value. To use this, the Kernel makes an
+OPAL call passing the PIR of the CPU, the SPR number and the value to
+which the SPR should be restored when that CPU wakes up from a deep
+stop state.
 
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- drivers/hwspinlock/omap_hwspinlock.c |   13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+Recently, a new feature, named self-save has been enabled in the
+stop-api, which is an alternative mechanism to do the same, except
+that self-save will save the current content of the SPR before
+entering a deep stop state and also restore the content back on
+waking up from a deep stop state.
 
-diff --git a/drivers/hwspinlock/omap_hwspinlock.c b/drivers/hwspinlock/omap_hwspinlock.c
-index 3b05560..9e8a8c2 100644
---- a/drivers/hwspinlock/omap_hwspinlock.c
-+++ b/drivers/hwspinlock/omap_hwspinlock.c
-@@ -131,8 +131,8 @@ static int omap_hwspinlock_probe(struct platform_device *pdev)
- 	for (i = 0, hwlock = &bank->lock[0]; i < num_locks; i++, hwlock++)
- 		hwlock->priv = io_base + LOCK_BASE_OFFSET + sizeof(u32) * i;
- 
--	ret = hwspin_lock_register(bank, &pdev->dev, &omap_hwspinlock_ops,
--						base_id, num_locks);
-+	ret = devm_hwspin_lock_register(&pdev->dev, bank, &omap_hwspinlock_ops,
-+					base_id, num_locks);
- 	if (ret)
- 		goto runtime_err;
- 
-@@ -148,15 +148,6 @@ static int omap_hwspinlock_probe(struct platform_device *pdev)
- 
- static int omap_hwspinlock_remove(struct platform_device *pdev)
- {
--	struct hwspinlock_device *bank = platform_get_drvdata(pdev);
--	int ret;
--
--	ret = hwspin_lock_unregister(bank);
--	if (ret) {
--		dev_err(&pdev->dev, "%s failed: %d\n", __func__, ret);
--		return ret;
--	}
--
- 	pm_runtime_disable(&pdev->dev);
- 
- 	return 0;
+This patch series aims at introducing and leveraging the self-save feature in
+the kernel.
+
+Now, as the kernel has a choice to prefer one mode over the other and
+there can be registers in both the save/restore SPR list which are sent
+from the device tree, a new interface has been defined for the seamless
+handing of the modes for each SPR.
+
+A list of preferred SPRs are maintained in the kernel which contains two
+properties:
+1. supported_mode: Helps in identifying if it strictly supports self
+                   save or restore or both.
+2. preferred_mode: Calls out what mode is preferred for each SPR. It
+                   could be strictly self save or restore, or it can also
+                   determine the preference of  mode over the other if both
+                   are present by encapsulating the other in bitmask from
+                   LSB to MSB.
+Below is a table to show the Scenario::Consequence when the self save and
+self restore modes are available or disabled in different combinations as
+perceived from the device tree thus giving complete backwards compatibly
+regardless of an older firmware running a newer kernel or vise-versa.
+
+SR = Self restore; SS = Self save
+
+.-----------------------------------.----------------------------------------.
+|             Scenario              |                Consequence             |
+:-----------------------------------+----------------------------------------:
+| Legacy Firmware. No SS or SR node | Self restore is called for all         |
+|                                   | supported SPRs                         |
+:-----------------------------------+----------------------------------------:
+| SR: !active SS: !active           | Deep stop states disabled              |
+:-----------------------------------+----------------------------------------:
+| SR: active SS: !active            | Self restore is called for all         |
+|                                   | supported SPRs                         |
+:-----------------------------------+----------------------------------------:
+| SR: active SS: active             | Goes through the preferences for each  |
+|                                   | SPR and executes of the modes          |
+|                                   | accordingly. Currently, Self restore is|
+|                                   | called for all the SPRs except PSSCR   |
+|                                   | which is self saved                    |
+:-----------------------------------+----------------------------------------:
+| SR: active(only HID0) SS: active  | Self save called for all supported     |
+|                                   | registers expect HID0 (as HID0 cannot  |
+|                                   | be self saved currently)               |
+:-----------------------------------+----------------------------------------:
+| SR: !active SS: active            | currently will disable deep states as  |
+|                                   | HID0 is needed to be self restored and |
+|                                   | cannot be self saved                   |
+'-----------------------------------'----------------------------------------'
+
+Pratik Rajesh Sampat (3):
+  powerpc/powernv: Interface to define support and preference for a SPR
+  powerpc/powernv: Introduce Self save support
+  powerpc/powernv: Parse device tree, population of SPR support
+
+ arch/powerpc/include/asm/opal-api.h        |   3 +-
+ arch/powerpc/include/asm/opal.h            |   1 +
+ arch/powerpc/platforms/powernv/idle.c      | 431 ++++++++++++++++++---
+ arch/powerpc/platforms/powernv/opal-call.c |   1 +
+ 4 files changed, 379 insertions(+), 57 deletions(-)
+
 -- 
-1.7.9.5
+2.21.0
 
