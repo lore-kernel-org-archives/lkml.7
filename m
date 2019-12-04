@@ -2,151 +2,199 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC743C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66964C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E633207DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D8D207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f6gx9D8F"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vtGNWWKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfLDPW6 (ORCPT
+        id S1728264AbfLDPX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:22:58 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45829 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbfLDPW6 (ORCPT
+        Wed, 4 Dec 2019 10:23:27 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:20620 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727828AbfLDPX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:22:58 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 203so6410314lfa.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:22:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QhRtjHCPm4dHMmypfZVrC9ZvTuu/tqs6/qPMMGAKlVc=;
-        b=f6gx9D8Fzo/082KBagEd5YUwuwdJPV3+2qN3Jp4bwdirB80/PSKKbQ7uBb7HKSDXb8
-         +c+51IgPuusWznWQZhf6FWGXKC9P3GTNOIr/01a75a+J48vUKtrNEn00TGazRBiLDA2j
-         LTr+DaLi1Yw/2qONCSlT0LgGHVp6wRzWm+ejW5wrlQA9XSHrOVYnTcoI7dHn5A6tFuZd
-         +ISQXjrhL4bRbSXG8PCPna852/LauG1Chvu7YAjtfuFxs73ZBH9r79iC3rH38mulvwsW
-         ejzMTXHEqq6H06yY6l6btr9ixgQpTxytuCNE7HJHwn7I+Hkt1jEt6xdORy7ZbkTrmx8A
-         QhUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QhRtjHCPm4dHMmypfZVrC9ZvTuu/tqs6/qPMMGAKlVc=;
-        b=mXLseGaNYF2bG+y1oj9F4jj90w3FVSXrVKF6x6Co/AMoq75wt4p4K28AltvnZVCW7D
-         oY10Wk/SbNwvSXnj75SZ85FbHoMYI8Mn9/5ggiJ+EaOIcyL5h4pRPBSEOA6DW6yHF7nq
-         WzC72Nmv+uXuzg2X0LEjDIewupeSegEad6AHhw4yENqnWx5dS/FnHh4m+je1OzePWVbA
-         E4wO3/FCAP/IcGi/VwTVQhH4+xtJVLSDuJb1XGsbZustELSbZNMjfeeg8RckhRBeM5GS
-         bLg2Qd6zsxFK3+RPbICGLdkdSUX+wqLID5po8VsjS1GYWHXlE/cP68XCeWyn41/qEYjB
-         YRRA==
-X-Gm-Message-State: APjAAAVpHc0Fkhcgr4fadwPMe4KiH4FRrIHBXeWEdTBr4je+nPc3O1wl
-        ZTk+j+GBB0BDKYT0beGUD6R0Jtk20p0+PGcmU5c1Nw==
-X-Google-Smtp-Source: APXvYqz1JOMHjPsCC+aY+OEI89bDT/1JuNAZxEJcfVpYtKmNUbCuezV4Z0Q0k2J97y3sSPrVRzqqqde2RKoNvY8ETzg=
-X-Received: by 2002:a19:f701:: with SMTP id z1mr2364885lfe.133.1575472975799;
- Wed, 04 Dec 2019 07:22:55 -0800 (PST)
+        Wed, 4 Dec 2019 10:23:27 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4FM5wl026203;
+        Wed, 4 Dec 2019 16:23:17 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=8BM+BgH6USRwz0DXxL6nJffx2+O6Ux7FvCH6ofepeP4=;
+ b=vtGNWWKDWVVqMkFqQY9rewo2iWybFK9AfvQ/W/Xm69QL0FsoyROikRZES5lgkuvUgKb2
+ CvhGu/DNWjvwjB7C9TmuRnkyVQhh0w7kEaNAl1ay3xQSCMI0TxRNpso8xOSqtmbZ6P2U
+ YbpD+aE7jLDpCEwhx50GMAAh/t3Mje0ShPBmY6gpA09oUCBCd5caUHGu32Faj3LwuL+4
+ jdNTSEiNtNtUIfXuJ8uC7CrzRU2n9TSPz3M+tdswwAaVYk0FKDpouSe3u/Ya9sAsqKCZ
+ naOCPPea+wqmLcVe2o6xQcfTXy47FIOGl1rq8xF9MFmZ2C3QpPxUs3c50+9MZv+ImJo2 Yg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wkeea645g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Dec 2019 16:23:17 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BF840100034;
+        Wed,  4 Dec 2019 16:23:16 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ABE802C1AC8;
+        Wed,  4 Dec 2019 16:23:16 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.45) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 4 Dec
+ 2019 16:23:15 +0100
+Subject: Re: [PATCH] ARM: dts: stm32: remove "@" from stm32f7 pinmux groups
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191125121244.19591-1-benjamin.gaignard@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <f277b73f-716c-0746-73b8-45a8096d0bff@st.com>
+Date:   Wed, 4 Dec 2019 16:23:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191203155907.2086-1-valentin.schneider@arm.com> <20191203155907.2086-2-valentin.schneider@arm.com>
-In-Reply-To: <20191203155907.2086-2-valentin.schneider@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 4 Dec 2019 16:22:44 +0100
-Message-ID: <CAKfTPtC-9nxGCAq8ck0Av6zuqCySvO87oP4hhBE=qKL3gxu+ow@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] sched/uclamp: Make uclamp_util_*() helpers use and
- return UL values
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Quentin Perret <qperret@google.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191125121244.19591-1-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Dec 2019 at 17:02, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
-> Vincent pointed out recently that the canonical type for utilization
-> values is 'unsigned long'. Internally uclamp uses 'unsigned int' values for
-> cache optimization, but this doesn't have to be exported to its users.
->
-> Make the uclamp helpers that deal with utilization use and return unsigned
-> long values.
->
-> Reviewed-by: Quentin Perret <qperret@google.com>
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Hi Benjamin
+
+On 11/25/19 1:12 PM, Benjamin Gaignard wrote:
+> Replace all "@" by "_" in pinmux groups for stm32f7 family.
+> This avoid errors when using yaml to check the bindings.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  kernel/sched/sched.h | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
->
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 280a3c735935..f1d035e5df7e 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -2303,15 +2303,15 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
->  unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+>   arch/arm/boot/dts/stm32f7-pinctrl.dtsi | 22 +++++++++++-----------
+>   1 file changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
+> index 9314128df185..5271df1017cb 100644
+> --- a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
+> @@ -127,7 +127,7 @@
+>   				st,bank-name = "GPIOK";
+>   			};
+>   
+> -			cec_pins_a: cec@0 {
+> +			cec_pins_a: cec_0 {
 
-Why not changing uclamp_eff_value to return unsigned long too ? The
-returned value represents a utilization to be compared with other
-utilization value
+You fix a warning by adding a new one. Please use "cec-0" instead of 
+"cec_0". To be done for all changes in this file.
 
->
->  static __always_inline
-> -unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
-> -                             struct task_struct *p)
-> +unsigned long uclamp_util_with(struct rq *rq, unsigned long util,
-> +                              struct task_struct *p)
->  {
-> -       unsigned int min_util = READ_ONCE(rq->uclamp[UCLAMP_MIN].value);
-> -       unsigned int max_util = READ_ONCE(rq->uclamp[UCLAMP_MAX].value);
-> +       unsigned long min_util = READ_ONCE(rq->uclamp[UCLAMP_MIN].value);
-> +       unsigned long max_util = READ_ONCE(rq->uclamp[UCLAMP_MAX].value);
->
->         if (p) {
-> -               min_util = max(min_util, uclamp_eff_value(p, UCLAMP_MIN));
-> -               max_util = max(max_util, uclamp_eff_value(p, UCLAMP_MAX));
-> +               min_util = max_t(unsigned long, min_util, uclamp_eff_value(p, UCLAMP_MIN));
+regards
+Alex
 
-As mentioned above, uclamp_eff_value should return an unsigned long
 
-> +               max_util = max_t(unsigned long, max_util, uclamp_eff_value(p, UCLAMP_MAX));
->         }
->
->         /*
-> @@ -2325,17 +2325,17 @@ unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
->         return clamp(util, min_util, max_util);
->  }
->
-> -static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
-> +static inline unsigned long uclamp_util(struct rq *rq, unsigned long util)
->  {
->         return uclamp_util_with(rq, util, NULL);
->  }
->  #else /* CONFIG_UCLAMP_TASK */
-> -static inline unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
-> -                                           struct task_struct *p)
-> +static inline unsigned long uclamp_util_with(struct rq *rq, unsigned long util,
-> +                                            struct task_struct *p)
->  {
->         return util;
->  }
-> -static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
-> +static inline unsigned long uclamp_util(struct rq *rq, unsigned long util)
->  {
->         return util;
->  }
-> --
-> 2.24.0
->
+>   				pins {
+>   					pinmux = <STM32_PINMUX('A', 15, AF4)>; /* HDMI CEC */
+>   					slew-rate = <0>;
+> @@ -136,7 +136,7 @@
+>   				};
+>   			};
+>   
+> -			usart1_pins_a: usart1@0 {
+> +			usart1_pins_a: usart1_0 {
+>   				pins1 {
+>   					pinmux = <STM32_PINMUX('A', 9, AF7)>; /* USART1_TX */
+>   					bias-disable;
+> @@ -149,7 +149,7 @@
+>   				};
+>   			};
+>   
+> -			usart1_pins_b: usart1@1 {
+> +			usart1_pins_b: usart1_1 {
+>   				pins1 {
+>   					pinmux = <STM32_PINMUX('A', 9, AF7)>; /* USART1_TX */
+>   					bias-disable;
+> @@ -162,7 +162,7 @@
+>   				};
+>   			};
+>   
+> -			i2c1_pins_b: i2c1@0 {
+> +			i2c1_pins_b: i2c1_0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('B', 9, AF4)>, /* I2C1 SDA */
+>   						 <STM32_PINMUX('B', 8, AF4)>; /* I2C1 SCL */
+> @@ -172,7 +172,7 @@
+>   				};
+>   			};
+>   
+> -			usbotg_hs_pins_a: usbotg-hs@0 {
+> +			usbotg_hs_pins_a: usbotg-hs_0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('H', 4, AF10)>, /* OTG_HS_ULPI_NXT */
+>   						 <STM32_PINMUX('I', 11, AF10)>, /* OTG_HS_ULPI_DIR */
+> @@ -192,7 +192,7 @@
+>   				};
+>   			};
+>   
+> -			usbotg_hs_pins_b: usbotg-hs@1 {
+> +			usbotg_hs_pins_b: usbotg-hs_1 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('H', 4, AF10)>, /* OTG_HS_ULPI_NXT */
+>   						 <STM32_PINMUX('C', 2, AF10)>, /* OTG_HS_ULPI_DIR */
+> @@ -212,7 +212,7 @@
+>   				};
+>   			};
+>   
+> -			usbotg_fs_pins_a: usbotg-fs@0 {
+> +			usbotg_fs_pins_a: usbotg-fs_0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('A', 10, AF10)>, /* OTG_FS_ID */
+>   						 <STM32_PINMUX('A', 11, AF10)>, /* OTG_FS_DM */
+> @@ -223,7 +223,7 @@
+>   				};
+>   			};
+>   
+> -			sdio_pins_a: sdio_pins_a@0 {
+> +			sdio_pins_a: sdio_pins_a_0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1 D0 */
+>   						 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1 D1 */
+> @@ -236,7 +236,7 @@
+>   				};
+>   			};
+>   
+> -			sdio_pins_od_a: sdio_pins_od_a@0 {
+> +			sdio_pins_od_a: sdio_pins_od_a_0 {
+>   				pins1 {
+>   					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1 D0 */
+>   						 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1 D1 */
+> @@ -254,7 +254,7 @@
+>   				};
+>   			};
+>   
+> -			sdio_pins_b: sdio_pins_b@0 {
+> +			sdio_pins_b: sdio_pins_b_0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('G', 9, AF11)>, /* SDMMC2 D0 */
+>   						 <STM32_PINMUX('G', 10, AF11)>, /* SDMMC2 D1 */
+> @@ -267,7 +267,7 @@
+>   				};
+>   			};
+>   
+> -			sdio_pins_od_b: sdio_pins_od_b@0 {
+> +			sdio_pins_od_b: sdio_pins_od_b_0 {
+>   				pins1 {
+>   					pinmux = <STM32_PINMUX('G', 9, AF11)>, /* SDMMC2 D0 */
+>   						 <STM32_PINMUX('G', 10, AF11)>, /* SDMMC2 D1 */
+> 
