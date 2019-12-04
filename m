@@ -2,90 +2,260 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E05C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5942C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E8920674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:21:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575462077;
-	bh=SO4UPO0pN1BpTj2Vj+qz2h8O3I4ExQ0WHdRywPmMRHA=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=RZQDaV4u1tsnIH1esnEHZ+/Fd3AHvwjdq1wkAg7sVsjXvj045tYI/c2pxwqrjHqn/
-	 FqlgbQAFb97Bk7Wka5Cm2RK8tEdSN809G9ADFF3dvWqrDRddMaX5HF6JraykaljqYN
-	 kWK86Moa6PU+XikIOIW/UrdHxlV0+N1BtGbrm3hI=
+	by mail.kernel.org (Postfix) with ESMTP id 77073207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:22:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MuercMXV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbfLDMVQ (ORCPT
+        id S1727856AbfLDMWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:21:16 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:43763 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727445AbfLDMVQ (ORCPT
+        Wed, 4 Dec 2019 07:22:42 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40506 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727445AbfLDMWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:21:16 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1icTeU-0002F5-09; Wed, 04 Dec 2019 13:21:06 +0100
-To:     <anarsoul@gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v3 1/2] arm64:  =?UTF-8?Q?arch=5Ftimer=3A=20Workaround=20for=20Allwinner=20A=36=34=20time?=  =?UTF-8?Q?r=20instability?=
-X-PHP-Originating-Script: 0:main.inc
+        Wed, 4 Dec 2019 07:22:42 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4CMaag011912;
+        Wed, 4 Dec 2019 06:22:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575462156;
+        bh=2T/wwk3W1LKzBzA5mnDpSGz8/pr3rFU9EQeKYaI8FpY=;
+        h=From:To:CC:Subject:Date;
+        b=MuercMXVYw0B3SAJq95QsDwe7eLxZ+ROSst/3GL+yzsoSKucCj0VWGhHibKFOuRE1
+         0fIwFHh0qjDK0T903uEGr+Z/supGShmixl5JUcE2BycHrnDhqyGAuAgFl6nNfWGn7+
+         rNpYfhQyjptM4g6r+JuUAeENDUar7D5QwbgFhjhg=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4CMau1069396
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 4 Dec 2019 06:22:36 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
+ 2019 06:22:34 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Dec 2019 06:22:34 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4CMXwW103192;
+        Wed, 4 Dec 2019 06:22:34 -0600
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] net: phy: dp83867: fix hfs boot in rgmii mode
+Date:   Wed, 4 Dec 2019 14:22:32 +0200
+Message-ID: <20191204122232.18107-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 04 Dec 2019 12:21:05 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <marc.zyngier@arm.com>, Samuel Holland <samuel@sholland.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-In-Reply-To: <CA+E=qVfaBcUN5iB3kaK5gHyURpWt7ET6_js=sLiDg4PCDXXTYA@mail.gmail.com>
-References: <20190113021719.46457-1-samuel@sholland.org>
- <20190113021719.46457-2-samuel@sholland.org>
- <472c5450-1b60-6ac7-b242-805c2a2f3272@arm.com>
- <CA+E=qVfaBcUN5iB3kaK5gHyURpWt7ET6_js=sLiDg4PCDXXTYA@mail.gmail.com>
-Message-ID: <4b922079aeed04f31ff67b3e7fb78022@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: anarsoul@gmail.com, marc.zyngier@arm.com, samuel@sholland.org, catalin.marinas@arm.com, will.deacon@arm.com, maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[please note that my email address has changed]
+The commit ef87f7da6b28 ("net: phy: dp83867: move dt parsing to probe")
+causes regression on TI dra71x-evm and dra72x-evm, where DP83867 PHY is
+used in "rgmii-id" mode - the networking stops working.
+Unfortunately, it's not enough to just move DT parsing code to .probe() as
+it depends on phydev->interface value, which is set to correct value abter
+the .probe() is completed and before calling .config_init(). So, RGMII
+configuration can't be loaded from DT.
 
-On 2019-12-04 04:18, Vasily Khoruzhick wrote:
+To fix and issue
+- move RGMII validation code to .config_init()
+- parse RGMII parameters in dp83867_of_init(), but consider them as
+optional.
 
-[...]
+Fixes: ef87f7da6b28 ("net: phy: dp83867: move dt parsing to probe")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+Hi All,
 
-> Unfortunately this patch doesn't completely eliminate the jumps. 
-> There
-> have been reports from users who still saw 95y jump even with the
-> patch applied.
->
-> Personally I've seen it once or twice on my Pine64-LTS.
->
-> Looks like we need bigger hammer. Does anyone have any idea what it 
-> could be?
+i'm very sorry for this regression. I've tested it on only one board and
+was just lucky probably. 
+I still think it's better to DT parsing at .probe(),
+but as second option - buggy patch can be reverted.
 
-Which kernel version did you see this happening on?
+ drivers/net/phy/dp83867.c | 117 +++++++++++++++++++++++---------------
+ 1 file changed, 71 insertions(+), 46 deletions(-)
 
-         M.
+diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+index 0b95e7a2e273..f3fc49a93245 100644
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -101,8 +101,11 @@
+ /* RGMIIDCTL bits */
+ #define DP83867_RGMII_TX_CLK_DELAY_MAX		0xf
+ #define DP83867_RGMII_TX_CLK_DELAY_SHIFT	4
++#define DP83867_RGMII_TX_CLK_DELAY_INV	(DP83867_RGMII_TX_CLK_DELAY_MAX + 1)
+ #define DP83867_RGMII_RX_CLK_DELAY_MAX		0xf
+ #define DP83867_RGMII_RX_CLK_DELAY_SHIFT	0
++#define DP83867_RGMII_RX_CLK_DELAY_INV	(DP83867_RGMII_RX_CLK_DELAY_MAX + 1)
++
+ 
+ /* IO_MUX_CFG bits */
+ #define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MASK	0x1f
+@@ -294,6 +297,48 @@ static int dp83867_config_port_mirroring(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
++static int dp83867_verify_rgmii_cfg(struct phy_device *phydev)
++{
++	struct dp83867_private *dp83867 = phydev->priv;
++
++	/* Existing behavior was to use default pin strapping delay in rgmii
++	 * mode, but rgmii should have meant no delay.  Warn existing users.
++	 */
++	if (phydev->interface == PHY_INTERFACE_MODE_RGMII) {
++		const u16 val = phy_read_mmd(phydev, DP83867_DEVADDR,
++					     DP83867_STRAP_STS2);
++		const u16 txskew = (val & DP83867_STRAP_STS2_CLK_SKEW_TX_MASK) >>
++				   DP83867_STRAP_STS2_CLK_SKEW_TX_SHIFT;
++		const u16 rxskew = (val & DP83867_STRAP_STS2_CLK_SKEW_RX_MASK) >>
++				   DP83867_STRAP_STS2_CLK_SKEW_RX_SHIFT;
++
++		if (txskew != DP83867_STRAP_STS2_CLK_SKEW_NONE ||
++		    rxskew != DP83867_STRAP_STS2_CLK_SKEW_NONE)
++			phydev_warn(phydev,
++				    "PHY has delays via pin strapping, but phy-mode = 'rgmii'\n"
++				    "Should be 'rgmii-id' to use internal delays txskew:%x rxskew:%x\n",
++				    txskew, rxskew);
++	}
++
++	/* RX delay *must* be specified if internal delay of RX is used. */
++	if ((phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++	     phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) &&
++	     dp83867->rx_id_delay == DP83867_RGMII_RX_CLK_DELAY_INV) {
++		phydev_err(phydev, "ti,rx-internal-delay must be specified\n");
++		return -EINVAL;
++	}
++
++	/* TX delay *must* be specified if internal delay of RX is used. */
++	if ((phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++	     phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) &&
++	     dp83867->tx_id_delay == DP83867_RGMII_TX_CLK_DELAY_INV) {
++		phydev_err(phydev, "ti,tx-internal-delay must be specified\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ #ifdef CONFIG_OF_MDIO
+ static int dp83867_of_init(struct phy_device *phydev)
+ {
+@@ -335,55 +380,27 @@ static int dp83867_of_init(struct phy_device *phydev)
+ 	dp83867->sgmii_ref_clk_en = of_property_read_bool(of_node,
+ 					"ti,sgmii-ref-clock-output-enable");
+ 
+-	/* Existing behavior was to use default pin strapping delay in rgmii
+-	 * mode, but rgmii should have meant no delay.  Warn existing users.
+-	 */
+-	if (phydev->interface == PHY_INTERFACE_MODE_RGMII) {
+-		const u16 val = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_STRAP_STS2);
+-		const u16 txskew = (val & DP83867_STRAP_STS2_CLK_SKEW_TX_MASK) >>
+-				   DP83867_STRAP_STS2_CLK_SKEW_TX_SHIFT;
+-		const u16 rxskew = (val & DP83867_STRAP_STS2_CLK_SKEW_RX_MASK) >>
+-				   DP83867_STRAP_STS2_CLK_SKEW_RX_SHIFT;
+-
+-		if (txskew != DP83867_STRAP_STS2_CLK_SKEW_NONE ||
+-		    rxskew != DP83867_STRAP_STS2_CLK_SKEW_NONE)
+-			phydev_warn(phydev,
+-				    "PHY has delays via pin strapping, but phy-mode = 'rgmii'\n"
+-				    "Should be 'rgmii-id' to use internal delays\n");
+-	}
+ 
+ 	/* RX delay *must* be specified if internal delay of RX is used. */
+-	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
+-		ret = of_property_read_u32(of_node, "ti,rx-internal-delay",
+-					   &dp83867->rx_id_delay);
+-		if (ret) {
+-			phydev_err(phydev, "ti,rx-internal-delay must be specified\n");
+-			return ret;
+-		}
+-		if (dp83867->rx_id_delay > DP83867_RGMII_RX_CLK_DELAY_MAX) {
+-			phydev_err(phydev,
+-				   "ti,rx-internal-delay value of %u out of range\n",
+-				   dp83867->rx_id_delay);
+-			return -EINVAL;
+-		}
++	dp83867->rx_id_delay = DP83867_RGMII_RX_CLK_DELAY_INV;
++	ret = of_property_read_u32(of_node, "ti,rx-internal-delay",
++				   &dp83867->rx_id_delay);
++	if (!ret && dp83867->rx_id_delay > DP83867_RGMII_RX_CLK_DELAY_MAX) {
++		phydev_err(phydev,
++			   "ti,rx-internal-delay value of %u out of range\n",
++			   dp83867->rx_id_delay);
++		return -EINVAL;
+ 	}
+ 
+ 	/* TX delay *must* be specified if internal delay of RX is used. */
+-	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
+-		ret = of_property_read_u32(of_node, "ti,tx-internal-delay",
+-					   &dp83867->tx_id_delay);
+-		if (ret) {
+-			phydev_err(phydev, "ti,tx-internal-delay must be specified\n");
+-			return ret;
+-		}
+-		if (dp83867->tx_id_delay > DP83867_RGMII_TX_CLK_DELAY_MAX) {
+-			phydev_err(phydev,
+-				   "ti,tx-internal-delay value of %u out of range\n",
+-				   dp83867->tx_id_delay);
+-			return -EINVAL;
+-		}
++	dp83867->tx_id_delay = DP83867_RGMII_TX_CLK_DELAY_INV;
++	ret = of_property_read_u32(of_node, "ti,tx-internal-delay",
++				   &dp83867->tx_id_delay);
++	if (!ret && dp83867->tx_id_delay > DP83867_RGMII_TX_CLK_DELAY_MAX) {
++		phydev_err(phydev,
++			   "ti,tx-internal-delay value of %u out of range\n",
++			   dp83867->tx_id_delay);
++		return -EINVAL;
+ 	}
+ 
+ 	if (of_property_read_bool(of_node, "enet-phy-lane-swap"))
+@@ -434,6 +451,10 @@ static int dp83867_config_init(struct phy_device *phydev)
+ 	int ret, val, bs;
+ 	u16 delay;
+ 
++	ret = dp83867_verify_rgmii_cfg(phydev);
++	if (ret)
++		return ret;
++
+ 	/* RX_DV/RX_CTRL strapped in mode 1 or mode 2 workaround */
+ 	if (dp83867->rxctrl_strap_quirk)
+ 		phy_clear_bits_mmd(phydev, DP83867_DEVADDR, DP83867_CFG4,
+@@ -485,8 +506,12 @@ static int dp83867_config_init(struct phy_device *phydev)
+ 
+ 		phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_RGMIICTL, val);
+ 
+-		delay = (dp83867->rx_id_delay |
+-			(dp83867->tx_id_delay << DP83867_RGMII_TX_CLK_DELAY_SHIFT));
++		delay = 0;
++		if (dp83867->rx_id_delay != DP83867_RGMII_RX_CLK_DELAY_INV)
++			delay |= dp83867->rx_id_delay;
++		if (dp83867->tx_id_delay != DP83867_RGMII_TX_CLK_DELAY_INV)
++			delay |= dp83867->tx_id_delay <<
++				 DP83867_RGMII_TX_CLK_DELAY_SHIFT;
+ 
+ 		phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_RGMIIDCTL,
+ 			      delay);
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
