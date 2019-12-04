@@ -2,338 +2,110 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5E5C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F80DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6E420409
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5637D2068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:01:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="TSXHE2l8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfLDIA4 (ORCPT
+        id S1727327AbfLDIBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:00:56 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:35016 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726632AbfLDIA4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:00:56 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0Tjuk.6v_1575446447;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Tjuk.6v_1575446447)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 04 Dec 2019 16:00:48 +0800
-Subject: [PATCH v4 2/2] sched/numa: documentation for per-cgroup numa
- statistics
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
- <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
-Message-ID: <e6f1aa2f-37ac-d9bc-09a5-29229559b1a6@linux.alibaba.com>
-Date:   Wed, 4 Dec 2019 16:00:47 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 4 Dec 2019 03:01:22 -0500
+Received: from mail-eopbgr30095.outbound.protection.outlook.com ([40.107.3.95]:46833
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726166AbfLDIBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 03:01:22 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bKRy3CQN7hcc7nw2q48a5v983hsH8EjbkdglEM/yD4dBFzgEbr6iT+nlXxqOR6kCXve9GS8dUVnjFixwZ7h6PnQUMls7x9csVfvQFVhDJhbE1v9vvr1FGka5+o1JenxZJi0UlGJPS0YcseQReVOBkvllfnoDW6XYxYYnq51fXR3sRUU8ce+sqxbQi8wwWJFkB3KdLIJKo4M3DDTfBuj8SsF3grd3GaDYa70UnccISbaXhHFavbZGDYhsQxjHmr5xuxkFHd/55CfkhG029W+71TcjDsg3IY5O7fZy+BFrFUdIwNbaks7pumGgmopw80oLloUX4zNrkIaZtY2IIVvQ7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I0yz5/jE4M1nIRvENs4Ba+fYNQnxZ/vxcr26vXwfNTY=;
+ b=EmOMkGl16LElTzV+SJwgjQT3nLu6nuh6R5qs5TwCFL4Zi+AYprzrIy8KB9uBrP3eF+2AwHXJoPCDVGgPChv3UZI7UbYVGHpCQiM8q62na5dcH9rceyAEFDf7bIgkGmSiULlB6BXVeaIG2ru4LdoRPDOGE45c4lW8gUtTly4IzO55XpYXdcDjVuAp1PGf+i1nhGPYlZIqS8Hu8W0j+lyBFzwFaLnIfGNCyfIUkzwrHW8zmRbWPq3V6j4TurkqHiIYCApHtlNDVFSrpMcnaUVq1XXQ89ftB3Y7JvrU1kdZPUD30n1ZBpUVzAF+Mh0e/S+8juhC5wDfV+gN/wgNocZyEg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I0yz5/jE4M1nIRvENs4Ba+fYNQnxZ/vxcr26vXwfNTY=;
+ b=TSXHE2l8nTIIW8QXk68WQRrK1sacvc/QI7hT4mPpQgwar957xjLKQZErCGMYn0OP32NDu1iCF9jPF5GoyJsndTXANXlzbtwubB6njVLC0qamPp4BC431aN7naxho0uXWHZpCTRVoumzHxFk62MdFitQfMxuWurSw1lIyh2fYc1E=
+Received: from VI1PR02MB3054.eurprd02.prod.outlook.com (10.175.244.155) by
+ VI1PR02MB5197.eurprd02.prod.outlook.com (20.178.80.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.21; Wed, 4 Dec 2019 08:01:17 +0000
+Received: from VI1PR02MB3054.eurprd02.prod.outlook.com
+ ([fe80::78f1:dc96:ee1a:bccd]) by VI1PR02MB3054.eurprd02.prod.outlook.com
+ ([fe80::78f1:dc96:ee1a:bccd%6]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 08:01:17 +0000
+From:   Tomer Tayar <ttayar@habana.ai>
+To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Omer Shpigelman <oshpigelman@habana.ai>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: RE: [PATCH] habanalabs: rate limit error msg on waiting for CS
+Thread-Topic: [PATCH] habanalabs: rate limit error msg on waiting for CS
+Thread-Index: AQHVqhgl8B9dKNMjIkGYpb/62LwdIKepm1Aw
+Date:   Wed, 4 Dec 2019 08:01:17 +0000
+Message-ID: <VI1PR02MB305448F610A65F0BD205737DD25D0@VI1PR02MB3054.eurprd02.prod.outlook.com>
+References: <20191203202750.9498-1-oded.gabbay@gmail.com>
+In-Reply-To: <20191203202750.9498-1-oded.gabbay@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ttayar@habana.ai; 
+x-originating-ip: [31.154.181.186]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 51f6c6b0-5522-48d5-3557-08d778902441
+x-ms-traffictypediagnostic: VI1PR02MB5197:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR02MB51971E4FAEE5177E2996C0C0D25D0@VI1PR02MB5197.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(366004)(39840400004)(136003)(189003)(199004)(76176011)(7696005)(256004)(102836004)(186003)(11346002)(55016002)(53546011)(26005)(6506007)(2906002)(6116002)(6436002)(33656002)(4326008)(3846002)(5660300002)(6246003)(446003)(2501003)(76116006)(4744005)(52536014)(66476007)(66946007)(86362001)(66556008)(64756008)(71200400001)(71190400001)(9686003)(66446008)(305945005)(99286004)(7736002)(25786009)(74316002)(81166006)(14454004)(229853002)(478600001)(110136005)(316002)(8936002)(81156014)(8676002)(6636002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR02MB5197;H:VI1PR02MB3054.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: habana.ai does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: m/yFgSDREeE57b1jLPXXA11LqDrxpp2zs2OppcwiuPH/QrYIpoZoxAu+DzPpAfgXWSV8X4kf0I5cNEObGDRxOVLk9/iJ0u/Tho43Djj++NsJP2eq07D4ThMHu46tolgcxOhTkBSysw6dyRxxbHuty48/5Kd0TqsvmmgqEQ+3SOFqBh0YM/u+hwpkkPOTHEYr399/OEftFcHVk2WS+UCz7r/HOteM3XfbFo5iiwjk+VfktylwiQgVd50tTlJK8YUNtsfqWRfKU+XeFpUWAOSqg5NRukp3JizELRp2OQ4bFCB0U/dj0q5Uo47152Ddl0iwlTCYTgmOSu1Qs1sI7VQSnRU5DqjFH4RVqEsQ5hZlvsrYtszZ0+ZkItxvS6Kw6+gN2PQHZp0Q2Bdlq8Z8tzizvRKTOMQeDPGUgVCFfcb0ALCBmxEiptkgzTtQhQ8cKFY4
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51f6c6b0-5522-48d5-3557-08d778902441
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 08:01:17.2862
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OwkHND9ZZwET0lG7yC1fzJCaF+H4XdgErjBEg0lBSDbGa1CdOCwGtrVCdenD4/Pn+DjlomZ2uJbCzAbeNCWQog==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB5197
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the description for 'numa_locality', also a new doc to explain
-the details on how to deal with the per-cgroup numa statistics.
+On Tue, Dec 3, 2019 at 22:28, Oded Gabbay <oded.gabbay@gmail.com> wrote:
+> In case a user submits a CS, and the submission fails, and the user doesn=
+'t
+> check the return value and instead use the error return value as a valid
+> sequence number of a CS and ask to wait on it, the driver will print an
+> error and return an error code for that wait.
+>=20
+> The real problem happens if now the user ignores the error of the wait, a=
+nd
+> try to wait again and again. This can lead to a flood of error messages
+> from the driver and even soft lockup event.
+>=20
+> Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Michal Koutný <mkoutny@suse.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Iurii Zaikin <yzaikin@google.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
----
- Documentation/admin-guide/cg-numa-stat.rst      | 178 ++++++++++++++++++++++++
- Documentation/admin-guide/index.rst             |   1 +
- Documentation/admin-guide/kernel-parameters.txt |   4 +
- Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
- init/Kconfig                                    |   6 +-
- 5 files changed, 196 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
-
-diff --git a/Documentation/admin-guide/cg-numa-stat.rst b/Documentation/admin-guide/cg-numa-stat.rst
-new file mode 100644
-index 000000000000..5d1f623451d5
---- /dev/null
-+++ b/Documentation/admin-guide/cg-numa-stat.rst
-@@ -0,0 +1,178 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============================
-+Per-cgroup NUMA statistics
-+===============================
-+
-+Background
-+----------
-+
-+On NUMA platforms, remote memory accessing always has a performance penalty.
-+Although we have NUMA balancing working hard to maximize the access locality,
-+there are still situations it can't help.
-+
-+This could happen in modern production environment. When a large number of
-+cgroups are used to classify and control resources, this creates a complex
-+configuration for memory policy, CPUs and NUMA nodes. In such cases NUMA
-+balancing could end up with the wrong memory policy or exhausted local NUMA
-+node, which would lead to low percentage of local page accesses.
-+
-+We need to detect such cases, figure out which workloads from which cgroup
-+have introduced the issues, then we get chance to do adjustment to avoid
-+performance degradation.
-+
-+However, there are no hardware counters for per-task local/remote accessing
-+info, we don't know how many remote page accesses have occurred for a
-+particular task.
-+
-+NUMA Locality
-+-------------
-+
-+Fortunately, we have NUMA Balancing which scans task's mapping and triggers
-+page fault periodically, giving us the opportunity to record per-task page
-+accessing info, when the CPU fall into PF is from the same node of pages, we
-+consider task as doing local page accessing, otherwise the remote page
-+accessing, we call these two counter the locality info.
-+
-+On each tick, we acquire the locality info of current task on that CPU, update
-+the increments into it's cgroup, becoming the group locality info.
-+
-+By "echo 1 > /proc/sys/kernel/numa_locality" at runtime or adding boot parameter
-+'numa_locality', we will enable the accounting of per-cgroup NUMA locality info,
-+the 'cpu.numa_stat' entry of CPU cgroup will show statistics::
-+
-+  page_access local=NR_LOCAL_PAGE_ACCESS remote=NR_REMOTE_PAGE_ACCESS
-+
-+We define 'NUMA locality' as::
-+
-+  NR_LOCAL_PAGE_ACCESS * 100 / (NR_LOCAL_PAGE_ACCESS + NR_REMOTE_PAGE_ACCESS)
-+
-+This per-cgroup percentage number help to represent the NUMA Balancing behavior.
-+
-+Note that the accounting is hierarchical, which means the NUMA locality info for
-+a given group represent not only the workload of this group, but also the
-+workloads of all its descendants.
-+
-+For example the 'cpu.numa_stat' show::
-+
-+  page_access local=129909383 remote=18265810
-+
-+The NUMA locality calculated as::
-+
-+  129909383 * 100 / (129909383 + 18265810) = 87.67
-+
-+Thus we know the workload of this group and its descendants have totally done
-+129909383 times of local page accessing and 18265810 times of remotes, locality
-+is 87.67% which imply most of the memory access are local.
-+
-+NUMA Consumption
-+----------------
-+
-+There are also other cgroup entry help us to estimate NUMA efficiency, which is
-+'cpuacct.usage_percpu' and 'memory.numa_stat'.
-+
-+By reading 'cpuacct.usage_percpu' we will get per-cpu runtime (in nanoseconds)
-+info (in hierarchy) as::
-+
-+  CPU_0_RUNTIME CPU_1_RUNTIME CPU_2_RUNTIME ... CPU_X_RUNTIME
-+
-+Combined with the info from::
-+
-+  cat /sys/devices/system/node/nodeX/cpulist
-+
-+We would be able to accumulate the runtime of CPUs into NUMA nodes, to get the
-+per-cgroup node runtime info.
-+
-+By reading 'memory.numa_stat' we will get per-cgroup node memory consumption
-+info as::
-+
-+  total=TOTAL_MEM N0=MEM_ON_NODE0 N1=MEM_ON_NODE1 ... NX=MEM_ON_NODEX
-+
-+Together we call these the per-cgroup NUMA consumption info, tell us how many
-+resources a particular workload has consumed, on a particular NUMA node.
-+
-+Monitoring
-+----------
-+
-+By monitoring the increments of locality info, we can easily know whether NUMA
-+Balancing is working well for a particular workload.
-+
-+For example we take a 5 seconds sample period, then on each sampling we have::
-+
-+  local_diff = last_nr_local_page_access - nr_local_page_access
-+  remote_diff = last_nr_remote_page_access - nr_remote_page_access
-+
-+and we get the locality in this period as::
-+
-+  locality = local_diff * 100 / (local_diff + remote_diff)
-+
-+We can plot a line for locality, when the line close to 100% things are good,
-+when getting close to 0% something is wrong, we can pick a proper watermark to
-+trigger warning message.
-+
-+You may want to drop the data if the local/remote_diff is too small, which
-+implies there are not many available pages for NUMA Balancing to scan, ignoring
-+would be fine since most likely the workload is insensitive to NUMA, or the
-+memory topology is already good enough.
-+
-+Monitoring root group helps you control the overall situation, while you may
-+also want to monitor all the leaf groups which contain the workloads, this
-+helps to catch the mouse.
-+
-+Try to put your workload into also the cpuacct & memory cgroup, when NUMA
-+Balancing is disabled or locality becomes too small, we may want to monitoring
-+the per-node runtime & memory info to see if the node consumption meet the
-+requirements.
-+
-+For NUMA node X on each sampling we have::
-+
-+  runtime_X_diff = runtime_X - last_runtime_X
-+  runtime_all_diff = runtime_all - last_runtime_all
-+
-+  runtime_percent_X = runtime_X_diff * 100 / runtime_all_diff
-+  memory_percent_X = memory_X * 100 / memory_all
-+
-+These two percentages are usually matched on each node, workload should execute
-+mostly on the node that contains most of its memory, but it's not guaranteed.
-+
-+The workload may only access a small part of its memory, in such cases although
-+the majority of memory are remotely, locality could still be good.
-+
-+Thus to tell if things are fine or not depends on the understanding of system
-+resource deployment, however, if you find node X got 100% memory percent but 0%
-+runtime percent, definitely something is wrong.
-+
-+Troubleshooting
-+---------------
-+
-+After identifying which workload introduced the bad locality, check:
-+
-+1). Is the workload bound to a particular NUMA node?
-+2). Has any NUMA node run out of resources?
-+
-+There are several ways to bind task's memory with a NUMA node, the strict way
-+like the MPOL_BIND memory policy or 'cpuset.mems' will limit the memory
-+node where to allocate pages. In this situation, admin should make sure the
-+task is allowed to run on the CPUs of that NUMA node, and make sure there are
-+available CPU resource there.
-+
-+There are also ways to bind task's CPU with a NUMA node, like 'cpuset.cpus' or
-+sched_setaffinity() syscall. In this situation, NUMA Balancing help to migrate
-+pages into that node, admin should make sure there are available memory there.
-+
-+Admin could try to rebind or unbind the NUMA node to erase the damage, make a
-+change then observe the statistics to see if things get better until the
-+situation is acceptable.
-+
-+Highlights
-+----------
-+
-+For some tasks, NUMA Balancing may found no necessary to scan pages, and
-+locality could always be 0 or small number, don't pay attention to them
-+since they most likely insensitive to NUMA.
-+
-+There is no accounting until the option is turned on, so enable it in advance
-+if you want to have the whole history.
-+
-+We have per-task migfailed counter to tell how many page migration has been
-+failed for a particular task, you will find it in /proc/PID/sched entry.
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 4405b7485312..c75a3fdfcd94 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -112,6 +112,7 @@ configure specific aspects of kernel behavior to your liking.
-    video-output
-    wimax/index
-    xfs
-+   cg-numa-stat
-
- .. only::  subproject and html
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 0945611b3877..9d9e57d19af3 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3227,6 +3227,10 @@
- 	numa_balancing=	[KNL,X86] Enable or disable automatic NUMA balancing.
- 			Allowed values are enable and disable
-
-+	numa_locality	[KNL] Enable per-cgroup numa locality info.
-+			Useful to debug NUMA efficiency problems when there are
-+			lots of per-cgroup workloads.
-+
- 	numa_zonelist_order= [KNL, BOOT] Select zonelist order for NUMA.
- 			'node', 'default' can be specified
- 			This can be set from sysctl after boot.
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 7e203b3ed331..efa995e757fd 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -572,6 +572,15 @@ rate for each task.
- numa_balancing_scan_size_mb is how many megabytes worth of pages are
- scanned for a given scan.
-
-+numa_locality:
-+=============
-+
-+Enables/disables per-cgroup NUMA locality info.
-+
-+0: disabled (default).
-+1: enabled.
-+
-+Check Documentation/admin-guide/cg-numa-stat.rst for details.
-
- osrelease, ostype & version:
- ============================
-diff --git a/init/Kconfig b/init/Kconfig
-index fb7182a0d017..3538fdd73387 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -818,13 +818,15 @@ config NUMA_BALANCING_DEFAULT_ENABLED
- 	  machine.
-
- config CGROUP_NUMA_LOCALITY
--	bool "The per-cgroup NUMA Locality"
-+	bool "per-cgroup NUMA Locality"
- 	default n
- 	depends on CGROUP_SCHED && NUMA_BALANCING
- 	help
--	  This option enable the collection of per-cgroup NUMA locality info,
-+	  This option enables the collection of per-cgroup NUMA locality info,
- 	  to tell whether NUMA Balancing is working well for a particular
- 	  workload, also imply the NUMA efficiency.
-+	  See
-+		-  Documentation/admin-guide/cg-numa-stat.rst
-
- menuconfig CGROUPS
- 	bool "Control Group support"
--- 
-2.14.4.44.g2045bb6
-
+Reviewed-by: Tomer Tayar <ttayar@habana.ai>
