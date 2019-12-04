@@ -2,162 +2,89 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2E4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269CCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6840620675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E69E42073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575451788;
+	bh=olCGYBNqUiviVWQIvUISVF1ya1mFuGUwBKcuWe02w5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LVK03dxWOj3kjV6+DWUi6dDhkZLjrKy3NEgTpnvMg514Y/5KJuVDfYjSAss/jyk7m
+	 t1+mHDRBdT+LvKYK+V4R+M1rApxpn6031i7g9jF6krRye60Nhceb8A9gdUZ3reyyXV
+	 v6FL50lEVKx0+7rTLAkC2bLDl/TZ0kAmQQlVwjdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfLDJ3j (ORCPT
+        id S1727394AbfLDJ3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:29:39 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49212 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725971AbfLDJ3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:29:39 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D9F7CAE8D;
-        Wed,  4 Dec 2019 09:29:36 +0000 (UTC)
-Subject: Re: [PATCH] drm/fb-cma-helpers: Fix include issue
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-References: <20191119105753.32363-1-benjamin.gaignard@st.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <685f58c0-087b-5438-1cb4-7ac7bbfe5062@suse.de>
-Date:   Wed, 4 Dec 2019 10:29:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Wed, 4 Dec 2019 04:29:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725922AbfLDJ3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 04:29:46 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A18820675;
+        Wed,  4 Dec 2019 09:29:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575451785;
+        bh=olCGYBNqUiviVWQIvUISVF1ya1mFuGUwBKcuWe02w5A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RgpthHgQ4pZiPs1SeA4WN16ryXE8z7kGsS2Nfg7w3eSzy8phuZ/jczqJAkJdcoh+F
+         dNfVPuA/3+EK+uS6fT4q+QMRDTKv7tQHPYYUkBX1K8f+C/22B1TPZB+KsJZCePobXH
+         KmL81FjgHZO/PVDLHr4aRz1gYeqf8G+PSYwxrK6g=
+Date:   Wed, 4 Dec 2019 10:29:42 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guoheyi <guoheyi@huawei.com>
+Cc:     Mike Waychison <mikew@google.com>, linux-kernel@vger.kernel.org,
+        wanghaibin 00208455 <wanghaibin.wang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: firmware: dmi-sysfs: why is the access mode of dmi sysfs entries
+ restricted to 0400?
+Message-ID: <20191204092942.GA3557583@kroah.com>
+References: <42bb2db8-66e0-3df4-75b7-98b2b2bcfca8@huawei.com>
+ <20191204074133.GA3548765@kroah.com>
+ <dac22bed-f138-471e-c19a-e31c5c910d48@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191119105753.32363-1-benjamin.gaignard@st.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="AxX246IxnoTUIznVycqbXIHOzMd5kyCMl"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dac22bed-f138-471e-c19a-e31c5c910d48@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---AxX246IxnoTUIznVycqbXIHOzMd5kyCMl
-Content-Type: multipart/mixed; boundary="eKxyl0DwhYHlhU4tBwr25j8LvW7I2a3gb";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Benjamin Gaignard <benjamin.gaignard@st.com>,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, sean@poorly.run,
- airlied@linux.ie, daniel@ffwll.ch
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Message-ID: <685f58c0-087b-5438-1cb4-7ac7bbfe5062@suse.de>
-Subject: Re: [PATCH] drm/fb-cma-helpers: Fix include issue
-References: <20191119105753.32363-1-benjamin.gaignard@st.com>
-In-Reply-To: <20191119105753.32363-1-benjamin.gaignard@st.com>
+On Wed, Dec 04, 2019 at 05:01:06PM +0800, Guoheyi wrote:
+> 
+> 在 2019/12/4 15:41, Greg Kroah-Hartman 写道:
+> > On Wed, Dec 04, 2019 at 03:31:22PM +0800, Guoheyi wrote:
+> > > Hi,
+> > > 
+> > > Why is the access mode of dmi sysfs entries restricted to 0400? Is it for
+> > > security concern? If it is, which information do we consider as privacy?
+> > There's lots of "interesting" information in dmi entries that you
+> > probably do not want all processes reading, which is why they are
+> > restricted.
+> > 
+> > > We would like to fetch CPU information from non-root application, is there
+> > > feasible way to do that?
+> > What specific CPU information is not currently exported in /proc/cpuinfo
+> > that only shows up in DMI entries that you are interested in?
+> 
+> We'd like to get processor manufacturer, speed and version, and pass the
+> information to qemu virtual machine, for users of VM might be happy to see
+> this instead of "unknown xxx", while qemu may run as non-root.
 
---eKxyl0DwhYHlhU4tBwr25j8LvW7I2a3gb
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Careful about this as if you move that virtual machine around, those
+values will change and if userspace was depending on them being static
+(set up at program start time), then you might have problems.
 
+good luck!
 
-
-Am 19.11.19 um 11:57 schrieb Benjamin Gaignard:
-> Exported functions prototypes are missing in drm_fb_cma_helper.c
-> Include drm_fb_cma_helper to fix that issue.
->=20
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-> ---
->  drivers/gpu/drm/drm_fb_cma_helper.c | 1 +
->  include/drm/drm_fb_cma_helper.h     | 2 ++
->  2 files changed, 3 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/drm_fb_cma_helper.c b/drivers/gpu/drm/drm_=
-fb_cma_helper.c
-> index c0b0f603af63..9801c0333eca 100644
-> --- a/drivers/gpu/drm/drm_fb_cma_helper.c
-> +++ b/drivers/gpu/drm/drm_fb_cma_helper.c
-> @@ -9,6 +9,7 @@
->   *  Copyright (C) 2012 Red Hat
->   */
-> =20
-> +#include <drm/drm_fb_cma_helper.h>
->  #include <drm/drm_fourcc.h>
->  #include <drm/drm_framebuffer.h>
->  #include <drm/drm_gem_cma_helper.h>
-> diff --git a/include/drm/drm_fb_cma_helper.h b/include/drm/drm_fb_cma_h=
-elper.h
-> index 4becb09975a4..795aea1d0a25 100644
-> --- a/include/drm/drm_fb_cma_helper.h
-> +++ b/include/drm/drm_fb_cma_helper.h
-> @@ -2,6 +2,8 @@
->  #ifndef __DRM_FB_CMA_HELPER_H__
->  #define __DRM_FB_CMA_HELPER_H__
-> =20
-> +#include <linux/types.h>
-> +
->  struct drm_framebuffer;
->  struct drm_plane_state;
-> =20
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---eKxyl0DwhYHlhU4tBwr25j8LvW7I2a3gb--
-
---AxX246IxnoTUIznVycqbXIHOzMd5kyCMl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl3nfHwACgkQaA3BHVML
-eiMaIQgAo8wGbLwClRVJeysH1/1uZ2BYpARPROIG40APPxRkNMWZDn63P4eI2okm
-mEBGVxj+dAqJWYeIMtiEzmlxWGhpeXVRlqHaBBnr3lD625JSHa6MecBl+jaHy7M+
-u0jbKijO7acFnzrVNlOwVfM59RT3Yg9OLY8EuyIO2N0yxPew7jImjoVL6Ndbybyi
-NuQvyafLStvFStWrRAeR9JDJJPAwO6gnI4WOS3xRxdVx2XTnCfVYDtuOp+aSPOcy
-ZsvQzp6sDbJBThZNHiLfRh2hObkaCRBWjeNBKlN5mfkrM7D5ZO7T1R7c9t2C1l0m
-fpPA3RKqAzvG8I//XHtCxFcznbTxUw==
-=ZP81
------END PGP SIGNATURE-----
-
---AxX246IxnoTUIznVycqbXIHOzMd5kyCMl--
+greg k-h
