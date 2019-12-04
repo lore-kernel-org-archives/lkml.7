@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78829C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B23C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F43F20833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE17920659
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482730;
-	bh=2fVdgC/fjirU6vo9EcK3UR87dC/f+jTse9YxNMAOxKE=;
+	s=default; t=1575482733;
+	bh=AdbyIqRS5cklHI4/34lbBdZESZsUf8IC0zfP30HwNIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lcE8gbV1D3JPxYsdoDMHtcjiTmoARTsZD+QgN2vVsWXxAT66P1HMmElOBnDNBb+hE
-	 R7pbW/YkNps+43JJBFF1Crp6LaA9zWFD/LCGZjqoHaUGUn7+LI2ixyIUFalvohE5NQ
-	 P5ZhCauSd5qePhfIwYIIjtj/F7jIxhMrHAHzBjK8=
+	b=xHv8QFcn5d00TKlyqpMeNDfoZV/xHrqAr9v1faOpIwl6gOmsUH8XlMBVKp/eBK3/3
+	 HrPB3GwGu773DAWwDfJfwvkYe9twHh30K2WdMIEb9JV0SLJSogUQkkoEUcjTSVpKfW
+	 e/PzTlhQa/W/5Nw7uAkgkKK13ty5sPlvcxDAnqm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbfLDSF3 (ORCPT
+        id S1730396AbfLDSFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:05:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51950 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:05:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729347AbfLDSFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:05:23 -0500
+        id S1730373AbfLDSF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:05:28 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 634F420659;
-        Wed,  4 Dec 2019 18:05:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6653720659;
+        Wed,  4 Dec 2019 18:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482722;
-        bh=2fVdgC/fjirU6vo9EcK3UR87dC/f+jTse9YxNMAOxKE=;
+        s=default; t=1575482727;
+        bh=AdbyIqRS5cklHI4/34lbBdZESZsUf8IC0zfP30HwNIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mj0jOfP87S98KaTy2D2NsWI8I6rlf1vmG0mr8cCi0naaU2r+TO2179xnmXlH6AsCH
-         Ycd/AoQj8BnGlWmIj5kYS6qIL19qyui4vub34RNoP5ismqyIl2O6ZtGosnuTFK3Xno
-         l49FWAuUOMhXgdM5f0OPpDRAktPL+g3STpRgM3i0=
+        b=f/Fshp6K2Dn23GB3EQ4a5maSOWXdk1KGOUKAj3YVpZqQU82wUhHXs8oh61vxdwG4L
+         imgkEOiTO/sOoMTwAmWL50918sLHjE7cUlG8kd8MkI2yJQ//AbXYfuOmC2dSxrZKkP
+         kvHcS7NbF+GASiimYBIDBYT/PyECe/d0FMPHupy8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 110/209] net/net_namespace: Check the return value of register_pernet_subsys()
-Date:   Wed,  4 Dec 2019 18:55:22 +0100
-Message-Id: <20191204175329.569679172@linuxfoundation.org>
+Subject: [PATCH 4.14 094/209] powerpc/prom: fix early DEBUG messages
+Date:   Wed,  4 Dec 2019 18:55:06 +0100
+Message-Id: <20191204175328.337796602@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,36 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 0eb987c874dc93f9c9d85a6465dbde20fdd3884c ]
+[ Upstream commit b18f0ae92b0a1db565c3e505fa87b6971ad3b641 ]
 
-In net_ns_init(), register_pernet_subsys() could fail while registering
-network namespace subsystems. The fix checks the return value and
-sends a panic() on failure.
+This patch fixes early DEBUG messages in prom.c:
+- Use %px instead of %p to see the addresses
+- Cast memblock_phys_mem_size() with (unsigned long long) to
+avoid build failure when phys_addr_t is not 64 bits.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/net_namespace.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/prom.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-index 60b88718b1d48..1af25d53f63ca 100644
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -854,7 +854,8 @@ static int __init net_ns_init(void)
+diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+index f830562974417..d96b284150904 100644
+--- a/arch/powerpc/kernel/prom.c
++++ b/arch/powerpc/kernel/prom.c
+@@ -128,7 +128,7 @@ static void __init move_device_tree(void)
+ 		p = __va(memblock_alloc(size, PAGE_SIZE));
+ 		memcpy(p, initial_boot_params, size);
+ 		initial_boot_params = p;
+-		DBG("Moved device tree to 0x%p\n", p);
++		DBG("Moved device tree to 0x%px\n", p);
+ 	}
  
- 	mutex_unlock(&net_mutex);
+ 	DBG("<- move_device_tree\n");
+@@ -662,7 +662,7 @@ void __init early_init_devtree(void *params)
+ {
+ 	phys_addr_t limit;
  
--	register_pernet_subsys(&net_ns_ops);
-+	if (register_pernet_subsys(&net_ns_ops))
-+		panic("Could not register network namespace subsystems");
+-	DBG(" -> early_init_devtree(%p)\n", params);
++	DBG(" -> early_init_devtree(%px)\n", params);
  
- 	rtnl_register(PF_UNSPEC, RTM_NEWNSID, rtnl_net_newid, NULL,
- 		      RTNL_FLAG_DOIT_UNLOCKED);
+ 	/* Too early to BUG_ON(), do it by hand */
+ 	if (!early_init_dt_verify(params))
+@@ -722,7 +722,7 @@ void __init early_init_devtree(void *params)
+ 	memblock_allow_resize();
+ 	memblock_dump_all();
+ 
+-	DBG("Phys. mem: %llx\n", memblock_phys_mem_size());
++	DBG("Phys. mem: %llx\n", (unsigned long long)memblock_phys_mem_size());
+ 
+ 	/* We may need to relocate the flat tree, do it now.
+ 	 * FIXME .. and the initrd too? */
 -- 
 2.20.1
 
