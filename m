@@ -2,183 +2,104 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1728C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7C4C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CE9205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="AgpV/o1m"
+	by mail.kernel.org (Postfix) with ESMTP id A91BB205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575483836;
+	bh=Ql9x8nBLRruSTrj/axpdo25m6wC+H80WPeR0h+hYPu4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DlShAoPM655jGU2mvt6bASqKeireLMGEushHdPmwu+JTNBOsjJu0BB2OBrLAF1rYi
+	 faGpqvV8i8pH295D0jczwjVbXZHHoW9xK9tT28NRgUVtY2P9ggx9wosBzEryP/0qQH
+	 6xCU3xvAGbDCQd+4ZQQwd98RKZx41KLUspK7r/bo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbfLDSXt (ORCPT
+        id S1729358AbfLDSXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:23:49 -0500
-Received: from mail-pj1-f41.google.com ([209.85.216.41]:36539 "EHLO
-        mail-pj1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730041AbfLDSD0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:03:26 -0500
-Received: by mail-pj1-f41.google.com with SMTP id n96so134103pjc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:03:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=ijtrVw014HGnTW9f8Rq13/UqYaPlJnd5tBfrouhme2o=;
-        b=AgpV/o1mZnIgpAoH4UnBkTb2AeEunM3wEMYlVCwuhsRc6nHGn5DE/z4qeh3ghh7U0v
-         wr+NUpnjFmgN1P8892diAPNYpY9tOeprR3UYoD4VYXMxu+EvknPXfN/fmiEwVL5wXAg0
-         XfWR408SuH8S99y6n0G6t9sAx41qS+xGg5g3myoDHxM4i2LXjlkO4llddsvG97ePbY0r
-         VOQlH2Ptc8TKsbkSDyYFY67mDb7GmTxAesh/wNPYehgkXnzYnY/hKXfOcpT8A7EgJ3qF
-         R6nr+Ue9+CovAkhG/6RcwfL82u395TdL+Ws/iP+odjGMyIyuKQpyOuFchN3x4+rZE6PL
-         fCuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=ijtrVw014HGnTW9f8Rq13/UqYaPlJnd5tBfrouhme2o=;
-        b=YQbcR/CEAKel645i5jpV3BVQ0G45UA7hpp3hyT3QcHQ8hAvvXPRwIXyqhjzmO8Zbl3
-         B6CnjhBSCqe0LSmofUSI1Q56uC2pcn8xNOiMI7JuMuU2A4Zma9Yzg5QzELj79nisdLmS
-         5VycW36SserkUugwPz+/1/Uw2hiouoF/STIICwswRuOv+xuEK8imZp4E16QqYZRV07yA
-         kcllQMHTVOBGuwh/mGW1V6vivzYIRuQG52Yxf3fBfC1M+QAWEpIUzaOZlzXHyIQCjcaH
-         R7IAFBU1JhXlqhNYgGVkyayXV+jEb8mYmGxakxTZi3UZoYE61AlpqIUBdDc7Z6koOd/E
-         8YkQ==
-X-Gm-Message-State: APjAAAVvHOdXWQ0hEuVO2AJ4MxxkSGPrzsBpimg6ind7V2LkWHQwDevg
-        9use/9CGf/cTgk6rjlAgNEjfzTy3QH5pJw==
-X-Google-Smtp-Source: APXvYqyzYudsKkRidnGnkIulUuTR6Y+Np/HmPhERtPjwaOBOpllO4bNdwLkfP8g5KfKzCW8F2YK7Pg==
-X-Received: by 2002:a17:90a:1b45:: with SMTP id q63mr4697389pjq.91.1575482605037;
-        Wed, 04 Dec 2019 10:03:25 -0800 (PST)
-Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id k60sm7536612pjh.22.2019.12.04.10.03.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Dec 2019 10:03:24 -0800 (PST)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <6C8DAF47-CA09-4F3B-BF32-2D7044C1EE78@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_E878DF10-FEBB-4C96-9C44-6FDCE30B3F8D";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
-Date:   Wed, 4 Dec 2019 11:03:18 -0700
-In-Reply-To: <6b6242d9-f88b-824d-afe9-d42382a93b34@phunq.net>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To:     Daniel Phillips <daniel@phunq.net>
-References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
- <20191127142508.GB5143@mit.edu>
- <6b6242d9-f88b-824d-afe9-d42382a93b34@phunq.net>
-X-Mailer: Apple Mail (2.3273)
+        Wed, 4 Dec 2019 13:23:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730036AbfLDSDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:03:25 -0500
+Received: from localhost (unknown [217.68.49.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1504820675;
+        Wed,  4 Dec 2019 18:03:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575482604;
+        bh=Ql9x8nBLRruSTrj/axpdo25m6wC+H80WPeR0h+hYPu4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aS4IYgy4Pkwf6wRbD7V3m1CKW0mDmuMnuJomaq3261RmCOTNetn/AWw2nFuzTdHho
+         QLS73GmfDIwEQO1xBk3DXeWer4/wAJTtvbtmx+/2q5h4fRhV8+a/jkQwXAYeMYXfkr
+         oBkwFqq7eicvCKBU3q0o1dqJ20DW9qIbu7SslAcA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andrea Righi <righi.andrea@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 063/209] kprobes/x86/xen: blacklist non-attachable xen interrupt functions
+Date:   Wed,  4 Dec 2019 18:54:35 +0100
+Message-Id: <20191204175325.651022463@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
+References: <20191204175321.609072813@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Andrea Righi <righi.andrea@gmail.com>
 
---Apple-Mail=_E878DF10-FEBB-4C96-9C44-6FDCE30B3F8D
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii
+[ Upstream commit bf9445a33ae6ac2f0822d2f1ce1365408387d568 ]
 
-On Dec 1, 2019, at 6:45 PM, Daniel Phillips <daniel@phunq.net> wrote:
-> 
-> On 2019-11-27 6:25 a.m., Theodore Y. Ts'o wrote:
->> (3) It's not particularly well documented...
-> 
-> We regard that as an issue needing attention. Here is a pretty picture
-> to get started:
-> 
->   https://github.com/danielbot/Shardmap/wiki/Shardmap-media-format
+Blacklist symbols in Xen probe-prohibited areas, so that user can see
+these prohibited symbols in debugfs.
 
-The shardmap diagram is good conceptually, but it would be useful
-to add a legend on the empty side of the diagram that shows the on-disk
-structures.
+See also: a50480cb6d61.
 
-> 
-> This needs some explaining. The bottom part of the directory file is
-> a simple linear range of directory blocks, with a freespace map block
-> appearing once every 4K blocks or so. This freespace mapping needs a
-> post of its own, it is somewhat subtle. This will be a couple of posts
-> in the future.
-> 
-> The Shardmap index appears at a higher logical address, sufficiently
-> far above the directory base to accommodate a reasonable number of
-> record entry blocks below it. We try not to place the index at so high
-> an address that the radix tree gets extra levels, slowing everything
-> down.
-> 
-> When the index needs to be expanded, either because some shard exceeded
-> a threshold number of entries, or the record entry blocks ran into the
-> the bottom of the index, then a new index tier with more shards is
-> created at a higher logical address. The lower index tier is not copied
-> immediately to the upper tier, but rather, each shard is incrementally
-> split when it hits the threshold because of an insert. This bounds the
-> latency of any given insert to the time needed to split one shard, which
-> we target nominally at less than one millisecond. Thus, Shardmap takes a
-> modest step in the direction of real time response.
-> 
-> Each index tier is just a simple array of shards, each of which fills
-> up with 8 byte entries from bottom to top. The count of entries in each
-> shard is stored separately in a table just below the shard array. So at
-> shard load time, we can determine rapidly from the count table which
-> tier a given shard belongs to. There are other advantages to breaking
-> the shard counts out separately having to do with the persistent memory
-> version of Shardmap, interesting details that I will leave for later.
-> 
-> When all lower tier shards have been deleted, the lower tier may be
-> overwritten by the expanding record entry block region. In practice,
-> a Shardmap file normally has just one tier most of the time, the other
-> tier existing only long enough to complete the incremental expansion
-> of the shard table, insert by insert.
-> 
-> There is a small header in the lowest record entry block, giving the
-> positions of the one or two index tiers, count of entry blocks, and
-> various tuning parameters such as maximum shard size and average depth
-> of cache hash collision lists.
-> 
-> That is it for media format. Very simple, is it not? My next post
-> will explain the Shardmap directory block format, with a focus on
-> deficiencies of the traditional Ext2 format that were addressed.
-> 
-> Regards,
-> 
-> Daniel
+Signed-off-by: Andrea Righi <righi.andrea@gmail.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/xen/xen-asm_64.S | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-Cheers, Andreas
+diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
+index 3a6feed76dfc1..a93d8a7cef26c 100644
+--- a/arch/x86/xen/xen-asm_64.S
++++ b/arch/x86/xen/xen-asm_64.S
+@@ -12,6 +12,7 @@
+ #include <asm/segment.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/thread_info.h>
++#include <asm/asm.h>
+ 
+ #include <xen/interface/xen.h>
+ 
+@@ -24,6 +25,7 @@ ENTRY(xen_\name)
+ 	pop %r11
+ 	jmp  \name
+ END(xen_\name)
++_ASM_NOKPROBE(xen_\name)
+ .endm
+ 
+ xen_pv_trap divide_error
+-- 
+2.20.1
 
 
 
-
-
-
---Apple-Mail=_E878DF10-FEBB-4C96-9C44-6FDCE30B3F8D
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl3n9OcACgkQcqXauRfM
-H+AzhQ/+LelpZVYoTlu0opEs5vyM+LBrYxtxWSYLpaFZMSFNERgkFMDEjbSF0qWp
-dIIZ4iOlI8OArkugvZk85BzQgQY8ZUZizyQSdzFBXDt/d9Gyew/Sbntkuv0UMZS+
-HhVM1Jr8tgFLYqjAijm+mDVyPh1ZAAMo9+jYAKTLQwOdqovCBtLRD9v7HOaCSYlU
-dZ094nsG7mDVmWztOO4KLG419h50OUK+q2nnuLwjV6Por0kA9penEo7XjZLecuIz
-X2GdIecu0SWh4E7hbsKjylkOC8AKQYibgv380MOJaNp9WBYeoHv3HaXmO0achr6T
-f5vHbhFoKRpochhRkKAOlknEY1h89AkyfqyDTfA95Yw0nND9nG8+PLUVOfP9mt72
-INqEdUY4gVIRR488YG3Dn9X4yGva6tI5v5oDx7JLvVa5Josk57AMIuvKIdsqluF0
-7g+lFY50CnWzfiATloSLhJEB3BohIm4PrLWyyjn27EE/BJpsZSvABxfDGpOSuCPr
-cNr68nQ4dw3E4PzTpuxhF3L/wlQNiG6OUbdFPfeyxxZfcoCFKrphzDWAW9iySS3x
-2P7kKDVP8SiCZQ5NUWtc8/YI6MwhA6Lcz7fQYL8+9DWdN2Ha1PZ1lU+/CqrAZIbJ
-It472/u392OJbPcAWJ5Gze52JsEDeLfj1ZzV58+MHmCvqoKJxb8=
-=M/DF
------END PGP SIGNATURE-----
-
---Apple-Mail=_E878DF10-FEBB-4C96-9C44-6FDCE30B3F8D--
