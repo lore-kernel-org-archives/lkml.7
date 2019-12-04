@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDBCC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE41C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2351522522
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB6022525
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:21:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="i1g8jJxL"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="GnME/3GQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbfLDXVQ (ORCPT
+        id S1728569AbfLDXVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 18:21:16 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35599 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728419AbfLDXVM (ORCPT
+        Wed, 4 Dec 2019 18:21:21 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43604 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728482AbfLDXVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 18:21:12 -0500
-Received: by mail-qk1-f195.google.com with SMTP id v23so1699414qkg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 15:21:12 -0800 (PST)
+        Wed, 4 Dec 2019 18:21:11 -0500
+Received: by mail-qk1-f193.google.com with SMTP id q28so1639125qkn.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 15:21:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=ZHIYboDwl4EWd97Tklkdkm+url9a5Lp8rxT6bERrC+M=;
-        b=i1g8jJxL0yaISsSkQcVG1T+YRVLPQorkORTVckOF1ul4UmdgjxetevbONnxu7GHHR6
-         WXK96ycRVB4k6ym6P0dlJ6VstgCOx1UZBEAX/OKcv1s2MPsWxgrk5CYfyx4cV6pd9Bw5
-         jUsEz55BdSZdY6HhBAwTU4pjFn1ewPD8PlkxMk6lZhxQkCzDxJaV1DXZuXgeL6O172ce
-         zJ2PNOb2JKEKgzLuvO8xUfDa7vPnEm7mX+/dOykrVC8c2EX4Wux0z26m27bI2YNOPLNh
-         oAQa/+PV4LAQAqd/k1eK3LpIC4vlgv+RQN+BcKlhvKmUX7V+YJHfxJL87xtqtSABCsrW
-         1OWw==
+        bh=jgWMYHD023tAXPY9yBvY7HlxUi3NtG7yB+YFJsFM+4s=;
+        b=GnME/3GQIkWEOnq+HnWtjzDW7KOeACVPsdHQBWSmyQiiOW1JrEqbNdO1yXHOHEGGLa
+         uiDQATmlJ+LFhPgQXv8Zf0F4NJElVwhSGKvmCcAUMQv+wEkB+XJDpMyg6iSNtxNh7VMy
+         4YRsLqt/0+myzBWoF8xlK6sHJAEmEPWcOsskDtof8qDxEGxli6obH0/ql8HXvOYyNOx0
+         E4CqVF/g/r8Y9BXPjdTCfVR8SCXfFoQnrtKWfB6fqzn7mEoF7LZSIahhhG8TlbwvWdi0
+         eV1TWGsF+FoGohnl0fwH163lctm1VQfxvAxKHjBKsqfJP8bqMssseBKgpDoDEsAqYzvT
+         ACgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZHIYboDwl4EWd97Tklkdkm+url9a5Lp8rxT6bERrC+M=;
-        b=kHtl6GNBFmGSfAlh5jCRwvWC0vIXm8JbjwmQlpagVk6GibwU8s0+1goHmU/lJXMqlD
-         AyFofmiDtIx7KkjxaEwgZ7wOdRSNRFk4W3Uo2ZedMB38B6afTMsFnLRx+ulhkdn+iNeo
-         DeL8zMmTlw6gi/zo5E7hlv++dGD7SmrR9lLGhS7jI5jiwlhHppuO7I6l1793bq7xlNp3
-         GVjOKYFODGfU+lsTVTgpdCQMAoKKFR4oxuWC71rS2Ft5XYDuh8ZAzNe+xAx7eCKSa7zf
-         k+150Ta6j7OTI6bak2ma7nrnWeoQBQE8w6cun7hsamXJBTrlHyZNVWcORNNx+X4zmfgz
-         N9bw==
-X-Gm-Message-State: APjAAAUob0rALUdP5wuWucILiugoMPHkTbuj0ZzrOL1Lm0vhlDMazBBJ
-        gNqliTsIBuie5eJSPL+CjIbAOg==
-X-Google-Smtp-Source: APXvYqyth5Vky9Sws+q1XOgIKaCf88qENA0eXdBaqBMhh1L+UlvBd0q1SnZjvczRgcyocJAH0Tk8+g==
-X-Received: by 2002:a37:6691:: with SMTP id a139mr5530912qkc.393.1575501671951;
-        Wed, 04 Dec 2019 15:21:11 -0800 (PST)
+        bh=jgWMYHD023tAXPY9yBvY7HlxUi3NtG7yB+YFJsFM+4s=;
+        b=TRKzPpGRRMrsCw0rZKyVzuWnE9aeL8crYcDvWAjPRO6/kLOInKP/QfWAKj9ygv7VeJ
+         66a3TF/846niBwbW50meMQ6f3CjsZrVRXn5HaBJmXyni8HWcLdVTvZTvJjr9gk3NvWJK
+         50gX/KDO5/BgUpKzF5FPBflb2myAOFxzbJQeytDcj+8YPNWVELw9/J1mAB9NDNRi+RjK
+         k6Lm5Opzlkaz4RxOwOlII2mDGaxurI4arr8l/C16O+mPrWi6tncvpP90xINHshz9qnSV
+         lpRmU1fvCcZOnYMo3Bk2If1SSPsK0kFxHRl5k0ErEetwAuaL/m/uA3gC3Tl6i4t0rPMO
+         iS1w==
+X-Gm-Message-State: APjAAAW6S7kwqsl7dK82HOVqZRyzpaS3ZqacvMx660L5myzDSMJigIp9
+        HIJTmDiOWFa8JAd85+KD2317yw==
+X-Google-Smtp-Source: APXvYqxYW3lHiAaEktvIv9R2Rs4Q7wh7u41fkOvqH028QUBhjHchCrv3OL1EskvJ6xR8p1wI4qmnmw==
+X-Received: by 2002:a05:620a:102e:: with SMTP id a14mr5398925qkk.159.1575501670158;
+        Wed, 04 Dec 2019 15:21:10 -0800 (PST)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id t38sm4667864qta.78.2019.12.04.15.21.10
+        by smtp.gmail.com with ESMTPSA id t38sm4667864qta.78.2019.12.04.15.21.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 15:21:11 -0800 (PST)
+        Wed, 04 Dec 2019 15:21:09 -0800 (PST)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
@@ -68,9 +68,9 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         jgross@suse.com, stefan@agner.ch, yamada.masahiro@socionext.com,
         xen-devel@lists.xenproject.org, linux@armlinux.org.uk,
         andrew.cooper3@citrix.com, julien@xen.org
-Subject: [PATCH v4 6/6] arm64: remove the rest of asm-uaccess.h
-Date:   Wed,  4 Dec 2019 18:20:58 -0500
-Message-Id: <20191204232058.2500117-7-pasha.tatashin@soleen.com>
+Subject: [PATCH v4 5/6] arm64: move ARM64_HAS_CACHE_DIC/_IDC from asm to C
+Date:   Wed,  4 Dec 2019 18:20:57 -0500
+Message-Id: <20191204232058.2500117-6-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204232058.2500117-1-pasha.tatashin@soleen.com>
 References: <20191204232058.2500117-1-pasha.tatashin@soleen.com>
@@ -81,184 +81,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The __uaccess_ttbr0_disable and __uaccess_ttbr0_enable,
-are the last two macros defined in asm-uaccess.h.
+The assmbly functions __asm_flush_cache_user_range and
+__asm_invalidate_icache_range have alternatives:
 
-For now move them to entry.S where they are used. Eventually,
-these macros should be replaced with C wrappers to reduce the
-maintenance burden.
+alternative_if ARM64_HAS_CACHE_DIC
+...
 
-Also, once these macros are unified with the C counterparts, it
-is a good idea to check that PAN is in correct state on every
-enable/disable calls.
+alternative_if ARM64_HAS_CACHE_IDC
+...
+
+But, the implementation of those alternatives is trivial and therefore
+can be done in the C inline wrappers.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/include/asm/asm-uaccess.h | 39 ----------------------------
- arch/arm64/kernel/entry.S            | 27 ++++++++++++++++++-
- arch/arm64/lib/clear_user.S          |  2 +-
- arch/arm64/lib/copy_from_user.S      |  2 +-
- arch/arm64/lib/copy_in_user.S        |  2 +-
- arch/arm64/lib/copy_to_user.S        |  2 +-
- arch/arm64/mm/cache.S                |  1 -
- 7 files changed, 30 insertions(+), 45 deletions(-)
- delete mode 100644 arch/arm64/include/asm/asm-uaccess.h
+ arch/arm64/include/asm/cacheflush.h | 19 +++++++++++++++++++
+ arch/arm64/mm/cache.S               | 27 +++++----------------------
+ arch/arm64/mm/flush.c               |  1 +
+ 3 files changed, 25 insertions(+), 22 deletions(-)
 
-diff --git a/arch/arm64/include/asm/asm-uaccess.h b/arch/arm64/include/asm/asm-uaccess.h
-deleted file mode 100644
-index fba2a69f7fef..000000000000
---- a/arch/arm64/include/asm/asm-uaccess.h
-+++ /dev/null
-@@ -1,39 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __ASM_ASM_UACCESS_H
--#define __ASM_ASM_UACCESS_H
--
--#include <asm/alternative.h>
--#include <asm/kernel-pgtable.h>
--#include <asm/mmu.h>
--#include <asm/sysreg.h>
--#include <asm/assembler.h>
--
--/*
-- * User access enabling/disabling macros.
-- */
--#ifdef CONFIG_ARM64_SW_TTBR0_PAN
--	.macro	__uaccess_ttbr0_disable, tmp1
--	mrs	\tmp1, ttbr1_el1			// swapper_pg_dir
--	bic	\tmp1, \tmp1, #TTBR_ASID_MASK
--	sub	\tmp1, \tmp1, #RESERVED_TTBR0_SIZE	// reserved_ttbr0 just before swapper_pg_dir
--	msr	ttbr0_el1, \tmp1			// set reserved TTBR0_EL1
--	isb
--	add	\tmp1, \tmp1, #RESERVED_TTBR0_SIZE
--	msr	ttbr1_el1, \tmp1		// set reserved ASID
--	isb
--	.endm
--
--	.macro	__uaccess_ttbr0_enable, tmp1, tmp2
--	get_current_task \tmp1
--	ldr	\tmp1, [\tmp1, #TSK_TI_TTBR0]	// load saved TTBR0_EL1
--	mrs	\tmp2, ttbr1_el1
--	extr    \tmp2, \tmp2, \tmp1, #48
--	ror     \tmp2, \tmp2, #16
--	msr	ttbr1_el1, \tmp2		// set the active ASID
--	isb
--	msr	ttbr0_el1, \tmp1		// set the non-PAN TTBR0_EL1
--	isb
--	.endm
--#endif
--
--#endif
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 583f71abbe98..446d90ab31af 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -22,8 +22,8 @@
- #include <asm/mmu.h>
- #include <asm/processor.h>
- #include <asm/ptrace.h>
-+#include <asm/kernel-pgtable.h>
- #include <asm/thread_info.h>
--#include <asm/asm-uaccess.h>
- #include <asm/unistd.h>
- 
- /*
-@@ -143,6 +143,31 @@ alternative_cb_end
- #endif
- 	.endm
- 
-+#ifdef CONFIG_ARM64_SW_TTBR0_PAN
-+	.macro	__uaccess_ttbr0_disable, tmp1
-+	mrs	\tmp1, ttbr1_el1		// swapper_pg_dir
-+	bic	\tmp1, \tmp1, #TTBR_ASID_MASK
-+	sub	\tmp1, \tmp1, #RESERVED_TTBR0_SIZE // reserved_ttbr0 just before swapper_pg_dir
-+	msr	ttbr0_el1, \tmp1		// set reserved TTBR0_EL1
-+	isb
-+	add	\tmp1, \tmp1, #RESERVED_TTBR0_SIZE
-+	msr	ttbr1_el1, \tmp1		// set reserved ASID
-+	isb
-+	.endm
+diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
+index ea563344b4ad..4eb244ee7154 100644
+--- a/arch/arm64/include/asm/cacheflush.h
++++ b/arch/arm64/include/asm/cacheflush.h
+@@ -75,8 +75,22 @@ extern void sync_icache_aliases(void *kaddr, unsigned long len);
+ static inline void __flush_cache_user_range(unsigned long start,
+ 					    unsigned long end)
+ {
++	if (cpus_have_const_cap(ARM64_HAS_CACHE_IDC)) {
++		dsb(ishst);
++		if (cpus_have_const_cap(ARM64_HAS_CACHE_DIC)) {
++			isb();
++			return;
++		}
++	}
 +
-+	.macro	__uaccess_ttbr0_enable, tmp1, tmp2
-+	get_current_task \tmp1
-+	ldr	\tmp1, [\tmp1, #TSK_TI_TTBR0]	// load saved TTBR0_EL1
-+	mrs	\tmp2, ttbr1_el1
-+	extr	\tmp2, \tmp2, \tmp1, #48
-+	ror	\tmp2, \tmp2, #16
-+	msr	ttbr1_el1, \tmp2		// set the active ASID
-+	isb
-+	msr	ttbr0_el1, \tmp1		// set the non-PAN TTBR0_EL1
-+	isb
-+	.endm
-+#endif
+ 	uaccess_ttbr0_enable();
+ 	__asm_flush_cache_user_range(start, end);
 +
- 	.macro	kernel_entry, el, regsize = 64
- 	.if	\regsize == 32
- 	mov	w0, w0				// zero upper 32 bits of x0
-diff --git a/arch/arm64/lib/clear_user.S b/arch/arm64/lib/clear_user.S
-index aeafc03e961a..b0b4a86a09e2 100644
---- a/arch/arm64/lib/clear_user.S
-+++ b/arch/arm64/lib/clear_user.S
-@@ -6,7 +6,7 @@
-  */
- #include <linux/linkage.h>
++	if (cpus_have_const_cap(ARM64_HAS_CACHE_DIC))
++		isb();
++	else
++		__asm_invalidate_icache_range(start, end);
++
+ 	uaccess_ttbr0_disable();
+ }
  
--#include <asm/asm-uaccess.h>
-+#include <asm/alternative.h>
- #include <asm/assembler.h>
+@@ -90,6 +104,11 @@ static inline int invalidate_icache_range(unsigned long start,
+ {
+ 	int ret;
  
- 	.text
-diff --git a/arch/arm64/lib/copy_from_user.S b/arch/arm64/lib/copy_from_user.S
-index ebb3c06cbb5d..142bc7505518 100644
---- a/arch/arm64/lib/copy_from_user.S
-+++ b/arch/arm64/lib/copy_from_user.S
-@@ -5,7 +5,7 @@
- 
- #include <linux/linkage.h>
- 
--#include <asm/asm-uaccess.h>
-+#include <asm/alternative.h>
- #include <asm/assembler.h>
- #include <asm/cache.h>
- 
-diff --git a/arch/arm64/lib/copy_in_user.S b/arch/arm64/lib/copy_in_user.S
-index 3d8153a1ebce..04dc48ca26f7 100644
---- a/arch/arm64/lib/copy_in_user.S
-+++ b/arch/arm64/lib/copy_in_user.S
-@@ -7,7 +7,7 @@
- 
- #include <linux/linkage.h>
- 
--#include <asm/asm-uaccess.h>
-+#include <asm/alternative.h>
- #include <asm/assembler.h>
- #include <asm/cache.h>
- 
-diff --git a/arch/arm64/lib/copy_to_user.S b/arch/arm64/lib/copy_to_user.S
-index 357eae2c18eb..8f3218ae88ab 100644
---- a/arch/arm64/lib/copy_to_user.S
-+++ b/arch/arm64/lib/copy_to_user.S
-@@ -5,7 +5,7 @@
- 
- #include <linux/linkage.h>
- 
--#include <asm/asm-uaccess.h>
-+#include <asm/alternative.h>
- #include <asm/assembler.h>
- #include <asm/cache.h>
- 
++	if (cpus_have_const_cap(ARM64_HAS_CACHE_DIC)) {
++		isb();
++		return 0;
++	}
++
+ 	uaccess_ttbr0_enable();
+ 	ret = __asm_invalidate_icache_range(start, end);
+ 	uaccess_ttbr0_disable();
 diff --git a/arch/arm64/mm/cache.S b/arch/arm64/mm/cache.S
-index 0093bb9fcd12..627be857b8d0 100644
+index 1981cbaf5d92..0093bb9fcd12 100644
 --- a/arch/arm64/mm/cache.S
 +++ b/arch/arm64/mm/cache.S
-@@ -12,7 +12,6 @@
- #include <asm/assembler.h>
- #include <asm/cpufeature.h>
- #include <asm/alternative.h>
--#include <asm/asm-uaccess.h>
+@@ -25,30 +25,18 @@
+  *	- end     - virtual end address of region
+  */
+ ENTRY(__asm_flush_cache_user_range)
+-alternative_if ARM64_HAS_CACHE_IDC
+-	dsb	ishst
+-	b	7f
+-alternative_else_nop_endif
+ 	dcache_line_size x2, x3
+ 	sub	x3, x2, #1
+ 	bic	x4, x0, x3
+-1:
+-user_alt 9f, "dc cvau, x4",  "dc civac, x4",  ARM64_WORKAROUND_CLEAN_CACHE
++1:	user_alt 3f, "dc cvau, x4",  "dc civac, x4",  ARM64_WORKAROUND_CLEAN_CACHE
+ 	add	x4, x4, x2
+ 	cmp	x4, x1
+ 	b.lo	1b
+ 	dsb	ish
+-
+-7:
+-alternative_if ARM64_HAS_CACHE_DIC
+-	isb
+-	b	8f
+-alternative_else_nop_endif
+-	invalidate_icache_by_line x0, x1, x2, x3, 9f
+-8:	mov	x0, #0
+-1:	ret
+-9:	mov	x0, #-EFAULT
+-	b	1b
++	mov	x0, #0
++2:	ret
++3:	mov	x0, #-EFAULT
++	b	2b
+ ENDPROC(__asm_flush_cache_user_range)
  
  /*
-  *	__asm_flush_cache_user_range(start,end)
+@@ -60,11 +48,6 @@ ENDPROC(__asm_flush_cache_user_range)
+  *	- end     - virtual end address of region
+  */
+ ENTRY(__asm_invalidate_icache_range)
+-alternative_if ARM64_HAS_CACHE_DIC
+-	mov	x0, xzr
+-	isb
+-	ret
+-alternative_else_nop_endif
+ 	invalidate_icache_by_line x0, x1, x2, x3, 2f
+ 	mov	x0, xzr
+ 1:	ret
+diff --git a/arch/arm64/mm/flush.c b/arch/arm64/mm/flush.c
+index 61521285f27d..adfdacb163ad 100644
+--- a/arch/arm64/mm/flush.c
++++ b/arch/arm64/mm/flush.c
+@@ -76,6 +76,7 @@ EXPORT_SYMBOL(flush_dcache_page);
+  * Additional functions defined in assembly.
+  */
+ EXPORT_SYMBOL(__asm_flush_cache_user_range);
++EXPORT_SYMBOL(__asm_invalidate_icache_range);
+ 
+ #ifdef CONFIG_ARCH_HAS_PMEM_API
+ void arch_wb_cache_pmem(void *addr, size_t size)
 -- 
 2.24.0
 
