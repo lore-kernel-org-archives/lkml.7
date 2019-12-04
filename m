@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7A9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E913AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09FBC20863
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B187120675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483254;
-	bh=AzQw1JMZSRBT1OXzbSASFvyaIf9+kUp0UT2Cx6J7xe8=;
+	s=default; t=1575483262;
+	bh=bhPbd1Q7AtDDpN7vSxVvjBu3+BIHBLCpWA1+mEKnBJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CP7cjfHnb48FN4oLLOdI4rIHadjL7VBkp1shf4llHmpTVkxCeEcULk4Q1Wc6Xp66P
-	 OdT5Zy7yQL/R4pGtKYYwO4ZyxG8U3HvUgqsiZSCGsUxrAonR6yO3iI4dR+1MaSVZtK
-	 g6FssSdrSHkLyk5dI2PPJkyIGtDs3rWov7a/FORk=
+	b=ymxfPK2NYfIn/cV/C9s6LgEZMDc5jZEipLswn/MVs5AzVtIquZk6MlKyFVJlUWD2D
+	 Py7TonaPN6RpSDKYv/9KtybViPuXSiA/w6eXCrU3jukDekZxwARpz39IeUZUPR7e1R
+	 wrtTiWYVf4G4bo2Jm2E3xOm2ULAJaWGZe5O26oTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731848AbfLDSON (ORCPT
+        id S1731612AbfLDSOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:14:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43332 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:14:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731091AbfLDSOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:14:04 -0500
+        id S1731879AbfLDSOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:14:11 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79943206DF;
-        Wed,  4 Dec 2019 18:14:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B767D20865;
+        Wed,  4 Dec 2019 18:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483244;
-        bh=AzQw1JMZSRBT1OXzbSASFvyaIf9+kUp0UT2Cx6J7xe8=;
+        s=default; t=1575483251;
+        bh=bhPbd1Q7AtDDpN7vSxVvjBu3+BIHBLCpWA1+mEKnBJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cOYvkOXbmZhlocfFYJ+uGZHv+vuvFnpOu04EOCYypkcBNdkNVEXAe9AIVamR7+lS8
-         1RPCpaHPwWxIsHSenKel+eIXES6NHDzp+DlR2nZtBR5+a5LUpKQs0OWt/4UXFis87S
-         6HpD2GU/kI9cw4m76p2tge8oMAxr1lX5zCO+uWRY=
+        b=U9QyLq0Fnl3RIaEkZ17Us3Cb8Skfr8nOJO7HxHKt+RuzWUZKxiS77erKPMCiudp25
+         tocAtS9ZrUxE3L57LR0K0RE+Ep70f3dwkV0olSDHMlQnUVq2zs6rW4yratfEzrhAkL
+         A1yhEDXbd1WZv6TkwP6typUf3/fOZQyUH6B/+cZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Ceresoli <luca@lucaceresoli.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.9 111/125] net: macb: fix error format in dev_err()
-Date:   Wed,  4 Dec 2019 18:56:56 +0100
-Message-Id: <20191204175325.866509239@linuxfoundation.org>
+Subject: [PATCH 4.9 113/125] media: atmel: atmel-isc: fix asd memory allocation
+Date:   Wed,  4 Dec 2019 18:56:58 +0100
+Message-Id: <20191204175325.992756023@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -62,87 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Ceresoli <luca@lucaceresoli.net>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-commit f413cbb332a0b5251a790f396d0eb4ebcade5dec upstream.
+commit 1e4e25c4959c10728fbfcc6a286f9503d32dfe02 upstream.
 
-Errors are negative numbers. Using %u shows them as very large positive
-numbers such as 4294967277 that don't make sense. Use the %d format
-instead, and get a much nicer -19.
+The subsystem will free the asd memory on notifier cleanup, if the asd is
+added to the notifier.
+However the memory is freed using kfree.
+Thus, we cannot allocate the asd using devm_*
+This can lead to crashes and problems.
+To test this issue, just return an error at probe, but cleanup the
+notifier beforehand.
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-Fixes: b48e0bab142f ("net: macb: Migrate to devm clock interface")
-Fixes: 93b31f48b3ba ("net/macb: unify clock management")
-Fixes: 421d9df0628b ("net/macb: merge at91_ether driver into macb driver")
-Fixes: aead88bd0e99 ("net: ethernet: macb: Add support for rx_clk")
-Fixes: f5473d1d44e4 ("net: macb: Support clock management for tsu_clk")
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 106267444f ("[media] atmel-isc: add the Image Sensor Controller code")
+
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/cadence/macb.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/media/platform/atmel/atmel-isc.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/cadence/macb.c
-+++ b/drivers/net/ethernet/cadence/macb.c
-@@ -2364,14 +2364,14 @@ static int macb_clk_init(struct platform
- 	*pclk = devm_clk_get(&pdev->dev, "pclk");
- 	if (IS_ERR(*pclk)) {
- 		err = PTR_ERR(*pclk);
--		dev_err(&pdev->dev, "failed to get macb_clk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to get macb_clk (%d)\n", err);
- 		return err;
- 	}
+--- a/drivers/media/platform/atmel/atmel-isc.c
++++ b/drivers/media/platform/atmel/atmel-isc.c
+@@ -1297,8 +1297,11 @@ static int isc_parse_dt(struct device *d
+ 			break;
+ 		}
  
- 	*hclk = devm_clk_get(&pdev->dev, "hclk");
- 	if (IS_ERR(*hclk)) {
- 		err = PTR_ERR(*hclk);
--		dev_err(&pdev->dev, "failed to get hclk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to get hclk (%d)\n", err);
- 		return err;
- 	}
- 
-@@ -2385,25 +2385,25 @@ static int macb_clk_init(struct platform
- 
- 	err = clk_prepare_enable(*pclk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable pclk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable pclk (%d)\n", err);
- 		return err;
- 	}
- 
- 	err = clk_prepare_enable(*hclk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable hclk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable hclk (%d)\n", err);
- 		goto err_disable_pclk;
- 	}
- 
- 	err = clk_prepare_enable(*tx_clk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable tx_clk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable tx_clk (%d)\n", err);
- 		goto err_disable_hclk;
- 	}
- 
- 	err = clk_prepare_enable(*rx_clk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable rx_clk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable rx_clk (%d)\n", err);
- 		goto err_disable_txclk;
- 	}
- 
-@@ -2823,7 +2823,7 @@ static int at91ether_clk_init(struct pla
- 
- 	err = clk_prepare_enable(*pclk);
- 	if (err) {
--		dev_err(&pdev->dev, "failed to enable pclk (%u)\n", err);
-+		dev_err(&pdev->dev, "failed to enable pclk (%d)\n", err);
- 		return err;
- 	}
+-		subdev_entity->asd = devm_kzalloc(dev,
+-				     sizeof(*subdev_entity->asd), GFP_KERNEL);
++		/* asd will be freed by the subsystem once it's added to the
++		 * notifier list
++		 */
++		subdev_entity->asd = kzalloc(sizeof(*subdev_entity->asd),
++					     GFP_KERNEL);
+ 		if (subdev_entity->asd == NULL) {
+ 			of_node_put(rem);
+ 			ret = -ENOMEM;
+@@ -1432,6 +1435,7 @@ static int atmel_isc_probe(struct platfo
+ 						   &subdev_entity->notifier);
+ 		if (ret) {
+ 			dev_err(dev, "fail to register async notifier\n");
++			kfree(subdev_entity->asd);
+ 			goto cleanup_subdev;
+ 		}
  
 
 
