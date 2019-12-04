@@ -2,171 +2,158 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A20C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB2EC43215
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35F6520674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2B92073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:20:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="MoobJeAp"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dmNuTER/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfLDEUm (ORCPT
+        id S1727081AbfLDEUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 23:20:42 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33204 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbfLDEUl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 23:20:41 -0500
-Received: by mail-pf1-f194.google.com with SMTP id y206so2958877pfb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 20:20:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TbHocbRRpqYJUnqZHtXqYEyOtGT/8yMitXiw8MvdmVs=;
-        b=MoobJeAp1JZQEejGBa6wxHWnnww541jlVn/zR+WtwArJE5V5lYykLoay7QvuHx8iGu
-         akwQOT0eC1UZ5XT4Vx0McDl7sfqP8tKLptf7gXwP6s+/PCd1kHcEkIOyqrYfwSXeR4/Z
-         sO+1C01XLhy5+SYIWepG4vbi5MUOGuynedanM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TbHocbRRpqYJUnqZHtXqYEyOtGT/8yMitXiw8MvdmVs=;
-        b=YYSdcle6Q6WOmonfYaGAuY7Oor1hAcI6YLC+Ja1bn0cp6yHNp/vQTjzCcMBBpDCyrn
-         O3lhBZQ4ICZNa/fvW40Cy8uQ7QdXcjdcQ7WWB35bTztty2lUXKRrXMKcvraHSO+fO66N
-         TTePUN5Q8b9V28Yvr1L+YlBeQSLjZr4rSQFpIXT3I7MMYdx33DBGQw0LUBapzag2/JKH
-         vtYaAr+NlCfzMYqUF4Sa9Re7mAAZTNPagQ3Zxn+ivi6Oa/UN8jL/5U4alb/+WBpnSWuP
-         6U+RS8A9IMBPIrDy3VDtrIGgU1ieOJ+yp/z0wfug+v8ouf/+L8rc5CZ0/uMT1WXO4eRe
-         Ktpg==
-X-Gm-Message-State: APjAAAXpcYHQ1CbgKe8cfhOY9S1MtQxKz1LARTSyGvNzP/s9DShOAwW+
-        C5gC/on/qrDh5JxFaGMKpbg3hw==
-X-Google-Smtp-Source: APXvYqy8NJykSVgAseSuUyW8Aj34k8HvBlp0h8pb7NkjrVeTtKWvKl7NS0w9kgYbOA9okO5MapkbOg==
-X-Received: by 2002:a63:f716:: with SMTP id x22mr1378944pgh.351.1575433240667;
-        Tue, 03 Dec 2019 20:20:40 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id h9sm4526765pjh.8.2019.12.03.20.20.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 20:20:40 -0800 (PST)
-Date:   Tue, 3 Dec 2019 23:20:39 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -tip] kprobes: Lock rcu_read_lock() while searching kprobe
-Message-ID: <20191204042039.GC192877@google.com>
-References: <157527193358.11113.14859628506665612104.stgit@devnote2>
- <20191202210854.GD17234@google.com>
- <20191203071329.GC115767@gmail.com>
- <20191204040959.GB192877@google.com>
+        Tue, 3 Dec 2019 23:20:45 -0500
+Received: from mail-eopbgr00060.outbound.protection.outlook.com ([40.107.0.60]:40471
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726804AbfLDEUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 23:20:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lKQJXjI5uMQFbhMRfw2qilb4nwsonJt8t6WmEoD0wkQzv0DG+rEcRigR5kmfMp1JwExe+SsHzdqSdggQh2AphcrZYOE7jOtl8JauYXizqblvDA9qfdYjyTZUT2RjqBq9cjf1ydB1GjNQmeDSF0LpgLnUwXbINVwDBDUoW8um8378jirUX0PrcE9pJF5GfHJ2pqZ8q/EuM3DPSw1TIvdN6nLLMbUEhEN8YFKN+Z1bTKVI1uiZWJQ5iIAbOjivJE53rFDY6gmRBC30dSI8Sa5Ea8ewkCwbBvarhSNrD7quc8qz1TNHkx86O3BzMjXYHV+xe8r1tcBEvpG5Ot8F2ui/XQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yzkTH+svQqE0tqxjXe103f2sbq7zzei/iIjtSMAOxrc=;
+ b=Yn6HHGB7g/CUibMUNpLL2Mdb+GXdaRcKsNVsgQrFAveCP1qzK8T+LZqppzrCAgegfgDFXjpWMDn+8QCP8azTh/ZxJ/CGWziB5nuG69GbHm1zhobaulXAlZCC8CQddqX/ck5BkO+JtX/3aanY+sJpbryRrEJdE0WivG+WxcJWnq+av9nJnWTJIJQs5LvYaH2ufYFQOiS7adTUcRVvMPMb/zyGXyESsZlHYMbHw6aqR4Ry8ESItk+THr5qqUa3LpweKdZvvcjmqxMzN+F0583W5u9orO/jxLonWRP0zEI1L872ColY0UpQFQks6fjdxkI5VW18D+U3q4+G9pH3i+e6mQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yzkTH+svQqE0tqxjXe103f2sbq7zzei/iIjtSMAOxrc=;
+ b=dmNuTER/l0TglfzqIg8ktZPWiqJREb1zM6TFgeyCRto0ddJVRpqX35awokvi9jMTLdqTqd8Tv7q8k+YnZ2w/W9iI8UFEHVL5gHi/obyl5BDLrj+b01/z/nxKWvJTzRw0w0QkUYrpA1UjJtoNk7XV6kLKJWXIm/OFg39qVr/fEJQ=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6210.eurprd04.prod.outlook.com (20.179.33.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.18; Wed, 4 Dec 2019 04:20:41 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 04:20:41 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>
+CC:     "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH v2 1/2] gpio: mvebu: use platform_irq_count
+Thread-Topic: [PATCH v2 1/2] gpio: mvebu: use platform_irq_count
+Thread-Index: AQHVqlowWUivP+fqhEySn62hTmdA6Q==
+Date:   Wed, 4 Dec 2019 04:20:41 +0000
+Message-ID: <1575433106-16171-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2P15301CA0024.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:202:1::34) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 86ed97e6-2fe1-4500-0522-08d7787152bb
+x-ms-traffictypediagnostic: AM0PR04MB6210:|AM0PR04MB6210:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB62108D271267C52619C24344885D0@AM0PR04MB6210.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:218;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(346002)(366004)(376002)(189003)(199004)(99286004)(2906002)(5660300002)(25786009)(54906003)(110136005)(316002)(3846002)(66946007)(66476007)(6116002)(4326008)(6486002)(64756008)(66446008)(66556008)(6512007)(2501003)(6436002)(14444005)(256004)(50226002)(305945005)(71200400001)(71190400001)(81156014)(7416002)(8676002)(8936002)(81166006)(7736002)(102836004)(36756003)(14454004)(52116002)(478600001)(386003)(6506007)(86362001)(2616005)(44832011)(186003)(26005)(2201001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6210;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: f2gP8iwIDAnnthUQWYyWiLddTEaQJvlImzytUpwbELibXL9S2dIl2UK5fj87HmrAfCxA+8DV839GxdLJ/UovGKckYRu3M/Oy5mQZX1ZtCUJ83srBOd3CTXLT/n3sL9luLBsGLr+36JWoisK8oK9Glh1llJgccTNYRxgHzsNa/10n59qPVq52PX9//kHKUbJ79J8t9L9lzV5uqZkTaLloNgBC5jVtTjL7NMa8xKb0tupjfgp0oASgxZt0C43Gb/7Wdjb8aWlymJqdvYdUq4apgLs9rf/cEgGrlkssXUcDuKpKbB8Joi7S/DviylgEGW4NZABlKWl2i7wzvC/obeuzHfKPYGFHu1muRD4XBZki7zpf4IRl/tQ1N511fXF2B8ERAPiNcDrhGVrOQBwe2L39uUjN4cNzvN6wlnkGxrZcEZZ/Hwuxn57BnjpOawJYo5mD
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204040959.GB192877@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86ed97e6-2fe1-4500-0522-08d7787152bb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 04:20:41.4377
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1R2e3cEQIeio94TAflSQn3g1Bf+QHlpOveyj3UBXb5e5V36k9Yz8F6YgRYnq0QuKg4c55wEX3uS2sl3SiaGfhw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6210
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 11:09:59PM -0500, Joel Fernandes wrote:
-> On Tue, Dec 03, 2019 at 08:13:29AM +0100, Ingo Molnar wrote:
-> > 
-> > * Joel Fernandes <joel@joelfernandes.org> wrote:
-> > 
-> > > On Mon, Dec 02, 2019 at 04:32:13PM +0900, Masami Hiramatsu wrote:
-> > > > Anders reported that the lockdep warns that suspicious
-> > > > RCU list usage in register_kprobe() (detected by
-> > > > CONFIG_PROVE_RCU_LIST.) This is because get_kprobe()
-> > > > access kprobe_table[] by hlist_for_each_entry_rcu()
-> > > > without rcu_read_lock.
-> > > > 
-> > > > If we call get_kprobe() from the breakpoint handler context,
-> > > > it is run with preempt disabled, so this is not a problem.
-> > > > But in other cases, instead of rcu_read_lock(), we locks
-> > > > kprobe_mutex so that the kprobe_table[] is not updated.
-> > > > So, current code is safe, but still not good from the view
-> > > > point of RCU.
-> > > > 
-> > > > Let's lock the rcu_read_lock() around get_kprobe() and
-> > > > ensure kprobe_mutex is locked at those points.
-> > > > 
-> > > > Note that we can safely unlock rcu_read_lock() soon after
-> > > > accessing the list, because we are sure the found kprobe has
-> > > > never gone before unlocking kprobe_mutex. Unless locking
-> > > > kprobe_mutex, caller must hold rcu_read_lock() until it
-> > > > finished operations on that kprobe.
-> > > > 
-> > > > Reported-by: Anders Roxell <anders.roxell@linaro.org>
-> > > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > > 
-> > > Instead of this, can you not just pass the lockdep_is_held() expression as
-> > > the last argument to list_for_each_entry_rcu() to silence the warning? Then
-> > > it will be a simpler patch.
-> > 
-> > Come on, we do not silence warnings!
-> 
-> By silence, I mean remove a false-positive warning. In this case since lock
-> is held, it is not a valid warning.
-> 
-> > If it's safely inside the lock then why not change it from 
-> > hlist_for_each_entry_rcu() to hlist_for_each_entry()?
-> > 
-> > I do think that 'lockdep flag' inside hlist_for_each_entry_rcu():
-> > 
-> > /**
-> >  * hlist_for_each_entry_rcu - iterate over rcu list of given type
-> >  * @pos:        the type * to use as a loop cursor.
-> >  * @head:       the head for your list.
-> >  * @member:     the name of the hlist_node within the struct.
-> >  * @cond:       optional lockdep expression if called from non-RCU protection.
-> >  *
-> >  * This list-traversal primitive may safely run concurrently with
-> >  * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-> >  * as long as the traversal is guarded by rcu_read_lock().
-> >  */
-> > #define hlist_for_each_entry_rcu(pos, head, member, cond...)            \
-> > 
-> > is actively harmful. Why is it there?
-> 
-> Because as Paul also said, the code can be common between regular lock
-> holders and RCU lock holders. I am not sure if this is the case with the
-> kprobe code though.
+From: Peng Fan <peng.fan@nxp.com>
 
-Here are some more details on the kprobe side of things:
+platform_irq_count() is the more generic way (independent of
+device trees) to determine the count of available interrupts. So
+use this instead.
 
-get_kprobe() can be called wither from preempt disabled section, or under
-kprobe_mutex lock as evident from also the code comments on this function [1]
+As platform_irq_count() might return an error code (which
+of_irq_count doesn't) some additional handling is necessary.
 
-If called from a preempt disable section, then it is in an RCU reader section
-and no warning will be emitted by use of hlist_for_each_entry_rcu(). This is
-because hlist_for_each_entry_rcu() will internally check if preempt is
-disabled.  However, if it is called under kprobe_mutex lock, then we have no
-way of knowing in hlist_for_each_entry_rcu() if lock was held. So we must
-pass the lockdep expression (which tests if lock is held) to the macro so
-that the false-positive warning is silenced.
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
-thanks,
+V2:
+ Update commit log, add err handling
+ Not tested, just code inspection
 
- - Joel
+ drivers/gpio/gpio-mvebu.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-[1]
-/*
- * This routine is called either:
- *      - under the kprobe_mutex - during kprobe_[un]register()
- *                              OR
- *      - with preemption disabled - from arch/xxx/kernel/kprobes.c
- */
-struct kprobe *get_kprobe(void *addr)
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index 993bbeb3c006..f0fd82b3417c 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -46,7 +46,6 @@
+ #include <linux/irqdomain.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/of_device.h>
+-#include <linux/of_irq.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
+@@ -1102,7 +1101,11 @@ static int mvebu_gpio_probe(struct platform_device *=
+pdev)
+ 		soc_variant =3D MVEBU_GPIO_SOC_VARIANT_ORION;
+=20
+ 	/* Some gpio controllers do not provide irq support */
+-	have_irqs =3D of_irq_count(np) !=3D 0;
++	err =3D platform_irq_count(pdev);
++	if (err < 0)
++		return err;
++
++	have_irqs =3D err !=3D 0;
+=20
+ 	mvchip =3D devm_kzalloc(&pdev->dev, sizeof(struct mvebu_gpio_chip),
+ 			      GFP_KERNEL);
+--=20
+2.16.4
 
