@@ -2,112 +2,105 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE73C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 005E2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6143C2084F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NzzfLl3F"
+	by mail.kernel.org (Postfix) with ESMTP id D5E1E2073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbfLDP3V (ORCPT
+        id S1728456AbfLDP3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:29:21 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34703 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728293AbfLDP3U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:29:20 -0500
-Received: by mail-lj1-f194.google.com with SMTP id m6so8623274ljc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:29:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JXuW32MEVpBGX+oYxjJlbOSqN8m13R4+8nxsyFB6KSo=;
-        b=NzzfLl3Ft2yWy0eGxjDMMRdiFd9HpDaDtBPQfI86Ry+T74t9MJJzS/nEUjgdDWH+Ns
-         l5vCfZPTel14OWP7F4RgXtKZ2zcVC/WkIJrrR5/y2iP5Z59vNoyKfiNMHsYMYn+0a15s
-         svTEJ7nYtBcG1pazF6M7+QWi49eVyFJbT/gSY3vzZRpipA9dPG3Cr25byAsuUX9m295C
-         CG2HjYw45+R+1Ev/YiQ6pwGOQLvypadluuGeWp/CTlcUd6xP56SQ9EY59CPIQXbZLhWv
-         AyYEHBYvLW5GjHaXQhvFWFcKRyl0jkKUlqXg8LGEAHbmyedWQ8ga7zTeo8rF/hP1yzRL
-         8X2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JXuW32MEVpBGX+oYxjJlbOSqN8m13R4+8nxsyFB6KSo=;
-        b=DQp7tuZXn9RvT7xMfPej3qj84fMuNRQz/fbr9ePpWIUIXhBz9VPGYqHYVzOf2qWStP
-         Hvx+9NGfybmHRR73sAWVMHTBRz0WJx0O9oHVlOEZrj63OV+BhclUOUHY2iDijJqP5IS2
-         RTp+4SMRNCQTZcKlZRPmoJkl99RiX5lZype1Wss7HSl24u6AgZLCh5d7lcePDrbnhWtx
-         fMBgEQEYrRy/3mV5+H7GgOSxGOZs6oybsgEzFlO4uWR4k3Cm3br8vuWjwNfvuDg61Bwa
-         2eSIoOc8bgxZBpMmPN8QBcnZqihdO23Z7ezLHOPRfiM/4hZ2P2Twf8StG03DVV/rVZp7
-         B73g==
-X-Gm-Message-State: APjAAAWduIMkXYsJFSXqo9eZqv90dy5LUl+wJF4jheLbB3mIK0a2BUQN
-        q8wxVKPoUzbzGNe8xkFXq+YLEcQv7Ay0nA==
-X-Google-Smtp-Source: APXvYqyWK4G41MaUOKkT9fJC8zvVih/07GuHxet3dUH/XaSUTa7hbcaHBPLzkHpRlp5QcLkBwkbNQA==
-X-Received: by 2002:a2e:294e:: with SMTP id u75mr2399912lje.173.1575473359152;
-        Wed, 04 Dec 2019 07:29:19 -0800 (PST)
-Received: from localhost.localdomain (c-21cd225c.014-348-6c756e10.bbcust.telenor.se. [92.34.205.33])
-        by smtp.gmail.com with ESMTPSA id n11sm3266870ljg.15.2019.12.04.07.29.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:29:17 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     lee.jones@linaro.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH] mfd: mc13xxx-spi: Do not hardcode SPI mode flags
-Date:   Wed,  4 Dec 2019 16:27:15 +0100
-Message-Id: <20191204152715.12553-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Wed, 4 Dec 2019 10:29:44 -0500
+Received: from mga05.intel.com ([192.55.52.43]:33320 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728281AbfLDP3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 10:29:43 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 07:29:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,277,1571727600"; 
+   d="scan'208";a="201434986"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga007.jf.intel.com with ESMTP; 04 Dec 2019 07:29:43 -0800
+Date:   Wed, 4 Dec 2019 07:29:42 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: use CPUID to locate host page table reserved
+ bits
+Message-ID: <20191204152942.GB6323@linux.intel.com>
+References: <1575471060-55790-1-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575471060-55790-1-git-send-email-pbonzini@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current use of mode flags to us SPI_MODE_0 and
-SPI_CS_HIGH is fragile: it overwrites anything already
-assigned by the SPI core. Change it thusly:
+On Wed, Dec 04, 2019 at 03:51:00PM +0100, Paolo Bonzini wrote:
+> The comment in kvm_get_shadow_phys_bits refers to MKTME, but the same is actually
+> true of SME and SEV.  Just use CPUID[0x8000_0008].EAX[7:0] unconditionally, it is
+> simplest and works even if memory is not encrypted.
+> 
+> Cc: stable@vger.kernel.org
+> Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/mmu/mmu.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 6f92b40d798c..8b8edfbdbaef 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -538,15 +538,11 @@ void kvm_mmu_set_mask_ptes(u64 user_mask, u64 accessed_mask,
+>  static u8 kvm_get_shadow_phys_bits(void)
+>  {
+>  	/*
+> -	 * boot_cpu_data.x86_phys_bits is reduced when MKTME is detected
+> -	 * in CPU detection code, but MKTME treats those reduced bits as
+> -	 * 'keyID' thus they are not reserved bits. Therefore for MKTME
+> -	 * we should still return physical address bits reported by CPUID.
+> +	 * boot_cpu_data.x86_phys_bits is reduced when MKTME or SME are detected
+> +	 * in CPU detection code, but the processor treats those reduced bits as
+> +	 * 'keyID' thus they are not reserved bits. Therefore KVM needs to look at
+> +	 * the physical address bits reported by CPUID.
+>  	 */
+> -	if (!boot_cpu_has(X86_FEATURE_TME) ||
+> -	    WARN_ON_ONCE(boot_cpu_data.extended_cpuid_level < 0x80000008))
+> -		return boot_cpu_data.x86_phys_bits;
 
-- Just |= the SPI_MODE_0 so we keep other flags
-- Assign ^= SPI_CS_HIGH since we might be active high
-  already, and that is usually the case with GPIOs used
-  for chip select, even if they are in practice active low.
+Removing this entirely will break CPUs that don't support leaf 0x80000008.
+From a VMX perspective, I'm pretty sure all Intel hardware that supports
+VMX is guaranteed to support 0x80000008, but I've no idea about SVM or any
+non-Intel CPU, and not supporting 0x80000008 in a virtual machine is
+technically legal/possible.  We conditioned doing CPUID on TME because TME
+would be reported as supported iff 0x80000008 existed.
 
-Add a comment clarifying why ^= SPI_CS_HIGH is the right
-choice here.
+The extra bit of paranoia doesn't cost much, so play it safe?  E.g.:
 
-Reported-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/mfd/mc13xxx-spi.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+	if (unlikely(boot_cpu_data.extended_cpuid_level < 0x80000008)) {
+		WARN_ON_ONCE(boot_cpu_has(X86_FEATURE_TME) || SME?);
+		return boot_cpu_data.x86_phys_bits;
+	}
 
-diff --git a/drivers/mfd/mc13xxx-spi.c b/drivers/mfd/mc13xxx-spi.c
-index 286ddcf5ddc6..9885e5f8210a 100644
---- a/drivers/mfd/mc13xxx-spi.c
-+++ b/drivers/mfd/mc13xxx-spi.c
-@@ -134,7 +134,13 @@ static int mc13xxx_spi_probe(struct spi_device *spi)
- 
- 	dev_set_drvdata(&spi->dev, mc13xxx);
- 
--	spi->mode = SPI_MODE_0 | SPI_CS_HIGH;
-+	spi->mode |= SPI_MODE_0;
-+	/*
-+	 * We want the inverse of what is set in the SPI core, if this
-+	 * is accomplished with a GPIO line then inversion semantics may
-+	 * be handled in the GPIO library.
-+	 */
-+	spi->mode ^= SPI_CS_HIGH;
- 
- 	mc13xxx->irq = spi->irq;
- 
--- 
-2.23.0
+	return cpuid_eax(0x80000008) & 0xff;
 
+> -
+>  	return cpuid_eax(0x80000008) & 0xff;
+>  }
+>  
+> -- 
+> 1.8.3.1
+> 
