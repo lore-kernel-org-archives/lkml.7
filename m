@@ -2,106 +2,151 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B278DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC743C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F00207DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575472959;
-	bh=+LyWKcoTaC83hFLYOVOLmtxAK1M+52+ZOKXak1ih5Tk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z1v+YbxtvPMPT1J8b5/NZWhskGXslSWrtdj8P49TxDffncrWFSUEgNhlHC/8b9rRl
-	 lvehRTtaR/WWQxvMD64OsVmaujuP2Ctt+7eipyD21W/nyOBWvu0Zyck1Zi/NVsTyoy
-	 ptxb8/LNVZ9w1USHb3mjn1u04LvXdwviDhIeS/8M=
+	by mail.kernel.org (Postfix) with ESMTP id 8E633207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:22:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f6gx9D8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbfLDPWi (ORCPT
+        id S1728253AbfLDPW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:22:38 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46805 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbfLDPWi (ORCPT
+        Wed, 4 Dec 2019 10:22:58 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45829 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbfLDPW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:22:38 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a124so7129800oii.13;
-        Wed, 04 Dec 2019 07:22:38 -0800 (PST)
+        Wed, 4 Dec 2019 10:22:58 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 203so6410314lfa.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:22:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QhRtjHCPm4dHMmypfZVrC9ZvTuu/tqs6/qPMMGAKlVc=;
+        b=f6gx9D8Fzo/082KBagEd5YUwuwdJPV3+2qN3Jp4bwdirB80/PSKKbQ7uBb7HKSDXb8
+         +c+51IgPuusWznWQZhf6FWGXKC9P3GTNOIr/01a75a+J48vUKtrNEn00TGazRBiLDA2j
+         LTr+DaLi1Yw/2qONCSlT0LgGHVp6wRzWm+ejW5wrlQA9XSHrOVYnTcoI7dHn5A6tFuZd
+         +ISQXjrhL4bRbSXG8PCPna852/LauG1Chvu7YAjtfuFxs73ZBH9r79iC3rH38mulvwsW
+         ejzMTXHEqq6H06yY6l6btr9ixgQpTxytuCNE7HJHwn7I+Hkt1jEt6xdORy7ZbkTrmx8A
+         QhUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6sPha/wbJhMAM5wPncZACHp8KjMdGhsy8S0M1rRpaf8=;
-        b=gsNNINqimOgoSGUwTJcVOyF7p1n+l9fsQ3+4gcj9pUpuhR6ChUtK4Aq/bDAyc1LvzX
-         RriT5wsksI/51e1+1YgYoIvFpolFxPkaVAelpKHEzKBIzrRBvCo9kg7OSU6TmfC6bfWZ
-         gU6N1zua9Xxae+xEQLBQwv4owbBcBHM3VpK11H94wt5P1cUARTQlrEmOs9esI6J42rtK
-         21ITaiPpYsbPU0ZrCEVf4FG3imFC1kqpQ1SOk/BCIKei5F/j+AWsnbv0TPRFcHcUa2/g
-         ZiUP4z5xWvMTLON+0P6gUCKyYYjTdb+WlgmBeigtm7SrDo9DKlr+75Tm8YFYwGyDpHyX
-         Ie8A==
-X-Gm-Message-State: APjAAAXIrs2UZacmwlkf+oavtZanFIaK+7UEjHbydGKG1bA7N+zCYxIa
-        8hJAbbsCqgwvHE/PxyK9BA==
-X-Google-Smtp-Source: APXvYqw8kKCWJtpWF4IZtXkjbDj7ihw7FUCSOym5glyPaxqeYYa79GKcja0rok7LmHGBYe7QPSY9CA==
-X-Received: by 2002:aca:b986:: with SMTP id j128mr3137425oif.16.1575472957574;
-        Wed, 04 Dec 2019 07:22:37 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c204sm2388795oia.14.2019.12.04.07.22.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:22:37 -0800 (PST)
-Date:   Wed, 4 Dec 2019 09:22:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Khouloud Touil <ktouil@baylibre.com>
-Cc:     bgolaszewski@baylibre.com, mark.rutland@arm.com,
-        srinivas.kandagatla@linaro.org, baylibre-upstreaming@groups.io,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linus.walleij@linaro.org
-Subject: Re: [PATCH 3/4] dt-bindings: at24: remove the optional property
- write-protect-gpios
-Message-ID: <20191204152236.GA22464@bogus>
-References: <20191120142038.30746-1-ktouil@baylibre.com>
- <20191120142038.30746-4-ktouil@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QhRtjHCPm4dHMmypfZVrC9ZvTuu/tqs6/qPMMGAKlVc=;
+        b=mXLseGaNYF2bG+y1oj9F4jj90w3FVSXrVKF6x6Co/AMoq75wt4p4K28AltvnZVCW7D
+         oY10Wk/SbNwvSXnj75SZ85FbHoMYI8Mn9/5ggiJ+EaOIcyL5h4pRPBSEOA6DW6yHF7nq
+         WzC72Nmv+uXuzg2X0LEjDIewupeSegEad6AHhw4yENqnWx5dS/FnHh4m+je1OzePWVbA
+         E4wO3/FCAP/IcGi/VwTVQhH4+xtJVLSDuJb1XGsbZustELSbZNMjfeeg8RckhRBeM5GS
+         bLg2Qd6zsxFK3+RPbICGLdkdSUX+wqLID5po8VsjS1GYWHXlE/cP68XCeWyn41/qEYjB
+         YRRA==
+X-Gm-Message-State: APjAAAVpHc0Fkhcgr4fadwPMe4KiH4FRrIHBXeWEdTBr4je+nPc3O1wl
+        ZTk+j+GBB0BDKYT0beGUD6R0Jtk20p0+PGcmU5c1Nw==
+X-Google-Smtp-Source: APXvYqz1JOMHjPsCC+aY+OEI89bDT/1JuNAZxEJcfVpYtKmNUbCuezV4Z0Q0k2J97y3sSPrVRzqqqde2RKoNvY8ETzg=
+X-Received: by 2002:a19:f701:: with SMTP id z1mr2364885lfe.133.1575472975799;
+ Wed, 04 Dec 2019 07:22:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120142038.30746-4-ktouil@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191203155907.2086-1-valentin.schneider@arm.com> <20191203155907.2086-2-valentin.schneider@arm.com>
+In-Reply-To: <20191203155907.2086-2-valentin.schneider@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 4 Dec 2019 16:22:44 +0100
+Message-ID: <CAKfTPtC-9nxGCAq8ck0Av6zuqCySvO87oP4hhBE=qKL3gxu+ow@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] sched/uclamp: Make uclamp_util_*() helpers use and
+ return UL values
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Quentin Perret <qperret@google.com>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 03:20:37PM +0100, Khouloud Touil wrote:
-> NVMEM framework is an interface for the at24 EEPROMs as well as for
-> other drivers, instead of passing the wp-gpios over the different
-> drivers each time, it would be better to pass it over the NVMEM
-> subsystem once and for all.
-> 
-> Removing the optional property form the device tree binding document.
-> 
-> Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+On Tue, 3 Dec 2019 at 17:02, Valentin Schneider
+<valentin.schneider@arm.com> wrote:
+>
+> Vincent pointed out recently that the canonical type for utilization
+> values is 'unsigned long'. Internally uclamp uses 'unsigned int' values for
+> cache optimization, but this doesn't have to be exported to its users.
+>
+> Make the uclamp helpers that deal with utilization use and return unsigned
+> long values.
+>
+> Reviewed-by: Quentin Perret <qperret@google.com>
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 > ---
->  Documentation/devicetree/bindings/eeprom/at24.yaml | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> index e8778560d966..9894237ac432 100644
-> --- a/Documentation/devicetree/bindings/eeprom/at24.yaml
-> +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> @@ -145,11 +145,6 @@ properties:
->        over reads to the next slave address. Please consult the manual of
->        your device.
->  
-> -  wp-gpios:
-> -    description:
-> -      GPIO to which the write-protect pin of the chip is connected.
-> -    maxItems: 1
-> -
+>  kernel/sched/sched.h | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 280a3c735935..f1d035e5df7e 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -2303,15 +2303,15 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
+>  unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
 
-At least 'wp-gpios: true' is still needed or you need to reference the 
-common definition in nvmem.yaml. The reason being is every possible 
-property (and child node) needs to be listed so we can have errors on 
-any that aren't.
+Why not changing uclamp_eff_value to return unsigned long too ? The
+returned value represents a utilization to be compared with other
+utilization value
 
-Rob
+>
+>  static __always_inline
+> -unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+> -                             struct task_struct *p)
+> +unsigned long uclamp_util_with(struct rq *rq, unsigned long util,
+> +                              struct task_struct *p)
+>  {
+> -       unsigned int min_util = READ_ONCE(rq->uclamp[UCLAMP_MIN].value);
+> -       unsigned int max_util = READ_ONCE(rq->uclamp[UCLAMP_MAX].value);
+> +       unsigned long min_util = READ_ONCE(rq->uclamp[UCLAMP_MIN].value);
+> +       unsigned long max_util = READ_ONCE(rq->uclamp[UCLAMP_MAX].value);
+>
+>         if (p) {
+> -               min_util = max(min_util, uclamp_eff_value(p, UCLAMP_MIN));
+> -               max_util = max(max_util, uclamp_eff_value(p, UCLAMP_MAX));
+> +               min_util = max_t(unsigned long, min_util, uclamp_eff_value(p, UCLAMP_MIN));
+
+As mentioned above, uclamp_eff_value should return an unsigned long
+
+> +               max_util = max_t(unsigned long, max_util, uclamp_eff_value(p, UCLAMP_MAX));
+>         }
+>
+>         /*
+> @@ -2325,17 +2325,17 @@ unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+>         return clamp(util, min_util, max_util);
+>  }
+>
+> -static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
+> +static inline unsigned long uclamp_util(struct rq *rq, unsigned long util)
+>  {
+>         return uclamp_util_with(rq, util, NULL);
+>  }
+>  #else /* CONFIG_UCLAMP_TASK */
+> -static inline unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+> -                                           struct task_struct *p)
+> +static inline unsigned long uclamp_util_with(struct rq *rq, unsigned long util,
+> +                                            struct task_struct *p)
+>  {
+>         return util;
+>  }
+> -static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
+> +static inline unsigned long uclamp_util(struct rq *rq, unsigned long util)
+>  {
+>         return util;
+>  }
+> --
+> 2.24.0
+>
