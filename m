@@ -2,150 +2,96 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D0BC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E0AC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7D6206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85F82206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:26:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MYMcpF0N"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="plcbcqfk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfLDKYH (ORCPT
+        id S1727489AbfLDK0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:24:07 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45665 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbfLDKYH (ORCPT
+        Wed, 4 Dec 2019 05:26:39 -0500
+Received: from mail-pf1-f180.google.com ([209.85.210.180]:43586 "EHLO
+        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727331AbfLDK0j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:24:07 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j42so7805681wrj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 02:24:05 -0800 (PST)
+        Wed, 4 Dec 2019 05:26:39 -0500
+Received: by mail-pf1-f180.google.com with SMTP id h14so3426110pfe.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 02:26:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GuqJKgxzORWixv+ONGuRvuIb4W1dExSeU86nj2DCsb0=;
-        b=MYMcpF0NBpya3Dp0QUs8IhS2XLN5hBn3Y74n2Fpg/00W933ktGY5gQuF5wGqC7dYf/
-         09qiEy92KfIgQgS+Zmo0DpX7rURPfWDBgRkP3d/r9p6HsYExqQAgaV/iRhlwDbZGw98L
-         uPjFZBSTofPNVxyjqtBh6MdbKRYzbm8MSmaMbsCVuthOUDjBMC7fGMTpxrA33vLEM/Ir
-         4cFfh+nlygb67h7WLQ083u+1eogyQ1SvUA71LYknaaooRX/9P/7kQU54UYf1oMm1qMi6
-         PE25lcUp+E2amWLAZt0AbC10mzYJ6McnJbJKCA3Ann6D5MibCmobitoldmtdRSxAcjvV
-         y9KA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uzsef4KJrsS+vISRoINrm5pjWR4MnJsKKjbKbFFAkQw=;
+        b=plcbcqfkYNxwTh9QWAJxdbLFK4r7wJFyd7D4RWeG7E7a0ApH3VV3/OG1vj3PObgRsx
+         Hs05DsuSr5Q1FtNmT5oEoEgDmPsmc28+kpoANcgCVsc4pdYPjmlCH+78MzURD+7Vb3BM
+         vh0LRMUtfzCvdojax+IS7luRhqOzQQgggw5MGfET5RfRdU0+9WunAeqNQOPI1v1EciAO
+         fWXlySGPRZU1OIB7Rcmi+n32F4nE5mt7wONwQ4WCCD/s/fjF4IErHM0NynPe+UFoRyn9
+         4zcj43XUBWvVdpXBUltIAq8DIHT0rgXEkzVx6KeOHbhiIzOzQ+PQMpeYstvCZz3gTOED
+         3b5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GuqJKgxzORWixv+ONGuRvuIb4W1dExSeU86nj2DCsb0=;
-        b=WFsh6d+rXgd5Q0ROwPU9XMfvlGwLzPYK6aIG6ND9DRijXiIjJgt5ABsyzcFhusJtt/
-         /SM3cJRsA7OSl9Fgkr0N7cDETHdjnuIsB3v45mmvcStV9iTWx1laejd4tDTj5DteOLe/
-         OEtg9bi68D7H6KG4d3GHqHhF0bLj14DaREeI+qxta6lNkVvl5nRyLJF/4xLJWFVzmLTs
-         36EbsvJZv9cdP1nJitftNhw9cJDwbQqGa/TdRTJ20mF6gJV5N5GWvjFlWvCilCSaOK1g
-         RM6SUgGUb4IGWSqQl6VrTT1cnGqjNccx7xlecOnLMIKeFPQWviAz8psSyctDHKnBgMmz
-         hqfg==
-X-Gm-Message-State: APjAAAXGHL6CiNzh0nuxvFKw0cvqaXFJv7yuC1M14q59fUJi5ohSDwQl
-        LExer5pqr8M3wojLazzJ3Qk7tDpp5OZR4bCXcAlwSw==
-X-Google-Smtp-Source: APXvYqxWwFndRJgAqjBJu+iNimNvB0sXaYF2yRdMmBK9Aw4qj7i6zYf8yApxP+lwHCYRcybjgFLsPwfMKMGRGGwlg9Y=
-X-Received: by 2002:a5d:6652:: with SMTP id f18mr3249867wrw.246.1575455044775;
- Wed, 04 Dec 2019 02:24:04 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uzsef4KJrsS+vISRoINrm5pjWR4MnJsKKjbKbFFAkQw=;
+        b=laYDGoKcCGBURPBojXdl4toORTvbntLHiGy6i3nJcWF4USZytrbmHS8evUR+Qn3rtw
+         6YdAyoUHm5G9foCFzMIRV9HVfUhirbpiNuLWwwchoYr5Eml1JoCx++3IzXa6qZLTi3m6
+         EmvRv1AguWT4o+oM/jCGt1cRadMunTxIkmi3KCn6MYZU2kHrExab53aciFDpOQIF+BZU
+         Pp4Px4LDPKC/gna/jzyjgUm14PtqlHBNbuF743gc9g1ix+9t3UytbzQTbkH8UjLV9Tfd
+         SfCQcy4SDJXVjLbBJgsMVvYMGm1ne1/Rq9RLeWGdylfl6r7kzKj5kJhHnLkijcYlelUQ
+         Hq8w==
+X-Gm-Message-State: APjAAAVrwWp64Hl+9ikpzUuFSIoiHIJh+Qst2/ooKKwsDgaEIGcLWMjB
+        O+c4WQED40ryeHr3k+prl0i1AQ==
+X-Google-Smtp-Source: APXvYqy0xchk5KDlqBbD2ez6El0z37utXxmTy0Z4siJZjd6n2+DLGWwd0SdK8poRbiZV/8sisN14SQ==
+X-Received: by 2002:aa7:9988:: with SMTP id k8mr2637132pfh.200.1575455198334;
+        Wed, 04 Dec 2019 02:26:38 -0800 (PST)
+Received: from localhost ([122.171.112.123])
+        by smtp.gmail.com with ESMTPSA id z26sm6727403pgu.80.2019.12.04.02.26.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Dec 2019 02:26:37 -0800 (PST)
+Date:   Wed, 4 Dec 2019 15:56:35 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sumit Gupta <sumitg@nvidia.com>, rjw@rjwysocki.net,
+        catalin.marinas@arm.com, will@kernel.org, jonathanh@nvidia.com,
+        talho@nvidia.com, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
+        mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ Patch 1/3] firmware: tegra: adding function to
+ get BPMP data
+Message-ID: <20191204102635.4umxtgmishlijyn4@vireshk-i7>
+References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
+ <20191203174229.GA1721849@ulmo>
+ <9404232d-84ce-a117-89dd-f2d8de80993e@kapsi.fi>
+ <20191204091703.d32to5omdm3eynon@vireshk-i7>
+ <cdb685a4-4d00-4635-df12-c67a6faa81e2@kapsi.fi>
 MIME-Version: 1.0
-References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
- <20191204075917.GA10587@dhcp-128-65.nay.redhat.com> <20191204101412.GD114697@gmail.com>
-In-Reply-To: <20191204101412.GD114697@gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 4 Dec 2019 10:24:01 +0000
-Message-ID: <CAKv+Gu8TcF69QNhqRJGh+A8AJ=91dfTJhRmV=J4V3ML9vQWoXA@mail.gmail.com>
-Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
- data to fix kexec breakage
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Dave Young <dyoung@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Weiser <michael@weiser.dinsnail.net>,
-        Kexec Mailing List <kexec@lists.infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cdb685a4-4d00-4635-df12-c67a6faa81e2@kapsi.fi>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Dec 2019 at 10:14, Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Dave Young <dyoung@redhat.com> wrote:
->
-> > On 12/04/19 at 03:52pm, Dave Young wrote:
-> > > Michael Weiser reported he got below error during a kexec rebooting:
-> > > esrt: Unsupported ESRT version 2904149718861218184.
-> > >
-> > > The ESRT memory stays in EFI boot services data, and it was reserved
-> > > in kernel via efi_mem_reserve().  The initial purpose of the reservation
-> > > is to reuse the EFI boot services data across kexec reboot. For example
-> > > the BGRT image data and some ESRT memory like Michael reported.
-> > >
-> > > But although the memory is reserved it is not updated in X86 e820 table.
-> > > And kexec_file_load iterate system ram in io resource list to find places
-> > > for kernel, initramfs and other stuff. In Michael's case the kexec loaded
-> > > initramfs overwritten the ESRT memory and then the failure happened.
-> >
-> > s/overwritten/overwrote :)  If need a repost please let me know..
-> >
-> > >
-> > > Since kexec_file_load depends on the e820 to be updated, just fix this
-> > > by updating the reserved EFI boot services memory as reserved type in e820.
-> > >
-> > > Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
-> > > bypassed in the reservation code path because they are assumed as reserved.
-> > > But the reservation is still needed for multiple kexec reboot.
-> > > And it is the only possible case we come here thus just drop the code
-> > > chunk then everything works without side effects.
-> > >
-> > > On my machine the ESRT memory sits in an EFI runtime data range, it does
-> > > not trigger the problem, but I successfully tested with BGRT instead.
-> > > both kexec_load and kexec_file_load work and kdump works as well.
-> > >
-> > > Signed-off-by: Dave Young <dyoung@redhat.com>
->
->
-> So I edited this to:
->
->  From: Dave Young <dyoung@redhat.com>
->
->  Michael Weiser reported he got this error during a kexec rebooting:
->
->    esrt: Unsupported ESRT version 2904149718861218184.
->
->  The ESRT memory stays in EFI boot services data, and it was reserved
->  in kernel via efi_mem_reserve().  The initial purpose of the reservation
->  is to reuse the EFI boot services data across kexec reboot. For example
->  the BGRT image data and some ESRT memory like Michael reported.
->
->  But although the memory is reserved it is not updated in the X86 E820 table,
->  and kexec_file_load() iterates system RAM in the IO resource list to find places
->  for kernel, initramfs and other stuff. In Michael's case the kexec loaded
->  initramfs overwrote the ESRT memory and then the failure happened.
->
->  Since kexec_file_load() depends on the E820 table being updated, just fix this
->  by updating the reserved EFI boot services memory as reserved type in E820.
->
->  Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
->  bypassed in the reservation code path because they are assumed as reserved.
->
->  But the reservation is still needed for multiple kexec reboots,
->  and it is the only possible case we come here thus just drop the code
->  chunk, then everything works without side effects.
->
->  On my machine the ESRT memory sits in an EFI runtime data range, it does
->  not trigger the problem, but I successfully tested with BGRT instead.
->  both kexec_load() and kexec_file_load() work and kdump works as well.
->
+On 04-12-19, 12:21, Mikko Perttunen wrote:
+> Ah, it seems I was mistaken here. Thanks for the information.
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Please avoid top-posting [1][2] for LKML discussions.
+
+Thanks.
+
+-- 
+viresh
+
+[1] https://en.wikipedia.org/wiki/Posting_style#Top-posting
+[2] https://web.archive.org/web/20080722025748/http://www.zip.com.au/~akpm/linux/patches/stuff/top-posting.txt
