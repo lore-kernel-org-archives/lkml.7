@@ -2,255 +2,373 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E62D5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8309EC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A94F920640
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575445901;
-	bh=8QpDtsmNPdaDSp+5CU+ICx3Gctl8iRJg4TOAPnU9ne0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qfbsYs7FT3RrhGTdgWDEzLxBzue0xG3rNSPDJd1QGxFq5tpybHIdxHQMs1/mRZ1/7
-	 iyyYOINTbi9fpQf+6J2pBXf13uS25tAciNn4jMAmxctl00jDPFe/vj5h9i7hMWdUMO
-	 2YjGRn8rj2DKG6GULdAfTpk6EFrIGyKEHGM8JGdw=
+	by mail.kernel.org (Postfix) with ESMTP id 46CD020640
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfLDHvk (ORCPT
+        id S1727181AbfLDHwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:51:40 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39838 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfLDHvk (ORCPT
+        Wed, 4 Dec 2019 02:52:39 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:52083 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfLDHwi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:51:40 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y11so7270753wrt.6;
-        Tue, 03 Dec 2019 23:51:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=d3HbM0ODdlNKB9WcOwE3VNxvNSYFaXuEW0sqO16IZaQ=;
-        b=NI3Rw0xO6yn88l2Qxm54NqUFkypRlkUqKEuJ2KtqZeVkCy8vzHfopmMwfVvwYeMkbN
-         xlvYxqCsG8HnQo5kZbwJHVjZjoWjdxaNkiJsvzHl58OLaibIuMUCPiEWrGveMFSxvs6x
-         jID6Y5oN7YMJSSL+EkVqgqcEvkwNt/x1oNUi6r7KSwi0Eh/TvKivAmWa4MzZBBh5wdJm
-         L2mX5fzq2w+pWQG/5DaFqalMe3I4VnIJ16IyDlca/4OOFs+HA9SAwUEPQ7IEj/27uSKT
-         2tEz+X1nOHVEMATIWPG62zICE40xfVV9ZzB0mtIkrj42nIVyLDpYQrYCJxXgmxwC7COu
-         uJtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d3HbM0ODdlNKB9WcOwE3VNxvNSYFaXuEW0sqO16IZaQ=;
-        b=ZsTPdzJTpvIgjbk2m3Qfr4J32BVOfm342eWJqNRsWAK/WtonqxO8RUmLSMi+HQrmhS
-         DwBCzxHoLq5HsCJyJMh0ty/CtIXCWkBSxD2sKph10htOr4NkMe7uDkkY4n8aB2iUi/8c
-         QiPbv2vmUkwAGvDK0QmrWgg3BUe0D1+Be+PNtgBHF1zGgM+ySolIQMfFmpaNso0zWHhe
-         MbNZu2d5rT0Zg6FP/EyLPhiysjISWQeD3qsdeQhgEqSveYBfTvXDq2zR6wdOZnlD/Nh+
-         gRxMlMypj+TUednl4C+7NKEuxYB4xy0Db1BGzm0wVBQJYZTNfu/iA4uNzSEKS+WBhIEe
-         qokg==
-X-Gm-Message-State: APjAAAWcEIWF7d6vTW4kmvMDC2dqHF2Mqr53r6+dvesedyAWIBjFaW9e
-        zzLNNB/9BJuKALp+FDy3lZA=
-X-Google-Smtp-Source: APXvYqz5x8aXYAuwNnis53lPnqsBoHOkOOUkQkfA0jt7m32Al1K4dQEwzudPGwVsj3S9nm3uOPD3tg==
-X-Received: by 2002:adf:b605:: with SMTP id f5mr2275860wre.383.1575445897033;
-        Tue, 03 Dec 2019 23:51:37 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id x7sm6923479wrq.41.2019.12.03.23.51.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 23:51:36 -0800 (PST)
-Date:   Wed, 4 Dec 2019 08:51:34 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Sudipm Mukherjee <sudipm.mukherjee@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Message-ID: <20191204075134.GA29770@gmail.com>
-References: <20191203135606.24902-1-acme@kernel.org>
+        Wed, 4 Dec 2019 02:52:38 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 9NC35zFt21PzVeS4bE6r9ZbexP0O69LzC+xvIUbQvu6rav1muERQSEUywBCHDXwtzktp1jmNzJ
+ CxrkbzX5MOcwupTwAEIHlGrXdGFbg5pj6ahkM/w7/Hit+a1T68Vz5VWGEVh6wJCsampkui8eQZ
+ r5hAkn0xND/3v6VQ9OrF+SMKAJfQ+vQQ0k6LBgGA/yZ7tkKgcy3DBWM81B/tR60NCdyILfjiRB
+ 1KO8ws77NuK5TtO10kCCOZ3QN0361Qft8opU0S736sU2isDdRUsVX8Nbj50KPFQ5W7MZZb5OJl
+ 4Ag=
+X-IronPort-AV: E=Sophos;i="5.69,276,1571727600"; 
+   d="scan'208";a="57740022"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Dec 2019 00:52:37 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 4 Dec 2019 00:52:37 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Wed, 4 Dec 2019 00:52:37 -0700
+Date:   Wed, 4 Dec 2019 08:52:26 +0100
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
+CC:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "jic23@kernel.org" <jic23@kernel.org>
+Subject: Re: [PATCH] iio: at91-sama5d2_adc: fix
+ iio_triggered_buffer_{predisable,postenable} positions
+Message-ID: <20191204075226.bpgd6d6o72lcjbpi@M43218.corp.atmel.com>
+Mail-Followup-To: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "jic23@kernel.org" <jic23@kernel.org>
+References: <20191023082508.17583-1-alexandru.ardelean@analog.com>
+ <17cf55869cc418795d0013c0594ed8fc04381d46.camel@analog.com>
+ <9df3d999-0ec6-a282-d24b-8f7df5f14f6d@microchip.com>
+ <e43bf58f-223c-0b12-2912-6f353d866ec3@microchip.com>
+ <74aabb41107ab162660f21e726c88a9dd40ecc5e.camel@analog.com>
+ <60ce6ff9-ba06-2522-e9a0-55e6fd2731ec@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20191203135606.24902-1-acme@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <60ce6ff9-ba06-2522-e9a0-55e6fd2731ec@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 03, 2019 at 10:49:58AM +0100, Eugen Hristev - M18282 wrote:
+> 
+> 
+> On 29.11.2019 09:02, Ardelean, Alexandru wrote:
+> 
+> > On Thu, 2019-11-28 at 15:19 +0000, Eugen.Hristev@microchip.com wrote:
+> >>
+> > 
+> > Hey,
+> > 
+> > Sorry for the late reply.
+> > I'm also juggling a few things.
+> > 
+> >>
+> >> On 28.11.2019 10:36, Eugen.Hristev@microchip.com wrote:
+> >>
+> >>> On 25.11.2019 17:03, Ardelean, Alexandru wrote:
+> >>>> On Wed, 2019-10-23 at 11:25 +0300, Alexandru Ardelean wrote:
+> >>>>> The iio_triggered_buffer_{predisable,postenable} functions
+> >>>>> attach/detach
+> >>>>> poll functions.
+> >>>>>
+> >>>>> The iio_triggered_buffer_postenable() should be called first to
+> >>>>> attach
+> >>>>> the
+> >>>>> poll function, and then the driver can init the data to be
+> >>>>> triggered.
+> >>>>>
+> >>>>> Similarly, iio_triggered_buffer_predisable() should be called last
+> >>>>> to
+> >>>>> first
+> >>>>> disable the data (to be triggered) and then the poll function
+> >>>>> should be
+> >>>>> detached.
+> >>>
+> >>> Hi Alexandru,
+> >>>
+> >>> Sorry for this late reply,
+> >>>
+> >>> I remember that by adding specific at91_adc code for
+> >>> predisable/postenable , I was replacing the existing standard callback
+> >>> with my own, and have my specific at91 code before postenable and then
+> >>> calling the subsystem postenable,
+> >>> and in similar way, for predisable, first call the subsystem predisable
+> >>> then doing my predisable code (in reverse order as in postenable)
+> >>>
+> >>> If you say the order should be reversed (basically have the
+> >>> pollfunction
+> >>> first), how is current code working ?
+> >>> Should current code fail if the poll function is not attached in time ?
+> >>> Or there is a race between triggered data and the attachment of the
+> >>> pollfunc ?
+> >>>
+> >>> I am thinking that attaching the pollfunc later makes it work because
+> >>> the DMA is not started yet. What happens if we have the pollfunc
+> >>> attached but DMA is not started (basically the trigger is not started)
+> >>> ,
+> >>> can this lead to unexpected behavior ? Like the pollfunc polling but no
+> >>> trigger started/no DMA started.
+> >>
+> >> I looked a bit more into the code and in DMA case, using postenable
+> >> first will lead to calling attach pollfunc, which will also enable the
+> >> trigger, but the DMA is not yet started.
+> >> Is this the desired effect ?
+> > 
+> > Yes.
+> 
+> How is this correct ? We start the trigger but have no buffer to carry 
+> to... what happens with the data ? -> I think we both have an answer to 
+> that, as you state below
+> 
+> > 
+> >> Normally when using DMA I would say we
+> >> would need to enable DMA first to be ready to carry data (and coherent
+> >> area etc.) and then enable the trigger.
+> > 
+> > So, there is a change in our tree [from some time ago].
+> > See here:
+> > https://github.com/analogdevicesinc/linux/commit/eee97d12665fef8cf429a1e5035b23ae969705b8
+> > 
+> > Particularly, what's interesting is around line:
+> > https://github.com/analogdevicesinc/linux/commit/eee97d12665fef8cf429a1e5035b23ae969705b8#diff-0a87744ce945d2c1c89ea19f21fb35bbR722
+> > And you may need to expand some stuff to see more of the function-body.
+> > And some things may have changed in upstream IIO since that change.
+> > 
+> > The change is to make the pollfunc attach/detach become part of the IIO
+> > framework, because plenty of drivers just call
+> > iio_triggered_buffer_postenable() & iio_triggered_buffer_predisable() to
+> > manually attach/detach the pollfunc for triggered buffers.
+> 
+> Okay, I understand this. at91-sama5d2_adc does not manually 
+> attach/detach the pollfunc. So why do we need to change anything here ?
+> 
+> 
+> > 
+> > That change is from 2015, and since then, some drivers were added that just
+> > manually attach/detach the pollfunc [and do nothing more with the
+> > postenable/predisable hooks].
+> > 
+> > I tried to upstream a more complete version of that patch a while ago [u1].
+> > https://patchwork.kernel.org/patch/10482167/
+> > https://patchwork.kernel.org/patch/10737291/
+> > 
+> > The conclusion was to first fix the attach/detach pollfunc order in all IIO
+> > drivers, so that when patch [u1] is applied, there is no more discussion
+> > about the correct order for attach/detach pollfunc.
+> 
+> Allright, what is required to be fixed regarding the order, in this 
+> specific case? We enable the DMA, and then we do the normal 'postenable' 
+> that was called anyway if we did not override the 'postenable' in the 
+> ops. Do you want to move this code to 'preenable' and keep 'postenable' 
+> to the standard subsystem one ?
+> 
+> The same applies to the predisable, we first call the subsystem 
+> 'predisable' then do the specific at91 stuff. You want to move this to 
+> the 'postdisable' ?
+> 
+> I think reverting the order inside the functions themselves is not good 
+> as we replace the order of starting trigger/DMA setup.
+> So, coming to your question below...
+> 
+> > 
+> > Coming back here [and to your question], my answer is: I don't know if the
+> > at91 DMA needs to be enabled/disabled before/after the pollfunc
+> > attach/detach.
+> > This sounds like specific stuff for at91 [which is fine].
+> > 
+> > It could be that some other hooks may need to used to enable DMA
+> > before/after the attach/detach pollfunc. Maybe preenable()/postdisable() ?
+> > 
+> > In any case, what I would like [with this discussion], is to resolve a
+> > situation where we can get closer to moving the attach/pollfunc code to IIO
+> > core. So, if AT91 requires a different ordering, I think you would be more
+> > appropriate to tell me, and propose an alternative to this patch.
+> 
+> ... yes, this looks more appropriate, to move things to 
+> 'preenable/postdisable', if you feel like 'postenable/predisable' is not 
+> the proper place to put them.
+> But the order itself, first enable DMA then trigger, and disable in 
+> reverse order, I do not think there is anything wrong with that? Am I 
+> misunderstanding ?
+> 
+> If Jonathan or Ludovic have a different idea, please let me know.
+> 
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+I didn't chime in because I am not sure that I really get the issue. I see
+the order of the sequence which enables the DMA first and for me it's safe
+in this way and I also have doubt it works well if DMA is enabled after
+but I didn't do the test.
 
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit e680a41fcaf07ccac8817c589fc4824988b48eac:
-> 
->   Merge tag 'perf-core-for-mingo-5.5-20191128' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2019-11-29 06:56:05 +0100)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.5-20191203
-> 
-> for you to fetch changes up to 15b3904f8e884e0d34d5f09906cf6526d0b889a2:
-> 
->   libtraceevent: Copy pkg-config file to output folder when using O= (2019-12-02 21:58:20 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> perf report/top:
-> 
->   - Fix segfault due to missing initialization of recently introduced
->     struct map_symbol 'maps' field in append_inlines(), when running
->     with DWARF callchains.
-> 
-> perf stat:
-> 
->   Andi Kleen:
-> 
->   - Affinity based optimizations for sessions with many events in
->     machines with large core counts, avoiding excessive number of IPIs.
-> 
-> libtraceevent:
-> 
->   - Sudip Mukherjee:
-> 
->   - Fix installation with O=.
-> 
->   - Copy pkg-config file to output folder when using O=.
-> 
-> perf bench:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Update the copies of x86's mem{cpy,set}_64.S, and because that
->     now uses new stuff in linux/linkage.h, update that header too, which
->     made the minimal clang version to build perf to be 3.5, as
->     3.4 as found in some of the container images used to test build perf
->     can't grok STT_FUNC as a token in .type lines.
-> 
-> ABI headers:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Sync x86's msr-index.h copy with the kernel sources, resulting
->     in new MSRs to be usable in filter expressions in 'perf trace',
->     such as IA32_TSX_CTRL.
-> 
->   - Sync linux/fscrypt.h, linux/stat.h, sched.h and the kvm headers.
-> 
-> perf trace:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Add CLEAR_SIGHAND support for clone's flags arg
-> 
-> perf kvm:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Clarify the 'perf kvm' -i and -o command line options
-> 
-> perf test:
-> 
->   Ian Rogers:
-> 
->   - Move test functionality in to a 'perf test' entry.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Andi Kleen (10):
->       perf cpumap: Maintain cpumaps ordered and without dups
->       perf evlist: Maintain evlist->all_cpus
->       perf evsel: Add iterator to iterate over events ordered by CPU
->       perf evsel: Add functions to close evsel on a CPU
->       perf stat: Use affinity for closing file descriptors
->       perf stat: Factor out open error handling
->       perf stat: Use affinity for opening events
->       perf stat: Use affinity for reading
->       perf evsel: Add functions to enable/disable for a specific CPU
->       perf stat: Use affinity for enabling/disabling events
-> 
-> Arnaldo Carvalho de Melo (10):
->       perf machine: Fill map_symbol->maps in append_inlines() to fix segfault
->       perf bench: Update the copies of x86's mem{cpy,set}_64.S
->       tools arch x86: Sync the msr-index.h copy with the kernel sources
->       tools headers uapi: Sync linux/fscrypt.h with the kernel sources
->       tools headers uapi: Sync linux/stat.h with the kernel sources
->       tools headers kvm: Sync kvm headers with the kernel sources
->       tools headers UAPI: Sync sched.h with the kernel
->       perf beauty: Add CLEAR_SIGHAND support for clone's flags arg
->       tools arch x86: Sync asm/cpufeatures.h with the kernel sources
->       perf kvm: Clarify the 'perf kvm' -i and -o command line options
-> 
-> Ian Rogers (1):
->       perf jit: Move test functionality in to a test
-> 
-> Sudip Mukherjee (2):
->       libtraceevent: Fix lib installation with O=
->       libtraceevent: Copy pkg-config file to output folder when using O=
-> 
->  tools/arch/arm/include/uapi/asm/kvm.h     |   3 +-
->  tools/arch/arm64/include/uapi/asm/kvm.h   |   5 +-
->  tools/arch/powerpc/include/uapi/asm/kvm.h |   3 +
->  tools/arch/x86/include/asm/cpufeatures.h  |   3 +
->  tools/arch/x86/include/asm/msr-index.h    |  18 ++
->  tools/arch/x86/lib/memcpy_64.S            |  20 +--
->  tools/arch/x86/lib/memset_64.S            |  16 +-
->  tools/include/uapi/linux/fscrypt.h        |   3 +-
->  tools/include/uapi/linux/kvm.h            |  11 ++
->  tools/include/uapi/linux/sched.h          |  60 +++++--
->  tools/include/uapi/linux/stat.h           |   2 +-
->  tools/lib/traceevent/Makefile             |   6 +-
->  tools/perf/Documentation/perf-kvm.txt     |   5 +-
->  tools/perf/arch/arm/tests/regs_load.S     |   4 +-
->  tools/perf/arch/arm64/tests/regs_load.S   |   4 +-
->  tools/perf/arch/x86/tests/regs_load.S     |   8 +-
->  tools/perf/builtin-record.c               |   2 +-
->  tools/perf/builtin-stat.c                 | 288 +++++++++++++++++++++---------
->  tools/perf/check-headers.sh               |   4 +-
->  tools/perf/lib/cpumap.c                   |  73 +++++++-
->  tools/perf/lib/evlist.c                   |   1 +
->  tools/perf/lib/evsel.c                    |  76 ++++++--
->  tools/perf/lib/include/internal/evlist.h  |   1 +
->  tools/perf/lib/include/perf/cpumap.h      |   2 +
->  tools/perf/lib/include/perf/evsel.h       |   3 +
->  tools/perf/tests/Build                    |   1 +
->  tools/perf/tests/builtin-test.c           |   9 +
->  tools/perf/tests/cpumap.c                 |  16 ++
->  tools/perf/tests/event-times.c            |   4 +-
->  tools/perf/tests/genelf.c                 |  51 ++++++
->  tools/perf/tests/tests.h                  |   2 +
->  tools/perf/trace/beauty/clone.c           |   1 +
->  tools/perf/util/cpumap.h                  |   1 +
->  tools/perf/util/evlist.c                  | 113 +++++++++++-
->  tools/perf/util/evlist.h                  |  11 +-
->  tools/perf/util/evsel.c                   |  35 +++-
->  tools/perf/util/evsel.h                   |   9 +-
->  tools/perf/util/genelf.c                  |  46 -----
->  tools/perf/util/include/linux/linkage.h   |  89 ++++++++-
->  tools/perf/util/machine.c                 |   1 +
->  tools/perf/util/stat.c                    |   5 +-
->  tools/perf/util/stat.h                    |   3 +-
->  42 files changed, 789 insertions(+), 229 deletions(-)
->  create mode 100644 tools/perf/tests/genelf.c
+Regards
 
-Pulled, thanks a lot Arnaldo!
+Ludovic
 
-	Ingo
+> Also, I can test your patch to see if everything is fine.
+> 
+> Thanks,
+> Eugen
+> 
+> > 
+> > Thanks :)
+> > Alex
+> > 
+> >>
+> >>>>> For this driver, the predisable & postenable hooks are also need to
+> >>>>> take
+> >>>>> into consideration the touchscreen, so the hooks need to be put in
+> >>>>> places
+> >>>>> that avoid the code for that cares about it.
+> >>>>>
+> >>>>
+> >>>> ping here
+> >>>>
+> >>>>> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> >>>>> ---
+> >>>>>     drivers/iio/adc/at91-sama5d2_adc.c | 19 ++++++++++---------
+> >>>>>     1 file changed, 10 insertions(+), 9 deletions(-)
+> >>>>>
+> >>>>> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c
+> >>>>> b/drivers/iio/adc/at91-
+> >>>>> sama5d2_adc.c
+> >>>>> index e1850f3d5cf3..ac3e5c4c9840 100644
+> >>>>> --- a/drivers/iio/adc/at91-sama5d2_adc.c
+> >>>>> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+> >>>>> @@ -889,20 +889,24 @@ static int at91_adc_buffer_postenable(struct
+> >>>>> iio_dev *indio_dev)
+> >>>>>          if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
+> >>>>>                  return -EINVAL;
+> >>>>>
+> >>>>> +     ret = iio_triggered_buffer_postenable(indio_dev);
+> >>>>> +     if (ret)
+> >>>>> +             return ret;
+> >>>>> +
+> >>>>>          /* we continue with the triggered buffer */
+> >>>>>          ret = at91_adc_dma_start(indio_dev);
+> >>>>>          if (ret) {
+> >>>>>                  dev_err(&indio_dev->dev, "buffer postenable
+> >>>>> failed\n");
+> >>>>> +             iio_triggered_buffer_predisable(indio_dev);
+> >>>>>                  return ret;
+> >>>>>          }
+> >>>>>
+> >>>>> -     return iio_triggered_buffer_postenable(indio_dev);
+> >>>>> +     return 0;
+> >>>>>     }
+> >>>>>
+> >>>>>     static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
+> >>>>>     {
+> >>>>>          struct at91_adc_state *st = iio_priv(indio_dev);
+> >>>>> -     int ret;
+> >>>>>          u8 bit;
+> >>>>>
+> >>>>>          /* check if we are disabling triggered buffer or the
+> >>>>> touchscreen */
+> >>>>> @@ -916,13 +920,8 @@ static int at91_adc_buffer_predisable(struct
+> >>>>> iio_dev
+> >>>>> *indio_dev)
+> >>>>>          if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
+> >>>>>                  return -EINVAL;
+> >>>>>
+> >>>>> -     /* continue with the triggered buffer */
+> >>>>> -     ret = iio_triggered_buffer_predisable(indio_dev);
+> >>>>> -     if (ret < 0)
+> >>>>> -             dev_err(&indio_dev->dev, "buffer predisable
+> >>>>> failed\n");
+> >>>>> -
+> >>>>>          if (!st->dma_st.dma_chan)
+> >>>>> -             return ret;
+> >>>>> +             goto out;
+> >>>>>
+> >>>>>          /* if we are using DMA we must clear registers and end DMA
+> >>>>> */
+> >>>>>          dmaengine_terminate_sync(st->dma_st.dma_chan);
+> >>>>> @@ -949,7 +948,9 @@ static int at91_adc_buffer_predisable(struct
+> >>>>> iio_dev
+> >>>>> *indio_dev)
+> >>>>>
+> >>>>>          /* read overflow register to clear possible overflow status
+> >>>>> */
+> >>>>>          at91_adc_readl(st, AT91_SAMA5D2_OVER);
+> >>>>> -     return ret;
+> >>>>> +
+> >>>>> +out:
+> >>>
+> >>> I would prefer if this label is named with a function name prefix,
+> >>> otherwise 'out' is pretty generic and can collide with other things in
+> >>> the file... I want to avoid having an out2 , out3 later if code
+> >>> changes.
+> >>>
+> > 
+> > Sure.
+> > Will do that.
+> > 
+> > I did not bother much with these labels, because after applying [u1], some
+> > of them [maybe all] should go away.
+> > 
+> > 
+> >>> Thanks for the patch,
+> >>> Eugen
+> >>>
+> >>>>> +     return iio_triggered_buffer_predisable(indio_dev);
+> >>>>>     }
+> >>>>>
+> >>>>>     static const struct iio_buffer_setup_ops at91_buffer_setup_ops =
+> >>>>> {
+> >>>> _______________________________________________
+> >>>> linux-arm-kernel mailing list
+> >>>> linux-arm-kernel@lists.infradead.org
+> >>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> >>>>
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
