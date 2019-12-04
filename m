@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E48C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37268C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2CD2073F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81922073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfLDAq7 (ORCPT
+        id S1726877AbfLDArY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 19:46:59 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:58496 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726079AbfLDAqs (ORCPT
+        Tue, 3 Dec 2019 19:47:24 -0500
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:47252 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726079AbfLDArX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 19:46:48 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0Tjr6d8u_1575420394;
+        Tue, 3 Dec 2019 19:47:23 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0Tjr6d8u_1575420394;
 Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0Tjr6d8u_1575420394)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 04 Dec 2019 08:46:44 +0800
+          Wed, 04 Dec 2019 08:46:43 +0800
 From:   Shile Zhang <shile.zhang@linux.alibaba.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -36,9 +36,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
         linux-kbuild@vger.kernel.org,
         Shile Zhang <shile.zhang@linux.alibaba.com>
-Subject: [RFC PATCH v6 4/7] scripts/sortextable: refactor do_func() function
-Date:   Wed,  4 Dec 2019 08:46:30 +0800
-Message-Id: <20191204004633.88660-5-shile.zhang@linux.alibaba.com>
+Subject: [RFC PATCH v6 2/7] scripts/sortextable: kernel coding style formating
+Date:   Wed,  4 Dec 2019 08:46:28 +0800
+Message-Id: <20191204004633.88660-3-shile.zhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.0.rc2
 In-Reply-To: <20191204004633.88660-1-shile.zhang@linux.alibaba.com>
 References: <20191204004633.88660-1-shile.zhang@linux.alibaba.com>
@@ -49,246 +49,441 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refine the loop, naming and code structure, make the code more readable
-and extendable, no functional changes.
+Fix the inconsistent function format and kernel code style,
+referred to commit 3aec8638246f ("recordmcount: Kernel style
+function signature formatting") and
+commit 2e63152bc190 ("recordmcount: Kernel style formatting")
+
+Make the code more readable and extendable, no functional changes.
 
 Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- scripts/sortextable.c |   4 +-
- scripts/sortextable.h | 115 ++++++++++++++++++++++--------------------
- 2 files changed, 61 insertions(+), 58 deletions(-)
+ scripts/sortextable.c | 182 ++++++++++++++++++++++--------------------
+ scripts/sortextable.h |  31 +++----
+ 2 files changed, 111 insertions(+), 102 deletions(-)
 
 diff --git a/scripts/sortextable.c b/scripts/sortextable.c
-index e5384e86b58c..efa2839865cd 100644
+index cd9762ba4467..e5384e86b58c 100644
 --- a/scripts/sortextable.c
 +++ b/scripts/sortextable.c
-@@ -320,7 +320,7 @@ static int do_file(char const *const fname, void *addr)
- 				"unrecognized ET_EXEC/ET_DYN file: %s\n", fname);
- 			break;
- 		}
--		rc = do32(ehdr, fname, custom_sort);
-+		rc = do_sort_32(ehdr, fname, custom_sort);
- 		break;
- 	case ELFCLASS64:
- 		{
-@@ -332,7 +332,7 @@ static int do_file(char const *const fname, void *addr)
- 				fname);
- 			break;
- 		}
--		rc = do64(ghdr, fname, custom_sort);
-+		rc = do_sort_64(ghdr, fname, custom_sort);
- 		}
- 		break;
- 	default:
-diff --git a/scripts/sortextable.h b/scripts/sortextable.h
-index a2e3af7bf211..6485513f7cae 100644
---- a/scripts/sortextable.h
-+++ b/scripts/sortextable.h
-@@ -12,7 +12,7 @@
+@@ -50,6 +50,14 @@
+ #define EM_ARCV2	195
+ #endif
  
- #undef extable_ent_size
- #undef compare_extable
--#undef do_func
-+#undef do_sort
- #undef Elf_Addr
- #undef Elf_Ehdr
- #undef Elf_Shdr
-@@ -34,7 +34,7 @@
- #ifdef SORTEXTABLE_64
- # define extable_ent_size	16
- # define compare_extable	compare_extable_64
--# define do_func		do64
-+# define do_sort		do_sort_64
- # define Elf_Addr		Elf64_Addr
- # define Elf_Ehdr		Elf64_Ehdr
- # define Elf_Shdr		Elf64_Shdr
-@@ -55,7 +55,7 @@
- #else
- # define extable_ent_size	8
- # define compare_extable	compare_extable_32
--# define do_func		do32
-+# define do_sort		do_sort_32
- # define Elf_Addr		Elf32_Addr
- # define Elf_Ehdr		Elf32_Ehdr
- # define Elf_Shdr		Elf32_Shdr
-@@ -87,81 +87,81 @@ static int compare_extable(const void *a, const void *b)
++static uint32_t (*r)(const uint32_t *);
++static uint16_t (*r2)(const uint16_t *);
++static uint64_t (*r8)(const uint64_t *);
++static void (*w)(uint32_t, uint32_t *);
++static void (*w2)(uint16_t, uint16_t *);
++static void (*w8)(uint64_t, uint64_t *);
++typedef void (*table_sort_t)(char *, int);
++
+ /*
+  * Get the whole file as a programming convenience in order to avoid
+  * malloc+lseek+read+free of many pieces.  If successful, then mmap
+@@ -75,6 +83,7 @@ static void *mmap_file(char const *fname, size_t *size)
+ 		fprintf(stderr, "not a regular file: %s\n", fname);
+ 		goto out;
+ 	}
++
+ 	addr = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+ 	if (addr == MAP_FAILED) {
+ 		fprintf(stderr, "Could not mmap file: %s\n", fname);
+@@ -88,64 +97,65 @@ static void *mmap_file(char const *fname, size_t *size)
+ 	return addr;
+ }
+ 
+-static uint64_t r8be(const uint64_t *x)
+-{
+-	return get_unaligned_be64(x);
+-}
+ static uint32_t rbe(const uint32_t *x)
+ {
+ 	return get_unaligned_be32(x);
+ }
++
+ static uint16_t r2be(const uint16_t *x)
+ {
+ 	return get_unaligned_be16(x);
+ }
+-static uint64_t r8le(const uint64_t *x)
++
++static uint64_t r8be(const uint64_t *x)
+ {
+-	return get_unaligned_le64(x);
++	return get_unaligned_be64(x);
+ }
++
+ static uint32_t rle(const uint32_t *x)
+ {
+ 	return get_unaligned_le32(x);
+ }
++
+ static uint16_t r2le(const uint16_t *x)
+ {
+ 	return get_unaligned_le16(x);
+ }
+ 
+-static void w8be(uint64_t val, uint64_t *x)
++static uint64_t r8le(const uint64_t *x)
+ {
+-	put_unaligned_be64(val, x);
++	return get_unaligned_le64(x);
+ }
++
+ static void wbe(uint32_t val, uint32_t *x)
+ {
+ 	put_unaligned_be32(val, x);
+ }
++
+ static void w2be(uint16_t val, uint16_t *x)
+ {
+ 	put_unaligned_be16(val, x);
+ }
+-static void w8le(uint64_t val, uint64_t *x)
++
++static void w8be(uint64_t val, uint64_t *x)
+ {
+-	put_unaligned_le64(val, x);
++	put_unaligned_be64(val, x);
+ }
++
+ static void wle(uint32_t val, uint32_t *x)
+ {
+ 	put_unaligned_le32(val, x);
+ }
++
+ static void w2le(uint16_t val, uint16_t *x)
+ {
+ 	put_unaligned_le16(val, x);
+ }
+ 
+-static uint64_t (*r8)(const uint64_t *);
+-static uint32_t (*r)(const uint32_t *);
+-static uint16_t (*r2)(const uint16_t *);
+-static void (*w8)(uint64_t, uint64_t *);
+-static void (*w)(uint32_t, uint32_t *);
+-static void (*w2)(uint16_t, uint16_t *);
+-
+-typedef void (*table_sort_t)(char *, int);
++static void w8le(uint64_t val, uint64_t *x)
++{
++	put_unaligned_le64(val, x);
++}
+ 
+ /*
+  * Move reserved section indices SHN_LORESERVE..SHN_HIRESERVE out of
+@@ -188,108 +198,100 @@ static int compare_relative_table(const void *a, const void *b)
  	return 0;
  }
  
--static int do_func(Elf_Ehdr *ehdr,
-+static int do_sort(Elf_Ehdr *ehdr,
- 		   char const *const fname,
- 		   table_sort_t custom_sort)
+-static void x86_sort_relative_table(char *extab_image, int image_size)
++static void sort_relative_table(char *extab_image, int image_size)
  {
--	Elf_Shdr *shdr;
--	Elf_Shdr *shstrtab_sec;
-+	Elf_Shdr *s, *shdr = (Elf_Shdr *)((char *)ehdr + _r(&ehdr->e_shoff));
- 	Elf_Shdr *strtab_sec = NULL;
- 	Elf_Shdr *symtab_sec = NULL;
- 	Elf_Shdr *extab_sec = NULL;
- 	Elf_Sym *sym;
- 	const Elf_Sym *symtab;
--	Elf32_Word *symtab_shndx_start = NULL;
--	Elf_Sym *sort_needed_sym;
-+	Elf32_Word *symtab_shndx = NULL;
-+	Elf_Sym *sort_needed_sym = NULL;
- 	Elf_Shdr *sort_needed_sec;
- 	Elf_Rel *relocs = NULL;
- 	int relocs_size = 0;
--	uint32_t *sort_done_location;
--	const char *secstrtab;
-+	uint32_t *sort_needed_loc;
-+	const char *secstrings;
- 	const char *strtab;
- 	char *extab_image;
- 	int extab_index = 0;
- 	int i;
- 	int idx;
--	unsigned int num_sections;
--	unsigned int secindex_strings;
-+	unsigned int shnum;
-+	unsigned int shstrndx;
+-	int i;
++	int i = 0;
  
--	shdr = (Elf_Shdr *)((char *)ehdr + _r(&ehdr->e_shoff));
-+	shstrndx = r2(&ehdr->e_shstrndx);
-+	if (shstrndx == SHN_XINDEX)
-+		shstrndx = r(&shdr[0].sh_link);
-+	secstrings = (const char *)ehdr + _r(&shdr[shstrndx].sh_offset);
- 
--	num_sections = r2(&ehdr->e_shnum);
--	if (num_sections == SHN_UNDEF)
--		num_sections = _r(&shdr[0].sh_size);
-+	shnum = r2(&ehdr->e_shnum);
-+	if (shnum == SHN_UNDEF)
-+		shnum = _r(&shdr[0].sh_size);
- 
--	secindex_strings = r2(&ehdr->e_shstrndx);
--	if (secindex_strings == SHN_XINDEX)
--		secindex_strings = r(&shdr[0].sh_link);
+-	i = 0;
++	/*
++	 * Do the same thing the runtime sort does, first normalize to
++	 * being relative to the start of the section.
++	 */
+ 	while (i < image_size) {
+ 		uint32_t *loc = (uint32_t *)(extab_image + i);
 -
--	shstrtab_sec = shdr + secindex_strings;
--	secstrtab = (const char *)ehdr + _r(&shstrtab_sec->sh_offset);
--	for (i = 0; i < num_sections; i++) {
--		idx = r(&shdr[i].sh_name);
--		if (!strcmp(secstrtab + idx, "__ex_table")) {
--			extab_sec = shdr + i;
-+	for (i = 0, s = shdr; s < shdr + shnum; i++, s++) {
-+		idx = r(&s->sh_name);
-+		if (!strcmp(secstrings + idx, "__ex_table")) {
-+			extab_sec = s;
+ 		w(r(loc) + i, loc);
+-		w(r(loc + 1) + i + 4, loc + 1);
+-		w(r(loc + 2) + i + 8, loc + 2);
+-
+-		i += sizeof(uint32_t) * 3;
++		i += 4;
+ 	}
+ 
+-	qsort(extab_image, image_size / 12, 12, compare_relative_table);
++	qsort(extab_image, image_size / 8, 8, compare_relative_table);
+ 
++	/* Now denormalize. */
+ 	i = 0;
+ 	while (i < image_size) {
+ 		uint32_t *loc = (uint32_t *)(extab_image + i);
+-
+ 		w(r(loc) - i, loc);
+-		w(r(loc + 1) - (i + 4), loc + 1);
+-		w(r(loc + 2) - (i + 8), loc + 2);
+-
+-		i += sizeof(uint32_t) * 3;
++		i += 4;
+ 	}
+ }
+ 
+-static void sort_relative_table(char *extab_image, int image_size)
++static void x86_sort_relative_table(char *extab_image, int image_size)
+ {
+-	int i;
++	int i = 0;
+ 
+-	/*
+-	 * Do the same thing the runtime sort does, first normalize to
+-	 * being relative to the start of the section.
+-	 */
+-	i = 0;
+ 	while (i < image_size) {
+ 		uint32_t *loc = (uint32_t *)(extab_image + i);
++
+ 		w(r(loc) + i, loc);
+-		i += 4;
++		w(r(loc + 1) + i + 4, loc + 1);
++		w(r(loc + 2) + i + 8, loc + 2);
++
++		i += sizeof(uint32_t) * 3;
+ 	}
+ 
+-	qsort(extab_image, image_size / 8, 8, compare_relative_table);
++	qsort(extab_image, image_size / 12, 12, compare_relative_table);
+ 
+-	/* Now denormalize. */
+ 	i = 0;
+ 	while (i < image_size) {
+ 		uint32_t *loc = (uint32_t *)(extab_image + i);
++
+ 		w(r(loc) - i, loc);
+-		i += 4;
++		w(r(loc + 1) - (i + 4), loc + 1);
++		w(r(loc + 2) - (i + 8), loc + 2);
++
++		i += sizeof(uint32_t) * 3;
+ 	}
+ }
+ 
+-static int
+-do_file(char const *const fname, void *addr)
++static int do_file(char const *const fname, void *addr)
+ {
+-	table_sort_t custom_sort = NULL;
+-	Elf32_Ehdr *ehdr = addr;
+ 	int rc = -1;
++	Elf32_Ehdr *ehdr = addr;
++	table_sort_t custom_sort = NULL;
+ 
+ 	switch (ehdr->e_ident[EI_DATA]) {
+-	default:
+-		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
+-			ehdr->e_ident[EI_DATA], fname);
+-		return -1;
+ 	case ELFDATA2LSB:
+-		r = rle;
+-		r2 = r2le;
+-		r8 = r8le;
+-		w = wle;
+-		w2 = w2le;
+-		w8 = w8le;
++		r	= rle;
++		r2	= r2le;
++		r8	= r8le;
++		w	= wle;
++		w2	= w2le;
++		w8	= w8le;
+ 		break;
+ 	case ELFDATA2MSB:
+-		r = rbe;
+-		r2 = r2be;
+-		r8 = r8be;
+-		w = wbe;
+-		w2 = w2be;
+-		w8 = w8be;
++		r	= rbe;
++		r2	= r2be;
++		r8	= r8be;
++		w	= wbe;
++		w2	= w2be;
++		w8	= w8be;
+ 		break;
+-	}  /* end switch */
+-	if (memcmp(ELFMAG, ehdr->e_ident, SELFMAG) != 0
+-	||  (r2(&ehdr->e_type) != ET_EXEC && r2(&ehdr->e_type) != ET_DYN)
+-	||  ehdr->e_ident[EI_VERSION] != EV_CURRENT) {
++	default:
++		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
++			ehdr->e_ident[EI_DATA], fname);
++		return -1;
++	}
++
++	if (memcmp(ELFMAG, ehdr->e_ident, SELFMAG) != 0 ||
++	    (r2(&ehdr->e_type) != ET_EXEC && r2(&ehdr->e_type) != ET_DYN) ||
++	    ehdr->e_ident[EI_VERSION] != EV_CURRENT) {
+ 		fprintf(stderr, "unrecognized ET_EXEC/ET_DYN file %s\n", fname);
+ 		return -1;
+ 	}
+ 
+-	custom_sort = NULL;
+ 	switch (r2(&ehdr->e_machine)) {
+-	default:
+-		fprintf(stderr, "unrecognized e_machine %d %s\n",
+-			r2(&ehdr->e_machine), fname);
+-		break;
+ 	case EM_386:
+ 	case EM_X86_64:
+ 		custom_sort = x86_sort_relative_table;
+ 		break;
+-
+ 	case EM_S390:
+ 	case EM_AARCH64:
+ 	case EM_PARISC:
+@@ -304,40 +306,45 @@ do_file(char const *const fname, void *addr)
+ 	case EM_MIPS:
+ 	case EM_XTENSA:
+ 		break;
+-	}  /* end switch */
++	default:
++		fprintf(stderr, "unrecognized e_machine %d %s\n",
++			r2(&ehdr->e_machine), fname);
++		return -1;
++	}
+ 
+ 	switch (ehdr->e_ident[EI_CLASS]) {
+-	default:
+-		fprintf(stderr, "unrecognized ELF class %d %s\n",
+-			ehdr->e_ident[EI_CLASS], fname);
+-		break;
+ 	case ELFCLASS32:
+-		if (r2(&ehdr->e_ehsize) != sizeof(Elf32_Ehdr)
+-		||  r2(&ehdr->e_shentsize) != sizeof(Elf32_Shdr)) {
++		if (r2(&ehdr->e_ehsize) != sizeof(Elf32_Ehdr) ||
++		    r2(&ehdr->e_shentsize) != sizeof(Elf32_Shdr)) {
+ 			fprintf(stderr,
+ 				"unrecognized ET_EXEC/ET_DYN file: %s\n", fname);
+ 			break;
+ 		}
+ 		rc = do32(ehdr, fname, custom_sort);
+ 		break;
+-	case ELFCLASS64: {
++	case ELFCLASS64:
++		{
+ 		Elf64_Ehdr *const ghdr = (Elf64_Ehdr *)ehdr;
+-		if (r2(&ghdr->e_ehsize) != sizeof(Elf64_Ehdr)
+-		||  r2(&ghdr->e_shentsize) != sizeof(Elf64_Shdr)) {
++		if (r2(&ghdr->e_ehsize) != sizeof(Elf64_Ehdr) ||
++		    r2(&ghdr->e_shentsize) != sizeof(Elf64_Shdr)) {
+ 			fprintf(stderr,
+-				"unrecognized ET_EXEC/ET_DYN file: %s\n", fname);
++				"unrecognized ET_EXEC/ET_DYN file: %s\n",
++				fname);
+ 			break;
+ 		}
+ 		rc = do64(ghdr, fname, custom_sort);
++		}
++		break;
++	default:
++		fprintf(stderr, "unrecognized ELF class %d %s\n",
++			ehdr->e_ident[EI_CLASS], fname);
+ 		break;
+ 	}
+-	}  /* end switch */
+ 
+ 	return rc;
+ }
+ 
+-int
+-main(int argc, char *argv[])
++int main(int argc, char *argv[])
+ {
+ 	int i, n_error = 0;  /* gcc-4.3.0 false positive complaint */
+ 	size_t size = 0;
+@@ -361,5 +368,6 @@ main(int argc, char *argv[])
+ 
+ 		munmap(addr, size);
+ 	}
++
+ 	return !!n_error;
+ }
+diff --git a/scripts/sortextable.h b/scripts/sortextable.h
+index 5a62e94df678..b7e407e09f59 100644
+--- a/scripts/sortextable.h
++++ b/scripts/sortextable.h
+@@ -6,7 +6,7 @@
+  *
+  * Some of this code was taken out of recordmcount.h written by:
+  *
+- * Copyright 2009 John F. Reiser <jreiser@BitWagon.com>.  All rights reserved.
++ * Copyright 2009 John F. Reiser <jreiser@BitWagon.com>. All rights reserved.
+  * Copyright 2010 Steven Rostedt <srostedt@redhat.com>, Red Hat Inc.
+  */
+ 
+@@ -87,8 +87,9 @@ static int compare_extable(const void *a, const void *b)
+ 	return 0;
+ }
+ 
+-static int
+-do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
++static int do_func(Elf_Ehdr *ehdr,
++		   char const *const fname,
++		   table_sort_t custom_sort)
+ {
+ 	Elf_Shdr *shdr;
+ 	Elf_Shdr *shstrtab_sec;
+@@ -126,7 +127,7 @@ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
+ 	secstrtab = (const char *)ehdr + _r(&shstrtab_sec->sh_offset);
+ 	for (i = 0; i < num_sections; i++) {
+ 		idx = r(&shdr[i].sh_name);
+-		if (strcmp(secstrtab + idx, "__ex_table") == 0) {
++		if (!strcmp(secstrtab + idx, "__ex_table")) {
+ 			extab_sec = shdr + i;
  			extab_index = i;
  		}
--		if ((r(&shdr[i].sh_type) == SHT_REL ||
--		     r(&shdr[i].sh_type) == SHT_RELA) &&
--		    r(&shdr[i].sh_info) == extab_index) {
--			relocs = (void *)ehdr + _r(&shdr[i].sh_offset);
--			relocs_size = _r(&shdr[i].sh_size);
-+		if (!strcmp(secstrings + idx, ".symtab"))
-+			symtab_sec = s;
-+		if (!strcmp(secstrings + idx, ".strtab"))
-+			strtab_sec = s;
-+
-+		if ((r(&s->sh_type) == SHT_REL ||
-+		     r(&s->sh_type) == SHT_RELA) &&
-+		    r(&s->sh_info) == extab_index) {
-+			relocs = (void *)ehdr + _r(&s->sh_offset);
-+			relocs_size = _r(&s->sh_size);
+@@ -136,26 +137,26 @@ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
+ 			relocs = (void *)ehdr + _r(&shdr[i].sh_offset);
+ 			relocs_size = _r(&shdr[i].sh_size);
  		}
--		if (!strcmp(secstrtab + idx, ".symtab"))
--			symtab_sec = shdr + i;
--		if (!strcmp(secstrtab + idx, ".strtab"))
--			strtab_sec = shdr + i;
--		if (r(&shdr[i].sh_type) == SHT_SYMTAB_SHNDX)
--			symtab_shndx_start = (Elf32_Word *)(
--				(const char *)ehdr + _r(&shdr[i].sh_offset));
-+		if (r(&s->sh_type) == SHT_SYMTAB_SHNDX)
-+			symtab_shndx = (Elf32_Word *)((const char *)ehdr +
-+						      _r(&s->sh_offset));
+-		if (strcmp(secstrtab + idx, ".symtab") == 0)
++		if (!strcmp(secstrtab + idx, ".symtab"))
+ 			symtab_sec = shdr + i;
+-		if (strcmp(secstrtab + idx, ".strtab") == 0)
++		if (!strcmp(secstrtab + idx, ".strtab"))
+ 			strtab_sec = shdr + i;
+ 		if (r(&shdr[i].sh_type) == SHT_SYMTAB_SHNDX)
+ 			symtab_shndx_start = (Elf32_Word *)(
+ 				(const char *)ehdr + _r(&shdr[i].sh_offset));
  	}
--	if (!strtab_sec) {
--		fprintf(stderr,	"no .strtab in file: %s\n", fname);
-+
-+	if (!extab_sec) {
-+		fprintf(stderr,	"no __ex_table in file: %s\n", fname);
- 		return -1;
- 	}
-+
- 	if (!symtab_sec) {
- 		fprintf(stderr,	"no .symtab in file: %s\n", fname);
- 		return -1;
- 	}
--	symtab = (const Elf_Sym *)((const char *)ehdr +
--				   _r(&symtab_sec->sh_offset));
--	if (!extab_sec) {
--		fprintf(stderr,	"no __ex_table in file: %s\n", fname);
-+
+-	if (strtab_sec == NULL) {
+-		fprintf(stderr,	"no .strtab in  file: %s\n", fname);
 +	if (!strtab_sec) {
 +		fprintf(stderr,	"no .strtab in file: %s\n", fname);
  		return -1;
  	}
--	strtab = (const char *)ehdr + _r(&strtab_sec->sh_offset);
- 
- 	extab_image = (void *)ehdr + _r(&extab_sec->sh_offset);
-+	strtab = (const char *)ehdr + _r(&strtab_sec->sh_offset);
-+	symtab = (const Elf_Sym *)((const char *)ehdr +
-+						  _r(&symtab_sec->sh_offset));
- 
- 	if (custom_sort) {
- 		custom_sort(extab_image, _r(&extab_sec->sh_size));
-@@ -170,38 +170,41 @@ static int do_func(Elf_Ehdr *ehdr,
- 		qsort(extab_image, num_entries,
- 		      extable_ent_size, compare_extable);
+-	if (symtab_sec == NULL) {
+-		fprintf(stderr,	"no .symtab in  file: %s\n", fname);
++	if (!symtab_sec) {
++		fprintf(stderr,	"no .symtab in file: %s\n", fname);
+ 		return -1;
  	}
-+
- 	/* If there were relocations, we no longer need them. */
- 	if (relocs)
- 		memset(relocs, 0, relocs_size);
- 
--	/* find main_extable_sort_needed */
--	sort_needed_sym = NULL;
--	for (i = 0; i < _r(&symtab_sec->sh_size) / sizeof(Elf_Sym); i++) {
--		sym = (void *)ehdr + _r(&symtab_sec->sh_offset);
--		sym += i;
-+	/* find the flag main_extable_sort_needed */
-+	for (sym = (void *)ehdr + _r(&symtab_sec->sh_offset);
-+	     sym < sym + _r(&symtab_sec->sh_size) / sizeof(Elf_Sym);
-+	     sym++) {
+ 	symtab = (const Elf_Sym *)((const char *)ehdr +
+ 				   _r(&symtab_sec->sh_offset));
+-	if (extab_sec == NULL) {
+-		fprintf(stderr,	"no __ex_table in  file: %s\n", fname);
++	if (!extab_sec) {
++		fprintf(stderr,	"no __ex_table in file: %s\n", fname);
+ 		return -1;
+ 	}
+ 	strtab = (const char *)ehdr + _r(&strtab_sec->sh_offset);
+@@ -181,14 +182,14 @@ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
  		if (ELF_ST_TYPE(sym->st_info) != STT_OBJECT)
  			continue;
--		idx = r(&sym->st_name);
--		if (!strcmp(strtab + idx, "main_extable_sort_needed")) {
-+		if (!strcmp(strtab + r(&sym->st_name),
-+			    "main_extable_sort_needed")) {
+ 		idx = r(&sym->st_name);
+-		if (strcmp(strtab + idx, "main_extable_sort_needed") == 0) {
++		if (!strcmp(strtab + idx, "main_extable_sort_needed")) {
  			sort_needed_sym = sym;
  			break;
  		}
  	}
-+
- 	if (!sort_needed_sym) {
+-	if (sort_needed_sym == NULL) {
++	if (!sort_needed_sym) {
  		fprintf(stderr,
- 			"no main_extable_sort_needed symbol in file: %s\n",
+-			"no main_extable_sort_needed symbol in  file: %s\n",
++			"no main_extable_sort_needed symbol in file: %s\n",
  			fname);
  		return -1;
  	}
-+
- 	sort_needed_sec = &shdr[get_secindex(r2(&sym->st_shndx),
- 					     sort_needed_sym - symtab,
--					     symtab_shndx_start)];
--	sort_done_location = (void *)ehdr +
-+					     symtab_shndx)];
-+	sort_needed_loc = (void *)ehdr +
- 		_r(&sort_needed_sec->sh_offset) +
- 		_r(&sort_needed_sym->st_value) -
- 		_r(&sort_needed_sec->sh_addr);
- 
--	/* We sorted it, clear the flag. */
--	w(0, sort_done_location);
-+	/* extable has been sorted, clear the flag */
-+	w(0, sort_needed_loc);
-+
- 	return 0;
- }
 -- 
 2.24.0.rc2
 
