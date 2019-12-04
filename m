@@ -2,100 +2,79 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6544C43215
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF31C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A88F6206E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:16:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575422193;
-	bh=pyIwV6L4UEtXTQhLH7Gd0hzPRTOu0cQInCfJuRjE93o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zqeoHtSy2Qy7FxzLsIGmAMzubKxX1jBKH/dBxv1o2XaYUUdrLah1GItqdCCABeeAZ
-	 5XWHHw+5NtJcxW5FFTMOQ/nYY/BMCFVnKv2lkMrpae7q0C2CVPbxw96Y03YNK+7uWi
-	 sFyDp0x1QlhKPXcRUTfl754MdjX8w6tQPJ8gbQFc=
+	by mail.kernel.org (Postfix) with ESMTP id D93ED2073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 01:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfLDBQc (ORCPT
+        id S1726298AbfLDBWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 20:16:32 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42379 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfLDBQc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 20:16:32 -0500
-Received: by mail-pf1-f195.google.com with SMTP id l22so2730403pff.9;
-        Tue, 03 Dec 2019 17:16:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kVMURLAlBf3/Fz+kLTObO2tSWfvuZ8y3HS/6yJNgqJk=;
-        b=TVIdDW4wlBo5WAqSMEcGSakx0SFJZt4Et+cnEAQYghLWB0EO7HFhoQlq9nMNfvABVT
-         9FI6EGtFZbLjHjR9tx7/6LYOxN8m4ftAwuK4w0RWF2whJeUMrvIa8lYbQU4nvdUNmhsU
-         fL88RqL30QlD6/ilsP7iTC97WMXe7ZyqxhLvd6LLfi/h4AWgnownhDhOOfUUeVWeAclS
-         NtchQhkX3ALtV0/+ogOAqbDShJ24db/V9OZq+WLukIMb+Uj8P5pHLXNiig819952qRPJ
-         OuYaAkYP4MYbZcQoLpNtuW3bFUxY1tYwAET6j3f4DE+ISQ5LHn0yky40VGx8XkZsoQem
-         3n2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kVMURLAlBf3/Fz+kLTObO2tSWfvuZ8y3HS/6yJNgqJk=;
-        b=uOtMsDnenAutM7APyeTbsm35VAUXU4aa1f7RgbTbEDPEoezsnGngjXz8ssES3dq1v7
-         yCrplGyjsl0Pj1oUf0kSPXzdymLPYS48z3SVdlqXh9nMJewlEfBSaIri+n0q/fqvc6jj
-         15s8CYBvqu7kBmPfYj6vmLorWYw98btiqH6uexRUS6b4swohNK4KYJxBFMsAWUS4ZYZB
-         OhswUiCzbdApVbkyXEWfxShq9o3Vdb3K6nXt9eRzuqZcomDOCPGKuu6OYC/7Z+YA6uqR
-         k65PXinzilRGLL5QPyGOibJy759jHodmWWhULJRFWLvXOhKyukjAN+4+zSPrEh7DGeb2
-         78vw==
-X-Gm-Message-State: APjAAAURH+ddz1HD7LWNQrWUbjI5OaDhmPP65vFM0jzZSwLgMmUYN3eI
-        ewhXaKdp/41pSXGMpnRHmsw=
-X-Google-Smtp-Source: APXvYqxK210s2BvoZGUjQ6XAf1PmqV0N2sOB9dy18+b/ZWXEhdBFM64fbqfki8SvD1ugC0TEqgdfaA==
-X-Received: by 2002:a63:184c:: with SMTP id 12mr707314pgy.418.1575422191607;
-        Tue, 03 Dec 2019 17:16:31 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id k15sm5545370pfg.37.2019.12.03.17.16.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 17:16:30 -0800 (PST)
-Date:   Tue, 3 Dec 2019 17:16:28 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Colin King <colin.king@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH] zram: fix error return codes not being returned in
- writeback_store
-Message-ID: <20191204011628.GA6629@google.com>
-References: <20191128122958.178290-1-colin.king@canonical.com>
+        Tue, 3 Dec 2019 20:22:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726060AbfLDBWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 20:22:04 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19DE1206DF;
+        Wed,  4 Dec 2019 01:22:01 +0000 (UTC)
+Date:   Tue, 3 Dec 2019 20:22:00 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        fabien.lahoudere@collabora.com,
+        Guillaume Tucker <guillaume.tucker@collabora.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alexey Brodkin <alexey.brodkin@synopsys.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 1/2] x86_64_defconfig: Normalize x86_64 defconfig
+Message-ID: <20191203202200.5565c451@gandalf.local.home>
+In-Reply-To: <CAJKOXPfzYSJdVg_j7MPP14WOve0cJpF+NV2FWWhjGbUEwVWavw@mail.gmail.com>
+References: <20191202211844.19629-1-enric.balletbo@collabora.com>
+        <20191202211844.19629-2-enric.balletbo@collabora.com>
+        <CAJKOXPdJSLoEX7+34imGuZ6CEE5unajL=byb+h9VT3Bejc353Q@mail.gmail.com>
+        <3355589d-0b0d-f30f-624c-0f781ee9cd8d@collabora.com>
+        <CAJKOXPcrTp7baiPMYaaf_44w+b8GUBWs=X3YTgNZtxJVx0zbgw@mail.gmail.com>
+        <CAMuHMdXdWASPa3yr04N5w9jTt3=jC_H20yVpcG1J1_Sx0PRtgA@mail.gmail.com>
+        <CAJKOXPfzYSJdVg_j7MPP14WOve0cJpF+NV2FWWhjGbUEwVWavw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128122958.178290-1-colin.king@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 12:29:58PM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently when an error code -EIO or -ENOSPC in the for-loop of
-> writeback_store the error code is being overwritten by a ret = len
-> assignment at the end of the function and the error codes are being
-> lost.  Fix this by assigning ret = len at the start of the function
-> and remove the assignment from the end, hence allowing ret to be
-> preserved when error codes are assigned to it.
-> 
-> Addresses-Coverity: ("Unused value")
-> Fixes: a939888ec38b ("zram: support idle/huge page writeback")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Minchan Kim <minchan@kernel.org>
+On Wed, 4 Dec 2019 09:15:12 +0800
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-Thanks!
+> Instead of keeping this known good config somewhere outside it should
+> be just equal to defconfig. There is no point to trim it with
+> savedefconfig and then later experience missing options (because some
+> option was a dependency but now is not). Instead, all visible options
+> (possible to select) should be explicitly defined by defconfig to
+> avoid what happened with DEBUG_FS.
+
+I totally agree.
+
+-- Steve
