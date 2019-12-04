@@ -2,222 +2,179 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FA0C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2573BC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6204B2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1FD205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:02:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u25w6Zjt"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="DVMY6tpk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbfLDN73 (ORCPT
+        id S1727915AbfLDOCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:59:29 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33364 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfLDN73 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:59:29 -0500
-Received: by mail-lf1-f68.google.com with SMTP id n25so6260955lfl.0;
-        Wed, 04 Dec 2019 05:59:27 -0800 (PST)
+        Wed, 4 Dec 2019 09:02:36 -0500
+Received: from mail-eopbgr790043.outbound.protection.outlook.com ([40.107.79.43]:6368
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727828AbfLDOCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 09:02:35 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bNsxNaDqD83acX7khCw3bG2u/hWVlj6u6BOowfW72TqmZHKIe6FcRRL9Xm2ydCa7B/n+mM1SL13O6grJnMSPM3JqsZ4ZxtTrUOZ6zrQEd/yTaOhqJqjHD+DTsu7DTIrjM0bejPQsf3dL0vz0r+mjQ3490cZx0SlfyselaP709XItRQsxgqLaqtI7bvcT5ButFSH9yrFY1ky30+Gen3zjIAYFHb+St10qJvbVZkFPS8Oapd1IUktUKMsfFALSf+t1KgP14VwLdAWnTL8mAvyXWkdmrJ7iv0wCkqv0P/dKSMHeGK6c0voa9BUVKViwist53inRmXzXvfE0KlxsxPBbsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5bGm5JMQnAFU8Ntt4xg3rbAARi/QoRFtqLwpDTU8S/I=;
+ b=ffzHVvDt0Uu8v2fjY+/r3w7s+nOQhPJVO7QNBApeuyyWhAWyv9oazS0aVMy9roPS24InVR1D2Te6w5sAjbXxzn7n86lVsRYqBp/xfM4nULyXSCauJLtbkH2kj6F/bBlY4IRegmYm39qxsO6PsQF5uGv/EbiztlJsNgMBqkWFqe8SMcEWJnw898o+vykJJfEUs4d50F9fNfS/e5LoJvSOigUOHwUN1ZKQARSzvT+Yv1DYM1jpUtJswI9m+4fplDHDYO30RSsGRn7Om+WqRRTZaBrQDjZAbVZ/q7bqVXfJWXf6OsluEatEip3X0eavWz5IzA8/cfuQL3vJHEEDAtm0vQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8zHhqf7R6W4VbEhK1Fh6EJVqgzLfv6MucTwQijoUla4=;
-        b=u25w6ZjtBuftoUXGN+MQuIu1d46T6/KHTNrMtyvHVxXJxRP7x9pv303uGL/dIlrASk
-         eoptMCAfnCZnhRA3sWpYTjniGobb1ABtfR29mxPNJZRBk9x5zlgzFQBm8CnB5GSFNTNI
-         YDovwdYxZzWedDtsinctosqJGgXGI6G4Yry+H3Wk9DGUqsJdxCLUjx79U9C5pjqpv3fF
-         PDalB5S6CcW9Rc7AtgEE8MkvfCNnpjbfAI1VpuDxNpWWPic9K8ThOxs0/yanGnPoVFzB
-         YGlB48uBOJLR6pGO1Hw8sJzx9OdkFe8vreCcRV+B092zRYa+bUKw0dUppBwHgl3waiD6
-         vgFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8zHhqf7R6W4VbEhK1Fh6EJVqgzLfv6MucTwQijoUla4=;
-        b=PtyIMCMoFz4fIa+vmyp1C71Sabmwxw7YO6xtl7jol9h5VkVt/41o8fSZU5WINsLXEP
-         7HD3QGN2yeOV49mznUFdT8RfPZh29bZ03+XvElAbXZReOShP4/yoGENTpAU/hKOgvkJd
-         B0OKoqbmPSy4VWH+9R27w7XJIwxi4vfPcm0zYZ+cb8Pf7pROArbw1l+F3vv2XQksZL6m
-         yBDl2CrmRYoen2xqIxB6hjfsD7MT7ssFHeA7PrRcYEfsnC32IM9SGzDnnMmCsBsByPmb
-         D43JdY9gVaOgdqlKKWZtUHhoq/ez81/j3JGlZZ9PnZ7ollar9q1dwpwK3X3DOpRIIvx1
-         8WrQ==
-X-Gm-Message-State: APjAAAVHWy6PYYnAz8Kr9VEm1h4Kh6EWF/KiO8zeOo9CEUnpCWgG985r
-        ZcL6zs5LCD2SgmQ1zrVY+Jc=
-X-Google-Smtp-Source: APXvYqy85kPBJwLxdxCzYJ15kSt0dID8nFQF26japTZRpeRsDnFxO4T5/D/z9IZj52UxSN1iJcQxUg==
-X-Received: by 2002:ac2:4884:: with SMTP id x4mr2153525lfc.92.1575467966393;
-        Wed, 04 Dec 2019 05:59:26 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id l28sm3317173lfk.21.2019.12.04.05.59.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 05:59:25 -0800 (PST)
-Subject: Re: [TEGRA194_CPUFREQ Patch 2/3] cpufreq: Add Tegra194 cpufreq driver
-To:     Sumit Gupta <sumitg@nvidia.com>, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, catalin.marinas@arm.com, will@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     bbasu@nvidia.com, mperttunen@nvidia.com
-References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
- <1575394348-17649-2-git-send-email-sumitg@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <9f7521aa-4f9a-6dc2-60e0-2f9916656748@gmail.com>
-Date:   Wed, 4 Dec 2019 16:59:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <1575394348-17649-2-git-send-email-sumitg@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5bGm5JMQnAFU8Ntt4xg3rbAARi/QoRFtqLwpDTU8S/I=;
+ b=DVMY6tpkLy+xbpxeGw0xK0dBJ6nTV1p03Pp51CD6p5cQIYj4r0/Lnfn7d2GJqUYjv0gUXW9ltnvwk2g6J+IR7FJs+exgMo5MqsV073McckDjHr3aXgCLri+tOJDdpt2u83povdijqRQ+yW/ExC5EHoeC1m4RHPVtlRj7iOLccoM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
+ DM5PR12MB1372.namprd12.prod.outlook.com (10.168.238.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.18; Wed, 4 Dec 2019 14:02:32 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::80df:f8b:e547:df84]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::80df:f8b:e547:df84%12]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 14:02:31 +0000
+Subject: Re: [PATCH 7/8] drm/ttm: Introduce a huge page aligning TTM range
+ manager.
+To:     =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <20191203132239.5910-1-thomas_os@shipmail.org>
+ <20191203132239.5910-8-thomas_os@shipmail.org>
+ <39b9d651-6afd-1926-7302-aa2a8d4ca626@amd.com>
+ <7223bee1-cb3f-3d88-a70b-f4e1a5088b76@shipmail.org>
+ <f87a03da-ea9d-fe2b-8069-8fe0bda57c12@amd.com>
+ <6ae46281-195c-2803-fc3d-16e7bc830639@shipmail.org>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <34a91568-cd07-9d95-d2f1-89cc1ff5fa90@amd.com>
+Date:   Wed, 4 Dec 2019 15:02:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <6ae46281-195c-2803-fc3d-16e7bc830639@shipmail.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: AM3PR07CA0083.eurprd07.prod.outlook.com
+ (2603:10a6:207:6::17) To DM5PR12MB1705.namprd12.prod.outlook.com
+ (2603:10b6:3:10c::22)
+MIME-Version: 1.0
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 28fd6849-05b2-44d1-d9a5-08d778c29adf
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1372:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB137250FF6223B34CCF49DF65835D0@DM5PR12MB1372.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0241D5F98C
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(136003)(376002)(39860400002)(396003)(189003)(199004)(316002)(31696002)(6246003)(5660300002)(52116002)(7736002)(305945005)(31686004)(7416002)(81156014)(99286004)(23676004)(53546011)(66574012)(14454004)(478600001)(8676002)(8936002)(58126008)(4326008)(6506007)(54906003)(25786009)(186003)(6666004)(2906002)(81166006)(66946007)(2616005)(36756003)(66556008)(66476007)(86362001)(2870700001)(11346002)(50466002)(65956001)(6116002)(6486002)(76176011)(6512007)(6436002)(229853002)(14583001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1372;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: K1K+9QHOm0Xg6m/SYFwQB0uhyhWaUxA7FkAmh1RDMQYfxJPu2dqWUXYUrYgd2AJCRWQkL7IuegUQsiQqCFf8jxpwn0/GYp8aBQXvVUzoBxoaMwId3L6f4d2oAFCaV6wk27vENANbl6FtmAkB9DtwBwd4T7NxhnzMltMAQvaKLvlErRfl9qPV2YBag/zdjOfiq+C5TqeCNRb90lSwf3sWnjyJpormiHENkSuAYOI1EOTOfwuqOmSZWoC6QyV3/k/5U3eMWvm/Tlty+p7ljQW9XcM07yVzq55o9DQnr2RS5N/5mJsjRCxkV/oeq3cBLlKTDKUM1wkzYmYMkoZZdWkghlUeMLB1QnP81PRNEtgFE/Mf+8b0f7cZ1RVF1KZ/9yL+Q7YgkRyMvsFzdsXIoy8zUWQoN8Ue4PV2SIbrEfqCq3ty3kyKdvKYDUJJNOIBfKWLh3bpC9n4HwhVSoxxoE2h6XnEs5cj++4woFPYD8Co27pdO5FvS1IDgYmVQQrXFFpF
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28fd6849-05b2-44d1-d9a5-08d778c29adf
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 14:02:31.7572
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EbV1Nj1lAP0/u7jsjhFR5hVXtkEMurP4uSsVZR+uYy4tmg/hB3NBidgoUScb2dPX
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1372
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-03.12.2019 20:32, Sumit Gupta пишет:
-> Add support for CPU frequency scaling on Tegra194. The frequency
-> of each core can be adjusted by writing a clock divisor value to
-> an MSR on the core. The range of valid divisors is queried from
-> the BPMP.
-> 
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-> ---
->  drivers/cpufreq/Kconfig.arm        |   6 +
->  drivers/cpufreq/Makefile           |   1 +
->  drivers/cpufreq/tegra194-cpufreq.c | 423 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 430 insertions(+)
->  create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
-> 
-> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> index a905796..4bcd47c 100644
-> --- a/drivers/cpufreq/Kconfig.arm
-> +++ b/drivers/cpufreq/Kconfig.arm
-> @@ -320,6 +320,12 @@ config ARM_TEGRA186_CPUFREQ
->  	help
->  	  This adds the CPUFreq driver support for Tegra186 SOCs.
->  
-> +config ARM_TEGRA194_CPUFREQ
-> +	tristate "Tegra194 CPUFreq support"
-> +	depends on ARCH_TEGRA && TEGRA_BPMP
-> +	help
-> +	  This adds CPU frequency driver support for Tegra194 SOCs.
-> +
->  config ARM_TI_CPUFREQ
->  	bool "Texas Instruments CPUFreq support"
->  	depends on ARCH_OMAP2PLUS
-> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-> index 9a9f5cc..433d492 100644
-> --- a/drivers/cpufreq/Makefile
-> +++ b/drivers/cpufreq/Makefile
-> @@ -85,6 +85,7 @@ obj-$(CONFIG_ARM_TANGO_CPUFREQ)		+= tango-cpufreq.o
->  obj-$(CONFIG_ARM_TEGRA20_CPUFREQ)	+= tegra20-cpufreq.o
->  obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
->  obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
-> +obj-$(CONFIG_ARM_TEGRA194_CPUFREQ)	+= tegra194-cpufreq.o
->  obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
->  obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
->  
-> diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
-> new file mode 100644
-> index 0000000..9df12f4
-> --- /dev/null
-> +++ b/drivers/cpufreq/tegra194-cpufreq.c
-> @@ -0,0 +1,423 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved
-> + */
-> +
-> +#include <linux/cpu.h>
-> +#include <linux/cpufreq.h>
-> +#include <linux/delay.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#include <asm/smp_plat.h>
-> +
-> +#include <soc/tegra/bpmp.h>
-> +#include <soc/tegra/bpmp-abi.h>
-> +
-> +#define KHZ                     1000
-> +#define REF_CLK_MHZ             408 /* 408 MHz */
-> +#define US_DELAY                2000
-> +#define US_DELAY_MIN            2
-> +#define CPUFREQ_TBL_STEP_HZ     (50 * KHZ * KHZ)
-> +#define MAX_CNT                 ~0U
-> +
-> +/* cpufreq transisition latency */
-> +#define TEGRA_CPUFREQ_TRANSITION_LATENCY (300 * 1000) /* unit in nanoseconds */
-> +
-> +enum cluster {
-> +	CLUSTER0,
-> +	CLUSTER1,
-> +	CLUSTER2,
-> +	CLUSTER3,
-> +	MAX_CLUSTERS,
-> +};
-> +
-> +struct tegra194_cpufreq_data {
-> +	void __iomem *regs;
-> +	size_t num_clusters;
-> +	struct cpufreq_frequency_table **tables;
-> +};
-> +
-> +static DEFINE_MUTEX(cpufreq_lock);
-> +
-> +struct tegra_cpu_ctr {
-> +	u32 cpu;
-> +	u32 delay;
-> +	u32 coreclk_cnt, last_coreclk_cnt;
-> +	u32 refclk_cnt, last_refclk_cnt;
-> +};
-> +
-> +static struct workqueue_struct *read_counters_wq;
-> +struct read_counters_work {
-> +	struct work_struct work;
-> +	struct tegra_cpu_ctr c;
-> +};
-> +
-> +static enum cluster get_cpu_cluster(u8 cpu)
-> +{
-> +	return MPIDR_AFFINITY_LEVEL(cpu_logical_map(cpu), 1);
-> +}
-> +
-> +/*
-> + * Read per-core Read-only system register NVFREQ_FEEDBACK_EL1.
-> + * The register provides frequency feedback information to
-> + * determine the average actual frequency a core has run at over
-> + * a period of time.
-> + *	[31:0] PLLP counter: Counts at fixed frequency (408 MHz)
-> + *	[63:32] Core clock counter: counts on every core clock cycle
-> + *			where the core is architecturally clocking
-> + */
-> +static u64 read_freq_feedback(void)
-> +{
-> +	u64 val = 0;
-> +
-> +	asm volatile("mrs %0, s3_0_c15_c0_5" : "=r" (val) : );
-> +
-> +	return val;
-> +}
-> +
-> +u16 map_freq_to_ndiv(struct mrq_cpu_ndiv_limits_response *nltbl, u32 freq)
-> +{
-> +	return DIV_ROUND_UP(freq * nltbl->pdiv * nltbl->mdiv,
-> +			    nltbl->ref_clk_hz / KHZ);
-> +}
+Am 04.12.19 um 14:18 schrieb Thomas Hellström (VMware):
+> On 12/4/19 1:16 PM, Christian König wrote:
+>> Am 04.12.19 um 12:45 schrieb Thomas Hellström (VMware):
+>>> On 12/4/19 12:13 PM, Christian König wrote:
+>>>> Am 03.12.19 um 14:22 schrieb Thomas Hellström (VMware):
+>>>>> From: Thomas Hellstrom <thellstrom@vmware.com>
+>>>>>
+>>>>> Using huge page-table entries require that the start of a buffer 
+>>>>> object
+>>>>> is huge page size aligned. So introduce a ttm_bo_man_get_node_huge()
+>>>>> function that attempts to accomplish this for allocations that are 
+>>>>> larger
+>>>>> than the huge page size, and provide a new range-manager instance 
+>>>>> that
+>>>>> uses that function.
+>>>>
+>>>> I still don't think that this is a good idea.
+>>>
+>>> Again, can you elaborate with some specific concerns?
+>>
+>> You seems to be seeing PUD as something optional.
+>>
+>>>>
+>>>> The driver/userspace should just use a proper alignment if it wants 
+>>>> to use huge pages.
+>>>
+>>> There are drawbacks with this approach. The TTM alignment is a hard 
+>>> constraint. Assume that you want to fit a 1GB buffer object into 
+>>> limited VRAM space, and _if possible_ use PUD size huge pages. Let's 
+>>> say there is 1GB available, but not 1GB aligned. The proper 
+>>> alignment approach would fail and possibly start to evict stuff from 
+>>> VRAM just to be able to accomodate the PUD alignment. That's bad. 
+>>> The approach I suggest would instead fall back to PMD alignment and 
+>>> use 2MB page table entries if possible, and as a last resort use 4K 
+>>> page table entries.
+>>
+>> And exactly that sounds like a bad idea to me.
+>>
+>> Using 1GB alignment is indeed unrealistic in most cases, but for 2MB 
+>> alignment we should really start to evict BOs.
+>>
+>> Otherwise the address space can become fragmented and we won't be 
+>> able de-fragment it in any way.
+>
+> Ah, I see, Yeah that's the THP tradeoff between fragmentation and 
+> memory-usage. From my point of view, it's not self-evident that either 
+> approach is the best one, but the nice thing with the suggested code 
+> is that you can view it as an optional helper. For example, to avoid 
+> fragmentation and have a high huge-page hit ratio for 2MB pages, You'd 
+> either inflate the buffer object size to be 2MB aligned, which would 
+> affect also system memory, or you'd set the TTM memory alignment to 
+> 2MB. If in addition you'd like "soft" (non-evicting) alignment also 
+> for 1GB pages, you'd also hook up the new range manager. I figure 
+> different drivers would want to use different strategies.
+>
+> In any case, vmwgfx would, due to its very limited VRAM size, want to 
+> use the "soft" alignment provided by this patch, but if you don't see 
+> any other drivers wanting that, I could definitely move it to vmwgfx.
 
-This function isn't used anywhere.
+Ok, let's do it this way then. Both amdgpu and well as nouveau have 
+specialized allocators anyway and I don't see the need for this in radeon.
+
+Regards,
+Christian.
+
+>
+> /Thomas
+>
+>
+>
+
