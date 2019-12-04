@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29F2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A7BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8817020833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7774320833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482790;
-	bh=ZhJ+AoQEj/5MiznVVd92YNDSv6J7kOWoIuf5m+J3hN0=;
+	s=default; t=1575482794;
+	bh=m46hbcDViVWHgP9ujJrVxd/nsrnZXJ5GEUJVDJ3t0e8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bmln4R5nnW8GWrGROl+cuo1zIZVpZh8MD0TmkxGnCKaAxuXizbCWM1VZU+s0+x4Bg
-	 DR8BNflSZcB+neMCcB5nd+RzlTr+RSbe81g0hyscUT2whmyoQ55l0ZmMfz30GciML4
-	 si4kuPiCVZen2+vIa617/f7PVCtspTFyLVoxtbwU=
+	b=LbTEm73iVJNUeBDbn0RZ1T9xj0Y3WskVySe5A3Ub8IUJzw8zkHeSbOxQ9fPZ1USaF
+	 j+JFBeAQucDAQ+yjNqJ+zjc1fqfZRgn0vuS/t+D7lSkH8fr36bByi95oc/JznYfc/q
+	 hv6ss3pIkOQXnae185la6e8lOJ76MjBWgyfFWq6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730555AbfLDSG2 (ORCPT
+        id S1730565AbfLDSGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:06:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54738 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:06:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730544AbfLDSG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:06:26 -0500
+        id S1730024AbfLDSG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:06:28 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5BD72081B;
-        Wed,  4 Dec 2019 18:06:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B2D620833;
+        Wed,  4 Dec 2019 18:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482785;
-        bh=ZhJ+AoQEj/5MiznVVd92YNDSv6J7kOWoIuf5m+J3hN0=;
+        s=default; t=1575482787;
+        bh=m46hbcDViVWHgP9ujJrVxd/nsrnZXJ5GEUJVDJ3t0e8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XOFfAy9mLMfqYdRL6vKXRhwwhNtb65kr9SqUIgDwCpLn652XNRm3A4X7Qflc6ntcU
-         enxSRj0UqArvd+0xs7wTIQVSMZ1l8c/AulCLW3Qe1qeVWoP6XxYVuLylKBXrJEDpWr
-         5mZyVoKZ01cKsY7M04j5kJpVaul//cyNOOMICk7g=
+        b=SmbCPz05r2JuORJNQdc/y4Tnxi/VKpw3DOW3TuG+/D39ktQHz2wEO+JglIVaKeUqu
+         koGAthXDKtUTzKRsvlP2+ZDS3OlXv531QJZvE5ICsuUIPYXVf7fHcCEhoYpUPQ9aAh
+         jsC0lgxhg6sCB/LdS7MzP53UWOTiyPlt1kIij2HA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 096/209] powerpc/44x/bamboo: Fix PCI range
-Date:   Wed,  4 Dec 2019 18:55:08 +0100
-Message-Id: <20191204175328.473679314@linuxfoundation.org>
+Subject: [PATCH 4.14 132/209] gpu: ipu-v3: pre: dont trigger update if buffer address doesnt change
+Date:   Wed,  4 Dec 2019 18:55:44 +0100
+Message-Id: <20191204175332.267410745@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,42 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 3cfb9ebe906b51f2942b1e251009bb251efd2ba6 ]
+[ Upstream commit eb0200a4357da100064971689d3a0e9e3cf57f33 ]
 
-The bamboo dts has a bug: it uses a non-naturally aligned range
-for PCI memory space. This isnt' supported by the code, thus
-causing PCI to break on this system.
+On a NOP double buffer update where current buffer address is the same
+as the next buffer address, the SDW_UPDATE bit clears too late. As we
+are now using this bit to determine when it is safe to signal flip
+completion to userspace this will delay completion of atomic commits
+where one plane doesn't change the buffer by a whole frame period.
 
-This is due to the fact that while the chip memory map has 1G
-reserved for PCI memory, it's only 512M aligned. The code doesn't
-know how to split that into 2 different PMMs and fails, so limit
-the region to 512M.
+Fix this by remembering the last buffer address and just skip the
+double buffer update if it would not change the buffer address.
 
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+[p.zabel@pengutronix.de: initialize last_bufaddr in ipu_pre_configure]
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/dts/bamboo.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/ipu-v3/ipu-pre.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/powerpc/boot/dts/bamboo.dts b/arch/powerpc/boot/dts/bamboo.dts
-index aa68911f6560a..084b82ba74933 100644
---- a/arch/powerpc/boot/dts/bamboo.dts
-+++ b/arch/powerpc/boot/dts/bamboo.dts
-@@ -268,8 +268,10 @@
- 			/* Outbound ranges, one memory and one IO,
- 			 * later cannot be changed. Chip supports a second
- 			 * IO range but we don't use it for now
-+			 * The chip also supports a larger memory range but
-+			 * it's not naturally aligned, so our code will break
- 			 */
--			ranges = <0x02000000 0x00000000 0xa0000000 0x00000000 0xa0000000 0x00000000 0x40000000
-+			ranges = <0x02000000 0x00000000 0xa0000000 0x00000000 0xa0000000 0x00000000 0x20000000
- 				  0x02000000 0x00000000 0x00000000 0x00000000 0xe0000000 0x00000000 0x00100000
- 				  0x01000000 0x00000000 0x00000000 0x00000000 0xe8000000 0x00000000 0x00010000>;
+diff --git a/drivers/gpu/ipu-v3/ipu-pre.c b/drivers/gpu/ipu-v3/ipu-pre.c
+index 1d1612e28854b..6fd4af647f599 100644
+--- a/drivers/gpu/ipu-v3/ipu-pre.c
++++ b/drivers/gpu/ipu-v3/ipu-pre.c
+@@ -102,6 +102,7 @@ struct ipu_pre {
+ 	void			*buffer_virt;
+ 	bool			in_use;
+ 	unsigned int		safe_window_end;
++	unsigned int		last_bufaddr;
+ };
  
+ static DEFINE_MUTEX(ipu_pre_list_mutex);
+@@ -177,6 +178,7 @@ void ipu_pre_configure(struct ipu_pre *pre, unsigned int width,
+ 
+ 	writel(bufaddr, pre->regs + IPU_PRE_CUR_BUF);
+ 	writel(bufaddr, pre->regs + IPU_PRE_NEXT_BUF);
++	pre->last_bufaddr = bufaddr;
+ 
+ 	val = IPU_PRE_PREF_ENG_CTRL_INPUT_PIXEL_FORMAT(0) |
+ 	      IPU_PRE_PREF_ENG_CTRL_INPUT_ACTIVE_BPP(active_bpp) |
+@@ -218,7 +220,11 @@ void ipu_pre_update(struct ipu_pre *pre, unsigned int bufaddr)
+ 	unsigned short current_yblock;
+ 	u32 val;
+ 
++	if (bufaddr == pre->last_bufaddr)
++		return;
++
+ 	writel(bufaddr, pre->regs + IPU_PRE_NEXT_BUF);
++	pre->last_bufaddr = bufaddr;
+ 
+ 	do {
+ 		if (time_after(jiffies, timeout)) {
 -- 
 2.20.1
 
