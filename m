@@ -2,220 +2,118 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7240C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F07C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A445021823
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575501947;
-	bh=h9iE1L4oSigLlIJOvTFavcHoI+dJQyu6qEDxeGSyg6A=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=e31wA+YJ8Fr9cOFveo7QNLu7C2ohUJ846h1qXxcaKNQhhLtc52lx5BfI07HnxwAJP
-	 jB/zSkVBnUtPV/rPxR9PKtGhlYqJe1VhVrL54877pPs0N1VMJ5k27+opTPOlpNu5IC
-	 saetFeMM3Rxq6Y+QcwPsxC5M1c99wZguhWDeYqnQ=
+	by mail.kernel.org (Postfix) with ESMTP id A537F2073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:25:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbfLDXZq (ORCPT
+        id S1728444AbfLDXZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 18:25:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58028 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 18:25:51 -0500
+Received: from mga06.intel.com ([134.134.136.31]:65086 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbfLDXZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 18:25:46 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 644A6206DF;
-        Wed,  4 Dec 2019 23:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575501944;
-        bh=h9iE1L4oSigLlIJOvTFavcHoI+dJQyu6qEDxeGSyg6A=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=fhqDWyZ8aDrj9EK2orxvp+WjgfLj27MhkHCIe28T7kl7FGfTvyky2+8ByDVtLDy2s
-         Tiu6f752p4jUS3xYeMAIRKNMG2CPEkyYLuyrASUNXIXxAKDR/rRLhThvcPqM1Bo8XD
-         fKK/ZP/czxaERj7n+pNnhUQC2dcbtohwtAmrzHck=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 2DA8135227BE; Wed,  4 Dec 2019 15:25:44 -0800 (PST)
-Date:   Wed, 4 Dec 2019 15:25:44 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: [PATCH tip/core/rcu] Enable tick for nohz_full CPUs not responding
- to expedited GP
-Message-ID: <20191204232544.GA17061@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+        id S1727116AbfLDXZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 18:25:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 15:25:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,278,1571727600"; 
+   d="scan'208";a="208994240"
+Received: from pminglan-mobl.amr.corp.intel.com ([10.251.2.222])
+  by fmsmga007.fm.intel.com with ESMTP; 04 Dec 2019 15:25:49 -0800
+Date:   Wed, 4 Dec 2019 15:25:48 -0800 (PST)
+From:   Mat Martineau <mathew.j.martineau@linux.intel.com>
+X-X-Sender: mjmartin@pminglan-mobl.amr.corp.intel.com
+To:     Mimi Zohar <zohar@linux.ibm.com>
+cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org, eric.snowberg@oracle.com,
+        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+Subject: Re: [PATCH v9 5/6] IMA: Add support to limit measuring keys
+In-Reply-To: <1575458192.5241.99.camel@linux.ibm.com>
+Message-ID: <alpine.OSX.2.21.1912041411100.45746@pminglan-mobl.amr.corp.intel.com>
+References: <20191127015654.3744-1-nramas@linux.microsoft.com>  <20191127015654.3744-6-nramas@linux.microsoft.com>  <1575375945.5241.16.camel@linux.ibm.com>  <2d20ce36-e24e-e238-4a82-286db9eeab97@linux.microsoft.com>  <1575403616.5241.76.camel@linux.ibm.com>
+  <89bb3226-3a2e-c7fa-fff9-3a422739481c@linux.microsoft.com> <1575458192.5241.99.camel@linux.ibm.com>
+User-Agent: Alpine 2.21 (OSX 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/mixed; boundary="0-1154282419-1575501949=:45746"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rcu: Enable tick for nohz_full CPUs slow to provide expedited QS
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-An expedited grace period can be stalled by a nohz_full CPU looping
-in kernel context.  This possibility is currently handled by some
-carefully crafted checks in rcu_read_unlock_special() that enlist help
-from ksoftirqd when permitted by the scheduler.  However, it is exactly
-these checks that require the scheduler avoid holding any of its rq or
-pi locks across rcu_read_unlock() without also having held them across
-the entire RCU read-side critical section.
+--0-1154282419-1575501949=:45746
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-It would therefore be very nice if expedited grace periods could
-handle nohz_full CPUs looping in kernel context without such checks.
-This commit therefore adds code to the expedited grace period's wait
-and cleanup code that forces the scheduler-clock interrupt on for CPUs
-that fail to quickly supply a quiescent state.  "Quickly" is currently
-a hard-coded single-jiffy delay.
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+On Wed, 4 Dec 2019, Mimi Zohar wrote:
 
----
+> [Cc'ing Mat Martineau]
+>
+> On Tue, 2019-12-03 at 15:37 -0800, Lakshmi Ramasubramanian wrote:
+>> On 12/3/2019 12:06 PM, Mimi Zohar wrote:
+>>
+>>> Suppose both root and uid 1000 define a keyring named "foo".  The
+>>> current "keyrings=foo" will measure all keys added to either keyring
+>>> named "foo".  There needs to be a way to limit measuring keys to a
+>>> particular keyring named "foo".
+>>>
+>>> Mimi
+>>
+>> Thanks for clarifying.
+>>
+>> Suppose two different non-root users create keyring with the same name
+>> "foo" and, say, both are measured, how would we know which keyring
+>> measurement belongs to which user?
+>>
+>> Wouldn't it be sufficient to include only keyrings created by "root"
+>> (UID value 0) in the key measurement? This will include all the builtin
+>> trusted keyrings (such as .builtin_trusted_keys,
+>> .secondary_trusted_keys, .ima, .evm, etc.).
+>>
+>> What would be the use case for including keyrings created by non-root
+>> users in key measurement?
+>>
+>> Also, since the UID for non-root users can be any integer value (greater
+>> than 0), can an an administrator craft a generic IMA policy that would
+>> be applicable to all clients in an enterprise?
+>
+> The integrity subsystem, and other concepts upstreamed to support it,
+> are being used by different people/companies in different ways.  I
+> know some of the ways, but not all, as how it is being used.  For
+> example, Mat Martineau gave an LSS2019-NA talk titled "Using and
+> Implementing Keyring Restrictions for Userspace".  I don't know if he
+> would be interested in measuring keys on these restricted userspace
+> keyrings, but before we limit how a new feature works, we should at
+> least look to see if that limitation is really necessary.
 
-This is needed to avoid rcu_read_unlock_special() needing to enter
-the scheduler for the benefit of expedited grace periods on nohz_full
-CPUs, thus enabling more of Lai Jiangshan's patchset.
+The use cases I'm most familiar with could have a use for key measurement 
+for something like enterprise Wi-Fi root certificates. I'm not sure of the 
+best way to uniquely identify a key to measure in that scenario, it could 
+be anchored in various ways (process, session, thread, or user keyrings, 
+for example) and may be owned by a non-root user. As Lakshmi noted above, 
+key names are not unique, and I'll add that namespace considerations may 
+come in to play too.
 
-diff --git a/include/linux/tick.h b/include/linux/tick.h
-index 4ed788c..72a2a21 100644
---- a/include/linux/tick.h
-+++ b/include/linux/tick.h
-@@ -109,9 +109,10 @@ enum tick_dep_bits {
- 	TICK_DEP_BIT_PERF_EVENTS	= 1,
- 	TICK_DEP_BIT_SCHED		= 2,
- 	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3,
--	TICK_DEP_BIT_RCU		= 4
-+	TICK_DEP_BIT_RCU		= 4,
-+	TICK_DEP_BIT_RCU_EXP		= 5
- };
--#define TICK_DEP_BIT_MAX TICK_DEP_BIT_RCU
-+#define TICK_DEP_BIT_MAX TICK_DEP_BIT_RCU_EXP
- 
- #define TICK_DEP_MASK_NONE		0
- #define TICK_DEP_MASK_POSIX_TIMER	(1 << TICK_DEP_BIT_POSIX_TIMER)
-@@ -119,6 +120,7 @@ enum tick_dep_bits {
- #define TICK_DEP_MASK_SCHED		(1 << TICK_DEP_BIT_SCHED)
- #define TICK_DEP_MASK_CLOCK_UNSTABLE	(1 << TICK_DEP_BIT_CLOCK_UNSTABLE)
- #define TICK_DEP_MASK_RCU		(1 << TICK_DEP_BIT_RCU)
-+#define TICK_DEP_MASK_RCU_EXP		(1 << TICK_DEP_BIT_RCU_EXP)
- 
- #ifdef CONFIG_NO_HZ_COMMON
- extern bool tick_nohz_enabled;
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index 634c1db..0c87e4c 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -181,6 +181,7 @@ struct rcu_data {
- 	bool rcu_need_heavy_qs;		/* GP old, so heavy quiescent state! */
- 	bool rcu_urgent_qs;		/* GP old need light quiescent state. */
- 	bool rcu_forced_tick;		/* Forced tick to provide QS. */
-+	bool rcu_forced_tick_exp;	/*   ... provide QS to expedited GP. */
- #ifdef CONFIG_RCU_FAST_NO_HZ
- 	unsigned long last_accelerate;	/* Last jiffy CBs were accelerated. */
- 	unsigned long last_advance_all;	/* Last jiffy CBs were all advanced. */
-diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index 726ba20..6935a9e 100644
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -230,7 +230,9 @@ static void __maybe_unused rcu_report_exp_rnp(struct rcu_node *rnp, bool wake)
- static void rcu_report_exp_cpu_mult(struct rcu_node *rnp,
- 				    unsigned long mask, bool wake)
- {
-+	int cpu;
- 	unsigned long flags;
-+	struct rcu_data *rdp;
- 
- 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 	if (!(rnp->expmask & mask)) {
-@@ -238,6 +240,13 @@ static void rcu_report_exp_cpu_mult(struct rcu_node *rnp,
- 		return;
- 	}
- 	WRITE_ONCE(rnp->expmask, rnp->expmask & ~mask);
-+	for_each_leaf_node_cpu_mask(rnp, cpu, mask) {
-+		rdp = per_cpu_ptr(&rcu_data, cpu);
-+		if (!IS_ENABLED(CONFIG_NO_HZ_FULL) || !rdp->rcu_forced_tick_exp)
-+			continue;
-+		rdp->rcu_forced_tick_exp = false;
-+		tick_dep_clear_cpu(cpu, TICK_DEP_BIT_RCU_EXP);
-+	}
- 	__rcu_report_exp_rnp(rnp, wake, flags); /* Releases rnp->lock. */
- }
- 
-@@ -450,6 +459,26 @@ static void sync_rcu_exp_select_cpus(void)
- }
- 
- /*
-+ * Wait for the expedited grace period to elapse, within time limit.
-+ * If the time limit is exceeded without the grace period elapsing,
-+ * return false, otherwise return true.
-+ */
-+static bool synchronize_rcu_expedited_wait_once(long tlimit)
-+{
-+	int t;
-+	struct rcu_node *rnp_root = rcu_get_root();
-+
-+	t = swait_event_timeout_exclusive(rcu_state.expedited_wq,
-+					  sync_rcu_exp_done_unlocked(rnp_root),
-+					  tlimit);
-+	// Workqueues should not be signaled.
-+	if (t > 0 || sync_rcu_exp_done_unlocked(rnp_root))
-+		return true;
-+	WARN_ON(t < 0);  /* workqueues should not be signaled. */
-+	return false;
-+}
-+
-+/*
-  * Wait for the expedited grace period to elapse, issuing any needed
-  * RCU CPU stall warnings along the way.
-  */
-@@ -460,22 +489,31 @@ static void synchronize_rcu_expedited_wait(void)
- 	unsigned long jiffies_start;
- 	unsigned long mask;
- 	int ndetected;
-+	struct rcu_data *rdp;
- 	struct rcu_node *rnp;
- 	struct rcu_node *rnp_root = rcu_get_root();
--	int ret;
- 
- 	trace_rcu_exp_grace_period(rcu_state.name, rcu_exp_gp_seq_endval(), TPS("startwait"));
- 	jiffies_stall = rcu_jiffies_till_stall_check();
- 	jiffies_start = jiffies;
-+	if (IS_ENABLED(CONFIG_NO_HZ_FULL)) {
-+		if (synchronize_rcu_expedited_wait_once(1))
-+			return;
-+		rcu_for_each_leaf_node(rnp) {
-+			for_each_leaf_node_cpu_mask(rnp, cpu, rnp->expmask) {
-+				rdp = per_cpu_ptr(&rcu_data, cpu);
-+				if (rdp->rcu_forced_tick_exp)
-+					continue;
-+				rdp->rcu_forced_tick_exp = true;
-+				tick_dep_set_cpu(cpu, TICK_DEP_BIT_RCU_EXP);
-+			}
-+		}
-+		WARN_ON_ONCE(1);
-+	}
- 
- 	for (;;) {
--		ret = swait_event_timeout_exclusive(
--				rcu_state.expedited_wq,
--				sync_rcu_exp_done_unlocked(rnp_root),
--				jiffies_stall);
--		if (ret > 0 || sync_rcu_exp_done_unlocked(rnp_root))
-+		if (synchronize_rcu_expedited_wait_once(jiffies_stall))
- 			return;
--		WARN_ON(ret < 0);  /* workqueues should not be signaled. */
- 		if (rcu_cpu_stall_suppress)
- 			continue;
- 		panic_on_rcu_stall();
+Keys (including keyrings like .builtin_trusted_keys, .ima, etc) can be 
+linked to multiple keyrings, maybe you could create a system-level 
+.ima_measured keyring. You could measure keys that are accessible from 
+that keyring, and opt in more keys for measurement by linking them to 
+.ima_measured or a keyring nested within .ima_measured.
+
+--
+Mat Martineau
+Intel
+--0-1154282419-1575501949=:45746--
