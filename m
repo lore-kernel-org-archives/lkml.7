@@ -2,81 +2,131 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4D7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D548C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550CA2068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:41:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575445297;
-	bh=mXmse0izUm18/vYwWZA7L1FmvwrmsFcAgHgaFLg8fWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZA9HVh8EgEW17WkI2STsiXn54QLgLmhdZ5+0zPlBih/p369BFGt8A2FMDDAHLxCSb
-	 3dAiKWXVNMGNZU0UlGZhZw2m7WrNZEXYaURIe6m+cB+hfKmAM+7/GlKXeTTEkWJVGe
-	 3cWeDVUSmuD93zHyA9K9E8crYy/bm8rpMBpsB0H4=
+	by mail.kernel.org (Postfix) with ESMTP id 9F57E215E5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfLDHlg (ORCPT
+        id S1727198AbfLDH1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:41:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbfLDHlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:41:36 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 064132054F;
-        Wed,  4 Dec 2019 07:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575445295;
-        bh=mXmse0izUm18/vYwWZA7L1FmvwrmsFcAgHgaFLg8fWM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vPVuNcSihDBFHN/wNcDvXq3nX0PneSL8zEKch9efO0LW0YXIFLkRq65kWAWxSUa6r
-         p8e7vcAFueJXx/qpiT31yGnClZWi5Bv0OKijGX1xLFCqOU8nYNYlG3eWC7+TNzffly
-         wRtG9NEGan8H8WOT2lSbnvfmPvioK70OMUP089yg=
-Date:   Wed, 4 Dec 2019 08:41:33 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guoheyi <guoheyi@huawei.com>
-Cc:     Mike Waychison <mikew@google.com>, linux-kernel@vger.kernel.org,
-        wanghaibin 00208455 <wanghaibin.wang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: firmware: dmi-sysfs: why is the access mode of dmi sysfs entries
- restricted to 0400?
-Message-ID: <20191204074133.GA3548765@kroah.com>
-References: <42bb2db8-66e0-3df4-75b7-98b2b2bcfca8@huawei.com>
+        Wed, 4 Dec 2019 02:27:50 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33263 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfLDH1u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 02:27:50 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1icP4b-0004xz-E4; Wed, 04 Dec 2019 08:27:45 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1icP4b-0007QK-0N; Wed, 04 Dec 2019 08:27:45 +0100
+Date:   Wed, 4 Dec 2019 08:27:44 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>
+Subject: Re: [PATCH v2 2/2] gpio: bcm-kona: use platform_irq_count
+Message-ID: <20191204072744.b7ytzi5gffjcq6sj@pengutronix.de>
+References: <1575433106-16171-1-git-send-email-peng.fan@nxp.com>
+ <1575433106-16171-2-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <42bb2db8-66e0-3df4-75b7-98b2b2bcfca8@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1575433106-16171-2-git-send-email-peng.fan@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 03:31:22PM +0800, Guoheyi wrote:
-> Hi,
+On Wed, Dec 04, 2019 at 04:20:45AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Why is the access mode of dmi sysfs entries restricted to 0400? Is it for
-> security concern? If it is, which information do we consider as privacy?
+> platform_irq_count() is the more generic way (independent of
+> device trees) to determine the count of available interrupts. So
+> use this instead.
+> 
+> As platform_irq_count() might return an error code (which
+> of_irq_count doesn't) some additional handling is necessary.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+> 
+> V2:
+>  Update commit log, and add err handling
+>  Not tested, just code inspection
+> 
+>  drivers/gpio/gpio-bcm-kona.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
+> index 4122683eb1f9..52ff56166263 100644
+> --- a/drivers/gpio/gpio-bcm-kona.c
+> +++ b/drivers/gpio/gpio-bcm-kona.c
+> @@ -19,7 +19,6 @@
+>  #include <linux/io.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/of_device.h>
+> -#include <linux/of_irq.h>
+>  #include <linux/init.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/irqchip/chained_irq.h>
+> @@ -586,11 +585,18 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
+>  
+>  	kona_gpio->gpio_chip = template_chip;
+>  	chip = &kona_gpio->gpio_chip;
+> -	kona_gpio->num_bank = of_irq_count(dev->of_node);
+> -	if (kona_gpio->num_bank == 0) {
+> +	ret = platform_irq_count(pdev);
+> +	if (!ret) {
+>  		dev_err(dev, "Couldn't determine # GPIO banks\n");
+>  		return -ENOENT;
+> +	} else if (ret < 0) {
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "Couldn't determine GPIO banks: %d\n",
+> +				ret);
 
-There's lots of "interesting" information in dmi entries that you
-probably do not want all processes reading, which is why they are
-restricted.
+You can use the new %pe feature here:
 
-> We would like to fetch CPU information from non-root application, is there
-> feasible way to do that?
+	dev_err(dev, "Couldn't determine GPIO banks: %pe\n",
+		ERR_PTR(ret));
 
-What specific CPU information is not currently exported in /proc/cpuinfo
-that only shows up in DMI entries that you are interested in?
+> +		return ret;
+>  	}
+> +	kona_gpio->num_bank = ret;
+> +
 
-You can always have root change the permissions of a sysfs file if you
-have a service that wants to allow non-root programs to read specific
-entries.
+Looks otherwise ok.
 
-thanks,
+Best regards
+Uwe
 
-greg k-h
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
