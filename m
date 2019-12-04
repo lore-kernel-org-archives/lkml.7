@@ -2,517 +2,155 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6B5C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2096DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B55242068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99B5206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:11:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="n7O0ZN76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfLDHKc convert rfc822-to-8bit (ORCPT
+        id S1727239AbfLDHLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:10:32 -0500
-Received: from emcscan.emc.com.tw ([192.72.220.5]:64891 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfLDHKc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:10:32 -0500
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="33142740"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 04 Dec 2019 15:10:28 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(71502:0:AUTH_RELAY)
-        (envelope-from <johnny.chuang@emc.com.tw>); Wed, 04 Dec 2019 15:10:25 +0800 (CST)
-Received: from 192.168.55.71
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(101173:0:AUTH_LOGIN)
-        (envelope-from <johnny.chuang@emc.com.tw>); Wed, 04 Dec 2019 15:10:23 +0800 (CST)
-From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
-To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        =?big5?B?J1NUUkQyLb2ytGa8YCc=?= <jennifer.tsai@emc.com.tw>,
-        <james.chen@emc.com.tw>,
-        =?big5?B?J7Hns9W1vic=?= <paul.liang@emc.com.tw>,
-        "'jeff'" <jeff.chuang@emc.com.tw>
-References: <1574142739-24556-1-git-send-email-johnny.chuang@emc.com.tw> <003d01d59e9e$8b0a3120$a11e9360$@emc.com.tw> <20191203194806.GL50317@dtor-ws>
-In-Reply-To: <20191203194806.GL50317@dtor-ws>
-Subject: RE: [PATCH] Input: elants_i2c - Add Remark ID check flow in firmware update function
-Date:   Wed, 4 Dec 2019 15:10:23 +0800
-Message-ID: <01b001d5aa71$e559c670$b00d5350$@emc.com.tw>
+        Wed, 4 Dec 2019 02:11:37 -0500
+Received: from mail-eopbgr680074.outbound.protection.outlook.com ([40.107.68.74]:51470
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725958AbfLDHLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 02:11:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EGteV2PxuQyQy7FgoDDbtmlwGcJb2HUTOiWWXirXRnkpyQrQEkRIWd8CnN0x+vR13wDZvDTbKuh7tAThyoxDDtFvWyTlzoWHqP4mO+oNSy3Sdo6I7WloxgC7ygG3JTvusI5UFJUM7ErVsqYTg8lIhDVWOTpxKFMV/9UO7iePKRVCRuaNuhX+UCeZnrj59PZ285gTsDBxI8QR4cV0T+ddnfqF9i5Agl0Kgye+46Vwf3iBcshpAWRsEP2BEqKjCdisf0cAwDyDAhzrQT/qBXXR9f5t7RENgPLEkMfNdjYTfknDJKe/Z7ppNx9syjE+1VJVGRUQ3mNj8MSTW6Jxsb0ueQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ISyUCZL8RpTJ1zgQiaPCB/kDas2VKZifHvvznAdk6AE=;
+ b=oHyXjr15C/FWyUIjQ6cIYB12333PRlcreg8HS2/RPQTjxb4xvc1CZ+/wiqP/u846fYYpRcF3Ewev15+7Hi62lUqzoRk+VXH7SwHy1jtScxlaDLEItH7sibv04/i1N1T4hVkdwnBA4V4y0tGl0WTKsXl9Mv2Kfx8OyoeaEPZxHSHBfjIJIwBg7Natvz00CkLgwUHYrTN+z07YIhDWCQdSrnBAbeJHJ1ZVfnE9xm/4e+mnurBXnsXg13/2PmkqWfn9j3V+m2fL5ief7GEELqjr3X9OUqE2HZqNX4CyFK9WCYnNMiHFAh/lHkCxG4wT+0drr8dzgQjNiyc2ZSa6SPZQtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ISyUCZL8RpTJ1zgQiaPCB/kDas2VKZifHvvznAdk6AE=;
+ b=n7O0ZN76lm1vastHlIXelrP1eu8db2NQSTs5ENf0HY5gbpFnir7ha4K1roW/YogEwJommMW5unNkaHgGLkD72AnzoVMWxfHjAGMHuESUzB83qR9PQ6E3Jaleb7MIDaL+188j8lgb9P2emRqFGHky5l2fLbjrHKdswEoUzfu3KDc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Rijo-john.Thomas@amd.com; 
+Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
+ CY4PR12MB1400.namprd12.prod.outlook.com (10.168.165.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Wed, 4 Dec 2019 07:11:34 +0000
+Received: from CY4PR12MB1925.namprd12.prod.outlook.com
+ ([fe80::cd8b:1d7e:31c2:e8b4]) by CY4PR12MB1925.namprd12.prod.outlook.com
+ ([fe80::cd8b:1d7e:31c2:e8b4%7]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 07:11:34 +0000
+From:   Rijo Thomas <Rijo-john.Thomas@amd.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
+        Nimesh Easow <Nimesh.Easow@amd.com>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: [RFC PATCH v3 0/6] Add TEE interface support to AMD Secure Processor driver
+Date:   Wed,  4 Dec 2019 11:48:57 +0530
+Message-Id: <cover.1575438845.git.Rijo-john.Thomas@amd.com>
+X-Mailer: git-send-email 1.9.1
+Content-Type: text/plain
+X-ClientProxiedBy: MAXPR0101CA0065.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:e::27) To CY4PR12MB1925.namprd12.prod.outlook.com
+ (2603:10b6:903:120::7)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="big5"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQJWcJ1GfW6vkoLmumyMvYKuQq0ScAIT1IjnAR9//EimjmCYoA==
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy0yMmEzOWU4ZC0xNjY1LTExZWEtOGFiMy03YzVjZjg3NDk0NzhcYW1lLXRlc3RcMjJhMzllOGYtMTY2NS0xMWVhLThhYjMtN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSIxNDIyNSIgdD0iMTMyMTk5MTcwMjI3ODEzNzE1IiBoPSJxRjBTaTJNZkpickdzK3lRckF1d0FIMHIyNG89IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
+X-Mailer: git-send-email 1.9.1
+X-Originating-IP: [165.204.156.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 375bf922-5d02-4a9d-0aaf-08d778893197
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1400:|CY4PR12MB1400:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR12MB1400B9EB9474EEF51789D5DACF5D0@CY4PR12MB1400.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2150;
+X-Forefront-PRVS: 0241D5F98C
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(199004)(189003)(2616005)(66556008)(2906002)(66476007)(50466002)(48376002)(478600001)(14454004)(50226002)(36756003)(81156014)(26005)(54906003)(110136005)(81166006)(3846002)(66946007)(8936002)(8676002)(5660300002)(6486002)(6116002)(386003)(186003)(6436002)(4326008)(99286004)(25786009)(6506007)(14444005)(16586007)(316002)(86362001)(52116002)(7736002)(51416003)(6666004)(6512007)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1400;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: i6rziHalWpc7pIdR59QBqdqD1jTYn9VP8TFy+P+lTNMAwFRS/eRnudoywsF2Vg0ZnkezmiUHsf2V/GnVlyyljoSICC2UmrYohFsn8qPYRaRQ3cvfQwC+e0xwO5xfY0Qb08NJAKnzYcME80wGvV6iYW3muyZaG7Gc/2jM2GcEAddmG+XoTy3TSQIwVurfoGeWUKxKCEKaQJdZkIkmowYqts9EwbJ2o3DWgZu8boHYax5BobK/OAiETl10W5rR6c7HKy/YFIVWO382nTywT4QV1RA1LlQyp90bPUDnzyh6L19SlPI66A2JbwXmTASUrzpmWzwo71I7OPVbZ7TWxXUcArM0/3WlLsAkO2jix6PWz4DsBGmvT3XbgWcg4ZK8oSL2UWlrvHnVLfttsEKVVrfVb9h1iuN05r+lSvDnBSDNXEadu42J39Q0kMQ6FOKi62Bm
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 375bf922-5d02-4a9d-0aaf-08d778893197
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 07:11:33.9387
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +DUgwjVakkZqwmoLS/iIga9bcrWv8XbsopIsHdXhGMRXVLrMSxLe5udRWkWSGF2Afxv/gcHwutBMjkmH4lVfUw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1400
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+The goal of this patch series is to introduce TEE (Trusted Execution
+Environment) interface support to AMD Secure Processor driver. The
+TEE is a secure area of a processor which ensures that sensitive data
+is stored, processed and protected in an isolated and trusted
+environment. The Platform Security Processor (PSP) is a dedicated
+processor which provides TEE to enable HW platform security. It offers
+protection against software attacks generated in Rich Operating System
+(Rich OS) such as Linux running on x86.
 
-I had modified driver and responded you inline.
+Based on the platform feature support, the PSP is capable of supporting
+either SEV (Secure Encrypted Virtualization) and/or TEE. The first three
+patches in this series is about moving SEV specific functions and data
+structures from PSP device driver file to a dedicated SEV interface
+driver file. The last two patches add TEE interface support to AMD
+Secure Processor driver. This TEE interface will be used by AMD-TEE
+driver to submit command buffers for processing in PSP Trusted Execution
+Environment.
 
-Many thanks,
-Johnny
+v3:
+* Rebased the patches onto cryptodev-2.6 tree with base commit
+  4ee812f6143d (crypto: vmx - Avoid weird build failures)
 
-diff --git a/drivers/input/touchscreen/elants_i2c.c
-b/drivers/input/touchscreen/elants_i2c.c
-index 9a17af6..4911799 100644
---- a/drivers/input/touchscreen/elants_i2c.c
-+++ b/drivers/input/touchscreen/elants_i2c.c
-@@ -130,7 +130,6 @@ struct elants_data {
-        u8 bc_version;
-        u8 iap_version;
-        u16 hw_version;
--       u16 remark_id;
-        unsigned int x_res;     /* resolution in units/mm */
-        unsigned int y_res;
-        unsigned int x_max;
-@@ -620,47 +619,33 @@ static int elants_i2c_fw_write_page(struct i2c_client
-*client,
-        return error;
- }
+v2:
+* Rebased the patches on cryptodev-2.6 tree with base commit
+  d158367682cd (crypto: atmel - Fix selection of CRYPTO_AUTHENC)
+* Regenerated patch with correct diff-stat to show file rename
+* Used Co-developed-by: tag to give proper credit to co-author
 
--static int elants_i2c_query_remark_id(struct elants_data *ts)
--{
--       struct i2c_client *client = ts->client;
--       int error;
--       const u8 cmd[] = { CMD_HEADER_ROM_READ, 0x80, 0x1F, 0x00, 0x00, 0x21
-};
--       u8 resp[6] = { 0 };
--
--       error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
--                                       resp, sizeof(resp));
--       if (error) {
--               dev_err(&client->dev, "get Remark ID failed: %d.\n", error);
--               return error;
--       }
--
--       ts->remark_id = get_unaligned_be16(&resp[3]);
--       dev_info(&client->dev, "remark_id=0x%04x.\n", ts->remark_id);
--
--       return 0;
--}
--
- static int elants_i2c_validate_remark_id(struct elants_data *ts,
-                                         const struct firmware *fw)
- {
-        struct i2c_client *client = ts->client;
-        int error;
-+       const u8 cmd[] = { CMD_HEADER_ROM_READ, 0x80, 0x1F, 0x00, 0x00, 0x21
-};
-+       u8 resp[6] = { 0 };
-+       u16 ts_remark_id = 0;
-        u16 fw_remark_id = 0;
+Rijo Thomas (6):
+  crypto: ccp - rename psp-dev files to sev-dev
+  crypto: ccp - create a generic psp-dev file
+  crypto: ccp - move SEV vdata to a dedicated data structure
+  crypto: ccp - check whether PSP supports SEV or TEE before
+    initialization
+  crypto: ccp - add TEE support for Raven Ridge
+  crypto: ccp - provide in-kernel API to submit TEE commands
 
-        /* Compare TS Remark ID and FW Remark ID */
--       error = elants_i2c_query_remark_id(ts);
-+       error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
-+                                       resp, sizeof(resp));
-        if (error) {
-                dev_err(&client->dev, "failed to query Remark ID: %d\n",
-error);
-                return error;
-        }
-
-+       ts_remark_id = get_unaligned_be16(&resp[3]);
-+
-        fw_remark_id = get_unaligned_le16(&fw->data[fw->size - 4]);
--       dev_info(&client->dev, "fw_remark_id=0x%04x.\n", fw_remark_id);
--       if (fw_remark_id != ts->remark_id) {
-+
-+       if (fw_remark_id != ts_remark_id) {
-                dev_err(&client->dev,
--                       "Remark ID Mismatched: ts_remark_id=0x%04x,
-fw_remark_id=0x%x.\n",
--                       ts->remark_id, fw_remark_id);
--               return -ENODATA;
-+                       "Remark ID Mismatched: ts_remark_id=0x%04x,
-fw_remark_id=0x%04x.\n",
-+                       ts_remark_id, fw_remark_id);
-+               return -EINVAL;
-        }
-
-        return 0;
-@@ -671,7 +656,6 @@ static int elants_i2c_do_update_firmware(struct
-i2c_client *client,
-                                         bool force)
- {
-        struct elants_data *ts = i2c_get_clientdata(client);
--       static const u8 w_flashkey[] = { 0x54, 0xC0, 0xE1, 0x5A };
-        const u8 enter_iap[] = { 0x45, 0x49, 0x41, 0x50 };
-        const u8 enter_iap2[] = { 0x54, 0x00, 0x12, 0x34 };
-        const u8 iap_ack[] = { 0x55, 0xaa, 0x33, 0xcc };
-@@ -686,29 +670,18 @@ static int elants_i2c_do_update_firmware(struct
-i2c_client *client,
-        if (force) {
-                dev_dbg(&client->dev, "Recovery mode procedure\n");
-
--               if (check_remark_id == true) {
--                       /* Validate Remark ID */
-+               if (check_remark_id) {
-                        error = elants_i2c_validate_remark_id(ts, fw);
--                       if (error) {
--                               dev_err(&client->dev,
--                                       "failed to validate Remark ID:
-%d\n",
--                                       error);
-+                       if (error)
-                                return error;
--                       }
-                }
-
--               error = elants_i2c_send(client, w_flashkey,
-sizeof(w_flashkey));
--               if (error)
--                       dev_err(&client->dev, "failed to write flash key:
-%d\n",
--                               error);
--
-                error = elants_i2c_send(client, enter_iap2,
-sizeof(enter_iap2));
-                if (error) {
-                        dev_err(&client->dev, "failed to enter IAP mode:
-%d\n",
-                                error);
-                        return error;
-                }
--               msleep(20);
-        } else {
-                /* Start IAP Procedure */
-                dev_dbg(&client->dev, "Normal IAP procedure\n");
-@@ -722,14 +695,10 @@ static int elants_i2c_do_update_firmware(struct
-i2c_client *client,
-                elants_i2c_sw_reset(client);
-                msleep(20);
-
--               if (check_remark_id == true) {
--                       /* Validate Remark ID */
-+               if (check_remark_id) {
-                        error = elants_i2c_validate_remark_id(ts, fw);
--                       if (error) {
--                               dev_err(&client->dev, "failed to validate
-Remark ID: %d\n",
--                                       error);
-+                       if (error)
-                                return error;
--                       }
-                }
-
-                error = elants_i2c_send(client, enter_iap,
-sizeof(enter_iap));
-
------Original Message-----
-From: 'Dmitry Torokhov' [mailto:dmitry.torokhov@gmail.com] 
-Sent: Wednesday, December 04, 2019 3:48 AM
-To: Johnny.Chuang
-Cc: linux-kernel@vger.kernel.org; linux-input@vger.kernel.org; STRD2-½²´f¼`;
-james.chen@emc.com.tw; '±ç³Õµ¾'; 'jeff'
-Subject: Re: [PATCH] Input: elants_i2c - Add Remark ID check flow in
-firmware update function
-
-Hi Johnny,
-
-On Tue, Nov 19, 2019 at 01:59:45PM +0800, Johnny.Chuang wrote:
-> This patch add Remark ID check flow to firmware update function of 
-> elan touchscreen driver.
-> 
-> It avoids firmware update with mismatched Remark ID.
-> 
-> This function is supported by our latest version of boot code, but it 
-> cooperates well with earlier versions.
-> 
-> Our driver will decide if enable Remark ID check with boot code version.
-> 
-> Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
-> ---
->  drivers/input/touchscreen/elants_i2c.c | 108
-> ++++++++++++++++++++++++++++++---
->  1 file changed, 100 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/elants_i2c.c
-> b/drivers/input/touchscreen/elants_i2c.c
-> index d4ad24e..9a17af6 100644
-> --- a/drivers/input/touchscreen/elants_i2c.c
-> +++ b/drivers/input/touchscreen/elants_i2c.c
-> @@ -59,8 +59,10 @@
->  #define CMD_HEADER_WRITE	0x54
->  #define CMD_HEADER_READ		0x53
->  #define CMD_HEADER_6B_READ	0x5B
-> +#define CMD_HEADER_ROM_READ	0x96
->  #define CMD_HEADER_RESP		0x52
->  #define CMD_HEADER_6B_RESP	0x9B
-> +#define CMD_HEADER_ROM_RESP	0x95
->  #define CMD_HEADER_HELLO	0x55
->  #define CMD_HEADER_REK		0x66
->  
-> @@ -128,6 +130,7 @@ struct elants_data {
->  	u8 bc_version;
->  	u8 iap_version;
->  	u16 hw_version;
-> +	u16 remark_id;
-
-We only use this during firmware version check phase, no need to store it in
-the device data structure.
-[J]: I remove remark_id and move work of elants_i2c_query_remark_id() into
-elants_i2c_validate_remark_id().
-
->  	unsigned int x_res;	/* resolution in units/mm */
->  	unsigned int y_res;
->  	unsigned int x_max;
-> @@ -200,6 +203,10 @@ static int elants_i2c_execute_command(struct 
-> i2c_client *client,
->  		expected_response = CMD_HEADER_6B_RESP;
->  		break;
->  
-> +	case CMD_HEADER_ROM_READ:
-> +		expected_response = CMD_HEADER_ROM_RESP;
-> +		break;
-> +
->  	default:
->  		dev_err(&client->dev, "%s: invalid command %*ph\n",
->  			__func__, (int)cmd_size, cmd);
-> @@ -556,6 +563,8 @@ static int elants_i2c_initialize(struct 
-> elants_data *ts)
->  
->  	/* hw version is available even if device in recovery state */
->  	error2 = elants_i2c_query_hw_version(ts);
-> +	if (!error2)
-> +		error2 = elants_i2c_query_bc_version(ts);
-
-Can you please explain why this change is done? This does not seem to relate
-to the "remark id" functionality. Should it be a separate change?
-[J]: We use ts->iap_version as check_remark_id to run validate remark id
-flow or not. Hence we need to get iap_version by elants_i2c_query_bc_version
-not only on normal mode but also on recovery mode.
-
->  	if (!error)
->  		error = error2;
->  
-> @@ -564,8 +573,6 @@ static int elants_i2c_initialize(struct elants_data
-*ts)
->  	if (!error)
->  		error = elants_i2c_query_test_version(ts);
->  	if (!error)
-> -		error = elants_i2c_query_bc_version(ts);
-> -	if (!error)
->  		error = elants_i2c_query_ts_info(ts);
->  
->  	if (error)
-> @@ -613,39 +620,124 @@ static int elants_i2c_fw_write_page(struct 
-> i2c_client *client,
->  	return error;
->  }
->  
-> +static int elants_i2c_query_remark_id(struct elants_data *ts) {
-> +	struct i2c_client *client = ts->client;
-> +	int error;
-> +	const u8 cmd[] = { CMD_HEADER_ROM_READ, 0x80, 0x1F, 0x00, 0x00, 0x21
-> };
-> +	u8 resp[6] = { 0 };
-> +
-> +	error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
-> +					resp, sizeof(resp));
-> +	if (error) {
-> +		dev_err(&client->dev, "get Remark ID failed: %d.\n", error);
-> +		return error;
-> +	}
-> +
-> +	ts->remark_id = get_unaligned_be16(&resp[3]);
-> +	dev_info(&client->dev, "remark_id=0x%04x.\n", ts->remark_id);
-
-I do not think we need be this noisy. Either dev_dbg, or drop it completely.
-[J]: drop done.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int elants_i2c_validate_remark_id(struct elants_data *ts,
-> +					 const struct firmware *fw)
-> +{
-> +	struct i2c_client *client = ts->client;
-> +	int error;
-> +	u16 fw_remark_id = 0;
-> +
-> +	/* Compare TS Remark ID and FW Remark ID */
-> +	error = elants_i2c_query_remark_id(ts);
-> +	if (error) {
-> +		dev_err(&client->dev, "failed to query Remark ID: %d\n",
-> error);
-> +		return error;
-> +	}
-> +
-> +	fw_remark_id = get_unaligned_le16(&fw->data[fw->size - 4]);
-> +	dev_info(&client->dev, "fw_remark_id=0x%04x.\n", fw_remark_id);
-
-Please drop this dev_info().
-[J]: drop done.
-
-> +	if (fw_remark_id != ts->remark_id) {
-> +		dev_err(&client->dev,
-> +			"Remark ID Mismatched: ts_remark_id=0x%04x,
-> fw_remark_id=0x%x.\n",
-
-You can use "%#04x" to format with prefix.
-[J]: Thanks for your recommendation. I still keep 0x%04x as other in this
-driver. I will submit another patch for all prefix change later.
-
-> +			ts->remark_id, fw_remark_id);
-> +		return -ENODATA;
-
-I'd say -EINVAL here.
-[J]: change done.
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int elants_i2c_do_update_firmware(struct i2c_client *client,
->  					 const struct firmware *fw,
->  					 bool force)
->  {
-> +	struct elants_data *ts = i2c_get_clientdata(client);
-> +	static const u8 w_flashkey[] = { 0x54, 0xC0, 0xE1, 0x5A };
->  	const u8 enter_iap[] = { 0x45, 0x49, 0x41, 0x50 };
->  	const u8 enter_iap2[] = { 0x54, 0x00, 0x12, 0x34 };
->  	const u8 iap_ack[] = { 0x55, 0xaa, 0x33, 0xcc };
-> -	const u8 close_idle[] = {0x54, 0x2c, 0x01, 0x01};
-> +	const u8 close_idle[] = { 0x54, 0x2c, 0x01, 0x01 };
->  	u8 buf[HEADER_SIZE];
->  	u16 send_id;
->  	int page, n_fw_pages;
->  	int error;
-> +	bool check_remark_id = ts->iap_version >= 0x60;
->  
->  	/* Recovery mode detection! */
->  	if (force) {
->  		dev_dbg(&client->dev, "Recovery mode procedure\n");
-> +
-> +		if (check_remark_id == true) {
-
-Simply
-		if (check_remark_id) {
-[J]: change done.
-
-
-> +			/* Validate Remark ID */
-
-This comment is not needed, you named the function that you are calling
-below well and its name describes what we are trying to do perfectly.
-[J]: drop done.
-
-> +			error = elants_i2c_validate_remark_id(ts, fw);
-> +			if (error) {
-> +				dev_err(&client->dev,
-> +					"failed to validate Remark ID:
-> %d\n",
-> +					error);
-
-elants_i2c_validate_remark_id() already gives necessary diagnostic, this
-message is not needed.
-[J]: drop done.
-
-> +				return error;
-> +			}
-> +		}
-> +
-> +		error = elants_i2c_send(client, w_flashkey,
-> sizeof(w_flashkey));
-> +		if (error)
-> +			dev_err(&client->dev, "failed to write flash key:
-> %d\n",
-> +				error);
-
-Sending flashkey in this chunk seems to be another change not directly
-related to the remark id. Why do we need this? Should it be split out?
-[J]: drop done. It's for another change.
-
-> +
->  		error = elants_i2c_send(client, enter_iap2,
-sizeof(enter_iap2));
-> +		if (error) {
-> +			dev_err(&client->dev, "failed to enter IAP mode:
-> %d\n",
-> +				error);
-> +			return error;
-> +		}
-> +		msleep(20);
-
-We already have msleep(20) in the common path below, do we really need 2nd
-one here?
-[J]: drop done. It's typo.
-
->  	} else {
->  		/* Start IAP Procedure */
->  		dev_dbg(&client->dev, "Normal IAP procedure\n");
-> +
->  		/* Close idle mode */
->  		error = elants_i2c_send(client, close_idle,
-sizeof(close_idle));
->  		if (error)
->  			dev_err(&client->dev, "Failed close idle: %d\n",
-error);
->  		msleep(60);
-> +
->  		elants_i2c_sw_reset(client);
->  		msleep(20);
-> -		error = elants_i2c_send(client, enter_iap,
-> sizeof(enter_iap));
-> -	}
->  
-> -	if (error) {
-> -		dev_err(&client->dev, "failed to enter IAP mode: %d\n",
-> error);
-> -		return error;
-> +		if (check_remark_id == true) {
-
-		if (check_remark_id) {
-
-> +			/* Validate Remark ID */
-
-Drop comment.
-[J]: drop done.
-
-> +			error = elants_i2c_validate_remark_id(ts, fw);
-> +			if (error) {
-> +				dev_err(&client->dev, "failed to validate
-> Remark ID: %d\n",
-> +					error);
-
-Drop message.
-[J]: drop done.
-
-> +				return error;
-> +			}
-> +		}
-> +
-> +		error = elants_i2c_send(client, enter_iap,
-> sizeof(enter_iap));
-> +		if (error) {
-> +			dev_err(&client->dev, "failed to enter IAP mode:
-> %d\n",
-> +				error);
-> +			return error;
-> +		}
->  	}
->  
->  	msleep(20);
-> --
-> 2.7.4
-> 
-
-Thanks.
+ drivers/crypto/ccp/Makefile  |    4 +-
+ drivers/crypto/ccp/psp-dev.c | 1033 ++++------------------------------------
+ drivers/crypto/ccp/psp-dev.h |   51 +-
+ drivers/crypto/ccp/sev-dev.c | 1068 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/crypto/ccp/sev-dev.h |   63 +++
+ drivers/crypto/ccp/sp-dev.h  |   17 +-
+ drivers/crypto/ccp/sp-pci.c  |   43 +-
+ drivers/crypto/ccp/tee-dev.c |  364 ++++++++++++++
+ drivers/crypto/ccp/tee-dev.h |  110 +++++
+ include/linux/psp-tee.h      |   73 +++
+ 10 files changed, 1842 insertions(+), 984 deletions(-)
+ create mode 100644 drivers/crypto/ccp/sev-dev.c
+ create mode 100644 drivers/crypto/ccp/sev-dev.h
+ create mode 100644 drivers/crypto/ccp/tee-dev.c
+ create mode 100644 drivers/crypto/ccp/tee-dev.h
+ create mode 100644 include/linux/psp-tee.h
 
 --
-Dmitry
+1.9.1
 
