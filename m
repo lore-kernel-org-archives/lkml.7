@@ -2,209 +2,251 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03050C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FF9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC54E24658
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B59D24686
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:34:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLRSP252"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dHJn7DD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfLDGNh (ORCPT
+        id S1727142AbfLDGeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 01:13:37 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34079 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbfLDGNg (ORCPT
+        Wed, 4 Dec 2019 01:34:00 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39965 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfLDGd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 01:13:36 -0500
-Received: by mail-ed1-f65.google.com with SMTP id cx19so5581941edb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 22:13:35 -0800 (PST)
+        Wed, 4 Dec 2019 01:33:59 -0500
+Received: by mail-qk1-f196.google.com with SMTP id a137so6117121qkc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 22:33:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=87Ai/2GBcoKT6fPUij1cG0QGHCMEFL+e1yuViHU4bI0=;
-        b=jLRSP252BPRHKnFzTkeVM2nQnu9zlZWlYg40vA1moDpFLFl6Gucf8MPRDDQELvBBNM
-         +/rcr/9SuaeRVu7ZP0eXGTQwlhWmixr94Js1SeZQIB/MMh6Ir3RF6ErERvgyeEgn9eAF
-         QRbmV+svqBfG7XHjDXEauI+urlRFyEwYGFFIg6GwtepNUX0XbNh2li/wZl6p/BFIWGjF
-         8IkIJAcpgzC9Ts8w5g3dlnmxKMhgXTeSd4LGF1aPNbyAgCCU9Ye0/7D4stgLRmu5h59e
-         SVt94OcmMFx6+uRMaaHzFsod952JTySKYJtfwt1IjaPq6vymOFLgdqG25hR58lTiY+7r
-         W55Q==
+        bh=2cRSRnUjyOWj8W68zyd7mIujpzqYQeBmGrBj93EFUXY=;
+        b=dHJn7DD/GzIvmxGi3WJtTxnr7lobK2J/Oi4Bn7PkUXqBKdM8XiuuMSwVwxSELSeNa6
+         IUh7RJ9hE279eVOvMIAtkV44u17LvJyd4BaCtSFwELWQbKZ1S+lyqLTma4AxsSRqs8i7
+         oqklpct9RqWtH5GjF75DxujkhqEBZ5bzQelJUyVJuh7xIxT0yJXS87kSLU01V2OopuPT
+         VzKxXdlhiY6l46M7g1r1HtJCNh140NrdpopLWPGrKSxquSLdnKmA5+gr5EJPe3sHp4CB
+         GZDSc43vmbGPdnUf7u0W+O5TeBBWOs8Mm8D2D4Ss6qcbpfJ+xu5KuzDQLzTFUDYa9sIk
+         5S5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=87Ai/2GBcoKT6fPUij1cG0QGHCMEFL+e1yuViHU4bI0=;
-        b=L0gNkauw2ynRqWn3+8MdKH1i6BpOaImGj0oQ3lMcqFMY6ztoFgHgP5QE6NSfs5ar5c
-         tVG9Jxd4/hTwRHop7lYeuoYtBL8/uSHXiKWzhaD4Ypw74awt6YErxJmPQIKvSJMtTOrd
-         uLujp056uj0tyfkTZXMl+up3faqafne9ttClBP/XDesVHomPSt/ZruTYos1V8w1cHhlA
-         DWZLfcUFRbCf2FGr+y2f/u+uFZPZ2GROhcREJuKgvM8AEMgJyL29qDockGKrmxCfi2uq
-         91NcRHwVg9n6lVvQPo1M+3ijLT9PDGgPokWdU2mtS/9bQ1xCDKAaXesdqrH0G6oN6DA7
-         Uj1w==
-X-Gm-Message-State: APjAAAWf+ltVcoT6wjKJhsWW8MiTCh9N0SFFUInqzwtsWIVwgTxqA2/+
-        fG7WqGcrb1GYYXcp5FZ7h3IUZInB6f4z8XJavbA=
-X-Google-Smtp-Source: APXvYqyNIk1C2c5BxdS1lstyDxH8vHJG7tYTPiXTFdZx4gXRSNQbWhRSDSLJjVCQfC1T7Xt5x+1i+P6dpe77QNSFaNc=
-X-Received: by 2002:aa7:d44a:: with SMTP id q10mr2221137edr.45.1575440014305;
- Tue, 03 Dec 2019 22:13:34 -0800 (PST)
+        bh=2cRSRnUjyOWj8W68zyd7mIujpzqYQeBmGrBj93EFUXY=;
+        b=CQjfdHqth6+XabsyoX8E72IaBuLA2VBzFVTtkV4mXTZVEknFXVzngYGER2Q+X3RGah
+         WTIDS6DWB0a91outM5uwE5LUJmpReRy15RfTwU9FwEqCh6o92vobzT6AklBOfFK9JfB4
+         VYUn8A1nif8mSg3STwe1TzQmaIa0fjTUTLa3AQQvV4YR30NcXBEFBJZvkIYjVfqMqCuJ
+         X8bN0qQEHilM4eefYksBoBduC85JyVQqhS7fPjEz4+aG9wQusZtIkP2EF0DvSgu0fgqP
+         OQ8HqsrMEVEhbz/otxjXd5Es/0uKvvGJ+0IInNaZnYboBj8pSyoKSNIDUwdUYxtW8wDR
+         4/gg==
+X-Gm-Message-State: APjAAAVansmMp3K5ded8hJeuhITj7tlZTPBrgLiH51C3Y88F/LkG0bw8
+        abGKX1IYE6HP/R5reO9qfT7RDLgTb6yEJQ3FyPlBKw==
+X-Google-Smtp-Source: APXvYqwhBE4d0rB8gmQY7oLs/uQktcvJLrM1vE+q4Z7mwp3vUUtAhx3SF7wctd9w99E49ofDhRG92p9+ezHmbwCxdDo=
+X-Received: by 2002:a37:4782:: with SMTP id u124mr1427511qka.8.1575441237260;
+ Tue, 03 Dec 2019 22:33:57 -0800 (PST)
 MIME-Version: 1.0
-References: <fd89d78030914d19939a1fc1c6eb5048@huawei.com> <e04e35e0a14f1507ac4a3d56899adcae@www.loen.fr>
- <c8649d75-a9b8-4680-c253-3172774ac33d@huawei.com> <c03d0b67a814288402b90bcdba600d26@www.loen.fr>
-In-Reply-To: <c03d0b67a814288402b90bcdba600d26@www.loen.fr>
-From:   Ivid Suvarna <ivid.suvarna@gmail.com>
-Date:   Wed, 4 Dec 2019 11:43:23 +0530
-Message-ID: <CABXF_AA+93p+1yVeDwmeMG3cn_2vUbvycN7TeV=8cDJ6bd8Leg@mail.gmail.com>
-Subject: Re: ITS restore/save state when HCC == 0
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Yao HongBo <yaohongbo@huawei.com>,
-        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
-        Yangyingliang <yangyingliang@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        james.morse@arm.com
+References: <0000000000002cfc3a0598d42b70@google.com> <CAKMK7uFAfw4M6B8WaHx6FBkYDmUBTQ6t3D8RE5BbMt=_5vyp9A@mail.gmail.com>
+In-Reply-To: <CAKMK7uFAfw4M6B8WaHx6FBkYDmUBTQ6t3D8RE5BbMt=_5vyp9A@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 4 Dec 2019 07:33:45 +0100
+Message-ID: <CACT4Y+aV9vzJ6gs9r2RAQP+dQ_vkOc5H6hWu-prF1ECruAE_5w@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in fbcon_get_font
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     syzbot <syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>, ghalat@redhat.com,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 9:46 PM Marc Zyngier <maz@kernel.org> wrote:
+On Tue, Dec 3, 2019 at 11:37 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
 >
-> + James, who wrote most (if not all) of the arm64 hibernate code
->
-> On 2019-12-03 02:23, Yao HongBo wrote:
-> > On 12/2/2019 9:22 PM, Marc Zyngier wrote:
-> >> Hi Yaohongbo,
-> >>
-> >> In the future, please refrain from sending HTML emails, they
-> >> don't render very well and force me to reformat your email
-> >> by hand.
+> On Tue, Dec 3, 2019 at 11:25 PM syzbot
+> <syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com> wrote:
 > >
-> > Sorry. I'll pay attention to this next time.
+> > Hello,
 > >
-> >> On 2019-12-02 12:52, yaohongbo wrote:
-> >>> Hi, marc.
-> >>>
-> >>> I met a problem with GIC ITS when I try to power off gic logic in
-> >>> suspend.
-> >>>
-> >>> In hisilicon hip08, the value of GIC_TYPER.HCC is zero, so that
-> >>> ITS_FLAGS_SAVE_SUSPEND_STATE will have no chance to be set to 1.
-> >>
-> >> And that's a good thing. HCC indicates that you have collections
-> >> that
-> >> are backed by registers, and not memory. Which means that once the
-> >> GIC
-> >> is powered off, the state is lost.
-> >>
-> >>> It goes well for s4, when I simply remove the condition judgement
-> >>> in
-> >>> the code.
-> >>
-> >> What is "s4"? Doing so means you are reprogramming the ITS with
-> >> mappings
-> >> that already exist in the tables, and that is UNPRED territory.
+> > syzbot found the following crash on:
 > >
-> > Sorry, I didn't describe it clearly.
-> > S4 means "suspend to disk".
-> > In s4, The its will reinit and malloc an new its address.
->
-> Huh, hibernate... Yeah, this is not expected to work, I'm afraid.
->
-> > My expectation is to reprogram the ITS with original mappings. If
-> > ITS_FLAGS_SAVE_SUSPEND_STATE
-> > is not set, i'll have no chance to use the original its table
-> > mappings.
+> > HEAD commit:    76bb8b05 Merge tag 'kbuild-v5.5' of git://git.kernel.org/p..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=10bfe282e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=dd226651cb0f364b
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=4455ca3b3291de891abc
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11181edae00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=105cbb7ae00000
 > >
-> > What should i do if i want to restore its state with hcc == 0?
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KASAN: slab-out-of-bounds in memcpy include/linux/string.h:380 [inline]
+> > BUG: KASAN: slab-out-of-bounds in fbcon_get_font+0x2b2/0x5e0
+> > drivers/video/fbdev/core/fbcon.c:2465
+> > Read of size 16 at addr ffff888094b0aa10 by task syz-executor414/9999
 >
-> HCC is the least of the problems, and there are plenty more issues:
+> So fbcon allocates some memory, security/tomoyo goes around and frees
+> it, fbcon goes boom because the memory is gone. I'm kinda leaning
+> towards "not an fbcon bug". Adding relevant security folks and mailing
+> lists.
 >
-> - I'm not sure what guarantees that the tables are at the same
->    address in the booting kernel and the the resumed kernel.
->    That covers all the ITS tables and as well as the RDs'.
->
-> - It could well be that restoring the ITS base addresses is enough
->    for everything to resume correctly, but this needs some serious
->    investigation. Worse case, we will need to replay the whole of
->    the ITS programming.
->
-> - This is going to interact more or less badly with the normal suspend
->    to RAM code...
->
-> - The ITS is only the tip of the iceberg. The whole of the SMMU setup
->    needs to be replayed, or devices won't resume correctly (I just tried
->    on a D05).
->
-> Anyway, with the hack below, I've been able to get D05 to resume
-> up to the point where devices try to do DMA, and then it was dead.
-> There is definitely some work to be done there...
->
->          M.
->
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c
-> b/drivers/irqchip/irq-gic-v3-its.c
-> index 4ba31de4a875..a05fc6bac203 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -27,6 +27,7 @@
->   #include <linux/of_platform.h>
->   #include <linux/percpu.h>
->   #include <linux/slab.h>
-> +#include <linux/suspend.h>
->   #include <linux/syscore_ops.h>
->
->   #include <linux/irqchip.h>
-> @@ -42,6 +43,7 @@
->   #define ITS_FLAGS_WORKAROUND_CAVIUM_22375     (1ULL << 1)
->   #define ITS_FLAGS_WORKAROUND_CAVIUM_23144     (1ULL << 2)
->   #define ITS_FLAGS_SAVE_SUSPEND_STATE          (1ULL << 3)
-> +#define ITS_FLAGS_SAVE_HIBERNATE_STATE         (1ULL << 4)
->
->   #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING   (1 << 0)
->   #define RDIST_FLAGS_RD_TABLES_PREALLOCATED    (1 << 1)
-> @@ -3517,8 +3519,16 @@ static int its_save_disable(void)
->         raw_spin_lock(&its_lock);
->         list_for_each_entry(its, &its_nodes, entry) {
->                 void __iomem *base;
-> +               u64 flags;
->
-> -               if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
-> +               if (system_entering_hibernation())
-> +                       its->flags |= ITS_FLAGS_SAVE_HIBERNATE_STATE;
-> +
-> +               flags = its->flags;
-> +               flags &= (ITS_FLAGS_SAVE_SUSPEND_STATE |
-> +                         ITS_FLAGS_SAVE_HIBERNATE_STATE);
-> +
-> +               if (!flags)
->                         continue;
->
->                 base = its->base;
-> @@ -3559,11 +3569,17 @@ static void its_restore_enable(void)
->         raw_spin_lock(&its_lock);
->         list_for_each_entry(its, &its_nodes, entry) {
->                 void __iomem *base;
-> +               u64 flags;
->                 int i;
->
-> -               if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
-> +               flags = its->flags;
-> +               flags &= (ITS_FLAGS_SAVE_SUSPEND_STATE |
-> +                         ITS_FLAGS_SAVE_HIBERNATE_STATE);
-> +               if (!flags)
->                         continue;
->
-> +               its->flags &= ~ITS_FLAGS_SAVE_HIBERNATE_STATE;
-> +
->                 base = its->base;
->
->                 /*
+> But from a very quick look in tomoyo it loosk more like "machine on
+> fire, random corruption all over". No idea what's going on here.
 
-How about this one to reinit GIC for restore:
- - https://source.codeaurora.org/quic/la/kernel/msm-4.14/commit/drivers/irqchip/irq-gic-v3.c?h=msm-4.14&id=b0079fb73c08e195498ba2b2ea9623b0cc0f5fed
+Hi Daniel,
+
+This is an out-of-bounds access, not use-after-free.
+I don't know why we print the free stack at all (maybe +Andrey knows),
+but that's what KASAN did from day one. I filed
+https://bugzilla.kernel.org/show_bug.cgi?id=198425 which I think is a
+good idea, I will add your confusion as a data point :)
+Re this bug, free stack is irrelevant, I guess it's when the heap
+block was freed before it was reallocated by console. So it's plain
+out-of-bounds in fbcon_get_font, which looks sane and consistent to me
+and reproducible on top.
+
+
+> > CPU: 0 PID: 9999 Comm: syz-executor414 Not tainted 5.4.0-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0x197/0x210 lib/dump_stack.c:118
+> >   print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+> >   __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+> >   kasan_report+0x12/0x20 mm/kasan/common.c:638
+> >   check_memory_region_inline mm/kasan/generic.c:185 [inline]
+> >   check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+> >   memcpy+0x24/0x50 mm/kasan/common.c:124
+> >   memcpy include/linux/string.h:380 [inline]
+> >   fbcon_get_font+0x2b2/0x5e0 drivers/video/fbdev/core/fbcon.c:2465
+> >   con_font_get drivers/tty/vt/vt.c:4446 [inline]
+> >   con_font_op+0x20b/0x1250 drivers/tty/vt/vt.c:4605
+> >   vt_ioctl+0x181a/0x26d0 drivers/tty/vt/vt_ioctl.c:965
+> >   tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2658
+> >   vfs_ioctl fs/ioctl.c:47 [inline]
+> >   file_ioctl fs/ioctl.c:545 [inline]
+> >   do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+> >   ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+> >   __do_sys_ioctl fs/ioctl.c:756 [inline]
+> >   __se_sys_ioctl fs/ioctl.c:754 [inline]
+> >   __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+> >   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > RIP: 0033:0x4444d9
+> > Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
+> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> > ff 0f 83 7b d8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> > RSP: 002b:00007fff6f4393b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> > RAX: ffffffffffffffda RBX: 00007fff6f4393c0 RCX: 00000000004444d9
+> > RDX: 0000000020000440 RSI: 0000000000004b72 RDI: 0000000000000005
+> > RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000400da0
+> > R10: 00007fff6f438f00 R11: 0000000000000246 R12: 00000000004021e0
+> > R13: 0000000000402270 R14: 0000000000000000 R15: 0000000000000000
+> >
+> > Allocated by task 9999:
+> >   save_stack+0x23/0x90 mm/kasan/common.c:71
+> >   set_track mm/kasan/common.c:79 [inline]
+> >   __kasan_kmalloc mm/kasan/common.c:512 [inline]
+> >   __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:485
+> >   kasan_kmalloc+0x9/0x10 mm/kasan/common.c:526
+> >   __do_kmalloc mm/slab.c:3656 [inline]
+> >   __kmalloc+0x163/0x770 mm/slab.c:3665
+> >   kmalloc include/linux/slab.h:561 [inline]
+> >   fbcon_set_font+0x32d/0x860 drivers/video/fbdev/core/fbcon.c:2663
+> >   con_font_set drivers/tty/vt/vt.c:4538 [inline]
+> >   con_font_op+0xe18/0x1250 drivers/tty/vt/vt.c:4603
+> >   vt_ioctl+0xd2e/0x26d0 drivers/tty/vt/vt_ioctl.c:913
+> >   tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2658
+> >   vfs_ioctl fs/ioctl.c:47 [inline]
+> >   file_ioctl fs/ioctl.c:545 [inline]
+> >   do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+> >   ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+> >   __do_sys_ioctl fs/ioctl.c:756 [inline]
+> >   __se_sys_ioctl fs/ioctl.c:754 [inline]
+> >   __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+> >   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> > Freed by task 9771:
+> >   save_stack+0x23/0x90 mm/kasan/common.c:71
+> >   set_track mm/kasan/common.c:79 [inline]
+> >   kasan_set_free_info mm/kasan/common.c:334 [inline]
+> >   __kasan_slab_free+0x102/0x150 mm/kasan/common.c:473
+> >   kasan_slab_free+0xe/0x10 mm/kasan/common.c:482
+> >   __cache_free mm/slab.c:3426 [inline]
+> >   kfree+0x10a/0x2c0 mm/slab.c:3757
+> >   tomoyo_init_log+0x15c1/0x2070 security/tomoyo/audit.c:294
+> >   tomoyo_supervisor+0x33f/0xef0 security/tomoyo/common.c:2095
+> >   tomoyo_audit_env_log security/tomoyo/environ.c:36 [inline]
+> >   tomoyo_env_perm+0x18e/0x210 security/tomoyo/environ.c:63
+> >   tomoyo_environ security/tomoyo/domain.c:670 [inline]
+> >   tomoyo_find_next_domain+0x1354/0x1f6c security/tomoyo/domain.c:876
+> >   tomoyo_bprm_check_security security/tomoyo/tomoyo.c:107 [inline]
+> >   tomoyo_bprm_check_security+0x124/0x1a0 security/tomoyo/tomoyo.c:97
+> >   security_bprm_check+0x63/0xb0 security/security.c:784
+> >   search_binary_handler+0x71/0x570 fs/exec.c:1645
+> >   exec_binprm fs/exec.c:1701 [inline]
+> >   __do_execve_file.isra.0+0x1329/0x22b0 fs/exec.c:1821
+> >   do_execveat_common fs/exec.c:1867 [inline]
+> >   do_execve fs/exec.c:1884 [inline]
+> >   __do_sys_execve fs/exec.c:1960 [inline]
+> >   __se_sys_execve fs/exec.c:1955 [inline]
+> >   __x64_sys_execve+0x8f/0xc0 fs/exec.c:1955
+> >   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> > The buggy address belongs to the object at ffff888094b0a000
+> >   which belongs to the cache kmalloc-4k of size 4096
+> > The buggy address is located 2576 bytes inside of
+> >   4096-byte region [ffff888094b0a000, ffff888094b0b000)
+> > The buggy address belongs to the page:
+> > page:ffffea000252c280 refcount:1 mapcount:0 mapping:ffff8880aa402000
+> > index:0x0 compound_mapcount: 0
+> > raw: 00fffe0000010200 ffffea0002a3ae08 ffffea0002a6aa88 ffff8880aa402000
+> > raw: 0000000000000000 ffff888094b0a000 0000000100000001 0000000000000000
+> > page dumped because: kasan: bad access detected
+> >
+> > Memory state around the buggy address:
+> >   ffff888094b0a900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >   ffff888094b0a980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > > ffff888094b0aa00: 00 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> >                           ^
+> >   ffff888094b0aa80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> >   ffff888094b0ab00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> > ==================================================================
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > syzbot can test patches for this bug, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches
