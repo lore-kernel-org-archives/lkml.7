@@ -2,76 +2,179 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EF6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFC3C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9802073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FAA42073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfLDArg (ORCPT
+        id S1726214AbfLDAuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 19:47:36 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:36382 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726086AbfLDArg (ORCPT
+        Tue, 3 Dec 2019 19:50:15 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12936 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726008AbfLDAuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 19:47:36 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0Tjr6d8u_1575420394;
-Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0Tjr6d8u_1575420394)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 04 Dec 2019 08:46:43 +0800
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org
-Cc:     "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org,
-        Shile Zhang <shile.zhang@linux.alibaba.com>
-Subject: [RFC PATCH v6 3/7] scripts/sortextable: Remove dead code
-Date:   Wed,  4 Dec 2019 08:46:29 +0800
-Message-Id: <20191204004633.88660-4-shile.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.0.rc2
-In-Reply-To: <20191204004633.88660-1-shile.zhang@linux.alibaba.com>
-References: <20191204004633.88660-1-shile.zhang@linux.alibaba.com>
+        Tue, 3 Dec 2019 19:50:15 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB40RJan098623
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Dec 2019 19:50:14 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wnqn4u9st-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 19:50:14 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Wed, 4 Dec 2019 00:50:11 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Dec 2019 00:50:06 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB40nPQ949480180
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Dec 2019 00:49:25 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4FD374204C;
+        Wed,  4 Dec 2019 00:50:05 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 80C8242041;
+        Wed,  4 Dec 2019 00:50:01 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.80.193.7])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  4 Dec 2019 00:50:01 +0000 (GMT)
+Date:   Tue, 3 Dec 2019 16:49:58 -0800
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, david@gibson.dropbear.id.au,
+        paulus@ozlabs.org, mdroth@linux.vnet.ibm.com, hch@lst.de,
+        andmike@us.ibm.com, sukadev@linux.vnet.ibm.com, mst@redhat.com,
+        ram.n.pai@gmail.com, cai@lca.pw, tglx@linutronix.de,
+        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <1575269124-17885-1-git-send-email-linuxram@us.ibm.com>
+ <1575269124-17885-2-git-send-email-linuxram@us.ibm.com>
+ <f08ace25-fa94-990b-1b6d-a1c0f30d6348@ozlabs.ru>
+ <20191203020850.GA12354@oc0525413822.ibm.com>
+ <0b56ce3e-6c32-5f3b-e7cc-0d419a61d71d@ozlabs.ru>
+ <20191203040509.GB12354@oc0525413822.ibm.com>
+ <a0f19e65-81eb-37bd-928b-7a57a8660e3d@ozlabs.ru>
+ <20191203165204.GA5079@oc0525413822.ibm.com>
+ <3a17372a-fcee-efbf-0a05-282ffb1adc90@ozlabs.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a17372a-fcee-efbf-0a05-282ffb1adc90@ozlabs.ru>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19120400-4275-0000-0000-0000038AC85F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120400-4276-0000-0000-0000389E6841
+Message-Id: <20191204004958.GB5063@oc0525413822.ibm.com>
+Subject: RE: [PATCH v4 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page with
+ the hypervisor.
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-03_07:2019-12-02,2019-12-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ impostorscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999
+ priorityscore=1501 suspectscore=18 adultscore=0 lowpriorityscore=0
+ phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912040002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the comment out dead code, no functional changes.
+On Wed, Dec 04, 2019 at 11:04:04AM +1100, Alexey Kardashevskiy wrote:
+> 
+> 
+> On 04/12/2019 03:52, Ram Pai wrote:
+> > On Tue, Dec 03, 2019 at 03:24:37PM +1100, Alexey Kardashevskiy wrote:
+> >>
+> >>
+> >> On 03/12/2019 15:05, Ram Pai wrote:
+> >>> On Tue, Dec 03, 2019 at 01:15:04PM +1100, Alexey Kardashevskiy wrote:
+> >>>>
+> >>>>
+> >>>> On 03/12/2019 13:08, Ram Pai wrote:
+> >>>>> On Tue, Dec 03, 2019 at 11:56:43AM +1100, Alexey Kardashevskiy wrote:
+> >>>>>>
+> >>>>>>
+> >>>>>> On 02/12/2019 17:45, Ram Pai wrote:
+> >>>>>>> H_PUT_TCE_INDIRECT hcall uses a page filled with TCE entries, as one of
+> >>>>>>> its parameters. One page is dedicated per cpu, for the lifetime of the
+> >>>>>>> kernel for this purpose. On secure VMs, contents of this page, when
+> >>>>>>> accessed by the hypervisor, retrieves encrypted TCE entries.  Hypervisor
+> >>>>>>> needs to know the unencrypted entries, to update the TCE table
+> >>>>>>> accordingly.  There is nothing secret or sensitive about these entries.
+> >>>>>>> Hence share the page with the hypervisor.
+> >>>>>>
+> >>>>>> This unsecures a page in the guest in a random place which creates an
+> >>>>>> additional attack surface which is hard to exploit indeed but
+> >>>>>> nevertheless it is there.
+> >>>>>> A safer option would be not to use the
+> >>>>>> hcall-multi-tce hyperrtas option (which translates FW_FEATURE_MULTITCE
+> >>>>>> in the guest).
+> >>>>>
+> >>>>>
+> >>>>> Hmm... How do we not use it?  AFAICT hcall-multi-tce option gets invoked
+> >>>>> automatically when IOMMU option is enabled.
+> >>>>
+> >>>> It is advertised by QEMU but the guest does not have to use it.
+> >>>
+> >>> Are you suggesting that even normal-guest, not use hcall-multi-tce?
+> >>> or just secure-guest?  
+> >>
+> >>
+> >> Just secure.
+> > 
+> > hmm..  how are the TCE entries communicated to the hypervisor, if
+> > hcall-multi-tce is disabled?
+> 
+> Via H_PUT_TCE which updates 1 entry at once (sets or clears).
+> hcall-multi-tce  enables H_PUT_TCE_INDIRECT (512 entries at once) and
+> H_STUFF_TCE (clearing, up to 4bln at once? many), these are simply an
+> optimization.
 
-Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- scripts/sortextable.h | 4 ----
- 1 file changed, 4 deletions(-)
+Do you still think, secure-VM should use H_PUT_TCE and not
+H_PUT_TCE_INDIRECT?  And normal VM should use H_PUT_TCE_INDIRECT?
+Is there any advantage of special casing it for secure-VMs.
+In fact, we could make use of as much optimization as possible.
 
-diff --git a/scripts/sortextable.h b/scripts/sortextable.h
-index b7e407e09f59..a2e3af7bf211 100644
---- a/scripts/sortextable.h
-+++ b/scripts/sortextable.h
-@@ -201,10 +201,6 @@ static int do_func(Elf_Ehdr *ehdr,
- 		_r(&sort_needed_sym->st_value) -
- 		_r(&sort_needed_sec->sh_addr);
- 
--#if 0
--	printf("sort done marker at %lx\n",
--	       (unsigned long)((char *)sort_done_location - (char *)ehdr));
--#endif
- 	/* We sorted it, clear the flag. */
- 	w(0, sort_done_location);
- 	return 0;
--- 
-2.24.0.rc2
+
+> 
+> >>>> Is not this for pci+swiotlb? 
+..snip..
+> >>> This patch is purely to help the hypervisor setup the TCE table, in the
+> >>> presence of a IOMMU.
+> >>
+> >> Then the hypervisor should be able to access the guest pages mapped for
+> >> DMA and these pages should be made unsecure for this to work. Where/when
+> >> does this happen?
+> > 
+> > This happens in the SWIOTLB code.  The code to do that is already
+> > upstream.  
+> >
+> > The sharing of the pages containing the SWIOTLB bounce buffers is done
+> > in init_svm() which calls swiotlb_update_mem_attributes() which calls
+> > set_memory_decrypted().  In the case of pseries, set_memory_decrypted() calls 
+> > uv_share_page().
+> 
+> 
+> This does not seem enough as when you enforce iommu_platform=on, QEMU
+> starts accessing virtio buffers via IOMMU so bounce buffers have to be
+> mapped explicitly, via H_PUT_TCE&co, where does this happen?
+> 
+
+I think, it happens at boot time. Every page of the guest memory is TCE
+mapped, if iommu is enabled. SWIOTLB pages get implicitly TCE-mapped
+as part of that operation.
+
+RP
 
