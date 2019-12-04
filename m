@@ -2,123 +2,110 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B301C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA6FC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC23206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:55:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=golovin.in header.i=@golovin.in header.b="jE0Xif/F"
+	by mail.kernel.org (Postfix) with ESMTP id 5E44E206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:59:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575500345;
+	bh=Ysf1J+BSQwUnFJHhUpB/ZT36dXA4hNeM8yJmqNkFhDc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mpxewbmHzJr20yJH3lvRAYLp99HDptWfpA4mdSrXpAXEd2TE+l3Gd89iY1adz71nd
+	 HCkYYZ6BWamo/VtC+sX5jhzujrFQWZ8eWYkelUu6y8Y2PjUFm9ugkLTv3GLtc4DON0
+	 +kuOR+7A7Y+aCk7mfLCfh1gx8keCcWy5oCGFJvLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbfLDWzc (ORCPT
+        id S1728347AbfLDW7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 17:55:32 -0500
-Received: from forward104j.mail.yandex.net ([5.45.198.247]:58843 "EHLO
-        forward104j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728284AbfLDWzb (ORCPT
+        Wed, 4 Dec 2019 17:59:04 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40747 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbfLDW7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 17:55:31 -0500
-Received: from mxback26o.mail.yandex.net (mxback26o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::77])
-        by forward104j.mail.yandex.net (Yandex) with ESMTP id 100914A0BFF;
-        Thu,  5 Dec 2019 01:55:27 +0300 (MSK)
-Received: from myt2-416899e1d7e0.qloud-c.yandex.net (myt2-416899e1d7e0.qloud-c.yandex.net [2a02:6b8:c00:1caf:0:640:4168:99e1])
-        by mxback26o.mail.yandex.net (mxback/Yandex) with ESMTP id CiCpCrHJu0-tQXeZx5L;
-        Thu, 05 Dec 2019 01:55:27 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=golovin.in; s=mail; t=1575500127;
-        bh=A0Ogu7gZHOBeP65sd0xtu2h11UWTeto1NUvcxcTaNio=;
-        h=Subject:To:From:Cc:Date:Message-Id;
-        b=jE0Xif/Fuj4dQpqsnEzIGuJnf00yVfKn/AwRBBClcsTLclfG67clFYiNlw4uGFxUz
-         UrJD01D870ksmiuhUS7sNWx59LOmwf5ywibSBqWUF+Pv9NeRGVi4Cq2Kvfx+o5AM8j
-         6etU6pOBx1cRhpNOfFkV/QXjuHZonbXPVLWh1btk=
-Authentication-Results: mxback26o.mail.yandex.net; dkim=pass header.i=@golovin.in
-Received: by myt2-416899e1d7e0.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id QEcSBchbvx-tOVumEJ1;
-        Thu, 05 Dec 2019 01:55:25 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Dmitry Golovin <dima@golovin.in>
-Cc:     Dmitry Golovin <dima@golovin.in>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Ross Philipson <ross.philipson@oracle.com>,
-        Ross Burton <ross.burton@intel.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] x86/boot: kbuild: allow readelf executable to be specified
-Date:   Thu,  5 Dec 2019 00:54:41 +0200
-Message-Id: <20191204225446.202981-1-dima@golovin.in>
-X-Mailer: git-send-email 2.23.0
+        Wed, 4 Dec 2019 17:59:03 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 6so889315oix.7;
+        Wed, 04 Dec 2019 14:59:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hqWdSoHcQzyTJkL7Mf3rYI2CqKq7GxVmoPtx9Wj/NUQ=;
+        b=HeeqcbTXIDcg1+EgDquum9Gbc+rK+sg/vwkSEMV7s6Jgb7mrLTGYzIzlP9ba2GjAKd
+         qc1HCRGBW17kPOVYcKC1Iru94DEnxak5qGbiU4ciNkWWg8vQGPCubtRstceKUc7BoNil
+         PVbwEgTGGtfOBdA++mpW4YJTyAH2Rt8RO2rDBqXC2W1GZ+o3B/ATDrWq+NEYbtWsUlVt
+         WBwQgvJ/zzxVp0xwfofvv/+ypqBcdC73t4bJ8MzFOMnwYjpLwtVjeQ1UYJ6V7yTFXHfH
+         wMQRjXRAz50+aEPBSPBzF/2yQH9ouK49D3Updpm2egJxwDwY+LX/f8EctHqbo9jw1aCI
+         9VJw==
+X-Gm-Message-State: APjAAAWXoSnc+ioG/xqExlZotU+sIBG0F+7FLrofM80o4SKYrP/BgDiO
+        s03CFzvqBckJTiuUU6JRnQ==
+X-Google-Smtp-Source: APXvYqzIMPoCRlaPXBAfjx/AI4iavLfiFcz3CpUIlhsCYXfOEc8f3duMXCd6ObvZG8FDt5/AHwWi0w==
+X-Received: by 2002:a05:6808:f:: with SMTP id u15mr4639374oic.164.1575500342713;
+        Wed, 04 Dec 2019 14:59:02 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f11sm2842044oij.8.2019.12.04.14.59.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 14:59:02 -0800 (PST)
+Date:   Wed, 4 Dec 2019 16:59:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jim Wright <wrightj@linux.vnet.ibm.com>
+Cc:     jdelvare@suse.com, linux@roeck-us.net, mark.rutland@arm.com,
+        corbet@lwn.net, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jim Wright <jlwright@us.ibm.com>
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon/pmbus: Add UCD90320 power
+ sequencer
+Message-ID: <20191204225901.GA20804@bogus>
+References: <20191122222542.29661-1-wrightj@linux.vnet.ibm.com>
+ <20191122222542.29661-2-wrightj@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122222542.29661-2-wrightj@linux.vnet.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a new READELF variable to top-level Makefile, so the name of
-readelf binary can be specified.
+On Fri, Nov 22, 2019 at 04:25:41PM -0600, Jim Wright wrote:
+> From: Jim Wright <jlwright@us.ibm.com>
+> 
+> Document the UCD90320 device tree binding.
+> 
+> Signed-off-by: Jim Wright <jlwright@us.ibm.com>
+> ---
+>  .../devicetree/bindings/hwmon/pmbus/ucd90320.txt    | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/ucd90320.txt
 
-Before this change the name of the binary was hardcoded to
-"$(CROSS_COMPILE)readelf" which might not be present for every
-toolchain.
+Can you make this a schema. See 
+Documentation/devicetree/writing-schema.rst.
 
-This allows to build with LLVM Object Reader by using make parameter
-READELF=llvm-readelf.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/771
-Signed-off-by: Dmitry Golovin <dima@golovin.in>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
----
- Makefile                          | 3 ++-
- arch/x86/boot/compressed/Makefile | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 999a197d67d2..612a55d25442 100644
---- a/Makefile
-+++ b/Makefile
-@@ -414,6 +414,7 @@ STRIP		= $(CROSS_COMPILE)strip
- OBJCOPY		= $(CROSS_COMPILE)objcopy
- OBJDUMP		= $(CROSS_COMPILE)objdump
- OBJSIZE		= $(CROSS_COMPILE)size
-+READELF		= $(CROSS_COMPILE)readelf
- PAHOLE		= pahole
- LEX		= flex
- YACC		= bison
-@@ -472,7 +473,7 @@ GCC_PLUGINS_CFLAGS :=
- CLANG_FLAGS :=
- 
- export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
--export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE PAHOLE LEX YACC AWK INSTALLKERNEL
-+export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
- export PERL PYTHON PYTHON2 PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
- export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
- 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index aa976adb7094..1dac210f7d44 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -103,7 +103,7 @@ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
- quiet_cmd_check_data_rel = DATAREL $@
- define cmd_check_data_rel
- 	for obj in $(filter %.o,$^); do \
--		${CROSS_COMPILE}readelf -S $$obj | grep -qF .rel.local && { \
-+		$(READELF) -S $$obj | grep -qF .rel.local && { \
- 			echo "error: $$obj has data relocations!" >&2; \
- 			exit 1; \
- 		} || true; \
--- 
-2.23.0
-
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/ucd90320.txt b/Documentation/devicetree/bindings/hwmon/pmbus/ucd90320.txt
+> new file mode 100644
+> index 000000000000..e1c1057c6292
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/pmbus/ucd90320.txt
+> @@ -0,0 +1,13 @@
+> +UCD90320 power sequencer
+> +-------------------------
+> +
+> +Requires node properties:
+> +- compatible : "ti,ucd90320"
+> +- reg : the I2C address of the device. This is 0x11, 0x13, 0x17, 0x31, 0x33,
+> +        0x37, 0x71, 0x73, or 0x77.
+> +
+> +Example:
+> +	ucd90320@11 {
+> +		compatible = "ti,ucd90320";
+> +		reg = <0x11>;
+> +	};
+> -- 
+> 2.17.1
+> 
