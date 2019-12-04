@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB804C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4C9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85507206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E0E206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483019;
-	bh=pBD8D54Jh+aAZ584Gec2gIdMiQfp2n7SefwZdXpySxQ=;
+	s=default; t=1575483022;
+	bh=bn7fpoGbsr5yYxne9+e9O//N48LFYLbM1CQiyWwEfes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b7cG0xCY06O8iH2AoOckNJgbglM7U44Jf7I2Iv4FCA2nXDPZ+S3uGnMWgT8wqT/i0
-	 5oqkk0zyDfvosgpOzDQSi5HS6v+14TEaJfud8W+C7Dl18lfduUOo7fVBgJA425H0jh
-	 Nu0gmxfSDncvqCP/9eLWKA2VHUbiPt0aY/s7Wm2c=
+	b=lzMb4WP009bbpAM29d3iKvtJ9ycDJr5RNzxP4zJYAySQBNw4CMjWBGW8RYn/WjqJ9
+	 W+Oiem/7U9APs2Is1/9G7JTUCRXy32raF5BYg7BQ5Sz0TFyLhaf2doDprNUzZIm2aM
+	 Yii9V6TNPZdP1iETR7JjHOAErpU40ssAg7jHosT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730252AbfLDSKS (ORCPT
+        id S1731252AbfLDSKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:10:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37220 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:10:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729763AbfLDSKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:10:14 -0500
+        id S1728611AbfLDSKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:10:19 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7878E20674;
-        Wed,  4 Dec 2019 18:10:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 524FF20674;
+        Wed,  4 Dec 2019 18:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483013;
-        bh=pBD8D54Jh+aAZ584Gec2gIdMiQfp2n7SefwZdXpySxQ=;
+        s=default; t=1575483018;
+        bh=bn7fpoGbsr5yYxne9+e9O//N48LFYLbM1CQiyWwEfes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UjgYreU687s0kGO9I0YzU+OHZ7K/QDn9afyrCZFuWTZ14LK1JcjZAzkM9IE7bF0IB
-         uoeu/xjfpKtYHutmnBH/r/xd0QiKYIuPNvza3ZqcNQQ+Wc/A/BdZtGVs2msZakJSCz
-         RBtHshN4q3HeuESfCI2UfBKppf6RLSTy2rLGQHag=
+        b=vzFin4lGef9ESNEzuu+GB1MxIMnxoRP/dULVZ2/YvTOoPOLTg3z1JILK6jy0Mpuia
+         9MK7e2u8m4eSsZXY6t4WHdCbvys0nUxPk0CTO/T95pDmHYFLqV2j92zO1Wfdvk8dld
+         STM0ehFxCmeZ1PgoZqlW5KEA2JdBpiGG14b5iWmQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        stable@vger.kernel.org, Steve Capper <steve.capper@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 017/125] parisc: Fix serio address output
-Date:   Wed,  4 Dec 2019 18:55:22 +0100
-Message-Id: <20191204175317.366024596@linuxfoundation.org>
+Subject: [PATCH 4.9 019/125] arm64: mm: Prevent mismatched 52-bit VA support
+Date:   Wed,  4 Dec 2019 18:55:24 +0100
+Message-Id: <20191204175318.025202869@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -59,38 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Steve Capper <steve.capper@arm.com>
 
-[ Upstream commit 785145171d17af2554128becd6a7c8f89e101141 ]
+[ Upstream commit a96a33b1ca57dbea4285893dedf290aeb8eb090b ]
 
-We want the hpa addresses printed in the serio modules, not some
-virtual ioremap()ed address, e.g.:
+For cases where there is a mismatch in ARMv8.2-LVA support between CPUs
+we have to be careful in allowing secondary CPUs to boot if 52-bit
+virtual addresses have already been enabled on the boot CPU.
 
- serio: gsc-ps2-keyboard port at 0xf0108000 irq 22 @ 2:0:11
- serio: gsc-ps2-mouse port at 0xf0108100 irq 22 @ 2:0:12
+This patch adds code to the secondary startup path. If the boot CPU has
+enabled 52-bit VAs then ID_AA64MMFR2_EL1 is checked to see if the
+secondary can also enable 52-bit support. If not, the secondary is
+prevented from booting and an error message is displayed indicating why.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+Technically this patch could be implemented using the cpufeature code
+when considering 52-bit userspace support. However, we employ low level
+checks here as the cpufeature code won't be able to run if we have
+mismatched 52-bit kernel va support.
+
+Signed-off-by: Steve Capper <steve.capper@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/serio/gscps2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/head.S | 26 ++++++++++++++++++++++++++
+ arch/arm64/kernel/smp.c  |  5 +++++
+ 2 files changed, 31 insertions(+)
 
-diff --git a/drivers/input/serio/gscps2.c b/drivers/input/serio/gscps2.c
-index ecba666afadb7..cca26e6f38b36 100644
---- a/drivers/input/serio/gscps2.c
-+++ b/drivers/input/serio/gscps2.c
-@@ -382,9 +382,9 @@ static int gscps2_probe(struct parisc_device *dev)
- 		goto fail;
- #endif
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index db6ff1944c412..3b10b93959607 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -686,6 +686,7 @@ secondary_startup:
+ 	/*
+ 	 * Common entry point for secondary CPUs.
+ 	 */
++	bl	__cpu_secondary_check52bitva
+ 	bl	__cpu_setup			// initialise processor
+ 	bl	__enable_mmu
+ 	ldr	x8, =__secondary_switched
+@@ -759,6 +760,31 @@ ENTRY(__enable_mmu)
+ 	ret
+ ENDPROC(__enable_mmu)
  
--	printk(KERN_INFO "serio: %s port at 0x%p irq %d @ %s\n",
-+	pr_info("serio: %s port at 0x%08lx irq %d @ %s\n",
- 		ps2port->port->name,
--		ps2port->addr,
-+		hpa,
- 		ps2port->padev->irq,
- 		ps2port->port->phys);
++ENTRY(__cpu_secondary_check52bitva)
++#ifdef CONFIG_ARM64_52BIT_VA
++	ldr_l	x0, vabits_user
++	cmp	x0, #52
++	b.ne	2f
++
++	mrs_s	x0, SYS_ID_AA64MMFR2_EL1
++	and	x0, x0, #(0xf << ID_AA64MMFR2_LVA_SHIFT)
++	cbnz	x0, 2f
++
++	adr_l	x0, va52mismatch
++	mov	w1, #1
++	strb	w1, [x0]
++	dmb	sy
++	dc	ivac, x0	// Invalidate potentially stale cache line
++
++	update_early_cpu_boot_status CPU_STUCK_IN_KERNEL, x0, x1
++1:	wfe
++	wfi
++	b	1b
++
++#endif
++2:	ret
++ENDPROC(__cpu_secondary_check52bitva)
++
+ __no_granule_support:
+ 	/* Indicate that this CPU can't boot and is stuck in the kernel */
+ 	update_early_cpu_boot_status CPU_STUCK_IN_KERNEL, x1, x2
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index cfd33f18f4378..f0c41524b052f 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -136,6 +136,7 @@ static int boot_secondary(unsigned int cpu, struct task_struct *idle)
+ }
  
+ static DECLARE_COMPLETION(cpu_running);
++bool va52mismatch __ro_after_init;
+ 
+ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+ {
+@@ -164,6 +165,10 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+ 
+ 		if (!cpu_online(cpu)) {
+ 			pr_crit("CPU%u: failed to come online\n", cpu);
++
++			if (IS_ENABLED(CONFIG_ARM64_52BIT_VA) && va52mismatch)
++				pr_crit("CPU%u: does not support 52-bit VAs\n", cpu);
++
+ 			ret = -EIO;
+ 		}
+ 	} else {
 -- 
 2.20.1
 
