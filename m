@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169E0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CE8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE9E2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C44E20833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482891;
-	bh=1GLPa8B7fl4g/gW0eK5IUcHL+XccJ4/+rn5ZHqPva9g=;
+	s=default; t=1575482893;
+	bh=HOp3Ta6NZpoFRwyh48a0gkxYv6Tz0xDYYwBI37p01V8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D85WzaWa2ST+roZZYSpa8TA5kuUwLDDqAm7spP8wmg72+02CvVP14JJco6E1W+rWh
-	 DEromljRyLnUa1SogBCkuCCCwtL7NKFIjHYgXhKRFV/D2oy3tznbUBuy/LOZgZ1E3u
-	 SjXA5ko7yLBdtkOKgfkv2fFpx1AArixhIVbZdA5c=
+	b=YklRqpls29SjDwxqilFPDA/W+pXufyXsGNB9bGyEKVQ7LX90q+kuk1oz1y0SRWOqE
+	 h+AjFSJRNV6U1nrwkfbnXGlRfMi0Tch7tSGtLl2/dHitq4bVJWurmC8bzotUFeCddg
+	 qpv92jKbvw3HDP2mwsPFNvDJDzjl2n1djHwGIQh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbfLDSIK (ORCPT
+        id S1730876AbfLDSIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:08:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59300 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:08:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730857AbfLDSIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:08:06 -0500
+        id S1730864AbfLDSIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:08:09 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A412E20674;
-        Wed,  4 Dec 2019 18:08:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 232EA20675;
+        Wed,  4 Dec 2019 18:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482886;
-        bh=1GLPa8B7fl4g/gW0eK5IUcHL+XccJ4/+rn5ZHqPva9g=;
+        s=default; t=1575482888;
+        bh=HOp3Ta6NZpoFRwyh48a0gkxYv6Tz0xDYYwBI37p01V8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wVms7Hul4whdq0pueHcbExpISd9R5DHPPak8DH9X0t6wiiguAxNsvOVOUXSZG4c5G
-         hW/tFc/8ZC6De5hYtIxZHDz+I07LwqEuxQJtQKJnv1325Y02sDKnk9ouv9T3NBWAg9
-         8WM1HA27XaNk10FlSjXCKUkq/HFtK8fU6Dppdjss=
+        b=yfWyEtxt5wQTRh5J8a10XuHE21OO2cNYcYyNsBQBI7nNBAEYXl/H48GMfZeacSnyr
+         /zCXnP2GCLu/QTvuTBq6UfSHXkwpiTEr6sGhrg0WO6zy/JoFIRviyH3+lsGeMfsLVt
+         T6sBXgbcktQ81HivmSuvCMwwCVJ/6A4nmixWkABE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 173/209] openvswitch: drop unneeded BUG_ON() in ovs_flow_cmd_build_info()
-Date:   Wed,  4 Dec 2019 18:56:25 +0100
-Message-Id: <20191204175335.398411886@linuxfoundation.org>
+Subject: [PATCH 4.14 174/209] openvswitch: remove another BUG_ON()
+Date:   Wed,  4 Dec 2019 18:56:26 +0100
+Message-Id: <20191204175335.467081480@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,38 +61,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit 8ffeb03fbba3b599690b361467bfd2373e8c450f ]
+[ Upstream commit 8a574f86652a4540a2433946ba826ccb87f398cc ]
 
-All the callers of ovs_flow_cmd_build_info() already deal with
-error return code correctly, so we can handle the error condition
-in a more gracefull way. Still dump a warning to preserve
-debuggability.
+If we can't build the flow del notification, we can simply delete
+the flow, no need to crash the kernel. Still keep a WARN_ON to
+preserve debuggability.
+
+Note: the BUG_ON() predates the Fixes tag, but this change
+can be applied only after the mentioned commit.
 
 v1 -> v2:
- - clarify the commit message
- - clean the skb and report the error (DaveM)
+ - do not leak an skb on error
 
-Fixes: ccb1352e76cf ("net: Add Open vSwitch kernel components.")
+Fixes: aed067783e50 ("openvswitch: Minimize ovs_flow_cmd_del critical section.")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/openvswitch/datapath.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/openvswitch/datapath.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 --- a/net/openvswitch/datapath.c
 +++ b/net/openvswitch/datapath.c
-@@ -906,7 +906,10 @@ static struct sk_buff *ovs_flow_cmd_buil
- 	retval = ovs_flow_cmd_fill_info(flow, dp_ifindex, skb,
- 					info->snd_portid, info->snd_seq, 0,
- 					cmd, ufid_flags);
--	BUG_ON(retval < 0);
-+	if (WARN_ON_ONCE(retval < 0)) {
-+		kfree_skb(skb);
-+		skb = ERR_PTR(retval);
-+	}
- 	return skb;
- }
+@@ -1372,7 +1372,10 @@ static int ovs_flow_cmd_del(struct sk_bu
+ 						     OVS_FLOW_CMD_DEL,
+ 						     ufid_flags);
+ 			rcu_read_unlock();
+-			BUG_ON(err < 0);
++			if (WARN_ON_ONCE(err < 0)) {
++				kfree_skb(reply);
++				goto out_free;
++			}
  
+ 			ovs_notify(&dp_flow_genl_family, reply, info);
+ 		} else {
+@@ -1380,6 +1383,7 @@ static int ovs_flow_cmd_del(struct sk_bu
+ 		}
+ 	}
+ 
++out_free:
+ 	ovs_flow_free(flow, true);
+ 	return 0;
+ unlock:
 
 
