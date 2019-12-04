@@ -2,110 +2,70 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328D1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC05C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D31820409
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C358206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:15:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="iQ3NLwjA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="id/Ecr3j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbfLDJLE (ORCPT
+        id S1727254AbfLDJO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:11:04 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39916 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfLDJLE (ORCPT
+        Wed, 4 Dec 2019 04:14:59 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:59088 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfLDJO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:11:04 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y11so7560751wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 01:11:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Sdir8t22Whp6d5zfU/aglTF8nH6hZfnd2WBrWb4Hzmk=;
-        b=iQ3NLwjAkMqPVUWrDPgMWFEJlCQWOIiJQX1XjeKSOseCyF0pFdXM3San8C5vT5vlCL
-         k/oVy8qj//oSFJ4vePk0dOmR0tQ5BCxIkmUlP4YdFbdIBw/YRC7EbLWd85QmuqB9B1k7
-         Ywg4c4Q1ZCXfV4I1wKUHfQ1r8WW7T9bwMYqUA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Sdir8t22Whp6d5zfU/aglTF8nH6hZfnd2WBrWb4Hzmk=;
-        b=tZtqV++0x4D/ys0OUt626Nx3btuFo17caFh603osK7ZDRkUJGd3xAylJ/bMlL639qs
-         exBaZNeLKUaPhTEJ/cG2N4z8O2hpxbT5YLpVRTOj6YyfGrmld6nc9EKgpUhRPsQg2VZI
-         hhsdFbdmHepN2Yjpzns5bpBUEsXymWR9ytSgJTVB619Yhrsx9XlGp743zRdpaqpPQf/F
-         +nz8XqFw2N7c9+isiLU6wUDYDzX38iWhPqFMEc9Vvq47cDTLL0ZmIENc3d80Rz2wicjB
-         luWUEiq9O4I7cRdNXabCeng5nl2htpNPxJ8tbHD8PuI4t4f9ETIydyn5tSPlNkpEKGQX
-         QR9A==
-X-Gm-Message-State: APjAAAU0RACcBBq9egE/qdkYbIOX8FzW+baCkPKwcOCeBRhV7VUcVBeC
-        NEy13AjfX7N6jCwApztFvcH6gYJvKnw=
-X-Google-Smtp-Source: APXvYqzkytORTQVPCACG5wYyyNFLEHO0L1v4wuq/QMOmPny/ytkdK4OTVqMTey4+mYHt68oxFWHylA==
-X-Received: by 2002:adf:ef10:: with SMTP id e16mr2630023wro.336.1575450662345;
-        Wed, 04 Dec 2019 01:11:02 -0800 (PST)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id t13sm6193517wmt.23.2019.12.04.01.11.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 01:11:01 -0800 (PST)
-Date:   Wed, 4 Dec 2019 10:10:59 +0100
-From:   Miklos Szeredi <miklos@szeredi.hu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [GIT PULL] fuse update for 5.5
-Message-ID: <20191204091059.GB16668@miu.piliscsaba.redhat.com>
+        Wed, 4 Dec 2019 04:14:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ze/GQOZbaeIXq6JrvkaIDBtmgtEHGOqhn5uCBmHdF9g=; b=id/Ecr3j6GF6mMKEOyen8Zi4c
+        ZQ2Hd5tPDJBwLZc/1pkGYkD+iBSsAQjoAcRHL0meYWETEg+5fAKNzggdRXasllVFYixIUDovMIXlI
+        9WR5O2fCD1BD7AN4iep+oGGnNwmmO37K2xbq9gVp9QaxjWPdyv6tm6h7Bve4bJxoI6Psi6lxnUoM8
+        9Wk4r6FmcLxTt/8E6HL9fkWfwKG1+FbPNizYmhb2q5vwFrWaBOVDN50hdzbGzkEk7aVUov0yGByfN
+        PE7hBxHExDrKIZlEIUF9Q9joRxqucpMp1xvSRUHCzGqdOmDcf35Cqm2XGnusm380JRp+0pjlqFqKX
+        bRcBUMAEw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1icQkH-00042f-Em; Wed, 04 Dec 2019 09:14:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BDFE33006E3;
+        Wed,  4 Dec 2019 10:13:33 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 49078200A908B; Wed,  4 Dec 2019 10:14:50 +0100 (CET)
+Date:   Wed, 4 Dec 2019 10:14:50 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] x86: Optimise x86 IP checksum code
+Message-ID: <20191204091450.GQ2844@hirez.programming.kicks-ass.net>
+References: <c92db041c78e4d81a70aaf4249393901@AcuMS.aculab.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <c92db041c78e4d81a70aaf4249393901@AcuMS.aculab.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, Dec 03, 2019 at 11:52:09AM +0000, David Laight wrote:
 
-Please pull from:
+> I did get about 12 bytes/clock using adox/adcx but that would need run-time
+> patching and some AMD cpu that support the instructions run them very slowly.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git tags/fuse-update-5.5
-
- - Fix a regression introduced in the last release.
-
- - Fix a number of issues with validating data coming from userspace.
-
- - Some cleanups in virtiofs.
-
-Thanks,
-Miklos
-
----
-Krzysztof Kozlowski (1):
-      fuse: fix Kconfig indentation
-
-Miklos Szeredi (4):
-      fuse: verify attributes
-      fuse: verify write return
-      fuse: verify nlink
-      fuse: fix leak of fuse_io_priv
-
-Vivek Goyal (3):
-      virtiofs: Use a common function to send forget
-      virtiofs: Do not send forget request "struct list_head" element
-      virtiofs: Use completions while waiting for queue to be drained
-
-YueHaibing (1):
-      virtiofs: Fix old-style declaration
-
----
- fs/fuse/Kconfig     |   4 +-
- fs/fuse/dir.c       |  25 +++++--
- fs/fuse/file.c      |   6 +-
- fs/fuse/fuse_i.h    |   2 +
- fs/fuse/readdir.c   |   2 +-
- fs/fuse/virtio_fs.c | 210 ++++++++++++++++++++++++++--------------------------
- 6 files changed, 134 insertions(+), 115 deletions(-)
+Isn't that was we have alternative_call() for?
