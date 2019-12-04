@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 696B9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DBAC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3FE205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7012073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483788;
-	bh=+ki55RV1IzPV8OlLCUZQK5QE1EvFkv2OU2Lgd/dUtRg=;
+	s=default; t=1575483792;
+	bh=kqpzJnTxRpyBYOpXv54CkIzJJid5vTn2KtSckSJ5ySM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F46fLBlgyM/qGSczxIBebK/ZmluO00VWM0lBHmuTEwWD5qCc5v8RBrDIGa/afHJrw
-	 rwxjlThDqUX7dHkGVl0RYXm90Sgpcf6h7JJvcHawWApjSnKI5ON1zGnVKunvJv60hx
-	 qzXJveK2qE6mHyYnUF8KqhIZg/hsSGwn9JRkkBYI=
+	b=zw09uTcVkCeQDlvWyq2PBdkElzOK2hyd3Ax+RzBFGKuIyqNNuerFLv+NEsMiDOrB5
+	 4C2a08YKwaisqe89uDyj1nU6BPuHQse+HnSdZwlAuykUXQiJpOYiPs1eOKtPucA4/l
+	 Y8II9qwbPZ3yitilU7MfYSqYoOsh+sknNOmseOZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731082AbfLDSXG (ORCPT
+        id S1730193AbfLDSE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:23:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49932 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:04:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730203AbfLDSEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:04:31 -0500
+        id S1730154AbfLDSEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:04:14 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A59B2081B;
-        Wed,  4 Dec 2019 18:04:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A7AF20675;
+        Wed,  4 Dec 2019 18:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482670;
-        bh=+ki55RV1IzPV8OlLCUZQK5QE1EvFkv2OU2Lgd/dUtRg=;
+        s=default; t=1575482653;
+        bh=kqpzJnTxRpyBYOpXv54CkIzJJid5vTn2KtSckSJ5ySM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gu/vqV6kKgB+sZOGrYiHyyuAUpnZLOSZ/fEg8/mcCy6z02fVeVY65tso7YIxjm55d
-         c2pzAdWVgOsF3W1UadFUZkvg6Jsa90X+8x71dOPWCDPuKqRS3KdnstOLtlSziXwohD
-         URpuZq9webY+S7KX85ZGJgmQREqIVzfCnLpnfNq8=
+        b=FupoDx1cisAZbV9EoC2phTzbcgYX21xO/PGr+8z51Gvmr0+CwsoK/3veyc0iQIlbc
+         HWWOdfPuJNUqoFogMYM7gTgal3ZgNGxgcqKCQydNez5mP2qjb4zuMRz8BmdqUAr3f7
+         4/XcDbHpN+fk8aN/OlFjyORbexRYL9JN5oUQ4MbQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stafford Horne <shorne@gmail.com>,
+        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 087/209] openrisc: Fix broken paths to arch/or32
-Date:   Wed,  4 Dec 2019 18:54:59 +0100
-Message-Id: <20191204175327.655874234@linuxfoundation.org>
+Subject: [PATCH 4.14 081/209] vxlan: Fix error path in __vxlan_dev_create()
+Date:   Wed,  4 Dec 2019 18:54:53 +0100
+Message-Id: <20191204175327.105634330@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,47 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit 57ce8ba0fd3a95bf29ed741df1c52bd591bf43ff ]
+[ Upstream commit 6db9246871394b3a136cd52001a0763676563840 ]
 
-OpenRISC was mainlined as "openrisc", not "or32".
-vmlinux.lds is generated from vmlinux.lds.S.
+When a failure occurs in rtnl_configure_link(), the current code
+calls unregister_netdevice() to roll back the earlier call to
+register_netdevice(), and jumps to errout, which calls
+vxlan_fdb_destroy().
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Stafford Horne <shorne@gmail.com>
+However unregister_netdevice() calls transitively ndo_uninit, which is
+vxlan_uninit(), and that already takes care of deleting the default FDB
+entry by calling vxlan_fdb_delete_default(). Since the entry added
+earlier in __vxlan_dev_create() is exactly the default entry, the
+cleanup code in the errout block always leads to double free and thus a
+panic.
+
+Besides, since vxlan_fdb_delete_default() always destroys the FDB entry
+with notification enabled, the deletion of the default entry is notified
+even before the addition was notified.
+
+Instead, move the unregister_netdevice() call after the manual destroy,
+which solves both problems.
+
+Fixes: 0241b836732f ("vxlan: fix default fdb entry netlink notify ordering during netdev create")
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/openrisc/kernel/entry.S | 2 +-
- arch/openrisc/kernel/head.S  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/vxlan.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
-index b16e95a4e875f..1107d34e45bf1 100644
---- a/arch/openrisc/kernel/entry.S
-+++ b/arch/openrisc/kernel/entry.S
-@@ -184,7 +184,7 @@ handler:							;\
-  *	 occured. in fact they never do. if you need them use
-  *	 values saved on stack (for SPR_EPC, SPR_ESR) or content
-  *       of r4 (for SPR_EEAR). for details look at EXCEPTION_HANDLE()
-- *       in 'arch/or32/kernel/head.S'
-+ *       in 'arch/openrisc/kernel/head.S'
-  */
+diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
+index 6d26bbd190dd6..153a81ece9fe4 100644
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -3217,6 +3217,7 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
+ 	struct vxlan_net *vn = net_generic(net, vxlan_net_id);
+ 	struct vxlan_dev *vxlan = netdev_priv(dev);
+ 	struct vxlan_fdb *f = NULL;
++	bool unregister = false;
+ 	int err;
  
- /* =====================================================[ exceptions] === */
-diff --git a/arch/openrisc/kernel/head.S b/arch/openrisc/kernel/head.S
-index 90979acdf165b..4d878d13b8606 100644
---- a/arch/openrisc/kernel/head.S
-+++ b/arch/openrisc/kernel/head.S
-@@ -1551,7 +1551,7 @@ _string_nl:
+ 	err = vxlan_dev_configure(net, dev, conf, false, extack);
+@@ -3242,12 +3243,11 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
+ 	err = register_netdevice(dev);
+ 	if (err)
+ 		goto errout;
++	unregister = true;
  
- /*
-  * .data section should be page aligned
-- *	(look into arch/or32/kernel/vmlinux.lds)
-+ *	(look into arch/openrisc/kernel/vmlinux.lds.S)
-  */
- 	.section .data,"aw"
- 	.align	8192
+ 	err = rtnl_configure_link(dev, NULL);
+-	if (err) {
+-		unregister_netdevice(dev);
++	if (err)
+ 		goto errout;
+-	}
+ 
+ 	/* notify default fdb entry */
+ 	if (f)
+@@ -3255,9 +3255,16 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
+ 
+ 	list_add(&vxlan->next, &vn->vxlan_list);
+ 	return 0;
++
+ errout:
++	/* unregister_netdevice() destroys the default FDB entry with deletion
++	 * notification. But the addition notification was not sent yet, so
++	 * destroy the entry by hand here.
++	 */
+ 	if (f)
+ 		vxlan_fdb_destroy(vxlan, f, false);
++	if (unregister)
++		unregister_netdevice(dev);
+ 	return err;
+ }
+ 
 -- 
 2.20.1
 
