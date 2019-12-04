@@ -2,115 +2,107 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F272C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC039C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F314120409
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA03D2073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 19:38:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="jjvcrGPC"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="OTaLNAYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbfLDTgV (ORCPT
+        id S1728101AbfLDTiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 14:36:21 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40935 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727982AbfLDTgU (ORCPT
+        Wed, 4 Dec 2019 14:38:52 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39128 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727911AbfLDTiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 14:36:20 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y5so489641lfy.7
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 11:36:19 -0800 (PST)
+        Wed, 4 Dec 2019 14:38:52 -0500
+Received: by mail-io1-f65.google.com with SMTP id c16so898036ioh.6
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 11:38:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=8YzffI6BTbDDQcKipmBH3epvQxf1I8mA0zvypaeoYk0=;
-        b=jjvcrGPCuHTHOGJJrH8U0Iyx3nsiiJlWtNPChRrPmX8N5u9p2MMFCXAOFPLEY8M4gs
-         RPtpg7yVp62/m5iFVQ01HaJPE6lPmyWLHI0C+LYBjNe1+MmgJseGa85LoFRhZXBGVwv1
-         IdyOohDBo/audQdOUMqjm7q3eJld7sprvONff0oMmdTq/d/cTSI761ZhBXPKrqrdmCXJ
-         eyGbAgMD7fpi/wUB2Dgu5U2MjpFfuN5SXsEkFHuxRD1mx1MOAYSxBjIjM7g82faeE/+A
-         iwwhT+PtByDqNf6hghXKTDPZxrEl30mrp8gkdTyKOyTqQ6RMveZrGCGRpBoWeKbp2TPQ
-         dAyA==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=dnl8sq3/Y6KZEMi16oi7HdkMoIiTgYXzOZkT56rB0us=;
+        b=OTaLNAYiBFoVe8AeZgU3tkYdNoZ3BTso4c3fdw4P/4T4P0n7+SpDqtKDI/Zs2tpQxB
+         na89AJmRZQIniUs8k7YAcMzt0QUtO3jy/asn2AX3pIhmgZZ/V0r0dHrA9cL3l9BWSUm8
+         8+FsvtA1M3WmSM9k/RFiNrZHqUDZX9nHgaUH/EEVfWl0HIuaD3E7g1YLROvdPBaoDcfP
+         2SThcxKOBDjXxnyE88JUKfNwUv9oart/q/YlC27z62EUi28fJtGPJkOjvDOt/5nbkz6k
+         JcOhw+vXSHKdjXjkWfVWb4XIN9FkwxPg2vieBbPs3j95WZlM2A6eyYfblv3Q9CHi77lo
+         yNtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=8YzffI6BTbDDQcKipmBH3epvQxf1I8mA0zvypaeoYk0=;
-        b=ZvS7SEBtCCZIZWOIrkRpzdxWyznsR6UjXKmExOh6ZPJltQtpc9rt1adqBvX0HFdPm5
-         ezrrwX54lgz2yBWPm01WhbCHeAcc73ONrA1lu0gQgPQL/CXf7exrKc1weBNRoxZLWRX0
-         ncRgnFO5yB88pk0rd/FEXQ2JJSKmn6Ym2QKwKHkpqduaUqHIn7V0K7Nlc2kayYk9swSS
-         bPLn+KgPDWejIDerEv7xl9wjHQJUf93IJek0klm+Px2wBsEJcP9WxWTZ/aGoAAbe+EOW
-         5QCs6fuDVnLUIjbipwUNlRIfV8rJr2J1eefqdPb626X/PCtHXaRSCuhyIrNdnBUq4Xr6
-         Fehw==
-X-Gm-Message-State: APjAAAV7xPjuJRX9Cp+29HRDMV2JJivO5dGDObrqoIDx2mqiss9UvuFy
-        J9/bF+3yS8Xo9A6EoIGqq0pQBw==
-X-Google-Smtp-Source: APXvYqzyT+LlrXJABBe8zZizq0/fO5fzzGnRLyqd7XLv6psgjGcvazOPITeCmnZQiQ/QgOw7b3YOLQ==
-X-Received: by 2002:ac2:5473:: with SMTP id e19mr3155384lfn.108.1575488178400;
-        Wed, 04 Dec 2019 11:36:18 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id 140sm1872100lfk.78.2019.12.04.11.36.13
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=dnl8sq3/Y6KZEMi16oi7HdkMoIiTgYXzOZkT56rB0us=;
+        b=eYIsMdAgl9/B8MycHENCIeYqYQN8KDvB46rLdkiD6d/uORKAKMpZPEyUvsWj0gAdb2
+         lxY70un3OhVWBYOhClpuTvDZlKyVYdoquuGWEsyYpWm1SdhqquDJm6Z9MOZkQFrGAi3a
+         TRZpCUN+zQQcquwM5CgvFDY//rHFR1cF6OT9m9EVNT9q5WZLrUlEc1g2JoMuJD7D6xt1
+         G9E/LoE31rz6/rQ5kSeMN2a4um5m+2GutqhanNn6+ityEZPEi//r7/X3IaTYQlCrjjVf
+         cLaddLPQ+5eF9b7Cfs7OdkhykHRXjwINV8au0k5gh0PoBZl1N1p0QFG/QaM3fKf5UVBQ
+         woNg==
+X-Gm-Message-State: APjAAAVUxWeKvs4aocxPsql53dIOxYQp8ZSe6nubIEOM8ddcvOJL2mfw
+        Rd4wVqNiqZgc31x3D9vMVAYXiQ==
+X-Google-Smtp-Source: APXvYqymOP1UPHAJ1vCK7SiRpUc7QAm62tq6NxqLA7O7BzVqLOB4a/lWy6LZPcmT2tiD42qxSAXAtw==
+X-Received: by 2002:a6b:8ec9:: with SMTP id q192mr3230104iod.237.1575488331468;
+        Wed, 04 Dec 2019 11:38:51 -0800 (PST)
+Received: from localhost (67-0-26-4.albq.qwest.net. [67.0.26.4])
+        by smtp.gmail.com with ESMTPSA id o83sm2061039ild.13.2019.12.04.11.38.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 11:36:17 -0800 (PST)
-Date:   Wed, 4 Dec 2019 11:35:44 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     Valentin Vidic <vvidic@valentin-vidic.from.hr>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Aviad Yehezkel <aviadye@mellanox.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net/tls: Fix return values for setsockopt
-Message-ID: <20191204113544.2d537bf7@cakuba.netronome.com>
-In-Reply-To: <CA+FuTSdcDW1oJU=BK-rifxm1n4kh0tkj0qQQfOGSoUOkkBKrFg@mail.gmail.com>
-References: <20191203224458.24338-1-vvidic@valentin-vidic.from.hr>
-        <20191203145535.5a416ef3@cakuba.netronome.com>
-        <CA+FuTSdcDW1oJU=BK-rifxm1n4kh0tkj0qQQfOGSoUOkkBKrFg@mail.gmail.com>
-Organization: Netronome Systems, Ltd.
+        Wed, 04 Dec 2019 11:38:50 -0800 (PST)
+Date:   Wed, 4 Dec 2019 11:38:49 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Alistair Francis <Alistair.Francis@wdc.com>
+cc:     "anup@brainfault.org" <anup@brainfault.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hch@lst.de" <hch@lst.de>
+Subject: Re: [GIT PULL] Second set of RISC-V updates for v5.5-rc1
+In-Reply-To: <9044bad02aa6553cdb2523294500b50fccf3fd2a.camel@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1912041128400.186402@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1912040050430.56420@viisi.sifive.com>  <CAAhSdy2id0FoLBxWwN7WHEk5Am770BizkK=sZO0-G54MtYa6DQ@mail.gmail.com> <9044bad02aa6553cdb2523294500b50fccf3fd2a.camel@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(there is a v2, in case you missed)
+Alistair, Anup,
 
-On Wed, 4 Dec 2019 14:22:55 -0500, Willem de Bruijn wrote:
-> On Tue, Dec 3, 2019 at 6:08 PM Jakub Kicinski wrote:
-> > On Tue,  3 Dec 2019 23:44:58 +0100, Valentin Vidic wrote:  
-> > > ENOTSUPP is not available in userspace:
-> > >
-> > >   setsockopt failed, 524, Unknown error 524
-> > >
-> > > Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>  
-> >
-> > I'm not 100% clear on whether we can change the return codes after they
-> > had been exposed to user space for numerous releases..  
+On Wed, 4 Dec 2019, Alistair Francis wrote:
+
+> On Wed, 2019-12-04 at 18:22 +0530, Anup Patel wrote:
+>
+> > I had commented on your patch but my comments are still
+> > not addressed.
+> > 
+> > Various debug options enabled by this patch have performance
+> > impact. Instead of enabling these debug options in primary
+> > defconfigs, I suggest to have separate debug defconfigs with
+> > these options enabled.
 > 
-> This has also come up in the context of SO_ZEROCOPY in the past. In my
-> opinion the answer is no. A quick grep | wc -l in net/ shows 99
-> matches for this error code. Only a fraction of those probably make it
-> to userspace, but definitely more than this single case.
+> +1
 > 
-> If anything, it may be time to define it in uapi?
+> OE uses the defconfig (as I'm sure other distros do) and slowing down
+> users seems like a bad idea.
 
-No opinion but FWIW I'm toying with some CI for netdev, I've added a
-check for use of ENOTSUPP, apparently checkpatch already sniffs out
-uses of ENOSYS, so seems appropriate to add this one.
+While I respect your points of view, our defconfigs are oriented towards 
+kernel developers.  This is particularly important when right now the only 
+RISC-V hardware on the market are test chips.  Our expectation is that 
+distros and benchmarkers will create their own Kconfigs for their needs.
 
-> > But if we can - please fix the tools/testing/selftests/net/tls.c test
-> > as well, because it expects ENOTSUPP.  
-> 
-> Even if changing the error code, EOPNOTSUPP is arguably a better
-> replacement. The request itself is valid. Also considering forward
-> compatibility.
+Going forward, we'll probably add a few more validation and debug options, 
+as Palmer suggested during the patch discussion.
 
-For the case TLS version case?
+
+- Paul
