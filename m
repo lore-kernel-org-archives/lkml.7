@@ -2,53 +2,59 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628DBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75001C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E4A206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BACE205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483392;
-	bh=v/ELUbqxZyXrZuAAY7IR8tKjXYRyU+EDsOX/Vedj/xw=;
+	s=default; t=1575483401;
+	bh=bX5shF6z+hdjvDopTiIOMnMFS00lNoa2FlAure1pDjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fp86tEZc4MCiPOZDfRo40jGNzHMraP6nkm2RIueMbPAAkPugJHJeX9Hln8i8AFEEj
-	 TA/hH7Imq/LDVsV9MsoM3PmdkWrxVXIop0S9oCvlzHhNi6wcRUL/j7STtEOoOdrJKN
-	 qD7tukIJECMhwfJL+NVx0bT+0Mw2LnrEGgQwRa+4=
+	b=pdvKhJ+OglQM1hmk/RCAIV09q27clntbv8PoWuWvGB3M3re1Npazq9QCDGhY67B0Y
+	 bcm1nR04tPwCmAaPJ2mfwLef+CQ2RCtM6CNhTxWsGVo9WxZ7ofIE1uuyV2zhLOAoR5
+	 LYVAchrQmPLw9LAoVDM7T7HrH+k3uCeQ0N/ota/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731823AbfLDSQa (ORCPT
+        id S1731885AbfLDSQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:16:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42130 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:16:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731706AbfLDSNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:13:08 -0500
+        id S1731389AbfLDSM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:12:57 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA43520674;
-        Wed,  4 Dec 2019 18:13:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5A8620675;
+        Wed,  4 Dec 2019 18:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483188;
-        bh=v/ELUbqxZyXrZuAAY7IR8tKjXYRyU+EDsOX/Vedj/xw=;
+        s=default; t=1575483176;
+        bh=bX5shF6z+hdjvDopTiIOMnMFS00lNoa2FlAure1pDjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g83zwmgTmkMAhA1tQ/VS7MXIFFpJUxQgWnH81Eeqxm3S0yoVZ0tjFqKDAu/6ZDLpl
-         f+M+CLY2ff9CnLyQkol9q04RmnZGebNsW3HmM/VTDZM0nr7H3fMHz/qvUuFOJtrtRU
-         k0fw0vhpcs4JHFlk5/SGBuKCIKBt+OvBBjBedozI=
+        b=jAPkAvcjDAKW12dl9HvGwmTLhpF/n9A0kJeqodUby4WIuxafa7hPAJKFjGk8HxFTz
+         SWp/n8QaHpqKtV5+C0GYiY5uihqPWcjmGzRZkVVFrJF2ELNoxahek3Rur+w2QRwu83
+         5frGUcA1VmcWbjZkEDWFdXMgFNdbofitKovxBoIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        stable@vger.kernel.org, Junxiao Bi <junxiao.bi@oracle.com>,
+        Yiwen Jiang <jiangyiwen@huawei.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Mark Fasheh <mfasheh@versity.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 043/125] pinctrl: sh-pfc: sh7734: Fix shifted values in IPSR10
-Date:   Wed,  4 Dec 2019 18:55:48 +0100
-Message-Id: <20191204175321.578634906@linuxfoundation.org>
+Subject: [PATCH 4.9 081/125] ocfs2: clear journal dirty flag after shutdown journal
+Date:   Wed,  4 Dec 2019 18:56:26 +0100
+Message-Id: <20191204175323.967916703@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,60 +67,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-[ Upstream commit 054f2400f706327f96770219c3065b5131f8f154 ]
+[ Upstream commit d85400af790dba2aa294f0a77e712f166681f977 ]
 
-Some values in the Peripheral Function Select Register 10 descriptor are
-shifted by one position, which may cause a peripheral function to be
-programmed incorrectly.
+Dirty flag of the journal should be cleared at the last stage of umount,
+if do it before jbd2_journal_destroy(), then some metadata in uncommitted
+transaction could be lost due to io error, but as dirty flag of journal
+was already cleared, we can't find that until run a full fsck.  This may
+cause system panic or other corruption.
 
-Fixing this makes all HSCIF0 pins use Function 4 (value 3), like was
-already the case for the HSCK0 pin in field IP10[5:3].
-
-Fixes: ac1ebc2190f575fc ("sh-pfc: Add sh7734 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Link: http://lkml.kernel.org/r/20181121020023.3034-3-junxiao.bi@oracle.com
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Reviewed-by: Yiwen Jiang <jiangyiwen@huawei.com>
+Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Mark Fasheh <mfasheh@versity.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7734.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ fs/ocfs2/journal.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-index 6502e676d3686..33232041ee86d 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-@@ -2213,22 +2213,22 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	    /* IP10_22 [1] */
- 		FN_CAN_CLK_A, FN_RX4_D,
- 	    /* IP10_21_19 [3] */
--		FN_AUDIO_CLKOUT, FN_TX1_E, FN_HRTS0_C, FN_FSE_B,
--		FN_LCD_M_DISP_B, 0, 0, 0,
-+		FN_AUDIO_CLKOUT, FN_TX1_E, 0, FN_HRTS0_C, FN_FSE_B,
-+		FN_LCD_M_DISP_B, 0, 0,
- 	    /* IP10_18_16 [3] */
--		FN_AUDIO_CLKC, FN_SCK1_E, FN_HCTS0_C, FN_FRB_B,
--		FN_LCD_VEPWC_B, 0, 0, 0,
-+		FN_AUDIO_CLKC, FN_SCK1_E, 0, FN_HCTS0_C, FN_FRB_B,
-+		FN_LCD_VEPWC_B, 0, 0,
- 	    /* IP10_15 [1] */
- 		FN_AUDIO_CLKB_A, FN_LCD_CLK_B,
- 	    /* IP10_14_12 [3] */
- 		FN_AUDIO_CLKA_A, FN_VI1_CLK_B, FN_SCK1_D, FN_IECLK_B,
- 		FN_LCD_FLM_B, 0, 0, 0,
- 	    /* IP10_11_9 [3] */
--		FN_SSI_SDATA3, FN_VI1_7_B, FN_HTX0_C, FN_FWE_B,
--		FN_LCD_CL2_B, 0, 0, 0,
-+		FN_SSI_SDATA3, FN_VI1_7_B, 0, FN_HTX0_C, FN_FWE_B,
-+		FN_LCD_CL2_B, 0, 0,
- 	    /* IP10_8_6 [3] */
--		FN_SSI_SDATA2, FN_VI1_6_B, FN_HRX0_C, FN_FRE_B,
--		FN_LCD_CL1_B, 0, 0, 0,
-+		FN_SSI_SDATA2, FN_VI1_6_B, 0, FN_HRX0_C, FN_FRE_B,
-+		FN_LCD_CL1_B, 0, 0,
- 	    /* IP10_5_3 [3] */
- 		FN_SSI_WS23, FN_VI1_5_B, FN_TX1_D, FN_HSCK0_C, FN_FALE_B,
- 		FN_LCD_DON_B, 0, 0, 0,
+diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+index a30f63623db70..13cf69aa4cae8 100644
+--- a/fs/ocfs2/journal.c
++++ b/fs/ocfs2/journal.c
+@@ -1018,7 +1018,8 @@ void ocfs2_journal_shutdown(struct ocfs2_super *osb)
+ 			mlog_errno(status);
+ 	}
+ 
+-	if (status == 0) {
++	/* Shutdown the kernel journal system */
++	if (!jbd2_journal_destroy(journal->j_journal) && !status) {
+ 		/*
+ 		 * Do not toggle if flush was unsuccessful otherwise
+ 		 * will leave dirty metadata in a "clean" journal
+@@ -1027,9 +1028,6 @@ void ocfs2_journal_shutdown(struct ocfs2_super *osb)
+ 		if (status < 0)
+ 			mlog_errno(status);
+ 	}
+-
+-	/* Shutdown the kernel journal system */
+-	jbd2_journal_destroy(journal->j_journal);
+ 	journal->j_journal = NULL;
+ 
+ 	OCFS2_I(inode)->ip_open_count--;
 -- 
 2.20.1
 
