@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E09C6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85A6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE6820675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7028120675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482699;
-	bh=ZfXiKwwqm2R4DXLa1XPSGYx1e1bjblTR5Y61Ob2UMiY=;
+	s=default; t=1575482704;
+	bh=5mkhHfymGmnKQldRumGWEaBlrFDgHKwBV49k8SQLJBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iWv8vUDtpC2/BHhMCRbjukVQLenMrL6h7mvpwSTu+aw2blzrWc/rHSrBeZdIbo0z7
-	 qY1zmyXFu2CEDfg+dvD2JL8nsSh4NRUPRy13/2n+RO/7zQSG/6TmrbTbKPHa1YE8xg
-	 yj+1PC4y2gYHTlDzshNerz5aN02elxSZQYufcSQY=
+	b=VNDplZAm+DakGoIAJ0M2yfcG5EUOb55hq+gbZegyu6R8+c7ezsFoKicj5PHg7v+Jr
+	 NKKTVs9w1g0UWpN6ojDZZqv9MdD2ntQTxBwa/I7RJgHtcTS8E8U2wm8pAoO8i08HwP
+	 gpdE9/w2Nwc1mzJEqb+amsWA//v8l8jedSqBk0z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbfLDSE6 (ORCPT
+        id S1730315AbfLDSFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:04:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:05:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730265AbfLDSEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:04:54 -0500
+        id S1730287AbfLDSE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:04:56 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A16420659;
-        Wed,  4 Dec 2019 18:04:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B56A620659;
+        Wed,  4 Dec 2019 18:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482693;
-        bh=ZfXiKwwqm2R4DXLa1XPSGYx1e1bjblTR5Y61Ob2UMiY=;
+        s=default; t=1575482696;
+        bh=5mkhHfymGmnKQldRumGWEaBlrFDgHKwBV49k8SQLJBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sO4CKunFrSteTJAnNUseM4Df6oCxVFdH3qkgwq76JIEJJm31h6eAGSpz66SvEoDkE
-         1SX7KYgcd5fQf0gCompOjHphvsQfvdVnIuzMVW18RJQPfw/2uJ3jCr+Lxi7YWXTUdQ
-         8mVoetZfuD6OEO+4VTrHtyQxKmHBcp3HnLlSA39M=
+        b=yxJPf64PD/VCPkjpbgjXW9cDVT9y6NwtZLTaBXfcFm5Me4c87uGmKgOYb7e0yXnCI
+         tRK8xNSFLwbcNP+k9OIVzN5KeOWGtpctGcOWOa9q29bR37sBDHljTzXcssAb/CUmdx
+         8QF2cbXqK0n+cqHIiZwJaHO3R4/LQ7iENWQF9TqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 054/209] iwlwifi: move iwl_nvm_check_version() into dvm
-Date:   Wed,  4 Dec 2019 18:54:26 +0100
-Message-Id: <20191204175325.089483740@linuxfoundation.org>
+Subject: [PATCH 4.14 045/209] crypto: user - support incremental algorithm dumps
+Date:   Wed,  4 Dec 2019 18:54:17 +0100
+Message-Id: <20191204175324.501019437@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -59,128 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 64866e5da1eabd0c52ff45029b245f5465920031 ]
+[ Upstream commit 0ac6b8fb23c724b015d9ca70a89126e8d1563166 ]
 
-This function is only half-used by mvm (i.e. only the nvm_version part
-matters, since the calibration version is irrelevant), so it's
-pointless to export it from iwlwifi.  If mvm uses this function, it
-has the additional complexity of setting the calib version to a bogus
-value on all cfg structs.
+CRYPTO_MSG_GETALG in NLM_F_DUMP mode sometimes doesn't return all
+registered crypto algorithms, because it doesn't support incremental
+dumps.  crypto_dump_report() only permits itself to be called once, yet
+the netlink subsystem allocates at most ~64 KiB for the skb being dumped
+to.  Thus only the first recvmsg() returns data, and it may only include
+a subset of the crypto algorithms even if the user buffer passed to
+recvmsg() is large enough to hold all of them.
 
-To avoid this, move the function to dvm and make a simple comparison
-of the nvm_version in mvm instead.
+Fix this by using one of the arguments in the netlink_callback structure
+to keep track of the current position in the algorithm list.  Then
+userspace can do multiple recvmsg() on the socket after sending the dump
+request.  This is the way netlink dumps work elsewhere in the kernel;
+it's unclear why this was different (probably just an oversight).
 
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Also fix an integer overflow when calculating the dump buffer size hint.
+
+Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/dvm/main.c | 17 +++++++++++++++++
- .../wireless/intel/iwlwifi/iwl-eeprom-parse.c | 19 -------------------
- .../wireless/intel/iwlwifi/iwl-eeprom-parse.h |  5 ++---
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c   |  4 +++-
- 4 files changed, 22 insertions(+), 23 deletions(-)
+ crypto/crypto_user.c | 37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/main.c b/drivers/net/wireless/intel/iwlwifi/dvm/main.c
-index 2acd94da9efeb..051a2fea95724 100644
---- a/drivers/net/wireless/intel/iwlwifi/dvm/main.c
-+++ b/drivers/net/wireless/intel/iwlwifi/dvm/main.c
-@@ -1229,6 +1229,23 @@ static int iwl_eeprom_init_hw_params(struct iwl_priv *priv)
- 	return 0;
+diff --git a/crypto/crypto_user.c b/crypto/crypto_user.c
+index 2b8fb8f1391e0..5e457a7dd1c92 100644
+--- a/crypto/crypto_user.c
++++ b/crypto/crypto_user.c
+@@ -296,30 +296,33 @@ drop_alg:
+ 
+ static int crypto_dump_report(struct sk_buff *skb, struct netlink_callback *cb)
+ {
+-	struct crypto_alg *alg;
++	const size_t start_pos = cb->args[0];
++	size_t pos = 0;
+ 	struct crypto_dump_info info;
+-	int err;
+-
+-	if (cb->args[0])
+-		goto out;
+-
+-	cb->args[0] = 1;
++	struct crypto_alg *alg;
++	int res;
+ 
+ 	info.in_skb = cb->skb;
+ 	info.out_skb = skb;
+ 	info.nlmsg_seq = cb->nlh->nlmsg_seq;
+ 	info.nlmsg_flags = NLM_F_MULTI;
+ 
++	down_read(&crypto_alg_sem);
+ 	list_for_each_entry(alg, &crypto_alg_list, cra_list) {
+-		err = crypto_report_alg(alg, &info);
+-		if (err)
+-			goto out_err;
++		if (pos >= start_pos) {
++			res = crypto_report_alg(alg, &info);
++			if (res == -EMSGSIZE)
++				break;
++			if (res)
++				goto out;
++		}
++		pos++;
+ 	}
+-
++	cb->args[0] = pos;
++	res = skb->len;
+ out:
+-	return skb->len;
+-out_err:
+-	return err;
++	up_read(&crypto_alg_sem);
++	return res;
  }
  
-+static int iwl_nvm_check_version(struct iwl_nvm_data *data,
-+				 struct iwl_trans *trans)
-+{
-+	if (data->nvm_version >= trans->cfg->nvm_ver ||
-+	    data->calib_version >= trans->cfg->nvm_calib_ver) {
-+		IWL_DEBUG_INFO(trans, "device EEPROM VER=0x%x, CALIB=0x%x\n",
-+			       data->nvm_version, data->calib_version);
-+		return 0;
-+	}
-+
-+	IWL_ERR(trans,
-+		"Unsupported (too old) EEPROM VER=0x%x < 0x%x CALIB=0x%x < 0x%x\n",
-+		data->nvm_version, trans->cfg->nvm_ver,
-+		data->calib_version,  trans->cfg->nvm_calib_ver);
-+	return -EINVAL;
-+}
-+
- static struct iwl_op_mode *iwl_op_mode_dvm_start(struct iwl_trans *trans,
- 						 const struct iwl_cfg *cfg,
- 						 const struct iwl_fw *fw,
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c
-index 3199d345b4274..92727f7e42db7 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c
-@@ -928,22 +928,3 @@ iwl_parse_eeprom_data(struct device *dev, const struct iwl_cfg *cfg,
- 	return NULL;
- }
- IWL_EXPORT_SYMBOL(iwl_parse_eeprom_data);
--
--/* helper functions */
--int iwl_nvm_check_version(struct iwl_nvm_data *data,
--			     struct iwl_trans *trans)
--{
--	if (data->nvm_version >= trans->cfg->nvm_ver ||
--	    data->calib_version >= trans->cfg->nvm_calib_ver) {
--		IWL_DEBUG_INFO(trans, "device EEPROM VER=0x%x, CALIB=0x%x\n",
--			       data->nvm_version, data->calib_version);
--		return 0;
--	}
--
--	IWL_ERR(trans,
--		"Unsupported (too old) EEPROM VER=0x%x < 0x%x CALIB=0x%x < 0x%x\n",
--		data->nvm_version, trans->cfg->nvm_ver,
--		data->calib_version,  trans->cfg->nvm_calib_ver);
--	return -EINVAL;
--}
--IWL_EXPORT_SYMBOL(iwl_nvm_check_version);
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h
-index b33888991b946..5545210151cd9 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h
-@@ -7,6 +7,7 @@
-  *
-  * Copyright(c) 2008 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2015 Intel Mobile Communications GmbH
-+ * Copyright (C) 2018 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -33,6 +34,7 @@
-  *
-  * Copyright(c) 2005 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2015 Intel Mobile Communications GmbH
-+ * Copyright (C) 2018 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -121,9 +123,6 @@ struct iwl_nvm_data *
- iwl_parse_eeprom_data(struct device *dev, const struct iwl_cfg *cfg,
- 		      const u8 *eeprom, size_t eeprom_size);
+ static int crypto_dump_report_done(struct netlink_callback *cb)
+@@ -503,7 +506,7 @@ static int crypto_user_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	if ((type == (CRYPTO_MSG_GETALG - CRYPTO_MSG_BASE) &&
+ 	    (nlh->nlmsg_flags & NLM_F_DUMP))) {
+ 		struct crypto_alg *alg;
+-		u16 dump_alloc = 0;
++		unsigned long dump_alloc = 0;
  
--int iwl_nvm_check_version(struct iwl_nvm_data *data,
--			  struct iwl_trans *trans);
--
- int iwl_init_sband_channels(struct iwl_nvm_data *data,
- 			    struct ieee80211_supported_band *sband,
- 			    int n_channels, enum nl80211_band band);
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-index 534c0ea7b232e..78228f870f8f5 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -501,7 +501,9 @@ int iwl_run_init_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
- 	if (mvm->nvm_file_name)
- 		iwl_mvm_load_nvm_to_nic(mvm);
+ 		if (link->dump == NULL)
+ 			return -EINVAL;
+@@ -511,16 +514,16 @@ static int crypto_user_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 		down_read(&crypto_alg_sem);
+ 		list_for_each_entry(alg, &crypto_alg_list, cra_list)
+ 			dump_alloc += CRYPTO_REPORT_MAXSIZE;
++		up_read(&crypto_alg_sem);
  
--	WARN_ON(iwl_nvm_check_version(mvm->nvm_data, mvm->trans));
-+	WARN_ONCE(mvm->nvm_data->nvm_version < mvm->trans->cfg->nvm_ver,
-+		  "Too old NVM version (0x%0x, required = 0x%0x)",
-+		  mvm->nvm_data->nvm_version, mvm->trans->cfg->nvm_ver);
+ 		{
+ 			struct netlink_dump_control c = {
+ 				.dump = link->dump,
+ 				.done = link->done,
+-				.min_dump_alloc = dump_alloc,
++				.min_dump_alloc = min(dump_alloc, 65535UL),
+ 			};
+ 			err = netlink_dump_start(crypto_nlsk, skb, nlh, &c);
+ 		}
+-		up_read(&crypto_alg_sem);
  
- 	/*
- 	 * abort after reading the nvm in case RF Kill is on, we will complete
+ 		return err;
+ 	}
 -- 
 2.20.1
 
