@@ -2,168 +2,203 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BE6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258A7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C3A20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7952068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 04:22:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Yer5ofDY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQqSCHpz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfLDEUu (ORCPT
+        id S1726949AbfLDEWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 23:20:50 -0500
-Received: from mail-eopbgr150074.outbound.protection.outlook.com ([40.107.15.74]:53094
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726804AbfLDEUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 23:20:48 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZRflIoqp0YSpJ7bWOkEMS1zcSvGA6ZXt1cCmVuBDjjizWH37fPCDfa5TrTG/t79XUZheyfQk2/5IKvaq5R1Lon/2O38ZiyLoRlc0/1fF6iYWhdxeWP0P7fkLDwEj//x4PuNO10fpQd82xEmaTRiywoZByyDCgKfUq8MPGjyM6zzjEhme4373vRkqi/3DnxuHNTIhcsuZj2r6RzZwS19bjP9L+XxYtgmBgIIAu0mkrQ/wtjUttJEp3lFMVV9UMAqpxyTkHngcUW0W8CqTwOi39z/FcWZMaWrZKkuPU3HXWHV2gKuQ9ny7RcFoHbd09bShnRjN6jDerFDcttuYohHSYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4T+hAvNkey+ix0CGSWBNEqRk2Q9d3lqzZ+Vr+Qu9wo4=;
- b=dB2po0ehtroeuguCEE0mC6Rh2wHu2gzrhsEAgp129ivVQxkBp5rAykk/b7mp5i4G068UKZ7hP4UabeUnofx1VO1Rwc0Prj25hcaQNlUhEgWbbgcjs2aPb7g/CDluLoZ/lvcJopoAXhkOBG+MGiZncpfzzn+6SJtArCwZj3L0Zr1ssA9g6IWzilWcO5zdmMTRa9DpYWO9b4kh0JHMoL2fKEamzt02CoFWd06iuKD+FGuMD7LdiY9a/8u0C5LT5wIRO8c5grN+a9RGKowLJV2lWUXeTOJ6ms3KbHQJZuZ260zeVqSMsusntfmSv3yuQx+k4pBaQ8Db6PI42+6QJlQLrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4T+hAvNkey+ix0CGSWBNEqRk2Q9d3lqzZ+Vr+Qu9wo4=;
- b=Yer5ofDYTc1/sdCY4pAzsBYm8ApMMMRZMLGEJUgezQ02DQNM9hEupbbOHhzZK3stmbrTWtwY7CTDWGBzg8JO3mbsaRzpmnvGSFXR2r+XKEa35QI9nnyIJnyG67I6K+w4GN7bqGp+Azf96c4oSyfhbudEZ0wDkD6tfUIVajAcndY=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6210.eurprd04.prod.outlook.com (20.179.33.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.18; Wed, 4 Dec 2019 04:20:46 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
- 04:20:46 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "rjui@broadcom.com" <rjui@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>
-CC:     "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alice Guo <alice.guo@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v2 2/2] gpio: bcm-kona: use platform_irq_count
-Thread-Topic: [PATCH v2 2/2] gpio: bcm-kona: use platform_irq_count
-Thread-Index: AQHVqlozVqivwz8NTU6lWRKFCpUzKA==
-Date:   Wed, 4 Dec 2019 04:20:45 +0000
-Message-ID: <1575433106-16171-2-git-send-email-peng.fan@nxp.com>
-References: <1575433106-16171-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1575433106-16171-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2P15301CA0024.APCP153.PROD.OUTLOOK.COM
- (2603:1096:202:1::34) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d784b034-23d0-43ee-836a-08d778715588
-x-ms-traffictypediagnostic: AM0PR04MB6210:|AM0PR04MB6210:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB6210FA861FE1EB7A2ADBF265885D0@AM0PR04MB6210.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:196;
-x-forefront-prvs: 0241D5F98C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(346002)(366004)(376002)(189003)(199004)(99286004)(2906002)(5660300002)(25786009)(54906003)(110136005)(316002)(3846002)(66946007)(66476007)(6116002)(4326008)(6486002)(64756008)(66446008)(66556008)(6512007)(2501003)(6436002)(14444005)(256004)(50226002)(305945005)(71200400001)(71190400001)(81156014)(7416002)(8676002)(8936002)(446003)(81166006)(7736002)(102836004)(36756003)(14454004)(52116002)(478600001)(386003)(6506007)(86362001)(11346002)(76176011)(2616005)(44832011)(186003)(26005)(2201001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6210;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jhYshgDHaG4tU6QHB4TvRC2gAe1t31oNWqtIll/yQEd9CYq5vy0tilCAotMnxfbsChfntM6hmNi7Np5UvvQqZjjpwHTEBJo0BjvMs1ixWr3cZ2Xiv7D0ALpOlb4fv1B15wgoDW9YxV2ilU+SxyXW7Qgx7Ey2GAM7iRtZ4LlZGuqy30m9onWT+XiBkY4kvH/44CdADl4/AAWqJqMeRaNhotazQg/mz/c3R5gLVEkX0GM91iCEOeO18S9G850Dy/0wsccss+yiyStiVrSBwW7scvjgwHOmAIBSGuDPDnQwgkjIrsH+XoeSo3qZ68QNib54NHP6iBD1zx01HNqx9wJLnPUAHj3BdQ04+pEaOEyFBX4TSQHKSfa6TjmWcEB/RihcobqDzCugdF39G6d6H4U5KgAT/ZYxBqeXUmxX2vPcMfA3f3QqNv7C0Uo6naG2Bzdw
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 3 Dec 2019 23:22:23 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:46569 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbfLDEWX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 23:22:23 -0500
+Received: by mail-pj1-f67.google.com with SMTP id z21so2402078pjq.13;
+        Tue, 03 Dec 2019 20:22:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/pkZzpK23dmwIi5+edhnCbw3h8UFfRYOpvCOiH4IOdI=;
+        b=kQqSCHpzyBi9y0eweJ323UfFfnnjl7xC2pgzwEbjwDPIMsYGcjRW9s6++GHocmeyh5
+         JKmtYUMGQgyINZH8+Y7k43RrqDgz+gXKEX0G75i8F/S7opMshK1UEqa6O82wLA4UDY7H
+         WqePkPOuWstFQMh00MIz4fOLfZRgyaZKugOEEdXlx7etrVtjI/JCh3hje9/O/gK6prdH
+         0HrNMrim4pIhS1HcKPw5RkfgtjPfRvlg0+BI9aJ+w1IusEDmVEQgdDIYW+Y3+wAa+DKO
+         qt22xJbvyZkAe4lM+JcmJH5nA6C3SBjpyHPVd3n85S4niU/CaXn2yPV31lT7SpjrFJzs
+         8KCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=/pkZzpK23dmwIi5+edhnCbw3h8UFfRYOpvCOiH4IOdI=;
+        b=FP+VNmKdqtbIUfcZJ1ZGxxVwd1dGQwpJasMMhAu/T1c1KCV1lRGhG4PSumOiWUyVUe
+         4bQDbqhJwwTOUYueahxp/VhP9+ubx/pLMQrgnemQ/f+3VVOIfCVtSvS91FMjHJDtpD0t
+         RiFExOC19xA5B5/g9ouJ8EAfsOlo+/uHOck2Oy0zVJYuU7PqyQ8OC2nw+K8k3lU6Z/Oi
+         ou96DnaZNQUF/uZiV+bR/H+FHGqV6tb40EJ+EyVgC3bjHGpFztszc661QhQPjDDRRwbk
+         AhasnYDnAcvKVzmcFVuFIXtVkyABf9XqdjL2LtgGjWsKahHj2AhD3LswYCshTcdNdsnN
+         /Tzw==
+X-Gm-Message-State: APjAAAWbeZp/Njzh54GApm8isUWbzvyainUMgf74aGVrHzr6QljGbggx
+        AwqxWMq4U/AiFPFpLa4q5y8=
+X-Google-Smtp-Source: APXvYqyfHwid5XXLbjTCd0bG4ZOVKPciFFswFQQxlS/PRPdYcgijCKFvKG+D7VKpK2fR6Jc3tfkL3A==
+X-Received: by 2002:a17:90a:fb87:: with SMTP id cp7mr1208391pjb.56.1575433342375;
+        Tue, 03 Dec 2019 20:22:22 -0800 (PST)
+Received: from ArchLinux ([103.231.91.34])
+        by smtp.gmail.com with ESMTPSA id l11sm5333608pff.120.2019.12.03.20.22.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 20:22:21 -0800 (PST)
+Date:   Wed, 4 Dec 2019 09:52:07 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] Enlist running kernel modules information
+Message-ID: <20191204041543.GA1086470@ArchLinux>
+Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191203094845.610692-1-unixbhaskar@gmail.com>
+ <CAK7LNASyrYv+pufwe4CfiNvd7NtriLw=FRdLOtu7CrbmZDSVHg@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d784b034-23d0-43ee-836a-08d778715588
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 04:20:45.9960
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wavSzesxCOZa6u9zhLsM+rg8JTqOg0lR4RJw83rBMNy3GDYqIqQP1A0xQnCbrds7U03PrxkQNyDjx/xXOY5VDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6210
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="St7VIuEGZ6dlpu13"
+Content-Disposition: inline
+In-Reply-To: <CAK7LNASyrYv+pufwe4CfiNvd7NtriLw=FRdLOtu7CrbmZDSVHg@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
 
-platform_irq_count() is the more generic way (independent of
-device trees) to determine the count of available interrupts. So
-use this instead.
+--St7VIuEGZ6dlpu13
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As platform_irq_count() might return an error code (which
-of_irq_count doesn't) some additional handling is necessary.
+On 12:10 Wed 04 Dec 2019, Masahiro Yamada wrote:
+>On Tue, Dec 3, 2019 at 6:49 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> w=
+rote:
+>>
+>> This is new file to show running kernel modules list.One line bash
+>> script.
+>>
+>> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+>> ---
+>>  scripts/kernel_modules_info.sh | 23 +++++++++++++++++++++++
+>>  1 file changed, 23 insertions(+)
+>>  create mode 100755 scripts/kernel_modules_info.sh
+>>
+>> diff --git a/scripts/kernel_modules_info.sh b/scripts/kernel_modules_inf=
+o.sh
+>> new file mode 100755
+>> index 000000000000..f005c47a3aa6
+>> --- /dev/null
+>> +++ b/scripts/kernel_modules_info.sh
+>> @@ -0,0 +1,23 @@
+>> +#!/bin/bash -
+>> +#SPDX-License-Identifier: GPL-2.0
+>> +#=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+>> +#
+>> +#          FILE: kernel_modules_info.sh
+>> +#
+>> +#         USAGE: ./kernel_modules_info.sh
+>> +#
+>> +#   DESCRIPTION:  Running kernel modules information.
+>> +#
+>> +#       OPTIONS: ---
+>> +#  REQUIREMENTS: awk
+>> +#          BUGS: ---
+>> +#         NOTES: ---
+>> +#        AUTHOR: Bhaskar Chowdhury (https://about.me/unixbhaskar), unix=
+bhaskar@gmail.com
+>> +#  ORGANIZATION: Independent
+>> +#       CREATED: 12/03/2019 13:52
+>> +#      REVISION:  ---
+>> +#=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+>> +
+>> +set -o nounset                              # Treat unset variables as =
+an error
+>> +
+>> +awk '{print $1}' "/proc/modules" | xargs modinfo | awk '/^(filename|des=
+c|depends)/'
+>
+>
+>
+>I want to see a good reason (e.g. useful for other developers) for upstrea=
+ming.
+>This script looks like your custom script, which you can maintain locally.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
+I think the usefulness comes from developers wants to see what are the
+modules are using by the running kernel in formatted way.=20
 
-V2:
- Update commit log, and add err handling
- Not tested, just code inspection
+This is very simple way to enlist all the modules with descriptions of
+it.So , they can easily parse it with other scripts.
 
- drivers/gpio/gpio-bcm-kona.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+I believe you have already copy and paste the single line on your
+terminal to see the output it produces, if not, I have already sent a
+mail which includes the out of it.
 
-diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-index 4122683eb1f9..52ff56166263 100644
---- a/drivers/gpio/gpio-bcm-kona.c
-+++ b/drivers/gpio/gpio-bcm-kona.c
-@@ -19,7 +19,6 @@
- #include <linux/io.h>
- #include <linux/gpio/driver.h>
- #include <linux/of_device.h>
--#include <linux/of_irq.h>
- #include <linux/init.h>
- #include <linux/irqdomain.h>
- #include <linux/irqchip/chained_irq.h>
-@@ -586,11 +585,18 @@ static int bcm_kona_gpio_probe(struct platform_device=
- *pdev)
-=20
- 	kona_gpio->gpio_chip =3D template_chip;
- 	chip =3D &kona_gpio->gpio_chip;
--	kona_gpio->num_bank =3D of_irq_count(dev->of_node);
--	if (kona_gpio->num_bank =3D=3D 0) {
-+	ret =3D platform_irq_count(pdev);
-+	if (!ret) {
- 		dev_err(dev, "Couldn't determine # GPIO banks\n");
- 		return -ENOENT;
-+	} else if (ret < 0) {
-+		if (ret !=3D -EPROBE_DEFER)
-+			dev_err(dev, "Couldn't determine GPIO banks: %d\n",
-+				ret);
-+		return ret;
- 	}
-+	kona_gpio->num_bank =3D ret;
-+
- 	if (kona_gpio->num_bank > GPIO_MAX_BANK_NUM) {
- 		dev_err(dev, "Too many GPIO banks configured (max=3D%d)\n",
- 			GPIO_MAX_BANK_NUM);
---=20
-2.16.4
+If and only if, no other tool or mechanism(which might have skips my
+eyes and knowledge) to find and display information this way.
 
+Kindly, share me the other way , you can achieve that. This is a generic
+script,and expecting stuff in common place, so everybody can use it.No,
+special requirement is needed.
+
+Here is little output,if you missed my other mail with it...
+
+filename:/lib/modules/5.4.1-arch1-1ArchLinux-5.4.1/kernel/drivers/usb/host/=
+xhci-pci.ko.xz
+description:    xHCI PCI Host Controller Driver
+depends:        xhci-hcd
+
+These output can be parse by other scripts too(cliche...sorry) ..
+
+Thanks,
+Bhaskar
+
+>
+>
+>--=20
+>Best Regards
+>Masahiro Yamada
+
+--St7VIuEGZ6dlpu13
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3nNGgACgkQsjqdtxFL
+KRUypggAgIbmgqA3OMg2FO8KR1Gn+rCPNkMTaekoI8YBpZyZEEriWb8zKTE6cYKQ
+T2SG2dtpKbCu8ZLchEcvhb3ZZtzhFkZvfHEFvn/adauqY6l/O1RqlJZq3Q+SggVz
+w42ceTdLu0O8NOdR2EKG0LhuL43g74By7RhmMMV+iR3H52OtCKyw5rV+z9n/K5dL
+opmGSpF9iH4NleHChPTy3ePUjJxFNXycOhM8PrtkenQ72Cdr34NkAP38eR7XDQVY
+7oZ5BEx+3O6B1KvypOI1e1+hmzypt7DfKwHSN+xifZu6YlvPJG4lV+2bFwhcDKfi
+xWbsPT0Rz4frny9krhnKBI2CZ0MQYg==
+=3QSx
+-----END PGP SIGNATURE-----
+
+--St7VIuEGZ6dlpu13--
