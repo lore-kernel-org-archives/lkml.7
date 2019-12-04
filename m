@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E394C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6AFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D428020675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDBF2081B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482744;
-	bh=zCX38j0ApMKwif385tSeV5oiDGYMeI09N9Vdg67Tctw=;
+	s=default; t=1575482747;
+	bh=c2DkTy4DJDy46PvyizCrjeXPqUguuY8YxnhHujB8QQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OVlsJxaJeQrfiJw2zRVxCVOiYm0T5P6perTqoSjQeAu1o1nLd73xoDRnjoNkaI1va
-	 A63IT/zExPiMiHPdZy/s2hkTbzNVCjSJJReCXZp44AVkBYGTCBKEcTDKlBy3jALuuO
-	 b7Y2dKsQMqMZ4mSZHM4317jsqYeDjmWHXujcO0GI=
+	b=f7vTV2Vsbm32tDe1B+IgkIv9Ry+0MO2qn9qkJgTnXmJHJHfxjWGz/OsyLUfPU7/Vy
+	 8NBLHmjATZR79wQwa2HIdYTtliB9OzNBlsEkmO/15VYKqajgE6WW+fg4BGT7Xg2BO3
+	 41sXRIerDrun6Q2XYVubDAspl8yN5Y183Sjr4NYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729897AbfLDSFm (ORCPT
+        id S1730098AbfLDSFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:05:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52476 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:05:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730409AbfLDSFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:05:36 -0500
+        id S1730420AbfLDSFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:05:38 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 340B120659;
-        Wed,  4 Dec 2019 18:05:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB90B20659;
+        Wed,  4 Dec 2019 18:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482735;
-        bh=zCX38j0ApMKwif385tSeV5oiDGYMeI09N9Vdg67Tctw=;
+        s=default; t=1575482738;
+        bh=c2DkTy4DJDy46PvyizCrjeXPqUguuY8YxnhHujB8QQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zkEbyTgDMGQY8idu+NSBVZhWAtHpJ4BbX3n2H3cIr/IJo3bDYFdFWvLPyf338F+c6
-         cStL7iButhWRtgX8vCcI6wahniuLW/VeL9NQPQ4eaRQyHbodcTqiKeyzoXL2AIZ7O5
-         vbNncn69ZavbUK1MV4gQ5Y1Ek2RmuuGbn4gPytR8=
+        b=bZxEQQzaEioyDiMfCZNHto8xArieFnq9nK0rxVHnfp1JsuJdu/6nVrnbb++mjyJjn
+         TTZDuPKTqyUXC8Vti1yzVrOSvE+OwTBBvZVPH1IyvDFEFUP20N2OYw8CpbUpTaxkRZ
+         el0wNHQlQwBEaOcjocxWksNHHqijdNe4Vvq/9YwQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 114/209] net: stmicro: fix a missing check of clk_prepare
-Date:   Wed,  4 Dec 2019 18:55:26 +0100
-Message-Id: <20191204175330.939505750@linuxfoundation.org>
+Subject: [PATCH 4.14 115/209] net: dsa: bcm_sf2: Propagate error value from mdio_write
+Date:   Wed,  4 Dec 2019 18:55:27 +0100
+Message-Id: <20191204175331.040110263@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -62,33 +62,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit f86a3b83833e7cfe558ca4d70b64ebc48903efec ]
+[ Upstream commit e49505f7255be8ced695919c08a29bf2c3d79616 ]
 
-clk_prepare() could fail, so let's check its status, and if it fails,
-return its error code upstream.
+Both bcm_sf2_sw_indir_rw and mdiobus_write_nested could fail, so let's
+return their error codes upstream.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/dsa/bcm_sf2.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-index d07520fb969e6..62ccbd47c1db2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-@@ -59,7 +59,9 @@ static int sun7i_gmac_init(struct platform_device *pdev, void *priv)
- 		gmac->clk_enabled = 1;
- 	} else {
- 		clk_set_rate(gmac->tx_clk, SUN7I_GMAC_MII_RATE);
--		clk_prepare(gmac->tx_clk);
-+		ret = clk_prepare(gmac->tx_clk);
-+		if (ret)
-+			return ret;
- 	}
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index af666951a9592..94ad2fdd6ef0d 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -432,11 +432,10 @@ static int bcm_sf2_sw_mdio_write(struct mii_bus *bus, int addr, int regnum,
+ 	 * send them to our master MDIO bus controller
+ 	 */
+ 	if (addr == BRCM_PSEUDO_PHY_ADDR && priv->indir_phy_mask & BIT(addr))
+-		bcm_sf2_sw_indir_rw(priv, 0, addr, regnum, val);
++		return bcm_sf2_sw_indir_rw(priv, 0, addr, regnum, val);
+ 	else
+-		mdiobus_write_nested(priv->master_mii_bus, addr, regnum, val);
+-
+-	return 0;
++		return mdiobus_write_nested(priv->master_mii_bus, addr,
++				regnum, val);
+ }
  
- 	return 0;
+ static irqreturn_t bcm_sf2_switch_0_isr(int irq, void *dev_id)
 -- 
 2.20.1
 
