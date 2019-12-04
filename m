@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22B2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B4FC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC6B720675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8163B20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575484096;
-	bh=2NavNmSSRIUFC61aNh873EINxN+3wfIG+QCBYvnDcQ0=;
+	s=default; t=1575484100;
+	bh=0SJIu/LLaSM4AgdLArh7J6zCrTkadleCHhZA7yhGIFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xBjR/NEQcQFasn7jEZvf8navYIRXLE3H0s2krkLskDRxPrW3WVa2jSMMteW1qFh1V
-	 Wfl8egA0ZtSjdHWpAAJMQvXE49GVS8TWplJQ4zD5pRFX4Q4AJhu7NlCwZxDtWmvg/G
-	 6bh0KaR56/dSYhf9YuoATenL8vGnuUPanb9IDOgc=
+	b=UGJXCZWVzRABdqC7tBIptZ7FnEm0IneGKY1FPueB/NX7y50Nwi474skhOcWXFpCDf
+	 0p2LLsjeLGkzMoCNQGNeeVZaRksjqZWh9VjNG+huDJmTKJEFfqRMe7hinchcuQWTrs
+	 jElOmY8eEiyykbHLd8jkRjOomSWR+c850kdOC044=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbfLDR5m (ORCPT
+        id S1729477AbfLDS2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:57:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58700 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:28:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728311AbfLDR5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:57:39 -0500
+        id S1728379AbfLDR5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:57:48 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A8782084F;
-        Wed,  4 Dec 2019 17:57:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC68D2084B;
+        Wed,  4 Dec 2019 17:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482258;
-        bh=2NavNmSSRIUFC61aNh873EINxN+3wfIG+QCBYvnDcQ0=;
+        s=default; t=1575482268;
+        bh=0SJIu/LLaSM4AgdLArh7J6zCrTkadleCHhZA7yhGIFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fva8FOMlG6vW8ZE7UodUEzonD5B/Hv7hj6DM6jRlwYu+8rrZxFpu/I9yJi4h1t6mn
-         /FrxNoUEGkt2BVgqKak4ndFPig5nRmG8C7fuI98MjHy0mBlpWNUR+vfU2sD+j8EssC
-         nKzZYVwQdhcQYL41lPHYVftzgbnfl4M1wxEOiwJY=
+        b=Hmx3xIw+Jn1PelN7EBQlQUKs19p31d3T7k+ODR6vVUZjEJU5JfJw9XhEJdE34+2fY
+         BxgUDwE8XxCLKNu8iCAOivRWrnZfWHf/MpevxR1ennBIZTiEU6VOpeFfZ+ldAVElul
+         IFIXplSjY68CMtYPzALstf7UuR8Bj+owMAaNqQDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Meyer <thomas@m3y3r.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 15/92] PM / AVS: SmartReflex: NULL check before some freeing functions is not needed
-Date:   Wed,  4 Dec 2019 18:49:15 +0100
-Message-Id: <20191204174330.335727209@linuxfoundation.org>
+Subject: [PATCH 4.4 19/92] mwifiex: fix potential NULL dereference and use after free
+Date:   Wed,  4 Dec 2019 18:49:19 +0100
+Message-Id: <20191204174330.808228957@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -61,34 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Meyer <thomas@m3y3r.de>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 14d338a857f05f894ba3badd9e6d3039c68b8180 ]
+[ Upstream commit 1dcd9429212b98bea87fc6ec92fb50bf5953eb47 ]
 
-NULL check before some freeing functions is not needed.
+There are two defects: (1) passing a NULL bss to
+mwifiex_save_hidden_ssid_channels will result in NULL dereference,
+(2) using bss after dropping the reference to it via cfg80211_put_bss.
+To fix them, the patch moves the buggy code to the branch that bss is
+not NULL and puts it before cfg80211_put_bss.
 
-Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/avs/smartreflex.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wireless/mwifiex/scan.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/power/avs/smartreflex.c b/drivers/power/avs/smartreflex.c
-index db9973bb53f19..ecc59798fd0aa 100644
---- a/drivers/power/avs/smartreflex.c
-+++ b/drivers/power/avs/smartreflex.c
-@@ -1001,8 +1001,7 @@ static int omap_sr_remove(struct platform_device *pdev)
+diff --git a/drivers/net/wireless/mwifiex/scan.c b/drivers/net/wireless/mwifiex/scan.c
+index b3fa3e4bed052..39b78dc1bd92b 100644
+--- a/drivers/net/wireless/mwifiex/scan.c
++++ b/drivers/net/wireless/mwifiex/scan.c
+@@ -1873,15 +1873,17 @@ mwifiex_parse_single_response_buf(struct mwifiex_private *priv, u8 **bss_info,
+ 					    ETH_ALEN))
+ 					mwifiex_update_curr_bss_params(priv,
+ 								       bss);
+-				cfg80211_put_bss(priv->wdev.wiphy, bss);
+-			}
  
- 	if (sr_info->autocomp_active)
- 		sr_stop_vddautocomp(sr_info);
--	if (sr_info->dbg_dir)
--		debugfs_remove_recursive(sr_info->dbg_dir);
-+	debugfs_remove_recursive(sr_info->dbg_dir);
- 
- 	pm_runtime_disable(&pdev->dev);
- 	list_del(&sr_info->node);
+-			if ((chan->flags & IEEE80211_CHAN_RADAR) ||
+-			    (chan->flags & IEEE80211_CHAN_NO_IR)) {
+-				mwifiex_dbg(adapter, INFO,
+-					    "radar or passive channel %d\n",
+-					    channel);
+-				mwifiex_save_hidden_ssid_channels(priv, bss);
++				if ((chan->flags & IEEE80211_CHAN_RADAR) ||
++				    (chan->flags & IEEE80211_CHAN_NO_IR)) {
++					mwifiex_dbg(adapter, INFO,
++						    "radar or passive channel %d\n",
++						    channel);
++					mwifiex_save_hidden_ssid_channels(priv,
++									  bss);
++				}
++
++				cfg80211_put_bss(priv->wdev.wiphy, bss);
+ 			}
+ 		}
+ 	} else {
 -- 
 2.20.1
 
