@@ -2,53 +2,54 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B17C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00BAC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 600D420865
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B124420866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483129;
-	bh=ZhJ+AoQEj/5MiznVVd92YNDSv6J7kOWoIuf5m+J3hN0=;
+	s=default; t=1575483132;
+	bh=SIJ+2AtMRSVhyjKuNp+YgzLxZeDID8jWrYk0fqKMcMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CjS9J+sYoOkBPPwqraEBHwXipcwK+VmVssUTfVD8ucI31l2v6CR497UE2etTJyw2D
-	 lr5bsxfyzhTGCvWFT20SYBHo9h0rQQf3M3oQ3lGbNY0G3Q4w3Tt0rq5NlWkzN9635C
-	 cx7taRSYRhZOiejUW6EehAJ1EGfW5DWHRD40A/+k=
+	b=r8vJrzwCbIrF1ZHvWCy2NXh5am6RT8DZY6ZoPOegCeGFvacFOHqMTU91blskKnskh
+	 BMdjsqgqsNHOOz5AznkyxZ/D4afwUmWiusErjc9v4B/U3Kf7THhs4YlH2t+WDgdprb
+	 rpg6UHo9mNfQRhMOSGjOUmkEuHUHTschvoaYsRWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731561AbfLDSMI (ORCPT
+        id S1731568AbfLDSML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:12:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40616 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:12:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731551AbfLDSMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:12:06 -0500
+        id S1731558AbfLDSMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:12:08 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ACEA214AF;
-        Wed,  4 Dec 2019 18:12:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7287020675;
+        Wed,  4 Dec 2019 18:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483125;
-        bh=ZhJ+AoQEj/5MiznVVd92YNDSv6J7kOWoIuf5m+J3hN0=;
+        s=default; t=1575483127;
+        bh=SIJ+2AtMRSVhyjKuNp+YgzLxZeDID8jWrYk0fqKMcMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o3odKegJ0pC0JKz2z77k+gWgwnPppQ0PUOSeo1coFV9r40ybn1Qu9B5/hTbnwTUvN
-         OueBuisazF8Pl0inwSbJRjWcJgvJ7DqxCGks6v1lNSuu7sooKjTCcOcVbLPRgPXiiQ
-         S62cgI3Ju4w8BVGOkFM73H2bYaOdfzZBS1mYQbd4=
+        b=XZb6AdgaLGtC8Ff7lWwHDN7dVdoWiS10ebVXRWoPARR3Qqa6xBRRERy+bigZgF6L8
+         r5FNdhEKSe5AUTNpwAlUn+Bi2iuYYxceefbn/V+FMBtodpJyIhDSeUmRrDm8Ly3F2x
+         oqInIGRJjTajIGi0Gt/Jk0oK4yxBiu7xveNO91GI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 062/125] powerpc/44x/bamboo: Fix PCI range
-Date:   Wed,  4 Dec 2019 18:56:07 +0100
-Message-Id: <20191204175322.742339862@linuxfoundation.org>
+Subject: [PATCH 4.9 063/125] vfio/spapr_tce: Get rid of possible infinite loop
+Date:   Wed,  4 Dec 2019 18:56:08 +0100
+Message-Id: <20191204175322.803008587@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,42 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-[ Upstream commit 3cfb9ebe906b51f2942b1e251009bb251efd2ba6 ]
+[ Upstream commit 517ad4ae8aa93dccdb9a88c27257ecb421c9e848 ]
 
-The bamboo dts has a bug: it uses a non-naturally aligned range
-for PCI memory space. This isnt' supported by the code, thus
-causing PCI to break on this system.
+As a part of cleanup, the SPAPR TCE IOMMU subdriver releases preregistered
+memory. If there is a bug in memory release, the loop in
+tce_iommu_release() becomes infinite; this actually happened to me.
 
-This is due to the fact that while the chip memory map has 1G
-reserved for PCI memory, it's only 512M aligned. The code doesn't
-know how to split that into 2 different PMMs and fails, so limit
-the region to 512M.
+This makes the loop finite and prints a warning on every failure to make
+the code more bug prone.
 
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+Acked-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/dts/bamboo.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/vfio/vfio_iommu_spapr_tce.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/bamboo.dts b/arch/powerpc/boot/dts/bamboo.dts
-index aa68911f6560a..084b82ba74933 100644
---- a/arch/powerpc/boot/dts/bamboo.dts
-+++ b/arch/powerpc/boot/dts/bamboo.dts
-@@ -268,8 +268,10 @@
- 			/* Outbound ranges, one memory and one IO,
- 			 * later cannot be changed. Chip supports a second
- 			 * IO range but we don't use it for now
-+			 * The chip also supports a larger memory range but
-+			 * it's not naturally aligned, so our code will break
- 			 */
--			ranges = <0x02000000 0x00000000 0xa0000000 0x00000000 0xa0000000 0x00000000 0x40000000
-+			ranges = <0x02000000 0x00000000 0xa0000000 0x00000000 0xa0000000 0x00000000 0x20000000
- 				  0x02000000 0x00000000 0x00000000 0x00000000 0xe0000000 0x00000000 0x00100000
- 				  0x01000000 0x00000000 0x00000000 0x00000000 0xe8000000 0x00000000 0x00010000>;
+diff --git a/drivers/vfio/vfio_iommu_spapr_tce.c b/drivers/vfio/vfio_iommu_spapr_tce.c
+index 70c748a5fbcc2..a8e25f9409fa5 100644
+--- a/drivers/vfio/vfio_iommu_spapr_tce.c
++++ b/drivers/vfio/vfio_iommu_spapr_tce.c
+@@ -406,6 +406,7 @@ static void tce_iommu_release(void *iommu_data)
+ {
+ 	struct tce_container *container = iommu_data;
+ 	struct tce_iommu_group *tcegrp;
++	struct tce_iommu_prereg *tcemem, *tmtmp;
+ 	long i;
  
+ 	while (tce_groups_attached(container)) {
+@@ -428,13 +429,8 @@ static void tce_iommu_release(void *iommu_data)
+ 		tce_iommu_free_table(container, tbl);
+ 	}
+ 
+-	while (!list_empty(&container->prereg_list)) {
+-		struct tce_iommu_prereg *tcemem;
+-
+-		tcemem = list_first_entry(&container->prereg_list,
+-				struct tce_iommu_prereg, next);
+-		WARN_ON_ONCE(tce_iommu_prereg_free(container, tcemem));
+-	}
++	list_for_each_entry_safe(tcemem, tmtmp, &container->prereg_list, next)
++		WARN_ON(tce_iommu_prereg_free(container, tcemem));
+ 
+ 	tce_iommu_disable(container);
+ 	if (container->mm)
 -- 
 2.20.1
 
