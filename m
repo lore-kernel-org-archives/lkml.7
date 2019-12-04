@@ -2,102 +2,133 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10693C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3467C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34BD2068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:16:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cveiedzL"
+	by mail.kernel.org (Postfix) with ESMTP id BC2E020640
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfLDHQz (ORCPT
+        id S1727267AbfLDHRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:16:55 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55133 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfLDHQy (ORCPT
+        Wed, 4 Dec 2019 02:17:50 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54831 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfLDHRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:16:54 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b11so5799592wmj.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 23:16:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=faPNT/f5uZo8iaeYVLQEwdlcOY2/BBdz04dTFvoUITs=;
-        b=cveiedzLTF5mS2Zqe/QUDDb+gQEYISQzEcCxIXxHIgCwuxsCD7IguOlhvwF1mEGg2o
-         yQZ+GKi3S7RZugEX2dkJs+rijyMXZKk0ktN2VTREOuTi+3slnANkRK+oG28LjgVp8dOU
-         aRRNb6+jvjPH6c/s0rsEwy/2dNj0u5hr4PfC8SmRhLoDd+K3kv+3NDa+pL8ohSdCBFqT
-         JOtBJGFlRL9fL3dQwWe/MH2MdP2fds1j9Ia8voFpqlD9rm8OZeuWIUGC74Ifxn1ihlYy
-         ZnrUOB2wEuQgmQSX1hrYqSg4+FQ0wmsYZrefxHyXN5AgX1K1dJlmi0+qwBXLw01dMoo8
-         n5dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=faPNT/f5uZo8iaeYVLQEwdlcOY2/BBdz04dTFvoUITs=;
-        b=B2uMuteRUQPLnzxaAlXi11951CCuNQa5Ts5Swh03glum+cp3AHBxo1BEZEkydEhZcC
-         ph+wW4pteW9WmIihxoaCy78mCtgZARctdj7gyxbp3p8z3vZgDGaGWCPemqYtfkIv7LW7
-         CJujtPqr+6dQ3Pl1AqIrJrlmDe703wPQSpF0J4t+H05tWPnz1ndUh/JKX2VQmEEeks56
-         TnVQO2eiq5/0W3Yf5jZ6wO73LtKjiB5TfGeJ7KilAg1z5zUwgVk6RF9YVM1apd4n8uYZ
-         fM5okNCotUf7PDAGwg67cBa1VC4n+w717PXLmxOGpORrvl1ZExXH8nlrcyHZiD91z/+j
-         RcGA==
-X-Gm-Message-State: APjAAAX1+EWZtm4MWmk9ofqiz8lRGKwTij1XtD1QfMGHv6kL/+cWVClY
-        7qKjPvupK/e4I+5RsMJ0qcWNcg==
-X-Google-Smtp-Source: APXvYqw1e9Sba16z73Xn9TIg9bIDlbIodXDWx2BbrTyW3EZXd6bcOtv3skaMKAl+1FJ8nPB6WxGrFw==
-X-Received: by 2002:a1c:a70e:: with SMTP id q14mr13797771wme.142.1575443812562;
-        Tue, 03 Dec 2019 23:16:52 -0800 (PST)
-Received: from glaroque-ThinkPad-T480.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id m7sm2319337wrr.40.2019.12.03.23.16.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 23:16:52 -0800 (PST)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, khilman@baylibre.com
-Subject: [PATCH] bluetooth: hci_bcm: enable IRQ capability from node
-Date:   Wed,  4 Dec 2019 08:16:51 +0100
-Message-Id: <20191204071651.14977-1-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Dec 2019 02:17:50 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1icOux-0003vA-St; Wed, 04 Dec 2019 08:17:47 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1icOuw-00075T-Cc; Wed, 04 Dec 2019 08:17:46 +0100
+Date:   Wed, 4 Dec 2019 08:17:46 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Richard Weinberger <richard.weinberger@gmail.com>
+Cc:     naga suresh kumar <nagasureshkumarrelli@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Michal Simek <michals@xilinx.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        siva durga paladugu <siva.durga.paladugu@xililnx.com>,
+        Naga Sureshkumar Relli <nagasure@xilinx.com>
+Subject: Re: ubifs mount failure
+Message-ID: <20191204071746.kfdflui4ziladmjg@pengutronix.de>
+References: <MN2PR02MB5727000CBE70BAF31F60FEE4AF420@MN2PR02MB5727.namprd02.prod.outlook.com>
+ <20191203084134.tgzir4mtekpm5xbs@pengutronix.de>
+ <MN2PR02MB57272E3343CA62ADBA0F97E5AF420@MN2PR02MB5727.namprd02.prod.outlook.com>
+ <614898763.105471.1575364223372.JavaMail.zimbra@nod.at>
+ <CALgLF9KPAk_AsecnTMmbdF5qbgqXe7HNOrNariNVbhSr6FVN2g@mail.gmail.com>
+ <20191203104558.vpqav3oxsydoe4aw@pengutronix.de>
+ <CAFLxGvywFxSrDLLGnLDW6+rMLVUA9Yoi=3sn7wdxqWMydy-w0g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFLxGvywFxSrDLLGnLDW6+rMLVUA9Yoi=3sn7wdxqWMydy-w0g@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:17:13 up 149 days, 13:27, 126 users,  load average: 0.16, 0.23,
+ 0.21
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Actually IRQ can be found from GPIO but all platorms don't support
-gpiod_to_irq, it's the case on amlogic chip.
-so to have possibility to use interrupt mode we need to add interrupts
-field in node and support it in driver.
+On Tue, Dec 03, 2019 at 08:08:48PM +0100, Richard Weinberger wrote:
+> On Tue, Dec 3, 2019 at 11:46 AM Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> >
+> > On Tue, Dec 03, 2019 at 04:06:12PM +0530, naga suresh kumar wrote:
+> > > Hi Richard,
+> > >
+> > > On Tue, Dec 3, 2019 at 2:40 PM Richard Weinberger <richard@nod.at> wrote:
+> > > >
+> > > > ----- Ursprüngliche Mail -----
+> > > > > Von: "Naga Sureshkumar Relli" <nagasure@xilinx.com>
+> > > > > https://elixir.bootlin.com/linux/v5.4/source/fs/ubifs/sb.c#L164
+> > > > > we are trying to allocate 4325376 (~4MB)
+> > > >
+> > > > 4MiB? Is ->min_io_size that large?
+> > > if you see https://elixir.bootlin.com/linux/latest/source/fs/ubifs/sb.c#L164
+> > > The size is actually ALIGN(tmp, c->min_io_size).
+> > > Here tmp is of 4325376 Bytes and min_io_size is 16384 Bytes
+> >
+> > 'tmp' contains bogus values. Try this:
+> >
+> > ----------------------------8<--------------------------------
+> >
+> > From 34f687fce189085f55706b4cddcb288a08f4ee06 Mon Sep 17 00:00:00 2001
+> > From: Sascha Hauer <s.hauer@pengutronix.de>
+> > Date: Tue, 3 Dec 2019 11:41:20 +0100
+> > Subject: [PATCH] ubifs: Fix wrong memory allocation
+> >
+> > In create_default_filesystem() when we allocate the idx node we must use
+> > the idx_node_size we calculated just one line before, not tmp, which
+> > contains completely other data.
+> >
+> > Fixes: c4de6d7e4319 ("ubifs: Refactor create_default_filesystem()")
+> > Reported-by: Naga Sureshkumar Relli <nagasure@xilinx.com>
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > ---
+> >  fs/ubifs/sb.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/fs/ubifs/sb.c b/fs/ubifs/sb.c
+> > index a551eb3e9b89..6681c18e52b8 100644
+> > --- a/fs/ubifs/sb.c
+> > +++ b/fs/ubifs/sb.c
+> > @@ -161,7 +161,7 @@ static int create_default_filesystem(struct ubifs_info *c)
+> >         sup = kzalloc(ALIGN(UBIFS_SB_NODE_SZ, c->min_io_size), GFP_KERNEL);
+> >         mst = kzalloc(c->mst_node_alsz, GFP_KERNEL);
+> >         idx_node_size = ubifs_idx_node_sz(c, 1);
+> > -       idx = kzalloc(ALIGN(tmp, c->min_io_size), GFP_KERNEL);
+> > +       idx = kzalloc(ALIGN(idx_node_size, c->min_io_size), GFP_KERNEL);
+> >         ino = kzalloc(ALIGN(UBIFS_INO_NODE_SZ, c->min_io_size), GFP_KERNEL);
+> >         cs = kzalloc(ALIGN(UBIFS_CS_NODE_SZ, c->min_io_size), GFP_KERNEL);
+> 
+> Oh, looks good! Thanks for fixing, Sascha!
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
- drivers/bluetooth/hci_bcm.c | 3 +++
- 1 file changed, 3 insertions(+)
+Will you apply this one? Otherwise I resend with the proper tags added.
 
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 7646636f2d18..9b024e1e36e2 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -1372,6 +1372,7 @@ static struct platform_driver bcm_driver = {
- static int bcm_serdev_probe(struct serdev_device *serdev)
- {
- 	struct bcm_device *bcmdev;
-+	struct platform_device *pdev;
- 	int err;
- 
- 	bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
-@@ -1384,6 +1385,8 @@ static int bcm_serdev_probe(struct serdev_device *serdev)
- #endif
- 	bcmdev->serdev_hu.serdev = serdev;
- 	serdev_device_set_drvdata(serdev, bcmdev);
-+	pdev = to_platform_device(bcmdev->dev);
-+	bcmdev->irq = platform_get_irq(pdev, 0);
- 
- 	if (has_acpi_companion(&serdev->dev))
- 		err = bcm_acpi_probe(bcmdev);
+Sascha
+
 -- 
-2.17.1
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
