@@ -2,95 +2,118 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B93F7C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC655C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814C52077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E10206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 22:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575499996;
-	bh=nSce+C0PV3nNdjCe0SnUxQ5HD4mnSnWmbA4HaJPR62w=;
+	s=default; t=1575500096;
+	bh=a45N71Qn9JrZvMI/vOhox37/PylKc+JyGeyvvna+jwc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zEMb2S0L3vgAMpP63QeFQyrTtL0bP19P44t4LroNdB9HKSEkMSd8W5Ja/bu5NSNKt
-	 rWh+iKWZ7rHm5EszQpYg27OcDqouXIlozRz7mgHO28GSdF+d6m2qcjoIfl221XPisg
-	 KIZiDY8cWNets19v5dYo9zs+Ypx0VWmpNDgdfp8k=
+	b=PtInBA/45iMWfnYfrIupyBz89CfhIu4yn178GG+af2KTB3ES1lo0K4f/qvY3l5BcB
+	 g51os9FhLXIl2jQlpZ9xkoPX4HWubskYvv+QUkMBY8feci0i6+7pDaA7SeTVjIXaMV
+	 AO4JLj7sTMwDkJwgHNFQbo4yVIt970NnoKT7YS70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbfLDWxP (ORCPT
+        id S1728344AbfLDWyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 17:53:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728011AbfLDWxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 17:53:15 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D90E52464F;
-        Wed,  4 Dec 2019 22:53:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575499994;
-        bh=nSce+C0PV3nNdjCe0SnUxQ5HD4mnSnWmbA4HaJPR62w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=veiNJx7i6rZD7MlLzz1MscyYOIJP30VUvfOdBvr6LudveLFrcX9O3W1lDClYj/wR+
-         sx/2tW2Vg6sFLtOrXzkgzRORhHxeo9rEM7Q/C+FXwpn7BUJOD4EqlhqmWWsLG6MVsK
-         YQ1h4Yg+D7ua7rgMThwaulZqcdhFlQTOGzMyqcOQ=
-Date:   Wed, 4 Dec 2019 23:53:12 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: Re: [PATCH 4.9 105/125] mm, gup: add missing refcount overflow
- checks on x86 and s390
-Message-ID: <20191204225312.GB3715390@kroah.com>
-References: <20191204175308.377746305@linuxfoundation.org>
- <20191204175325.500930880@linuxfoundation.org>
- <7ca516fa-c526-b5e6-4b7c-855f229112ac@suse.cz>
- <20191204203711.GA3685601@kroah.com>
+        Wed, 4 Dec 2019 17:54:55 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45197 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbfLDWyy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 17:54:54 -0500
+Received: by mail-pl1-f196.google.com with SMTP id w7so335962plz.12;
+        Wed, 04 Dec 2019 14:54:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=71fWNQ0DN1swwIGhbCZ65wzcZtX6q09U8VNbO3XVJ2E=;
+        b=SEGp8TaZeiMDrnk6zAQ1kjGALOWEMQna4WdC85fGpk+uNwpO7tnZKkB+prOLYvB99y
+         yEDkQI6y3v+Gsg4ipXwU+fKGNa8ao5QdJCUNJNuwdzk5i1VlcJ7Y9ZPpMD3sx4S7J6Kd
+         rrIApoCSFgyMoQ9quKG+bxKCUc8I7GT6YB39VejvQ0+WePek+AmGHQyEEh3AXOsCqQMd
+         LBJGwaR/9exSzOsBLf78EckGi1fDZrS1Ux0sV7tyMe57LfeKq78R2mkfF8tRC/fHPFlC
+         HTFeV0Ggvr+LZxLln7KIxLKFwIzwmTq2cgjO0IGA1l5wbdMLBSt+c0/X+FFnIzVUe0kT
+         EpDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=71fWNQ0DN1swwIGhbCZ65wzcZtX6q09U8VNbO3XVJ2E=;
+        b=tYdqwupMlPnwx3dSxZJxn4+WNhdaXG3xICeur+feUC0MmQRna24p8j1ROkQ4vYhAUR
+         WYeIra7Rr0v0+3u+6YWHdJGRnMQYMTdZSYGbrb5T9nV2iX2d7tdvG3uH8e/0IBeCQQUs
+         qg5F163cCK5ABrI71sEJJGiBwLIsT/LLk5J5G+ewB/5NLKN5r6aDYvwOSMqEvtKH4sjB
+         KMM8jGKWghiXAhnfnbBLxuYhHUHaXgOKLwnIyt7WZcaKWggiu+uCMcJdHCsKMzEzRO0w
+         WiXKm6klS899ALhqM5cH9swkV6fgrnKTUsECeflSOAeIGKF/N57Cp1z6hQ8osjPw0EQN
+         JWDA==
+X-Gm-Message-State: APjAAAWz+2EPQOMgHF2P9/+YFNy7Hqv2pAa0LcucTpg6GeXCbTpezcsi
+        E6T9MzLUeFwY+aIGLtcFZJ4=
+X-Google-Smtp-Source: APXvYqxBqYdBKxl+V2SCEjcz4KN8KXwHybwTQg8WM67jtRfnnhU6nU4LkNayv6vE7Jk2ZYUz3LM9VA==
+X-Received: by 2002:a17:902:d204:: with SMTP id t4mr5897686ply.167.1575500094029;
+        Wed, 04 Dec 2019 14:54:54 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id l18sm8916725pff.79.2019.12.04.14.54.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 14:54:53 -0800 (PST)
+Date:   Wed, 4 Dec 2019 14:54:51 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     Taejoon Song <taejoon.song@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     ngupta@vflare.org, sergey.senozhatsky.work@gmail.com,
+        axboe@kernel.dk, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, yjay.kim@lge.com
+Subject: Re: [PATCH] zram: try to avoid worst-case scenario on same element
+ pages
+Message-ID: <20191204225451.GA42672@google.com>
+References: <1575424418-16119-1-git-send-email-taejoon.song@lge.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191204203711.GA3685601@kroah.com>
+In-Reply-To: <1575424418-16119-1-git-send-email-taejoon.song@lge.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 09:37:11PM +0100, Greg Kroah-Hartman wrote:
-> On Wed, Dec 04, 2019 at 07:27:44PM +0100, Vlastimil Babka wrote:
-> > On 12/4/19 6:56 PM, Greg Kroah-Hartman wrote:
-> > > From: Vlastimil Babka <vbabka@suse.cz>
-> > > 
-> > > The mainline commit 8fde12ca79af ("mm: prevent get_user_pages() from
-> > > overflowing page refcount") was backported to 4.9.y stable as commit
-> > > 2ed768cfd895. The backport however missed that in 4.9, there are several
-> > > arch-specific gup.c versions with fast gup implementations, so these do not
-> > > prevent refcount overflow.
-> > > 
-> > > This is partially fixed for x86 in stable-only commit d73af79742e7 ("x86, mm,
-> > > gup: prevent get_page() race with munmap in paravirt guest"). This stable-only
-> > > commit adds missing parts to x86 version, as well as s390 version, both taken
-> > > from the SUSE SLES/openSUSE 4.12-based kernels.
-> > > 
-> > > The remaining architectures with own gup.c are sparc, mips, sh. It's unlikely
-> > > the known overflow scenario based on FUSE, which needs 140GB of RAM, is a
-> > > problem for those architectures, and I don't feel confident enough to patch
-> > > them.
-> > > 
-> > > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > 
-> > No, this one had a leak bug and I've sent updated version:
-> > https://lore.kernel.org/linux-mm/e274291b-054f-2fad-28e8-59fabf312e61@suse.cz/
+On Wed, Dec 04, 2019 at 10:53:38AM +0900, Taejoon Song wrote:
+> The worst-case scenario on finding same element pages is that almost
+> all elements are same at the first glance but only last few elements
+> are different.
 > 
-> Ugh.  Ok, let me go fix that up...
+> Since the same element tends to be grouped from the beginning of the
+> pages, if we check the first element with the last element before
+> looping through all elements, we might have some chances to quickly
+> detect non-same element pages.
+> 
+> 1. Test is done under LG webOS TV (64-bit arch)
+> 2. Dump the swap-out pages (~819200 pages)
+> 3. Analyze the pages with simple test script which counts the iteration
+>    number and measures the speed at off-line
+> 
+> Under 64-bit arch, the worst iteration count is PAGE_SIZE / 8 bytes = 512.
+> The speed is based on the time to consume page_same_filled() function only.
+> The result, on average, is listed as below:
+> 
+>                                    Num of Iter    Speed(MB/s)
+> Looping-Forward (Orig)                 38            99265
+> Looping-Backward                       36           102725
+> Last-element-check (This Patch)        33           125072
+> 
+> The result shows that the average iteration count decreases by 13% and
+> the speed increases by 25% with this patch. This patch does not increase
+> the overall time complexity, though.
+> 
+> I also ran simpler version which uses backward loop. Just looping backward
+> also makes some improvement, but less than this patch.
+> 
+> Signed-off-by: Taejoon Song <taejoon.song@lge.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
 
-Now done and I've pushed out a -rc2 with that fix in it.
-
-thanks,
-
-greg k-h
+I think it's very reasonable optimization with small cost.
