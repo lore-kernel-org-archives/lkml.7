@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDBEC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7B0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D262086D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C42214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483086;
-	bh=ghWIX+m6hgr7up8H2IEj/4iJDmGytA1qPuXv0RVTtfE=;
+	s=default; t=1575483089;
+	bh=zZruYX87mevRMIX7WAXQ0HW9SLzcEcLIwjQKbU+516E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mwAvosxt+AOhq1zAC5BQrabrbAg6uYjqJvgC/qmmEcGvYbDCuI7kWwSbZrwtjjDaa
-	 Onvm37TYJ/sISoFEZC3UtU4K9+IRLyuCN90TiCWru/R9lgLFFBG6/McxDl5qGWrMBC
-	 MUjTujFNBqiy69YY4kC+dpsprDYMryxub18MN6hI=
+	b=I/T3WeI9WWuNkEiVMU1qyk0UeG2O5ZeCs0I9Vxm5BSl/mc+BpN0aekYpVA8cKUcS9
+	 rXtzYruB8g8cV4GUznYaClOoC7LuFvO5H0UL/UUegaUB2NXr82cINi5VQYraX1gMeS
+	 fcrUh6dQX0piQbIx82cdBqp2PKHF5vFw9iP4XV34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731433AbfLDSLY (ORCPT
+        id S1731149AbfLDSL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:11:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39438 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:11:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731427AbfLDSLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:11:19 -0500
+        id S1729804AbfLDSLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:11:22 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC3362084B;
-        Wed,  4 Dec 2019 18:11:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C43F2086D;
+        Wed,  4 Dec 2019 18:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483079;
-        bh=ghWIX+m6hgr7up8H2IEj/4iJDmGytA1qPuXv0RVTtfE=;
+        s=default; t=1575483081;
+        bh=zZruYX87mevRMIX7WAXQ0HW9SLzcEcLIwjQKbU+516E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wMQMqnNe3o8AThvmLYiuQr8novJTo/DZOeib7F6NLJfHSwljHeqf9r8R5KnQ2LalE
-         sO+BWoyP0zdpk4sReL95xdCl1uizUGPjqSgFIqEuPBSF6OXsdidKDxmwMiFHYpefnL
-         eFHcZ5BwkVvlc6e4G6TUe69RrExZ0joKB6HkB5DI=
+        b=hbqJi9BGr7ug+K6uyRxGSkjL8K7Wp428gWG0L5UqhcocNPbSC4rSPQUQkBxio0qIs
+         6lj9BUH32p6P9XoZIcRMeot5ENavt+zHjKYDAwpESGhzxeU4HXxVeToJS4ghbSi4QJ
+         BmXSSkSug8Cp36qFxfDyGNqP/LS0CwPLsjUvf1ak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Hutterer <peter.hutterer@who-t.net>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 044/125] HID: doc: fix wrong data structure reference for UHID_OUTPUT
-Date:   Wed,  4 Dec 2019 18:55:49 +0100
-Message-Id: <20191204175321.643695817@linuxfoundation.org>
+        stable@vger.kernel.org, John Dorminy <jdorminy@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 045/125] dm flakey: Properly corrupt multi-page bios.
+Date:   Wed,  4 Dec 2019 18:55:50 +0100
+Message-Id: <20191204175321.706574896@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -59,30 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Hutterer <peter.hutterer@who-t.net>
+From: Sweet Tea <sweettea@redhat.com>
 
-[ Upstream commit 46b14eef59a8157138dc02f916a7f97c73b3ec53 ]
+[ Upstream commit a00f5276e26636cbf72f24f79831026d2e2868e7 ]
 
-Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+The flakey target is documented to be able to corrupt the Nth byte in
+a bio, but does not corrupt byte indices after the first biovec in the
+bio. Change the corrupting function to actually corrupt the Nth byte
+no matter in which biovec that index falls.
+
+A test device generating two-page bios, atop a flakey device configured
+to corrupt a byte index on the second page, verified both the failure
+to corrupt before this patch and the expected corruption after this
+change.
+
+Signed-off-by: John Dorminy <jdorminy@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/hid/uhid.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-flakey.c | 33 ++++++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/hid/uhid.txt b/Documentation/hid/uhid.txt
-index c8656dd029a91..958fff9453044 100644
---- a/Documentation/hid/uhid.txt
-+++ b/Documentation/hid/uhid.txt
-@@ -160,7 +160,7 @@ them but you should handle them according to your needs.
-   UHID_OUTPUT:
-   This is sent if the HID device driver wants to send raw data to the I/O
-   device on the interrupt channel. You should read the payload and forward it to
--  the device. The payload is of type "struct uhid_data_req".
-+  the device. The payload is of type "struct uhid_output_req".
-   This may be received even though you haven't received UHID_OPEN, yet.
+diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
+index 3643cba713518..742c1fa870dae 100644
+--- a/drivers/md/dm-flakey.c
++++ b/drivers/md/dm-flakey.c
+@@ -258,20 +258,31 @@ static void flakey_map_bio(struct dm_target *ti, struct bio *bio)
  
-   UHID_GET_REPORT:
+ static void corrupt_bio_data(struct bio *bio, struct flakey_c *fc)
+ {
+-	unsigned bio_bytes = bio_cur_bytes(bio);
+-	char *data = bio_data(bio);
++	unsigned int corrupt_bio_byte = fc->corrupt_bio_byte - 1;
++
++	struct bvec_iter iter;
++	struct bio_vec bvec;
++
++	if (!bio_has_data(bio))
++		return;
+ 
+ 	/*
+-	 * Overwrite the Nth byte of the data returned.
++	 * Overwrite the Nth byte of the bio's data, on whichever page
++	 * it falls.
+ 	 */
+-	if (data && bio_bytes >= fc->corrupt_bio_byte) {
+-		data[fc->corrupt_bio_byte - 1] = fc->corrupt_bio_value;
+-
+-		DMDEBUG("Corrupting data bio=%p by writing %u to byte %u "
+-			"(rw=%c bi_opf=%u bi_sector=%llu cur_bytes=%u)\n",
+-			bio, fc->corrupt_bio_value, fc->corrupt_bio_byte,
+-			(bio_data_dir(bio) == WRITE) ? 'w' : 'r', bio->bi_opf,
+-			(unsigned long long)bio->bi_iter.bi_sector, bio_bytes);
++	bio_for_each_segment(bvec, bio, iter) {
++		if (bio_iter_len(bio, iter) > corrupt_bio_byte) {
++			char *segment = (page_address(bio_iter_page(bio, iter))
++					 + bio_iter_offset(bio, iter));
++			segment[corrupt_bio_byte] = fc->corrupt_bio_value;
++			DMDEBUG("Corrupting data bio=%p by writing %u to byte %u "
++				"(rw=%c bi_opf=%u bi_sector=%llu size=%u)\n",
++				bio, fc->corrupt_bio_value, fc->corrupt_bio_byte,
++				(bio_data_dir(bio) == WRITE) ? 'w' : 'r', bio->bi_opf,
++				(unsigned long long)bio->bi_iter.bi_sector, bio->bi_iter.bi_size);
++			break;
++		}
++		corrupt_bio_byte -= bio_iter_len(bio, iter);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
