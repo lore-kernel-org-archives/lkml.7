@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A90C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F34C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22979206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4559620674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483270;
-	bh=HyRnJ4hHIIT88R4IE4XWdBuwVdb6Ox6saxvkkrM4gqQ=;
+	s=default; t=1575483274;
+	bh=cft3eriOLCjXp/E4K4Z63jWyDhfa/m7BrWbUAAMJ7RQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWp4BlwOwN2nb7rgUMcxkkFNC32F6lrPGdlERO+anLGtDvb43Z2S3kK8QsRGwi6GS
-	 zYe+gL3n21IZT0oZdzB1LoRIBz2OnpUfK1L+ugQ4RojRdmmSHahhMm5uZ+yr3QJ6hA
-	 hMjAfThjh9Gp9MLFSkpJCuR8PIVf+LHMyowVi8BQ=
+	b=a0qhG3R2d40HAeuVNXoMm0n1oXTJK1fBgDc0Rdr7M5uJwkL38ArNzwdjYN83CFCCE
+	 lci5QPN4PKAjFdLlsLOQvDzTN8zF1yrDxwicL+QeCPtSfJH/9tn6LgnE8wlmM+NQSi
+	 XPccpB1yfztqPuQaqkSS+TJ96lpzL1k8XHdEiAKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbfLDSO3 (ORCPT
+        id S1731933AbfLDSOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:14:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43788 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:14:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731625AbfLDSO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:14:26 -0500
+        id S1731919AbfLDSOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:14:31 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35B3820674;
-        Wed,  4 Dec 2019 18:14:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B32B20674;
+        Wed,  4 Dec 2019 18:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483265;
-        bh=HyRnJ4hHIIT88R4IE4XWdBuwVdb6Ox6saxvkkrM4gqQ=;
+        s=default; t=1575483270;
+        bh=cft3eriOLCjXp/E4K4Z63jWyDhfa/m7BrWbUAAMJ7RQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bNIqle7/IRGIMiB1FvOb7SUSbEKv7y9W1WwFI61ZJvZBnJq64OFlKPdznytmfQqHF
-         z3KrFXAGQFGXPZDChw4R4vCg0stIb+UI3heyYdUrSUETJM1gwz5xeaet0+69x5vVNp
-         A4j2BWZrICDoTrPMQB26B0UKuHbKFy35YcC6Wu2E=
+        b=E7e5QQZ7Sl41Vj+H1Sv5It2fBsPmY4ExpGKJ0KGTJVjJjjRWJ5YfFaTEmVfAEtijs
+         jXyu3KYtNtifBEQ0e8BQLJOEMJcRU0wZq8dM3bSzISZzwroU9y3R2f7Ew6yFLkYaWV
+         kvBDEnv+pQKtYH0QAoRNaEL2RtL2+Xc5dwoDm7v0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        John Rutherford <john.rutherford@dektech.com.au>,
-        Jon Maloy <jon.maloy@ericsson.com>,
+        stable@vger.kernel.org, Dust Li <dust.li@linux.alibaba.com>,
+        Tony Lu <tonylu@linux.alibaba.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 119/125] tipc: fix link name length check
-Date:   Wed,  4 Dec 2019 18:57:04 +0100
-Message-Id: <20191204175326.498816873@linuxfoundation.org>
+Subject: [PATCH 4.9 121/125] net: sched: fix `tc -s class show` no bstats on class with nolock subqueues
+Date:   Wed,  4 Dec 2019 18:57:06 +0100
+Message-Id: <20191204175326.682613206@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,45 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Rutherford <john.rutherford@dektech.com.au>
+From: Dust Li <dust.li@linux.alibaba.com>
 
-[ Upstream commit fd567ac20cb0377ff466d3337e6e9ac5d0cb15e4 ]
+[ Upstream commit 14e54ab9143fa60794d13ea0a66c792a2046a8f3 ]
 
-In commit 4f07b80c9733 ("tipc: check msg->req data len in
-tipc_nl_compat_bearer_disable") the same patch code was copied into
-routines: tipc_nl_compat_bearer_disable(),
-tipc_nl_compat_link_stat_dump() and tipc_nl_compat_link_reset_stats().
-The two link routine occurrences should have been modified to check
-the maximum link name length and not bearer name length.
+When a classful qdisc's child qdisc has set the flag
+TCQ_F_CPUSTATS (pfifo_fast for example), the child qdisc's
+cpu_bstats should be passed to gnet_stats_copy_basic(),
+but many classful qdisc didn't do that. As a result,
+`tc -s class show dev DEV` always return 0 for bytes and
+packets in this case.
 
-Fixes: 4f07b80c9733 ("tipc: check msg->reg data len in tipc_nl_compat_bearer_disable")
-Signed-off-by: John Rutherford <john.rutherford@dektech.com.au>
-Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+Pass the child qdisc's cpu_bstats to gnet_stats_copy_basic()
+to fix this issue.
+
+The qstats also has this problem, but it has been fixed
+in 5dd431b6b9 ("net: sched: introduce and use qstats read...")
+and bstats still remains buggy.
+
+Fixes: 22e0f8b9322c ("net: sched: make bstats per cpu and estimator RCU safe")
+Signed-off-by: Dust Li <dust.li@linux.alibaba.com>
+Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/netlink_compat.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/sched/sch_mq.c     |    3 ++-
+ net/sched/sch_mqprio.c |    4 ++--
+ net/sched/sch_multiq.c |    2 +-
+ net/sched/sch_prio.c   |    2 +-
+ 4 files changed, 6 insertions(+), 5 deletions(-)
 
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -539,7 +539,7 @@ static int tipc_nl_compat_link_stat_dump
- 	if (len <= 0)
- 		return -EINVAL;
+--- a/net/sched/sch_mq.c
++++ b/net/sched/sch_mq.c
+@@ -195,7 +195,8 @@ static int mq_dump_class_stats(struct Qd
+ 	struct netdev_queue *dev_queue = mq_queue_get(sch, cl);
  
--	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
-+	len = min_t(int, len, TIPC_MAX_LINK_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
+ 	sch = dev_queue->qdisc_sleeping;
+-	if (gnet_stats_copy_basic(&sch->running, d, NULL, &sch->bstats) < 0 ||
++	if (gnet_stats_copy_basic(&sch->running, d, sch->cpu_bstats,
++				  &sch->bstats) < 0 ||
+ 	    gnet_stats_copy_queue(d, NULL, &sch->qstats, sch->q.qlen) < 0)
+ 		return -1;
+ 	return 0;
+--- a/net/sched/sch_mqprio.c
++++ b/net/sched/sch_mqprio.c
+@@ -362,8 +362,8 @@ static int mqprio_dump_class_stats(struc
+ 		struct netdev_queue *dev_queue = mqprio_queue_get(sch, cl);
  
-@@ -821,7 +821,7 @@ static int tipc_nl_compat_link_reset_sta
- 	if (len <= 0)
- 		return -EINVAL;
+ 		sch = dev_queue->qdisc_sleeping;
+-		if (gnet_stats_copy_basic(qdisc_root_sleeping_running(sch),
+-					  d, NULL, &sch->bstats) < 0 ||
++		if (gnet_stats_copy_basic(qdisc_root_sleeping_running(sch), d,
++					  sch->cpu_bstats, &sch->bstats) < 0 ||
+ 		    gnet_stats_copy_queue(d, NULL,
+ 					  &sch->qstats, sch->q.qlen) < 0)
+ 			return -1;
+--- a/net/sched/sch_multiq.c
++++ b/net/sched/sch_multiq.c
+@@ -332,7 +332,7 @@ static int multiq_dump_class_stats(struc
  
--	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
-+	len = min_t(int, len, TIPC_MAX_LINK_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
+ 	cl_q = q->queues[cl - 1];
+ 	if (gnet_stats_copy_basic(qdisc_root_sleeping_running(sch),
+-				  d, NULL, &cl_q->bstats) < 0 ||
++				  d, cl_q->cpu_bstats, &cl_q->bstats) < 0 ||
+ 	    gnet_stats_copy_queue(d, NULL, &cl_q->qstats, cl_q->q.qlen) < 0)
+ 		return -1;
+ 
+--- a/net/sched/sch_prio.c
++++ b/net/sched/sch_prio.c
+@@ -286,7 +286,7 @@ static int prio_dump_class_stats(struct
+ 
+ 	cl_q = q->queues[cl - 1];
+ 	if (gnet_stats_copy_basic(qdisc_root_sleeping_running(sch),
+-				  d, NULL, &cl_q->bstats) < 0 ||
++				  d, cl_q->cpu_bstats, &cl_q->bstats) < 0 ||
+ 	    gnet_stats_copy_queue(d, NULL, &cl_q->qstats, cl_q->q.qlen) < 0)
+ 		return -1;
  
 
 
