@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD84C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD78C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3252B20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DDD205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483811;
-	bh=qIgDX2z+lr7L+kdpozSslehcZI5zrr+JOqcoBwxWbXE=;
+	s=default; t=1575483817;
+	bh=nqrDeAiqwjw67y0i2EHRlzpeX2mJIKdZBClni9COesA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E7/62Wk8LToyqrXw0NW8nEqW7hknNaa9DXNG1WRNAphYh4kjty/QHihc2ZueCnUg4
-	 jYlyv5UsI3tDAXDfiZ0P/ZXyXlZRpLaTiThjroSwg4YZMuBrrg2KGe+eiqcd/NMatg
-	 u+WglM+f5mEL0WJKT7oNAEUWimDtV0VEVQV+Z/Zg=
+	b=gZ03rn64fA73ODyNxGApHSe5pK+TYZAZ6kI33hPFR3/qjFTPMvK+TZz6JkCw54zDX
+	 CbrB7HgQGp4PmUM0rYQ7yja6pATMLAGVGhDd3aicbYETLpgFA6rdVEiNKc+gSnznEs
+	 BUmVQ4B+T/lce/NtPbXt67K/pzyUb5TSqDg7sIIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730325AbfLDSX3 (ORCPT
+        id S1731181AbfLDSXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:23:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49064 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:23:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730139AbfLDSEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:04:09 -0500
+        id S1729723AbfLDSD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:03:56 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8E0320675;
-        Wed,  4 Dec 2019 18:04:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF4792073B;
+        Wed,  4 Dec 2019 18:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482649;
-        bh=qIgDX2z+lr7L+kdpozSslehcZI5zrr+JOqcoBwxWbXE=;
+        s=default; t=1575482636;
+        bh=nqrDeAiqwjw67y0i2EHRlzpeX2mJIKdZBClni9COesA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hRJc/n5bI7TLhj9/E7WwgzB161G5BQF51Ib5rDNrJ0Qu0v+ADIpqcWfjtD8NtFe11
-         WwYaK6DmYmwpURscBeeVm79C44wXnazI/g5wCfgFslQLLBOv8bPhL6ectOQ20fVHQd
-         wELtPYO52K9AZDNr5Yx+5nktcx5nnC2aB+UfFa7A=
+        b=E2ASZ2Wj1ijkpV0HIBxt8Q4FS/r47SJFer2BZYiNWsiKKShPMF6tjJDyA8y5+IWBF
+         A1R0LLdTX4CwDxGfKbxBdihZvwrJxol6TzflavsIa9DAe8SXxJk7WxYwAJrF1ileIu
+         EJNr7GyWfn2NpSH9ERy0fXnahxBAxuYRfNia2WfM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 079/209] IB/qib: Fix an error code in qib_sdma_verbs_send()
-Date:   Wed,  4 Dec 2019 18:54:51 +0100
-Message-Id: <20191204175326.927329191@linuxfoundation.org>
+Subject: [PATCH 4.14 048/209] rtl818x: fix potential use after free
+Date:   Wed,  4 Dec 2019 18:54:20 +0100
+Message-Id: <20191204175324.678822977@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,36 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 5050ae5fa3d54c8e83e1e447cc7e3591110a7f57 ]
+[ Upstream commit afbb1947db94eacc5a13302eee88a9772fb78935 ]
 
-We accidentally return success on this error path.
+entry is released via usb_put_urb just after calling usb_submit_urb.
+However, entry is used if the submission fails, resulting in a use after
+free bug. The patch fixes this.
 
-Fixes: f931551bafe1 ("IB/qib: Add new qib driver for QLogic PCIe InfiniBand adapters")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+ACKed-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qib/qib_sdma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/qib/qib_sdma.c b/drivers/infiniband/hw/qib/qib_sdma.c
-index 891873b38a1e6..5f3f197678b78 100644
---- a/drivers/infiniband/hw/qib/qib_sdma.c
-+++ b/drivers/infiniband/hw/qib/qib_sdma.c
-@@ -600,8 +600,10 @@ retry:
- 		dw = (len + 3) >> 2;
- 		addr = dma_map_single(&ppd->dd->pcidev->dev, sge->vaddr,
- 				      dw << 2, DMA_TO_DEVICE);
--		if (dma_mapping_error(&ppd->dd->pcidev->dev, addr))
-+		if (dma_mapping_error(&ppd->dd->pcidev->dev, addr)) {
-+			ret = -ENOMEM;
- 			goto unmap;
-+		}
- 		sdmadesc[0] = 0;
- 		make_sdma_desc(ppd, sdmadesc, (u64) addr, dw, dwoffset);
- 		/* SDmaUseLargeBuf has to be set in every descriptor */
+diff --git a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
+index 9a1d15b3ce453..518caaaf8a987 100644
+--- a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
++++ b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
+@@ -444,12 +444,13 @@ static int rtl8187_init_urbs(struct ieee80211_hw *dev)
+ 		skb_queue_tail(&priv->rx_queue, skb);
+ 		usb_anchor_urb(entry, &priv->anchored);
+ 		ret = usb_submit_urb(entry, GFP_KERNEL);
+-		usb_put_urb(entry);
+ 		if (ret) {
+ 			skb_unlink(skb, &priv->rx_queue);
+ 			usb_unanchor_urb(entry);
++			usb_put_urb(entry);
+ 			goto err;
+ 		}
++		usb_put_urb(entry);
+ 	}
+ 	return ret;
+ 
 -- 
 2.20.1
 
