@@ -2,116 +2,114 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B95C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7829BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E510B24684
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3865920661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 06:54:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p4jlz6cv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BOkMzCMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfLDGdH (ORCPT
+        id S1727133AbfLDGyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 01:33:07 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:34514 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfLDGdH (ORCPT
+        Wed, 4 Dec 2019 01:54:07 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35557 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfLDGyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 01:33:07 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB46T2FY063294;
-        Wed, 4 Dec 2019 06:32:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=dACA43soU8GDdHUjwYqjBqF/VhZ6M/HfzgDTJlJS8Ec=;
- b=p4jlz6cvyDmosH57R5bGv6rUx7bjuoaVmfO1bRDUceDvu3sPiCvQ1kpjurrIO07A5oQ5
- YJYTiAjEOCsom78MMk1/yKNn+TUhXoDXGTdmfFQNDCIgzxgTCKG4ryKx3fltnRnZbnIa
- RHlNjL5VJOaTDLcOTSt1waLtCNizZzPimPJEKRuHmdxWvxyjKB+Yx/bX6p/zUBZqVSU3
- 409OPNRZqg7b70JZK28TtrpCJJ2YeRwKXRAvzJuY6lf4318TZLNiNimQyEszd8rDqNYU
- xAdd6ZzJoI27lRIRsDmateuI7L3VPGEvF/k2AX7cEeHAicUyQdsQnkNFvU8nv3YaOOz9 rQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2wkgcqcbdx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Dec 2019 06:32:54 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB46TCsI062755;
-        Wed, 4 Dec 2019 06:32:53 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2wp17csr5d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Dec 2019 06:32:53 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB46WqUg013991;
-        Wed, 4 Dec 2019 06:32:52 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Dec 2019 22:32:51 -0800
-Date:   Wed, 4 Dec 2019 09:32:40 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH -next] power: supply: ab8500: Drop pointless static
- qualifier in ab8500_btemp_batctrl_volt_to_res()
-Message-ID: <20191204063240.GJ1787@kadam>
-References: <20191204010506.159128-1-maowenan@huawei.com>
- <20191204063058.GE1765@kadam>
+        Wed, 4 Dec 2019 01:54:06 -0500
+Received: by mail-qk1-f194.google.com with SMTP id v23so6185637qkg.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 22:54:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NPK31KT4fxLwD0F1AZDz2V/fu+xIHdUgpNu7HrMjbFw=;
+        b=BOkMzCMzR5sKMnF42GmwGVTEJc+LOb23dsZlRHel6sRqIWvouhTx3uSjuj56W+eI6i
+         WKFjyajdaq7/klhycZJpOZ1C5uY21UsOGiG3SpNpVOEnp0+cjCk+LYKRMS3fgkriAub8
+         nlHDa2FMR8/XmMhwk20tOkMU7HMQ5vmevU7ui4yNMQ51MSLv6jRXrtVe2iukGrm6XIBU
+         vGbD2kLuak4JrxMh1o/1pLHbGaeWJKVG7AbvqgJWVtMDRZkN1JqlAgO8mU4Ox2Exa1tC
+         Mj5rKh2JP3pCY5Jxm8w4XU444Krqs9wk1QO+o+2WiulmzqgHnVKwfLTC/2Na+ibHlTMY
+         OeNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NPK31KT4fxLwD0F1AZDz2V/fu+xIHdUgpNu7HrMjbFw=;
+        b=sdwLBcUWQTpjtTi9RKCDbiAYGDRIin35/SDkfUwHJJl9BMdR6ZMaXkxiZ6PoHYdtq/
+         i8TLlY2uv2LyGFVLnvEXjxqS1t0N0QqZGFSymhPc8HLMvttIvyQDC07bIDn3ADl9xmRa
+         6GsyjekGtme8vaFID1Zxf2l8l8GKeotqFcVauMUSrT21UNagvKbIac/222bfO8NVnhV5
+         Gryzau8WZaOPlNPNlZ7i32npg+uj7K60pmnlHmpGqWKg5UaVvp2tSeWjn6PfRpr7vEX3
+         HcF07HOJ+GmjSXsLcF6IJL0b5/CHuMOX2+4dIj62kjudMSJSLpnI69Ao4AJuiryBO2NY
+         4hhw==
+X-Gm-Message-State: APjAAAWRUGSOXFr2sIb4kbQhvCUPTzWp6YItlclOCO5xvi7hNR4SzTlw
+        mCmCKS8a+FwIe5mIZMHoC0OnWfx9OtRoSv42OLbAfQ==
+X-Google-Smtp-Source: APXvYqyKONKPMM3S6T9nyyBFpC5NnDRt2Bm9tOCUttMMCINdvVilsB2+tf+V3DS0oKZWvWvW5H/afsAEiU8hht6KyQ0=
+X-Received: by 2002:a37:9d12:: with SMTP id g18mr1356251qke.43.1575442445437;
+ Tue, 03 Dec 2019 22:54:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204063058.GE1765@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912040046
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9460 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912040046
+References: <000000000000dd04830598d50133@google.com> <0000000000009574da0598d7ccfa@google.com>
+In-Reply-To: <0000000000009574da0598d7ccfa@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 4 Dec 2019 07:53:54 +0100
+Message-ID: <CACT4Y+aEzDb2r=wjAD=qWyE=_JCfH8pzdoWCdLQsCmWmahLhaw@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in tty_open
+To:     syzbot <syzbot+9af6d43c1beabec8fd05@syzkaller.appspotmail.com>
+Cc:     Gleb Natapov <gleb@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        gwshan@linux.vnet.ibm.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Jiri Slaby <jslaby@suse.com>, KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Russell Currey <ruscur@russell.cc>, stewart@linux.vnet.ibm.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 09:30:58AM +0300, Dan Carpenter wrote:
-> On Wed, Dec 04, 2019 at 09:05:06AM +0800, Mao Wenan wrote:
-> > There is no need to have the 'T *v' variable static
-> > since new value always be assigned before use it.
-> > 
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> > ---
-> >  drivers/power/supply/ab8500_btemp.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/power/supply/ab8500_btemp.c b/drivers/power/supply/ab8500_btemp.c
-> > index 909f0242bacb..d3d4f7327d1b 100644
-> > --- a/drivers/power/supply/ab8500_btemp.c
-> > +++ b/drivers/power/supply/ab8500_btemp.c
-> > @@ -180,7 +180,7 @@ static int ab8500_btemp_batctrl_volt_to_res(struct ab8500_btemp *di,
-> >  static int ab8500_btemp_read_batctrl_voltage(struct ab8500_btemp *di)
-> >  {
-> >  	int vbtemp, ret;
-> > -	static int prev;
-> > +	int prev;
-> 
-> No.  We use it first on linux-next (yesterday).  It needs to be static.
-> 
+On Wed, Dec 4, 2019 at 3:45 AM syzbot
+<syzbot+9af6d43c1beabec8fd05@syzkaller.appspotmail.com> wrote:
+>
+> syzbot has bisected this bug to:
+>
+> commit 2de50e9674fc4ca3c6174b04477f69eb26b4ee31
+> Author: Russell Currey <ruscur@russell.cc>
+> Date:   Mon Feb 8 04:08:20 2016 +0000
+>
+>      powerpc/powernv: Remove support for p5ioc2
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15e5fc32e00000
+> start commit:   76bb8b05 Merge tag 'kbuild-v5.5' of git://git.kernel.org/p..
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=17e5fc32e00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13e5fc32e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=dd226651cb0f364b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9af6d43c1beabec8fd05
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d15061e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14b69aeae00000
+>
+> Reported-by: syzbot+9af6d43c1beabec8fd05@syzkaller.appspotmail.com
+> Fixes: 2de50e9674fc ("powerpc/powernv: Remove support for p5ioc2")
+>
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-It's surprising that your patch didn't cause an uninitialized variable
-compile warning for you.
-
-regards,
-dan carpenter
-
+This should have been detected as "does not affect binary", but there
+is something I don't understand/missing:
+This is bisected to 2de50e9674fc4ca3c6174b04477f69eb26b4ee31
+and it has this parent:
+$ git log -n 1 --format="%P" 2de50e9674fc4ca3c6174b04477f69eb26b4ee31
+388f7b1d6e8ca06762e2454d28d6c3c55ad0fe95
+But the parent was never tested during bisection... how is this possible?
+Mentioned this here:
+https://github.com/google/syzkaller/issues/1271#issuecomment-561504032
