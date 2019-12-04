@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143C8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31E2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD3F320674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8607820862
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482858;
-	bh=TJx8KbA4ZSUM9FPpwLULBs4doPP4axQ+NI5GD8/63TE=;
+	s=default; t=1575482862;
+	bh=ZmRfeg7mG/o18B/qAwsmClWkZP/Qip4Ex6AAyRlF5J4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gqTdwjJv+giGPycaf7XdkRyD3z1ftK8R6tk+fsPtqa0QCp8SkZ7uj/HhQ/BZ8Xibm
-	 lrPn3IFJGaazqZ2mdz2f3WbxRuESyC2mXvpijAWlb3Bnzvb5MRC0Ovq0iwT7EirOZw
-	 jb/wLV5TMXaJel5duw8Ao2pI7MGo0hzoXqhjpJGw=
+	b=RfxLRUlClE7xgwyvKfuWE895jgy83g9RX4Vq4eVlXum+tvLMrgZSGgCatrsShHVQy
+	 QqJpWjAS2Sx0FjGMW4j0TUeCSI/D0AZ8kJpQx9PQ2hjqkkinG3n2cCiuIyoLl9ka9R
+	 SS52V0J0j9kuk39vvUXF6GyG24hBriOqhoKbxXOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730790AbfLDSHh (ORCPT
+        id S1730797AbfLDSHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:07:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57650 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:07:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730415AbfLDSHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:07:32 -0500
+        id S1730789AbfLDSHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:07:37 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C4A20675;
-        Wed,  4 Dec 2019 18:07:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D3FF20862;
+        Wed,  4 Dec 2019 18:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482852;
-        bh=TJx8KbA4ZSUM9FPpwLULBs4doPP4axQ+NI5GD8/63TE=;
+        s=default; t=1575482857;
+        bh=ZmRfeg7mG/o18B/qAwsmClWkZP/Qip4Ex6AAyRlF5J4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MckX4L2gZNTaC/m+s9hWljfioAtqbPKeTy7w3xFnezWUsoFWo1ThO5deb+skuehCP
-         dmYPPotG3+yrSD9pjWncG6PgvSBLrIyyGmp+lC0BS1F/wqZtyPcpLVEKIZpUijIlwn
-         bViRhbCUlgT+aBxBeKFLBFnevnDCTmvwx46IFA1M=
+        b=iVxcouETYJtWvbbi4tYuUYZaNNkI9GFSUVkgWf3Ukl+3ARr3Zyu/OmGcPm0zOrJ8r
+         sjxArUqj9X6WcXFEvkGm1yFlWN5u6i74iQm5LiX7afvqzh+NWLiIpENQPO5pXor06U
+         kQgFUmevePBG774vfKGZtn782UVMjrDC6QKhfUCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        youling257 <youling257@gmail.com>
-Subject: [PATCH 4.14 160/209] staging: rtl8723bs: Add 024c:0525 to the list of SDIO device-ids
-Date:   Wed,  4 Dec 2019 18:56:12 +0100
-Message-Id: <20191204175334.496878404@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 4.14 162/209] mei: bus: prefix device names on bus with the bus name
+Date:   Wed,  4 Dec 2019 18:56:14 +0100
+Message-Id: <20191204175334.636738550@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -59,33 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 3d5f1eedbfd22ceea94b39989d6021b1958181f4 upstream.
+commit 7a2b9e6ec84588b0be65cc0ae45a65bac431496b upstream.
 
-Add 024c:0525 to the list of SDIO device-ids, based on a patch found
-in the Android X86 kernels. According to that patch this device id is
-used on the Alcatel Plus 10 device.
+Add parent device name to the name of devices on bus to avoid
+device names collisions for same client UUID available
+from different MEI heads. Namely this prevents sysfs collision under
+/sys/bus/mei/device/
 
-Reported-and-tested-by: youling257 <youling257@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191111113846.24940-1-hdegoede@redhat.com
+In the device part leave just UUID other parameters that are
+required for device matching are not required here and are
+just bloating the name.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20191105150514.14010-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8723bs/os_dep/sdio_intf.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/mei/bus.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-+++ b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-@@ -25,6 +25,7 @@
- static const struct sdio_device_id sdio_ids[] =
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -850,15 +850,16 @@ static const struct device_type mei_cl_d
+ 
+ /**
+  * mei_cl_bus_set_name - set device name for me client device
++ *  <controller>-<client device>
++ *  Example: 0000:00:16.0-55213584-9a29-4916-badf-0fb7ed682aeb
+  *
+  * @cldev: me client device
+  */
+ static inline void mei_cl_bus_set_name(struct mei_cl_device *cldev)
  {
- 	{ SDIO_DEVICE(0x024c, 0x0523), },
-+	{ SDIO_DEVICE(0x024c, 0x0525), },
- 	{ SDIO_DEVICE(0x024c, 0x0623), },
- 	{ SDIO_DEVICE(0x024c, 0x0626), },
- 	{ SDIO_DEVICE(0x024c, 0xb723), },
+-	dev_set_name(&cldev->dev, "mei:%s:%pUl:%02X",
+-		     cldev->name,
+-		     mei_me_cl_uuid(cldev->me_cl),
+-		     mei_me_cl_ver(cldev->me_cl));
++	dev_set_name(&cldev->dev, "%s-%pUl",
++		     dev_name(cldev->bus->dev),
++		     mei_me_cl_uuid(cldev->me_cl));
+ }
+ 
+ /**
 
 
