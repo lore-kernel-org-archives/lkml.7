@@ -2,52 +2,54 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC66C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4D8C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3DB20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A1720675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483599;
-	bh=uKXpVmh/ikjybWUv3q4M6l44VxMqVZPCOOxvCGn/hNc=;
+	s=default; t=1575483602;
+	bh=Nh+HcfVHCez8hEtRqsXlfDz3c1EZS0DjrPKmFW0Nb7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UcnkxOL1HtgxbYQTmG9QLeAK2kITOsaJpP9rloFc7n8PQg+9A47/3cy61ur5y8Cyg
-	 9d+FOgmy0L4mheM1HCICpM9ZlNAISwscuMB0J8HvAT9Fym71e8emMNTRMnEz5HYe26
-	 s8+19sG3V8DJWfVPtNKw7ZdTJAm2AOGwJH29XUM4=
+	b=cImgeXffU48MqOcxbVOpp3vZ+XKU/ZaYcxnoPU9kY7A59eQqF2OJ35j+zGcR6QRzp
+	 ST9IdsnMNzMfH8n3THTYIOwGjtB6oxdJzqaw+F2vw1aQJNGQ+8eFl1neIYCWAoypyb
+	 /OlmopkcGKz1/PyamaPrt2BAwdu8m28IsXbqQbHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731513AbfLDST6 (ORCPT
+        id S1730981AbfLDSI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:19:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33844 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:08:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730492AbfLDSI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:08:58 -0500
+        id S1730950AbfLDSIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:08:43 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 612D9206DF;
-        Wed,  4 Dec 2019 18:08:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C94B206DF;
+        Wed,  4 Dec 2019 18:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482937;
-        bh=uKXpVmh/ikjybWUv3q4M6l44VxMqVZPCOOxvCGn/hNc=;
+        s=default; t=1575482922;
+        bh=Nh+HcfVHCez8hEtRqsXlfDz3c1EZS0DjrPKmFW0Nb7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fc4O9KjFdvSfwHaXAPfLY5GRa6TE73cnot8JhkXOMQzyV9aizjQAo4HrZ4ChBVxDF
-         R6QENAeeuClt5KYL6yOyGZ5n0gNDQYeHBbjGyG+RFsc7r/7TOwhmWFMVLNysusAsQa
-         YANzj438BFydLv22l1sRMlk0kWtJ31KoLz6jmJRc=
+        b=oP4Q/Vu6XSYETN2ILr2I8vVLmooWuZl5JlpAoGpeHfjqBRmOh/8xBHa1o/AEZZCPY
+         tYLnvoYBpawqM+iKOvJLFtuDTjTG2TpsLE1sCdsV8mzwrkPfFx74pA+64TCYoXHszT
+         sZDN6s+5Y3P68oCp1quh78e49xCn8r1bxn3fz7/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 4.14 196/209] futex: Provide distinct return value when owner is exiting
-Date:   Wed,  4 Dec 2019 18:56:48 +0100
-Message-Id: <20191204175336.977670539@linuxfoundation.org>
+        stable@vger.kernel.org, Peng Sun <sironhide0null@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 145/209] bpf: drop refcount if bpf_map_new_fd() fails in map_create()
+Date:   Wed,  4 Dec 2019 18:55:57 +0100
+Message-Id: <20191204175333.517622722@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,82 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Peng Sun <sironhide0null@gmail.com>
 
-commit ac31c7ff8624409ba3c4901df9237a616c187a5d upstream.
+[ Upstream commit 352d20d611414715353ee65fc206ee57ab1a6984 ]
 
-attach_to_pi_owner() returns -EAGAIN for various cases:
+In bpf/syscall.c, map_create() first set map->usercnt to 1, a file
+descriptor is supposed to return to userspace. When bpf_map_new_fd()
+fails, drop the refcount.
 
- - Owner task is exiting
- - Futex value has changed
-
-The caller drops the held locks (hash bucket, mmap_sem) and retries the
-operation. In case of the owner task exiting this can result in a live
-lock.
-
-As a preparatory step for seperating those cases, provide a distinct return
-value (EBUSY) for the owner exiting case.
-
-No functional change.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20191106224556.935606117@linutronix.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: bd5f5f4ecb78 ("bpf: Add BPF_MAP_GET_FD_BY_ID")
+Signed-off-by: Peng Sun <sironhide0null@gmail.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/futex.c |   16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ kernel/bpf/syscall.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -1182,11 +1182,11 @@ static int handle_exit_race(u32 __user *
- 	u32 uval2;
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 34110450a78f2..f5c1d5479ba3d 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -348,12 +348,12 @@ static int map_create(union bpf_attr *attr)
+ 	err = bpf_map_new_fd(map);
+ 	if (err < 0) {
+ 		/* failed to allocate fd.
+-		 * bpf_map_put() is needed because the above
++		 * bpf_map_put_with_uref() is needed because the above
+ 		 * bpf_map_alloc_id() has published the map
+ 		 * to the userspace and the userspace may
+ 		 * have refcnt-ed it through BPF_MAP_GET_FD_BY_ID.
+ 		 */
+-		bpf_map_put(map);
++		bpf_map_put_with_uref(map);
+ 		return err;
+ 	}
  
- 	/*
--	 * If the futex exit state is not yet FUTEX_STATE_DEAD, wait
--	 * for it to finish.
-+	 * If the futex exit state is not yet FUTEX_STATE_DEAD, tell the
-+	 * caller that the alleged owner is busy.
- 	 */
- 	if (tsk && tsk->futex_state != FUTEX_STATE_DEAD)
--		return -EAGAIN;
-+		return -EBUSY;
- 
- 	/*
- 	 * Reread the user space value to handle the following situation:
-@@ -2093,12 +2093,13 @@ retry_private:
- 			if (!ret)
- 				goto retry;
- 			goto out;
-+		case -EBUSY:
- 		case -EAGAIN:
- 			/*
- 			 * Two reasons for this:
--			 * - Owner is exiting and we just wait for the
-+			 * - EBUSY: Owner is exiting and we just wait for the
- 			 *   exit to complete.
--			 * - The user space value changed.
-+			 * - EAGAIN: The user space value changed.
- 			 */
- 			double_unlock_hb(hb1, hb2);
- 			hb_waiters_dec(hb2);
-@@ -2859,12 +2860,13 @@ retry_private:
- 			goto out_unlock_put_key;
- 		case -EFAULT:
- 			goto uaddr_faulted;
-+		case -EBUSY:
- 		case -EAGAIN:
- 			/*
- 			 * Two reasons for this:
--			 * - Task is exiting and we just wait for the
-+			 * - EBUSY: Task is exiting and we just wait for the
- 			 *   exit to complete.
--			 * - The user space value changed.
-+			 * - EAGAIN: The user space value changed.
- 			 */
- 			queue_unlock(hb);
- 			put_futex_key(&q.key);
+-- 
+2.20.1
+
 
 
