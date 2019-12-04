@@ -2,160 +2,207 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB18C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA10EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F122068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF9F20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:16:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="XC4SD8Nm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfLDIPK (ORCPT
+        id S1727177AbfLDIQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:15:10 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:56100 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfLDIPJ (ORCPT
+        Wed, 4 Dec 2019 03:16:47 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39883 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfLDIQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:15:09 -0500
-Received: by mail-io1-f69.google.com with SMTP id z21so4477884iob.22
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 00:15:09 -0800 (PST)
+        Wed, 4 Dec 2019 03:16:47 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y11so7357945wrt.6
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 00:16:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=A3EjttU8t1DCaxtv3QmwTcUqJUdcBQEbi7gg5HzyUUg=;
+        b=XC4SD8Nm/CJsVX2cNdH7LMWWN1jdVbSSfwd5CoVNQMApFZ+METGkcdcOx2Hm/HnLn7
+         p5o53EPcTISnscB7YQ3Y9dglaKVNaQnve9q4h2ZwxJQR/MdFfdC7o6AjnJqXsi6eElZb
+         ejtUwfloOEdNVnXzKDxOgjYzLHhO7l8WMX0SUBahb/mhtCnl7eci/+AVJn47kzjbCiU1
+         0fQJ7xnwFY8h0qKjFkKbjGbtsPtZdZVX/M6S6QuBjuls6n7ouePAkdN4MP43579p06dk
+         9gEW0OmWqbL+XeR8HcAhI4UJJo3BdbQW3STwibFTMTinesHQFa0m1amtrRRmaOOo2Cs5
+         LJgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=3gxsHwvlUUBpSvK315i8o2sg/roLIxlVFL41wPQysKk=;
-        b=tDWlMbDfeZshv4ZPiPAWv6UiaqkQ+NhEftAuRkjAp/3/VZ5panbobEa48pslqJTmoj
-         5y/UuY/LTfQO2EqQVlATPAXaI3etW+fjVyhQdjobFesBWG8FcCxv4eOWcaOCEw5C24GE
-         JwRQunLuqslSieZxK8yN0w9MDQ/6DF04nnYcnKcQd9MFUajHtisXjAvlr5Bx6lEY4NVL
-         Krwou5rttQ3jkOJFM/NaoKw5yAqxG4pWcvx6WP/trPIKW5NQAtbl+0YIX+66FUVXebGj
-         b0TO39pTm471Acots6CHXbPz0sRy+l8N4SHfAoDypiY+FccPHxEukkW2XuRXub3ODoLd
-         KIfw==
-X-Gm-Message-State: APjAAAW/EhcbByhu7nRubUqkHD4PhL3rAYCrL0hzslHj+CmzfDvKTXC8
-        mQVAML3rAngaRWw0WIVIf7MOj8R0jJw2f39rjoML2EYzF9Ut
-X-Google-Smtp-Source: APXvYqzIxmgXZ1QBxq9xD17imaY7z6J5sKHlCL+TCugehyRVkX/brVHwcBEz4gS5IceA/HyMOfHDPcia0dyBirhn7V2aKi4P33dF
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=A3EjttU8t1DCaxtv3QmwTcUqJUdcBQEbi7gg5HzyUUg=;
+        b=XZ4Y/1gB4dSqnZc4IkqF/2fjN1Pi6SZl6T4w+ei53+gBU7DnP6zbKcol8lvgsUMEa6
+         SIBA8o57E6hZwQ54+YyqjTgb+eGfmdt52nlNb1cga1Dn0SvV12dWef6LvhaTVHvE1yAu
+         2mTOWWRz0SmOZP7CSq7wHRUAiXfEsEgwyZ1ALBSnegKepeCyIewBjteXRECxHgYtIk2H
+         aovEpN8DCGkashj7smCHv9KFOC98mapFuRNmR/PIE0pV1vb+Pq0AkH8qAYnMNiMUeFNM
+         UQNM0Wue6z28fYVAZLRbDTH9YIHoo1evvywl+hLXQ3WB19Ce0/YFxmjglXaohwDzgh1y
+         bH0A==
+X-Gm-Message-State: APjAAAWomubcJj1EkDlk/KF5ZR/82LH/su+LLc4rC1MfGuMD4Jg/IPLX
+        3sPTGO49dedA7jGORi5TxMWJQg==
+X-Google-Smtp-Source: APXvYqxhYn0nwnicejVfpeVuMHpPYxIZfRC6Yv6j4V8Gy/5U1lyQHKa9KaXdhFUr/j++Rc1R50CEyg==
+X-Received: by 2002:adf:dd46:: with SMTP id u6mr2599078wrm.13.1575447404312;
+        Wed, 04 Dec 2019 00:16:44 -0800 (PST)
+Received: from localhost ([194.62.217.57])
+        by smtp.gmail.com with ESMTPSA id g21sm8286034wrb.48.2019.12.04.00.16.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 00:16:43 -0800 (PST)
+Date:   Wed, 4 Dec 2019 09:16:42 +0100
+From:   Javier Gonzalez <javier@javigon.com>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        linux-fsdevel@vger.kernel.org,
+        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: Re: [PATCH v2] f2fs: Fix direct IO handling
+Message-ID: <20191204081642.gnd55byogedrhfoz@MacBook-Pro.gnusmas>
+References: <20191126075719.1046485-1-damien.lemoal@wdc.com>
+ <20191126234428.GB20652@jaegeuk-macbookpro.roam.corp.google.com>
+ <20191203173308.GA41093@jaegeuk-macbookpro.roam.corp.google.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:a148:: with SMTP id m8mr1878744jah.69.1575447308616;
- Wed, 04 Dec 2019 00:15:08 -0800 (PST)
-Date:   Wed, 04 Dec 2019 00:15:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000314c120598dc69bd@google.com>
-Subject: BUG: unable to handle kernel paging request in pcpu_alloc
-From:   syzbot <syzbot+82e323920b78d54aaed5@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191203173308.GA41093@jaegeuk-macbookpro.roam.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 03.12.2019 09:33, Jaegeuk Kim wrote:
+>Thank you for checking the patch.
+>I found some regressions in xfstests, so want to follow the Damien's one
+>like below.
+>
+>Thanks,
+>
+>===
+>From 9df6f09e3a09ed804aba4b56ff7cd9524c002e69 Mon Sep 17 00:00:00 2001
+>From: Jaegeuk Kim <jaegeuk@kernel.org>
+>Date: Tue, 26 Nov 2019 15:01:42 -0800
+>Subject: [PATCH] f2fs: preallocate DIO blocks when forcing buffered_io
+>
+>The previous preallocation and DIO decision like below.
+>
+>                         allow_outplace_dio              !allow_outplace_dio
+>f2fs_force_buffered_io   (*) No_Prealloc / Buffered_IO   Prealloc / Buffered_IO
+>!f2fs_force_buffered_io  No_Prealloc / DIO               Prealloc / DIO
+>
+>But, Javier reported Case (*) where zoned device bypassed preallocation but
+>fell back to buffered writes in f2fs_direct_IO(), resulting in stale data
+>being read.
+>
+>In order to fix the issue, actually we need to preallocate blocks whenever
+>we fall back to buffered IO like this. No change is made in the other cases.
+>
+>                         allow_outplace_dio              !allow_outplace_dio
+>f2fs_force_buffered_io   (*) Prealloc / Buffered_IO      Prealloc / Buffered_IO
+>!f2fs_force_buffered_io  No_Prealloc / DIO               Prealloc / DIO
+>
+>Reported-and-tested-by: Javier Gonzalez <javier@javigon.com>
+>Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+>Tested-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+>Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>---
+> fs/f2fs/data.c | 13 -------------
+> fs/f2fs/file.c | 43 +++++++++++++++++++++++++++++++++----------
+> 2 files changed, 33 insertions(+), 23 deletions(-)
+>
+>diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>index a034cd0ce021..fc40a72f7827 100644
+>--- a/fs/f2fs/data.c
+>+++ b/fs/f2fs/data.c
+>@@ -1180,19 +1180,6 @@ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
+> 	int err = 0;
+> 	bool direct_io = iocb->ki_flags & IOCB_DIRECT;
+>
+>-	/* convert inline data for Direct I/O*/
+>-	if (direct_io) {
+>-		err = f2fs_convert_inline_inode(inode);
+>-		if (err)
+>-			return err;
+>-	}
+>-
+>-	if (direct_io && allow_outplace_dio(inode, iocb, from))
+>-		return 0;
+>-
+>-	if (is_inode_flag_set(inode, FI_NO_PREALLOC))
+>-		return 0;
+>-
+> 	map.m_lblk = F2FS_BLK_ALIGN(iocb->ki_pos);
+> 	map.m_len = F2FS_BYTES_TO_BLK(iocb->ki_pos + iov_iter_count(from));
+> 	if (map.m_len > map.m_lblk)
+>diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>index c0560d62dbee..0e1b12a4a4d6 100644
+>--- a/fs/f2fs/file.c
+>+++ b/fs/f2fs/file.c
+>@@ -3386,18 +3386,41 @@ static ssize_t f2fs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
+> 				ret = -EAGAIN;
+> 				goto out;
+> 			}
+>-		} else {
+>-			preallocated = true;
+>-			target_size = iocb->ki_pos + iov_iter_count(from);
+>+			goto write;
+>+		}
+>
+>-			err = f2fs_preallocate_blocks(iocb, from);
+>-			if (err) {
+>-				clear_inode_flag(inode, FI_NO_PREALLOC);
+>-				inode_unlock(inode);
+>-				ret = err;
+>-				goto out;
+>-			}
+>+		if (is_inode_flag_set(inode, FI_NO_PREALLOC))
+>+			goto write;
+>+
+>+		if (iocb->ki_flags & IOCB_DIRECT) {
+>+			/*
+>+			 * Convert inline data for Direct I/O before entering
+>+			 * f2fs_direct_IO().
+>+			 */
+>+			err = f2fs_convert_inline_inode(inode);
+>+			if (err)
+>+				goto out_err;
+>+			/*
+>+			 * If force_buffere_io() is true, we have to allocate
+>+			 * blocks all the time, since f2fs_direct_IO will fall
+>+			 * back to buffered IO.
+>+			 */
+>+			if (!f2fs_force_buffered_io(inode, iocb, from) &&
+>+					allow_outplace_dio(inode, iocb, from))
+>+				goto write;
+>+		}
+>+		preallocated = true;
+>+		target_size = iocb->ki_pos + iov_iter_count(from);
+>+
+>+		err = f2fs_preallocate_blocks(iocb, from);
+>+		if (err) {
+>+out_err:
+>+			clear_inode_flag(inode, FI_NO_PREALLOC);
+>+			inode_unlock(inode);
+>+			ret = err;
+>+			goto out;
+> 		}
+>+write:
+> 		ret = __generic_file_write_iter(iocb, from);
+> 		clear_inode_flag(inode, FI_NO_PREALLOC);
+>
+>-- 
+>2.19.0.605.g01d371f741-goog
+>
+>
 
-syzbot found the following crash on:
+Looks good to me. It also fixes the problem we see in our end.
 
-HEAD commit:    1ab75b2e Add linux-next specific files for 20191203
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10edf2eae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=de1505c727f0ec20
-dashboard link: https://syzkaller.appspot.com/bug?extid=82e323920b78d54aaed5
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=156ef061e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11641edae00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+82e323920b78d54aaed5@syzkaller.appspotmail.com
-
-RDX: 000000000000003c RSI: 0000000020000080 RDI: 0c00000000000000
-RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000018
-R13: 0000000000000004 R14: 0000000000000005 R15: 0000000000000000
-BUG: unable to handle page fault for address: fffff91ffff00000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffe6067 P4D 21ffe6067 PUD aa56c067 PMD aa56d067 PTE 0
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 8999 Comm: syz-executor865 Not tainted  
-5.4.0-next-20191203-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:memory_is_nonzero mm/kasan/generic.c:121 [inline]
-RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:135 [inline]
-RIP: 0010:memory_is_poisoned mm/kasan/generic.c:166 [inline]
-RIP: 0010:check_memory_region_inline mm/kasan/generic.c:182 [inline]
-RIP: 0010:check_memory_region+0x9c/0x1a0 mm/kasan/generic.c:192
-Code: c9 4d 0f 49 c1 49 c1 f8 03 45 85 c0 0f 84 10 01 00 00 41 83 e8 01 4e  
-8d 44 c0 08 eb 0d 48 83 c0 08 4c 39 c0 0f 84 a7 00 00 00 <48> 83 38 00 74  
-ed 4c 8d 40 08 eb 09 48 83 c0 01 49 39 c0 74 53 80
-RSP: 0018:ffffc90001f67a80 EFLAGS: 00010216
-RAX: fffff91ffff00000 RBX: fffff91ffff01000 RCX: ffffffff819e1589
-RDX: 0000000000000001 RSI: 0000000000008000 RDI: ffffe8ffff800000
-RBP: ffffc90001f67a98 R08: fffff91ffff01000 R09: 0000000000001000
-R10: fffff91ffff00fff R11: ffffe8ffff807fff R12: fffff91ffff00000
-R13: 0000000000008000 R14: 0000000000000000 R15: ffff88821fffd100
-FS:  00000000011a7880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffff91ffff00000 CR3: 00000000a94ad000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  memset+0x24/0x40 mm/kasan/common.c:107
-  memset include/linux/string.h:410 [inline]
-  pcpu_alloc+0x589/0x1380 mm/percpu.c:1734
-  __alloc_percpu_gfp+0x28/0x30 mm/percpu.c:1783
-  bpf_array_alloc_percpu kernel/bpf/arraymap.c:35 [inline]
-  array_map_alloc+0x698/0x7d0 kernel/bpf/arraymap.c:159
-  find_and_alloc_map kernel/bpf/syscall.c:123 [inline]
-  map_create kernel/bpf/syscall.c:654 [inline]
-  __do_sys_bpf+0x478/0x3810 kernel/bpf/syscall.c:3012
-  __se_sys_bpf kernel/bpf/syscall.c:2989 [inline]
-  __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:2989
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x442f99
-Code: e8 ec 09 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc8aa156d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000442f99
-RDX: 000000000000003c RSI: 0000000020000080 RDI: 0c00000000000000
-RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000018
-R13: 0000000000000004 R14: 0000000000000005 R15: 0000000000000000
-Modules linked in:
-CR2: fffff91ffff00000
----[ end trace 449f8b43dad6ffb8 ]---
-RIP: 0010:memory_is_nonzero mm/kasan/generic.c:121 [inline]
-RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:135 [inline]
-RIP: 0010:memory_is_poisoned mm/kasan/generic.c:166 [inline]
-RIP: 0010:check_memory_region_inline mm/kasan/generic.c:182 [inline]
-RIP: 0010:check_memory_region+0x9c/0x1a0 mm/kasan/generic.c:192
-Code: c9 4d 0f 49 c1 49 c1 f8 03 45 85 c0 0f 84 10 01 00 00 41 83 e8 01 4e  
-8d 44 c0 08 eb 0d 48 83 c0 08 4c 39 c0 0f 84 a7 00 00 00 <48> 83 38 00 74  
-ed 4c 8d 40 08 eb 09 48 83 c0 01 49 39 c0 74 53 80
-RSP: 0018:ffffc90001f67a80 EFLAGS: 00010216
-RAX: fffff91ffff00000 RBX: fffff91ffff01000 RCX: ffffffff819e1589
-RDX: 0000000000000001 RSI: 0000000000008000 RDI: ffffe8ffff800000
-RBP: ffffc90001f67a98 R08: fffff91ffff01000 R09: 0000000000001000
-R10: fffff91ffff00fff R11: ffffe8ffff807fff R12: fffff91ffff00000
-R13: 0000000000008000 R14: 0000000000000000 R15: ffff88821fffd100
-FS:  00000000011a7880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffff91ffff00000 CR3: 00000000a94ad000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Reviewed-by: Javier González <javier@javigon.com>
