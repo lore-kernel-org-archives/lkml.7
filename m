@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2840CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5861C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F02D920833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D0520674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482983;
-	bh=wjIAeldskLilIvaoK2XJFjAhvpCuqT460oTLXStuPl4=;
+	s=default; t=1575482986;
+	bh=TwRb2Jo2UO6eKV3XNXiuSSacNPsSiJZvcfN6vNluiqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A/dMDuHr73425TnQKJCSOYRWk7krp7C738TCms2d40aABGxoGzjD6jLbwYKn1SXx5
-	 4G9vzlLxCDsXcaLpow8GmjV4Q5gf96UKjx5tEL8lD+Xc6yvkLM7UmLb1gzxKqJxR7T
-	 LzykNibfYCbJ+gRReFUzXjWCUkPMZTor0LjvlRK0=
+	b=UbiyyiTUDAk8i92Grp6Dx2YJJZmNYU6ubJje+GAeWkqeipgWGKvIhJZEWum+/3OoD
+	 bCcaNTS9GvfIJBsQ159LQyNeDQnjjfSfA+fqWLtu1FObZ6zy8znP76RgH6uKJ6KkzE
+	 ewXGqqjMTU2zgaRDYLHhn2IhDFc3hrANhrITAb1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731121AbfLDSJm (ORCPT
+        id S1730828AbfLDSJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:09:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35610 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:09:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730607AbfLDSJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:09:38 -0500
+        id S1730809AbfLDSJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:09:40 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 313A320674;
-        Wed,  4 Dec 2019 18:09:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB03C20862;
+        Wed,  4 Dec 2019 18:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482977;
-        bh=wjIAeldskLilIvaoK2XJFjAhvpCuqT460oTLXStuPl4=;
+        s=default; t=1575482980;
+        bh=TwRb2Jo2UO6eKV3XNXiuSSacNPsSiJZvcfN6vNluiqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yL9/FuaMr6OhAOX8yNjHyCzNAHQ7FNOm7MXRavnu5JlgzHWrKW8eG9zBZTB81uT/1
-         Pvpkr99Xq81OnI4TcwyWdzm9v7AMofctxpVi32lgiUVePJ2/2FUzzvqhGdun4m5/Ii
-         bVC1URyKdSsV16EOHLkZHDnH0QG1ykr8PZZgSLoE=
+        b=0N/3HbaqIReTq/o+KFh9F164+Ah489n5yGckI5EAMhVLdOspaWXjko/CRURtCl+dQ
+         zLd6RbruESwXZKe1XJimVC8iWpHOxAmW9ev3qX98/SjpZtqNCZO2FPym+pT6uXRGm8
+         xukQP+YMqiV4maFHHzyxk6xqQIptgfnuxwQf2Zxw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 4.14 190/209] futex: Split futex_mm_release() for exit/exec
-Date:   Wed,  4 Dec 2019 18:56:42 +0100
-Message-Id: <20191204175336.567830543@linuxfoundation.org>
+Subject: [PATCH 4.14 191/209] futex: Set task::futex_state to DEAD right after handling futex exit
+Date:   Wed,  4 Dec 2019 18:56:43 +0100
+Message-Id: <20191204175336.636498362@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -62,95 +62,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 150d71584b12809144b8145b817e83b81158ae5f upstream.
+commit f24f22435dcc11389acc87e5586239c1819d217c upstream.
 
-To allow separate handling of the futex exit state in the futex exit code
-for exit and exec, split futex_mm_release() into two functions and invoke
-them from the corresponding exit/exec_mm_release() callsites.
+Setting task::futex_state in do_exit() is rather arbitrarily placed for no
+reason. Move it into the futex code.
 
-Preparatory only, no functional change.
+Note, this is only done for the exit cleanup as the exec cleanup cannot set
+the state to FUTEX_STATE_DEAD because the task struct is still in active
+use.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20191106224556.332094221@linutronix.de
+Link: https://lkml.kernel.org/r/20191106224556.439511191@linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/futex.h |    6 ++++--
- kernel/fork.c         |    5 ++---
- kernel/futex.c        |    7 ++++++-
- 3 files changed, 12 insertions(+), 6 deletions(-)
+ kernel/exit.c  |    1 -
+ kernel/futex.c |    1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/futex.h
-+++ b/include/linux/futex.h
-@@ -96,14 +96,16 @@ static inline void futex_exit_done(struc
- 	tsk->futex_state = FUTEX_STATE_DEAD;
- }
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -893,7 +893,6 @@ void __noreturn do_exit(long code)
+ 	 * Make sure we are holding no locks:
+ 	 */
+ 	debug_check_no_locks_held();
+-	futex_exit_done(tsk);
  
--void futex_mm_release(struct task_struct *tsk);
-+void futex_exit_release(struct task_struct *tsk);
-+void futex_exec_release(struct task_struct *tsk);
- 
- long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
- 	      u32 __user *uaddr2, u32 val2, u32 val3);
- #else
- static inline void futex_init_task(struct task_struct *tsk) { }
--static inline void futex_mm_release(struct task_struct *tsk) { }
- static inline void futex_exit_done(struct task_struct *tsk) { }
-+static inline void futex_exit_release(struct task_struct *tsk) { }
-+static inline void futex_exec_release(struct task_struct *tsk) { }
- #endif
- 
- #endif
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1134,9 +1134,6 @@ static int wait_for_vfork_done(struct ta
-  */
- static void mm_release(struct task_struct *tsk, struct mm_struct *mm)
- {
--	/* Get rid of any futexes when releasing the mm */
--	futex_mm_release(tsk);
--
- 	uprobe_free_utask(tsk);
- 
- 	/* Get rid of any cached register state */
-@@ -1171,11 +1168,13 @@ static void mm_release(struct task_struc
- 
- void exit_mm_release(struct task_struct *tsk, struct mm_struct *mm)
- {
-+	futex_exit_release(tsk);
- 	mm_release(tsk, mm);
- }
- 
- void exec_mm_release(struct task_struct *tsk, struct mm_struct *mm)
- {
-+	futex_exec_release(tsk);
- 	mm_release(tsk, mm);
- }
- 
+ 	if (tsk->io_context)
+ 		exit_io_context(tsk);
 --- a/kernel/futex.c
 +++ b/kernel/futex.c
-@@ -3684,7 +3684,7 @@ static void exit_robust_list(struct task
- 	}
- }
- 
--void futex_mm_release(struct task_struct *tsk)
-+void futex_exec_release(struct task_struct *tsk)
+@@ -3705,6 +3705,7 @@ void futex_exec_release(struct task_stru
+ void futex_exit_release(struct task_struct *tsk)
  {
- 	if (unlikely(tsk->robust_list)) {
- 		exit_robust_list(tsk);
-@@ -3702,6 +3702,11 @@ void futex_mm_release(struct task_struct
- 		exit_pi_state_list(tsk);
+ 	futex_exec_release(tsk);
++	futex_exit_done(tsk);
  }
  
-+void futex_exit_release(struct task_struct *tsk)
-+{
-+	futex_exec_release(tsk);
-+}
-+
  long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
- 		u32 __user *uaddr2, u32 val2, u32 val3)
- {
 
 
