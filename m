@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D854C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D607AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E897020675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A49E020675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482500;
-	bh=C6IeJ1Jr9eVTqu3mUr/vW3aqgYeK24qHmCmJDg0Y4Co=;
+	s=default; t=1575482504;
+	bh=H8r+7YXvCx8T/EUb3d20nJKxVG4s6oZ/bYM374HNWV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=he+g6mBOLA+MesKtIqRed/OCIdNjX5AvtyULMoY0k7of7avHLud1ATwBarPPPtwqO
-	 JV9Kf0FGW9O5LeL1yKwvQN6AiVNJQxG10Bjpa3J9ITqVAWAR+MPI4Mu7B1EY7Ev5Js
-	 vFMIqPr3Bdtqtk1ZmX6k2nmZ7Cz77o86INKTHCSw=
+	b=JpcnE4e8BZUl25fJMIM6gkPv4CC/TLbbbfsmFSTw868r9sdwKVAgJG6WgfO+2oJbK
+	 lFLzhZCCTtAF/0FFDudfngHpbcvoAADGEaKi8ftRI7hszpo7u9/JqIQ/KRTumFEpJO
+	 JOjjo4h6NtUDJppN4Uj7d6dVE7TBV51h6yKRLwUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729639AbfLDSBj (ORCPT
+        id S1729650AbfLDSBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:01:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42338 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:01:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729618AbfLDSBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:01:36 -0500
+        id S1729637AbfLDSBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:01:39 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C029320675;
-        Wed,  4 Dec 2019 18:01:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 331FB20865;
+        Wed,  4 Dec 2019 18:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482496;
-        bh=C6IeJ1Jr9eVTqu3mUr/vW3aqgYeK24qHmCmJDg0Y4Co=;
+        s=default; t=1575482498;
+        bh=H8r+7YXvCx8T/EUb3d20nJKxVG4s6oZ/bYM374HNWV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yI6aCkG8/xJBUXZXkyOId/4ROgy80L1iXfPZLfPVaKeHVkMcVPZr3shMEz6bRfxhk
-         TbCEwJgYrt/oCYKfUPqMGr8V4jQiTmprwSRES2OKQeEVkT8F0CGueexVHq7XAnkNbC
-         NxJSLeIJl+tJrWOMah+lO5SUhHbb1tWzG3UTruN8=
+        b=lGC1I8aWTRb+FUZaUt64T71AInacdLwze6wnv/NMutaFGNZsj5mRCF6V7C4IFw86j
+         KwjFDh9DpT1DabhRF8APXJrrGpTibkd1MVWyiTOLiZhGVnu8YQXbqLLPk3hNdKK2ih
+         QRHdvk8tXQywkqpbCE1CYmqbnKgA47phtNBUZpVY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 002/209] ASoC: msm8916-wcd-analog: Fix RX1 selection in RDAC2 MUX
-Date:   Wed,  4 Dec 2019 18:53:34 +0100
-Message-Id: <20191204175321.763617305@linuxfoundation.org>
+Subject: [PATCH 4.14 020/209] can: rx-offload: can_rx_offload_offload_one(): use ERR_PTR() to propagate error value in case of errors
+Date:   Wed,  4 Dec 2019 18:53:52 +0100
+Message-Id: <20191204175322.908327664@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,54 +59,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-[ Upstream commit 9110d1b0e229cebb1ffce0c04db2b22beffd513d ]
+[ Upstream commit d763ab3044f0bf50bd0e6179f6b2cf1c125d1d94 ]
 
-According to the PM8916 Hardware Register Description,
-CDC_D_CDC_CONN_HPHR_DAC_CTL has only a single bit (RX_SEL)
-to switch between RX1 (0) and RX2 (1). It is not possible to
-disable it entirely to achieve the "ZERO" state.
+Before this patch can_rx_offload_offload_one() returns a pointer to a
+skb containing the read CAN frame or a NULL pointer.
 
-However, at the moment the "RDAC2 MUX" mixer defines three possible
-values ("ZERO", "RX2" and "RX1"). Setting the mixer to "ZERO"
-actually configures it to RX1. Setting the mixer to "RX1" has
-(seemingly) no effect.
+However the meaning of the NULL pointer is ambiguous, it can either mean
+the requested mailbox is empty or there was an error.
 
-Remove "ZERO" and replace it with "RX1" to fix this.
+This patch fixes this situation by returning:
+- pointer to skb on success
+- NULL pointer if mailbox is empty
+- ERR_PTR() in case of an error
 
-Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20191020153007.206070-1-stephan@gerhold.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+All users of can_rx_offload_offload_one() have been adopted, no
+functional change intended.
+
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/msm8916-wcd-analog.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/can/rx-offload.c | 86 ++++++++++++++++++++++++++++++------
+ 1 file changed, 73 insertions(+), 13 deletions(-)
 
-diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
-index 0b9b014b4bb6c..969283737787f 100644
---- a/sound/soc/codecs/msm8916-wcd-analog.c
-+++ b/sound/soc/codecs/msm8916-wcd-analog.c
-@@ -303,7 +303,7 @@ struct pm8916_wcd_analog_priv {
- };
+diff --git a/drivers/net/can/rx-offload.c b/drivers/net/can/rx-offload.c
+index b068e2320c794..840aef094f208 100644
+--- a/drivers/net/can/rx-offload.c
++++ b/drivers/net/can/rx-offload.c
+@@ -116,39 +116,95 @@ static int can_rx_offload_compare(struct sk_buff *a, struct sk_buff *b)
+ 	return cb_b->timestamp - cb_a->timestamp;
+ }
  
- static const char *const adc2_mux_text[] = { "ZERO", "INP2", "INP3" };
--static const char *const rdac2_mux_text[] = { "ZERO", "RX2", "RX1" };
-+static const char *const rdac2_mux_text[] = { "RX1", "RX2" };
- static const char *const hph_text[] = { "ZERO", "Switch", };
+-static struct sk_buff *can_rx_offload_offload_one(struct can_rx_offload *offload, unsigned int n)
++/**
++ * can_rx_offload_offload_one() - Read one CAN frame from HW
++ * @offload: pointer to rx_offload context
++ * @n: number of mailbox to read
++ *
++ * The task of this function is to read a CAN frame from mailbox @n
++ * from the device and return the mailbox's content as a struct
++ * sk_buff.
++ *
++ * If the struct can_rx_offload::skb_queue exceeds the maximal queue
++ * length (struct can_rx_offload::skb_queue_len_max) or no skb can be
++ * allocated, the mailbox contents is discarded by reading it into an
++ * overflow buffer. This way the mailbox is marked as free by the
++ * driver.
++ *
++ * Return: A pointer to skb containing the CAN frame on success.
++ *
++ *         NULL if the mailbox @n is empty.
++ *
++ *         ERR_PTR() in case of an error
++ */
++static struct sk_buff *
++can_rx_offload_offload_one(struct can_rx_offload *offload, unsigned int n)
+ {
+-	struct sk_buff *skb = NULL;
++	struct sk_buff *skb = NULL, *skb_error = NULL;
+ 	struct can_rx_offload_cb *cb;
+ 	struct can_frame *cf;
+ 	int ret;
  
- static const struct soc_enum hph_enum = SOC_ENUM_SINGLE_VIRT(
-@@ -318,7 +318,7 @@ static const struct soc_enum adc2_enum = SOC_ENUM_SINGLE_VIRT(
+-	/* If queue is full or skb not available, read to discard mailbox */
+ 	if (likely(skb_queue_len(&offload->skb_queue) <
+-		   offload->skb_queue_len_max))
++		   offload->skb_queue_len_max)) {
+ 		skb = alloc_can_skb(offload->dev, &cf);
++		if (unlikely(!skb))
++			skb_error = ERR_PTR(-ENOMEM);	/* skb alloc failed */
++	} else {
++		skb_error = ERR_PTR(-ENOBUFS);		/* skb_queue is full */
++	}
  
- /* RDAC2 MUX */
- static const struct soc_enum rdac2_mux_enum = SOC_ENUM_SINGLE(
--			CDC_D_CDC_CONN_HPHR_DAC_CTL, 0, 3, rdac2_mux_text);
-+			CDC_D_CDC_CONN_HPHR_DAC_CTL, 0, 2, rdac2_mux_text);
+-	if (!skb) {
++	/* If queue is full or skb not available, drop by reading into
++	 * overflow buffer.
++	 */
++	if (unlikely(skb_error)) {
+ 		struct can_frame cf_overflow;
+ 		u32 timestamp;
  
- static const struct snd_kcontrol_new spkr_switch[] = {
- 	SOC_DAPM_SINGLE("Switch", CDC_A_SPKR_DAC_CTL, 7, 1, 0)
+ 		ret = offload->mailbox_read(offload, &cf_overflow,
+ 					    &timestamp, n);
+-		if (ret) {
+-			offload->dev->stats.rx_dropped++;
+-			offload->dev->stats.rx_fifo_errors++;
+-		}
+ 
+-		return NULL;
++		/* Mailbox was empty. */
++		if (unlikely(!ret))
++			return NULL;
++
++		/* Mailbox has been read and we're dropping it or
++		 * there was a problem reading the mailbox.
++		 *
++		 * Increment error counters in any case.
++		 */
++		offload->dev->stats.rx_dropped++;
++		offload->dev->stats.rx_fifo_errors++;
++
++		/* There was a problem reading the mailbox, propagate
++		 * error value.
++		 */
++		if (unlikely(ret < 0))
++			return ERR_PTR(ret);
++
++		return skb_error;
+ 	}
+ 
+ 	cb = can_rx_offload_get_cb(skb);
+ 	ret = offload->mailbox_read(offload, cf, &cb->timestamp, n);
+-	if (!ret) {
++
++	/* Mailbox was empty. */
++	if (unlikely(!ret)) {
+ 		kfree_skb(skb);
+ 		return NULL;
+ 	}
+ 
++	/* There was a problem reading the mailbox, propagate error value. */
++	if (unlikely(ret < 0)) {
++		kfree_skb(skb);
++
++		offload->dev->stats.rx_dropped++;
++		offload->dev->stats.rx_fifo_errors++;
++
++		return ERR_PTR(ret);
++	}
++
++	/* Mailbox was read. */
+ 	return skb;
+ }
+ 
+@@ -168,7 +224,7 @@ int can_rx_offload_irq_offload_timestamp(struct can_rx_offload *offload, u64 pen
+ 			continue;
+ 
+ 		skb = can_rx_offload_offload_one(offload, i);
+-		if (!skb)
++		if (IS_ERR_OR_NULL(skb))
+ 			break;
+ 
+ 		__skb_queue_add_sort(&skb_queue, skb, can_rx_offload_compare);
+@@ -199,7 +255,11 @@ int can_rx_offload_irq_offload_fifo(struct can_rx_offload *offload)
+ 	struct sk_buff *skb;
+ 	int received = 0;
+ 
+-	while ((skb = can_rx_offload_offload_one(offload, 0))) {
++	while (1) {
++		skb = can_rx_offload_offload_one(offload, 0);
++		if (IS_ERR_OR_NULL(skb))
++			break;
++
+ 		skb_queue_tail(&offload->skb_queue, skb);
+ 		received++;
+ 	}
 -- 
 2.20.1
 
