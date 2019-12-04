@@ -2,51 +2,52 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51465C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5D2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24EC32084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A6A920862
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482437;
-	bh=AdY9CoZS6VbSim8ej2vJKKJ5+4ut52l1UdMkaC/yLbQ=;
+	s=default; t=1575482441;
+	bh=IP5ew8cinng8wN83PXrqL1p/+8xz9WNlKNL1skXB5BE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MLb6q1mofjV+sWquTJRfcc+wVXEZgefFMas+4C8oFKGt6ap9rP5rC4em4oblJyBWy
-	 Q0O/VCMAXUnuKTJJcj84TOFVWOt3yrbMw7ri584v47czjh8Y+muRdotxxrkj+IUgA9
-	 A/tHFyZ9N7p3ZJYdn2fbJJOlNMumkL5KA1BexdOQ=
+	b=2JpcQnewdlP4y+6Q6Xynx9rnVqIJdklXp1S1nEJ17f0YEpyp9poaoJz1z2upo1TAC
+	 6FUEjerXwHJ4o2AJfBw/fyzZ/7LX2FAmuZJwpkQ4c8leKoixR1NCFxBznBcbO0tPA8
+	 npfzXniLcBL2CV5xgSkCTyBqzQmqUPLWhhJbRO4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbfLDSAf (ORCPT
+        id S1729016AbfLDSAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:00:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39222 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:00:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729348AbfLDSAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:00:31 -0500
+        id S1729390AbfLDSAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:00:36 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6520D2084B;
-        Wed,  4 Dec 2019 18:00:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EE5220863;
+        Wed,  4 Dec 2019 18:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482430;
-        bh=AdY9CoZS6VbSim8ej2vJKKJ5+4ut52l1UdMkaC/yLbQ=;
+        s=default; t=1575482435;
+        bh=IP5ew8cinng8wN83PXrqL1p/+8xz9WNlKNL1skXB5BE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cIfi40BCo1ZQWpx3EYM7sG6LvQu2ry0Fq/9aZz+qygsTjxsJzuoUs0nZzh3ttEgLL
-         mQVADSMEzL4OAQkulp1rd9k+lVo/l/7t4CrUWEQ26O4Hu+RUeZPR+yLU/2Ktp5Oik/
-         mnUyyUQJqZVDvgM2YRJtCYhpTotL4fSNItzAdusY=
+        b=MVt1S2lIoXOWpDQ9MKZYk66VyAFyIcPI8X3yysyhxeQBtFERJJ4me3fxzm873yJlV
+         1g3ov9pbWoESusIsWbrbJevsHjvNwOOodT2djIybIfFLONie1DT0hCnxhUBazIA+MM
+         c6dj9MsKP6qpQthKsk25b9N3CSgEBxQX59J1hSYc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Menglong Dong <dong.menglong@zte.com.cn>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 83/92] macvlan: schedule bc_work even if error
-Date:   Wed,  4 Dec 2019 18:50:23 +0100
-Message-Id: <20191204174335.185471437@linuxfoundation.org>
+        stable@vger.kernel.org, Kyle Roeschley <kyle.roeschley@ni.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 46/92] ath6kl: Only use match sets when firmware supports it
+Date:   Wed,  4 Dec 2019 18:49:46 +0100
+Message-Id: <20191204174333.263226729@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -59,52 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Menglong Dong <dong.menglong@zte.com.cn>
+From: Kyle Roeschley <kyle.roeschley@ni.com>
 
-[ Upstream commit 1d7ea55668878bb350979c377fc72509dd6f5b21 ]
+[ Upstream commit fb376a495fbdb886f38cfaf5a3805401b9e46f13 ]
 
-While enqueueing a broadcast skb to port->bc_queue, schedule_work()
-is called to add port->bc_work, which processes the skbs in
-bc_queue, to "events" work queue. If port->bc_queue is full, the
-skb will be discarded and schedule_work(&port->bc_work) won't be
-called. However, if port->bc_queue is full and port->bc_work is not
-running or pending, port->bc_queue will keep full and schedule_work()
-won't be called any more, and all broadcast skbs to macvlan will be
-discarded. This case can happen:
+Commit dd45b7598f1c ("ath6kl: Include match ssid list in scheduled scan")
+merged the probed and matched SSID lists before sending them to the
+firmware. In the process, it assumed match set support is always available
+in ath6kl_set_probed_ssids, which breaks scans for hidden SSIDs. Now, check
+that the firmware supports matching SSIDs in scheduled scans before setting
+MATCH_SSID_FLAG.
 
-macvlan_process_broadcast() is the pending function of port->bc_work,
-it moves all the skbs in port->bc_queue to the queue "list", and
-processes the skbs in "list". During this, new skbs will keep being
-added to port->bc_queue in macvlan_broadcast_enqueue(), and
-port->bc_queue may already full when macvlan_process_broadcast()
-return. This may happen, especially when there are a lot of real-time
-threads and the process is preempted.
-
-Fix this by calling schedule_work(&port->bc_work) even if
-port->bc_work is full in macvlan_broadcast_enqueue().
-
-Fixes: 412ca1550cbe ("macvlan: Move broadcasts into a work queue")
-Signed-off-by: Menglong Dong <dong.menglong@zte.com.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: dd45b7598f1c ("ath6kl: Include match ssid list in scheduled scan")
+Signed-off-by: Kyle Roeschley <kyle.roeschley@ni.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macvlan.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath6kl/cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -326,10 +326,11 @@ static void macvlan_broadcast_enqueue(st
+diff --git a/drivers/net/wireless/ath/ath6kl/cfg80211.c b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+index 81ac8c59f0ecd..2b79815f59093 100644
+--- a/drivers/net/wireless/ath/ath6kl/cfg80211.c
++++ b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+@@ -932,7 +932,7 @@ static int ath6kl_set_probed_ssids(struct ath6kl *ar,
+ 		else
+ 			ssid_list[i].flag = ANY_SSID_FLAG;
+ 
+-		if (n_match_ssid == 0)
++		if (ar->wiphy->max_match_sets != 0 && n_match_ssid == 0)
+ 			ssid_list[i].flag |= MATCH_SSID_FLAG;
  	}
- 	spin_unlock(&port->bc_queue.lock);
  
-+	schedule_work(&port->bc_work);
-+
- 	if (err)
- 		goto free_nskb;
- 
--	schedule_work(&port->bc_work);
- 	return;
- 
- free_nskb:
+-- 
+2.20.1
+
 
 
