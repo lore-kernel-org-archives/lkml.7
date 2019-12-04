@@ -2,53 +2,52 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86919C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940EBC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53553205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6821A205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483937;
-	bh=NiyhNSjeY2QPTLhCpR5U2r+9OKL6jNarrXVPeFdcUUM=;
+	s=default; t=1575483944;
+	bh=5WIS6H9GfOjXchxXxGvWQfONvCwhwRy3yvUMfZS+QTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=csXpJUFdbwLiPyV6E6Ee6+7kn4QxVo/O15Bzm58huJZ0a+UBjr0jGKLV7OHI2EzGy
-	 AFEhc8JiUqx4uyPYIUInjETXkteXft92X1in+AyCKa2fpRcf5txLy97xfRLzk2pkVx
-	 v0n79pRo+4m/MHzriPoEmMxq6djoCx4i6XPcgT18=
+	b=K26ki3BuvNIAK89bxEVLBI8+aHkKRuecCGTirXk45GrQfYTDbw2cn/PNnqzBDN5Cj
+	 WbNYykDZlAYhevaDy6O3I/EZO5y5y/ccgAGTe5yKoQ4k+GrH7zJZJm7hRz5TbB9p20
+	 imAFhiZ92pr6DI0qtQK7VCWlFUws81Pa/Lxg+fs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729947AbfLDSZg (ORCPT
+        id S1730056AbfLDSZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:25:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40412 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:25:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728326AbfLDSAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:00:55 -0500
+        id S1729415AbfLDSAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:00:43 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA27B20675;
-        Wed,  4 Dec 2019 18:00:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F9F420863;
+        Wed,  4 Dec 2019 18:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482455;
-        bh=NiyhNSjeY2QPTLhCpR5U2r+9OKL6jNarrXVPeFdcUUM=;
+        s=default; t=1575482443;
+        bh=5WIS6H9GfOjXchxXxGvWQfONvCwhwRy3yvUMfZS+QTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zVYFF4iviyGKVZnnlwhJISa52NAN7i8BLQzE8XzXLqIV8JCxnmPFiVG/hdzv5KtVr
-         3OFzGXTbyiTTLjcvumjRWqqsreMWgD93Yj7CWq4i/fkzZ75/97jgu+UgDleYjE8V0N
-         /u6dZoNV97lUZJ+VdxGP2S5UWPK2edT5LzoXw3aE=
+        b=1hIgBe1/4dbiogxS/JDbq3bH8aQAgNEfUBCmWU7VFtUSOG0+FXMqdEH3j6G3nKApP
+         fbZIH0yzkt8PzlWsEsW07+oZoFaSNAuK7/SwfisJL2gS/SAxfitRpNCv7siCrnHsmk
+         sBE1ueqKrcrg+LZekfPswPS9gqcKC1R3H6WCS1fk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        John Rutherford <john.rutherford@dektech.com.au>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 88/92] tipc: fix link name length check
-Date:   Wed,  4 Dec 2019 18:50:28 +0100
-Message-Id: <20191204174335.459025400@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 49/92] powerpc/mm: Make NULL pointer deferences explicit on bad page faults.
+Date:   Wed,  4 Dec 2019 18:49:49 +0100
+Message-Id: <20191204174333.434691066@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -61,45 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Rutherford <john.rutherford@dektech.com.au>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit fd567ac20cb0377ff466d3337e6e9ac5d0cb15e4 ]
+[ Upstream commit 49a502ea23bf9dec47f8f3c3960909ff409cd1bb ]
 
-In commit 4f07b80c9733 ("tipc: check msg->req data len in
-tipc_nl_compat_bearer_disable") the same patch code was copied into
-routines: tipc_nl_compat_bearer_disable(),
-tipc_nl_compat_link_stat_dump() and tipc_nl_compat_link_reset_stats().
-The two link routine occurrences should have been modified to check
-the maximum link name length and not bearer name length.
+As several other arches including x86, this patch makes it explicit
+that a bad page fault is a NULL pointer dereference when the fault
+address is lower than PAGE_SIZE
 
-Fixes: 4f07b80c9733 ("tipc: check msg->reg data len in tipc_nl_compat_bearer_disable")
-Signed-off-by: John Rutherford <john.rutherford@dektech.com.au>
-Acked-by: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In the mean time, this page makes all bad_page_fault() messages
+shorter so that they remain on one single line. And it prefixes them
+by "BUG: " so that they get easily grepped.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+[mpe: Avoid pr_cont()]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/netlink_compat.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/mm/fault.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -516,7 +516,7 @@ static int tipc_nl_compat_link_stat_dump
- 	if (len <= 0)
- 		return -EINVAL;
- 
--	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
-+	len = min_t(int, len, TIPC_MAX_LINK_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
- 
-@@ -791,7 +791,7 @@ static int tipc_nl_compat_link_reset_sta
- 	if (len <= 0)
- 		return -EINVAL;
- 
--	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
-+	len = min_t(int, len, TIPC_MAX_LINK_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
- 
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index d154e333f76b7..d1f860ca03ade 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -521,21 +521,22 @@ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
+ 	switch (regs->trap) {
+ 	case 0x300:
+ 	case 0x380:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"data at address 0x%08lx\n", regs->dar);
++		pr_alert("BUG: %s at 0x%08lx\n",
++			 regs->dar < PAGE_SIZE ? "Kernel NULL pointer dereference" :
++			 "Unable to handle kernel data access", regs->dar);
+ 		break;
+ 	case 0x400:
+ 	case 0x480:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"instruction fetch\n");
++		pr_alert("BUG: Unable to handle kernel instruction fetch%s",
++			 regs->nip < PAGE_SIZE ? " (NULL pointer?)\n" : "\n");
+ 		break;
+ 	case 0x600:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"unaligned access at address 0x%08lx\n", regs->dar);
++		pr_alert("BUG: Unable to handle kernel unaligned access at 0x%08lx\n",
++			 regs->dar);
+ 		break;
+ 	default:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"unknown fault\n");
++		pr_alert("BUG: Unable to handle unknown paging fault at 0x%08lx\n",
++			 regs->dar);
+ 		break;
+ 	}
+ 	printk(KERN_ALERT "Faulting instruction address: 0x%08lx\n",
+-- 
+2.20.1
+
 
 
