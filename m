@@ -2,90 +2,141 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51E0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A5AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 878D22084F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8B42084F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:35:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NI0Fvbud"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoheGBkS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbfLDMfL (ORCPT
+        id S1727778AbfLDMfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:35:11 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52118 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfLDMfL (ORCPT
+        Wed, 4 Dec 2019 07:35:22 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:36870 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfLDMfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:35:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=J/WQVy4sVaQLO7VIHTnenUpwaZjanvaxoH0c5Hwc9nw=; b=NI0FvbudZLi4D4imzicu27gs4
-        9ia9drai1ik6o8TO554McoiXs1W8pzSzyYUlzhct+Xygw3ZCzZJz9CReyckDMe4k0LoWvoaNpjaid
-        00gqF7Eg/fLDXqAZ9K472g8O4q+pDI+mpRRh14gzMTr2mGC3auFX9881Jzz2dyd+BjEQL50FhmoEj
-        yT30m9e2O2VC2cGdCH9ve42N0dxmYp2EvQAxQILsbEiBTt9RjFlTkNzMXAOIXOyopFOMIuwh/drqF
-        Prvh9QdNyU5YcdvnIw2n6NhgTH9Qb7LR+8GahKM3YEOLlRREIJbN5pLvxeHUCcdetnfwqwCqmJrXS
-        xqSVJwCfQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1icTs0-00076q-Vu; Wed, 04 Dec 2019 12:35:05 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 07FF03011E0;
-        Wed,  4 Dec 2019 13:33:43 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A04C62B25FE23; Wed,  4 Dec 2019 13:35:00 +0100 (CET)
-Date:   Wed, 4 Dec 2019 13:35:00 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Liu Song <fishland@aliyun.com>
-Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
-        liu.song11@zte.com.cn
-Subject: Re: [PATCH] psi: Only collect online cpu time in collect_percpu_times
-Message-ID: <20191204123500.GT2844@hirez.programming.kicks-ass.net>
-References: <20191202130928.2971-1-fishland@aliyun.com>
+        Wed, 4 Dec 2019 07:35:22 -0500
+Received: by mail-pj1-f67.google.com with SMTP id ep17so2965699pjb.4;
+        Wed, 04 Dec 2019 04:35:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YPZbrljyNjC5j7q28Y1yjStc3oy4UmLl5B93KBpnvIM=;
+        b=GoheGBkSxxZ2NEshTyIX/Ttdx3CJSOLqcHa40SoFDIs3V8urBZ3Jy4URycaDCzXoDH
+         00kh0HualCF0KBfW8fYntwGYmPSUdZ22u/QR3EofTFJsWQ6TcMkwd1OXg9oLm6JxvxZm
+         bh7DCHbBokIJvrielyZRpZafcDUqQQMh8vbMgvh7Vz8NUFQ46Mbq3qN5/tFiiO8xurk7
+         So4p+tUanA4K5Ik2NtvjKz0DpTV9Lm++Gg8/CTvcMNcdfwwlm5W/yCfEWCcWREG2oUqB
+         EJCWUvFMoATg4rTmyvIG/RMEYfjHS/0rzo+WBkqTYlmAooznA+cJNPnOVluzw6k/lT75
+         3Z3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YPZbrljyNjC5j7q28Y1yjStc3oy4UmLl5B93KBpnvIM=;
+        b=dwWAe1OmdkebWTKdRwfzKO4Ia2tCy5YeqLUy24J/ji6mVPuOSfUwKtPajBHMA89E/2
+         wHUog5PiukO+2R68v+uXLjOMsNoHKoUy6YqvXFJfej9xsV0NX36rda93BIlCSUCfp1ps
+         2jLD4Ue8R73z9K8dZeMKGfthtF/HfLiqZXpQ9d3LvUFN/6GvfULRgA6Y94Osq3/FdJ02
+         /K3uRtaeUatJgEcfe1ZsB6KQHhAjnlVoE9cUMPwheY38my3WsKiHALfTq7Iv7gFhanVJ
+         sEhdMW8Seai2jqQpkzJBYB4xyw4N49xItlYa5fm08D3rUhDwYp8gvYdwnjZ6ExMfDk8w
+         W96Q==
+X-Gm-Message-State: APjAAAUTxqDgLJYM7S4AtxaaPUA8Qmh23aH14LueSAWmy4lG5UJpDSNj
+        FubeK5uUV6dJy+/Ch09585qRW4QvPZ+qF9PqvGQ=
+X-Google-Smtp-Source: APXvYqwhVWSxxvAv2De28QrHHETKA2K8Fjug4l6wpXAC5Wz3wrCTeVAemgGKgq2ymv4AVWx6Z6UfSlORnOxvAsK067g=
+X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr3093142pjb.30.1575462921462;
+ Wed, 04 Dec 2019 04:35:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202130928.2971-1-fishland@aliyun.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191204101042.4275-2-cleger@kalray.eu>
+In-Reply-To: <20191204101042.4275-2-cleger@kalray.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 4 Dec 2019 14:35:11 +0200
+Message-ID: <CAHp75VfL5mRB0wy86_352nosKkKqVLZC_amCbLvhBTyNZztgRw@mail.gmail.com>
+Subject: Re: [PATCH 1/5] gpio: export acpi_gpiochip_request_interrupts in gpio/driver.h
+To:     Clement Leger <cleger@kalray.eu>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 09:09:28PM +0800, Liu Song wrote:
-> From: Liu Song <liu.song11@zte.com.cn>
-> 
-> Tasks can only run on the online cpu, so only need to
-> collect the time of the online cpu.
-> 
-> Signed-off-by: Liu Song <liu.song11@zte.com.cn>
-> ---
->  kernel/sched/psi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> index 7acc632c3b82..605f02facb7b 100644
-> --- a/kernel/sched/psi.c
-> +++ b/kernel/sched/psi.c
-> @@ -316,7 +316,7 @@ static void collect_percpu_times(struct psi_group *group,
->  	 * the sampling period. This eliminates artifacts from uneven
->  	 * loading, or even entirely idle CPUs.
->  	 */
-> -	for_each_possible_cpu(cpu) {
-> +	for_each_online_cpu(cpu) {
->  		u32 times[NR_PSI_STATES];
->  		u32 nonidle;
->  		u32 cpu_changed_states;
+On Wed, Dec 4, 2019 at 12:13 PM Clement Leger <cleger@kalray.eu> wrote:
+>
+> dwapb-gpio driver which uses this function will be moved to pinctrl for
+> pinctrl support. Export this function in gpio/driver.h to allow using
+> it.
+>
 
-And who collects the deltas that remain after offline?
+I don't think this is proper way to do it.
+The driver has to register IRQ chip and GPIO core will take care of
+ACPI related stuff.
+
+> Signed-off-by: Clement Leger <cleger@kalray.eu>
+> ---
+>  drivers/gpio/gpiolib-acpi.h |  4 ----
+>  include/linux/gpio/driver.h | 12 ++++++++++++
+>  2 files changed, 12 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib-acpi.h b/drivers/gpio/gpiolib-acpi.h
+> index 1c6d65cf0629..ba2f187babe3 100644
+> --- a/drivers/gpio/gpiolib-acpi.h
+> +++ b/drivers/gpio/gpiolib-acpi.h
+> @@ -34,7 +34,6 @@ struct acpi_gpio_info {
+>  void acpi_gpiochip_add(struct gpio_chip *chip);
+>  void acpi_gpiochip_remove(struct gpio_chip *chip);
+>
+> -void acpi_gpiochip_request_interrupts(struct gpio_chip *chip);
+>  void acpi_gpiochip_free_interrupts(struct gpio_chip *chip);
+>
+>  int acpi_gpio_update_gpiod_flags(enum gpiod_flags *flags,
+> @@ -56,9 +55,6 @@ int acpi_gpio_count(struct device *dev, const char *con_id);
+>  static inline void acpi_gpiochip_add(struct gpio_chip *chip) { }
+>  static inline void acpi_gpiochip_remove(struct gpio_chip *chip) { }
+>
+> -static inline void
+> -acpi_gpiochip_request_interrupts(struct gpio_chip *chip) { }
+> -
+>  static inline void
+>  acpi_gpiochip_free_interrupts(struct gpio_chip *chip) { }
+>
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index e2480ef94c55..40b9f13d77e1 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -733,6 +733,18 @@ void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
+>
+>  struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
+>
+> +
+> +#ifdef CONFIG_GPIO_ACPI
+> +
+> +void acpi_gpiochip_request_interrupts(struct gpio_chip *chip);
+> +
+> +#else
+> +
+> +static inline void acpi_gpiochip_request_interrupts(struct gpio_chip *chip)
+> +{
+> +}
+> +
+> +#endif /* CONFIG_GPIO_ACPI */
+>  #else /* CONFIG_GPIOLIB */
+>
+>  static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
+> --
+> 2.15.0.276.g89ea799
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
