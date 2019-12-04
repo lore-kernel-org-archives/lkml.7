@@ -2,122 +2,130 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CE1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36123C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D0620674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:39:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DFVeuZX8"
+	by mail.kernel.org (Postfix) with ESMTP id 08C0020674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:39:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575481173;
+	bh=0hhXOqQVLzcC/91DX1iMkXjEIx1nrjiGpDRjL6AIWA0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=mZ+vOVD7uHiJ70clx2KhoW26sZHJCCrp5ukd5Sb93n6StP/PXX4p7+tAXLKXb+hrB
+	 v+BHXIcbzzJVYusE/Eq2YjDcVjQB8gPy/D455n1pYDc3+EiGvYXxCLGsp+7YSfAvtd
+	 tu8+YbfkYzTW3o1YcL2ZcxY3HTzzOnG3CVpvDpcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfLDRj1 (ORCPT
+        id S1728124AbfLDRjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:39:27 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:36084 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbfLDRj1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:39:27 -0500
-Received: by mail-pj1-f68.google.com with SMTP id n96so108956pjc.3;
-        Wed, 04 Dec 2019 09:39:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LiJocrhksCvpO+19ZdExpChYK8w6nQgoAmY+U1ToVCw=;
-        b=DFVeuZX8iTexCHx8t3r9+DFmLx/hWSshdMstwuBvqeXm/taPQxGkeLpYDDdOktV7KC
-         y6oi9Y38zDn3633Eya9Ka5B6eJZSkvOO/saG/83igdkdtK/Xpf4QyZowDVvxVYdFQQ90
-         /vBCnSAbNsyWNm8sVmkVRIyfl+3n3caPM/xCmkuibaIORcQY8Hrfwvd4HjWa1n7yOQUw
-         Bt5yhDjKtOFzuthd9dVDDxbAmYbj16C/BrI8xzpXOBkI15DizyUT+rSOsE93HxZW+KNQ
-         ImGZhsnVhOd6cys76qCNeHLTRKEVdFaqD688dS4wskjOocqD9JrzmKQTAgfG5PgOHmVI
-         J+KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LiJocrhksCvpO+19ZdExpChYK8w6nQgoAmY+U1ToVCw=;
-        b=ISVsFWAVHjsACFml5DM6kViYQJ0tXEIV/IPOisRbwpUnc6gorkY0jF30c2JSEoZ/rC
-         NbCeUHw8/wVl0iitzh1lfMSEFYStVzn0Wrn1RevkD//XVwh84UW4uzVWmCCFdLELJVHF
-         PQohA0gIrYEKGNIxVcZRte9uiMvYXIdEjVKLZycfRCWWeogVAr5hssGZLMsoUPtciEmF
-         iq57tqadijDoT66ivoFpUFFsByCcOR4/fh4uBWqWux1pPoIKhyOuDWe8whnUJIP0RBs4
-         3qfhUj+jQP4iE3IihGiUT+3sIsqppHBzE+LWZTNF2oRlMfZsRULpVhOUZLE6mTrb+T3y
-         Uf4A==
-X-Gm-Message-State: APjAAAWAEI58tk62hBdVbV3QikgdjVqPONYvWFTV/8HeptP2EI+Yob/q
-        ndMKaDjeqVjG+Z/B6zK47W3a+ZEr
-X-Google-Smtp-Source: APXvYqwe3IcNYdntM1drGvi5vv9cb2mBcY251MgrD5fiAgLt2Jx1ESE7j+6W8y9jVGNETF4QVvvsuQ==
-X-Received: by 2002:a17:90a:bf81:: with SMTP id d1mr4465454pjs.125.1575481166109;
-        Wed, 04 Dec 2019 09:39:26 -0800 (PST)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id j20sm8350166pff.182.2019.12.04.09.39.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 09:39:25 -0800 (PST)
-Subject: Re: [PATCH] net/decnet: fix -EFAULT error that is not getting
- returned
-To:     Colin King <colin.king@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        linux-decnet-user@lists.sourceforge.net, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191204151144.1434209-1-colin.king@canonical.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <b75479fd-055e-3758-fc59-3385185a705b@gmail.com>
-Date:   Wed, 4 Dec 2019 09:39:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 4 Dec 2019 12:39:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726934AbfLDRja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:39:30 -0500
+Received: from localhost.localdomain (c-73-169-115-106.hsd1.co.comcast.net [73.169.115.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA13D20803;
+        Wed,  4 Dec 2019 17:39:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575481170;
+        bh=0hhXOqQVLzcC/91DX1iMkXjEIx1nrjiGpDRjL6AIWA0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Lzi2+UhYABr7RnaS7JA+Qpdd5fUix+MiSApd70giJxIAqJ3XMRROxqS6/vIyWO9Dj
+         SUX3rkMJCqdeoeOIUzNMG6AC20sa5M3u55hBImUuqlqg9pPCtKIz7NvOwPXDFRScta
+         J1nqHLf+G6OSu4k/Y0l+/gba1SdkhkkRpfJp0JW8=
+From:   David Ahern <dsahern@kernel.org>
+To:     acme@kernel.org
+Cc:     namhyung@kernel.org, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        David Ahern <dsahern@gmail.com>
+Subject: [PATCH] perf sched timehist: Add support for filtering on CPU
+Date:   Wed,  4 Dec 2019 10:39:25 -0700
+Message-Id: <20191204173925.66976-1-dsahern@kernel.org>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-In-Reply-To: <20191204151144.1434209-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: David Ahern <dsahern@gmail.com>
 
+Allow user to limit output to one or more CPUs. Really helpful on systems
+with a large number of cpus.
 
-On 12/4/19 7:11 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently an -EFAULT error on a memcpy_to_msg is not being returned
-> because it is being overwritten when variable rv is being re-assigned
-> to the number of bytes copied after breaking out of a loop. Fix this
-> by instead assigning the error to variable copied so that this error
-> code propegated to rv and hence is returned at the end of the function.
-> 
-> [ This bug was was introduced before the current git history ]
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  net/decnet/af_decnet.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/decnet/af_decnet.c b/net/decnet/af_decnet.c
-> index e19a92a62e14..e23d9f219597 100644
-> --- a/net/decnet/af_decnet.c
-> +++ b/net/decnet/af_decnet.c
-> @@ -1759,7 +1759,7 @@ static int dn_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
->  			chunk = size - copied;
->  
->  		if (memcpy_to_msg(msg, skb->data, chunk)) {
-> -			rv = -EFAULT;
-> +			copied = -EFAULT;
+Signed-off-by: David Ahern <dsahern@gmail.com>
+---
+ tools/perf/Documentation/perf-sched.txt |  4 ++++
+ tools/perf/builtin-sched.c              | 13 +++++++++++++
+ 2 files changed, 17 insertions(+)
 
-This does not look right.
+diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+index 63f938b887dd..5fbe42bd599b 100644
+--- a/tools/perf/Documentation/perf-sched.txt
++++ b/tools/perf/Documentation/perf-sched.txt
+@@ -110,6 +110,10 @@ OPTIONS for 'perf sched timehist'
+ --max-stack::
+ 	Maximum number of functions to display in backtrace, default 5.
+ 
++-C=::
++--cpu=::
++	Only show events for the given CPU(s) (comma separated list).
++
+ -p=::
+ --pid=::
+ 	Only show events for given process ID (comma separated list).
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 8a12d71364c3..82fcc2c15fe4 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -51,6 +51,9 @@
+ #define SYM_LEN			129
+ #define MAX_PID			1024000
+ 
++static const char *cpu_list;
++static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
++
+ struct sched_atom;
+ 
+ struct task_desc {
+@@ -2008,6 +2011,9 @@ static void timehist_print_sample(struct perf_sched *sched,
+ 	char nstr[30];
+ 	u64 wait_time;
+ 
++	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
++		return;
++
+ 	timestamp__scnprintf_usec(t, tstr, sizeof(tstr));
+ 	printf("%15s [%04d] ", tstr, sample->cpu);
+ 
+@@ -2994,6 +3000,12 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 	if (IS_ERR(session))
+ 		return PTR_ERR(session);
+ 
++	if (cpu_list) {
++		err = perf_session__cpu_bitmap(session, cpu_list, cpu_bitmap);
++		if (err < 0)
++			goto out;
++	}
++
+ 	evlist = session->evlist;
+ 
+ 	symbol__init(&session->header.env);
+@@ -3429,6 +3441,7 @@ int cmd_sched(int argc, const char **argv)
+ 		   "analyze events only for given process id(s)"),
+ 	OPT_STRING('t', "tid", &symbol_conf.tid_list_str, "tid[,tid...]",
+ 		   "analyze events only for given thread id(s)"),
++	OPT_STRING('C', "cpu", &cpu_list, "cpu", "list of cpus to profile"),
+ 	OPT_PARENT(sched_options)
+ 	};
+ 
+-- 
+2.20.1
 
-We probably want :
-		if (!copied)
-			copied = -EFAULT;
-
->  			break;
->  		}
->  		copied += chunk;
-> 
