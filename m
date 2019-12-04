@@ -2,55 +2,55 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1DAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4189C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EDE820409
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F31205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483662;
-	bh=em/d8aYF1bMtjXSLVU4kj2JcBOP0Eed2tRCO1S+7JDg=;
+	s=default; t=1575483665;
+	bh=Nf0DVFVuptbAyQMUFY7AZ2jp/QtCcsFowue809GM62E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mduMFvWlSlI36fCWXMBLqiEfNqRd3fWdkHzWiYRvfyj2Rl93Y9eno49OgSkKiN1q4
-	 2Me9vP9VR/ny2pjPp/TbhOFvBAtU9rR3kulSHT/lD5uFOcpFpLSil8RAP3aWfCjM0b
-	 nXs9UuA7GyOQH7yh1FBQvfumVoW1RLF7IHHpTJ0Y=
+	b=1BkdnV3PIycrDcrDqfJfvd68Xr0MrwFGNhYaRQYm2StdFnaQjfeBZC42o7WDABXBh
+	 +nFD6XiFuUaZkpeyZgvX9KNSXAFQZfLlU6KbXAn6Rp++00t5+oCnpaYVAN+C6c9HNd
+	 ZlL3ztq4gYagSttzp/kawtkzHsqxoGo+9elfXpX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731572AbfLDSVB (ORCPT
+        id S1730765AbfLDSHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:21:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57404 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:07:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730162AbfLDSH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:07:27 -0500
+        id S1728812AbfLDSHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:07:20 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A0C120675;
-        Wed,  4 Dec 2019 18:07:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A04420674;
+        Wed,  4 Dec 2019 18:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482847;
-        bh=em/d8aYF1bMtjXSLVU4kj2JcBOP0Eed2tRCO1S+7JDg=;
+        s=default; t=1575482839;
+        bh=Nf0DVFVuptbAyQMUFY7AZ2jp/QtCcsFowue809GM62E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bukLjOdVPzrVA3NsJkT+23QIR14Cuv64vUMuHOSI+1Qp894+Hx+8GkSghbTUDY37z
-         OKay1JR9NO8ihUt75MwD/fiAFqOt7X5VouPHJCO2Axfv64Vv2zcs8jcwNRQhuCv0x8
-         w/9hZ54XrUXnJqgaisBcCnJUBUPq3RLnoF96ke6Q=
+        b=ZwdvSzBpxPrqF52e3BmzvYIhsDtoULoG3p4CVnseW9BDLGTmeOuwtuagz3dFYQCsy
+         M71WU6D4EPC/ULVDRN+u+O8OHd7p2UJlwZ33tjkmOqQb8QAjpH3nGLhVFmIaHI/ZSb
+         +CuIgiFlhML3B9HkdS4zFUJnR5fcVIi4sOzEtjQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcin Stojek <marcin.stojek@nokia.com>,
-        Maciej Kwiecien <maciej.kwiecien@nokia.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 141/209] sctp: dont compare hb_timer expire date before starting it
-Date:   Wed,  4 Dec 2019 18:55:53 +0100
-Message-Id: <20191204175333.019542367@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.14 156/209] clk: at91: fix update bit maps on CFG_MOR write
+Date:   Wed,  4 Dec 2019 18:56:08 +0100
+Message-Id: <20191204175334.223122318@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -63,59 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Kwiecien <maciej.kwiecien@nokia.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit d1f20c03f48102e52eb98b8651d129b83134cae4 ]
+commit 263eaf8f172d9f44e15d6aca85fe40ec18d2c477 upstream.
 
-hb_timer might not start at all for a particular transport because its
-start is conditional. In a result a node is not sending heartbeats.
+The regmap update bits call was not selecting the proper mask, considering
+the bits which was updating.
+Update the mask from call to also include OSCBYPASS.
+Removed MOSCEN which was not updated.
 
-Function sctp_transport_reset_hb_timer has two roles:
-    - initial start of hb_timer for a given transport,
-    - update expire date of hb_timer for a given transport.
-The function is optimized to update timer's expire only if it is before
-a new calculated one but this comparison is invalid for a timer which
-has not yet started. Such a timer has expire == 0 and if a new expire
-value is bigger than (MAX_JIFFIES / 2 + 2) then "time_before" macro will
-fail and timer will not start resulting in no heartbeat packets send by
-the node.
+Fixes: 1bdf02326b71 ("clk: at91: make use of syscon/regmap internally")
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Link: https://lkml.kernel.org/r/1568042692-11784-1-git-send-email-eugen.hristev@microchip.com
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This was found when association was initialized within first 5 mins
-after system boot due to jiffies init value which is near to MAX_JIFFIES.
-
-Test kernel version: 4.9.154 (ARCH=arm)
-hb_timer.expire = 0;                //initialized, not started timer
-new_expire = MAX_JIFFIES / 2 + 2;   //or more
-time_before(hb_timer.expire, new_expire) == false
-
-Fixes: ba6f5e33bdbb ("sctp: avoid refreshing heartbeat timer too often")
-Reported-by: Marcin Stojek <marcin.stojek@nokia.com>
-Tested-by: Marcin Stojek <marcin.stojek@nokia.com>
-Signed-off-by: Maciej Kwiecien <maciej.kwiecien@nokia.com>
-Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/transport.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/at91/clk-main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sctp/transport.c b/net/sctp/transport.c
-index 43105cf04bc45..274df899e7bfa 100644
---- a/net/sctp/transport.c
-+++ b/net/sctp/transport.c
-@@ -210,7 +210,8 @@ void sctp_transport_reset_hb_timer(struct sctp_transport *transport)
+--- a/drivers/clk/at91/clk-main.c
++++ b/drivers/clk/at91/clk-main.c
+@@ -162,7 +162,7 @@ at91_clk_register_main_osc(struct regmap
+ 	if (bypass)
+ 		regmap_update_bits(regmap,
+ 				   AT91_CKGR_MOR, MOR_KEY_MASK |
+-				   AT91_PMC_MOSCEN,
++				   AT91_PMC_OSCBYPASS,
+ 				   AT91_PMC_OSCBYPASS | AT91_PMC_KEY);
  
- 	/* When a data chunk is sent, reset the heartbeat interval.  */
- 	expires = jiffies + sctp_transport_timeout(transport);
--	if (time_before(transport->hb_timer.expires, expires) &&
-+	if ((time_before(transport->hb_timer.expires, expires) ||
-+	     !timer_pending(&transport->hb_timer)) &&
- 	    !mod_timer(&transport->hb_timer,
- 		       expires + prandom_u32_max(transport->rto)))
- 		sctp_transport_hold(transport);
--- 
-2.20.1
-
+ 	hw = &osc->hw;
 
 
