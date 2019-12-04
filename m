@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9854C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73194C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C96620833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B35B20659
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482572;
-	bh=LtQrovMj3xaXTG/VWHO6OY+mEao16tL4OcVegHIYCIM=;
+	s=default; t=1575482575;
+	bh=YmhnP20tpsgPx29MUewJ8NBV4qA6cgOJYoQR7Abm1bg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vMK+jG4p1e+Rx39E6wjzwONqdxTWKCA/A52rMJb1sQ+3sP1qu2MXITl/uZN/vsQyX
-	 MlfBd770TgNeDS5pjPiaWAPOC4ymJGrmlw8hZZuX7ocLecegREBC/Qd9SdadGPo4ub
-	 i6JjNqzr3ZBqQ6KW6wvkdCguXfSqmCEMmeXTZ2KA=
+	b=F5y24Z5pYp4DEtf1VoCUadvYGFzbIcYAzmA1EkizUq6JpmIt8EzQyMA4iYEvGNGDM
+	 2RgaUW/1xnMHErnNONtRGV1aI65iuHRbtAAk/HVitDHCoNy+zjB+daFHkCO534pJan
+	 RpKKMGhLmskoAxXGdKnsPwtxDIe223iRzvRlQZp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729936AbfLDSCv (ORCPT
+        id S1729945AbfLDSCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:02:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45330 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:02:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729923AbfLDSCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:02:46 -0500
+        id S1729931AbfLDSCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:02:49 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EDB8206DF;
-        Wed,  4 Dec 2019 18:02:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E01E20675;
+        Wed,  4 Dec 2019 18:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482565;
-        bh=LtQrovMj3xaXTG/VWHO6OY+mEao16tL4OcVegHIYCIM=;
+        s=default; t=1575482568;
+        bh=YmhnP20tpsgPx29MUewJ8NBV4qA6cgOJYoQR7Abm1bg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q/VtvxyeVOUZBqSAGH1iu1gHLEYUIcTxt3n7RLPt95PKkSBZudBnxM9O4KKPU5eds
-         lC906Rb+zWurn+S9AUYcclPH0pj7CkyyYfmG+Uis1tRkq8j0oI0Mz5fhq49+F+DLIN
-         SyKZ3TOrjg8VXgwpOGoQx6L93bU3bXSoYdC/KxiI=
+        b=LYLRgp/9MpQafErpsO+2tLvVo9x6WYoUbXBiL/riXWMc6rkrlhCGSP+vd6EvWTZWH
+         VRT0NwK9eZEBT8YY6eB5ApQTkl8r4FJc5/AzRHCfZr8mQ9AcHcX3K5mcTw7D/mASn/
+         iOxci4/AyS5xGE/bEBymKby4wUfhtwm0Nu5aJXFk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        "Reported-by: Marian Mihailescu" <mihailescu2m@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 005/209] ASoC: kirkwood: fix external clock probe defer
-Date:   Wed,  4 Dec 2019 18:53:37 +0100
-Message-Id: <20191204175321.970258905@linuxfoundation.org>
+Subject: [PATCH 4.14 006/209] clk: samsung: exynos5420: Preserve PLL configuration during suspend/resume
+Date:   Wed,  4 Dec 2019 18:53:38 +0100
+Message-Id: <20191204175322.047825199@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,49 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 4523817d51bc3b2ef38da768d004fda2c8bc41de ]
+[ Upstream commit e9323b664ce29547d996195e8a6129a351c39108 ]
 
-When our call to get the external clock fails, we forget to clean up
-the enabled internal clock correctly.  Enable the clock after we have
-obtained all our resources.
+Properly save and restore all top PLL related configuration registers
+during suspend/resume cycle. So far driver only handled EPLL and RPLL
+clocks, all other were reset to default values after suspend/resume cycle.
+This caused for example lower G3D (MALI Panfrost) performance after system
+resume, even if performance governor has been selected.
 
-Fixes: 84aac6c79bfd ("ASoC: kirkwood: fix loss of external clock at probe time")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Link: https://lore.kernel.org/r/E1iNGyK-0004oF-6A@rmk-PC.armlinux.org.uk
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Reported-by: Marian Mihailescu <mihailescu2m@gmail.com>
+Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/kirkwood/kirkwood-i2s.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/clk/samsung/clk-exynos5420.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
-index 105a73cc51585..149b7cba10fb7 100644
---- a/sound/soc/kirkwood/kirkwood-i2s.c
-+++ b/sound/soc/kirkwood/kirkwood-i2s.c
-@@ -569,10 +569,6 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
- 		return PTR_ERR(priv->clk);
- 	}
- 
--	err = clk_prepare_enable(priv->clk);
--	if (err < 0)
--		return err;
--
- 	priv->extclk = devm_clk_get(&pdev->dev, "extclk");
- 	if (IS_ERR(priv->extclk)) {
- 		if (PTR_ERR(priv->extclk) == -EPROBE_DEFER)
-@@ -588,6 +584,10 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	err = clk_prepare_enable(priv->clk);
-+	if (err < 0)
-+		return err;
-+
- 	/* Some sensible defaults - this reflects the powerup values */
- 	priv->ctl_play = KIRKWOOD_PLAYCTL_SIZE_24;
- 	priv->ctl_rec = KIRKWOOD_RECCTL_SIZE_24;
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index a882f7038bcec..47a14f93f8693 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -170,12 +170,18 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
+ 	GATE_BUS_CPU,
+ 	GATE_SCLK_CPU,
+ 	CLKOUT_CMU_CPU,
++	CPLL_CON0,
++	DPLL_CON0,
+ 	EPLL_CON0,
+ 	EPLL_CON1,
+ 	EPLL_CON2,
+ 	RPLL_CON0,
+ 	RPLL_CON1,
+ 	RPLL_CON2,
++	IPLL_CON0,
++	SPLL_CON0,
++	VPLL_CON0,
++	MPLL_CON0,
+ 	SRC_TOP0,
+ 	SRC_TOP1,
+ 	SRC_TOP2,
 -- 
 2.20.1
 
