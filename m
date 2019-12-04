@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8FAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7DCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFE2205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA8F20833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483446;
-	bh=giUmpor69kBQGPlEKJQXTVOif8JHpyxMXUDBvI7re4Q=;
+	s=default; t=1575483453;
+	bh=krRnmuaqC7qVirxcwWinxCXHxJDjFmPmqqWCcCAM/RA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wWTxXnB/F6DysJIadkOEQsbh40cAq8U81ceBCTriiiq+obvRVRnUsy16eYcUZ98fT
-	 R+Pd3iGZ66/ykU+RStZL+GX7j/JiX3VPtNMh45ipN28HBixVLsnJ/lQurwa0v63+L8
-	 3j2DsOVBxV2ebGB4autYv2yo67+zHawuF8h0X5d8=
+	b=g49Y8EnosMNZ4SVXRSAMzryUewxTV25yzT5qfD4gCN4JH5lilRPB72whRm03qpAY6
+	 X17DvElz/bpTSt8Hvt5MmCWJ1rq27zDnykYyrriE9xMKMDLpCfzB1SNd+Do3crV2W0
+	 XFJYLKf0UPVYi2/DM5/HUEgPqY4rZsbqwa+3vjNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731556AbfLDSRZ (ORCPT
+        id S1731758AbfLDSRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:17:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40534 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:17:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731244AbfLDSMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:12:03 -0500
+        id S1730757AbfLDSLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:11:54 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE4BB20865;
-        Wed,  4 Dec 2019 18:12:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A14F20675;
+        Wed,  4 Dec 2019 18:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483123;
-        bh=giUmpor69kBQGPlEKJQXTVOif8JHpyxMXUDBvI7re4Q=;
+        s=default; t=1575483113;
+        bh=krRnmuaqC7qVirxcwWinxCXHxJDjFmPmqqWCcCAM/RA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b1l81dHiOajZuu8jQvNVmVAkhhS3d4APPUr5Tm+vSLnHatfc4q6U8BFAXwM8NjWTt
-         qoqvlgl7otgXem2ggWXVEm1pX7KzEvLM3uTcMcGixZE62pOSBNmia0nahgsCkaFc3A
-         HcPjPNosSeWguiYT6w6iTo9bMvXdRqQJOAao90Zo=
+        b=VJVe6mLhE6qRoK4vpzmnU0tz0yftqcUntotGuHnnm9RPzdr441ig9LP+qxSpUkxyn
+         e+kQ/RMvj8DaTukRR8i2/TPuec1hQIEBCX692WCYKOUJ0cmK3Z6HC/KnV2CZJJZ+uV
+         0B/KYKk6wraC/K/w5PtvZj8A9jd4Px3iiyJ05ZY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 061/125] powerpc/mm: Make NULL pointer deferences explicit on bad page faults.
-Date:   Wed,  4 Dec 2019 18:56:06 +0100
-Message-Id: <20191204175322.677655070@linuxfoundation.org>
+Subject: [PATCH 4.9 057/125] scsi: csiostor: fix incorrect dma device in case of vport
+Date:   Wed,  4 Dec 2019 18:56:02 +0100
+Message-Id: <20191204175322.442459743@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -60,61 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Varun Prakash <varun@chelsio.com>
 
-[ Upstream commit 49a502ea23bf9dec47f8f3c3960909ff409cd1bb ]
+[ Upstream commit 9934613edcb40b92a216122876cd3b7e76d08390 ]
 
-As several other arches including x86, this patch makes it explicit
-that a bad page fault is a NULL pointer dereference when the fault
-address is lower than PAGE_SIZE
+In case of ->vport_create() call scsi_add_host_with_dma() instead of
+scsi_add_host() to pass correct dma device.
 
-In the mean time, this page makes all bad_page_fault() messages
-shorter so that they remain on one single line. And it prefixes them
-by "BUG: " so that they get easily grepped.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-[mpe: Avoid pr_cont()]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Varun Prakash <varun@chelsio.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/fault.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/scsi/csiostor/csio_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-index 9376e8e53bfae..2791f568bdb25 100644
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -521,21 +521,22 @@ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
- 	switch (regs->trap) {
- 	case 0x300:
- 	case 0x380:
--		printk(KERN_ALERT "Unable to handle kernel paging request for "
--			"data at address 0x%08lx\n", regs->dar);
-+		pr_alert("BUG: %s at 0x%08lx\n",
-+			 regs->dar < PAGE_SIZE ? "Kernel NULL pointer dereference" :
-+			 "Unable to handle kernel data access", regs->dar);
- 		break;
- 	case 0x400:
- 	case 0x480:
--		printk(KERN_ALERT "Unable to handle kernel paging request for "
--			"instruction fetch\n");
-+		pr_alert("BUG: Unable to handle kernel instruction fetch%s",
-+			 regs->nip < PAGE_SIZE ? " (NULL pointer?)\n" : "\n");
- 		break;
- 	case 0x600:
--		printk(KERN_ALERT "Unable to handle kernel paging request for "
--			"unaligned access at address 0x%08lx\n", regs->dar);
-+		pr_alert("BUG: Unable to handle kernel unaligned access at 0x%08lx\n",
-+			 regs->dar);
- 		break;
- 	default:
--		printk(KERN_ALERT "Unable to handle kernel paging request for "
--			"unknown fault\n");
-+		pr_alert("BUG: Unable to handle unknown paging fault at 0x%08lx\n",
-+			 regs->dar);
- 		break;
- 	}
- 	printk(KERN_ALERT "Faulting instruction address: 0x%08lx\n",
+diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csio_init.c
+index dbe416ff46c27..776b992786881 100644
+--- a/drivers/scsi/csiostor/csio_init.c
++++ b/drivers/scsi/csiostor/csio_init.c
+@@ -648,7 +648,7 @@ csio_shost_init(struct csio_hw *hw, struct device *dev,
+ 	if (csio_lnode_init(ln, hw, pln))
+ 		goto err_shost_put;
+ 
+-	if (scsi_add_host(shost, dev))
++	if (scsi_add_host_with_dma(shost, dev, &hw->pdev->dev))
+ 		goto err_lnode_exit;
+ 
+ 	return ln;
 -- 
 2.20.1
 
