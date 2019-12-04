@@ -2,130 +2,121 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA37C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7505BC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9C920675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C12C2073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:52:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f2Z+tp19"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQxO6lcp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfLDNuw (ORCPT
+        id S1727962AbfLDNwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:50:52 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48056 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727792AbfLDNuw (ORCPT
+        Wed, 4 Dec 2019 08:52:03 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40695 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbfLDNwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:50:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575467450;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VA9lOoBJgqCxzPUvXrp+l1oPS8XjH4P1e6jO6rnjjg8=;
-        b=f2Z+tp19dJrQR0ToQ2UDHUTiTxUAL/eYzxqdD2/w+wjMZow6hJ5moqpIwswyH7yWeXnU/f
-        eMR8lA6h7tfLT413WvnRIum1l7YFTcuog/hZVzwYu650nVVFnYv04cf6vmr8DAniprc1xv
-        g/TbnvNaOO1bFIHMu/GZzDgztmUq/lw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-353-sTXKKfdVOFaPo2t4eAi-uw-1; Wed, 04 Dec 2019 08:50:49 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2144D91206;
-        Wed,  4 Dec 2019 13:50:47 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-23.pek2.redhat.com [10.72.8.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C826E19C68;
-        Wed,  4 Dec 2019 13:50:32 +0000 (UTC)
-Date:   Wed, 4 Dec 2019 21:50:14 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Phil Auld <pauld@redhat.com>, Dave Chinner <david@fromorbit.com>,
-        Hillf Danton <hdanton@sina.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rong Chen <rong.a.chen@intel.com>, Tejun Heo <tj@kernel.org>
-Subject: Re: single aio thread is migrated crazily by scheduler
-Message-ID: <20191204135014.GA21449@ming.t460p>
-References: <20191115010824.GC4847@ming.t460p>
- <20191115045634.GN4614@dread.disaster.area>
- <20191115070843.GA24246@ming.t460p>
- <20191128094003.752-1-hdanton@sina.com>
- <CAKfTPtA23ErKGCEJVmg6vk-QoufkiUM3NbXd31mZmKnuwbTkFw@mail.gmail.com>
- <20191202024625.GD24512@ming.t460p>
- <20191202040256.GE2695@dread.disaster.area>
- <CAKfTPtD8Q97qJ_+hdCXQRt=gy7k96XrhnFmGYP1G88YSFW0vNA@mail.gmail.com>
- <20191202212210.GA32767@lorien.usersys.redhat.com>
- <CAKfTPtC7uycC3b2ngOFUqOh9-Fcz7h-151aaYJbLJFXrNq-gkw@mail.gmail.com>
+        Wed, 4 Dec 2019 08:52:03 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k25so3416643pgt.7;
+        Wed, 04 Dec 2019 05:52:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TbJ9lT2HAjMyDE1SH6CunT8N4kMbxtVJWep3/Ofx1Bc=;
+        b=iQxO6lcpt1bJ5gN8Y4kXPU0dr1c6ATyxgAG3EI+vfRJjoJwHwrwXLUiEJaKIQTeWiJ
+         F3UYh0AiufKF1rKIvNQHINl9+iu83Ghb6/HciDylFzE+lqA/Y05uht95p5Ml9dMsmiBW
+         LmVhvC1WqxEHyDikQtRY5aa/DLzmEzUGP3WajcYRhfSuSWiCmhqQJofWgjUUxhimvZSn
+         izg4tZ21p1IIh8YQpHrKl/rgkij20CilbOG/R4QdRrqb9CPVgj9rh5hJ4dp5NTjNgINr
+         9RXoUsxYqHRo0g6+BYKJsFgzQZChPUtfJBJ/0BM1AuCvPjydaTIWFhouEQ4evipa6UdD
+         kFyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TbJ9lT2HAjMyDE1SH6CunT8N4kMbxtVJWep3/Ofx1Bc=;
+        b=r7oMuwDiRF9yLKrjGYMVAtufKB9fGrXyRdy3j0pNtD8W4lo6KjIgTucYuxMsvOFike
+         4gc6Y+FoNEYGWt+tZR8VtHPD/J6yRY4T+AmLwph9XhPCvNoyiWrcPnNHSjZBFZ8BRPbC
+         GYnQeVTqIkZdis7RCbb0fkHorqwcabyKe43aG/pQs5C2oPokkudnidh+DqNsap115iTo
+         Gz8GZ14MqdHlt38tV9qFlQE89CCrK67qWkeyfv9oi6Atuhk/AEZ/maT8SVvrswmStpAC
+         FsMlF3y/rzdgDvEZGbhLdFht7lCZTJTjEjWpkfJViJU2ijROFXaOBF5pRv9P11uzLUGh
+         OVNg==
+X-Gm-Message-State: APjAAAWvTA6murU0RSYSEoe0RCkAwwbU6pxqKmc0K1q3wxlKEnZgy0n5
+        A1DsmCF5yZJl0F7rKfXxoRI=
+X-Google-Smtp-Source: APXvYqyoPrSep/q/DUOv+zINoePEiuZB7UyBS8bmOBLu+0j65jHVO2r6iBhfr9RUckMGjFizXhOFLg==
+X-Received: by 2002:a63:66c6:: with SMTP id a189mr3327547pgc.401.1575467521937;
+        Wed, 04 Dec 2019 05:52:01 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id in19sm6642985pjb.11.2019.12.04.05.52.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 04 Dec 2019 05:52:01 -0800 (PST)
+Date:   Wed, 4 Dec 2019 05:51:59 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH v7 16/25] arm: Add support for generic vDSO (causing
+ crash)
+Message-ID: <20191204135159.GA7210@roeck-us.net>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <20190621095252.32307-17-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtC7uycC3b2ngOFUqOh9-Fcz7h-151aaYJbLJFXrNq-gkw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: sTXKKfdVOFaPo2t4eAi-uw-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
+In-Reply-To: <20190621095252.32307-17-vincenzo.frascino@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 10:45:38AM +0100, Vincent Guittot wrote:
-> On Mon, 2 Dec 2019 at 22:22, Phil Auld <pauld@redhat.com> wrote:
-> >
-> > Hi Vincent,
-> >
-> > On Mon, Dec 02, 2019 at 02:45:42PM +0100 Vincent Guittot wrote:
-> > > On Mon, 2 Dec 2019 at 05:02, Dave Chinner <david@fromorbit.com> wrote=
-:
-> >
-> > ...
-> >
-> > > > So, we can fiddle with workqueues, but it doesn't address the
-> > > > underlying issue that the scheduler appears to be migrating
-> > > > non-bound tasks off a busy CPU too easily....
-> > >
-> > > The root cause of the problem is that the sched_wakeup_granularity_ns
-> > > is in the same range or higher than load balance period. As Peter
-> > > explained, This make the kworker waiting for the CPU for several load
-> > > period and a transient unbalanced state becomes a stable one that the
-> > > scheduler to fix. With default value, the scheduler doesn't try to
-> > > migrate any task.
-> >
-> > There are actually two issues here.   With the high wakeup granularity
-> > we get the user task actively migrated. This causes the significant
-> > performance hit Ming was showing. With the fast wakeup_granularity
-> > (or smaller IOs - 512 instead of 4k) we get, instead, the user task
-> > migrated at wakeup to a new CPU for every IO completion.
->=20
-> Ok, I haven't noticed that this one was a problem too. Do we have perf
-> regression ?
+On Fri, Jun 21, 2019 at 10:52:43AM +0100, Vincenzo Frascino wrote:
+> The arm vDSO library requires some adaptations to use to take advantage
+> of the newly introduced generic vDSO library.
+> 
+> Introduce the following changes:
+>  - Modification vdso.c to be compliant with the common vdso datapage
+>  - Use of lib/vdso for gettimeofday
+>  - Implementation of elf note
+> 
+> Cc: Russell King <linux@armlinux.org.uk>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-Follows the test result on one server(Dell, R630: Haswell-E):
+This patch causes a crash with qemu's mcimx6ul-evk emulation while running
+imx_v6_v7_defconfig.
 
-kernel.sched_wakeup_granularity_ns =3D 4000000
-kernel.sched_min_granularity_ns =3D 3000000
+[   19.976852] Run /sbin/init as init process
+[   20.044931] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000004
 
----------------------------------------
-test              =09=09        | IOPS
----------------------------------------
-./xfs_complete 512      =09    | 7.8K=20
----------------------------------------
-taskset -c 8 ./xfs_complete 512 | 9.8K=20
----------------------------------------
+There is nothing else useful in the log, unfortunately.
 
-Thanks,
-Ming
+Reverting the following three patches fixes the problem.
 
+74d06efb9c2f ARM: 8932/1: Add clock_gettime64 entry point
+052e76a31b4a ARM: 8931/1: Add clock_getres entry point
+20e2fc42312f ARM: 8930/1: Add support for generic vDSO
+
+Guenter
