@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877ECC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C46C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE8920866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD952084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483063;
-	bh=qiar1VaVBvPmu92UC81QiJx1uqOjg2HjOpaJCa2CW2c=;
+	s=default; t=1575483066;
+	bh=6gBP4j6U7yeNBj0eNTpRBUArgZTCEi7eTGuf8x+3BP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=boPxzXTP6MShumaT4PLECtUM41KGBDs5rSnF5g977Lxltdqig7dbn3gEjcr53tyS/
-	 E8seTL4/S9yJtYIm7vPpLZ8wsPaZtkPSb5ykJXAB7I569k7G5b5dK3+hYeDY/CLXhg
-	 I02z9XIzsA34e8ESgoVIwBScoZzCfExe+rtn/ohw=
+	b=1DnE1l77H+JBF2aDm1YXF3R4h+72wFH+u/Y5Xyn8QRouNEjSD9Eo0nLT4pS4Uc++Y
+	 O3CArtkqeRaIbnMItfwFpCSr+6WQ3XQ6Xbq9VzB8mdijBxO1E/Xy+CrMN3zTn8XbyB
+	 EIvh/Yy5whCH23+KIh0s5Bez4tlDrxm1y0NqYShk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731369AbfLDSLC (ORCPT
+        id S1730696AbfLDSLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:11:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38782 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:11:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731347AbfLDSK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:10:58 -0500
+        id S1731362AbfLDSLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:11:00 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 224FB20833;
-        Wed,  4 Dec 2019 18:10:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EB482084B;
+        Wed,  4 Dec 2019 18:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483057;
-        bh=qiar1VaVBvPmu92UC81QiJx1uqOjg2HjOpaJCa2CW2c=;
+        s=default; t=1575483060;
+        bh=6gBP4j6U7yeNBj0eNTpRBUArgZTCEi7eTGuf8x+3BP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E0s8I6sQxy95tpWjCnrP2vpAcLGWFaR3i7i0ARLX4yr18xiF67SIGxDjXcGvxGZ03
-         BKx9katYKA69T0V4t5TafDaOcsahMz3MBJzMIcJgctAaib2iJkao5hL2M9yuQU+0R0
-         i14SA6c8xuEOjtk0fk+vNcwYR/LCZe4H8oJWz4Lw=
+        b=CQdhwcH4OUh+xPKeauQuhTC/dfVvMm46Cq6lgIJv6cLvkd9cBBUPpxTubbifaC9Zg
+         PCPlo7U7E51ONyVVUqSutNoBETixLFCpFBgRqHboVnYuMa7IwAODFVqwJupO621d3u
+         0rtYTaPge8SUvjYXZ89h20AGQKCI0AZ4jG6kTodU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 033/125] gpiolib: Fix return value of gpio_to_desc() stub if !GPIOLIB
-Date:   Wed,  4 Dec 2019 18:55:38 +0100
-Message-Id: <20191204175321.006007556@linuxfoundation.org>
+Subject: [PATCH 4.9 004/125] reset: fix reset_control_ops kerneldoc comment
+Date:   Wed,  4 Dec 2019 18:55:09 +0100
+Message-Id: <20191204175310.486489838@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -60,37 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit c5510b8dafce5f3f5a039c9b262ebcae0092c462 ]
+[ Upstream commit f430c7ed8bc22992ed528b518da465b060b9223f ]
 
-If CONFIG_GPOILIB is not set, the stub of gpio_to_desc() should return
-the same type of error as regular version: NULL.  All the callers
-compare the return value of gpio_to_desc() against NULL, so returned
-ERR_PTR would be treated as non-error case leading to dereferencing of
-error value.
+Add a missing short description to the reset_control_ops documentation.
 
-Fixes: 79a9becda894 ("gpiolib: export descriptor-based GPIO interface")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+[p.zabel@pengutronix.de: rebased and updated commit message]
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/gpio/consumer.h | 2 +-
+ include/linux/reset-controller.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index fb0fde686cb1f..4a9838feb0866 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -398,7 +398,7 @@ static inline int gpiod_to_irq(const struct gpio_desc *desc)
+diff --git a/include/linux/reset-controller.h b/include/linux/reset-controller.h
+index db1fe6772ad50..b5542aff192cd 100644
+--- a/include/linux/reset-controller.h
++++ b/include/linux/reset-controller.h
+@@ -6,7 +6,7 @@
+ struct reset_controller_dev;
  
- static inline struct gpio_desc *gpio_to_desc(unsigned gpio)
- {
--	return ERR_PTR(-EINVAL);
-+	return NULL;
- }
- 
- static inline int desc_to_gpio(const struct gpio_desc *desc)
+ /**
+- * struct reset_control_ops
++ * struct reset_control_ops - reset controller driver callbacks
+  *
+  * @reset: for self-deasserting resets, does all necessary
+  *         things to reset the device
 -- 
 2.20.1
 
