@@ -2,134 +2,68 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7636C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308CEC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1C92077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042292081B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:17:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6wW9rQZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MTCZfGEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbfLDQQq (ORCPT
+        id S1728658AbfLDQRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 11:16:46 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:38647 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727912AbfLDQQq (ORCPT
+        Wed, 4 Dec 2019 11:17:31 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:54016 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728301AbfLDQRa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 11:16:46 -0500
-Received: by mail-pj1-f68.google.com with SMTP id l4so20659pjt.5;
-        Wed, 04 Dec 2019 08:16:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pqU4igCndeG4UoCDSucNu4GwL3x2y+vfWi/Ebs1wzZc=;
-        b=J6wW9rQZNctPpcpaRobDFMExB93/ZEkzhTam2T23ewBpNq8vpq3su7cM3xksiLZRNj
-         VWPwta8xYcL1/FVMAdHrrQqm0c6LIyIsxgxue6Nal0v0DU7ls9RPDkIGRGiUemkCZKbz
-         42pJxBUytOxLa7bu52MpYJG4PcBntgRTHizCN1Yh/q1pnqXc3Uqc2I+E/MoFiC7fxL5k
-         wFc3uc1nXh85UFVB2mLGjIjtD49oKFf/fDu/OREA03+FCqWDtXvfnkLlcT93j4BX7+rC
-         hAV9eg9itNtdgLH1AOehHAfFNPjXTPeR9v8kLgmX3SQ0aTeAkM/nMKIeKGQ8GydaR7cm
-         lu5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pqU4igCndeG4UoCDSucNu4GwL3x2y+vfWi/Ebs1wzZc=;
-        b=Q+QHix0XoJSnVn8FahV+Jq82pMk0i1pRPv8+0rHqG6Ow5vCqFlCEBzUvx+oeAMyoef
-         bUa+cvPxga0d04543WrXXh5HAZM9IcuocNIANKooxc/hpIQPnr1xIHfL1cDWTY+l5I5o
-         hWlE0heWCUYoLMTO5L1ZJeqxqeen4feoARcx1gTEAC+1BQbmkF3DQTY6cLF0Pap3SOOT
-         bhzcCrGiUAhzU0VG7d+k8mhtCjwaA8z4BzPphC9uKJpWKX/FAWA7/TDSW4nY+w2/jNp+
-         Da3hB6e9XvlQZf6HuieZiWTwQ/ItnO0idb0yhY4WIK9NVG3A7dgWuar6ztODG0dpxyXe
-         Yq2Q==
-X-Gm-Message-State: APjAAAVMa6toSII94401IJUWWcoQBub29ptCtHGElbGrUc+w7h9s3Pzq
-        kojSSVuizCpR9s/y+DKAbVRsgnjx
-X-Google-Smtp-Source: APXvYqwdytT3wxqOWmWAUSezJYS9o3F9w3oCV/vG1Nqu53f+3nOnX41jUHMdU6TBi2uG6y1+LpWSnw==
-X-Received: by 2002:a17:90b:3011:: with SMTP id hg17mr4116854pjb.90.1575476205426;
-        Wed, 04 Dec 2019 08:16:45 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x186sm8346024pfx.105.2019.12.04.08.16.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Dec 2019 08:16:43 -0800 (PST)
-Date:   Wed, 4 Dec 2019 08:16:41 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH v7 16/25] arm: Add support for generic vDSO (causing
- crash)
-Message-ID: <20191204161641.GA28130@roeck-us.net>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
- <20190621095252.32307-17-vincenzo.frascino@arm.com>
- <20191204135159.GA7210@roeck-us.net>
- <6cdf4734-4065-09c1-8623-1bf523b38c1b@arm.com>
+        Wed, 4 Dec 2019 11:17:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=oerg8XF/lOMDwxE9KdXGBz7kFCKApnqMtBiqtJcsso0=; b=MTCZfGEi5yab2rgkp5t3DFn/W
+        keIJFZ5wdG9/ljCXKgSgFp4RSV4FsVB841Nhz7SNbs+1bfHssQfoFNHiB8AcUTPBsMgfDN0FZwoCM
+        u0D4jf1ZCjg3nFknLbBIlyl+CZgOroKkSfqSxIli9Q+MdvsgZlWfoKwM7KcwL1Vw66lb3kDMBJvp9
+        p7BH0hmSrMBKPSQJJifAFrpGQA6TZTACuHsfu264fK3chmQB+ygmJGZ4nmu5IvE61J7rN8SS64p0n
+        VcdRxcCp63Yi37cUEVnKHzWyS5sd1Zn7qPodimgnJoEjLL4fHIJrqFUUJehlpxbTlvgHAcX8BgSny
+        +LrhoRxaQ==;
+Received: from [2601:1c0:6280:3f0::3deb]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1icXLG-0006Qf-83; Wed, 04 Dec 2019 16:17:30 +0000
+Subject: Re: [PATCH]gen_initramfs_list.sh
+To:     "Jory A. Pratt" <anarchy@gentoo.org>, linux-kernel@vger.kernel.org
+References: <0e13a1b9-c1f7-5255-e7cd-507c62ed767f@gentoo.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a9fc51a5-278e-fe5d-1f4e-c7b968b9e12b@infradead.org>
+Date:   Wed, 4 Dec 2019 08:17:29 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6cdf4734-4065-09c1-8623-1bf523b38c1b@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <0e13a1b9-c1f7-5255-e7cd-507c62ed767f@gentoo.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 01:58:25PM +0000, Vincenzo Frascino wrote:
-> Hi Guenter,
-> 
-> On 12/4/19 1:51 PM, Guenter Roeck wrote:
-> > On Fri, Jun 21, 2019 at 10:52:43AM +0100, Vincenzo Frascino wrote:
-> >> The arm vDSO library requires some adaptations to use to take advantage
-> >> of the newly introduced generic vDSO library.
-> >>
-> >> Introduce the following changes:
-> >>  - Modification vdso.c to be compliant with the common vdso datapage
-> >>  - Use of lib/vdso for gettimeofday
-> >>  - Implementation of elf note
-> >>
-> >> Cc: Russell King <linux@armlinux.org.uk>
-> >> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> > 
-> > This patch causes a crash with qemu's mcimx6ul-evk emulation while running
-> > imx_v6_v7_defconfig.
-> > 
-> 
-> Thank you for reporting this. Could you please provide some details on how I can
-> reproduce the scenario you are describing?
-> 
-- Build imx_v6_v7_defconfig
-- Get root file system or initrd, for example from
-  https://github.com/groeck/linux-build-test/tree/master/rootfs/arm
-- Run image. Example, with initrd:
-	qemu-system-arm -M mcimx6ul-evk -kernel arch/arm/boot/zImage \
-		-no-reboot -initrd rootfs-armv7a.cpio \
-		-m 256 -display none -serial null \
-		--append 'rdinit=/sbin/init earlycon=ec_imx6q,mmio,0x21e8000,115200n8 console=ttymxc1,115200'
-		-dtb arch/arm/boot/dts/imx6ul-14x14-evk.dtb \
-		-nographic -monitor null -serial stdio
+On 12/4/19 7:48 AM, Jory A. Pratt wrote:
+> As stated in patch the script is a non posix bash script and should use
+> bash instead of config_shell
 
-qemu has to be v3.1 or later to support the machine.
+Hi,
+You will need to send this to some maintainer to merge it.
 
-Hope this helps,
-Guenter
+Maintainers don't usually scan LKML to pick up patches.
+
+thanks.
+-- 
+~Randy
