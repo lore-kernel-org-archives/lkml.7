@@ -2,53 +2,53 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE23C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E6AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D563205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DFB1206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483367;
-	bh=Oq84LTVSVC75WPxhcTGPrRuAJow9CRZ9cyQfe033SG0=;
+	s=default; t=1575483369;
+	bh=UE13o5NrIZhLN81xQOZBSUABipSuNtXeuxUj/NUsRM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HuIy14E1SEAS3sOS8YfDGh+dyaW6LjzbAkQ0IoHqKAjbPKWfTpDcwDy1vkpGn8qyy
-	 bBYU9pfD8w2k9Q3n41zPPYgyXTJTfjaUDlm9yjDZVXUqQkehwkAjlriLQ0ToYTpe5J
-	 UYCoPPszAsmRaVaJ0m4Orco6hsEEscugVGkkExNs=
+	b=v+OS95JIClN0efpQnkAk7iHZ34G3iIQO+GZO6DJPuY8ijHLYUNtn2xORperT7EM8n
+	 3Yjajw7wf+QGpfROAir5QsKHuy51K9KZzrofjfe4KHW0UQrS/XIq90giKB5/+xNcXl
+	 sTHV37TCOG9vgt/tnvqquaGNy9H5lz/SZB22/3kI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731703AbfLDSQG (ORCPT
+        id S1731836AbfLDSQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:16:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42752 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:16:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731753AbfLDSNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:13:35 -0500
+        id S1731762AbfLDSNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:13:30 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4509320674;
-        Wed,  4 Dec 2019 18:13:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75A62206DF;
+        Wed,  4 Dec 2019 18:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483214;
-        bh=Oq84LTVSVC75WPxhcTGPrRuAJow9CRZ9cyQfe033SG0=;
+        s=default; t=1575483210;
+        bh=UE13o5NrIZhLN81xQOZBSUABipSuNtXeuxUj/NUsRM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D+p+UrNCTgWJ2QcBtvTFluOkX0Tq1Of/q6/VJ5pQJ6otrZ5MDfhTGAMlUUSMJAUlQ
-         4ZHloam7fyfffNvqJux8bTLQRoUwSyGsi7kZmoE5iGlVxz3l42VFXuvv0ydWdlKJ4a
-         9rb99W/QXpm6/pyuLetfF4bNQfHh1jLbglKt6vjA=
+        b=NTunWYox9mo8cV6jG0zkpezGWv9PBUTlNtA2KNBvBREPvRJqOX6IlbiiAfVQOz3NK
+         +XsfnDfQbIGcLbD4bATboNh0rnjSIa47uPWYKCJti6owzmQEO56RhjXjHlq/CINFp/
+         PJsENwbjyxyI9SCQlqr3Z097THlukG7Ltn5ucfmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Luo <luojian5@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 100/125] scsi: libsas: Support SATA PHY connection rate unmatch fixing during discovery
-Date:   Wed,  4 Dec 2019 18:56:45 +0100
-Message-Id: <20191204175325.182554385@linuxfoundation.org>
+Subject: [PATCH 4.9 098/125] net: dev: Use unsigned integer as an argument to left-shift
+Date:   Wed,  4 Dec 2019 18:56:43 +0100
+Message-Id: <20191204175325.062669571@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -61,98 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit cec9771d2e954650095aa37a6a97722c8194e7d2 ]
+[ Upstream commit f4d7b3e23d259c44f1f1c39645450680fcd935d6 ]
 
-   +----------+             +----------+
-   |          |             |          |
-   |          |--- 3.0 G ---|          |--- 6.0 G --- SAS  disk
-   |          |             |          |
-   |          |--- 3.0 G ---|          |--- 6.0 G --- SAS  disk
-   |initiator |             |          |
-   | device   |--- 3.0 G ---| Expander |--- 6.0 G --- SAS  disk
-   |          |             |          |
-   |          |--- 3.0 G ---|          |--- 6.0 G --- SATA disk  -->failed to connect
-   |          |             |          |
-   |          |             |          |--- 6.0 G --- SATA disk  -->failed to connect
-   |          |             |          |
-   +----------+             +----------+
+1 << 31 is Undefined Behaviour according to the C standard.
+Use U type modifier to avoid theoretical overflow.
 
-According to Serial Attached SCSI - 1.1 (SAS-1.1):
-If an expander PHY attached to a SATA PHY is using a physical link rate
-greater than the maximum connection rate supported by the pathway from an
-STP initiator port, a management application client should use the SMP PHY
-CONTROL function (see 10.4.3.10) to set the PROGRAMMED MAXIMUM PHYSICAL
-LINK RATE field of the expander PHY to the maximum connection rate
-supported by the pathway from that STP initiator port.
-
-Currently libsas does not support checking if this condition occurs, nor
-rectifying when it does.
-
-Such a condition is not at all common, however it has been seen on some
-pre-silicon environments where the initiator PHY only supports a 1.5 Gbit
-maximum linkrate, mated with 12G expander PHYs and 3/6G SATA phy.
-
-This patch adds support for checking and rectifying this condition during
-initial device discovery only.
-
-We do support checking min pathway connection rate during revalidation phase,
-when new devices can be detected in the topology. However we do not
-support in the case of the the user reprogramming PHY linkrates, such that
-min pathway condition is not met/maintained.
-
-A note on root port PHY rates:
-The libsas root port PHY rates calculation is broken. Libsas sets the
-rates (min, max, and current linkrate) of a root port to the same linkrate
-of the first PHY member of that same port. In doing so, it assumes that
-all other PHYs which subsequently join the port to have the same
-negotiated linkrate, when they could actually be different.
-
-In practice this doesn't happen, as initiator and expander PHYs are
-normally initialised with consistent min/max linkrates.
-
-This has not caused an issue so far, so leave alone for now.
-
-Tested-by: Jian Luo <luojian5@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libsas/sas_expander.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ include/linux/netdevice.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index d44f18f773c0f..b7e4493d3dc16 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -806,6 +806,26 @@ static struct domain_device *sas_ex_discover_end_dev(
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 2ecf0f32444e0..29ed5977ac041 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -3565,7 +3565,7 @@ static inline u32 netif_msg_init(int debug_value, int default_msg_enable_bits)
+ 	if (debug_value == 0)	/* no output */
+ 		return 0;
+ 	/* set low N bits */
+-	return (1 << debug_value) - 1;
++	return (1U << debug_value) - 1;
+ }
  
- #ifdef CONFIG_SCSI_SAS_ATA
- 	if ((phy->attached_tproto & SAS_PROTOCOL_STP) || phy->attached_sata_dev) {
-+		if (child->linkrate > parent->min_linkrate) {
-+			struct sas_phy_linkrates rates = {
-+				.maximum_linkrate = parent->min_linkrate,
-+				.minimum_linkrate = parent->min_linkrate,
-+			};
-+			int ret;
-+
-+			pr_notice("ex %016llx phy%02d SATA device linkrate > min pathway connection rate, attempting to lower device linkrate\n",
-+				   SAS_ADDR(child->sas_addr), phy_id);
-+			ret = sas_smp_phy_control(parent, phy_id,
-+						  PHY_FUNC_LINK_RESET, &rates);
-+			if (ret) {
-+				pr_err("ex %016llx phy%02d SATA device could not set linkrate (%d)\n",
-+				       SAS_ADDR(child->sas_addr), phy_id, ret);
-+				goto out_free;
-+			}
-+			pr_notice("ex %016llx phy%02d SATA device set linkrate successfully\n",
-+				  SAS_ADDR(child->sas_addr), phy_id);
-+			child->linkrate = child->min_linkrate;
-+		}
- 		res = sas_get_ata_info(child, phy);
- 		if (res)
- 			goto out_free;
+ static inline void __netif_tx_lock(struct netdev_queue *txq, int cpu)
 -- 
 2.20.1
 
