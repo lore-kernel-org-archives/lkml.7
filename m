@@ -2,222 +2,75 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40224C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9094C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072212073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:22:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BkGkfmJG"
+	by mail.kernel.org (Postfix) with ESMTP id C33992073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbfLDOWJ (ORCPT
+        id S1728021AbfLDOXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 09:22:09 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41112 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbfLDOWJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 09:22:09 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so8299392ljc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 06:22:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d3Nxmw+vn1VuxFttdDZKUOezpfDYOtV4NA2f/g2zscU=;
-        b=BkGkfmJGCsb6xciaWWy7sVyFHJwt4WpU8VDZdzMhwsbnF7SARshxSVLNkUg6qF13iG
-         6VIgaTdFkiDXoCyBKrSWEX4/zUM/HkVsuf8Jt0SyIicaIewiQz/6lUrx5ksaQ1R+oXje
-         h0RLZTQhdGO3ClBu0N+XxE4afiHSsLHWkgtM0BBGapEzoTA++Rw0Sf5VAjnAh9rGa/pT
-         ZiqbqmyTWr74/bxfAC6+fzq2YYwT7B+BmgfkrNg5WsXEJjuZzcNwiYPKTNWWXEg1lqlM
-         wS6KEyH5jYT4WDVSwk5Gky3WtllKQrcSHWbixcOBOE3GRLaEJKMEI+StmcwifgFxFWwO
-         qSEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=d3Nxmw+vn1VuxFttdDZKUOezpfDYOtV4NA2f/g2zscU=;
-        b=hJExdarTE1sM9+lH7jsDJilAaUSGBpjNqu83dg6+O3pB/nwvai/EPSwFSeubMMlSL0
-         FIdqX1t0Mewyohw1AisuyA10CigdimH75RXRYaxDZGObBXIIJ9ZxyLAjIvlzyb3Z1j3l
-         hDZlVycr5R0X9mzrK2Aj10ng1lefgrnE9R2W/o440hr/OTygjFDQZVpLW+Y4LRfOz5ei
-         U03VGPAdri59n01wbZOQKnvWylSXzwbfobbOLyO856IHuQ8Z0glPwqytt08f2ty37G8o
-         ygpcoXxqzAja7xqB5tICS1rYeFn3a1c3/hmJVvBeenYMhvfPZbAo+MTBxnzpQLuWeJ5F
-         +iWA==
-X-Gm-Message-State: APjAAAUCRivoiLL8Vs4TakkOGhBvU5zafN2Yw0HiXijxKnYax4nWfOsL
-        mG1t0Dk1NfHCpUMzA+NMQDOcDg==
-X-Google-Smtp-Source: APXvYqxKlhMVgujp40CoS5qS4seav7v1+DL+/gCEnZ04ynl9ZbvxpIksSl5LG6/iJdMBH145iXP5RA==
-X-Received: by 2002:a2e:9194:: with SMTP id f20mr2209513ljg.154.1575469326401;
-        Wed, 04 Dec 2019 06:22:06 -0800 (PST)
-Received: from khorivan (57-201-94-178.pool.ukrtel.net. [178.94.201.57])
-        by smtp.gmail.com with ESMTPSA id w1sm3303259lfe.96.2019.12.04.06.22.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 06:22:05 -0800 (PST)
-Date:   Wed, 4 Dec 2019 16:22:03 +0200
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: ethernet: ti: davinci_cpdma: fix warning "device
- driver frees DMA memory with different size"
-Message-ID: <20191204142202.GG2680@khorivan>
-Mail-Followup-To: Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org
-References: <20191204124618.18774-1-grygorii.strashko@ti.com>
+        Wed, 4 Dec 2019 09:23:11 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44006 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727850AbfLDOXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 09:23:11 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E01303A4CD5614230013;
+        Wed,  4 Dec 2019 22:23:05 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Dec 2019
+ 22:22:58 +0800
+To:     <akpm@linux-foundation.org>, <zhengbin13@huawei.com>,
+        <reiserfs-devel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH] reiserfs: prevent NULL pointer dereference in
+ reiserfs_insert_item()
+Message-ID: <79c5135d-ff25-1cc9-4e99-9f572b88cc00@huawei.com>
+Date:   Wed, 4 Dec 2019 22:22:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191204124618.18774-1-grygorii.strashko@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Grygorii,
+The variable inode may be NULL in reiserfs_insert_item(), but there is
+no check before accessing the member of inode.
 
-On Wed, Dec 04, 2019 at 02:46:18PM +0200, Grygorii Strashko wrote:
->The TI CPSW(s) driver produces warning with DMA API debug options enabled:
->
->WARNING: CPU: 0 PID: 1033 at kernel/dma/debug.c:1025 check_unmap+0x4a8/0x968
->DMA-API: cpsw 48484000.ethernet: device driver frees DMA memory with different size
-> [device address=0x00000000abc6aa02] [map size=64 bytes] [unmap size=42 bytes]
->CPU: 0 PID: 1033 Comm: ping Not tainted 5.3.0-dirty #41
->Hardware name: Generic DRA72X (Flattened Device Tree)
->[<c0112c60>] (unwind_backtrace) from [<c010d270>] (show_stack+0x10/0x14)
->[<c010d270>] (show_stack) from [<c09bc564>] (dump_stack+0xd8/0x110)
->[<c09bc564>] (dump_stack) from [<c013b93c>] (__warn+0xe0/0x10c)
->[<c013b93c>] (__warn) from [<c013b9ac>] (warn_slowpath_fmt+0x44/0x6c)
->[<c013b9ac>] (warn_slowpath_fmt) from [<c01e0368>] (check_unmap+0x4a8/0x968)
->[<c01e0368>] (check_unmap) from [<c01e08a8>] (debug_dma_unmap_page+0x80/0x90)
->[<c01e08a8>] (debug_dma_unmap_page) from [<c0752414>] (__cpdma_chan_free+0x114/0x16c)
->[<c0752414>] (__cpdma_chan_free) from [<c07525c4>] (__cpdma_chan_process+0x158/0x17c)
->[<c07525c4>] (__cpdma_chan_process) from [<c0753690>] (cpdma_chan_process+0x3c/0x5c)
->[<c0753690>] (cpdma_chan_process) from [<c0758660>] (cpsw_tx_mq_poll+0x48/0x94)
->[<c0758660>] (cpsw_tx_mq_poll) from [<c0803018>] (net_rx_action+0x108/0x4e4)
->[<c0803018>] (net_rx_action) from [<c010230c>] (__do_softirq+0xec/0x598)
->[<c010230c>] (__do_softirq) from [<c0143914>] (do_softirq.part.4+0x68/0x74)
->[<c0143914>] (do_softirq.part.4) from [<c0143a44>] (__local_bh_enable_ip+0x124/0x17c)
->[<c0143a44>] (__local_bh_enable_ip) from [<c0871590>] (ip_finish_output2+0x294/0xb7c)
->[<c0871590>] (ip_finish_output2) from [<c0875440>] (ip_output+0x210/0x364)
->[<c0875440>] (ip_output) from [<c0875e2c>] (ip_send_skb+0x1c/0xf8)
->[<c0875e2c>] (ip_send_skb) from [<c08a7fd4>] (raw_sendmsg+0x9a8/0xc74)
->[<c08a7fd4>] (raw_sendmsg) from [<c07d6b90>] (sock_sendmsg+0x14/0x24)
->[<c07d6b90>] (sock_sendmsg) from [<c07d8260>] (__sys_sendto+0xbc/0x100)
->[<c07d8260>] (__sys_sendto) from [<c01011ac>] (__sys_trace_return+0x0/0x14)
->Exception stack(0xea9a7fa8 to 0xea9a7ff0)
->...
->
->The reason is that cpdma_chan_submit_si() now stores original buffer length
->(sw_len) in CPDMA descriptor instead of adjusted buffer length (hw_len)
->used to map the buffer.
+Fix this by adding NULL pointer check before calling reiserfs_debug().
 
-It's kind not complete fix.
-Seems like debug just shows it only fo dma_map, but for sync it doesn't.
-The issue is not in swlen, it contains smilar size and inited to len equally as
-hw_len. Problem that hw_len is inited later then swlen after below:
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+ fs/reiserfs/stree.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-	if (len < ctlr->params.min_packet_size) {
-		len = ctlr->params.min_packet_size;
-		chan->stats.runt_transmit_buff++;
-	}
-
-Thus it potentially can have different size for lens less min_pakcet_size, that
-could never happen but tracked with dma debug.
-
-	mode = CPDMA_DESC_OWNER | CPDMA_DESC_SOP | CPDMA_DESC_EOP;
-	cpdma_desc_to_port(chan, mode, si->directed);
-
-	if (si->data_dma) {
-		buffer = si->data_dma;
-		dma_sync_single_for_device(ctlr->dev, buffer, len, chan->dir);
-		swlen |= CPDMA_DMA_EXT_MAP;
-	} else {
-		buffer = dma_map_single(ctlr->dev, si->data_virt, len, chan->dir);
-		ret = dma_mapping_error(ctlr->dev, buffer);
-		if (ret) {
-			cpdma_desc_free(ctlr->pool, desc, 1);
-			return -EINVAL;
-		}
-	}
-
-So, the fix you propose do it only for dma_map_single. But, even it should never
-happen, it should be fixed for dma_sync() also for consistency.
-Proposition is to move the following initialization:
-
-	int				swlen = len;
-
-after
-
-	if (len < ctlr->params.min_packet_size) {
-		len = ctlr->params.min_packet_size;
-		chan->stats.runt_transmit_buff++;
-	}
-
-->     swlen = len;
-
-And that should work for both cases, even if dma_sync uses len:
-
-dma_sync_single_for_device(ctlr->dev, buffer, len, chan->dir);
-
-....
-
-
->
->Hence, fix an issue by using adjusted buffer length (hw_len) to unmap
->packet buffer.
->
->Cc: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->Fixes: 6670acacd59e ("net: ethernet: ti: davinci_cpdma: add dma mapped submit")
->Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->---
-> drivers/net/ethernet/ti/davinci_cpdma.c | 5 +++--
-> 1 file changed, 3 insertions(+), 2 deletions(-)
->
->diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
->index 37ba708ac781..6be5a514d5b1 100644
->--- a/drivers/net/ethernet/ti/davinci_cpdma.c
->+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
->@@ -1197,12 +1197,13 @@ static void __cpdma_chan_free(struct cpdma_chan *chan,
-> {
-> 	struct cpdma_ctlr		*ctlr = chan->ctlr;
-> 	struct cpdma_desc_pool		*pool = ctlr->pool;
->+	int				origlen, hw_len;
-> 	dma_addr_t			buff_dma;
->-	int				origlen;
-> 	uintptr_t			token;
->
-> 	token      = desc_read(desc, sw_token);
-> 	origlen    = desc_read(desc, sw_len);
->+	hw_len = desc_read(desc, hw_len);
->
-> 	buff_dma   = desc_read(desc, sw_buffer);
-> 	if (origlen & CPDMA_DMA_EXT_MAP) {
->@@ -1210,7 +1211,7 @@ static void __cpdma_chan_free(struct cpdma_chan *chan,
-> 		dma_sync_single_for_cpu(ctlr->dev, buff_dma, origlen,
-> 					chan->dir);
-> 	} else {
->-		dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
->+		dma_unmap_single(ctlr->dev, buff_dma, hw_len, chan->dir);
-> 	}
-
-I've tried to avod two register reads on data path. So read only one sw_len
-that actually supposed to contain same size. So proposition is to fix it like
-in above comment would be more correct, and leave this func unchanged I mean in:
-
-static int cpdma_chan_submit_si(struct submit_info *si) {}
-
->
-> 	cpdma_desc_free(pool, desc, 1);
->-- 
->2.17.1
->
-
+diff --git a/fs/reiserfs/stree.c b/fs/reiserfs/stree.c
+index da9ebe33882b..bb4973aefbb1 100644
+--- a/fs/reiserfs/stree.c
++++ b/fs/reiserfs/stree.c
+@@ -2246,7 +2246,8 @@ int reiserfs_insert_item(struct reiserfs_transaction_handle *th,
+ 	/* also releases the path */
+ 	unfix_nodes(&s_ins_balance);
+ #ifdef REISERQUOTA_DEBUG
+-	reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
++	if (inode)
++		reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
+ 		       "reiserquota insert_item(): freeing %u id=%u type=%c",
+ 		       quota_bytes, inode->i_uid, head2type(ih));
+ #endif
 -- 
-Regards,
-Ivan Khoronzhuk
+2.7.4
+
