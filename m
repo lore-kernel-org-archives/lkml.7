@@ -2,129 +2,331 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECE0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9559EC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A4E2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:30:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKZ+O0qQ"
+	by mail.kernel.org (Postfix) with ESMTP id 64E202073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfLDIaD (ORCPT
+        id S1727376AbfLDIaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:30:03 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42929 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbfLDIaC (ORCPT
+        Wed, 4 Dec 2019 03:30:18 -0500
+Received: from lucky1.263xmail.com ([211.157.147.130]:54048 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfLDIaS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:30:02 -0500
-Received: by mail-pf1-f195.google.com with SMTP id l22so3261071pff.9;
-        Wed, 04 Dec 2019 00:30:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=26Svodx2iKimpEDX28qyUXASc5gWZTuY5LBcruAtYsQ=;
-        b=KKZ+O0qQLp376LkvoLp+WaBAY1gCrMaSJqGMWi4S6126B1TeH6x48Xb8ngBRJIQc4F
-         3QAbr2qXsqfgY6bBbrmVpx7DJZh3AcAVN/OhQxB1W9OpHyvXnlWafkDYFUJUuaxE3lvU
-         cCh1rAALzHNb1CE+yvUyA6ql7xgTnsB+XrmeqJYTLh20JxMAm75L8JIRGzvgUrbCsv4e
-         B+eaNcCE0NqBZmMcBWbN5onY15Vdj7MydB5ggqh2P+2Y0fQ5o710inQhwTl9o9xz/8ih
-         tsaHh/wyC4jr98DqSeZCNAG4QxH/ZlWbuwQ3Nsp25rlkIpeZteEX1q1eLvBFWoliSr0W
-         BSfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=26Svodx2iKimpEDX28qyUXASc5gWZTuY5LBcruAtYsQ=;
-        b=Ns26/PsTPjJzt/P2VXQrg2CGAsHaRo7OToaT+9cdKrKErVTlH5OqgCRbOcj5TjF+zE
-         K5/YmS+PbO0uyTmFh02umssSp5gk62a3/dU5AHOLbsFJexGZXY6SRatF4kHpPAn2gvvA
-         11J/kSDnXppLDw/7qglm6Bi84kU/aJgGcAPLcO9AsIOxbZcixqEtiweXYMLhr/AT32CB
-         LyXcOycaAFlnkJSUTn56um3heq22REdu4YruhaeDIDhDtamA8d/jP8Xt0QKYeTr0GryO
-         amSbWaKousD2N0B6Xn/2uIGKHs929jXzwMW04ocCwjQqphqrBLi+SdJ3v6wqOM7HVNA9
-         +IVA==
-X-Gm-Message-State: APjAAAWqaE+EhPsXZRdv8SLNaum1W4ame4Zettqc4TxEnqSWPPORp46o
-        qXCuLEn/Rt8SYOZUBoGQpSzh0RfY//malxBn5dA=
-X-Google-Smtp-Source: APXvYqzjAZ0vAhPhJSIR2kF3EuRKWdrEJY88vgQI+LDDt1kDWp6YChc0yxSHIbzB8zqEI/D6eXIErZ/TdjfYIfEZpgM=
-X-Received: by 2002:a62:1a09:: with SMTP id a9mr2343166pfa.64.1575448202017;
- Wed, 04 Dec 2019 00:30:02 -0800 (PST)
-MIME-Version: 1.0
-References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
- <1575349026-8743-3-git-send-email-srinath.mannam@broadcom.com>
- <20191203155514.GE18399@e119886-lin.cambridge.arm.com> <CAHp75Vf7d=Gw24MTq2q3BKspkLEDDM24GVK4Zh_4zfZEzVuZjw@mail.gmail.com>
- <40fffa66-4b06-a851-84c2-4de36d5c6777@broadcom.com>
-In-Reply-To: <40fffa66-4b06-a851-84c2-4de36d5c6777@broadcom.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Dec 2019 10:29:51 +0200
-Message-ID: <CAHp75VfyKAg4OhzUa4swGXOGTvJ5fVO8mhGSG=5HAUP__M-URQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] PCI: iproc: Add INTx support with better modeling
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 4 Dec 2019 03:30:18 -0500
+Received: from localhost (unknown [192.168.167.69])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 576DD79864;
+        Wed,  4 Dec 2019 16:30:12 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P29210T140217073772288S1575447928786120_;
+        Wed, 04 Dec 2019 16:25:30 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <8fabd335a09b755d178ee73c5a87b63f>
+X-RL-SENDER: zhangqing@rock-chips.com
+X-SENDER: zhangqing@rock-chips.com
+X-LOGIN-NAME: zhangqing@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Elaine Zhang <zhangqing@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
+        Elaine Zhang <zhangqing@rock-chips.com>
+Subject: [PATCH v4 5/5] clk: rockchip: support pll setting by auto
+Date:   Wed,  4 Dec 2019 16:25:27 +0800
+Message-Id: <20191204082527.19957-1-zhangqing@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191204081859.19454-1-zhangqing@rock-chips.com>
+References: <20191204081859.19454-1-zhangqing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 12:09 AM Ray Jui <ray.jui@broadcom.com> wrote:
-> On 12/3/19 11:27 AM, Andy Shevchenko wrote:
-> > On Tue, Dec 3, 2019 at 5:55 PM Andrew Murray <andrew.murray@arm.com> wrote:
-> >> On Tue, Dec 03, 2019 at 10:27:02AM +0530, Srinath Mannam wrote:
-> >
-> >>> +     /* go through INTx A, B, C, D until all interrupts are handled */
-> >>> +     do {
-> >>> +             status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
-> >>
-> >> By performing this read once and outside of the do/while loop you may improve
-> >> performance. I wonder how probable it is to get another INTx whilst handling
-> >> one?
-> >
-> > May I ask how it can be improved?
-> > One read will be needed any way, and so does this code.
-> >
->
-> I guess the current code will cause the IPROC_PCIE_INTX_CSR register to
-> be read TWICE, if it's ever set to start with.
->
-> But then if we do it outside of the while loop, if we ever receive an
-> interrupt while servicing one, the interrupt will still need to be
-> serviced, and in this case, it will cause additional context switch
-> overhead by going out and back in the interrupt context.
->
-> My take is that it's probably more ideal to leave this portion of code
-> as it is.
+If setting freq is not support in rockchip_pll_rate_table,
+It can calculate and set pll params by auto.
 
-Can't we simple drop a do-while completely and leave only
-for_each_set_bit() loop?
+Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+---
+ drivers/clk/rockchip/clk-pll.c | 215 ++++++++++++++++++++++++++++++---
+ 1 file changed, 200 insertions(+), 15 deletions(-)
 
->
-> >>> +             for_each_set_bit(bit, &status, PCI_NUM_INTX) {
-> >>> +                     virq = irq_find_mapping(pcie->irq_domain, bit);
-> >>> +                     if (virq)
-> >>> +                             generic_handle_irq(virq);
-> >>> +                     else
-> >>> +                             dev_err(dev, "unexpected INTx%u\n", bit);
-> >>> +             }
-> >>> +     } while ((status & SYS_RC_INTX_MASK) != 0);
-> >
-
-
-
+diff --git a/drivers/clk/rockchip/clk-pll.c b/drivers/clk/rockchip/clk-pll.c
+index 390e9473807a..ac8c62c531f0 100644
+--- a/drivers/clk/rockchip/clk-pll.c
++++ b/drivers/clk/rockchip/clk-pll.c
+@@ -14,6 +14,7 @@
+ #include <linux/clk-provider.h>
+ #include <linux/regmap.h>
+ #include <linux/clk.h>
++#include <linux/gcd.h>
+ #include "clk.h"
+ 
+ #define PLL_MODE_MASK		0x3
+@@ -46,6 +47,198 @@ struct rockchip_clk_pll {
+ #define to_rockchip_clk_pll_nb(nb) \
+ 			container_of(nb, struct rockchip_clk_pll, clk_nb)
+ 
++#define MHZ			(1000UL * 1000UL)
++#define KHZ			(1000UL)
++
++/* CLK_PLL_TYPE_RK3066_AUTO type ops */
++#define PLL_FREF_MIN		(269 * KHZ)
++#define PLL_FREF_MAX		(2200 * MHZ)
++
++#define PLL_FVCO_MIN		(440 * MHZ)
++#define PLL_FVCO_MAX		(2200 * MHZ)
++
++#define PLL_FOUT_MIN		(27500 * KHZ)
++#define PLL_FOUT_MAX		(2200 * MHZ)
++
++#define PLL_NF_MAX		(4096)
++#define PLL_NR_MAX		(64)
++#define PLL_NO_MAX		(16)
++
++/* CLK_PLL_TYPE_RK3036/3366/3399_AUTO type ops */
++#define MIN_FOUTVCO_FREQ	(800 * MHZ)
++#define MAX_FOUTVCO_FREQ	(2000 * MHZ)
++
++static struct rockchip_pll_rate_table auto_table;
++
++static struct rockchip_pll_rate_table *rk_pll_rate_table_get(void)
++{
++	return &auto_table;
++}
++
++static int rockchip_pll_clk_set_postdiv(unsigned long fout_hz,
++					u32 *postdiv1,
++					u32 *postdiv2,
++					u32 *foutvco)
++{
++	unsigned long freq;
++
++	if (fout_hz < MIN_FOUTVCO_FREQ) {
++		for (*postdiv1 = 1; *postdiv1 <= 7; (*postdiv1)++) {
++			for (*postdiv2 = 1; *postdiv2 <= 7; (*postdiv2)++) {
++				freq = fout_hz * (*postdiv1) * (*postdiv2);
++				if (freq >= MIN_FOUTVCO_FREQ &&
++				    freq <= MAX_FOUTVCO_FREQ) {
++					*foutvco = freq;
++					return 0;
++				}
++			}
++		}
++		pr_err("CANNOT FIND postdiv1/2 to make fout in range from 800M to 2000M,fout = %lu\n",
++		       fout_hz);
++	} else {
++		*postdiv1 = 1;
++		*postdiv2 = 1;
++	}
++	return 0;
++}
++
++static struct rockchip_pll_rate_table *
++rockchip_pll_clk_set_by_auto(struct rockchip_clk_pll *pll,
++			     unsigned long fin_hz,
++			     unsigned long fout_hz)
++{
++	struct rockchip_pll_rate_table *rate_table = rk_pll_rate_table_get();
++	/* FIXME set postdiv1/2 always 1*/
++	u32 foutvco = fout_hz;
++	u64 fin_64, frac_64;
++	u32 f_frac, postdiv1, postdiv2;
++	unsigned long clk_gcd = 0;
++
++	if (fin_hz == 0 || fout_hz == 0 || fout_hz == fin_hz)
++		return NULL;
++
++	rockchip_pll_clk_set_postdiv(fout_hz, &postdiv1, &postdiv2, &foutvco);
++	rate_table->postdiv1 = postdiv1;
++	rate_table->postdiv2 = postdiv2;
++	rate_table->dsmpd = 1;
++
++	if (fin_hz / MHZ * MHZ == fin_hz && fout_hz / MHZ * MHZ == fout_hz) {
++		fin_hz /= MHZ;
++		foutvco /= MHZ;
++		clk_gcd = gcd(fin_hz, foutvco);
++		rate_table->refdiv = fin_hz / clk_gcd;
++		rate_table->fbdiv = foutvco / clk_gcd;
++
++		rate_table->frac = 0;
++
++		pr_debug("fin = %lu, fout = %lu, clk_gcd = %lu, refdiv = %u, fbdiv = %u, postdiv1 = %u, postdiv2 = %u, frac = %u\n",
++			 fin_hz, fout_hz, clk_gcd, rate_table->refdiv,
++			 rate_table->fbdiv, rate_table->postdiv1,
++			 rate_table->postdiv2, rate_table->frac);
++	} else {
++		pr_debug("frac div running, fin_hz = %lu, fout_hz = %lu, fin_INT_mhz = %lu, fout_INT_mhz = %lu\n",
++			 fin_hz, fout_hz,
++			 fin_hz / MHZ * MHZ,
++			 fout_hz / MHZ * MHZ);
++		pr_debug("frac get postdiv1 = %u,  postdiv2 = %u, foutvco = %u\n",
++			 rate_table->postdiv1, rate_table->postdiv2, foutvco);
++		clk_gcd = gcd(fin_hz / MHZ, foutvco / MHZ);
++		rate_table->refdiv = fin_hz / MHZ / clk_gcd;
++		rate_table->fbdiv = foutvco / MHZ / clk_gcd;
++		pr_debug("frac get refdiv = %u,  fbdiv = %u\n",
++			 rate_table->refdiv, rate_table->fbdiv);
++
++		rate_table->frac = 0;
++
++		f_frac = (foutvco % MHZ);
++		fin_64 = fin_hz;
++		do_div(fin_64, (u64)rate_table->refdiv);
++		frac_64 = (u64)f_frac << 24;
++		do_div(frac_64, fin_64);
++		rate_table->frac = (u32)frac_64;
++		if (rate_table->frac > 0)
++			rate_table->dsmpd = 0;
++		pr_debug("frac = %x\n", rate_table->frac);
++	}
++	return rate_table;
++}
++
++static struct rockchip_pll_rate_table *
++rockchip_rk3066_pll_clk_set_by_auto(struct rockchip_clk_pll *pll,
++				    unsigned long fin_hz,
++				    unsigned long fout_hz)
++{
++	struct rockchip_pll_rate_table *rate_table = rk_pll_rate_table_get();
++	u32 nr, nf, no, nonr;
++	u32 nr_out, nf_out, no_out;
++	u32 n;
++	u32 numerator, denominator;
++	u64 fref, fvco, fout;
++	unsigned long clk_gcd = 0;
++
++	nr_out = PLL_NR_MAX + 1;
++	no_out = 0;
++	nf_out = 0;
++
++	if (fin_hz == 0 || fout_hz == 0 || fout_hz == fin_hz)
++		return NULL;
++
++	clk_gcd = gcd(fin_hz, fout_hz);
++
++	numerator = fout_hz / clk_gcd;
++	denominator = fin_hz / clk_gcd;
++
++	for (n = 1;; n++) {
++		nf = numerator * n;
++		nonr = denominator * n;
++		if (nf > PLL_NF_MAX || nonr > (PLL_NO_MAX * PLL_NR_MAX))
++			break;
++
++		for (no = 1; no <= PLL_NO_MAX; no++) {
++			if (!(no == 1 || !(no % 2)))
++				continue;
++
++			if (nonr % no)
++				continue;
++			nr = nonr / no;
++
++			if (nr > PLL_NR_MAX)
++				continue;
++
++			fref = fin_hz / nr;
++			if (fref < PLL_FREF_MIN || fref > PLL_FREF_MAX)
++				continue;
++
++			fvco = fref * nf;
++			if (fvco < PLL_FVCO_MIN || fvco > PLL_FVCO_MAX)
++				continue;
++
++			fout = fvco / no;
++			if (fout < PLL_FOUT_MIN || fout > PLL_FOUT_MAX)
++				continue;
++
++			/* select the best from all available PLL settings */
++			if ((no > no_out) ||
++			    ((no == no_out) && (nr < nr_out))) {
++				nr_out = nr;
++				nf_out = nf;
++				no_out = no;
++			}
++		}
++	}
++
++	/* output the best PLL setting */
++	if ((nr_out <= PLL_NR_MAX) && (no_out > 0)) {
++		rate_table->nr = nr_out;
++		rate_table->nf = nf_out;
++		rate_table->no = no_out;
++	} else {
++		return NULL;
++	}
++
++	return rate_table;
++}
++
+ static const struct rockchip_pll_rate_table *rockchip_get_pll_settings(
+ 			    struct rockchip_clk_pll *pll, unsigned long rate)
+ {
+@@ -57,24 +250,16 @@ static const struct rockchip_pll_rate_table *rockchip_get_pll_settings(
+ 			return &rate_table[i];
+ 	}
+ 
+-	return NULL;
++	if (pll->type == pll_rk3066)
++		return rockchip_rk3066_pll_clk_set_by_auto(pll, 24 * MHZ, rate);
++	else
++		return rockchip_pll_clk_set_by_auto(pll, 24 * MHZ, rate);
+ }
+ 
+ static long rockchip_pll_round_rate(struct clk_hw *hw,
+ 			    unsigned long drate, unsigned long *prate)
+ {
+-	struct rockchip_clk_pll *pll = to_rockchip_clk_pll(hw);
+-	const struct rockchip_pll_rate_table *rate_table = pll->rate_table;
+-	int i;
+-
+-	/* Assumming rate_table is in descending order */
+-	for (i = 0; i < pll->rate_count; i++) {
+-		if (drate >= rate_table[i].rate)
+-			return rate_table[i].rate;
+-	}
+-
+-	/* return minimum supported value */
+-	return rate_table[i - 1].rate;
++	return drate;
+ }
+ 
+ /*
+@@ -154,7 +339,7 @@ static unsigned long rockchip_rk3036_pll_recalc_rate(struct clk_hw *hw,
+ {
+ 	struct rockchip_clk_pll *pll = to_rockchip_clk_pll(hw);
+ 	struct rockchip_pll_rate_table cur;
+-	u64 rate64 = prate;
++	u64 rate64 = prate, frac_rate64 = prate;
+ 
+ 	rockchip_rk3036_pll_get_params(pll, &cur);
+ 
+@@ -163,7 +348,7 @@ static unsigned long rockchip_rk3036_pll_recalc_rate(struct clk_hw *hw,
+ 
+ 	if (cur.dsmpd == 0) {
+ 		/* fractional mode */
+-		u64 frac_rate64 = prate * cur.frac;
++		frac_rate64 *= cur.frac;
+ 
+ 		do_div(frac_rate64, cur.refdiv);
+ 		rate64 += frac_rate64 >> 24;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
+
+
