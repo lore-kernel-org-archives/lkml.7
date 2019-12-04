@@ -2,99 +2,118 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8247C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC53C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE3E20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E74721823
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 21:54:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="sNHngkNW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbfLDVsD (ORCPT
+        id S1728181AbfLDVya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 16:48:03 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:58288 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728030AbfLDVsD (ORCPT
+        Wed, 4 Dec 2019 16:54:30 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45239 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728031AbfLDVya (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 16:48:03 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 95D231C2462; Wed,  4 Dec 2019 22:48:01 +0100 (CET)
-Date:   Wed, 4 Dec 2019 22:48:00 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 084/321] scsi: qla2xxx: Fix NPIV handling for FC-NVMe
-Message-ID: <20191204214800.GD7678@amd>
-References: <20191203223427.103571230@linuxfoundation.org>
- <20191203223431.527072152@linuxfoundation.org>
+        Wed, 4 Dec 2019 16:54:30 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 203so745088lfa.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 13:54:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=VnhsCb+n6LgjC+6907Tb3B2Vl6EZOomyJ8tnp+TG/qc=;
+        b=sNHngkNWV9ev/PowIGAz1Y8jFs9+YDnaFQVf/lco03gsiAcIQu1SbZnuJ3nQdVH7NO
+         dqB3KDHH54WY/F8yOmZq7+XwbP3We2KsJhXSussbQI7WEkf2pJK9Dfv4VskpP8DP0xi9
+         RzokWdmqDSdtmSDaKdUMDRrvVxUrRdXp0gDizkbeHWwtxewzYwtw6aE5w/5hDpcO20SB
+         74FHt6IyhRWsBnQU/vFF7rWwOcznpjo77kfAOnzsGWoZ37J6sd+cfmNms7yTG4rlocFD
+         N1REEnbp/vd+gBJEzbLLWJqAMdZTJZ+uw1Sg2M976u4gSv6gz4dbBj3zq1DgrdBZ4xt+
+         T2eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=VnhsCb+n6LgjC+6907Tb3B2Vl6EZOomyJ8tnp+TG/qc=;
+        b=klQUY1fMHxkiiiPaePEiDtcyu+9BVGOm2KxaON92pZuNUP+vKM9W5dHyLgrWPqkwXO
+         KSzdNbizEHlPt/6ryE1zgOdA4vR3O3jxauUiQARpABhV0b5g5DwtyTcoD3cpJ3uKOkML
+         52NSBG/TddY1ljY70KR81tKXQSvhHk5BbCBWuv+/Z026e8tGi+ZfrEreNtzwU3PFCoyT
+         4Ta+WpmSjj6qzeauZQ8hbGGcpC5aJfopp4xnxxR7hifYwn1Caut9ZJt/IUdd1aXHjqTc
+         Dh+A/xyzJ2QbRzk3OpHHqHfPbL8hLDoRUXZHVe1MRswcSeBMFvN+5KcUbhDxRoHlJ++Y
+         gjUQ==
+X-Gm-Message-State: APjAAAVlHc9TgJVjqQh+4nTmYPm4Er62R5DlIzHNRdAdj6VXx/VnS5wz
+        39zStUXLLuWTpT39FPs+k19A/g==
+X-Google-Smtp-Source: APXvYqzPvrDymPjXRh9qruHs8tBDH3UgArE45+g66WgCMyK1u3JpllpAjDPD+rE9wYXI6GOY+loWbw==
+X-Received: by 2002:a19:c382:: with SMTP id t124mr3210526lff.124.1575496468486;
+        Wed, 04 Dec 2019 13:54:28 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id e20sm3841379ljk.44.2019.12.04.13.54.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 13:54:28 -0800 (PST)
+Date:   Wed, 4 Dec 2019 13:54:05 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Toke =?UTF-8?B?SMO4?= =?UTF-8?B?aWxhbmQtSsO4cmdlbnNlbg==?= 
+        <toke@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
+Message-ID: <20191204135405.3ffb9ad6@cakuba.netronome.com>
+In-Reply-To: <CAEf4BzZ+0XpH_zJ0P78vjzmFAH3kGZ21w3-LcSEG=B=+ZQWJ=w@mail.gmail.com>
+References: <20191202131847.30837-1-jolsa@kernel.org>
+        <CAEf4BzY_D9JHjuU6K=ciS70NSy2UvSm_uf1NfN_tmFz1445Jiw@mail.gmail.com>
+        <87wobepgy0.fsf@toke.dk>
+        <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
+        <CAEf4BzZ+0XpH_zJ0P78vjzmFAH3kGZ21w3-LcSEG=B=+ZQWJ=w@mail.gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="SO98HVl1bnMOfKZd"
-Content-Disposition: inline
-In-Reply-To: <20191203223431.527072152@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 4 Dec 2019 13:16:13 -0800, Andrii Nakryiko wrote:
+> I wonder what big advantage having bpftool in libbpf's Github repo
+> brings, actually? The reason we need libbpf on github is to allow
+> other projects like pahole to be able to use libbpf from submodule.
+> There is no such need for bpftool.
+> 
+> I agree about preference to release them in sync, but that could be
+> easily done by releasing based on corresponding commits in github's
+> libbpf repo and kernel repo. bpftool doesn't have to physically live
+> next to libbpf on Github, does it?
 
---SO98HVl1bnMOfKZd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
++1
 
-Hi!
+> Calling github repo a "mirror" is incorrect. It's not a 1:1 copy of
+> files. We have a completely separate Makefile for libbpf, and we have
+> a bunch of stuff we had to re-implement to detach libbpf code from
+> kernel's non-UAPI headers. Doing this for bpftool as well seems like
+> just more maintenance. Keeping github's Makefile in sync with kernel's
+> Makefile (for libbpf) is PITA, I'd rather avoid similar pains for
+> bpftool without a really good reason.
 
-> From: Himanshu Madhani <hmadhani@marvell.com>
->=20
-> [ Upstream commit 5e6803b409ba3c18434de6693062d98a470bcb1e ]
->=20
-> This patch fixes issues with NPIV port with FC-NVMe. Clean up code for
-> remoteport delete and also call nvme_delete when deleting VPs.
-
-> @@ -564,7 +554,7 @@ static void qla_nvme_remoteport_delete(struct nvme_fc=
-_remote_port *rport)
->  		schedule_work(&fcport->free_work);
->  	}
-> =20
-> -	fcport->nvme_flag &=3D ~(NVME_FLAG_REGISTERED | NVME_FLAG_DELETING);
-> +	fcport->nvme_flag &=3D ~NVME_FLAG_DELETING;
->  	ql_log(ql_log_info, fcport->vha, 0x2110,
->  	    "remoteport_delete of %p completed.\n", fcport);
->  }
-
-Current -next-20191204 contains
-
- fcport->nvme_flag &=3D ~NVME_FLAG_REGISTERED;
- fcport->nvme_flag &=3D ~NVME_FLAG_DELETING;
-
-=2E.. and there's no explanation in changelog why removing
-NVME_FLAG_REGISTERED is good idea.
-
-Are you sure this change is correct and suitable for -stable?
- 								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---SO98HVl1bnMOfKZd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3oKZAACgkQMOfwapXb+vI1bwCfV96dejmfg0seyu7LfFUDgFS/
-GJYAoJCX2OXH1ib1MwztFkpJxihfZMhw
-=jQOd
------END PGP SIGNATURE-----
-
---SO98HVl1bnMOfKZd--
+Agreed. Having libbpf on GH is definitely useful today, but one can hope
+a day will come when distroes will get up to speed on packaging libbpf,
+and perhaps we can retire it? Maybe 2, 3 years from now? Putting
+bpftool in the same boat is just more baggage.
