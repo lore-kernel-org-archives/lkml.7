@@ -2,158 +2,151 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E39C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB32EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87B0206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB1E20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:43:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="q8nNR2Jn"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S6ZibFY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbfLDSkT (ORCPT
+        id S1728587AbfLDSn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:40:19 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37580 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728285AbfLDSkS (ORCPT
+        Wed, 4 Dec 2019 13:43:57 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:49246 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728244AbfLDSn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:40:18 -0500
-Received: by mail-lj1-f196.google.com with SMTP id u17so476141lja.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:40:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=MPUgt8BKK8jntMpPJJpiSxrSzMem1sQgZ2v86URinXA=;
-        b=q8nNR2JnYKwS3g9vjbQ3LUk+rSLD9sMW5X6tYyysV5UGJQTejC8CEhjzojGmF56EJg
-         MzrOIkU2eI//hos+tVVTrz5UrbWRNr188CTiCTjgseET0IO5HsgGi/tcJl8p4jNM3BwH
-         rtyt3Qsk4yAmL7hhGfYpgbk5xtCDX3V1e2SxNcC/yOx8qbJ3VhBYvd70O1llAIjC1o+z
-         Y0DfWuMLJIv9pOZgsTPNrQBJggY4rEzKIdZTTE7qMFEtYny79ScbaKo8zrhKmCpBi5sa
-         wUnV4WeWDl0kk1rWTPbFh2DZtV0r/bw9ujOIk6ekRJhvxNeqVCbK4C3bZQ71bT1DV4eZ
-         D1Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=MPUgt8BKK8jntMpPJJpiSxrSzMem1sQgZ2v86URinXA=;
-        b=axHehZWYn35FSJ4z0QXZN1dAziwcYCMwM22yNVv7doP0Ksmp8BvARKHhcMdikiCkTh
-         LdIJchAVqa8G2F0SAHFio9cg9f9KyXdtmMeC3STiBQfLwz2yO7oJcddgfHdEP4DFrzvo
-         ujN0yYxNs9EQH+AeWfzEa00iLlKqeARwMZHQqDjhMH0VO6b/Ylh6jKyLOiyYu5xraAmv
-         iIp1enD4ndFlfKiKVJ6qIB8ouGoCPio4Drla5gTbA8izUNPDt17VT3nFi/BgjROeLI3V
-         4zIUPDrjqiuysd1S8iX2IBPCzaXh8fxWPVbVh9nbJQVECLcPo/7xB5r5PM2sueHsZsH8
-         5f4A==
-X-Gm-Message-State: APjAAAUONPSkycgQVzOw4tLcgJGDoyY5Vg10ak0yAykZIB9Lq7peEJUm
-        O9amb5ss7BO6+QjR5tUOuWqocA==
-X-Google-Smtp-Source: APXvYqwdXIR+tb8hZ6Ua2SQCwf0XVGUGg7xt5ESgNSXxlS0m4rBtdDw61DUznFeBsV4bTXIUOIjh/A==
-X-Received: by 2002:a2e:84d0:: with SMTP id q16mr2935643ljh.138.1575484816865;
-        Wed, 04 Dec 2019 10:40:16 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id a24sm3584077ljp.97.2019.12.04.10.40.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 10:40:16 -0800 (PST)
-Date:   Wed, 4 Dec 2019 10:39:55 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        "David S. Miller" <davem@davemloft.net>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        John Hurley <john.hurley@netronome.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        oss-drivers@netronome.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] nfp: abm: fix memory leak in
- nfp_abm_u32_knode_replace
-Message-ID: <20191204103955.63c4d9af@cakuba.netronome.com>
-In-Reply-To: <20190927015157.20070-1-navid.emamdoost@gmail.com>
-References: <20190925215314.10cf291d@cakuba.netronome.com>
-        <20190927015157.20070-1-navid.emamdoost@gmail.com>
-Organization: Netronome Systems, Ltd.
+        Wed, 4 Dec 2019 13:43:57 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB4IY6on074545;
+        Wed, 4 Dec 2019 18:43:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=iW3p+lMiFZuhMFDcuCH3k9CwOvQRI86to7kQ5iH1Rq4=;
+ b=S6ZibFY0lW8ejK3kFSiyqf7Vpdd9fY6E2NTXRsRhCYThgfMRpGz8vcMPSFGZaruvC3hZ
+ jgEKyGaGOquOpKxZMjUgyDcx8BXEJ2JNNRm4xm2qHrD6+q11Gqy4YlRlIW3ZX9krO23X
+ aIaPgqywANWpQVonrZ0vS/12Gs6nvGNhS0RUsS1cxtoJjZ1FHy7F7XWi1GSgzka2Mc1T
+ jH7gnKqm2XA1B3+6+13SGIAUiwXMdTvIUCr/30qGFGcellsnE2VPvbo6ta3MF8V3LZ6+
+ 06lwveWeAZ/Tf77qBCLVQ5mo600cJW8BB9jWoL2Fn5ZQgb+cXqZdWzjmW6MGydu08aji qw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2wkh2rg5c5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 18:43:16 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB4IhFsD014723;
+        Wed, 4 Dec 2019 18:43:16 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2wp17en7cr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 18:43:15 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB4Igt7S024219;
+        Wed, 4 Dec 2019 18:42:56 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 04 Dec 2019 10:42:54 -0800
+Date:   Wed, 4 Dec 2019 21:42:47 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] Silence an uninitialized variable warning
+Message-ID: <20191204184247.GG1765@kadam>
+References: <20191126121934.kuolgbm55dirfbay@kili.mountain>
+ <20191204092640.692c95af@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204092640.692c95af@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9461 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912040151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9461 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912040150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Sep 2019 20:51:46 -0500, Navid Emamdoost wrote:
-> In nfp_abm_u32_knode_replace if the allocation for match fails it should
-> go to the error handling instead of returning. Updated other gotos to
-> have correct errno returned, too.
+On Wed, Dec 04, 2019 at 09:26:40AM -0500, Steven Rostedt wrote:
+> On Tue, 26 Nov 2019 15:19:34 +0300
+> Dan Carpenter <dan.carpenter@oracle.com> wrote:
 > 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
-> Changes in v2:
-> 	- Reused err variable for erorr value returning.
-> Changes in v3:
-> 	- Fix the err value in the first goto, and fix subject prefix.
+> > Smatch complains that "ret" could be uninitialized if we don't enter the
+> > loop.  I don't know if that's possible, but it's nicer to return a
+> > literal zero instead.
+> > 
+> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > ---
+> >  kernel/trace/trace_syscalls.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+> > index 73140d80dd46..63528f458826 100644
+> > --- a/kernel/trace/trace_syscalls.c
+> > +++ b/kernel/trace/trace_syscalls.c
+> > @@ -286,7 +286,7 @@ static int __init syscall_enter_define_fields(struct trace_event_call *call)
+> >  		offset += sizeof(unsigned long);
+> >  	}
+> >  
+> > -	return ret;
+> > +	return 0;
+> >  }
+> >  
+> >  static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
+> 
+> The current code has this:
+> 
+> static int __init syscall_enter_define_fields(struct trace_event_call *call)
+> {
+> 	struct syscall_trace_enter trace;
+> 	struct syscall_metadata *meta = call->data;
+> 	int ret;
+> 	int i;
+> 	int offset = offsetof(typeof(trace), args);
+> 
+> 	ret = trace_define_field(call, SYSCALL_FIELD(int, nr, __syscall_nr),
+> 				 FILTER_OTHER);
 
-Ugh damn this. Apparently this "fix" has made the news:
+In linux-next this ret = trace_define_field() assignment is removed.
+That was commit 60fdad00827c ("ftrace: Rework event_create_dir()").
 
-https://news.softpedia.com/news/canonical-releases-major-kernel-security-update-for-ubuntu-19-10-and-18-04-lts-528433.shtml
+> 	if (ret)
+> 		return ret;
+> 
+> 	for (i = 0; i < meta->nb_args; i++) {
+> 		ret = trace_define_field(call, meta->types[i],
+> 					 meta->args[i], offset,
+> 					 sizeof(unsigned long), 0,
+> 					 FILTER_OTHER);
+> 		offset += sizeof(unsigned long);
+> 	}
+> 
+> 	return ret;
+> }
+> 
+> 
+> How can ret possibly be uninitialized?
 
-https://nvd.nist.gov/vuln/detail/CVE-2019-19076
+I should have written this commit more carefully and verified whether
+meta->nb_args can actually be zero instead of just assuming it was a
+false positive...
 
-and (a) it would be a damn control path, root-only memory leak, but
-also (b) upon closer inspection there is no leak here at all!
-
-We don't need to delete the entry if we failed to allocate it...
-The delete path is in case the entry for the handle is changed, but 
-if we're trying to allocate one anew there can't be any on the list.
-
-Congratulations to whoever classified this as a security fix.
-
-I will send a revert, and go ask for the CVE to be marked invalid.
-What a waste of time. I should have paid more attention :/
-
-> diff --git a/drivers/net/ethernet/netronome/nfp/abm/cls.c b/drivers/net/ethernet/netronome/nfp/abm/cls.c
-> index 23ebddfb9532..9f8a1f69c0c4 100644
-> --- a/drivers/net/ethernet/netronome/nfp/abm/cls.c
-> +++ b/drivers/net/ethernet/netronome/nfp/abm/cls.c
-> @@ -176,8 +176,10 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
->  	u8 mask, val;
->  	int err;
->  
-> -	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack))
-> +	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack)) {
-> +		err = -EOPNOTSUPP;
->  		goto err_delete;
-> +	}
->  
->  	tos_off = proto == htons(ETH_P_IP) ? 16 : 20;
->  
-> @@ -198,14 +200,18 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
->  		if ((iter->val & cmask) == (val & cmask) &&
->  		    iter->band != knode->res->classid) {
->  			NL_SET_ERR_MSG_MOD(extack, "conflict with already offloaded filter");
-> +			err = -EOPNOTSUPP;
->  			goto err_delete;
->  		}
->  	}
->  
->  	if (!match) {
->  		match = kzalloc(sizeof(*match), GFP_KERNEL);
-> -		if (!match)
-> -			return -ENOMEM;
-> +		if (!match) {
-> +			err = -ENOMEM;
-> +			goto err_delete;
-> +		}
-> +
->  		list_add(&match->list, &alink->dscp_map);
->  	}
->  	match->handle = knode->handle;
-> @@ -221,7 +227,7 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
->  
->  err_delete:
->  	nfp_abm_u32_knode_delete(alink, knode);
-> -	return -EOPNOTSUPP;
-> +	return err;
->  }
->  
->  static int nfp_abm_setup_tc_block_cb(enum tc_setup_type type,
+regards,
+dan carpenter
 
