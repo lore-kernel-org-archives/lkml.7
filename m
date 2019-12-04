@@ -2,61 +2,78 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBA3C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A60DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A685206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 511432077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gdlRrs8i"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L2d+h5Mm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbfLDUsV (ORCPT
+        id S1728327AbfLDUs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 15:48:21 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24771 "EHLO
+        Wed, 4 Dec 2019 15:48:29 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50842 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727961AbfLDUsU (ORCPT
+        by vger.kernel.org with ESMTP id S1727961AbfLDUs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 15:48:20 -0500
+        Wed, 4 Dec 2019 15:48:28 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575492499;
+        s=mimecast20190719; t=1575492507;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding;
-        bh=HGdo0QqEvgrVy6Dmn+cWHHGQsiAPEZt7SK6V5tCrwOc=;
-        b=gdlRrs8iKDoB6WHPw1NCdt6h51cYhTkB1kXRzh1CeeVtFY6P8eaugSxRA6RMAoqRhd8zwI
-        WiAfrIkoryynVp2WxgEQafrGN76dZOmzG7jme3jjNd++o1Z/d+azzyudgJfcFiaNJhPIJi
-        9/KBvLqgWdGHxFOzu+MqWa0nCFg6t/s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-397-SaLO2BmOPTq01o2R3QT5JQ-1; Wed, 04 Dec 2019 15:48:16 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 86C6619057A1;
-        Wed,  4 Dec 2019 20:48:14 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-116-80.ams2.redhat.com [10.36.116.80])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CF40F1001B28;
-        Wed,  4 Dec 2019 20:48:07 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
+        bh=fi+iH2WNUp9ArXpenr/WTfC70sq/cA3J8MYZu5XIifI=;
+        b=L2d+h5MmWwSpbZEv2QiY7pgpRt0XztufmiEZnc2KswTvdo8hzu5s79L5mI+gSx+TK61v3B
+        M8wl3DjQsPeDtFNUQvDZBuZ38VvvBjmRlNcgyTUkUUK/ZEyc1NQkijY7U4awOhKjdajk5Q
+        WH0r/98iczQWmnBRnLdmGOjr5sxUJCU=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-391-Wgwym-nbMdalAcsh_0Sp7g-1; Wed, 04 Dec 2019 15:48:26 -0500
+Received: by mail-qv1-f69.google.com with SMTP id g15so648360qvq.20
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 12:48:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=szcVrB/vhwnsVwNPePyokXdoFWkLFoOQYKT5PyFKc2M=;
+        b=p8rMs/kXr2pVIMLHPg10qnx+efymAb4dDdxSxEQeu5b2U5HJdxtPWJBcFCs1ONVczx
+         Vcl4ScQBsK3+Hynq/RNr09qxqO5l9Qb9z+8Eoe2nweesb1uCDtyDMhi3bQ6qds70xMe4
+         JLrAbwOF05xnysBqI8aBMRTBsSzbrzfZ3h+8FABwPpMZDKp0QFSB62FxSlj0d5lINNSs
+         EsPnL/Sl3BDHDwcGw+RaOYVFp5qiQrJBc2g4uFrJamLJ7e5D0HzIxHoWe+b0zCHCkrnL
+         A+Xt6RftshgjghL2tDif+hhP7ousaAHv+fok5DNPV/JNcR/aXP/hJFQNk64OVVhwQcSW
+         0aww==
+X-Gm-Message-State: APjAAAV7CF9TSKzUtPkwksunY73pUuThcEFIh99pOEiXhzqM3ittLFiu
+        V72ErMJ0WmVM2nMZVLK4NF4AmxceKm7ytTN2ltvnCYQKBnsYpW1oWQshjfrdOceYRmBKueZWxHH
+        mpsRN6jHlEhV5PXoHgxR3e52B
+X-Received: by 2002:ac8:3f33:: with SMTP id c48mr4727975qtk.108.1575492505380;
+        Wed, 04 Dec 2019 12:48:25 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwTtUNHMoYhd2iy9Ft3Xyw24MqSjCrk37QJMT8SUtJP0ErMH4rC+8O1i8W0/P7eF6Vb5OiIfg==
+X-Received: by 2002:ac8:3f33:: with SMTP id c48mr4727966qtk.108.1575492505143;
+        Wed, 04 Dec 2019 12:48:25 -0800 (PST)
+Received: from xz-x1.yyz.redhat.com ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id 3sm4305700qth.2.2019.12.04.12.48.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 12:48:24 -0800 (PST)
+From:   Peter Xu <peterx@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Yumei Huang <yuhuang@redhat.com>, stable@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Jiang Liu <liuj97@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH] virtio-balloon: fix managed page counts when migrating pages between zones
-Date:   Wed,  4 Dec 2019 21:48:07 +0100
-Message-Id: <20191204204807.8025-1-david@redhat.com>
+Cc:     peterx@redhat.com, Marcelo Tosatti <mtosatti@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nadav Amit <namit@vmware.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH] smp: Allow smp_call_function_single_async() to insert locked csd
+Date:   Wed,  4 Dec 2019 15:48:23 -0500
+Message-Id: <20191204204823.1503-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: SaLO2BmOPTq01o2R3QT5JQ-1
+X-MC-Unique: Wgwym-nbMdalAcsh_0Sp7g-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
@@ -65,161 +82,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case we have to migrate a ballon page to a newpage of another zone, the
-managed page count of both zones is wrong. Paired with memory offlining
-(which will adjust the managed page count), we can trigger kernel crashes
-and all kinds of different symptoms.
+Previously we will raise an warning if we want to insert a csd object
+which is with the LOCK flag set, and if it happens we'll also wait for
+the lock to be released.  However, this operation does not match
+perfectly with how the function is named - the name with "_async"
+suffix hints that this function should not block, while we will.
 
-One way to reproduce:
-1. Start a QEMU guest with 4GB, no NUMA
-2. Hotplug a 1GB DIMM and only the memory to ZONE_NORMAL
-3. Inflate the balloon to 1GB
-4. Unplug the DIMM (be quick, otherwise unmovable data ends up on it)
-5. Observe /proc/zoneinfo
-  Node 0, zone   Normal
-    pages free     16810
-          min      24848885473806
-          low      18471592959183339
-          high     36918337032892872
-          spanned  262144
-          present  262144
-          managed  18446744073709533486
-6. Do anything that requires some memory (e.g., inflate the balloon some
-more). The OOM goes crazy and the system crashes
-  [  238.324946] Out of memory: Killed process 537 (login) total-vm:27584kB=
-, anon-rss:860kB, file-rss:0kB, shmem-rss:00
-  [  238.338585] systemd invoked oom-killer: gfp_mask=3D0x100cca(GFP_HIGHUS=
-ER_MOVABLE), order=3D0, oom_score_adj=3D0
-  [  238.339420] CPU: 0 PID: 1 Comm: systemd Tainted: G      D W         5.=
-4.0-next-20191204+ #75
-  [  238.340139] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIO=
-S rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu4
-  [  238.341121] Call Trace:
-  [  238.341337]  dump_stack+0x8f/0xd0
-  [  238.341630]  dump_header+0x61/0x5ea
-  [  238.341942]  oom_kill_process.cold+0xb/0x10
-  [  238.342299]  out_of_memory+0x24d/0x5a0
-  [  238.342625]  __alloc_pages_slowpath+0xd12/0x1020
-  [  238.343024]  __alloc_pages_nodemask+0x391/0x410
-  [  238.343407]  pagecache_get_page+0xc3/0x3a0
-  [  238.343757]  filemap_fault+0x804/0xc30
-  [  238.344083]  ? ext4_filemap_fault+0x28/0x42
-  [  238.344444]  ext4_filemap_fault+0x30/0x42
-  [  238.344789]  __do_fault+0x37/0x1a0
-  [  238.345087]  __handle_mm_fault+0x104d/0x1ab0
-  [  238.345450]  handle_mm_fault+0x169/0x360
-  [  238.345790]  do_user_addr_fault+0x20d/0x490
-  [  238.346154]  do_page_fault+0x31/0x210
-  [  238.346468]  async_page_fault+0x43/0x50
-  [  238.346797] RIP: 0033:0x7f47eba4197e
-  [  238.347110] Code: Bad RIP value.
-  [  238.347387] RSP: 002b:00007ffd7c0c1890 EFLAGS: 00010293
-  [  238.347834] RAX: 0000000000000002 RBX: 000055d196a20a20 RCX: 00007f47e=
-ba4197e
-  [  238.348437] RDX: 0000000000000033 RSI: 00007ffd7c0c18c0 RDI: 000000000=
-0000004
-  [  238.349047] RBP: 00007ffd7c0c1c20 R08: 0000000000000000 R09: 000000000=
-0000033
-  [  238.349660] R10: 00000000ffffffff R11: 0000000000000293 R12: 000000000=
-0000001
-  [  238.350261] R13: ffffffffffffffff R14: 0000000000000000 R15: 00007ffd7=
-c0c18c0
-  [  238.350878] Mem-Info:
-  [  238.351085] active_anon:3121 inactive_anon:51 isolated_anon:0
-  [  238.351085]  active_file:12 inactive_file:7 isolated_file:0
-  [  238.351085]  unevictable:0 dirty:0 writeback:0 unstable:0
-  [  238.351085]  slab_reclaimable:5565 slab_unreclaimable:10170
-  [  238.351085]  mapped:3 shmem:111 pagetables:155 bounce:0
-  [  238.351085]  free:720717 free_pcp:2 free_cma:0
-  [  238.353757] Node 0 active_anon:12484kB inactive_anon:204kB active_file=
-:48kB inactive_file:28kB unevictable:0kB iss
-  [  238.355979] Node 0 DMA free:11556kB min:36kB low:48kB high:60kB reserv=
-ed_highatomic:0KB active_anon:152kB inactivB
-  [  238.358345] lowmem_reserve[]: 0 2955 2884 2884 2884
-  [  238.358761] Node 0 DMA32 free:2677864kB min:7004kB low:10028kB high:13=
-052kB reserved_highatomic:0KB active_anon:0B
-  [  238.361202] lowmem_reserve[]: 0 0 72057594037927865 72057594037927865 =
-72057594037927865
-  [  238.361888] Node 0 Normal free:193448kB min:99395541895224kB low:73886=
-371836733356kB high:147673348131571488kB reB
-  [  238.364765] lowmem_reserve[]: 0 0 0 0 0
-  [  238.365101] Node 0 DMA: 7*4kB (U) 5*8kB (UE) 6*16kB (UME) 2*32kB (UM) =
-1*64kB (U) 2*128kB (UE) 3*256kB (UME) 2*512B
-  [  238.366379] Node 0 DMA32: 0*4kB 1*8kB (U) 2*16kB (UM) 2*32kB (UM) 2*64=
-kB (UM) 1*128kB (U) 1*256kB (U) 1*512kB (U)B
-  [  238.367654] Node 0 Normal: 1985*4kB (UME) 1321*8kB (UME) 844*16kB (UME=
-) 524*32kB (UME) 300*64kB (UME) 138*128kB (B
-  [  238.369184] Node 0 hugepages_total=3D0 hugepages_free=3D0 hugepages_su=
-rp=3D0 hugepages_size=3D2048kB
-  [  238.369915] 130 total pagecache pages
-  [  238.370241] 0 pages in swap cache
-  [  238.370533] Swap cache stats: add 0, delete 0, find 0/0
-  [  238.370981] Free swap  =3D 0kB
-  [  238.371239] Total swap =3D 0kB
-  [  238.371488] 1048445 pages RAM
-  [  238.371756] 0 pages HighMem/MovableOnly
-  [  238.372090] 306992 pages reserved
-  [  238.372376] 0 pages cma reserved
-  [  238.372661] 0 pages hwpoisoned
+This patch changed this behavior by simply return -EBUSY instead of
+waiting, at the meantime we allow this operation to happen without
+warning the user to change this into a feature when the caller wants
+to "insert a csd object, if it's there, just wait for that one".
 
-In another instance (older kernel), I was able to observe this
-(negative page count :/):
-  [  180.896971] Offlined Pages 32768
-  [  182.667462] Offlined Pages 32768
-  [  184.408117] Offlined Pages 32768
-  [  186.026321] Offlined Pages 32768
-  [  187.684861] Offlined Pages 32768
-  [  189.227013] Offlined Pages 32768
-  [  190.830303] Offlined Pages 32768
-  [  190.833071] Built 1 zonelists, mobility grouping on.  Total pages: -36=
-920272750453009
+This is pretty safe because in flush_smp_call_function_queue() for
+async csd objects (where csd->flags&SYNC is zero) we'll first do the
+unlock then we call the csd->func().  So if we see the csd->flags&LOCK
+is true in smp_call_function_single_async(), then it's guaranteed that
+csd->func() will be called after this smp_call_function_single_async()
+returns -EBUSY.
 
-In another instance (older kernel), I was no longer able to start any
-process:
-  [root@vm ~]# [  214.348068] Offlined Pages 32768
-  [  215.973009] Offlined Pages 32768
-  cat /proc/meminfo
-  -bash: fork: Cannot allocate memory
-  [root@vm ~]# cat /proc/meminfo
-  -bash: fork: Cannot allocate memory
+Update the comment of the function too to refect this.
 
-Fix it by properly adjusting the managed page count when migrating. The
-managed page count of the zones now looks after unplug of the DIMM
-(and after deflating the balloon) just like before inflating the balloon
-(and plugging+onlining the DIMM).
-
-Reported-by: Yumei Huang <yuhuang@redhat.com>
-Fixes: 3dcc0571cd64 ("mm: correctly update zone->managed_pages")
-Cc: <stable@vger.kernel.org> # v3.11+
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Jiang Liu <liuj97@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: virtualization@lists.linux-foundation.org
-Signed-off-by: David Hildenbrand <david@redhat.com>
+CC: Marcelo Tosatti <mtosatti@redhat.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Nadav Amit <namit@vmware.com>
+CC: Josh Poimboeuf <jpoimboe@redhat.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: linux-kernel@vger.kernel.org
+Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- drivers/virtio/virtio_balloon.c | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloo=
-n.c
-index 15b7f1d8c334..1089b07679cf 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -742,6 +742,12 @@ static int virtballoon_migratepage(struct balloon_dev_=
-info *vb_dev_info,
+The story starts from a test where we've encountered the WARN_ON() on
+a customized kernel and the csd_wait() took merely forever to
+complete (so we've got a WARN_ON plusing a hang host).  The current
+solution (which is downstream-only for now) is that from the caller's
+side we use a boolean to store whether the csd is executed, we do:
+
+  if (atomic_cmpxchg(&in_progress, 0, 1))
+    smp_call_function_single_async(..);
+
+While at the end of csd->func() we clear the bit.  However imho that's
+mostly what csd->flags&LOCK is doing.  So I'm thinking maybe it would
+worth it to raise this patch for upstream too so that it might help
+other users of smp_call_function_single_async() when they need the
+same semantic (and, I do think we shouldn't wait in _async()s...)
+
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ kernel/smp.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 7dbcb402c2fc..dd31e8228218 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -329,6 +329,11 @@ EXPORT_SYMBOL(smp_call_function_single);
+  * (ie: embedded in an object) and is responsible for synchronizing it
+  * such that the IPIs performed on the @csd are strictly serialized.
+  *
++ * If the function is called with one csd which has not yet been
++ * processed by previous call to smp_call_function_single_async(), the
++ * function will return immediately with -EBUSY showing that the csd
++ * object is still in progress.
++ *
+  * NOTE: Be careful, there is unfortunately no current debugging facility =
+to
+  * validate the correctness of this serialization.
+  */
+@@ -338,14 +343,17 @@ int smp_call_function_single_async(int cpu, call_sing=
+le_data_t *csd)
 =20
- =09mutex_unlock(&vb->balloon_lock);
+ =09preempt_disable();
 =20
-+=09/* fixup the managed page count (esp. of the zone) */
-+=09if (!virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
-+=09=09adjust_managed_page_count(page, 1);
-+=09=09adjust_managed_page_count(newpage, -1);
+-=09/* We could deadlock if we have to wait here with interrupts disabled! =
+*/
+-=09if (WARN_ON_ONCE(csd->flags & CSD_FLAG_LOCK))
+-=09=09csd_lock_wait(csd);
++=09if (csd->flags & CSD_FLAG_LOCK) {
++=09=09err =3D -EBUSY;
++=09=09goto out;
 +=09}
-+
- =09put_page(page); /* balloon reference */
 =20
- =09return MIGRATEPAGE_SUCCESS;
+ =09csd->flags =3D CSD_FLAG_LOCK;
+ =09smp_wmb();
+=20
+ =09err =3D generic_exec_single(cpu, csd, csd->func, csd->info);
++
++out:
+ =09preempt_enable();
+=20
+ =09return err;
 --=20
 2.21.0
 
