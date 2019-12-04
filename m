@@ -2,103 +2,114 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F63C2BC73
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A456C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943E02077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E412D20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:51:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXtA9Ypt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Przb2Mp6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfLDJt7 (ORCPT
+        id S1727438AbfLDJvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:49:59 -0500
-Received: from mail-vk1-f176.google.com ([209.85.221.176]:36345 "EHLO
-        mail-vk1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbfLDJt7 (ORCPT
+        Wed, 4 Dec 2019 04:51:19 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36763 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbfLDJvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:49:59 -0500
-Received: by mail-vk1-f176.google.com with SMTP id i4so1952157vkc.3;
-        Wed, 04 Dec 2019 01:49:58 -0800 (PST)
+        Wed, 4 Dec 2019 04:51:19 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so7107121wma.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 01:51:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pPIJ9M8+mSe3OeAXCE+fj/3dGRagMu8jXvBF/uDza34=;
-        b=cXtA9Yptfjo8ePQAqvUGePG60nWRObXSX42QTc+c9FwtujDvR9ZEnH4F+TSMnpA0Wh
-         oC4zo10iCmvaHbQ2tY1mcsutd71XBkBZxHBpsa+OMIKSFjHw4DnqKkNjBnaBdNVgZviZ
-         QStk480dlgw0qkHufnq0myyOQrwFKS1amp6vOXy/nBAFHKrwjti4hyS6QMgMwxx/ASDc
-         z/w0o3d1mdWNZHgbRAbxXVgP/yR470eozuhigjg+M5z0ew7sPRoOajiP0UZ8c6N6aGgR
-         Nwcx0wY1PaA3VUwL4oum8Zse0r9sHnQx7iwt5Al5bti6ru0vs0kz9S8lEAIy5Hf4AegX
-         pBMA==
+        bh=U+MqMdaqYA9wxrEDifn792XFhLysGc8RSGDMrug+w3U=;
+        b=Przb2Mp6fXtj52PQek5CbvK0m72zcxvl/tkEZHPbnWSa++nCWSJZZmS9++pPkRXrHG
+         BmP235WX29P6BS93AZhlst2RD7hH2WoH2RVk3T/9HoyC4AgEsDCHcd1EHI0AlYUuXjJe
+         dI3x/0u7OgFjrMrvJ6WcKeOUmYgR0U1yn16Yy5SlGY6ZJDeX94v6WUG23ht7i1IPjrMw
+         okf5mTcha9+T7jwil9n90t9RCeixq59sYXp9pI34nZ9pevxFrWCHHd0Suk3OvMD0bdvY
+         NyMXQL9g/QB8vKBbvg2D257IjR/amd+XQRUdX4R+nQbtGGP3uveM6gu9gV1MrkTo+DW+
+         pA8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pPIJ9M8+mSe3OeAXCE+fj/3dGRagMu8jXvBF/uDza34=;
-        b=UO92pHQSGzMRcZ3RRqdt/sJVurbaeR1l5MVFaCvM6jzNAdtaSS2raLNURdgrk+rPRH
-         XReOJKAtET26Ta/Z+iW6ybXGRI4a34OFzAHGRtUTctBZqfCjVfrcnQByf5/54l/lhfiC
-         AtsWjKpotvrZP8jZQWCdHjdBE5OAitBZq9vqcV6p5aegrwINNsAbXoly4XaaWwWQ1kUZ
-         vJJRxPza9uvSnKn/JO5i9fbMD7QXlFeWCZyPom/8pEzOxjRvau0ASU8gsS+qBJdNNFBO
-         qW/6AYsXC0w/zMp4rpg6o1zd1G9lFCcmUP361xcob5IguT076RiKVa6S0oZ2Ha8E9G9v
-         BOzg==
-X-Gm-Message-State: APjAAAVngQ9dfJYI3WAG2GdRoRaDk0LE7ML8MCuge5m8X74lt/QmfOoH
-        2wjjq/dxU1plKcCR50FOV7YqofuXNKGwjhlxNJY=
-X-Google-Smtp-Source: APXvYqwcmEszgaP2f+aEFuCk64GgbEQC+Y3ruLWXWwDDA0lNHGnXECgPDn5L2c4lKmDY2WgkAnD6nw9PVtHk309L/8c=
-X-Received: by 2002:a05:6122:1065:: with SMTP id k5mr1378302vko.14.1575452997897;
- Wed, 04 Dec 2019 01:49:57 -0800 (PST)
+        bh=U+MqMdaqYA9wxrEDifn792XFhLysGc8RSGDMrug+w3U=;
+        b=SrfzotT6rQ+GHDcTINGna8xGeqRakB9LXWuv5vgIaMLlqBojvCV4Nf9Gtwt5zzrWQk
+         WvMqpl6gIqGQW3RMZQThkN8qCUSw7fENj4VL4Rqnz4YysxzQYFfNZH2FWQzIs8ULhMKx
+         jnTeJw5+UPJstWm7EbqdFolZTJv3K3Y/Qlf0DEXOFtMpRGgxq8NaJe5nTq5wury620hO
+         qgZ5wzEiFOSFFvVJ8YhCE5R27Mj5aINqTNA55FlMWkqUV4fYInYzJPl2c5dJM8V8ciCm
+         q5vB8+ya4NERfcHE/8N/mVAzPArB9SrY7Ihv/5vt5EXchEhJTP6uNvF+NAT/OoleNkMp
+         +s5Q==
+X-Gm-Message-State: APjAAAVif3FqnYcdV9cMHXymiwIL3slBu3yF9jMQ/aDHli9UmUZ0vphk
+        IimkabQb2P7sb8lC2UgzdXTgMELH1lI9LlhNSystwQ==
+X-Google-Smtp-Source: APXvYqzLvQuJFDKa5YEtxpmabNfV3tNQmNC8LrgshglGnlL4aV86T/kP4WSpVw03YPNpB05E/92NdOuel+uj0rhMQXU=
+X-Received: by 2002:a05:600c:141:: with SMTP id w1mr18577201wmm.61.1575453077074;
+ Wed, 04 Dec 2019 01:51:17 -0800 (PST)
 MIME-Version: 1.0
-References: <CAOuPNLh8dsSCq850afbj4OiHhZ2swBWZP=BTUrXrXhdpTjZs+A@mail.gmail.com>
- <CAK7N6vpawfLSVcHCg_3aQ0M8L=j77ZeGfmUZ-J4hpUkWu0fkWA@mail.gmail.com>
-In-Reply-To: <CAK7N6vpawfLSVcHCg_3aQ0M8L=j77ZeGfmUZ-J4hpUkWu0fkWA@mail.gmail.com>
-From:   Pintu Agarwal <pintu.ping@gmail.com>
-Date:   Wed, 4 Dec 2019 15:19:46 +0530
-Message-ID: <CAOuPNLii26WcDnwD7ZkMX6ux7VRspw7nMEKJK0QF+j95YCHPOw@mail.gmail.com>
-Subject: Re: interrupt handler not getting called after resume
-To:     anish singh <anish198519851985@gmail.com>
-Cc:     Kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        linux-pm@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
+References: <20191203201410.28045-1-msys.mizuma@gmail.com>
+In-Reply-To: <20191203201410.28045-1-msys.mizuma@gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 4 Dec 2019 09:51:13 +0000
+Message-ID: <CAKv+Gu-teb+3a29cZVc0cxZrXonQeO-EtPugPaQ1QFbeBYjGTw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] efi: arm64: Introduce /proc/efi/memreserve to tell
+ the persistent pages
+To:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        James Morse <james.morse@arm.com>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kexec Mailing List <kexec@lists.infradead.org>,
+        d.hatayama@fujitsu.com, Eric Biederman <ebiederm@xmission.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Dec 2019 at 00:28, anish singh <anish198519851985@gmail.com> wrote:
+On Tue, 3 Dec 2019 at 20:14, Masayoshi Mizuma <msys.mizuma@gmail.com> wrote:
 >
-> On Tue, Dec 3, 2019 at 6:12 AM Pintu Agarwal <pintu.ping@gmail.com> wrote:
-> >
-> > Hi All,
-> >
-> > I have one general query.
-> >
-> > If an interrupt handler is NOT getting called (for one device) after
-> > the system resume (from snapshot image), then what could be the issue?
+> From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 >
-> Most likely during resume the interrupt was not enabled. So check
-> irq status registers to see in the working and non working case.
+> kexec reboot sometime fails in early boot sequence on aarch64 machine.
+> That is because kexec overwrites the LPI property tables and pending
+> tables with the initrd.
 >
-Oh sorry, I forgot to mention one thing.
-After resume, I can see that the interrupts are visible under /proc/interrupts.
-# cat /proc/interrupts
-           CPU0       CPU1
-[...]
-416:          1          0       IPU  (null)
-417:          0          0       IPU  (null)
-418:          0          0       IPU  imx_drm  ===> HDMI
-419:       2242       2       IPU  imx_drm   ===> LCD
-[...]
+> To avoid the overwrite, introduce /proc/efi/memreserve to tell the
+> tables region to kexec so that kexec can avoid the memory region to
+> locate initrd.
+>
+> kexec also needs a patch to handle /proc/efi/memreserve. I'm preparing
+> the patch for kexec.
+>
+> Changelog
+>     v2: - Change memreserve file location from sysfs to procfs.
+>           memreserve may exceed the PAGE_SIZE in case efi_memreserve_root
+>           has a lot of entries. So we cannot use sysfs_kf_seq_show().
+>           Use seq_printf() in procfs instead.
+>
+> Masayoshi Mizuma (2):
+>   efi: add /proc/efi directory
+>   efi: arm64: Introduce /proc/efi/memreserve to tell the persistent
+>     pages
+>
 
-The interrupts are coming only for LCD display and thus its irq
-handler is getting called.
-But the interrupts are not coming for HDMI case, thus HDMI gives
-"vblank timeout issue".
-Apart from this I also tried calling enable_irq(irq) after resume, but
-it did not help much.
+Apologies for the tardy response.
+
+Adding /proc/efi is really out of the question. *If* we add any
+special files to expose this information, it should be under sysfs.
+
+However, this is still only a partial solution, since it only solves
+the problem for userspace based kexec, and we need something for
+kexec_file_load() as well.
+
+The fundamental issue here is that /proc/iomem apparently lacks the
+entries that describe these regions as 'reserved', so we should try to
+address that instead.
