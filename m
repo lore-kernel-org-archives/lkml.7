@@ -3,70 +3,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85136C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA218C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52AB2206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B422084F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 16:00:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="BBMUbwY6"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Sok0tvbQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbfLDP7y (ORCPT
+        id S1728752AbfLDP77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:59:54 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37184 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728652AbfLDP7t (ORCPT
+        Wed, 4 Dec 2019 10:59:59 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46957 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728709AbfLDP7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:59:49 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so9268530wru.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:59:47 -0800 (PST)
+        Wed, 4 Dec 2019 10:59:52 -0500
+Received: by mail-qk1-f193.google.com with SMTP id f5so298821qkm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 07:59:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3vOhxME4oM+fCXvGw9SeZO8ZtZ/Y7PIxuNLc7TEy6Us=;
-        b=BBMUbwY67rlDFQzYeKhhMrURjvq+SV00mi/aBQLu2XUm4f46pIt+flDS2ZdL34ILWA
-         DzDRxfz3Yse3rm5oSdZzFW6HbJOmk/562LaDsoSkah9MDpnNm6FirJxpYFPL19eTT5XO
-         cYgZWpYU/4cQcK2Vyv9QkBmwzwB3XE6JXTh9hU5vQ2WV1i6ExBsOUVUUh5Z9j+uOHmh4
-         f+Kvl8kbcALtFF3IEXsIDRhybsXftUPA+95fNvPhs/VZsBUY9y8HXjmpAUiWUbWxVJT8
-         7cMQILfswsNcQuk1QkzOzoHcVacLpetKWDxSOH2geHB+fbAOo159sxgUmbSf1Qjljkq6
-         kcGA==
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=CRoxRB8IFeyVTKMx5ypVP5zpyTfws7d6gsb5dpS33vY=;
+        b=Sok0tvbQLMnworXiNYVhIsHwglGthkb3F+IhAdIcuhFulkUCzxnNQoenHOV9jZOFjI
+         j+LhEcYyCn9ROvSInEYKmOhJuEOPmmQ08vXVphxlZ2ehSYtzVB52PEXPd228QW3V74bh
+         cAaSTg7fOOZQ3NITCQCB1rwrp/WGVCUOy6xrabpfn66awnzPzV69K6GT9ulg6YMTgbXj
+         uRAuoIS70KFRfBdgKsaRb61RQkg7X6LVBK5drx/E0YOZIem865LxPGCr5r703CATQc8U
+         rOrWA2d25zRlVOYA7M4U9udGrIjq30jlrkiJt8irQv3CKskg4Iik/g8iaoL+WRUNkLv6
+         6VXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3vOhxME4oM+fCXvGw9SeZO8ZtZ/Y7PIxuNLc7TEy6Us=;
-        b=DMITyOhujZ43xPmQhX0WNPz0qtW2cn2FaIYkPVTn8vff6w807exg9XC6wEM4BuBTRz
-         TnoAEV3uPhDilYoeDb9ekjZZ6dqqMp9M7aq6seETjIasaQKbtnNyhU+JnSyTum1TDawD
-         fIKk15T9rJt2a2sNsZFFEDUASc6aguuzWNOJg7GedOSx2JN1YXjkMqwMHuX8hchvV5tU
-         z0OXgDXdBBViKZsgAPUi5KJvgK0Q/wL/9FpzshZ1gJi7nDOznwdX3TxSUd4IAyF4P6OV
-         SFgyzRIcl4PLVHqUwG8KSeJ7EIEINRGMNeohH7ISRF46JfewtwoFsOK+nruBqeyw8h9A
-         xpEQ==
-X-Gm-Message-State: APjAAAX6JnRFp743gUB67O1aMu951kKdiNYCq8cBrAYtt+iUDnhxX/0h
-        IDRGJIeYgb8XQ2kVbN3UDICKkw==
-X-Google-Smtp-Source: APXvYqxDIY/iXDiy3QJ88E3DR3VBqpPxQnwpJM1KGnR56oJlEtM54rx1fvuTnHc5kW24DTAt+3ceSQ==
-X-Received: by 2002:adf:dcc2:: with SMTP id x2mr4555036wrm.24.1575475186930;
-        Wed, 04 Dec 2019 07:59:46 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id s10sm8769070wrw.12.2019.12.04.07.59.45
+        bh=CRoxRB8IFeyVTKMx5ypVP5zpyTfws7d6gsb5dpS33vY=;
+        b=CGQbDs8h22ETHpX/gH7HcuAzMHnfSq9TnPC1Se6CJifmPOsMQCCIzXR3OAMMUY5b2r
+         iLbBuUZMjVgoLoQzJhNAjaxJuH2K5JxlHPxU9O1RZRFKP6ue5bQeovZokMk/rhdneHsJ
+         EKA/eRFSKc8HdO9RYW8Etuoe1uhqJao0UcDyXG1U6MZ67lOjc3tUiRHSE5bv5I7bTneA
+         nYluRkv8ZEt3QHPkxgsalxIlG1wSilZAp92kL3hlMypQH7oZS3A3KiKtC6fBEv8c7ag4
+         OJEJZbXvdbuoX6ockIfkqJmA/bmHbSTCeOQ+XcMNSkBmBzPQB++N3QH+6kZJD5wFL2DM
+         8u2w==
+X-Gm-Message-State: APjAAAW3x4/2/iGGQPi+rTPZVKjxCF9ikW09Ec6oPCTWqJ36pvHASgCI
+        lhfPzenl4Tdkbe30e1VCWf+QMA==
+X-Google-Smtp-Source: APXvYqyVmMQxr7dKNkbJcOcAyAvUUs0ErG6tRUeh+GTtJpJDytBoHcBnlTjVSMoH9TY9Eceuj5dpxQ==
+X-Received: by 2002:a37:514:: with SMTP id 20mr3502735qkf.321.1575475191178;
+        Wed, 04 Dec 2019 07:59:51 -0800 (PST)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id w21sm4177585qth.17.2019.12.04.07.59.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:59:45 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 11/11] tools: gpio: implement gpio-watch
-Date:   Wed,  4 Dec 2019 16:59:41 +0100
-Message-Id: <20191204155941.17814-2-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191204155941.17814-1-brgl@bgdev.pl>
-References: <20191204155941.17814-1-brgl@bgdev.pl>
+        Wed, 04 Dec 2019 07:59:50 -0800 (PST)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        ebiederm@xmission.com, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        james.morse@arm.com, vladimir.murzin@arm.com,
+        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
+        mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com,
+        tglx@linutronix.de
+Subject: [PATCH v8 07/25] arm64: hibernate: remove gotos as they are not needed
+Date:   Wed,  4 Dec 2019 10:59:20 -0500
+Message-Id: <20191204155938.2279686-8-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
+References: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,185 +79,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Usually, gotos are used to handle cleanup after exception, but in case of
+create_safe_exec_page and swsusp_arch_resume there are no clean-ups. So,
+simply return the errors directly.
 
-Add a simple program that allows to test the new LINECHANGED_FD ioctl().
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: James Morse <james.morse@arm.com>
 ---
- tools/gpio/.gitignore   |   1 +
- tools/gpio/Build        |   1 +
- tools/gpio/Makefile     |  11 +++-
- tools/gpio/gpio-watch.c | 112 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 124 insertions(+), 1 deletion(-)
- create mode 100644 tools/gpio/gpio-watch.c
+ arch/arm64/kernel/hibernate.c | 49 ++++++++++++-----------------------
+ 1 file changed, 17 insertions(+), 32 deletions(-)
 
-diff --git a/tools/gpio/.gitignore b/tools/gpio/.gitignore
-index a94c0e83b209..fffd32969d62 100644
---- a/tools/gpio/.gitignore
-+++ b/tools/gpio/.gitignore
-@@ -1,4 +1,5 @@
- gpio-event-mon
- gpio-hammer
- lsgpio
-+gpio-watch
- include/linux/gpio.h
-diff --git a/tools/gpio/Build b/tools/gpio/Build
-index 4141f35837db..67c7b7f6a717 100644
---- a/tools/gpio/Build
-+++ b/tools/gpio/Build
-@@ -2,3 +2,4 @@ gpio-utils-y += gpio-utils.o
- lsgpio-y += lsgpio.o gpio-utils.o
- gpio-hammer-y += gpio-hammer.o gpio-utils.o
- gpio-event-mon-y += gpio-event-mon.o gpio-utils.o
-+gpio-watch-y += gpio-watch.o
-diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-index 6080de58861f..842287e42c83 100644
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -18,7 +18,7 @@ MAKEFLAGS += -r
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index 34297716643f..83c41a2f8400 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -198,7 +198,6 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 				 unsigned long dst_addr,
+ 				 phys_addr_t *phys_dst_addr)
+ {
+-	int rc = 0;
+ 	pgd_t *trans_pgd;
+ 	pgd_t *pgdp;
+ 	pud_t *pudp;
+@@ -206,47 +205,37 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 	pte_t *ptep;
+ 	unsigned long dst = get_safe_page(GFP_ATOMIC);
  
- override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+-	if (!dst) {
+-		rc = -ENOMEM;
+-		goto out;
+-	}
++	if (!dst)
++		return -ENOMEM;
  
--ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon
-+ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon gpio-watch
- ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+ 	memcpy((void *)dst, src_start, length);
+ 	__flush_icache_range(dst, dst + length);
  
- all: $(ALL_PROGRAMS)
-@@ -66,6 +66,15 @@ $(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+ 	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
+-	if (!trans_pgd) {
+-		rc = -ENOMEM;
+-		goto out;
+-	}
++	if (!trans_pgd)
++		return -ENOMEM;
  
-+#
-+# gpio-watch
-+#
-+GPIO_WATCH_IN := $(OUTPUT)gpio-watch-in.o
-+$(GPIO_WATCH_IN): prepare FORCE
-+	$(Q)$(MAKE) $(build)=gpio-watch
-+$(OUTPUT)gpio-watch: $(GPIO_WATCH_IN)
-+	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-+
- clean:
- 	rm -f $(ALL_PROGRAMS)
- 	rm -f $(OUTPUT)include/linux/gpio.h
-diff --git a/tools/gpio/gpio-watch.c b/tools/gpio/gpio-watch.c
-new file mode 100644
-index 000000000000..69aee43655ae
---- /dev/null
-+++ b/tools/gpio/gpio-watch.c
-@@ -0,0 +1,112 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * gpio-watch - monitor unrequested lines for property changes using the
-+ *              character device
-+ *
-+ * Copyright (C) 2019 BayLibre SAS
-+ * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+ */
-+
-+#include <ctype.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <linux/gpio.h>
-+#include <poll.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
-+#include <unistd.h>
-+
-+static bool isnumber(const char *str)
-+{
-+	size_t sz = strlen(str);
-+	int i;
-+
-+	for (i = 0; i < sz; i++) {
-+		if (!isdigit(str[i]))
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	struct gpioline_info_changed chg;
-+	struct gpioline_info req;
-+	struct pollfd pfd;
-+	int fd, i, j, ret;
-+	char *event;
-+	ssize_t rd;
-+
-+	if (argc < 3)
-+		goto err_usage;
-+
-+	fd = open(argv[1], O_RDWR | O_CLOEXEC);
-+	if (fd < 0) {
-+		perror("unable to open gpiochip");
-+		return EXIT_FAILURE;
-+	}
-+
-+	for (i = 0, j = 2; i < argc - 2; i++, j++) {
-+		if (!isnumber(argv[j]))
-+			goto err_usage;
-+
-+		memset(&req, 0, sizeof(req));
-+		req.line_offset = atoi(argv[j]);
-+
-+		ret = ioctl(fd, GPIO_GET_LINEINFO_WATCH_IOCTL, &req);
-+		if (ret) {
-+			perror("unable to set up line watch");
-+			return EXIT_FAILURE;
-+		}
-+	}
-+
-+	pfd.fd = fd;
-+	pfd.events = POLLIN | POLLPRI;
-+
-+	for (;;) {
-+		ret = poll(&pfd, 1, 5000);
-+		if (ret < 0) {
-+			perror("error polling the linechanged fd");
-+			return EXIT_FAILURE;
-+		} else if (ret > 0) {
-+			memset(&chg, 0, sizeof(chg));
-+			rd = read(pfd.fd, &chg, sizeof(chg));
-+			if (rd < 0 || rd != sizeof(chg)) {
-+				if (rd != sizeof(chg))
-+					errno = EIO;
-+
-+				perror("error reading line change event");
-+				return EXIT_FAILURE;
-+			}
-+
-+			switch (chg.event_type) {
-+			case GPIOLINE_CHANGED_REQUESTED:
-+				event = "requested";
-+				break;
-+			case GPIOLINE_CHANGED_RELEASED:
-+				event = "released";
-+				break;
-+			case GPIOLINE_CHANGED_CONFIG:
-+				event = "config changed";
-+				break;
-+			default:
-+				fprintf(stderr,
-+					"invalid event type received from the kernel\n");
-+				return EXIT_FAILURE;
-+			}
-+
-+			printf("line %u: %s at %llu\n",
-+			       chg.info.line_offset, event, chg.timestamp);
-+		}
-+	}
-+
+ 	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
+ 	if (pgd_none(READ_ONCE(*pgdp))) {
+ 		pudp = (void *)get_safe_page(GFP_ATOMIC);
+-		if (!pudp) {
+-			rc = -ENOMEM;
+-			goto out;
+-		}
++		if (!pudp)
++			return -ENOMEM;
+ 		pgd_populate(&init_mm, pgdp, pudp);
+ 	}
+ 
+ 	pudp = pud_offset(pgdp, dst_addr);
+ 	if (pud_none(READ_ONCE(*pudp))) {
+ 		pmdp = (void *)get_safe_page(GFP_ATOMIC);
+-		if (!pmdp) {
+-			rc = -ENOMEM;
+-			goto out;
+-		}
++		if (!pmdp)
++			return -ENOMEM;
+ 		pud_populate(&init_mm, pudp, pmdp);
+ 	}
+ 
+ 	pmdp = pmd_offset(pudp, dst_addr);
+ 	if (pmd_none(READ_ONCE(*pmdp))) {
+ 		ptep = (void *)get_safe_page(GFP_ATOMIC);
+-		if (!ptep) {
+-			rc = -ENOMEM;
+-			goto out;
+-		}
++		if (!ptep)
++			return -ENOMEM;
+ 		pmd_populate_kernel(&init_mm, pmdp, ptep);
+ 	}
+ 
+@@ -272,8 +261,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 
+ 	*phys_dst_addr = virt_to_phys((void *)dst);
+ 
+-out:
+-	return rc;
 +	return 0;
-+
-+err_usage:
-+	printf("%s: <gpiochip> <line0> <line1> ...\n", argv[0]);
-+	return EXIT_FAILURE;
-+}
+ }
+ 
+ #define dcache_clean_range(start, end)	__flush_dcache_area(start, (end - start))
+@@ -482,7 +470,7 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
+  */
+ int swsusp_arch_resume(void)
+ {
+-	int rc = 0;
++	int rc;
+ 	void *zero_page;
+ 	size_t exit_size;
+ 	pgd_t *tmp_pg_dir;
+@@ -498,12 +486,11 @@ int swsusp_arch_resume(void)
+ 	tmp_pg_dir = (pgd_t *)get_safe_page(GFP_ATOMIC);
+ 	if (!tmp_pg_dir) {
+ 		pr_err("Failed to allocate memory for temporary page tables.\n");
+-		rc = -ENOMEM;
+-		goto out;
++		return -ENOMEM;
+ 	}
+ 	rc = copy_page_tables(tmp_pg_dir, PAGE_OFFSET, PAGE_END);
+ 	if (rc)
+-		goto out;
++		return rc;
+ 
+ 	/*
+ 	 * We need a zero page that is zero before & after resume in order to
+@@ -512,8 +499,7 @@ int swsusp_arch_resume(void)
+ 	zero_page = (void *)get_safe_page(GFP_ATOMIC);
+ 	if (!zero_page) {
+ 		pr_err("Failed to allocate zero page.\n");
+-		rc = -ENOMEM;
+-		goto out;
++		return -ENOMEM;
+ 	}
+ 
+ 	/*
+@@ -531,7 +517,7 @@ int swsusp_arch_resume(void)
+ 				   &phys_hibernate_exit);
+ 	if (rc) {
+ 		pr_err("Failed to create safe executable page for hibernate_exit code.\n");
+-		goto out;
++		return rc;
+ 	}
+ 
+ 	/*
+@@ -558,8 +544,7 @@ int swsusp_arch_resume(void)
+ 		       resume_hdr.reenter_kernel, restore_pblist,
+ 		       resume_hdr.__hyp_stub_vectors, virt_to_phys(zero_page));
+ 
+-out:
+-	return rc;
++	return 0;
+ }
+ 
+ int hibernate_resume_nonboot_cpu_disable(void)
 -- 
-2.23.0
+2.24.0
 
