@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AE6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696B9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB6EE2073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3FE205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483784;
-	bh=vL+/RDK10ml6Tv/n+U2H4e/OwtvIvXxku6Fqr6Xlm1E=;
+	s=default; t=1575483788;
+	bh=+ki55RV1IzPV8OlLCUZQK5QE1EvFkv2OU2Lgd/dUtRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WRzflLHIZyhVTv6lYR4ssr9aOUK0+T237R2/0q2zItXfUF/dhq6W1YJDrUpAJGNXI
-	 KFbtiWuWe3qNGiMoXOjuYkYNsrNFUvEkdwtRakU5xBsKzdKWyfHJjbU6+XmnhpHet+
-	 xyQR/lpYPqzf/T/dFIJuKuf44kFHQMBwUmNCBC0A=
+	b=F46fLBlgyM/qGSczxIBebK/ZmluO00VWM0lBHmuTEwWD5qCc5v8RBrDIGa/afHJrw
+	 rwxjlThDqUX7dHkGVl0RYXm90Sgpcf6h7JJvcHawWApjSnKI5ON1zGnVKunvJv60hx
+	 qzXJveK2qE6mHyYnUF8KqhIZg/hsSGwn9JRkkBYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbfLDSEc (ORCPT
+        id S1731082AbfLDSXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:04:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49432 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:23:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729275AbfLDSET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:04:19 -0500
+        id S1730203AbfLDSEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:04:31 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 524452073B;
-        Wed,  4 Dec 2019 18:04:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A59B2081B;
+        Wed,  4 Dec 2019 18:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482658;
-        bh=vL+/RDK10ml6Tv/n+U2H4e/OwtvIvXxku6Fqr6Xlm1E=;
+        s=default; t=1575482670;
+        bh=+ki55RV1IzPV8OlLCUZQK5QE1EvFkv2OU2Lgd/dUtRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pvlHk2Pb4+1LOFcwnjn61dCneRBjQbOQw+icoobQfWa6WwrYa7/oau0+rn1cArI7Z
-         Zvc5QTLs8mVw3dY80HQiojbUSg+ELIL3nGp3Vs9zLUQVJaAprq/mfN7GAiTOr8+uri
-         zQOV8DbaC5q4+AjvOLBIs8xobdaiJYiL5FDrh/PQ=
+        b=gu/vqV6kKgB+sZOGrYiHyyuAUpnZLOSZ/fEg8/mcCy6z02fVeVY65tso7YIxjm55d
+         c2pzAdWVgOsF3W1UadFUZkvg6Jsa90X+8x71dOPWCDPuKqRS3KdnstOLtlSziXwohD
+         URpuZq9webY+S7KX85ZGJgmQREqIVzfCnLpnfNq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stafford Horne <shorne@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 083/209] powerpc/xmon: fix dump_segments()
-Date:   Wed,  4 Dec 2019 18:54:55 +0100
-Message-Id: <20191204175327.290102807@linuxfoundation.org>
+Subject: [PATCH 4.14 087/209] openrisc: Fix broken paths to arch/or32
+Date:   Wed,  4 Dec 2019 18:54:59 +0100
+Message-Id: <20191204175327.655874234@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -60,33 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit 32c8c4c621897199e690760c2d57054f8b84b6e6 ]
+[ Upstream commit 57ce8ba0fd3a95bf29ed741df1c52bd591bf43ff ]
 
-mfsrin() takes segment num from bits 31-28 (IBM bits 0-3).
+OpenRISC was mainlined as "openrisc", not "or32".
+vmlinux.lds is generated from vmlinux.lds.S.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-[mpe: Clarify bit numbering]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/xmon/xmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/openrisc/kernel/entry.S | 2 +-
+ arch/openrisc/kernel/head.S  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index 5a739588aa505..51a53fd517229 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -3293,7 +3293,7 @@ void dump_segments(void)
+diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
+index b16e95a4e875f..1107d34e45bf1 100644
+--- a/arch/openrisc/kernel/entry.S
++++ b/arch/openrisc/kernel/entry.S
+@@ -184,7 +184,7 @@ handler:							;\
+  *	 occured. in fact they never do. if you need them use
+  *	 values saved on stack (for SPR_EPC, SPR_ESR) or content
+  *       of r4 (for SPR_EEAR). for details look at EXCEPTION_HANDLE()
+- *       in 'arch/or32/kernel/head.S'
++ *       in 'arch/openrisc/kernel/head.S'
+  */
  
- 	printf("sr0-15 =");
- 	for (i = 0; i < 16; ++i)
--		printf(" %x", mfsrin(i));
-+		printf(" %x", mfsrin(i << 28));
- 	printf("\n");
- }
- #endif
+ /* =====================================================[ exceptions] === */
+diff --git a/arch/openrisc/kernel/head.S b/arch/openrisc/kernel/head.S
+index 90979acdf165b..4d878d13b8606 100644
+--- a/arch/openrisc/kernel/head.S
++++ b/arch/openrisc/kernel/head.S
+@@ -1551,7 +1551,7 @@ _string_nl:
+ 
+ /*
+  * .data section should be page aligned
+- *	(look into arch/or32/kernel/vmlinux.lds)
++ *	(look into arch/openrisc/kernel/vmlinux.lds.S)
+  */
+ 	.section .data,"aw"
+ 	.align	8192
 -- 
 2.20.1
 
