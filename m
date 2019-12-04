@@ -2,93 +2,125 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E3CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6211AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3E820661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575484105;
-	bh=7Ry9jrHQuYnZY7uOPI526vZCkCbcI2sx4X8O3i8qnwc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qcA2IVFLB5i4p/Cp4JqPi2+DR6TB6L9GuDVs56Zl2GXSV/CAyA04P70ok36LnyFXg
-	 zmJQNdmpsahkPFrf7WGVgAG+rFjlM1MTy1DAga9QEDiecvu6G65j4HDlhEUv8tplOF
-	 6oFwgUTBAWq1m/trygPtDpG3iKBbCVohR9F/X/p4=
+	by mail.kernel.org (Postfix) with ESMTP id C92BF205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:30:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b="JvdlIsyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbfLDR5f (ORCPT
+        id S1728581AbfLDSaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:57:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58498 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728244AbfLDR5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:57:34 -0500
-Received: from localhost (unknown [217.68.49.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F5002073B;
-        Wed,  4 Dec 2019 17:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482253;
-        bh=7Ry9jrHQuYnZY7uOPI526vZCkCbcI2sx4X8O3i8qnwc=;
+        Wed, 4 Dec 2019 13:30:13 -0500
+Received: from valentin-vidic.from.hr ([94.229.67.141]:35815 "EHLO
+        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728273AbfLDSaN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:30:13 -0500
+X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
+Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
+        id 3E978239; Wed,  4 Dec 2019 19:30:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+        d=valentin-vidic.from.hr; s=2017; t=1575484206;
+        bh=1INDlaCJpLn0+6hFM2qct798lptXvkxMEEVD7w8HTnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0jRVV7Ds3Fv8cxUtRlVIyJYlrTi4vXncUmrzId1xKagEce3TrF74ZjJlLao8iEcGL
-         jUYeM6I/tkMMHXqaxYhGpgRPUVykuuJfrYJPk4WBHOj9S4EYRTZKUq6rTDrno2DYfR
-         0DN0VpavHx+TKZgpMyKUWqKMsvz+95eR8BKXV9G8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 13/92] parisc: Fix HP SDC hpa address output
-Date:   Wed,  4 Dec 2019 18:49:13 +0100
-Message-Id: <20191204174330.080172993@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
-References: <20191204174327.215426506@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=JvdlIsyO7/kU9WQYpMjEaFJiIk89QPGWPjXwoB5h2q5HNFQUPHDoLGq5VJ8MI7txM
+         0j0JR18glCTZ7O8GTTHDwD+pyZqcn3Ha4FsH9XBZWWMQ3jB/aVn7ci0vUDVbFLawiv
+         d4ycgDXPPEGXABJoz6h4CALIDr5syFFWloJhcAC8ez40ynlpTQi3U12iC34FLthIJR
+         IqGZYceR+xmj4cuJ8mT6piv/2H5cldoj/ZIjHUhuqPKGrA0otJFiHHgGXx8A3e9+WB
+         awgSSUbmxytmQJvv6lOS1NNfdBef/mtYqMzVaAt7A4+I+6Asc4HqzODwc+KqxWZLqO
+         ijt7aIv8rVK8g==
+From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Boris Pismenny <borisp@mellanox.com>,
+        Aviad Yehezkel <aviadye@mellanox.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Valentin Vidic <vvidic@valentin-vidic.from.hr>
+Subject: [PATCH v2] net/tls: Fix return values for setsockopt
+Date:   Wed,  4 Dec 2019 19:29:40 +0100
+Message-Id: <20191204182940.29007-1-vvidic@valentin-vidic.from.hr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191203145535.5a416ef3@cakuba.netronome.com>
+References: <20191203145535.5a416ef3@cakuba.netronome.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+ENOTSUPP is not available in userspace:
 
-[ Upstream commit c4bff35ca1bfba886da6223c9fed76a2b1382b8e ]
+  setsockopt failed, 524, Unknown error 524
 
-Show the hpa address of the HP SDC instead of a hashed value, e.g.:
-HP SDC: HP SDC at 0xf0201000, IRQ 23 (NMI IRQ 24)
-
-Signed-off-by: Helge Deller <deller@gmx.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
 ---
- drivers/input/serio/hp_sdc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v2: update error code in selftest
 
-diff --git a/drivers/input/serio/hp_sdc.c b/drivers/input/serio/hp_sdc.c
-index 852858e5d8d08..92f541db98a09 100644
---- a/drivers/input/serio/hp_sdc.c
-+++ b/drivers/input/serio/hp_sdc.c
-@@ -887,8 +887,8 @@ static int __init hp_sdc_init(void)
- 			"HP SDC NMI", &hp_sdc))
- 		goto err2;
+ net/tls/tls_main.c                | 4 ++--
+ tools/testing/selftests/net/tls.c | 8 ++------
+ 2 files changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
+index bdca31ffe6da..5830b8e02a36 100644
+--- a/net/tls/tls_main.c
++++ b/net/tls/tls_main.c
+@@ -496,7 +496,7 @@ static int do_tls_setsockopt_conf(struct sock *sk, char __user *optval,
+ 	/* check version */
+ 	if (crypto_info->version != TLS_1_2_VERSION &&
+ 	    crypto_info->version != TLS_1_3_VERSION) {
+-		rc = -ENOTSUPP;
++		rc = -EINVAL;
+ 		goto err_crypto_info;
+ 	}
  
--	printk(KERN_INFO PREFIX "HP SDC at 0x%p, IRQ %d (NMI IRQ %d)\n",
--	       (void *)hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
-+	pr_info(PREFIX "HP SDC at 0x%08lx, IRQ %d (NMI IRQ %d)\n",
-+	       hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
+@@ -723,7 +723,7 @@ static int tls_init(struct sock *sk)
+ 	 * share the ulp context.
+ 	 */
+ 	if (sk->sk_state != TCP_ESTABLISHED)
+-		return -ENOTSUPP;
++		return -ENOTCONN;
  
- 	hp_sdc_status_in8();
- 	hp_sdc_data_in8();
+ 	/* allocate tls context */
+ 	write_lock_bh(&sk->sk_callback_lock);
+diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
+index 1c8f194d6556..97c056ab43d9 100644
+--- a/tools/testing/selftests/net/tls.c
++++ b/tools/testing/selftests/net/tls.c
+@@ -25,10 +25,6 @@
+ #define TLS_PAYLOAD_MAX_LEN 16384
+ #define SOL_TLS 282
+ 
+-#ifndef ENOTSUPP
+-#define ENOTSUPP 524
+-#endif
+-
+ FIXTURE(tls_basic)
+ {
+ 	int fd, cfd;
+@@ -1145,11 +1141,11 @@ TEST(non_established) {
+ 	/* TLS ULP not supported */
+ 	if (errno == ENOENT)
+ 		return;
+-	EXPECT_EQ(errno, ENOTSUPP);
++	EXPECT_EQ(errno, ENOTCONN);
+ 
+ 	ret = setsockopt(sfd, IPPROTO_TCP, TCP_ULP, "tls", sizeof("tls"));
+ 	EXPECT_EQ(ret, -1);
+-	EXPECT_EQ(errno, ENOTSUPP);
++	EXPECT_EQ(errno, ENOTCONN);
+ 
+ 	ret = getsockname(sfd, &addr, &len);
+ 	ASSERT_EQ(ret, 0);
 -- 
 2.20.1
-
-
 
