@@ -2,287 +2,173 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921E3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CD6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 454F1205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:21:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575490862;
-	bh=lO0lBJgLyqcoBTyVD8Q+rC9hNWl674FfWN001V3gRtU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eBOQFRcr5Ac+czOnF2aZ31l0vlfchmbT4FFSXOO843kgqYRmsAjyzHX/4D8YUyXki
-	 N5QJmhlbFNeo8XLR6AatAwwM/h1sNNIjjL40I7yRSecldcVVDqxcydT+U4DmCuTUfI
-	 cG87eKZb3YB+ZKHNamSe6XFx8q0ZFjT0ZkW7E02o=
+	by mail.kernel.org (Postfix) with ESMTP id 4B9E62077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:23:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cmEl7UJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfLDUVB (ORCPT
+        id S1728105AbfLDUXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 15:21:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727887AbfLDUVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 15:21:00 -0500
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 153BE21826
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Dec 2019 20:20:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575490859;
-        bh=lO0lBJgLyqcoBTyVD8Q+rC9hNWl674FfWN001V3gRtU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=syXInMnBdcHfggC2YZeZqDGzqn7ueusXNnCZSx+2ObCK9uquHBJk4i/VSJLYOgdbO
-         CM+zsK5chs3dFq6YujvKCbZkfD3LIGkOXt9MlkweLEdTSvVL66cMs5LYA2lfHO/RMC
-         M6I1sTY9A0N8USjX79MsWlwQw6t/7zolppmive5c=
-Received: by mail-wm1-f45.google.com with SMTP id t14so1162293wmi.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 12:20:59 -0800 (PST)
-X-Gm-Message-State: APjAAAWjdU06m8zx20rJ70AP9XrjhNKWfixGbQLVtre5QShEaq+TUWz8
-        z0sP93wrmER2GnUzJwHqlCu+vX7VSvqP+tyqfypONw==
-X-Google-Smtp-Source: APXvYqyfNBgNEYvvwr7qmo50hagGPvMbA1TIN+lBkJd1e3JL28NxNFF/kEYPl6ljbu6ey3PBWGE3dz+jzD87ivwzg9M=
-X-Received: by 2002:a1c:9c54:: with SMTP id f81mr1523186wme.89.1575490857350;
- Wed, 04 Dec 2019 12:20:57 -0800 (PST)
+        Wed, 4 Dec 2019 15:23:00 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36306 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727889AbfLDUW7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 15:22:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575490978;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=B6501AeuCH09kqXayTpJahOroJlNswm8cYGVnammuGQ=;
+        b=cmEl7UJPtZNkOCFgzByuvji/lxGXZTLTxng4mY4MiVrRJBR2Fe2yjIhGXDEr7u3gmW6NaC
+        8PzCCpwJzMGwFcFj8sxEKsWoahfPGhsc+9C1zd5OxyvHrlX4RzVDHw5TQEAtKKAIqCZdFC
+        wT7YRqj4PZBpBamwxI4X0PKw7c1LYXo=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-386-ikl-MifKNlC-sjD-Y9LFSg-1; Wed, 04 Dec 2019 15:22:57 -0500
+Received: by mail-lf1-f72.google.com with SMTP id l2so98102lfk.23
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 12:22:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=bWGBRGftecl1TELE+NPWJSQpPs1ATjeROtIx8QlzOM4=;
+        b=oJMnUikiXL3kMZtiTYEgOwYAVHKy9BT7Z4STcMrA6e7+c/yXfkYBY7A6wQYNIezBfA
+         d5dDI71602f1GiSDJQmixmSmMurWtk4UvL8HFikaAcnJoEGH/8jqq5n8/Yy1LrbxaR/X
+         ZsnBr0Gq4Qu5JtqUX81JxcX1DSZ9fIYMvo+7UDEGo/AGKD1KZ4FaqdjzZZbX8TG9QpOu
+         gXn6QKTwh4pFMePBk12E4xi66H494lXF/rd4460DdqggHIAsSWEJab1Pqxe9ybHOo9X+
+         eXJ37tPOdqxxd/0E/2VO3jTBU1clBKPkqI8pePlhQ1UXMczobIg/QxrPulPX6OLlzN3b
+         qDKQ==
+X-Gm-Message-State: APjAAAXqJap9ZwEp0Xk0KNOzj9MRlPr/1yc6Nu/gh6ByC5RKR57DZ6ST
+        oIhv6lkYscio3hLOgLhaIvWx8zO8fr4UuCHk2d2aZ7KdfOe3sh+QNjomkkKMFkXp9h5b1Hgri8t
+        rjioJGdeu1SYjUUvmyR38wjOz
+X-Received: by 2002:ac2:4553:: with SMTP id j19mr3393447lfm.142.1575490975583;
+        Wed, 04 Dec 2019 12:22:55 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy2XgLJTxeJZ2xtK1286GgeuYjhYemj4/KIs3cLvmOYe+qrHgZQ6tFFdNaXHi7b1nLifRHVpA==
+X-Received: by 2002:ac2:4553:: with SMTP id j19mr3393421lfm.142.1575490975321;
+        Wed, 04 Dec 2019 12:22:55 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id o19sm4417121lji.54.2019.12.04.12.22.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 12:22:54 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id C9CAC18193A; Wed,  4 Dec 2019 21:22:53 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
+In-Reply-To: <20191204182727.GA29780@localhost.localdomain>
+References: <20191202131847.30837-1-jolsa@kernel.org> <CAEf4BzY_D9JHjuU6K=ciS70NSy2UvSm_uf1NfN_tmFz1445Jiw@mail.gmail.com> <87wobepgy0.fsf@toke.dk> <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com> <877e3cpdc9.fsf@toke.dk> <CAADnVQJeC9FQDXhv34KTiFSRq-=x4cBaspj-bTXdQ1=7prphcA@mail.gmail.com> <20191204182727.GA29780@localhost.localdomain>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Wed, 04 Dec 2019 21:22:53 +0100
+Message-ID: <874kyfon6q.fsf@toke.dk>
 MIME-Version: 1.0
-References: <1570212969-21888-1-git-send-email-chang.seok.bae@intel.com>
- <alpine.DEB.2.21.1911151926380.28787@nanos.tec.linutronix.de>
- <20191115191200.GD22747@tassilo.jf.intel.com> <A78C989F6D9628469189715575E55B236B50834A@IRSMSX104.ger.corp.intel.com>
- <CALCETrXc=-k3fQyxjBok0npjTMr6-Ho7+pkvzDUdG=b52Qz=9g@mail.gmail.com> <A78C989F6D9628469189715575E55B236B508C1A@IRSMSX104.ger.corp.intel.com>
-In-Reply-To: <A78C989F6D9628469189715575E55B236B508C1A@IRSMSX104.ger.corp.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 4 Dec 2019 12:20:46 -0800
-X-Gmail-Original-Message-ID: <CALCETrWb9jvwOPuupet4n5=JytbS-x37bnn=THniv_d8cNvf_Q@mail.gmail.com>
-Message-ID: <CALCETrWb9jvwOPuupet4n5=JytbS-x37bnn=THniv_d8cNvf_Q@mail.gmail.com>
-Subject: Re: [PATCH v9 00/17] Enable FSGSBASE instructions
-To:     "Metzger, Markus T" <markus.t.metzger@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Bae, Chang Seok" <chang.seok.bae@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        Pedro Alves <palves@redhat.com>,
-        Simon Marchi <simark@simark.ca>,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: ikl-MifKNlC-sjD-Y9LFSg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 12:23 AM Metzger, Markus T
-<markus.t.metzger@intel.com> wrote:
->
-> > On Fri, Nov 29, 2019 at 6:56 AM Metzger, Markus T
-> > <markus.t.metzger@intel.com> wrote:
-> > >
-> > > > On Fri, Nov 15, 2019 at 07:29:17PM +0100, Thomas Gleixner wrote:
-> > > > > On Fri, 4 Oct 2019, Chang S. Bae wrote:
-> > > > > >
-> > > > > > Updates from v8 [10]:
-> > > > > > * Internalized the interrupt check in the helper functions (Andy L.)
-> > > > > > * Simplified GS base helper functions (Tony L.)
-> > > > > > * Changed the patch order to put the paranoid path changes before the
-> > > > > >   context switch changes (Tony L.)
-> > > > > > * Fixed typos (Randy D.) and massaged a few sentences in the
-> > documentation
-> > > > > > * Massaged the FSGSBASE enablement message
-> > > > >
-> > > > > That still lacks what Andy requested quite some time ago in the V8 thread:
-> > > > >
-> > > > >      https://lore.kernel.org/lkml/034aaf3a-a93d-ec03-0bbd-
-> > > > 068e1905b774@kernel.org/
-> > > > >
-> > > > >   "I also think that, before this series can have my ack, it needs an
-> > > > >    actual gdb maintainer to chime in, publicly, and state that they have
-> > > > >    thought about and tested the ABI changes and that gdb still works on
-> > > > >    patched kernels with and without FSGSBASE enabled.  I realize that there
-> > > > >    were all kinds of discussions, but they were all quite theoretical, and
-> > > > >    I think that the actual patches need to be considered by people who
-> > > > >    understand the concerns.  Specific test cases would be nice, too."
-> > > > >
-> > > > > What's the state of this?
-> > >
-> > > On branch users/mmetzger/fsgs in sourceware.org/git/binutils-gdb.git,
-> > > there's a GDB test covering the behavior discussed theoretically back then.
-> > >
-> > > It covers modifying the selector as well as the base from GDB and using
-> > > the modified values for inferior calls as well as for resuming the inferior.
-> > >
-> > > Current kernels allow changing the selector and provide the resulting
-> > > base back to the ptracer.  They also allow changing the base as long as
-> > > the selector is zero.  That's the behavior we wanted to preserve IIRC.
-> >
-> > The general kernel rule is that we don't break working applications.
-> > Other than that, we're allowed to change the ABI if existing working
-> > applications don't break.  I can't tell whether you wrote a test that
-> > detects a behavior change or whether you wrote a test that tests
-> > behavior that gdb or other programs actually rely on.
->
-> Well, that's a tough question.  The test covers GDB's behavior on today's
-> systems.  GDB itself does not actually rely on that behavior.  That is, GDB
-> itself wouldn't break.  You couldn't do all that you could do with it before,
-> though.
+Daniel Borkmann <daniel@iogearbox.net> writes:
 
-GDB does rely on at least some behavior.  If I tell gdb to call a
-function on my behalf, doesn't it save the old state, call the
-function, and then restore the state?  Surely it expects the restore
-operation to actually restore the state.
-
+> On Wed, Dec 04, 2019 at 09:39:59AM -0800, Alexei Starovoitov wrote:
+>> On Wed, Dec 4, 2019 at 2:58 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@re=
+dhat.com> wrote:
+>> > Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+>> > > On Mon, Dec 2, 2019 at 1:15 PM Toke H=C3=B8iland-J=C3=B8rgensen <tok=
+e@redhat.com> wrote:
+>> > >>
+>> > >> Ah, that is my mistake: I was getting dynamic libbpf symbols with t=
+his
+>> > >> approach, but that was because I had the version of libbpf.so in my
+>> > >> $LIBDIR that had the patch to expose the netlink APIs as versioned
+>> > >> symbols; so it was just pulling in everything from the shared libra=
+ry.
+>> > >>
+>> > >> So what I was going for was exactly what you described above; but i=
+t
+>> > >> seems that doesn't actually work. Too bad, and sorry for wasting yo=
+ur
+>> > >> time on this :/
+>> > >
+>> > > bpftool is currently tightly coupled with libbpf and very likely
+>> > > in the future the dependency will be even tighter.
+>> > > In that sense bpftool is an extension of libbpf and libbpf is an ext=
+ension
+>> > > of bpftool.
+>> > > Andrii is working on set of patches to generate user space .c code
+>> > > from bpf program.
+>> > > bpftool will be generating the code that is specific for the version
+>> > > bpftool and for
+>> > > the version of libbpf. There will be compatibility layers as usual.
+>> > > But in general the situation where a bug in libbpf is so criticial
+>> > > that bpftool needs to repackaged is imo less likely than a bug in
+>> > > bpftool that will require re-packaging of libbpf.
+>> > > bpftool is quite special. It's not a typical user of libbpf.
+>> > > The other way around is more correct. libbpf is a user of the code
+>> > > that bpftool generates and both depend on each other.
+>> > > perf on the other side is what typical user space app that uses
+>> > > libbpf will look like.
+>> > > I think keeping bpftool in the kernel while packaging libbpf
+>> > > out of github was an oversight.
+>> > > I think we need to mirror bpftool into github/libbpf as well
+>> > > and make sure they stay together. The version of libbpf =3D=3D versi=
+on of bpftool.
+>> > > Both should come from the same package and so on.
+>> > > May be they can be two different packages but
+>> > > upgrading one should trigger upgrade of another and vice versa.
+>> > > I think one package would be easier though.
+>> > > Thoughts?
+>> >
+>> > Yup, making bpftool explicitly the "libbpf command line interface" mak=
+es
+>> > sense and would help clarify the relationship between the two. As Jiri
+>> > said, we are already moving in that direction packaging-wise...
+>>=20
+>> Awesome. Let's figure out the logistics.
+>> Should we do:
+>> git mv tools/bpf/bpftool/ tools/lib/bpf/
+>> and appropriate adjustment to Makefiles ?
+>> or keep it where it is and only add to
+>> https://github.com/libbpf/libbpf/blob/master/scripts/sync-kernel.sh ?
 >
-> It would be GDB's users that are affected.  How do you tell if anyone is
-> actually relying on it?
+> I'd be in preference of the latter aka keeping where it is.
 
-No clue.  But at least if this type of use is mostly interactive, then
-users should be that badly affected.
+I don't have any strong preference either way. It would make sense to
+move it to make clear the interdependency (and that bpftool is really
+the "libbpf cli interface"); but it could also just be kept separate and
+just document this in the existing bpftool dir.
 
-It also helps that very, very few 64-bit applications use nonzero
-segments at all.  They used to because of a kernel optimization to
-automatically load a segment if an FS or GSBASE less than 4GB was
-requested, but that's been gone for a while.  Calling
-set_thread_area() at all in a 64-bit program requires considerable
-gymnastics, and distributions can and do disable modify_ldt() outright
-without significant ill effects.
+The github repository may need some surgery, though. So maybe let the
+changes in the kernel tree depend on what's easiest for that? IDK?
 
-So we're mostly talking about compatibility with 32-bit programs and
-exotic users like Wine and DOSEMU.
+-Toke
 
->
->
-> > Certainly, with a 32-bit *gdb*, writing a nonzero value to FS or GS
-> > using ptrace should change the base accordingly.  I think the current
-> > patches get this wrong.
-> >
-> > With a 64-bit gdb and a 32-bit inferior, in an ideal world, everything
-> > would work just like full 64-bit, since that's how the hardware works.
->
-> Not sure what you mean.  The h/w runs in compatibility mode and the
-> inferior cannot set the base directly, can it?
-
-I think there's a general impedance mismatch between gdb and the
-kernel/hw here.  On Linux on a 64-bit machine, there's isn't really a
-strong concept of a "32-bit process" versus a "64-bit process".  All
-tasks have 64-bit values in RAX, all tasks have R8-R15, all tasks have
-a GDT and an LDT, etc.  "32-bit tasks" are merely tasks that happen to
-be running with a compatibility selector loaded into CS at the time.
-Tasks can and do switch freely between compatibility and long mode
-using LJMP or LRET.  As far as I can tell, however, gdb doesn't really
-understand this and thinks that 32-bit tasks are their own special
-thing.
-
-This causes me real problems: gdb explodes horribly if I connect gdb
-to QEMU's gdbserver (qemu -s) and try to debug during boot when the
-inferior switches between 32-bit and long mode.
-
-As far as FSGSBASE goes, a "32-bit task" absolutely can set
-independent values in FS and FSBASE, although it's awkward to do so:
-the task would have to do a far transfer to long mode, then WRFSBASE,
-then far transfer back to compat mode.  But this entire sequence of
-events could occur without entering the kernel at all, and the ptrace
-API should be able to represent the result.  I think that, ideally, a
-64-bit debugger would understand the essential 64-bitness of even
-compat tasks and work sensibly.  I don't really expect gdb to be able
-to do this any time soon, though.
-
->
->
-> > But we don't necessary live in an ideal world.
-> >
-> > With a 64-bit gdb and a 64-bit inferior, the inferior can set FS to
-> > some nonzero value and then set FSBASE to an arbitrary 64-bit number,
-> > and FS will retain its value.  ptrace needs to give gdb some way to
-> > read, save, and restore this state.
->
-> With Chang's patch series, that actually works.  You can set FS and then
-> set FSBASE without setting FS to zero previously.  The tests do not cover
-> that since on current system that leads to the inferior crashing in read_fs().
->
->
-> > I think the ideal behavior is that 64-bit ptrace callers should
-> > control FS and FSBASE independently.  The question is: will that break
-> > things?  If it will, then we'll need to make sure that there is an API
-> > by which a debugger can independently control FS and FSBASE, and we'll
-> > also need to make sure that whatever existing API debuggers use to
-> > change FS and expect FSBASE to magically change as well continue to
-> > have that effect.
->
-> We had discussed this some time ago and proposed the following behavior: "
-> https://lore.kernel.org/lkml/1521481767-22113-15-git-send-email-chang.seok.bae@intel.com/
->
->         In a summary, ptracer's update on FS/GS selector and base
->         yields such results on tracee's base:
->         - When FS/GS selector only changed (to nonzero), fetch base
->         from GDT/LDT (legacy behavior)
->         - When FS/GS base (regardless of selector) changed, tracee
->         will have the base
-> "
-
-Indeed.  But I never understood how this behavior could be implemented
-with the current ABI.  As I understand it, gdb only ever sets the
-inferior register state by using a single ptrace() call to load the
-entire state, which means that the kernel does not know whether just
-FS is being written or whether FS and FSBASE are being written.
-
-What actual ptrace() call does gdb use when a 64-bit gdb debugs a
-64-bit inferior?  How about a 32-bit inferior?
-
->
-> The ptracer would need to read registers back after changing the selector
-> to get the updated base.
-
-What would the actual API be?
-
-I think it could make sense to add a whole new ptrace() command to
-tell the tracee to, in effect, MOV a specified value to a segment
-register.  This call would have the actual correct semantics in which
-it would return an error code if the specified value is invalid and
-would return 0 on success.  And then a second ptrace() call could be
-issued to read out FSBASE or GSBASE if needed.  Would this be useful?
-What gdb commands would invoke it?
-
->
-> The only time when both change at the same time, then, is when registers
-> are restored after returning from an inferior call.  And then, it's the base
-> we want to take priority since we previously ensured that the base is always
-> up-to-date.
-
-Right.  But how does the kernel tell the difference?
-
-> >
-> > The base of a segment in a descriptor table is 32 bits, full stop.
-> > This is a hardware limitation and has nothing to do with the kernel.
-> > base_addr is correctly unsigned int in the kernel headers.  If you
-> > actually find a system where base_addr is unsigned long and unsigned
-> > long is 64 bits, then your test will malfunction.
->
-> The modify_ldt(2) man page says: "
->        The user_desc structure is defined in <asm/ldt.h> as:
->
->            struct user_desc {
->                unsigned int  entry_number;
->                unsigned long base_addr;
->                unsigned int  limit;
->                unsigned int  seg_32bit:1;
->                unsigned int  contents:2;
->                unsigned int  read_exec_only:1;
->                unsigned int  limit_in_pages:1;
->                unsigned int  seg_not_present:1;
->                unsigned int  useable:1;
->            };
-> "
->
-> The declaration in asm/ldt.h actually defines base_addr as unsigned int.
->
-> So my comment about 'some 64-bit systems' is wrong and should actually
-> say 'all systems'.  Will fix.
-
->
-> That by itself is not an issue as long as the main executable is not loaded at
-> a high address.  I only ran into problems with that on some ubuntu system
-> in our test pool.
-
-In my test cases, I use mmap() with MAP_32BIT to avoid this issue.
