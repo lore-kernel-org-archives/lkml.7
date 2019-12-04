@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054A6C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05E9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B0F20637
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9230A20637
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 11:35:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bVSC40PZ"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VKo6egvd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfLDLex (ORCPT
+        id S1727768AbfLDLfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 06:34:53 -0500
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:1302 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfLDLew (ORCPT
+        Wed, 4 Dec 2019 06:35:01 -0500
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:19986 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727740AbfLDLe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 06:34:52 -0500
+        Wed, 4 Dec 2019 06:34:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575459291; x=1606995291;
+  t=1575459299; x=1606995299;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=l9KPO+RfCo20qWXXb2Nj9NKT03YEvDC09jO2n9eHTpU=;
-  b=bVSC40PZzS1pbsGSnYSn797HiGF6KsKsr7dnSXhoaK0cm6AVmTi9+UTK
-   LLoLYG3encITk/W/XCNo3nCrRCzrDxWdPTi5/YxK4KE6mnLvWkiOhxV9F
-   cAR0k2RNKRaqsI2+P+h3QStYjFvIwY//z+AHi/Ne+/GxcZj4loHOH7+1r
-   I=;
-IronPort-SDR: viKll6ecnooPrmUshSbgKArxk+zTotTLwmPFV/Wv/PkUGPV6L9xCUelo4wLNJXlMTz/omLid4V
- /zTdHD3WM+lw==
+  bh=hFszrM7KiTbnME9EGJrfhQofskCo55+99bwJF65SxQo=;
+  b=VKo6egvd72nO/10EAgpu5ZDJnu7ihtJbi7xqAzuJuCJgtKzNFdyu3sXn
+   axcW77xQcaDYhOsANcKFtWvw8mM0oMnZJMutUrId1AUxtdf0dXvJ9m/yn
+   yLNECJx3x7f79oTbMhdULQ/Bi3Z0uyRu/G1KKaKnCD5JpjPc3sM15GVs0
+   Y=;
+IronPort-SDR: qhYuRtZ0Yol5ruY3wIPQVvj8V7PP7DvXuyvJIH0Dg4IB71EmrDNKQjPBTijP9FyR4jjk/XWup5
+ 68gfq8Di2HhQ==
 X-IronPort-AV: E=Sophos;i="5.69,277,1571702400"; 
-   d="scan'208";a="7009075"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 04 Dec 2019 11:34:45 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com (Postfix) with ESMTPS id 18111C0C8E;
-        Wed,  4 Dec 2019 11:34:42 +0000 (UTC)
+   d="scan'208";a="6142138"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 04 Dec 2019 11:34:49 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id A586EA2641;
+        Wed,  4 Dec 2019 11:34:46 +0000 (UTC)
 Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
  EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 4 Dec 2019 11:34:42 +0000
+ id 15.0.1367.3; Wed, 4 Dec 2019 11:34:45 +0000
 Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.249) by
  EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 4 Dec 2019 11:34:38 +0000
+ id 15.0.1367.3; Wed, 4 Dec 2019 11:34:42 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <konrad.wilk@oracle.com>, <roger.pau@citrix.com>, <axboe@kernel.dk>
 CC:     <sj38.park@gmail.com>, <xen-devel@lists.xenproject.org>,
         <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         SeongJae Park <sjpark@amazon.de>
-Subject: [PATCH 1/2] xen/blkback: Aggressively shrink page pools if a memory pressure is detected
-Date:   Wed, 4 Dec 2019 12:34:18 +0100
-Message-ID: <20191204113419.2298-2-sjpark@amazon.com>
+Subject: [PATCH 2/2] blkback: Add a module parameter for aggressive pool shrinking duration
+Date:   Wed, 4 Dec 2019 12:34:19 +0100
+Message-ID: <20191204113419.2298-3-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191204113419.2298-1-sjpark@amazon.com>
 References: <20191204113419.2298-1-sjpark@amazon.com>
@@ -71,182 +71,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-Each `blkif` has a free pages pool for the grant mapping.  The size of
-the pool starts from zero and be increased on demand while processing
-the I/O requests.  If current I/O requests handling is finished or 100
-milliseconds has passed since last I/O requests handling, it checks and
-shrinks the pool to not exceed the size limit, `max_buffer_pages`.
+As discussed by the previous commit ("xen/blkback: Aggressively shrink
+page pools if a memory pressure is detected"), the aggressive pool
+shrinking duration should be carefully selected:
+``If it is too long, free pages pool shrinking overhead can reduce the
+I/O performance.  If it is too short, blkback will not free enough pages
+to reduce the memory pressure.``
 
-Therefore, `blkfront` running guests can cause a memory pressure in the
-`blkback` running guest by attaching arbitrarily large number of block
-devices and inducing I/O.  This commit avoids such problematic
-situations by shrinking the pools aggressively (further the limit) for a
-while (one millisecond) if a memory pressure is detected.
-
-Discussions
-===========
-
-The shrinking mechanism returns only pages in the pool which are not
-currently be used by blkback.  In other words, the pages that will be
-shrunk are not mapped with foreign pages.  Because this commit is
-changing only the shrink limit but uses the shrinking mechanism as is,
-this commit does not introduce security issues such as improper
-unmappings.
-
-This commit keeps the aggressive shrinking limit for one milisecond from
-last memory pressure detected time.  The duration should be neither too
-short nor too long.  If it is too long, free pages pool shrinking
-overhead can reduce the I/O performance.  If it is too short, blkback
-will not free enough pages to reduce the memory pressure.  I believe
-that one millisecond is a short duration in terms of I/O while it is a
-long duration in terms of memory operations.  Also, as the original
-shrinking mechanism works for every 100 milliseconds, this 1 millisecond
-could be a somewhat reasonable choice.  Also, this duration worked well
-for our testing environment simulating the memory pressure situation
-(will be described in detail below).
-
-Memory Pressure Test
-====================
-
-To show whether this commit fixes the above mentioned memory pressure
-situation well, I configured a test environment.  On the `blkfront`
-running guest instances of a virtualized environment, I attach
-arbitrarily large number of network-backed volume devices and induce I/O
-to those.  Meanwhile, I measure the number of pages that swapped in and
-out on the `blkback` running guest.  The test ran twice, once for the
-`blkback` before this commit and once for that after this commit.
-
-Roughly speaking, this commit has reduced those numbers 130x (pswpin)
-and 34x (pswpout) as below:
-
-    		pswpin	pswpout
-    before	76,672	185,799
-    after	   587	  5,402
-
-Performance Overhead Test
-=========================
-
-This commit could incur I/O performance degradation under memory
-pressure because the aggressive shrinking will require more page
-allocations.  To show the overhead, I artificially made an aggressive
-pages pool shrinking situation and measured the I/O performance of a
-`blkfront` running guest.
-
-For the artificial shrinking, I set the `blkback.max_buffer_pages` using
-the `/sys/module/xen_blkback/parameters/max_buffer_pages` file.  We set
-the value to `1024` and `0`.  The `1024` is the default value.  Setting
-the value as `0` incurs the worst-case aggressive shrinking stress.
-
-For the I/O performance measurement, I use a simple `dd` command.
-
-Default Performance
--------------------
-
-    [dom0]# echo 1024 >  /sys/module/xen_blkback/parameters/max_buffer_pages
-    [instance]$ for i in {1..5}; do dd if=/dev/zero of=file bs=4k count=$((256*512)); sync; done
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 11.7257 s, 45.8 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8827 s, 38.7 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8781 s, 38.7 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8737 s, 38.7 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8702 s, 38.7 MB/s
-
-Worst-case Performance
-----------------------
-
-    [dom0]# echo 0 >  /sys/module/xen_blkback/parameters/max_buffer_pages
-    [instance]$ for i in {1..5}; do dd if=/dev/zero of=file bs=4k count=$((256*512)); sync; done
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 11.7257 s, 45.8 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.878 s, 38.7 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8746 s, 38.7 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8786 s, 38.7 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8749 s, 38.7 MB/s
-
-In short, even worst case aggressive pools shrinking makes no visible
-performance degradation.  I think this is due to the slow speed of the
-I/O.  In other words, the additional page allocation overhead is hidden
-under the much slower I/O time.
+That said, the proper duration would depends on given configurations and
+workloads.  For the reason, this commit allows users to set it via a
+module parameter interface.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Suggested-by: Amit Shah <aams@amazon.de>
 ---
- drivers/block/xen-blkback/blkback.c | 31 +++++++++++++++++++++++++++--
- 1 file changed, 29 insertions(+), 2 deletions(-)
+ drivers/block/xen-blkback/blkback.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
-index 3666afa639d1..aa1a127093e5 100644
+index aa1a127093e5..88c011300ee9 100644
 --- a/drivers/block/xen-blkback/blkback.c
 +++ b/drivers/block/xen-blkback/blkback.c
-@@ -135,6 +135,27 @@ module_param(log_stats, int, 0644);
- /* Number of free pages to remove on each call to gnttab_free_pages */
- #define NUM_BATCH_FREE_PAGES 10
+@@ -137,9 +137,13 @@ module_param(log_stats, int, 0644);
  
-+/*
-+ * Once a memory pressure is detected, keep aggressive shrinking of the free
-+ * page pools for this time (msec)
-+ */
-+#define AGGRESSIVE_SHRINKING_DURATION	1
-+
-+static unsigned long xen_blk_mem_pressure_end;
-+
-+static unsigned long blkif_shrink_count(struct shrinker *shrinker,
-+				struct shrink_control *sc)
-+{
-+	xen_blk_mem_pressure_end = jiffies +
-+		msecs_to_jiffies(AGGRESSIVE_SHRINKING_DURATION);
-+	return 0;
-+}
-+
-+static struct shrinker blkif_shrinker = {
-+	.count_objects = blkif_shrink_count,
-+	.seeks = DEFAULT_SEEKS,
-+};
-+
- static inline bool persistent_gnt_timeout(struct persistent_gnt *persistent_gnt)
+ /*
+  * Once a memory pressure is detected, keep aggressive shrinking of the free
+- * page pools for this time (msec)
++ * page pools for this time (milliseconds)
+  */
+-#define AGGRESSIVE_SHRINKING_DURATION	1
++static int xen_blkif_aggressive_shrinking_duration = 1;
++module_param_named(aggressive_shrinking_duration,
++		xen_blkif_aggressive_shrinking_duration, int, 0644);
++MODULE_PARM_DESC(aggressive_shrinking_duration,
++"Duration to do aggressive shrinking when a memory pressure is detected");
+ 
+ static unsigned long xen_blk_mem_pressure_end;
+ 
+@@ -147,7 +151,7 @@ static unsigned long blkif_shrink_count(struct shrinker *shrinker,
+ 				struct shrink_control *sc)
  {
- 	return xen_blkif_pgrant_timeout &&
-@@ -656,8 +677,11 @@ int xen_blkif_schedule(void *arg)
- 			ring->next_lru = jiffies + msecs_to_jiffies(LRU_INTERVAL);
- 		}
- 
--		/* Shrink if we have more than xen_blkif_max_buffer_pages */
--		shrink_free_pagepool(ring, xen_blkif_max_buffer_pages);
-+		/* Shrink the free pages pool if it is too large. */
-+		if (time_before(jiffies, xen_blk_mem_pressure_end))
-+			shrink_free_pagepool(ring, 0);
-+		else
-+			shrink_free_pagepool(ring, xen_blkif_max_buffer_pages);
- 
- 		if (log_stats && time_after(jiffies, ring->st_print))
- 			print_stats(ring);
-@@ -1500,6 +1524,9 @@ static int __init xen_blkif_init(void)
- 	if (rc)
- 		goto failed_init;
- 
-+	if (register_shrinker(&blkif_shrinker))
-+		pr_warn("shrinker registration failed\n");
-+
-  failed_init:
- 	return rc;
+ 	xen_blk_mem_pressure_end = jiffies +
+-		msecs_to_jiffies(AGGRESSIVE_SHRINKING_DURATION);
++		msecs_to_jiffies(xen_blkif_aggressive_shrinking_duration);
+ 	return 0;
  }
+ 
 -- 
 2.17.1
 
