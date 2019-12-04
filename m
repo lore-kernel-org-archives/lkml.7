@@ -2,85 +2,96 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8382C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F45C2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7496720661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB8E20833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:46:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eyN1hPzp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G4LQ6Sqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfLDRpq (ORCPT
+        id S1728268AbfLDRq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:45:46 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49950 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfLDRpq (ORCPT
+        Wed, 4 Dec 2019 12:46:29 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40691 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbfLDRq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:45:46 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4Hjap8077764;
-        Wed, 4 Dec 2019 11:45:36 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575481536;
-        bh=QEMrw5/Z9z3JNqDZq8b18WA934p6CJvirSUEPVYw+dA=;
-        h=From:To:CC:Subject:Date;
-        b=eyN1hPzpRNUszDrsknKMKRK6Aty/IACTlByrKDqO2LKN74HOXo6gBSbSkGhLNv91l
-         56bxGuQ3OET6OKgsAfxi5VEmJQxN371DLnU6Jq6bh+JoPrWAlC8azBAd34ISNvTJwC
-         AVxh15Axi9pPHjUgjgQU8BqCILbqyMzUoANJoqBQ=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4HjaQr113249
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Dec 2019 11:45:36 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
- 2019 11:45:36 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Dec 2019 11:45:36 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4HjZMT019571;
-        Wed, 4 Dec 2019 11:45:36 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Randy Dunlap <rdunlap@infradead.org>, <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Tony Lindgren <tony@atomide.com>
-CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH 0/2] net: ethernet: ti: cpsw_switchdev: fix unmet direct dependencies detected for NET_SWITCHDEV
-Date:   Wed, 4 Dec 2019 19:45:31 +0200
-Message-ID: <20191204174533.32207-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Dec 2019 12:46:29 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so24530plp.7;
+        Wed, 04 Dec 2019 09:46:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+Ef0Di1Mlcu80Pa6OnzfRhYDxxXa3qHYCdrx2xSTUmc=;
+        b=G4LQ6SqcaxFkJGoL1gpd4ycNNviowxOzXjMa51EICkpxjrYYKiJD3loZwTL+Gkv4It
+         8tnh8Jh31009rAnHy7t5m5o9L4JQhj8UnsU/g/TZX+KIIy7cF4uxsqWlPNw14XbfGt5L
+         ZfMFGGCNIBRexdOkiAXYyvTNGmrQRg1Ekd0r1RaXg1PWZBupfKwBcjUCD9n0bIG3JdN2
+         /uZc71iqkVP4G/1nsUfAbPkpEpXihYZ2kT1OSmLohRYMzGE0oONmwZ79plxW1S9qLJDm
+         e6wmAkszZTetCNq+go9X7sZJxsGFbn1A+Y21YkkSpp0UCJO3nHHsetNaD51Gd59goGP5
+         ei9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+Ef0Di1Mlcu80Pa6OnzfRhYDxxXa3qHYCdrx2xSTUmc=;
+        b=sTndvu00bd62VfRAT3e0Z792RxLVXA5QZNESEXgFZgL+5B+dXkKoRgFdewu2JzdOs0
+         SNPFM0hP2MoId3c5PG9U353WYuJYlGlORIgGPrXbRWkfm8U8APBobWB+22bzndSiB384
+         4H7eN/2z40dEbhnT9+SlgfaTpKXY/ckFb2YwK8maQkwxHhO3B5MpcRFaPZwE2IizvcpT
+         QwMZWAMKKOjj3ajNI1/urofloQ0anvPN2gAKIBp2CnBt9OBqXJwg05G4X0U3P55UKwvj
+         ydbBwEL2tbWaCv1TGSuxkWXZZsk7R/g7AX0DtVad3F6cQPwrGk4MZNgiR+8lakGP1q0C
+         PkFA==
+X-Gm-Message-State: APjAAAW5IDu3lWaguT4Dn5ySM3jVgOkVdHIT8qLkMOCwazL8mFSSamgN
+        pCT5t3KGsVEoL5F2DZxmvdg+mwjzidmrLZKIiBA=
+X-Google-Smtp-Source: APXvYqxiM25mDXDKoFbGOZwJwH0bs15OaVwiQHsUdLywdLhGhJgTIeOLfUI/3u70DWdr0QFAtP0DkmvBfaWiUg2YCwo=
+X-Received: by 2002:a17:902:9308:: with SMTP id bc8mr4717449plb.18.1575481588283;
+ Wed, 04 Dec 2019 09:46:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191204101042.4275-1-cleger@kalray.eu> <CAHp75VcMm3PPAgfFPLzVwg_RN7_vQfRmufvWiPOkYaErdGiNsw@mail.gmail.com>
+ <2116673293.95313020.1575466238935.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <2116673293.95313020.1575466238935.JavaMail.zimbra@kalray.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 4 Dec 2019 19:46:18 +0200
+Message-ID: <CAHp75VdrsM8hzKdOo0AnRoEeTK-KKy-A-Aj_7yuEp9ZMNUjZ7g@mail.gmail.com>
+Subject: Re: [PATCH 0/5] Add pinctrl support for dwapb gpio driver
+To:     =?UTF-8?Q?Cl=C3=A9ment_Leger?= <cleger@kalray.eu>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series fixes Kconfig warning with CONFIG_COMPILE_TEST=y reported by
-Randy Dunlap <rdunlap@infradead.org> [1]
+On Wed, Dec 4, 2019 at 3:30 PM Cl=C3=A9ment Leger <cleger@kalray.eu> wrote:
+> ----- On 4 Dec, 2019, at 13:24, Andy Shevchenko andy.shevchenko@gmail.com=
+ wrote:
+> > On Wed, Dec 4, 2019 at 12:13 PM Clement Leger <cleger@kalray.eu> wrote:
 
-[1] https://lkml.org/lkml/2019/12/3/1373
+> > This series misses at least GPIO ACPI maintainers to be Cc'ed to for
+> > the certain changes.
+> > Moreover, I would like to see entire series in the future in my mailbox=
+.
+>
+> Sorry, I messed up with get_maintainer.pl while sending the serie.
 
-Grygorii Strashko (2):
-  net: ethernet: ti: cpsw_switchdev: fix unmet direct dependencies
-    detected for NET_SWITCHDEV
-  arm: omap2plus_defconfig: enable NET_SWITCHDEV
+It's not your fault. I sent a patch to update MAINTAINERS to include
+header file under GPIO ACPI record.
 
- arch/arm/configs/omap2plus_defconfig | 3 ++-
- drivers/net/ethernet/ti/Kconfig      | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+> I can resend it properly if needed.
 
--- 
-2.17.1
 
+--=20
+With Best Regards,
+Andy Shevchenko
