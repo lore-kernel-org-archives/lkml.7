@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52144C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B20CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272B420675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3002020675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483639;
-	bh=ywSoSXkP8w77VyOlFas9uJv7rGWfrOqFdh7e90EPxJE=;
+	s=default; t=1575483647;
+	bh=MWk4AQ2+jYOB29Ok4FHSgOcoisrRJU+A2AKBEoWaLeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WBC+BWMXtQPFh1qUupDgyImcaB7gjCJv9yfL4ocOElb/SYLT0WXjlK99bNkWJUNWW
-	 dManlMRVsNCXMaT8/t+K6Rr4N42F/POm6J00LpIcfdjWMi7fw7LBtflavDjIoYj2d/
-	 Rw/pPNDfw+Fp2lsNilWm6VZY8+l6U32bKkJ4SBDg=
+	b=0ZO0ST/rFUk3CifEIPhQXU7No1vOQTGArRL2gAX9Y4VTjbODcXBjcHWBlp8hYWX+h
+	 lSPMcnYzXlD0oOfIX6vw2HvPf9qHguNq38W3UNQtzDtnvUD4FuxYdZtoRxBuaVFiS2
+	 X+LWmEDUa5B31cMtXJgwFLT/NWuGIvXEuJ5a8O3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbfLDSUi (ORCPT
+        id S1731006AbfLDSUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:20:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59196 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:20:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730509AbfLDSIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:08:04 -0500
+        id S1729950AbfLDSHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:07:50 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E80E206DF;
-        Wed,  4 Dec 2019 18:08:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBBD320674;
+        Wed,  4 Dec 2019 18:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482883;
-        bh=ywSoSXkP8w77VyOlFas9uJv7rGWfrOqFdh7e90EPxJE=;
+        s=default; t=1575482869;
+        bh=MWk4AQ2+jYOB29Ok4FHSgOcoisrRJU+A2AKBEoWaLeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2WM+BvIgV2Y5LT1cCllIl50xNTXpK+59BMd+aIkKlhI6K0T0zDJSaLS5nH/aKGRRB
-         s/iRshoukO2cswMdHTcNs8LDFGQ6e1ePTXo796TCPEHr3/WbbIfyGJ4WYQ6gFeeK+h
-         bQnTg+ssRl6oAjZNM+oujBU2JdyKMVbFH6+TIRF8=
+        b=jAzaupUc78orKBgsxaswk8ra6e2W4Gt+fMFiXvKKwjagJ/6XVPaC2raQd86xDsfq5
+         viCxT+T+7VtOe6Naj0IbRBLdMsAEqZ9m9sqBZpSYhWyjN5ijjQ16YZN1bc7eeDIqM+
+         7dYq6WyQSAprQJdl+f7+mgfwjKPsnTJXZCeJYBUk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+4d5170758f3762109542@syzkaller.appspotmail.com,
-        David Miller <davem@davemloft.net>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jouni Hogander <jouni.hogander@unikie.com>
-Subject: [PATCH 4.14 172/209] slip: Fix use-after-free Read in slip_open
-Date:   Wed,  4 Dec 2019 18:56:24 +0100
-Message-Id: <20191204175335.329945789@linuxfoundation.org>
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.14 167/209] media: atmel: atmel-isc: fix asd memory allocation
+Date:   Wed,  4 Dec 2019 18:56:19 +0100
+Message-Id: <20191204175334.976840781@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -63,60 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit e58c1912418980f57ba2060017583067f5f71e52 ]
+commit 1e4e25c4959c10728fbfcc6a286f9503d32dfe02 upstream.
 
-Slip_open doesn't clean-up device which registration failed from the
-slip_devs device list. On next open after failure this list is iterated
-and freed device is accessed. Fix this by calling sl_free_netdev in error
-path.
+The subsystem will free the asd memory on notifier cleanup, if the asd is
+added to the notifier.
+However the memory is freed using kfree.
+Thus, we cannot allocate the asd using devm_*
+This can lead to crashes and problems.
+To test this issue, just return an error at probe, but cleanup the
+notifier beforehand.
 
-Here is the trace from the Syzbot:
+Fixes: 106267444f ("[media] atmel-isc: add the Image Sensor Controller code")
 
-__dump_stack lib/dump_stack.c:77 [inline]
-dump_stack+0x197/0x210 lib/dump_stack.c:118
-print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-__kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-kasan_report+0x12/0x20 mm/kasan/common.c:634
-__asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-sl_sync drivers/net/slip/slip.c:725 [inline]
-slip_open+0xecd/0x11b7 drivers/net/slip/slip.c:801
-tty_ldisc_open.isra.0+0xa3/0x110 drivers/tty/tty_ldisc.c:469
-tty_set_ldisc+0x30e/0x6b0 drivers/tty/tty_ldisc.c:596
-tiocsetd drivers/tty/tty_io.c:2334 [inline]
-tty_ioctl+0xe8d/0x14f0 drivers/tty/tty_io.c:2594
-vfs_ioctl fs/ioctl.c:46 [inline]
-file_ioctl fs/ioctl.c:509 [inline]
-do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
-ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-__do_sys_ioctl fs/ioctl.c:720 [inline]
-__se_sys_ioctl fs/ioctl.c:718 [inline]
-__x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 3b5a39979daf ("slip: Fix memory leak in slip_open error path")
-Reported-by: syzbot+4d5170758f3762109542@syzkaller.appspotmail.com
-Cc: David Miller <davem@davemloft.net>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/slip/slip.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -859,6 +859,7 @@ err_free_chan:
- 	sl->tty = NULL;
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
-+	sl_free_netdev(sl->dev);
- 	free_netdev(sl->dev);
+---
+ drivers/media/platform/atmel/atmel-isc.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+--- a/drivers/media/platform/atmel/atmel-isc.c
++++ b/drivers/media/platform/atmel/atmel-isc.c
+@@ -1722,8 +1722,11 @@ static int isc_parse_dt(struct device *d
+ 			break;
+ 		}
  
- err_exit:
+-		subdev_entity->asd = devm_kzalloc(dev,
+-				     sizeof(*subdev_entity->asd), GFP_KERNEL);
++		/* asd will be freed by the subsystem once it's added to the
++		 * notifier list
++		 */
++		subdev_entity->asd = kzalloc(sizeof(*subdev_entity->asd),
++					     GFP_KERNEL);
+ 		if (subdev_entity->asd == NULL) {
+ 			of_node_put(rem);
+ 			ret = -ENOMEM;
+@@ -1859,6 +1862,7 @@ static int atmel_isc_probe(struct platfo
+ 						   &subdev_entity->notifier);
+ 		if (ret) {
+ 			dev_err(dev, "fail to register async notifier\n");
++			kfree(subdev_entity->asd);
+ 			goto cleanup_subdev;
+ 		}
+ 
 
 
