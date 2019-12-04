@@ -2,113 +2,174 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58404C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 02:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE12C43215
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 02:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BEC62068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 02:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04332068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 02:22:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QOHYHgfv"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="obsjUILe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfLDCWV (ORCPT
+        id S1726916AbfLDCWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 21:22:21 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:29015 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726179AbfLDCWV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 21:22:21 -0500
-X-UUID: 68ec0c3ab67948ca9baeb7e60e3fa6c4-20191204
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=gASy9TDuVsH5zwpxeW0BE8bxVb8mYW76DT6995xQhXA=;
-        b=QOHYHgfvSFD8m0DDWMic4GaD7zRffTP057Ws/SsQ1lzOhPCh3ga0IqjcmI/q4SbsWBKQZETxYEECbKtQFrKxv++xGGl9RZ7/J8ZXJdIbkji55JlP82QR1jYNIWi1oqgTPlTwy1VxLGwLqfEtrtULsmD3/Cv4N6yU+hnZYI5ienI=;
-X-UUID: 68ec0c3ab67948ca9baeb7e60e3fa6c4-20191204
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1382334364; Wed, 04 Dec 2019 10:22:16 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 4 Dec 2019 10:22:03 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 4 Dec 2019 10:21:56 +0800
-Message-ID: <1575426135.31411.2.camel@mtksdaap41>
-Subject: Re: [PATCH] soc: mediatek: cmdq: avoid racing condition with mutex
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
+        Tue, 3 Dec 2019 21:22:39 -0500
+Received: from mail-eopbgr140074.outbound.protection.outlook.com ([40.107.14.74]:63214
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726162AbfLDCWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 21:22:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EWXpsGUqmnSoSL+D9JlGrMBaOKJzjY2XsFGPM+W61/ld9BL9GTNQjxmoylC3ToaWnv8QyeUBVBOHcDzmTujSaxgCGQCTxOSqSn6Ey8dEWT7AQncFv0PlK6K5xQdY3TIcrUDvDeKLBmIfSlB0+RvVSMN4uerMzObfm8tyUZH/c1nAj7qYGyG0PtuB3MVPeNQuG1xZ2BkxNdq99z3v86M2kI1t0YBl0CxlO85ipl9w8JnHBoYYtvOLojKZOJwJ+tg3HiXXQn3fzlrwFUezXTN6iTdqJLpCrhBINBZkkRF2Gt2XnDgFnTwRCDArPy21Atzib/6hc2YSZZd7HJc72bRZew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DbJxBly5TyryvPHM5vQVZjy9njGk9fxennF/bq0h/S8=;
+ b=Gfx2HF0jt1MOmVazZ1LOfX34recCKCwqlVDOKr097FuxCj1/zpHqScTMwIuxZ7H6RLCu/J8OmqXCLj6+6ZJT64IsUNegZwJSZ4iy5Hv+03BL3W2/OWtaz+0Bfegcsx7l/3A0zA7cn+6OtwfOdW54az+nu3plvJF7zbTAO3vN3dWv4sqdzvQNocOT0jjEg27LufG/kEKbKNbXUYOJzFzYvoHBCsKKITAC3P9DKwDbzGb1YpVTLxmsV0L7hpNd9PcPZRkiqgpQcGv25L+jju0S0DDl5KrIHfyHAW7eZegSBiVnLGxLkR0IbsSpctaDcuxv2EmMv2mBNGPjolNwgWWd0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DbJxBly5TyryvPHM5vQVZjy9njGk9fxennF/bq0h/S8=;
+ b=obsjUILeJyx3tedyCjXh8WB8lmZEIuqCh8EvNfi4O8EOgqx/w+4dpp8u5otApOV+GIK8Qwr7fsOGq6RQxPr4RH5rT0ZDlVCsXrzt9s21eZBwAUStd2gSzqRwmMI7xMu3WnT67S90n9lGRf3hDqYJUzrsdAIZNitVGdqz8nqhihI=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4786.eurprd04.prod.outlook.com (20.177.42.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.21; Wed, 4 Dec 2019 02:22:35 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 02:22:35 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>
-Date:   Wed, 4 Dec 2019 10:22:15 +0800
-In-Reply-To: <20191121072910.31665-1-bibby.hsieh@mediatek.com>
-References: <20191121072910.31665-1-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Subject: RE: [PATCH] clk: imx: pll14xx: fix clk_pll14xx_wait_lock
+Thread-Topic: [PATCH] clk: imx: pll14xx: fix clk_pll14xx_wait_lock
+Thread-Index: AQHVlGNoepC2TDBj7kaCYRyt+h3yD6epaaSAgAAAaIA=
+Date:   Wed, 4 Dec 2019 02:22:34 +0000
+Message-ID: <AM0PR04MB4481A56B3651CDE63465B7AB885D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1573018178-14939-1-git-send-email-peng.fan@nxp.com>
+ <20191204021908.GN9767@dragon>
+In-Reply-To: <20191204021908.GN9767@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d01cdf88-d1a0-4354-54dd-08d77860d321
+x-ms-traffictypediagnostic: AM0PR04MB4786:|AM0PR04MB4786:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB4786C49AF7A7D316D0AAF7E9885D0@AM0PR04MB4786.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(366004)(396003)(39860400002)(189003)(199004)(6116002)(186003)(11346002)(3846002)(44832011)(446003)(52536014)(4326008)(7696005)(76176011)(6916009)(478600001)(14454004)(6506007)(8676002)(71190400001)(102836004)(71200400001)(25786009)(81166006)(81156014)(26005)(5660300002)(66476007)(2906002)(33656002)(66446008)(66556008)(64756008)(305945005)(66946007)(14444005)(86362001)(229853002)(55016002)(8936002)(9686003)(7736002)(256004)(74316002)(316002)(6246003)(99286004)(6436002)(54906003)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4786;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jB5wnzL9ifjnbHUL6Zt6wdNhFMZm0bMiZE3MWa4DY4O77bsEHBpS1bTSaXDBv1lyxbtFRVachYSlKMYlX4RL8fWPVbcsfK42Ih5jICJQP4kr2kelo3yuFnwtJAUManzeO6TpCtjkW95kT4ViPuVcDicXuFD4YAQKsERmXq3xiovx7L4pKe7Z+M/Txs45kQNaMzlKfi7nxNn4WIeYD3bUMKHuUskbkj4ZA2J+uYVrCwgrpGwjqM3bXWlOOdAMSoNFU5ldzlR0v6zmDkrL3wsr6DTcQ+RlkHzFt5e22lHnQy0dsCeyfbv2/Mc/H8/jZ9/BycCVgLyJs/D/uLZ/uzY7tI3QmQ/p/mm2ul1tHzEnb2Vg9rwESIEXn6yejFHN/+wfHZhbVC1mmR20BzhuGgpPrlHvK3CwYGJ6VCsreiqkaIwqrKS6+nZtslzoGgM99v3g
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d01cdf88-d1a0-4354-54dd-08d77860d321
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 02:22:34.9645
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8zHnylVv9WZUNY0q/sK3wRhd7h2v8lTLBn+vp/zliJm/83ROl3CcjjirzWvKZ7O+Co5Lm6pp75fWWYAu3do02Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4786
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEphc3NpOg0KDQpBcmUgbWJveF9zZW5kX21lc3NhZ2UoKSBhbmQgbWJveF9jbGllbnRfdHhk
-b25lKCkgdGhyZWFkLXNhZmU/IElmIHRoZXNlDQp0d28gYXJlIHRocmVhZC1zYWZlLCB0aGlzIGJ1
-ZyBzaG91bGQgYmUgZml4ZWQgaW4gbWFpbGJveCBjb3JlIG5vdA0KY2xpZW50Lg0KDQpSZWdhcmRz
-LA0KQ0sNCg0KT24gVGh1LCAyMDE5LTExLTIxIGF0IDE1OjI5ICswODAwLCBCaWJieSBIc2llaCB3
-cm90ZToNCj4gSWYgY21kcSBjbGllbnQgaXMgbXVsdGkgdGhyZWFkIHVzZXIsIHJhY2luZyB3aWxs
-IG9jY3VyIHdpdGhvdXQgbXV0ZXgNCj4gcHJvdGVjdGlvbi4gSXQgd2lsbCBtYWtlIHRoZSBDIG1l
-c3NhZ2UgcXVldWVkIGluIG1haWxib3gncyBxdWV1ZQ0KPiBhbHdheXMgbmVlZCBEIG1lc3NhZ2Un
-cyB0cmlnZ2VyaW5nLg0KPiANCj4gVGhyZWFkIEEJCVRocmVhZCBCCQkgIFRocmVhZCBDCQlUaHJl
-YWQgRC4uLg0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiBtYm94X3NlbmRfbWVzc2Fn
-ZSgpDQo+IAlzZW5kX2RhdGEoKQ0KPiAJCQltYm94X3NlbmRfbWVzc2FnZSgpDQo+IAkJCQkqZXhp
-dA0KPiAJCQkJCQltYm94X3NlbmRfbWVzc2FnZSgpDQo+IAkJCQkJCQkqZXhpdA0KPiBtYm94X2Ns
-aWVudF90eGRvbmUoKQ0KPiAJdHhfdGljaygpDQo+IAkJCW1ib3hfY2xpZW50X3R4ZG9uZSgpDQo+
-IAkJCQl0eF90aWNrKCkNCj4gCQkJCQkJbWJveF9jbGllbnRfdHhkb25lKCkNCj4gCQkJCQkJCXR4
-X3RpY2soKQ0KPiBtc2dfc3VibWl0KCkNCj4gCXNlbmRfZGF0YSgpDQo+IAkJCW1zZ19zdWJtaXQo
-KQ0KPiAJCQkJKmV4aXQNCj4gCQkJCQkJbXNnX3N1Ym1pdCgpDQo+IAkJCQkJCQkqZXhpdA0KPiAt
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiANCj4gU2lnbmVkLW9mZi1ieTogQmliYnkgSHNp
-ZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3NvYy9tZWRp
-YXRlay9tdGstY21kcS1oZWxwZXIuYyB8IDMgKysrDQo+ICBpbmNsdWRlL2xpbnV4L3NvYy9tZWRp
-YXRlay9tdGstY21kcS5oICB8IDEgKw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
-KykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxw
-ZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IGluZGV4IDlh
-ZGQwZmQ1ZmE2Yy4uOWUzNWUwYmVmZmFhIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9tZWRp
-YXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGst
-Y21kcS1oZWxwZXIuYw0KPiBAQCAtODEsNiArODEsNyBAQCBzdHJ1Y3QgY21kcV9jbGllbnQgKmNt
-ZHFfbWJveF9jcmVhdGUoc3RydWN0IGRldmljZSAqZGV2LCBpbnQgaW5kZXgsIHUzMiB0aW1lb3V0
-KQ0KPiAgCWNsaWVudC0+Y2xpZW50LmRldiA9IGRldjsNCj4gIAljbGllbnQtPmNsaWVudC50eF9i
-bG9jayA9IGZhbHNlOw0KPiAgCWNsaWVudC0+Y2hhbiA9IG1ib3hfcmVxdWVzdF9jaGFubmVsKCZj
-bGllbnQtPmNsaWVudCwgaW5kZXgpOw0KPiArCW11dGV4X2luaXQoJmNsaWVudC0+bXV0ZXgpOw0K
-PiAgDQo+ICAJaWYgKElTX0VSUihjbGllbnQtPmNoYW4pKSB7DQo+ICAJCWxvbmcgZXJyOw0KPiBA
-QCAtMzUyLDkgKzM1MywxMSBAQCBpbnQgY21kcV9wa3RfZmx1c2hfYXN5bmMoc3RydWN0IGNtZHFf
-cGt0ICpwa3QsIGNtZHFfYXN5bmNfZmx1c2hfY2IgY2IsDQo+ICAJCXNwaW5fdW5sb2NrX2lycXJl
-c3RvcmUoJmNsaWVudC0+bG9jaywgZmxhZ3MpOw0KPiAgCX0NCj4gIA0KPiArCW11dGV4X2xvY2so
-JmNsaWVudC0+bXV0ZXgpOw0KPiAgCW1ib3hfc2VuZF9tZXNzYWdlKGNsaWVudC0+Y2hhbiwgcGt0
-KTsNCj4gIAkvKiBXZSBjYW4gc2VuZCBuZXh0IHBhY2tldCBpbW1lZGlhdGVseSwgc28ganVzdCBj
-YWxsIHR4ZG9uZS4gKi8NCj4gIAltYm94X2NsaWVudF90eGRvbmUoY2xpZW50LT5jaGFuLCAwKTsN
-Cj4gKwltdXRleF91bmxvY2soJmNsaWVudC0+bXV0ZXgpOw0KPiAgDQo+ICAJcmV0dXJuIDA7DQo+
-ICB9DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5o
-IGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiBpbmRleCBhNzRjMWQ1
-YWNkZjMuLjBmOTA3MWNkMWJjNyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9zb2MvbWVk
-aWF0ZWsvbXRrLWNtZHEuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGst
-Y21kcS5oDQo+IEBAIC0yOCw2ICsyOCw3IEBAIHN0cnVjdCBjbWRxX2NsaWVudCB7DQo+ICAJc3Ry
-dWN0IG1ib3hfY2hhbiAqY2hhbjsNCj4gIAlzdHJ1Y3QgdGltZXJfbGlzdCB0aW1lcjsNCj4gIAl1
-MzIgdGltZW91dF9tczsgLyogaW4gdW5pdCBvZiBtaWNyb3NlY29uZCAqLw0KPiArCXN0cnVjdCBt
-dXRleCBtdXRleDsNCj4gIH07DQo+ICANCj4gIC8qKg0KDQo=
+Hi Shawn,
 
+> Subject: Re: [PATCH] clk: imx: pll14xx: fix clk_pll14xx_wait_lock
+>=20
+> On Wed, Nov 06, 2019 at 05:31:15AM +0000, Peng Fan wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > The usage of readl_poll_timeout is wrong, the cond should be "val &
+> > LOCK_STATUS" not "val & LOCK_TIMEOUT_US".
+>=20
+> Is this caught just by code inspection or a real world bug?=20
+
+Code inspection.
+
+ If you want this
+> get into -rc (and stable kernel) as a fix, you should add more informatio=
+n
+> about the bug, like how it's been triggered, what's the consequence of th=
+e
+> bug, and kernel dump message etc.
+>=20
+> >
+> > Fixes: 8646d4dcc7fb ("clk: imx: Add PLLs driver for imx8mm soc")
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >
+> > V1:
+> >  Hi Shawn,
+> >    This patch is made based on 5.4-rc6, not your for-next branch,
+>=20
+> Please rebase it on 5.5-rc1 which will be coming next Monday.
+
+ok. I'll wait 5.5-rc1, then rebase and post v2.
+
+>=20
+> >    not sure whether this patch could catch 5.4 release.
+>=20
+> You can Cc stable kernel, so that it will be back ported.
+
+ok.
+
+Thanks,
+Peng.
+
+>=20
+> Shawn
+>=20
+> >
+> >  drivers/clk/imx/clk-pll14xx.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/clk/imx/clk-pll14xx.c
+> > b/drivers/clk/imx/clk-pll14xx.c index 7a815ec76aa5..d43b4a3c0de8
+> > 100644
+> > --- a/drivers/clk/imx/clk-pll14xx.c
+> > +++ b/drivers/clk/imx/clk-pll14xx.c
+> > @@ -153,7 +153,7 @@ static int clk_pll14xx_wait_lock(struct
+> > clk_pll14xx *pll)  {
+> >  	u32 val;
+> >
+> > -	return readl_poll_timeout(pll->base, val, val & LOCK_TIMEOUT_US, 0,
+> > +	return readl_poll_timeout(pll->base, val, val & LOCK_STATUS, 0,
+> >  			LOCK_TIMEOUT_US);
+> >  }
+> >
+> > --
+> > 2.16.4
+> >
