@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E59C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE54C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60BD0206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B2C206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbfLDUqO (ORCPT
+        id S1728295AbfLDUqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 15:46:14 -0500
-Received: from relay.sw.ru ([185.231.240.75]:50564 "EHLO relay.sw.ru"
+        Wed, 4 Dec 2019 15:46:17 -0500
+Received: from relay.sw.ru ([185.231.240.75]:50568 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727889AbfLDUqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 15:46:14 -0500
+        id S1727911AbfLDUqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 15:46:16 -0500
 Received: from dhcp-172-16-25-5.sw.ru ([172.16.25.5] helo=i7.sw.ru)
         by relay.sw.ru with esmtp (Exim 4.92.3)
         (envelope-from <aryabinin@virtuozzo.com>)
-        id 1icbWy-0001lh-Pk; Wed, 04 Dec 2019 23:45:53 +0300
+        id 1icbWx-0001lh-Px; Wed, 04 Dec 2019 23:45:52 +0300
 From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Alexander Potapenko <glider@google.com>,
         Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
         Daniel Axtens <dja@axtens.net>, Qian Cai <cai@lca.pw>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Subject: [PATCH 2/2] kasan: Don't allocate page tables in kasan_release_vmalloc()
-Date:   Wed,  4 Dec 2019 23:45:34 +0300
-Message-Id: <20191204204534.32202-2-aryabinin@virtuozzo.com>
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        syzbot+82e323920b78d54aaed5@syzkaller.appspotmail.com
+Subject: [PATCH 1/2] kasan: fix crashes on access to memory mapped by vm_map_ram()
+Date:   Wed,  4 Dec 2019 23:45:33 +0300
+Message-Id: <20191204204534.32202-1-aryabinin@virtuozzo.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191204204534.32202-1-aryabinin@virtuozzo.com>
-References: <20191204204534.32202-1-aryabinin@virtuozzo.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,172 +42,247 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The purpose of kasan_release_vmalloc() is to unmap and deallocate shadow
-memory. The usage of apply_to_page_range() isn't suitable in that scenario
-because it allocates pages to fill missing page tables entries.
-This also cause sleep in atomic bug:
+With CONFIG_KASAN_VMALLOC=y any use of memory obtained via vm_map_ram()
+will crash because there is no shadow backing that memory.
 
-	BUG: sleeping function called from invalid context at mm/page_alloc.c:4681
-	in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 15087, name:
-
-	Call Trace:
-	 __dump_stack lib/dump_stack.c:77 [inline]
-	 dump_stack+0x199/0x216 lib/dump_stack.c:118
-	 ___might_sleep.cold.97+0x1f5/0x238 kernel/sched/core.c:6800
-	 __might_sleep+0x95/0x190 kernel/sched/core.c:6753
-	 prepare_alloc_pages mm/page_alloc.c:4681 [inline]
-	 __alloc_pages_nodemask+0x3cd/0x890 mm/page_alloc.c:4730
-	 alloc_pages_current+0x10c/0x210 mm/mempolicy.c:2211
-	 alloc_pages include/linux/gfp.h:532 [inline]
-	 __get_free_pages+0xc/0x40 mm/page_alloc.c:4786
-	 __pte_alloc_one_kernel include/asm-generic/pgalloc.h:21 [inline]
-	 pte_alloc_one_kernel include/asm-generic/pgalloc.h:33 [inline]
-	 __pte_alloc_kernel+0x1d/0x200 mm/memory.c:459
-	 apply_to_pte_range mm/memory.c:2031 [inline]
-	 apply_to_pmd_range mm/memory.c:2068 [inline]
-	 apply_to_pud_range mm/memory.c:2088 [inline]
-	 apply_to_p4d_range mm/memory.c:2108 [inline]
-	 apply_to_page_range+0x77d/0xa00 mm/memory.c:2133
-	 kasan_release_vmalloc+0xa7/0xc0 mm/kasan/common.c:970
-	 __purge_vmap_area_lazy+0xcbb/0x1f30 mm/vmalloc.c:1313
-	 try_purge_vmap_area_lazy mm/vmalloc.c:1332 [inline]
-	 free_vmap_area_noflush+0x2ca/0x390 mm/vmalloc.c:1368
-	 free_unmap_vmap_area mm/vmalloc.c:1381 [inline]
-	 remove_vm_area+0x1cc/0x230 mm/vmalloc.c:2209
-	 vm_remove_mappings mm/vmalloc.c:2236 [inline]
-	 __vunmap+0x223/0xa20 mm/vmalloc.c:2299
-	 __vfree+0x3f/0xd0 mm/vmalloc.c:2356
-	 __vmalloc_area_node mm/vmalloc.c:2507 [inline]
-	 __vmalloc_node_range+0x5d5/0x810 mm/vmalloc.c:2547
-	 __vmalloc_node mm/vmalloc.c:2607 [inline]
-	 __vmalloc_node_flags mm/vmalloc.c:2621 [inline]
-	 vzalloc+0x6f/0x80 mm/vmalloc.c:2666
-	 alloc_one_pg_vec_page net/packet/af_packet.c:4233 [inline]
-	 alloc_pg_vec net/packet/af_packet.c:4258 [inline]
-	 packet_set_ring+0xbc0/0x1b50 net/packet/af_packet.c:4342
-	 packet_setsockopt+0xed7/0x2d90 net/packet/af_packet.c:3695
-	 __sys_setsockopt+0x29b/0x4d0 net/socket.c:2117
-	 __do_sys_setsockopt net/socket.c:2133 [inline]
-	 __se_sys_setsockopt net/socket.c:2130 [inline]
-	 __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2130
-	 do_syscall_64+0xfa/0x780 arch/x86/entry/common.c:294
-	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Add kasan_unmap_page_range() which skips empty page table entries instead
-of allocating them.
+Instead of sprinkling additional kasan_populate_vmalloc() calls all over
+the vmalloc code, move it into alloc_vmap_area(). This will fix
+vm_map_ram() and simplify the code a bit.
 
 Fixes: 3c5c3cfb9ef4 ("kasan: support backing vmalloc space with real shadow memory")
 Reported-by: Dmitry Vyukov <dvyukov@google.com>
+Reported-by: syzbot+82e323920b78d54aaed5@syzkaller.appspotmail.com
 Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
 ---
- mm/kasan/common.c | 82 +++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 68 insertions(+), 14 deletions(-)
+ include/linux/kasan.h | 15 +++++++++------
+ mm/kasan/common.c     | 27 +++++++++++++++++---------
+ mm/vmalloc.c          | 45 ++++++++++++++++++-------------------------
+ 3 files changed, 46 insertions(+), 41 deletions(-)
 
+diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+index 4f404c565db1..e18fe54969e9 100644
+--- a/include/linux/kasan.h
++++ b/include/linux/kasan.h
+@@ -205,20 +205,23 @@ static inline void *kasan_reset_tag(const void *addr)
+ #endif /* CONFIG_KASAN_SW_TAGS */
+ 
+ #ifdef CONFIG_KASAN_VMALLOC
+-int kasan_populate_vmalloc(unsigned long requested_size,
+-			   struct vm_struct *area);
+-void kasan_poison_vmalloc(void *start, unsigned long size);
++int kasan_populate_vmalloc(unsigned long addr, unsigned long size);
++void kasan_poison_vmalloc(const void *start, unsigned long size);
++void kasan_unpoison_vmalloc(const void *start, unsigned long size);
+ void kasan_release_vmalloc(unsigned long start, unsigned long end,
+ 			   unsigned long free_region_start,
+ 			   unsigned long free_region_end);
+ #else
+-static inline int kasan_populate_vmalloc(unsigned long requested_size,
+-					 struct vm_struct *area)
++static inline int kasan_populate_vmalloc(unsigned long start,
++					unsigned long size)
+ {
+ 	return 0;
+ }
+ 
+-static inline void kasan_poison_vmalloc(void *start, unsigned long size) {}
++static inline void kasan_poison_vmalloc(const void *start, unsigned long size)
++{ }
++static inline void kasan_unpoison_vmalloc(const void *start, unsigned long size)
++{ }
+ static inline void kasan_release_vmalloc(unsigned long start,
+ 					 unsigned long end,
+ 					 unsigned long free_region_start,
 diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-index a1e6273be8c3..e9ba7d8ad324 100644
+index df3371d5c572..a1e6273be8c3 100644
 --- a/mm/kasan/common.c
 +++ b/mm/kasan/common.c
-@@ -857,22 +857,77 @@ void kasan_unpoison_vmalloc(const void *start, unsigned long size)
- 	kasan_unpoison_shadow(start, size);
+@@ -777,15 +777,17 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+ 	return 0;
  }
  
--static int kasan_depopulate_vmalloc_pte(pte_t *ptep, unsigned long addr,
--					void *unused)
-+static void kasan_unmap_pte_range(pmd_t *pmd, unsigned long addr,
-+				unsigned long end)
+-int kasan_populate_vmalloc(unsigned long requested_size, struct vm_struct *area)
++int kasan_populate_vmalloc(unsigned long addr, unsigned long size)
  {
--	unsigned long page;
-+	pte_t *pte;
+ 	unsigned long shadow_start, shadow_end;
+ 	int ret;
  
--	page = (unsigned long)__va(pte_pfn(*ptep) << PAGE_SHIFT);
-+	pte = pte_offset_kernel(pmd, addr);
-+	do {
-+		pte_t ptent = ptep_get_and_clear(&init_mm, addr, pte);
+-	shadow_start = (unsigned long)kasan_mem_to_shadow(area->addr);
++	if (!is_vmalloc_or_module_addr((void *)addr))
++		return 0;
++
++	shadow_start = (unsigned long)kasan_mem_to_shadow((void *)addr);
+ 	shadow_start = ALIGN_DOWN(shadow_start, PAGE_SIZE);
+-	shadow_end = (unsigned long)kasan_mem_to_shadow(area->addr +
+-							area->size);
++	shadow_end = (unsigned long)kasan_mem_to_shadow((void *)addr + size);
+ 	shadow_end = ALIGN(shadow_end, PAGE_SIZE);
  
--	spin_lock(&init_mm.page_table_lock);
-+		if (!pte_none(ptent))
-+			__free_page(pte_page(ptent));
-+	} while (pte++, addr += PAGE_SIZE, addr != end);
-+}
+ 	ret = apply_to_page_range(&init_mm, shadow_start,
+@@ -796,10 +798,6 @@ int kasan_populate_vmalloc(unsigned long requested_size, struct vm_struct *area)
  
--	if (likely(!pte_none(*ptep))) {
--		pte_clear(&init_mm, addr, ptep);
--		free_page(page);
--	}
--	spin_unlock(&init_mm.page_table_lock);
-+static void kasan_unmap_pmd_range(pud_t *pud, unsigned long addr,
-+				unsigned long end)
-+{
-+	pmd_t *pmd;
-+	unsigned long next;
+ 	flush_cache_vmap(shadow_start, shadow_end);
  
--	return 0;
-+	pmd = pmd_offset(pud, addr);
-+	do {
-+		next = pmd_addr_end(addr, end);
-+		if (pmd_none_or_clear_bad(pmd))
-+			continue;
-+		kasan_unmap_pte_range(pmd, addr, next);
-+	} while (pmd++, addr = next, addr != end);
-+}
+-	kasan_unpoison_shadow(area->addr, requested_size);
+-
+-	area->flags |= VM_KASAN;
+-
+ 	/*
+ 	 * We need to be careful about inter-cpu effects here. Consider:
+ 	 *
+@@ -842,12 +840,23 @@ int kasan_populate_vmalloc(unsigned long requested_size, struct vm_struct *area)
+  * Poison the shadow for a vmalloc region. Called as part of the
+  * freeing process at the time the region is freed.
+  */
+-void kasan_poison_vmalloc(void *start, unsigned long size)
++void kasan_poison_vmalloc(const void *start, unsigned long size)
+ {
++	if (!is_vmalloc_or_module_addr(start))
++		return;
 +
-+static void kasan_unmap_pud_range(p4d_t *p4d, unsigned long addr,
-+				unsigned long end)
-+{
-+	pud_t *pud;
-+	unsigned long next;
-+
-+	pud = pud_offset(p4d, addr);
-+	do {
-+		next = pud_addr_end(addr, end);
-+		if (pud_none_or_clear_bad(pud))
-+			continue;
-+		kasan_unmap_pmd_range(pud, addr, next);
-+	} while (pud++, addr = next, addr != end);
-+}
-+
-+static void kasan_unmap_p4d_range(pgd_t *pgd, unsigned long addr,
-+				unsigned long end)
-+{
-+	p4d_t *p4d;
-+	unsigned long next;
-+
-+	p4d = p4d_offset(pgd, addr);
-+	do {
-+		next = p4d_addr_end(addr, end);
-+		if (p4d_none_or_clear_bad(p4d))
-+			continue;
-+		kasan_unmap_pud_range(p4d, addr, next);
-+	} while (p4d++, addr = next, addr != end);
-+}
-+
-+static void kasan_unmap_page_range(unsigned long addr, unsigned long end)
-+{
-+	pgd_t *pgd;
-+	unsigned long next;
-+
-+	pgd = pgd_offset_k(addr);
-+	do {
-+		next = pgd_addr_end(addr, end);
-+		if (pgd_none_or_clear_bad(pgd))
-+			continue;
-+		kasan_unmap_p4d_range(pgd, addr, next);
-+	} while (pgd++, addr = next, addr != end);
+ 	size = round_up(size, KASAN_SHADOW_SCALE_SIZE);
+ 	kasan_poison_shadow(start, size, KASAN_VMALLOC_INVALID);
  }
  
- /*
-@@ -978,9 +1033,8 @@ void kasan_release_vmalloc(unsigned long start, unsigned long end,
- 	shadow_end = kasan_mem_to_shadow((void *)region_end);
++void kasan_unpoison_vmalloc(const void *start, unsigned long size)
++{
++	if (!is_vmalloc_or_module_addr(start))
++		return;
++
++	kasan_unpoison_shadow(start, size);
++}
++
+ static int kasan_depopulate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+ 					void *unused)
+ {
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 4d3b3d60d893..a5412f14f57f 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1073,6 +1073,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 	struct vmap_area *va, *pva;
+ 	unsigned long addr;
+ 	int purged = 0;
++	int ret = -EBUSY;
  
- 	if (shadow_end > shadow_start) {
--		apply_to_page_range(&init_mm, (unsigned long)shadow_start,
--				    (unsigned long)(shadow_end - shadow_start),
--				    kasan_depopulate_vmalloc_pte, NULL);
-+		kasan_unmap_page_range((unsigned long)shadow_start,
-+				    (unsigned long)shadow_end);
- 		flush_tlb_kernel_range((unsigned long)shadow_start,
- 				       (unsigned long)shadow_end);
+ 	BUG_ON(!size);
+ 	BUG_ON(offset_in_page(size));
+@@ -1139,6 +1140,10 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 	va->va_end = addr + size;
+ 	va->vm = NULL;
+ 
++	ret = kasan_populate_vmalloc(addr, size);
++	if (ret)
++		goto out;
++
+ 	spin_lock(&vmap_area_lock);
+ 	insert_vmap_area(va, &vmap_area_root, &vmap_area_list);
+ 	spin_unlock(&vmap_area_lock);
+@@ -1169,8 +1174,9 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 		pr_warn("vmap allocation for size %lu failed: use vmalloc=<size> to increase size\n",
+ 			size);
+ 
++out:
+ 	kmem_cache_free(vmap_area_cachep, va);
+-	return ERR_PTR(-EBUSY);
++	return ERR_PTR(ret);
+ }
+ 
+ int register_vmap_purge_notifier(struct notifier_block *nb)
+@@ -1771,6 +1777,8 @@ void vm_unmap_ram(const void *mem, unsigned int count)
+ 	BUG_ON(addr > VMALLOC_END);
+ 	BUG_ON(!PAGE_ALIGNED(addr));
+ 
++	kasan_poison_vmalloc(mem, size);
++
+ 	if (likely(count <= VMAP_MAX_ALLOC)) {
+ 		debug_check_no_locks_freed(mem, size);
+ 		vb_free(mem, size);
+@@ -1821,6 +1829,9 @@ void *vm_map_ram(struct page **pages, unsigned int count, int node, pgprot_t pro
+ 		addr = va->va_start;
+ 		mem = (void *)addr;
  	}
++
++	kasan_unpoison_vmalloc(mem, size);
++
+ 	if (vmap_page_range(addr, addr + size, prot, pages) < 0) {
+ 		vm_unmap_ram(mem, count);
+ 		return NULL;
+@@ -2075,6 +2086,7 @@ static struct vm_struct *__get_vm_area_node(unsigned long size,
+ {
+ 	struct vmap_area *va;
+ 	struct vm_struct *area;
++	unsigned long requested_size = size;
+ 
+ 	BUG_ON(in_interrupt());
+ 	size = PAGE_ALIGN(size);
+@@ -2098,23 +2110,9 @@ static struct vm_struct *__get_vm_area_node(unsigned long size,
+ 		return NULL;
+ 	}
+ 
+-	setup_vmalloc_vm(area, va, flags, caller);
++	kasan_unpoison_vmalloc((void *)va->va_start, requested_size);
+ 
+-	/*
+-	 * For KASAN, if we are in vmalloc space, we need to cover the shadow
+-	 * area with real memory. If we come here through VM_ALLOC, this is
+-	 * done by a higher level function that has access to the true size,
+-	 * which might not be a full page.
+-	 *
+-	 * We assume module space comes via VM_ALLOC path.
+-	 */
+-	if (is_vmalloc_addr(area->addr) && !(area->flags & VM_ALLOC)) {
+-		if (kasan_populate_vmalloc(area->size, area)) {
+-			unmap_vmap_area(va);
+-			kfree(area);
+-			return NULL;
+-		}
+-	}
++	setup_vmalloc_vm(area, va, flags, caller);
+ 
+ 	return area;
+ }
+@@ -2293,8 +2291,7 @@ static void __vunmap(const void *addr, int deallocate_pages)
+ 	debug_check_no_locks_freed(area->addr, get_vm_area_size(area));
+ 	debug_check_no_obj_freed(area->addr, get_vm_area_size(area));
+ 
+-	if (area->flags & VM_KASAN)
+-		kasan_poison_vmalloc(area->addr, area->size);
++	kasan_poison_vmalloc(area->addr, area->size);
+ 
+ 	vm_remove_mappings(area, deallocate_pages);
+ 
+@@ -2539,7 +2536,7 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
+ 	if (!size || (size >> PAGE_SHIFT) > totalram_pages())
+ 		goto fail;
+ 
+-	area = __get_vm_area_node(size, align, VM_ALLOC | VM_UNINITIALIZED |
++	area = __get_vm_area_node(real_size, align, VM_ALLOC | VM_UNINITIALIZED |
+ 				vm_flags, start, end, node, gfp_mask, caller);
+ 	if (!area)
+ 		goto fail;
+@@ -2548,11 +2545,6 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
+ 	if (!addr)
+ 		return NULL;
+ 
+-	if (is_vmalloc_or_module_addr(area->addr)) {
+-		if (kasan_populate_vmalloc(real_size, area))
+-			return NULL;
+-	}
+-
+ 	/*
+ 	 * In this function, newly allocated vm_struct has VM_UNINITIALIZED
+ 	 * flag. It means that vm_struct is not fully initialized.
+@@ -3437,7 +3429,8 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
+ 	/* populate the shadow space outside of the lock */
+ 	for (area = 0; area < nr_vms; area++) {
+ 		/* assume success here */
+-		kasan_populate_vmalloc(sizes[area], vms[area]);
++		kasan_populate_vmalloc(vas[area]->va_start, sizes[area]);
++		kasan_unpoison_vmalloc((void *)vms[area]->addr, sizes[area]);
+ 	}
+ 
+ 	kfree(vas);
 -- 
 2.23.0
 
