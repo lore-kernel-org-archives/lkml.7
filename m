@@ -2,116 +2,95 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D256C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA1EC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FFFC20803
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:57:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CjK94ZRk"
+	by mail.kernel.org (Postfix) with ESMTP id 9349B20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbfLDM5L (ORCPT
+        id S1727726AbfLDNAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:57:11 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33668 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfLDM5L (ORCPT
+        Wed, 4 Dec 2019 08:00:09 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:56672 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727445AbfLDNAJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:57:11 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b6so8541235wrq.0;
-        Wed, 04 Dec 2019 04:57:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WX9DsnxjR1TLkIQAS0BjsZD23PSgQu93DSuzJlaRss8=;
-        b=CjK94ZRk2M/LKqEEX5rm/3WkZf/HiI3Q+vVXDbZOZxQNFGaqW6DwTHkkkx84vRfS+M
-         U4ORtkjPBA9iSMbi9wpu7YmMFTp+pNz3ylxcjalwvJv2KZQBId8X2noNPl++SsRNODK7
-         QHPvskaMNV5R762Lpb7nY4iTA+SdVhlMhJxfRgfvM6jxwD1ZNI97gcI1rUhzyzNaVE+Q
-         k0Bc2/yGbWtp6U/eTSBRlksg5lobZN4iEcrEFCI2rqfgwYhIgxNwI1rIPCeNNltPaVVM
-         rHvfdkl+vcc+QKkCwM59zcflNAcevYc8jww4nTJSaG3Zq6ZEE7D6XZBEvNXC3R/zck1W
-         +j6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WX9DsnxjR1TLkIQAS0BjsZD23PSgQu93DSuzJlaRss8=;
-        b=pxgNVOgwIvkOfmoXERfwOH0Kiku7SN/V9+mRNatB+tUZlpcj0uYwx5WnpaNTD/h+Bd
-         FdO7FGNayoTnSeKaMPfDIUIXSSeA7nmuZCyWmKzmCw2FcB3v4lR7G/zKeimLjUfAiz7A
-         Q2VD6++zB64LPRbGsrpdkOzZSSHvLQvPyKyZl6ISblWtB72CYBcpCxbFqp9NmQARmOyE
-         4tNKgnF6F+CHHulI5AHx3fnf3odzuVoecz2oG/+592xMabSrd0c/h5eUH1c0jIf+QRtd
-         XbeGBNNUBzhauA4atFhpwvDRAoKCd74vw33T4c76gOTH36Q10/A6S6PCU6BmM734gnrA
-         wJ3A==
-X-Gm-Message-State: APjAAAUfurpV8ZteyShaiPCn2cp8mPWYI9Py+2MaEZqvrtBKcn7EglMl
-        1NQpLXO8iycKOaavmZ+Zx2n59nnzmR3CQucjwSM=
-X-Google-Smtp-Source: APXvYqzndsNueQS92Xe4B1d71REsjlvqx9ynvD8CvVkru+ORVDr1gVmjag6dLc6gMBN+1fpeYUjla8YjTCCO/YsvQMA=
-X-Received: by 2002:adf:dd52:: with SMTP id u18mr3950790wrm.131.1575464228649;
- Wed, 04 Dec 2019 04:57:08 -0800 (PST)
+        Wed, 4 Dec 2019 08:00:09 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 8E02E1C246E; Wed,  4 Dec 2019 14:00:07 +0100 (CET)
+Date:   Wed, 4 Dec 2019 14:00:07 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 073/321] bus: ti-sysc: Check for no-reset and
+ no-idle flags at the child level
+Message-ID: <20191204130007.GB25176@duo.ucw.cz>
+References: <20191203223427.103571230@linuxfoundation.org>
+ <20191203223430.961774111@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20191204124816.1415359-1-colin.king@canonical.com>
-In-Reply-To: <20191204124816.1415359-1-colin.king@canonical.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 4 Dec 2019 14:56:57 +0200
-Message-ID: <CAEnQRZAEExdNS+=aSFb86OCgWfezEFHYvoAJBV4=DshEprRGrA@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: SOF: imx8: fix memory allocation failure check on priv->pd_dev
-To:     Colin King <colin.king@canonical.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="St7VIuEGZ6dlpu13"
+Content-Disposition: inline
+In-Reply-To: <20191203223430.961774111@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 2:49 PM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The memory allocation failure check for priv->pd_dev is incorrectly
-> pointer checking priv instead of priv->pd_dev. Fix this.
->
-> Addresses-Coverity: ("Logically dead code")
-> Fixes: 202acc565a1f ("ASoC: SOF: imx: Add i.MX8 HW support")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+--St7VIuEGZ6dlpu13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Good catch! Thanks Colin!
+On Tue 2019-12-03 23:32:19, Greg Kroah-Hartman wrote:
+> From: Tony Lindgren <tony@atomide.com>
+>=20
+> [ Upstream commit 4014c08ba39476a18af546186da625a6833a1529 ]
+>=20
+> With ti-sysc, we need to now have the device tree properties for
+> ti,no-reset-on-init and ti,no-idle-on-init at the module level instead
+> of the child device level.
+>=20
+> Let's check for these properties at the child device level to enable
+> quirks, and warn about moving the properties to the module level.
+>=20
+> Otherwise am335x-evm based boards tagging gpio1 with ti,no-reset-on-init
+> will have their DDR power disabled if wired up in such a tricky way.
+>=20
+> Note that this should not be an issue for earlier kernels as we don't
+> rely on this until the dts files have been updated to probe with ti-sysc
+> interconnect target driver.
 
-> ---
->  sound/soc/sof/imx/imx8.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
-> index cfefcfd92798..9d926b1df0d7 100644
-> --- a/sound/soc/sof/imx/imx8.c
-> +++ b/sound/soc/sof/imx/imx8.c
-> @@ -209,7 +209,7 @@ static int imx8_probe(struct snd_sof_dev *sdev)
->
->         priv->pd_dev = devm_kmalloc_array(&pdev->dev, priv->num_domains,
->                                           sizeof(*priv->pd_dev), GFP_KERNEL);
-> -       if (!priv)
-> +       if (!priv->pd_dev)
->                 return -ENOMEM;
->
->         priv->link = devm_kmalloc_array(&pdev->dev, priv->num_domains,
-> --
-> 2.24.0
->
+This is queued for 4.19-stable, but the comment seems to say it is not
+needed in the older kernels.
+
+Tony, do we want this in 4.19?
+
+Best regards,
+							Pavel
+						=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--St7VIuEGZ6dlpu13
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXeet1wAKCRAw5/Bqldv6
+8ukEAKCxbTfOmsBX9h7gTCQD+NhQM6N2SwCePPnbgcNyJZVhJvwwHX7aARNci/w=
+=VUBL
+-----END PGP SIGNATURE-----
+
+--St7VIuEGZ6dlpu13--
