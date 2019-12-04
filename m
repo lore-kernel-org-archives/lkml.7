@@ -2,141 +2,113 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A5AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F31F0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8B42084F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:35:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoheGBkS"
+	by mail.kernel.org (Postfix) with ESMTP id C690720865
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:35:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575462935;
+	bh=M1Wf/f30+BvSWegCWZV9CQ1OJDcWNvDUUneWC9hFQOQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hDM0r2L4TjUsP8AH8JW0OSYZiuimRxFcfQnwFOuuToQow3O2QC0wdv+ytWq3NKHb/
+	 X6C60rRK8jHDPvzhD0yVvjQjjBLRSlT2tQIgQFpWPmaURjIg4XBo/HEJrZPw4pciwF
+	 3LLw7M8Ct4QCc+LyXQLxenBzpbeemg7iSwdYg/7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbfLDMfW (ORCPT
+        id S1727833AbfLDMff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:35:22 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36870 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfLDMfW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:35:22 -0500
-Received: by mail-pj1-f67.google.com with SMTP id ep17so2965699pjb.4;
-        Wed, 04 Dec 2019 04:35:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YPZbrljyNjC5j7q28Y1yjStc3oy4UmLl5B93KBpnvIM=;
-        b=GoheGBkSxxZ2NEshTyIX/Ttdx3CJSOLqcHa40SoFDIs3V8urBZ3Jy4URycaDCzXoDH
-         00kh0HualCF0KBfW8fYntwGYmPSUdZ22u/QR3EofTFJsWQ6TcMkwd1OXg9oLm6JxvxZm
-         bh7DCHbBokIJvrielyZRpZafcDUqQQMh8vbMgvh7Vz8NUFQ46Mbq3qN5/tFiiO8xurk7
-         So4p+tUanA4K5Ik2NtvjKz0DpTV9Lm++Gg8/CTvcMNcdfwwlm5W/yCfEWCcWREG2oUqB
-         EJCWUvFMoATg4rTmyvIG/RMEYfjHS/0rzo+WBkqTYlmAooznA+cJNPnOVluzw6k/lT75
-         3Z3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YPZbrljyNjC5j7q28Y1yjStc3oy4UmLl5B93KBpnvIM=;
-        b=dwWAe1OmdkebWTKdRwfzKO4Ia2tCy5YeqLUy24J/ji6mVPuOSfUwKtPajBHMA89E/2
-         wHUog5PiukO+2R68v+uXLjOMsNoHKoUy6YqvXFJfej9xsV0NX36rda93BIlCSUCfp1ps
-         2jLD4Ue8R73z9K8dZeMKGfthtF/HfLiqZXpQ9d3LvUFN/6GvfULRgA6Y94Osq3/FdJ02
-         /K3uRtaeUatJgEcfe1ZsB6KQHhAjnlVoE9cUMPwheY38my3WsKiHALfTq7Iv7gFhanVJ
-         sEhdMW8Seai2jqQpkzJBYB4xyw4N49xItlYa5fm08D3rUhDwYp8gvYdwnjZ6ExMfDk8w
-         W96Q==
-X-Gm-Message-State: APjAAAUTxqDgLJYM7S4AtxaaPUA8Qmh23aH14LueSAWmy4lG5UJpDSNj
-        FubeK5uUV6dJy+/Ch09585qRW4QvPZ+qF9PqvGQ=
-X-Google-Smtp-Source: APXvYqwhVWSxxvAv2De28QrHHETKA2K8Fjug4l6wpXAC5Wz3wrCTeVAemgGKgq2ymv4AVWx6Z6UfSlORnOxvAsK067g=
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr3093142pjb.30.1575462921462;
- Wed, 04 Dec 2019 04:35:21 -0800 (PST)
+        Wed, 4 Dec 2019 07:35:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbfLDMfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 07:35:34 -0500
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7B2A20862;
+        Wed,  4 Dec 2019 12:35:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575462933;
+        bh=M1Wf/f30+BvSWegCWZV9CQ1OJDcWNvDUUneWC9hFQOQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=A+OJZidzgtdJt6409seAEyH45Ss0kz2SBVJ8TWk3Q0UceO0y4S6OsXy2bjaslg5lP
+         LK6ARqr0xZruFvxNrlV5jBQ6dU6ReePVQk9HAWRwyTXGhM4FszRdjBL0OgxolzqKS0
+         a9CRC+a0jEEIjKw+N+wMhE7DRPXw7GklS56VuPLw=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Darren Stevens <darren@stevens-zone.net>,
+        mad skateman <madskateman@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Paul Mackerras <paulus@samba.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH] powerpc: ensure that swiotlb buffer is allocated from low memory
+Date:   Wed,  4 Dec 2019 14:35:24 +0200
+Message-Id: <20191204123524.22919-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191204101042.4275-2-cleger@kalray.eu>
-In-Reply-To: <20191204101042.4275-2-cleger@kalray.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Dec 2019 14:35:11 +0200
-Message-ID: <CAHp75VfL5mRB0wy86_352nosKkKqVLZC_amCbLvhBTyNZztgRw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] gpio: export acpi_gpiochip_request_interrupts in gpio/driver.h
-To:     Clement Leger <cleger@kalray.eu>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 12:13 PM Clement Leger <cleger@kalray.eu> wrote:
->
-> dwapb-gpio driver which uses this function will be moved to pinctrl for
-> pinctrl support. Export this function in gpio/driver.h to allow using
-> it.
->
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-I don't think this is proper way to do it.
-The driver has to register IRQ chip and GPIO core will take care of
-ACPI related stuff.
+Some powerpc platforms (e.g. 85xx) limit DMA-able memory way below 4G. If a
+system has more physical memory than this limit, the swiotlb buffer is not
+addressable because it is allocated from memblock using top-down mode.
 
-> Signed-off-by: Clement Leger <cleger@kalray.eu>
-> ---
->  drivers/gpio/gpiolib-acpi.h |  4 ----
->  include/linux/gpio/driver.h | 12 ++++++++++++
->  2 files changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib-acpi.h b/drivers/gpio/gpiolib-acpi.h
-> index 1c6d65cf0629..ba2f187babe3 100644
-> --- a/drivers/gpio/gpiolib-acpi.h
-> +++ b/drivers/gpio/gpiolib-acpi.h
-> @@ -34,7 +34,6 @@ struct acpi_gpio_info {
->  void acpi_gpiochip_add(struct gpio_chip *chip);
->  void acpi_gpiochip_remove(struct gpio_chip *chip);
->
-> -void acpi_gpiochip_request_interrupts(struct gpio_chip *chip);
->  void acpi_gpiochip_free_interrupts(struct gpio_chip *chip);
->
->  int acpi_gpio_update_gpiod_flags(enum gpiod_flags *flags,
-> @@ -56,9 +55,6 @@ int acpi_gpio_count(struct device *dev, const char *con_id);
->  static inline void acpi_gpiochip_add(struct gpio_chip *chip) { }
->  static inline void acpi_gpiochip_remove(struct gpio_chip *chip) { }
->
-> -static inline void
-> -acpi_gpiochip_request_interrupts(struct gpio_chip *chip) { }
-> -
->  static inline void
->  acpi_gpiochip_free_interrupts(struct gpio_chip *chip) { }
->
-> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-> index e2480ef94c55..40b9f13d77e1 100644
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -733,6 +733,18 @@ void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
->
->  struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
->
-> +
-> +#ifdef CONFIG_GPIO_ACPI
-> +
-> +void acpi_gpiochip_request_interrupts(struct gpio_chip *chip);
-> +
-> +#else
-> +
-> +static inline void acpi_gpiochip_request_interrupts(struct gpio_chip *chip)
-> +{
-> +}
-> +
-> +#endif /* CONFIG_GPIO_ACPI */
->  #else /* CONFIG_GPIOLIB */
->
->  static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
-> --
-> 2.15.0.276.g89ea799
->
+Force memblock to bottom-up mode before calling swiotlb_init() to ensure
+that the swiotlb buffer is DMA-able.
 
+Link: https://lkml.kernel.org/r/F1EBB706-73DF-430E-9020-C214EC8ED5DA@xenosoft.de
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Darren Stevens <darren@stevens-zone.net>
+Cc: mad skateman <madskateman@gmail.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+---
+ arch/powerpc/mm/mem.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index be941d382c8d..14c2c53e3f9e 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -260,6 +260,14 @@ void __init mem_init(void)
+ 	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
+ 
+ #ifdef CONFIG_SWIOTLB
++	/*
++	 * Some platforms (e.g. 85xx) limit DMA-able memory way below
++	 * 4G. We force memblock to bottom-up mode to ensure that the
++	 * memory allocated in swiotlb_init() is DMA-able.
++	 * As it's the last memblock allocation, no need to reset it
++	 * back to to-down.
++	 */
++	memblock_set_bottom_up(true);
+ 	swiotlb_init(0);
+ #endif
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.24.0
+
