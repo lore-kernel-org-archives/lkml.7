@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B88C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7CFC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C7521823
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A9321823
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 23:29:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="TC9oKOxf"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="jrkrkmSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbfLDX3o (ORCPT
+        id S1728552AbfLDX3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 4 Dec 2019 18:29:44 -0500
-Received: from mail-bn8nam11on2080.outbound.protection.outlook.com ([40.107.236.80]:16652
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+Received: from mail-dm6nam12on2065.outbound.protection.outlook.com ([40.107.243.65]:6235
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728121AbfLDX3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 18:29:41 -0500
+        id S1728011AbfLDX3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 18:29:42 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XBOnBB0q7EmCLcmU1sbItKipSwNvkClifzM277hqQPJe5KRD8t2q0zOu66Bmxb1Uj+psHvcVW/k215+VAEkKCFQla3JUGxaLKYFJnmSyHUabsQ5k9H/jucThxbpqQgN0wUJuoUwCsYo8G3Ukl6wepPKqjw6cHyxQOVXo5jPUIaTtvaP4xGSSI6FHCgIV7lfk6JhN2q94r/n45S4x480THOO8m1WHfVpVHR6SHhajB3FDEeroKeuJHkx5sKCUUm8bQ76N6MXpLiVJiNqv+vv0x7OLlbO1IIdZU+KNmJdivIpelof4RFLLqPm6JZQIWduO63ne3Tosscqd9HY9kNeNBQ==
+ b=DhsUYZlfQKBXitU5MjQ37YZ+bjbrldXFxm67lhxsL16liK6kc1KE7quLxgQKt72ZdRoc/LNDN/cf7BPNs0wp5ec6G8IBJjCHp/J4HLfbClLrFiQZ6sHDZb6UmugmG+mbxlN9Y0AYUwbdsHBOr3LO7szCQOB/Om0V7xN35cV3701NChggb9enxoIJ/96zhXEihuMTC1/JCCKE50uTIGX7Qh+CePuz+lMTliSG4o378FvddG6aCmnXT4AKnGqBY2TXo5b2FFkOca/nS5VCusF+cscpMS5AB9OwmwjIssbE8U3YJpIP9cXyNxYdsdJrcLj+L0J8dVRiy2UfCdpDrs9Zuw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xnn5m9BIVahwpHM5ev2ifCNMt2qkTs7Gds0xdWYYI8w=;
- b=Z2PenWzUciiMUaxLuOoqh/IVhwMq8kOL9s2s4hScTWz6hSvF2WDzYzM5H4iX/ESYDrvvBmw5EXfe+bmVjXMK8UcT9AuRHPOu2BXQ0R3HW3kZxZfobJ6wU3kkHA3HF3hMQpe2GmYQ/03ed/BpN3PML2btmTgnnq4N+jP71IIMOmrF32PznNb40FLwLEuXZ3m4V2vfkBfghpmTDqdg8tiyfaoe3f+poNSwXKTlsVOQjBMzfrM3C2ReAJ/fAJiB5wYT8nidNSBMy6hJ9sbwLqIao/KfS8Pxc5Co1SIYl7PmelcjkKfj/bGR4veshSApQ05q3Oqkhoi1tg1ERfqMX7XETw==
+ bh=C6ehSa67b2eRuoG+daJ6YIk5dss8v60v6CUqO5i+olg=;
+ b=RMNm55tRnYRlwcl2rQn6uZjGjsZw26REvIP54APJzLUSdXBfN+DIIu9y0irWctaSmRvQIOUKLwEv7yZY8tHkvzVS5pHRzhu4UYBGIakbAGGjgkiNBQwkd9NeLTWqfklpwVZKHQJwkdVPC9jzA3rl55MSh3WJpxq+oaqfiCukhT4+vkQeYU8lzBCqzbnuA030ObejRjeKST+EDvskEkF1iC8bUcZLzsF1YHuNAd+oRgGIbQ0nju4miu8g4GVvTiM0EMzpaoL+RpRGt3tRRA8Nv0plj95oL8u7uwhy8abALrbA0cOZUTbk5rpfAcDJhAuLuklixNjaSqIRrNqBX2aIgQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xnn5m9BIVahwpHM5ev2ifCNMt2qkTs7Gds0xdWYYI8w=;
- b=TC9oKOxfvb9EhzO1diQj830Uls8NNpyJeG4KrpgBa5/N90G3Bsgz2i37FCOjTDXHWJsJ1p39mV4tYkRPkx/grBYmCyggFWouSC6DVvQUoUs7gEg4WC1MkDC+6bddSkH1i4syi6aR0aKd7Ey3fBP0spHe6AehHI6QkDkgHSJ/4VA=
-Received: from CH2PR02CA0019.namprd02.prod.outlook.com (2603:10b6:610:4e::29)
- by MWHPR02MB2829.namprd02.prod.outlook.com (2603:10b6:300:109::11) with
+ bh=C6ehSa67b2eRuoG+daJ6YIk5dss8v60v6CUqO5i+olg=;
+ b=jrkrkmSvDvIn+4BvgZP592iPO36IQlV4Qa86jA1cp/lsVIux+U+4vNfGeZNSy1j02FaXDo8eAJKMlmQlotF+/DMZoWAePk7Vs4f+s9XtXBnez/Yl/TZ4RiuovahCJPtXHqSvw1oBFS1hgvuhWbuWvy42Mka6UuYrF7Zt4GTik1g=
+Received: from CY4PR02CA0015.namprd02.prod.outlook.com (2603:10b6:903:18::25)
+ by BYAPR02MB5512.namprd02.prod.outlook.com (2603:10b6:a03:9a::30) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.17; Wed, 4 Dec
- 2019 23:29:35 +0000
-Received: from SN1NAM02FT018.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::208) by CH2PR02CA0019.outlook.office365.com
- (2603:10b6:610:4e::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.20 via Frontend
- Transport; Wed, 4 Dec 2019 23:29:35 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12; Wed, 4 Dec
+ 2019 23:29:37 +0000
+Received: from BL2NAM02FT032.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::209) by CY4PR02CA0015.outlook.office365.com
+ (2603:10b6:903:18::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12 via Frontend
+ Transport; Wed, 4 Dec 2019 23:29:37 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
@@ -57,24 +57,24 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT018.mail.protection.outlook.com (10.152.72.122) with Microsoft SMTP
+ BL2NAM02FT032.mail.protection.outlook.com (10.152.77.169) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Wed, 4 Dec 2019 23:29:35 +0000
+ via Frontend Transport; Wed, 4 Dec 2019 23:29:36 +0000
 Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1ice5O-0005aD-S1; Wed, 04 Dec 2019 15:29:34 -0800
+        id 1ice5P-0005aF-09; Wed, 04 Dec 2019 15:29:35 -0800
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1ice5J-00080R-Ox; Wed, 04 Dec 2019 15:29:29 -0800
-Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB4NTR0E024865;
+        id 1ice5J-00080R-TI; Wed, 04 Dec 2019 15:29:29 -0800
+Received: from xsj-pvapsmtp01 (xsj-smtp.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB4NTREc024867;
         Wed, 4 Dec 2019 15:29:27 -0800
 Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1ice5H-000802-FS; Wed, 04 Dec 2019 15:29:27 -0800
+        id 1ice5H-000802-Hf; Wed, 04 Dec 2019 15:29:27 -0800
 From:   Jolly Shah <jolly.shah@xilinx.com>
 To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
@@ -83,9 +83,9 @@ To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
 Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
         Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH 1/5] firmware: xilinx: Adds new eemi call for reg access
-Date:   Wed,  4 Dec 2019 15:29:15 -0800
-Message-Id: <1575502159-11327-2-git-send-email-jolly.shah@xilinx.com>
+Subject: [PATCH 2/5] firmware: xilinx: Add sysfs interface
+Date:   Wed,  4 Dec 2019 15:29:16 -0800
+Message-Id: <1575502159-11327-3-git-send-email-jolly.shah@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1575502159-11327-1-git-send-email-jolly.shah@xilinx.com>
 References: <1575502159-11327-1-git-send-email-jolly.shah@xilinx.com>
@@ -94,27 +94,27 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(39860400002)(189003)(199004)(7696005)(2906002)(2616005)(76176011)(107886003)(50466002)(50226002)(36386004)(336012)(7416002)(16586007)(26005)(5660300002)(186003)(426003)(14444005)(51416003)(36756003)(48376002)(54906003)(305945005)(316002)(81156014)(8676002)(70206006)(81166006)(4326008)(356004)(8936002)(9786002)(6666004)(11346002)(44832011)(70586007)(478600001)(6636002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB2829;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(136003)(396003)(199004)(189003)(70586007)(5660300002)(11346002)(76176011)(30864003)(107886003)(81166006)(6636002)(51416003)(70206006)(7696005)(81156014)(478600001)(305945005)(50226002)(8936002)(2616005)(336012)(186003)(426003)(26005)(8676002)(7416002)(4326008)(316002)(356004)(9786002)(48376002)(16586007)(50466002)(14444005)(44832011)(54906003)(2906002)(36386004)(6666004)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5512;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9f3d2813-194b-4610-5ccb-08d77911d2d4
-X-MS-TrafficTypeDiagnostic: MWHPR02MB2829:
-X-Microsoft-Antispam-PRVS: <MWHPR02MB28297CA02E424906BB395ABEB85D0@MWHPR02MB2829.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: fbf06d41-47d4-48e5-2d46-08d77911d3b7
+X-MS-TrafficTypeDiagnostic: BYAPR02MB5512:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB551279574D13220DD798F5A7B85D0@BYAPR02MB5512.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:639;
+X-MS-Oob-TLC-OOBClassifiers: OLM:327;
 X-Forefront-PRVS: 0241D5F98C
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ANDJU3SiTmReaeCz0b3PkicK9ij/R1lMNEXUaxt7oW4H7CS5PybQtV04YbSFjHhthwKpGIprq7uO4y/XNF1M/zVTdYZEXM61cNq2vcyp58I1rLMJ0bzZOhuvpxGliD0rKplr5FWDLoJS2C0U8vwcXHYAYGolslIEmk/R6VCEtlcsc6bS765gjudRmcRO3Jl0AkJCSJnW/KHTQObfkSmbdW8TjVtGEul5Bf47ncQ92GE+M7Q4rYWXVzO7/qG16Ns5RPj0Mp9+vV/kzyxyNUI/hrsN4acteorZfMNrUixkBWMeh5tfogMOOkVU44cTGYQSEUcy1iCFtHVYEebl7UOmkJrcva27cIjptU62/JQUGWIexh3VG19TH9vfbQ+u6ROCDsytu45aJCVz9rxtjHJNWwh7bi4HsQWJNbCIE5k9H/BNjyWucVhAsv8SGDMOtAgk
+X-Microsoft-Antispam-Message-Info: IVAiAs06neRB50URjcic5nVfyVtxAQXWgMdmtN2gyAz330O4OC+QoDiXdffMMS368dn/A6wPN2ndynPGqcaDr9PU66fz6yqIv4eZR4OADRmcs222OKPFokzgVa2XHKmd1CMAItYH7JLfD8GFi3bFbrmBnJ/4TGtL1PfDFiVoscVOmv0bmRWX+Drk1AczlO2RQEfpc2D7YlkiLtGnA/hp2EbiG1PkeDkxAyc+QkkdU9Chx1kRm5sX9yKo1aPi6k2AeG3b1O4cLy1g1p4N6QoFrwwrIsvE2JiaKtgaOKES0Tyh2QQxCho5Y3Dwf9hBEcrzbIDH8Il/moeBS06kFLrswMJN/K91sBCijesfc6SBOy9UbOzSiKvkL8tqD/+wO8jNu/aF088ckB3S8TIaAEb3N0XsjaTPHU6GD2ixpCmL3hzJG0zRTiPA8viURQ3W7Es3
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 23:29:35.2910
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 23:29:36.6454
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f3d2813-194b-4610-5ccb-08d77911d2d4
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbf06d41-47d4-48e5-2d46-08d77911d3b7
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2829
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5512
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -122,96 +122,140 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-This patch adds new EEMI call which is used for CSU/PMU register
-access from linux.
+Add Firmware-ggs sysfs interface which provides read/write
+interface to global storage registers.
 
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
 Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
 ---
- drivers/firmware/xilinx/zynqmp.c     | 183 +++++++++++++++++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h |   9 ++
- 2 files changed, 192 insertions(+)
+ Documentation/ABI/stable/sysfs-firmware-zynqmp |  50 +++++
+ drivers/firmware/xilinx/Makefile               |   2 +-
+ drivers/firmware/xilinx/zynqmp-ggs.c           | 289 +++++++++++++++++++++++++
+ drivers/firmware/xilinx/zynqmp.c               |  12 +
+ include/linux/firmware/xlnx-zynqmp.h           |  10 +
+ 5 files changed, 362 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/stable/sysfs-firmware-zynqmp
+ create mode 100644 drivers/firmware/xilinx/zynqmp-ggs.c
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index fd3d837..56431ad 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -24,6 +24,8 @@
- #include <linux/firmware/xlnx-zynqmp.h>
- #include "zynqmp-debug.h"
- 
-+static unsigned long register_address;
+diff --git a/Documentation/ABI/stable/sysfs-firmware-zynqmp b/Documentation/ABI/stable/sysfs-firmware-zynqmp
+new file mode 100644
+index 0000000..0a75812
+--- /dev/null
++++ b/Documentation/ABI/stable/sysfs-firmware-zynqmp
+@@ -0,0 +1,50 @@
++What:		/sys/firmware/zynqmp/ggs*
++Date:		January 2018
++KernelVersion:	4.15.0
++Contact:	"Jolly Shah" <jollys@xilinx.com>
++Description:
++		Read/Write PMU global general storage register value,
++		GLOBAL_GEN_STORAGE{0:3}.
++		Global general storage register that can be used
++		by system to pass information between masters.
 +
- static const struct zynqmp_eemi_ops *eemi_ops_tbl;
++		The register is reset during system or power-on
++		resets. Three registers are used by the FSBL and
++		other Xilinx software products: GLOBAL_GEN_STORAGE{4:6}.
++
++		Usage:
++		# cat /sys/firmware/zynqmp/ggs0
++		# echo <mask> <value> > /sys/firmware/zynqmp/ggs0
++
++		Example:
++		# cat /sys/firmware/zynqmp/ggs0
++		# echo 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/ggs0
++
++Users:		Xilinx
++
++What:		/sys/firmware/zynqmp/pggs*
++Date:		January 2018
++KernelVersion:	4.15.0
++Contact:	"Jolly Shah" <jollys@xilinx.com>
++Description:
++		Read/Write PMU persistent global general storage register
++		value, PERS_GLOB_GEN_STORAGE{0:3}.
++		Persistent global general storage register that
++		can be used by system to pass information between
++		masters.
++
++		This register is only reset by the power-on reset
++		and maintains its value through a system reset.
++		Four registers are used by the FSBL and other Xilinx
++		software products: PERS_GLOB_GEN_STORAGE{4:7}.
++		Register is reset only by a POR reset.
++
++		Usage:
++		# cat /sys/firmware/zynqmp/pggs0
++		# echo <mask> <value> > /sys/firmware/zynqmp/pggs0
++
++		Example:
++		# cat /sys/firmware/zynqmp/pggs0
++		# echo 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/pggs0
++
++Users:		Xilinx
+diff --git a/drivers/firmware/xilinx/Makefile b/drivers/firmware/xilinx/Makefile
+index 875a537..1e8643c 100644
+--- a/drivers/firmware/xilinx/Makefile
++++ b/drivers/firmware/xilinx/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for Xilinx firmwares
  
- static const struct mfd_cell firmware_devs[] = {
-@@ -664,6 +666,26 @@ static int zynqmp_pm_set_requirement(const u32 node, const u32 capabilities,
- 				   qos, ack, NULL);
- }
- 
-+/**
-+ * zynqmp_pm_config_reg_access - PM Config API for Config register access
-+ * @register_access_id:	ID of the requested REGISTER_ACCESS
-+ * @address:		Address of the register to be accessed
-+ * @mask:		Mask to be written to the register
-+ * @value:		Value to be written to the register
-+ * @out:		Returned output value
+-obj-$(CONFIG_ZYNQMP_FIRMWARE) += zynqmp.o
++obj-$(CONFIG_ZYNQMP_FIRMWARE) += zynqmp.o zynqmp-ggs.o
+ obj-$(CONFIG_ZYNQMP_FIRMWARE_DEBUG) += zynqmp-debug.o
+diff --git a/drivers/firmware/xilinx/zynqmp-ggs.c b/drivers/firmware/xilinx/zynqmp-ggs.c
+new file mode 100644
+index 0000000..42179ad
+--- /dev/null
++++ b/drivers/firmware/xilinx/zynqmp-ggs.c
+@@ -0,0 +1,289 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Xilinx Zynq MPSoC Firmware layer
 + *
-+ * This function calls REGISTER_ACCESS to configure CSU/PMU registers.
++ *  Copyright (C) 2014-2018 Xilinx, Inc.
 + *
-+ * Return:	Returns status, either success or error+reason
++ *  Jolly Shah <jollys@xilinx.com>
++ *  Rajan Vaja <rajanv@xilinx.com>
 + */
 +
-+static int zynqmp_pm_config_reg_access(u32 register_access_id, u32 address,
-+				       u32 mask, u32 value, u32 *out)
++#include <linux/compiler.h>
++#include <linux/of.h>
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/uaccess.h>
++#include <linux/slab.h>
++#include <linux/firmware/xlnx-zynqmp.h>
++
++static ssize_t read_register(char *buf, u32 ioctl_id, u32 reg)
 +{
-+	return zynqmp_pm_invoke_fn(PM_REGISTER_ACCESS, register_access_id,
-+				   address, mask, value, out);
++	int ret;
++	u32 ret_payload[PAYLOAD_ARG_CNT];
++	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
++
++	if (!eemi_ops->ioctl)
++		return -EFAULT;
++
++	ret = eemi_ops->ioctl(0, ioctl_id, reg, 0, ret_payload);
++	if (ret)
++		return ret;
++
++	return sprintf(buf, "0x%x\n", ret_payload[1]);
 +}
 +
- static const struct zynqmp_eemi_ops eemi_ops = {
- 	.get_api_version = zynqmp_pm_get_api_version,
- 	.get_chipid = zynqmp_pm_get_chipid,
-@@ -687,6 +709,7 @@ static const struct zynqmp_eemi_ops eemi_ops = {
- 	.set_requirement = zynqmp_pm_set_requirement,
- 	.fpga_load = zynqmp_pm_fpga_load,
- 	.fpga_get_status = zynqmp_pm_fpga_get_status,
-+	.register_access = zynqmp_pm_config_reg_access,
- };
- 
- /**
-@@ -704,6 +727,160 @@ const struct zynqmp_eemi_ops *zynqmp_pm_get_eemi_ops(void)
- }
- EXPORT_SYMBOL_GPL(zynqmp_pm_get_eemi_ops);
- 
-+/**
-+ * config_reg_store - Write config_reg sysfs attribute
-+ * @kobj:	Kobject structure
-+ * @attr:	Kobject attribute structure
-+ * @buf:	User entered health_status attribute string
-+ * @count:	Buffer size
-+ *
-+ * User-space interface for setting the config register.
-+ *
-+ * To write any CSU/PMU register
-+ * echo <address> <mask> <values> > /sys/firmware/zynqmp/config_reg
-+ * Usage:
-+ * echo 0x345AB234 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/config_reg
-+ *
-+ * To Read any CSU/PMU register, write address to the variable like below
-+ * echo <address> > /sys/firmware/zynqmp/config_reg
-+ *
-+ * Return:	count argument if request succeeds, the corresponding error
-+ *		code otherwise
-+ */
-+static ssize_t config_reg_store(struct kobject *kobj,
-+				struct kobj_attribute *attr,
-+				const char *buf, size_t count)
++static ssize_t write_register(const char *buf, size_t count, u32 read_ioctl,
++			      u32 write_ioctl, u32 reg)
 +{
 +	char *kern_buff, *inbuf, *tok;
-+	unsigned long address, value, mask;
++	long mask, value;
 +	int ret;
++	u32 ret_payload[PAYLOAD_ARG_CNT];
++	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
++
++	if (!eemi_ops->ioctl)
++		return -EFAULT;
 +
 +	kern_buff = kzalloc(count, GFP_KERNEL);
 +	if (!kern_buff)
@@ -225,92 +269,225 @@ index fd3d837..56431ad 100644
 +
 +	inbuf = kern_buff;
 +
-+	/* Read the addess */
++	/* Read the write mask */
 +	tok = strsep(&inbuf, " ");
 +	if (!tok) {
 +		ret = -EFAULT;
 +		goto err;
 +	}
-+	ret = kstrtol(tok, 16, &address);
-+	if (ret) {
-+		ret = -EFAULT;
-+		goto err;
-+	}
-+	/* Read the write value */
-+	tok = strsep(&inbuf, " ");
-+	/*
-+	 * If parameter provided is only address, then its a read operation.
-+	 * Store the address in a global variable and retrieve whenever
-+	 * required.
-+	 */
-+	if (!tok) {
-+		register_address = address;
-+		goto err;
-+	}
-+	register_address = address;
 +
 +	ret = kstrtol(tok, 16, &mask);
 +	if (ret) {
 +		ret = -EFAULT;
 +		goto err;
 +	}
++
++	/* Read the write value */
 +	tok = strsep(&inbuf, " ");
 +	if (!tok) {
 +		ret = -EFAULT;
 +		goto err;
 +	}
++
 +	ret = kstrtol(tok, 16, &value);
-+	if (!tok) {
++	if (ret) {
 +		ret = -EFAULT;
 +		goto err;
 +	}
-+	ret = zynqmp_pm_config_reg_access(CONFIG_REG_WRITE, address,
-+					  mask, value, NULL);
++
++	ret = eemi_ops->ioctl(0, read_ioctl, reg, 0, ret_payload);
++	if (ret) {
++		ret = -EFAULT;
++		goto err;
++	}
++	ret_payload[1] &= ~mask;
++	value &= mask;
++	value |= ret_payload[1];
++
++	ret = eemi_ops->ioctl(0, write_ioctl, reg, value, NULL);
 +	if (ret)
-+		pr_err("unable to write value to %lx\n", value);
++		ret = -EFAULT;
++
 +err:
 +	kfree(kern_buff);
 +	if (ret)
 +		return ret;
++
 +	return count;
 +}
 +
 +/**
-+ * config_reg_show - Read config_reg sysfs attribute
-+ * @kobj:	Kobject structure
-+ * @attr:	Kobject attribute structure
-+ * @buf:	User entered health_status attribute string
++ * ggs_show - Show global general storage (ggs) sysfs attribute
++ * @kobj: Kobject structure
++ * @attr: Kobject attribute structure
++ * @buf: Requested available shutdown_scope attributes string
++ * @reg: Register number
 + *
-+ * User-space interface for getting the config register.
++ * Return:Number of bytes printed into the buffer.
 + *
-+ * To Read any CSU/PMU register, write address to the variable like below
-+ * echo <address> > /sys/firmware/zynqmp/config_reg
++ * Helper function for viewing a ggs register value.
 + *
-+ * Then Read the address using below command
-+ * cat /sys/firmware/zynqmp/config_reg
-+ *
-+ * Return: number of chars written to buf.
++ * User-space interface for viewing the content of the ggs0 register.
++ * cat /sys/firmware/zynqmp/ggs0
 + */
-+static ssize_t config_reg_show(struct kobject *kobj,
-+			       struct kobj_attribute *attr,
-+			       char *buf)
++static ssize_t ggs_show(struct kobject *kobj,
++			struct kobj_attribute *attr,
++			char *buf,
++			u32 reg)
 +{
-+	int ret;
-+	u32 ret_payload[PAYLOAD_ARG_CNT];
-+
-+	ret = zynqmp_pm_config_reg_access(CONFIG_REG_READ, register_address,
-+					  0, 0, ret_payload);
-+	if (ret)
-+		return ret;
-+
-+	return sprintf(buf, "0x%x\n", ret_payload[1]);
++	return read_register(buf, IOCTL_READ_GGS, reg);
 +}
 +
-+static struct kobj_attribute zynqmp_attr_config_reg =
-+					__ATTR_RW(config_reg);
++/**
++ * ggs_store - Store global general storage (ggs) sysfs attribute
++ * @kobj: Kobject structure
++ * @attr: Kobject attribute structure
++ * @buf: User entered shutdown_scope attribute string
++ * @count: Size of buf
++ * @reg: Register number
++ *
++ * Return: count argument if request succeeds, the corresponding
++ * error code otherwise
++ *
++ * Helper function for storing a ggs register value.
++ *
++ * For example, the user-space interface for storing a value to the
++ * ggs0 register:
++ * echo 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/ggs0
++ */
++static ssize_t ggs_store(struct kobject *kobj,
++			 struct kobj_attribute *attr,
++			 const char *buf,
++			 size_t count,
++			 u32 reg)
++{
++	if (!kobj || !attr || !buf || !count || reg >= GSS_NUM_REGS)
++		return -EINVAL;
++
++	return write_register(buf, count, IOCTL_READ_GGS, IOCTL_WRITE_GGS, reg);
++}
++
++/* GGS register show functions */
++#define GGS0_SHOW(N)						\
++	ssize_t ggs##N##_show(struct kobject *kobj,		\
++				struct kobj_attribute *attr,	\
++				char *buf)			\
++	{							\
++		return ggs_show(kobj, attr, buf, N);		\
++	}
++
++static GGS0_SHOW(0);
++static GGS0_SHOW(1);
++static GGS0_SHOW(2);
++static GGS0_SHOW(3);
++
++/* GGS register store function */
++#define GGS0_STORE(N)						\
++	ssize_t ggs##N##_store(struct kobject *kobj,		\
++				struct kobj_attribute *attr,	\
++				const char *buf,		\
++				size_t count)			\
++	{							\
++		return ggs_store(kobj, attr, buf, count, N);	\
++	}
++
++static GGS0_STORE(0);
++static GGS0_STORE(1);
++static GGS0_STORE(2);
++static GGS0_STORE(3);
++
++/**
++ * pggs_show - Show persistent global general storage (pggs) sysfs attribute
++ * @kobj: Kobject structure
++ * @attr: Kobject attribute structure
++ * @buf: Requested available shutdown_scope attributes string
++ * @reg: Register number
++ *
++ * Return:Number of bytes printed into the buffer.
++ *
++ * Helper function for viewing a pggs register value.
++ */
++static ssize_t pggs_show(struct kobject *kobj,
++			 struct kobj_attribute *attr,
++			 char *buf,
++			 u32 reg)
++{
++	return read_register(buf, IOCTL_READ_PGGS, reg);
++}
++
++/**
++ * pggs_store - Store persistent global general storage (pggs) sysfs attribute
++ * @kobj: Kobject structure
++ * @attr: Kobject attribute structure
++ * @buf: User entered shutdown_scope attribute string
++ * @count: Size of buf
++ * @reg: Register number
++ *
++ * Return: count argument if request succeeds, the corresponding
++ * error code otherwise
++ *
++ * Helper function for storing a pggs register value.
++ */
++static ssize_t pggs_store(struct kobject *kobj,
++			  struct kobj_attribute *attr,
++			  const char *buf,
++			  size_t count,
++			  u32 reg)
++{
++	return write_register(buf, count, IOCTL_READ_PGGS,
++			      IOCTL_WRITE_PGGS, reg);
++}
++
++#define PGGS0_SHOW(N)						\
++	ssize_t pggs##N##_show(struct kobject *kobj,		\
++				struct kobj_attribute *attr,	\
++				char *buf)			\
++	{							\
++		return pggs_show(kobj, attr, buf, N);		\
++	}
++
++#define PGGS0_STORE(N)						\
++	ssize_t pggs##N##_store(struct kobject *kobj,		\
++				   struct kobj_attribute *attr,	\
++				   const char *buf,		\
++				   size_t count)		\
++	{							\
++		return pggs_store(kobj, attr, buf, count, N);	\
++	}
++
++/* PGGS register show functions */
++static PGGS0_SHOW(0);
++static PGGS0_SHOW(1);
++static PGGS0_SHOW(2);
++static PGGS0_SHOW(3);
++
++/* PGGS register store functions */
++static PGGS0_STORE(0);
++static PGGS0_STORE(1);
++static PGGS0_STORE(2);
++static PGGS0_STORE(3);
++
++/* GGS register attributes */
++static struct kobj_attribute zynqmp_attr_ggs0 = __ATTR_RW(ggs0);
++static struct kobj_attribute zynqmp_attr_ggs1 = __ATTR_RW(ggs1);
++static struct kobj_attribute zynqmp_attr_ggs2 = __ATTR_RW(ggs2);
++static struct kobj_attribute zynqmp_attr_ggs3 = __ATTR_RW(ggs3);
++
++/* PGGS register attributes */
++static struct kobj_attribute zynqmp_attr_pggs0 = __ATTR_RW(pggs0);
++static struct kobj_attribute zynqmp_attr_pggs1 = __ATTR_RW(pggs1);
++static struct kobj_attribute zynqmp_attr_pggs2 = __ATTR_RW(pggs2);
++static struct kobj_attribute zynqmp_attr_pggs3 = __ATTR_RW(pggs3);
 +
 +static struct attribute *attrs[] = {
-+	&zynqmp_attr_config_reg.attr,
++	&zynqmp_attr_ggs0.attr,
++	&zynqmp_attr_ggs1.attr,
++	&zynqmp_attr_ggs2.attr,
++	&zynqmp_attr_ggs3.attr,
++	&zynqmp_attr_pggs0.attr,
++	&zynqmp_attr_pggs1.attr,
++	&zynqmp_attr_pggs2.attr,
++	&zynqmp_attr_pggs3.attr,
 +	NULL,
 +};
 +
@@ -319,76 +496,84 @@ index fd3d837..56431ad 100644
 +	NULL,
 +};
 +
-+static int zynqmp_pm_sysfs_init(void)
++int zynqmp_pm_ggs_init(struct kobject *parent_kobj)
 +{
-+	struct kobject *zynqmp_kobj;
-+	int ret;
-+
-+	zynqmp_kobj = kobject_create_and_add("zynqmp", firmware_kobj);
-+	if (!zynqmp_kobj) {
-+		pr_err("zynqmp: Firmware kobj add failed.\n");
-+		return -ENOMEM;
-+	}
-+
-+	ret = sysfs_create_group(zynqmp_kobj, &attr_group);
-+	if (ret) {
-+		pr_err("%s() sysfs creation fail with error %d\n",
-+		       __func__, ret);
-+	}
-+
-+	return ret;
++	return sysfs_create_group(parent_kobj, &attr_group);
 +}
-+
- static int zynqmp_firmware_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -748,6 +925,12 @@ static int zynqmp_firmware_probe(struct platform_device *pdev)
- 	/* Assign eemi_ops_table */
- 	eemi_ops_tbl = &eemi_ops;
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 56431ad..9836174 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -475,6 +475,10 @@ static inline int zynqmp_is_valid_ioctl(u32 ioctl_id)
+ 	case IOCTL_GET_PLL_FRAC_MODE:
+ 	case IOCTL_SET_PLL_FRAC_DATA:
+ 	case IOCTL_GET_PLL_FRAC_DATA:
++	case IOCTL_WRITE_GGS:
++	case IOCTL_READ_GGS:
++	case IOCTL_WRITE_PGGS:
++	case IOCTL_READ_PGGS:
+ 		return 1;
+ 	default:
+ 		return 0;
+@@ -876,8 +880,16 @@ static int zynqmp_pm_sysfs_init(void)
+ 	if (ret) {
+ 		pr_err("%s() sysfs creation fail with error %d\n",
+ 		       __func__, ret);
++		goto err;
+ 	}
  
-+	ret = zynqmp_pm_sysfs_init();
++	ret = zynqmp_pm_ggs_init(zynqmp_kobj);
 +	if (ret) {
-+		pr_err("%s() sysfs init fail with error %d\n", __func__, ret);
-+		return ret;
++		pr_err("%s() GGS init fail with error %d\n",
++		       __func__, ret);
++		goto err;
 +	}
-+
- 	zynqmp_pm_api_debugfs_init();
++err:
+ 	return ret;
+ }
  
- 	ret = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, firmware_devs,
 diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index df366f1..55561d0 100644
+index 55561d0..bf6e9db 100644
 --- a/include/linux/firmware/xlnx-zynqmp.h
 +++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -77,6 +77,8 @@ enum pm_api_id {
- 	PM_CLOCK_GETRATE,
- 	PM_CLOCK_SETPARENT,
- 	PM_CLOCK_GETPARENT,
-+	/* PM_REGISTER_ACCESS API */
-+	PM_REGISTER_ACCESS = 52,
- };
+@@ -13,6 +13,8 @@
+ #ifndef __FIRMWARE_ZYNQMP_H__
+ #define __FIRMWARE_ZYNQMP_H__
  
- /* PMU-FW return status codes */
-@@ -261,6 +263,11 @@ enum tap_delay_type {
- 	PM_TAPDELAY_OUTPUT,
- };
- 
-+enum pm_register_access_id {
-+	CONFIG_REG_WRITE,
-+	CONFIG_REG_READ,
-+};
++#include <linux/device.h>
 +
- /**
-  * struct zynqmp_pm_query_data - PM query data
-  * @qid:	query ID
-@@ -305,6 +312,8 @@ struct zynqmp_eemi_ops {
- 			       const u32 capabilities,
- 			       const u32 qos,
- 			       const enum zynqmp_pm_request_ack ack);
-+	int (*register_access)(u32 register_access_id, u32 address,
-+			       u32 mask, u32 value, u32 *out);
+ #define ZYNQMP_PM_VERSION_MAJOR	1
+ #define ZYNQMP_PM_VERSION_MINOR	0
+ 
+@@ -42,6 +44,8 @@
+ 
+ #define ZYNQMP_PM_MAX_QOS		100U
+ 
++#define GSS_NUM_REGS	(4)
++
+ /* Node capabilities */
+ #define	ZYNQMP_PM_CAPABILITY_ACCESS	0x1U
+ #define	ZYNQMP_PM_CAPABILITY_CONTEXT	0x2U
+@@ -98,6 +102,10 @@ enum pm_ioctl_id {
+ 	IOCTL_GET_PLL_FRAC_MODE,
+ 	IOCTL_SET_PLL_FRAC_DATA,
+ 	IOCTL_GET_PLL_FRAC_DATA,
++	IOCTL_WRITE_GGS,
++	IOCTL_READ_GGS,
++	IOCTL_WRITE_PGGS,
++	IOCTL_READ_PGGS,
  };
  
+ enum pm_query_id {
+@@ -319,6 +327,8 @@ struct zynqmp_eemi_ops {
  int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
+ 			u32 arg2, u32 arg3, u32 *ret_payload);
+ 
++int zynqmp_pm_ggs_init(struct kobject *parent_kobj);
++
+ #if IS_REACHABLE(CONFIG_ARCH_ZYNQMP)
+ const struct zynqmp_eemi_ops *zynqmp_pm_get_eemi_ops(void);
+ #else
 -- 
 2.7.4
 
