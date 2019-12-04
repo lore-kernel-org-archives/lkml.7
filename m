@@ -2,149 +2,416 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BITCOIN_SPAM_02,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEF6C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E478EC2BBE2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F262084F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:59:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="aC1slvFa"
+	by mail.kernel.org (Postfix) with ESMTP id B77792084F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:00:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfLDH7x (ORCPT
+        id S1727384AbfLDIAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:59:53 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:27072 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726679AbfLDH7x (ORCPT
+        Wed, 4 Dec 2019 03:00:01 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:53007 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725839AbfLDIAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:59:53 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB47xgXj006913;
-        Wed, 4 Dec 2019 02:59:45 -0500
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2wkp76jkqj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Dec 2019 02:59:45 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PTokhyBaXTzfcijCCcc/aCFmfkpNM7vgXA+YGAqr/+0+Go0TwIGwjGzOi+kM8WgXUBusAviGj6fodw3Y/5u2M0Es+73X6gcvxKT5eTNeAUNgekc8dC1DruW47pNAgIwV63b5+Zyafdg/K0HZM5gJNeNr8qG+OmeoClHNBnKqMmpqZt48ANfsLyoryW2mDq9mkRl/2gijpbnuQWaxniXaTk+BPIwDDXBO5TBg39pZvqHgZBT/vLj1bHZNX7762RIVzH6+9Yu0e7o717jMi9FYq+S+yaaRkWHsICqijTjcjyoOkhuf7AzdR9BSqpiixA4WoKNRsxSGoUsxZ5CnFwSuuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=toob3OX5/OlJqul4x5WXd+ISn28GGz0UHhJn4xkvWmo=;
- b=FhfSIixRI4QnhxYBpoF5RVCBeN5Tu+J3eht2LdCCy/WBDLxP1EK8oF4tuikZ22N6T1PuVZsp0y9Vf2ZbWrqVxAaoWeAD6TxOWDQbgHDPmOaDoQeasJ3Qedj8dQFHiK+vEKlvrlFf24TrU+BxAIn6mZqYc8TdLMY0nboU6LZOPOfHB8Am+Xd/bxQ9UcDJtvefd7KlpxdXmWSMNwKwIYF6EIJ0a+uZ3hUU2duaumS50ONf2tyyT+GKBaE68wiCRl+E4ZKzpaer+8QKbCRnLwVSd7RJK/4jbmL/oJ/m0Yt+bQaiqF93826OtJVeDI/Q1HDAKJkfPWzB9V4Q/DySd26/JA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=linuxfoundation.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=toob3OX5/OlJqul4x5WXd+ISn28GGz0UHhJn4xkvWmo=;
- b=aC1slvFazvITktSPQh9oNbMI8i2BhYUn2mlej/QRA0PXNXETH+Ysp+Bh508M+me2cv5pXfzYcpYJNIU3JeV/mo00KDjStudiLSSSSzfQRLH1GsKVUbiTuws1xm9p0UwZ/EcS6z8SbqS5xnf8ouOIcPp34Lmuf4v+T7RrYNaBwsc=
-Received: from BN6PR03CA0010.namprd03.prod.outlook.com (2603:10b6:404:23::20)
- by DM6PR03MB5291.namprd03.prod.outlook.com (2603:10b6:5:229::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13; Wed, 4 Dec
- 2019 07:59:43 +0000
-Received: from CY1NAM02FT040.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::208) by BN6PR03CA0010.outlook.office365.com
- (2603:10b6:404:23::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.17 via Frontend
- Transport; Wed, 4 Dec 2019 07:59:43 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- CY1NAM02FT040.mail.protection.outlook.com (10.152.75.135) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Wed, 4 Dec 2019 07:59:42 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xB47xgCY018394
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 3 Dec 2019 23:59:42 -0800
-Received: from saturn.ad.analog.com (10.48.65.119) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 4 Dec 2019 02:59:41 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <gregkh@linuxfoundation.org>, <peterhuewe@gmx.de>,
-        <jarkko.sakkinen@linux.intel.com>, <jgg@ziepe.ca>, <arnd@arndb.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] tpm_tis_spi: use new `delay` structure for SPI transfer delays
-Date:   Wed, 4 Dec 2019 10:00:49 +0200
-Message-ID: <20191204080049.32701-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 4 Dec 2019 03:00:01 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0Tjuhij-_1575446387;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Tjuhij-_1575446387)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 04 Dec 2019 15:59:49 +0800
+Subject: [PATCH v4 1/2] sched/numa: introduce per-cgroup NUMA locality info
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+ <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
+ <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
+ <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
+Message-ID: <89416266-0a06-ce1c-1d78-11171f0c80b8@linux.alibaba.com>
+Date:   Wed, 4 Dec 2019 15:59:47 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(396003)(346002)(39860400002)(376002)(199004)(189003)(1076003)(5660300002)(26005)(186003)(70206006)(70586007)(426003)(356004)(316002)(14444005)(86362001)(336012)(51416003)(7696005)(7636002)(305945005)(50466002)(2906002)(106002)(48376002)(478600001)(4326008)(50226002)(246002)(110136005)(54906003)(2616005)(2870700001)(8676002)(8936002)(44832011)(107886003)(36756003)(81973001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB5291;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f95888c4-df36-4320-feda-08d7788febf3
-X-MS-TrafficTypeDiagnostic: DM6PR03MB5291:
-X-Microsoft-Antispam-PRVS: <DM6PR03MB5291640D30E506F6279B4888F95D0@DM6PR03MB5291.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:826;
-X-Forefront-PRVS: 0241D5F98C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bg9NJMpWiKqq34TXt5XQGDrK6uL+7zdh9Es52scARanQXSEGQUhaAqj+jREXHBE51yBB10VCCv6mt3zTQifXLt8VFeIZQttcStAHhd2FBepD9tol3pq1VPmIqwgjsVAvKxiU4l0eMIEylO9byMCP0bdVKX4ZvFxOXJbj08F280gmVS2tqZp/aFvgy9pKJo2Qo9b4D9MOI/dmiON5y2PKZj4YAffgVfIrXT2NsjEns/j7P/fq755KosB3UfPHo3bXwm/Tv8MAOP7QP4dcnpXb1tGx1STIgzMngFU1cw8NLJ6+ELC5V/c14lK43tF3y1UN8LoKlX3rF70zZp8vRk3fOyZmbelHVTFGBmea/cbdd91w9ETsrLWBmRboYs3xQfkuX4R17fOQ4VntmpQ8ZF35Zl3sRpnoKRUK1uS5Ju9BWrkuqsmiVz+QfnhP8nbozK3lixaNc+QjygDxHj4jlTLCtVsVU9vyCDdR74G1CJu30Qsdnde36w+nitqczwIugpwf
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2019 07:59:42.9106
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f95888c4-df36-4320-feda-08d7788febf3
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5291
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-04_01:2019-12-04,2019-12-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- mlxscore=0 malwarescore=0 adultscore=0 priorityscore=1501 clxscore=1011
- mlxlogscore=999 suspectscore=0 phishscore=0 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912040058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a recent change to the SPI subsystem [1], a new `delay` struct was added
-to replace the `delay_usecs`. This change replaces the current `delay_secs`
-with `delay` for this driver.
+Currently there are no good approach to monitoring the per-cgroup NUMA
+efficiency, this could be a trouble especially when groups are sharing
+CPUs, we don't know which one introduced remote-memory accessing.
 
-The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-that both `delay_usecs` & `delay` are used (in this order to preserve
-backwards compatibility).
+Although the per-task NUMA accessing info from PMU is good for further
+debuging, but not light enough for daily monitoring, especial on a box
+with thousands of tasks.
 
-[1] commit bebcfd272df6485 ("spi: introduce `delay` field for
-`spi_transfer` + spi_transfer_delay_exec()")
+Fortunately, when NUMA Balancing enabled, it will periodly trigger page
+fault and try to increase the NUMA locality, by tracing the results we
+will be able to estimate the NUMA efficiency.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+On each page fault of NUMA Balancing, when task's executing CPU is from
+the same node of pages, we call this a local page accessing, otherwise
+a remote page accessing.
+
+By updating task's accessing counter into it's cgroup on ticks, we get
+the per-cgroup numa locality info.
+
+For example the new entry 'cpu.numa_stat' show:
+  page_access local=1231412 remote=53453
+
+Here we know the workloads in hierarchy have totally been traced 1284865
+times of page accessing, and 1231412 of them are local page access, which
+imply a good NUMA efficiency.
+
+By monitoring the increments, we will be able to locate the per-cgroup
+workload which NUMA Balancing can't helpwith (usually caused by wrong
+CPU and memory node bindings), then we got chance to fix that in time.
+
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Michal Koutný <mkoutny@suse.com>
+Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
 ---
- drivers/char/tpm/tpm_tis_spi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/sched.h        | 15 +++++++++
+ include/linux/sched/sysctl.h |  6 ++++
+ init/Kconfig                 |  9 ++++++
+ kernel/sched/core.c          | 75 ++++++++++++++++++++++++++++++++++++++++++++
+ kernel/sched/fair.c          | 62 ++++++++++++++++++++++++++++++++++++
+ kernel/sched/sched.h         | 12 +++++++
+ kernel/sysctl.c              | 11 +++++++
+ 7 files changed, 190 insertions(+)
 
-diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
-index 19513e622053..1990e79afaed 100644
---- a/drivers/char/tpm/tpm_tis_spi.c
-+++ b/drivers/char/tpm/tpm_tis_spi.c
-@@ -105,7 +105,8 @@ static int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
- 
- 		spi_xfer.cs_change = 0;
- 		spi_xfer.len = transfer_len;
--		spi_xfer.delay_usecs = 5;
-+		spi_xfer.delay.value = 5;
-+		spi_xfer.delay.unit = SPI_DELAY_UNIT_USECS;
- 
- 		if (in) {
- 			spi_xfer.tx_buf = NULL;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 8f6607cd40ac..f73b3cf7d32a 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1125,6 +1125,21 @@ struct task_struct {
+ 	unsigned long			numa_pages_migrated;
+ #endif /* CONFIG_NUMA_BALANCING */
+
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++	/*
++	 * Counter index stand for:
++	 * 0 -- remote page accessing
++	 * 1 -- local page accessing
++	 * 2 -- remote page accessing updated to cgroup
++	 * 3 -- local page accessing updated to cgroup
++	 *
++	 * We record the counter before the end of task_numa_fault(), this
++	 * is based on the fact that after page fault is handled, the task
++	 * will access the page on the CPU where it triggered the PF.
++	 */
++	unsigned long			numa_page_access[4];
++#endif
++
+ #ifdef CONFIG_RSEQ
+ 	struct rseq __user *rseq;
+ 	u32 rseq_sig;
+diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+index 89f55e914673..c7048119b8b5 100644
+--- a/include/linux/sched/sysctl.h
++++ b/include/linux/sched/sysctl.h
+@@ -102,4 +102,10 @@ extern int sched_energy_aware_handler(struct ctl_table *table, int write,
+ 				 loff_t *ppos);
+ #endif
+
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++extern int sysctl_numa_locality(struct ctl_table *table, int write,
++				 void __user *buffer, size_t *lenp,
++				 loff_t *ppos);
++#endif
++
+ #endif /* _LINUX_SCHED_SYSCTL_H */
+diff --git a/init/Kconfig b/init/Kconfig
+index 4d8d145c41d2..fb7182a0d017 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -817,6 +817,15 @@ config NUMA_BALANCING_DEFAULT_ENABLED
+ 	  If set, automatic NUMA balancing will be enabled if running on a NUMA
+ 	  machine.
+
++config CGROUP_NUMA_LOCALITY
++	bool "The per-cgroup NUMA Locality"
++	default n
++	depends on CGROUP_SCHED && NUMA_BALANCING
++	help
++	  This option enable the collection of per-cgroup NUMA locality info,
++	  to tell whether NUMA Balancing is working well for a particular
++	  workload, also imply the NUMA efficiency.
++
+ menuconfig CGROUPS
+ 	bool "Control Group support"
+ 	select KERNFS
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index aaa1740e6497..6a7850d94c55 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7657,6 +7657,68 @@ static u64 cpu_rt_period_read_uint(struct cgroup_subsys_state *css,
+ }
+ #endif /* CONFIG_RT_GROUP_SCHED */
+
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++DEFINE_STATIC_KEY_FALSE(sched_numa_locality);
++
++#ifdef CONFIG_PROC_SYSCTL
++int sysctl_numa_locality(struct ctl_table *table, int write,
++			 void __user *buffer, size_t *lenp, loff_t *ppos)
++{
++	struct ctl_table t;
++	int err;
++	int state = static_branch_likely(&sched_numa_locality);
++
++	if (write && !capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	t = *table;
++	t.data = &state;
++	err = proc_dointvec_minmax(&t, write, buffer, lenp, ppos);
++	if (err < 0 || !write)
++		return err;
++
++	if (state)
++		static_branch_enable(&sched_numa_locality);
++	else
++		static_branch_disable(&sched_numa_locality);
++
++	return err;
++}
++#endif
++
++static inline struct cfs_rq *tg_cfs_rq(struct task_group *tg, int cpu)
++{
++	return tg == &root_task_group ? &cpu_rq(cpu)->cfs : tg->cfs_rq[cpu];
++}
++
++static int cpu_numa_stat_show(struct seq_file *sf, void *v)
++{
++	int cpu;
++	u64 local = 0, remote = 0;
++	struct task_group *tg = css_tg(seq_css(sf));
++
++	if (!static_branch_likely(&sched_numa_locality))
++		return 0;
++
++	for_each_possible_cpu(cpu) {
++		local += tg_cfs_rq(tg, cpu)->local_page_access;
++		remote += tg_cfs_rq(tg, cpu)->remote_page_access;
++	}
++
++	seq_printf(sf, "page_access local=%llu remote=%llu\n", local, remote);
++
++	return 0;
++}
++
++static __init int numa_locality_setup(char *opt)
++{
++	static_branch_enable(&sched_numa_locality);
++
++	return 0;
++}
++__setup("numa_locality", numa_locality_setup);
++#endif
++
+ static struct cftype cpu_legacy_files[] = {
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ 	{
+@@ -7706,6 +7768,12 @@ static struct cftype cpu_legacy_files[] = {
+ 		.seq_show = cpu_uclamp_max_show,
+ 		.write = cpu_uclamp_max_write,
+ 	},
++#endif
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++	{
++		.name = "numa_stat",
++		.seq_show = cpu_numa_stat_show,
++	},
+ #endif
+ 	{ }	/* Terminate */
+ };
+@@ -7887,6 +7955,13 @@ static struct cftype cpu_files[] = {
+ 		.seq_show = cpu_uclamp_max_show,
+ 		.write = cpu_uclamp_max_write,
+ 	},
++#endif
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++	{
++		.name = "numa_stat",
++		.flags = CFTYPE_NOT_ON_ROOT,
++		.seq_show = cpu_numa_stat_show,
++	},
+ #endif
+ 	{ }	/* terminate */
+ };
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 81eba554db8d..d3a141c79155 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1050,6 +1050,62 @@ update_stats_curr_start(struct cfs_rq *cfs_rq, struct sched_entity *se)
+  */
+
+ #ifdef CONFIG_NUMA_BALANCING
++
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++/*
++ * We want to record the real local/remote page access statistic
++ * here, so 'pnid' should be pages's real residential node after
++ * migrate_misplaced_page(), and 'cnid' should be the node of CPU
++ * where triggered the PF.
++ */
++static inline void
++update_task_locality(struct task_struct *p, int pnid, int cnid, int pages)
++{
++	if (!static_branch_unlikely(&sched_numa_locality))
++		return;
++
++	/*
++	 * pnid != cnid --> remote idx 0
++	 * pnid == cnid --> local idx 1
++	 */
++	p->numa_page_access[!!(pnid == cnid)] += pages;
++}
++
++static inline void update_group_locality(struct cfs_rq *cfs_rq)
++{
++	unsigned long ldiff, rdiff;
++
++	if (!static_branch_unlikely(&sched_numa_locality))
++		return;
++
++	rdiff = current->numa_page_access[0] - current->numa_page_access[2];
++	ldiff = current->numa_page_access[1] - current->numa_page_access[3];
++	if (!ldiff && !rdiff)
++		return;
++
++	cfs_rq->local_page_access += ldiff;
++	cfs_rq->remote_page_access += rdiff;
++
++	/*
++	 * Consider updated when reach root cfs_rq, no NUMA Balancing PF
++	 * should happen on current task during the hierarchical updating.
++	 */
++	if (&cfs_rq->rq->cfs == cfs_rq) {
++		current->numa_page_access[2] = current->numa_page_access[0];
++		current->numa_page_access[3] = current->numa_page_access[1];
++	}
++}
++#else
++static inline void
++update_task_locality(struct task_struct *p, int pnid, int cnid, int pages)
++{
++}
++
++static inline void update_group_locality(struct cfs_rq *cfs_rq)
++{
++}
++#endif /* CONFIG_CGROUP_NUMA_LOCALITY */
++
+ /*
+  * Approximate time to scan a full NUMA task in ms. The task scan period is
+  * calculated based on the tasks virtual memory size and
+@@ -2465,6 +2521,8 @@ void task_numa_fault(int last_cpupid, int mem_node, int pages, int flags)
+ 	p->numa_faults[task_faults_idx(NUMA_MEMBUF, mem_node, priv)] += pages;
+ 	p->numa_faults[task_faults_idx(NUMA_CPUBUF, cpu_node, priv)] += pages;
+ 	p->numa_faults_locality[local] += pages;
++
++	update_task_locality(p, mem_node, numa_node_id(), pages);
+ }
+
+ static void reset_ptenuma_scan(struct task_struct *p)
+@@ -2650,6 +2708,9 @@ void init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
+ 	p->last_sum_exec_runtime	= 0;
+
+ 	init_task_work(&p->numa_work, task_numa_work);
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++	memset(p->numa_page_access, 0, sizeof(p->numa_page_access));
++#endif
+
+ 	/* New address space, reset the preferred nid */
+ 	if (!(clone_flags & CLONE_VM)) {
+@@ -4298,6 +4359,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
+ 	 */
+ 	update_load_avg(cfs_rq, curr, UPDATE_TG);
+ 	update_cfs_group(curr);
++	update_group_locality(cfs_rq);
+
+ #ifdef CONFIG_SCHED_HRTICK
+ 	/*
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 05c282775f21..33f5653d9d4c 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -575,6 +575,14 @@ struct cfs_rq {
+ 	struct list_head	throttled_list;
+ #endif /* CONFIG_CFS_BANDWIDTH */
+ #endif /* CONFIG_FAIR_GROUP_SCHED */
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++	/*
++	 * The local/remote page access info collected from all
++	 * the tasks in hierarchy.
++	 */
++	u64			local_page_access;
++	u64			remote_page_access;
++#endif
+ };
+
+ static inline int rt_bandwidth_enabled(void)
+@@ -1601,6 +1609,10 @@ static const_debug __maybe_unused unsigned int sysctl_sched_features =
+ extern struct static_key_false sched_numa_balancing;
+ extern struct static_key_false sched_schedstats;
+
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++extern struct static_key_false sched_numa_locality;
++#endif
++
+ static inline u64 global_rt_period(void)
+ {
+ 	return (u64)sysctl_sched_rt_period * NSEC_PER_USEC;
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 50373984a5e2..73cbb70940ac 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -428,6 +428,17 @@ static struct ctl_table kern_table[] = {
+ 		.extra2		= SYSCTL_ONE,
+ 	},
+ #endif /* CONFIG_NUMA_BALANCING */
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++	{
++		.procname	= "numa_locality",
++		.data		= NULL, /* filled in by handler */
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler	= sysctl_numa_locality,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
++#endif /* CONFIG_CGROUP_NUMA_LOCALITY */
+ #endif /* CONFIG_SCHED_DEBUG */
+ 	{
+ 		.procname	= "sched_rt_period_us",
 -- 
-2.20.1
+2.14.4.44.g2045bb6
 
