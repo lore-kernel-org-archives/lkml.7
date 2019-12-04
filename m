@@ -2,51 +2,51 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B04C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A0BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75F302084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 026C22081B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 15:10:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LIRY5QDr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bGUkJYQR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbfLDPJh (ORCPT
+        id S1728189AbfLDPKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:09:37 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47345 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727910AbfLDPJh (ORCPT
+        Wed, 4 Dec 2019 10:10:04 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47561 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727889AbfLDPKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:09:37 -0500
+        Wed, 4 Dec 2019 10:10:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575472175;
+        s=mimecast20190719; t=1575472203;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JpDNGnaXwkcWb4OqMO4sY3OzA9+qHY77UsQ1KQYrk/U=;
-        b=LIRY5QDrtVHlIMNcMO9elA3YVX2YaiP1YCtKSrzENkOfcgFxFPx7YgPAyd6kf+ee5Qavqw
-        MkvjmGkbmUv47/33fkHk45eFrhx2nsRi7D4y8pfbOGBgW3AFeoZwXHhNH4kOq0C+rpwKW8
-        uZrZduF/STo8RcGSPNu7xwd5CHQIIXg=
+        bh=CJ5SrMoJYVdqtHhNR2msw2JRPLhkHNGFHBvr+vTM02U=;
+        b=bGUkJYQRyCHmYYzwD7aafmq0EAEbG6ml07LX+CxrLRoGwLBjYDbvYomlqxzF8bHn1mLTBR
+        OZfeSUPsKPJ2cSpyrcLFRNerCcYR5fGdl+NJX/2ZBmsxzBes/v1L4sFzHCw/WM9hKKz9+r
+        Sc65u7F+Ff/Fsy6Zy/qi++w/XfQSPpw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-365-Lm1CiUrXMdCtDnXyrPgbkg-1; Wed, 04 Dec 2019 10:09:30 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-99-Fi_Ynz56Mayh6ejcqPYSXA-1; Wed, 04 Dec 2019 10:10:01 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DF22A593C7;
-        Wed,  4 Dec 2019 15:09:28 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02533800C7A;
+        Wed,  4 Dec 2019 15:10:00 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id B9E38691B1;
-        Wed,  4 Dec 2019 15:09:23 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with SMTP id D6B2E1001B28;
+        Wed,  4 Dec 2019 15:09:54 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed,  4 Dec 2019 16:09:27 +0100 (CET)
-Date:   Wed, 4 Dec 2019 16:09:21 +0100
+        oleg@redhat.com; Wed,  4 Dec 2019 16:09:58 +0100 (CET)
+Date:   Wed, 4 Dec 2019 16:09:52 +0100
 From:   Oleg Nesterov <oleg@redhat.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
@@ -56,17 +56,16 @@ Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
         Pedro Alves <palves@redhat.com>, Peter Anvin <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v2 1/4] introduce set_restart_fn() and
- arch_set_restart_data()
-Message-ID: <20191204150921.GA14871@redhat.com>
+Subject: [PATCH v3 1/4] introduce set_restart_fn() and arch_set_restart_data()
+Message-ID: <20191204150952.GB14871@redhat.com>
 References: <20191126110659.GA14042@redhat.com>
  <20191203141239.GA30688@redhat.com>
  <20191203141305.GB30688@redhat.com>
 MIME-Version: 1.0
 In-Reply-To: <20191203141305.GB30688@redhat.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: Lm1CiUrXMdCtDnXyrPgbkg-1
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: Fi_Ynz56Mayh6ejcqPYSXA-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
@@ -76,16 +75,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/03, Oleg Nesterov wrote:
->
-> +static inline long set_restart_fn(struct restart_block *restart,
-> +=09=09=09=09=09long (*fn)(struct restart_block *))
-> +{
-> +=09restart->fn =3D fn;
-> +=09arch_set_restart_data(restart);
-> +=09return -ERESTART_RESTARTBLOCK;
+Preparation. Add the new helper which sets restart_block->fn and calls
+the dummy arch_set_restart_data() helper.
 
-this needs include/errno.h (thank you kbuild test robot), I am sending v3.
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ fs/select.c                    | 10 ++++------
+ include/linux/thread_info.h    | 13 +++++++++++++
+ kernel/futex.c                 |  3 +--
+ kernel/time/alarmtimer.c       |  2 +-
+ kernel/time/hrtimer.c          |  2 +-
+ kernel/time/posix-cpu-timers.c |  2 +-
+ 6 files changed, 21 insertions(+), 11 deletions(-)
 
-Oleg.
+diff --git a/fs/select.c b/fs/select.c
+index 53a0c14..e517960 100644
+--- a/fs/select.c
++++ b/fs/select.c
+@@ -1037,10 +1037,9 @@ static long do_restart_poll(struct restart_block *re=
+start_block)
+=20
+ =09ret =3D do_sys_poll(ufds, nfds, to);
+=20
+-=09if (ret =3D=3D -ERESTARTNOHAND) {
+-=09=09restart_block->fn =3D do_restart_poll;
+-=09=09ret =3D -ERESTART_RESTARTBLOCK;
+-=09}
++=09if (ret =3D=3D -ERESTARTNOHAND)
++=09=09ret =3D set_restart_fn(restart_block, do_restart_poll);
++
+ =09return ret;
+ }
+=20
+@@ -1062,7 +1061,6 @@ SYSCALL_DEFINE3(poll, struct pollfd __user *, ufds, u=
+nsigned int, nfds,
+ =09=09struct restart_block *restart_block;
+=20
+ =09=09restart_block =3D &current->restart_block;
+-=09=09restart_block->fn =3D do_restart_poll;
+ =09=09restart_block->poll.ufds =3D ufds;
+ =09=09restart_block->poll.nfds =3D nfds;
+=20
+@@ -1073,7 +1071,7 @@ SYSCALL_DEFINE3(poll, struct pollfd __user *, ufds, u=
+nsigned int, nfds,
+ =09=09} else
+ =09=09=09restart_block->poll.has_timeout =3D 0;
+=20
+-=09=09ret =3D -ERESTART_RESTARTBLOCK;
++=09=09ret =3D set_restart_fn(restart_block, do_restart_poll);
+ =09}
+ =09return ret;
+ }
+diff --git a/include/linux/thread_info.h b/include/linux/thread_info.h
+index 659a440..be124f0 100644
+--- a/include/linux/thread_info.h
++++ b/include/linux/thread_info.h
+@@ -11,6 +11,7 @@
+ #include <linux/types.h>
+ #include <linux/bug.h>
+ #include <linux/restart_block.h>
++#include <linux/errno.h>
+=20
+ #ifdef CONFIG_THREAD_INFO_IN_TASK
+ /*
+@@ -39,6 +40,18 @@ enum {
+=20
+ #ifdef __KERNEL__
+=20
++#ifndef arch_set_restart_data
++#define arch_set_restart_data(restart) do { } while (0)
++#endif
++
++static inline long set_restart_fn(struct restart_block *restart,
++=09=09=09=09=09long (*fn)(struct restart_block *))
++{
++=09restart->fn =3D fn;
++=09arch_set_restart_data(restart);
++=09return -ERESTART_RESTARTBLOCK;
++}
++
+ #ifndef THREAD_ALIGN
+ #define THREAD_ALIGN=09THREAD_SIZE
+ #endif
+diff --git a/kernel/futex.c b/kernel/futex.c
+index bd18f60..f4f20e9 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -2753,14 +2753,13 @@ static int futex_wait(u32 __user *uaddr, unsigned i=
+nt flags, u32 val,
+ =09=09goto out;
+=20
+ =09restart =3D &current->restart_block;
+-=09restart->fn =3D futex_wait_restart;
+ =09restart->futex.uaddr =3D uaddr;
+ =09restart->futex.val =3D val;
+ =09restart->futex.time =3D *abs_time;
+ =09restart->futex.bitset =3D bitset;
+ =09restart->futex.flags =3D flags | FLAGS_HAS_TIMEOUT;
+=20
+-=09ret =3D -ERESTART_RESTARTBLOCK;
++=09ret =3D set_restart_fn(restart, futex_wait_restart);
+=20
+ out:
+ =09if (to) {
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index 451f9d0..a2ddf56 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -829,9 +829,9 @@ static int alarm_timer_nsleep(const clockid_t which_clo=
+ck, int flags,
+ =09if (flags =3D=3D TIMER_ABSTIME)
+ =09=09return -ERESTARTNOHAND;
+=20
+-=09restart->fn =3D alarm_timer_nsleep_restart;
+ =09restart->nanosleep.clockid =3D type;
+ =09restart->nanosleep.expires =3D exp;
++=09set_restart_fn(restart, alarm_timer_nsleep_restart);
+ =09return ret;
+ }
+=20
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 6560553..55f71c4 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1932,9 +1932,9 @@ long hrtimer_nanosleep(const struct timespec64 *rqtp,
+ =09}
+=20
+ =09restart =3D &current->restart_block;
+-=09restart->fn =3D hrtimer_nanosleep_restart;
+ =09restart->nanosleep.clockid =3D t.timer.base->clockid;
+ =09restart->nanosleep.expires =3D hrtimer_get_expires_tv64(&t.timer);
++=09set_restart_fn(restart, hrtimer_nanosleep_restart);
+ out:
+ =09destroy_hrtimer_on_stack(&t.timer);
+ =09return ret;
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.=
+c
+index 42d512f..eacb0ca 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -1335,8 +1335,8 @@ static int posix_cpu_nsleep(const clockid_t which_clo=
+ck, int flags,
+ =09=09if (flags & TIMER_ABSTIME)
+ =09=09=09return -ERESTARTNOHAND;
+=20
+-=09=09restart_block->fn =3D posix_cpu_nsleep_restart;
+ =09=09restart_block->nanosleep.clockid =3D which_clock;
++=09=09set_restart_fn(restart_block, posix_cpu_nsleep_restart);
+ =09}
+ =09return error;
+ }
+--=20
+2.5.0
+
 
