@@ -2,143 +2,113 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDC6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649BCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BBB22068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:35:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575448520;
-	bh=+pqnkE/apkOsnurZ7uTJ6pjC4WpRH/az4J/xsaoNCzY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mHUKSEBShr0CEcomF9tzo17JUkh7WiT/SERHCLHw8oHa9kv2iqgcE/0AoVi6AufTd
-	 T9QY7jTTrOaMLRtN2PoyvjLhz5IxSCLk5rpt8kffcEDXdfrPelBatwLcP9nx/3o6ol
-	 lfZlpeqSkqt6Zd6hBJzxomc2JR8U72dRiF/qGZCg=
+	by mail.kernel.org (Postfix) with ESMTP id 277C420674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:39:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uZju8+En"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfLDIfT (ORCPT
+        id S1727208AbfLDIjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:35:19 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43511 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfLDIfS (ORCPT
+        Wed, 4 Dec 2019 03:39:51 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36360 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfLDIju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:35:18 -0500
-Received: by mail-wr1-f65.google.com with SMTP id d16so2804122wre.10;
-        Wed, 04 Dec 2019 00:35:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qV8BnIZcKdGe8g/B3hjF/qhzHGhiwqhh1CS3JHi7+oY=;
-        b=dJ+iOk0nrjo08ouSvTi9Phu9bYVfP8B8lGOK/FxWccFa2S09GSt6sHQiSJDY6in7o5
-         NToXPggo/i+sF+YzJiwmccXWyU+Nwx9BjbqbIt0WMJtYpj9FMaSf2LWoiCJ7bBKk+s+1
-         l3uNBaMfXJ4dRGOuTYXJv/10g0JbwUAtA+DJFdWRDi3J/OAW7STpDI3BYwRDopvI3TFD
-         utOyn4i/biUJEO6L3RcgQFatG/yOPY9NZ8Tf/m4jo4V5OJCPPyEiq0QqAi1YFjn2xjf9
-         t53xVNVBrBnXNoGaay+S2E9Zw47aeJKCia6EA1t4MVsOZipgiEeDhpUosN8Y25K2232K
-         y4zg==
-X-Gm-Message-State: APjAAAUIrOt11L1Fbxzp80aAYKzvADJKdr4um+qZ3F2u1bphyq4cgagH
-        gvUcxW5vYkJrnhSnxDv7ZHE=
-X-Google-Smtp-Source: APXvYqzFdwhcGWtledJWcOOqneG+EdFvBn9gWujUMfZNGoZusAuGEFf87XEmN8KRoxRmuwTOLCbijA==
-X-Received: by 2002:adf:dd52:: with SMTP id u18mr2622697wrm.131.1575448515963;
-        Wed, 04 Dec 2019 00:35:15 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id w13sm7529074wru.38.2019.12.04.00.35.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 00:35:15 -0800 (PST)
-Date:   Wed, 4 Dec 2019 09:35:14 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Subject: Re: [PATCH] mm: fix hanging shrinker management on long
- do_shrink_slab
-Message-ID: <20191204083514.GC25242@dhcp22.suse.cz>
-References: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
+        Wed, 4 Dec 2019 03:39:50 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB48dnlB098180;
+        Wed, 4 Dec 2019 02:39:49 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575448789;
+        bh=kIf+FK3QwDZXdvWtPj+QZXSJqavKAzj/7/FnUtLPm3A=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=uZju8+EnXkDg7P4M4xAjZbKLodTE2G0Z8eF+IypZcHMt8/yLfPF8qypBv6RGndIxE
+         /cC505SXhUjDtYZUVEqJjkTKkTsYTr+VljkoTBODyaE3eHfMyedSp0Kjl1p4A97xd5
+         Ny5DXkxu1mupilF5uwq0sVaFnmjdUtE2ujfPdEik=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB48dnlo070005;
+        Wed, 4 Dec 2019 02:39:49 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
+ 2019 02:39:49 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Dec 2019 02:39:49 -0600
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB48dltU102099;
+        Wed, 4 Dec 2019 02:39:48 -0600
+Subject: Re: [PATCH] phy: ti-pipe3: fix missed clk_disable_unprepare in remove
+To:     Chuhong Yuan <hslester96@gmail.com>
+CC:     Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-kernel@vger.kernel.org>
+References: <20191204072540.1452-1-hslester96@gmail.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <3384e4e0-d3d0-1ab0-f631-8b1dfdc5705a@ti.com>
+Date:   Wed, 4 Dec 2019 10:39:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191204072540.1452-1-hslester96@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 30-11-19 00:45:41, Pavel Tikhomirov wrote:
-> We have a problem that shrinker_rwsem can be held for a long time for
-> read in shrink_slab, at the same time any process which is trying to
-> manage shrinkers hangs.
+Hi Chuhong,
+
+On 04/12/2019 09:25, Chuhong Yuan wrote:
+> The driver calls clk_prepare_enable in probe but forgets to call
+> clk_disable_unprepare in remove.
+> Add the missed call to fix it.
 > 
-> The shrinker_rwsem is taken in shrink_slab while traversing shrinker_list.
-> It tries to shrink something on nfs (hard) but nfs server is dead at
-> these moment already and rpc will never succeed. Generally any shrinker
-> can take significant time to do_shrink_slab, so it's a bad idea to hold
-> the list lock here.
-
-Yes, this is a known problem and people have already tried to address it
-in the past. Have you checked previous attempts? SRCU based one
-http://lkml.kernel.org/r/153365347929.19074.12509495712735843805.stgit@localhost.localdomain
-but I believe there were others (I only had this one in my notes).
-Please make sure to Cc Dave Chinner when posting a next version because
-he had some concerns about the change of the behavior.
-
-> We have a similar problem in shrink_slab_memcg, except that we are
-> traversing shrinker_map+shrinker_idr there.
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>   drivers/phy/ti/phy-ti-pipe3.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
 > 
-> The idea of the patch is to inc a refcount to the chosen shrinker so it
-> won't disappear and release shrinker_rwsem while we are in
-> do_shrink_slab, after that we will reacquire shrinker_rwsem, dec
-> the refcount and continue the traversal.
+> diff --git a/drivers/phy/ti/phy-ti-pipe3.c b/drivers/phy/ti/phy-ti-pipe3.c
+> index edd6859afba8..19fd1005a440 100644
+> --- a/drivers/phy/ti/phy-ti-pipe3.c
+> +++ b/drivers/phy/ti/phy-ti-pipe3.c
+> @@ -850,6 +850,12 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+>   
+>   static int ti_pipe3_remove(struct platform_device *pdev)
+>   {
+> +	struct ti_pipe3 *phy = platform_get_drvdata(pdev);
+> +
+> +	if (phy->mode == PIPE3_MODE_SATA) {
+> +		clk_disable_unprepare(phy->refclk);
+> +		phy->sata_refclk_enabled = false;
+> +	}
 
-The reference count part makes sense to me. RCU role needs a better
-explanation. Also do you have any reason to not use completion for
-the final step? Openconding essentially the same concept sounds a bit
-awkward to me.
+In fact we are doing an additional disable in ti_pipe3_disable_clocks()
+for SATA case.
 
-> We also need a wait_queue so that unregister_shrinker can wait for the
-> refcnt to become zero. Only after these we can safely remove the
-> shrinker from list and idr, and free the shrinker.
-[...]
->   crash> bt ...
->   PID: 18739  TASK: ...  CPU: 3   COMMAND: "bash"
->    #0 [...] __schedule at ...
->    #1 [...] schedule at ...
->    #2 [...] rpc_wait_bit_killable at ... [sunrpc]
->    #3 [...] __wait_on_bit at ...
->    #4 [...] out_of_line_wait_on_bit at ...
->    #5 [...] _nfs4_proc_delegreturn at ... [nfsv4]
->    #6 [...] nfs4_proc_delegreturn at ... [nfsv4]
->    #7 [...] nfs_do_return_delegation at ... [nfsv4]
->    #8 [...] nfs4_evict_inode at ... [nfsv4]
->    #9 [...] evict at ...
->   #10 [...] dispose_list at ...
->   #11 [...] prune_icache_sb at ...
->   #12 [...] super_cache_scan at ...
->   #13 [...] do_shrink_slab at ...
+I think that piece of code should removed if you implement it in
+ti_pipe3_remove().
+Also commit log should be updated accordingly.
 
-Are NFS people aware of this? Because this is simply not acceptable
-behavior. Memory reclaim cannot be block indefinitely or for a long
-time. There must be a way to simply give up if the underlying inode
-cannot be reclaimed.
+>   	pm_runtime_disable(&pdev->dev);
+>   
+>   	return 0;
+> 
 
-I still have to think about the proposed solution. It sounds a bit over
-complicated to me.
 -- 
-Michal Hocko
-SUSE Labs
+cheers,
+-roger
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
