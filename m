@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E44C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECDBC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF62720661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E93205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483707;
-	bh=TYfsVzZ4zwiOufA5oBSyagynvgD3Ixw6QqNPhHSGTfE=;
+	s=default; t=1575483712;
+	bh=qcNO1Caxm6NWbnY5JlZralMjIeX6Rv+MxU4i3SGAiy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zVBkV06wDQm344Lay2FiChmHQu6k1IIeJz1KuDpcuWY9DOlwpzM59hhXf0sfWQQLw
-	 z3+9vrP+vi9S6/+nxl/lDjSnXhFWwtsxn6cDGo4ngOp6ztMtzqWnnHb28WezBnn6+Z
-	 g84O/TW1RnOMwfL2rEt/CJNxphsnv/AkhETYepj4=
+	b=ZCC6pZNUOxKjXn+JbQL9AHAIIGcGPzdWSc/vw8AwPfMCkJSYNQ51r+IbdinvJOj+6
+	 rAWifSKZ9LzPoWQwmeaG2SMd9yHY4goqxJNwEZRE95E8rQbNstTAQxSxAqRG9XtlKR
+	 j2OnncJTk5XSTaw+7ECur9XeHljN2fI49Q7zirWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730759AbfLDSVq (ORCPT
+        id S1730134AbfLDSGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:21:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53950 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:06:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730505AbfLDSGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:06:10 -0500
+        id S1728186AbfLDSF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:05:56 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4174E2081B;
-        Wed,  4 Dec 2019 18:06:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77E4520675;
+        Wed,  4 Dec 2019 18:05:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482769;
-        bh=TYfsVzZ4zwiOufA5oBSyagynvgD3Ixw6QqNPhHSGTfE=;
+        s=default; t=1575482756;
+        bh=qcNO1Caxm6NWbnY5JlZralMjIeX6Rv+MxU4i3SGAiy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g9dHoBw9U334Sf0Qt+HKZneKKFQbTST5sD6CfKztyuBSLPfC5+lYo7zu4cquX8gnc
-         N21s86nEUFqSoQK20ug8Y5IVasf3yLEDMduNpEsLpaqkvgenYrdsqD9wWoxp4roKSq
-         IaaylsUD/D+SRvzGNnmg4N80aNar/wuYTmYyl5Vg=
+        b=pwSeYMoklIVm9GAuzxbsgIkd+2YE/GbMcZWaMbfpWnahIgsvwYSN2jEOpa/T1MSsr
+         V7IHknNeMeaC2irzrI1NJlU2POtFpyMFoGb2DEFVyl4UgYih+qlLozGuTGy8Fuz5V/
+         8DRP7anlaNMaToROjec/HgXgYzEL/ig3/kYGidYU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Boris Brezillon <bbrezillon@kernel.org>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 126/209] mtd: Check add_mtd_device() ret code
-Date:   Wed,  4 Dec 2019 18:55:38 +0100
-Message-Id: <20191204175331.760818602@linuxfoundation.org>
+Subject: [PATCH 4.14 095/209] powerpc/mm: Make NULL pointer deferences explicit on bad page faults.
+Date:   Wed,  4 Dec 2019 18:55:07 +0100
+Message-Id: <20191204175328.405038792@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -59,111 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <bbrezillon@kernel.org>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 2b6f0090a3335b7bdd03ca520c35591159463041 ]
+[ Upstream commit 49a502ea23bf9dec47f8f3c3960909ff409cd1bb ]
 
-add_mtd_device() can fail. We should always check its return value
-and gracefully handle the failure case. Fix the call sites where this
-not done (in mtdpart.c) and add a __must_check attribute to the
-prototype to avoid this kind of mistakes.
+As several other arches including x86, this patch makes it explicit
+that a bad page fault is a NULL pointer dereference when the fault
+address is lower than PAGE_SIZE
 
-Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
+In the mean time, this page makes all bad_page_fault() messages
+shorter so that they remain on one single line. And it prefixes them
+by "BUG: " so that they get easily grepped.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+[mpe: Avoid pr_cont()]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/mtdcore.h |  2 +-
- drivers/mtd/mtdpart.c | 36 +++++++++++++++++++++++++++++++-----
- 2 files changed, 32 insertions(+), 6 deletions(-)
+ arch/powerpc/mm/fault.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/mtd/mtdcore.h b/drivers/mtd/mtdcore.h
-index 37accfd0400e5..24480b75a88dd 100644
---- a/drivers/mtd/mtdcore.h
-+++ b/drivers/mtd/mtdcore.h
-@@ -7,7 +7,7 @@
- extern struct mutex mtd_table_mutex;
- 
- struct mtd_info *__mtd_next_device(int i);
--int add_mtd_device(struct mtd_info *mtd);
-+int __must_check add_mtd_device(struct mtd_info *mtd);
- int del_mtd_device(struct mtd_info *mtd);
- int add_mtd_partitions(struct mtd_info *, const struct mtd_partition *, int);
- int del_mtd_partitions(struct mtd_info *);
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index a308e707392d5..27d9785487d69 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -684,10 +684,22 @@ int mtd_add_partition(struct mtd_info *parent, const char *name,
- 	list_add(&new->list, &mtd_partitions);
- 	mutex_unlock(&mtd_partitions_mutex);
- 
--	add_mtd_device(&new->mtd);
-+	ret = add_mtd_device(&new->mtd);
-+	if (ret)
-+		goto err_remove_part;
- 
- 	mtd_add_partition_attrs(new);
- 
-+	return 0;
-+
-+err_remove_part:
-+	mutex_lock(&mtd_partitions_mutex);
-+	list_del(&new->list);
-+	mutex_unlock(&mtd_partitions_mutex);
-+
-+	free_partition(new);
-+	pr_info("%s:%i\n", __func__, __LINE__);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(mtd_add_partition);
-@@ -778,22 +790,31 @@ int add_mtd_partitions(struct mtd_info *master,
- {
- 	struct mtd_part *slave;
- 	uint64_t cur_offset = 0;
--	int i;
-+	int i, ret;
- 
- 	printk(KERN_NOTICE "Creating %d MTD partitions on \"%s\":\n", nbparts, master->name);
- 
- 	for (i = 0; i < nbparts; i++) {
- 		slave = allocate_partition(master, parts + i, i, cur_offset);
- 		if (IS_ERR(slave)) {
--			del_mtd_partitions(master);
--			return PTR_ERR(slave);
-+			ret = PTR_ERR(slave);
-+			goto err_del_partitions;
- 		}
- 
- 		mutex_lock(&mtd_partitions_mutex);
- 		list_add(&slave->list, &mtd_partitions);
- 		mutex_unlock(&mtd_partitions_mutex);
- 
--		add_mtd_device(&slave->mtd);
-+		ret = add_mtd_device(&slave->mtd);
-+		if (ret) {
-+			mutex_lock(&mtd_partitions_mutex);
-+			list_del(&slave->list);
-+			mutex_unlock(&mtd_partitions_mutex);
-+
-+			free_partition(slave);
-+			goto err_del_partitions;
-+		}
-+
- 		mtd_add_partition_attrs(slave);
- 		if (parts[i].types)
- 			mtd_parse_part(slave, parts[i].types);
-@@ -802,6 +823,11 @@ int add_mtd_partitions(struct mtd_info *master,
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 52863deed65df..5fc8a010fdf07 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -581,21 +581,22 @@ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
+ 	switch (regs->trap) {
+ 	case 0x300:
+ 	case 0x380:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"data at address 0x%08lx\n", regs->dar);
++		pr_alert("BUG: %s at 0x%08lx\n",
++			 regs->dar < PAGE_SIZE ? "Kernel NULL pointer dereference" :
++			 "Unable to handle kernel data access", regs->dar);
+ 		break;
+ 	case 0x400:
+ 	case 0x480:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"instruction fetch\n");
++		pr_alert("BUG: Unable to handle kernel instruction fetch%s",
++			 regs->nip < PAGE_SIZE ? " (NULL pointer?)\n" : "\n");
+ 		break;
+ 	case 0x600:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"unaligned access at address 0x%08lx\n", regs->dar);
++		pr_alert("BUG: Unable to handle kernel unaligned access at 0x%08lx\n",
++			 regs->dar);
+ 		break;
+ 	default:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"unknown fault\n");
++		pr_alert("BUG: Unable to handle unknown paging fault at 0x%08lx\n",
++			 regs->dar);
+ 		break;
  	}
- 
- 	return 0;
-+
-+err_del_partitions:
-+	del_mtd_partitions(master);
-+
-+	return ret;
- }
- 
- static DEFINE_SPINLOCK(part_parser_lock);
+ 	printk(KERN_ALERT "Faulting instruction address: 0x%08lx\n",
 -- 
 2.20.1
 
