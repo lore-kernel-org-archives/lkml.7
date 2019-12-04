@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9972C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E93C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7495205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2808120833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483460;
-	bh=c92/BLyGFwnUnlC9RHs4LORE2AeBCegKXnWlVU3xO4I=;
+	s=default; t=1575483463;
+	bh=qIgDX2z+lr7L+kdpozSslehcZI5zrr+JOqcoBwxWbXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=swp+0CLqDSveinOFsEFqEC+ij0bl5pmewJOiHfr1BdyuwDvQy1eXDeQlWOD1YcxKg
-	 ZJdAwpd7Zbmum+iW4Mu8bkHvdrcFTtC+cL58dyrF614FpO/cf3fYfIzWnXcn8zG78Z
-	 Ff+hlHZlQDl6HSj5zknEBbRtCD4LG2HllKzuo3RE=
+	b=iKKsS59Tx31EY5gnVlXhBYrrbGGtQzQe6DfnjJji3azqsUF90uOTK6Tj5IBHBrY/R
+	 Ly5x1tvJdj3hQZORcYA5e90OZu+POJyoFXqEAtszBjKoL5P1d2V8cB1nJc4nXmuU3i
+	 4LTgMQIswq3/2fsGyfYSXiqEpAmZdbu9mdA5Jelo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731480AbfLDSLh (ORCPT
+        id S1731470AbfLDSLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:11:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39826 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:11:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730942AbfLDSLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:11:34 -0500
+        id S1731454AbfLDSLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:11:32 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 987C720674;
-        Wed,  4 Dec 2019 18:11:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34B7920862;
+        Wed,  4 Dec 2019 18:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483094;
-        bh=c92/BLyGFwnUnlC9RHs4LORE2AeBCegKXnWlVU3xO4I=;
+        s=default; t=1575483091;
+        bh=qIgDX2z+lr7L+kdpozSslehcZI5zrr+JOqcoBwxWbXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jIFR1ZLWRrWB2+PuKXzpKeE62E5xvGI3UPAGCh8RZ9UuYlUZPaWKQNj911rVZ3tXk
-         ov9S1wMUEzWpGBkEbJgxgI5rN8yJn1T6Wtipt/nMPkWdGLcTe/CgKbIluyqSsn5+gt
-         oq3o3n9Lqb3iBbR69S5r4S2SCFrkqqUO//Zxs80s=
+        b=Bip+nWpon1wzKgBUcgckWM+Y30wuUlqqDQzrxJgt6PFfPeNZt9ICu6WH15gUp6Z9q
+         2I4hjovRMwxsZHLgOiclKrxA3/wqYD+TJZIYXcaW3WEdzZh5IuAm/hXTBsZlyXCg+g
+         QpnjbSGw64XAV3Z4xaXClJ8WLajqMvrvguUbAl/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 050/125] powerpc/book3s/32: fix number of bats in p/v_block_mapped()
-Date:   Wed,  4 Dec 2019 18:55:55 +0100
-Message-Id: <20191204175322.048057205@linuxfoundation.org>
+Subject: [PATCH 4.9 049/125] IB/qib: Fix an error code in qib_sdma_verbs_send()
+Date:   Wed,  4 Dec 2019 18:55:54 +0100
+Message-Id: <20191204175321.970408955@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -60,42 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit e93ba1b7eb5b188c749052df7af1c90821c5f320 ]
+[ Upstream commit 5050ae5fa3d54c8e83e1e447cc7e3591110a7f57 ]
 
-This patch fixes the loop in p_block_mapped() and v_block_mapped()
-to scan the entire bat_addrs[] array.
+We accidentally return success on this error path.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: f931551bafe1 ("IB/qib: Add new qib driver for QLogic PCIe InfiniBand adapters")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/ppc_mmu_32.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/qib/qib_sdma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/ppc_mmu_32.c b/arch/powerpc/mm/ppc_mmu_32.c
-index 2a049fb8523d5..96c52271e9c2d 100644
---- a/arch/powerpc/mm/ppc_mmu_32.c
-+++ b/arch/powerpc/mm/ppc_mmu_32.c
-@@ -52,7 +52,7 @@ struct batrange {		/* stores address ranges mapped by BATs */
- phys_addr_t v_block_mapped(unsigned long va)
- {
- 	int b;
--	for (b = 0; b < 4; ++b)
-+	for (b = 0; b < ARRAY_SIZE(bat_addrs); ++b)
- 		if (va >= bat_addrs[b].start && va < bat_addrs[b].limit)
- 			return bat_addrs[b].phys + (va - bat_addrs[b].start);
- 	return 0;
-@@ -64,7 +64,7 @@ phys_addr_t v_block_mapped(unsigned long va)
- unsigned long p_block_mapped(phys_addr_t pa)
- {
- 	int b;
--	for (b = 0; b < 4; ++b)
-+	for (b = 0; b < ARRAY_SIZE(bat_addrs); ++b)
- 		if (pa >= bat_addrs[b].phys
- 	    	    && pa < (bat_addrs[b].limit-bat_addrs[b].start)
- 		              +bat_addrs[b].phys)
+diff --git a/drivers/infiniband/hw/qib/qib_sdma.c b/drivers/infiniband/hw/qib/qib_sdma.c
+index 891873b38a1e6..5f3f197678b78 100644
+--- a/drivers/infiniband/hw/qib/qib_sdma.c
++++ b/drivers/infiniband/hw/qib/qib_sdma.c
+@@ -600,8 +600,10 @@ retry:
+ 		dw = (len + 3) >> 2;
+ 		addr = dma_map_single(&ppd->dd->pcidev->dev, sge->vaddr,
+ 				      dw << 2, DMA_TO_DEVICE);
+-		if (dma_mapping_error(&ppd->dd->pcidev->dev, addr))
++		if (dma_mapping_error(&ppd->dd->pcidev->dev, addr)) {
++			ret = -ENOMEM;
+ 			goto unmap;
++		}
+ 		sdmadesc[0] = 0;
+ 		make_sdma_desc(ppd, sdmadesc, (u64) addr, dw, dwoffset);
+ 		/* SDmaUseLargeBuf has to be set in every descriptor */
 -- 
 2.20.1
 
