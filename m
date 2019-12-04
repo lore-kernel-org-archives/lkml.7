@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DEFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83892C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29DDD20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E25720675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:07:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hNvxZF+y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sSbbWoEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfLDAGs (ORCPT
+        id S1726598AbfLDAHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 19:06:48 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59056 "EHLO
+        Tue, 3 Dec 2019 19:07:03 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59706 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfLDAGs (ORCPT
+        with ESMTP id S1726066AbfLDAHC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 19:06:48 -0500
+        Tue, 3 Dec 2019 19:07:02 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IM+PKkKail1pE96xE6nqz6r5Q7wnGRk237iXDfr/sHE=; b=hNvxZF+ygKSZr6liz3AOtfR/n
-        b1mQtF1O+bjIzfv2nzGt7lq+mjHJjCAoweZdJMDVXnuyZx4Ii6xZBFH30zJOOeeK/aNzHnH4Ayv3S
-        PZdLmoiDo/92fpOOP+UJwqpU+okjIIA+C+QC/VsBPCPSoYhgIZPZSQlGyT+0wumqWcYI5OBZRMP5T
-        DKr2RlUdjsSVetW/SdAUXa0Q/kFnkjr44YVUuVx76SnLMPDpWKEYfDVL9O7vRKUbCrnqXPjQ/URTM
-        olS8dlOiRFfpi8HypAdlmbRcp+h4bJo0LobLkkw+duc9F0C3+U82dldS8D7ynWCJpOwO9u8SJPFW/
-        Gr6zcGddg==;
+         bh=2KtDmWdvGCmxR2mK0YiKHb1fX6wYNN4zJ9xjwFiMUgY=; b=sSbbWoEo7m0ZysVS1/j+8In3k
+        17b5idWPoNt6AeraONIVGM1rX2dkfj1ulbHtaVeMZt1vV0G/1nwIaYLgDbhSzxShWMeaVaUVRAElI
+        Ji+p4+8A3payLnl0Fwhpttr9Qj8l8nyla30kyJIDImsiNzCIxx0yephmwWuE0eseLZ7KpKk+LtEDR
+        jOND6xztFbTzzCBEt7AgasUq+giRTb2AuEPJgoxgZvlxeuZNd8DNLwIVYZQWBqB3fOLQ6CcPxO8cv
+        qXu2eiYy9/GSb0GoeQQTr+leRVVNuq7h4+Nf1fUoBRiTeBWrR1gh8ISYA4W1WjeY+T37y/co/LT7e
+        ZhCJC6r4g==;
 Received: from [2601:1c0:6280:3f0::5a22]
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1icIBs-0003pq-5Y; Wed, 04 Dec 2019 00:06:48 +0000
+        id 1icIC6-0003xa-CW; Wed, 04 Dec 2019 00:07:02 +0000
 To:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>
 From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] x86: fix Kconfig punctuation for X86_BIGSMP
-Message-ID: <443ed0a8-783d-6c7c-3258-e1c44df03fd7@infradead.org>
-Date:   Tue, 3 Dec 2019 16:06:47 -0800
+Subject: [PATCH] x86: fix NUMA Kconfig help text
+Message-ID: <1aff275a-b71b-e1dc-a137-caff06a8538f@infradead.org>
+Date:   Tue, 3 Dec 2019 16:07:01 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
@@ -55,24 +55,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-End a sentence with a period (aka full stop) in Kconfig
-help text.
+Fix minor NUMA-related Kconfig text:
+
+- Use capitals letters for NUMA acronym.
+- Hyphenate Non-Uniform.
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: x86@kernel.org
 ---
- arch/x86/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/Kconfig |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 --- lnx-54.orig/arch/x86/Kconfig
 +++ lnx-54/arch/x86/Kconfig
-@@ -476,7 +476,7 @@ config X86_BIGSMP
- 	bool "Support for big SMP systems with more than 8 CPUs"
- 	depends on SMP
- 	---help---
--	  This option is needed for the systems that have more than 8 CPUs
-+	  This option is needed for the systems that have more than 8 CPUs.
+@@ -1554,12 +1554,12 @@ config AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT
  
- config X86_EXTENDED_PLATFORM
- 	bool "Support for extended (non-PC) x86 platforms"
+ # Common NUMA Features
+ config NUMA
+-	bool "Numa Memory Allocation and Scheduler Support"
++	bool "NUMA Memory Allocation and Scheduler Support"
+ 	depends on SMP
+ 	depends on X86_64 || (X86_32 && HIGHMEM64G && X86_BIGSMP)
+ 	default y if X86_BIGSMP
+ 	---help---
+-	  Enable NUMA (Non Uniform Memory Access) support.
++	  Enable NUMA (Non-Uniform Memory Access) support.
+ 
+ 	  The kernel will try to allocate memory used by a CPU on the
+ 	  local memory controller of the CPU and add some more
+
 
