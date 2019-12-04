@@ -2,113 +2,149 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A33FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85F7C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275692073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:27:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Qo11Rhqd"
+	by mail.kernel.org (Postfix) with ESMTP id BE68220661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:35:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575455702;
+	bh=gIOCdcCQn6L7tyD3Xj0ya+lR+9rHnxlkop6MTZ3oS38=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=eMzH3i024R4GPtXwaChxoWxAtx0EzQXdLZvaAASekYQCaCES7eFPz6hqkqDHsvRe4
+	 esIbcgmaG5ZmmoNxgGGQpCMynGiIHKiV/OlgOd8MHNWt6rukRcy9qv2yMnOLNECE1U
+	 dtFiZjUeSG/2+0PfacvMJjLcm1Qxe4T/f2bsejv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbfLDK1A (ORCPT
+        id S1727491AbfLDKfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:27:00 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:3040 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727491AbfLDK07 (ORCPT
+        Wed, 4 Dec 2019 05:35:01 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39080 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbfLDKfB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:26:59 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de789f60002>; Wed, 04 Dec 2019 02:27:02 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 04 Dec 2019 02:26:59 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 04 Dec 2019 02:26:59 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Dec
- 2019 10:26:56 +0000
-Subject: Re: [PATCH 5.4 00/46] 5.4.2-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191203212705.175425505@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <2c6d505c-e05a-9156-223a-0795f2090e1f@nvidia.com>
-Date:   Wed, 4 Dec 2019 10:26:54 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 4 Dec 2019 05:35:01 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 77so5874618oty.6;
+        Wed, 04 Dec 2019 02:35:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=WNn4XHe9ywl5H5Cb0VGU+9qS/kYHcdC+aeiiry/1kpM=;
+        b=OI6cVXpMhdjVAbn0ZtgEAo788b6jCZ60MVD3EkSbOpIiYmo4vvbxvsmk/JXpZ3U8FS
+         Jr6Orw/vKUmcA8l675DGDr7rse2U8BfPZt49+Hce+oZ9VMWW3VxrtSxWLg9j4QvQZW/w
+         E0iaxUF1qbAw8t00wVAxKQJVLEI2/BfUShT9vilFaNiI4GLDcf6SakdtIYxF8wFtdJUN
+         Oyfg/qZlWYpvH5yoMVt26JmPbaY0fJ8DzIy6fCGABpcI079tdjahw3sEGGhrqe7+edAN
+         C8linyYdmC75/gZA33W/NGZyX+4RURAXt7ykb9TfmMCbKgVxfgWnoBdMbdAp30FG4wBd
+         z2rg==
+X-Gm-Message-State: APjAAAVf/8z+1xGInGzP/fh3D8kNN+5U21WD/WpSX/Dt40rtSmf6uB4s
+        zuNdQrvsqxIffWbH04S/6r8Ac+oOPnMkGLjcTSzThina
+X-Google-Smtp-Source: APXvYqwi/xv+2t7WJjFELHBgx2xxlAvDSPObHgOKAMie0hXPlaY8UJ7uVPjZHHOG5pB3iZgU8+48EoXBwiTvMXTp3tQ=
+X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr1965013otd.266.1575455700009;
+ Wed, 04 Dec 2019 02:35:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575455223; bh=udt3CsPxpkBLU+zwEc/hyQSc0Cs7eS3ZopOoRTbMwL0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Qo11RhqdiQB33r34LrjAfwKk2CH2IxJPHCFRCTZPgFFzWD8KCwlZ5PoRyRxykN7ju
-         IUIag6bhfS7Jyae6zvi5699tapa5xL2/T5GGRbpgTlA14A+GDV13UZV0POBYu8OUwA
-         O2agbdPxDetgYZSdrwruAFB+c0lsnLXUfNrzgGBuVTrgt6nbT/zJ4gHHoZuR/IFNE7
-         XsXIlrCSWUKl4wG4cv6KG9+2vvFyCU6CcNRvKcjpscBuzyo0QFnroYGlEPdbhavzFy
-         baPZCzb4ZNOD2rutVrbqGA8iN56GJEq35or3T/IAOkQXvvavSm5jgZNzMCc04Jf7vZ
-         mbPcWz7EY5ekQ==
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 4 Dec 2019 11:34:48 +0100
+Message-ID: <CAJZ5v0iWz6HG4C19U2Pax8KpyGm=AvwDbU__w=Yt7ij1JqQZFg@mail.gmail.com>
+Subject: [GIT PULL] More power management updates for v5.5-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
-On 03/12/2019 22:35, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.2 release.
-> There are 46 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 05 Dec 2019 21:20:36 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.2-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
+Please pull from the tag
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.5-rc1-2
+
+with top-most commit 1e4230f56dac141eb149ebec01f41b6fad27e503
+
+ Merge branches 'pm-sleep', 'pm-cpuidle', 'pm-cpufreq', 'pm-devfreq'
+and 'pm-avs'
+
+on top of commit 6e9f879684b46331f51d0c76ebee981c788417db
+
+ Merge tag 'acpi-5.5-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+
+to receive additional power management updates for 5.5-rc1.
+
+These fix an ACPI EC driver bug exposed by the recent rework
+of the suspend-to-idle code flow, reintroduce frequency
+constraints into device PM QoS (in preparation for adding
+QoS support to devfreq), drop a redundant field from struct
+cpuidle_state and clean up Kconfig in some places.
+
+Specifics:
+
+ - Avoid a race condition in the ACPI EC driver that may cause
+   systems to be unable to leave suspend-to-idle (Rafael Wysocki).
+
+ - Drop the "disabled" field, which is redundant, from struct
+   cpuidle_state (Rafael Wysocki).
+
+ - Reintroduce device PM QoS frequency constraints (temporarily
+   introduced and than dropped during the 5.4 cycle) in preparation
+   for adding QoS support to devfreq (Leonard Crestez).
+
+ - Clean up indentation (in multiple places) and the cpuidle drivers
+   help text in Kconfig (Krzysztof Kozlowski, Randy Dunlap).
+
+Thanks!
 
 
-No new regressions for Tegra. Still one warning test failing, but that
-is expected.
+---------------
 
-Test results for stable-v5.4:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	37 pass, 1 fail
+Krzysztof Kozlowski (3):
+      cpuidle: Fix Kconfig indentation
+      cpufreq: Fix Kconfig indentation
+      power: avs: Fix Kconfig indentation
 
-Linux version:	5.4.2-rc1-g3eb35d2ecc30
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+Leonard Crestez (4):
+      PM / QoS: Redefine FREQ_QOS_MAX_DEFAULT_VALUE to S32_MAX
+      PM / QoS: Initial kunit test
+      PM / QoS: Reorder pm_qos/freq_qos/dev_pm_qos structs
+      PM / QoS: Restore DEV_PM_QOS_MIN/MAX_FREQUENCY
 
-Cheers
-Jon
+Marek Szyprowski (1):
+      PM / devfreq: Add missing locking while setting suspend_freq
 
--- 
-nvpublic
+Rafael J. Wysocki (3):
+      cpuidle: Drop disabled field from struct cpuidle_state
+      ACPI: EC: Rework flushing of pending work
+      ACPI: PM: s2idle: Rework ACPI events synchronization
+
+Randy Dunlap (1):
+      cpuidle: minor Kconfig help text fixes
+
+---------------
+
+ arch/sh/kernel/cpu/shmobile/cpuidle.c |   8 +--
+ drivers/acpi/ec.c                     |  36 ++++-------
+ drivers/acpi/sleep.c                  |  26 ++++++--
+ drivers/base/Kconfig                  |   4 ++
+ drivers/base/power/Makefile           |   1 +
+ drivers/base/power/qos-test.c         | 117 ++++++++++++++++++++++++++++++++++
+ drivers/base/power/qos.c              |  73 +++++++++++++++++++--
+ drivers/cpufreq/Kconfig.powerpc       |   8 +--
+ drivers/cpufreq/Kconfig.x86           |  16 ++---
+ drivers/cpuidle/Kconfig               |  16 ++---
+ drivers/cpuidle/Kconfig.arm           |  22 +++----
+ drivers/cpuidle/cpuidle.c             |   2 +-
+ drivers/cpuidle/poll_state.c          |   1 -
+ drivers/devfreq/devfreq.c             |   4 ++
+ drivers/idle/intel_idle.c             |   6 +-
+ drivers/power/avs/Kconfig             |  12 ++--
+ include/linux/cpuidle.h               |   2 +-
+ include/linux/pm_qos.h                |  86 ++++++++++++++-----------
+ kernel/power/qos.c                    |   4 +-
+ 19 files changed, 324 insertions(+), 120 deletions(-)
