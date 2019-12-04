@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2F1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2177BC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F54020863
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3C72084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482774;
-	bh=cvFZvCXWVi56kGin9wBixbYsa4vDrv6sQdpsJCuvV0I=;
+	s=default; t=1575482777;
+	bh=mPO7WF3K91Z9u3xAlclEJ3aTcPwGlshbnZnEVQAoziM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IBtlE5AgydCyUQP1K54jjRvNjjh+WZsXPqtke8T8dr1P6uNtBUJcfALZe6Sop5/yh
-	 uVsaDwHe5iyG2WmGVduCB+gTYZsGZeNd36YT9M1rJ9H3/HHm/bbrVriOvF8evgay98
-	 eSU1prsMhWHs0jX/vSsdOmUd/IVT4rTMNo5U4ZZc=
+	b=NWifCBKIyl0ocyUpK5oSr4LdrkyukUDVZVAFd2ZO4vBGK43E2sJqZlyiT65XqNodX
+	 Ski8W2nO9IHkAGWn3eYauvnUbHnUXKqCFyGA7jSqh1u8A0o+TwD3ihKAC5MWsTWLfn
+	 QPPOY6lzajhE0qdZ9KMO0PxZu8aRTIFHkIKxtyYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbfLDSGN (ORCPT
+        id S1728742AbfLDSGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:06:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53790 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:06:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730495AbfLDSGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:06:06 -0500
+        id S1730510AbfLDSGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:06:12 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB03E2081B;
-        Wed,  4 Dec 2019 18:06:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C501420865;
+        Wed,  4 Dec 2019 18:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482766;
-        bh=cvFZvCXWVi56kGin9wBixbYsa4vDrv6sQdpsJCuvV0I=;
+        s=default; t=1575482772;
+        bh=mPO7WF3K91Z9u3xAlclEJ3aTcPwGlshbnZnEVQAoziM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MyTA0fVhOQuflOBBTZOlyyJnbxCXb6/I6ePS00chuMVMLATqTX2eFTjiGRW9q+LUn
-         GXBuOH+/zHEoYtOXvMrWeyU3KABHweyyWcVS0yY2xrOuYKm319r3W53cX6ei9LkWN5
-         epohRcyuBcX4tRECFP9GGRvA6Peh+RtQlksflUU0=
+        b=yiLPlnr68eNdP6a4UAcTX6dTnO0B88pKzdfs5jZq2jfYdXaA816RlI2DJ+5gVAkdM
+         sxvkcoPBtYYOQ7oQzEdH98FwtkHuwwp3oZUCFEQIJitdGe+kfR3O4KItJmgDjuGl7+
+         LUQ9MKNRJDsw/q+PG6/qJuVQXesmj14IKeo9HW4o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huang Shijie <sjhuang@iluvatar.ai>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Skidanov <alexey.skidanov@intel.com>,
-        Olof Johansson <olof@lixom.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 125/209] lib/genalloc.c: include vmalloc.h
-Date:   Wed,  4 Dec 2019 18:55:37 +0100
-Message-Id: <20191204175331.680647044@linuxfoundation.org>
+Subject: [PATCH 4.14 127/209] tipc: fix memory leak in tipc_nl_compat_publ_dump
+Date:   Wed,  4 Dec 2019 18:55:39 +0100
+Message-Id: <20191204175331.832817279@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -63,41 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olof Johansson <olof@lixom.net>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-[ Upstream commit 35004f2e55807a1a1491db24ab512dd2f770a130 ]
+[ Upstream commit f87d8ad9233f115db92c6c087d58403b0009ed36 ]
 
-Fixes build break on most ARM/ARM64 defconfigs:
+There is a memory leak in case genlmsg_put fails.
 
-  lib/genalloc.c: In function 'gen_pool_add_virt':
-  lib/genalloc.c:190:10: error: implicit declaration of function 'vzalloc_node'; did you mean 'kzalloc_node'?
-  lib/genalloc.c:190:8: warning: assignment to 'struct gen_pool_chunk *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-  lib/genalloc.c: In function 'gen_pool_destroy':
-  lib/genalloc.c:254:3: error: implicit declaration of function 'vfree'; did you mean 'kfree'?
+Fix this by freeing *args* before return.
 
-Fixes: 6862d2fc8185 ('lib/genalloc.c: use vzalloc_node() to allocate the bitmap')
-Cc: Huang Shijie <sjhuang@iluvatar.ai>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexey Skidanov <alexey.skidanov@intel.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Addresses-Coverity-ID: 1476406 ("Resource leak")
+Fixes: 46273cf7e009 ("tipc: fix a missing check of genlmsg_put")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Acked-by: Ying Xue <ying.xue@windriver.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/genalloc.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/tipc/netlink_compat.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/genalloc.c b/lib/genalloc.c
-index f365d71cdc774..7e85d1e37a6ea 100644
---- a/lib/genalloc.c
-+++ b/lib/genalloc.c
-@@ -35,6 +35,7 @@
- #include <linux/interrupt.h>
- #include <linux/genalloc.h>
- #include <linux/of_device.h>
-+#include <linux/vmalloc.h>
+diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+index 91d51a595ac23..bbd05707c4e07 100644
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -974,8 +974,10 @@ static int tipc_nl_compat_publ_dump(struct tipc_nl_compat_msg *msg, u32 sock)
  
- static inline size_t chunk_size(const struct gen_pool_chunk *chunk)
- {
+ 	hdr = genlmsg_put(args, 0, 0, &tipc_genl_family, NLM_F_MULTI,
+ 			  TIPC_NL_PUBL_GET);
+-	if (!hdr)
++	if (!hdr) {
++		kfree_skb(args);
+ 		return -EMSGSIZE;
++	}
+ 
+ 	nest = nla_nest_start(args, TIPC_NLA_SOCK);
+ 	if (!nest) {
 -- 
 2.20.1
 
