@@ -2,127 +2,117 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801B5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7113C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52DC1207DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575455824;
-	bh=nEdTtOUo24H09IeLNZxMcO1SUPfwSOjFQbWHqideWtM=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=UJ5D87BCK9hjoCaxVhCUXqNLmeCBwifpAnzm+i6oGcACEM/yJIdFMJ/BHDMi94VqO
-	 7yQRdH7lpN1xPKwNXLf473nSo6LTRQr3hvBxOWEruqKJhTJyYNQG0vzujPpXmXpfAL
-	 B0U/CHT2dM4b3FM7lkwJt88QwYGCWrHQWO1+W+8Q=
+	by mail.kernel.org (Postfix) with ESMTP id A70C52068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:38:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PBV9A8K/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbfLDKhD (ORCPT
+        id S1727571AbfLDKi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:37:03 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46949 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfLDKhC (ORCPT
+        Wed, 4 Dec 2019 05:38:58 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49847 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727445AbfLDKi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:37:02 -0500
-Received: by mail-ot1-f65.google.com with SMTP id g18so5835094otj.13;
-        Wed, 04 Dec 2019 02:37:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=hrn+T0qXoBS7Oix705yZN70rK/KjrjidrzrYQzpvk60=;
-        b=uOiZ5L3ycsWP1ypJcqLcVydDA2vOHcjwdIV8iV64rGC/L/SR9xTQPpfSSuWjI5nYMc
-         bp0rGEC9XQRRrZVR+pO5MyLpDL8OT/mZnAXl9keQcmE2DKY/O/AqGeAi64yexfYxjTBI
-         uTeFv9b+90CiaQs0cqQayIkfiPSFPiDgI+kynDdGIPQ+Ipoi+KVW8ibhIkhc26v1W4Bl
-         d5jIEnAF5gF/TcSY0hYPv3YcDkgVivhJfxTuZzzBApNu9jxVFT2XbYzjSaNKf4BZliik
-         1e0cXwo+77w3W+0GuHp+vnn/FPYWHi+lAg7G75AR7pXCeXMaUcsxgjU6pfDiL8ZRVAV8
-         cYkA==
-X-Gm-Message-State: APjAAAXnXwcxDI0OxDkp1wvcZ+BHGOP8LuLRbkS0zTaqLJybyeX5sGze
-        K92wUody8GIM9WzSkUgPXzC/+4pdbmQI9+T+8eI=
-X-Google-Smtp-Source: APXvYqylkz9yP/hrkQViDPt291eUwfZVYWuWFjR8l2wU4NqXVMwO1iSg4PjIa/CfW4XWAaZk9Q06SEPG/3IkwwHc9L0=
-X-Received: by 2002:a9d:7483:: with SMTP id t3mr1952495otk.262.1575455821133;
- Wed, 04 Dec 2019 02:37:01 -0800 (PST)
+        Wed, 4 Dec 2019 05:38:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575455937;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qyYnPmXfgI61ReQeMn/+NTEgEMEEZXrZpt8TBXvPtWs=;
+        b=PBV9A8K/tIfbfS9wJYChjoNSb9X+xXIEAHaNTucE75HhJ7gElP7WBMO+BMZ5ZJcM0UeGI4
+        XaHG5X/VApWjw7K0qxyt1BdIrHaMcY5pzLlUdJsIuU+mdrndbOiZStICt5QPsrqbshaJJP
+        oZtT1b8uBtnQrNbljCEsgOb7tyQs7II=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-207-GMxku97lOqKb5wfj8JYdEQ-1; Wed, 04 Dec 2019 05:38:56 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3388D107ACC4;
+        Wed,  4 Dec 2019 10:38:55 +0000 (UTC)
+Received: from [10.72.12.45] (ovpn-12-45.pek2.redhat.com [10.72.12.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0763E101E811;
+        Wed,  4 Dec 2019 10:38:47 +0000 (UTC)
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+To:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-5-peterx@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <1355422f-ab62-9dc3-2b48-71a6e221786b@redhat.com>
+Date:   Wed, 4 Dec 2019 18:38:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 4 Dec 2019 11:36:50 +0100
-Message-ID: <CAJZ5v0g4T6cCQr0BegWhY+KD0W2VJRqBTNoeu-bV8RYmPzTtRg@mail.gmail.com>
-Subject: [GIT PULL] More ACPI updates for v5.5-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191129213505.18472-5-peterx@redhat.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: GMxku97lOqKb5wfj8JYdEQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-Please pull from the tag
-
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-5.5-rc1-2
-
-with top-most commit b65d56305c6f5c74b1b4fcaf55d48e949e49d67c
-
- Merge branches 'acpi-bus', 'acpi-button', 'acpi-sysfs' and 'acpi-misc'
-
-on top of commit 6e9f879684b46331f51d0c76ebee981c788417db
-
- Merge tag 'acpi-5.5-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-
-to receive additional ACPI updates for 5.5-rc1.
-
-These close a nasty race condition in the ACPI memory mappings
-management code and an invalid parameter check in a library
-routing, allow GPE 0xFF to be masked via kernel command line,
-add a new lid switch blacklist entry and clean up Kconfig.
-
-Specifics:
-
- - Fix locking issue in acpi_os_map_cleanup() leading to a race
-   condition that can be harnessed for provoking a kernel panic
-   from user space (Francesco Ruggeri).
-
- - Fix parameter check in acpi_bus_get_private_data() (Vamshi K
-   Sthambamkadi).
-
- - Allow GPE 0xFF to be masked via kernel command line (Yunfeng Ye).
-
- - Add a new lid switch blacklist entry for Acer Switch 10 SW5-032
-   to the ACPI button driver (Hans de Goede).
-
- - Clean up Kconfig (Krzysztof Kozlowski).
-
-Thanks!
+On 2019/11/30 =E4=B8=8A=E5=8D=885:34, Peter Xu wrote:
+> +int kvm_dirty_ring_push(struct kvm_dirty_ring *ring,
+> +=09=09=09struct kvm_dirty_ring_indexes *indexes,
+> +=09=09=09u32 slot, u64 offset, bool lock)
+> +{
+> +=09int ret;
+> +=09struct kvm_dirty_gfn *entry;
+> +
+> +=09if (lock)
+> +=09=09spin_lock(&ring->lock);
+> +
+> +=09if (kvm_dirty_ring_full(ring)) {
+> +=09=09ret =3D -EBUSY;
+> +=09=09goto out;
+> +=09}
+> +
+> +=09entry =3D &ring->dirty_gfns[ring->dirty_index & (ring->size - 1)];
+> +=09entry->slot =3D slot;
+> +=09entry->offset =3D offset;
 
 
----------------
+Haven't gone through the whole series, sorry if it was a silly question=20
+but I wonder things like this will suffer from similar issue on=20
+virtually tagged archs as mentioned in [1].
 
-Francesco Ruggeri (1):
-      ACPI: OSL: only free map once in osl.c
+Is this better to allocate the ring from userspace and set to KVM=20
+instead? Then we can use copy_to/from_user() friends (a little bit slow=20
+on recent CPUs).
 
-Hans de Goede (1):
-      ACPI: button: Add DMI quirk for Acer Switch 10 SW5-032 lid-switch
+[1] https://lkml.org/lkml/2019/4/9/5
 
-Krzysztof Kozlowski (1):
-      ACPI: Fix Kconfig indentation
+Thanks
 
-Vamshi K Sthambamkadi (1):
-      ACPI: bus: Fix NULL pointer check in acpi_bus_get_private_data()
 
-Yunfeng Ye (1):
-      ACPI: sysfs: Change ACPI_MASKABLE_GPE_MAX to 0x100
+> +=09smp_wmb();
+> +=09ring->dirty_index++;
+> +=09WRITE_ONCE(indexes->avail_index, ring->dirty_index);
+> +=09ret =3D kvm_dirty_ring_used(ring) >=3D ring->soft_limit;
+> +=09pr_info("%s: slot %u offset %llu used %u\n",
+> +=09=09__func__, slot, offset, kvm_dirty_ring_used(ring));
+> +
+> +out:
 
----------------
-
- Documentation/admin-guide/kernel-parameters.txt |  2 +-
- drivers/acpi/Kconfig                            |  8 +++----
- drivers/acpi/bus.c                              |  2 +-
- drivers/acpi/button.c                           | 13 ++++++++++++
- drivers/acpi/osl.c                              | 28 +++++++++++++++----------
- drivers/acpi/sysfs.c                            |  6 +++---
- 6 files changed, 39 insertions(+), 20 deletions(-)
