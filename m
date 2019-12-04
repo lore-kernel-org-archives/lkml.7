@@ -8,137 +8,111 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4354C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE64C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB7021835
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B0521826
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:19:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gda1EXMI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZ4USlEM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbfLDUSm (ORCPT
+        id S1728309AbfLDUTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 15:18:42 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36968 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728097AbfLDUS3 (ORCPT
+        Wed, 4 Dec 2019 15:19:18 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46014 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfLDUTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 15:18:29 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f129so1183195wmf.2;
-        Wed, 04 Dec 2019 12:18:28 -0800 (PST)
+        Wed, 4 Dec 2019 15:19:18 -0500
+Received: by mail-pl1-f193.google.com with SMTP id w7so175241plz.12;
+        Wed, 04 Dec 2019 12:19:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=utI8T3ub3njoo3SG3qDSzeTSz7Igjg4spb9ZghayKKs=;
-        b=Gda1EXMI623emlm6+fK5zgPSd31v9U7EssM926uXVQx+hwosvwmGnLx3hgeBOudkzT
-         IAhIP1//jwbUBKKBVqQwqgwSMvx2Yqj1JpscetLUBIE0ac21M3eQP5ouGMZvEvdLepKn
-         13kWfDPvfy3ZXNshH/p18k5vySt9LW4p7j7TK1qyasVJHs1/8ub4tKBP7MJ3pYs3j63b
-         17X+gcJScIftOQtkIpBrLq+o3p90XYC/6CzLjkHH48hPo2YAHWtW/MeITP2f2+Gt3AU/
-         ecDrP1U9P3YfqH1Yk4kz8H89eQ+UINRTtSkkGN1zeduxOLgLrjqDn3d3Hq/Bl1Pm7dE5
-         bjFQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=IdpmGu8iGR4pu9wN40g1Va4Rxg/xN1WVWM43oFtOZuc=;
+        b=GZ4USlEMGXv34THmiUPdaunV9mU1mXLwjquzOhYT1UTMPxHQXdwfl8TSoecTFZNaLm
+         4gM1RC87AWfGad075jZwJvO8b9Yfm2KDvrnt5mqrmxh4cziVMfaEQBKEZ/0AybZ/xXoz
+         YS2Mfgigc4PcZCQvBCgFFDbxnIj2X2wAh/xCfEH1gdYUlsK+LB1CCoofz+d/jHqQJapf
+         PSpmyHGUncjfB2tcWDiMGG4OP0iI818+PbMGW2MxVg4MIOnTEdaTSctO7ri2XtS2L3JH
+         CHxnyvqr5Q67K1kOmvFRw4AFYG4Y8KSa7KzryXc0iaO7CoEPJC06vXsOsV6+cF/Vys/6
+         0HnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=utI8T3ub3njoo3SG3qDSzeTSz7Igjg4spb9ZghayKKs=;
-        b=r/bR2HKrk5DFUZOWrHI/zrjoLY2qncC+vZuPF6rITvMFFu9hLjuSPpXzbCrfaGlUyW
-         kox6i8Y4Mq9n5dSGPCLnBe7POPhBWB6JluhU3DSnDw0u2f7cHBjDSDr4RdRLW7VPftGH
-         qwcopyYyZPf0jtNMQcvy8vviYqCi/6vp6Wmh0+RaRytwgWMzrx463p+Ghirz+zBCrhLn
-         yFPUk/qfdQsHxGP/6+884f/QIayxv5dr/CNNJqPMa0t3h1L09FYT6cyRbr5sTY0iNrDo
-         Wm5E37sQ57hZrPQGqvsT1qUTcHNdgizKXIcY+cQepSC3YC3Mo0wM/xPZUEwLk1FloxE+
-         KBVQ==
-X-Gm-Message-State: APjAAAXXUfgq7n9vxt4SajwRXhqayWsig/XiDebka4U6R3Gy1+p4nBn2
-        jVbwW6qyeBLlfYlGdt1318Y=
-X-Google-Smtp-Source: APXvYqxXPZre4z2bywzFVr6zdgbmpu8XL1cgTlsJhkpoWd2uLbZ6NhNzJzyrABqEaK5M8U+F0YyUuw==
-X-Received: by 2002:a1c:f214:: with SMTP id s20mr1380257wmc.81.1575490706500;
-        Wed, 04 Dec 2019 12:18:26 -0800 (PST)
-Received: from localhost.localdomain (cable-86-56-100-90.cust.telecolumbus.net. [86.56.100.90])
-        by smtp.gmail.com with ESMTPSA id f2sm7329254wmh.46.2019.12.04.12.18.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 04 Dec 2019 12:18:25 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     brendanhiggins@google.com
-Cc:     corbet@lwn.net, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org,
-        sj38.park@gmail.com, sjpark@amazon.de
-Subject: [PATCH v4 3/5] kunit: Create default config in '--build_dir'
-Date:   Thu,  5 Dec 2019 05:18:01 +0900
-Message-Id: <1575490683-13015-4-git-send-email-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575490683-13015-1-git-send-email-sj38.park@gmail.com>
-References: <1575490683-13015-1-git-send-email-sj38.park@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IdpmGu8iGR4pu9wN40g1Va4Rxg/xN1WVWM43oFtOZuc=;
+        b=JooPbHXhDENfcvMgteyWBITjg5yWSgxtAcnD6jtkfrvUadnrBaSwJA3rZEpTLeGep1
+         u6nCPtByooDHRB3eW4QZ6HozKDBSZWIZ1+z+FGpMekppWuWg57p6j1LnBzw5UWRAF1O1
+         fiiQRFxR4QiNZwWgAcXk2yEunWNvsn16YD8lR2FdOq4oVH5TPKyIQZYF2if+NyrwsHqZ
+         7CgA0ZX42WdAcb8jj1oLIFDTp97lPGmtXeffGDIymMZXLobhaeqHiJoQcwJE1En4D7DY
+         6U0E5P7TBcRVkq/uD30Gp1gmdSSaE5nZukz7XmhTMff93Yge+QNNEYxJVv+2UzTZo1Ia
+         wB0g==
+X-Gm-Message-State: APjAAAUeLkUNhvCgJcwD/9762IbJ62P45qsOiv81ogtGSeVyBSTkWDRT
+        rs8sP1OXFEOav79MrYlf4yk=
+X-Google-Smtp-Source: APXvYqyym3aLJWp4bkO/UDgkjJGP80l8ErW34GumqKw5caVpvJNp1FIFrFHrA4GfR/q8GtM7lsaqFg==
+X-Received: by 2002:a17:90a:200d:: with SMTP id n13mr5388240pjc.16.1575490756959;
+        Wed, 04 Dec 2019 12:19:16 -0800 (PST)
+Received: from localhost.localdomain ([2402:3a80:cdb:9473:3984:ab1:9b44:803])
+        by smtp.gmail.com with ESMTPSA id c2sm8882170pfn.55.2019.12.04.12.19.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 12:19:16 -0800 (PST)
+From:   madhuparnabhowmik04@gmail.com
+To:     clm@fb.com, josef@toxicpanda.com, paulmck@kernel.org,
+        joel@joelfernandes.org
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rcu@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: [PATCH] fs: btrfs: volumes.h: Annotate rcu_string with __rcu
+Date:   Thu,  5 Dec 2019 01:49:01 +0530
+Message-Id: <20191204201901.22466-1-madhuparnabhowmik04@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-If both '--build_dir' and '--defconfig' are given, the handling of
-'--defconfig' ignores '--build_dir' option.  This commit modifies the
-behavior to respect '--build_dir' option.
+This patch fixes the following sparse errors in
+fs/btrfs/super.c in function btrfs_show_devname()
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Suggested-by: Brendan Higgins <brendanhiggins@google.com>
-Reported-by: Brendan Higgins <brendanhiggins@google.com>
+fs/btrfs/super.c: error: incompatible types in comparison expression (different address spaces):
+fs/btrfs/super.c:    struct rcu_string [noderef] <asn:4> *
+fs/btrfs/super.c:    struct rcu_string *
+
+The error was because of the following line in function btrfs_show_devname():
+
+if (first_dev)
+       seq_escape(m, rcu_str_deref(first_dev->name), " \t\n\\");
+
+rcu_str_deref is defined in fs/btrfs/rcu-string.h
+
+And first_dev is of type struct btrfs_device.
+
+struct btrfs_device is defined in fs/btrfs/volumes.h
+
+Annotating the member  "struct rcu_string *name "  of struct btrfs_device
+with __rcu fixes the sparse error.
+
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 ---
- tools/testing/kunit/kunit.py        | 11 +++++++++--
- tools/testing/kunit/kunit_kernel.py |  4 ++--
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ fs/btrfs/volumes.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index f8f2695..5b22241 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -31,9 +31,9 @@ class KunitStatus(Enum):
- 	TEST_FAILURE = auto()
+diff --git a/fs/btrfs/volumes.h b/fs/btrfs/volumes.h
+index a7da1f3e3627..de7131ee604d 100644
+--- a/fs/btrfs/volumes.h
++++ b/fs/btrfs/volumes.h
+@@ -64,7 +64,7 @@ struct btrfs_device {
+ 	struct btrfs_fs_devices *fs_devices;
+ 	struct btrfs_fs_info *fs_info;
  
- def create_default_kunitconfig():
--	if not os.path.exists(kunit_kernel.KUNITCONFIG_PATH):
-+	if not os.path.exists(kunit_kernel.kunitconfig_path):
- 		shutil.copyfile('arch/um/configs/kunit_defconfig',
--				kunit_kernel.KUNITCONFIG_PATH)
-+				kunit_kernel.kunitconfig_path)
+-	struct rcu_string *name;
++	struct rcu_string __rcu *name;
  
- def run_tests(linux: kunit_kernel.LinuxSourceTree,
- 	      request: KunitRequest) -> KunitResult:
-@@ -114,6 +114,13 @@ def main(argv, linux=None):
- 	cli_args = parser.parse_args(argv)
+ 	u64 generation;
  
- 	if cli_args.subcommand == 'run':
-+		if cli_args.build_dir:
-+			if not os.path.exists(cli_args.build_dir):
-+				os.mkdir(cli_args.build_dir)
-+			kunit_kernel.kunitconfig_path = os.path.join(
-+				cli_args.build_dir,
-+				kunit_kernel.kunitconfig_path)
-+
- 		if cli_args.defconfig:
- 			create_default_kunitconfig()
- 
-diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-index bf38768..c04a12e 100644
---- a/tools/testing/kunit/kunit_kernel.py
-+++ b/tools/testing/kunit/kunit_kernel.py
-@@ -14,7 +14,7 @@ import os
- import kunit_config
- 
- KCONFIG_PATH = '.config'
--KUNITCONFIG_PATH = 'kunitconfig'
-+kunitconfig_path = 'kunitconfig'
- 
- class ConfigError(Exception):
- 	"""Represents an error trying to configure the Linux kernel."""
-@@ -82,7 +82,7 @@ class LinuxSourceTree(object):
- 
- 	def __init__(self):
- 		self._kconfig = kunit_config.Kconfig()
--		self._kconfig.read_from_file(KUNITCONFIG_PATH)
-+		self._kconfig.read_from_file(kunitconfig_path)
- 		self._ops = LinuxSourceTreeOperations()
- 
- 	def clean(self):
 -- 
-2.7.4
+2.17.1
 
