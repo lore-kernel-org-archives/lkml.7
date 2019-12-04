@@ -2,202 +2,252 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F97C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08B9C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57A4120661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F4F207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 03:07:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="CABelTWk";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="ZqUz3GeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfLDDBz (ORCPT
+        id S1726908AbfLDDH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 22:01:55 -0500
-Received: from mga05.intel.com ([192.55.52.43]:36485 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726549AbfLDDBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 22:01:55 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 19:01:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,275,1571727600"; 
-   d="scan'208";a="205227855"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by orsmga008.jf.intel.com with ESMTP; 03 Dec 2019 19:01:53 -0800
-Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 3 Dec 2019 19:01:52 -0800
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.109]) by
- SHSMSX152.ccr.corp.intel.com ([169.254.6.222]) with mapi id 14.03.0439.000;
- Wed, 4 Dec 2019 11:01:50 +0800
-From:   "Zhao, Shirley" <shirley.zhao@intel.com>
-To:     James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "Zhu, Bing" <bing.zhu@intel.com>,
-        "Chen, Luhai" <luhai.chen@intel.com>
-Subject: RE: One question about trusted key of keyring in Linux kernel.
-Thread-Topic: One question about trusted key of keyring in Linux kernel.
-Thread-Index: AdWZwFKzDBwFOydYTGGk+Aqs+6BIxAANhxEAAoxRZMAAOKaagABSSevwABZzFQAAgRP1kP//pW0A//9ftMCAAMH6gP//eLrAgACO1ID//3k2UAAqYIQA//8FitD//nrPAP/64XgQ
-Date:   Wed, 4 Dec 2019 03:01:50 +0000
-Message-ID: <A888B25CD99C1141B7C254171A953E8E4909E877@shsmsx102.ccr.corp.intel.com>
-References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
-         <1573659978.17949.83.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49095F9B@shsmsx102.ccr.corp.intel.com>
-         <1574877977.3551.5.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
-         <1575057916.6220.7.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
-         <1575260220.4080.17.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
-         <1575267453.4080.26.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
-         <1575269075.4080.31.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909E399@shsmsx102.ccr.corp.intel.com>
-         <1575312932.24227.13.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909E62E@shsmsx102.ccr.corp.intel.com>
- <1575342724.24227.41.camel@linux.ibm.com>
-In-Reply-To: <1575342724.24227.41.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTYzYzVkMWQtYWNlMC00MjA3LWE2YjAtMGZjZDcxZWZjOTY1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiN29pKzRYNEZSV0NSSU5idkZcLzJRanhtSE1tcWJQQk5ZUmZVZGxlNEo1K0g0eDk0akZRWGhqZlFlRWpBM055bGsifQ==
-x-ctpclassification: CTP_NT
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 3 Dec 2019 22:07:29 -0500
+Received: from pb-smtp20.pobox.com ([173.228.157.52]:54877 "EHLO
+        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfLDDH2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Dec 2019 22:07:28 -0500
+Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id 6C080B78C0;
+        Tue,  3 Dec 2019 22:07:20 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=IelinpDQbeKXepUMIROrDb1GjTk=; b=CABelT
+        WkHNrEvR+2eEnSX0bNqjSWKA/3JG1AUlPYzS6fJN7aDPEtFVeaTyMC9hLgMCYkWj
+        n/RZBTvD2362KdETd9+Tar4x+YNjuayDw3VSi+kJ+EmiCjQOE8EYY6xVrHgH2oZt
+        CCNveCbXGJ4jOnIVMvoHCWEneo6oVq2bUdVZI=
+Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id 52EDEB78BF;
+        Tue,  3 Dec 2019 22:07:20 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=SSmx4RjaKZO1wY+Z9EUeYC3/D32XHteJ5gssCL181wQ=; b=ZqUz3GeKbvAUdbHOEM64cq09NdvCTpnNeBNJFHKQbLSQhGyL7K8ZHyTyNWRWPSHSwGq/JO3WEfU+REaO21VPmKO22UWazqPwrza//GVGCYMrgeaxHtdgdhoZ7bGv0GafxgE7FZmSrHq07zyNoTO9y/STkxGTKsvce2DU+W49RYY=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id 2AFCCB78BE;
+        Tue,  3 Dec 2019 22:07:17 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 521B52DA0206;
+        Tue,  3 Dec 2019 22:07:15 -0500 (EST)
+Date:   Tue, 3 Dec 2019 22:07:15 -0500 (EST)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+cc:     Manoj Gupta <manojgupta@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm: explicitly place .fixup in .text
+In-Reply-To: <CAKwvOdmAFp=p=z8bhaRHf8uRhUBKpoAYtissyLTk5DC8f-=BUw@mail.gmail.com>
+Message-ID: <nycvar.YSQ.7.76.1912032147340.17114@knanqh.ubzr>
+References: <20191122185522.20582-1-ndesaulniers@google.com> <nycvar.YSQ.7.76.1911291614480.8537@knanqh.ubzr> <CAKwvOdmAFp=p=z8bhaRHf8uRhUBKpoAYtissyLTk5DC8f-=BUw@mail.gmail.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 2D9A5A48-1643-11EA-92BA-B0405B776F7B-78420484!pb-smtp20.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEphbWVzLCANCg0KVXNpbmcgcG9saWN5IGRpZ2VzdCB0byByZWxvYWQgdHJ1c3RlZCBrZXks
-IGRvZXNuJ3Qgd29yaywgZWl0aGVyLiANClBsZWFzZSBjaGVjayB0aGUgc3RlcHMgYmVsb3cuIA0K
-SSB0aGluayBwb2xpY3kgZGlnZXN0IHNob3VsZCBiZSBjYWxjdWxhdGVkIGJ5IFRQTSB3aGVuIHZl
-cmlmeWluZyB0aGUgcG9saWN5IHRvIHJlbG9hZCBrZXkuIA0KDQovLy8vLy8vIGJ1aWxkIHBvbGlj
-eQ0KIyB0cG0yX3Bjcmxpc3QgLUwgc2hhMjU2OjcgLW8gcGNyNy5zaGEyNTYNCnNoYTI1NjoNCiAg
-NyA6IDB4MDYxQUFEMDcwNUE2MjM2MUFEMThFNThCNjVEM0Q3MzgzRjREMTBGN0Y1QTdFNzg5MjRC
-RTA1N0FDNjc5NzQwOA0KIyB0cG0yX2NyZWF0ZXBvbGljeSAtLXBvbGljeS1wY3IgLS1wY3ItbGlz
-dCBzaGEyNTY6NyAtLXBvbGljeSBwY3I3X2Jpbi5wb2xpY3kgPiBwY3I3LnBvbGljeQ0KIyBjYXQg
-cGNyNy5wb2xpY3kNCjMyMWZiZDI4YjYwZmNjMjMwMTdkNTAxYjEzM2JkNWRiZjI4ODk4MTQ1ODhl
-OGEyMzUxMGZlMTAxMDVjYjJjYzkNCg0KLy8vLy8vLyBuZXcgdHJ1c3RlZCBrZXkgYW5kIHVzZSBw
-b2xpY3kgdG8gcHJvdGVjdA0KIyBrZXljdGwgYWRkIHRydXN0ZWQga21rICJuZXcgMzIga2V5aGFu
-ZGxlPTB4ODEwMDAwMDEgaGFzaD1zaGEyNTYgcG9saWN5ZGlnZXN0PWBjYXQgcGNyNy5wb2xpY3lg
-IiBAdQ0KNDY2MTA3NTc4DQojIGtleWN0bCBwaXBlIDQ2NjEwNzU3OCA+IGttay5ibG9iDQojIGtl
-eWN0bCBwcmludCA0NjYxMDc1NzgNCjAwN2YwMDIwYTkyMmNhNzY0ZDNhZTlmZWFlNGMzYTFiMTQw
-YzYxMGFkMWRmODM2ZGY2ZDcwNTQ5NTdmM2Y1ZGExNDA0MmYyOTAwMTBkM2NhODNhY2EwOGVkMTBh
-NDMzYmE1ODVhNTE0NzEyNmQyMDdmMGM1MmU1M2ExZWRiZmMzMWI4OWIzMDk4ODA1Mzg3MDU1M2Vm
-NjkyYzc3YzI4YjJjN2FkYjYzZTFmYzY5ODY5ZDdmMmU4YWIyYjlkODkwNmUwMmJkOTUzZGM1OGMz
-YTViMWRlMDg1OGVjMzhhNmRjYjU1MTM4NGYzOGQ2ODM0ODQyZmQyMmI0YTljNjFjMDMyMDAwNGUw
-MDA4MDAwYjAwMDAwMDAwMDAyMDMyMWZiZDI4YjYwZmNjMjMwMTdkNTAxYjEzM2JkNWRiZjI4ODk4
-MTQ1ODhlOGEyMzUxMGZlMTAxMDVjYjJjYzkwMDEwMDAyMDAyODAzMjE4MTBhNjZkZjYzOTA1ZDQ4
-NDZlMzllNmFkM2VjNjliNzdkZWFjMzM5ZjQyMDlmMjkxMDc4NDgzYzEwMDczMDAwMDAwMDAwMDIw
-ZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3
-ODUyYjg1NTAxMDAwYjAwMjIwMDBiZGNkYjY5NGUxMDJlMTNhMGZiYTUxMTEwODFjYjZjZjYxNmMx
-MThkNDA0OTM2Y2FjM2U4NGRiMjRjNzFlNDdkNTAwMjIwMDBiMDRiNWRiMWFhNTI2MzVkZmIyNDJl
-NzZmNmJkZThlMjE3NmFlNDhmYzY4Mjk0NmM2Yzc2ZDk2ZjYwODA3OWQxZjAwMDAwMDIwMzZiNmZj
-Y2E4MjA2YzdmNzIyZGU4NTgyMWQ3ZWNiNDc4NTk3NmZkZDY0MmJjNzUzODUwNWEyYTgxOGM4YTIz
-ODgwMjE0MDAwMDAwMTAwMjAxNGI0MzlkYTliOTQ5MGQ5YmI2ZTVhOTNlN2U2ZWQ0MDhiMWQ1MWFl
-NDVhYmNjZDVkNWRjYzYyNWQ5NjgyODJkDQojIGNhdCBrbWsuYmxvYg0KMDA3ZjAwMjBhOTIyY2E3
-NjRkM2FlOWZlYWU0YzNhMWIxNDBjNjEwYWQxZGY4MzZkZjZkNzA1NDk1N2YzZjVkYTE0MDQyZjI5
-MDAxMGQzY2E4M2FjYTA4ZWQxMGE0MzNiYTU4NWE1MTQ3MTI2ZDIwN2YwYzUyZTUzYTFlZGJmYzMx
-Yjg5YjMwOTg4MDUzODcwNTUzZWY2OTJjNzdjMjhiMmM3YWRiNjNlMWZjNjk4NjlkN2YyZThhYjJi
-OWQ4OTA2ZTAyYmQ5NTNkYzU4YzNhNWIxZGUwODU4ZWMzOGE2ZGNiNTUxMzg0ZjM4ZDY4MzQ4NDJm
-ZDIyYjRhOWM2MWMwMzIwMDA0ZTAwMDgwMDBiMDAwMDAwMDAwMDIwMzIxZmJkMjhiNjBmY2MyMzAx
-N2Q1MDFiMTMzYmQ1ZGJmMjg4OTgxNDU4OGU4YTIzNTEwZmUxMDEwNWNiMmNjOTAwMTAwMDIwMDI4
-MDMyMTgxMGE2NmRmNjM5MDVkNDg0NmUzOWU2YWQzZWM2OWI3N2RlYWMzMzlmNDIwOWYyOTEwNzg0
-ODNjMTAwNzMwMDAwMDAwMDAwMjBlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0
-MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1MDEwMDBiMDAyMjAwMGJkY2RiNjk0ZTEwMmUxM2Ew
-ZmJhNTExMTA4MWNiNmNmNjE2YzExOGQ0MDQ5MzZjYWMzZTg0ZGIyNGM3MWU0N2Q1MDAyMjAwMGIw
-NGI1ZGIxYWE1MjYzNWRmYjI0MmU3NmY2YmRlOGUyMTc2YWU0OGZjNjgyOTQ2YzZjNzZkOTZmNjA4
-MDc5ZDFmMDAwMDAwMjAzNmI2ZmNjYTgyMDZjN2Y3MjJkZTg1ODIxZDdlY2I0Nzg1OTc2ZmRkNjQy
-YmM3NTM4NTA1YTJhODE4YzhhMjM4ODAyMTQwMDAwMDAxMDAyMDE0YjQzOWRhOWI5NDkwZDliYjZl
-NWE5M2U3ZTZlZDQwOGIxZDUxYWU0NWFiY2NkNWQ1ZGNjNjI1ZDk2ODI4MmQNCg0KLy8vLy8vLy8v
-L2NsZWFyIHRydXN0ZWQga2V5IGFuZCByZWxvYWQNCiMga2V5Y3RsIGNsZWFyIEB1DQprZXljdGwg
-bGlzdCBAdQ0Ka2V5cmluZyBpcyBlbXB0eQ0KIyBrZXljdGwgYWRkIHRydXN0ZWQga21rICJsb2Fk
-IGBjYXQga21rLmJsb2JgIGtleWhhbmRsZT0weDgxMDAwMDAxIGhhc2g9c2hhMjU2IHBvbGljeWRp
-Z2VzdD1gY2F0IHBjcjcucG9saWN5YCIgQHUNCmFkZF9rZXk6IE9wZXJhdGlvbiBub3QgcGVybWl0
-dGVkDQoNCg0KVGhhbmtzLiANCg0KLSBTaGlybGV5IA0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2Ut
-LS0tLQ0KRnJvbTogSmFtZXMgQm90dG9tbGV5IDxqZWpiQGxpbnV4LmlibS5jb20+IA0KU2VudDog
-VHVlc2RheSwgRGVjZW1iZXIgMywgMjAxOSAxMToxMiBBTQ0KVG86IFpoYW8sIFNoaXJsZXkgPHNo
-aXJsZXkuemhhb0BpbnRlbC5jb20+OyBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29tPjsg
-SmFya2tvIFNha2tpbmVuIDxqYXJra28uc2Fra2luZW5AbGludXguaW50ZWwuY29tPjsgSm9uYXRo
-YW4gQ29yYmV0IDxjb3JiZXRAbHduLm5ldD4NCkNjOiBsaW51eC1pbnRlZ3JpdHlAdmdlci5rZXJu
-ZWwub3JnOyBrZXlyaW5nc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWRvY0B2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7ICdNYXVybyBDYXJ2YWxobyBDaGVoYWIn
-IDxtY2hlaGFiK3NhbXN1bmdAa2VybmVsLm9yZz47IFpodSwgQmluZyA8YmluZy56aHVAaW50ZWwu
-Y29tPjsgQ2hlbiwgTHVoYWkgPGx1aGFpLmNoZW5AaW50ZWwuY29tPg0KU3ViamVjdDogUmU6IE9u
-ZSBxdWVzdGlvbiBhYm91dCB0cnVzdGVkIGtleSBvZiBrZXlyaW5nIGluIExpbnV4IGtlcm5lbC4N
-Cg0KT24gVHVlLCAyMDE5LTEyLTAzIGF0IDAyOjExICswMDAwLCBaaGFvLCBTaGlybGV5IHdyb3Rl
-Og0KPiBUaGFua3Mgc28gbXVjaCBmb3IgeW91IGZlZWRiYWNrLCBKYW1lcy4gDQo+IEFuZCBnbGFk
-IHRvIGhlYXIgdGhhdCB0aGUgQVBJIHdpbGwgYmUgbWFkZSBtb3JlIGZyaWVuZGx5LiANCj4gDQo+
-IEJ1dCBJIGhhdmUgYSBsaXR0bGUgY29uZnVzZWQgYWJvdXQgdGhlIGNhbGwgc3RhY2suIA0KPiBG
-cm9tIHRoZSBkb2N1bWVudCwgaHR0cHM6Ly9naXRodWIuY29tL3RvcnZhbGRzL2xpbnV4L2Jsb2Iv
-bWFzdGVyL0RvY3UNCj4gbWVudGF0aW9uL3NlY3VyaXR5L2tleXMvdHJ1c3RlZC1lbmNyeXB0ZWQu
-cnN0IGFuZCANCj4gaHR0cHM6Ly9naXRodWIuY29tL3pmc29ubGludXgvZHJhY3V0L3RyZWUvbWFz
-dGVyL21vZHVsZXMuZC85N21hc3RlcmtlDQo+IHksIHRoZSB0cnVzdGVkIGtleSBpcyBhIHJhbmRv
-bSBudW1iZXIgYW5kIGdlbmVyYXRlZCBieSBUUE0yLjAgYW5kIA0KPiBzZWFsZWQgd2l0aCBUUE0y
-LjAgMjA0OCBSU0Ega2V5Lg0KDQpXZWxsLCB1bSwgdGhhdCBkb2N1bWVudCBzZWVtcyB0byBiZSBi
-YXNlZCBvbiBUUE0gMS4yIC4uLiBhIGxvdCBvZiB3aGF0IGl0IHNheXMgaXNuJ3QgcXVpdGUgdHJ1
-ZSBmb3IgVFBNIDIuMC4gIEZvciBpbnN0YW5jZSBhbGwgVFBNIDIuMCBwcmltYXJ5IGtleXMgY29t
-ZSB3aXRoIGEgc3ltbWV0cmljIGNvbXBvbmVudCwgc28gdGhlIHNlYWxlZCBkYXRhIGluIFRQTSAy
-LjAgaXMgYWN0dWFsbHkgc3ltbWV0cmljYWxseSBlbmNyeXB0ZWQgdG8gYSBwcmltYXJ5IGtleS4N
-Cg0KPiBUaGUgMjA0OCBSU0Ega2V5IGlzIGdlbmVyYXRlZCBieSB0cG0yX2NyZWF0ZXByaW1hcnks
-IGFuZCBpdCBjYW4gYmUgZ290IA0KPiBieSB0aGUgVFBNMi4wIGhhbmRsZSwganVzdCB0aGUgImtl
-eWhhbmRsZSIgdXNlZCBpbiB0aGUgZm9sbG93aW5nIA0KPiBrZXljdGwgY29tbWFuZC4NCj4gJCBr
-ZXljdGwgYWRkIHRydXN0ZWQga21rICJuZXcgMzIga2V5aGFuZGxlPTB4ODEwMDAwMDEgaGFzaD1z
-aGEyNTYgDQo+IHBvbGljeWRpZ2VzdD1gY2F0IHBjcjcucG9saWN5YCIgQHUNCg0KVGhlIHByb2Js
-ZW0gVFBNIDIuMCBoYXMgaXMgdGhhdCBtb3N0IG9mIHRoZW0gY2FuJ3QgZ2VuZXJhdGUgcHJpbWUg
-bnVtYmVycyB2ZXJ5IGZhc3QsIHNvIGV2ZW4gdGhyb3VnaCB0aGUga2VybmVsIGNvdWxkIGdlbmVy
-YXRlIHRoZSBSU0EgcHJpbWFyeSwgaXQgd291bGQgdXN1YWxseSB0YWtlIGZhciB0b28gbG9uZywg
-c28gaWYgeW91IHdhbnQgdG8gdXNlIGEgUlNBIHByaW1hcnkgeW91IGhhdmUgdG8gcHJlLWdlbmVy
-YXRlIG9uZSBhbmQgcGxhY2UgaXQgaW4gTlYgc3RvcmFnZTsgdGhlIFRDRyByZWNvbW1lbmRzIGRv
-aW5nIHRoaXMgYXQgaGFuZGxlIDgxMDAwMDAxLCB3aGljaCBpcyB3aGF0IHlvdSBoYXZlIGFib3Zl
-LiAgSG93ZXZlciwgdGhlIG1vcmUgbW9kZXJuIHdheSBpcyB0byBkZXJpdmUgYW4gZWxsaXB0aWMg
-Y3VydmUga2V5IHByaW1hcnkga2V5IGV2ZXJ5IHRpbWUgLi4uIEVDIGtleXMgY2FuIGJlIGdlbmVy
-YXRlZCBieSBtb3N0IFRQTXMgaW4gMTBzIG9mIG1pbGxpc2Vjb25kcywgc28gdGhlIHByaW1hcnkg
-ZG9lc24ndCBuZWVkIHRvIGJlIHByZXNlbnQgaW4gTlZSQU0uDQoNClRIZSBrZXJuZWwgc2hvdWxk
-IGJlIHVzaW5nIHRoZSBFQyBwcmltYXJ5IG1ldGhvZCBmb3IgdGhlIHBhcmVudC4gIFRoZSBvbmx5
-IGV4Y2VwdGlvbiBpcyB3aGVuIHRoZSBrZXkgaGFzIGFuIGludGVybWVkaWF0ZSBwYXJlbnQsIGFu
-ZCB0aGVuIGl0IGNhbiBiZSBzaW1wbHkgbG9hZGVkIGZyb20gYSBmaWxlLg0KDQo+IElmIHJlYm9v
-dCwgdG8gcmUtbG9hZCB0aGUgdHJ1c3RlZCBrZXkgYmFjayB0byBrZXlyaW5nLCBqdXN0IGNhbGwg
-DQo+IHRwbTJfdW5zZWFsIGlzIGVub3VnaCwgZG9uJ3QgbmVlZCB0byBjYWxsIHRwbTJfbG9hZCB0
-byBsb2FkIHRoZQ0KPiBUUE0yLjAgMjA0OCBSU0Ega2V5Lg0KPiBJZiB0aGUgdHJ1c3RlZCBrZXkg
-aXMgYWxzbyBwcm90ZWN0ZWQgYnkgcG9saWN5LCB0aGVuIHRoZSBwb2xpY3kgd2lsbCANCj4gYmUg
-Y2hlY2tlZCBkdXJpbmcgdHBtMl91bnNlYWwuDQo+IA0KPiBBZnRlciBjaGVjayB0aGUgc291cmNl
-IGNvZGUsIHRoZSBjYWxsIHN0YWNrIGlzIG1vc3RseSBsaWtlOiANCj4gU1lTQ0FMTF9ERUZJTkU1
-KGFkZF9rZXksLi4uKSAtLT4ga2V5X2NyZWF0ZV9vcl91cGRhdGUoKSAtLT4NCj4gX19rZXlfaW5z
-dGFudGlhdGVfYW5kX2xpbmsoKSAtLT4gIHRydXN0ZWRfaW5zdGFudGlhdGUoKSAtLT4NCj4gdHBt
-Ml91bnNlYWxfdHJ1c3RlZCgpIC0tPiB0cG0yX3Vuc2VhbF9jbWQoKS4NCg0KV2VsbCwgdGhlIEFQ
-SSBpcyBjb25mdXNpbmcsIGJ1dCB0aGUgY29kZSBzZWVtcyB0byBpbXBseSB0aGUgcGFyZW50IHNo
-b3VsZCBiZSBwcmVzZW50IHNvbWVob3cuICBBIGtleSBpbiBOVlJBTSwgbGlrZSA4MTAwMDAwMSBp
-cyBhbHdheXMgcHJlc2VudCBzbyBpdCBkb2Vzbid0IG5lZWQgdG8gYmUgbG9hZGVkIGl0IGNhbiBq
-dXN0IGJlIHVzZWQgYXMgaXMuDQoNCj4gQW5vdGhlciBwcm9ibGVtIGhlcmUgaXMsIHRvIGJ1aWxk
-IHRoZSBwb2xpY3kgdG8gdW5zZWFsIHRoZSBrZXksIGl0IA0KPiBuZWVkIHRvIHN0YXJ0IGFuIHBv
-bGljeSBzZXNzaW9uLCBhbmQgdHJhbnNmZXIgdGhlIHNlc3Npb24gaGFuZGxlIHRvDQo+IFRQTTIu
-MCB1bnNlYWwgY29tbWFuZC4gDQo+IEluIG15IGtleWN0bCBjb21tYW5kLCBJIHVzZSB0cG0yLjAg
-Y29tbWFuZCB0byBzdGFydCB0aGUgc2Vzc2lvbiBhbmQgDQo+IGdldCB0aGUgaGFuZGxlLCBwdXQg
-aXQgaW50byB0aGUga2V5Y3RsIGNvbW1hbmQgbGlrZToNCj4ga2V5Y3RsIGFkZCB0cnVzdGVkIGtt
-ayAibG9hZCBgY2F0IGttay5ibG9iYCBrZXloYW5kbGU9MHg4MTAwMDAwMSANCj4gcG9saWN5aGFu
-ZGxlPTB4MzAwMDAwMCIgQHUNCg0KQXMgSSBzYWlkLCB1c2luZyBwb2xpY3kgaGFuZGxlcyBzaW1w
-bHkgd29uJ3Qgc2NhbGUsIHNvIHdlIG5lZWQgdG8gdXNlIHRoZSBhY3R1YWwgcG9saWN5IGluc3Rl
-YWQgLi4uIHRodXMgdGhlIHBvbGljeSBzaG91bGQgYmUgcGFzc2VkIGludG8gdGhlIGtlcm5lbCAg
-YXMgcGFydCBvZiB0aGUgdHJ1c3RlZCBrZXkgYW5kIHRoZSBrZXJuZWwgaXRzZWxmIHdvdWxkIGdl
-bmVyYXRlIGEgcG9saWN5IHNlc3Npb24gZnJvbSB0aGUgcG9saWN5IHN0YXRlbWVudHMgLi4uIHRo
-aXMgYXBwcm9hY2ggaXMgYXJlYWR5IHByb3ZlbiB0byBiZSB1c2VmdWwgYW5kIGZ1bmN0aW9uYWwg
-aW4gdGhlIHRwbTIgb3BlbnNzbCBlbmdpbmUgY29kZS4NCg0KSmFtZXMNCg0K
+On Tue, 3 Dec 2019, Nick Desaulniers wrote:
+
+> On Fri, Nov 29, 2019 at 1:33 PM Nicolas Pitre <nico@fluxnic.net> wrote:
+> >
+> > On Fri, 22 Nov 2019, Nick Desaulniers wrote:
+> >
+> > > From: Kees Cook <keescook@chromium.org>
+> > >
+> > > There's an implicit dependency on the section ordering of the orphaned
+> > > section .fixup that can break arm_copy_from_user if the linker places
+> > > the .fixup section before the .text section. Since .fixup is not
+> > > explicitly placed in the existing ARM linker scripts, the linker is free
+> > > to order it anywhere with respect to the rest of the sections.
+> > >
+> > > Multiple users from different distros (Raspbian, CrOS) reported kernel
+> > > panics executing seccomp() syscall with Linux kernels linked with LLD.
+> > >
+> > > Documentation/x86/exception-tables.rst alludes to the ordering
+> > > dependency. The relevant quote:
+> > >
+> > > ```
+> > > NOTE:
+> > > Due to the way that the exception table is built and needs to be ordered,
+> > > only use exceptions for code in the .text section.  Any other section
+> > > will cause the exception table to not be sorted correctly, and the
+> > > exceptions will fail.
+> > >
+> > > Things changed when 64-bit support was added to x86 Linux. Rather than
+> > > double the size of the exception table by expanding the two entries
+> > > from 32-bits to 64 bits, a clever trick was used to store addresses
+> > > as relative offsets from the table itself. The assembly code changed
+> > > from::
+> > >
+> > >     .long 1b,3b
+> > >   to:
+> > >           .long (from) - .
+> > >           .long (to) - .
+> > >
+> > > and the C-code that uses these values converts back to absolute addresses
+> > > like this::
+> > >
+> > >         ex_insn_addr(const struct exception_table_entry *x)
+> > >         {
+> > >                 return (unsigned long)&x->insn + x->insn;
+> > >         }
+> > > ```
+> > >
+> > > Since the addresses stored in the __ex_table are RELATIVE offsets and
+> > > not ABSOLUTE addresses, ordering the fixup anywhere that's not
+> > > immediately preceding .text causes the relative offset of the faulting
+> > > instruction to be wrong, causing the wrong (or no) address of the fixup
+> > > handler to looked up in __ex_table.
+> >
+> > This explanation makes no sense.
+> >
+> > The above is valid only when ARCH_HAS_RELATIVE_EXTABLE is defined. On
+> > ARM32 it is not, nor would it make sense to be.
+> 
+> Hmm...I thought that was the smoking gun. From the description in
+> Documentation, I thought they meant that exception table entry lookup
+> was changed to be homogeneous for 32b AND 64b arch's, but as you point
+> out they're not.  Now with the reference to ARCH_HAS_RELATIVE_EXTABLE,
+> I know to look through:
+> include/asm-generic/extable.h
+> include/linux/extable.h
+> lib/extable.c
+> kernel/extable.c
+> arch/arm/mm/extable.c
+> arch/arm/mm/fault.c (__do_kernel_fault() calls fixup_exception(),
+> which is of interest).
+> 
+> Looks like the exception table is sorted by address of faulting
+> instruction, then binary searched when an exception occurs.  Seems the
+> exception table is like an array of pairs of addresses (address of
+> faulting instruction from the get_user() call, address of fixup
+> handler) (when !ARCH_HAS_RELATIVE_EXTABLE), IIUC.
+
+Exact. And those are absolute addresses.
+
+To save on memory footprint, this table was made into relative addresses 
+on 64-bit targets with the restriction that the relative offsets have to 
+fit in a 32-bit value and not be negative. On 32-bit targets there is no 
+point using relative addresses as the absolute addresses use only 32 
+bits already, and then we don't have to compute the absolute address at 
+run time.
+
+> Reviewing the logs from the bugreport
+> (https://bugs.chromium.org/p/chromium/issues/detail?id=1020633#c44)
+> indeed the error string looks like the error message from
+> __do_kernel_fault() in arch/arm/mm/fault.c where a call to
+> fixup_exceptions() in arch/arm/mm/extable returned 1 because the call
+> to search_exception_tables() in kernel/extable.c returned NULL.
+> 
+> So I was right that `no address of the fixup handler to (be) looked up
+> in __ex_table`, but not quite right about *why* it fails to be looked
+> up.
+> 
+> search_exception_tables() in kernel/extable.c calls 3 functions:
+> 1. search_kernel_exception_table()
+> 2. search_module_extables()
+> 3. search_bpf_extables()
+> 
+> So the next question is which one of the above should have found the
+> exception table entry, and why did it not when LLD placed the orphaned
+> .fixup section BEFORE .text?  All three of the above do some
+> processing on the address but in the end all call search_extable().
+> 
+> I really don't think kernel modules are involved.
+> 
+> Since we're observing the fault via a call to seccomp(), which IIUC
+> takes a BPF program when setting a filter (SECCOMP_SET_MODE_FILTER),
+> I'm curious to look into search_bpf_extables() first.  Maybe
+> constructing a BPF program involves insertion of special exception
+> handler?  Looks like bpf programs are stored in an rb_tree called
+> bpf_tree.  They have an auxiliary field that contains a pointer to an
+> exception table entry.  "Auxiliary" makes it sounds optional, and the
+> only assignment I can find to this field is in
+> arch/x86/net/bpf_jit_comp.c, so I doubt it's relevant for arm.  It
+> also just looks like it's zero initialized (bpf_prog_alloc_no_stats()
+> in kernel/bpf/core.c) for arch generic code.
+> 
+> That leaves just search_kernel_exception_table().  I wonder if it
+> fails because we put garbage entries in, or sorted it improperly?
+
+Well, if you can reproduce the issue (would be very helpful) then you 
+can add some printk to log search_exception_tables() and figure out for 
+sure actually which category is involved here. Unlike with user space, 
+kernel exceptions are relatively rare events and they shouldn't flood 
+your log.
+
+> Oh, and messing around with grep, it looks like entries to the
+> exception table can be sorted at build time rather than boot time via
+> CONFIG_BUILDTIME_EXTABLE_SORT?
+> 
+> I don't see the pr_notice from sort_main_extable() (kernel/extable.c
+> called from start_kernel() in init/main.c) in the bugreports:
+> https://bugs.chromium.org/p/chromium/issues/attachmentText?aid=421842
+> https://github.com/ClangBuiltLinux/linux/issues/282
+> (But IIRC, the log level may not be set to display these).
+> 
+> CONFIG_BUILDTIME_EXTABLE_SORT is selected by arch/arm/Kconfig if
+> CONFIG_MMU, which I highly suspect is already selected for the above
+> two reports. (Would an arm32 based chromebook not have an MMU? I doubt
+> it.)
+> 
+> So there may be an ordering dependency in scripts/sortextable.{c|h}?
+> Neither mention `fixup`.
+> 
+> Will continue debugging more tomorrow or later this week, but please
+> stop me if any of the above is also incorrect.  Some ideas for further
+> experiments:
+> - scripts/check_extable.sh sounds like some kind of validator.
+> Manoj/Nathan, I wonder if you linked the problematic kernel with LLD
+> than ran `./scripts/check_extable.sh vmlinux` if it would warn? Dunno
+> about all those command line flags though.
+> - if we apply a similar diff to the patch I posted, but force .fixup
+> to be before .text for BFD (as LLD is placing the orphaned section
+> currently), relinked with BFD and could reproduce the issue, that
+> seems like proof about the implicit section ordering.
+> ```
+> diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
+> index 319ccb10846a..adfb5297f359 100644
+> --- a/arch/arm/kernel/vmlinux.lds.S
+> +++ b/arch/arm/kernel/vmlinux.lds.S
+> @@ -58,6 +58,7 @@ SECTIONS
+>  #ifdef CONFIG_ARM_MPU
+>         . = ALIGN(PMSAv8_MINALIGN);
+>  #endif
+> +       .fixup : { *(.fixup) }
+>         .text : {                       /* Real text segment            */
+>                 _stext = .;             /* Text and read-only data      */
+>                 ARM_TEXT
+> ```
+> 
+> -- 
+> Thanks,
+> ~Nick Desaulniers
+> 
