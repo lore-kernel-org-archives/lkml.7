@@ -2,52 +2,59 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EF4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A06C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2852084F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB07220833
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 17:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482371;
-	bh=uVmrMTReuiw8qke0Vz4udyQimZmWzBpfxFe56+DKeUo=;
+	s=default; t=1575482374;
+	bh=jcXj7HV4yf5/Cm5saoBjX27s47NqlAsf2IvWyuAQFSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ELP55HfPCRNwZq0I9s+fgPM00I/po1ZLAW5cPoQY1rihze4/ZeNW0LSnwTtoMBFL4
-	 gWUJHhey96xzsi3U4n0JlY1kN9UopgFOnwNLX7byvQbr578iYE/hfgG5lBztLGsPx+
-	 +66Kbb5wYruZYnFXicCoPUnb9R9zH/VMw2AUnWEU=
+	b=xpmcfQFmmRdTWxUgYZzRVh/hrUCS1PLZaiZnUTmXoeNukW3nT5zizyr/0mo1LqO71
+	 57SuyszzbvH7vcVEvOUQJ51HbXQ+9noSW9SFwZgneIJxQrpjpotHAl+WaA+QtKy4zm
+	 N8FqQ5Wc9fh9VdOE23RZxTgn2wtEB6m0zjAorXCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbfLDR7a (ORCPT
+        id S1729125AbfLDR7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:59:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35824 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 12:59:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729088AbfLDR7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 12:59:23 -0500
+        id S1729095AbfLDR70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 12:59:26 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACD8620833;
-        Wed,  4 Dec 2019 17:59:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F01DC20833;
+        Wed,  4 Dec 2019 17:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482363;
-        bh=uVmrMTReuiw8qke0Vz4udyQimZmWzBpfxFe56+DKeUo=;
+        s=default; t=1575482365;
+        bh=jcXj7HV4yf5/Cm5saoBjX27s47NqlAsf2IvWyuAQFSo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MvApvX3CVnyoBloVTHrHJ4KUTzUTJxCECCehqbJyxv21QJlbWW5Jo0P7Lq/Hk7FyZ
-         q81K1o6PEmNIVRMXWF3WWaBc1yNHh2S4Kuy0bUyoxmfBG3S4T67BbADdoRlgCJlTsz
-         JkbKogNr2ThT0ZM6GMUB+thcJGYXsYx9COvPS1ww=
+        b=i+L/GJ1NG9aJm/D0KM10lboKnxj/JXenb6iOQNVWKLm+uyoZF5xVyiGEvF/y/7+Ig
+         dt5WKICDoEbkjSh4NtmMOvHoDIzPeqPtDbJo43PXXmkud9Yd1TqBEdqtZRZVOUhy2R
+         PhGDJrbOPEo6NCC9bSJD7PBjvp1Ge/RSLDjtv5jc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Junxiao Bi <junxiao.bi@oracle.com>,
+        Yiwen Jiang <jiangyiwen@huawei.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Mark Fasheh <mfasheh@versity.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 58/92] tipc: fix a missing check of genlmsg_put
-Date:   Wed,  4 Dec 2019 18:49:58 +0100
-Message-Id: <20191204174333.893817920@linuxfoundation.org>
+Subject: [PATCH 4.4 59/92] ocfs2: clear journal dirty flag after shutdown journal
+Date:   Wed,  4 Dec 2019 18:49:59 +0100
+Message-Id: <20191204174333.945293828@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204174327.215426506@linuxfoundation.org>
 References: <20191204174327.215426506@linuxfoundation.org>
@@ -60,33 +67,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-[ Upstream commit 46273cf7e009231d2b6bc10a926e82b8928a9fb2 ]
+[ Upstream commit d85400af790dba2aa294f0a77e712f166681f977 ]
 
-genlmsg_put could fail. The fix inserts a check of its return value, and
-if it fails, returns -EMSGSIZE.
+Dirty flag of the journal should be cleared at the last stage of umount,
+if do it before jbd2_journal_destroy(), then some metadata in uncommitted
+transaction could be lost due to io error, but as dirty flag of journal
+was already cleared, we can't find that until run a full fsck.  This may
+cause system panic or other corruption.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/20181121020023.3034-3-junxiao.bi@oracle.com
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Reviewed-by: Yiwen Jiang <jiangyiwen@huawei.com>
+Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Mark Fasheh <mfasheh@versity.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/netlink_compat.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/ocfs2/journal.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
-index d2bf92e711505..4f6fbd2f29add 100644
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -926,6 +926,8 @@ static int tipc_nl_compat_publ_dump(struct tipc_nl_compat_msg *msg, u32 sock)
+diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+index 722eb5bc9b8f0..2301011428a1d 100644
+--- a/fs/ocfs2/journal.c
++++ b/fs/ocfs2/journal.c
+@@ -1017,7 +1017,8 @@ void ocfs2_journal_shutdown(struct ocfs2_super *osb)
+ 			mlog_errno(status);
+ 	}
  
- 	hdr = genlmsg_put(args, 0, 0, &tipc_genl_family, NLM_F_MULTI,
- 			  TIPC_NL_PUBL_GET);
-+	if (!hdr)
-+		return -EMSGSIZE;
+-	if (status == 0) {
++	/* Shutdown the kernel journal system */
++	if (!jbd2_journal_destroy(journal->j_journal) && !status) {
+ 		/*
+ 		 * Do not toggle if flush was unsuccessful otherwise
+ 		 * will leave dirty metadata in a "clean" journal
+@@ -1026,9 +1027,6 @@ void ocfs2_journal_shutdown(struct ocfs2_super *osb)
+ 		if (status < 0)
+ 			mlog_errno(status);
+ 	}
+-
+-	/* Shutdown the kernel journal system */
+-	jbd2_journal_destroy(journal->j_journal);
+ 	journal->j_journal = NULL;
  
- 	nest = nla_nest_start(args, TIPC_NLA_SOCK);
- 	if (!nest) {
+ 	OCFS2_I(inode)->ip_open_count--;
 -- 
 2.20.1
 
