@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3C6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B842C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 631FE20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436F9205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483901;
-	bh=KtvtfVhh4d+XHkmCqF5Q/paFYbGma6zpuEW1PkAKSR4=;
+	s=default; t=1575483910;
+	bh=/apV2zLk0V62ZzWk8+H2uE8yvtGpn8y547OMVbqc97o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wxBLi8EDLM4ry62WcsTXSCG1HIEdnDaRv5AOqxV3OS2g0xuYkDcC/GqLN46qNvwZj
-	 es/DXQ6BxidDbyBXvzORewErgTQTTiIl2KA/vltDjULrByN+j19J9YWjC7I3OvsbNJ
-	 X3g5gCqBrpU1oGq62gMPJ8SFxcYal1WI9qVi3yc0=
+	b=C+Y6X+Y2b4j0UiQiwFBpHy/ZkAOLsh6jf/dqeMIuylz3jjeYwjgh57oNmpsQDcHdw
+	 5Q7TMHbk3a1layGGJhDCjtqw+Iu0g586mg7n0RPnDDxM8F6jK1p6grn7nWaq0DTkPW
+	 7BzXZdls8qlszovfZoug0ju+iAeE6B3PGK7Er7iI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbfLDSBr (ORCPT
+        id S1729959AbfLDSZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:01:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42644 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:25:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729637AbfLDSBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:01:44 -0500
+        id S1729613AbfLDSBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:01:34 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1F31206DF;
-        Wed,  4 Dec 2019 18:01:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5434C2084B;
+        Wed,  4 Dec 2019 18:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482503;
-        bh=KtvtfVhh4d+XHkmCqF5Q/paFYbGma6zpuEW1PkAKSR4=;
+        s=default; t=1575482493;
+        bh=/apV2zLk0V62ZzWk8+H2uE8yvtGpn8y547OMVbqc97o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J7vXRiPQ+e6z38/ws3oLxLVcSDs0DF1G+/pJDl0DdlrYwW3o64gACLpg7K68bTD0l
-         OiOiss/znSkQw3X03vb/QfRvKFqZf3JtEh6Oot6jeNY/sL67vZMJWPZke/iQkn8q/0
-         glnwkZkF0lMrYTMzLE0ze/N5BYKlr8MEEZbBt8Sg=
+        b=YCpMtGPNAEabsXwIuOBcRIA0XooLgaPzdHmytvIW3l6CJTpmn60KiIzBSaE3k0XLn
+         fid0Mvr1L4hu1HvPtLEZrbkvO9DwXBz2SF3sv2S1iOHDqI3j8AGi1QWwY2nQQtjne0
+         UFwc0VclKmvNEaRjGLo2pQuD+EPgPROIFVRvkG/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 022/209] can: rx-offload: can_rx_offload_irq_offload_fifo(): continue on error
-Date:   Wed,  4 Dec 2019 18:53:54 +0100
-Message-Id: <20191204175323.030935417@linuxfoundation.org>
+Subject: [PATCH 4.14 019/209] can: rx-offload: can_rx_offload_offload_one(): increment rx_fifo_errors on queue overflow or OOM
+Date:   Wed,  4 Dec 2019 18:53:51 +0100
+Message-Id: <20191204175322.847524200@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,29 +61,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-[ Upstream commit 1f7f504dcd9d1262437bdcf4fa071e41dec1af03 ]
+[ Upstream commit 4e9016bee3bf0c24963097edace034ff205b565c ]
 
-In case of a resource shortage, i.e. the rx_offload queue will overflow
-or a skb fails to be allocated (due to OOM),
-can_rx_offload_offload_one() will call mailbox_read() to discard the
-mailbox and return an ERR_PTR.
+If the rx-offload skb_queue is full or the skb allocation fails (due to OOM),
+the mailbox contents is discarded.
 
-If the hardware FIFO is empty can_rx_offload_offload_one() will return
-NULL.
-
-In case a CAN frame was read from the hardware,
-can_rx_offload_offload_one() returns the skb containing it.
-
-Without this patch can_rx_offload_irq_offload_fifo() bails out if no skb
-returned, regardless of the reason.
-
-Similar to can_rx_offload_irq_offload_timestamp() in case of a resource
-shortage the whole FIFO should be discarded, to avoid an IRQ storm and
-give the system some time to recover. However if the FIFO is empty the
-loop can be left.
-
-With this patch the loop is left in case of empty FIFO, but not on
-errors.
+This patch adds the incrementing of the rx_fifo_errors statistics counter.
 
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
@@ -92,20 +75,21 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/can/rx-offload.c b/drivers/net/can/rx-offload.c
-index fef6534f163b7..54ffd1e91a693 100644
+index c0e51a2f8e4fc..b068e2320c794 100644
 --- a/drivers/net/can/rx-offload.c
 +++ b/drivers/net/can/rx-offload.c
-@@ -257,7 +257,9 @@ int can_rx_offload_irq_offload_fifo(struct can_rx_offload *offload)
+@@ -134,8 +134,10 @@ static struct sk_buff *can_rx_offload_offload_one(struct can_rx_offload *offload
  
- 	while (1) {
- 		skb = can_rx_offload_offload_one(offload, 0);
--		if (IS_ERR_OR_NULL(skb))
-+		if (IS_ERR(skb))
-+			continue;
-+		if (!skb)
- 			break;
+ 		ret = offload->mailbox_read(offload, &cf_overflow,
+ 					    &timestamp, n);
+-		if (ret)
++		if (ret) {
+ 			offload->dev->stats.rx_dropped++;
++			offload->dev->stats.rx_fifo_errors++;
++		}
  
- 		skb_queue_tail(&offload->skb_queue, skb);
+ 		return NULL;
+ 	}
 -- 
 2.20.1
 
