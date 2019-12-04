@@ -2,145 +2,147 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3D7C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCBAC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD442073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA752073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 20:27:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isOkK7jE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DcveGWFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfLDUZv (ORCPT
+        id S1728114AbfLDU07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 15:25:51 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43059 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727887AbfLDUZv (ORCPT
+        Wed, 4 Dec 2019 15:26:59 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43652 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727889AbfLDU07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 15:25:51 -0500
-Received: by mail-lj1-f195.google.com with SMTP id a13so770714ljm.10;
-        Wed, 04 Dec 2019 12:25:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q1HDbNtziDmWn+nZrAorGFLczK81PnzJXfxFuv+uGos=;
-        b=isOkK7jEUsiIbE8op5mEt0BDkQUXYQSgX5LoWkkU1yYu/SjbiwRiNC1dN67TJA65YZ
-         gFeLozQOWBjANrnXjwVGEQt3Jk7S0nnBIkrFAr/KK8Icnf0EvLx11Mg6pccdLVVi1dTB
-         /lCb8fMVvusHsMfkVAozHtwwaIGJ/ODtWjFWlIwXKsgDo1duf95yEic776rUJZl1YPFa
-         nwUzmWgRR7d+JtNL3EUP7UqnZnpJ41Q820pawJ2l08WnHbAW5ShTchPJUOz+882BmieP
-         Y6mv2Kt5V7Fh3I3V9OGmiQfwRshEUSr1s745kp6JAuxB8ATVbMRBTbkohDPrV9HeiRRf
-         WjvA==
+        Wed, 4 Dec 2019 15:26:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575491217;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YfQKeXnNoYxsQBvNeoTQ/YZry60QJ/3YXLUrpnggw2I=;
+        b=DcveGWFR2OhN6KwmJD2wWc0doMaboRrTzJiNjWn+yYfw0GeEg71jDMDdLAZIMCVLI8+FDc
+        AL1mPVMgPs/bH/c53a23L0BL1DsEEfolvCfeCsDj1OAHcqym5UBfcRMM/oo3N4v22mpGDD
+        AsfuezrizmZmf/1+2LrGEwWl7kMutzw=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-339-HD-rWFbCMfq1o1-cCPc1hQ-1; Wed, 04 Dec 2019 15:26:56 -0500
+Received: by mail-pl1-f200.google.com with SMTP id k22so251691pls.23
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 12:26:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q1HDbNtziDmWn+nZrAorGFLczK81PnzJXfxFuv+uGos=;
-        b=f/7JyJYXwtktx1qWlW6J9kyiQdPtNKBALbfiqk5wdWsUVNerxhv0W5j4W1F+MhoJ92
-         W/tOhs4C/7gvnN7VRLvOCP/0/XDwQ7JxneoMDLSi1KvYS4uoPRSZyRh/FuotWFRBXx1O
-         zUPfXyBe+wLZa6kOzlCoYPu/f+aJdPINU4i/Vil4oTgBtwYgZ42dNT6LPiomhsrdbf0l
-         W9NuoAaZ6mnD/K0QmW0ot9BUkGjCECb9W+/w+G3FbOgqxDMC9G3ExrTO4VFQMhZyRat1
-         4rPFsJkT6qzJG3X2fdWCKcQf1b2h3T+H1E6o/23VNJnlwiuL3j5PHi10GlCRWsyUdsU0
-         b60w==
-X-Gm-Message-State: APjAAAXGoOxw7x3riUvGlFD3qMRrnJXvslPaZMEeYkj0lrc81+6rYAyF
-        m6j6jR2B82dipMvnCgHsHF9y6qpR0vcXB+uIUI8=
-X-Google-Smtp-Source: APXvYqyYSPA5OmBseF+oP2/0KobwdsYBxyGBDH8F5+DbyooGjfmL7VhNSK+UhPKxR+9+i4OiUYWjZl5/B5HSUHar5Og=
-X-Received: by 2002:a2e:8953:: with SMTP id b19mr2947176ljk.249.1575491148522;
- Wed, 04 Dec 2019 12:25:48 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YfQKeXnNoYxsQBvNeoTQ/YZry60QJ/3YXLUrpnggw2I=;
+        b=tHnZzzIfEuVyWxo/W7UB2925G4mzU8+AptGBRx5Td6sja0zuvjjybZOeT9u2TIAUig
+         yG5Pc2Zf2BLIuc87zxTOyVlDFVCKXuoD35bGiDNZG1bWDVhWtyySK6Jjw9VAhWca+Ul3
+         mrGbEzveznY0lZEV9Jzs1qA/sohGAPL5Ef15e1WWPfOd4D/m00KicdXyEbMHEUdoVRWD
+         Vp0hxBVNFEL/b/TE0/NmnoGoM1o3pfWnYaZ7NekBgR0AQRIQDYd0uwvyyQya2BNdLdkw
+         tY524NXJZNWQ922jYUgitmnj4LLezf8HkkuL7izOpmusF445JAAwSzKSTC7UZhQiMN3Z
+         iwAg==
+X-Gm-Message-State: APjAAAWVUy+ETJPdpsbpqp9vwIBF4LdDz9oO4/xm23ICqeCgEJlOAEyN
+        VCcpX6CM2agmqZgoic5tGZs7Nwe4302OsDXFojBU8DWt0s5o17Pg9uv+aWdYfeTjJGPO/BUYia/
+        KIYs/pu7kmlshHH/eubcjT1rn
+X-Received: by 2002:a17:90a:be11:: with SMTP id a17mr5095402pjs.26.1575491215432;
+        Wed, 04 Dec 2019 12:26:55 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyTX+qKz/Awrxl/ThBCNJPWIQMObcavP5XlWM7RVd2DLBDfFutgms5AXLhrvCBKU/i0mHVd1w==
+X-Received: by 2002:a17:90a:be11:: with SMTP id a17mr5095373pjs.26.1575491215147;
+        Wed, 04 Dec 2019 12:26:55 -0800 (PST)
+Received: from localhost.localdomain ([122.177.160.143])
+        by smtp.gmail.com with ESMTPSA id s2sm9483979pfb.109.2019.12.04.12.26.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Dec 2019 12:26:54 -0800 (PST)
+Subject: Re: [PATCH v2 0/3] arm64: kexec_file: add kdump
+To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org,
+        frowand.list@gmail.com
+Cc:     kexec@lists.infradead.org, james.morse@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20191114051510.17037-1-takahiro.akashi@linaro.org>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Message-ID: <da0113d3-24b8-6263-b06e-0e58037f292f@redhat.com>
+Date:   Thu, 5 Dec 2019 01:56:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-References: <1575396508-21480-1-git-send-email-sj38.park@gmail.com>
- <CAFd5g46X9WK-xKJFF5AVYXXmM4a2dYD3fy=oi1CGJM1gc9RzuA@mail.gmail.com> <20191204192141.GA247851@google.com>
-In-Reply-To: <20191204192141.GA247851@google.com>
-From:   SeongJae Park <sj38.park@gmail.com>
-Date:   Wed, 4 Dec 2019 21:25:21 +0100
-Message-ID: <CAEjAshrXG3GmNMAS6Upu0=cCe9KJxchQWeiqLg0b8kif9ivNTg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] Fix nits in the kunit
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, shuah <shuah@kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191114051510.17037-1-takahiro.akashi@linaro.org>
+Content-Language: en-US
+X-MC-Unique: HD-rWFbCMfq1o1-cCPc1hQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 8:21 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Tue, Dec 03, 2019 at 02:41:26PM -0800, Brendan Higgins wrote:
-> > On Tue, Dec 3, 2019 at 10:08 AM SeongJae Park <sj38.park@gmail.com> wrote:
-> > >
-> > > This patchset contains trivial fixes for the kunit documentations and the
-> > > wrapper python scripts.
-> > >
-> > > Changes from v2 (https://lore.kernel.org/linux-kselftest/1575361141-6806-1-git-send-email-sj38.park@gmail.com/T/#t):
-> > >  - Make 'build_dir' if not exists (missed from v3 by mistake)
-> > >
-> > > SeongJae Park (5):
-> > >   docs/kunit/start: Use in-tree 'kunit_defconfig'
-> > >   kunit: Remove duplicated defconfig creation
-> > >   kunit: Create default config in '--build_dir'
-> > >   kunit: Place 'test.log' under the 'build_dir'
-> > >   kunit: Rename 'kunitconfig' to '.kunitconfig'
-> > >
-> > >  Documentation/dev-tools/kunit/start.rst | 13 +++++--------
-> > >  tools/testing/kunit/kunit.py            | 16 ++++++++++------
-> > >  tools/testing/kunit/kunit_kernel.py     |  8 ++++----
-> > >  3 files changed, 19 insertions(+), 18 deletions(-)
-> >
-> > Tested-by: Brendan Higgins <brendanhiggins@google.com>
->
-> I just realized that I forgot to test for something...
->
-> The following command fails:
->
-> ./tools/testing/kunit/kunit.py run --timeout=60 --jobs=12 --defconfig
->
-> [11:17:13] Building KUnit Kernel ...
-> [11:17:16] Starting KUnit Kernel ...
-> Traceback (most recent call last):
->   File "tools/testing/kunit/kunit.py", line 142, in <module>
->     main(sys.argv[1:])
->   File "tools/testing/kunit/kunit.py", line 135, in main
->     result = run_tests(linux, request)
->   File "tools/testing/kunit/kunit.py", line 67, in run_tests
->     test_result = kunit_parser.parse_run_tests(kunit_output)
->   File "/usr/local/google/home/brendanhiggins/gbmc-linux/tools/testing/kunit/kunit_parser.py", line 283, in parse_run_tests
->     test_result = parse_test_result(list(isolate_kunit_output(kernel_output)))
->   File "/usr/local/google/home/brendanhiggins/gbmc-linux/tools/testing/kunit/kunit_parser.py", line 54, in isolate_kunit_output
->     for line in kernel_output:
->   File "/usr/local/google/home/brendanhiggins/gbmc-linux/tools/testing/kunit/kunit_kernel.py", line 146, in run_kernel
->     with open(os.path.join(build_dir, 'test.log'), 'w') as f:
->   File "/usr/lib/python3.7/posixpath.py", line 80, in join
->     a = os.fspath(a)
-> TypeError: expected str, bytes or os.PathLike object, not NoneType
->
-> It seems as though you assume that build_dir is always populated by the flag.
+Hi Akashi,
 
-Sorry for not checking the case.  The 4th patch, "kunit: Place 'test.log' under
-the 'build_dir'" made the bug.  I fixed the 4th patch and tested with below
-commands:
+Thanks for the patchset.
 
-    ./tools/testing/kunit/kunit.py run --timeout=60 --jobs=12
---defconfig --build_dir .kunit
-    ./tools/testing/kunit/kunit.py run --timeout=60 --jobs=12 --defconfig
+On 11/14/2019 10:45 AM, AKASHI Takahiro wrote:
+> This is the last piece of my kexec_file_load implementation for arm64.
+> It is now ready for being merged as some relevant patch to dtc/libfdt[1]
+> has finally been integrated in v5.3-rc1.
+> (Nothing changed since kexec_file v16[2] except adding Patch#1 and #2.)
+> 
+> Patch#1 and #2 are preliminary patches for libfdt component.
+> Patch#3 is to add kdump support.
+> 
+> Bhepesh's patch[3] will be required for 52-bit VA support.
+> Once this patch is applied, whether or not CONFIG_ARM64_VA_BITS_52 is
+> enabled or not, a matching fix on user space side, crash utility,
+> will also be needed.
+> 
+> Anyway, I tested my patch, at least, with the following configuration:
+> 1) CONFIG_ARM64_BITS_48=y
+> 2) CONFIG_ARM64_BITS_52=y, but vabits_actual=48
+> 
+> (I don't have any platform to use for
+> 3) CONFIG_ARM64_BITS_52=y, and vabits_actual=52)
+> 
+> [1] commit 9bb9c6a110ea ("scripts/dtc: Update to upstream version
+>      v1.5.0-23-g87963ee20693"), in particular
+> 	7fcf8208b8a9 libfdt: add fdt_append_addrrange()
+> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-November/612641.html
+> [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2019-November/693411.html
+> 
+> Changes in v2 (Nov 14, 2019)
+> * rebased to v5.4-rc7
+> * no functional changes
 
-Just sent the 4th version patchset including the fix:
-    http://lkml.kernel.org/r/1575490683-13015-1-git-send-email-sj38.park@gmail.com
+This looks like a step in the right direction. I have some minor 
+nitpicks which I have mentioned in the individual patch reviews.
 
-I will consider adding some tests that can check such cases in the
-'kunit_tools_test.py' later.
+With those addressed (v2?):
 
+Tested-and-Reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
 
 Thanks,
-SeongJae Park
+Bhupesh
+
+> AKASHI Takahiro (3):
+>    libfdt: define UINT32_MAX in libfdt_env.h
+>    libfdt: include fdt_addresses.c
+>    arm64: kexec_file: add crash dump support
+> 
+>   arch/arm64/include/asm/kexec.h         |   4 +
+>   arch/arm64/kernel/kexec_image.c        |   4 -
+>   arch/arm64/kernel/machine_kexec_file.c | 106 ++++++++++++++++++++++++-
+>   include/linux/libfdt_env.h             |   3 +
+>   lib/Makefile                           |   2 +-
+>   lib/fdt_addresses.c                    |   2 +
+>   6 files changed, 112 insertions(+), 9 deletions(-)
+>   create mode 100644 lib/fdt_addresses.c
+> 
+
