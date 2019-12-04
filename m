@@ -2,106 +2,133 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0388C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757AAC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90DCC205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A842073C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 14:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575470573;
+	bh=2T3cDTzDA87g7MvwyfSCWi/szJAiCoaXRwXVDoDiGVc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0wRNgYyAWh97CGee/Yc7vSBSifu0oWwmX6WRPy/LH8GAo5/xxOFO39ZxO5+jQufdG
+	 L/wpJ3pygZwaR/dVueqlTviSETrA2AuXq6+PgKhDvQgI/IGzf0RKjq2PKogwUgFAXT
+	 mfyJ2OvQzl2UkhDSGiFgfeLtGOiV9jz8uE7akS7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfLDOmr (ORCPT
+        id S1728073AbfLDOmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 09:42:47 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:51284 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbfLDOmq (ORCPT
+        Wed, 4 Dec 2019 09:42:52 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37584 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727850AbfLDOmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 09:42:46 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: AGWUSFKVep72VFgoHVqGth5W1ENoGoy19fv307QW78o0LdLebpm5m8W1WDhjQJIkkjBFmwZFPz
- dhk8GJZl5DBwdb1iuKyqZtJ1HAfPztibMcef5Ymow3tTsNpoSypXzzXlNXGM+vcDXJqhmAwFaQ
- L3ttN7YF1VTMcKjYelfTYb1qj9SuKzsDpbGvaKnmTUgM87xiKRRODUuGVaALp9sXc9hW4xWUh/
- hiYQV6TgJ2Ph+Ze0sSTItEWNOs6YW2DzRHi3lUxf9PM3UmI0yA1JV7wPp19Ce7zMMXzhp2cpQA
- XLo=
-X-IronPort-AV: E=Sophos;i="5.69,277,1571727600"; 
-   d="scan'208";a="60610889"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Dec 2019 07:42:45 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 4 Dec 2019 07:42:44 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 4 Dec 2019 07:42:42 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <daniel.lezcano@linaro.org>,
-        <tglx@linutronix.de>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v3 1/2] dt-bindings: arm: atmel: add bindings for PIT64B
-Date:   Wed, 4 Dec 2019 16:42:28 +0200
-Message-ID: <1575470549-702-2-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575470549-702-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1575470549-702-1-git-send-email-claudiu.beznea@microchip.com>
+        Wed, 4 Dec 2019 09:42:51 -0500
+Received: by mail-wm1-f65.google.com with SMTP id f129so8235904wmf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 06:42:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=fmkqNOaDxlFa9adJqpXSMGLRx9tYqe3bfVnOjKiJBj8=;
+        b=RgCnOieN8mveNzvnb/er7/Y6eRjz9Nu9EZeuLZ5TsF3VpwRhZ/qQfl1vcvLILYnsbM
+         MXrIF+bTnvKqoRXJiWZ8yz9/GrXp40OsGVUmcpGc7exM/XMWi5xd9aq8QgF7GW+/MoCV
+         mEydQk8AD8yL1LR88UGhN+sXQYop62jevnuan0LKejWaTwzOTiMpTbe4AeJctNmYlV78
+         mlSTczJJEVP1u2rXfpItXgphePz+q7weIj7m1AF1s/Ix1P3qoDSPKucA5TDQWzNzg9h4
+         zTHOBTz1SES773rXdoOvw/T56X/e3xke4Y5awy7lJTewiEiNKvpRIHo9wxTkf7sw+lFq
+         kR7w==
+X-Gm-Message-State: APjAAAUHrH/nESWSBojAz2J/pBcFnIddpRdwXoMaRHG6YQV2kCXrVVVr
+        fPbTdMVz0F6w6V4zBt+5Tfk=
+X-Google-Smtp-Source: APXvYqwSz66IR1bxVLLt9RZ38byrmQYX+FmrPmMpaXVz8Iv/tsYjvmFVCkFgMd/eEe+TtTuCDncVdA==
+X-Received: by 2002:a1c:9958:: with SMTP id b85mr33323811wme.63.1575470570528;
+        Wed, 04 Dec 2019 06:42:50 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id e16sm6724403wme.35.2019.12.04.06.42.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 06:42:49 -0800 (PST)
+Date:   Wed, 4 Dec 2019 15:42:48 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, pv-drivers@vmware.com,
+        linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Subject: Re: [PATCH v2 2/2] drm/ttm: Fix vm page protection handling
+Message-ID: <20191204144248.GK25242@dhcp22.suse.cz>
+References: <20191203104853.4378-1-thomas_os@shipmail.org>
+ <20191203104853.4378-3-thomas_os@shipmail.org>
+ <20191204135219.GH25242@dhcp22.suse.cz>
+ <b29b166c-e9fe-f829-f533-b39f98b334a9@shipmail.org>
+ <20191204143521.GJ25242@dhcp22.suse.cz>
+ <5c2658b6-b5ec-5747-c360-fada54d759ed@shipmail.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5c2658b6-b5ec-5747-c360-fada54d759ed@shipmail.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree bindings for PIT64B timer.
+On Wed 04-12-19 15:36:58, Thomas Hellström (VMware) wrote:
+> On 12/4/19 3:35 PM, Michal Hocko wrote:
+> > On Wed 04-12-19 15:16:09, Thomas Hellström (VMware) wrote:
+> > > On 12/4/19 2:52 PM, Michal Hocko wrote:
+> > > > On Tue 03-12-19 11:48:53, Thomas Hellström (VMware) wrote:
+> > > > > From: Thomas Hellstrom <thellstrom@vmware.com>
+> > > > > 
+> > > > > TTM graphics buffer objects may, transparently to user-space,  move
+> > > > > between IO and system memory. When that happens, all PTEs pointing to the
+> > > > > old location are zapped before the move and then faulted in again if
+> > > > > needed. When that happens, the page protection caching mode- and
+> > > > > encryption bits may change and be different from those of
+> > > > > struct vm_area_struct::vm_page_prot.
+> > > > > 
+> > > > > We were using an ugly hack to set the page protection correctly.
+> > > > > Fix that and instead use vmf_insert_mixed_prot() and / or
+> > > > > vmf_insert_pfn_prot().
+> > > > > Also get the default page protection from
+> > > > > struct vm_area_struct::vm_page_prot rather than using vm_get_page_prot().
+> > > > > This way we catch modifications done by the vm system for drivers that
+> > > > > want write-notification.
+> > > > So essentially this should have any new side effect on functionality it
+> > > > is just making a hacky/ugly code less so?
+> > > Functionality is unchanged. The use of a on-stack vma copy was severely
+> > > frowned upon in an earlier thread, which also points to another similar
+> > > example using vmf_insert_pfn_prot().
+> > > 
+> > > https://lore.kernel.org/lkml/20190905103541.4161-2-thomas_os@shipmail.org/
+> > > 
+> > > > In other words what are the
+> > > > consequences of having page protection inconsistent from vma's?
+> > > During the years, it looks like the caching- and encryption flags of
+> > > vma::vm_page_prot have been largely removed from usage. From what I can
+> > > tell, there are no more places left that can affect TTM. We discussed
+> > > __split_huge_pmd_locked() towards the end of that thread, but that doesn't
+> > > affect TTM even with huge page-table entries.
+> > Please state all those details/assumptions you are operating on in the
+> > changelog.
+> 
+> Thanks. I'll update the patchset and add that.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/arm/atmel-sysregs.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-index 9fbde401a090..e003a553b986 100644
---- a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-+++ b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-@@ -10,6 +10,12 @@ PIT Timer required properties:
- - interrupts: Should contain interrupt for the PIT which is the IRQ line
-   shared across all System Controller members.
- 
-+PIT64B Timer required properties:
-+- compatible: Should be "microchip,sam9x60-pit64b"
-+- reg: Should contain registers location and length
-+- interrupts: Should contain interrupt for PIT64B timer
-+- clocks: Should contain the available clock sources for PIT64B timer.
-+
- System Timer (ST) required properties:
- - compatible: Should be "atmel,at91rm9200-st", "syscon", "simple-mfd"
- - reg: Should contain registers location and length
+And thinking about that this also begs for a comment in the code to
+explain that some (which?) mappings might have a mismatch and the
+generic code have to be careful. Because as things stand now this seems
+to be really subtle and happen to work _now_ and might break in the future.
+Or what does prevent a generic code to stumble over this discrepancy?
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
