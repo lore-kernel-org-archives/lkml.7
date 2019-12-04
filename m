@@ -2,197 +2,162 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2552AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2E4C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E034620675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:26:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hxIqBDu8"
+	by mail.kernel.org (Postfix) with ESMTP id 6840620675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfLDJ0V (ORCPT
+        id S1727212AbfLDJ3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:26:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45476 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726632AbfLDJ0U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:26:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575451578;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jUuRDdnXhCHO/NEUeUPUPsA/97IPezLMrW4ezc6k+9o=;
-        b=hxIqBDu8QV4PNcH8cP+isddtNf1gJ4IVIzsNHB5OV/6Ze4P6+pcxy3L43+1aFpYZxIJaWK
-        S1QH6DR4LyGKZoEPgV5nDa27lxXbmWkkRWqGf20UOgIGxiq5Px8G+z1awHFMaQDyxHCMe8
-        bKF4Nj6JS5o2XPNL8gyJTkK96tGtqsY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-134-pcLu1CDBNPeAjUMWVy4bsw-1; Wed, 04 Dec 2019 04:26:16 -0500
-Received: by mail-wr1-f70.google.com with SMTP id z14so3380817wrs.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 01:26:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MT4/tfwIPaDsN4vYfFd3gEaF9rrqRXt+8txO4zjJd9o=;
-        b=iboHGyD5Q/2AM9Pw9dq32hV0jVKdGkonNPrWQaUUfX18my4i+ye11yWlYCoev72Jzh
-         xojvkgby5hmGQEVDeyIK8DEF6HQCvDVlrSAoc4waQtuaoXAK/IG6tz1s20nfKsQGgT8x
-         DcIQuhQXUo4TGGKe63u9Rra/EWlCuwpETPrgsiG4v+2x+VGC7rzMCpjfTptUbpcPASKW
-         S5jHHdO7/Qg3EwWTn7I1BfVjuXw1ocS+RdwXMk6ilxqwxBJ5Jeok2By7hdP3Z/Eo6A/U
-         +lBQl+VlzfUYHHTtWJe3Msj5oSK4wIrPcgnrHHl1NuDBquF46iM4JFFTCfwVpp63q3YU
-         sPSA==
-X-Gm-Message-State: APjAAAWTmqa/fMKx2Yemz2XHwOtUWvcIddQ/4NUr0b50RefmSdit2BFE
-        Mja+kOL8fFSMtAp/jZb69R62vk9jN0CR6IhNrW7RfQ4jEXXG5zAL9SPBno9ZFIWj+gwOYCUyIsB
-        UKQPDlB+8W9mlbsPh2qtXb9U5
-X-Received: by 2002:a7b:cb46:: with SMTP id v6mr22387008wmj.117.1575451575072;
-        Wed, 04 Dec 2019 01:26:15 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwRVLIPHq0X1w4SmiKY1LeXp4vxUB8NUYGDePnpKQOfdTm3CXhxIEkco+pRZHHgug5mizjUqg==
-X-Received: by 2002:a7b:cb46:: with SMTP id v6mr22386980wmj.117.1575451574780;
-        Wed, 04 Dec 2019 01:26:14 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:8dc6:5dd5:2c0a:6a9a? ([2001:b07:6468:f312:8dc6:5dd5:2c0a:6a9a])
-        by smtp.gmail.com with ESMTPSA id b17sm7145776wrp.49.2019.12.04.01.26.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 01:26:14 -0800 (PST)
-Subject: Re: KASAN: vmalloc-out-of-bounds Write in kvm_dev_ioctl_get_cpuid
-To:     syzbot <syzbot+e3f4897236c4eeb8af4f@syzkaller.appspotmail.com>,
-        bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-References: <000000000000ea5ec20598d90e50@google.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <77d993a5-5d41-14d1-e51d-52e092c84c42@redhat.com>
-Date:   Wed, 4 Dec 2019 10:26:12 +0100
+        Wed, 4 Dec 2019 04:29:39 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49212 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725971AbfLDJ3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 04:29:39 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D9F7CAE8D;
+        Wed,  4 Dec 2019 09:29:36 +0000 (UTC)
+Subject: Re: [PATCH] drm/fb-cma-helpers: Fix include issue
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20191119105753.32363-1-benjamin.gaignard@st.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <685f58c0-087b-5438-1cb4-7ac7bbfe5062@suse.de>
+Date:   Wed, 4 Dec 2019 10:29:32 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <000000000000ea5ec20598d90e50@google.com>
-Content-Language: en-US
-X-MC-Unique: pcLu1CDBNPeAjUMWVy4bsw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191119105753.32363-1-benjamin.gaignard@st.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="AxX246IxnoTUIznVycqbXIHOzMd5kyCMl"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/12/19 05:15, syzbot wrote:
-> Hello,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--AxX246IxnoTUIznVycqbXIHOzMd5kyCMl
+Content-Type: multipart/mixed; boundary="eKxyl0DwhYHlhU4tBwr25j8LvW7I2a3gb";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Benjamin Gaignard <benjamin.gaignard@st.com>,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, sean@poorly.run,
+ airlied@linux.ie, daniel@ffwll.ch
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Message-ID: <685f58c0-087b-5438-1cb4-7ac7bbfe5062@suse.de>
+Subject: Re: [PATCH] drm/fb-cma-helpers: Fix include issue
+References: <20191119105753.32363-1-benjamin.gaignard@st.com>
+In-Reply-To: <20191119105753.32363-1-benjamin.gaignard@st.com>
+
+--eKxyl0DwhYHlhU4tBwr25j8LvW7I2a3gb
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+
+
+Am 19.11.19 um 11:57 schrieb Benjamin Gaignard:
+> Exported functions prototypes are missing in drm_fb_cma_helper.c
+> Include drm_fb_cma_helper to fix that issue.
 >=20
-> syzbot found the following crash on:
->=20
-> HEAD commit:=C2=A0=C2=A0=C2=A0 596cf45c Merge branch 'akpm' (patches from=
- Andrew)
-> git tree:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D103acb7ae0000=
-0
-> kernel config:=C2=A0 https://syzkaller.appspot.com/x/.config?x=3D8eb54eee=
-6e6ca4a7
-> dashboard link:
-> https://syzkaller.appspot.com/bug?extid=3De3f4897236c4eeb8af4f
-> compiler:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gcc (GCC) 9.0.0 20181231 (e=
-xperimental)
-> syz repro:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 https://syzkaller.appspot.com/x/=
-repro.syz?x=3D15b87c82e00000
-> C reproducer:=C2=A0=C2=A0 https://syzkaller.appspot.com/x/repro.c?x=3D112=
-50f36e00000
->=20
-> IMPORTANT: if you fix the bug, please add the following tag to the commit=
-:
-> Reported-by: syzbot+e3f4897236c4eeb8af4f@syzkaller.appspotmail.com
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> BUG: KASAN: vmalloc-out-of-bounds in __do_cpuid_func_emulated
-> arch/x86/kvm/cpuid.c:323 [inline]
-> BUG: KASAN: vmalloc-out-of-bounds in do_cpuid_func
-> arch/x86/kvm/cpuid.c:814 [inline]
-> BUG: KASAN: vmalloc-out-of-bounds in do_cpuid_func
-> arch/x86/kvm/cpuid.c:810 [inline]
-> BUG: KASAN: vmalloc-out-of-bounds in kvm_dev_ioctl_get_cpuid+0xad7/0xb0b
-> arch/x86/kvm/cpuid.c:891
-> Write of size 4 at addr ffffc90000d36050 by task syz-executor490/9767
->=20
-> CPU: 1 PID: 9767 Comm: syz-executor490 Not tainted 5.4.0-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
-> =C2=A0__dump_stack lib/dump_stack.c:77 [inline]
-> =C2=A0dump_stack+0x197/0x210 lib/dump_stack.c:118
-> =C2=A0print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/repor=
-t.c:374
-> =C2=A0__kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-> =C2=A0kasan_report+0x12/0x20 mm/kasan/common.c:638
-> =C2=A0__asan_report_store4_noabort+0x17/0x20 mm/kasan/generic_report.c:13=
-9
-> =C2=A0__do_cpuid_func_emulated arch/x86/kvm/cpuid.c:323 [inline]
-> =C2=A0do_cpuid_func arch/x86/kvm/cpuid.c:814 [inline]
-> =C2=A0do_cpuid_func arch/x86/kvm/cpuid.c:810 [inline]
-> =C2=A0kvm_dev_ioctl_get_cpuid+0xad7/0xb0b arch/x86/kvm/cpuid.c:891
-> =C2=A0kvm_arch_dev_ioctl+0x300/0x4b0 arch/x86/kvm/x86.c:3387
-> =C2=A0kvm_dev_ioctl+0x127/0x17d0 arch/x86/kvm/../../../virt/kvm/kvm_main.=
-c:3593
-> =C2=A0vfs_ioctl fs/ioctl.c:47 [inline]
-> =C2=A0file_ioctl fs/ioctl.c:539 [inline]
-> =C2=A0do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:726
-> =C2=A0ksys_ioctl+0xab/0xd0 fs/ioctl.c:743
-> =C2=A0__do_sys_ioctl fs/ioctl.c:750 [inline]
-> =C2=A0__se_sys_ioctl fs/ioctl.c:748 [inline]
-> =C2=A0__x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:748
-> =C2=A0do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> =C2=A0entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x440159
-> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89
-> f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01
-> f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffd106332c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440159
-> RDX: 0000000020000080 RSI: 00000000c008ae09 RDI: 0000000000000003
-> RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004019e0
-> R13: 0000000000401a70 R14: 0000000000000000 R15: 0000000000000000
->=20
->=20
-> Memory state around the buggy address:
-> =C2=A0ffffc90000d35f00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-> =C2=A0ffffc90000d35f80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
->> ffffc90000d36000: 00 00 00 00 00 00 00 00 00 00 f9 f9 f9 f9 f9 f9
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> =C2=A0ffffc90000d36080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-> =C2=A0ffffc90000d36100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
->=20
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+
 > ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>  drivers/gpu/drm/drm_fb_cma_helper.c | 1 +
+>  include/drm/drm_fb_cma_helper.h     | 2 ++
+>  2 files changed, 3 insertions(+)
 >=20
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+> diff --git a/drivers/gpu/drm/drm_fb_cma_helper.c b/drivers/gpu/drm/drm_=
+fb_cma_helper.c
+> index c0b0f603af63..9801c0333eca 100644
+> --- a/drivers/gpu/drm/drm_fb_cma_helper.c
+> +++ b/drivers/gpu/drm/drm_fb_cma_helper.c
+> @@ -9,6 +9,7 @@
+>   *  Copyright (C) 2012 Red Hat
+>   */
+> =20
+> +#include <drm/drm_fb_cma_helper.h>
+>  #include <drm/drm_fourcc.h>
+>  #include <drm/drm_framebuffer.h>
+>  #include <drm/drm_gem_cma_helper.h>
+> diff --git a/include/drm/drm_fb_cma_helper.h b/include/drm/drm_fb_cma_h=
+elper.h
+> index 4becb09975a4..795aea1d0a25 100644
+> --- a/include/drm/drm_fb_cma_helper.h
+> +++ b/include/drm/drm_fb_cma_helper.h
+> @@ -2,6 +2,8 @@
+>  #ifndef __DRM_FB_CMA_HELPER_H__
+>  #define __DRM_FB_CMA_HELPER_H__
+> =20
+> +#include <linux/types.h>
+> +
+>  struct drm_framebuffer;
+>  struct drm_plane_state;
+> =20
 >=20
 
-Ouch, this is bad.  Sending a patch now.
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
 
-Paolo
 
+--eKxyl0DwhYHlhU4tBwr25j8LvW7I2a3gb--
+
+--AxX246IxnoTUIznVycqbXIHOzMd5kyCMl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl3nfHwACgkQaA3BHVML
+eiMaIQgAo8wGbLwClRVJeysH1/1uZ2BYpARPROIG40APPxRkNMWZDn63P4eI2okm
+mEBGVxj+dAqJWYeIMtiEzmlxWGhpeXVRlqHaBBnr3lD625JSHa6MecBl+jaHy7M+
+u0jbKijO7acFnzrVNlOwVfM59RT3Yg9OLY8EuyIO2N0yxPew7jImjoVL6Ndbybyi
+NuQvyafLStvFStWrRAeR9JDJJPAwO6gnI4WOS3xRxdVx2XTnCfVYDtuOp+aSPOcy
+ZsvQzp6sDbJBThZNHiLfRh2hObkaCRBWjeNBKlN5mfkrM7D5ZO7T1R7c9t2C1l0m
+fpPA3RKqAzvG8I//XHtCxFcznbTxUw==
+=ZP81
+-----END PGP SIGNATURE-----
+
+--AxX246IxnoTUIznVycqbXIHOzMd5kyCMl--
