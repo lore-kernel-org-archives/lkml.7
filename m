@@ -2,162 +2,314 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53F5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A204C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E0120675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CE5820675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 13:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyRyiRJs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oZWXjct2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfLDNWc (ORCPT
+        id S1727888AbfLDNX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:22:32 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:32891 "EHLO
+        Wed, 4 Dec 2019 08:23:27 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41836 "EHLO
         mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727503AbfLDNWc (ORCPT
+        with ESMTP id S1727503AbfLDNX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:22:32 -0500
-Received: by mail-pf1-f195.google.com with SMTP id y206so3666328pfb.0;
-        Wed, 04 Dec 2019 05:22:31 -0800 (PST)
+        Wed, 4 Dec 2019 08:23:26 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s18so3646276pfd.8;
+        Wed, 04 Dec 2019 05:23:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wZJOF5sLAkP6Lj5JLT4j1oHbVGDdAKwvCkWIUq+dheE=;
-        b=pyRyiRJsR/LSFSgykNDNtWvgkjb/xDhjdWYPO4bvDoYwIrAiXaC8Q9Mfe1qKKmYaYR
-         JGPz6eDAEudYkUKAeATKN7m8fsMYj1DteNEskTvJFGYJ/At5faDtqSL/RU12cSxucLnA
-         RrbwncZHxyOUZ6HvOlL/m+ImhQucJU7j0tMmCXkom+JkJkQJJcg0/2JiLLTYBFhrYNX2
-         ZRhSs1k59HQ9adQyGfpYEk2vMSekJHU9onLCDZyH8bdnlj6UzaUbsTkXclR6XB+ik+1m
-         dflGFJf6R4P6X7Ct5JDhiuAiIqObkM0FdrlxMLHxzgMiyfo83v/ANwBZVNjQ358K8BkO
-         TxiA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bzUORddslteW5eXVIHJy4dfoW0y32isnmr7LqDGicxw=;
+        b=oZWXjct2+pDngJOf1ZO69GNIEaqfJnySgrANO49oJSySb5qU5NC+FhIrb/ALMr1SjW
+         hbhrD3uFhVcPYq4DvojLlxMAoUM2u1J8VJvVfcBIrkSyVCS8AjUDebQb/KnxVWR2i/Q2
+         Zit37FqF0dlN3xHTlBBMmj1q4mF8zIGyTTM66gFQFpbE/ug2B59RLtvjH5Mcic6ljq5Y
+         TtqQj6KA5+9fy64Rx74VeQrTsyusJil1R9bQQICl8tj3K1BNmxIsqPRJEhABOu+RyDuD
+         ksckKXgFgadp+68ZLnkAnQVoNF1rbfrU964lKODADfxphfNHWrXk/60hanrqAj6GGJa0
+         AJRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wZJOF5sLAkP6Lj5JLT4j1oHbVGDdAKwvCkWIUq+dheE=;
-        b=jflCQXiOv7+nLXKn1YlY6cF/4OqdpBthPswq6VHKIaxAwDlJpdprXoIJzwO9m3X3+p
-         jzgDBL915P4/P9r76qeVC2f1GC8TXvq5n68Le1DgRE1sam8IcwekcYxWVBxLF+4nIB3N
-         qRwDdlvva5fFi5anU6oi1oJnYZCND0SIpXYlmymLqJ+WTE9wRW/t/l3omc0zSqLyfFTl
-         w+uOuteupy4o7BJQ3KAvr8vBq8MULKPylUvgqdDxArRDrm/cRXLbROSFiwVPofMzcGaQ
-         vwfIFNBGmKI/ddEQ05vWsCX8mmDWJ7qm6IvBdrjZx3oi229htzJTxhfHi3uwRRNGdHsb
-         4mmA==
-X-Gm-Message-State: APjAAAUt/VA/InQSXCCx1aN6R0x1dowIFVxiV7nGvnSi/mJzxjJQmE79
-        tyVC5viUDx34xRjkVgrwnIjONQFq
-X-Google-Smtp-Source: APXvYqwkk/5MouzqntAeuXQGGYrBHHJiqg16oYZsk0XxEdxvjahSNBUzsQvvraKzr9vzruaDkgwQtw==
-X-Received: by 2002:aa7:8ad3:: with SMTP id b19mr3489646pfd.134.1575465751097;
-        Wed, 04 Dec 2019 05:22:31 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s7sm7911105pfe.22.2019.12.04.05.22.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 05:22:30 -0800 (PST)
-Subject: Re: [PATCH v6 10/18] sh/tlb: Convert SH to generic mmu_gather
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-References: <20190219103148.192029670@infradead.org>
- <20190219103233.443069009@infradead.org>
- <CAMuHMdW3nwckjA9Bt-_Dmf50B__sZH+9E5s0_ziK1U_y9onN=g@mail.gmail.com>
- <20191204104733.GR2844@hirez.programming.kicks-ass.net>
- <CAMuHMdXs_Fm93t=O9jJPLxcREZy-T53Z_U_RtHcvaWyV+ESdjg@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <156fa92f-4c5a-08bd-bcda-20029724c0de@roeck-us.net>
-Date:   Wed, 4 Dec 2019 05:22:28 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bzUORddslteW5eXVIHJy4dfoW0y32isnmr7LqDGicxw=;
+        b=WRf3sUb38NmImAi8ciyc+ufyQSP7U0P7IVl7UmcHQso1lH9nHN+wZdI40uEeWoO7A6
+         sO3uobz94KwpRxuKs8xX9PV4qzfZQQ+KBrIQJEoGLsk+6l1eCTo0f20TnNWLrkDjAQhI
+         bVlT1+rJWOu9cszuJFBdZN+vjMiHAwfcKONRqt9zUarp8DJ10hq54co7lQuTvcAaTPGa
+         9UasfW+Gkm7PHlYXaRkfqJbDoFFy2soc/vVKhrQnCg3H8mqFqJoChaMWpbAvPh0Dt1/q
+         4pOU8ObMQEM5YmTLf+PZ5C339L/pk2d83JBH0lC6KFmYKuSeg4Hn0aGBoAGWw86QYMqK
+         vQOQ==
+X-Gm-Message-State: APjAAAVQfMGualQj1TgtGZmzvRJu5xq/f4NNUbOk709sdYNNAh4xNnq/
+        CMvJG9CuD4GlBLxkpW3+YoA=
+X-Google-Smtp-Source: APXvYqwngfLMCvJInq4cmDcMPFV+ut6IxE6J4QXbthURpT7Mf5uj4gw+nwPijzXrrxxNnIX+0Nzc+A==
+X-Received: by 2002:a63:d617:: with SMTP id q23mr3553478pgg.146.1575465805677;
+        Wed, 04 Dec 2019 05:23:25 -0800 (PST)
+Received: from workstation-kernel-dev ([139.5.253.107])
+        by smtp.gmail.com with ESMTPSA id x4sm8366997pfx.68.2019.12.04.05.23.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 05:23:25 -0800 (PST)
+Date:   Wed, 4 Dec 2019 18:53:18 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 00/46] 5.4.2-stable review
+Message-ID: <20191204132318.GA14649@workstation-kernel-dev>
+References: <20191203212705.175425505@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdXs_Fm93t=O9jJPLxcREZy-T53Z_U_RtHcvaWyV+ESdjg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203212705.175425505@linuxfoundation.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/4/19 4:32 AM, Geert Uytterhoeven wrote:
-> Hoi Peter,
+On Tue, Dec 03, 2019 at 11:35:20PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.2 release.
+> There are 46 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> On Wed, Dec 4, 2019 at 11:48 AM Peter Zijlstra <peterz@infradead.org> wrote:
->> On Tue, Dec 03, 2019 at 12:19:00PM +0100, Geert Uytterhoeven wrote:
->>> On Tue, Feb 19, 2019 at 11:35 AM Peter Zijlstra <peterz@infradead.org> wrote:
->>>> Generic mmu_gather provides everything SH needs (range tracking and
->>>> cache coherency).
->>>>
->>>> Cc: Will Deacon <will.deacon@arm.com>
->>>> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
->>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>> Cc: Nick Piggin <npiggin@gmail.com>
->>>> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
->>>> Cc: Rich Felker <dalias@libc.org>
->>>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->>>
->>> I got remote access to an SH7722-based Migo-R again, which spews a long
->>> sequence of BUGs during userspace startup.  I've bisected this to commit
->>> c5b27a889da92f4a ("sh/tlb: Convert SH to generic mmu_gather").
->>
->> Whoopsy.. also, is this really the first time anybody booted an SH
->> kernel in over a year ?!?
+> Responses should be made by Thu, 05 Dec 2019 21:20:36 +0000.
+> Anything received after that time might be too late.
 > 
-> Nah, but the v5.4-rc3 I booted recently on qemu -M r2d had
-> CONFIG_PGTABLE_LEVELS=2, so it didn't show the problem.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.2-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> -------------
+> Pseudo-Shortlog of commits:
+> 
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>     Linux 5.4.2-rc1
+> 
+> Hans de Goede <hdegoede@redhat.com>
+>     platform/x86: hp-wmi: Fix ACPI errors caused by passing 0 as input size
+> 
+> Hans de Goede <hdegoede@redhat.com>
+>     platform/x86: hp-wmi: Fix ACPI errors caused by too small buffer
+> 
+> Candle Sun <candle.sun@unisoc.com>
+>     HID: core: check whether Usage Page item is after Usage ID items
+> 
+> Herbert Xu <herbert@gondor.apana.org.au>
+>     crypto: talitos - Fix build error by selecting LIB_DES
+> 
+> Joel Stanley <joel@jms.id.au>
+>     Revert "jffs2: Fix possible null-pointer dereferences in jffs2_add_frag_to_fragtree()"
+> 
+> Theodore Ts'o <tytso@mit.edu>
+>     ext4: add more paranoia checking in ext4_expand_extra_isize handling
+> 
+> Heiner Kallweit <hkallweit1@gmail.com>
+>     r8169: fix resume on cable plug-in
+> 
+> Heiner Kallweit <hkallweit1@gmail.com>
+>     r8169: fix jumbo configuration for RTL8168evl
+> 
+> Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+>     selftests: pmtu: use -oneline for ip route list cache
+> 
+> John Rutherford <john.rutherford@dektech.com.au>
+>     tipc: fix link name length check
+> 
+> Jakub Kicinski <jakub.kicinski@netronome.com>
+>     selftests: bpf: correct perror strings
+> 
+> Jakub Kicinski <jakub.kicinski@netronome.com>
+>     selftests: bpf: test_sockmap: handle file creation failures gracefully
+> 
+> Jakub Kicinski <jakub.kicinski@netronome.com>
+>     net/tls: use sg_next() to walk sg entries
+> 
+> Jakub Kicinski <jakub.kicinski@netronome.com>
+>     net/tls: remove the dead inplace_crypto code
+> 
+> Jakub Kicinski <jakub.kicinski@netronome.com>
+>     selftests/tls: add a test for fragmented messages
 > 
 
-Guess that explains why I do not see the problem with my qemu boots.
-I use rts7751r2dplus_defconfig. Is it possible to reproduce the problem
-with qemu ? I don't think so, but maybe I am missing something.
+Hi,
+I'm not sure if this is relevant but I tested out the latest revision
+of tools/testing/selftests/net/tls (run as sudo) with 5.3.9, 5.3.13,
+and 5.4.1, and all of them resulted in Oops. I'm not sure that it
+happens only on my PC but the old version worked fine on all 3 kernels.
 
-Guenter
+More information available in this thread:
+https://lore.kernel.org/stable/20191203171817.GA24581@workstation-portable/
 
->>> Do you have a clue?
->>
->> Does the below help?
-> 
-> Unfortunately not.
-> 
->> diff --git a/arch/sh/include/asm/pgalloc.h b/arch/sh/include/asm/pgalloc.h
->> index 22d968bfe9bb..73a2c00de6c5 100644
->> --- a/arch/sh/include/asm/pgalloc.h
->> +++ b/arch/sh/include/asm/pgalloc.h
->> @@ -36,9 +36,8 @@ do {                                                  \
->>   #if CONFIG_PGTABLE_LEVELS > 2
->>   #define __pmd_free_tlb(tlb, pmdp, addr)                        \
->>   do {                                                   \
->> -       struct page *page = virt_to_page(pmdp);         \
->> -       pgtable_pmd_page_dtor(page);                    \
->> -       tlb_remove_page((tlb), page);                   \
->> +       pgtable_pmd_page_dtor(pmdp);                    \
-> 
-> expected ‘struct page *’ but argument is of type ‘pmd_t * {aka struct
-> <anonymous> *}’
-> 
->> +       tlb_remove_page((tlb), (pmdp));                 \
-> 
-> likewise
-> 
->>   } while (0);
->>   #endif
-> 
-> Gr{oetje,eeting}s,
-> 
->                          Geert
-> 
+Thanks
+Amol
 
+> Jakub Kicinski <jakub.kicinski@netronome.com>
+>     net: skmsg: fix TLS 1.3 crash with full sk_msg
+> 
+> Jakub Kicinski <jakub.kicinski@netronome.com>
+>     net/tls: free the record on encryption error
+> 
+> Jakub Kicinski <jakub.kicinski@netronome.com>
+>     net/tls: take into account that bpf_exec_tx_verdict() may free the record
+> 
+> Paolo Abeni <pabeni@redhat.com>
+>     openvswitch: remove another BUG_ON()
+> 
+> Paolo Abeni <pabeni@redhat.com>
+>     openvswitch: drop unneeded BUG_ON() in ovs_flow_cmd_build_info()
+> 
+> Xin Long <lucien.xin@gmail.com>
+>     sctp: cache netns in sctp_ep_common
+> 
+> Jouni Hogander <jouni.hogander@unikie.com>
+>     slip: Fix use-after-free Read in slip_open
+> 
+> Navid Emamdoost <navid.emamdoost@gmail.com>
+>     sctp: Fix memory leak in sctp_sf_do_5_2_4_dupcook
+> 
+> Paolo Abeni <pabeni@redhat.com>
+>     openvswitch: fix flow command message size
+> 
+> Dust Li <dust.li@linux.alibaba.com>
+>     net: sched: fix `tc -s class show` no bstats on class with nolock subqueues
+> 
+> Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+>     net: psample: fix skb_over_panic
+> 
+> Chuhong Yuan <hslester96@gmail.com>
+>     net: macb: add missed tasklet_kill
+> 
+> Oleksij Rempel <linux@rempel-privat.de>
+>     net: dsa: sja1105: fix sja1105_parse_rgmii_delays()
+> 
+> David Bauer <mail@david-bauer.net>
+>     mdio_bus: don't use managed reset-controller
+> 
+> Menglong Dong <dong.menglong@zte.com.cn>
+>     macvlan: schedule bc_work even if error
+> 
+> Jeroen de Borst <jeroendb@google.com>
+>     gve: Fix the queue page list allocated pages count
+> 
+> Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+>     x86/fpu: Don't cache access to fpu_fpregs_owner_ctx
+> 
+> Mika Westerberg <mika.westerberg@linux.intel.com>
+>     thunderbolt: Power cycle the router if NVM authentication fails
+> 
+> Alexander Usyskin <alexander.usyskin@intel.com>
+>     mei: me: add comet point V device id
+> 
+> Alexander Usyskin <alexander.usyskin@intel.com>
+>     mei: bus: prefix device names on bus with the bus name
+> 
+> Fabio D'Urso <fabiodurso@hotmail.it>
+>     USB: serial: ftdi_sio: add device IDs for U-Blox C099-F9P
+> 
+> Hans de Goede <hdegoede@redhat.com>
+>     staging: rtl8723bs: Add 024c:0525 to the list of SDIO device-ids
+> 
+> Hans de Goede <hdegoede@redhat.com>
+>     staging: rtl8723bs: Drop ACPI device ids
+> 
+> Pan Bian <bianpan2016@163.com>
+>     staging: rtl8192e: fix potential use after free
+> 
+> Ajay Singh <ajay.kathat@microchip.com>
+>     staging: wilc1000: fix illegal memory access in wilc_parse_join_bss_param()
+> 
+> Mathias Kresin <dev@kresin.me>
+>     usb: dwc2: use a longer core rest timeout in dwc2_core_reset()
+> 
+> Sami Tolvanen <samitolvanen@google.com>
+>     driver core: platform: use the correct callback type for bus_find_device
+> 
+> Pascal van Leeuwen <pascalvanl@gmail.com>
+>     crypto: inside-secure - Fix stability issue with Macchiatobin
+> 
+> Jens Axboe <axboe@kernel.dk>
+>     net: disallow ancillary data for __sys_{send,recv}msg_file()
+> 
+> Jens Axboe <axboe@kernel.dk>
+>     net: separate out the msghdr copy from ___sys_{send,recv}msg()
+> 
+> Jens Axboe <axboe@kernel.dk>
+>     io_uring: async workers should inherit the user creds
+> 
+> 
+> -------------
+> 
+> Diffstat:
+> 
+>  Makefile                                     |   4 +-
+>  arch/x86/include/asm/fpu/internal.h          |   2 +-
+>  drivers/base/platform.c                      |   7 +-
+>  drivers/crypto/Kconfig                       |   1 +
+>  drivers/crypto/inside-secure/safexcel.c      |   4 +-
+>  drivers/hid/hid-core.c                       |  51 +++++++-
+>  drivers/misc/mei/bus.c                       |   9 +-
+>  drivers/misc/mei/hw-me-regs.h                |   1 +
+>  drivers/misc/mei/pci-me.c                    |   1 +
+>  drivers/net/dsa/sja1105/sja1105_main.c       |  10 +-
+>  drivers/net/ethernet/cadence/macb_main.c     |   1 +
+>  drivers/net/ethernet/google/gve/gve_main.c   |   3 +-
+>  drivers/net/ethernet/realtek/r8169_main.c    |   3 +-
+>  drivers/net/macvlan.c                        |   3 +-
+>  drivers/net/phy/mdio_bus.c                   |   6 +-
+>  drivers/net/slip/slip.c                      |   1 +
+>  drivers/platform/x86/hp-wmi.c                |  10 +-
+>  drivers/staging/rtl8192e/rtl8192e/rtl_core.c |   5 +-
+>  drivers/staging/rtl8723bs/os_dep/sdio_intf.c |   7 +-
+>  drivers/staging/wilc1000/wilc_hif.c          |  25 ++--
+>  drivers/thunderbolt/switch.c                 |  54 ++++++--
+>  drivers/usb/dwc2/core.c                      |   2 +-
+>  drivers/usb/serial/ftdi_sio.c                |   3 +
+>  drivers/usb/serial/ftdi_sio_ids.h            |   7 +
+>  fs/ext4/inode.c                              |  15 +++
+>  fs/ext4/super.c                              |  21 +--
+>  fs/io_uring.c                                |  23 +++-
+>  fs/jffs2/nodelist.c                          |   2 +-
+>  include/linux/skmsg.h                        |  26 ++--
+>  include/net/sctp/structs.h                   |   3 +
+>  include/net/tls.h                            |   3 +-
+>  net/core/filter.c                            |   8 +-
+>  net/core/skmsg.c                             |   2 +-
+>  net/ipv4/tcp_bpf.c                           |   2 +-
+>  net/openvswitch/datapath.c                   |  17 ++-
+>  net/psample/psample.c                        |   2 +-
+>  net/sched/sch_mq.c                           |   3 +-
+>  net/sched/sch_mqprio.c                       |   4 +-
+>  net/sched/sch_multiq.c                       |   2 +-
+>  net/sched/sch_prio.c                         |   2 +-
+>  net/sctp/associola.c                         |   1 +
+>  net/sctp/endpointola.c                       |   1 +
+>  net/sctp/input.c                             |   4 +-
+>  net/sctp/sm_statefuns.c                      |   4 +-
+>  net/socket.c                                 | 184 +++++++++++++++++++--------
+>  net/tipc/netlink_compat.c                    |   4 +-
+>  net/tls/tls_main.c                           |  13 +-
+>  net/tls/tls_sw.c                             |  32 +++--
+>  tools/testing/selftests/bpf/test_sockmap.c   |  47 ++++---
+>  tools/testing/selftests/bpf/xdping.c         |   2 +-
+>  tools/testing/selftests/net/pmtu.sh          |   5 +-
+>  tools/testing/selftests/net/tls.c            |  60 +++++++++
+>  52 files changed, 505 insertions(+), 207 deletions(-)
+> 
+> 
