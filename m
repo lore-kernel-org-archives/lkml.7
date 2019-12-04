@@ -2,121 +2,138 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A339C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC17C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2013F20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2093620675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:52:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="c6YQ/CC7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qtzjdrFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfLDIwL (ORCPT
+        id S1727286AbfLDIw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:52:11 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39149 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfLDIwK (ORCPT
+        Wed, 4 Dec 2019 03:52:29 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38052 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfLDIw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:52:10 -0500
-Received: by mail-io1-f66.google.com with SMTP id c16so7127516ioh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 00:52:10 -0800 (PST)
+        Wed, 4 Dec 2019 03:52:26 -0500
+Received: by mail-qk1-f196.google.com with SMTP id k6so647344qki.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 00:52:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=VbSlraRKW1h6H09AWbIwzLPGNtIDxR9arS6sirAYwJA=;
-        b=c6YQ/CC7bn4j4hm9q72EVlvKUyNaajPvf64J+26Xmu1skjC54vIn6Ooi02zolvRivY
-         XAIZz1anbbfubFp2wtJU2zqyZIBShjO/Qjnl/L0PbyYOxCBRXTfauQcHItm/AYTDDHl2
-         jfCIyTZGlNEHVYpnECUIQP5TXN4MIrWN5/on1aZ7FoMTkpD7hvp0Ts2s3J90Zy7shf42
-         Dv7s96Fp9xlv+OyRQ+1KXl/MIjYAXGyGGPqwT/euEmFvpkxwXaK7acg4IdHq7cw/IpoR
-         eK/AXzs2h7My1DRaziiWwq9PwANx29k4hkvTwqI1f92Mrdrgww09L5LK8iwnUpEJ3OPd
-         0NGw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eFxpjE5vqC11Qb7kVYdyl3QjT2lQv9V/mzQLuWIL6ow=;
+        b=qtzjdrFqUraz67iCJUJLMgk648tBILdd6AFOARTl4AbtEz6pGnUuLD28JHPtptGCpp
+         hrSw77YmYLT0+uRXl94NZbBnkUTyKqA02oZGjzw4WOOrGByi2ONdhTmOBspy3JJOIb+6
+         dq/sTGBjBsgjq19la6I+K/cumYUb5sX28XQg2UtQIWCuFCjpqVLv8Dirv0yIhQCEGNBk
+         odLoCo2bIbzC1rzU3BbX2Lp83PkNvKEYKmAmK375sLYvQn2Gqy4XpUZDQXTC13e2MaY7
+         3l2aZ1uEsnd3TOA7uBwo7eDG+OnomdzPuOC5hQD5tylegy4HtM903gQE3UyNJhCU+ynn
+         kbHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=VbSlraRKW1h6H09AWbIwzLPGNtIDxR9arS6sirAYwJA=;
-        b=YVuH3+WM3aKJOlCQdNIbG5BPemiMo/jU8WIEFlNrrVaFve2ZDc/EIUFv2fXjoQbTHo
-         uC6gRI5zHOZ851b5FN87drVJUKqNa8nEK8vW+uTQkur33luocRVSy5dNRgHhpfVR7hCf
-         9pQsaPKdgUoVp0uLmtf3dI9JAc9QGFo4sNuTd8JqwTJKgXkvCVw7HkRwZ2ZtrXBHAjKj
-         1HiS8TPA1I95a6xkMIZk1n8d1dcce5NLnR0P6M0Ao3ItTseEZo14ZmMrd447KB9k9/qf
-         DewAVH51XhComPp1D6DjNUfG+ozy/SeI/vD77dwTtP2jtvwp8NvZMKf8r7mvNlrZQKMX
-         mQFA==
-X-Gm-Message-State: APjAAAX4bEVkcW1KsRH+Xx4EGOZLyp8pOIuUZAdxNmz/RCI6L8wwn6nC
-        rByHpwSCXNSj4h2pr7+0bTxZLA==
-X-Google-Smtp-Source: APXvYqyhs0VOhD8pRYtwYkIDbN3LMMXkKvjbgTwc1G/5AlUPF+NK+mkXe8vUg+Fx0fECgjN0fQhVIg==
-X-Received: by 2002:a6b:3b90:: with SMTP id i138mr1354434ioa.105.1575449529990;
-        Wed, 04 Dec 2019 00:52:09 -0800 (PST)
-Received: from localhost (67-0-26-4.albq.qwest.net. [67.0.26.4])
-        by smtp.gmail.com with ESMTPSA id m18sm1320714ioj.74.2019.12.04.00.52.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 00:52:09 -0800 (PST)
-Date:   Wed, 4 Dec 2019 00:52:08 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     torvalds@linux-foundation.org
-cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Second set of RISC-V updates for v5.5-rc1
-Message-ID: <alpine.DEB.2.21.9999.1912040050430.56420@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eFxpjE5vqC11Qb7kVYdyl3QjT2lQv9V/mzQLuWIL6ow=;
+        b=lO+U6qzDD55ece6/K+0Y31vA3ILIpE8Nqftp8Sy+/e7QiYarcuvUCxbxfVQjyc8JRV
+         lSlb22Bk3x6rs22T2Bmn6iZyrMTHu/MEphyxJ4AUPky9HAp0ndhTVPUHs6j/rGvzMp/6
+         bLA0t4278btFnbewgdT1pOlsoJI9tFCN+hYMgdP6y/itjb1QIx0/S4Iu0p3emdbqVz/H
+         aGJVfEAHPanUwvM3l9TwpV+I5IzRi8PJn2FyEyehrTGvKcQR/CsKUR8QstpvkcQAs09i
+         zz/cM8HoX9/ufalL3uQTkq1xasuHqf/RdVBW/lXmrKE/Ksn2sjPN6N0dAuvR7exz24F4
+         hiLw==
+X-Gm-Message-State: APjAAAWzLuDGDKjZtRsspkcaxQSsvF1p71sdhFGI58FvJNi2xsqkZ8WZ
+        nqonas9Vj7WMGun5yhNL7dqcVNcVbhaurXYEHPvOxw==
+X-Google-Smtp-Source: APXvYqzom2zVNmJsnqgeX6Zl7UU1aW7YcSnWZuVSvd+8o7mht/oFU7cWZhb+CIiGCNrQewvTP6CIAxhwhVpDXOGxL40=
+X-Received: by 2002:a37:76c5:: with SMTP id r188mr1747286qkc.256.1575449544636;
+ Wed, 04 Dec 2019 00:52:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <001a114372a6074e6505642b7f72@google.com> <000000000000039751059891760e@google.com>
+ <CACT4Y+Yrg8JxWABi4CJgBG7GpBSCmT0DHr_eZhQA-ikLH-X5Yw@mail.gmail.com>
+ <20191202183912.GC377783@localhost.localdomain> <CACT4Y+ZpZVYgA-oiE_YYC49LRA2=iTQLxOaKTA3TEYBt8KjFbw@mail.gmail.com>
+ <20191203115616.GA4707@hmswarspite.think-freely.org>
+In-Reply-To: <20191203115616.GA4707@hmswarspite.think-freely.org>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 4 Dec 2019 09:52:13 +0100
+Message-ID: <CACT4Y+aRwLG2nHfzmeN=KMY6f+ihj-c73v-pdznjgz0eDDQOZg@mail.gmail.com>
+Subject: Re: kernel BUG at net/core/skbuff.c:LINE! (3)
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        syzbot <syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>, linux-sctp@vger.kernel.org,
+        Xin Long <lucien.xin@gmail.com>, mvohra@vmware.com,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        William Tu <u9012063@gmail.com>,
+        Vladislav Yasevich <vyasevich@gmail.com>,
+        websitedesignservices4u@gmail.com,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Tue, Dec 3, 2019 at 12:56 PM Neil Horman <nhorman@tuxdriver.com> wrote:
+>
+> On Tue, Dec 03, 2019 at 09:42:14AM +0100, Dmitry Vyukov wrote:
+> > On Mon, Dec 2, 2019 at 7:39 PM Marcelo Ricardo Leitner
+> > <marcelo.leitner@gmail.com> wrote:
+> > >
+> > > On Sat, Nov 30, 2019 at 04:37:56PM +0100, Dmitry Vyukov wrote:
+> > > > On Sat, Nov 30, 2019 at 3:50 PM syzbot
+> > > > <syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com> wrote:
+> > > > >
+> > > > > syzbot has bisected this bug to:
+> > > > >
+> > > > > commit 84e54fe0a5eaed696dee4019c396f8396f5a908b
+> > > > > Author: William Tu <u9012063@gmail.com>
+> > > > > Date:   Tue Aug 22 16:40:28 2017 +0000
+> > > > >
+> > > > >      gre: introduce native tunnel support for ERSPAN
+> > > > >
+> > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=158a2f86e00000
+> > > > > start commit:   f9f1e414 Merge tag 'for-linus-4.16-rc1-tag' of git://git.k..
+> > > > > git tree:       upstream
+> > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=178a2f86e00000
+> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=138a2f86e00000
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=34a80ee1ac29767b
+> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=b2bf2652983d23734c5c
+> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=147bfebd800000
+> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d8d543800000
+> > > > >
+> > > > > Reported-by: syzbot+b2bf2652983d23734c5c@syzkaller.appspotmail.com
+> > > > > Fixes: 84e54fe0a5ea ("gre: introduce native tunnel support for ERSPAN")
+> > > > >
+> > > > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> > > >
+> > > > Humm... the repro contains syz_emit_ethernet, wonder if it's
+> > > > remote-triggerable...
+> > >
+> > > The call trace is still from the tx path. Packet never left the system
+> > > in this case.
+> >
+> > My understanding is that this does not necessarily mean that the
+> > remote side is not involved. There is enough state on the host for L4
+> > protocols, so that the remote side can mess things and then the bad
+> > thing will happen with local trigger. But that local trigger can be
+> > just anything trivial that everybody does.
+> >
+> But thats not really helpful.  Unless you see an explicit path from the receive
+> side to ip6_append_data, Theres no real way for a received packet to reach this
+> code, so we can't really call it remotely triggerable.
+>
+> My guess is, since this is coming from the rawv6_sendmsg path, that the raw
+> protocol is somehow not marshaling its data in a way that ip6_append_data
+> expects.
 
-The following changes since commit 5ba9aa56e6d3e8fddb954c2f818d1ce0525235bb:
-
-  Merge branch 'next/nommu' into for-next (2019-11-22 18:59:09 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.5-rc1-2
-
-for you to fetch changes up to 1646220a6d4b27153ddb5ffb117aa1f4c39e3d1f:
-
-  Merge branch 'next/defconfig-add-debug' into for-next (2019-11-22 18:59:23 -0800)
-
-----------------------------------------------------------------
-Second set of RISC-V updates for v5.5-rc1
-
-A few minor RISC-V updates for v5.5-rc1 that arrived late.
-
-New features:
-
-- Dump some kernel virtual memory map details to the console if
-  CONFIG_DEBUG_VM is enabled
-
-Other improvements:
-
-- Enable more debugging options in the primary defconfigs
-
-Cleanups:
-
-- Clean up Kconfig indentation
-
-----------------------------------------------------------------
-Krzysztof Kozlowski (1):
-      riscv: Fix Kconfig indentation
-
-Paul Walmsley (4):
-      riscv: defconfigs: enable debugfs
-      riscv: defconfigs: enable more debugging options
-      Merge branch 'next/misc2' into for-next
-      Merge branch 'next/defconfig-add-debug' into for-next
-
-Yash Shah (1):
-      RISC-V: Add address map dumper
-
- arch/riscv/Kconfig.socs           | 16 ++++++++--------
- arch/riscv/configs/defconfig      | 24 ++++++++++++++++++++++++
- arch/riscv/configs/rv32_defconfig | 24 ++++++++++++++++++++++++
- arch/riscv/mm/init.c              | 32 ++++++++++++++++++++++++++++++++
- 4 files changed, 88 insertions(+), 8 deletions(-)
+If it's in the local send path and does not use any remotely
+controllable data, then this should be good enough estimation of not
+being a remote attack vector.
