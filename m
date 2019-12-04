@@ -2,447 +2,313 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E98C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5232DC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF40820833
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D61A2081B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 12:02:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IYB+fl6o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbfLDMCo (ORCPT
+        id S1727823AbfLDMCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:02:44 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:52816 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727472AbfLDMCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 07:02:42 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 63A8F1A047C;
-        Wed,  4 Dec 2019 13:02:38 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 20B011A0474;
-        Wed,  4 Dec 2019 13:02:32 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 70DB7402BC;
-        Wed,  4 Dec 2019 20:02:24 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/2] ASoC: fsl_asrc: Add support for imx8qm & imx8qxp
-Date:   Wed,  4 Dec 2019 20:00:19 +0800
-Message-Id: <f33dfe3157b5ab200e09ccbf9ab73d31fac6664b.1575452454.git.shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <b9352edb014c1ee8530c0fd8829c2b044b3da649.1575452454.git.shengjiu.wang@nxp.com>
-References: <b9352edb014c1ee8530c0fd8829c2b044b3da649.1575452454.git.shengjiu.wang@nxp.com>
-In-Reply-To: <b9352edb014c1ee8530c0fd8829c2b044b3da649.1575452454.git.shengjiu.wang@nxp.com>
-References: <b9352edb014c1ee8530c0fd8829c2b044b3da649.1575452454.git.shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 4 Dec 2019 07:02:51 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46218 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727472AbfLDMCu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 07:02:50 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a124so6548618oii.13;
+        Wed, 04 Dec 2019 04:02:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=I/wNnqfcW4ZqavTcDtDeP4DdimYQ/CbMfwcHPxLORcU=;
+        b=IYB+fl6oiS7WVYNm6UizdS/dbsz6W9GVR4XYnydRvQ0ZlHII7Px4LdYgywQOB7vWvr
+         8LgFbx4H2Upl7Cn9wsk0BHhVEh1Q/cgrRij2gzwLTmzkIc9toHHkqw7mgPHAJ5wzwkgy
+         DwsZ+dczIx3jBNYYnN70fdv25xRJxjWdo/qTrfvVGpETJCusxh0mAaLaJBgCs32EAqPk
+         Ubf/BOrPJJ0QAiAGFIQ6NFaM2V+hA8+K/LavEYQ0uW/MguPRaiwWOEjuwvFNuY93nvjx
+         5LYlmty4nWyvV4xnjMg8bikOzKzL3jaBbzmPewXdp7sErAU++naAQ1JZucY/RmrsaZrQ
+         Dtrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=I/wNnqfcW4ZqavTcDtDeP4DdimYQ/CbMfwcHPxLORcU=;
+        b=bQeg+ba/gA6J0nD5BJMJtdftG8JpD5hrvU/oHUIrUIvFlKl8UCksATxomAhhXdWgiD
+         tNurA0bAIhe/PxcQmA8XAi7lY7nhA/SALlqUcSSAplttwMBPDWNiMD7SUTJgE2k0Dtg3
+         G+RGy+XREgSHsRdBZPy3U+F10D20+BNqzi0uu73s9bF3NflEKg2qHoIoAgl/r0mpR5k+
+         of8+SOc87rCdabAAIShHmlxgpXGLDpcqgZa2HAaaxEcXkfvX6lai1/XyWOqrSXEKmeMr
+         xXrp9gPtH9Pxm+2MPUbwrdO+ZdT8BdWN2Y6umZ0WCFS8l3jdi5l2YmwHFy9grcbN6MKq
+         Kv/A==
+X-Gm-Message-State: APjAAAWd5iLE/czO24TW0K/KcfOEW1re0p/QTUEREeRlqaSbRC4utfvx
+        OMYMLUNTzgWe2DWihUuQ9D518L0eUiudwIQs6kM=
+X-Google-Smtp-Source: APXvYqys2hbbLQs/l6VGOlnshpcn40iqrNce0dKse5iFNBHnievNd7zQLIm4YS8hOeNTRMeuOpALpmLfw+cBz1JpNdg=
+X-Received: by 2002:aca:b805:: with SMTP id i5mr2248499oif.110.1575460968940;
+ Wed, 04 Dec 2019 04:02:48 -0800 (PST)
+MIME-Version: 1.0
+References: <20191127185139.65048-1-abhishekpandit@chromium.org>
+ <20191201145357.ybq5gfty4ulnfasq@pali> <20191202012305.GQ248138@dtor-ws>
+ <20191202084750.k7lafzzrf3yq2tqs@pali> <20191202175440.GA50317@dtor-ws>
+ <20191202185340.nae4lljten5jqp3y@pali> <20191202193628.GI50317@dtor-ws>
+ <20191202230947.ld5ibnczdpkekfcm@pali> <20191203173821.4u6uzxeaqnt3gyz3@pali> <20191203191112.GJ50317@dtor-ws>
+In-Reply-To: <20191203191112.GJ50317@dtor-ws>
+From:   Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date:   Wed, 4 Dec 2019 14:02:36 +0200
+Message-ID: <CABBYNZ+D8E1BA--T+dQfWTH31G2zHYvc1mxicm+p7WwA2O-THw@mail.gmail.com>
+Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        linux-input@vger.kernel.org,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kirill Smelkov <kirr@nexedi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two asrc module in imx8qm & imx8qxp, each module has
-different clock configuration, and the DMA type is EDMA.
+Hi Dmitry,
 
-So in this patch, we define the new clocks, refine the clock map,
-and include struct fsl_asrc_soc_data for different soc usage.
+On Tue, Dec 3, 2019 at 9:11 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> On Tue, Dec 03, 2019 at 06:38:21PM +0100, Pali Roh=C3=A1r wrote:
+> > On Tuesday 03 December 2019 00:09:47 Pali Roh=C3=A1r wrote:
+> > > On Monday 02 December 2019 11:36:28 Dmitry Torokhov wrote:
+> > > > On Mon, Dec 02, 2019 at 07:53:40PM +0100, Pali Roh=C3=A1r wrote:
+> > > > > On Monday 02 December 2019 09:54:40 Dmitry Torokhov wrote:
+> > > > > > On Mon, Dec 02, 2019 at 09:47:50AM +0100, Pali Roh=C3=A1r wrote=
+:
+> > > > > > > On Sunday 01 December 2019 17:23:05 Dmitry Torokhov wrote:
+> > > > > > > > Hi Pali,
+> > > > > > > >
+> > > > > > > > On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Roh=C3=A1r w=
+rote:
+> > > > > > > > > Hello!
+> > > > > > > > >
+> > > > > > > > > On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Su=
+bedi wrote:
+> > > > > > > > > > Support setting the uniq attribute of the input device.=
+ The uniq
+> > > > > > > > > > attribute is used as a unique identifier for the connec=
+ted device.
+> > > > > > > > > >
+> > > > > > > > > > For example, uinput devices created by BlueZ will store=
+ the address of
+> > > > > > > > > > the connected device as the uniq property.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@c=
+hromium.org>
+> > > > > > > > >
+> > > > > > > > > ...
+> > > > > > > > >
+> > > > > > > > > > diff --git a/include/uapi/linux/uinput.h b/include/uapi=
+/linux/uinput.h
+> > > > > > > > > > index c9e677e3af1d..d5b7767c1b02 100644
+> > > > > > > > > > --- a/include/uapi/linux/uinput.h
+> > > > > > > > > > +++ b/include/uapi/linux/uinput.h
+> > > > > > > > > > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
+> > > > > > > > > >  #define UI_SET_PHYS          _IOW(UINPUT_IOCTL_BASE, 1=
+08, char*)
+> > > > > > > > > >  #define UI_SET_SWBIT         _IOW(UINPUT_IOCTL_BASE, 1=
+09, int)
+> > > > > > > > > >  #define UI_SET_PROPBIT               _IOW(UINPUT_IOCTL=
+_BASE, 110, int)
+> > > > > > > > > > +#define UI_SET_UNIQ          _IOW(UINPUT_IOCTL_BASE, 1=
+11, char*)
+> > > > > > > > >
+> > > > > > > > > I think that usage of char* as type in _IOW would cause c=
+ompatibility
+> > > > > > > > > problems like it is for UI_SET_PHYS (there is UI_SET_PHYS=
+_COMPAT). Size
+> > > > > > > > > of char* pointer depends on userspace (32 vs 64bit), so 3=
+2bit process on
+> > > > > > > > > 64bit kernel would not be able to call this new UI_SET_UN=
+IQ ioctl.
+> > > > > > > > >
+> > > > > > > > > I would suggest to define this ioctl as e.g.:
+> > > > > > > > >
+> > > > > > > > >   #define UI_SET_UNIQ           _IOW(_IOC_WRITE, UINPUT_I=
+OCTL_BASE, 111, 0)
+> > > > > > > > >
+> > > > > > > > > And then in uinput.c code handle it as:
+> > > > > > > > >
+> > > > > > > > >   case UI_SET_UNIQ & ~IOCSIZE_MASK:
+> > > > > > > > >
+> > > > > > > > > as part of section /* Now check variable-length commands =
+*/
+> > > > > > > >
+> > > > > > > > If we did not have UI_SET_PHYS in its current form, I'd agr=
+ee with you,
+> > > > > > > > but I think there is benefit in having UI_SET_UNIQ be simil=
+ar to
+> > > > > > > > UI_SET_PHYS.
+> > > > > > >
+> > > > > > > I thought that ioctl is just number, so we can define it as w=
+e want. And
+> > > > > > > because uinput.c has already switch for variable-length comma=
+nds it
+> > > > > > > would be easy to use it. Final handling can be in separate fu=
+nction like
+> > > > > > > for UI_SET_PHYS which can look like same.
+> > > > > >
+> > > > > > Yes, we can define ioctl number as whatever we want. What I was=
+ trying
+> > > > > > to say, right now users do this:
+> > > > > >
+> > > > > >       rc =3D ioctl(fd, UI_SET_PHYS, "whatever");
+> > > > > >       ...
+> > > > > >
+> > > > > > and with UI_SET_UNIQ they expect the following to work:
+> > > > > >
+> > > > > >       rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
+> > > > > >       ...
+> > > > >
+> > > > > And would not following definition
+> > > > >
+> > > > >   #define UI_SET_UNIQ _IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
+> > > > >
+> > > > > allow userspace to call
+> > > > >
+> > > > >   rc =3D ioctl(fd, UI_SET_UNIQ, "whatever");
+> > > > >
+> > > > > as you want?
+> > > >
+> > > > OK, so what you are saying is that we can have whatever in the size
+> > > > portion of ioctl number and simply ignore it in the driver
+> > >
+> > > Yes.
+> > >
+> > > > (and I do not
+> > > > think we need to do any of "UI_SET_UNIQ & ~IOCSIZE_MASK" really).
+> > >
+> > > You are right, we do not need to clear any IOCSIZE_MASK. As ioctl num=
+ber
+> > > would be always sam constant number. So it would be really simple. So
+> > > original patch would work if UI_SET_UNIQ define would be changed to
+> > > above with _IOW() macro.
+> > >
+> > > > While this would work, I am not sure it is the best option as I thi=
+nk
+> > > > we'd have to comment extensively why we have arbitrary number in pl=
+ace
+> > > > of the size.
+> > >
+> > > Comment can be added. But this is as ioctl is going to accept variabl=
+e
+> > > length array (not fixed array), zero value make sense for me (zero as=
+ we
+> > > do not know exact size).
+> > >
+> > > > And we still do not really save anything, as we still have to go th=
+rough
+> > > > compat ioctl handler (since we have it already) and it is very simp=
+le to
+> > > > add a case for UI_SET_UNIQ there...
+> > >
+> > > Yes, compat ioctl is still used. But my proposed solution does not
+> > > involve to define a new compact ioctl number just for sizeof(char *).
+> > >
+> > > I'm looking at this particular problem from side, that there is no
+> > > reason to define two new ioctl numbers for UI_SET_UNIQ (one normal
+> > > number and one compat number), when one number is enough. It is one n=
+ew
+> > > ioctl call, so one ioctl number should be enough.
+> > >
+> > > And also with my proposed solution with ioctl size=3D0 it simplify
+> > > implementation of UI_SET_UNIQ as it is not needed to implement also
+> > > UI_SET_UNIQ_COMPAT ioctl nor touch compat ioct code path. Basically
+> > > original patch (with changed UI_SET_UNIQ macro) is enough.
+> > >
+> > > But of of course, this is my view of this problem and I would not be
+> > > against your decision from maintainer position. Both solutions would
+> > > work correctly and bring same behavior for userspace applications.
+> >
+> >
+> > Hi Dmitry!
+> >
+> > I was looking again at those _IOW defines for ioctl calls and I have
+> > another argument why not specify 'char *' in _IOW:
+> >
+> > All ioctls in _IOW() specify as a third macro argument type which is
+> > passed as pointer to the third argument for ioctl() syscall.
+> >
+> > So e.g.:
+> >
+> >   #define EVIOCSCLOCKID _IOW('E', 0xa0, int)
+> >
+> > is called from userspace as:
+> >
+> >   int val;
+> >   ioctl(fd, EVIOCSCLOCKID, &val);
+> >
+> > Or
+> >
+> >   #define EVIOCSMASK _IOW('E', 0x93, struct input_mask)
+> >
+> > is called as:
+> >
+> >   struct input_mask val;
+> >   ioctl(fd, EVIOCSMASK, &val);
+> >
+> > So basically third argument for _IOW specify size of byte buffer passed
+> > as third argument for ioctl(). In _IOW is not specified pointer to
+> > struct input_mask, but struct input_mask itself.
+> >
+> > And in case you define
+> >
+> >   #define MY_NEW_IOCTL _IOW(UINPUT_IOCTL_BASE, 200, char*)
+> >
+> > then you by above usage you should pass data as:
+> >
+> >   char *val =3D "DATA";
+> >   ioctl(fd, MY_NEW_IOCTL, &val);
+> >
+> > Which is not same as just:
+> >
+> >   ioctl(fd, MY_NEW_IOCTL, "DATA");
+> >
+> > As in former case you passed pointer to pointer to data and in later
+> > case you passed only pointer to data.
+> >
+> > It just mean that UI_SET_PHYS is already defined inconsistently which i=
+s
+> > also reason why compat ioctl for it was introduced.
+>
+> Yes, you are right. UI_SET_PHYS is messed up. I guess the question is
+> what to do with all of this...
+>
+> Maybe we should define
+>
+> #define UI_SET_PHYS_STR(len)    _IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, =
+len)
+> #define UI_SET_UNIQ_STR(len)    _IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 112, =
+len)
+>
+> and mark UI_SET_PHYS as deprecated/wrong? This will allow us to specify
+> exactly how much data kernel is supposed to fetch from userspace instead
+> of trying to rely on a null-terminated string.
+>
+> It would also be very helpful if BlueZ did not accept changes that use
+> this brand new ioctl until after we agreed on how it should look like.
+> Luiz, can it be reverted for now please?
 
-The EDMA channel is fixed with each dma request, one dma request
-corresponding to one dma channel. So we need to request dma
-channel with dma request of asrc module.
+Sure, it has been reverted, I guess we will have to settle on the
+kernel changes first before we do any changes to userspace.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
-changes in v2
-- use !use_edma to wrap code in fsl_asrc_dma
-- add Acked-by: Nicolin Chen
-
-changes in v3
-- remove the acked-by for commit is updated
-- read "fsl,asrc-clk-map" property, and update table
-  clk_map_imx8qm.
-
-changes in v4
-- Add table clk_map_imx8qxp
-- add Acked-by: Nicolin Chen
-
-changes in v5
-- none
-
- sound/soc/fsl/fsl_asrc.c     | 125 +++++++++++++++++++++++++++++------
- sound/soc/fsl/fsl_asrc.h     |  64 +++++++++++++++++-
- sound/soc/fsl/fsl_asrc_dma.c |  39 +++++++----
- 3 files changed, 193 insertions(+), 35 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index a3cfceea7d2f..0dcebc24c312 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -41,26 +41,65 @@ static struct snd_pcm_hw_constraint_list fsl_asrc_rate_constraints = {
-  * The following tables map the relationship between asrc_inclk/asrc_outclk in
-  * fsl_asrc.h and the registers of ASRCSR
-  */
--static unsigned char input_clk_map_imx35[] = {
-+static unsigned char input_clk_map_imx35[ASRC_CLK_MAP_LEN] = {
- 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
- };
- 
--static unsigned char output_clk_map_imx35[] = {
-+static unsigned char output_clk_map_imx35[ASRC_CLK_MAP_LEN] = {
- 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
- };
- 
- /* i.MX53 uses the same map for input and output */
--static unsigned char input_clk_map_imx53[] = {
-+static unsigned char input_clk_map_imx53[ASRC_CLK_MAP_LEN] = {
- /*	0x0  0x1  0x2  0x3  0x4  0x5  0x6  0x7  0x8  0x9  0xa  0xb  0xc  0xd  0xe  0xf */
- 	0x0, 0x1, 0x2, 0x7, 0x4, 0x5, 0x6, 0x3, 0x8, 0x9, 0xa, 0xb, 0xc, 0xf, 0xe, 0xd,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
- };
- 
--static unsigned char output_clk_map_imx53[] = {
-+static unsigned char output_clk_map_imx53[ASRC_CLK_MAP_LEN] = {
- /*	0x0  0x1  0x2  0x3  0x4  0x5  0x6  0x7  0x8  0x9  0xa  0xb  0xc  0xd  0xe  0xf */
- 	0x8, 0x9, 0xa, 0x7, 0xc, 0x5, 0x6, 0xb, 0x0, 0x1, 0x2, 0x3, 0x4, 0xf, 0xe, 0xd,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
- };
- 
--static unsigned char *clk_map[2];
-+/**
-+ * i.MX8QM/i.MX8QXP uses the same map for input and output.
-+ * clk_map_imx8qm[0] is for i.MX8QM asrc0
-+ * clk_map_imx8qm[1] is for i.MX8QM asrc1
-+ * clk_map_imx8qxp[0] is for i.MX8QXP asrc0
-+ * clk_map_imx8qxp[1] is for i.MX8QXP asrc1
-+ */
-+static unsigned char clk_map_imx8qm[2][ASRC_CLK_MAP_LEN] = {
-+	{
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	},
-+	{
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0x7, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0xb, 0xc, 0xf, 0xf, 0xd, 0xe, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	0x4, 0x5, 0x6, 0xf, 0x8, 0x9, 0xa, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	},
-+};
-+
-+static unsigned char clk_map_imx8qxp[2][ASRC_CLK_MAP_LEN] = {
-+	{
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0xf, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xf, 0xf,
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	},
-+	{
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0x7, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0x7, 0x8, 0xf, 0xf, 0x9, 0xa, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	0xf, 0xf, 0x6, 0xf, 0xf, 0xf, 0xa, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	},
-+};
- 
- /**
-  * Select the pre-processing and post-processing options
-@@ -353,8 +392,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
- 	}
- 
- 	/* Validate input and output clock sources */
--	clk_index[IN] = clk_map[IN][config->inclk];
--	clk_index[OUT] = clk_map[OUT][config->outclk];
-+	clk_index[IN] = asrc_priv->clk_map[IN][config->inclk];
-+	clk_index[OUT] = asrc_priv->clk_map[OUT][config->outclk];
- 
- 	/* We only have output clock for ideal ratio mode */
- 	clk = asrc_priv->asrck_clk[clk_index[ideal ? OUT : IN]];
-@@ -398,13 +437,13 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
- 	/* Set the channel number */
- 	channels = config->channel_num;
- 
--	if (asrc_priv->channel_bits < 4)
-+	if (asrc_priv->soc->channel_bits < 4)
- 		channels /= 2;
- 
- 	/* Update channels for current pair */
- 	regmap_update_bits(asrc_priv->regmap, REG_ASRCNCR,
--			   ASRCNCR_ANCi_MASK(index, asrc_priv->channel_bits),
--			   ASRCNCR_ANCi(index, channels, asrc_priv->channel_bits));
-+			   ASRCNCR_ANCi_MASK(index, asrc_priv->soc->channel_bits),
-+			   ASRCNCR_ANCi(index, channels, asrc_priv->soc->channel_bits));
- 
- 	/* Default setting: Automatic selection for processing mode */
- 	regmap_update_bits(asrc_priv->regmap, REG_ASRCTR,
-@@ -531,7 +570,7 @@ static int fsl_asrc_dai_startup(struct snd_pcm_substream *substream,
- 	struct fsl_asrc *asrc_priv = snd_soc_dai_get_drvdata(dai);
- 
- 	/* Odd channel number is not valid for older ASRC (channel_bits==3) */
--	if (asrc_priv->channel_bits == 3)
-+	if (asrc_priv->soc->channel_bits == 3)
- 		snd_pcm_hw_constraint_step(substream->runtime, 0,
- 					   SNDRV_PCM_HW_PARAM_CHANNELS, 2);
- 
-@@ -905,6 +944,7 @@ static int fsl_asrc_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	void __iomem *regs;
- 	int irq, ret, i;
-+	u32 map_idx;
- 	char tmp[16];
- 
- 	asrc_priv = devm_kzalloc(&pdev->dev, sizeof(*asrc_priv), GFP_KERNEL);
-@@ -964,14 +1004,37 @@ static int fsl_asrc_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	asrc_priv->soc = of_device_get_match_data(&pdev->dev);
-+	if (!asrc_priv->soc) {
-+		dev_err(&pdev->dev, "failed to get soc data\n");
-+		return -ENODEV;
-+	}
-+
- 	if (of_device_is_compatible(np, "fsl,imx35-asrc")) {
--		asrc_priv->channel_bits = 3;
--		clk_map[IN] = input_clk_map_imx35;
--		clk_map[OUT] = output_clk_map_imx35;
--	} else {
--		asrc_priv->channel_bits = 4;
--		clk_map[IN] = input_clk_map_imx53;
--		clk_map[OUT] = output_clk_map_imx53;
-+		asrc_priv->clk_map[IN] = input_clk_map_imx35;
-+		asrc_priv->clk_map[OUT] = output_clk_map_imx35;
-+	} else if (of_device_is_compatible(np, "fsl,imx53-asrc")) {
-+		asrc_priv->clk_map[IN] = input_clk_map_imx53;
-+		asrc_priv->clk_map[OUT] = output_clk_map_imx53;
-+	} else if (of_device_is_compatible(np, "fsl,imx8qm-asrc") ||
-+		   of_device_is_compatible(np, "fsl,imx8qxp-asrc")) {
-+		ret = of_property_read_u32(np, "fsl,asrc-clk-map", &map_idx);
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to get clk map index\n");
-+			return ret;
-+		}
-+
-+		if (map_idx > 1) {
-+			dev_err(&pdev->dev, "unsupported clk map index\n");
-+			return -EINVAL;
-+		}
-+		if (of_device_is_compatible(np, "fsl,imx8qm-asrc")) {
-+			asrc_priv->clk_map[IN] = clk_map_imx8qm[map_idx];
-+			asrc_priv->clk_map[OUT] = clk_map_imx8qm[map_idx];
-+		} else {
-+			asrc_priv->clk_map[IN] = clk_map_imx8qxp[map_idx];
-+			asrc_priv->clk_map[OUT] = clk_map_imx8qxp[map_idx];
-+		}
- 	}
- 
- 	ret = fsl_asrc_init(asrc_priv);
-@@ -1113,9 +1176,31 @@ static const struct dev_pm_ops fsl_asrc_pm = {
- 	SET_SYSTEM_SLEEP_PM_OPS(fsl_asrc_suspend, fsl_asrc_resume)
- };
- 
-+static const struct fsl_asrc_soc_data fsl_asrc_imx35_data = {
-+	.use_edma = false,
-+	.channel_bits = 3,
-+};
-+
-+static const struct fsl_asrc_soc_data fsl_asrc_imx53_data = {
-+	.use_edma = false,
-+	.channel_bits = 4,
-+};
-+
-+static const struct fsl_asrc_soc_data fsl_asrc_imx8qm_data = {
-+	.use_edma = true,
-+	.channel_bits = 4,
-+};
-+
-+static const struct fsl_asrc_soc_data fsl_asrc_imx8qxp_data = {
-+	.use_edma = true,
-+	.channel_bits = 4,
-+};
-+
- static const struct of_device_id fsl_asrc_ids[] = {
--	{ .compatible = "fsl,imx35-asrc", },
--	{ .compatible = "fsl,imx53-asrc", },
-+	{ .compatible = "fsl,imx35-asrc", .data = &fsl_asrc_imx35_data },
-+	{ .compatible = "fsl,imx53-asrc", .data = &fsl_asrc_imx53_data },
-+	{ .compatible = "fsl,imx8qm-asrc", .data = &fsl_asrc_imx8qm_data },
-+	{ .compatible = "fsl,imx8qxp-asrc", .data = &fsl_asrc_imx8qxp_data },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, fsl_asrc_ids);
-diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
-index 2b57e8c53728..8a821132d9d0 100644
---- a/sound/soc/fsl/fsl_asrc.h
-+++ b/sound/soc/fsl/fsl_asrc.h
-@@ -308,6 +308,29 @@ enum asrc_inclk {
- 	INCLK_SSI3_TX = 0x0b,
- 	INCLK_SPDIF_TX = 0x0c,
- 	INCLK_ASRCK1_CLK = 0x0f,
-+
-+	/* clocks for imx8 */
-+	INCLK_AUD_PLL_DIV_CLK0 = 0x10,
-+	INCLK_AUD_PLL_DIV_CLK1 = 0x11,
-+	INCLK_AUD_CLK0         = 0x12,
-+	INCLK_AUD_CLK1         = 0x13,
-+	INCLK_ESAI0_RX_CLK     = 0x14,
-+	INCLK_ESAI0_TX_CLK     = 0x15,
-+	INCLK_SPDIF0_RX        = 0x16,
-+	INCLK_SPDIF1_RX        = 0x17,
-+	INCLK_SAI0_RX_BCLK     = 0x18,
-+	INCLK_SAI0_TX_BCLK     = 0x19,
-+	INCLK_SAI1_RX_BCLK     = 0x1a,
-+	INCLK_SAI1_TX_BCLK     = 0x1b,
-+	INCLK_SAI2_RX_BCLK     = 0x1c,
-+	INCLK_SAI3_RX_BCLK     = 0x1d,
-+	INCLK_ASRC0_MUX_CLK    = 0x1e,
-+
-+	INCLK_ESAI1_RX_CLK     = 0x20,
-+	INCLK_ESAI1_TX_CLK     = 0x21,
-+	INCLK_SAI6_TX_BCLK     = 0x22,
-+	INCLK_HDMI_RX_SAI0_RX_BCLK     = 0x24,
-+	INCLK_HDMI_TX_SAI0_TX_BCLK     = 0x25,
- };
- 
- enum asrc_outclk {
-@@ -325,9 +348,33 @@ enum asrc_outclk {
- 	OUTCLK_SSI3_RX = 0x0b,
- 	OUTCLK_SPDIF_RX = 0x0c,
- 	OUTCLK_ASRCK1_CLK = 0x0f,
-+
-+	/* clocks for imx8 */
-+	OUTCLK_AUD_PLL_DIV_CLK0 = 0x10,
-+	OUTCLK_AUD_PLL_DIV_CLK1 = 0x11,
-+	OUTCLK_AUD_CLK0         = 0x12,
-+	OUTCLK_AUD_CLK1         = 0x13,
-+	OUTCLK_ESAI0_RX_CLK     = 0x14,
-+	OUTCLK_ESAI0_TX_CLK     = 0x15,
-+	OUTCLK_SPDIF0_RX        = 0x16,
-+	OUTCLK_SPDIF1_RX        = 0x17,
-+	OUTCLK_SAI0_RX_BCLK     = 0x18,
-+	OUTCLK_SAI0_TX_BCLK     = 0x19,
-+	OUTCLK_SAI1_RX_BCLK     = 0x1a,
-+	OUTCLK_SAI1_TX_BCLK     = 0x1b,
-+	OUTCLK_SAI2_RX_BCLK     = 0x1c,
-+	OUTCLK_SAI3_RX_BCLK     = 0x1d,
-+	OUTCLK_ASRCO_MUX_CLK    = 0x1e,
-+
-+	OUTCLK_ESAI1_RX_CLK     = 0x20,
-+	OUTCLK_ESAI1_TX_CLK     = 0x21,
-+	OUTCLK_SAI6_TX_BCLK     = 0x22,
-+	OUTCLK_HDMI_RX_SAI0_RX_BCLK     = 0x24,
-+	OUTCLK_HDMI_TX_SAI0_TX_BCLK     = 0x25,
- };
- 
- #define ASRC_CLK_MAX_NUM	16
-+#define ASRC_CLK_MAP_LEN	0x30
- 
- enum asrc_word_width {
- 	ASRC_WIDTH_24_BIT = 0,
-@@ -387,6 +434,17 @@ struct dma_block {
- 	unsigned int length;
- };
- 
-+/**
-+ * fsl_asrc_soc_data: soc specific data
-+ *
-+ * @use_edma: using edma as dma device or not
-+ * @channel_bits: width of ASRCNCR register for each pair
-+ */
-+struct fsl_asrc_soc_data {
-+	bool use_edma;
-+	unsigned int channel_bits;
-+};
-+
- /**
-  * fsl_asrc_pair: ASRC Pair private data
-  *
-@@ -431,8 +489,9 @@ struct fsl_asrc_pair {
-  * @asrck_clk: clock sources to driver ASRC internal logic
-  * @lock: spin lock for resource protection
-  * @pair: pair pointers
-- * @channel_bits: width of ASRCNCR register for each pair
-+ * @soc: soc specific data
-  * @channel_avail: non-occupied channel numbers
-+ * @clk_map: clock map for input/output clock
-  * @asrc_rate: default sample rate for ASoC Back-Ends
-  * @asrc_width: default sample width for ASoC Back-Ends
-  * @regcache_cfg: store register value of REG_ASRCFG
-@@ -450,8 +509,9 @@ struct fsl_asrc {
- 	spinlock_t lock;
- 
- 	struct fsl_asrc_pair *pair[ASRC_PAIR_MAX_NUM];
--	unsigned int channel_bits;
-+	const struct fsl_asrc_soc_data *soc;
- 	unsigned int channel_avail;
-+	unsigned char *clk_map[2];
- 
- 	int asrc_rate;
- 	int asrc_width;
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-index d6146de9acd2..48486a78b7b4 100644
---- a/sound/soc/fsl/fsl_asrc_dma.c
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -197,21 +197,34 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
- 	dma_cap_set(DMA_SLAVE, mask);
- 	dma_cap_set(DMA_CYCLIC, mask);
- 
--	/* Get DMA request of Back-End */
--	tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
--	tmp_data = tmp_chan->private;
--	pair->dma_data.dma_request = tmp_data->dma_request;
--	dma_release_channel(tmp_chan);
-+	/*
-+	 * An EDMA DEV_TO_DEV channel is fixed and bound with DMA event of each
-+	 * peripheral, unlike SDMA channel that is allocated dynamically. So no
-+	 * need to configure dma_request and dma_request2, but get dma_chan via
-+	 * dma_request_slave_channel directly with dma name of Front-End device
-+	 */
-+	if (!asrc_priv->soc->use_edma) {
-+		/* Get DMA request of Back-End */
-+		tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
-+		tmp_data = tmp_chan->private;
-+		pair->dma_data.dma_request = tmp_data->dma_request;
-+		dma_release_channel(tmp_chan);
- 
--	/* Get DMA request of Front-End */
--	tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
--	tmp_data = tmp_chan->private;
--	pair->dma_data.dma_request2 = tmp_data->dma_request;
--	pair->dma_data.peripheral_type = tmp_data->peripheral_type;
--	pair->dma_data.priority = tmp_data->priority;
--	dma_release_channel(tmp_chan);
-+		/* Get DMA request of Front-End */
-+		tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
-+		tmp_data = tmp_chan->private;
-+		pair->dma_data.dma_request2 = tmp_data->dma_request;
-+		pair->dma_data.peripheral_type = tmp_data->peripheral_type;
-+		pair->dma_data.priority = tmp_data->priority;
-+		dma_release_channel(tmp_chan);
-+
-+		pair->dma_chan[dir] =
-+			dma_request_channel(mask, filter, &pair->dma_data);
-+	} else {
-+		pair->dma_chan[dir] =
-+			fsl_asrc_get_dma_channel(pair, dir);
-+	}
- 
--	pair->dma_chan[dir] = dma_request_channel(mask, filter, &pair->dma_data);
- 	if (!pair->dma_chan[dir]) {
- 		dev_err(dev, "failed to request DMA channel for Back-End\n");
- 		return -EINVAL;
--- 
-2.21.0
-
+--=20
+Luiz Augusto von Dentz
