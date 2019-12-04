@@ -2,108 +2,140 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEC5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCC1C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368EE20865
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB3D2084F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:59:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HXM7s6A9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfLDH7C (ORCPT
+        id S1727322AbfLDH7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:59:02 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:57882 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725839AbfLDH7B (ORCPT
+        Wed, 4 Dec 2019 02:59:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29114 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725839AbfLDH7c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:59:01 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0TjueJVH_1575446335;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TjueJVH_1575446335)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 04 Dec 2019 15:58:56 +0800
-Subject: [PATCH v4 0/2] sched/numa: introduce numa locality
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
-Message-ID: <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
-Date:   Wed, 4 Dec 2019 15:58:55 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Wed, 4 Dec 2019 02:59:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575446371;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y5kFSk3WfohLawK+ouQUq7MzOpCu6jHAThUpUuz9xKY=;
+        b=HXM7s6A9ZXPBLCmhbraikqQdmap5Gusuf3nqYSxH89UFT7bRX/cuoH5zxlUDzQ/D0a3EZ8
+        /9WwePc++CfzWv3uiuB4nozKMT/p38cSIvi3w7QywFGR29MmE978Xep+FbHv6Z3YspJpyx
+        4anDeoN218xGVSB3cX0sTUJ3wgaR5dY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-134-GImN9KY2Oae3TC4z5ol6cQ-1; Wed, 04 Dec 2019 02:59:27 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 13272107ACC7;
+        Wed,  4 Dec 2019 07:59:26 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-85.pek2.redhat.com [10.72.12.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A092A1001902;
+        Wed,  4 Dec 2019 07:59:21 +0000 (UTC)
+Date:   Wed, 4 Dec 2019 15:59:17 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     linux-efi@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Weiser <michael@weiser.dinsnail.net>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
+ data to fix kexec breakage
+Message-ID: <20191204075917.GA10587@dhcp-128-65.nay.redhat.com>
+References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: GImN9KY2Oae3TC4z5ol6cQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since v3:
-  * fix comments and improved documentation
-Since v2:
-  * simplified the locality concept & implementation
-Since v1:
-  * improved documentation
+On 12/04/19 at 03:52pm, Dave Young wrote:
+> Michael Weiser reported he got below error during a kexec rebooting:
+> esrt: Unsupported ESRT version 2904149718861218184.
+>=20
+> The ESRT memory stays in EFI boot services data, and it was reserved
+> in kernel via efi_mem_reserve().  The initial purpose of the reservation
+> is to reuse the EFI boot services data across kexec reboot. For example
+> the BGRT image data and some ESRT memory like Michael reported.=20
+>=20
+> But although the memory is reserved it is not updated in X86 e820 table.
+> And kexec_file_load iterate system ram in io resource list to find places
+> for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+> initramfs overwritten the ESRT memory and then the failure happened.
 
-Modern production environment could use hundreds of cgroup to control
-the resources for different workloads, along with the complicated
-resource binding.
+s/overwritten/overwrote :)  If need a repost please let me know..
 
-On NUMA platforms where we have multiple nodes, things become even more
-complicated, we hope there are more local memory access to improve the
-performance, and NUMA Balancing keep working hard to achieve that,
-however, wrong memory policy or node binding could easily waste the
-effort, result a lot of remote page accessing.
+>=20
+> Since kexec_file_load depends on the e820 to be updated, just fix this
+> by updating the reserved EFI boot services memory as reserved type in e82=
+0.
+>=20
+> Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
+> bypassed in the reservation code path because they are assumed as reserve=
+d.
+> But the reservation is still needed for multiple kexec reboot.
+> And it is the only possible case we come here thus just drop the code
+> chunk then everything works without side effects.=20
+>=20
+> On my machine the ESRT memory sits in an EFI runtime data range, it does
+> not trigger the problem, but I successfully tested with BGRT instead.
+> both kexec_load and kexec_file_load work and kdump works as well.
+>=20
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+> ---
+>  arch/x86/platform/efi/quirks.c |    6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>=20
+> --- linux-x86.orig/arch/x86/platform/efi/quirks.c
+> +++ linux-x86/arch/x86/platform/efi/quirks.c
+> @@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_ad
+>  =09=09return;
+>  =09}
+> =20
+> -=09/* No need to reserve regions that will never be freed. */
+> -=09if (md.attribute & EFI_MEMORY_RUNTIME)
+> -=09=09return;
+> -
+>  =09size +=3D addr % EFI_PAGE_SIZE;
+>  =09size =3D round_up(size, EFI_PAGE_SIZE);
+>  =09addr =3D round_down(addr, EFI_PAGE_SIZE);
+> @@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_ad
+>  =09early_memunmap(new, new_size);
+> =20
+>  =09efi_memmap_install(new_phys, num_entries);
+> +=09e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
+> +=09e820__update_table(e820_table);
+>  }
+> =20
+>  /*
 
-We need to notice such problems, then we got chance to fix it before
-there are too much damages, however, there are no good monitoring
-approach yet to help catch the mouse who introduced the remote access.
+Michael, could you a one more test and provide a tested-by if it works
+for you?
 
-This patch set is trying to fill in the missing pieces， by introduce
-the per-cgroup NUMA locality info, with this new statistics, we could
-achieve the daily monitoring on NUMA efficiency, to give warning when
-things going too wrong.
-
-Please check the second patch for more details.
-Michael Wang (2):
-  sched/numa: introduce per-cgroup NUMA locality info
-  sched/numa: documentation for per-cgroup numa statistics
-
- Documentation/admin-guide/cg-numa-stat.rst      | 178 ++++++++++++++++++++++++
- Documentation/admin-guide/index.rst             |   1 +
- Documentation/admin-guide/kernel-parameters.txt |   4 +
- Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
- include/linux/sched.h                           |  15 ++
- include/linux/sched/sysctl.h                    |   6 +
- init/Kconfig                                    |  11 ++
- kernel/sched/core.c                             |  75 ++++++++++
- kernel/sched/fair.c                             |  62 +++++++++
- kernel/sched/sched.h                            |  12 ++
- kernel/sysctl.c                                 |  11 ++
- 11 files changed, 384 insertions(+)
- create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
-
--- 
-2.14.4.44.g2045bb6
+Thanks
+Dave
 
