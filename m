@@ -2,148 +2,147 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5BFC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19924C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 511C520675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JdRLHNFl"
+	by mail.kernel.org (Postfix) with ESMTP id E23DA206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575483589;
+	bh=M8+BzG2H54XkI/BcXHzPmQgzhfr+jLlYukWSbZPKgHM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TXB+vg1HDLlbj0CCBTCdAKL0lWo0SlWX3u1zDZKJzoGfCUzozId+h4NBFJhmU1Cbx
+	 mNaLzFkdD88BbmTw+D5uYdKa7gFRm76QP2J150rlBu6CWt5tl3ZDllcKRuxncuD23N
+	 Mneex1Dl2h3VDVcVhCfKKZK4bvhhKuRCd47YCZP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbfLDSTp (ORCPT
+        id S1729756AbfLDSJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:19:45 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33140 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728482AbfLDSTm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:19:42 -0500
-Received: by mail-lj1-f195.google.com with SMTP id 21so441833ljr.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 10:19:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TO3M4JRDwYEQYalzC1JJGfXlWb3K9ShCnnIC37XGBvg=;
-        b=JdRLHNFl/zP5IdAJrHumL9k5kT+8N/SXMgaszfW6wKBo84jtVsc8GDMDEnHdUfzsxb
-         UH5/xrbFYWjsnujb1VgNV0ifwdAa6m2rUr/VbbeTKuNW4BHdAB17wKII+KD6isEytVz9
-         8kEgho3g4wpnYqC27M7LDRh8voiRk1Fr197UjvGqnmez4aSHveJEcfdpWGs4ON0Kb58l
-         TPd/YkqWWyCAHUvV5oZqSTPSe4c20GL8w5run9Fva+GzuNglr8j/ZmchkzY5PT9zY4le
-         EKDlDTR/jCYBd92gms9jcyKKt3MPmcpzYfYz25tbx2QBYpR3qsI/DNV9BYYPR+kf4+gG
-         D2TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TO3M4JRDwYEQYalzC1JJGfXlWb3K9ShCnnIC37XGBvg=;
-        b=eFceCEEcKDk31XPZB9pzxAfByFDxzcDbVvfwmiE79m+Gfk0jmb7cgXRemmzcn4jQGG
-         PKxW3hfcQW+Wrzqz32mJzKAkG50Zd1hpx6CQbBdnewRo5d+eobdOddM/KWZwFCbs6ybZ
-         TGvAa6LJ2S/5am3WWA7izWmViPrCUcLQMbu6AVTAShAWyV/DPBUhTuUTydAr7wnwxW9y
-         dhrrYRVnZ7GPLVWPSoQrRMCWD4kcs1XuOShsiZCtM86RVF/+NrDiQAVfbKlNSMBzxOg7
-         QQQdj0KTXZ6vrPMVhO1TLIP8Ay5NmWOGODEhwmn/zhoK787opfK4X2GiUj0tF6XSxiiq
-         za0w==
-X-Gm-Message-State: APjAAAXxt1cx4+7IcbaGJgDHVDChPJ4FxOaxF9pr50iA5bk01Jp31EMU
-        XC2vPU89JjHeVwhX5UvFclXpiLIpMNDIuGquxxVvSA==
-X-Google-Smtp-Source: APXvYqyzBiR+Ed0b5BcuFC05QaXCBuLCHt63QfZjPhGoegC3WP3wGNcc6ShbnjkYko3wnz8eotLLdLInGe+67+UCcjQ=
-X-Received: by 2002:a05:651c:239:: with SMTP id z25mr510830ljn.48.1575483580174;
- Wed, 04 Dec 2019 10:19:40 -0800 (PST)
+        Wed, 4 Dec 2019 13:09:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731013AbfLDSJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:09:08 -0500
+Received: from localhost (unknown [217.68.49.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3566E206DF;
+        Wed,  4 Dec 2019 18:09:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575482947;
+        bh=M8+BzG2H54XkI/BcXHzPmQgzhfr+jLlYukWSbZPKgHM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=15VXrxCt66qzt6O6csgVmlFoX32vmE4TUWLyL8H9vn/0WwlI11R1U6JiCAFWE/BrT
+         3DVlUJbE5diO5IDcx2M0siPl0WKX5Dmgy1oFSZ2rRQ1hJR5ww2UfB1MONH2vCYVjvg
+         uRcWWWw1+G/N6Yuw6fZLTRJzZ5nqulrn+45mam4E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hugues Fruchet <hugues.fruchet@st.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.14 200/209] media: stm32-dcmi: fix DMA corruption when stopping streaming
+Date:   Wed,  4 Dec 2019 18:56:52 +0100
+Message-Id: <20191204175337.255517758@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
+References: <20191204175321.609072813@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <CALAqxLXrWWnWi32BR1F8JOtrGt1y2Kzj__zWopLx1ZfRy3EZKA@mail.gmail.com>
- <CAKfTPtAvnLY3brp9iy_aHNu0rMM8nLfgeLc3CXEkMk3bwU1weA@mail.gmail.com>
- <20191204094216.u7yld5r3zelp22lf@e107158-lin.cambridge.arm.com>
- <20191204100925.GA15727@linaro.org> <CALAqxLWCFNJzNvgrSKSs3s42O=D6EPmnvwPTWV_k-QH7v7VNtQ@mail.gmail.com>
-In-Reply-To: <CALAqxLWCFNJzNvgrSKSs3s42O=D6EPmnvwPTWV_k-QH7v7VNtQ@mail.gmail.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 4 Dec 2019 19:19:26 +0100
-Message-ID: <CAKfTPtC-G+avBrixS35emnqUvW_MMjRBLyy=WxRB=bvS62zg_w@mail.gmail.com>
-Subject: Re: Null pointer crash at find_idlest_group on db845c w/ linus/master
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Quentin Perret <qperret@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <Patrick.Bellasi@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Dec 2019 at 19:16, John Stultz <john.stultz@linaro.org> wrote:
->
-> On Wed, Dec 4, 2019 at 2:09 AM Vincent Guittot
-> <vincent.guittot@linaro.org> wrote:
-> >
-> > Le Wednesday 04 Dec 2019 =C3=A0 09:42:17 (+0000), Qais Yousef a =C3=A9c=
-rit :
-> > > On 12/04/19 09:06, Vincent Guittot wrote:
-> > > > Hi John,
-> > > >
-> > > > On Tue, 3 Dec 2019 at 20:15, John Stultz <john.stultz@linaro.org> w=
-rote:
-> > > > >
-> > > > > With today's linus/master on db845c running android, I'm able to
-> > > > > fairly easily reproduce the following crash. I've not had a chanc=
-e to
-> > > > > bisect it yet, but I'm suspecting its connected to Vincent's rece=
-nt
-> > > > > rework.
-> > > >
-> > > > Does the crash happen randomly or after a specific action ?
-> > > > I have a db845 so I can try to reproduce it locally.
-> > >
-> > > Isn't there a chance we use local_sgs without initializing it in that=
- function?
-> >
-> > Normally not because the cpu belongs to its sched_domain
-> >
-> > Now, we test that a group has at least one allowed CPU for the task so =
-we
-> > could skip the local group with the correct/wrong p->cpus_ptr
-> >
-> > The path is used for fork/exec ibut also for wakeup path for b.L when t=
-he task doesn't fit in the CPUs
-> >
-> > So we can probably imagine a scenario where we change task affinity whi=
-le
-> > sleeping. If the wakeup happens on a CPU that belongs to the group that=
- is not
-> > allowed, we can imagine that we skip the local_group
-> >
-> > John,
-> >
-> > Could you try the fix below ?
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 08a233e..bcd216d 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -8417,6 +8417,10 @@ find_idlest_group(struct sched_domain *sd, struc=
-t task_struct *p,
-> >         if (!idlest)
-> >                 return NULL;
-> >
-> > +       /* The local group has been skipped because of cpu affinity */
-> > +       if (!local)
-> > +               return idlest;
-> > +
-> >         /*
-> >          * If the local group is idler than the selected idlest group
-> >          * don't try and push the task.
->
-> This patch does seem to solve the issue for me! Thanks so much!
+From: Hugues Fruchet <hugues.fruchet@st.com>
 
-Thanks for testing
+commit b3ce6f6ff3c260ee53b0f2236e5fd950d46957da upstream.
 
->
-> Tested-by: John Stultz <john.stultz@linaro.org>
-> -john
+Avoid call of dmaengine_terminate_all() between
+dmaengine_prep_slave_single() and dmaengine_submit() by locking
+the whole DMA submission sequence.
+
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/media/platform/stm32/stm32-dcmi.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -161,6 +161,9 @@ struct stm32_dcmi {
+ 	u32				misr;
+ 	int				errors_count;
+ 	int				buffers_count;
++
++	/* Ensure DMA operations atomicity */
++	struct mutex			dma_lock;
+ };
+ 
+ static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
+@@ -291,6 +294,13 @@ static int dcmi_start_dma(struct stm32_d
+ 		return ret;
+ 	}
+ 
++	/*
++	 * Avoid call of dmaengine_terminate_all() between
++	 * dmaengine_prep_slave_single() and dmaengine_submit()
++	 * by locking the whole DMA submission sequence
++	 */
++	mutex_lock(&dcmi->dma_lock);
++
+ 	/* Prepare a DMA transaction */
+ 	desc = dmaengine_prep_slave_single(dcmi->dma_chan, buf->paddr,
+ 					   buf->size,
+@@ -298,6 +308,7 @@ static int dcmi_start_dma(struct stm32_d
+ 	if (!desc) {
+ 		dev_err(dcmi->dev, "%s: DMA dmaengine_prep_slave_single failed for buffer size %zu\n",
+ 			__func__, buf->size);
++		mutex_unlock(&dcmi->dma_lock);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -309,9 +320,12 @@ static int dcmi_start_dma(struct stm32_d
+ 	dcmi->dma_cookie = dmaengine_submit(desc);
+ 	if (dma_submit_error(dcmi->dma_cookie)) {
+ 		dev_err(dcmi->dev, "%s: DMA submission failed\n", __func__);
++		mutex_unlock(&dcmi->dma_lock);
+ 		return -ENXIO;
+ 	}
+ 
++	mutex_unlock(&dcmi->dma_lock);
++
+ 	dma_async_issue_pending(dcmi->dma_chan);
+ 
+ 	return 0;
+@@ -690,7 +704,9 @@ static void dcmi_stop_streaming(struct v
+ 	spin_unlock_irq(&dcmi->irqlock);
+ 
+ 	/* Stop all pending DMA operations */
++	mutex_lock(&dcmi->dma_lock);
+ 	dmaengine_terminate_all(dcmi->dma_chan);
++	mutex_unlock(&dcmi->dma_lock);
+ 
+ 	clk_disable(dcmi->mclk);
+ 
+@@ -1662,6 +1678,7 @@ static int dcmi_probe(struct platform_de
+ 
+ 	spin_lock_init(&dcmi->irqlock);
+ 	mutex_init(&dcmi->lock);
++	mutex_init(&dcmi->dma_lock);
+ 	init_completion(&dcmi->complete);
+ 	INIT_LIST_HEAD(&dcmi->buffers);
+ 
+
+
