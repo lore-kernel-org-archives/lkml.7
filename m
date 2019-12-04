@@ -2,73 +2,70 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41BDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC91DC2BBE2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B441D2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B5820803
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575450337;
+	bh=W1t6dNj52ZUG0AupYVqxw7bef+USOAa+be6MpmKrRSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LRjC0TQiN560Mn9RguXo11wx0x7kvl7sxdqPP8Nkh/CxaQaT3RYzSy2DDvWp7jTVN
+	 rHAKAhGJhLbUwsuds9ieT6Hp+EqWyzRS9nnw+LGNF1Ft2QqiMwErwWt7/nSGohmgfG
+	 pXKSYKqdK23G0th4tcElItZBCIC0hATpR6CgWMXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfLDJFT convert rfc822-to-8bit (ORCPT
+        id S1727283AbfLDJFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:05:19 -0500
-Received: from lithops.sigma-star.at ([195.201.40.130]:37162 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfLDJFT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:05:19 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id B2B2E60B302D;
-        Wed,  4 Dec 2019 10:05:16 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id wBeuTBKAYkpa; Wed,  4 Dec 2019 10:05:15 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 32AED6126B4B;
-        Wed,  4 Dec 2019 10:05:15 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Cz8CAp_kOJsR; Wed,  4 Dec 2019 10:05:15 +0100 (CET)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id B283B60B302D;
-        Wed,  4 Dec 2019 10:05:14 +0100 (CET)
-Date:   Wed, 4 Dec 2019 10:05:14 +0100 (CET)
-From:   Richard Weinberger <richard@nod.at>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Richard Weinberger <richard.weinberger@gmail.com>,
-        naga suresh kumar <nagasureshkumarrelli@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        siva durga paladugu <siva.durga.paladugu@xililnx.com>,
-        Naga Sureshkumar Relli <nagasure@xilinx.com>
-Message-ID: <944646339.106336.1575450314655.JavaMail.zimbra@nod.at>
-In-Reply-To: <20191204071746.kfdflui4ziladmjg@pengutronix.de>
-References: <MN2PR02MB5727000CBE70BAF31F60FEE4AF420@MN2PR02MB5727.namprd02.prod.outlook.com> <20191203084134.tgzir4mtekpm5xbs@pengutronix.de> <MN2PR02MB57272E3343CA62ADBA0F97E5AF420@MN2PR02MB5727.namprd02.prod.outlook.com> <614898763.105471.1575364223372.JavaMail.zimbra@nod.at> <CALgLF9KPAk_AsecnTMmbdF5qbgqXe7HNOrNariNVbhSr6FVN2g@mail.gmail.com> <20191203104558.vpqav3oxsydoe4aw@pengutronix.de> <CAFLxGvywFxSrDLLGnLDW6+rMLVUA9Yoi=3sn7wdxqWMydy-w0g@mail.gmail.com> <20191204071746.kfdflui4ziladmjg@pengutronix.de>
-Subject: Re: ubifs mount failure
+        Wed, 4 Dec 2019 04:05:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725922AbfLDJFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 04:05:36 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8E942073B;
+        Wed,  4 Dec 2019 09:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575450335;
+        bh=W1t6dNj52ZUG0AupYVqxw7bef+USOAa+be6MpmKrRSU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ye4CL1vchhMhXmU2l2B3AVyoNIjTA2ItW0G/6OMaBc7fpkBQiPTFVaJEQ4tTZ70nw
+         hWuQ4ybPwyTm+UTcxCO7XrMYp6BKDDGuOJGI5fWk1nESiZC7b+YvuGktiQdTYY5nzk
+         jvnc1JZmnH1ljU2QYYykILnMcqVECwsDAXxSgv/g=
+Date:   Wed, 4 Dec 2019 17:05:25 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
+        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 1/2] ARM: dts: imx7d-sdb-reva: Add revision in board
+ compatible string
+Message-ID: <20191204071930.GE3365@dragon>
+References: <1573092893-10612-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
-Thread-Topic: ubifs mount failure
-Thread-Index: 9APKbxAFaVpw2zMCYjv1IuV9dZ0ZGw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573092893-10612-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ Ursprüngliche Mail -----
-> Von: "Sascha Hauer" <s.hauer@pengutronix.de>
->> Oh, looks good! Thanks for fixing, Sascha!
+On Thu, Nov 07, 2019 at 10:14:52AM +0800, Anson Huang wrote:
+> i.MX7D SDB Rev-A board should use its own board compatible
+> string instead of default i.MX7D SDB board.
 > 
-> Will you apply this one? Otherwise I resend with the proper tags added.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Just checked in patchwork. It is unable to detect the patch, please resend. :-)
-
-Thanks,
-//richard
+Applied both, thanks.
