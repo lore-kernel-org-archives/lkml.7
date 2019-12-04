@@ -2,137 +2,337 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB273C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F69C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5192073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:43:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HSQcW8Wz"
+	by mail.kernel.org (Postfix) with ESMTP id 791A42080A
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 00:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfLDAnH (ORCPT
+        id S1726330AbfLDAqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Dec 2019 19:43:07 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41554 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfLDAnG (ORCPT
+        Tue, 3 Dec 2019 19:46:46 -0500
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:46861 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726079AbfLDAqq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Dec 2019 19:43:06 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x8so2437414pgk.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Dec 2019 16:43:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lTzMjkRz8igkqTydLerD9176xU658ZlUYiWKHY2ex6s=;
-        b=HSQcW8Wzpl9ub6BBhV1+tep82/q+mNh8FuYwLl4NImQYAdOza4YA0qERBlJYtkgxaR
-         zCpeMGmqtvrSrlcNlGxaZZbcGxxlRqK7boYqUouT31jH0I6mDnnliaWoScsiLD4ftr4W
-         MCGn7IXOrq2ysXcInTybP3E3rs5XEzPDjnBigi961bzuEErNeWOPLZBj0IX7VIRNrYCq
-         3zkHbZ3xxnW0BdUtpjQUmhLj/uIc6yFmEUZpWyPiqdwYg8t1cT8R7ipvn36mwaNx/6Ga
-         8OO2PH8F932g5RY5wQWRWmFoUPR42+i1e7U5qgqUNBQha2CvuRx55CS5VQdOZF+Xl3wF
-         32Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lTzMjkRz8igkqTydLerD9176xU658ZlUYiWKHY2ex6s=;
-        b=sVFPWSXlxZmKwSYf+k74Cy1j3YmfncUNDycdJgeRYXg10I4BGkQHeZ+mjciCU9nMrf
-         7BQpMYVrDqPmo2Y0ipAoZ7VHSl/Sraw/vWL606J3KUWdO0bHhJ5LHKmeC9XmFcQI4ahI
-         ZD3A6D66f/DvnFMtrbNRELG9S3r83uWnIQZsL4zrt0HlClPtEdM+fVjF339jqX/rkHih
-         1jrK711q2x3u/+rvLY1N21DkcVL2po++HzjRaWb3GxGO86yLMKywZ5r/vfnis9EyOhJM
-         Rn4iKcoyTBzVLtBIuBWXqLQtU8pH66WTJRGAvIFLIt8JQRzVUL3BWVAxOiYGlfxlhkop
-         nYQQ==
-X-Gm-Message-State: APjAAAUAB052s5+iKVhAU83LMKIKltsbJjnyp9SXETwcmqN8VcH/YP/7
-        PHQVmqHEpeiPsjo0xRZ2tJN7MkYQw+TZZoJIbK1k8Q==
-X-Google-Smtp-Source: APXvYqyGKeGtcjtUngbNRBrUiYGZIBnvEvbM9zW11nSo8Qb6u5cQtLoGC1yYUMbx1bhlZS10pfYLS6CT7DhUATPpN4E=
-X-Received: by 2002:a63:cc4f:: with SMTP id q15mr550233pgi.159.1575420184378;
- Tue, 03 Dec 2019 16:43:04 -0800 (PST)
-MIME-Version: 1.0
-References: <1575374868-32601-1-git-send-email-alan.maguire@oracle.com>
- <1575374868-32601-4-git-send-email-alan.maguire@oracle.com>
- <CAFd5g47dRP9HvsZD3sqzzfbAthNq8gxEdh57owo3CqVHLNOf6w@mail.gmail.com> <20191204003851.GF86484@mit.edu>
-In-Reply-To: <20191204003851.GF86484@mit.edu>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 3 Dec 2019 16:42:53 -0800
-Message-ID: <CAFd5g46A5gyGg0g+GmLRFM1DY=ySf_85P2T7+VYqm4nD8J9wBA@mail.gmail.com>
-Subject: Re: [PATCH v5 linux-kselftest-test 3/6] kunit: allow kunit tests to
- be loaded as a module
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 3 Dec 2019 19:46:46 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R841e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0Tjr6d8u_1575420394;
+Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0Tjr6d8u_1575420394)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 04 Dec 2019 08:46:43 +0800
+From:   Shile Zhang <shile.zhang@linux.alibaba.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
-        andriy.shevchenko@linux.intel.com,
-        Jonathan Corbet <corbet@lwn.net>, adilger.kernel@dilger.ca,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Knut Omang <knut.omang@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org
+Cc:     "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org,
+        Shile Zhang <shile.zhang@linux.alibaba.com>
+Subject: [RFC PATCH v6 1/7] scripts/sortextable: Rewrite error/success handling
+Date:   Wed,  4 Dec 2019 08:46:27 +0800
+Message-Id: <20191204004633.88660-2-shile.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.0.rc2
+In-Reply-To: <20191204004633.88660-1-shile.zhang@linux.alibaba.com>
+References: <20191204004633.88660-1-shile.zhang@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 4:39 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
-> On Tue, Dec 03, 2019 at 09:54:25AM -0800, Brendan Higgins wrote:
-> > On Tue, Dec 3, 2019 at 4:08 AM Alan Maguire <alan.maguire@oracle.com> wrote:
-> > >
-> > > As tests are added to kunit, it will become less feasible to execute
-> > > all built tests together.  By supporting modular tests we provide
-> > > a simple way to do selective execution on a running system; specifying
-> > >
-> > > CONFIG_KUNIT=y
-> > > CONFIG_KUNIT_EXAMPLE_TEST=m
-> > >
-> > > ...means we can simply "insmod example-test.ko" to run the tests.
-> > >
-> > > To achieve this we need to do the following:
-> > >
-> > > o export the required symbols in kunit
-> > > o string-stream tests utilize non-exported symbols so for now we skip
-> > >   building them when CONFIG_KUNIT_TEST=m.
-> > > o support a new way of declaring test suites.  Because a module cannot
-> > >   do multiple late_initcall()s, we provide a kunit_test_suites() macro
-> > >   to declare multiple suites within the same module at once.
-> > > o some test module names would have been too general ("test-test"
-> > >   and "example-test" for kunit tests, "inode-test" for ext4 tests);
-> > >   rename these as appropriate ("kunit-test", "kunit-example-test"
-> > >   and "ext4-inode-test" respectively).
-> > >
-> > > Co-developed-by: Knut Omang <knut.omang@oracle.com>
-> > > Signed-off-by: Knut Omang <knut.omang@oracle.com>
-> > > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> >
-> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
->
-> Acked-by: Theodore Ts'o <tytso@mit.edu> # for ext4 bits
->
->
-> I do have one question, out of curiosity --- for people who aren't
-> using UML to run Kunit tests, and are either running the kunit tests
-> during boot, or when the module is loaded, is there the test framework
-> to automatically extract the test reports out of dmesg?
->
-> I can boot a kernel with kunit tests enabled using kvm, and I see it
-> splatted intermixed with the rest of the kernel boot messages.  This
-> is how I tested the 32-bit ext4 inode test fix.  But I had to manually
-> find the test output.  Is that the expected way people are supposed to
-> be using Kunit tests w/o using UML and the python runner?
+The sortextable token some code from recordmount, which uses
+the same setjmp/longjmp to manage control flow.
+Now, recordmcount has been rewritten the error handling by
+commit 3f1df12019f3 ("recordmcount: Rewrite error/success handling").
 
-For now, yes. We do not currently have a piece that extracts the test
-reports; however, we are planning on pulling that bit out of
-tools/testing/kunit/; we just haven't gotten around to it yet.
+So rewrite this part as well with more refactors, make it more readable
+and easy for further extend, no functional changes.
+
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ scripts/sortextable.c | 119 +++++++++++++++---------------------------
+ scripts/sortextable.h |  11 ++--
+ 2 files changed, 48 insertions(+), 82 deletions(-)
+
+diff --git a/scripts/sortextable.c b/scripts/sortextable.c
+index 55768654e3c6..cd9762ba4467 100644
+--- a/scripts/sortextable.c
++++ b/scripts/sortextable.c
+@@ -22,7 +22,6 @@
+ #include <getopt.h>
+ #include <elf.h>
+ #include <fcntl.h>
+-#include <setjmp.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -51,61 +50,41 @@
+ #define EM_ARCV2	195
+ #endif
+ 
+-static int fd_map;	/* File descriptor for file being modified. */
+-static int mmap_failed; /* Boolean flag. */
+-static void *ehdr_curr; /* current ElfXX_Ehdr *  for resource cleanup */
+-static struct stat sb;	/* Remember .st_size, etc. */
+-static jmp_buf jmpenv;	/* setjmp/longjmp per-file error escape */
+-
+-/* setjmp() return values */
+-enum {
+-	SJ_SETJMP = 0,  /* hardwired first return */
+-	SJ_FAIL,
+-	SJ_SUCCEED
+-};
+-
+-/* Per-file resource cleanup when multiple files. */
+-static void
+-cleanup(void)
+-{
+-	if (!mmap_failed)
+-		munmap(ehdr_curr, sb.st_size);
+-	close(fd_map);
+-}
+-
+-static void __attribute__((noreturn))
+-fail_file(void)
+-{
+-	cleanup();
+-	longjmp(jmpenv, SJ_FAIL);
+-}
+-
+ /*
+  * Get the whole file as a programming convenience in order to avoid
+  * malloc+lseek+read+free of many pieces.  If successful, then mmap
+  * avoids copying unused pieces; else just read the whole file.
+  * Open for both read and write.
+  */
+-static void *mmap_file(char const *fname)
++static void *mmap_file(char const *fname, size_t *size)
+ {
+-	void *addr;
++	int fd;
++	struct stat sb;
++	void *addr = NULL;
+ 
+-	fd_map = open(fname, O_RDWR);
+-	if (fd_map < 0 || fstat(fd_map, &sb) < 0) {
++	fd = open(fname, O_RDWR);
++	if (fd < 0) {
+ 		perror(fname);
+-		fail_file();
++		return NULL;
++	}
++	if (fstat(fd, &sb) < 0) {
++		perror(fname);
++		goto out;
+ 	}
+ 	if (!S_ISREG(sb.st_mode)) {
+ 		fprintf(stderr, "not a regular file: %s\n", fname);
+-		fail_file();
++		goto out;
+ 	}
+-	addr = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_SHARED,
+-		    fd_map, 0);
++	addr = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+ 	if (addr == MAP_FAILED) {
+-		mmap_failed = 1;
+ 		fprintf(stderr, "Could not mmap file: %s\n", fname);
+-		fail_file();
++		goto out;
+ 	}
++
++	*size = sb.st_size;
++
++out:
++	close(fd);
+ 	return addr;
+ }
+ 
+@@ -264,19 +243,18 @@ static void sort_relative_table(char *extab_image, int image_size)
+ 	}
+ }
+ 
+-static void
+-do_file(char const *const fname)
++static int
++do_file(char const *const fname, void *addr)
+ {
+-	table_sort_t custom_sort;
+-	Elf32_Ehdr *ehdr = mmap_file(fname);
++	table_sort_t custom_sort = NULL;
++	Elf32_Ehdr *ehdr = addr;
++	int rc = -1;
+ 
+-	ehdr_curr = ehdr;
+ 	switch (ehdr->e_ident[EI_DATA]) {
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
+ 			ehdr->e_ident[EI_DATA], fname);
+-		fail_file();
+-		break;
++		return -1;
+ 	case ELFDATA2LSB:
+ 		r = rle;
+ 		r2 = r2le;
+@@ -298,7 +276,7 @@ do_file(char const *const fname)
+ 	||  (r2(&ehdr->e_type) != ET_EXEC && r2(&ehdr->e_type) != ET_DYN)
+ 	||  ehdr->e_ident[EI_VERSION] != EV_CURRENT) {
+ 		fprintf(stderr, "unrecognized ET_EXEC/ET_DYN file %s\n", fname);
+-		fail_file();
++		return -1;
+ 	}
+ 
+ 	custom_sort = NULL;
+@@ -306,7 +284,6 @@ do_file(char const *const fname)
+ 	default:
+ 		fprintf(stderr, "unrecognized e_machine %d %s\n",
+ 			r2(&ehdr->e_machine), fname);
+-		fail_file();
+ 		break;
+ 	case EM_386:
+ 	case EM_X86_64:
+@@ -333,16 +310,15 @@ do_file(char const *const fname)
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF class %d %s\n",
+ 			ehdr->e_ident[EI_CLASS], fname);
+-		fail_file();
+ 		break;
+ 	case ELFCLASS32:
+ 		if (r2(&ehdr->e_ehsize) != sizeof(Elf32_Ehdr)
+ 		||  r2(&ehdr->e_shentsize) != sizeof(Elf32_Shdr)) {
+ 			fprintf(stderr,
+ 				"unrecognized ET_EXEC/ET_DYN file: %s\n", fname);
+-			fail_file();
++			break;
+ 		}
+-		do32(ehdr, fname, custom_sort);
++		rc = do32(ehdr, fname, custom_sort);
+ 		break;
+ 	case ELFCLASS64: {
+ 		Elf64_Ehdr *const ghdr = (Elf64_Ehdr *)ehdr;
+@@ -350,21 +326,22 @@ do_file(char const *const fname)
+ 		||  r2(&ghdr->e_shentsize) != sizeof(Elf64_Shdr)) {
+ 			fprintf(stderr,
+ 				"unrecognized ET_EXEC/ET_DYN file: %s\n", fname);
+-			fail_file();
++			break;
+ 		}
+-		do64(ghdr, fname, custom_sort);
++		rc = do64(ghdr, fname, custom_sort);
+ 		break;
+ 	}
+ 	}  /* end switch */
+ 
+-	cleanup();
++	return rc;
+ }
+ 
+ int
+ main(int argc, char *argv[])
+ {
+-	int n_error = 0;  /* gcc-4.3.0 false positive complaint */
+-	int i;
++	int i, n_error = 0;  /* gcc-4.3.0 false positive complaint */
++	size_t size = 0;
++	void *addr = NULL;
+ 
+ 	if (argc < 2) {
+ 		fprintf(stderr, "usage: sortextable vmlinux...\n");
+@@ -373,28 +350,16 @@ main(int argc, char *argv[])
+ 
+ 	/* Process each file in turn, allowing deep failure. */
+ 	for (i = 1; i < argc; i++) {
+-		char *file = argv[i];
+-		int const sjval = setjmp(jmpenv);
++		addr = mmap_file(argv[i], &size);
++		if (!addr) {
++			++n_error;
++			continue;
++		}
+ 
+-		switch (sjval) {
+-		default:
+-			fprintf(stderr, "internal error: %s\n", file);
+-			exit(1);
+-			break;
+-		case SJ_SETJMP:    /* normal sequence */
+-			/* Avoid problems if early cleanup() */
+-			fd_map = -1;
+-			ehdr_curr = NULL;
+-			mmap_failed = 1;
+-			do_file(file);
+-			break;
+-		case SJ_FAIL:    /* error in do_file or below */
++		if (do_file(argv[i], addr))
+ 			++n_error;
+-			break;
+-		case SJ_SUCCEED:    /* premature success */
+-			/* do nothing */
+-			break;
+-		}  /* end switch */
++
++		munmap(addr, size);
+ 	}
+ 	return !!n_error;
+ }
+diff --git a/scripts/sortextable.h b/scripts/sortextable.h
+index d4b3f6c40f02..5a62e94df678 100644
+--- a/scripts/sortextable.h
++++ b/scripts/sortextable.h
+@@ -87,7 +87,7 @@ static int compare_extable(const void *a, const void *b)
+ 	return 0;
+ }
+ 
+-static void
++static int
+ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
+ {
+ 	Elf_Shdr *shdr;
+@@ -146,17 +146,17 @@ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
+ 	}
+ 	if (strtab_sec == NULL) {
+ 		fprintf(stderr,	"no .strtab in  file: %s\n", fname);
+-		fail_file();
++		return -1;
+ 	}
+ 	if (symtab_sec == NULL) {
+ 		fprintf(stderr,	"no .symtab in  file: %s\n", fname);
+-		fail_file();
++		return -1;
+ 	}
+ 	symtab = (const Elf_Sym *)((const char *)ehdr +
+ 				   _r(&symtab_sec->sh_offset));
+ 	if (extab_sec == NULL) {
+ 		fprintf(stderr,	"no __ex_table in  file: %s\n", fname);
+-		fail_file();
++		return -1;
+ 	}
+ 	strtab = (const char *)ehdr + _r(&strtab_sec->sh_offset);
+ 
+@@ -190,7 +190,7 @@ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
+ 		fprintf(stderr,
+ 			"no main_extable_sort_needed symbol in  file: %s\n",
+ 			fname);
+-		fail_file();
++		return -1;
+ 	}
+ 	sort_needed_sec = &shdr[get_secindex(r2(&sym->st_shndx),
+ 					     sort_needed_sym - symtab,
+@@ -206,4 +206,5 @@ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
+ #endif
+ 	/* We sorted it, clear the flag. */
+ 	w(0, sort_done_location);
++	return 0;
+ }
+-- 
+2.24.0.rc2
+
