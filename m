@@ -2,81 +2,135 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168FEC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAA7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4C5A20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB4D820675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 08:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Urf/A79c"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dW1k409H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfLDIMR (ORCPT
+        id S1727223AbfLDINR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:12:17 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42821 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfLDIMR (ORCPT
+        Wed, 4 Dec 2019 03:13:17 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:41956 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfLDINR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 03:12:17 -0500
-Received: by mail-io1-f66.google.com with SMTP id f82so6988887ioa.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 00:12:16 -0800 (PST)
+        Wed, 4 Dec 2019 03:13:17 -0500
+Received: by mail-pj1-f66.google.com with SMTP id ca19so2667277pjb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 00:13:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I13QOM/XyZe4jexaUu6Tg14FjNQVNu2OzdTG+eKEvxs=;
-        b=Urf/A79crlroamjdZ/4jO0Ea3JsVS/HR0RS6j4Scbe/uESPEuIqzn1CISgZZ4M2O5Q
-         2IJ/bbCONVPXPx0UHdwldQBbY+glrYv9E+RAOFyiQlZhteyXjKfPhHoaC0lmBx818SVx
-         zrOFUawhELjFTUzvBv6ySv1v7pSJqYo2WdgONHIEbMLzMRuo7ZshWOT2URSNCCVm0tFs
-         dME9t6qUHmmDkcJ78hRUgtnH7QGqkW7K6X4NttTr2wqeRCOPQMcv/FfDYNUVmkpEpxui
-         EHybpT0WbT4GlKWVIlTpGBZ+k3S90J77Jjt72aKwVx2gqSklHM8p5i9ZFJGkKUFnam/Z
-         +fqQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kLVVGHNKvob9eoQ/kiwi8Hd5PvOTq3zBu7HFDYNsI7o=;
+        b=dW1k409Hwpne9y4cOUDwoaNXf/m2bg6wig4H+wPSOt+LKkQuKohHtDTRe/0bMYvJqF
+         Ge1sTZ2HM81RJdZ+b8CZff1kARp2NNdFi5h05eIfpIDzXQtSocCRxTdz31Fbplc6Hnb2
+         hVrkIx9Vu+3hSP+y5rBGNsyIP9YCtvGdj6QXw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I13QOM/XyZe4jexaUu6Tg14FjNQVNu2OzdTG+eKEvxs=;
-        b=hZRUD9UCOI0g2UUQ16QZ1gb8IWPScnQ+gR/WFkDlmJsFgeiPCuyuShdEP8tv4MVzlL
-         0HCTcuEVtT5752OtIVGCLelh+LL084NTAhyE+7c02G61WuLXBMHcJrJ8WQG3akiHVElI
-         BcI8z5ynGBAOEj1EoIrdySt3z66HY3B8XByK6kNq6LR5EiSHng8+xwpM4Ww8r8d1ueL0
-         m8bkzvCH6SwZNE+s+mjBSk1rEnKETLxnxa5IWsGi0081YHO+4K6OQsqm2bI5mgb8xmAo
-         5mTLU2MT5q0UVXAB2fflADAKQbQLVzU0VaJjcfi1bom41ZbZTWj747Nt2RweXpbtPS5/
-         2FQA==
-X-Gm-Message-State: APjAAAWwZOqxXSAQSTRXc9+hi3egmvAGIQPq1jUZj+1GGHwjL5NuW5cf
-        vh0vSSwB7W8EQ8TXiS8WZz82WqCkAZlvPTkNhs5QgA==
-X-Google-Smtp-Source: APXvYqwt6fIkH5aRFph0l1Lb7nTwjasXYcWkPzvXCdXqxUsHWhUIa0fRQNvSZ2zcwf47+j1kV/aNS9rzQoInjIAmU2g=
-X-Received: by 2002:a6b:c7c7:: with SMTP id x190mr1124939iof.123.1575447135988;
- Wed, 04 Dec 2019 00:12:15 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kLVVGHNKvob9eoQ/kiwi8Hd5PvOTq3zBu7HFDYNsI7o=;
+        b=QfmyrQaUZ1EhxN6Vvl5A9NidIlBGrrn9KCrQJ3OVNmSmV8HyqYeVFHvUG6+chFYIYz
+         TZDhH/pffssgwlJku15IIic0SQXiPDHQ0CjnQtocsyHJzulZMLEjffCnSi5Z8SvPM1Pq
+         cNpGqPBlB9FbGWRTFZg3spIWHIXLT23x4/P4fPuffD9qk509tiR0S6xpKTKYaomAD94z
+         C3TCKTLQ87UuhDs3+Ma6DNTe/5mtoi+SG2eryPLsa9fBfntugYWBzsEIcjLXxjkSnxFa
+         lzSuhU0BmQ79gAiaDmD6KH1aiuWwkhI6DixpdvLAr3tXKQ8yUrWyJfO82xT5Y+nkoa+5
+         CKdg==
+X-Gm-Message-State: APjAAAVLJGtytjMKdEvvW2WjP1JgQB9ddS1C2hlgLCVrI6kEEIhcILFh
+        7bsD9/NlO9NMtDzYMPvxLBuMYQ==
+X-Google-Smtp-Source: APXvYqyB1iRYmu9NxaK6tXmRL7wMYwxaJcR0mPrBrRqMo+4sZPD2J7OZJ1+Ll2NMDetAC7/eMFOkGg==
+X-Received: by 2002:a17:902:b095:: with SMTP id p21mr2149106plr.313.1575447196552;
+        Wed, 04 Dec 2019 00:13:16 -0800 (PST)
+Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
+        by smtp.googlemail.com with ESMTPSA id a3sm5435699pjh.31.2019.12.04.00.13.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 00:13:15 -0800 (PST)
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>, linux-wireless@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org (open list),
+        clang-built-linux@googlegroups.com (open list:CLANG/LLVM BUILD SUPPORT)
+Subject: [PATCH v2] wireless: Use offsetof instead of custom macro.
+Date:   Wed,  4 Dec 2019 16:13:07 +0800
+Message-Id: <20191204081307.138765-1-pihsun@chromium.org>
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
 MIME-Version: 1.0
-References: <20191204071958.18553-1-chaotian.jing@mediatek.com>
-In-Reply-To: <20191204071958.18553-1-chaotian.jing@mediatek.com>
-From:   Hsin-Yi Wang <hsinyi@google.com>
-Date:   Wed, 4 Dec 2019 16:11:50 +0800
-Message-ID: <CACb=7PWeW+aYx3Dah0CFj3cyG+Wr=gOe7pfo9a_jmfjvjJeFDg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: mediatek: fix CMD_TA to 2 for MT8173 HS200/HS400 mode
-To:     Chaotian Jing <chaotian.jing@mediatek.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 3:20 PM Chaotian Jing <chaotian.jing@mediatek.com> wrote:
->
-> there is a chance that always get response CRC error after HS200 tuning,
-> the reason is that need set CMD_TA to 2. this modification is only for
-> MT8173.
->
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
+Use offsetof to calculate offset of a field to take advantage of
+compiler built-in version when possible, and avoid UBSAN warning when
+compiling with Clang:
+
+==================================================================
+UBSAN: Undefined behaviour in net/wireless/wext-core.c:525:14
+member access within null pointer of type 'struct iw_point'
+CPU: 3 PID: 165 Comm: kworker/u16:3 Tainted: G S      W         4.19.23 #43
+Workqueue: cfg80211 __cfg80211_scan_done [cfg80211]
+Call trace:
+ dump_backtrace+0x0/0x194
+ show_stack+0x20/0x2c
+ __dump_stack+0x20/0x28
+ dump_stack+0x70/0x94
+ ubsan_epilogue+0x14/0x44
+ ubsan_type_mismatch_common+0xf4/0xfc
+ __ubsan_handle_type_mismatch_v1+0x34/0x54
+ wireless_send_event+0x3cc/0x470
+ ___cfg80211_scan_done+0x13c/0x220 [cfg80211]
+ __cfg80211_scan_done+0x28/0x34 [cfg80211]
+ process_one_work+0x170/0x35c
+ worker_thread+0x254/0x380
+ kthread+0x13c/0x158
+ ret_from_fork+0x10/0x18
+===================================================================
+
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+---
+
+Change since v1:
+ * Add #include <stddef.h>
+
+---
+ include/uapi/linux/wireless.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/include/uapi/linux/wireless.h b/include/uapi/linux/wireless.h
+index 86eca3208b6b..a2c006a364e0 100644
+--- a/include/uapi/linux/wireless.h
++++ b/include/uapi/linux/wireless.h
+@@ -74,6 +74,8 @@
+ #include <linux/socket.h>		/* for "struct sockaddr" et al	*/
+ #include <linux/if.h>			/* for IFNAMSIZ and co... */
+ 
++#include <stddef.h>                     /* for offsetof */
++
+ /***************************** VERSION *****************************/
+ /*
+  * This constant is used to know the availability of the wireless
+@@ -1090,8 +1092,7 @@ struct iw_event {
+ /* iw_point events are special. First, the payload (extra data) come at
+  * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
+  * we omit the pointer, so start at an offset. */
+-#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
+-			  (char *) NULL)
++#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
+ #define IW_EV_POINT_LEN	(IW_EV_LCP_LEN + sizeof(struct iw_point) - \
+ 			 IW_EV_POINT_OFF)
+ 
+
+base-commit: c5db92909beddadddb705b92d3388ea50b01e1a2
+-- 
+2.24.0.393.g34dc348eaf-goog
+
