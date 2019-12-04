@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E913AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ED0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B187120675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2F120862
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483262;
-	bh=bhPbd1Q7AtDDpN7vSxVvjBu3+BIHBLCpWA1+mEKnBJc=;
+	s=default; t=1575483264;
+	bh=ymmdOMpoTUi2nRCMXulIM8OpjOTxMBNwjovAUehgbuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ymxfPK2NYfIn/cV/C9s6LgEZMDc5jZEipLswn/MVs5AzVtIquZk6MlKyFVJlUWD2D
-	 Py7TonaPN6RpSDKYv/9KtybViPuXSiA/w6eXCrU3jukDekZxwARpz39IeUZUPR7e1R
-	 wrtTiWYVf4G4bo2Jm2E3xOm2ULAJaWGZe5O26oTs=
+	b=r8N9kgHbxQOgF/LxfnTckay36ukCVPRv65qRn1LFEayHklpH3rP7f4tq8vT43oo5L
+	 MVvx3mEYVeUNQ4esP9n2BkX6HdNcsRTnB/HUwHEXkWyEukTL8TbjFpE7C7tUgm3N85
+	 ZCKCxUdG8ghxEENC3m+u6Y3wEKccZSGDQSJyjpC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731612AbfLDSOW (ORCPT
+        id S1728997AbfLDSOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:14:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43506 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:14:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731879AbfLDSOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:14:11 -0500
+        id S1730756AbfLDSOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:14:21 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B767D20865;
-        Wed,  4 Dec 2019 18:14:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A26C20674;
+        Wed,  4 Dec 2019 18:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483251;
-        bh=bhPbd1Q7AtDDpN7vSxVvjBu3+BIHBLCpWA1+mEKnBJc=;
+        s=default; t=1575483260;
+        bh=ymmdOMpoTUi2nRCMXulIM8OpjOTxMBNwjovAUehgbuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U9QyLq0Fnl3RIaEkZ17Us3Cb8Skfr8nOJO7HxHKt+RuzWUZKxiS77erKPMCiudp25
-         tocAtS9ZrUxE3L57LR0K0RE+Ep70f3dwkV0olSDHMlQnUVq2zs6rW4yratfEzrhAkL
-         A1yhEDXbd1WZv6TkwP6typUf3/fOZQyUH6B/+cZw=
+        b=gMMK0LZnrhMQrBSNEnClpKJYgGvBVyBik01bWBwZME4eNXMpllZ+xBJ7nf8T8eAdt
+         UYUsPD9vfbJJQ33j5zV7qQqFDQXKcFUplNasHk8xLjjCqci45C1vhUD3v4+rgBof1A
+         uctMHupYtuoOUvMjXhl3CzpLwJqXIPHWUloJqMN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.9 113/125] media: atmel: atmel-isc: fix asd memory allocation
-Date:   Wed,  4 Dec 2019 18:56:58 +0100
-Message-Id: <20191204175325.992756023@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 117/125] openvswitch: drop unneeded BUG_ON() in ovs_flow_cmd_build_info()
+Date:   Wed,  4 Dec 2019 18:57:02 +0100
+Message-Id: <20191204175326.322840740@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -62,53 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-commit 1e4e25c4959c10728fbfcc6a286f9503d32dfe02 upstream.
+[ Upstream commit 8ffeb03fbba3b599690b361467bfd2373e8c450f ]
 
-The subsystem will free the asd memory on notifier cleanup, if the asd is
-added to the notifier.
-However the memory is freed using kfree.
-Thus, we cannot allocate the asd using devm_*
-This can lead to crashes and problems.
-To test this issue, just return an error at probe, but cleanup the
-notifier beforehand.
+All the callers of ovs_flow_cmd_build_info() already deal with
+error return code correctly, so we can handle the error condition
+in a more gracefull way. Still dump a warning to preserve
+debuggability.
 
-Fixes: 106267444f ("[media] atmel-isc: add the Image Sensor Controller code")
+v1 -> v2:
+ - clarify the commit message
+ - clean the skb and report the error (DaveM)
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: ccb1352e76cf ("net: Add Open vSwitch kernel components.")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/media/platform/atmel/atmel-isc.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/openvswitch/datapath.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/media/platform/atmel/atmel-isc.c
-+++ b/drivers/media/platform/atmel/atmel-isc.c
-@@ -1297,8 +1297,11 @@ static int isc_parse_dt(struct device *d
- 			break;
- 		}
- 
--		subdev_entity->asd = devm_kzalloc(dev,
--				     sizeof(*subdev_entity->asd), GFP_KERNEL);
-+		/* asd will be freed by the subsystem once it's added to the
-+		 * notifier list
-+		 */
-+		subdev_entity->asd = kzalloc(sizeof(*subdev_entity->asd),
-+					     GFP_KERNEL);
- 		if (subdev_entity->asd == NULL) {
- 			of_node_put(rem);
- 			ret = -ENOMEM;
-@@ -1432,6 +1435,7 @@ static int atmel_isc_probe(struct platfo
- 						   &subdev_entity->notifier);
- 		if (ret) {
- 			dev_err(dev, "fail to register async notifier\n");
-+			kfree(subdev_entity->asd);
- 			goto cleanup_subdev;
- 		}
+--- a/net/openvswitch/datapath.c
++++ b/net/openvswitch/datapath.c
+@@ -920,7 +920,10 @@ static struct sk_buff *ovs_flow_cmd_buil
+ 	retval = ovs_flow_cmd_fill_info(flow, dp_ifindex, skb,
+ 					info->snd_portid, info->snd_seq, 0,
+ 					cmd, ufid_flags);
+-	BUG_ON(retval < 0);
++	if (WARN_ON_ONCE(retval < 0)) {
++		kfree_skb(skb);
++		skb = ERR_PTR(retval);
++	}
+ 	return skb;
+ }
  
 
 
