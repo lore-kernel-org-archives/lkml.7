@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90780C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB01C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 663C120661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01EBF205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483750;
-	bh=knbKsM2PPdiJ13pHkQSZUjV9t4XeGk2gTHxk015Ntho=;
+	s=default; t=1575483759;
+	bh=VvRfFCC/KgixHFcsaFYlG0r52DlU90PC4AO4Z5QVs/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J9lkN+SfAqllUdYTs2A/YipJ2OHexdOGbIoaBdCAhhftG+sZm4adO35kGiqG2PhIV
-	 JIRFl6HdXt9mw64BabDnL1XpFK4Ev117vtJCShGqEJfNi9FtiCWqueDin+qS2edPxD
-	 /7g/r2dVz8DRchzmooAyKg+9xnVGhEQSiAZ85H3U=
+	b=kUe9K40ezSxljLPOSYv3NSmUdcjBbB4OIYkjWo58OxP0eULS7Wgu72EDhLrtXVD/G
+	 l11el7EX8xmV4f/k0tsOFLMpKdLxmPuTaQcof5MeBK208GvABLN8ozFVPT0uXpZ0up
+	 /kddNlbFyQwfHg0afmon6AjgAAeYRrV2Xe0WQzZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730928AbfLDSW3 (ORCPT
+        id S1731078AbfLDSWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:22:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51396 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:22:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730335AbfLDSFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:05:10 -0500
+        id S1729984AbfLDSFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:05:05 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6AEE20659;
-        Wed,  4 Dec 2019 18:05:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 753A3206DF;
+        Wed,  4 Dec 2019 18:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482710;
-        bh=knbKsM2PPdiJ13pHkQSZUjV9t4XeGk2gTHxk015Ntho=;
+        s=default; t=1575482704;
+        bh=VvRfFCC/KgixHFcsaFYlG0r52DlU90PC4AO4Z5QVs/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vAIUtrhl0yPzSfdk8o0Jr1KVkujVu9Pr0MeuCBd2Klno0NoyM8Z4Tbho0YgQZO1P9
-         lnUctLIrOw5rSobIM5c2Rmh+5yH18m946Nt2EUVvz2ne8LlrpAgJs7mr+esC/FDVtL
-         JOMZXykxrmaOCKPmiLUTqYJi0G1QrlLUy2dPz+BA=
+        b=dZ1P4uI0/CN3dJ77rZ/c1eXkJoc9kC2gWEs3L3sm/S5Mi6CAMhwKGL0ruMGbJUbUH
+         q262zNpD3metNIDiB5wtC5i4kL46gZHMx7+JpIMlhcbw1L73HBhIWJIhGTGb99qfEE
+         AdXSVASmrlsyzy4onIOUA3jsXZeBuSY/uS5O3fxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Scott Wood <oss@buserror.net>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 105/209] powerpc/83xx: handle machine check caused by watchdog timer
-Date:   Wed,  4 Dec 2019 18:55:17 +0100
-Message-Id: <20191204175329.091245216@linuxfoundation.org>
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 103/209] IB/rxe: Make counters thread safe
+Date:   Wed,  4 Dec 2019 18:55:15 +0100
+Message-Id: <20191204175328.951209411@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -59,140 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit 0deae39cec6dab3a66794f3e9e83ca4dc30080f1 ]
+[ Upstream commit d5108e69fe013ff47ab815b849caba9cc33ca1e5 ]
 
-When the watchdog timer is set in interrupt mode, it causes a
-machine check when it times out. The purpose of this mode is to
-ease debugging, not to crash the kernel and reboot the machine.
+Current rxe device counters are not thread safe.
+When multiple QPs are used, they can be racy.
+Make them thread safe by making it atomic64.
 
-This patch implements a special handling for that, in order to not
-crash the kernel if the watchdog times out while in interrupt or
-within the idle task.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-[scottwood: added missing #include]
-Signed-off-by: Scott Wood <oss@buserror.net>
+Fixes: 0b1e5b99a48b ("IB/rxe: Add port protocol stats")
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/cputable.h |  1 +
- arch/powerpc/include/asm/reg.h      |  2 ++
- arch/powerpc/kernel/cputable.c      | 10 ++++++----
- arch/powerpc/platforms/83xx/misc.c  | 17 +++++++++++++++++
- 4 files changed, 26 insertions(+), 4 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_hw_counters.c | 2 +-
+ drivers/infiniband/sw/rxe/rxe_verbs.h       | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
-index 7e3ccf21830e6..e4451b30d7e32 100644
---- a/arch/powerpc/include/asm/cputable.h
-+++ b/arch/powerpc/include/asm/cputable.h
-@@ -45,6 +45,7 @@ extern int machine_check_e500(struct pt_regs *regs);
- extern int machine_check_e200(struct pt_regs *regs);
- extern int machine_check_47x(struct pt_regs *regs);
- int machine_check_8xx(struct pt_regs *regs);
-+int machine_check_83xx(struct pt_regs *regs);
+diff --git a/drivers/infiniband/sw/rxe/rxe_hw_counters.c b/drivers/infiniband/sw/rxe/rxe_hw_counters.c
+index 6aeb7a165e469..ea4542a9d69e6 100644
+--- a/drivers/infiniband/sw/rxe/rxe_hw_counters.c
++++ b/drivers/infiniband/sw/rxe/rxe_hw_counters.c
+@@ -59,7 +59,7 @@ int rxe_ib_get_hw_stats(struct ib_device *ibdev,
+ 		return -EINVAL;
  
- extern void cpu_down_flush_e500v2(void);
- extern void cpu_down_flush_e500mc(void);
-diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
-index b779f3ccd4126..05f3c2b3aa0ec 100644
---- a/arch/powerpc/include/asm/reg.h
-+++ b/arch/powerpc/include/asm/reg.h
-@@ -733,6 +733,8 @@
- #define   SRR1_PROGTRAP		0x00020000 /* Trap */
- #define   SRR1_PROGADDR		0x00010000 /* SRR0 contains subsequent addr */
+ 	for (cnt = 0; cnt  < ARRAY_SIZE(rxe_counter_name); cnt++)
+-		stats->value[cnt] = dev->stats_counters[cnt];
++		stats->value[cnt] = atomic64_read(&dev->stats_counters[cnt]);
  
-+#define   SRR1_MCE_MCP		0x00080000 /* Machine check signal caused interrupt */
-+
- #define SPRN_HSRR0	0x13A	/* Save/Restore Register 0 */
- #define SPRN_HSRR1	0x13B	/* Save/Restore Register 1 */
- #define   HSRR1_DENORM		0x00100000 /* Denorm exception */
-diff --git a/arch/powerpc/kernel/cputable.c b/arch/powerpc/kernel/cputable.c
-index 760872916013d..da4b0e3792380 100644
---- a/arch/powerpc/kernel/cputable.c
-+++ b/arch/powerpc/kernel/cputable.c
-@@ -1185,6 +1185,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.machine_check		= machine_check_generic,
- 		.platform		= "ppc603",
- 	},
-+#ifdef CONFIG_PPC_83xx
- 	{	/* e300c1 (a 603e core, plus some) on 83xx */
- 		.pvr_mask		= 0x7fff0000,
- 		.pvr_value		= 0x00830000,
-@@ -1195,7 +1196,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.icache_bsize		= 32,
- 		.dcache_bsize		= 32,
- 		.cpu_setup		= __setup_cpu_603,
--		.machine_check		= machine_check_generic,
-+		.machine_check		= machine_check_83xx,
- 		.platform		= "ppc603",
- 	},
- 	{	/* e300c2 (an e300c1 core, plus some, minus FPU) on 83xx */
-@@ -1209,7 +1210,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.icache_bsize		= 32,
- 		.dcache_bsize		= 32,
- 		.cpu_setup		= __setup_cpu_603,
--		.machine_check		= machine_check_generic,
-+		.machine_check		= machine_check_83xx,
- 		.platform		= "ppc603",
- 	},
- 	{	/* e300c3 (e300c1, plus one IU, half cache size) on 83xx */
-@@ -1223,7 +1224,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.icache_bsize		= 32,
- 		.dcache_bsize		= 32,
- 		.cpu_setup		= __setup_cpu_603,
--		.machine_check		= machine_check_generic,
-+		.machine_check		= machine_check_83xx,
- 		.num_pmcs		= 4,
- 		.oprofile_cpu_type	= "ppc/e300",
- 		.oprofile_type		= PPC_OPROFILE_FSL_EMB,
-@@ -1240,12 +1241,13 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.icache_bsize		= 32,
- 		.dcache_bsize		= 32,
- 		.cpu_setup		= __setup_cpu_603,
--		.machine_check		= machine_check_generic,
-+		.machine_check		= machine_check_83xx,
- 		.num_pmcs		= 4,
- 		.oprofile_cpu_type	= "ppc/e300",
- 		.oprofile_type		= PPC_OPROFILE_FSL_EMB,
- 		.platform		= "ppc603",
- 	},
-+#endif
- 	{	/* default match, we assume split I/D cache & TB (non-601)... */
- 		.pvr_mask		= 0x00000000,
- 		.pvr_value		= 0x00000000,
-diff --git a/arch/powerpc/platforms/83xx/misc.c b/arch/powerpc/platforms/83xx/misc.c
-index d75c9816a5c92..2b6589fe812dd 100644
---- a/arch/powerpc/platforms/83xx/misc.c
-+++ b/arch/powerpc/platforms/83xx/misc.c
-@@ -14,6 +14,7 @@
- #include <linux/of_platform.h>
- #include <linux/pci.h>
- 
-+#include <asm/debug.h>
- #include <asm/io.h>
- #include <asm/hw_irq.h>
- #include <asm/ipic.h>
-@@ -150,3 +151,19 @@ void __init mpc83xx_setup_arch(void)
- 
- 	mpc83xx_setup_pci();
+ 	return ARRAY_SIZE(rxe_counter_name);
  }
-+
-+int machine_check_83xx(struct pt_regs *regs)
-+{
-+	u32 mask = 1 << (31 - IPIC_MCP_WDT);
-+
-+	if (!(regs->msr & SRR1_MCE_MCP) || !(ipic_get_mcp_status() & mask))
-+		return machine_check_generic(regs);
-+	ipic_clear_mcp_status(mask);
-+
-+	if (debugger_fault_handler(regs))
-+		return 1;
-+
-+	die("Watchdog NMI Reset", regs, 0);
-+
-+	return 1;
-+}
+diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+index b2b76a316ebae..d1cc89f6f2e33 100644
+--- a/drivers/infiniband/sw/rxe/rxe_verbs.h
++++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+@@ -410,16 +410,16 @@ struct rxe_dev {
+ 	spinlock_t		mmap_offset_lock; /* guard mmap_offset */
+ 	int			mmap_offset;
+ 
+-	u64			stats_counters[RXE_NUM_OF_COUNTERS];
++	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
+ 
+ 	struct rxe_port		port;
+ 	struct list_head	list;
+ 	struct crypto_shash	*tfm;
+ };
+ 
+-static inline void rxe_counter_inc(struct rxe_dev *rxe, enum rxe_counters cnt)
++static inline void rxe_counter_inc(struct rxe_dev *rxe, enum rxe_counters index)
+ {
+-	rxe->stats_counters[cnt]++;
++	atomic64_inc(&rxe->stats_counters[index]);
+ }
+ 
+ static inline struct rxe_dev *to_rdev(struct ib_device *dev)
 -- 
 2.20.1
 
