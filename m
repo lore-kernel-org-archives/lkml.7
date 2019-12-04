@@ -2,140 +2,122 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D45AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358C9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F1320661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E8B205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:27:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730426AbfLDS1a (ORCPT
+        id S1729307AbfLDS1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:27:30 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7546 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729223AbfLDS1V (ORCPT
+        Wed, 4 Dec 2019 13:27:42 -0500
+Received: from www62.your-server.de ([213.133.104.62]:40604 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729345AbfLDS1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:27:21 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4IPp2U014128;
-        Wed, 4 Dec 2019 13:26:59 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wntctt8g7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Dec 2019 13:26:59 -0500
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xB4IPxbS015108;
-        Wed, 4 Dec 2019 13:26:58 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wntctt8f2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Dec 2019 13:26:58 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB4IPIFT021221;
-        Wed, 4 Dec 2019 18:27:02 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01wdc.us.ibm.com with ESMTP id 2wkg26fmjj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Dec 2019 18:27:02 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB4IQu9w43188536
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Dec 2019 18:26:56 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34D65AE05C;
-        Wed,  4 Dec 2019 18:26:56 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A755AE05F;
-        Wed,  4 Dec 2019 18:26:54 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.137])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Dec 2019 18:26:53 +0000 (GMT)
-Message-ID: <1f337af9f52ac4c3128e61c971cf0e32068a71ab.camel@linux.ibm.com>
-Subject: Re: [PATCH v4 1/2] powerpc/pseries/iommu: Share the per-cpu TCE
- page with the hypervisor.
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Ram Pai <linuxram@us.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        mpe@ellerman.id.au
-Cc:     andmike@us.ibm.com, mst@redhat.com, aik@ozlabs.ru,
-        mdroth@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        ram.n.pai@gmail.com, cai@lca.pw, tglx@linutronix.de,
-        sukadev@linux.vnet.ibm.com, hch@lst.de, bauerman@linux.ibm.com,
-        david@gibson.dropbear.id.au
-Date:   Wed, 04 Dec 2019 15:26:50 -0300
-In-Reply-To: <1575269124-17885-2-git-send-email-linuxram@us.ibm.com>
-References: <1575269124-17885-1-git-send-email-linuxram@us.ibm.com>
-         <1575269124-17885-2-git-send-email-linuxram@us.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-xOP3QrA+adzjZyTY2Uvc"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Wed, 4 Dec 2019 13:27:40 -0500
+Received: from [194.230.159.159] (helo=localhost)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1icZN2-0004rF-GG; Wed, 04 Dec 2019 19:27:28 +0100
+Date:   Wed, 4 Dec 2019 19:27:27 +0100
+From:   Daniel Borkmann <daniel@iogearbox.net>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
+Message-ID: <20191204182727.GA29780@localhost.localdomain>
+References: <20191202131847.30837-1-jolsa@kernel.org>
+ <CAEf4BzY_D9JHjuU6K=ciS70NSy2UvSm_uf1NfN_tmFz1445Jiw@mail.gmail.com>
+ <87wobepgy0.fsf@toke.dk>
+ <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
+ <877e3cpdc9.fsf@toke.dk>
+ <CAADnVQJeC9FQDXhv34KTiFSRq-=x4cBaspj-bTXdQ1=7prphcA@mail.gmail.com>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- bulkscore=0 adultscore=0 mlxlogscore=969 clxscore=1011 priorityscore=1501
- spamscore=0 mlxscore=0 malwarescore=0 suspectscore=2 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912040148
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQJeC9FQDXhv34KTiFSRq-=x4cBaspj-bTXdQ1=7prphcA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25653/Wed Dec  4 10:46:42 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 04, 2019 at 09:39:59AM -0800, Alexei Starovoitov wrote:
+> On Wed, Dec 4, 2019 at 2:58 AM Toke Høiland-Jørgensen <toke@redhat.com> wrote:
+> > Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+> > > On Mon, Dec 2, 2019 at 1:15 PM Toke Høiland-Jørgensen <toke@redhat.com> wrote:
+> > >>
+> > >> Ah, that is my mistake: I was getting dynamic libbpf symbols with this
+> > >> approach, but that was because I had the version of libbpf.so in my
+> > >> $LIBDIR that had the patch to expose the netlink APIs as versioned
+> > >> symbols; so it was just pulling in everything from the shared library.
+> > >>
+> > >> So what I was going for was exactly what you described above; but it
+> > >> seems that doesn't actually work. Too bad, and sorry for wasting your
+> > >> time on this :/
+> > >
+> > > bpftool is currently tightly coupled with libbpf and very likely
+> > > in the future the dependency will be even tighter.
+> > > In that sense bpftool is an extension of libbpf and libbpf is an extension
+> > > of bpftool.
+> > > Andrii is working on set of patches to generate user space .c code
+> > > from bpf program.
+> > > bpftool will be generating the code that is specific for the version
+> > > bpftool and for
+> > > the version of libbpf. There will be compatibility layers as usual.
+> > > But in general the situation where a bug in libbpf is so criticial
+> > > that bpftool needs to repackaged is imo less likely than a bug in
+> > > bpftool that will require re-packaging of libbpf.
+> > > bpftool is quite special. It's not a typical user of libbpf.
+> > > The other way around is more correct. libbpf is a user of the code
+> > > that bpftool generates and both depend on each other.
+> > > perf on the other side is what typical user space app that uses
+> > > libbpf will look like.
+> > > I think keeping bpftool in the kernel while packaging libbpf
+> > > out of github was an oversight.
+> > > I think we need to mirror bpftool into github/libbpf as well
+> > > and make sure they stay together. The version of libbpf == version of bpftool.
+> > > Both should come from the same package and so on.
+> > > May be they can be two different packages but
+> > > upgrading one should trigger upgrade of another and vice versa.
+> > > I think one package would be easier though.
+> > > Thoughts?
+> >
+> > Yup, making bpftool explicitly the "libbpf command line interface" makes
+> > sense and would help clarify the relationship between the two. As Jiri
+> > said, we are already moving in that direction packaging-wise...
+> 
+> Awesome. Let's figure out the logistics.
+> Should we do:
+> git mv tools/bpf/bpftool/ tools/lib/bpf/
+> and appropriate adjustment to Makefiles ?
+> or keep it where it is and only add to
+> https://github.com/libbpf/libbpf/blob/master/scripts/sync-kernel.sh ?
 
---=-xOP3QrA+adzjZyTY2Uvc
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I'd be in preference of the latter aka keeping where it is.
 
-On Sun, 2019-12-01 at 22:45 -0800, Ram Pai wrote:
-> @@ -206,8 +224,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_tabl=
-e *tbl, long tcenum,
->          * from iommu_alloc{,_sg}()
->          */
->         if (!tcep) {
-> -               tcep =3D (__be64 *)__get_free_page(GFP_ATOMIC);
-> -               /* If allocation fails, fall back to the loop implementat=
-ion */
-> +               tcep =3D alloc_tce_page();
->                 if (!tcep) {
->                         local_irq_restore(flags);
->                         return tce_build_pSeriesLP(tbl, tcenum, npages, u=
-addr,
-
-The comment about failing allocation was removed, but I see no chage of
-behaviour here.=20
-
-Can you please explain what/where it changes?=20
-
-Best regards,
-
-Leonardo
-
---=-xOP3QrA+adzjZyTY2Uvc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3n+moACgkQlQYWtz9S
-ttRN3xAA5oyWECPthDRG8RJVWpXNBntk5Q5p2NArYbJ2lPJPtQUZ4n1jTrXU9jzH
-3lJ/fgi3X3uKzDt85ZJRN7r8Q/EvSH7GQwS8615PSzkQ+7pR2ncdsJNiW99Q5/AF
-PxLiygpyAYCIAvfQVyHS5zpdIMDmQ2jX2Pw9KOLMyBhcm1SdI60y6H3FYr3ihXUo
-iswyg49W/jc7u2MwpX5T4p4CS8aUHdaZLKePpGTwI7feZaJNYZkuCSecC35vuBBB
-9zuLFWh1bXQ78U+B3eikQr8HP13xuHMkOo3gN2OhBKhREO4VSfkMQ76W3Zko9HE3
-+T7kxanN+fThP9cVzV6Lvee1mgt7C2rOMdcL9/VnAQ8VkbhSpnUxkDGBA6CrFadF
-rdspu4FdWdlbI9JW3fGjcSGFtwzPkIV9JV3YfQsUKvUDZro10dwoeYwjv/cVcOlH
-UFQByrOSa26k4rAFrlnD1YmZJyY5GHnkk3dIhzq1my96foYC2ucOO1tNSMyHkyuT
-Hr23JAxFO3QSqhc4093l+MxiirP5VAsOyXQFcYLMtWV2gw1FKVRumenBTWt6hIDR
-ATnM6uj5TUOx5R/rI+XhAJj5ar5XMdRU8CsbmTh1zHd0laz3k62z7z5B0HhhfPzd
-JBbkysHhunvUUs9J0s+STdyScofunsbTx9j0Pchhgwbeb9bB+XA=
-=axXy
------END PGP SIGNATURE-----
-
---=-xOP3QrA+adzjZyTY2Uvc--
-
+Thanks,
+Daniel
