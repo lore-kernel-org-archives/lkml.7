@@ -2,180 +2,454 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1464DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11853C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2B56206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8693206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:04:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfLDKAJ (ORCPT
+        id S1727459AbfLDKD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:00:09 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53747 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbfLDKAI (ORCPT
+        Wed, 4 Dec 2019 05:03:59 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48752 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbfLDKD7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:00:08 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1icRS2-000533-CD; Wed, 04 Dec 2019 11:00:06 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1icRS2-0005y6-0h; Wed, 04 Dec 2019 11:00:06 +0100
-Date:   Wed, 4 Dec 2019 11:00:05 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     shawnguo@kernel.org, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, wsa@the-dreams.de, leoyang.li@nxp.com,
-        aisheng.dong@nxp.com, xiaoning.wang@nxp.com,
-        o.rempel@pengutronix.de, xiaobo.xie@nxp.com,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        jiafei.pan@nxp.com, linux-arm-kernel@lists.infradead.org,
-        laurentiu.tudor@nxp.com
-Subject: Re: [v6] i2c: imx: support slave mode for imx I2C driver
-Message-ID: <20191204100005.r56huywxa7h3c6zr@pengutronix.de>
-References: <20191203114809.21226-1-biwen.li@nxp.com>
+        Wed, 4 Dec 2019 05:03:59 -0500
+Received: from [IPv6:2a02:810a:113f:ad1c::498c] (unknown [IPv6:2a02:810a:113f:ad1c::498c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: dafna)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 63B9628DFCC;
+        Wed,  4 Dec 2019 10:03:55 +0000 (GMT)
+Subject: Re: [PATCH v3 RESEND] media: vimc: fla: Add virtual flash subdevice
+To:     =?UTF-8?Q?Lucas_A=2e_M=2e_Magalh=c3=a3es?= <lucmaga@gmail.com>,
+        linux-media@vger.kernel.org
+Cc:     hverkuil@xs4all.nl, linux-kernel@vger.kernel.org,
+        helen.koike@collabora.com, edusbarretto@gmail.com,
+        lkcamp@lists.libreplanetbr.org
+References: <20191203230148.2442-1-lucmaga@gmail.com>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <dba2fa57-2101-b24a-a482-97878895fb92@collabora.com>
+Date:   Wed, 4 Dec 2019 11:03:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203114809.21226-1-biwen.li@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:53:58 up 149 days, 16:04, 138 users,  load average: 0.01, 0.10,
- 0.15
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20191203230148.2442-1-lucmaga@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
+Thanks for the patch
 
-The patch looks ok to me now, but I still do not like the #ifdeffery
-around CONFIG_I2C_SLAVE. With the patch I just sent (You are on Cc:)
-we could apply the following on your patch which makes it more readable
-and increases compile coverage.
+On 12/4/19 12:01 AM, Lucas A. M. Magalhães wrote:
+> From: Lucas A. M. Magalhaes <lucmaga@gmail.com>
+> 
+> Add a virtual subdevice to simulate the flash control API.
+> Those are the supported controls:
+> v4l2-ctl -d /dev/v4l-subdev6 -L
+> Flash Controls
+> 
+>                         led_mode 0x009c0901 (menu)   : min=0 max=2 default=1 value=1
+>                                  0: Off
+>                                  1: Flash
+>                                  2: Torch
+>                    strobe_source 0x009c0902 (menu)   : min=0 max=1 default=0 value=0
+>                                  0: Software
+>                                  1: External
+>                           strobe 0x009c0903 (button) : flags=write-only, execute-on-write
+>                      stop_strobe 0x009c0904 (button) : flags=write-only, execute-on-write
+>                    strobe_status 0x009c0905 (bool)   : default=0 value=0 flags=read-only
+>                   strobe_timeout 0x009c0906 (int)    : min=50 max=400 step=50 default=50 value=400
+>             intensity_flash_mode 0x009c0907 (int)    : min=23040 max=1499600 step=11718 default=23040 value=23040
+>             intensity_torch_mode 0x009c0908 (int)    : min=2530 max=187100 step=1460 default=2530 value=2530
+>              intensity_indicator 0x009c0909 (int)    : min=0 max=255 step=1 default=0 value=0
+>                           faults 0x009c090a (bitmask): max=0x00000002 default=0x00000000 value=0x00000000
+> 
+> Co-authored-by: Eduardo Barretto <edusbarretto@gmail.com>
+> Signed-off-by: Eduardo Barretto <edusbarretto@gmail.com>
+> Signed-off-by: Lucas A. M. Magalhães <lucmaga@gmail.com>
+> 
+> ---
+> Hi,
+> 
+> I've copied some values from another driver (lm3646) to make it more
+> realistic, as suggested by Hans. All values except for
+> V4L2_CID_FLASH_INDICATOR_INTENSITY, which I couldn't find any
+> implementation.
+> 
+> The v4l-compliance is failing. From the documentation
+> V4L2_CID_FLASH_STROBE should just work if the
+> V4L2_CID_FLASH_STROBE_SOURCE is "Software" and the
+> V4L2_CID_FLASH_LED_MODE is "Flash", otherwise it should fail. With the
+> standard values configured for the V4L2_CID_FLASH_STROBE will not fail.
+> But during the tests v4l-compliance sets V4L2_CID_FLASH_LED_MODE to
+> "Torch" and V4L2_CID_FLASH_STROBE_SOURCE to "External" which makes
+> V4L2_CID_FLASH_STROBE to fail. How do I proceed? Should the
+> v4l-compliance be changed?
+> 
+> Changes in v3:
+> 	- Fix style errors
+> 	- Use more realistic numbers for the controllers
+> 	- Change from kthread to workqueue
+> 	- Change commit message for the new controllers values
+> 
+> Changes in v2:
+> 	- Fix v4l2-complience errors
+> 	- Add V4L2_CID_FLASH_STROBE_STATUS behavior
+> 	- Add V4L2_CID_FLASH_STROBE restrictions
+> 	- Remove vimc_fla_g_volatile_ctrl
+> 	- Remove unnecessarie V4L2_CID_FLASH_CLASS
+> 	- Change varables names
+> 
+>   drivers/media/platform/vimc/Makefile      |   2 +-
+>   drivers/media/platform/vimc/vimc-common.c |   2 +
+>   drivers/media/platform/vimc/vimc-common.h |   4 +
+>   drivers/media/platform/vimc/vimc-core.c   |   5 +
+>   drivers/media/platform/vimc/vimc-flash.c  | 248 ++++++++++++++++++++++
+>   5 files changed, 260 insertions(+), 1 deletion(-)
+>   create mode 100644 drivers/media/platform/vimc/vimc-flash.c
+> 
+> diff --git a/drivers/media/platform/vimc/Makefile b/drivers/media/platform/vimc/Makefile
+> index a53b2b532e9f..e759bbb04b14 100644
+> --- a/drivers/media/platform/vimc/Makefile
+> +++ b/drivers/media/platform/vimc/Makefile
+> @@ -1,6 +1,6 @@
+>   # SPDX-License-Identifier: GPL-2.0
+>   vimc-y := vimc-core.o vimc-common.o vimc-streamer.o vimc-capture.o \
+> -		vimc-debayer.o vimc-scaler.o vimc-sensor.o
+> +		vimc-debayer.o vimc-scaler.o vimc-sensor.o vimc-flash.o
+>   
+>   obj-$(CONFIG_VIDEO_VIMC) += vimc.o
+>   
+> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
+> index a3120f4f7a90..cb786de75573 100644
+> --- a/drivers/media/platform/vimc/vimc-common.c
+> +++ b/drivers/media/platform/vimc/vimc-common.c
+> @@ -203,6 +203,8 @@ struct media_pad *vimc_pads_init(u16 num_pads, const unsigned long *pads_flag)
+>   	struct media_pad *pads;
+>   	unsigned int i;
+>   
+> +	if (!num_pads)
+> +		return NULL;
+Please rebase on top of latest master,
+this function was removed in patch 'media: vimc: embed the pads of entities in the entities' structs'
 
-Wolfram, Biwen, what do you think?
+>   	/* Allocate memory for the pads */
+>   	pads = kcalloc(num_pads, sizeof(*pads), GFP_KERNEL);
+>   	if (!pads)
+> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
+> index 698db7c07645..19815f0f4d40 100644
+> --- a/drivers/media/platform/vimc/vimc-common.h
+> +++ b/drivers/media/platform/vimc/vimc-common.h
+> @@ -169,6 +169,10 @@ struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>   				     const char *vcfg_name);
+>   void vimc_sen_rm(struct vimc_device *vimc, struct vimc_ent_device *ved);
+>   
+> +struct vimc_ent_device *vimc_fla_add(struct vimc_device *vimc,
+> +				     const char *vcfg_name);
+This should be lined with the opening '('
 
-Sascha
+> +void vimc_fla_rm(struct vimc_device *vimc, struct vimc_ent_device *ved);
+> +
+>   /**
+>    * vimc_pads_init - initialize pads
+>    *
+> diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
+> index 6e3e5c91ae39..5f6c750d3d8d 100644
+> --- a/drivers/media/platform/vimc/vimc-core.c
+> +++ b/drivers/media/platform/vimc/vimc-core.c
+> @@ -91,6 +91,11 @@ static struct vimc_ent_config ent_config[] = {
+>   		.add = vimc_cap_add,
+>   		.rm = vimc_cap_rm,
+>   	},
+> +	{
+> +		.name = "Flash Controller",
+> +		.add = vimc_fla_add,
+> +		.rm = vimc_fla_rm,
+> +	}
+>   };
+>   
+>   static const struct vimc_ent_link ent_links[] = {
+> diff --git a/drivers/media/platform/vimc/vimc-flash.c b/drivers/media/platform/vimc/vimc-flash.c
+> new file mode 100644
+> index 000000000000..3918beecec57
+> --- /dev/null
+> +++ b/drivers/media/platform/vimc/vimc-flash.c
+> @@ -0,0 +1,248 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * vimc-flash.c Virtual Media Controller Driver
+> + *
+> + * Copyright (C) 2019
+> + * Contributors: Lucas A. M. Magalhães <lamm@lucmaga.dev>
+> + *               Eduardo Barretto <edusbarretto@gmail.com>
+> + *
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/sched.h>
+> +#include <linux/vmalloc.h>
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-event.h>
+> +#include <media/v4l2-subdev.h>
+> +
+> +#include "vimc-common.h"
+> +
+> +/*
+> + * Flash timeout in ms
+> + */
+> +#define VIMC_FLASH_TIMEOUT_MS_MIN 50
+> +#define VIMC_FLASH_TIMEOUT_MS_MAX 400
+> +#define VIMC_FLASH_TIMEOUT_MS_STEP 50
+> +
+> +/*
+> + * Torch intencity in uA
+> + */
+> +#define VIMC_FLASH_TORCH_UA_MIN 2530
+> +#define VIMC_FLASH_TORCH_UA_MAX 187100
+> +#define VIMC_FLASH_TORCH_UA_STEP 1460
+> +
+> +/*
+> + * Flash intencity in uA
+> + */
+> +#define VIMC_FLASH_FLASH_UA_MIN 23040
+> +#define VIMC_FLASH_FLASH_UA_MAX 1499600
+> +#define VIMC_FLASH_FLASH_UA_STEP 11718
+> +
+> +struct vimc_fla_device {
+> +	struct vimc_ent_device ved;
+> +	struct v4l2_subdev sd;
+> +	struct v4l2_ctrl_handler hdl;
+> +	int strobe_source;
+> +	bool is_strobe;
+> +	int led_mode;
+> +	int indicator_intensity;
+> +	int torch_intensity;
+> +	int flash_intensity;
+> +	u64 timeout;
+> +	u64 last_strobe;
+> +	struct workqueue_struct *wq;
+> +	struct work_struct work;
+> +	struct v4l2_ctrl *strobe_status_ctl;
+> +};
+> +
+> +static void vimc_fla_strobe_work(struct work_struct *work)
+> +{
+> +	struct vimc_fla_device *vfla =
+> +		container_of(work, struct vimc_fla_device, work);
+> +	v4l2_ctrl_s_ctrl(vfla->strobe_status_ctl, true);
+> +	vfla->last_strobe = ktime_get_ns();
+> +	while (vfla->is_strobe &&
+> +	       vfla->last_strobe + vfla->timeout > ktime_get_ns()) {
+> +		msleep_interruptible(VIMC_FLASH_TIMEOUT_MS_STEP);
+> +	}
+> +	v4l2_ctrl_s_ctrl(vfla->strobe_status_ctl, false);
+> +}
+> +
+> +static int vimc_fla_s_ctrl(struct v4l2_ctrl *c)
+> +{
+> +	struct vimc_fla_device *vfla =
+> +		container_of(c->handler, struct vimc_fla_device, hdl);
+> +
+> +	switch (c->id) {
+> +	case V4L2_CID_FLASH_LED_MODE:
+> +		vfla->led_mode = c->val;
+> +		return 0;
+> +	case V4L2_CID_FLASH_STROBE_SOURCE:
+> +		vfla->strobe_source = c->val;
+> +		return 0;
+> +	case V4L2_CID_FLASH_STROBE:
+> +		if (vfla->led_mode != V4L2_FLASH_LED_MODE_FLASH ||
+> +		    vfla->strobe_source != V4L2_FLASH_STROBE_SOURCE_SOFTWARE){
+you can add error/warning debug here,
+if you choose not to, then the parentheses are redundant.
+Additionally, the opening '{' should come after a space
+You can run srctipts/checkpatch.pl before submitting to catch such issues
 
----------------------------8<------------------------------
+> +			return -EINVAL;
+> +		}
+> +		queue_work(vfla->wq, &vfla->work);
+> +		return 0;
+> +	case V4L2_CID_FLASH_STROBE_STATUS:
+> +		vfla->is_strobe = c->val;
+> +		return 0;
+> +	case V4L2_CID_FLASH_STROBE_STOP:
+> +		vfla->is_strobe = false;
+> +		return 0;
+> +	case V4L2_CID_FLASH_TIMEOUT:
+> +		vfla->timeout = c->val * 1000000; /* MS to NS */
+> +		return 0;
+> +	case V4L2_CID_FLASH_INTENSITY:
+> +		vfla->flash_intensity = c->val;
+> +		return 0;
+> +	case V4L2_CID_FLASH_TORCH_INTENSITY:
+> +		vfla->torch_intensity = c->val;
+> +		return 0;
+> +	case V4L2_CID_FLASH_INDICATOR_INTENSITY:
+> +		vfla->indicator_intensity = c->val;
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_ctrl_ops vimc_fla_ctrl_ops = {
+> +	.s_ctrl = vimc_fla_s_ctrl,
+> +};
+> +
+> +static const struct v4l2_subdev_core_ops vimc_fla_core_ops = {
+> +	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
+> +	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
+> +};
+> +
+> +static const struct v4l2_subdev_ops vimc_fla_ops = {
+> +	.core = &vimc_fla_core_ops,
+> +};
+> +
+> +static void vimc_fla_release(struct v4l2_subdev *sd)
+> +{
+> +	struct vimc_fla_device *vfla =
+> +				container_of(sd, struct vimc_fla_device, sd);
+one tab is enough
+> +
+> +	v4l2_ctrl_handler_free(&vfla->hdl);
+> +	kfree(vfla);
+> +}
+> +
+> +static const struct v4l2_subdev_internal_ops vimc_fla_int_ops = {
+> +	.release = vimc_fla_release,
+> +};
+> +
+> +/* initialize device */
+> +struct vimc_ent_device *vimc_fla_add(struct vimc_device *vimc,
+> +				     const char *vcfg_name)
+> +{
+> +	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
+> +	struct vimc_fla_device *vfla;
+> +	int ret;
+> +
+> +	/* Allocate the vfla struct */
+> +	vfla = kzalloc(sizeof(*vfla), GFP_KERNEL);
+> +	if (!vfla)
+> +		return NULL;
+I think it is better to change the return values of the .add calbbacks
+to return ERR_PTR upon error and not just NULL so that different types of
+errors can be distinguished.
+(This is not related specifically to this patch),
+If you want you can send a patch fixing that.
 
-From 52f7c2bf59db61d4b27b59ca6404136e3ed77310 Mon Sep 17 00:00:00 2001
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Wed, 4 Dec 2019 10:56:34 +0100
-Subject: [PATCH] fixup! i2c: imx: support slave mode for imx I2C driver
+> +
+> +	v4l2_ctrl_handler_init(&vfla->hdl, 4);
+> +	v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			       V4L2_CID_FLASH_LED_MODE,
+> +			       V4L2_FLASH_LED_MODE_TORCH, ~0x7,
+> +			       V4L2_FLASH_LED_MODE_FLASH);
+> +	v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			       V4L2_CID_FLASH_STROBE_SOURCE, 0x1, ~0x3,
+> +			       V4L2_FLASH_STROBE_SOURCE_SOFTWARE);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_STROBE, 0, 0, 0, 0);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_STROBE_STOP, 0, 0, 0, 0);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_TIMEOUT, VIMC_FLASH_TIMEOUT_MS_MIN,
+> +			  VIMC_FLASH_TIMEOUT_MS_MAX,
+> +			  VIMC_FLASH_TIMEOUT_MS_STEP,
+> +			  VIMC_FLASH_TIMEOUT_MS_MIN);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_TORCH_INTENSITY,
+> +			  VIMC_FLASH_TORCH_UA_MIN,
+> +			  VIMC_FLASH_TORCH_UA_MAX,
+> +			  VIMC_FLASH_TORCH_UA_STEP,
+> +			  VIMC_FLASH_TORCH_UA_MIN);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_INTENSITY,
+> +			  VIMC_FLASH_FLASH_UA_MIN,
+> +			  VIMC_FLASH_FLASH_UA_MAX,
+> +			  VIMC_FLASH_FLASH_UA_STEP,
+> +			  VIMC_FLASH_FLASH_UA_MIN);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_INDICATOR_INTENSITY,
+> +			  0,
+> +			  255,
+> +			  1,
+> +			  0);
+why not having one line with "0,255,1,0);" ?
 
----
- drivers/i2c/busses/i2c-imx.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_STROBE_STATUS, 0, 1, 1, 0);
+> +	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
+> +			  V4L2_CID_FLASH_FAULT, 0,
+> +			  V4L2_FLASH_FAULT_TIMEOUT, 0, 0);
+> +	vfla->sd.ctrl_handler = &vfla->hdl;
+> +	if (vfla->hdl.error) {
+> +		ret = vfla->hdl.error;
+> +		goto err_free_vfla;
+> +	}
+> +	vfla->strobe_status_ctl = v4l2_ctrl_find(&vfla->hdl,
+> +						 V4L2_CID_FLASH_STROBE_STATUS);
+> +
+> +	/* Initialize ved and sd */
+> +	ret = vimc_ent_sd_register(&vfla->ved, &vfla->sd, v4l2_dev,
+> +				   vcfg_name,
+> +				   MEDIA_ENT_F_FLASH, 0, NULL,
+> +				   &vimc_fla_int_ops, &vimc_fla_ops);
+> +	if (ret)
+> +		goto err_free_hdl;
+> +
+> +	/* Create processing workqueue */
+> +	vfla->wq = alloc_workqueue("%s", 0, 0, "vimc-flash thread");
+> +	if (!vfla->wq)
+> +		goto err_unregister;
+> +
+> +	INIT_WORK(&vfla->work, vimc_fla_strobe_work);
+> +	/* Initialize standard values */
+> +	vfla->indicator_intensity = 0;
+> +	vfla->torch_intensity = 0;
+> +	vfla->flash_intensity = 0;
+> +	vfla->is_strobe = false;
+> +	vfla->timeout = 0;
+> +	vfla->last_strobe = 0;
+> +	vfla->strobe_source = V4L2_FLASH_STROBE_SOURCE_SOFTWARE;
+> +	vfla->led_mode = V4L2_FLASH_LED_MODE_FLASH;
+> +
+> +	return &vfla->ved;
+> +
+> +err_unregister:
+> +	vimc_ent_sd_unregister(&vfla->ved, &vfla->sd);
+> +err_free_hdl:
+> +	v4l2_ctrl_handler_free(&vfla->hdl);
+> +err_free_vfla:
+> +	kfree(vfla);
+> +
+> +	return NULL;
+> +}
+> +
+> +void vimc_fla_rm(struct vimc_device *vimc, struct vimc_ent_device *ved)
+> +{
+> +	struct vimc_fla_device *vfla;
+> +
+> +	if (!ved)
+> +		return;
+> +
+> +	vfla = container_of(ved, struct vimc_fla_device, ved);
+> +	destroy_workqueue(vfla->wq);
+> +	vimc_ent_sd_unregister(ved, &vfla->sd);
+> +}
+> 
+Not sure but I think there are indentation issues in this patch, a tab should be 8 spaces
 
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index 40ccfca600bf..c5d9ae8226cd 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -203,9 +203,7 @@ struct imx_i2c_struct {
- 	struct pinctrl_state *pinctrl_pins_gpio;
- 
- 	struct imx_i2c_dma	*dma;
--#if IS_ENABLED(CONFIG_I2C_SLAVE)
- 	struct i2c_client	*slave;
--#endif
- };
- 
- static const struct imx_i2c_hwdata imx1_i2c_hwdata = {
-@@ -913,12 +911,10 @@ static int i2c_imx_xfer(struct i2c_adapter *adapter,
- 
- 	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
- 
--#if IS_ENABLED(CONFIG_I2C_SLAVE)
- 	if (i2c_imx->slave) {
- 		dev_err(&i2c_imx->adapter.dev, "Please not do operations of master mode in slave mode");
- 		return -EBUSY;
- 	}
--#endif
- 
- 	result = pm_runtime_get_sync(i2c_imx->adapter.dev.parent);
- 	if (result < 0)
-@@ -1068,7 +1064,6 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
- 		| I2C_FUNC_SMBUS_READ_BLOCK_DATA;
- }
- 
--#if IS_ENABLED(CONFIG_I2C_SLAVE)
- static int i2c_imx_slave_init(struct imx_i2c_struct *i2c_imx)
- {
- 	int temp;
-@@ -1159,6 +1154,10 @@ static int i2c_imx_reg_slave(struct i2c_client *client)
- {
- 	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
- 	int ret;
-+
-+	if (!IS_ENABLED(CONFIG_I2C_SLAVE))
-+		return -EINVAL;
-+
- 	if (i2c_imx->slave)
- 		return -EBUSY;
- 
-@@ -1173,6 +1172,9 @@ static int i2c_imx_unreg_slave(struct i2c_client *client)
- {
- 	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
- 
-+	if (!IS_ENABLED(CONFIG_I2C_SLAVE))
-+		return -EINVAL;
-+
- 	if (!i2c_imx->slave)
- 		return -EINVAL;
- 
-@@ -1188,15 +1190,12 @@ static int i2c_imx_unreg_slave(struct i2c_client *client)
- 
- 	return 0;
- }
--#endif
- 
- static const struct i2c_algorithm i2c_imx_algo = {
- 	.master_xfer	= i2c_imx_xfer,
- 	.functionality	= i2c_imx_func,
--#if IS_ENABLED(CONFIG_I2C_SLAVE)
- 	.reg_slave	= i2c_imx_reg_slave,
- 	.unreg_slave	= i2c_imx_unreg_slave,
--#endif
- };
- 
- static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
-@@ -1208,10 +1207,10 @@ static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
- 
- 	if (status & I2SR_IIF) {
- 		i2c_imx_clr_if_bit(status, i2c_imx);
--#if IS_ENABLED(CONFIG_I2C_SLAVE)
--		if (i2c_imx->slave)
-+
-+		if (IS_ENABLED(CONFIG_I2C_SLAVE) && i2c_imx->slave)
- 			return i2c_imx_slave_isr(i2c_imx);
--#endif
-+
- 		i2c_imx->i2csr = status;
- 		return i2c_imx_master_isr(i2c_imx);
- 	}
--- 
-2.24.0
-
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks,
+Dafna
