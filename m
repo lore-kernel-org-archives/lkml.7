@@ -2,373 +2,125 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8309EC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A9CC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46CD020640
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15CED20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 07:52:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eczMlvwV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfLDHwj (ORCPT
+        id S1727228AbfLDHwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:52:39 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:52083 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfLDHwi (ORCPT
+        Wed, 4 Dec 2019 02:52:49 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56270 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725951AbfLDHws (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:52:38 -0500
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 9NC35zFt21PzVeS4bE6r9ZbexP0O69LzC+xvIUbQvu6rav1muERQSEUywBCHDXwtzktp1jmNzJ
- CxrkbzX5MOcwupTwAEIHlGrXdGFbg5pj6ahkM/w7/Hit+a1T68Vz5VWGEVh6wJCsampkui8eQZ
- r5hAkn0xND/3v6VQ9OrF+SMKAJfQ+vQQ0k6LBgGA/yZ7tkKgcy3DBWM81B/tR60NCdyILfjiRB
- 1KO8ws77NuK5TtO10kCCOZ3QN0361Qft8opU0S736sU2isDdRUsVX8Nbj50KPFQ5W7MZZb5OJl
- 4Ag=
-X-IronPort-AV: E=Sophos;i="5.69,276,1571727600"; 
-   d="scan'208";a="57740022"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Dec 2019 00:52:37 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 4 Dec 2019 00:52:37 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Wed, 4 Dec 2019 00:52:37 -0700
-Date:   Wed, 4 Dec 2019 08:52:26 +0100
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
-CC:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "jic23@kernel.org" <jic23@kernel.org>
-Subject: Re: [PATCH] iio: at91-sama5d2_adc: fix
- iio_triggered_buffer_{predisable,postenable} positions
-Message-ID: <20191204075226.bpgd6d6o72lcjbpi@M43218.corp.atmel.com>
-Mail-Followup-To: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "jic23@kernel.org" <jic23@kernel.org>
-References: <20191023082508.17583-1-alexandru.ardelean@analog.com>
- <17cf55869cc418795d0013c0594ed8fc04381d46.camel@analog.com>
- <9df3d999-0ec6-a282-d24b-8f7df5f14f6d@microchip.com>
- <e43bf58f-223c-0b12-2912-6f353d866ec3@microchip.com>
- <74aabb41107ab162660f21e726c88a9dd40ecc5e.camel@analog.com>
- <60ce6ff9-ba06-2522-e9a0-55e6fd2731ec@microchip.com>
+        Wed, 4 Dec 2019 02:52:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575445967;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=CmZsBRvE51ACJrut6MCysLB+nDBJN/2JjOUocQctg1k=;
+        b=eczMlvwVDgI6RUytY0wV3Lxrtb2IuOP0Pd4lr9fHlnunM9ACoh1ulQuDFk/yPrPWUScp+K
+        vbqsu4vUzdQNQM9joGSQHJx5h16QVAt8vyA2mUE2rykQ6rjJw0ZlUQQppRfshEbX+jeoZq
+        BHvS7KzVnL2wqDn6Zv1BScaix5P0PnI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-248-M1dUFJOENXixzcIe7-m3FA-1; Wed, 04 Dec 2019 02:52:43 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01B2F107ACFE;
+        Wed,  4 Dec 2019 07:52:42 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-85.pek2.redhat.com [10.72.12.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 33D775DA60;
+        Wed,  4 Dec 2019 07:52:36 +0000 (UTC)
+Date:   Wed, 4 Dec 2019 15:52:33 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     linux-efi@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Michael Weiser <michael@weiser.dinsnail.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH] x86/efi: update e820 about reserved EFI boot services data
+ to fix kexec breakage
+Message-ID: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: M1dUFJOENXixzcIe7-m3FA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <60ce6ff9-ba06-2522-e9a0-55e6fd2731ec@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 10:49:58AM +0100, Eugen Hristev - M18282 wrote:
-> 
-> 
-> On 29.11.2019 09:02, Ardelean, Alexandru wrote:
-> 
-> > On Thu, 2019-11-28 at 15:19 +0000, Eugen.Hristev@microchip.com wrote:
-> >>
-> > 
-> > Hey,
-> > 
-> > Sorry for the late reply.
-> > I'm also juggling a few things.
-> > 
-> >>
-> >> On 28.11.2019 10:36, Eugen.Hristev@microchip.com wrote:
-> >>
-> >>> On 25.11.2019 17:03, Ardelean, Alexandru wrote:
-> >>>> On Wed, 2019-10-23 at 11:25 +0300, Alexandru Ardelean wrote:
-> >>>>> The iio_triggered_buffer_{predisable,postenable} functions
-> >>>>> attach/detach
-> >>>>> poll functions.
-> >>>>>
-> >>>>> The iio_triggered_buffer_postenable() should be called first to
-> >>>>> attach
-> >>>>> the
-> >>>>> poll function, and then the driver can init the data to be
-> >>>>> triggered.
-> >>>>>
-> >>>>> Similarly, iio_triggered_buffer_predisable() should be called last
-> >>>>> to
-> >>>>> first
-> >>>>> disable the data (to be triggered) and then the poll function
-> >>>>> should be
-> >>>>> detached.
-> >>>
-> >>> Hi Alexandru,
-> >>>
-> >>> Sorry for this late reply,
-> >>>
-> >>> I remember that by adding specific at91_adc code for
-> >>> predisable/postenable , I was replacing the existing standard callback
-> >>> with my own, and have my specific at91 code before postenable and then
-> >>> calling the subsystem postenable,
-> >>> and in similar way, for predisable, first call the subsystem predisable
-> >>> then doing my predisable code (in reverse order as in postenable)
-> >>>
-> >>> If you say the order should be reversed (basically have the
-> >>> pollfunction
-> >>> first), how is current code working ?
-> >>> Should current code fail if the poll function is not attached in time ?
-> >>> Or there is a race between triggered data and the attachment of the
-> >>> pollfunc ?
-> >>>
-> >>> I am thinking that attaching the pollfunc later makes it work because
-> >>> the DMA is not started yet. What happens if we have the pollfunc
-> >>> attached but DMA is not started (basically the trigger is not started)
-> >>> ,
-> >>> can this lead to unexpected behavior ? Like the pollfunc polling but no
-> >>> trigger started/no DMA started.
-> >>
-> >> I looked a bit more into the code and in DMA case, using postenable
-> >> first will lead to calling attach pollfunc, which will also enable the
-> >> trigger, but the DMA is not yet started.
-> >> Is this the desired effect ?
-> > 
-> > Yes.
-> 
-> How is this correct ? We start the trigger but have no buffer to carry 
-> to... what happens with the data ? -> I think we both have an answer to 
-> that, as you state below
-> 
-> > 
-> >> Normally when using DMA I would say we
-> >> would need to enable DMA first to be ready to carry data (and coherent
-> >> area etc.) and then enable the trigger.
-> > 
-> > So, there is a change in our tree [from some time ago].
-> > See here:
-> > https://github.com/analogdevicesinc/linux/commit/eee97d12665fef8cf429a1e5035b23ae969705b8
-> > 
-> > Particularly, what's interesting is around line:
-> > https://github.com/analogdevicesinc/linux/commit/eee97d12665fef8cf429a1e5035b23ae969705b8#diff-0a87744ce945d2c1c89ea19f21fb35bbR722
-> > And you may need to expand some stuff to see more of the function-body.
-> > And some things may have changed in upstream IIO since that change.
-> > 
-> > The change is to make the pollfunc attach/detach become part of the IIO
-> > framework, because plenty of drivers just call
-> > iio_triggered_buffer_postenable() & iio_triggered_buffer_predisable() to
-> > manually attach/detach the pollfunc for triggered buffers.
-> 
-> Okay, I understand this. at91-sama5d2_adc does not manually 
-> attach/detach the pollfunc. So why do we need to change anything here ?
-> 
-> 
-> > 
-> > That change is from 2015, and since then, some drivers were added that just
-> > manually attach/detach the pollfunc [and do nothing more with the
-> > postenable/predisable hooks].
-> > 
-> > I tried to upstream a more complete version of that patch a while ago [u1].
-> > https://patchwork.kernel.org/patch/10482167/
-> > https://patchwork.kernel.org/patch/10737291/
-> > 
-> > The conclusion was to first fix the attach/detach pollfunc order in all IIO
-> > drivers, so that when patch [u1] is applied, there is no more discussion
-> > about the correct order for attach/detach pollfunc.
-> 
-> Allright, what is required to be fixed regarding the order, in this 
-> specific case? We enable the DMA, and then we do the normal 'postenable' 
-> that was called anyway if we did not override the 'postenable' in the 
-> ops. Do you want to move this code to 'preenable' and keep 'postenable' 
-> to the standard subsystem one ?
-> 
-> The same applies to the predisable, we first call the subsystem 
-> 'predisable' then do the specific at91 stuff. You want to move this to 
-> the 'postdisable' ?
-> 
-> I think reverting the order inside the functions themselves is not good 
-> as we replace the order of starting trigger/DMA setup.
-> So, coming to your question below...
-> 
-> > 
-> > Coming back here [and to your question], my answer is: I don't know if the
-> > at91 DMA needs to be enabled/disabled before/after the pollfunc
-> > attach/detach.
-> > This sounds like specific stuff for at91 [which is fine].
-> > 
-> > It could be that some other hooks may need to used to enable DMA
-> > before/after the attach/detach pollfunc. Maybe preenable()/postdisable() ?
-> > 
-> > In any case, what I would like [with this discussion], is to resolve a
-> > situation where we can get closer to moving the attach/pollfunc code to IIO
-> > core. So, if AT91 requires a different ordering, I think you would be more
-> > appropriate to tell me, and propose an alternative to this patch.
-> 
-> ... yes, this looks more appropriate, to move things to 
-> 'preenable/postdisable', if you feel like 'postenable/predisable' is not 
-> the proper place to put them.
-> But the order itself, first enable DMA then trigger, and disable in 
-> reverse order, I do not think there is anything wrong with that? Am I 
-> misunderstanding ?
-> 
-> If Jonathan or Ludovic have a different idea, please let me know.
-> 
+Michael Weiser reported he got below error during a kexec rebooting:
+esrt: Unsupported ESRT version 2904149718861218184.
 
-I didn't chime in because I am not sure that I really get the issue. I see
-the order of the sequence which enables the DMA first and for me it's safe
-in this way and I also have doubt it works well if DMA is enabled after
-but I didn't do the test.
+The ESRT memory stays in EFI boot services data, and it was reserved
+in kernel via efi_mem_reserve().  The initial purpose of the reservation
+is to reuse the EFI boot services data across kexec reboot. For example
+the BGRT image data and some ESRT memory like Michael reported.=20
 
-Regards
+But although the memory is reserved it is not updated in X86 e820 table.
+And kexec_file_load iterate system ram in io resource list to find places
+for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+initramfs overwritten the ESRT memory and then the failure happened.
 
-Ludovic
+Since kexec_file_load depends on the e820 to be updated, just fix this
+by updating the reserved EFI boot services memory as reserved type in e820.
 
-> Also, I can test your patch to see if everything is fine.
-> 
-> Thanks,
-> Eugen
-> 
-> > 
-> > Thanks :)
-> > Alex
-> > 
-> >>
-> >>>>> For this driver, the predisable & postenable hooks are also need to
-> >>>>> take
-> >>>>> into consideration the touchscreen, so the hooks need to be put in
-> >>>>> places
-> >>>>> that avoid the code for that cares about it.
-> >>>>>
-> >>>>
-> >>>> ping here
-> >>>>
-> >>>>> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> >>>>> ---
-> >>>>>     drivers/iio/adc/at91-sama5d2_adc.c | 19 ++++++++++---------
-> >>>>>     1 file changed, 10 insertions(+), 9 deletions(-)
-> >>>>>
-> >>>>> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c
-> >>>>> b/drivers/iio/adc/at91-
-> >>>>> sama5d2_adc.c
-> >>>>> index e1850f3d5cf3..ac3e5c4c9840 100644
-> >>>>> --- a/drivers/iio/adc/at91-sama5d2_adc.c
-> >>>>> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
-> >>>>> @@ -889,20 +889,24 @@ static int at91_adc_buffer_postenable(struct
-> >>>>> iio_dev *indio_dev)
-> >>>>>          if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
-> >>>>>                  return -EINVAL;
-> >>>>>
-> >>>>> +     ret = iio_triggered_buffer_postenable(indio_dev);
-> >>>>> +     if (ret)
-> >>>>> +             return ret;
-> >>>>> +
-> >>>>>          /* we continue with the triggered buffer */
-> >>>>>          ret = at91_adc_dma_start(indio_dev);
-> >>>>>          if (ret) {
-> >>>>>                  dev_err(&indio_dev->dev, "buffer postenable
-> >>>>> failed\n");
-> >>>>> +             iio_triggered_buffer_predisable(indio_dev);
-> >>>>>                  return ret;
-> >>>>>          }
-> >>>>>
-> >>>>> -     return iio_triggered_buffer_postenable(indio_dev);
-> >>>>> +     return 0;
-> >>>>>     }
-> >>>>>
-> >>>>>     static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
-> >>>>>     {
-> >>>>>          struct at91_adc_state *st = iio_priv(indio_dev);
-> >>>>> -     int ret;
-> >>>>>          u8 bit;
-> >>>>>
-> >>>>>          /* check if we are disabling triggered buffer or the
-> >>>>> touchscreen */
-> >>>>> @@ -916,13 +920,8 @@ static int at91_adc_buffer_predisable(struct
-> >>>>> iio_dev
-> >>>>> *indio_dev)
-> >>>>>          if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
-> >>>>>                  return -EINVAL;
-> >>>>>
-> >>>>> -     /* continue with the triggered buffer */
-> >>>>> -     ret = iio_triggered_buffer_predisable(indio_dev);
-> >>>>> -     if (ret < 0)
-> >>>>> -             dev_err(&indio_dev->dev, "buffer predisable
-> >>>>> failed\n");
-> >>>>> -
-> >>>>>          if (!st->dma_st.dma_chan)
-> >>>>> -             return ret;
-> >>>>> +             goto out;
-> >>>>>
-> >>>>>          /* if we are using DMA we must clear registers and end DMA
-> >>>>> */
-> >>>>>          dmaengine_terminate_sync(st->dma_st.dma_chan);
-> >>>>> @@ -949,7 +948,9 @@ static int at91_adc_buffer_predisable(struct
-> >>>>> iio_dev
-> >>>>> *indio_dev)
-> >>>>>
-> >>>>>          /* read overflow register to clear possible overflow status
-> >>>>> */
-> >>>>>          at91_adc_readl(st, AT91_SAMA5D2_OVER);
-> >>>>> -     return ret;
-> >>>>> +
-> >>>>> +out:
-> >>>
-> >>> I would prefer if this label is named with a function name prefix,
-> >>> otherwise 'out' is pretty generic and can collide with other things in
-> >>> the file... I want to avoid having an out2 , out3 later if code
-> >>> changes.
-> >>>
-> > 
-> > Sure.
-> > Will do that.
-> > 
-> > I did not bother much with these labels, because after applying [u1], some
-> > of them [maybe all] should go away.
-> > 
-> > 
-> >>> Thanks for the patch,
-> >>> Eugen
-> >>>
-> >>>>> +     return iio_triggered_buffer_predisable(indio_dev);
-> >>>>>     }
-> >>>>>
-> >>>>>     static const struct iio_buffer_setup_ops at91_buffer_setup_ops =
-> >>>>> {
-> >>>> _______________________________________________
-> >>>> linux-arm-kernel mailing list
-> >>>> linux-arm-kernel@lists.infradead.org
-> >>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >>>>
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > 
+Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
+bypassed in the reservation code path because they are assumed as reserved.
+But the reservation is still needed for multiple kexec reboot.
+And it is the only possible case we come here thus just drop the code
+chunk then everything works without side effects.=20
+
+On my machine the ESRT memory sits in an EFI runtime data range, it does
+not trigger the problem, but I successfully tested with BGRT instead.
+both kexec_load and kexec_file_load work and kdump works as well.
+
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+ arch/x86/platform/efi/quirks.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+--- linux-x86.orig/arch/x86/platform/efi/quirks.c
++++ linux-x86/arch/x86/platform/efi/quirks.c
+@@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_ad
+ =09=09return;
+ =09}
+=20
+-=09/* No need to reserve regions that will never be freed. */
+-=09if (md.attribute & EFI_MEMORY_RUNTIME)
+-=09=09return;
+-
+ =09size +=3D addr % EFI_PAGE_SIZE;
+ =09size =3D round_up(size, EFI_PAGE_SIZE);
+ =09addr =3D round_down(addr, EFI_PAGE_SIZE);
+@@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_ad
+ =09early_memunmap(new, new_size);
+=20
+ =09efi_memmap_install(new_phys, num_entries);
++=09e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
++=09e820__update_table(e820_table);
+ }
+=20
+ /*
+
