@@ -2,51 +2,51 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDA4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CEBC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A939A20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC5E205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483350;
-	bh=3UYTPmBAQW/svZFcNquzT/A11hrYjh5lf4XFdXscCdE=;
+	s=default; t=1575483353;
+	bh=osEXV0FwrCCNyBYKCk+cgRyj4+wj5wEU5wmwMpQtlF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vZHVylAMhZZ19uSzKv6lDrStik/8b724QrM1ncOmAW7QscBJVJ7rrrMk8uZVVJmWn
-	 c21zbqUSD4E67QbT0fNG5fbokioF2wH1EkWs+TOdnAi9tlBBQyPK8+Duw5R83hEtGO
-	 bFMxmlN+YCX3PkKYqTFSCMtGdMRMcfdjp/x4WDpo=
+	b=qmhCCder8//fWtZ9MWY3LWEXlod6Wrn+XevhaxADWcf7PF9YxD8MYEJewviaMOxys
+	 E6lWr+qwJXkgixDU90N7wOM2Q2me78a9nolQBSqaVedc9IPzxtsawYVCUNgdeWkdn1
+	 oIVPyULDsE+vFNF7PAefL01mfvB7UI9ylZfsO6w8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731824AbfLDSPs (ORCPT
+        id S1731838AbfLDSN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:15:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43226 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:13:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731840AbfLDSN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:13:57 -0500
+        id S1731820AbfLDSNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:13:50 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2589220674;
-        Wed,  4 Dec 2019 18:13:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3C2F206DF;
+        Wed,  4 Dec 2019 18:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483236;
-        bh=3UYTPmBAQW/svZFcNquzT/A11hrYjh5lf4XFdXscCdE=;
+        s=default; t=1575483229;
+        bh=osEXV0FwrCCNyBYKCk+cgRyj4+wj5wEU5wmwMpQtlF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f4kDEpXLJSRENxu+ZfhzXN6lVFAbp4GSN0JrDZcymbDGqwqL7PmkP+nEByjJqUO9v
-         prpCg1NgBc3RuHfZGN5xXlpk3NCrCLnMw0q8hl2B5ZTnXXdI/ocU2p8Vsva7C/PaFM
-         sNkVODPWzwiU1NBpK8TBo9UalPlUOGdLq8L26by0=
+        b=wTiyjsHcCU/Q0B8WAN5Oe2SEDW/Eh9wrz6Su+2AnnmxDQq9Ltnzc9mCmj2Z4PcUAP
+         cBOuevAivn57SY42cS+/KnuuW0RfPUVTZkyvTVpZu0Rao4C/NWiMrE5aQ1RpGvPKmn
+         iJa/sFgcaGkquvnRhKwZw9HhXToOO8EbAby02Tuc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio DUrso <fabiodurso@hotmail.it>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 108/125] USB: serial: ftdi_sio: add device IDs for U-Blox C099-F9P
-Date:   Wed,  4 Dec 2019 18:56:53 +0100
-Message-Id: <20191204175325.680119492@linuxfoundation.org>
+        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 105/125] mm, gup: add missing refcount overflow checks on x86 and s390
+Date:   Wed,  4 Dec 2019 18:56:50 +0100
+Message-Id: <20191204175325.500930880@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -59,56 +59,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio D'Urso <fabiodurso@hotmail.it>
+From: Vlastimil Babka <vbabka@suse.cz>
 
-commit c1a1f273d0825774c80896b8deb1c9ea1d0b91e3 upstream.
+The mainline commit 8fde12ca79af ("mm: prevent get_user_pages() from
+overflowing page refcount") was backported to 4.9.y stable as commit
+2ed768cfd895. The backport however missed that in 4.9, there are several
+arch-specific gup.c versions with fast gup implementations, so these do not
+prevent refcount overflow.
 
-This device presents itself as a USB hub with three attached devices:
- - An ACM serial port connected to the GPS module (not affected by this
-   commit)
- - An FTDI serial port connected to the GPS module (1546:0502)
- - Another FTDI serial port connected to the ODIN-W2 radio module
-   (1546:0503)
+This is partially fixed for x86 in stable-only commit d73af79742e7 ("x86, mm,
+gup: prevent get_page() race with munmap in paravirt guest"). This stable-only
+commit adds missing parts to x86 version, as well as s390 version, both taken
+from the SUSE SLES/openSUSE 4.12-based kernels.
 
-This commit registers U-Blox's VID and the PIDs of the second and third
-devices.
+The remaining architectures with own gup.c are sparc, mips, sh. It's unlikely
+the known overflow scenario based on FUSE, which needs 140GB of RAM, is a
+problem for those architectures, and I don't feel confident enough to patch
+them.
 
-Datasheet: https://www.u-blox.com/sites/default/files/C099-F9P-AppBoard-Mbed-OS3-FW_UserGuide_%28UBX-18063024%29.pdf
-
-Signed-off-by: Fabio D'Urso <fabiodurso@hotmail.it>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/ftdi_sio.c     |    3 +++
- drivers/usb/serial/ftdi_sio_ids.h |    7 +++++++
- 2 files changed, 10 insertions(+)
+ arch/s390/mm/gup.c |  9 ++++++---
+ arch/x86/mm/gup.c  | 10 ++++++++--
+ 2 files changed, 14 insertions(+), 5 deletions(-)
 
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -1028,6 +1028,9 @@ static const struct usb_device_id id_tab
- 	/* Sienna devices */
- 	{ USB_DEVICE(FTDI_VID, FTDI_SIENNA_PID) },
- 	{ USB_DEVICE(ECHELON_VID, ECHELON_U20_PID) },
-+	/* U-Blox devices */
-+	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ZED_PID) },
-+	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ODIN_PID) },
- 	{ }					/* Terminating entry */
- };
+diff --git a/arch/s390/mm/gup.c b/arch/s390/mm/gup.c
+index 97fc449a74707..33a940389a6d1 100644
+--- a/arch/s390/mm/gup.c
++++ b/arch/s390/mm/gup.c
+@@ -38,7 +38,8 @@ static inline int gup_pte_range(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
+ 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+ 		page = pte_page(pte);
+ 		head = compound_head(page);
+-		if (!page_cache_get_speculative(head))
++		if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
++		    || !page_cache_get_speculative(head)))
+ 			return 0;
+ 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+ 			put_page(head);
+@@ -76,7 +77,8 @@ static inline int gup_huge_pmd(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
  
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -1557,3 +1557,10 @@
-  */
- #define UNJO_VID			0x22B7
- #define UNJO_ISODEBUG_V1_PID		0x150D
-+
-+/*
-+ * U-Blox products (http://www.u-blox.com).
-+ */
-+#define UBLOX_VID			0x1546
-+#define UBLOX_C099F9P_ZED_PID		0x0502
-+#define UBLOX_C099F9P_ODIN_PID		0x0503
+-	if (!page_cache_add_speculative(head, refs)) {
++	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
++	    || !page_cache_add_speculative(head, refs))) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+@@ -150,7 +152,8 @@ static int gup_huge_pud(pud_t *pudp, pud_t pud, unsigned long addr,
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	if (!page_cache_add_speculative(head, refs)) {
++	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
++	    || !page_cache_add_speculative(head, refs))) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+diff --git a/arch/x86/mm/gup.c b/arch/x86/mm/gup.c
+index d7db45bdfb3bd..551fc7fea046d 100644
+--- a/arch/x86/mm/gup.c
++++ b/arch/x86/mm/gup.c
+@@ -202,10 +202,12 @@ static int __gup_device_huge_pmd(pmd_t pmd, unsigned long addr,
+ 			undo_dev_pagemap(nr, nr_start, pages);
+ 			return 0;
+ 		}
++		if (unlikely(!try_get_page(page))) {
++			put_dev_pagemap(pgmap);
++			return 0;
++		}
+ 		SetPageReferenced(page);
+ 		pages[*nr] = page;
+-		get_page(page);
+-		put_dev_pagemap(pgmap);
+ 		(*nr)++;
+ 		pfn++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+@@ -230,6 +232,8 @@ static noinline int gup_huge_pmd(pmd_t pmd, unsigned long addr,
+ 
+ 	refs = 0;
+ 	head = pmd_page(pmd);
++	if (WARN_ON_ONCE(page_ref_count(head) <= 0))
++		return 0;
+ 	page = head + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+ 	do {
+ 		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+@@ -289,6 +293,8 @@ static noinline int gup_huge_pud(pud_t pud, unsigned long addr,
+ 
+ 	refs = 0;
+ 	head = pud_page(pud);
++	if (WARN_ON_ONCE(page_ref_count(head) <= 0))
++		return 0;
+ 	page = head + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+ 	do {
+ 		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+-- 
+2.20.1
+
 
 
