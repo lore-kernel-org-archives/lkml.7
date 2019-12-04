@@ -2,171 +2,197 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343E9C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2552AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA0520675
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E034620675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 09:26:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TSyhezor"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hxIqBDu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfLDJYp (ORCPT
+        id S1727299AbfLDJ0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:24:45 -0500
-Received: from mail-eopbgr50077.outbound.protection.outlook.com ([40.107.5.77]:49022
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725922AbfLDJYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:24:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mMk72EJK+p5V0D5JfVvrY1DBZdXz6dDxIB5FMaQYOAHYsqu2EyUIuKL8z9K2FtUuE7m/LDRVTKAOWUiIdsqQL5mo+E36yX63ESopKs7NhebSiGuGbmmL7fHN6eAUa6qYgh1bmKHWbCizlmbDc1D/v9gptV6GRtQtaZRRSPjGPmb/dKT0HLt92wvkc7lBJQiwgScHENGeXBTEv3CX7cQym4BqNQrFIEa57xif88xA5xx8bR7m9ZKe7ZNn8CBvMD5/+fU57ujp+FO21utWZIDIT9QzqBG3ZDjtsFyCbcEDbhf9jxTzOthcH9QdQm147q2GOuqetXP2Wvo6tLP+uqFn7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vWL6Y/JuzonP2fKxT1BtzX8ymGZAolCz63+Glcgs960=;
- b=O8RXU9NnJoA2fLO1RyO1+FTnwBG5Qj/nHd8s3VxxnMJoVy/PBAwdEJSCPmC+6F8E3OpiVvh8YIVfJCKc+V6A3P10WDKDdvGE3df0pUnMdM0gZT0TTXkT0ReGieUbQLmf0Ed1GBEQzWPxlYRQRRpuioniFNi7g0GQk6TNo+/m25rmj1zrHv1MvwmoTTZ/HNz8KEYY+R8YTNWxriXgzShfv+jNLl+ECRVpG2C3FNJnGNqPogUghXd5zd/t9KKknl0BE0IXnHEhPDM0TTZiJpzGglUwAVmfBRXTOWPf3DIKh/0J/d6hzKhZ85i3eiYZ9xMypKqaMqJUwu5nYcU7jDHV1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vWL6Y/JuzonP2fKxT1BtzX8ymGZAolCz63+Glcgs960=;
- b=TSyhezorWQya6pacCBMUZfkQf21xAIAnYXuJTlWMP2jJtPby1hzP9ssmGfJp8RQLR3MJFiQzZPhpnfZ0G2039NTVoyTZeEPupF0Fjn5vCZNRasaEUZsMkgKi4Bg1Kxm4QfZkcZLy9RI8rEzczrcykf0oC8pui5MNVItaPwdv5s4=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5812.eurprd04.prod.outlook.com (20.178.119.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.21; Wed, 4 Dec 2019 09:24:39 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
- 09:24:39 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "rjui@broadcom.com" <rjui@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>
-CC:     "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v3 2/2] gpio: bcm-kona: use platform_irq_count
-Thread-Topic: [PATCH v3 2/2] gpio: bcm-kona: use platform_irq_count
-Thread-Index: AQHVqoSnVgd0oV+avUOUZsuBa7eNTw==
-Date:   Wed, 4 Dec 2019 09:24:39 +0000
-Message-ID: <1575451330-11112-2-git-send-email-peng.fan@nxp.com>
-References: <1575451330-11112-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1575451330-11112-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR03CA0060.apcprd03.prod.outlook.com
- (2603:1096:202:17::30) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3dbfcd41-7b3f-4fa1-85fa-08d7789bc9a7
-x-ms-traffictypediagnostic: AM0PR04MB5812:|AM0PR04MB5812:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB5812BE69EF798C57BE83225D885D0@AM0PR04MB5812.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:196;
-x-forefront-prvs: 0241D5F98C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(366004)(376002)(396003)(346002)(189003)(199004)(110136005)(14444005)(316002)(2501003)(305945005)(7736002)(50226002)(8676002)(81156014)(81166006)(8936002)(86362001)(2906002)(3846002)(7416002)(6116002)(54906003)(4326008)(6512007)(2201001)(25786009)(52116002)(478600001)(6486002)(5660300002)(6436002)(44832011)(2616005)(446003)(11346002)(76176011)(102836004)(26005)(6506007)(386003)(186003)(71200400001)(66446008)(66476007)(66556008)(64756008)(66946007)(99286004)(71190400001)(36756003)(256004)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5812;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tPib5bqkzWLTPipBPqmCstjocwrs4cr6OFfbRZDmvSJAw/Y0WWeFEsIF2F7qlzpoCpBH9snXDGc8c7WTRKsuZh2vmQUN9KzBPT4VZaZj+bsc5uvU9LwETWmSG5ZH8zHtKlzcQzew8qvRIkZkrA4RYuql3PJWsJx4q+V+kF9zdtHhrGdHJB/9dqrlC7PyNhKe32fS0JwZV9peO0ExZWhpBV1d+7WKW+CXCvLOIGdS9OM+3z5BSdro5jRQyMOXtF4EYk+iMWrF1HsVgUFygRV8RlEP368OjGs6VREgHhWMcHN3BqXP7MiLIRjfhM/8zh9hxotgJaHJM0Oj//9vuKTXotvfKVwh1wmHIZug9A14o03iWllfriEthXrjp+kvMvKdk5QI2TGSrXK4rXUb7uIb+a6nPU5Q3fPE9R43axwHycC/hoITZW1SlDDoMXFAOzCp
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 4 Dec 2019 04:26:21 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45476 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726632AbfLDJ0U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 04:26:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575451578;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jUuRDdnXhCHO/NEUeUPUPsA/97IPezLMrW4ezc6k+9o=;
+        b=hxIqBDu8QV4PNcH8cP+isddtNf1gJ4IVIzsNHB5OV/6Ze4P6+pcxy3L43+1aFpYZxIJaWK
+        S1QH6DR4LyGKZoEPgV5nDa27lxXbmWkkRWqGf20UOgIGxiq5Px8G+z1awHFMaQDyxHCMe8
+        bKF4Nj6JS5o2XPNL8gyJTkK96tGtqsY=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-134-pcLu1CDBNPeAjUMWVy4bsw-1; Wed, 04 Dec 2019 04:26:16 -0500
+Received: by mail-wr1-f70.google.com with SMTP id z14so3380817wrs.4
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 01:26:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MT4/tfwIPaDsN4vYfFd3gEaF9rrqRXt+8txO4zjJd9o=;
+        b=iboHGyD5Q/2AM9Pw9dq32hV0jVKdGkonNPrWQaUUfX18my4i+ye11yWlYCoev72Jzh
+         xojvkgby5hmGQEVDeyIK8DEF6HQCvDVlrSAoc4waQtuaoXAK/IG6tz1s20nfKsQGgT8x
+         DcIQuhQXUo4TGGKe63u9Rra/EWlCuwpETPrgsiG4v+2x+VGC7rzMCpjfTptUbpcPASKW
+         S5jHHdO7/Qg3EwWTn7I1BfVjuXw1ocS+RdwXMk6ilxqwxBJ5Jeok2By7hdP3Z/Eo6A/U
+         +lBQl+VlzfUYHHTtWJe3Msj5oSK4wIrPcgnrHHl1NuDBquF46iM4JFFTCfwVpp63q3YU
+         sPSA==
+X-Gm-Message-State: APjAAAWTmqa/fMKx2Yemz2XHwOtUWvcIddQ/4NUr0b50RefmSdit2BFE
+        Mja+kOL8fFSMtAp/jZb69R62vk9jN0CR6IhNrW7RfQ4jEXXG5zAL9SPBno9ZFIWj+gwOYCUyIsB
+        UKQPDlB+8W9mlbsPh2qtXb9U5
+X-Received: by 2002:a7b:cb46:: with SMTP id v6mr22387008wmj.117.1575451575072;
+        Wed, 04 Dec 2019 01:26:15 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwRVLIPHq0X1w4SmiKY1LeXp4vxUB8NUYGDePnpKQOfdTm3CXhxIEkco+pRZHHgug5mizjUqg==
+X-Received: by 2002:a7b:cb46:: with SMTP id v6mr22386980wmj.117.1575451574780;
+        Wed, 04 Dec 2019 01:26:14 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:8dc6:5dd5:2c0a:6a9a? ([2001:b07:6468:f312:8dc6:5dd5:2c0a:6a9a])
+        by smtp.gmail.com with ESMTPSA id b17sm7145776wrp.49.2019.12.04.01.26.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 01:26:14 -0800 (PST)
+Subject: Re: KASAN: vmalloc-out-of-bounds Write in kvm_dev_ioctl_get_cpuid
+To:     syzbot <syzbot+e3f4897236c4eeb8af4f@syzkaller.appspotmail.com>,
+        bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+References: <000000000000ea5ec20598d90e50@google.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <77d993a5-5d41-14d1-e51d-52e092c84c42@redhat.com>
+Date:   Wed, 4 Dec 2019 10:26:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3dbfcd41-7b3f-4fa1-85fa-08d7789bc9a7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 09:24:39.6716
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: macVC3OPEqSAGw34i5TgbEyLdWbl3P0kEGXyaiAWahvuKdfNVoQhzEQgvcNCYiXnkcfj5pXhnjz/enSTQpYhhw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5812
+In-Reply-To: <000000000000ea5ec20598d90e50@google.com>
+Content-Language: en-US
+X-MC-Unique: pcLu1CDBNPeAjUMWVy4bsw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On 04/12/19 05:15, syzbot wrote:
+> Hello,
+>=20
+> syzbot found the following crash on:
+>=20
+> HEAD commit:=C2=A0=C2=A0=C2=A0 596cf45c Merge branch 'akpm' (patches from=
+ Andrew)
+> git tree:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D103acb7ae0000=
+0
+> kernel config:=C2=A0 https://syzkaller.appspot.com/x/.config?x=3D8eb54eee=
+6e6ca4a7
+> dashboard link:
+> https://syzkaller.appspot.com/bug?extid=3De3f4897236c4eeb8af4f
+> compiler:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gcc (GCC) 9.0.0 20181231 (e=
+xperimental)
+> syz repro:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 https://syzkaller.appspot.com/x/=
+repro.syz?x=3D15b87c82e00000
+> C reproducer:=C2=A0=C2=A0 https://syzkaller.appspot.com/x/repro.c?x=3D112=
+50f36e00000
+>=20
+> IMPORTANT: if you fix the bug, please add the following tag to the commit=
+:
+> Reported-by: syzbot+e3f4897236c4eeb8af4f@syzkaller.appspotmail.com
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> BUG: KASAN: vmalloc-out-of-bounds in __do_cpuid_func_emulated
+> arch/x86/kvm/cpuid.c:323 [inline]
+> BUG: KASAN: vmalloc-out-of-bounds in do_cpuid_func
+> arch/x86/kvm/cpuid.c:814 [inline]
+> BUG: KASAN: vmalloc-out-of-bounds in do_cpuid_func
+> arch/x86/kvm/cpuid.c:810 [inline]
+> BUG: KASAN: vmalloc-out-of-bounds in kvm_dev_ioctl_get_cpuid+0xad7/0xb0b
+> arch/x86/kvm/cpuid.c:891
+> Write of size 4 at addr ffffc90000d36050 by task syz-executor490/9767
+>=20
+> CPU: 1 PID: 9767 Comm: syz-executor490 Not tainted 5.4.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+> =C2=A0__dump_stack lib/dump_stack.c:77 [inline]
+> =C2=A0dump_stack+0x197/0x210 lib/dump_stack.c:118
+> =C2=A0print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/repor=
+t.c:374
+> =C2=A0__kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+> =C2=A0kasan_report+0x12/0x20 mm/kasan/common.c:638
+> =C2=A0__asan_report_store4_noabort+0x17/0x20 mm/kasan/generic_report.c:13=
+9
+> =C2=A0__do_cpuid_func_emulated arch/x86/kvm/cpuid.c:323 [inline]
+> =C2=A0do_cpuid_func arch/x86/kvm/cpuid.c:814 [inline]
+> =C2=A0do_cpuid_func arch/x86/kvm/cpuid.c:810 [inline]
+> =C2=A0kvm_dev_ioctl_get_cpuid+0xad7/0xb0b arch/x86/kvm/cpuid.c:891
+> =C2=A0kvm_arch_dev_ioctl+0x300/0x4b0 arch/x86/kvm/x86.c:3387
+> =C2=A0kvm_dev_ioctl+0x127/0x17d0 arch/x86/kvm/../../../virt/kvm/kvm_main.=
+c:3593
+> =C2=A0vfs_ioctl fs/ioctl.c:47 [inline]
+> =C2=A0file_ioctl fs/ioctl.c:539 [inline]
+> =C2=A0do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:726
+> =C2=A0ksys_ioctl+0xab/0xd0 fs/ioctl.c:743
+> =C2=A0__do_sys_ioctl fs/ioctl.c:750 [inline]
+> =C2=A0__se_sys_ioctl fs/ioctl.c:748 [inline]
+> =C2=A0__x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:748
+> =C2=A0do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+> =C2=A0entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x440159
+> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89
+> f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01
+> f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffd106332c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440159
+> RDX: 0000000020000080 RSI: 00000000c008ae09 RDI: 0000000000000003
+> RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004019e0
+> R13: 0000000000401a70 R14: 0000000000000000 R15: 0000000000000000
+>=20
+>=20
+> Memory state around the buggy address:
+> =C2=A0ffffc90000d35f00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+> =C2=A0ffffc90000d35f80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+>> ffffc90000d36000: 00 00 00 00 00 00 00 00 00 00 f9 f9 f9 f9 f9 f9
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
+> =C2=A0ffffc90000d36080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+> =C2=A0ffffc90000d36100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+>=20
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>=20
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+>=20
 
-platform_irq_count() is the more generic way (independent of
-device trees) to determine the count of available interrupts. So
-use this instead.
+Ouch, this is bad.  Sending a patch now.
 
-As platform_irq_count() might return an error code (which
-of_irq_count doesn't) some additional handling is necessary.
-
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
-
-V3:
- Use %pe
-V2:
- Update commit log, and add err handling
- Not tested, just code inspection
-
-
- drivers/gpio/gpio-bcm-kona.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-index 4122683eb1f9..baee8c3f06ad 100644
---- a/drivers/gpio/gpio-bcm-kona.c
-+++ b/drivers/gpio/gpio-bcm-kona.c
-@@ -19,7 +19,6 @@
- #include <linux/io.h>
- #include <linux/gpio/driver.h>
- #include <linux/of_device.h>
--#include <linux/of_irq.h>
- #include <linux/init.h>
- #include <linux/irqdomain.h>
- #include <linux/irqchip/chained_irq.h>
-@@ -586,11 +585,18 @@ static int bcm_kona_gpio_probe(struct platform_device=
- *pdev)
-=20
- 	kona_gpio->gpio_chip =3D template_chip;
- 	chip =3D &kona_gpio->gpio_chip;
--	kona_gpio->num_bank =3D of_irq_count(dev->of_node);
--	if (kona_gpio->num_bank =3D=3D 0) {
-+	ret =3D platform_irq_count(pdev);
-+	if (!ret) {
- 		dev_err(dev, "Couldn't determine # GPIO banks\n");
- 		return -ENOENT;
-+	} else if (ret < 0) {
-+		if (ret !=3D -EPROBE_DEFER)
-+			dev_err(dev, "Couldn't determine GPIO banks: (%pe)\n",
-+				ERR_PTR(ret));
-+		return ret;
- 	}
-+	kona_gpio->num_bank =3D ret;
-+
- 	if (kona_gpio->num_bank > GPIO_MAX_BANK_NUM) {
- 		dev_err(dev, "Too many GPIO banks configured (max=3D%d)\n",
- 			GPIO_MAX_BANK_NUM);
---=20
-2.16.4
+Paolo
 
