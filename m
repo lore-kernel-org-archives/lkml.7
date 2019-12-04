@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4E1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09C6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1180920659
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE6820675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575482695;
-	bh=BN0DhflK9aTP7pbgnOI1FtlaLz5PDG30I11spKOXY7I=;
+	s=default; t=1575482699;
+	bh=ZfXiKwwqm2R4DXLa1XPSGYx1e1bjblTR5Y61Ob2UMiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=geyHB4BRlcCnv3Lm66VftEAvSJpxw/daIZJYDa+mijDmnpBei6yzPevKUcr6zZZkC
-	 dLGOj/5u7k+QIVqQJibVXUqBpUeSEC8fUtd0CGwmQPOh9TKvhINqlAt9haz69hXczw
-	 v29mk1qFlYgXCZDk46/yRcTdDoFFGaIQrJA2Ukes=
+	b=iWv8vUDtpC2/BHhMCRbjukVQLenMrL6h7mvpwSTu+aw2blzrWc/rHSrBeZdIbo0z7
+	 qY1zmyXFu2CEDfg+dvD2JL8nsSh4NRUPRy13/2n+RO/7zQSG/6TmrbTbKPHa1YE8xg
+	 yj+1PC4y2gYHTlDzshNerz5aN02elxSZQYufcSQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbfLDSEx (ORCPT
+        id S1729955AbfLDSE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:04:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50550 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:04:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730265AbfLDSEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:04:49 -0500
+        id S1730265AbfLDSEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:04:54 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12F0D20659;
-        Wed,  4 Dec 2019 18:04:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A16420659;
+        Wed,  4 Dec 2019 18:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575482688;
-        bh=BN0DhflK9aTP7pbgnOI1FtlaLz5PDG30I11spKOXY7I=;
+        s=default; t=1575482693;
+        bh=ZfXiKwwqm2R4DXLa1XPSGYx1e1bjblTR5Y61Ob2UMiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OIFoYkeINDmg7MbCaOa6A6L5kT+596L5LLEhRrY4ml3Ql6gV6WYZub9opgnDxH0OO
-         WBXmetjBzEueQu71WloNcEOC6zCGW6rs+++KP/80tXE63hZZr0HnCofiN5lWZ+f5vn
-         Tz+HK10yYSEMlOSeVT5AqZB1MTsrjktkPFdN5jjk=
+        b=sO4CKunFrSteTJAnNUseM4Df6oCxVFdH3qkgwq76JIEJJm31h6eAGSpz66SvEoDkE
+         1SX7KYgcd5fQf0gCompOjHphvsQfvdVnIuzMVW18RJQPfw/2uJ3jCr+Lxi7YWXTUdQ
+         8mVoetZfuD6OEO+4VTrHtyQxKmHBcp3HnLlSA39M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Simek <michal.simek@xilinx.com>,
+        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 052/209] microblaze: adjust the help to the real behavior
-Date:   Wed,  4 Dec 2019 18:54:24 +0100
-Message-Id: <20191204175324.959353887@linuxfoundation.org>
+Subject: [PATCH 4.14 054/209] iwlwifi: move iwl_nvm_check_version() into dvm
+Date:   Wed,  4 Dec 2019 18:54:26 +0100
+Message-Id: <20191204175325.089483740@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175321.609072813@linuxfoundation.org>
 References: <20191204175321.609072813@linuxfoundation.org>
@@ -61,59 +59,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Luca Coelho <luciano.coelho@intel.com>
 
-[ Upstream commit bafcc61d998c1ca18f556d92a0e95335ac68c7da ]
+[ Upstream commit 64866e5da1eabd0c52ff45029b245f5465920031 ]
 
-"make ARCH=microblaze help" mentions simpleImage.<dt>.unstrip,
-but it is not a real Make target. It does not work because Makefile
-assumes "system.unstrip" is the name of DT.
+This function is only half-used by mvm (i.e. only the nvm_version part
+matters, since the calibration version is irrelevant), so it's
+pointless to export it from iwlwifi.  If mvm uses this function, it
+has the additional complexity of setting the calib version to a bogus
+value on all cfg structs.
 
-$ make ARCH=microblaze CROSS_COMPILE=microblaze-linux- simpleImage.system.unstrip
-  [ snip ]
-make[1]: *** No rule to make target 'arch/microblaze/boot/dts/system.unstrip.dtb', needed by 'arch/microblaze/boot/dts/system.dtb'.  Stop.
-make: *** [Makefile;1060: arch/microblaze/boot/dts] Error 2
-make: *** Waiting for unfinished jobs....
+To avoid this, move the function to dvm and make a simple comparison
+of the nvm_version in mvm instead.
 
-simpleImage.<dt> works like a phony target that generates multiple
-images. Reflect the real behavior. I removed the DT directory path
-information because it is already explained a few lines below.
-
-While I am here, I deleted the redundant *_defconfig explanation.
-
-The top-level Makefile caters to list available defconfig files:
-
-  mmu_defconfig            - Build for mmu
-  nommu_defconfig          - Build for nommu
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/microblaze/Makefile | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c | 17 +++++++++++++++++
+ .../wireless/intel/iwlwifi/iwl-eeprom-parse.c | 19 -------------------
+ .../wireless/intel/iwlwifi/iwl-eeprom-parse.h |  5 ++---
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c   |  4 +++-
+ 4 files changed, 22 insertions(+), 23 deletions(-)
 
-diff --git a/arch/microblaze/Makefile b/arch/microblaze/Makefile
-index d269dd4b82795..188f07bba0959 100644
---- a/arch/microblaze/Makefile
-+++ b/arch/microblaze/Makefile
-@@ -91,11 +91,11 @@ define archhelp
-   echo '* linux.bin    - Create raw binary'
-   echo '  linux.bin.gz - Create compressed raw binary'
-   echo '  linux.bin.ub - Create U-Boot wrapped raw binary'
--  echo '  simpleImage.<dt> - ELF image with $(arch)/boot/dts/<dt>.dts linked in'
--  echo '                   - stripped elf with fdt blob'
--  echo '  simpleImage.<dt>.unstrip - full ELF image with fdt blob'
--  echo '  *_defconfig      - Select default config from arch/microblaze/configs'
--  echo ''
-+  echo '  simpleImage.<dt> - Create the following images with <dt>.dtb linked in'
-+  echo '                    simpleImage.<dt>        : raw image'
-+  echo '                    simpleImage.<dt>.ub     : raw image with U-Boot header'
-+  echo '                    simpleImage.<dt>.unstrip: ELF (identical to vmlinux)'
-+  echo '                    simpleImage.<dt>.strip  : stripped ELF'
-   echo '  Targets with <dt> embed a device tree blob inside the image'
-   echo '  These targets support board with firmware that does not'
-   echo '  support passing a device tree directly. Replace <dt> with the'
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/main.c b/drivers/net/wireless/intel/iwlwifi/dvm/main.c
+index 2acd94da9efeb..051a2fea95724 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/main.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/main.c
+@@ -1229,6 +1229,23 @@ static int iwl_eeprom_init_hw_params(struct iwl_priv *priv)
+ 	return 0;
+ }
+ 
++static int iwl_nvm_check_version(struct iwl_nvm_data *data,
++				 struct iwl_trans *trans)
++{
++	if (data->nvm_version >= trans->cfg->nvm_ver ||
++	    data->calib_version >= trans->cfg->nvm_calib_ver) {
++		IWL_DEBUG_INFO(trans, "device EEPROM VER=0x%x, CALIB=0x%x\n",
++			       data->nvm_version, data->calib_version);
++		return 0;
++	}
++
++	IWL_ERR(trans,
++		"Unsupported (too old) EEPROM VER=0x%x < 0x%x CALIB=0x%x < 0x%x\n",
++		data->nvm_version, trans->cfg->nvm_ver,
++		data->calib_version,  trans->cfg->nvm_calib_ver);
++	return -EINVAL;
++}
++
+ static struct iwl_op_mode *iwl_op_mode_dvm_start(struct iwl_trans *trans,
+ 						 const struct iwl_cfg *cfg,
+ 						 const struct iwl_fw *fw,
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c
+index 3199d345b4274..92727f7e42db7 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c
+@@ -928,22 +928,3 @@ iwl_parse_eeprom_data(struct device *dev, const struct iwl_cfg *cfg,
+ 	return NULL;
+ }
+ IWL_EXPORT_SYMBOL(iwl_parse_eeprom_data);
+-
+-/* helper functions */
+-int iwl_nvm_check_version(struct iwl_nvm_data *data,
+-			     struct iwl_trans *trans)
+-{
+-	if (data->nvm_version >= trans->cfg->nvm_ver ||
+-	    data->calib_version >= trans->cfg->nvm_calib_ver) {
+-		IWL_DEBUG_INFO(trans, "device EEPROM VER=0x%x, CALIB=0x%x\n",
+-			       data->nvm_version, data->calib_version);
+-		return 0;
+-	}
+-
+-	IWL_ERR(trans,
+-		"Unsupported (too old) EEPROM VER=0x%x < 0x%x CALIB=0x%x < 0x%x\n",
+-		data->nvm_version, trans->cfg->nvm_ver,
+-		data->calib_version,  trans->cfg->nvm_calib_ver);
+-	return -EINVAL;
+-}
+-IWL_EXPORT_SYMBOL(iwl_nvm_check_version);
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h
+index b33888991b946..5545210151cd9 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h
+@@ -7,6 +7,7 @@
+  *
+  * Copyright(c) 2008 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2015 Intel Mobile Communications GmbH
++ * Copyright (C) 2018 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of version 2 of the GNU General Public License as
+@@ -33,6 +34,7 @@
+  *
+  * Copyright(c) 2005 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2015 Intel Mobile Communications GmbH
++ * Copyright (C) 2018 Intel Corporation
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+@@ -121,9 +123,6 @@ struct iwl_nvm_data *
+ iwl_parse_eeprom_data(struct device *dev, const struct iwl_cfg *cfg,
+ 		      const u8 *eeprom, size_t eeprom_size);
+ 
+-int iwl_nvm_check_version(struct iwl_nvm_data *data,
+-			  struct iwl_trans *trans);
+-
+ int iwl_init_sband_channels(struct iwl_nvm_data *data,
+ 			    struct ieee80211_supported_band *sband,
+ 			    int n_channels, enum nl80211_band band);
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+index 534c0ea7b232e..78228f870f8f5 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -501,7 +501,9 @@ int iwl_run_init_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
+ 	if (mvm->nvm_file_name)
+ 		iwl_mvm_load_nvm_to_nic(mvm);
+ 
+-	WARN_ON(iwl_nvm_check_version(mvm->nvm_data, mvm->trans));
++	WARN_ONCE(mvm->nvm_data->nvm_version < mvm->trans->cfg->nvm_ver,
++		  "Too old NVM version (0x%0x, required = 0x%0x)",
++		  mvm->nvm_data->nvm_version, mvm->trans->cfg->nvm_ver);
+ 
+ 	/*
+ 	 * abort after reading the nvm in case RF Kill is on, we will complete
 -- 
 2.20.1
 
