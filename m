@@ -2,52 +2,52 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2FDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0E8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4712086D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69402086D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 18:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575483094;
-	bh=NvrQw7QKrw6deC5tWLOAh/fQD/q5N773PT0/67Lg21w=;
+	s=default; t=1575483098;
+	bh=ET+DFIQMOkHhXcT1P7hHhRmwzDhIgs682udKVkzTbRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FAM+59+gF6ubCRkG1CjeeKJrCsPQrC+IhMDqFMTL3gDubDwcEGZcKxkDfE+qouZ0n
-	 HCJUaYu+Zmg0qHF3eyS+vF52DHX0Ko4AazyxnTPTYK8l9R3ozxF57YGiX9DS+mASfK
-	 qLSwXx6yq6xrRNwSQ7T9TeGxWLRcEwO75DpBhIws=
+	b=KtcYFd2I5TQWHqgHG5rBgm2K8IwQdAA4btqpB90nN/TKywD7tiS0fyhMJ5IdwcyIK
+	 3AG3dd7pILTCmKLLms5etlQCDPGNBSLfkikHZzQm2o5I4zoA9B08O0IgzBU3dNPhPK
+	 zQI0xkj7XctHYJpNLsV+023Rh85379pp8ADR4dhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731460AbfLDSLd (ORCPT
+        id S1731489AbfLDSLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:11:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39716 "EHLO mail.kernel.org"
+        Wed, 4 Dec 2019 13:11:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731445AbfLDSLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 13:11:30 -0500
+        id S1731478AbfLDSLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:11:37 -0500
 Received: from localhost (unknown [217.68.49.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2C352084B;
-        Wed,  4 Dec 2019 18:11:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CC1820863;
+        Wed,  4 Dec 2019 18:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575483089;
-        bh=NvrQw7QKrw6deC5tWLOAh/fQD/q5N773PT0/67Lg21w=;
+        s=default; t=1575483096;
+        bh=ET+DFIQMOkHhXcT1P7hHhRmwzDhIgs682udKVkzTbRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zfexd94xnuXUYQwafXV92FJHlfH/BIU+G9f4NGjD8Bo+91zynF0IgBvMa7ne6qt11
-         S74uSlBjKPzM4ZLcJE53uh0XhYBuqFK5TxAzTnCUbhM1Jd9MkS0JixTbYPILt9LAPx
-         q2KXTxWV1C8hYQKvUjhSNd1iPWQ4245lvYKXRnYI=
+        b=RPd9lJpYGREEr1ToqiE23p/bvKEn4yxjp010VQtZEWoebG92+7zKb5y9qGH/bTFAw
+         2U+izhKfc0aolUu6Zx6X+IjpNHvKTMbyUrj+RgyX4NOWTnKD/tPiaactTtKkfKMwxM
+         C/aHciRdDMdW5Qdn+NfTxrIhD4/VOfzrOMC1NFpQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Bowler <nbowler@draconx.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 048/125] xfs: Fix bulkstat compat ioctls on x32 userspace.
-Date:   Wed,  4 Dec 2019 18:55:53 +0100
-Message-Id: <20191204175321.892795502@linuxfoundation.org>
+Subject: [PATCH 4.9 051/125] powerpc/xmon: fix dump_segments()
+Date:   Wed,  4 Dec 2019 18:55:56 +0100
+Message-Id: <20191204175322.101953708@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191204175308.377746305@linuxfoundation.org>
 References: <20191204175308.377746305@linuxfoundation.org>
@@ -60,92 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Bowler <nbowler@draconx.ca>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 7ca860e3c1a74ad6bd8949364073ef1044cad758 ]
+[ Upstream commit 32c8c4c621897199e690760c2d57054f8b84b6e6 ]
 
-The bulkstat family of ioctls are problematic on x32, because there is
-a mixup of native 32-bit and 64-bit conventions.  The xfs_fsop_bulkreq
-struct contains pointers and 32-bit integers so that matches the native
-32-bit layout, and that means the ioctl implementation goes into the
-regular compat path on x32.
+mfsrin() takes segment num from bits 31-28 (IBM bits 0-3).
 
-However, the 'ubuffer' member of that struct in turn refers to either
-struct xfs_inogrp or xfs_bstat (or an array of these).  On x32, those
-structures match the native 64-bit layout.  The compat implementation
-writes out the 32-bit version of these structures.  This is not the
-expected format for x32 userspace, causing problems.
-
-Fortunately the functions which actually output these xfs_inogrp and
-xfs_bstat structures have an easy way to select which output format
-is required, so we just need a little tweak to select the right format
-on x32.
-
-Signed-off-by: Nick Bowler <nbowler@draconx.ca>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+[mpe: Clarify bit numbering]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_ioctl32.c | 34 ++++++++++++++++++++++++++++++----
- 1 file changed, 30 insertions(+), 4 deletions(-)
+ arch/powerpc/xmon/xmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
-index 8f18756ee405e..6b7ed221726db 100644
---- a/fs/xfs/xfs_ioctl32.c
-+++ b/fs/xfs/xfs_ioctl32.c
-@@ -251,6 +251,32 @@ xfs_compat_ioc_bulkstat(
- 	int			done;
- 	int			error;
+diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
+index 687e8b8bf5c67..899288b71145e 100644
+--- a/arch/powerpc/xmon/xmon.c
++++ b/arch/powerpc/xmon/xmon.c
+@@ -3043,7 +3043,7 @@ void dump_segments(void)
  
-+	/*
-+	 * Output structure handling functions.  Depending on the command,
-+	 * either the xfs_bstat and xfs_inogrp structures are written out
-+	 * to userpace memory via bulkreq.ubuffer.  Normally the compat
-+	 * functions and structure size are the correct ones to use ...
-+	 */
-+	inumbers_fmt_pf inumbers_func = xfs_inumbers_fmt_compat;
-+	bulkstat_one_pf	bs_one_func = xfs_bulkstat_one_compat;
-+	size_t bs_one_size = sizeof(struct compat_xfs_bstat);
-+
-+#ifdef CONFIG_X86_X32
-+	if (in_x32_syscall()) {
-+		/*
-+		 * ... but on x32 the input xfs_fsop_bulkreq has pointers
-+		 * which must be handled in the "compat" (32-bit) way, while
-+		 * the xfs_bstat and xfs_inogrp structures follow native 64-
-+		 * bit layout convention.  So adjust accordingly, otherwise
-+		 * the data written out in compat layout will not match what
-+		 * x32 userspace expects.
-+		 */
-+		inumbers_func = xfs_inumbers_fmt;
-+		bs_one_func = xfs_bulkstat_one;
-+		bs_one_size = sizeof(struct xfs_bstat);
-+	}
-+#endif
-+
- 	/* done = 1 if there are more stats to get and if bulkstat */
- 	/* should be called again (unused here, but used in dmapi) */
- 
-@@ -282,15 +308,15 @@ xfs_compat_ioc_bulkstat(
- 
- 	if (cmd == XFS_IOC_FSINUMBERS_32) {
- 		error = xfs_inumbers(mp, &inlast, &count,
--				bulkreq.ubuffer, xfs_inumbers_fmt_compat);
-+				bulkreq.ubuffer, inumbers_func);
- 	} else if (cmd == XFS_IOC_FSBULKSTAT_SINGLE_32) {
- 		int res;
- 
--		error = xfs_bulkstat_one_compat(mp, inlast, bulkreq.ubuffer,
--				sizeof(compat_xfs_bstat_t), NULL, &res);
-+		error = bs_one_func(mp, inlast, bulkreq.ubuffer,
-+				bs_one_size, NULL, &res);
- 	} else if (cmd == XFS_IOC_FSBULKSTAT_32) {
- 		error = xfs_bulkstat(mp, &inlast, &count,
--			xfs_bulkstat_one_compat, sizeof(compat_xfs_bstat_t),
-+			bs_one_func, bs_one_size,
- 			bulkreq.ubuffer, &done);
- 	} else
- 		error = -EINVAL;
+ 	printf("sr0-15 =");
+ 	for (i = 0; i < 16; ++i)
+-		printf(" %x", mfsrin(i));
++		printf(" %x", mfsrin(i << 28));
+ 	printf("\n");
+ }
+ #endif
 -- 
 2.20.1
 
