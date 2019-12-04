@@ -2,88 +2,88 @@ Return-Path: <SRS0=oopU=Z2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C8CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5DCC2BC73
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 016702073C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1D720675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Dec 2019 10:08:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Yd8WukcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfLDKIt (ORCPT
+        id S1727536AbfLDKIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:08:49 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43571 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbfLDKIs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:08:48 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1icRaP-0006Nf-QN; Wed, 04 Dec 2019 11:08:45 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1icRaO-0006iO-Sp; Wed, 04 Dec 2019 11:08:44 +0100
-Date:   Wed, 4 Dec 2019 11:08:44 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     naga suresh kumar <nagasureshkumarrelli@gmail.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Naga Sureshkumar Relli <nagasure@xilinx.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        siva.durga.paladugu@xilinx.com
-Subject: Re: ubifs mount failure
-Message-ID: <20191204100844.jvyvhbgthqycjq6g@pengutronix.de>
-References: <MN2PR02MB5727000CBE70BAF31F60FEE4AF420@MN2PR02MB5727.namprd02.prod.outlook.com>
- <20191203084134.tgzir4mtekpm5xbs@pengutronix.de>
- <MN2PR02MB57272E3343CA62ADBA0F97E5AF420@MN2PR02MB5727.namprd02.prod.outlook.com>
- <614898763.105471.1575364223372.JavaMail.zimbra@nod.at>
- <CALgLF9KPAk_AsecnTMmbdF5qbgqXe7HNOrNariNVbhSr6FVN2g@mail.gmail.com>
- <20191203104558.vpqav3oxsydoe4aw@pengutronix.de>
- <CALgLF9+H-8BdZ0BkmpcEL8B1G1cpPsC+=5oqz6ErnTOhnG7yZQ@mail.gmail.com>
+        Wed, 4 Dec 2019 05:08:54 -0500
+Received: from ozlabs.org ([203.11.71.1]:49463 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727273AbfLDKIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 05:08:54 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47SZLm3vv0z9sPJ;
+        Wed,  4 Dec 2019 21:08:48 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1575454131;
+        bh=xnBjDSr0aSFVeB7maxwFPpkGfOtz3BGCfA4g+lvQdxU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Yd8WukcXSECKwdjb2Z71Ixl9wSMNnzOZKyH1Iwrev/qnnb9keNJl+EhY3ghPINILi
+         XxnHrZWBE20aZXnffp1nyMRqn8lJ8Xtr0Dc7QBaLkY/PmW5OTF6ddg98nYBbDMy9on
+         nItgAMk6jpLdI/Wv4vOkJgtAafikedAy8r3KrOk32GwVetJhZ+YfDGlzj53hchxLTV
+         uKypy1N8cpT+qCskd7uMCRR4oQyKvyLwg0Vp3gmPUd/bjxHOXVlaICN4cjM7x/VSFC
+         W17sMf/t0K34WM2aTTqJxbibXImDbYRrKkFpm24IiQ6o+GgwnLve2s3CZd+nMoEJLQ
+         MdvB+pk9ozxgA==
+Date:   Wed, 4 Dec 2019 21:08:08 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the tip tree
+Message-ID: <20191204210808.7d34299e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALgLF9+H-8BdZ0BkmpcEL8B1G1cpPsC+=5oqz6ErnTOhnG7yZQ@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:08:04 up 149 days, 16:18, 149 users,  load average: 0.21, 0.23,
- 0.19
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; boundary="Sig_/iVrY7I571Rjc10A=Y9W93ll";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 04:23:34PM +0530, naga suresh kumar wrote:
-> Hi Sascha,
-> 
-> Tested this patch. and it worked.
-> Thanks for your quick response.
+--Sig_/iVrY7I571Rjc10A=Y9W93ll
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ok, I take this as a:
+Hi all,
 
-Tested-by: Naga Sureshkumar Relli <nagasure@xilinx.com>
+Commit
 
-Thanks
+  38ebd8d11924 ("x86/ftrace: Mark ftrace_modify_code_direct() __ref")
 
-Sascha
+is missing a Signed-off-by from its committer.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/iVrY7I571Rjc10A=Y9W93ll
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3nhYgACgkQAVBC80lX
+0Gz4aQf/QJ3ZxJNsJ3lwNSdE1Tn+eR6P4S2t2pOav2lk9jA50AVp5dcp0GEx/hmC
+fGQPoSaKI49qZwM5HGQAs8uNuatbN3QvRbtiZ5zdSPQJ71h1juw1DGXiHHUNgTSY
+Mo7BQ0iAsxfkOLgBPN2P83lfDRLbgiMFJDiUrMKCIfNeOk2Cimg1+Nmm2CO+00vP
+5tbDfkyGP29LiHpyCTFScPgB+EKNtO9HNQ6mgpVke2TRYYAq2uwZWxfuEgq9tWwZ
+ARbRCg0m/Ui3X3ae+r8m9xP+w0GIr2Y/qtnWQlKD1cP9lNbmbP+zHPhEZGSHz2Mn
+h2GjgmT6+g1CJtVVhOvQvjbGsh7juQ==
+=/MfH
+-----END PGP SIGNATURE-----
+
+--Sig_/iVrY7I571Rjc10A=Y9W93ll--
