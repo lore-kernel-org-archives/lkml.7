@@ -2,105 +2,559 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B945C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F011C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71913206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:42:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MBJ6tQQa"
+	by mail.kernel.org (Postfix) with ESMTP id E19FD22464
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbfLEDmK (ORCPT
+        id S1728909AbfLEDm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 22:42:10 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41214 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728098AbfLEDmK (ORCPT
+        Wed, 4 Dec 2019 22:42:27 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23640 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728098AbfLEDm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 22:42:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SKEwuU9LCubrqhiHixUVqpCy0ldQIv/3sUOUcM8nBDs=; b=MBJ6tQQaMPWzRiQjX2yRpygbf
-        dvad/n2hXUp0+K09ULooMF6cSihWeH2kJRB60ogr1YNLs9/viLrQWIS+d1LxNt/9Om0oIbiXoJ+o7
-        YQ4Af4KYLDE26Fwm4OygR4iCXtTmZaUkommbO2x9E22SJqTPSpaISZ0UsZrQem8NQ9pRvKo2+HnDK
-        H+lExL6upZhDp2pLLd/ikAOwm1moJBrui4it/dj5tOoaXx0rhWH8sGeDpNOvMFU9u5KN7e/Dah5A0
-        y2BxrelEtJEAvm07pNJfqR63/7BNDW9pQPPMQmLxUjQthY4vvvMRnmHZEiIUW0zJ6Z1ZZpql4FE3b
-        JSw1lDxXA==;
-Received: from [2601:1c0:6280:3f0::3deb]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ici1p-0006RO-1Q; Thu, 05 Dec 2019 03:42:09 +0000
-Subject: Re: [PATCH 1/1] pinctrl: Modify Kconfig to fix linker error
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        linus.walleij@linaro.org
-Cc:     sfr@canb.auug.org.au, linux-next@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <cover.1575514110.git.rahul.tanwar@linux.intel.com>
- <ba937f271d1a2173828a2325990d62cb36d61595.1575514110.git.rahul.tanwar@linux.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b92f1c7c-efdb-340d-dbfa-2a083732d8fb@infradead.org>
-Date:   Wed, 4 Dec 2019 19:42:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 4 Dec 2019 22:42:26 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB53WMuX059897
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Dec 2019 22:42:25 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wpmjphmmg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 22:42:25 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Thu, 5 Dec 2019 03:42:22 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Dec 2019 03:42:15 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB53gE8p49152176
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Dec 2019 03:42:14 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1BCD9A404D;
+        Thu,  5 Dec 2019 03:42:14 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6EA1AA405E;
+        Thu,  5 Dec 2019 03:42:13 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Dec 2019 03:42:13 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id C0A28A010B;
+        Thu,  5 Dec 2019 14:42:10 +1100 (AEDT)
+Subject: Re: [PATCH v2 16/27] nvdimm/ocxl: Implement the Read Error Log
+ command
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Thu, 05 Dec 2019 14:42:12 +1100
+In-Reply-To: <20191203034655.51561-17-alastair@au1.ibm.com>
+References: <20191203034655.51561-1-alastair@au1.ibm.com>
+         <20191203034655.51561-17-alastair@au1.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <ba937f271d1a2173828a2325990d62cb36d61595.1575514110.git.rahul.tanwar@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120503-0028-0000-0000-000003C5175C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120503-0029-0000-0000-0000248837E1
+Message-Id: <c9e6c332792eb8192d6f3eb2baae3d3a92a5a092.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_04:2019-12-04,2019-12-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 mlxscore=0 suspectscore=2
+ bulkscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912050023
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/4/19 7:01 PM, Rahul Tanwar wrote:
-> Fix below linker error
+On Tue, 2019-12-03 at 14:46 +1100, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
->     ld: drivers/pinctrl/pinctrl-equilibrium.o: in function
->     `pinconf_generic_dt_node_to_map_all':
->     pinctrl-equilibrium.c:(.text+0xb): undefined reference
->     to `pinconf_generic_dt_node_to_map'
+> The read error log command extracts information from the controller's
+> internal error log.
 > 
-> Caused by below commit
+> This patch exposes this information in 2 ways:
+> - During probe, if an error occurs & a log is available, print it to
+> the
+>   console
+> - After probe, make the error log available to userspace via an
+> IOCTL.
+>   Userspace is notified of pending error logs in a later patch
+>   ("nvdimm/ocxl: Forward events to userspace")
 > 
->     1948d5c51dba ("pinctrl: Add pinmux & GPIO controller driver for a new SoC")
-> 
-> by adding 'depends on OF' in Kconfig driver entry.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>>
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-
-Thanks.
-
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 > ---
->  drivers/pinctrl/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/nvdimm/ocxl/scm.c          | 270
+> +++++++++++++++++++++++++++++
+>  drivers/nvdimm/ocxl/scm_internal.h |   1 +
+>  include/uapi/nvdimm/ocxl-scm.h     |  46 +++++
+>  3 files changed, 317 insertions(+)
+>  create mode 100644 include/uapi/nvdimm/ocxl-scm.h
 > 
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index 3bfbf2ff6e2b..ba0cad4bd072 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -422,6 +422,7 @@ config PINCTRL_TB10X
+> diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
+> index c313a473a28e..0bbe1a14291e 100644
+> --- a/drivers/nvdimm/ocxl/scm.c
+> +++ b/drivers/nvdimm/ocxl/scm.c
+> @@ -495,10 +495,220 @@ static int scm_file_release(struct inode
+> *inode, struct file *file)
+>  	return 0;
+>  }
 >  
->  config PINCTRL_EQUILIBRIUM
->  	tristate "Generic pinctrl and GPIO driver for Intel Lightning Mountain SoC"
-> +	depends on OF
->  	select PINMUX
->  	select PINCONF
->  	select GPIOLIB
-> 
+> +/**
+> + * scm_error_log_header_parse() - Parse the first 64 bits of the
+> error log command response
+> + * @scm_data: the SCM metadata
+> + * @length: out, returns the number of bytes in the response
+> (excluding the 64 bit header)
+> + */
+> +static int scm_error_log_header_parse(struct scm_data *scm_data, u16
+> *length)
+> +{
+> +	int rc;
+> +	u64 val;
+> +
+> +	u16 data_identifier;
+> +	u32 data_length;
+> +
+> +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
+> +				     scm_data-
+> >admin_command.data_offset,
+> +				     OCXL_LITTLE_ENDIAN, &val);
+> +	if (rc)
+> +		return rc;
+> +
+> +	data_identifier = val >> 48;
+> +	data_length = val & 0xFFFF;
+> +
+> +	if (data_identifier != 0x454C) {
+> +		dev_err(&scm_data->dev,
+> +			"Bad data identifier for error log data,
+> expected 'EL', got '%2s' (%#x), data_length=%u\n",
+> +			(char *)&data_identifier,
+> +			(unsigned int)data_identifier, data_length);
+> +		return -EINVAL;
+> +	}
+> +
+> +	*length = data_length;
+> +	return 0;
+> +}
+> +
+> +static int scm_error_log_offset_0x08(struct scm_data *scm_data,
+> +				     u32 *log_identifier, u32
+> *program_ref_code)
+> +{
+> +	int rc;
+> +	u64 val;
+> +
+> +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
+> +				     scm_data-
+> >admin_command.data_offset + 0x08,
+> +				     OCXL_LITTLE_ENDIAN, &val);
+> +	if (rc)
+> +		return rc;
+> +
+> +	*log_identifier = val >> 32;
+> +	*program_ref_code = val & 0xFFFFFFFF;
+> +
+> +	return 0;
+> +}
+> +
+> +static int scm_read_error_log(struct scm_data *scm_data,
+> +			      struct scm_ioctl_error_log *log, bool
+> buf_is_user)
+> +{
+> +	u64 val;
+> +	u16 user_buf_length;
+> +	u16 buf_length;
+> +	u16 i;
+> +	int rc;
+> +
+> +	if (log->buf_size % 8)
+> +		return -EINVAL;
+> +
+> +	rc = scm_chi(scm_data, &val);
+> +	if (rc)
+> +		goto out;
+> +
+> +	if (!(val & GLOBAL_MMIO_CHI_ELA))
+> +		return -EAGAIN;
+> +
+> +	user_buf_length = log->buf_size;
+> +
+> +	mutex_lock(&scm_data->admin_command.lock);
+> +
+> +	rc = scm_admin_command_request(scm_data, ADMIN_COMMAND_ERRLOG);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = scm_admin_command_execute(scm_data);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = scm_admin_command_complete_timeout(scm_data,
+> ADMIN_COMMAND_ERRLOG);
+> +	if (rc < 0) {
+> +		dev_warn(&scm_data->dev, "Read error log timed out\n");
+> +		goto out;
+> +	}
+> +
+> +	rc = scm_admin_response(scm_data);
+> +	if (rc < 0)
+> +		goto out;
+> +	if (rc != STATUS_SUCCESS) {
+> +		scm_warn_status(scm_data, "Unexpected status from
+> retrieve error log", rc);
+> +		goto out;
+> +	}
+> +
+> +
+> +	rc = scm_error_log_header_parse(scm_data, &log->buf_size);
+> +	if (rc)
+> +		goto out;
+> +	// log->buf_size now contains the scm buffer size, not the user
+> size
+> +
+> +	rc = scm_error_log_offset_0x08(scm_data, &log->log_identifier,
+> +				       &log->program_reference_code);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
+> +				     scm_data-
+> >admin_command.data_offset + 0x10,
+> +				     OCXL_LITTLE_ENDIAN, &val);
+> +	if (rc)
+> +		goto out;
+> +
+> +	log->error_log_type = val >> 56;
+> +	log->action_flags = (log->error_log_type ==
+> SCM_ERROR_LOG_TYPE_GENERAL) ?
+> +			    (val >> 32) & 0xFFFFFF : 0;
+> +	log->power_on_seconds = val & 0xFFFFFFFF;
+> +
+> +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
+> +				     scm_data-
+> >admin_command.data_offset + 0x18,
+> +				     OCXL_LITTLE_ENDIAN, &log-
+> >timestamp);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
+> +				     scm_data-
+> >admin_command.data_offset + 0x20,
+> +				     OCXL_HOST_ENDIAN, &log->wwid[0]);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
+> +				     scm_data-
+> >admin_command.data_offset + 0x28,
+> +				     OCXL_HOST_ENDIAN, &log->wwid[1]);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
+> +				     scm_data-
+> >admin_command.data_offset + 0x30,
+> +				     OCXL_HOST_ENDIAN, (u64 *)log-
+> >fw_revision);
+> +	if (rc)
+> +		goto out;
+> +	log->fw_revision[8] = '\0';
+> +
+> +	buf_length = (user_buf_length < log->buf_size) ?
+> +		     user_buf_length : log->buf_size;
+> +	for (i = 0; i < buf_length + 0x48; i += 8) {
+> +		u64 val;
+> +
+> +		rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
+> +					     scm_data-
+> >admin_command.data_offset + i,
+> +					     OCXL_HOST_ENDIAN, &val);
+> +		if (rc)
+> +			goto out;
+> +
+> +		if (buf_is_user) {
+> +			if (copy_to_user(&log->buf[i], &val,
+> sizeof(u64))) {
+> +				rc = -EFAULT;
+> +				goto out;
+> +			}
+> +		} else
+> +			log->buf[i] = val;
+> +	}
+> +
+> +	rc = scm_admin_response_handled(scm_data);
+> +	if (rc)
+> +		goto out;
+> +
+> +out:
+> +	mutex_unlock(&scm_data->admin_command.lock);
+> +	return rc;
+> +
+> +}
+> +
+> +static int scm_ioctl_error_log(struct scm_data *scm_data,
+> +			       struct scm_ioctl_error_log __user *uarg)
+> +{
+> +	struct scm_ioctl_error_log args;
+> +	int rc;
+> +
+> +	if (copy_from_user(&args, uarg, sizeof(args)))
+> +		return -EFAULT;
+> +
+> +	rc = scm_read_error_log(scm_data, &args, true);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (copy_to_user(uarg, &args, sizeof(args)))
+> +		return -EFAULT;
+> +
+> +	return 0;
+> +}
+> +
+> +static long scm_file_ioctl(struct file *file, unsigned int cmd,
+> +			   unsigned long args)
+> +{
+> +	struct scm_data *scm_data = file->private_data;
+> +	int rc = -EINVAL;
+> +
+> +	switch (cmd) {
+> +	case SCM_IOCTL_ERROR_LOG:
+> +		rc = scm_ioctl_error_log(scm_data,
+> +					 (struct scm_ioctl_error_log
+> __user *)args);
+> +		break;
+> +	}
+> +	return rc;
+> +}
+> +
+>  static const struct file_operations scm_fops = {
+>  	.owner		= THIS_MODULE,
+>  	.open		= scm_file_open,
+>  	.release	= scm_file_release,
+> +	.unlocked_ioctl = scm_file_ioctl,
+> +	.compat_ioctl   = scm_file_ioctl,
+>  };
+>  
+>  /**
+> @@ -575,6 +785,60 @@ static int read_device_metadata(struct scm_data
+> *scm_data)
+>  	return 0;
+>  }
+>  
+> +static const char *scm_decode_error_log_type(u8 error_log_type)
+> +{
+> +	switch (error_log_type) {
+> +	case 0x00:
+> +		return "general";
+> +	case 0x01:
+> +		return "predictive failure";
+> +	case 0x02:
+> +		return "thermal warning";
+> +	case 0x03:
+> +		return "data loss";
+> +	case 0x04:
+> +		return "health & performance";
+> +	default:
+> +		return "unknown";
+> +	}
+> +}
+> +
+> +static void scm_dump_error_log(struct scm_data *scm_data)
+> +{
+> +	struct scm_ioctl_error_log log;
+> +	u32 buf_size;
+> +	u8 *buf;
+> +	int rc;
+> +
+> +	if (scm_data->admin_command.data_size == 0)
+> +		return;
+> +
+> +	buf_size = scm_data->admin_command.data_size - 0x48;
+> +	buf = kzalloc(buf_size, GFP_KERNEL);
+> +	if (!buf)
+> +		return;
+> +
+> +	log.buf = buf;
+> +	log.buf_size = buf_size;
+> +
+> +	rc = scm_read_error_log(scm_data, &log, false);
+> +	if (rc < 0)
+> +		goto out;
+> +
+> +	dev_warn(&scm_data->dev,
+> +		 "SCM Error log: WWID=0x%016llx%016llx LID=0x%x PRC=%x
+> type=0x%x %s, Uptime=%u seconds timestamp=0x%llx\n",
+> +		 log.wwid[0], log.wwid[1],
+> +		 log.log_identifier, log.program_reference_code,
+> +		 log.error_log_type,
+> +		 scm_decode_error_log_type(log.error_log_type),
+> +		 log.power_on_seconds, log.timestamp);
+> +	print_hex_dump(KERN_WARNING, "buf", DUMP_PREFIX_OFFSET, 16, 1,
+> buf,
+> +		       log.buf_size, false);
+> +
+> +out:
+> +	kfree(buf);
+> +}
+> +
+>  /**
+>   * scm_probe_function_0 - Set up function 0 for an OpenCAPI Storage
+> Class Memory device
+>   * This is important as it enables templates higher than 0 across
+> all other functions,
+> @@ -617,6 +881,7 @@ static int scm_probe(struct pci_dev *pdev, const
+> struct pci_device_id *ent)
+>  	struct scm_data *scm_data = NULL;
+>  	int elapsed;
+>  	u16 timeout;
+> +	u64 chi;
+>  
+>  	if (PCI_FUNC(pdev->devfn) == 0)
+>  		return scm_probe_function_0(pdev);
+> @@ -707,6 +972,11 @@ static int scm_probe(struct pci_dev *pdev, const
+> struct pci_device_id *ent)
+>  	return 0;
+>  
+>  err:
+> +	if (scm_data &&
+> +		    (scm_chi(scm_data, &chi) == 0) &&
+> +		    (chi & GLOBAL_MMIO_CHI_ELA))
+> +		scm_dump_error_log(scm_data);
+> +
+>  	/*
+>  	 * Further cleanup is done in the release handler via
+> free_scm()
+>  	 * This allows us to keep the character device live to handle
+> IOCTLs to
+> diff --git a/drivers/nvdimm/ocxl/scm_internal.h
+> b/drivers/nvdimm/ocxl/scm_internal.h
+> index 57491dbee1a4..9bf8fcf30ea6 100644
+> --- a/drivers/nvdimm/ocxl/scm_internal.h
+> +++ b/drivers/nvdimm/ocxl/scm_internal.h
+> @@ -5,6 +5,7 @@
+>  #include <linux/cdev.h>
+>  #include <misc/ocxl.h>
+>  #include <linux/libnvdimm.h>
+> +#include <uapi/linux/ocxl-scm.h>
 
+This should be uapi/nvdimm/ocxl-scm.h
 
+>  #include <linux/mm.h>
+>  
+>  #define SCM_DEFAULT_TIMEOUT 100
+> diff --git a/include/uapi/nvdimm/ocxl-scm.h
+> b/include/uapi/nvdimm/ocxl-scm.h
+> new file mode 100644
+> index 000000000000..b34dd1ba06ff
+> --- /dev/null
+> +++ b/include/uapi/nvdimm/ocxl-scm.h
+> @@ -0,0 +1,46 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+> +/* Copyright 2017 IBM Corp. */
+> +#ifndef _UAPI_OCXL_SCM_H
+> +#define _UAPI_OCXL_SCM_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/ioctl.h>
+> +
+> +#define SCM_ERROR_LOG_ACTION_RESET	(1 << (32-32))
+> +#define SCM_ERROR_LOG_ACTION_CHKFW	(1 << (53-32))
+> +#define SCM_ERROR_LOG_ACTION_REPLACE	(1 << (54-32))
+> +#define SCM_ERROR_LOG_ACTION_DUMP	(1 << (55-32))
+> +
+> +#define SCM_ERROR_LOG_TYPE_GENERAL		(0x00)
+> +#define SCM_ERROR_LOG_TYPE_PREDICTIVE_FAILURE	(0x01)
+> +#define SCM_ERROR_LOG_TYPE_THERMAL_WARNING	(0x02)
+> +#define SCM_ERROR_LOG_TYPE_DATA_LOSS		(0x03)
+> +#define SCM_ERROR_LOG_TYPE_HEALTH_PERFORMANCE	(0x04)
+> +
+> +struct scm_ioctl_error_log {
+> +	__u32 log_identifier; // out
+> +	__u32 program_reference_code; // out
+> +	__u32 action_flags; //out, recommended course of action
+> +	__u32 power_on_seconds; // out, Number of seconds the
+> controller has been on when the error occurred
+> +	__u64 timestamp; // out, relative time since the current IPL
+> +	__u64 wwid[2]; // out, the NAA formatted WWID associated with
+> the controller
+> +	char  fw_revision[8+1]; // out, firmware revision as null
+> terminated text
+> +	__u16 buf_size; /* in/out, buffer size provided/required.
+> +			 * If required is greater than provided, the
+> buffer
+> +			 * will be truncated to the amount provided. If
+> its
+> +			 * less, then only the required bytes will be
+> populated.
+> +			 * If it is 0, then there are no more error log
+> entries.
+> +			 */
+> +	__u8  error_log_type;
+> +	__u8  reserved1;
+> +	__u32 reserved2;
+> +	__u64 reserved3[2];
+> +	__u8 *buf; // pointer to output buffer
+> +};
+> +
+> +/* ioctl numbers */
+> +#define SCM_MAGIC 0x5C
+> +/* SCM devices */
+> +#define SCM_IOCTL_ERROR_LOG	_IOWR(SCM_MAGIC, 0x01, struct
+> scm_ioctl_error_log)
+> +
+> +#endif /* _UAPI_OCXL_SCM_H */
 -- 
-~Randy
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
 
