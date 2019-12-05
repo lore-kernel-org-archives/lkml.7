@@ -2,529 +2,249 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5229CC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B781C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C6724648
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA97A21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:49:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="e5KRiGJ+";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="izcisppH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730245AbfLERsq (ORCPT
+        id S1730261AbfLERt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 12:48:46 -0500
-Received: from foss.arm.com ([217.140.110.172]:42126 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730142AbfLERsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 12:48:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FE9C31B;
-        Thu,  5 Dec 2019 09:48:44 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B69F3F52E;
-        Thu,  5 Dec 2019 09:48:38 -0800 (PST)
-Subject: Re: [PATCH v4 7/8] linux/log2.h: Fix 64bit calculations in
- roundup/down_pow_two()
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio@elopez.com.ar>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
-        Edward Cree <ecree@solarflare.com>,
-        Martin Habets <mhabets@solarflare.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thomas Graf <tgraf@suug.ch>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
-        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.con>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rdma@vger.kernel.org, iommu@lists.linux-foundation.org,
-        netdev@vger.kernel.org, kexec@lists.infradead.org,
-        linux-nfs@vger.kernel.org
-References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
- <20191203114743.1294-8-nsaenzjulienne@suse.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <70c6b704-a12a-fb44-e93f-a6db12ed928f@arm.com>
-Date:   Thu, 5 Dec 2019 17:48:36 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 5 Dec 2019 12:49:27 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:18202 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729711AbfLERt1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 12:49:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1575568167; x=1607104167;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=Nv+hKdooAxKdH7glM0Jj2+irDxDGqNkVa/qgilBCHLw=;
+  b=e5KRiGJ+PEJ8fsoDvb4DEjx0vM2OVXQuUqssIH6gyoyrrKzlJMN2xQBK
+   qq4G+kkCldllQQv07DT49vEk10IrHt7tatLbaMIu3vh3sW4i8NnsmT8L0
+   uvUDSRGXf4tj3eblR3cNLUC30YluPWY2OiJlwctFlEqg9ZIwe/U41bHLr
+   X01D6j/6KtrbqgkxJJPel6oPKFFuZC7QyO4cuAhrQmcFtUD1HTQkraq1f
+   RB+aIyUIbvgxi0zk9Q4JgAovtKiTYvsiKHK3UjlIQLBymM4f9pBqYsjbi
+   dKKpmxKbqMGL6AtIRQuBE2ZclChPrWWE18m7yl4Ak3QZ+ThaQ0mYpbpOu
+   A==;
+IronPort-SDR: N90IWYwHtka/3jr+sRCmL/gdNbzkS8rCVSWNO0wKCpjO8cqiYzv//LWN++g9ovfIDpTXIHWYcJ
+ WGNvS1E/W4YUjRqpbvRaxf9MlsZUV0B98Jxj8iqYZiZLLkKwsndpj0XV5XvpNZSh0geOVlPs0d
+ iBsVhGMCWUltiREaKNyCMF2ZRrHjmPZ5JOkvTI2Gh4ai6r9JBR1fvuU1XMpa8tD7EujW3LVbkf
+ W8gE2a114eJptNpkuWUpLe7ddrXRYTjcJdZX/WOgiUO/iar9dTlY7sOKP+cq+iJGz1j2kBO9Ye
+ QYw=
+X-IronPort-AV: E=Sophos;i="5.69,282,1571673600"; 
+   d="scan'208";a="126317378"
+Received: from mail-bn7nam10lp2102.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.102])
+  by ob1.hgst.iphmx.com with ESMTP; 06 Dec 2019 01:49:21 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i5pQwroMe3CK2L+JZcZQKz1Y8cX3WTW+ZOJ4o4ocwAztPursYCUox3DNnoyxN9NneOM8nqiKNIwo00vY7uvVZZP1yjbyxtJ6nCFZGfQYW6wmvikjHgjuFyVl4qns7eW5/grfUap5jrQOpawiKPRIy5vRZtS6W4u5oJlTKaPjWOMKgjGYviqylJQKlCh+76P1hRDcKZMU7/n1bmHMNHNBfYvnJ3w/rz2TYALYO1BZOX8d1n9quRXc13YISPi+De6dmyDY4csNmheRz+Ifqgp8f34/FqDStJoio7A5ivihRiO5PK+xH8TBdGCv0Xk6ogSKm5Amcg/tlxcbzph69O+CgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UagiJ3yabGHLC/4UK5yBUQWCgrH9neO76NQ4ftHS9YQ=;
+ b=JWgDuYUQA8IQ7IApOL8YQQpAFwBRMyrP6if62qiZDZT3TE2wif8l1vzhM6uZdqhcUcaghFaL2Le3fJQXMT/8QyOxeKQmaIVyZJh5RweaC1bur79IM7zZu4rkcTlVp7FDD/7DhkR4CKRlbnJb5SazpWyzUoy1rBsyc+hp+o8DAAfsnTaZTiOH2xYob6JT/7aBn5De5xM9NMrPdsRKKjZ4YE109jgcj2gF+1CJhnZ2lKXwMWSBXxwO9JtFBpgu0P/xSZ0JUShgYIxqA4JRLgCXxD+jvccLysqdZroTwE9+DcjJ3apoipfuOWGGQAnIxO48PjoCsAJKUD377TLnhSyU5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UagiJ3yabGHLC/4UK5yBUQWCgrH9neO76NQ4ftHS9YQ=;
+ b=izcisppHVMUvZibO1kIxmpMxnjHXFE8n5PURRSTljvkiUEmZqMwpUQZRFA9F7Fme7dj8sqp4GJPvXNxjOMtsqL4EyqgCjTLdLWUWQy3bfde2ztUJHubdYlZ9SY70Sf1Uh/dQ4RUCO3zpVp7VQ4rHih97+jZraj7z60fUGoyuSwQ=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB6349.namprd04.prod.outlook.com (52.132.171.7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.14; Thu, 5 Dec 2019 17:49:19 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::7949:d205:5ad1:1d30]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::7949:d205:5ad1:1d30%7]) with mapi id 15.20.2516.014; Thu, 5 Dec 2019
+ 17:49:18 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+CC:     Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Anup Patel <anup@brainfault.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anup Patel <Anup.Patel@wdc.com>
+Subject: [PATCH v2] RISC-V: Add fragmented config for debug options
+Thread-Topic: [PATCH v2] RISC-V: Add fragmented config for debug options
+Thread-Index: AQHVq5RRWtXKoOVpQ06lEm6d7kwovw==
+Date:   Thu, 5 Dec 2019 17:49:18 +0000
+Message-ID: <20191205174902.4935-1-anup.patel@wdc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR03CA0021.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::34) To MN2PR04MB6061.namprd04.prod.outlook.com
+ (2603:10b6:208:d8::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [199.255.44.170]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ab38c3c0-d51d-4b07-8185-08d779ab738b
+x-ms-traffictypediagnostic: MN2PR04MB6349:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR04MB6349BF287A6FAEE0467582908D5C0@MN2PR04MB6349.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 02426D11FE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(39860400002)(136003)(396003)(376002)(189003)(199004)(2616005)(25786009)(99286004)(52116002)(186003)(54906003)(44832011)(316002)(4326008)(478600001)(14454004)(71200400001)(50226002)(36756003)(71190400001)(6506007)(102836004)(110136005)(81156014)(66556008)(66476007)(66446008)(66946007)(64756008)(8936002)(6486002)(6512007)(5660300002)(305945005)(1076003)(2906002)(8676002)(86362001)(81166006)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6349;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: M2i3qUBh4bXx2bgGlVy4L5xXQ/SIsT1xP6Ek04kuLfYtITtwCo0JEXmugFE2kH4cmQD5XI0cAoyR9P9BOFy5tOVDwF/gdaXGjt9aXc/k6Kl5FDRee8bSih9HL1kck57pAUe60OWZezPldQz5WRFSyxZzkoeyGbP1zOEZn1Rjv1X6b0Kn7t2IWn9TnrZ6vf8bydxLO1M2MuqO2eEU6eeQSmfbjauA76xxR42v6Im2MjcKRRWSPm7HASllJYde/hf8nynECSHBVvokCZeVeslcAER7ar5uN7xw1s32Ji6JxKYZH7LWK7LgnMmFmk8xVX//k+AMJiRNyY8jR1+JWRbBWz2ac1YUbqgIZ1itQnqlQg6sXSar6RQi5lLBbFpDR6WmOGauOsTgMUtVxtonPexZCwFZW0iI2uLHI6ndgtxycFubxgPsqPKmarfCmZ3Tyx+y
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20191203114743.1294-8-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab38c3c0-d51d-4b07-8185-08d779ab738b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 17:49:18.6422
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: d4e0Y7wTaL23SMEMWzuVSCF+rsv0mHVp0D17zgqsIPFh+MMa49xEge7pOFs3d3GevomeaFxARvRrJJpTuAldWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6349
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/12/2019 11:47 am, Nicolas Saenz Julienne wrote:
-> Some users need to make sure their rounding function accepts and returns
-> 64bit long variables regardless of the architecture. Sadly
-> roundup/rounddown_pow_two() takes and returns unsigned longs. It turns
-> out ilog2() already handles 32/64bit calculations properly, and being
-> the building block to the round functions we can rework them as a
-> wrapper around it.
+Various Linux kernel DEBUG options have big performance impact so
+these should not be enabled in RISC-V normal defconfigs.
 
-Neat! Although all the additional ULL casts this introduces seem 
-somewhat unwelcome - I suppose the (1ULL << (ilog2(n))) makes it 
-effectively always return unsigned long long now. Might it make sense to 
-cast the return value to typeof(n) to avoid this slightly non-obvious 
-behaviour (and the associated churn)?
+Instead we should have separate RISC-V fragmented config for enabling
+these DEBUG options. This way Linux RISC-V kernel can be built for
+both non-debug and debug purposes using same defconfig.
 
-Robin.
+This patch moves additional DEBUG options to extra_debug.config.
 
-> Suggested-by: Robin Murphy <robin.murphy@arm.con>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->   drivers/clk/clk-divider.c                    |  8 ++--
->   drivers/clk/sunxi/clk-sunxi.c                |  2 +-
->   drivers/infiniband/hw/hfi1/chip.c            |  4 +-
->   drivers/infiniband/hw/hfi1/init.c            |  4 +-
->   drivers/infiniband/hw/mlx4/srq.c             |  2 +-
->   drivers/infiniband/hw/mthca/mthca_srq.c      |  2 +-
->   drivers/infiniband/sw/rxe/rxe_qp.c           |  4 +-
->   drivers/iommu/intel-iommu.c                  |  4 +-
->   drivers/iommu/intel-svm.c                    |  4 +-
->   drivers/iommu/intel_irq_remapping.c          |  2 +-
->   drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c |  4 +-
->   drivers/net/ethernet/marvell/sky2.c          |  2 +-
->   drivers/net/ethernet/rocker/rocker_hw.h      |  4 +-
->   drivers/net/ethernet/sfc/ef10.c              |  2 +-
->   drivers/net/ethernet/sfc/efx.h               |  2 +-
->   drivers/net/ethernet/sfc/falcon/efx.h        |  2 +-
->   drivers/pci/msi.c                            |  2 +-
->   include/linux/log2.h                         | 44 +++++---------------
->   kernel/kexec_core.c                          |  3 +-
->   lib/rhashtable.c                             |  2 +-
->   net/sunrpc/xprtrdma/verbs.c                  |  2 +-
->   21 files changed, 41 insertions(+), 64 deletions(-)
-> 
-> diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
-> index 098b2b01f0af..ba947e4c8193 100644
-> --- a/drivers/clk/clk-divider.c
-> +++ b/drivers/clk/clk-divider.c
-> @@ -222,7 +222,7 @@ static int _div_round_up(const struct clk_div_table *table,
->   	int div = DIV_ROUND_UP_ULL((u64)parent_rate, rate);
->   
->   	if (flags & CLK_DIVIDER_POWER_OF_TWO)
-> -		div = __roundup_pow_of_two(div);
-> +		div = roundup_pow_of_two(div);
->   	if (table)
->   		div = _round_up_table(table, div);
->   
-> @@ -240,8 +240,8 @@ static int _div_round_closest(const struct clk_div_table *table,
->   	down = parent_rate / rate;
->   
->   	if (flags & CLK_DIVIDER_POWER_OF_TWO) {
-> -		up = __roundup_pow_of_two(up);
-> -		down = __rounddown_pow_of_two(down);
-> +		up = roundup_pow_of_two(up);
-> +		down = rounddown_pow_of_two(down);
->   	} else if (table) {
->   		up = _round_up_table(table, up);
->   		down = _round_down_table(table, down);
-> @@ -278,7 +278,7 @@ static int _next_div(const struct clk_div_table *table, int div,
->   	div++;
->   
->   	if (flags & CLK_DIVIDER_POWER_OF_TWO)
-> -		return __roundup_pow_of_two(div);
-> +		return roundup_pow_of_two(div);
->   	if (table)
->   		return _round_up_table(table, div);
->   
-> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-> index 27201fd26e44..faec99dc09c0 100644
-> --- a/drivers/clk/sunxi/clk-sunxi.c
-> +++ b/drivers/clk/sunxi/clk-sunxi.c
-> @@ -311,7 +311,7 @@ static void sun6i_get_ahb1_factors(struct factors_request *req)
->   
->   		calcm = DIV_ROUND_UP(div, 1 << calcp);
->   	} else {
-> -		calcp = __roundup_pow_of_two(div);
-> +		calcp = roundup_pow_of_two(div);
->   		calcp = calcp > 3 ? 3 : calcp;
->   	}
->   
-> diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
-> index 9b1fb84a3d45..96b1d343c32f 100644
-> --- a/drivers/infiniband/hw/hfi1/chip.c
-> +++ b/drivers/infiniband/hw/hfi1/chip.c
-> @@ -14199,10 +14199,10 @@ static int qos_rmt_entries(struct hfi1_devdata *dd, unsigned int *mp,
->   			max_by_vl = krcvqs[i];
->   	if (max_by_vl > 32)
->   		goto no_qos;
-> -	m = ilog2(__roundup_pow_of_two(max_by_vl));
-> +	m = ilog2(roundup_pow_of_two(max_by_vl));
->   
->   	/* determine bits for vl */
-> -	n = ilog2(__roundup_pow_of_two(num_vls));
-> +	n = ilog2(roundup_pow_of_two(num_vls));
->   
->   	/* reject if too much is used */
->   	if ((m + n) > 7)
-> diff --git a/drivers/infiniband/hw/hfi1/init.c b/drivers/infiniband/hw/hfi1/init.c
-> index 26b792bb1027..838c789c7cce 100644
-> --- a/drivers/infiniband/hw/hfi1/init.c
-> +++ b/drivers/infiniband/hw/hfi1/init.c
-> @@ -467,7 +467,7 @@ int hfi1_create_ctxtdata(struct hfi1_pportdata *ppd, int numa,
->   		 * MTU supported.
->   		 */
->   		if (rcd->egrbufs.size < hfi1_max_mtu) {
-> -			rcd->egrbufs.size = __roundup_pow_of_two(hfi1_max_mtu);
-> +			rcd->egrbufs.size = roundup_pow_of_two(hfi1_max_mtu);
->   			hfi1_cdbg(PROC,
->   				  "ctxt%u: eager bufs size too small. Adjusting to %u\n",
->   				    rcd->ctxt, rcd->egrbufs.size);
-> @@ -1959,7 +1959,7 @@ int hfi1_setup_eagerbufs(struct hfi1_ctxtdata *rcd)
->   	 * to satisfy the "multiple of 8 RcvArray entries" requirement.
->   	 */
->   	if (rcd->egrbufs.size <= (1 << 20))
-> -		rcd->egrbufs.rcvtid_size = max((unsigned long)round_mtu,
-> +		rcd->egrbufs.rcvtid_size = max((unsigned long long)round_mtu,
->   			rounddown_pow_of_two(rcd->egrbufs.size / 8));
->   
->   	while (alloced_bytes < rcd->egrbufs.size &&
-> diff --git a/drivers/infiniband/hw/mlx4/srq.c b/drivers/infiniband/hw/mlx4/srq.c
-> index 8dcf6e3d9ae2..7e685600a7b3 100644
-> --- a/drivers/infiniband/hw/mlx4/srq.c
-> +++ b/drivers/infiniband/hw/mlx4/srq.c
-> @@ -96,7 +96,7 @@ int mlx4_ib_create_srq(struct ib_srq *ib_srq,
->   	srq->msrq.max    = roundup_pow_of_two(init_attr->attr.max_wr + 1);
->   	srq->msrq.max_gs = init_attr->attr.max_sge;
->   
-> -	desc_size = max(32UL,
-> +	desc_size = max(32ULL,
->   			roundup_pow_of_two(sizeof (struct mlx4_wqe_srq_next_seg) +
->   					   srq->msrq.max_gs *
->   					   sizeof (struct mlx4_wqe_data_seg)));
-> diff --git a/drivers/infiniband/hw/mthca/mthca_srq.c b/drivers/infiniband/hw/mthca/mthca_srq.c
-> index a85935ccce88..0c2e14b4142a 100644
-> --- a/drivers/infiniband/hw/mthca/mthca_srq.c
-> +++ b/drivers/infiniband/hw/mthca/mthca_srq.c
-> @@ -225,7 +225,7 @@ int mthca_alloc_srq(struct mthca_dev *dev, struct mthca_pd *pd,
->   	else
->   		srq->max = srq->max + 1;
->   
-> -	ds = max(64UL,
-> +	ds = max(64ULL,
->   		 roundup_pow_of_two(sizeof (struct mthca_next_seg) +
->   				    srq->max_gs * sizeof (struct mthca_data_seg)));
->   
-> diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
-> index e2c6d1cedf41..040b707b0877 100644
-> --- a/drivers/infiniband/sw/rxe/rxe_qp.c
-> +++ b/drivers/infiniband/sw/rxe/rxe_qp.c
-> @@ -592,7 +592,7 @@ int rxe_qp_from_attr(struct rxe_qp *qp, struct ib_qp_attr *attr, int mask,
->   	int err;
->   
->   	if (mask & IB_QP_MAX_QP_RD_ATOMIC) {
-> -		int max_rd_atomic = __roundup_pow_of_two(attr->max_rd_atomic);
-> +		int max_rd_atomic = roundup_pow_of_two(attr->max_rd_atomic);
->   
->   		qp->attr.max_rd_atomic = max_rd_atomic;
->   		atomic_set(&qp->req.rd_atomic, max_rd_atomic);
-> @@ -600,7 +600,7 @@ int rxe_qp_from_attr(struct rxe_qp *qp, struct ib_qp_attr *attr, int mask,
->   
->   	if (mask & IB_QP_MAX_DEST_RD_ATOMIC) {
->   		int max_dest_rd_atomic =
-> -			__roundup_pow_of_two(attr->max_dest_rd_atomic);
-> +			roundup_pow_of_two(attr->max_dest_rd_atomic);
->   
->   		qp->attr.max_dest_rd_atomic = max_dest_rd_atomic;
->   
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 0c8d81f56a30..ce7c900bd666 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -1488,7 +1488,7 @@ static void iommu_flush_iotlb_psi(struct intel_iommu *iommu,
->   				  unsigned long pfn, unsigned int pages,
->   				  int ih, int map)
->   {
-> -	unsigned int mask = ilog2(__roundup_pow_of_two(pages));
-> +	unsigned int mask = ilog2(roundup_pow_of_two(pages));
->   	uint64_t addr = (uint64_t)pfn << VTD_PAGE_SHIFT;
->   	u16 did = domain->iommu_did[iommu->seq_id];
->   
-> @@ -3390,7 +3390,7 @@ static unsigned long intel_alloc_iova(struct device *dev,
->   	/* Restrict dma_mask to the width that the iommu can handle */
->   	dma_mask = min_t(uint64_t, DOMAIN_MAX_ADDR(domain->gaw), dma_mask);
->   	/* Ensure we reserve the whole size-aligned region */
-> -	nrpages = __roundup_pow_of_two(nrpages);
-> +	nrpages = roundup_pow_of_two(nrpages);
->   
->   	if (!dmar_forcedac && dma_mask > DMA_BIT_MASK(32)) {
->   		/*
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> index 9b159132405d..602caca3cd1a 100644
-> --- a/drivers/iommu/intel-svm.c
-> +++ b/drivers/iommu/intel-svm.c
-> @@ -115,7 +115,7 @@ static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_d
->   			QI_EIOTLB_TYPE;
->   		desc.qw1 = 0;
->   	} else {
-> -		int mask = ilog2(__roundup_pow_of_two(pages));
-> +		int mask = ilog2(roundup_pow_of_two(pages));
->   
->   		desc.qw0 = QI_EIOTLB_PASID(svm->pasid) |
->   				QI_EIOTLB_DID(sdev->did) |
-> @@ -142,7 +142,7 @@ static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_d
->   			 * for example, an "address" value of 0x12345f000 will
->   			 * flush from 0x123440000 to 0x12347ffff (256KiB). */
->   			unsigned long last = address + ((unsigned long)(pages - 1) << VTD_PAGE_SHIFT);
-> -			unsigned long mask = __rounddown_pow_of_two(address ^ last);
-> +			unsigned long mask = rounddown_pow_of_two(address ^ last);
->   
->   			desc.qw1 = QI_DEV_EIOTLB_ADDR((address & ~mask) |
->   					(mask - 1)) | QI_DEV_EIOTLB_SIZE;
-> diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel_irq_remapping.c
-> index 81e43c1df7ec..935657b2c661 100644
-> --- a/drivers/iommu/intel_irq_remapping.c
-> +++ b/drivers/iommu/intel_irq_remapping.c
-> @@ -113,7 +113,7 @@ static int alloc_irte(struct intel_iommu *iommu,
->   		return -1;
->   
->   	if (count > 1) {
-> -		count = __roundup_pow_of_two(count);
-> +		count = roundup_pow_of_two(count);
->   		mask = ilog2(count);
->   	}
->   
-> diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c b/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
-> index 6a757dadb5f1..fd5b12c23eaa 100644
-> --- a/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
-> +++ b/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
-> @@ -680,13 +680,13 @@ static int xgbe_set_ringparam(struct net_device *netdev,
->   		return -EINVAL;
->   	}
->   
-> -	rx = __rounddown_pow_of_two(ringparam->rx_pending);
-> +	rx = rounddown_pow_of_two(ringparam->rx_pending);
->   	if (rx != ringparam->rx_pending)
->   		netdev_notice(netdev,
->   			      "rx ring parameter rounded to power of two: %u\n",
->   			      rx);
->   
-> -	tx = __rounddown_pow_of_two(ringparam->tx_pending);
-> +	tx = rounddown_pow_of_two(ringparam->tx_pending);
->   	if (tx != ringparam->tx_pending)
->   		netdev_notice(netdev,
->   			      "tx ring parameter rounded to power of two: %u\n",
-> diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
-> index 5f56ee83e3b1..cc3a03b4a611 100644
-> --- a/drivers/net/ethernet/marvell/sky2.c
-> +++ b/drivers/net/ethernet/marvell/sky2.c
-> @@ -4139,7 +4139,7 @@ static int sky2_set_coalesce(struct net_device *dev,
->    */
->   static unsigned long roundup_ring_size(unsigned long pending)
->   {
-> -	return max(128ul, roundup_pow_of_two(pending+1));
-> +	return max(128ull, roundup_pow_of_two(pending+1));
->   }
->   
->   static void sky2_get_ringparam(struct net_device *dev,
-> diff --git a/drivers/net/ethernet/rocker/rocker_hw.h b/drivers/net/ethernet/rocker/rocker_hw.h
-> index 59f1f8b690d2..d8de15509e2c 100644
-> --- a/drivers/net/ethernet/rocker/rocker_hw.h
-> +++ b/drivers/net/ethernet/rocker/rocker_hw.h
-> @@ -88,8 +88,8 @@ enum rocker_dma_type {
->   };
->   
->   /* Rocker DMA ring size limits and default sizes */
-> -#define ROCKER_DMA_SIZE_MIN		2ul
-> -#define ROCKER_DMA_SIZE_MAX		65536ul
-> +#define ROCKER_DMA_SIZE_MIN		2ull
-> +#define ROCKER_DMA_SIZE_MAX		65536ull
->   #define ROCKER_DMA_CMD_DEFAULT_SIZE	32ul
->   #define ROCKER_DMA_EVENT_DEFAULT_SIZE	32ul
->   #define ROCKER_DMA_TX_DEFAULT_SIZE	64ul
-> diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
-> index 4d9bbccc6f89..4f4d9a5b3b75 100644
-> --- a/drivers/net/ethernet/sfc/ef10.c
-> +++ b/drivers/net/ethernet/sfc/ef10.c
-> @@ -27,7 +27,7 @@ enum {
->   };
->   /* The maximum size of a shared RSS context */
->   /* TODO: this should really be from the mcdi protocol export */
-> -#define EFX_EF10_MAX_SHARED_RSS_CONTEXT_SIZE 64UL
-> +#define EFX_EF10_MAX_SHARED_RSS_CONTEXT_SIZE 64ULL
->   
->   /* The filter table(s) are managed by firmware and we have write-only
->    * access.  When removing filters we must identify them to the
-> diff --git a/drivers/net/ethernet/sfc/efx.h b/drivers/net/ethernet/sfc/efx.h
-> index 2dd8d5002315..fea2add5860e 100644
-> --- a/drivers/net/ethernet/sfc/efx.h
-> +++ b/drivers/net/ethernet/sfc/efx.h
-> @@ -52,7 +52,7 @@ void efx_schedule_slow_fill(struct efx_rx_queue *rx_queue);
->   
->   #define EFX_MAX_DMAQ_SIZE 4096UL
->   #define EFX_DEFAULT_DMAQ_SIZE 1024UL
-> -#define EFX_MIN_DMAQ_SIZE 512UL
-> +#define EFX_MIN_DMAQ_SIZE 512ULL
->   
->   #define EFX_MAX_EVQ_SIZE 16384UL
->   #define EFX_MIN_EVQ_SIZE 512UL
-> diff --git a/drivers/net/ethernet/sfc/falcon/efx.h b/drivers/net/ethernet/sfc/falcon/efx.h
-> index d3b4646545fa..0d16257156d6 100644
-> --- a/drivers/net/ethernet/sfc/falcon/efx.h
-> +++ b/drivers/net/ethernet/sfc/falcon/efx.h
-> @@ -55,7 +55,7 @@ void ef4_schedule_slow_fill(struct ef4_rx_queue *rx_queue);
->   
->   #define EF4_MAX_DMAQ_SIZE 4096UL
->   #define EF4_DEFAULT_DMAQ_SIZE 1024UL
-> -#define EF4_MIN_DMAQ_SIZE 512UL
-> +#define EF4_MIN_DMAQ_SIZE 512ULL
->   
->   #define EF4_MAX_EVQ_SIZE 16384UL
->   #define EF4_MIN_EVQ_SIZE 512UL
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index c7709e49f0e4..f0391e88bc42 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -578,7 +578,7 @@ msi_setup_entry(struct pci_dev *dev, int nvec, struct irq_affinity *affd)
->   	entry->msi_attrib.maskbit	= !!(control & PCI_MSI_FLAGS_MASKBIT);
->   	entry->msi_attrib.default_irq	= dev->irq;	/* Save IOAPIC IRQ */
->   	entry->msi_attrib.multi_cap	= (control & PCI_MSI_FLAGS_QMASK) >> 1;
-> -	entry->msi_attrib.multiple	= ilog2(__roundup_pow_of_two(nvec));
-> +	entry->msi_attrib.multiple	= ilog2(roundup_pow_of_two(nvec));
->   
->   	if (control & PCI_MSI_FLAGS_64BIT)
->   		entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_64;
-> diff --git a/include/linux/log2.h b/include/linux/log2.h
-> index 83a4a3ca3e8a..53a727303dac 100644
-> --- a/include/linux/log2.h
-> +++ b/include/linux/log2.h
-> @@ -47,26 +47,6 @@ bool is_power_of_2(unsigned long n)
->   	return (n != 0 && ((n & (n - 1)) == 0));
->   }
->   
-> -/**
-> - * __roundup_pow_of_two() - round up to nearest power of two
-> - * @n: value to round up
-> - */
-> -static inline __attribute__((const))
-> -unsigned long __roundup_pow_of_two(unsigned long n)
-> -{
-> -	return 1UL << fls_long(n - 1);
-> -}
-> -
-> -/**
-> - * __rounddown_pow_of_two() - round down to nearest power of two
-> - * @n: value to round down
-> - */
-> -static inline __attribute__((const))
-> -unsigned long __rounddown_pow_of_two(unsigned long n)
-> -{
-> -	return 1UL << (fls_long(n) - 1);
-> -}
-> -
->   /**
->    * const_ilog2 - log base 2 of 32-bit or a 64-bit constant unsigned value
->    * @n: parameter
-> @@ -170,14 +150,11 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
->    * - the result is undefined when n == 0
->    * - this can be used to initialise global variables from constant data
->    */
-> -#define roundup_pow_of_two(n)			\
-> -(						\
-> -	__builtin_constant_p(n) ? (		\
-> -		(n == 1) ? 1 :			\
-> -		(1UL << (ilog2((n) - 1) + 1))	\
-> -				   ) :		\
-> -	__roundup_pow_of_two(n)			\
-> - )
-> +#define roundup_pow_of_two(n)			  \
-> +(						  \
-> +	(__builtin_constant_p(n) && ((n) == 1)) ? \
-> +	1 : (1ULL << (ilog2((n) - 1) + 1))        \
-> +)
->   
->   /**
->    * rounddown_pow_of_two - round the given value down to nearest power of two
-> @@ -187,12 +164,11 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
->    * - the result is undefined when n == 0
->    * - this can be used to initialise global variables from constant data
->    */
-> -#define rounddown_pow_of_two(n)			\
-> -(						\
-> -	__builtin_constant_p(n) ? (		\
-> -		(1UL << ilog2(n))) :		\
-> -	__rounddown_pow_of_two(n)		\
-> - )
-> +#define rounddown_pow_of_two(n)			  \
-> +(						  \
-> +	(__builtin_constant_p(n) && ((n) == 1)) ? \
-> +	1 : (1ULL << (ilog2(n)))		  \
-> +)
->   
->   static inline __attribute_const__
->   int __order_base_2(unsigned long n)
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 15d70a90b50d..bb9efc6944a4 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -1094,7 +1094,8 @@ static int __init crash_notes_memory_init(void)
->   	 * crash_notes is allocated inside one physical page.
->   	 */
->   	size = sizeof(note_buf_t);
-> -	align = min(roundup_pow_of_two(sizeof(note_buf_t)), PAGE_SIZE);
-> +	align = min(roundup_pow_of_two(sizeof(note_buf_t)),
-> +		    (unsigned long long)PAGE_SIZE);
->   
->   	/*
->   	 * Break compile if size is bigger than PAGE_SIZE since crash_notes
-> diff --git a/lib/rhashtable.c b/lib/rhashtable.c
-> index bdb7e4cadf05..70908678c7a8 100644
-> --- a/lib/rhashtable.c
-> +++ b/lib/rhashtable.c
-> @@ -950,7 +950,7 @@ static size_t rounded_hashtable_size(const struct rhashtable_params *params)
->   
->   	if (params->nelem_hint)
->   		retsize = max(roundup_pow_of_two(params->nelem_hint * 4 / 3),
-> -			      (unsigned long)params->min_size);
-> +			      (unsigned long long)params->min_size);
->   	else
->   		retsize = max(HASH_DEFAULT_SIZE,
->   			      (unsigned long)params->min_size);
-> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-> index 77c7dd7f05e8..78fb8ccabddd 100644
-> --- a/net/sunrpc/xprtrdma/verbs.c
-> +++ b/net/sunrpc/xprtrdma/verbs.c
-> @@ -1015,7 +1015,7 @@ struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt, size_t size,
->   	maxhdrsize = rpcrdma_fixed_maxsz + 3 +
->   		     r_xprt->rx_ia.ri_max_segs * rpcrdma_readchunk_maxsz;
->   	maxhdrsize *= sizeof(__be32);
-> -	rb = rpcrdma_regbuf_alloc(__roundup_pow_of_two(maxhdrsize),
-> +	rb = rpcrdma_regbuf_alloc(roundup_pow_of_two(maxhdrsize),
->   				  DMA_TO_DEVICE, flags);
->   	if (!rb)
->   		goto out2;
-> 
+To configure a non-debug RV64 kernel, we use our normal defconfig:
+   $ make O=3D<linux_build_directory> defconfig
+Wherease to configure a debug RV64 kernel, we use extra_debug.config:
+   $ make O=3D<linux_build_directory> defconfig extra_debug.config
+
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+---
+Changes since v1:
+ - Use fragmented .config instead of separate debug defconfigs.
+---
+ arch/riscv/configs/defconfig          | 23 -----------------------
+ arch/riscv/configs/extra_debug.config | 21 +++++++++++++++++++++
+ arch/riscv/configs/rv32_defconfig     | 23 -----------------------
+ 3 files changed, 21 insertions(+), 46 deletions(-)
+ create mode 100644 arch/riscv/configs/extra_debug.config
+
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index e2ff95cb3390..f0710d8f50cc 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -101,27 +101,4 @@ CONFIG_CRYPTO_USER_API_HASH=3Dy
+ CONFIG_CRYPTO_DEV_VIRTIO=3Dy
+ CONFIG_PRINTK_TIME=3Dy
+ CONFIG_DEBUG_FS=3Dy
+-CONFIG_DEBUG_PAGEALLOC=3Dy
+-CONFIG_DEBUG_VM=3Dy
+-CONFIG_DEBUG_VM_PGFLAGS=3Dy
+-CONFIG_DEBUG_MEMORY_INIT=3Dy
+-CONFIG_DEBUG_PER_CPU_MAPS=3Dy
+-CONFIG_SOFTLOCKUP_DETECTOR=3Dy
+-CONFIG_WQ_WATCHDOG=3Dy
+-CONFIG_SCHED_STACK_END_CHECK=3Dy
+-CONFIG_DEBUG_TIMEKEEPING=3Dy
+-CONFIG_DEBUG_RT_MUTEXES=3Dy
+-CONFIG_DEBUG_SPINLOCK=3Dy
+-CONFIG_DEBUG_MUTEXES=3Dy
+-CONFIG_DEBUG_RWSEMS=3Dy
+-CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
+-CONFIG_STACKTRACE=3Dy
+-CONFIG_DEBUG_LIST=3Dy
+-CONFIG_DEBUG_PLIST=3Dy
+-CONFIG_DEBUG_SG=3Dy
+ # CONFIG_RCU_TRACE is not set
+-CONFIG_RCU_EQS_DEBUG=3Dy
+-CONFIG_DEBUG_BLOCK_EXT_DEVT=3Dy
+-# CONFIG_FTRACE is not set
+-# CONFIG_RUNTIME_TESTING_MENU is not set
+-CONFIG_MEMTEST=3Dy
+diff --git a/arch/riscv/configs/extra_debug.config b/arch/riscv/configs/ext=
+ra_debug.config
+new file mode 100644
+index 000000000000..66c58bb645a4
+--- /dev/null
++++ b/arch/riscv/configs/extra_debug.config
+@@ -0,0 +1,21 @@
++CONFIG_DEBUG_PAGEALLOC=3Dy
++CONFIG_DEBUG_VM=3Dy
++CONFIG_DEBUG_VM_PGFLAGS=3Dy
++CONFIG_DEBUG_MEMORY_INIT=3Dy
++CONFIG_DEBUG_PER_CPU_MAPS=3Dy
++CONFIG_SOFTLOCKUP_DETECTOR=3Dy
++CONFIG_WQ_WATCHDOG=3Dy
++CONFIG_SCHED_STACK_END_CHECK=3Dy
++CONFIG_DEBUG_TIMEKEEPING=3Dy
++CONFIG_DEBUG_RT_MUTEXES=3Dy
++CONFIG_DEBUG_SPINLOCK=3Dy
++CONFIG_DEBUG_MUTEXES=3Dy
++CONFIG_DEBUG_RWSEMS=3Dy
++CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
++CONFIG_STACKTRACE=3Dy
++CONFIG_DEBUG_LIST=3Dy
++CONFIG_DEBUG_PLIST=3Dy
++CONFIG_DEBUG_SG=3Dy
++CONFIG_RCU_EQS_DEBUG=3Dy
++CONFIG_DEBUG_BLOCK_EXT_DEVT=3Dy
++CONFIG_MEMTEST=3Dy
+diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_de=
+fconfig
+index eb519407c841..bdec58e6c5f7 100644
+--- a/arch/riscv/configs/rv32_defconfig
++++ b/arch/riscv/configs/rv32_defconfig
+@@ -98,27 +98,4 @@ CONFIG_CRYPTO_USER_API_HASH=3Dy
+ CONFIG_CRYPTO_DEV_VIRTIO=3Dy
+ CONFIG_PRINTK_TIME=3Dy
+ CONFIG_DEBUG_FS=3Dy
+-CONFIG_DEBUG_PAGEALLOC=3Dy
+-CONFIG_DEBUG_VM=3Dy
+-CONFIG_DEBUG_VM_PGFLAGS=3Dy
+-CONFIG_DEBUG_MEMORY_INIT=3Dy
+-CONFIG_DEBUG_PER_CPU_MAPS=3Dy
+-CONFIG_SOFTLOCKUP_DETECTOR=3Dy
+-CONFIG_WQ_WATCHDOG=3Dy
+-CONFIG_SCHED_STACK_END_CHECK=3Dy
+-CONFIG_DEBUG_TIMEKEEPING=3Dy
+-CONFIG_DEBUG_RT_MUTEXES=3Dy
+-CONFIG_DEBUG_SPINLOCK=3Dy
+-CONFIG_DEBUG_MUTEXES=3Dy
+-CONFIG_DEBUG_RWSEMS=3Dy
+-CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
+-CONFIG_STACKTRACE=3Dy
+-CONFIG_DEBUG_LIST=3Dy
+-CONFIG_DEBUG_PLIST=3Dy
+-CONFIG_DEBUG_SG=3Dy
+ # CONFIG_RCU_TRACE is not set
+-CONFIG_RCU_EQS_DEBUG=3Dy
+-CONFIG_DEBUG_BLOCK_EXT_DEVT=3Dy
+-# CONFIG_FTRACE is not set
+-# CONFIG_RUNTIME_TESTING_MENU is not set
+-CONFIG_MEMTEST=3Dy
+--=20
+2.17.1
+
