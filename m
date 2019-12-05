@@ -2,119 +2,101 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC53C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5C5C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1943D2077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9412C214B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:05:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MEnl6REM";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="JcbJwX2m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbfLECDy (ORCPT
+        id S1728699AbfLECFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 21:03:54 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:60062 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbfLECDy (ORCPT
+        Wed, 4 Dec 2019 21:05:05 -0500
+Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:37964
+        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728419AbfLECFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 21:03:54 -0500
-Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xB51xvft020982;
-        Thu, 5 Dec 2019 10:59:57 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp);
- Thu, 05 Dec 2019 10:59:57 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xB51xvmN020973;
-        Thu, 5 Dec 2019 10:59:57 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: (from i-love@localhost)
-        by www262.sakura.ne.jp (8.15.2/8.15.2/Submit) id xB51xuco020972;
-        Thu, 5 Dec 2019 10:59:56 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Message-Id: <201912050159.xB51xuco020972@www262.sakura.ne.jp>
-X-Authentication-Warning: www262.sakura.ne.jp: i-love set sender to penguin-kernel@i-love.sakura.ne.jp using -f
-Subject: Re: KASAN: slab-out-of-bounds Read in =?ISO-2022-JP?B?ZmJjb25fZ2V0X2Zv?=
- =?ISO-2022-JP?B?bnQ=?=
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Grzegorz Halat <ghalat@redhat.com>
-Cc:     syzbot <syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com>,
-        aryabinin@virtuozzo.com, daniel.thompson@linaro.org,
-        dri-devel@lists.freedesktop.org, dvyukov@google.com,
-        gleb@kernel.org, gwshan@linux.vnet.ibm.com, hpa@zytor.com,
-        jmorris@namei.org, kasan-dev@googlegroups.com, kvm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, mingo@redhat.com,
-        mpe@ellerman.id.au, pbonzini@redhat.com, ruscur@russell.cc,
-        serge@hallyn.com, stewart@linux.vnet.ibm.com,
-        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp,
-        tglx@linutronix.de, x86@kernel.org
-MIME-Version: 1.0
-Date:   Thu, 05 Dec 2019 10:59:56 +0900
-References: <0000000000002cfc3a0598d42b70@google.com> <0000000000003e640e0598e7abc3@google.com>
-In-Reply-To: <0000000000003e640e0598e7abc3@google.com>
-Content-Type: text/plain; charset="ISO-2022-JP"
-Content-Transfer-Encoding: 7bit
+        Wed, 4 Dec 2019 21:05:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575511504;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=sN9HQYh6wIVagBIBwBcjFatf2XSTX81OaYD+RTbaeUs=;
+        b=MEnl6REMwAWupUgIrkziAx7V4m1WceQyy03mLLXcJEoMoR50iTDnyLBiL8e59lUl
+        Zsson7+DjZHBSJ55Vu9M0kBQUEwz83DWy7GS5/krT9Q/P+VTThw5BONLfHYMy726Q6a
+        1JeUJkYOp6u4dMbTD1I2an5I1M19nmvuS+Pr92Xw=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575511504;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
+        bh=sN9HQYh6wIVagBIBwBcjFatf2XSTX81OaYD+RTbaeUs=;
+        b=JcbJwX2mEG/7jU6YyaxyUKsPhzpyKNyRe30VD9WnsWS+rIZr/qlba1z/MeqyP4Cn
+        pRyYHA1EFTQkb7Uw0T+q+/PeedT6MDbEldKOGvtf2vuyz3Qjo9wwNbtYc9IqLIE6p5t
+        uL2CUvEJ+zqK8Mkw82ss0QQgH1E0bt51s0nXrSJo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 96AE5C447A5
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 1/5] scsi: Adjust DBD setting in mode sense for caching mode page per LLD
+Date:   Thu, 5 Dec 2019 02:05:04 +0000
+Message-ID: <0101016ed3cdb63d-06b5ad68-0049-46c5-bb5d-a01866023be5-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1575511482-15115-1-git-send-email-cang@codeaurora.org>
+References: <1575511482-15115-1-git-send-email-cang@codeaurora.org>
+X-SES-Outgoing: 2019.12.05-54.240.27.21
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello.
+UFS JEDEC standards require DBD field to be set to 1 in mode sense command.
+This patch allows LLD to define the setting of DBD if required.
 
-syzbot is reporting that memory allocation size at fbcon_set_font() is too small
-because font's height is rounded up from 10 to 16 after memory allocation.
+Signed-off-by: Can Guo <cang@codeaurora.org>
+---
+ drivers/scsi/scsi_lib.c    | 2 ++
+ include/scsi/scsi_device.h | 1 +
+ 2 files changed, 3 insertions(+)
 
-----------
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index c9235a2f42f8..68fe66e435d3 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -2461,6 +2461,7 @@ static int fbcon_get_font(struct vc_data *vc, struct console_font *font)
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 5447738..3812e90 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -2108,6 +2108,8 @@ void scsi_exit_queue(void)
  
- 	if (font->width <= 8) {
- 		j = vc->vc_font.height;
-+		printk("ksize(fontdata)=%lu font->charcount=%d vc->vc_font.height=%d font->width=%u\n", ksize(fontdata), font->charcount, j, font->width);
- 		for (i = 0; i < font->charcount; i++) {
- 			memcpy(data, fontdata, j);
- 			memset(data + j, 0, 32 - j);
-@@ -2661,6 +2662,8 @@ static int fbcon_set_font(struct vc_data *vc, struct console_font *font,
- 	size = h * pitch * charcount;
+ 	memset(data, 0, sizeof(*data));
+ 	memset(&cmd[0], 0, 12);
++
++	dbd = sdev->set_dbd_for_ms ? 8 : dbd;
+ 	cmd[1] = dbd & 0x18;	/* allows DBD and LLBA bits */
+ 	cmd[2] = modepage;
  
- 	new_data = kmalloc(FONT_EXTRA_WORDS * sizeof(int) + size, GFP_USER);
-+	if (new_data)
-+		printk("ksize(new_data)=%lu h=%u pitch=%u charcount=%u font->width=%u\n", ksize(new_data), h, pitch, charcount, font->width);
- 
- 	if (!new_data)
- 		return -ENOMEM;
-----------
+diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+index 3ed836d..f8312a3 100644
+--- a/include/scsi/scsi_device.h
++++ b/include/scsi/scsi_device.h
+@@ -172,6 +172,7 @@ struct scsi_device {
+ 				     * because we did a bus reset. */
+ 	unsigned use_10_for_rw:1; /* first try 10-byte read / write */
+ 	unsigned use_10_for_ms:1; /* first try 10-byte mode sense/select */
++	unsigned set_dbd_for_ms:1; /* Set "DBD" field in mode sense */
+ 	unsigned no_report_opcodes:1;	/* no REPORT SUPPORTED OPERATION CODES */
+ 	unsigned no_write_same:1;	/* no WRITE SAME command */
+ 	unsigned use_16_for_rw:1; /* Use read/write(16) over read/write(10) */
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-Normal usage:
-
-[   27.305293] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-[   27.328527] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-[   27.362551] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-[   27.385084] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-[   27.387653] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-[   27.417562] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-[   27.437808] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-[   27.440738] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-[   27.461157] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-[   27.495346] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-[   27.607372] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-[   27.655674] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-[   27.675310] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-[   27.702193] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
-
-syzbot's testcase:
-
-[  115.784893] ksize(new_data)=4096 h=10 pitch=1 charcount=256 font->width=8
-[  115.790269] ksize(fontdata)=4096 font->charcount=256 vc->vc_font.height=16 font->width=8
