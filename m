@@ -2,107 +2,186 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88E9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B816C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A2E2245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:49:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="GCisWDnM"
+	by mail.kernel.org (Postfix) with ESMTP id 18C142464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575557551;
+	bh=WDWf308h0I7fTPqJFhf3xdFYAWidzrAm0auwO5eRlD0=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=XWKPIGPpAlR4C7hrwai0uewkDEQNoUzzGfKDYtH10N/3CDIAjBvv5AG8FFdv2yyjO
+	 T69d/LKPTz9oFFrGx1WQP3Ng/E5w9FIEnKmXLbBDt7MPCkg5obYHRCXoD/ustV0ZyC
+	 ypj9HtDgBGB94L4NUQPuz179eDj9V+7xzuSKckxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbfLEOtr (ORCPT
+        id S1729641AbfLEOwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 09:49:47 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:57812 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729396AbfLEOtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 09:49:47 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47TJTZ2DSpz3c;
-        Thu,  5 Dec 2019 15:47:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1575557234; bh=SdhSC4B4qnY5nHTEIulHuGXWpsS6ubKaRhfb6FXv6F0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GCisWDnMuiO3s6XgyfUW7VxaCIffzvteDBYLehPFGJmBQ7sCFAxEo0JlWNfjhUUqB
-         qOYihABrLOYXEB5eqOOKRvwBxKW+8aE9+so1fOaxzEaISx5ddWVcoD8aBEzsk6VF4x
-         l4Oh96a3/d4OCPJO+UCYI0d9nSYDJT2UaQrBoweb9d0cmTTymjgCFnh+FJQiDi+kQG
-         kzX/wobFQGBLP2KPV5HWgAKkv5MRlITMyfEOwAKcOQ3OKxzn/xAZcGDfLbTnPkW4oV
-         Zrxt/L+2dADI/MRLaIKI8vcTqYrkEuGzy6VRZvmvJ7VwIjXARVe3owcNtHr0W6uz4S
-         Q4Ef4IBICDL8g==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Thu, 5 Dec 2019 15:49:41 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     =?iso-8859-2?B?Suly9G1l?= Pouiller <Jerome.Pouiller@silabs.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: wfx: fix reset GPIO polarity
-Message-ID: <20191205144941.GA12859@qmqm.qmqm.pl>
-References: <f9ebb05f4a13cce4a8724dfb17f8383ec9b2d468.1575478705.git.mirq-linux@rere.qmqm.pl>
- <3343657.nOMI9WY9u8@pc-42>
+        Thu, 5 Dec 2019 09:52:30 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:35701 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729099AbfLEOw3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 09:52:29 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1icsUV-0007qd-2u; Thu, 05 Dec 2019 15:52:27 +0100
+To:     Auger Eric <eric.auger@redhat.com>
+Subject: Re: [RFC 2/3] KVM: arm64: pmu: Fix chained =?UTF-8?Q?SW=5FINCR=20?=  =?UTF-8?Q?counters?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3343657.nOMI9WY9u8@pc-42>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Date:   Thu, 05 Dec 2019 14:52:26 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <eric.auger.pro@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <kvmarm@lists.cs.columbia.edu>, <james.morse@arm.com>,
+        <andrew.murray@arm.com>, <suzuki.poulose@arm.com>,
+        <drjones@redhat.com>
+In-Reply-To: <2b30c1ca-3bc0-9f73-4bea-ee42bb74cbac@redhat.com>
+References: <20191204204426.9628-1-eric.auger@redhat.com>
+ <20191204204426.9628-3-eric.auger@redhat.com>
+ <561ac6df385e977cc51d51a8ab28ee49@www.loen.fr>
+ <2b30c1ca-3bc0-9f73-4bea-ee42bb74cbac@redhat.com>
+Message-ID: <15507faca89a980056df7119e105e82a@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: eric.auger@redhat.com, eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu, james.morse@arm.com, andrew.murray@arm.com, suzuki.poulose@arm.com, drjones@redhat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 02:08:23PM +0000, J�r�me Pouiller wrote:
-> On Wednesday 4 December 2019 17:59:46 CET Micha� Miros�aw wrote:
-> > Driver inverts meaning of GPIO_ACTIVE_LOW/HIGH. Fix it to prevent
-> > confusion.
-> > 
-> > Signed-off-by: Micha� Miros�aw <mirq-linux@rere.qmqm.pl>
-> > ---
-> >  drivers/staging/wfx/bus_spi.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/staging/wfx/bus_spi.c b/drivers/staging/wfx/bus_spi.c
-> > index ab0cda1e124f..73d0157a86ba 100644
-> > --- a/drivers/staging/wfx/bus_spi.c
-> > +++ b/drivers/staging/wfx/bus_spi.c
-> > @@ -199,9 +199,9 @@ static int wfx_spi_probe(struct spi_device *func)
-> >         if (!bus->gpio_reset) {
-> >                 dev_warn(&func->dev, "try to load firmware anyway\n");
-> >         } else {
-> > -               gpiod_set_value(bus->gpio_reset, 0);
-> > -               udelay(100);
-> >                 gpiod_set_value(bus->gpio_reset, 1);
-> > +               udelay(100);
-> > +               gpiod_set_value(bus->gpio_reset, 0);
-> >                 udelay(2000);
-> >         }
-> Hello Micha�,
-> 
-> I did not find real consensus in kernel code. My personal taste would
-> be to keep this gpio "ACTIVE_HIGH" and rename it gpio_nreset. What do
-> you think about it?
-> 
-> (in add, this solution would explicitly change the name of the DT
-> attribute instead of changing the semantic of the existing attribute)
+On 2019-12-05 14:06, Auger Eric wrote:
+> Hi Marc,
+>
+> On 12/5/19 10:43 AM, Marc Zyngier wrote:
+>> Hi Eric,
+>>
+>> On 2019-12-04 20:44, Eric Auger wrote:
+>>> At the moment a SW_INCR counter always overflows on 32-bit
+>>> boundary, independently on whether the n+1th counter is
+>>> programmed as CHAIN.
+>>>
+>>> Check whether the SW_INCR counter is a 64b counter and if so,
+>>> implement the 64b logic.
+>>>
+>>> Fixes: 80f393a23be6 ("KVM: arm/arm64: Support chained PMU 
+>>> counters")
+>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>> ---
+>>>  virt/kvm/arm/pmu.c | 16 +++++++++++++++-
+>>>  1 file changed, 15 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
+>>> index c3f8b059881e..7ab477db2f75 100644
+>>> --- a/virt/kvm/arm/pmu.c
+>>> +++ b/virt/kvm/arm/pmu.c
+>>> @@ -491,6 +491,8 @@ void kvm_pmu_software_increment(struct kvm_vcpu
+>>> *vcpu, u64 val)
+>>>
+>>>      enable = __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
+>>>      for (i = 0; i < ARMV8_PMU_CYCLE_IDX; i++) {
+>>> +        bool chained = test_bit(i >> 1, vcpu->arch.pmu.chained);
+>>> +
+>>
+>> I'd rather you use kvm_pmu_pmc_is_chained() rather than open-coding
+>> this. But see below:
+>>
+>>>          if (!(val & BIT(i)))
+>>>              continue;
+>>>          type = __vcpu_sys_reg(vcpu, PMEVTYPER0_EL0 + i)
+>>> @@ -500,8 +502,20 @@ void kvm_pmu_software_increment(struct 
+>>> kvm_vcpu
+>>> *vcpu, u64 val)
+>>>              reg = __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) + 1;
+>>>              reg = lower_32_bits(reg);
+>>>              __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) = reg;
+>>> -            if (!reg)
+>>> +            if (reg) /* no overflow */
+>>> +                continue;
+>>> +            if (chained) {
+>>> +                reg = __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) 
+>>> + 1;
+>>> +                reg = lower_32_bits(reg);
+>>> +                __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) = reg;
+>>> +                if (reg)
+>>> +                    continue;
+>>> +                /* mark an overflow on high counter */
+>>> +                __vcpu_sys_reg(vcpu, PMOVSSET_EL0) |= BIT(i + 1);
+>>> +            } else {
+>>> +                /* mark an overflow */
+>>>                  __vcpu_sys_reg(vcpu, PMOVSSET_EL0) |= BIT(i);
+>>> +            }
+>>>          }
+>>>      }
+>>>  }
+>>
+>> I think the whole function is a bit of a mess, and could be better
+>> structured to treat 64bit counters as a first class citizen.
+>>
+>> I'm suggesting something along those lines, which tries to
+>> streamline things a bit and keep the flow uniform between the
+>> two word sizes. IMHO, it helps reasonning about it and gives
+>> scope to the ARMv8.5 full 64bit counters... It is of course
+>> completely untested.
+>
+> Looks OK to me as well. One remark though, don't we need to test if 
+> the
+> n+1th reg is enabled before incrementing it?
 
-As a user (board developer) I would expect that DT describes the
-GPIO meaning directly: so when I specify GPIO_ACTIVE_HIGH flag I also
-wire up the board so that outputing 1 would match the active state of
-the chip's signal (that might be inverted for some reason). I think we
-should stick to what is said in Documentation/devicetree/bindings/gpio.txt
-(section 1.1).
+Hmmm. I'm not sure. I think we should make sure that we don't flag
+a counter as being chained if the odd counter is disabled, rather
+than checking it here. As long as the odd counter is not chained
+*and* enabled, we shouldn't touch it.
 
-Since this is a new driver in kernel I would prefer to fix it at the start.
-Changing the name of the GPIO would also be ok, but since there is no DT
-binding yet, I guess there will come up an issue of 'compatible' string
-format that does not match 'vendor,chip' now, so we can use the difference
-for backwards compatibility with out-of-tree driver if needed.
+Again, untested:
 
-Best Regards,
-Micha��Miros�aw
+diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
+index cf371f643ade..47366817cd2a 100644
+--- a/virt/kvm/arm/pmu.c
++++ b/virt/kvm/arm/pmu.c
+@@ -15,6 +15,7 @@
+  #include <kvm/arm_vgic.h>
+
+  static void kvm_pmu_create_perf_event(struct kvm_vcpu *vcpu, u64 
+select_idx);
++static void kvm_pmu_update_pmc_chained(struct kvm_vcpu *vcpu, u64 
+select_idx);
+
+  #define PERF_ATTR_CFG1_KVM_PMU_CHAINED 0x1
+
+@@ -298,6 +299,7 @@ void kvm_pmu_enable_counter_mask(struct kvm_vcpu 
+*vcpu, u64 val)
+  		 * For high counters of chained events we must recreate the
+  		 * perf event with the long (64bit) attribute set.
+  		 */
++		kvm_pmu_update_pmc_chained(vcpu, i);
+  		if (kvm_pmu_pmc_is_chained(pmc) &&
+  		    kvm_pmu_idx_is_high_counter(i)) {
+  			kvm_pmu_create_perf_event(vcpu, i);
+@@ -645,7 +647,8 @@ static void kvm_pmu_update_pmc_chained(struct 
+kvm_vcpu *vcpu, u64 select_idx)
+  	struct kvm_pmu *pmu = &vcpu->arch.pmu;
+  	struct kvm_pmc *pmc = &pmu->pmc[select_idx];
+
+-	if (kvm_pmu_idx_has_chain_evtype(vcpu, pmc->idx)) {
++	if (kvm_pmu_idx_has_chain_evtype(vcpu, pmc->idx) &&
++	    kvm_pmu_counter_is_enabled(vcpu, pmc->idx)) {
+  		/*
+  		 * During promotion from !chained to chained we must ensure
+  		 * the adjacent counter is stopped and its event destroyed
+
+What do you think?
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
