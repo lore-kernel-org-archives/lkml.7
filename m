@@ -2,278 +2,168 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6002FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 241ACC2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D86724648
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2BEA24648
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:59:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kAiWMOq3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbfLEI70 (ORCPT
+        id S1729043AbfLEI7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 03:59:26 -0500
-Received: from mga07.intel.com ([134.134.136.100]:44458 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbfLEI7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 03:59:25 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 00:59:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,280,1571727600"; 
-   d="scan'208";a="236602245"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Dec 2019 00:59:22 -0800
-Date:   Thu, 5 Dec 2019 03:51:11 -0500
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     alex.williamson@redhat.com, kevin.tian@intel.com,
-        kvm@vger.kernel.org, libvir-list@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, zhenyuw@linux.intel.com,
-        qemu-devel@nongnu.org, shaopeng.he@intel.com, zhi.a.wang@intel.com
-Subject: Re: [RFC PATCH 0/9] Introduce mediate ops in vfio-pci
-Message-ID: <20191205085111.GD31791@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20191205032419.29606-1-yan.y.zhao@intel.com>
- <8bcf603c-f142-f96d-bb11-834d686f5519@redhat.com>
+        Thu, 5 Dec 2019 03:59:43 -0500
+Received: from mail-eopbgr00087.outbound.protection.outlook.com ([40.107.0.87]:44806
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728991AbfLEI7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 03:59:42 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CyMEvTWTsbAWn+xylzQGh0F/qZP0FUbgIj+R6pAo92Kx7t1rbxfaXSHxDe9m98xdXQtgySq9/XJzZ6c8eEZ1S2T45+P9X9QH1TeCYeWsoExkGabXEj8lexXqQYdtD1YFM1kBPlgBMrf4eZCqm/gC0+kvVZljrqqI3uKBd57RvYaqafaRO08SYCutshKoji09V+L+dhN5tIzf/ZKlEQcR/71KfDZNsCqsKEJtjgecALShMsi+cNPwZpbQdHw0p+CI8tuu9zlSega7g3UAw4FD6cGzR+RF+q/9J4kaYrISiK/h0/z/AIFrMHHh3UpvYLfDqM4Ipy4sTAEbH2bv1/V57g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7CIzxGpWFAUHgxGUGp3tV6qQNKf1oG4y0wMxwBZ7uFA=;
+ b=QQVLCBq8jEg7cNdzWSgL+kBM7idjI4mQhGgaFWn6HY+X/GjU3wgxXKUx+Sxr6SG03xBuG0o8fgtgFcxTKzN/DhEs3BjMIR+A/CI9cyxGjs4K2hYd5er0n/kBH9aa8sSIfTqCLtKN0AYK7h7iXGKu2GPEMXJhCW50Tifj8O8RJeuwh06SUdQy+pP3hpO2zGxsLuqjh44XEx48ZgCmaO1GO6LWIwpdyqop7mfKGcqzXY/kmgciuzNexgM79rOuajA58DgwsH2REtBn26KIG17VJM6BBWussvVNqMq3zk3ZqrHG9pxpqd5TVf0rY1D5WhctgSZfnvvRyls0r3y5kQ5nkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7CIzxGpWFAUHgxGUGp3tV6qQNKf1oG4y0wMxwBZ7uFA=;
+ b=kAiWMOq35oBUw4VLnSjx1/Q9OZxp3XUO9fqHWSYqiTT/hjcz6otjmksMGnZfVvNewh2InpRKPLwJ0dOMnBtBH02wpmzC1hcrwev6moX3elRyct1Ej/UcHMYwGxi/WaVzq4QCwCMFyyUIV1yW/3h3UWwZP3jUxFVYxNgqZ8Lep/4=
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
+ VI1PR04MB6847.eurprd04.prod.outlook.com (10.255.196.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.13; Thu, 5 Dec 2019 08:59:38 +0000
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::2c49:44c8:2c02:68b1]) by VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::2c49:44c8:2c02:68b1%5]) with mapi id 15.20.2516.014; Thu, 5 Dec 2019
+ 08:59:38 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>
+Subject: Re: [PATCH] clk: imx: imx8qxp-lpcg: use
+ devm_platform_ioremap_resource
+Thread-Topic: [PATCH] clk: imx: imx8qxp-lpcg: use
+ devm_platform_ioremap_resource
+Thread-Index: AQHVqoum7IH7ZRFDgESKl5wnHnxd3Q==
+Date:   Thu, 5 Dec 2019 08:59:38 +0000
+Message-ID: <VI1PR04MB70232C511E4F43360D7533C9EE5C0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <1575454349-5762-1-git-send-email-peng.fan@nxp.com>
+ <VI1PR04MB7023E9790323200A4B122445EE5D0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <AM0PR04MB4481FC4A8FD76A01242424B5885C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b31ce410-20ac-4088-1d09-08d77961754b
+x-ms-traffictypediagnostic: VI1PR04MB6847:|VI1PR04MB6847:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB68476CEC0AEB3D04F02E371AEE5C0@VI1PR04MB6847.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02426D11FE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(136003)(39860400002)(396003)(199004)(189003)(74316002)(44832011)(4326008)(186003)(7736002)(229853002)(33656002)(2501003)(14454004)(6246003)(91956017)(6116002)(6436002)(25786009)(8936002)(86362001)(305945005)(55016002)(966005)(9686003)(52536014)(478600001)(5660300002)(6306002)(53546011)(2906002)(26005)(66446008)(66556008)(54906003)(64756008)(76176011)(3846002)(110136005)(71200400001)(81166006)(81156014)(316002)(6506007)(8676002)(71190400001)(66946007)(66476007)(76116006)(102836004)(7696005)(14444005)(99286004)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6847;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Hg8xYH2M5qTU1FxCIR7l+mSWvL4UNDVwoXvXgW169zZ0q8S3EyZ5iE+xiM8kllyCHC0DKRd674M56/BtEGItDMhAoDqXWVSER0eQi2jcrkEpcXB415UBG027TDTW/U2xqdtWuQp0qknaGLpRlDx7prbnbySKevvgkEm9TfWNylndW6w9v0q1rYCSm7pZuJj7CO79558sn0BRyAzaUXDk6GUAbgH1q1vLgJfWM72FNRf6rwlvXCRnpB2KB0wLBF8AUOBbR+MQF++wyWLUnDaWRIcO1992RBVrnkGmBNItcnjICAwY5ToGJQKlqKa9Cua274JiJTVL2tAA/cfEY6sndpjg7yWP1+05TJ/XU4KrVMzlzcF/33w87odujCp1tjuGnbBhH3i73uKBuRQP39LFjnapZAI0XMntJP6XwJxFeu0Q2NCmxZR+3/YwvtgHveQGgDIjUCmQ7KeyTSqnSKfnQOm0f7roI01sd8ePy16xb/vT4+Gm1Mfhpt4J/Z3mjLFQmEzUR8t5AAGhZnk+NYU8OQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8bcf603c-f142-f96d-bb11-834d686f5519@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b31ce410-20ac-4088-1d09-08d77961754b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 08:59:38.2451
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lTBLCAqg9wmr6sPl78P10hAiMAACnE1yABwqdEt0A+ONCg41oDoncHn/TZ9oEQC+IAWVoLdGVwxR0IRJ5evboQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6847
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 02:33:19PM +0800, Jason Wang wrote:
-> Hi:
-> 
-> On 2019/12/5 上午11:24, Yan Zhao wrote:
-> > For SRIOV devices, VFs are passthroughed into guest directly without host
-> > driver mediation. However, when VMs migrating with passthroughed VFs,
-> > dynamic host mediation is required to  (1) get device states, (2) get
-> > dirty pages. Since device states as well as other critical information
-> > required for dirty page tracking for VFs are usually retrieved from PFs,
-> > it is handy to provide an extension in PF driver to centralizingly control
-> > VFs' migration.
-> > 
-> > Therefore, in order to realize (1) passthrough VFs at normal time, (2)
-> > dynamically trap VFs' bars for dirty page tracking and
-> 
-> 
-> A silly question, what's the reason for doing this, is this a must for dirty
-> page tracking?
->
-For performance consideration. VFs' bars should be passthoughed at
-normal time and only enter into trap state on need.
-
-> 
-> >   (3) centralizing
-> > VF critical states retrieving and VF controls into one driver, we propose
-> > to introduce mediate ops on top of current vfio-pci device driver.
-> > 
-> > 
-> >                                     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-> >   __________   register mediate ops|  ___________     ___________    |
-> > |          |<-----------------------|     VF    |   |           |
-> > | vfio-pci |                      | |  mediate  |   | PF driver |   |
-> > |__________|----------------------->|   driver  |   |___________|
-> >       |            open(pdev)      |  -----------          |         |
-> >       |                                                    |
-> >       |                            |_ _ _ _ _ _ _ _ _ _ _ _|_ _ _ _ _|
-> >      \|/                                                  \|/
-> > -----------                                         ------------
-> > |    VF   |                                         |    PF    |
-> > -----------                                         ------------
-> > 
-> > 
-> > VF mediate driver could be a standalone driver that does not bind to
-> > any devices (as in demo code in patches 5-6) or it could be a built-in
-> > extension of PF driver (as in patches 7-9) .
-> > 
-> > Rather than directly bind to VF, VF mediate driver register a mediate
-> > ops into vfio-pci in driver init. vfio-pci maintains a list of such
-> > mediate ops.
-> > (Note that: VF mediate driver can register mediate ops into vfio-pci
-> > before vfio-pci binding to any devices. And VF mediate driver can
-> > support mediating multiple devices.)
-> > 
-> > When opening a device (e.g. a VF), vfio-pci goes through the mediate ops
-> > list and calls each vfio_pci_mediate_ops->open() with pdev of the opening
-> > device as a parameter.
-> > VF mediate driver should return success or failure depending on it
-> > supports the pdev or not.
-> > E.g. VF mediate driver would compare its supported VF devfn with the
-> > devfn of the passed-in pdev.
-> > Once vfio-pci finds a successful vfio_pci_mediate_ops->open(), it will
-> > stop querying other mediate ops and bind the opening device with this
-> > mediate ops using the returned mediate handle.
-> > 
-> > Further vfio-pci ops (VFIO_DEVICE_GET_REGION_INFO ioctl, rw, mmap) on the
-> > VF will be intercepted into VF mediate driver as
-> > vfio_pci_mediate_ops->get_region_info(),
-> > vfio_pci_mediate_ops->rw,
-> > vfio_pci_mediate_ops->mmap, and get customized.
-> > For vfio_pci_mediate_ops->rw and vfio_pci_mediate_ops->mmap, they will
-> > further return 'pt' to indicate whether vfio-pci should further
-> > passthrough data to hw.
-> > 
-> > when vfio-pci closes the VF, it calls its vfio_pci_mediate_ops->release()
-> > with a mediate handle as parameter.
-> > 
-> > The mediate handle returned from vfio_pci_mediate_ops->open() lets VF
-> > mediate driver be able to differentiate two opening VFs of the same device
-> > id and vendor id.
-> > 
-> > When VF mediate driver exits, it unregisters its mediate ops from
-> > vfio-pci.
-> > 
-> > 
-> > In this patchset, we enable vfio-pci to provide 3 things:
-> > (1) calling mediate ops to allow vendor driver customizing default
-> > region info/rw/mmap of a region.
-> > (2) provide a migration region to support migration
-> 
-> 
-> What's the benefit of introducing a region? It looks to me we don't expect
-> the region to be accessed directly from guest. Could we simply extend device
-> fd ioctl for doing such things?
->
-You may take a look on mdev live migration discussions in
-https://lists.gnu.org/archive/html/qemu-devel/2019-11/msg01763.html
-
-or previous discussion at
-https://lists.gnu.org/archive/html/qemu-devel/2019-02/msg04908.html,
-which has kernel side implemetation https://patchwork.freedesktop.org/series/56876/
-
-generaly speaking, qemu part of live migration is consistent for
-vfio-pci + mediate ops way or mdev way. The region is only a channel for
-QEMU and kernel to communicate information without introducing IOCTLs.
-
-
-> 
-> > (3) provide a dynamic trap bar info region to allow vendor driver
-> > control trap/untrap of device pci bars
-> > 
-> > This vfio-pci + mediate ops way differs from mdev way in that
-> > (1) medv way needs to create a 1:1 mdev device on top of one VF, device
-> > specific mdev parent driver is bound to VF directly.
-> > (2) vfio-pci + mediate ops way does not create mdev devices and VF
-> > mediate driver does not bind to VFs. Instead, vfio-pci binds to VFs.
-> > 
-> > The reason why we don't choose the way of writing mdev parent driver is
-> > that
-> > (1) VFs are almost all the time directly passthroughed. Directly binding
-> > to vfio-pci can make most of the code shared/reused.
-> 
-> 
-> Can we split out the common parts from vfio-pci?
-> 
-That's very attractive. but one cannot implement a vfio-pci except
-export everything in it as common part :)
-> 
-> >   If we write a
-> > vendor specific mdev parent driver, most of the code (like passthrough
-> > style of rw/mmap) still needs to be copied from vfio-pci driver, which is
-> > actually a duplicated and tedious work.
-> 
-> 
-> The mediate ops looks quite similar to what vfio-mdev did. And it looks to
-> me we need to consider live migration for mdev as well. In that case, do we
-> still expect mediate ops through VFIO directly?
-> 
-> 
-> > (2) For features like dynamically trap/untrap pci bars, if they are in
-> > vfio-pci, they can be available to most people without repeated code
-> > copying and re-testing.
-> > (3) with a 1:1 mdev driver which passthrough VFs most of the time, people
-> > have to decide whether to bind VFs to vfio-pci or mdev parent driver before
-> > it runs into a real migration need. However, if vfio-pci is bound
-> > initially, they have no chance to do live migration when there's a need
-> > later.
-> 
-> 
-> We can teach management layer to do this.
-> 
-No. not possible as vfio-pci by default has no migration region and
-dirty page tracking needs vendor's mediation at least for most
-passthrough devices now.
-
-Thanks
-Yn
-
-> Thanks
-> 
-> 
-> > 
-> > In this patchset,
-> > - patches 1-4 enable vfio-pci to call mediate ops registered by vendor
-> >    driver to mediate/customize region info/rw/mmap.
-> > 
-> > - patches 5-6 provide a standalone sample driver to register a mediate ops
-> >    for Intel Graphics Devices. It does not bind to IGDs directly but decides
-> >    what devices it supports via its pciidlist. It also demonstrates how to
-> >    dynamic trap a device's PCI bars. (by adding more pciids in its
-> >    pciidlist, this sample driver actually is not necessarily limited to
-> >    support IGDs)
-> > 
-> > - patch 7-9 provide a sample on i40e driver that supports Intel(R)
-> >    Ethernet Controller XL710 Family of devices. It supports VF precopy live
-> >    migration on Intel's 710 SRIOV. (but we commented out the real
-> >    implementation of dirty page tracking and device state retrieving part
-> >    to focus on demonstrating framework part. Will send out them in future
-> >    versions)
-> >    patch 7 registers/unregisters VF mediate ops when PF driver
-> >    probes/removes. It specifies its supporting VFs via
-> >    vfio_pci_mediate_ops->open(pdev)
-> > 
-> >    patch 8 reports device cap of VFIO_PCI_DEVICE_CAP_MIGRATION and
-> >    provides a sample implementation of migration region.
-> >    The QEMU part of vfio migration is based on v8
-> >    https://lists.gnu.org/archive/html/qemu-devel/2019-08/msg05542.html.
-> >    We do not based on recent v9 because we think there are still opens in
-> >    dirty page track part in that series.
-> > 
-> >    patch 9 reports device cap of VFIO_PCI_DEVICE_CAP_DYNAMIC_TRAP_BAR and
-> >    provides an example on how to trap part of bar0 when migration starts
-> >    and passthrough this part of bar0 again when migration fails.
-> > 
-> > Yan Zhao (9):
-> >    vfio/pci: introduce mediate ops to intercept vfio-pci ops
-> >    vfio/pci: test existence before calling region->ops
-> >    vfio/pci: register a default migration region
-> >    vfio-pci: register default dynamic-trap-bar-info region
-> >    samples/vfio-pci/igd_dt: sample driver to mediate a passthrough IGD
-> >    sample/vfio-pci/igd_dt: dynamically trap/untrap subregion of IGD bar0
-> >    i40e/vf_migration: register mediate_ops to vfio-pci
-> >    i40e/vf_migration: mediate migration region
-> >    i40e/vf_migration: support dynamic trap of bar0
-> > 
-> >   drivers/net/ethernet/intel/Kconfig            |   2 +-
-> >   drivers/net/ethernet/intel/i40e/Makefile      |   3 +-
-> >   drivers/net/ethernet/intel/i40e/i40e.h        |   2 +
-> >   drivers/net/ethernet/intel/i40e/i40e_main.c   |   3 +
-> >   .../ethernet/intel/i40e/i40e_vf_migration.c   | 626 ++++++++++++++++++
-> >   .../ethernet/intel/i40e/i40e_vf_migration.h   |  78 +++
-> >   drivers/vfio/pci/vfio_pci.c                   | 189 +++++-
-> >   drivers/vfio/pci/vfio_pci_private.h           |   2 +
-> >   include/linux/vfio.h                          |  18 +
-> >   include/uapi/linux/vfio.h                     | 160 +++++
-> >   samples/Kconfig                               |   6 +
-> >   samples/Makefile                              |   1 +
-> >   samples/vfio-pci/Makefile                     |   2 +
-> >   samples/vfio-pci/igd_dt.c                     | 367 ++++++++++
-> >   14 files changed, 1455 insertions(+), 4 deletions(-)
-> >   create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.c
-> >   create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
-> >   create mode 100644 samples/vfio-pci/Makefile
-> >   create mode 100644 samples/vfio-pci/igd_dt.c
-> > 
-> 
+On 2019-12-05 3:38 AM, Peng Fan wrote:=0A=
+>> Subject: Re: [PATCH] clk: imx: imx8qxp-lpcg: use=0A=
+>> devm_platform_ioremap_resource=0A=
+>>=0A=
+>> On 2019-12-04 12:14 PM, Peng Fan wrote:=0A=
+>>> From: Peng Fan <peng.fan@nxp.com>=0A=
+>>>=0A=
+>>> devm_platform_ioremap_resource() wraps platform_get_resource() and=0A=
+>>> devm_ioremap_resource(), we could use this API to simplify the code.=0A=
+>>>=0A=
+>>> Signed-off-by: Peng Fan <peng.fan@nxp.com>=0A=
+>>=0A=
+>> This patch has been posted before and it breaks uart on imx8qxp-mek and=
+=0A=
+>> possibly other things.=0A=
+>>=0A=
+>> The old and new paths are not equivalent: devm_platform_ioremap_resource=
+=0A=
+>> calls devm_ioremap_resource differs from devm_ioremap by also calling=0A=
+>> devm_request_mem_region.=0A=
+>>=0A=
+>> This prevents other mappings in the area; this is not an issue for most =
+drivers=0A=
+>> but imx8qxp-lpcg maps whole subsystems. For example:=0A=
+>>=0A=
+>>                   adma_lpcg: clock-controller@59000000 {=0A=
+>>                           compatible =3D "fsl,imx8qxp-lpcg-adma";=0A=
+>>                           reg =3D <0x59000000 0x2000000>;=0A=
+>>                           #clock-cells =3D <1>;=0A=
+>>                   };=0A=
+>>=0A=
+>>                   adma_lpuart0: serial@5a060000 {=0A=
+>>                           reg =3D <0x5a060000 0x1000>;=0A=
+>> 			...=0A=
+>> 		};=0A=
+>>=0A=
+>> Previously: https://patchwork.kernel.org/patch/10908807/=0A=
+> =0A=
+> Thanks. I think at least need to provide some comments in code.=0A=
+=0A=
+Yes, comments would help. I think it's actually the 3rd time this =0A=
+incorrect cleanup was posted.=0A=
+=0A=
+But mapping entire subsystems (32mb at a time) for LPCG is deeply =0A=
+flawed: the LPCG areas are each 64k and they're interspersed among the =0A=
+peripherals. The correct solution is to have many small clock providers.=0A=
+=0A=
+This is done by a series of patches from Aisheng, I think this is the =0A=
+latest one:=0A=
+=0A=
+https://patchwork.kernel.org/patch/11248235/=0A=
+=0A=
+If some aspects of that series are dubious perhaps they could be =0A=
+discussed and maybe the series could be split into smaller chunks?=0A=
+=0A=
+That series does brings many essential improvements to imx8 clk support.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
