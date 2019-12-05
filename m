@@ -2,135 +2,82 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A65C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02756C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C63022525
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:50:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Jd4bTje6"
+	by mail.kernel.org (Postfix) with ESMTP id C823524652
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:51:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575571860;
+	bh=2J8dGb3LKQ1NbtoXi2EBVOWgBZLtFsy9Ky5TBCacaiY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IH+jgjzuRQ1McUhc8m72sJ3TY8E1F6e23WKAcpO9Ye542eSm1TcI0I2eYD2woHsp1
+	 vlPQxUkbxpMMlrGmvIuuS/Hm/kNvkxAkFzJA0HU8cwv+Yf3os/d4J9RBfosIRQSe9x
+	 InZi0vZ1m5DtRuNaGrhuFod8R3IxaHOXXShOI0Uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729806AbfLESuD (ORCPT
+        id S1729829AbfLESu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 13:50:03 -0500
-Received: from mail-eopbgr130079.outbound.protection.outlook.com ([40.107.13.79]:48151
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726589AbfLESuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 13:50:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GVDj72VqtyNDHGWlqpFL2BAv12SYw2NTlY6lccOdHIy5cRWEblMMex5xxfyB5PkGQRaUAvsbEnS+U3wTFAJ0mrNegtDFlJ9qmQeeQW3qt3V6tKBzp3Sq87+u/EF3CO2JM/WMOhiCEjgskAOEn+GKxYAfHYXNIS9gzuPGM5jsK6RUrX/eSkiLAPMTLQrq/Q0wDDjVtKlcJ3Ors9dTF2Sl4BICbfBqOvATjBt8xdHckkNg5mCPuVZLw6X9IJST99yS7cnL3Z4JcDdYnOeP/+WHK2sfKz1hp4AlSV68Xlue/VjRHxZc5b3MqrxlOv70gt4Veis8CTs9utBxI8bNrRL7GA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EqpEX+GRcN85lqr7uGDwuxAtDob+08CroYaIAD23nEE=;
- b=gqhDU/PaFx9LwscmckX+3O5F9KjPNShGxFt35MRbYbBpNstDcF0hUm9kWxSmS9OzfMVEtqHt6p50/l5i8QzP8oMAys09KzXOC2OFEFF34gABOtJTHzaHsEfJNyTCuexU63vfnASjrIu/8joSJ27s2ijlnOdkgFqh7mPvsh1BSpy1ZMTrFzHfrxmc5KtAoQGKDIQ4mVsPvkPc86wTmxUirJoPYEINk0By7gm/A4Ilht5TQYG/E+9LzVLF/jAwJ3cOQXrUeHabaswR6oxIMIfk15WqXR9A0akzEBXbabCXpL58gBEV8/rnAuTVYDmTPK4Ys0dsFMTbKG5ALmfimotbIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EqpEX+GRcN85lqr7uGDwuxAtDob+08CroYaIAD23nEE=;
- b=Jd4bTje69b75n46bjKpVVhUn5MW8a23mmiR/GzFa5jjJXutQ6rtTP3e7c01cCF61oak2wsi2qoXkgz2gcH12YhI/5pNWAAQHTClLPAzgp8buxq/35VaDN9fggx2waql+Qf8NHIrPj1xcUF8s2THa4BbSaFyl+Ua3oRJyD+kfTsA=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB4756.eurprd05.prod.outlook.com (52.133.61.29) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.14; Thu, 5 Dec 2019 18:49:58 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::16:9951:5a4b:9ec6]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::16:9951:5a4b:9ec6%7]) with mapi id 15.20.2516.014; Thu, 5 Dec 2019
- 18:49:58 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-CC:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] RDMA/cma: add missed unregister_pernet_subsys in init
- failure
-Thread-Topic: [PATCH] RDMA/cma: add missed unregister_pernet_subsys in init
- failure
-Thread-Index: AQHVq4X+uZCTp3HGm0yAWTgo2WdDwaer4g5w
-Date:   Thu, 5 Dec 2019 18:49:58 +0000
-Message-ID: <AM0PR05MB486638F7997D643FAD64B482D15C0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20191205160632.32132-1-hslester96@gmail.com>
-In-Reply-To: <20191205160632.32132-1-hslester96@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [208.176.44.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 70c08c0a-fbb7-49a4-57f4-08d779b3ed95
-x-ms-traffictypediagnostic: AM0PR05MB4756:
-x-microsoft-antispam-prvs: <AM0PR05MB4756336E7C79D24302188A11D15C0@AM0PR05MB4756.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:83;
-x-forefront-prvs: 02426D11FE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(39860400002)(346002)(376002)(189003)(199004)(71190400001)(71200400001)(305945005)(4326008)(11346002)(14454004)(186003)(74316002)(33656002)(102836004)(26005)(478600001)(76116006)(6506007)(66556008)(99286004)(8676002)(66476007)(66446008)(316002)(55016002)(86362001)(66946007)(6916009)(81166006)(5660300002)(8936002)(25786009)(4744005)(81156014)(52536014)(2906002)(229853002)(64756008)(9686003)(76176011)(7696005)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4756;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: c2S6h+9siS6ywIxMFrzlNiqQKHp/iaBcfaf/QLWze0lkWvdhKKvZPq8zsKBKVi1d/ZrTFYwDZvaZr3Y3meJzI/KE6itOcZmuuoZCCtIJfDqTAthM9SMlSESgYzwI7Z7cw4nlA8Z5JxDv7Df5hGeC7R0tsYjqeSxLrHpuFwP+2wtBnscNjShBYD2IjtJGVBPRWO3MgbZB8dZ4IeiYn1OW+j2EieaHoY6KGfFH9+Ml1P2i8OZ6lSeNf8v73/PQSppOpSc/iw7ni4XlUkhRnXb5fOYN1dWsqnXQjELE/vpAk4JLk/KT7whPSbR5xSQWcehVn2gavTOSvrjJN4sNXP/7yleGrh2L9TQbzFrjonLlhEQvR05g3gjyV68WicQBPBF5/Dl4ScBucSvf5Uv/Wkvysmb4+MGywi8RF21njTqjg/ZNv/g9Mqtg0ruqs9lejCXK
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 5 Dec 2019 13:50:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726589AbfLESu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 13:50:59 -0500
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D544420637;
+        Thu,  5 Dec 2019 18:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575571859;
+        bh=2J8dGb3LKQ1NbtoXi2EBVOWgBZLtFsy9Ky5TBCacaiY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EBCsNjMDgXMFZXrcDooeWfc9lTvGQUYo6UW1MuEcj73auCI4K5vsWs0qYGz8E+5K9
+         fHVJNauSqUHqVS0yHEzwu9ZmEyKqEVXUmH+ktkInnpyuDGqyXyShsK+2/OfHjqV6MJ
+         7tuRbdPuZ6yLsdzheDC7FqGZPZvv5GfVeNMZd5qo=
+Received: by mail-qk1-f180.google.com with SMTP id c124so4291480qkg.0;
+        Thu, 05 Dec 2019 10:50:58 -0800 (PST)
+X-Gm-Message-State: APjAAAUVju2bVbOdgw4JXNiMaJMXUe6viVeSvLD4KK5ePngbh7Kn4J3d
+        T8atgrox7zK8K71CGBPBlRm6xTYqvcOBsbhesA==
+X-Google-Smtp-Source: APXvYqxHRk7XLULW3uCK57I1LO+GYC0i7xE9PKzl0lYAajv5uAHzi3goaknvA1mi8cmpWUtzOFO+k3inbP9FBuI6+gc=
+X-Received: by 2002:a37:85c4:: with SMTP id h187mr9650315qkd.223.1575571857971;
+ Thu, 05 Dec 2019 10:50:57 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70c08c0a-fbb7-49a4-57f4-08d779b3ed95
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 18:49:58.7469
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZCTPfvtrtJCOD51xShImtjP2qFBRU2AbQ4t1QS3bjMyQWVSf5CU/T+OUkRMSu9eAEs7z/UhfccuvSc8+8n/cbw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4756
+References: <20191205153408.26500-1-narmstrong@baylibre.com> <20191205153408.26500-3-narmstrong@baylibre.com>
+In-Reply-To: <20191205153408.26500-3-narmstrong@baylibre.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 5 Dec 2019 12:50:46 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+ytVOw6pVaLo6pN_hM3gwk60d-hyx=P9ntcmunMLxOZg@mail.gmail.com>
+Message-ID: <CAL_Jsq+ytVOw6pVaLo6pN_hM3gwk60d-hyx=P9ntcmunMLxOZg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: media: amlogic,gx-vdec: add bindings
+ for G12A family
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Maxime Jourdan <mjourdan@baylibre.com>, devicetree@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
-> owner@vger.kernel.org> On Behalf Of Chuhong Yuan
-> Sent: Thursday, December 5, 2019 10:07 AM
-> The driver forgets to call unregister_pernet_subsys() in the error path o=
-f
-> cma_init().
-> Add the missed call to fix it.
->=20
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+On Thu, Dec 5, 2019 at 9:34 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Add bindings to support the Amlogic Video Decoder on the Amlogic G12A
+> family.
+>
+> For the G12A family, a supplementary clock is needed to operate the
+> HEVC/VP9 decoder.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  drivers/infiniband/core/cma.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.=
-c
-> index 25f2b70fd8ef..43a6f07e0afe 100644
-> --- a/drivers/infiniband/core/cma.c
-> +++ b/drivers/infiniband/core/cma.c
-> @@ -4763,6 +4763,7 @@ static int __init cma_init(void)
->  err:
->  	unregister_netdevice_notifier(&cma_nb);
->  	ib_sa_unregister_client(&sa_client);
-> +	unregister_pernet_subsys(&cma_pernet_operations);
->  err_wq:
->  	destroy_workqueue(cma_wq);
->  	return ret;
-> --
-> 2.24.0
-Please add to commit log.
+>  .../bindings/media/amlogic,gx-vdec.yaml       | 42 ++++++++++++++++---
+>  1 file changed, 37 insertions(+), 5 deletions(-)
 
-Fixes: 4be74b42a6d0 ("IB/cma: Separate port allocation to network namespace=
-s ")=20
-
-Reviewed-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
