@@ -2,133 +2,298 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC91FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26DDC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0706205ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C6B2073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:23:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbfLEBSI (ORCPT
+        id S1728590AbfLEBXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 20:18:08 -0500
-Received: from mga03.intel.com ([134.134.136.65]:2377 "EHLO mga03.intel.com"
+        Wed, 4 Dec 2019 20:23:16 -0500
+Received: from mga05.intel.com ([192.55.52.43]:11477 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727146AbfLEBSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 20:18:08 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1727146AbfLEBXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 20:23:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 17:18:07 -0800
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 17:23:14 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,279,1571727600"; 
-   d="scan'208";a="208989540"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Dec 2019 17:18:03 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1icfmJ-0009QL-P1; Thu, 05 Dec 2019 09:17:59 +0800
-Date:   Thu, 5 Dec 2019 09:17:15 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     kbuild-all@lists.01.org, Theodore Ts'o <tytso@mit.edu>,
-        linux-ext4@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com, Daniel Rosenberg <drosen@google.com>
-Subject: Re: [PATCH 5/8] f2fs: Handle casefolding with Encryption
-Message-ID: <201912050955.3f2DMo5g%lkp@intel.com>
-References: <20191203051049.44573-6-drosen@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203051049.44573-6-drosen@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+   d="scan'208";a="385977676"
+Received: from spandruv-mobl3.jf.intel.com ([10.252.134.55])
+  by orsmga005.jf.intel.com with ESMTP; 04 Dec 2019 17:23:12 -0800
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     rjw@rjwysocki.net, lenb@kernel.org, rui.zhang@intel.com,
+        corbet@lwn.net
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [UPDATE][PATCH] ACPI / fan: Display fan performance state information
+Date:   Wed,  4 Dec 2019 17:23:09 -0800
+Message-Id: <20191205012309.23868-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+When _FPS object indicates support of variable speed fan, thermal cooling
+devices for fan shows max performance state count using attribute
+"max_state" greater than or equal to 1.
 
-Thank you for the patch! Perhaps something to improve:
+But the thermal cooling device doesn't display properties of each
+performance state. This is not enough for smart fan control user space
+software, which also considers speed, power and noise level.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on next-20191202 next-20191204]
-[cannot apply to ext4/dev f2fs/dev-test v5.4 v5.4-rc8 v5.4-rc7 v5.4]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+This change presents fan performance states attributes under acpi
+device for the fan. This will be under:
+/sys/bus/acpi/devices/devices/INT3404:00
+or
+/sys/bus/platform/devices/PNP0C0B:00.
 
-url:    https://github.com/0day-ci/linux/commits/Daniel-Rosenberg/Support-for-Casefolding-and-Encryption/20191203-131410
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 76bb8b05960c3d1668e6bee7624ed886cbd135ba
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-91-g817270f-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+For more information refer to:
+Documentation/acpi/fan_performance_states.txt
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> fs/f2fs/dir.c:205:13: sparse: sparse: incorrect type in assignment (different base types) @@    expected int len @@    got restricted __le16 [usertyint len @@
->> fs/f2fs/dir.c:205:13: sparse:    expected int len
-   fs/f2fs/dir.c:205:13: sparse:    got restricted __le16 [usertype] name_len
---
->> fs/f2fs/hash.c:90:27: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] f2fs_hash @@    got __le32 [usertype] f2fs_hash @@
->> fs/f2fs/hash.c:90:27: sparse:    expected restricted __le32 [usertype] f2fs_hash
->> fs/f2fs/hash.c:90:27: sparse:    got unsigned long long
-   fs/f2fs/hash.c:133:24: sparse: sparse: incorrect type in return expression (different base types) @@    expected restricted __le32 @@    got e32 @@
-   fs/f2fs/hash.c:133:24: sparse:    expected restricted __le32
-   fs/f2fs/hash.c:133:24: sparse:    got int
-   fs/f2fs/hash.c:141:11: sparse: sparse: incorrect type in assignment (different base types) @@    expected int r @@    got restricted __int r @@
-   fs/f2fs/hash.c:141:11: sparse:    expected int r
-   fs/f2fs/hash.c:141:11: sparse:    got restricted __le32
-   fs/f2fs/hash.c:144:16: sparse: sparse: incorrect type in return expression (different base types) @@    expected restricted __le32 @@    got le32 @@
-   fs/f2fs/hash.c:144:16: sparse:    expected restricted __le32
-   fs/f2fs/hash.c:144:16: sparse:    got int r
-
-vim +205 fs/f2fs/dir.c
-
-   199	
-   200		if (de->hash_code != namehash)
-   201			return false;
-   202	
-   203	#ifdef CONFIG_UNICODE
-   204		name = d->filename[bit_pos];
- > 205		len = de->name_len;
-   206	
-   207		if (sb->s_encoding && needs_casefold(parent)) {
-   208			if (cf_str->name) {
-   209				struct qstr cf = {.name = cf_str->name,
-   210						  .len = cf_str->len};
-   211				return !f2fs_ci_compare(parent, &cf, name, len, true);
-   212			}
-   213			return !f2fs_ci_compare(parent, fname->usr_fname, name, len,
-   214						false);
-   215		}
-   216	#endif
-   217		if (fscrypt_match_name(fname, d->filename[bit_pos],
-   218					le16_to_cpu(de->name_len)))
-   219			return true;
-   220		return false;
-   221	}
-   222	
-
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Tested-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
 ---
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+updated version:
+	Removed one unnecessary platoform_device* conversion from
+	acpi_device* in the function argument.
+
+ Documentation/acpi/fan_performance_states.txt |  39 +++++++
+ drivers/acpi/fan.c                            | 106 ++++++++++++++++--
+ 2 files changed, 138 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/acpi/fan_performance_states.txt
+
+diff --git a/Documentation/acpi/fan_performance_states.txt b/Documentation/acpi/fan_performance_states.txt
+new file mode 100644
+index 000000000000..06fd8eb002f2
+--- /dev/null
++++ b/Documentation/acpi/fan_performance_states.txt
+@@ -0,0 +1,39 @@
++When the optional object _FPS is present for ACPI devices PNP0C0B or INT3404,
++additional attributes are displayed under acpi device object. These attributes
++display information about each performance state.
++
++For example
++$ ls /sys/bus/acpi/devices/INT3404\:00
++description        fan_perf_state_11  fan_perf_state_5  fan_perf_state_9  physical_node  uevent
++fan_perf_state_0   fan_perf_state_2   fan_perf_state_6  hid               power          uid
++fan_perf_state_1   fan_perf_state_3   fan_perf_state_7  modalias          status         wakeup
++fan_perf_state_10  fan_perf_state_4   fan_perf_state_8  path              subsystem
++
++Each fan_perf_state_* contains the information about the fields for each state as
++defined by the ACPI specification.
++
++For example
++$ grep . /sys/bus/acpi/devices/INT3404\:00/fan_perf_state_1/*
++/sys/bus/acpi/devices/INT3404:00/fan_perf_state_1/control_percent:25
++/sys/bus/acpi/devices/INT3404:00/fan_perf_state_1/noise_level_mdb:12500
++/sys/bus/acpi/devices/INT3404:00/fan_perf_state_1/power_mw:1250
++/sys/bus/acpi/devices/INT3404:00/fan_perf_state_1/speed_rpm:3200
++/sys/bus/acpi/devices/INT3404:00/fan_perf_state_1/trip_point_index:invalid
++
++Fields
++control_percent: Indicates the value to be used to set the fan speed to a
++specific level using the _FSL object. The value here is from 0-100 percent.
++
++noise_level_mdb: Indicates the audible noise emitted by the fan. By the
++specification the value represents the noise in 10ths of decibels. Here
++it is multiplied with 100 to present in milli-db, to avoid loss of
++precision. When not populated, "not-defined" is displayed.
++
++speed_rpm: Indicates the speed of the fan in revolutions per minute.
++
++power_mw: Indicates the power consumption in milliwatts. When not populated,
++"not-defined" is displayed.
++
++trip_point_index: The active cooling trip point number that corresponds to this
++performance state. The range is from 0-9. For any other values, "invalid" is
++be displayed.
+diff --git a/drivers/acpi/fan.c b/drivers/acpi/fan.c
+index 816b0803f7fb..f5e9f67e6a5f 100644
+--- a/drivers/acpi/fan.c
++++ b/drivers/acpi/fan.c
+@@ -50,6 +50,7 @@ struct acpi_fan_fps {
+ 	u64 speed;
+ 	u64 noise_level;
+ 	u64 power;
++	struct kobject kobj;
+ };
+ 
+ struct acpi_fan_fif {
+@@ -265,6 +266,64 @@ static int acpi_fan_speed_cmp(const void *a, const void *b)
+ 	return fps1->speed - fps2->speed;
+ }
+ 
++#define to_fps_state(k) container_of(k, struct acpi_fan_fps, kobj)
++
++#define DEFINE_ONE_FPS_ATTR_RO(_name)\
++	static struct kobj_attribute _name =\
++		__ATTR(_name, 0444, show_##_name, NULL)
++
++#define FPS_INFO_SHOW(name, object, multiplier)\
++static ssize_t show_##name(struct kobject *kobj,\
++			   struct kobj_attribute *attr,\
++			   char *buf)\
++{\
++	struct acpi_fan_fps *fps = to_fps_state(kobj);\
++\
++	if (fps->object == 0xFFFFFFFF)\
++		return sprintf(buf, "not-defined\n");\
++\
++	return sprintf(buf, "%llu\n", multiplier * fps->object);\
++}
++
++FPS_INFO_SHOW(control_percent, control, 1)
++FPS_INFO_SHOW(speed_rpm, speed, 1)
++FPS_INFO_SHOW(power_mw, power, 1)
++FPS_INFO_SHOW(noise_level_mdb, noise_level, 100)
++
++static ssize_t show_trip_point_index(struct kobject *kobj,
++				     struct kobj_attribute *attr,
++				     char *buf)
++{
++	struct acpi_fan_fps *fps = to_fps_state(kobj);
++
++	if (fps->trip_point > 9)
++		return sprintf(buf, "invalid\n");
++
++	return sprintf(buf, "%llu\n", fps->trip_point);
++}
++
++DEFINE_ONE_FPS_ATTR_RO(control_percent);
++DEFINE_ONE_FPS_ATTR_RO(trip_point_index);
++DEFINE_ONE_FPS_ATTR_RO(speed_rpm);
++DEFINE_ONE_FPS_ATTR_RO(noise_level_mdb);
++DEFINE_ONE_FPS_ATTR_RO(power_mw);
++
++static struct attribute *fps_attrs[] = {
++	&control_percent.attr,
++	&trip_point_index.attr,
++	&speed_rpm.attr,
++	&noise_level_mdb.attr,
++	&power_mw.attr,
++	NULL
++};
++
++static struct kobj_type fps_ktype = {
++	.sysfs_ops = &kobj_sysfs_ops,
++	.default_attrs = fps_attrs,
++};
++
++#define ACPI_FPS_NAME_LEN	20
++
+ static int acpi_fan_get_fps(struct acpi_device *device)
+ {
+ 	struct acpi_fan *fan = acpi_driver_data(device);
+@@ -295,12 +354,13 @@ static int acpi_fan_get_fps(struct acpi_device *device)
+ 	}
+ 	for (i = 0; i < fan->fps_count; i++) {
+ 		struct acpi_buffer format = { sizeof("NNNNN"), "NNNNN" };
+-		struct acpi_buffer fps = { sizeof(fan->fps[i]), &fan->fps[i] };
++		struct acpi_buffer fps = { offsetof(struct acpi_fan_fps, kobj),
++						&fan->fps[i] };
+ 		status = acpi_extract_package(&obj->package.elements[i + 1],
+ 					      &format, &fps);
+ 		if (ACPI_FAILURE(status)) {
+ 			dev_err(&device->dev, "Invalid _FPS element\n");
+-			break;
++			goto err;
+ 		}
+ 	}
+ 
+@@ -308,6 +368,21 @@ static int acpi_fan_get_fps(struct acpi_device *device)
+ 	sort(fan->fps, fan->fps_count, sizeof(*fan->fps),
+ 	     acpi_fan_speed_cmp, NULL);
+ 
++	for (i = 0; i < fan->fps_count; ++i) {
++		char name[ACPI_FPS_NAME_LEN];
++
++		snprintf(name, ACPI_FPS_NAME_LEN, "fan_perf_state_%d", i);
++		status = kobject_init_and_add(&fan->fps[i].kobj, &fps_ktype,
++					      &device->dev.kobj, name);
++		if (status) {
++			int j;
++
++			for (j = 0; j < i; ++j)
++				kobject_put(&fan->fps[j].kobj);
++			break;
++		}
++	}
++
+ err:
+ 	kfree(obj);
+ 	return status;
+@@ -331,13 +406,13 @@ static int acpi_fan_probe(struct platform_device *pdev)
+ 
+ 	if (acpi_fan_is_acpi4(device)) {
+ 		if (acpi_fan_get_fif(device) || acpi_fan_get_fps(device))
+-			goto end;
++			goto err_end;
+ 		fan->acpi4 = true;
+ 	} else {
+ 		result = acpi_device_update_power(device, NULL);
+ 		if (result) {
+ 			dev_err(&device->dev, "Failed to set initial power state\n");
+-			goto end;
++			goto err_end;
+ 		}
+ 	}
+ 
+@@ -350,7 +425,7 @@ static int acpi_fan_probe(struct platform_device *pdev)
+ 						&fan_cooling_ops);
+ 	if (IS_ERR(cdev)) {
+ 		result = PTR_ERR(cdev);
+-		goto end;
++		goto err_end;
+ 	}
+ 
+ 	dev_dbg(&pdev->dev, "registered as cooling_device%d\n", cdev->id);
+@@ -365,10 +440,21 @@ static int acpi_fan_probe(struct platform_device *pdev)
+ 	result = sysfs_create_link(&cdev->device.kobj,
+ 				   &pdev->dev.kobj,
+ 				   "device");
+-	if (result)
++	if (result) {
+ 		dev_err(&pdev->dev, "Failed to create sysfs link 'device'\n");
++		goto err_end;
++	}
++
++	return 0;
++
++err_end:
++	if (fan->acpi4) {
++		int i;
++
++		for (i = 0; i < fan->fps_count; ++i)
++			kobject_put(&fan->fps[i].kobj);
++	}
+ 
+-end:
+ 	return result;
+ }
+ 
+@@ -376,6 +462,12 @@ static int acpi_fan_remove(struct platform_device *pdev)
+ {
+ 	struct acpi_fan *fan = platform_get_drvdata(pdev);
+ 
++	if (fan->acpi4) {
++		int i;
++
++		for (i = 0; i < fan->fps_count; ++i)
++			kobject_put(&fan->fps[i].kobj);
++	}
+ 	sysfs_remove_link(&pdev->dev.kobj, "thermal_cooling");
+ 	sysfs_remove_link(&fan->cdev->device.kobj, "device");
+ 	thermal_cooling_device_unregister(fan->cdev);
+-- 
+2.17.2
+
