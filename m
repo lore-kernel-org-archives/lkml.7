@@ -2,149 +2,107 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC38EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F68CC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22EF206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:36:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hEvfs86e"
+	by mail.kernel.org (Postfix) with ESMTP id E2C8221835
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbfLEEgQ (ORCPT
+        id S1728847AbfLEEm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 23:36:16 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32820 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728470AbfLEEgQ (ORCPT
+        Wed, 4 Dec 2019 23:42:59 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:44874 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728470AbfLEEm7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 23:36:16 -0500
-Received: by mail-wr1-f67.google.com with SMTP id b6so1858141wrq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 20:36:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=keNUPJzqbpb1zvh7gwgj7wSZGJ1RcEtCjXcl9nIyRWA=;
-        b=hEvfs86e9uivc96esO1PqMIaSDQRwe6rRSEh3UTbWwRpAfK2D9o0OHW9jyWdUe+ImC
-         KM5sjitV4VYUSsac91vLm0LvC2QACkEbjm+0bQ9Usog5c782YsT0qny4ZFJy4VNaaSPj
-         EoxT4aPxXr+CxnhTvj6mg+0gI6BMQ0BvXkUSCTtK4JWxrfURYclITMO5RB0/bJH0GV9K
-         ICalID4puBDrItEojRVXbjuKsTJ/YPJt6Xlql9wzZ9RXhh3pubq8cEt3s5sYE1KzUS8x
-         QwAVJIhhZQaZkudwl6IhRSSzAGZ1MN263zCP8gq5tnsmIZCHCa1Ve0QoErHbRHURc2er
-         kWPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=keNUPJzqbpb1zvh7gwgj7wSZGJ1RcEtCjXcl9nIyRWA=;
-        b=T9VRrcIcRpL7JYkrYc4Nb6I6uPBQSSCcBOE6GxBG/XJxn83AaWDNW5Nc2euOaz7wIA
-         JmrJuvaA/12MF0lU43i+o2spTElPEhLt1Z4ZKg2alHyvuJsE4XVHz4eHPue5Mq3YWnJS
-         XaoZq0t/Y7Vh29t1VH2g4Y4B+DktOcbiLelC1lWmiCDhZP3sv5tuIcu8AsTQPBMesYcg
-         +1KBphSusA9++0WiLMGPO96G4IP276Yij3cvckz9Cd5dUR2Qyi2eqMlTa5YLH7mPNIHJ
-         ABjcqgR1vSJ1MSDSXmz9F83rw2CBDbFXGB/ukDW4KFolPeEHg3NxGoIX9J8691xq218k
-         FfMQ==
-X-Gm-Message-State: APjAAAVjZfL2zeMZkDisytrI77pIzVMO+LzvpqgJ21Y/y+BPw1oIrG1n
-        QiiBYZfWIrHWioKHBdFDY/syaQ==
-X-Google-Smtp-Source: APXvYqyAeuNq7VceTAS9eq+u2nkne8kbzO+3NySJpdhCTng6yAxjdC53noAT+TaQdRaTXEWhj0rzog==
-X-Received: by 2002:adf:fe86:: with SMTP id l6mr7357191wrr.252.1575520573537;
-        Wed, 04 Dec 2019 20:36:13 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id j12sm11408925wrw.54.2019.12.04.20.36.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 20:36:12 -0800 (PST)
-Date:   Thu, 5 Dec 2019 04:36:09 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Zhang Rui <rui.zhang@intel.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Subject: Re: linux-next: Tree for Nov 15 (thermal:
- THERMAL_GOV_POWER_ALLOCATOR)
-Message-ID: <20191205043609.GA231782@google.com>
-References: <20191115190525.77efdf6c@canb.auug.org.au>
- <247cd41e-a07b-adf0-4ec2-6467f0257837@infradead.org>
- <9436e207-8a65-f01b-c348-32a8a00f03d4@infradead.org>
- <6d43c93a748872293df489d397f894b77b221bc9.camel@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6d43c93a748872293df489d397f894b77b221bc9.camel@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 4 Dec 2019 23:42:59 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 05 Dec 2019 10:12:56 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 05 Dec 2019 10:12:37 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id AD1951A09; Thu,  5 Dec 2019 10:12:36 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v2 3/3] dt-bindings: phy: qcom-qusb2: Add SC7180 QUSB2 phy support
+Date:   Thu,  5 Dec 2019 10:11:21 +0530
+Message-Id: <1575520881-31458-4-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1575520881-31458-1-git-send-email-sanm@codeaurora.org>
+References: <1575520881-31458-1-git-send-email-sanm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Add QUSB2 phy entries for SC7180 in device tree bindings.
 
-On Thursday 05 Dec 2019 at 12:27:47 (+0800), Zhang Rui wrote:
-> I overlooked the original report probably because I was not CCed.
-> 
-> This is introduced by commit a4e893e802e6("thermal: cpu_cooling:
-> Migrate to using the EM framework") which adds the dependency of
-> ENERGY_MODEL for THERMAL_GOV_POWER_ALLOCATOR.
-> 
-> To fix this, it's better to make THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
-> depends on THERMAL_GOV_POWER_ALLOCATOR instead.
-> 
-> Please confirm the problem is fixed by below patch.
-> 
-> thanks,
-> rui
-> 
-> From c9429f6e28ea2219686a4294d39f015ba373774b Mon Sep 17 00:00:00 2001
-> From: Zhang Rui <rui.zhang@intel.com>
-> Date: Thu, 5 Dec 2019 12:17:07 +0800
-> Subject: [PATCH] thermal: fix a Kconfig warning
-> 
-> Currently, THERMAL_GOV_POWER_ALLOCATOR is selected by
-> THERMAL_DEFAULT_GOV_POWER_ALLOCATOR even if it has some unmet
-> dependencies.
-> 
-> This causes the Kconfig warning
->    WARNING: unmet direct dependencies detected for
->       THERMAL_GOV_POWER_ALLOCATOR
->       Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
->       Selected by [y]:
->       - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
-> 
-> Fix the problem by making THERMAL_DEFAULT_GOV_POWER_ALLOCATOR depends on
-> THERMAL_GOV_POWER_ALLOCATOR instead.
-> 
-> Fixes: a4e893e802e6("thermal: cpu_cooling: Migrate to using the EM framework")
-> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> ---
->  drivers/thermal/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 59b79fc48266..79b27865c6f4 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -108,7 +108,7 @@ config THERMAL_DEFAULT_GOV_USER_SPACE
->  
->  config THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
->  	bool "power_allocator"
-> -	select THERMAL_GOV_POWER_ALLOCATOR
-> +	depends on THERMAL_GOV_POWER_ALLOCATOR
->  	help
->  	  Select this if you want to control temperature based on
->  	  system and device power allocation. This governor can only
-> -- 
-> 2.17.1
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+---
+ Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-FWIW, a similar fix has been suggested a couple weeks back:
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml
+index 3ef94bc..5eff9016 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml
+@@ -18,6 +18,7 @@ properties:
+     enum:
+       - qcom,msm8996-qusb2-phy
+       - qcom,msm8998-qusb2-phy
++      - qcom,sc7180-qusb2-phy
+       - qcom,sdm845-qusb2-phy
+ 
+   reg:
+@@ -66,7 +67,7 @@ properties:
+         It is a 6 bit value that specifies offset to be
+         added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
+         tuning parameter that may vary for different boards of same SOC.
+-        This property is applicable to only QUSB2 v2 PHY (sdm845).
++        This property is applicable to only QUSB2 v2 PHY (sc7180, sdm845).
+     $ref: /schemas/types.yaml#/definitions/uint32
+ 
+   qcom,hstx-trim-value:
+@@ -75,7 +76,7 @@ properties:
+         output current.
+         Possible range is - 15mA to 24mA (stepsize of 600 uA).
+         See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+-        This property is applicable to only QUSB2 v2 PHY (sdm845).
++        This property is applicable to only QUSB2 v2 PHY (sc7180, sdm845).
+         Default value is 22.2mA for sdm845.
+     $ref: /schemas/types.yaml#/definitions/uint32
+ 
+@@ -84,7 +85,7 @@ properties:
+         It is a 2 bit value that specifies pre-emphasis level.
+         Possible range is 0 to 15% (stepsize of 5%).
+         See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+-        This property is applicable to only QUSB2 v2 PHY (sdm845).
++        This property is applicable to only QUSB2 v2 PHY (sc7180, sdm845).
+         Default value is 10% for sdm845.
+     $ref: /schemas/types.yaml#/definitions/uint32
+ 
+@@ -94,7 +95,7 @@ properties:
+         pre-emphasis (specified using qcom,preemphasis-level) must be in
+         effect. Duration could be half-bit of full-bit.
+         See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+-        This property is applicable to only QUSB2 v2 PHY (sdm845).
++        This property is applicable to only QUSB2 v2 PHY (sc7180, sdm845).
+         Default value is full-bit width for sdm845.
+     $ref: /schemas/types.yaml#/definitions/uint32
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-  https://lore.kernel.org/lkml/20191113105313.41616-1-yuehaibing@huawei.com/
-
-Thanks,
-Quentin
