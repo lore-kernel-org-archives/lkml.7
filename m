@@ -2,103 +2,119 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3169C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA46C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B68CA24655
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:33:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vjvNicES"
+	by mail.kernel.org (Postfix) with ESMTP id 1A4BD2464F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:34:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbfLEKdi (ORCPT
+        id S1729303AbfLEKeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:33:38 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:41230 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728794AbfLEKdi (ORCPT
+        Thu, 5 Dec 2019 05:34:50 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:62946 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728707AbfLEKeu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:33:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GQf+rnNFuRmLYQiBswud5Lup/z9TY9QZpcCJ3hoxq8A=; b=vjvNicESJqr5AY6NlaHJa6rea
-        cnuqKiDYZOs3IGOuIFyjtR+mAkH9jYuoeiDrxZykggmCO6aT+Ud+hR3UxAanfEgYoFrSchej3FDRo
-        s2IDNhjYVpb6obg/o25jt0RLXfptkZKEPg8zTT6qWZBZiKExrtZuJEKBBl9CpT6LZnlYOeJwBj4t8
-        aQPQe2aKgXGWTssi2TfIuYGelIZq5ghE0h+J9Yg5POuYFD6kemx0hq9jg37LUax/1Q4bsffuAU2HG
-        VoSNvd4DE/7uGUvvfMtsfiVpoIHwm6w+f3mAT+oEP3V2d/DOko4MA/4qbOWwd69IKVIjvxVg6VQxL
-        0oWr+4lWw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1icoRv-0003Hz-9v; Thu, 05 Dec 2019 10:33:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 97E1E3011E0;
-        Thu,  5 Dec 2019 11:32:12 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9991B2006F795; Thu,  5 Dec 2019 11:33:29 +0100 (CET)
-Date:   Thu, 5 Dec 2019 11:33:29 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     liu.song11@zte.com.cn
-Cc:     fishland@aliyun.com, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, jiang.xuexin@zte.com.cn
-Subject: Re: [PATCH] psi: Only collect online cpu time in collect_percpu_times
-Message-ID: <20191205103329.GH2810@hirez.programming.kicks-ass.net>
-References: <20191204123500.GT2844@hirez.programming.kicks-ass.net>
- <201912051005599522735@zte.com.cn>
+        Thu, 5 Dec 2019 05:34:50 -0500
+Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xB5AUvCo044363;
+        Thu, 5 Dec 2019 19:30:57 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp);
+ Thu, 05 Dec 2019 19:30:57 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp)
+Received: from [192.168.1.9] (softbank126040062084.bbtec.net [126.40.62.84])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xB5AUqmd044301
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 5 Dec 2019 19:30:57 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: KASAN: slab-out-of-bounds Read in fbcon_get_font
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     syzbot <syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI <dri-devel@lists.freedesktop.org>, ghalat@redhat.com,
+        Gleb Natapov <gleb@kernel.org>, gwshan@linux.vnet.ibm.com,
+        "H. Peter Anvin" <hpa@zytor.com>, James Morris <jmorris@namei.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        KVM list <kvm@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, stewart@linux.vnet.ibm.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>
+References: <0000000000003e640e0598e7abc3@google.com>
+ <41c082f5-5d22-d398-3bdd-3f4bf69d7ea3@redhat.com>
+ <CACT4Y+bCHOCLYF+TW062n8+tqfK9vizaRvyjUXNPdneciq0Ahg@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <811afcac-ec6e-3ff0-1a4e-c83b98540f0d@i-love.sakura.ne.jp>
+Date:   Thu, 5 Dec 2019 19:30:53 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201912051005599522735@zte.com.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACT4Y+bCHOCLYF+TW062n8+tqfK9vizaRvyjUXNPdneciq0Ahg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 10:05:59AM +0800, liu.song11@zte.com.cn wrote:
-> >On Mon, Dec 02, 2019 at 09:09:28PM +0800, Liu Song wrote:
-> >> From: Liu Song <liu.song11@zte.com.cn> 
-> >>  
-> >> Tasks can only run on the online cpu, so only need to
-> >> collect the time of the online cpu.
-> >>  
-> >> Signed-off-by: Liu Song <liu.song11@zte.com.cn> 
-> >> ---
-> >>  kernel/sched/psi.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>  
-> >> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> >> index 7acc632c3b82..605f02facb7b 100644
-> >> --- a/kernel/sched/psi.c
-> >> +++ b/kernel/sched/psi.c
-> >> @@ -316,7 +316,7 @@ static void collect_percpu_times(struct psi_group *group,
-> >>       * the sampling period. This eliminates artifacts from uneven
-> >>       * loading, or even entirely idle CPUs.
-> >>       */
-> >> -    for_each_possible_cpu(cpu) {
-> >> +    for_each_online_cpu(cpu) {
-> >>          u32 times[NR_PSI_STATES];
-> >>          u32 nonidle;
-> >>          u32 cpu_changed_states;
-> >
-> >And who collects the deltas that remain after offline?
+On 2019/12/05 19:16, Dmitry Vyukov wrote:
+> On Thu, Dec 5, 2019 at 11:13 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>>
+>> On 04/12/19 22:41, syzbot wrote:
+>>> syzbot has bisected this bug to:
+>>>
+>>> commit 2de50e9674fc4ca3c6174b04477f69eb26b4ee31
+>>> Author: Russell Currey <ruscur@russell.cc>
+>>> Date:   Mon Feb 8 04:08:20 2016 +0000
+>>>
+>>>     powerpc/powernv: Remove support for p5ioc2
+>>>
+>>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=127a042ae00000
+>>> start commit:   76bb8b05 Merge tag 'kbuild-v5.5' of
+>>> git://git.kernel.org/p..
+>>> git tree:       upstream
+>>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=117a042ae00000
+>>> console output: https://syzkaller.appspot.com/x/log.txt?x=167a042ae00000
+>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=dd226651cb0f364b
+>>> dashboard link:
+>>> https://syzkaller.appspot.com/bug?extid=4455ca3b3291de891abc
+>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11181edae00000
+>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=105cbb7ae00000
+>>>
+>>> Reported-by: syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com
+>>> Fixes: 2de50e9674fc ("powerpc/powernv: Remove support for p5ioc2")
+>>>
+>>> For information about bisection process see:
+>>> https://goo.gl/tpsmEJ#bisection
+>>>
+>>
+>> Why is everybody being CC'd, even if the bug has nothing to do with the
+>> person's subsystem?
 > 
-> Hi,
-> After the cpu goes offline, there is no activity on the cpu and no time will be updated.
+> The To list should be intersection of 2 groups of emails: result of
+> get_maintainers.pl on the file identified as culprit in the crash
+> message + emails extracted from the bisected to commit.
+> 
 
-But there might have been activitiy before it went offline.
-
-> So the value of deltas is 0 and it will not contribute to the total time.
-
-No, the value will not change, but it need not be 0.
-
-
+There is "#syz uncc" command but it is too hard to utilize?
