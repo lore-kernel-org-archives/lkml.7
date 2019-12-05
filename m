@@ -2,115 +2,62 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8FAC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECE9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC03B20707
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:28:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575534515;
-	bh=/l81rifg3rXzLUo11Q36GAttbB8DKI+R9E4DG7pEnKM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=EiP+Dd1/Jw2IKHJz62671XWAMfNEGEBUZcVrH6x0NPL66zzA/XPXe1YUoKl21Rj56
-	 XVQ6S+twiS2eoLk0LDDq2S8j6xEEFc4qgkOdJwjcOYOlUYY4NMwHRKS3bZvtZoauck
-	 jCKwDUx3KECa1WQlh3YcE7/jXCiV5VrCF8vo6pHM=
+	by mail.kernel.org (Postfix) with ESMTP id C909921835
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:28:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfLEI2e (ORCPT
+        id S1728975AbfLEI2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 03:28:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52076 "EHLO mail.kernel.org"
+        Thu, 5 Dec 2019 03:28:45 -0500
+Received: from verein.lst.de ([213.95.11.211]:54012 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfLEI2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 03:28:33 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8D220707;
-        Thu,  5 Dec 2019 08:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575534513;
-        bh=/l81rifg3rXzLUo11Q36GAttbB8DKI+R9E4DG7pEnKM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=chCMKjcpCxO62O5MnivFHjPUdtxg6+WgtEauVsar/Y9E+qBshhHXHHYEm3xzSYQtp
-         j9qCk2vZsSvQl57fNz6goAF5IZ8wLM65QreL0gu5o/TRVZicDsdEnAmAF3lJnUQ5bR
-         I9Vp2X0muh1wOLdYMKXQmpjMSIQ8QfVinlMh1ZWI=
-Date:   Thu, 5 Dec 2019 17:28:29 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jaswinder.singh@linaro.org
-Subject: Re: [BUGFIX PATCH] selftests/x86: Check the availablity of
- sys/syscall.h
-Message-Id: <20191205172829.66ec55907ac31303bbede593@kernel.org>
-In-Reply-To: <157467982420.24866.4375165389279465782.stgit@devnote2>
-References: <157467982420.24866.4375165389279465782.stgit@devnote2>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726059AbfLEI2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 03:28:45 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 4D04768C4E; Thu,  5 Dec 2019 09:28:38 +0100 (CET)
+Date:   Thu, 5 Dec 2019 09:28:37 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ram Pai <linuxram@us.ibm.com>
+Cc:     David Gibson <david@gibson.dropbear.id.au>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@ozlabs.org,
+        mdroth@linux.vnet.ibm.com, hch@lst.de, andmike@us.ibm.com,
+        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
+        cai@lca.pw, tglx@linutronix.de, bauerman@linux.ibm.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] powerpc/pseries/iommu: Share the per-cpu TCE
+ page with the hypervisor.
+Message-ID: <20191205082837.GA20298@lst.de>
+References: <20191203020850.GA12354@oc0525413822.ibm.com> <0b56ce3e-6c32-5f3b-e7cc-0d419a61d71d@ozlabs.ru> <20191203040509.GB12354@oc0525413822.ibm.com> <a0f19e65-81eb-37bd-928b-7a57a8660e3d@ozlabs.ru> <20191203165204.GA5079@oc0525413822.ibm.com> <3a17372a-fcee-efbf-0a05-282ffb1adc90@ozlabs.ru> <20191204004958.GB5063@oc0525413822.ibm.com> <5963ff32-2119-be7c-d1e5-63457888a73b@ozlabs.ru> <20191204033618.GA5031@umbus.fritz.box> <20191204204232.GE5063@oc0525413822.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204204232.GE5063@oc0525413822.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
-
-Could you pick this if there si no issue?
-
-Thank you,
-
-On Mon, 25 Nov 2019 20:03:44 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> Since single_step_syscall.c depends on sys/syscall.h and
-> its include, asm/unistd.h, we should check the availability
-> of those headers.
-> Without this fix, if gcc-multilib is not installed but
-> libc6-dev-i386 is installed, kselftest tries to build 32bit
-> binary and failed with following error message.
+On Wed, Dec 04, 2019 at 12:42:32PM -0800, Ram Pai wrote:
+> > The other approach we could use for that - which would still allow
+> > H_PUT_TCE_INDIRECT, would be to allocate the TCE buffer page from the
+> > same pool that we use for the bounce buffers.  I assume there must
+> > already be some sort of allocator for that?
 > 
-> In file included from single_step_syscall.c:18:
-> /usr/include/sys/syscall.h:24:10: fatal error: asm/unistd.h: No such file or directory
->  #include <asm/unistd.h>
->           ^~~~~~~~~~~~~~
-> compilation terminated.
-> 
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  .../testing/selftests/x86/trivial_32bit_program.c  |    1 +
->  .../testing/selftests/x86/trivial_64bit_program.c  |    1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/x86/trivial_32bit_program.c b/tools/testing/selftests/x86/trivial_32bit_program.c
-> index aa1f58c2f71c..6b455eda24f7 100644
-> --- a/tools/testing/selftests/x86/trivial_32bit_program.c
-> +++ b/tools/testing/selftests/x86/trivial_32bit_program.c
-> @@ -8,6 +8,7 @@
->  # error wrong architecture
->  #endif
->  
-> +#include <sys/syscall.h>
->  #include <stdio.h>
->  
->  int main()
-> diff --git a/tools/testing/selftests/x86/trivial_64bit_program.c b/tools/testing/selftests/x86/trivial_64bit_program.c
-> index 39f4b84fbf15..07ae86df18ff 100644
-> --- a/tools/testing/selftests/x86/trivial_64bit_program.c
-> +++ b/tools/testing/selftests/x86/trivial_64bit_program.c
-> @@ -8,6 +8,7 @@
->  # error wrong architecture
->  #endif
->  
-> +#include <sys/syscall.h>
->  #include <stdio.h>
->  
->  int main()
-> 
+> The allocator for swiotlb is buried deep in the swiotlb code. It is 
+> not exposed to the outside-swiotlb world. Will have to do major surgery
+> to expose it.
 
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+I don't think it would require all that much changes, but I'd really
+hate the layering of calling into it directly.  Do we have a struct
+device associated with the iommu that doesn't get iommu translations
+themselves?  If we do a dma_alloc_coherent on that you'll get the
+memory pool for free.
