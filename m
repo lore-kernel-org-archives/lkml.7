@@ -2,327 +2,222 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69B9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA179C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9C320409
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94CFA20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:21:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HGikBZLc"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AjT1fPN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbfLEAQH (ORCPT
+        id S1728466AbfLEAVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 19:16:07 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35501 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbfLEAQH (ORCPT
+        Wed, 4 Dec 2019 19:21:10 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:33387 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbfLEAVK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 19:16:07 -0500
-Received: by mail-pl1-f195.google.com with SMTP id s10so441701plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 16:16:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=dIxP6eV19dV4deKuY2u2OMouyxNg4VVPoJ/7ILKlt5A=;
-        b=HGikBZLck8OARIrtAyQH3OeYiqo0Ij6YGebXJIIIRxVX71igUK9HbQXhX2OBH08lyO
-         5RJh4XoDgLBqrkxiyI4Y+OyMLKOfCoV5d1PI5bEtFSs7VqcHInIi9ca45iKf6bksoedk
-         Eqhr3y1Rfg0g3CJXfoDVokCHjjaEZ4hiZ//ALVY0fSWObzeMQy0vu/w+too2wH+Rxte9
-         iP3H+QXdZfDafNmsk09TEWFdtt/VZyEpgjuOZBwgpM1mpZqXN1LkNAXWcaZ0gHJ9dq2A
-         RkncLEsEeLnt4v/bOqtrpRZZpGDTtfJ/eiDlH/OFv/HqL29HjHlzJ8aRZjJhqyKNW8Du
-         7Whg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=dIxP6eV19dV4deKuY2u2OMouyxNg4VVPoJ/7ILKlt5A=;
-        b=QIb69zY6aRGFER+cqGyGSNuVgFOQaeOD6NLnsdTI62gMe5yO9syeC85WSWJhyRjXXE
-         83FWDE9w6QlvjVXvGpnwrtqCjHSDbNfqf96s845V4CiRli/eNQF6SlYXOyYUlK1L+/RS
-         xIBGOafnyEBWxP4t4AZ+Ols6nm69puW/Q3bCsQDdneSSVeMco3VSF0tUH1tRaqfruD8S
-         vBeDvB0HOXY5sOIx01om8MKeSKPxAeySCxDKBeXwub6RUkoxczHlEjrBfGjFTsA6VlAy
-         exwsWAZg+Zir+4nkDxBztl/Hk3Zbtw0dmRy5u9/yhb8iDsBX/fJDIncDi+AnNImatsCX
-         HOkQ==
-X-Gm-Message-State: APjAAAV3ShfhDG39rOmGdXmHZawMXCdypr8JOjZKBy7tT6rI+xSLe0Du
-        RHBvnQPNVMM50coRx2loeWYvQw==
-X-Google-Smtp-Source: APXvYqxeT9uihoBBzyRhAwmkW/g9V+/o1AQCwmW1ck6mL/ZoJBtejNoD5YqWH0Ghvs6ckqXpawCpHg==
-X-Received: by 2002:a17:902:b410:: with SMTP id x16mr6196641plr.258.1575504965547;
-        Wed, 04 Dec 2019 16:16:05 -0800 (PST)
-Received: from [100.112.92.218] ([104.133.9.106])
-        by smtp.gmail.com with ESMTPSA id g26sm9053526pfo.128.2019.12.04.16.16.04
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 04 Dec 2019 16:16:04 -0800 (PST)
-Date:   Wed, 4 Dec 2019 16:15:42 -0800 (PST)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-cc:     hughd@google.com, kirill.shutemov@linux.intel.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v2 PATCH] mm: shmem: allow split THP when truncating THP
- partially
-In-Reply-To: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com>
-Message-ID: <alpine.LSU.2.11.1912041601270.12930@eggly.anvils>
-References: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Wed, 4 Dec 2019 19:21:10 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191205002105epoutp03c4d90a2bc1cb4e06d586320ed988d973~dUbEZlebK2319223192epoutp036
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Dec 2019 00:21:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191205002105epoutp03c4d90a2bc1cb4e06d586320ed988d973~dUbEZlebK2319223192epoutp036
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575505265;
+        bh=aRUuMrHlQQDwAmmmhmUQinAQVsf5nnrqlN834n7/lwo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=AjT1fPN5T6cLCE+hXnWwaZUck9Y/2V0fvfmdhS7YYex56N/6tQEoIDNQdLnaKpQme
+         zmf9AWZDwAQG8lwXIHWnMULOdNcpYPKg+X+KkBS3Sk+6lpWAHI4GKQUiqIVJHUeNkU
+         Zss5ort/At0cghTkVT/40L5z/NMQf1Ms80lr0E6g=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191205002105epcas1p28b1b2ca77cb68647f068e7bbd8e79b7f~dUbD8Gi3B0491804918epcas1p2H;
+        Thu,  5 Dec 2019 00:21:05 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47SxG44GVwzMqYly; Thu,  5 Dec
+        2019 00:21:00 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        15.33.57028.76D48ED5; Thu,  5 Dec 2019 09:20:55 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20191205002054epcas1p46063b2d9d385ecbe30d86036a221eaa6~dUa6IO69d3207332073epcas1p4L;
+        Thu,  5 Dec 2019 00:20:54 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191205002054epsmtrp120a94ed51d592e5d4de6c7118f38ccf5~dUa6HLDlP1774817748epsmtrp1G;
+        Thu,  5 Dec 2019 00:20:54 +0000 (GMT)
+X-AuditID: b6c32a35-4f3ff7000001dec4-79-5de84d67c6e5
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        0F.58.10238.66D48ED5; Thu,  5 Dec 2019 09:20:54 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191205002054epsmtip1e7a47fc6b1a21978b10bea41149ade4f~dUa56OkBa2276922769epsmtip1B;
+        Thu,  5 Dec 2019 00:20:54 +0000 (GMT)
+Subject: Re: [PATCH v2 1/3] devfreq: change time stats to 64-bit
+To:     Kamil Konieczny <k.konieczny@samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <0fd243ee-001e-a93a-3421-3e3c82947f11@samsung.com>
+Date:   Thu, 5 Dec 2019 09:27:08 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <20191204150018.5234-2-k.konieczny@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmrm6674tYg47zbBYbZ6xntVjwaQar
+        xfnzG9gtzja9Ybe4vGsOm8Xn3iOMFmuP3GW3uN24gs2Bw2PTqk42j74tqxg9Pm+SC2COyrbJ
+        SE1MSS1SSM1Lzk/JzEu3VfIOjneONzUzMNQ1tLQwV1LIS8xNtVVy8QnQdcvMAbpASaEsMacU
+        KBSQWFyspG9nU5RfWpKqkJFfXGKrlFqQklNgWaBXnJhbXJqXrpecn2tlaGBgZApUmJCdsfPg
+        bKaC21IV7z//Z2pgvCPaxcjJISFgInH0eA8LiC0ksINRYt7+wC5GLiD7E6NE464t7BDON0aJ
+        G5MWsMB0TF+4iwUisZdR4sGBqawQ7e8ZJX7uEAaxhQUcJCa9fssMYosI6Eq82bGUGaSBWWAe
+        k8SbaRfAGtgEtCT2v7jBBmLzCyhKXP3xmBHE5hWwk5iz5C6YzSKgIjHj+j2wQaICYRInt7VA
+        1QhKnJz5BOwiTgEbieOP9oHVMAuIS9x6Mp8JwpaX2P52DthiCYHXbBIdV6YwQrzgInHm+1Ko
+        d4QlXh0H+RPElpJ42d8GZVdLrDx5hA2iuYNRYst+iKslBIwl9i+dDLSBA2iDpsT6XfoQYUWJ
+        nb/nMkIs5pN497WHFaREQoBXoqNNCKJEWeLyg7tMELakxOL2TrYJjEqzkLwzC8kLs5C8MAth
+        2QJGllWMYqkFxbnpqcWGBYbIsb2JEZw6tUx3ME4553OIUYCDUYmHt2HT81gh1sSy4srcQ4wS
+        HMxKIrzbJJ7GCvGmJFZWpRblxxeV5qQWH2I0BYb2RGYp0eR8YFrPK4k3NDUyNja2MDE0MzU0
+        VBLn5fhxMVZIID2xJDU7NbUgtQimj4mDU6qBUXx91blJ1na2H1aoMjv3mnprf/SNnnhqRZ3c
+        o8mWM2NPTbjxVa9ILUK87siL6yt+qmtk2LpKv7NN/vvsbNLiDPHLL+xOe6wVLvl6NHhezTq1
+        jfq+Hao7bupE5wapuq6R0vL/f8r+0E+rYrZbcZFRkX8rF9yrr1g9pXqKjNEmpeCazPjj9c4a
+        SizFGYmGWsxFxYkAMizysrMDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42LZdlhJTjfN90Wswa9NyhYbZ6xntVjwaQar
+        xfnzG9gtzja9Ybe4vGsOm8Xn3iOMFmuP3GW3uN24gs2Bw2PTqk42j74tqxg9Pm+SC2CO4rJJ
+        Sc3JLEst0rdL4MrYeXA2U8FtqYr3n/8zNTDeEe1i5OSQEDCRmL5wF0sXIxeHkMBuRonX11cz
+        QyQkJaZdPApkcwDZwhKHDxdD1LxllOhc2soIUiMs4CAx6fVbsHoRAV2JNzuWMoMUMQssYJKY
+        f3Mi1NSDjBLrH39nBaliE9CS2P/iBhuIzS+gKHH1x2OwSbwCdhJzltwFs1kEVCRmXL8HNlVU
+        IExi55LHTBA1ghInZz5hAbE5BWwkjj/aB1bDLKAu8WfeJShbXOLWk/lMELa8xPa3c5gnMArP
+        QtI+C0nLLCQts5C0LGBkWcUomVpQnJueW2xYYJiXWq5XnJhbXJqXrpecn7uJERxHWpo7GC8v
+        iT/EKMDBqMTD27DpeawQa2JZcWXuIUYJDmYlEd5tEk9jhXhTEiurUovy44tKc1KLDzFKc7Ao
+        ifM+zTsWKSSQnliSmp2aWpBaBJNl4uCUamBMT/7K8/lFrZDFF2c2tYSPj1cV7W389Z6JvT+e
+        VWNBimD4me25HboSbx3WyS/2MXuisMZaNn/C4R6Bh7z70768YO/+962tn+1Ch1HyxUy1rO2P
+        ZJQs1hsl3Ne7ce1RqE9n1fnH3Yl3r2hul04pWlGfPynb6+J7hsstMwU2H2lj2aNg+e+X9SMl
+        luKMREMt5qLiRAAiDxBbnwIAAA==
+X-CMS-MailID: 20191205002054epcas1p46063b2d9d385ecbe30d86036a221eaa6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191204150033eucas1p1bf11d36a89c89e3eb55c37a1a204e988
+References: <20191204150018.5234-1-k.konieczny@samsung.com>
+        <CGME20191204150033eucas1p1bf11d36a89c89e3eb55c37a1a204e988@eucas1p1.samsung.com>
+        <20191204150018.5234-2-k.konieczny@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Dec 2019, Yang Shi wrote:
-
-> Currently when truncating shmem file, if the range is partial of THP
-> (start or end is in the middle of THP), the pages actually will just get
-> cleared rather than being freed unless the range cover the whole THP.
-> Even though all the subpages are truncated (randomly or sequentially),
-> the THP may still be kept in page cache.  This might be fine for some
-> usecases which prefer preserving THP.
+On 12/5/19 12:00 AM, Kamil Konieczny wrote:
+> Change time stats counting to bigger type by using 64-bit jiffies.
+> This will make devfreq stats code look similar to cpufreq stats and
+> prevents overflow (for HZ = 1000 after 49.7 days).
 > 
-> But, when doing balloon inflation in QEMU, QEMU actually does hole punch
-> or MADV_DONTNEED in base page size granulairty if hugetlbfs is not used.
-> So, when using shmem THP as memory backend QEMU inflation actually doesn't
-> work as expected since it doesn't free memory.  But, the inflation
-> usecase really needs get the memory freed.  Anonymous THP will not get
-> freed right away too but it will be freed eventually when all subpages are
-> unmapped, but shmem THP would still stay in page cache.
-> 
-> Split THP right away when doing partial hole punch, and if split fails
-> just clear the page so that read to the hole punched area would return
-> zero.
-> 
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 > ---
-> v2: * Adopted the comment from Kirill.
->     * Dropped fallocate mode flag, THP split is the default behavior.
->     * Blended Huge's implementation with my v1 patch. TBH I'm not very keen to
->       Hugh's find_get_entries() hack (basically neutral), but without that hack
-
-Thanks for giving it a try.  I'm not neutral about my find_get_entries()
-hack: it surely had to go (without it, I'd have just pushed my own patch).
-I've not noticed anything wrong with your patch, and it's in the right
-direction, but I'm still not thrilled with it.  I also remember that I
-got the looping wrong in my first internal attempt (fixed in what I sent),
-and need to be very sure of the try-again-versus-move-on-to-next conditions
-before agreeing to anything.  No rush, I'll come back to this in days or
-month ahead: I'll try to find a less gotoey blend of yours and mine.
-
-Hugh
-
->       we have to rely on pagevec_release() to release extra pins and play with
->       goto. This version does in this way. The patch is bigger than Hugh's due
->       to extra comments to make the flow clear.
+> Changes in v2:
+>  added Acked-by, rebased on linux-next
 > 
->  mm/shmem.c | 120 ++++++++++++++++++++++++++++++++++++++++++-------------------
->  1 file changed, 83 insertions(+), 37 deletions(-)
+>  drivers/devfreq/devfreq.c | 14 +++++++-------
+>  include/linux/devfreq.h   |  4 ++--
+>  2 files changed, 9 insertions(+), 9 deletions(-)
 > 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 220be9f..1ae0c7f 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -806,12 +806,15 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
->  	long nr_swaps_freed = 0;
->  	pgoff_t index;
->  	int i;
-> +	bool split = false;
-> +	struct page *page = NULL;
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index bdeb4189c978..0e2030403e4a 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -199,10 +199,10 @@ static int set_freq_table(struct devfreq *devfreq)
+>  int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+>  {
+>  	int lev, prev_lev, ret = 0;
+> -	unsigned long cur_time;
+> +	unsigned long long cur_time;
+
+It looks better to use 'u64' instead of 'unsigned long long'.
+Because get_jiffies_u64 has 'u64' return type.
+
 >  
->  	if (lend == -1)
->  		end = -1;	/* unsigned, so actually very big */
+>  	lockdep_assert_held(&devfreq->lock);
+> -	cur_time = jiffies;
+> +	cur_time = get_jiffies_64();
 >  
->  	pagevec_init(&pvec);
->  	index = start;
-> +retry:
->  	while (index < end) {
->  		pvec.nr = find_get_entries(mapping, index,
->  			min(end - index, (pgoff_t)PAGEVEC_SIZE),
-> @@ -819,7 +822,8 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
->  		if (!pvec.nr)
->  			break;
->  		for (i = 0; i < pagevec_count(&pvec); i++) {
-> -			struct page *page = pvec.pages[i];
-> +			split = false;
-> +			page = pvec.pages[i];
+>  	/* Immediately exit if previous_freq is not initialized yet. */
+>  	if (!devfreq->previous_freq)
+> @@ -525,7 +525,7 @@ void devfreq_monitor_resume(struct devfreq *devfreq)
+>  			msecs_to_jiffies(devfreq->profile->polling_ms));
 >  
->  			index = indices[i];
->  			if (index >= end)
-> @@ -838,23 +842,24 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
->  			if (!trylock_page(page))
->  				continue;
+>  out_update:
+> -	devfreq->last_stat_updated = jiffies;
+> +	devfreq->last_stat_updated = get_jiffies_64();
+>  	devfreq->stop_polling = false;
 >  
-> -			if (PageTransTail(page)) {
-> -				/* Middle of THP: zero out the page */
-> -				clear_highpage(page);
-> -				unlock_page(page);
-> -				continue;
-> -			} else if (PageTransHuge(page)) {
-> -				if (index == round_down(end, HPAGE_PMD_NR)) {
-> +			if (PageTransCompound(page) && !unfalloc) {
-> +				if (PageHead(page) &&
-> +				    index != round_down(end, HPAGE_PMD_NR)) {
->  					/*
-> -					 * Range ends in the middle of THP:
-> -					 * zero out the page
-> +					 * Fall through when punching whole
-> +					 * THP.
->  					 */
-> -					clear_highpage(page);
-> -					unlock_page(page);
-> -					continue;
-> +					index += HPAGE_PMD_NR - 1;
-> +					i += HPAGE_PMD_NR - 1;
-> +				} else {
-> +					/*
-> +					 * Split THP for any partial hole
-> +					 * punch.
-> +					 */
-> +					get_page(page);
-> +					split = true;
-> +					goto split;
->  				}
-> -				index += HPAGE_PMD_NR - 1;
-> -				i += HPAGE_PMD_NR - 1;
->  			}
+>  	if (devfreq->profile->get_cur_freq &&
+> @@ -748,7 +748,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
 >  
->  			if (!unfalloc || !PageUptodate(page)) {
-> @@ -866,9 +871,29 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
->  			}
->  			unlock_page(page);
->  		}
-> +split:
->  		pagevec_remove_exceptionals(&pvec);
->  		pagevec_release(&pvec);
->  		cond_resched();
-> +
-> +		if (split) {
-> +			/*
-> +			 * The pagevec_release() released all extra pins
-> +			 * from pagevec lookup.  And we hold an extra pin
-> +			 * and still have the page locked under us.
-> +			 */
-> +			if (!split_huge_page(page)) {
-> +				unlock_page(page);
-> +				put_page(page);
-> +				/* Re-lookup page cache from current index */
-> +				goto retry;
-> +			}
-> +
-> +			/* Fail to split THP, move to next index */
-> +			unlock_page(page);
-> +			put_page(page);
-> +		}
-> +
->  		index++;
+>  	devfreq->time_in_state = devm_kcalloc(&devfreq->dev,
+>  			devfreq->profile->max_state,
+> -			sizeof(unsigned long),
+> +			sizeof(*devfreq->time_in_state),
+>  			GFP_KERNEL);
+>  	if (!devfreq->time_in_state) {
+>  		mutex_unlock(&devfreq->lock);
+> @@ -756,7 +756,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+>  		goto err_devfreq;
 >  	}
 >  
-> @@ -901,6 +926,7 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
->  		return;
+> -	devfreq->last_stat_updated = jiffies;
+> +	devfreq->last_stat_updated = get_jiffies_64();
 >  
->  	index = start;
-> +again:
->  	while (index < end) {
->  		cond_resched();
+>  	srcu_init_notifier_head(&devfreq->transition_notifier_list);
 >  
-> @@ -916,7 +942,8 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
->  			continue;
->  		}
->  		for (i = 0; i < pagevec_count(&pvec); i++) {
-> -			struct page *page = pvec.pages[i];
-> +			split = false;
-> +			page = pvec.pages[i];
->  
->  			index = indices[i];
->  			if (index >= end)
-> @@ -936,30 +963,24 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
->  
->  			lock_page(page);
->  
-> -			if (PageTransTail(page)) {
-> -				/* Middle of THP: zero out the page */
-> -				clear_highpage(page);
-> -				unlock_page(page);
-> -				/*
-> -				 * Partial thp truncate due 'start' in middle
-> -				 * of THP: don't need to look on these pages
-> -				 * again on !pvec.nr restart.
-> -				 */
-> -				if (index != round_down(end, HPAGE_PMD_NR))
-> -					start++;
-> -				continue;
-> -			} else if (PageTransHuge(page)) {
-> -				if (index == round_down(end, HPAGE_PMD_NR)) {
-> +			if (PageTransCompound(page) && !unfalloc) {
-> +				if (PageHead(page) &&
-> +				    index != round_down(end, HPAGE_PMD_NR)) {
->  					/*
-> -					 * Range ends in the middle of THP:
-> -					 * zero out the page
-> +					 * Fall through when punching whole
-> +					 * THP.
->  					 */
-> -					clear_highpage(page);
-> -					unlock_page(page);
-> -					continue;
-> +					index += HPAGE_PMD_NR - 1;
-> +					i += HPAGE_PMD_NR - 1;
-> +				} else {
-> +					/*
-> +					 * Split THP for any partial hole
-> +					 * punch.
-> +					 */
-> +					get_page(page);
-> +					split = true;
-> +					goto rescan_split;
->  				}
-> -				index += HPAGE_PMD_NR - 1;
-> -				i += HPAGE_PMD_NR - 1;
->  			}
->  
->  			if (!unfalloc || !PageUptodate(page)) {
-> @@ -976,8 +997,33 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
->  			}
->  			unlock_page(page);
->  		}
-> +rescan_split:
->  		pagevec_remove_exceptionals(&pvec);
->  		pagevec_release(&pvec);
-> +
-> +		if (split) {
-> +			/*
-> +			 * The pagevec_release() released all extra pins
-> +			 * from pagevec lookup.  And we hold an extra pin
-> +			 * and still have the page locked under us.
-> +			 */
-> +			if (!split_huge_page(page)) {
-> +				unlock_page(page);
-> +				put_page(page);
-> +				/* Re-lookup page cache from current index */
-> +				goto again;
-> +			}
-> +
-> +			/*
-> +			 * Split fail, clear the page then move to next
-> +			 * index.
-> +			 */
-> +			clear_highpage(page);
-> +
-> +			unlock_page(page);
-> +			put_page(page);
-> +		}
-> +
->  		index++;
+> @@ -1470,8 +1470,8 @@ static ssize_t trans_stat_show(struct device *dev,
+>  		for (j = 0; j < max_state; j++)
+>  			len += sprintf(buf + len, "%10u",
+>  				devfreq->trans_table[(i * max_state) + j]);
+> -		len += sprintf(buf + len, "%10u\n",
+> -			jiffies_to_msecs(devfreq->time_in_state[i]));
+> +		len += sprintf(buf + len, "%10llu\n", (u64)
+> +			jiffies64_to_msecs(devfreq->time_in_state[i]));
 >  	}
 >  
-> -- 
-> 1.8.3.1
+>  	len += sprintf(buf + len, "Total transition : %u\n",
+> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+> index 2bae9ed3c783..b81a86e47fb9 100644
+> --- a/include/linux/devfreq.h
+> +++ b/include/linux/devfreq.h
+> @@ -174,8 +174,8 @@ struct devfreq {
+>  	/* information for device frequency transition */
+>  	unsigned int total_trans;
+>  	unsigned int *trans_table;
+> -	unsigned long *time_in_state;
+> -	unsigned long last_stat_updated;
+> +	u64 *time_in_state;
+> +	unsigned long long last_stat_updated;
+
+ditto. 'unsigned long long' -> 'u64'.
+
+>  
+>  	struct srcu_notifier_head transition_notifier_list;
+>  };
 > 
-> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
