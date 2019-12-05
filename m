@@ -2,118 +2,162 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B5BC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C313C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7556206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:51:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I0YX2aPy";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="dYisZPGV"
+	by mail.kernel.org (Postfix) with ESMTP id DD38C206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:54:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbfLEPvf (ORCPT
+        id S1729629AbfLEPx7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:51:35 -0500
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:43070
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726257AbfLEPve (ORCPT
+        Thu, 5 Dec 2019 10:53:59 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:41127 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726257AbfLEPx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 10:51:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575561093;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        bh=9pymZMREs0aDkOkin38Qg0017bN8aBp0lR9eje0eErE=;
-        b=I0YX2aPyE1wmJuAEsRH7NG882VDFs1+W5HNYeqtHYLS+RCmrI85rJy4kN59Z2iun
-        N1ORqJaKoNb822rVVHaLduZXXxwcWENX9aqZyxUffln8idHIl1OkUl57WsCnfBurF9n
-        kh7cCK2GsYe9Z2w6PDGqSeTdmSS4NvsBAIK3Y9wI=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575561093;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
-        bh=9pymZMREs0aDkOkin38Qg0017bN8aBp0lR9eje0eErE=;
-        b=dYisZPGV5kT0zFkXYf4Ja0qXK7puDCqj0ENz+EncOwW1SpkZ1dLJB4gQP2YijdTE
-        3j/cSRj2CQULLqQxFBRRu/HT4YgCw2B6wneHiiEQs9kwx/c8Aro0XuBsiCeH9z3YXmh
-        cB4UR2rKaiKWbtwGIDUgPqlb9yTCRE7gsorh1a8U=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 17A40C447B1
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Thu, 5 Dec 2019 15:51:33 +0000
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     iommu@lists.linux-foundation.org, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v2 4/8] iommu/arm-smmu: Add split pagetables for Adreno
- IOMMU implementations
-Message-ID: <0101016ed6c26118-3bccfc33-005d-4824-a0d1-55ef6beeaeb8-000000@us-west-2.amazonses.com>
-Mail-Followup-To: Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>
-References: <1574465484-7115-1-git-send-email-jcrouse@codeaurora.org>
- <0101016e95752703-78491f46-41db-441c-b0fb-9a760e4d56cb-000000@us-west-2.amazonses.com>
- <2a43c49e-064e-1e95-6726-8d1e761f6749@arm.com>
+        Thu, 5 Dec 2019 10:53:59 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-72-DURempHmOMK1f9U0yt4-xQ-1; Thu, 05 Dec 2019 15:53:56 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 5 Dec 2019 15:53:56 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 5 Dec 2019 15:53:56 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Peter Zijlstra' <peterz@infradead.org>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: Running an Ivy Bridge cpu at fixed frequency
+Thread-Topic: Running an Ivy Bridge cpu at fixed frequency
+Thread-Index: AdWqwtS5CEX1+9oiRRqqz+2UyKDrUwAjenUAAAvrmWA=
+Date:   Thu, 5 Dec 2019 15:53:55 +0000
+Message-ID: <df5b67c5f51b48c391480358d6af53ca@AcuMS.aculab.com>
+References: <8eeee0695c664305ba6a56bce42a995f@AcuMS.aculab.com>
+ <20191205094535.GF2810@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191205094535.GF2810@hirez.programming.kicks-ass.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2a43c49e-064e-1e95-6726-8d1e761f6749@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-SES-Outgoing: 2019.12.05-54.240.27.188
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-MC-Unique: DURempHmOMK1f9U0yt4-xQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 04:44:59PM +0000, Robin Murphy wrote:
-> On 22/11/2019 11:31 pm, Jordan Crouse wrote:
-> >Add implementation specific support to enable split pagetables for
-> >SMMU implementations attached to Adreno GPUs on Qualcomm targets.
-> >
-> >To enable split pagetables the driver will set an attribute on the domain.
-> >if conditions are correct, set up the hardware to support equally sized
-> >TTBR0 and TTBR1 regions and programs the domain pagetable to TTBR1 to make
-> >it available for global buffers while allowing the GPU the chance to
-> >switch the TTBR0 at runtime for per-context pagetables.
-> >
-> >After programming the context, the value of the domain attribute can be
-> >queried to see if split pagetables were successfully programmed. The
-> >domain geometry will be updated so that the caller can determine the
-> >start of the region to generate correct virtual addresses.
+From: Peter Zijlstra
+> Sent: 05 December 2019 09:46
+> As Andy already wrote, perf is really good for this.
 > 
-> Why is any of this in impl? It all looks like perfectly generic
-> architectural TTBR1 setup to me. As long as DOMAIN_ATTR_SPLIT_TABLES is
-> explicitly an opt-in for callers, I'm OK with them having to trust that
-> SEP_UPSTREAM is good enough. Or, even better, make the value of
-> DOMAIN_ATTR_SPLIT_TABLES not a boolean but the actual split point, where the
-> default of 0 would logically mean "no split".
+> Find attached, it probably is less shiny than what Andy handed you, but
+> contains all the bits required to frob something.
 
-(apologies if you get multiple copies of this email, I have tickets in with the
-CAF IT folks).
+You are in a maze of incomplete documentation all disjoint.
 
-I made it impl specific because my impression from the previous conversations
-was that setting up the T0 space but leaving TTBR0 un-programmed was a silly
-thing that was unique to the Adreno GPU. I don't mind moving it to the generic
-code since that saves us from some silly compatible string games.
+The x86 instruction set doc (eg 325462.pdf) defines the rdpmc instruction, tells you
+how many counters each cpu type has, but doesn't even contain a reference
+to how they are incremented.
+I guess there are some processor-specific MSR for that.
 
-I like the idea of DOMAIN_ATTR_SPLIT_TABLES returning the split point but would
-we want to allow the user to try to specific a desired split point ahead of
-time? It is my impression that we only have a handful of valid SEP values and
-I'm not sure what the right response would be if the user specified an incorrect
-one.
+perf_event_open(2) tells you a few things, but doesn't actually what anything is.
+It contains all but the last 'if' clause of this function, without really saying
+what any of it does - or why you might do it this way.
 
-So far I've not found a use for anything except SEP_UPSTREAM but I have the
-extreme luxury of a SMMU with an actual 49 bit IAS.
+static inline u64 mmap_read_self(void *addr)
+{
+        struct perf_event_mmap_page *pc = addr;
+        u32 seq, idx, time_mult = 0, time_shift = 0, width = 0;
+        u64 count, cyc = 0, time_offset = 0, enabled, running, delta;
+        s64 pmc = 0;
 
-New patchset coming soon.
+        do {
+                seq = pc->lock;
+                barrier();
 
-Thanks,
-Jordan
+                enabled = pc->time_enabled;
+                running = pc->time_running;
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+                if (pc->cap_user_time && enabled != running) {
+                        cyc = rdtsc();
+                        time_mult = pc->time_mult;
+                        time_shift = pc->time_shift;
+                        time_offset = pc->time_offset;
+                }
+
+                idx = pc->index;
+                count = pc->offset;
+                if (pc->cap_user_rdpmc && idx) {
+                        width = pc->pmc_width;
+                        pmc = rdpmc(idx - 1);
+                }
+
+                barrier();
+        } while (pc->lock != seq);
+
+        if (idx) {
+                pmc <<= 64 - width;
+                pmc >>= 64 - width; /* shift right signed */
+                count += pmc;
+        }
+
+        if (enabled != running) {
+                u64 quot, rem;
+
+                quot = (cyc >> time_shift);
+                rem = cyc & ((1 << time_shift) - 1);
+                delta = time_offset + quot * time_mult +
+                        ((rem * time_mult) >> time_shift);
+
+                enabled += delta;
+                if (idx)
+                        running += delta;
+
+                quot = count / running;
+                rem = count % running;
+                count = quot * enabled + (rem * enabled) / running;
+        }
+
+        return count;
+}
+
+AFAICT:
+1) The last clause is scaling the count up to allow for time when the hardware counter
+   couldn't be allocated.
+   I'm not convinced that is useful, better to ignore the entire measurement.
+   Half this got deleted from the man page, leaving strange 'set but unused' variables.
+
+2) The hardware counters are disabled while the process is asleep.
+   On wake a different pmc counter might be used (maybe on a different cpu).
+   The new cpu might not even have a counter available.
+
+3) If you don't want to scale up for missing periods it is probably enough to do:
+	do {
+		seq = pc->offset;
+		barrier();
+		idx = pc->index;
+		if (!index)
+			return -1;
+		count = pc->offset + rdpmc(idx - 1);
+	} while (seq != pc->seq);
+	return (unsigned int)count;
+  
+Not tried it yet :-)
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
