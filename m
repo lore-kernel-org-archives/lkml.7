@@ -2,223 +2,158 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85B3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBA8C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685B924667
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:56:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="loOHFweO";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="MXPTYN+o"
+	by mail.kernel.org (Postfix) with ESMTP id 16C4B24667
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbfLEA42 (ORCPT
+        id S1728645AbfLEA4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 19:56:28 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:10158 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbfLEA41 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 19:56:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1575507387; x=1607043387;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=1MRJo1Mwa9fEUDrEoXh4J/ud54ab2RccofANEM3pdLU=;
-  b=loOHFweO8WPjwHpIEeFTJI+0xOMpq2bwCpF+eIGz+hnZK11uIjFer81M
-   isZ7HMQxUj4ihqlczb/vuQVcB9eVlH8tpQhSoUijYwrHuN8kmcbM6YaJL
-   d9C2wkK7UtRhNRjP05uMbDAJXZ0hExvToComW7FmbVzwYZNZLQvfmj36/
-   ikbTo+l4oqDayt0gYKhqQdMaj46t/XuJiKaOQ9aTJXbTfPlxsyZO2U7Cy
-   TaFbsjSmaIFQOeYgmeIJos32jFJFK71UQDEUgiPB5G3jUQTiy/OLd7L+J
-   iBijgv+o5RpeVkxnJ7RutrKYY8p7lGtsjnBGdvcCffhpYSGzE5ivwKLoP
-   A==;
-IronPort-SDR: E3vxvqaQ5iuF6vk+Ig/HvTniuwf9/8Z7LhC7cdKDSpm0uFVy2fivotg4lVkFGRr47nNMEgVrIx
- 4eQBNoIrDmgK/CbNH4hnmEgeVHLufXk3wY4wWO3Cb6GPf9/1cW10g5uycXE2lHfADvnvjOJpd4
- PsLXYk70HN6VInviyHhpH3Dn/ET/YRUiaXmAKxBT/1LXQoxBwYTPX1YUq2hDW7A59yVpVHTB8p
- eATkxjO7nGsAtlxi1pRV2csWlSiEHnmpamxbb/46Bzfl+5KlUMpl0GAQdKcQjjJxW/vxBNjmJ/
- VN0=
-X-IronPort-AV: E=Sophos;i="5.69,279,1571673600"; 
-   d="scan'208";a="125414365"
-Received: from mail-bn7nam10lp2105.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.105])
-  by ob1.hgst.iphmx.com with ESMTP; 05 Dec 2019 08:56:26 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ONzEC0ojtYXxefJV2PZh24Ok64IDK+GT6zm49vKWIrd/+oAJgnvrtxdngdfNPcFp9QUbCb26kPUiB4LFRzc3eMtz5jvBlAcjmkQqWVqet64iQr6HOSPCLcJbneyMdOsm8W6T7xlA34KHn3LQB04zMZ+Tx46H+wbV/lqbJG3wf8HVhRZoJeF0Ybm/T2mFt8hy2bGYhI1ds3FyKt+yDwUvg4/uWOuNWbEHkPqyX82Z9kFXsXrMKzZWAKzaGlwncMB655cBLnkeXOncUhHaoXAMMiGGMJjAnwXHys1iR6Ybu1JFYa+V+hY77xelt+0JwIaR9CYM/SLhCgbp/jwITESrWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=liK8pWbhj+vB/mPkk/i7svih3Xyal3xzsur3YtzWqfg=;
- b=gxcAXkQOrzk5AVzv4i1DF8heGVNF5obsFbRhQYc7dsYojuqn8vREdYVtoqK7o4KjvVlTxbdIPsnenWBNY6qef3k9bH11t5VtIhFxHP8NuJb9HsA5vf7QwOf5mk9XCrlzsmCqT5bhG6TQ1v0PAtm0B1neLaZ1Tsyl3sOGTmfxW2tMH1KAPDPCWTaBTngCDQFeH0mdHiz6d26KOC8yT3MddbYWz8q0VrUFhfMv9SpkVL9M+loY8FfJeaKT2EoBD+ZNwDfYNAGfrsn4j3Sk9M37ONqiZnAPB3spX28wI3jEzmwwL/n9G6LuHt1q0bgnp3+KAQhK4eUAeDqA5WOIry8mLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=liK8pWbhj+vB/mPkk/i7svih3Xyal3xzsur3YtzWqfg=;
- b=MXPTYN+oZezwgJe5C1qKJZSRM8DRO2dcfSVguKsRh4zwkaGYjCDouvyG2N1et28o/t1pJNoOWqiK3xyQYC90vVPcXG7GC+H/ULL4H10U5GQAMBA9sILTt7kIRP9Ax902m6iq8yp2TuzznsAMM9EgZzIft2JPyLKhqisAOdhr4L4=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB6910.namprd04.prod.outlook.com (10.186.147.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.22; Thu, 5 Dec 2019 00:56:25 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::7949:d205:5ad1:1d30]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::7949:d205:5ad1:1d30%7]) with mapi id 15.20.2516.014; Thu, 5 Dec 2019
- 00:56:25 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-CC:     Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Anup Patel <anup@brainfault.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH] RISC-V: Add debug defconfigs
-Thread-Topic: [PATCH] RISC-V: Add debug defconfigs
-Thread-Index: AQHVqwbRBzOF14qKU02iX5oJLiweww==
-Date:   Thu, 5 Dec 2019 00:56:25 +0000
-Message-ID: <20191205005601.1559-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BY5PR13CA0029.namprd13.prod.outlook.com
- (2603:10b6:a03:180::42) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [199.255.44.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e53812ec-9f68-4d1f-58d1-08d7791df3f4
-x-ms-traffictypediagnostic: MN2PR04MB6910:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB6910D39AD71D4A020FECF7878D5C0@MN2PR04MB6910.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 02426D11FE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(136003)(396003)(346002)(376002)(189003)(199004)(50226002)(6116002)(66446008)(99286004)(6512007)(6436002)(81156014)(81166006)(36756003)(8676002)(6506007)(66946007)(66476007)(478600001)(64756008)(52116002)(6486002)(2616005)(86362001)(25786009)(8936002)(44832011)(3846002)(66556008)(54906003)(316002)(110136005)(102836004)(14454004)(2906002)(2171002)(26005)(4326008)(5660300002)(305945005)(71200400001)(71190400001)(1076003)(7736002)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6910;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: P/PXPKXuxt8Cw4hHtm7GZzbZicAFN7K82z1rTNuzgvKd4fc5qxx7um52itvMt3cTiwBxbHovsCruW9ab2IsepngLy2mkgDDNqja4+Zql5P3K/4FRoUbG1cIivaVzmt/JzjmVBM4ar+atorTc5126nMsWCS0qn5BQt7cLgwChHDUpe7dF4eKENkEqJMNAY3pWQc6XKArEj1ZV72Hp2oD0bfpxxVUFXPNboovjXd3p7fubRefCftQvggZPuOSc4FwhgsVgoGfdvXa/WhVFxJlEVoneXXj3DcB/I8JuTmdpnXCIqKvSX6vnVSzxPMM/A5drDN+AmgvmayXtTMaipCLF0dPoeqN4IHOA1TKn+F4qdu5D2kpvCjvtElmPM/WCYNW/FWpSn+w4z+wsNLdqyvwirSrE0x/10nhSo7izYVbHi41yHoMho7rV65CwFU/76gX4
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 4 Dec 2019 19:56:35 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:40400 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728011AbfLEA4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 19:56:34 -0500
+Received: from [10.130.0.36] (unknown [123.138.236.242])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxHxenVehdhgwHAA--.71S3;
+        Thu, 05 Dec 2019 08:56:09 +0800 (CST)
+Subject: Re: [PATCH v2] fs: introduce is_dot_dotdot helper for cleanup
+To:     Matthew Wilcox <willy@infradead.org>
+References: <1575377810-3574-1-git-send-email-yangtiezhu@loongson.cn>
+ <20191203135651.GU20752@bombadil.infradead.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <0003a252-b003-0a8c-b4ac-6280557ece06@loongson.cn>
+Date:   Thu, 5 Dec 2019 08:56:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e53812ec-9f68-4d1f-58d1-08d7791df3f4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 00:56:25.2582
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sbpIfddytRlWNsTi/kcaev9VOn9RkgUqGvE/pH76uppPMB/425tHyrjmBHsa4+734kRR/g2DYkRHJ6JdW4LgHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6910
+In-Reply-To: <20191203135651.GU20752@bombadil.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxHxenVehdhgwHAA--.71S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxCFWkWF1kCr1UtFWxXFW8Zwb_yoW5AF1fpa
+        y8tanrur4kKa4UAw1qqrsrZa4YgryxZ34DJryqgryv9rW0vw1qqas5Ca1UCa97JrWDWr10
+        vrWrtwn8G34rt37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9qb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l
+        c7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_twCF04k20xvY0x0EwIxGrwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
+        6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
+        4UJbIYCTnIWIevJa73UjIFyTuYvjxUybyZUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Various Linux kernel DEBUG options have big performance impact
-so these should not be enabled in RISC-V normal defconfigs.
+On 12/03/2019 09:56 PM, Matthew Wilcox wrote:
+> On Tue, Dec 03, 2019 at 08:56:50PM +0800, Tiezhu Yang wrote:
+>> There exists many similar and duplicate codes to check "." and "..",
+>> so introduce is_dot_dotdot helper to make the code more clean.
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>
+>> v2:
+>>    - use the better performance implementation of is_dot_dotdot
+>>    - make it static inline and move it to include/linux/fs.h
+> Ugh, not more crap in fs.h.
+>
+> $ ls -l --sort=size include/linux |head
+> -rw-r--r--  1 willy willy 154148 Nov 29 22:35 netdevice.h
+> -rw-r--r--  1 willy willy 130488 Nov 29 22:35 skbuff.h
+> -rw-r--r--  1 willy willy 123540 Nov 29 22:35 pci_ids.h
+> -rw-r--r--  1 willy willy 118991 Nov 29 22:35 fs.h
+>
+> I think this probably fits well in namei.h.  And I think it works
+> better with bare 'name' and 'len' arguments, rather than taking a qstr.
 
-Instead we should have separate RISC-V debug defconfigs having
-these DEBUG options enabled. This way Linux RISC-V can build both
-non-debug and debug kernels separately.
+According to the definition of struct qstr:
+"quick string" -- eases parameter passing, but more importantly saves
+"metadata" about the string (ie length and the hash), it seems there
+is no need to use qstr to only check "." and "..", I will use "name"
+and "len" as arguments in the v3 patch and move it to namei.h:
 
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
----
- .../configs/{defconfig =3D> debug_defconfig}    |  0
- arch/riscv/configs/defconfig                  | 23 -------------------
- .../{rv32_defconfig =3D> rv32_debug_defconfig}  |  0
- arch/riscv/configs/rv32_defconfig             | 23 -------------------
- 4 files changed, 46 deletions(-)
- copy arch/riscv/configs/{defconfig =3D> debug_defconfig} (100%)
- copy arch/riscv/configs/{rv32_defconfig =3D> rv32_debug_defconfig} (100%)
+static inline bool is_dot_dotdot(const unsigned char *name, size_t len)
+{
+         if (unlikely(name[0] == '.')) {
+                 if (len < 2 || (len == 2 && name[1] == '.'))
+                         return true;
+         }
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/debug_defcon=
-fig
-similarity index 100%
-copy from arch/riscv/configs/defconfig
-copy to arch/riscv/configs/debug_defconfig
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index e2ff95cb3390..f0710d8f50cc 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -101,27 +101,4 @@ CONFIG_CRYPTO_USER_API_HASH=3Dy
- CONFIG_CRYPTO_DEV_VIRTIO=3Dy
- CONFIG_PRINTK_TIME=3Dy
- CONFIG_DEBUG_FS=3Dy
--CONFIG_DEBUG_PAGEALLOC=3Dy
--CONFIG_DEBUG_VM=3Dy
--CONFIG_DEBUG_VM_PGFLAGS=3Dy
--CONFIG_DEBUG_MEMORY_INIT=3Dy
--CONFIG_DEBUG_PER_CPU_MAPS=3Dy
--CONFIG_SOFTLOCKUP_DETECTOR=3Dy
--CONFIG_WQ_WATCHDOG=3Dy
--CONFIG_SCHED_STACK_END_CHECK=3Dy
--CONFIG_DEBUG_TIMEKEEPING=3Dy
--CONFIG_DEBUG_RT_MUTEXES=3Dy
--CONFIG_DEBUG_SPINLOCK=3Dy
--CONFIG_DEBUG_MUTEXES=3Dy
--CONFIG_DEBUG_RWSEMS=3Dy
--CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
--CONFIG_STACKTRACE=3Dy
--CONFIG_DEBUG_LIST=3Dy
--CONFIG_DEBUG_PLIST=3Dy
--CONFIG_DEBUG_SG=3Dy
- # CONFIG_RCU_TRACE is not set
--CONFIG_RCU_EQS_DEBUG=3Dy
--CONFIG_DEBUG_BLOCK_EXT_DEVT=3Dy
--# CONFIG_FTRACE is not set
--# CONFIG_RUNTIME_TESTING_MENU is not set
--CONFIG_MEMTEST=3Dy
-diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_de=
-bug_defconfig
-similarity index 100%
-copy from arch/riscv/configs/rv32_defconfig
-copy to arch/riscv/configs/rv32_debug_defconfig
-diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_de=
-fconfig
-index eb519407c841..bdec58e6c5f7 100644
---- a/arch/riscv/configs/rv32_defconfig
-+++ b/arch/riscv/configs/rv32_defconfig
-@@ -98,27 +98,4 @@ CONFIG_CRYPTO_USER_API_HASH=3Dy
- CONFIG_CRYPTO_DEV_VIRTIO=3Dy
- CONFIG_PRINTK_TIME=3Dy
- CONFIG_DEBUG_FS=3Dy
--CONFIG_DEBUG_PAGEALLOC=3Dy
--CONFIG_DEBUG_VM=3Dy
--CONFIG_DEBUG_VM_PGFLAGS=3Dy
--CONFIG_DEBUG_MEMORY_INIT=3Dy
--CONFIG_DEBUG_PER_CPU_MAPS=3Dy
--CONFIG_SOFTLOCKUP_DETECTOR=3Dy
--CONFIG_WQ_WATCHDOG=3Dy
--CONFIG_SCHED_STACK_END_CHECK=3Dy
--CONFIG_DEBUG_TIMEKEEPING=3Dy
--CONFIG_DEBUG_RT_MUTEXES=3Dy
--CONFIG_DEBUG_SPINLOCK=3Dy
--CONFIG_DEBUG_MUTEXES=3Dy
--CONFIG_DEBUG_RWSEMS=3Dy
--CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
--CONFIG_STACKTRACE=3Dy
--CONFIG_DEBUG_LIST=3Dy
--CONFIG_DEBUG_PLIST=3Dy
--CONFIG_DEBUG_SG=3Dy
- # CONFIG_RCU_TRACE is not set
--CONFIG_RCU_EQS_DEBUG=3Dy
--CONFIG_DEBUG_BLOCK_EXT_DEVT=3Dy
--# CONFIG_FTRACE is not set
--# CONFIG_RUNTIME_TESTING_MENU is not set
--CONFIG_MEMTEST=3Dy
---=20
-2.17.1
+         return false;
+}
+
+>
+> And, as I asked twice in the last round of review, did you benchmark
+> this change?
+
+Before sending this v2 patch, I have done the test used with your test
+program and already pointed out the following implementation is better:
+
+bool is_dot_dotdot(const struct qstr *str)
+{
+         if (unlikely(str->name[0] == '.')) {
+                 if (str->len < 2 || (str->len == 2 && str->name[1] == '.'))
+                         return true;
+         }
+
+         return false;
+}
+
+[enjoy@linux ~]$ lscpu | grep "Model name"
+Model name:            Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz
+
+[enjoy@linux ~]$ ./test
+qstr . time_1 0.025204 time_2 0.023717
+qstr .. time_1 0.036542 time_2 0.034330
+qstr a time_1 0.028123 time_2 0.022514
+qstr matthew time_1 0.024282 time_2 0.022617
+qstr .a time_1 0.037132 time_2 0.034118
+qstr , time_1 0.028121 time_2 0.022527
+[enjoy@linux ~]$ ./test
+qstr . time_1 0.025200 time_2 0.023666
+qstr .. time_1 0.036486 time_2 0.034275
+qstr a time_1 0.028113 time_2 0.022514
+qstr matthew time_1 0.024289 time_2 0.022515
+qstr .a time_1 0.037058 time_2 0.034063
+qstr , time_1 0.028117 time_2 0.022523
+[enjoy@linux ~]$ ./test
+qstr . time_1 0.025128 time_2 0.023692
+qstr .. time_1 0.036687 time_2 0.034284
+qstr a time_1 0.028133 time_2 0.022527
+qstr matthew time_1 0.024246 time_2 0.022589
+qstr .a time_1 0.037063 time_2 0.034106
+qstr , time_1 0.028127 time_2 0.022522
+
+Additionally, by declaring is_dot_dotdot inline, we can make execution
+faster by eliminating the function-call overhead, so the performance
+influence is very small with this patch.
+
+If you have any more suggestion, please let me know.
+
+Thanks,
+
+Tiezhu Yang
 
