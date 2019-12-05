@@ -2,94 +2,87 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3BDC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA44C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970EB224F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58530224F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2VSti3x"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mx51vNNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbfLEIoB (ORCPT
+        id S1729014AbfLEIo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 03:44:01 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51186 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfLEIoA (ORCPT
+        Thu, 5 Dec 2019 03:44:28 -0500
+Received: from mail-io1-f46.google.com ([209.85.166.46]:44546 "EHLO
+        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbfLEIo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 03:44:00 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p9so2688661wmg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 00:43:59 -0800 (PST)
+        Thu, 5 Dec 2019 03:44:27 -0500
+Received: by mail-io1-f46.google.com with SMTP id z23so2700140iog.11
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 00:44:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lU1EvzM/eLD0n0vZaZM7AMkwMVY8sZSz0h3WsdV8t0E=;
-        b=U2VSti3xVYS3TZPRfEbXKHUduQrzXSc5f+w1SuhjId7MWQwy7oOm4AD/MgMfRrvBTD
-         8BVTycGLuJp8sE6OQ+FG0TCjsXTjRI964j4m5fup+dxVQ1Mlsa/+9p6kWM4HQEUnLUPB
-         jDoOpTvvmLrggMmDLQIrbrpt5LlAn6GbQjyJzvu+gdCJX+gp30vQL38CMQoJbw+vSUBh
-         vzqWSDfZ60M9svZzy8bab7AWE7X0RDQRXDUrvfoAx35v2NKnCNG3v2WH50/J0oJuj6Vy
-         N0t0vFI5R42CNnD2QpW2oIE8fwT3iMnetrtWzEp9GEPetG4/UuqNqfJVlZQZR3k3ONod
-         jj8g==
+        bh=wt9G2vozOpMT2hGMgKE0ip5uoYB13lnK1YvlPurVBq4=;
+        b=mx51vNNmXng2Ai4iTAblfI1F6ComWE5BNDOYZ4xrxfULaKGleW01zww0J9E6sEvEGm
+         lfLcgIvUw/0nKHL3PF9n6k428lWT/lZXzBTmVRVLyRjWQMqUnL/4r42HLnAkItilGkYS
+         rEOKRmjE51Iy/fCKvADi2jVYm4ok8Pi5z2RxI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lU1EvzM/eLD0n0vZaZM7AMkwMVY8sZSz0h3WsdV8t0E=;
-        b=hyV8wOfOCk6mocJT0YaKtG9rLPAMRxuv4uzK8QnRNqnZxi73kOVoinuLT/mV6RgcAA
-         fRZ7b37qV3n/Q9c/keES17hX388y9jdnZvXgU0JpD7ZxV8KXqMBfx63gsSpQLLDx1NlP
-         IYAMjbPiogw1iOD4EJpqkoeHPB2393FH6JJ19+K78DmKAbJTfRI+JSM2RoxTZWpsfawi
-         mDzcw8cPvJYWLJdUfIz2N+sLVLiM+NLxn4//FMXi1Id5OBAZZ8BAVL9iMHZ7g3R3gZyh
-         Yv7i9pibCsbVEldSoSrzPfFaty0HKSqIRqie9DUD2i8bWCTz2J8FnznhXpSo/DPj2O5d
-         WxoQ==
-X-Gm-Message-State: APjAAAVWnyW60CqTwRedrE0ryLPgG3TrpNnp97R8olcGW0JJ4jVOcL1M
-        1gMLOqWZCjnOxcqem5/TSu9ZkwYRqyUiYiLFUZI=
-X-Google-Smtp-Source: APXvYqzHaKRUEfbiAOswMp49ewBcixg21LL6YP05PzNudQhdouGxpQM6W2U/QiJNtYTg+vZqQcCAgBCV7oa+geJPtRg=
-X-Received: by 2002:a1c:4944:: with SMTP id w65mr3776661wma.39.1575535439089;
- Thu, 05 Dec 2019 00:43:59 -0800 (PST)
+        bh=wt9G2vozOpMT2hGMgKE0ip5uoYB13lnK1YvlPurVBq4=;
+        b=PyedXjLEf1vR18QiTPhp5H1mDa5F6H56mcDTjWJNHV033oOrXyZ9dW7RFGnQzts5DX
+         k2BtNHs6EQSWZKy+uyT7E6FlBeBIRkUoEwZps/j5gNFdM1LNzDcg6plHglNUf6U0zXqq
+         0l+QRS7VbX3LwMjBMSiLl4pRbxrzH3VpMm/6v04Gh0QKx9gi2BXCggk+8ts3nWEnEgSx
+         LrjtoxnehXZI81V6D49CemtB3GsXH/Pir4AtiXLeioAU0mIHdJhlLdl028wa0dTKVnwA
+         ImAbSswTbt2tAwNQgZT7niCmLSQ+BlFXM+evNiPX70dosLFS7Wl649WDFeqYGOnkKk32
+         65FQ==
+X-Gm-Message-State: APjAAAUcFlRtKFfae5bM1lizuT/IH5pMLLpydI8cNCs/g5/SsdSRWfsQ
+        Yulld5FzdNmqS7LCDn2D8TXuf0/M2A8QveYngQ7C/w==
+X-Google-Smtp-Source: APXvYqzsTUeVlvYNSc46o8MgjJIitMPOpzSQhh53SIxsiMDq5akjwRzVyhJ8uX4NGcPMJOsXZfEjVH38FLKYx8LYJGo=
+X-Received: by 2002:a5d:8cd6:: with SMTP id k22mr5264840iot.283.1575535467112;
+ Thu, 05 Dec 2019 00:44:27 -0800 (PST)
 MIME-Version: 1.0
-References: <20191128223802.18228-1-michael@walle.cc>
-In-Reply-To: <20191128223802.18228-1-michael@walle.cc>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Thu, 5 Dec 2019 10:43:46 +0200
-Message-ID: <CAEnQRZCnQAUVowOJw5aPe9rYWU5DKR4bFbmQLYV2BzYqOhRJmQ@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: fsl_sai: add IRQF_SHARED
-To:     Michael Walle <michael@walle.cc>
-Cc:     Linux-ALSA <alsa-devel@alsa-project.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+References: <1574817475-22378-2-git-send-email-yongqiang.niu@mediatek.com>
+ <CAJMQK-iDnOWCYmxcREGschD=sDfU6yKpUu+koP3YDeO3MPCdhQ@mail.gmail.com> <1575529976.9400.4.camel@mhfsdcap03>
+In-Reply-To: <1575529976.9400.4.camel@mhfsdcap03>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Thu, 5 Dec 2019 16:44:01 +0800
+Message-ID: <CAJMQK-jGTAm7YS3ov3ok0SkrH7dWEL4umC21O6RSchrfDs5omw@mail.gmail.com>
+Subject: Re: [v1,1/2] drm/mediatek: Fixup external display black screen issue
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        CK Hu <ck.hu@mediatek.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 12:40 AM Michael Walle <michael@walle.cc> wrote:
+On Thu, Dec 5, 2019 at 3:13 PM Yongqiang Niu <yongqiang.niu@mediatek.com> wrote:
 >
-> The LS1028A SoC uses the same interrupt line for adjacent SAIs. Use
-> IRQF_SHARED to be able to use these SAIs simultaneously.
-
-Hi Michael,
-
-Thanks for the patch. We have a similar change inside our internal tree
-(it is on my long TODO list to upstream :D).
-
-We add the shared flag conditionally on a dts property.
-
-Do you think it is a good idea to always add shared flag? I'm thinking
-on SAI IP integrations where the interrupt is edge triggered.
-
-AFAIK edge triggered interrupts do not get along very well
-with sharing an interrupt line.
+> please double confirm is this dump stack log is ruining on MT8173 real
+> IC or not.
+> if yes, that may caused ovl hang when disable layer not in blanking,
+> then cause vblank time out.
+> i will disable overlay with cmdq in next version.
+>
+It is running on MT8173 acer chromebook. Error only happens when
+turning off display.
+>
