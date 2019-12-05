@@ -2,173 +2,465 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC0FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5CFC2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BCCF2464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC5B2464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KVC0ndqX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vnt4TGef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbfLEKoh (ORCPT
+        id S1729214AbfLEKrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:44:37 -0500
-Received: from mail-eopbgr70049.outbound.protection.outlook.com ([40.107.7.49]:7429
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729017AbfLEKoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:44:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jwSSS12cEZacHWAZSOTj0Ks0AGOhGmXTTwj5t7FadaphlZ+k3DFRAdZ8tMGZacnWk12DODz7yDO/yG/b1FiOa4qSq28ypDSM4SBm68WdWKWgHtGdtOLaz7VQYuSegxa/xOMU3bvhjVQ1a1inFW7xYNQg10Ob4t6N3SJY7H+Vc7JL7iuGmz5ir0xv0MuC7p2krLK+kf1EyRDmDXGXqQoXwmnv91e2/1rhDPvLeovIt01JmETTgnzlmZFVkyHMBLhAMLH/sGVVTu06LYhVjQJ8+o3klJozl+iU3dW7cRnjrItDQ4HQaz5R7RDLjmB0ggH913sA4ySlswePNK13Gg8MsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pSXglY/VDo/VIpNCszOGm4UmqGOypqdpPy9E9ryilrU=;
- b=QACEw+gIBsb4Sz9mQwIR1Ij5Mx9yOsG4cejDa7cYH4yeYrqZ53Nl6irOHWa9vM6prl7QI+zUWAk/qW6QfrQBCzJH2NmTrsaNpIABbA/M78SykMIqP4xyf0BQAH04iR4fz6lr6D/oIlP/BISFSFXh7dN8saPfyw20OiC57vNRhdEgq/NXHu5Y0lvnbV8cdG75pSFo9UV44GiciaUAwj+MgmXH4fIh6Azy7mbdg8tL4t5rGrjv7UFjwWfkj49C8qxU70VEByVXyEEiVi0yq8Q8DqZR3D5TFl7UXi0oHI4luelzshENil1U7iii5FflVgR4lKFVi9il4Qs+ZXjJss1RXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pSXglY/VDo/VIpNCszOGm4UmqGOypqdpPy9E9ryilrU=;
- b=KVC0ndqXS8rHpBosaiqldokh/2J+Rmk6HTg8o3pGoumzBqByO8uH5ykkdXJQ9fK1WNQVjA4S4PmeLKlPuRt4IPi9wZYkm1HmIwizdMlHKbjaqT3zNLkpjk3ZMCBGZ4HFeWTSXg0eVRMmmmyb8csSybWyKH+YpFbyVQw8YTQp0P0=
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.51.208) by
- VI1PR04MB7037.eurprd04.prod.outlook.com (10.186.157.7) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.13; Thu, 5 Dec 2019 10:44:30 +0000
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::71d2:55b3:810d:c75b]) by VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::71d2:55b3:810d:c75b%7]) with mapi id 15.20.2495.026; Thu, 5 Dec 2019
- 10:44:30 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Marc Zyngier <maz@misterjones.org>
-CC:     Roy Zang <roy.zang@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "frowand.list@gmail.com" <frowand.list@gmail.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>
-Subject: RE: [PATCH] PCI: layerscape: Add the SRIOV support in host side
-Thread-Topic: [PATCH] PCI: layerscape: Add the SRIOV support in host side
-Thread-Index: AQHVqP2u5HKRks3QXEmyFTQz0j+ob6emy2EAgADYg4CAA7rQsA==
-Date:   Thu, 5 Dec 2019 10:44:30 +0000
-Message-ID: <VI1PR04MB5134FEB9AF2952E84E4C1179EC5C0@VI1PR04MB5134.eurprd04.prod.outlook.com>
-References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
- <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
- <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
-In-Reply-To: <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 30db89d1-77b2-44e2-f1e1-08d779701ba3
-x-ms-traffictypediagnostic: VI1PR04MB7037:|VI1PR04MB7037:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB703762F6694EB6009E790526EC5C0@VI1PR04MB7037.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 02426D11FE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(366004)(39860400002)(346002)(13464003)(43544003)(199004)(189003)(99286004)(74316002)(14444005)(305945005)(5660300002)(7696005)(76176011)(66946007)(66476007)(2906002)(81156014)(66446008)(8676002)(66556008)(81166006)(52536014)(71190400001)(8936002)(9686003)(76116006)(71200400001)(25786009)(966005)(4326008)(561944003)(64756008)(6506007)(33656002)(478600001)(86362001)(11346002)(186003)(53546011)(102836004)(26005)(316002)(44832011)(55016002)(110136005)(14454004)(229853002)(7416002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB7037;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dTuupey0oZ6rGpECx5ZTIUtSF3KDgQJ0+hi3QE2oVPq5TgoKUowDkkQQfzMiSkOmUumqw6aVz+0x//p/ZUWv/trjzqsOxRbboVVg+vKHi07U/tsyTZSz5yub0IG7ikWXCWvXxL0RLm1gZsrVNOe2/KwLbZ9bh+i5pw/bvJohq8P7q6yvdcpQavsYRWXj6TmsLgJiIjMPy9ScYRaFhg62le0yuExLM+Pz4HtWjeWyZVpBvKaJTR9d1mAis11ypqkWu0z3gqvb9OB9+IqAnTDxOKP5kTFp1Yz92laqHS+4zvkYfI6Roa1ZnPOgEZK30CaESCkebsJeS/4KUxCU00afHxG6/yPlT/I5/Rkv5JgEC1T1GIWpb0V+uBkl0e0nND0OSazkMd9yHf6MzlZuWij8blt0/G8l2GQR5ll5J02No9GnLNZWL9+wRD4ipVSwnTJ2zqDKqrvzS2ciNivbPn4sSkUxEJZocbj3pllQB8WBKTF0JN0ad1Au7EDqqL4s4j/etBWOghOyFv8LtSZ5kQpGQj6jFaEwuZBD133e39/o56dJapBUfq65NQWmwMdoE6pp
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 5 Dec 2019 05:47:36 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34736 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729017AbfLEKrf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 05:47:35 -0500
+Received: by mail-pl1-f196.google.com with SMTP id h13so1109373plr.1;
+        Thu, 05 Dec 2019 02:47:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gk6TblHVVrg9Cpc/xHxeB9rnv+iljuF8odgalkwRB/k=;
+        b=Vnt4TGefqBqXWOMrSc0EIBLaU3txO5yVQ+E22FATz2hInSOlSBPVqxuFXbHHC/38Zf
+         ktrqrIsY3S+sYEH+YY3U0KHJcfNYCz63EgJ9XFxrkZDX8wuWqpzSNgEEU5P4oj4xcvJ/
+         OGYqo96wo+vX49QrnmRkHlMP2DhpeqxkFZ8yqTSItf8vr29Xez8ecMyGFs/OeOao+s3G
+         sCucPle4EL8pjcPDWc7+mUCx3L7Rbj/DPgPIkyokNZDBqEnufHhfEitZsD7ynZWh75Q9
+         YUYfsU5jrIofsP9nY7VW6z7LlcEwvMcROF3iAWoZdFjPHvrvb0Rvok9qQd8pA/IVf7YK
+         OwCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gk6TblHVVrg9Cpc/xHxeB9rnv+iljuF8odgalkwRB/k=;
+        b=XzpOimTGvrWNPTrzo3zhaNdRIjz2jZqNqpqyvGwcVmqLzNGtH0EHyb28FKlyzw09Ow
+         Hl//7DrYttxpL6v2tddG+JN9LDE9RSfCv1q6JuXGwyhrjq3UneJpG00erEBBKI/P8uB+
+         5vbvhjUL2OuLuLDeMnV7F0Qc+ONSETqSJG97w1zfRZk89r/LqVHN2tfNgcLWAU9mdsbu
+         7ssUXg3D8mrC1qf6EJZnxiQNwpvR8Rj7HUoSwDpESdP+xmEbn5B8D5zBgYmHl3phlAM4
+         n21sW0LYbDyb1VGBAT6Pa1j3yDn1jUb4tccM7r4EKw/PYZ4gjZ2tDxCWd/SQic2s+r1T
+         0vZA==
+X-Gm-Message-State: APjAAAV58vuZx3U23/Q8pubzGlrBw6jEIfM0NPXtzAJi9ByMnU9+3uFt
+        kXz4gM3CX7S47ViK6X2fG+E=
+X-Google-Smtp-Source: APXvYqwIwHOsXHimhVrPGpJRhNXaqSVw8lm5Imo+eNludoaSvkWFrhjE8Qtf1FqG/UeFtobUwWYgxw==
+X-Received: by 2002:a17:902:7c83:: with SMTP id y3mr8368505pll.34.1575542854334;
+        Thu, 05 Dec 2019 02:47:34 -0800 (PST)
+Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
+        by smtp.gmail.com with ESMTPSA id 24sm8604991pfn.101.2019.12.05.02.47.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 05 Dec 2019 02:47:33 -0800 (PST)
+Date:   Thu, 5 Dec 2019 18:47:28 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes
+ in line info
+Message-ID: <20191205104728.GA9443@sol>
+References: <20191204155941.17814-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30db89d1-77b2-44e2-f1e1-08d779701ba3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 10:44:30.1932
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 45KSgEd2uEJzrYPyveJ5KKtdBYH0rmytbXhZHJL0GI+kEVJ2iPaY2zeJqgPN2fV8+PKfF3wd2d8XcrUTuu0klQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7037
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204155941.17814-1-brgl@bgdev.pl>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgWGlhb3dlaSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51
-eC1hcm0ta2VybmVsIDxsaW51eC1hcm0ta2VybmVsLWJvdW5jZXNAbGlzdHMuaW5mcmFkZWFkLm9y
-Zz4gT24NCj4gQmVoYWxmIE9mIFhpYW93ZWkgQmFvDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQo+ID4gRnJvbTogTWFyYyBaeW5naWVyIDxtYXpAbWlzdGVyam9uZXMub3JnPg0K
-PiA+IFNlbnQ6IDIwMTnlubQxMuaciDLml6UgMjA6NDgNCj4gPiBUbzogWGlhb3dlaSBCYW8gPHhp
-YW93ZWkuYmFvQG54cC5jb20+DQo+ID4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgZnJvd2FuZC5s
-aXN0QGdtYWlsLmNvbTsgTS5oLiBMaWFuDQo+ID4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IE1p
-bmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveSBaYW5nDQo+ID4gPHJveS56YW5nQG54
-cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOyBhbmRyZXcubXVycmF5QGFybS5jb207
-DQo+ID4gYmhlbGdhYXNAZ29vZ2xlLmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+
-ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtcGNpQHZnZXIua2VybmVsLm9y
-ZzsNCj4gPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IFoucS4gSG91IDx6
-aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIXSBQQ0k6IGxheWVy
-c2NhcGU6IEFkZCB0aGUgU1JJT1Ygc3VwcG9ydCBpbiBob3N0IHNpZGUNCj4gPg0KPiA+IE9uIDIw
-MTktMTItMDIgMTA6NDUsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+ID4gR0lDIGdldCB0aGUgbWFw
-IHJlbGF0aW9ucyBvZiBkZXZpZCBhbmQgc3RyZWFtIGlkIGZyb20gdGhlIG1zaS1tYXANCj4gPiA+
-IHByb3BlcnR5IG9mIERUUywgb3VyIHBsYXRmb3JtIGFkZCB0aGlzIHByb3BlcnR5IGluIHUtYm9v
-dCBiYXNlIG9uIHRoZQ0KPiA+ID4gUENJZSBkZXZpY2UgaW4gdGhlIGJ1cywgYnV0IGlmIGVuYWJs
-ZSB0aGUgdmYgZGV2aWNlIGluIGtlcm5lbCwgdGhlIHZmDQo+ID4gPiBkZXZpY2UgbXNpLW1hcCB3
-aWxsIG5vdCBzZXQsIHNvIHRoZSB2ZiBkZXZpY2UgY2FuJ3Qgd29yaywgdGhpcyBwYXRjaA0KPiA+
-ID4gcHVycG9zZSBpcyB0aGF0IG1hbmFnZSB0aGUgc3RyZWFtIGlkIGFuZCBkZXZpY2UgaWQgbWFw
-IHJlbGF0aW9ucw0KPiA+ID4gZHluYW1pY2FsbHkgaW4ga2VybmVsLCBhbmQgbWFrZSB0aGUgbmV3
-IFBDSWUgZGV2aWNlIHdvcmsgaW4ga2VybmVsLg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6
-IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiAgZHJp
-dmVycy9vZi9pcnEuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA5ICsrKw0KPiA+ID4g
-IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLmMgfCA5NA0KPiA+ID4g
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+ICBkcml2ZXJzL3BjaS9wcm9iZS5j
-ICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDYgKysNCj4gPiA+ICBkcml2ZXJzL3BjaS9yZW1v
-dmUuYyAgICAgICAgICAgICAgICAgICAgICAgIHwgIDYgKysNCj4gPiA+ICA0IGZpbGVzIGNoYW5n
-ZWQsIDExNSBpbnNlcnRpb25zKCspDQo+ID4gPg0KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-b2YvaXJxLmMgYi9kcml2ZXJzL29mL2lycS5jIGluZGV4DQo+ID4gPiBhMjk2ZWFmLi43OTFlNjA5
-IDEwMDY0NA0KPiA+ID4gLS0tIGEvZHJpdmVycy9vZi9pcnEuYw0KPiA+ID4gKysrIGIvZHJpdmVy
-cy9vZi9pcnEuYw0KPiA+ID4gQEAgLTU3Niw2ICs1NzYsMTEgQEAgdm9pZCBfX2luaXQgb2ZfaXJx
-X2luaXQoY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZA0KPiA+ID4gKm1hdGNoZXMpDQo+ID4gPiAg
-CX0NCj4gPiA+ICB9DQo+ID4gPg0KPiA+ID4gK3UzMiBfX3dlYWsgbHNfcGNpZV9zdHJlYW1pZF9m
-aXgoc3RydWN0IGRldmljZSAqZGV2LCB1MzIgcmlkKSB7DQo+ID4gPiArCXJldHVybiByaWQ7DQo+
-ID4gPiArfQ0KPiA+ID4gKw0KPiA+ID4gIHN0YXRpYyB1MzIgX19vZl9tc2lfbWFwX3JpZChzdHJ1
-Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2Vfbm9kZQ0KPiA+ID4gKipucCwNCj4gPiA+ICAJ
-CQkgICAgdTMyIHJpZF9pbikNCj4gPiA+ICB7DQo+ID4gPiBAQCAtNTkwLDYgKzU5NSwxMCBAQCBz
-dGF0aWMgdTMyIF9fb2ZfbXNpX21hcF9yaWQoc3RydWN0IGRldmljZSAqZGV2LA0KPiA+ID4gc3Ry
-dWN0IGRldmljZV9ub2RlICoqbnAsDQo+ID4gPiAgCQlpZiAoIW9mX21hcF9yaWQocGFyZW50X2Rl
-di0+b2Zfbm9kZSwgcmlkX2luLCAibXNpLW1hcCIsDQo+ID4gPiAgCQkJCSJtc2ktbWFwLW1hc2si
-LCBucCwgJnJpZF9vdXQpKQ0KPiA+ID4gIAkJCWJyZWFrOw0KPiA+ID4gKw0KPiA+ID4gKwlpZiAo
-cmlkX291dCA9PSByaWRfaW4pDQo+ID4gPiArCQlyaWRfb3V0ID0gbHNfcGNpZV9zdHJlYW1pZF9m
-aXgocGFyZW50X2RldiwgcmlkX2luKTsNCj4gPg0KPiA+IE92ZXIgbXkgZGVhZCBib2R5LiBHZXQg
-eW91ciBmaXJtd2FyZSB0byBwcm9wZXJseSBwcm9ncmFtIHRoZSBMVVQgc28gdGhhdA0KPiBpdA0K
-PiA+IHByZXNlbnRzIHRoZSBJVFMgd2l0aCBhIHJlYXNvbmFibGUgdG9wb2xvZ3kuIFRoZXJlIGlz
-IGFic29sdXRlbHkgbm8gd2F5DQo+IHRoaXMNCj4gPiBraW5kIG9mIGNoYW5nZSBtYWtlcyBpdCBp
-bnRvIHRoZSBrZXJuZWwuDQo+IA0KPiBTb3JyeSBmb3IgdGhpcywgSSBrbm93IGl0IGlzIG5vdCBy
-ZWFzb25hYmxlLCBidXQgSSBoYXZlIG5vIG90aGVyIHdheSwgYXMgSQ0KPiBrbm93LCBBUk0NCj4g
-Z2V0IHRoZSBtYXBwaW5nIG9mIHN0cmVhbSBJRCB0byByZXF1ZXN0IElEIGZyb20gdGhlIG1zaS1t
-YXAgcHJvcGVydHkgb2YNCj4gRFRTLCBpZg0KPiBhZGQgYSBuZXcgZGV2aWNlIHdoaWNoIG5lZWQg
-dGhlIHN0cmVhbSBJRCBhbmQgdHJ5IHRvIGdldCBpdCBmcm9tIHRoZSBtc2ktDQo+IG1hcCBvZiBE
-VFMsDQo+IGl0IHdpbGwgZmFpbGVkIGFuZCBub3Qgd29yaywgeWVzPyBTbyBjb3VsZCB5b3UgZ2l2
-ZSBtZSBhIGJldHRlciBhZHZpY2UgdG8NCj4gZml4IHRoaXMgaXNzdWUsDQo+IEkgd291bGQgcmVh
-bGx5IGFwcHJlY2lhdGUgYW55IGNvbW1lbnRzIG9yIHN1Z2dlc3Rpb25zLCB0aGFua3MgYSBsb3Qu
-DQo+IA0KDQpJIGFncmVlIHdpdGggdGhlIGNvbW11bml0eSB0aGF0IHRoaXMgc2hvdWxkIGJlIHRh
-Y2tsZWQgaW4gZmlybXdhcmUuIEkgYWN0dWFsbHkgc3VibWl0dGVkIChieSBtaXN0YWtlLCBidXQg
-bGV0J3MgZGlzcmVnYXJkIHRoYXQgOi0pKSBhIHNpbXBsZSBwcm9wb3NhbCBpbiB1LWJvb3QgWzFd
-IHRoYXQgc2hvdWxkIHRha2UgY2FyZSBvZiBpdC4gV2UgY2FuIGRpc2N1c3MgZnVydGhlciBvbiBp
-dCwgaWYgeW91IHdpc2guDQoNClsxXSBodHRwczovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNo
-LzEwMzM0NjYvDQoNCi0tLQ0KQmVzdCBSZWdhcmRzLCBMYXVyZW50aXUNCg==
+On Wed, Dec 04, 2019 at 04:59:40PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Currently there is no way for user-space to be informed about changes
+> in status of GPIO lines e.g. when someone else requests the line or its
+> config changes. We can only periodically re-read the line-info. This
+> is fine for simple one-off user-space tools, but any daemon that provides
+> a centralized access to GPIO chips would benefit hugely from an event
+> driven line info synchronization.
+> 
+> This patch adds a new ioctl() that allows user-space processes to reuse
+> the file descriptor associated with the character device for watching
+> any changes in line properties. Every such event contains the updated
+> line information.
+> 
+> Currently the events are generated on three types of status changes: when
+> a line is requested, when it's released and when its config is changed.
+> The first two are self-explanatory. For the third one: this will only
+> happen when another user-space process calls the new SET_CONFIG ioctl()
+> as any changes that can happen from within the kernel (i.e.
+> set_transitory() or set_debounce()) are of no interest to user-space.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/gpio/gpiolib.c    | 177 ++++++++++++++++++++++++++++++++++++--
+>  drivers/gpio/gpiolib.h    |   2 +
+>  include/uapi/linux/gpio.h |  24 ++++++
+>  3 files changed, 195 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 711963aa9239..2ff15ef0bbe0 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -547,6 +547,9 @@ static long linehandle_set_config(struct linehandle_state *lh,
+>  			if (ret)
+>  				return ret;
+>  		}
+> +
+> +		atomic_notifier_call_chain(&desc->gdev->notifier,
+> +					   GPIOLINE_CHANGED_CONFIG, desc);
+>  	}
+>  	return 0;
+>  }
+> @@ -1199,14 +1202,24 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+>  	spin_unlock_irqrestore(&gpio_lock, flags);
+>  }
+>  
+> +struct gpio_chardev_data {
+> +	struct gpio_device *gdev;
+> +	wait_queue_head_t wait;
+> +	DECLARE_KFIFO(events, struct gpioline_info_changed, 32);
+> +	struct notifier_block lineinfo_changed_nb;
+> +};
+> +
+>  /*
+>   * gpio_ioctl() - ioctl handler for the GPIO chardev
+>   */
+>  static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  {
+> -	struct gpio_device *gdev = filp->private_data;
+> +	struct gpio_chardev_data *priv = filp->private_data;
+> +	struct gpio_device *gdev = priv->gdev;
+>  	struct gpio_chip *chip = gdev->chip;
+>  	void __user *ip = (void __user *)arg;
+> +	struct gpio_desc *desc;
+> +	__u32 offset;
+>  
+>  	/* We fail any subsequent ioctl():s when the chip is gone */
+>  	if (!chip)
+> @@ -1228,9 +1241,9 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  		if (copy_to_user(ip, &chipinfo, sizeof(chipinfo)))
+>  			return -EFAULT;
+>  		return 0;
+> -	} else if (cmd == GPIO_GET_LINEINFO_IOCTL) {
+> +	} else if (cmd == GPIO_GET_LINEINFO_IOCTL ||
+> +		   cmd == GPIO_GET_LINEINFO_WATCH_IOCTL) {
+>  		struct gpioline_info lineinfo;
+> -		struct gpio_desc *desc;
+>  
+>  		if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
+>  			return -EFAULT;
+> @@ -1243,11 +1256,25 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  
+>  		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
+>  			return -EFAULT;
+> +
+> +		if (cmd == GPIO_GET_LINEINFO_WATCH_IOCTL)
+> +			set_bit(FLAG_WATCHED, &desc->flags);
+> +
+
+The WATCHED flag is stored globally in the gdev->descs?
+Shouldn't it be stored in struct gpio_chardev_data?
+Otherwise I can open the chip and disable your watches.
+
+Kent.
+
+
+>  		return 0;
+>  	} else if (cmd == GPIO_GET_LINEHANDLE_IOCTL) {
+>  		return linehandle_create(gdev, ip);
+>  	} else if (cmd == GPIO_GET_LINEEVENT_IOCTL) {
+>  		return lineevent_create(gdev, ip);
+> +	} else if (cmd == GPIO_GET_LINEINFO_UNWATCH_IOCTL) {
+> +		if (copy_from_user(&offset, ip, sizeof(offset)))
+> +			return -EFAULT;
+> +
+> +		desc = gpiochip_get_desc(chip, offset);
+> +		if (IS_ERR(desc))
+> +			return PTR_ERR(desc);
+> +
+> +		clear_bit(FLAG_WATCHED, &desc->flags);
+> +		return 0;
+>  	}
+>  	return -EINVAL;
+>  }
+> @@ -1260,6 +1287,99 @@ static long gpio_ioctl_compat(struct file *filp, unsigned int cmd,
+>  }
+>  #endif
+>  
+> +static struct gpio_chardev_data *
+> +to_gpio_chardev_data(struct notifier_block *nb)
+> +{
+> +	return container_of(nb, struct gpio_chardev_data, lineinfo_changed_nb);
+> +}
+> +
+> +static int lineinfo_changed_notify(struct notifier_block *nb,
+> +				   unsigned long action, void *data)
+> +{
+> +	struct gpio_chardev_data *priv = to_gpio_chardev_data(nb);
+> +	struct gpioline_info_changed chg;
+> +	struct gpio_desc *desc = data;
+> +	int ret = NOTIFY_DONE;
+> +
+> +	if (test_bit(FLAG_WATCHED, &desc->flags)) {
+> +		memset(&chg, 0, sizeof(chg));
+> +		chg.info.line_offset = gpio_chip_hwgpio(desc);
+> +		chg.event_type = action;
+> +		chg.timestamp = ktime_get_real_ns();
+> +		gpio_desc_to_lineinfo(desc, &chg.info);
+> +
+> +		ret = kfifo_in_spinlocked(&priv->events, &chg,
+> +					  1, &priv->wait.lock);
+> +		if (ret)
+> +			wake_up_poll(&priv->wait, EPOLLIN);
+> +		else
+> +			pr_debug_ratelimited(
+> +				"%s: lineinfo event FIFO is full - event dropped\n",
+> +				__func__);
+> +
+> +		ret = NOTIFY_OK;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static __poll_t lineinfo_watch_poll(struct file *filep,
+> +				    struct poll_table_struct *pollt)
+> +{
+> +	struct gpio_chardev_data *priv = filep->private_data;
+> +	__poll_t events = 0;
+> +
+> +	poll_wait(filep, &priv->wait, pollt);
+> +
+> +	spin_lock(&priv->wait.lock);
+> +	if (!kfifo_is_empty(&priv->events))
+> +		events = EPOLLIN | EPOLLRDNORM;
+> +	spin_unlock(&priv->wait.lock);
+> +
+> +	return events;
+> +}
+> +
+> +static ssize_t lineinfo_watch_read(struct file *filep, char __user *buf,
+> +				   size_t count, loff_t *off)
+> +{
+> +	struct gpio_chardev_data *priv = filep->private_data;
+> +	struct gpioline_info_changed event;
+> +	int ret;
+> +
+> +	if (count < sizeof(event))
+> +		return -EINVAL;
+> +
+> +	for (;;) {
+> +		spin_lock(&priv->wait.lock);
+> +		if (kfifo_is_empty(&priv->events)) {
+> +			if (filep->f_flags & O_NONBLOCK) {
+> +				spin_unlock(&priv->wait.lock);
+> +				return -EAGAIN;
+> +			}
+> +
+> +			ret = wait_event_interruptible_locked(priv->wait,
+> +					!kfifo_is_empty(&priv->events));
+> +			if (ret) {
+> +				spin_unlock(&priv->wait.lock);
+> +				return ret;
+> +			}
+> +		}
+> +
+> +		ret = kfifo_out(&priv->events, &event, 1);
+> +		spin_unlock(&priv->wait.lock);
+> +		if (ret == 1)
+> +			break;
+> +
+> +		/* We should never get here. See lineevent_read(). */
+> +	}
+> +
+> +	ret = copy_to_user(buf, &event, sizeof(event));
+> +	if (ret)
+> +		return -EFAULT;
+> +
+> +	return sizeof(event);
+> +}
+> +
+>  /**
+>   * gpio_chrdev_open() - open the chardev for ioctl operations
+>   * @inode: inode for this chardev
+> @@ -1270,14 +1390,42 @@ static int gpio_chrdev_open(struct inode *inode, struct file *filp)
+>  {
+>  	struct gpio_device *gdev = container_of(inode->i_cdev,
+>  					      struct gpio_device, chrdev);
+> +	struct gpio_chardev_data *priv;
+> +	int ret;
+>  
+>  	/* Fail on open if the backing gpiochip is gone */
+>  	if (!gdev->chip)
+>  		return -ENODEV;
+> +
+> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	init_waitqueue_head(&priv->wait);
+> +	INIT_KFIFO(priv->events);
+> +	priv->gdev = gdev;
+> +
+> +	priv->lineinfo_changed_nb.notifier_call = lineinfo_changed_notify;
+> +	ret = atomic_notifier_chain_register(&gdev->notifier,
+> +					     &priv->lineinfo_changed_nb);
+> +	if (ret)
+> +		goto out_free_priv;
+> +
+>  	get_device(&gdev->dev);
+> -	filp->private_data = gdev;
+> +	filp->private_data = priv;
+> +
+> +	ret = nonseekable_open(inode, filp);
+> +	if (ret)
+> +		goto out_unregister_notifier;
+>  
+> -	return nonseekable_open(inode, filp);
+> +	return ret;
+> +
+> +out_unregister_notifier:
+> +	atomic_notifier_chain_unregister(&gdev->notifier,
+> +					 &priv->lineinfo_changed_nb);
+> +out_free_priv:
+> +	kfree(priv);
+> +	return ret;
+>  }
+>  
+>  /**
+> @@ -1288,17 +1436,22 @@ static int gpio_chrdev_open(struct inode *inode, struct file *filp)
+>   */
+>  static int gpio_chrdev_release(struct inode *inode, struct file *filp)
+>  {
+> -	struct gpio_device *gdev = container_of(inode->i_cdev,
+> -					      struct gpio_device, chrdev);
+> +	struct gpio_chardev_data *priv = filp->private_data;
+> +	struct gpio_device *gdev = priv->gdev;
+>  
+> +	atomic_notifier_chain_unregister(&gdev->notifier,
+> +					 &priv->lineinfo_changed_nb);
+>  	put_device(&gdev->dev);
+> +	kfree(priv);
+> +
+>  	return 0;
+>  }
+>  
+> -
+>  static const struct file_operations gpio_fileops = {
+>  	.release = gpio_chrdev_release,
+>  	.open = gpio_chrdev_open,
+> +	.poll = lineinfo_watch_poll,
+> +	.read = lineinfo_watch_read,
+>  	.owner = THIS_MODULE,
+>  	.llseek = no_llseek,
+>  	.unlocked_ioctl = gpio_ioctl,
+> @@ -1509,6 +1662,8 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
+>  	for (i = 0; i < chip->ngpio; i++)
+>  		gdev->descs[i].gdev = gdev;
+>  
+> +	ATOMIC_INIT_NOTIFIER_HEAD(&gdev->notifier);
+> +
+>  #ifdef CONFIG_PINCTRL
+>  	INIT_LIST_HEAD(&gdev->pin_ranges);
+>  #endif
+> @@ -2848,6 +3003,8 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
+>  	}
+>  done:
+>  	spin_unlock_irqrestore(&gpio_lock, flags);
+> +	atomic_notifier_call_chain(&desc->gdev->notifier,
+> +				   GPIOLINE_CHANGED_REQUESTED, desc);
+>  	return ret;
+>  }
+>  
+> @@ -2945,6 +3102,9 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
+>  	}
+>  
+>  	spin_unlock_irqrestore(&gpio_lock, flags);
+> +	atomic_notifier_call_chain(&desc->gdev->notifier,
+> +				   GPIOLINE_CHANGED_RELEASED, desc);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -3107,6 +3267,7 @@ static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
+>  		if (ret != -ENOTSUPP)
+>  			return ret;
+>  	}
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index a1cbeabadc69..4fca77241fb0 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -54,6 +54,7 @@ struct gpio_device {
+>  	const char		*label;
+>  	void			*data;
+>  	struct list_head        list;
+> +	struct atomic_notifier_head notifier;
+>  
+>  #ifdef CONFIG_PINCTRL
+>  	/*
+> @@ -112,6 +113,7 @@ struct gpio_desc {
+>  #define FLAG_PULL_UP    13	/* GPIO has pull up enabled */
+>  #define FLAG_PULL_DOWN  14	/* GPIO has pull down enabled */
+>  #define FLAG_BIAS_DISABLE    15	/* GPIO has pull disabled */
+> +#define FLAG_WATCHED	16	/* GPIO line is being watched by user-space */
+>  
+>  	/* Connection label */
+>  	const char		*label;
+> diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+> index 799cf823d493..2401028ae7de 100644
+> --- a/include/uapi/linux/gpio.h
+> +++ b/include/uapi/linux/gpio.h
+> @@ -59,6 +59,28 @@ struct gpioline_info {
+>  /* Maximum number of requested handles */
+>  #define GPIOHANDLES_MAX 64
+>  
+> +/* Possible line status change events */
+> +enum {
+> +	GPIOLINE_CHANGED_REQUESTED = 1,
+> +	GPIOLINE_CHANGED_RELEASED,
+> +	GPIOLINE_CHANGED_CONFIG,
+> +};
+> +
+> +/**
+> + * struct gpioline_info_changed - Information about a change in status
+> + * of a GPIO line
+> + * @timestamp: estimate of time of status change occurrence, in nanoseconds
+> + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RELEASED
+> + * and GPIOLINE_CHANGED_CONFIG
+> + * @info: updated line information
+> + */
+> +struct gpioline_info_changed {
+> +	__u64 timestamp;
+> +	__u32 event_type;
+> +	struct gpioline_info info;
+> +	__u32 padding[4]; /* for future use */
+> +};
+> +
+>  /* Linerequest flags */
+>  #define GPIOHANDLE_REQUEST_INPUT	(1UL << 0)
+>  #define GPIOHANDLE_REQUEST_OUTPUT	(1UL << 1)
+> @@ -176,6 +198,8 @@ struct gpioevent_data {
+>  
+>  #define GPIO_GET_CHIPINFO_IOCTL _IOR(0xB4, 0x01, struct gpiochip_info)
+>  #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
+> +#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0b, struct gpioline_info)
+> +#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0c, __u32)
+>  #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
+>  #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_request)
+>  
+> -- 
+> 2.23.0
+> 
