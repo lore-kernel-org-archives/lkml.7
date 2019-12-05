@@ -2,209 +2,272 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D175AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052E6C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 944BA206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:25:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="MooxaA5V";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="MooxaA5V"
+	by mail.kernel.org (Postfix) with ESMTP id B5228206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575555888;
+	bh=jN17Ga8kf5HoaOx3s+oL4/naaLNCleezKFlMKQT6iZs=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=dSg5W4sJEd7B26A/aLaIfq4p126RXygbOy5iTfcwSKZE5rImwTO1c5mOA0RBF56/4
+	 cTUGULjVQcI67M1vmpE0PtLa0nill0lNUg9yjY0/dmf90g8vVN5TulCZJh1hCru3VM
+	 6dT7Q4nYAv2+iKzgPqA/WvsAuaEepgLa2OWuxuU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729700AbfLEOZQ (ORCPT
+        id S1729666AbfLEOYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 09:25:16 -0500
-Received: from mail-eopbgr150079.outbound.protection.outlook.com ([40.107.15.79]:39089
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729502AbfLEOZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 09:25:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N2gaSfS/AOSUARqmaSAtHyZlb0ZkH1PSkNBEEWPwFYs=;
- b=MooxaA5VOG6LHihqG+CetmiiRq4pYX6i98bvsblRW5q9MJStlOoCTKtusrxp/3WE+SLr+aYkYfP7ph40gPIKJO1yQhV5yv07uk6t+yMsSDb13l2oiDZiLETDq8M96YGkiuClMViEK3j1pQnqY8v3uerAJ90FuUu1hrAaCa9gcEc=
-Received: from AM4PR08CA0046.eurprd08.prod.outlook.com (2603:10a6:205:2::17)
- by AM0PR08MB3938.eurprd08.prod.outlook.com (2603:10a6:208:123::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.14; Thu, 5 Dec
- 2019 14:25:11 +0000
-Received: from AM5EUR03FT040.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e08::200) by AM4PR08CA0046.outlook.office365.com
- (2603:10a6:205:2::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12 via Frontend
- Transport; Thu, 5 Dec 2019 14:25:11 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT040.mail.protection.outlook.com (10.152.17.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.18 via Frontend Transport; Thu, 5 Dec 2019 14:25:11 +0000
-Received: ("Tessian outbound 64ac59f2ee79:v37"); Thu, 05 Dec 2019 14:25:11 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 27f4d37a2bbfa0b4
-X-CR-MTA-TID: 64aa7808
-Received: from 6099433ef415.2
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 768036F3-B177-4B3C-8C09-429EB040D10A.1;
-        Thu, 05 Dec 2019 14:25:05 +0000
-Received: from EUR03-VE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 6099433ef415.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 05 Dec 2019 14:25:05 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WjCfKkHXbe2LOqZF2cgPG/grdG+TxfdL6eqDpmSaj7xA0iOtOThWtQo6+FqbJubhz3KIQRvdFeVGEMbVEAW5S9XZ5nwzqpeNhYJ3AldWafvqvKatvOL50Irj3XicSoppX5/TwqhlXi2DrfkJftw4FF4sJ+dPC1NrU8TUbpasurHNqCLsK9sPN3q+niDV3pJ3XIfVe2LCf/TQCKKUGvoqWez9FBOxxuD08dGiUvV1GcE3J7obBxRUH4mglUCeG8XRQDK/egqgcJjRF+7F2iBSxS9VhGEj3IJSvTh2JkP76LbbrhcaFKm/yGrd85sBSeQRKlhrcBS1awNn9JYdCp5tKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N2gaSfS/AOSUARqmaSAtHyZlb0ZkH1PSkNBEEWPwFYs=;
- b=LRCBnfr8gq7SPMxBqDll/XMObV8l3Wyn7K1odZQbxyyK0+RwYvo8uFGIIPYSVTwNkBPCe/UU52fHBat6OdSltMad1c2YhszzxKyeemh6BYpDzvUYWT64rcI4xcjlVKPZsPGFyCQi5+NRcJIpeW1E8G8LcM47B5kTLno2R5ktoWHWt31QTLbMAMiod+glF9YrRpdVOgr2DJpawi6Dix4/P6yNqw+WoxDyNgqI7UYqaaBEE1wJE/cQWkhRk5JBg6zUTS0/8E6iaWDblWkCxSyoGi2Ld5axiNUVfKlZ0t0D6wYkvbaS2opi7JO3Xpt+ybwEm93HQm3vUjvQ9SaRZtWGSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N2gaSfS/AOSUARqmaSAtHyZlb0ZkH1PSkNBEEWPwFYs=;
- b=MooxaA5VOG6LHihqG+CetmiiRq4pYX6i98bvsblRW5q9MJStlOoCTKtusrxp/3WE+SLr+aYkYfP7ph40gPIKJO1yQhV5yv07uk6t+yMsSDb13l2oiDZiLETDq8M96YGkiuClMViEK3j1pQnqY8v3uerAJ90FuUu1hrAaCa9gcEc=
-Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
- VI1PR08MB4462.eurprd08.prod.outlook.com (20.179.26.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.22; Thu, 5 Dec 2019 14:25:04 +0000
-Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
- ([fe80::3d0a:7cde:7f1f:fe7c]) by VI1PR08MB4078.eurprd08.prod.outlook.com
- ([fe80::3d0a:7cde:7f1f:fe7c%7]) with mapi id 15.20.2516.014; Thu, 5 Dec 2019
- 14:25:04 +0000
-From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-CC:     nd <nd@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>, Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 12/28] gpu: drm: bridge: sii9234: Use drm_bridge_init()
-Thread-Topic: [PATCH v2 12/28] gpu: drm: bridge: sii9234: Use
- drm_bridge_init()
-Thread-Index: AQHVqpi1nuxUXRNmNkWRvMMZxB0aZaerdNCAgAAYNIA=
-Date:   Thu, 5 Dec 2019 14:25:04 +0000
-Message-ID: <3778483.nNFBiIlyVN@e123338-lin>
-References: <20191204114732.28514-1-mihail.atanassov@arm.com>
- <20191204114732.28514-13-mihail.atanassov@arm.com>
- <a0727a3d-ccc5-7d09-9567-cf7fb68b1240@baylibre.com>
-In-Reply-To: <a0727a3d-ccc5-7d09-9567-cf7fb68b1240@baylibre.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [217.140.106.55]
-x-clientproxiedby: LNXP265CA0076.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:76::16) To VI1PR08MB4078.eurprd08.prod.outlook.com
- (2603:10a6:803:e5::28)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Mihail.Atanassov@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 772cf037-3d98-4922-1e70-08d7798ef009
-X-MS-TrafficTypeDiagnostic: VI1PR08MB4462:|AM0PR08MB3938:
-X-Microsoft-Antispam-PRVS: <AM0PR08MB393812BD6D65589237A5BB438F5C0@AM0PR08MB3938.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:7219;
-x-forefront-prvs: 02426D11FE
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(39860400002)(346002)(136003)(366004)(396003)(376002)(189003)(199004)(14454004)(99286004)(5660300002)(9686003)(71200400001)(71190400001)(66556008)(186003)(66476007)(52116002)(33716001)(11346002)(66446008)(6512007)(54906003)(316002)(86362001)(229853002)(2906002)(478600001)(81166006)(25786009)(102836004)(8676002)(6506007)(81156014)(305945005)(6486002)(53546011)(64756008)(66946007)(4326008)(6916009)(26005)(8936002)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB4462;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: iGq0hdsMEPTUerphJcJj1bAAgzrpWwizwnaFUllBIG6qycT1zSqMfwOlUTK02/ZUeKtNS69VAdhlrFTiPP71MraF/yK5ZZfZZeaReOIWbMdrCj6ZuN95Xq9Rid0YTece7FVjSpFGCcnr0BUdE5E2Wjo+tHcJGLhzqPtvl9voi7BQkcgjL4ChJENMPboldSqW6eUsa4vyk6fkX4iRa6qXDYRHnTqumwY3eLEkEvDpwn0TMUVvpfTBTby1dxxPes7cKisnDA3vSpNF4npvG2p04a9fwclyeNO10xLRb8VKo8Nw+ZltroFUlfPnGhKqhuXFu5m/PM3gJpwa0qxOXFAbv4LRPJlJfK7/xpD/R2nP027Kc71Sx8DOooa5HnO+FRIQFqOqJRJSUziydcXG4ZbTE/OyB/dij16x0e7Yop5Td91V2DYv90XyHNhkb69qnrkY
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C9B1579D1646684EA33FC0BE4AF02DDB@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 5 Dec 2019 09:24:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729165AbfLEOYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 09:24:46 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F207206DB;
+        Thu,  5 Dec 2019 14:24:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575555885;
+        bh=jN17Ga8kf5HoaOx3s+oL4/naaLNCleezKFlMKQT6iZs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=xm3AuUvczXN0AA/RlOFU6XFj7Wp4JS5yDWkI48662/3Tji5h0qOfTnU343GObCB1h
+         dqupHspdKG2602TdxJHOe89KPZZ2c9dyzZe7Bh2sOb/J2QPGQX9xFk4ptlxsn9kHVB
+         l1dO4CFPDgtJsaukKH5JMN2qZXAS6GJm14SRmp+c=
+Date:   Thu, 5 Dec 2019 15:24:43 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 5.4.2
+Message-ID: <20191205142443.GA693797@kroah.com>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB4462
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Mihail.Atanassov@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT040.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(7916004)(4636009)(136003)(376002)(346002)(396003)(39860400002)(189003)(199004)(186003)(33716001)(26005)(97756001)(9686003)(6512007)(6862004)(86362001)(102836004)(22756006)(53546011)(6506007)(229853002)(50466002)(8936002)(8676002)(81166006)(46406003)(81156014)(25786009)(14454004)(99286004)(336012)(4326008)(305945005)(26826003)(5660300002)(70206006)(76130400001)(11346002)(6486002)(356004)(2906002)(54906003)(23726003)(70586007)(76176011)(36906005)(316002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB3938;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: c460b271-1314-41fb-23f6-08d7798eeba1
-NoDisclaimer: True
-X-Forefront-PRVS: 02426D11FE
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +v2N3o7Xw5Bt1jc67OOQzER5pwwD0k0bwLPfQvLZ+kA12hQM4EQfLlwimgYfraEjNtn8kiToYnCcKdOVen0ozveqAI6cJgNgpj54PKe4Gcc1tuDrXIjKMz2cqX98LQE2VCiwReYuWI84qpKIudeAwe1MisoKU08EY8o7c/KRAhhu1xpYYXU91Cy0pqGteeyEKXqlaSUrTFW7AzL8ic/l+6NvU8E9slF1H3/Aw8Ns5ynmwSwe7kxSwpgIxTIAcRsC2gPxtwEkjDHnd8zCTfYTD37P+AE2h8TInzRBerRqoj1Qc+JjlHCekPyIoPp6Xm0y3sXSUZcfL4VYPgrAmNX+Oe9v0tOncNAJyHPbRB9FuO6rq+KbbhbMJlMOMHeCnNyMmyBjdWO+stLUT+d5fTlGs9KGxjjdtQIGrvKPs8TgJsPA1NMVeFvONsL0N1RqyXC/
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2019 14:25:11.5050
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 772cf037-3d98-4922-1e70-08d7798ef009
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3938
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
 
-On Thursday, 5 December 2019 12:10:37 GMT Neil Armstrong wrote:
-> Hi,
->=20
-> On 04/12/2019 12:48, Mihail Atanassov wrote:
-> > No functional change.
-> >=20
->=20
-> Why this particular one has "gpu: drm: bridge" unlike the other patches o=
-f the serie ?
->=20
+--r5Pyd7+fXNt84Ff3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I took the "look at the file's git log" approach to determining the prefix.
-I can change it if you prefer a "drm/bridge: sii9234" prefix instead.
+I'm announcing the release of the 5.4.2 kernel.
 
-> Neil
->=20
-> > Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
-> > ---
-> >  drivers/gpu/drm/bridge/sii9234.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/bridge/sii9234.c b/drivers/gpu/drm/bridge/=
-sii9234.c
-> > index f81f81b7051f..bfd3832baa1a 100644
-> > --- a/drivers/gpu/drm/bridge/sii9234.c
-> > +++ b/drivers/gpu/drm/bridge/sii9234.c
-> > @@ -925,8 +925,7 @@ static int sii9234_probe(struct i2c_client *client,
-> > =20
-> >  	i2c_set_clientdata(client, ctx);
-> > =20
-> > -	ctx->bridge.funcs =3D &sii9234_bridge_funcs;
-> > -	ctx->bridge.of_node =3D dev->of_node;
-> > +	drm_bridge_init(&ctx->bridge, dev, &sii9234_bridge_funcs, NULL, NULL)=
-;
-> >  	drm_bridge_add(&ctx->bridge);
-> > =20
-> >  	sii9234_cable_in(ctx);
-> >=20
->=20
->=20
+All users of the 5.4 kernel series must upgrade.
+
+The updated 5.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-5.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Makefile                                     |    2=20
+ arch/x86/include/asm/fpu/internal.h          |    2=20
+ drivers/base/platform.c                      |    7 -
+ drivers/crypto/Kconfig                       |    1=20
+ drivers/crypto/inside-secure/safexcel.c      |    4=20
+ drivers/hid/hid-core.c                       |   51 ++++++-
+ drivers/misc/mei/bus.c                       |    9 -
+ drivers/misc/mei/hw-me-regs.h                |    1=20
+ drivers/misc/mei/pci-me.c                    |    1=20
+ drivers/net/dsa/sja1105/sja1105_main.c       |   10 -
+ drivers/net/ethernet/cadence/macb_main.c     |    1=20
+ drivers/net/ethernet/google/gve/gve_main.c   |    3=20
+ drivers/net/ethernet/realtek/r8169_main.c    |    3=20
+ drivers/net/macvlan.c                        |    3=20
+ drivers/net/phy/mdio_bus.c                   |    6=20
+ drivers/net/slip/slip.c                      |    1=20
+ drivers/platform/x86/hp-wmi.c                |   10 -
+ drivers/staging/rtl8192e/rtl8192e/rtl_core.c |    5=20
+ drivers/staging/rtl8723bs/os_dep/sdio_intf.c |    7 -
+ drivers/staging/wilc1000/wilc_hif.c          |   25 ++-
+ drivers/thunderbolt/switch.c                 |   54 ++++++-
+ drivers/usb/dwc2/core.c                      |    2=20
+ drivers/usb/serial/ftdi_sio.c                |    3=20
+ drivers/usb/serial/ftdi_sio_ids.h            |    7 +
+ fs/ext4/inode.c                              |   15 ++
+ fs/ext4/super.c                              |   21 +--
+ fs/io_uring.c                                |   23 +++
+ fs/jffs2/nodelist.c                          |    2=20
+ include/linux/skmsg.h                        |   26 +--
+ include/net/sctp/structs.h                   |    3=20
+ include/net/tls.h                            |    3=20
+ net/core/filter.c                            |    8 -
+ net/core/skmsg.c                             |    2=20
+ net/ipv4/tcp_bpf.c                           |    2=20
+ net/openvswitch/datapath.c                   |   17 ++
+ net/psample/psample.c                        |    2=20
+ net/sched/sch_mq.c                           |    3=20
+ net/sched/sch_mqprio.c                       |    4=20
+ net/sched/sch_multiq.c                       |    2=20
+ net/sched/sch_prio.c                         |    2=20
+ net/sctp/associola.c                         |    1=20
+ net/sctp/endpointola.c                       |    1=20
+ net/sctp/input.c                             |    4=20
+ net/sctp/sm_statefuns.c                      |    4=20
+ net/socket.c                                 |  184 +++++++++++++++++++---=
+-----
+ net/tipc/netlink_compat.c                    |    4=20
+ net/tls/tls_main.c                           |   13 -
+ net/tls/tls_sw.c                             |   32 ++--
+ tools/testing/selftests/bpf/test_sockmap.c   |   47 ++++--
+ tools/testing/selftests/bpf/xdping.c         |    2=20
+ tools/testing/selftests/net/pmtu.sh          |    5=20
+ tools/testing/selftests/net/tls.c            |   60 ++++++++
+ 52 files changed, 504 insertions(+), 206 deletions(-)
+
+Ajay Singh (1):
+      staging: wilc1000: fix illegal memory access in wilc_parse_join_bss_p=
+aram()
+
+Alexander Usyskin (2):
+      mei: bus: prefix device names on bus with the bus name
+      mei: me: add comet point V device id
+
+Candle Sun (1):
+      HID: core: check whether Usage Page item is after Usage ID items
+
+Chuhong Yuan (1):
+      net: macb: add missed tasklet_kill
+
+David Bauer (1):
+      mdio_bus: don't use managed reset-controller
+
+Dust Li (1):
+      net: sched: fix `tc -s class show` no bstats on class with nolock sub=
+queues
+
+Fabio D'Urso (1):
+      USB: serial: ftdi_sio: add device IDs for U-Blox C099-F9P
+
+Greg Kroah-Hartman (1):
+      Linux 5.4.2
+
+Hans de Goede (4):
+      staging: rtl8723bs: Drop ACPI device ids
+      staging: rtl8723bs: Add 024c:0525 to the list of SDIO device-ids
+      platform/x86: hp-wmi: Fix ACPI errors caused by too small buffer
+      platform/x86: hp-wmi: Fix ACPI errors caused by passing 0 as input si=
+ze
+
+Heiner Kallweit (2):
+      r8169: fix jumbo configuration for RTL8168evl
+      r8169: fix resume on cable plug-in
+
+Herbert Xu (1):
+      crypto: talitos - Fix build error by selecting LIB_DES
+
+Jakub Kicinski (8):
+      net/tls: take into account that bpf_exec_tx_verdict() may free the re=
+cord
+      net/tls: free the record on encryption error
+      net: skmsg: fix TLS 1.3 crash with full sk_msg
+      selftests/tls: add a test for fragmented messages
+      net/tls: remove the dead inplace_crypto code
+      net/tls: use sg_next() to walk sg entries
+      selftests: bpf: test_sockmap: handle file creation failures gracefully
+      selftests: bpf: correct perror strings
+
+Jens Axboe (3):
+      io_uring: async workers should inherit the user creds
+      net: separate out the msghdr copy from ___sys_{send,recv}msg()
+      net: disallow ancillary data for __sys_{send,recv}msg_file()
+
+Jeroen de Borst (1):
+      gve: Fix the queue page list allocated pages count
+
+Joel Stanley (1):
+      Revert "jffs2: Fix possible null-pointer dereferences in jffs2_add_fr=
+ag_to_fragtree()"
+
+John Rutherford (1):
+      tipc: fix link name length check
+
+Jouni Hogander (1):
+      slip: Fix use-after-free Read in slip_open
+
+Mathias Kresin (1):
+      usb: dwc2: use a longer core rest timeout in dwc2_core_reset()
+
+Menglong Dong (1):
+      macvlan: schedule bc_work even if error
+
+Mika Westerberg (1):
+      thunderbolt: Power cycle the router if NVM authentication fails
+
+Navid Emamdoost (1):
+      sctp: Fix memory leak in sctp_sf_do_5_2_4_dupcook
+
+Nikolay Aleksandrov (1):
+      net: psample: fix skb_over_panic
+
+Oleksij Rempel (1):
+      net: dsa: sja1105: fix sja1105_parse_rgmii_delays()
+
+Pan Bian (1):
+      staging: rtl8192e: fix potential use after free
+
+Paolo Abeni (3):
+      openvswitch: fix flow command message size
+      openvswitch: drop unneeded BUG_ON() in ovs_flow_cmd_build_info()
+      openvswitch: remove another BUG_ON()
+
+Pascal van Leeuwen (1):
+      crypto: inside-secure - Fix stability issue with Macchiatobin
+
+Sami Tolvanen (1):
+      driver core: platform: use the correct callback type for bus_find_dev=
+ice
+
+Sebastian Andrzej Siewior (1):
+      x86/fpu: Don't cache access to fpu_fpregs_owner_ctx
+
+Thadeu Lima de Souza Cascardo (1):
+      selftests: pmtu: use -oneline for ip route list cache
+
+Theodore Ts'o (1):
+      ext4: add more paranoia checking in ext4_expand_extra_isize handling
+
+Xin Long (1):
+      sctp: cache netns in sctp_ep_common
 
 
---=20
-Mihail
+--r5Pyd7+fXNt84Ff3
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl3pEysACgkQONu9yGCS
+aT5LlRAAi3zI2RTma6gBGAs7EZHDVqyJvWo4os49/Gv3uyMOTGOoWsyjjtqCDXfY
+eVrILFdvwHBHLyy4dm1dSj6o3P1BUjUdmF5WPeB38TEBiszcon+dAOaz71HGHVWJ
+Ek4trg/MWtlx+JFaR6Opo+ojyedU89KykWyI4/OQ/VmvEbQ+4vdnqQzaD6TUUyh5
+iijxlwfeaL2sOouJW2nhqg65U78RCqEL6FxnDGAh2OtEmYyb9YM2fPjUZzuaS2Bb
+m1XIHgFhUbBEthQHIvNm0KjTBlGyKlcYW5oHxQCQ3rjLswiyYvZFYg0XVJMxHeGL
+NP3zJzAYn2PDn27HqoGsqDC7zPWZ79tZiCR+swP7YeJMDe6RhiaUUqTxmXHEBnMW
+T9kDtrFJR+AqmvXtjQaGzP3iiqDbigfoCsRl++GM+vB1dXKi/aXQzkiQ8k4c1UTo
++yQoQn4ASliSbDzsR8HUjcopUrPkKE64n6sfzL5D797YYtWwVdWFwDiEncvSNm8B
+Q1oKTAJTaowHEZnkQLqspE1pIkfsxBGCEb4D56qbJ2h8bDyNw3ZagXjgwaa1+w1r
+EFMFiHewv649EQAOhBUnvlz2GkNrtWGosR7AZKQeZAPoZVDzn/hQJLKN096jd742
+hrkeWUjM8C62RAAoOhhqjzFRdzoc5NAalUP1PKhP4pr+wsvEuEQ=
+=yyqz
+-----END PGP SIGNATURE-----
 
+--r5Pyd7+fXNt84Ff3--
