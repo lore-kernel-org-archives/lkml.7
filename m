@@ -2,193 +2,157 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1B0C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C95C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E98620707
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5F6222B48
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:37:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="l1IwK6Bn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfLEGfI (ORCPT
+        id S1726184AbfLEGhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 01:35:08 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:43072 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfLEGfH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 01:35:07 -0500
-Received: by mail-il1-f198.google.com with SMTP id j17so1731915ilc.10
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 22:35:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=sWlaImi5B4uVh73w3PHyR9//P49nAec4x6mydwyswqI=;
-        b=bslcDjwClzwE1Z0KfVJ/bW1ns7psfhbp6Oocyg6KgrZuJ9ftjt0uvaLn1a7JLTRJG3
-         hGxyCzwuzETLe5k1PAyhHzzDsAmNSu4wIwFPkMc71N3WBGiABRRWArcL6c+FfRgPestY
-         lg1RJ016FW3ZGWkBq+MtQa+OqaXATOWI+kewGwsveQc5uANvSLpir4XlB+2vgCNL7PaW
-         jMaAl0dDgHIvHHy/TjR7RhemtVJAl27AXRBSSOF8GDSZy/DOkbBe4uyBOam0iKGKB2L0
-         9EF6V0G2eNTo+aN0SEgXIwUaNwrzCCn9pLDsgOunUClmlHa2G0BZupq2LwQrJ0j/uC6C
-         tydw==
-X-Gm-Message-State: APjAAAWHZF9eBljPtTWgJqZkBO7Kr0e1ijNSY7WnEpYBJI1rVaSdhnJl
-        g7Ow1gXzKJoVkzMSOuIqNw+3Jt9BPAvvs4ToZRKJiXOK7Hgq
-X-Google-Smtp-Source: APXvYqyTtejw80rTQ+CvFHMjZ29IKsVykf637q7u88PD0v7dSr0tMfseJhNiwYx/dKnjCd9NiH1jHxoe84au5O7n2k3Y1oufRx2G
+        Thu, 5 Dec 2019 01:37:38 -0500
+Received: from mail-eopbgr700066.outbound.protection.outlook.com ([40.107.70.66]:35200
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725880AbfLEGhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 01:37:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e8hu840KSCk8imC9F0AQID4xymmV+yC3EJf2BedsxE/JWLrkzeGXE/IVJa5fPRrvzWGyVxgX5bu/FeF8PTPM7yX51y4yOmtHc8aJ1U3OLtrZd8+BlIYs4Io0K1jbL3AfR6lD7OrSiqRsbyw5VxCYW1hXJwl9uqsEZ1i/DXIBFBmhxxxganiY7P8hdTKWzT2J1ZbE8/M80xf4zNvLWs92Q7YihSmG4pyLs0dh+hkymlgoGtkJshZs3chl/IuuSLouGuYVVFULrQyZhhlrEvuJBOp5/CMhz0uesqHMaSbGblhpDD6RYSTUaLnQxQKD74mH+AO2SyqYoDbEeviM67gCcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E9CHQI/shtHh7y7xVKO9wv5ZGzwFahyHkg96iYSppKM=;
+ b=cZ+it4umzxIZMpE6ZpjqqJc2e4LrrCvK/5o7OYIhK9OhkQqEV9pksWzlEB1TcWfgq/owSKEROBnGucn698hlZsCpTt9c2cTlV07jRsQrkKtUGH2zlKlMmvbnPHukn7MCqyHRYTJimHnozjExDvNGFICxYB52wPYaa1XLWWXZSqifCNToA4whIW3E0ZCx/5qTWSPexqSbLi4xBnhliPWyJAJgzQhepjhHCox3JerRDKqf/jvWWYQ96yh0Yv6oeKmkCEu47UrQSdp5nF3fRRl+hvIk4BhC3ODrrCpbxM5q75atHDbRyO1sZ5d7xWN+rQNm3yDQRqkHp7bUO5qZjKc3Dg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=lists.infradead.org
+ smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E9CHQI/shtHh7y7xVKO9wv5ZGzwFahyHkg96iYSppKM=;
+ b=l1IwK6BnPGJTfJzXbfe890PqHvRuOBn9t0BquJN647rmtrH8qfPRVsZaYHgYbZMjPxk3giWtb1KeOHIoyamjrnaBB2US8fImydNs2DxkMK2oLqs137fS+BzeOulp7/OFPCNDDbrMfGT6RD11erE7ZNWpjDf8EWsSSaY/4B/fLX0=
+Received: from DM6PR02CA0138.namprd02.prod.outlook.com (2603:10b6:5:1b4::40)
+ by MN2PR02MB6989.namprd02.prod.outlook.com (2603:10b6:208:20f::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.17; Thu, 5 Dec
+ 2019 06:37:35 +0000
+Received: from CY1NAM02FT044.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::207) by DM6PR02CA0138.outlook.office365.com
+ (2603:10b6:5:1b4::40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13 via Frontend
+ Transport; Thu, 5 Dec 2019 06:37:35 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; lists.infradead.org; dkim=none (message not signed)
+ header.d=none;lists.infradead.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT044.mail.protection.outlook.com (10.152.75.137) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
+ via Frontend Transport; Thu, 5 Dec 2019 06:37:34 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <rajan.vaja@xilinx.com>)
+        id 1ickla-0000xI-G7; Wed, 04 Dec 2019 22:37:34 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <rajan.vaja@xilinx.com>)
+        id 1icklV-0000XV-CV; Wed, 04 Dec 2019 22:37:29 -0800
+Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB56bJpk003539;
+        Wed, 4 Dec 2019 22:37:20 -0800
+Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <rajan.vaja@xilinx.com>)
+        id 1icklL-0000WL-Qw; Wed, 04 Dec 2019 22:37:19 -0800
+From:   Rajan Vaja <rajan.vaja@xilinx.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, michal.simek@xilinx.com,
+        jolly.shah@xilinx.com, m.tretter@pengutronix.de,
+        gustavo@embeddedor.com, tejas.patel@xilinx.com,
+        nava.manne@xilinx.com, mdf@kernel.org
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rajan Vaja <rajan.vaja@xilinx.com>
+Subject: [PATCH v3 2/6] clk: zynqmp: Extend driver for versal
+Date:   Wed,  4 Dec 2019 22:35:55 -0800
+Message-Id: <1575527759-26452-3-git-send-email-rajan.vaja@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1575527759-26452-1-git-send-email-rajan.vaja@xilinx.com>
+References: <1574415814-19797-1-git-send-email-rajan.vaja@xilinx.com>
+ <1575527759-26452-1-git-send-email-rajan.vaja@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(39860400002)(396003)(199004)(189003)(426003)(36756003)(70206006)(2616005)(2906002)(70586007)(51416003)(14444005)(26005)(44832011)(336012)(7696005)(11346002)(186003)(316002)(16586007)(5660300002)(4326008)(107886003)(305945005)(81156014)(81166006)(76176011)(36386004)(6666004)(8936002)(356004)(50466002)(478600001)(4744005)(8676002)(7416002)(9786002)(50226002)(48376002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6989;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-X-Received: by 2002:a6b:5a13:: with SMTP id o19mr5063163iob.120.1575527706944;
- Wed, 04 Dec 2019 22:35:06 -0800 (PST)
-Date:   Wed, 04 Dec 2019 22:35:06 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004e6eed0598ef2184@google.com>
-Subject: KASAN: slab-out-of-bounds Write in decode_data
-From:   syzbot <syzbot+fc8cd9a673d4577fb2e4@syzkaller.appspotmail.com>
-To:     ajk@comnets.uni-bremen.de, davem@davemloft.net,
-        linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bb32a81e-a208-49a9-fd25-08d7794d9d15
+X-MS-TrafficTypeDiagnostic: MN2PR02MB6989:
+X-Microsoft-Antispam-PRVS: <MN2PR02MB6989186B3E7FF90FC10C0E23B75C0@MN2PR02MB6989.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:446;
+X-Forefront-PRVS: 02426D11FE
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pY1Vcie4ejMmyJJk/LlT0RBNBCMTFsHYVmRCnQGWa0U7BtCaH/IKf+kaLajsD/aeOkEkQDGUY0q30qdpG0xg+ecYzzCUwYRHUtZbuzqIWIeEKA4I895DMmhA+CELDGzbjyZqo7V9qTGzyr/F+0woaL+HfwBGBKIvRrTFihRlJKeNIXu08jUHfwpuLyGlpvVcZLADsr7k13uwqyFgV51l2OPJrZfRghMnTJy9+qWkjPaexzCDyGKgJu3+Qh1f8NqxR5J9UGYTlh2gFh1QlVeqogL5FTDTD2aQGAfmjC/N1TjeaiKhm9h4EaKbCKg7f02GK2jwQ+Yo6s4us7wkk5NgxZlPaSvqDkvODO21ug3fBvxYQB0erUd9Xcg//NkSCwbhp/Hd42p6oBuq3RYRCYZfCvtk69S3FkoqWmXmpnSAmO3dH2FYsYHkS+3bBkRcZzvS9Ke+0hptYZXdnVe+kEgSISHhLi04J5Ovo0v4voxdtZADtFHEGUlix579pIxsFHLo
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2019 06:37:34.9830
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb32a81e-a208-49a9-fd25-08d7794d9d15
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6989
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Add Versal compatible string to support Versal
+binding.
 
-syzbot found the following crash on:
-
-HEAD commit:    63de3747 Merge tag 'tag-chrome-platform-for-v5.5' of git:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=165a7c82e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1d189d07c6717979
-dashboard link: https://syzkaller.appspot.com/bug?extid=fc8cd9a673d4577fb2e4
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15379c2ee00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=133cf97ee00000
-
-Bisection is inconclusive: the bug happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=150e2861e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=170e2861e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=130e2861e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+fc8cd9a673d4577fb2e4@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in decode_data.part.0+0x23b/0x270  
-drivers/net/hamradio/6pack.c:843
-Write of size 1 at addr ffff8880993bd04e by task kworker/u4:2/25
-
-CPU: 1 PID: 25 Comm: kworker/u4:2 Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events_unbound flush_to_ldisc
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:638
-  __asan_report_store1_noabort+0x17/0x20 mm/kasan/generic_report.c:137
-  decode_data.part.0+0x23b/0x270 drivers/net/hamradio/6pack.c:843
-  decode_data drivers/net/hamradio/6pack.c:965 [inline]
-  sixpack_decode drivers/net/hamradio/6pack.c:968 [inline]
-  sixpack_receive_buf drivers/net/hamradio/6pack.c:458 [inline]
-  sixpack_receive_buf+0xde4/0x1420 drivers/net/hamradio/6pack.c:435
-  tty_ldisc_receive_buf+0x15f/0x1c0 drivers/tty/tty_buffer.c:465
-  tty_port_default_receive_buf+0x7d/0xb0 drivers/tty/tty_port.c:38
-  receive_buf drivers/tty/tty_buffer.c:481 [inline]
-  flush_to_ldisc+0x222/0x390 drivers/tty/tty_buffer.c:533
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 8864:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:512 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:485
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:526
-  __do_kmalloc_node mm/slab.c:3616 [inline]
-  __kmalloc_node+0x4e/0x70 mm/slab.c:3623
-  kmalloc_node include/linux/slab.h:579 [inline]
-  kvmalloc_node+0x68/0x100 mm/util.c:574
-  kvmalloc include/linux/mm.h:655 [inline]
-  kvzalloc include/linux/mm.h:663 [inline]
-  alloc_netdev_mqs+0x98/0xde0 net/core/dev.c:9730
-  sixpack_open+0x104/0xaaf drivers/net/hamradio/6pack.c:563
-  tty_ldisc_open.isra.0+0xa3/0x110 drivers/tty/tty_ldisc.c:464
-  tty_set_ldisc+0x30e/0x6b0 drivers/tty/tty_ldisc.c:591
-  tiocsetd drivers/tty/tty_io.c:2337 [inline]
-  tty_ioctl+0xe8d/0x14f0 drivers/tty/tty_io.c:2597
-  vfs_ioctl fs/ioctl.c:47 [inline]
-  file_ioctl fs/ioctl.c:545 [inline]
-  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-  __do_sys_ioctl fs/ioctl.c:756 [inline]
-  __se_sys_ioctl fs/ioctl.c:754 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 8605:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  kasan_set_free_info mm/kasan/common.c:334 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:473
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:482
-  __cache_free mm/slab.c:3426 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3757
-  skb_free_head+0x93/0xb0 net/core/skbuff.c:591
-  skb_release_data+0x551/0x8d0 net/core/skbuff.c:611
-  skb_release_all+0x4d/0x60 net/core/skbuff.c:665
-  __kfree_skb net/core/skbuff.c:679 [inline]
-  consume_skb net/core/skbuff.c:838 [inline]
-  consume_skb+0xfb/0x410 net/core/skbuff.c:832
-  skb_free_datagram+0x1b/0x100 net/core/datagram.c:328
-  netlink_recvmsg+0x6c6/0xf50 net/netlink/af_netlink.c:1996
-  sock_recvmsg_nosec net/socket.c:873 [inline]
-  sock_recvmsg net/socket.c:891 [inline]
-  sock_recvmsg+0xce/0x110 net/socket.c:887
-  ____sys_recvmsg+0x236/0x550 net/socket.c:2562
-  ___sys_recvmsg+0xff/0x190 net/socket.c:2603
-  __sys_recvmsg+0x102/0x1d0 net/socket.c:2650
-  __do_sys_recvmsg net/socket.c:2660 [inline]
-  __se_sys_recvmsg net/socket.c:2657 [inline]
-  __x64_sys_recvmsg+0x78/0xb0 net/socket.c:2657
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8880993bc000
-  which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 78 bytes to the right of
-  4096-byte region [ffff8880993bc000, ffff8880993bd000)
-The buggy address belongs to the page:
-page:ffffea000264ef00 refcount:1 mapcount:0 mapping:ffff8880aa402000  
-index:0x0 compound_mapcount: 0
-raw: 00fffe0000010200 ffffea000262c288 ffffea00029bc908 ffff8880aa402000
-raw: 0000000000000000 ffff8880993bc000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8880993bcf00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8880993bcf80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8880993bd000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                                               ^
-  ffff8880993bd080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8880993bd100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
+Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/clk/zynqmp/clkc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/drivers/clk/zynqmp/clkc.c b/drivers/clk/zynqmp/clkc.c
+index a11f93e..10e89f2 100644
+--- a/drivers/clk/zynqmp/clkc.c
++++ b/drivers/clk/zynqmp/clkc.c
+@@ -2,7 +2,7 @@
+ /*
+  * Zynq UltraScale+ MPSoC clock controller
+  *
+- *  Copyright (C) 2016-2018 Xilinx
++ *  Copyright (C) 2016-2019 Xilinx
+  *
+  * Based on drivers/clk/zynq/clkc.c
+  */
+@@ -749,6 +749,7 @@ static int zynqmp_clock_probe(struct platform_device *pdev)
+ 
+ static const struct of_device_id zynqmp_clock_of_match[] = {
+ 	{.compatible = "xlnx,zynqmp-clk"},
++	{.compatible = "xlnx,versal-clk"},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, zynqmp_clock_of_match);
+-- 
+2.7.4
+
