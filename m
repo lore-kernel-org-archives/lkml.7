@@ -2,76 +2,115 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188B5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8FAC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED02921835
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC03B20707
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:28:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575534515;
+	bh=/l81rifg3rXzLUo11Q36GAttbB8DKI+R9E4DG7pEnKM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=EiP+Dd1/Jw2IKHJz62671XWAMfNEGEBUZcVrH6x0NPL66zzA/XPXe1YUoKl21Rj56
+	 XVQ6S+twiS2eoLk0LDDq2S8j6xEEFc4qgkOdJwjcOYOlUYY4NMwHRKS3bZvtZoauck
+	 jCKwDUx3KECa1WQlh3YcE7/jXCiV5VrCF8vo6pHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbfLEI0Z (ORCPT
+        id S1728419AbfLEI2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 03:26:25 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:56097 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfLEI0Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 03:26:24 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xB58Q2or024519, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xB58Q2or024519
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 5 Dec 2019 16:26:02 +0800
-Received: from james-BS01.localdomain (172.21.190.33) by
- RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server id
- 14.3.468.0; Thu, 5 Dec 2019 16:26:02 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-CC:     <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        <linux-realtek-soc@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 1/2] dt-bindings: arm: realtek: Document RTD1319 and Realtek PymParticle EVB
-Date:   Thu, 5 Dec 2019 16:25:54 +0800
-Message-ID: <20191205082555.22633-2-james.tai@realtek.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191205082555.22633-1-james.tai@realtek.com>
-References: <20191205082555.22633-1-james.tai@realtek.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+        Thu, 5 Dec 2019 03:28:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbfLEI2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 03:28:33 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC8D220707;
+        Thu,  5 Dec 2019 08:28:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575534513;
+        bh=/l81rifg3rXzLUo11Q36GAttbB8DKI+R9E4DG7pEnKM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=chCMKjcpCxO62O5MnivFHjPUdtxg6+WgtEauVsar/Y9E+qBshhHXHHYEm3xzSYQtp
+         j9qCk2vZsSvQl57fNz6goAF5IZ8wLM65QreL0gu5o/TRVZicDsdEnAmAF3lJnUQ5bR
+         I9Vp2X0muh1wOLdYMKXQmpjMSIQ8QfVinlMh1ZWI=
+Date:   Thu, 5 Dec 2019 17:28:29 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jaswinder.singh@linaro.org
+Subject: Re: [BUGFIX PATCH] selftests/x86: Check the availablity of
+ sys/syscall.h
+Message-Id: <20191205172829.66ec55907ac31303bbede593@kernel.org>
+In-Reply-To: <157467982420.24866.4375165389279465782.stgit@devnote2>
+References: <157467982420.24866.4375165389279465782.stgit@devnote2>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define compatible strings for Realtek RTD1319 SoC and Realtek PymParticle
-EVB.
+Hi Shuah,
 
-Signed-off-by: James Tai <james.tai@realtek.com>
----
- Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+Could you pick this if there si no issue?
 
-diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
-index 2444eff2c3d5..f018d683a544 100644
---- a/Documentation/devicetree/bindings/arm/realtek.yaml
-+++ b/Documentation/devicetree/bindings/arm/realtek.yaml
-@@ -39,4 +39,10 @@ properties:
-           - enum:
-               - realtek,mjolnir # Realtek Mjolnir EVB
-           - const: realtek,rtd1619
-+
-+     # RTD1319 SoC based boards
-+     - items:
-+          - enum:
-+              - realtek,pymparticle # Realtek PymParticle EVB
-+          - const: realtek,rtd1319
- ...
+Thank you,
+
+On Mon, 25 Nov 2019 20:03:44 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> Since single_step_syscall.c depends on sys/syscall.h and
+> its include, asm/unistd.h, we should check the availability
+> of those headers.
+> Without this fix, if gcc-multilib is not installed but
+> libc6-dev-i386 is installed, kselftest tries to build 32bit
+> binary and failed with following error message.
+> 
+> In file included from single_step_syscall.c:18:
+> /usr/include/sys/syscall.h:24:10: fatal error: asm/unistd.h: No such file or directory
+>  #include <asm/unistd.h>
+>           ^~~~~~~~~~~~~~
+> compilation terminated.
+> 
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  .../testing/selftests/x86/trivial_32bit_program.c  |    1 +
+>  .../testing/selftests/x86/trivial_64bit_program.c  |    1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/x86/trivial_32bit_program.c b/tools/testing/selftests/x86/trivial_32bit_program.c
+> index aa1f58c2f71c..6b455eda24f7 100644
+> --- a/tools/testing/selftests/x86/trivial_32bit_program.c
+> +++ b/tools/testing/selftests/x86/trivial_32bit_program.c
+> @@ -8,6 +8,7 @@
+>  # error wrong architecture
+>  #endif
+>  
+> +#include <sys/syscall.h>
+>  #include <stdio.h>
+>  
+>  int main()
+> diff --git a/tools/testing/selftests/x86/trivial_64bit_program.c b/tools/testing/selftests/x86/trivial_64bit_program.c
+> index 39f4b84fbf15..07ae86df18ff 100644
+> --- a/tools/testing/selftests/x86/trivial_64bit_program.c
+> +++ b/tools/testing/selftests/x86/trivial_64bit_program.c
+> @@ -8,6 +8,7 @@
+>  # error wrong architecture
+>  #endif
+>  
+> +#include <sys/syscall.h>
+>  #include <stdio.h>
+>  
+>  int main()
+> 
+
+
 -- 
-2.24.0
-
+Masami Hiramatsu <mhiramat@kernel.org>
