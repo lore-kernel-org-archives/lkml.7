@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FBBC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69224C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3468224673
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189092466E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:52:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="unAIKatQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6gwEXQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387450AbfLEVw0 (ORCPT
+        id S2387460AbfLEVw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 16:52:26 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43605 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387420AbfLEVwT (ORCPT
+        Thu, 5 Dec 2019 16:52:29 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:38292 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387429AbfLEVwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 16:52:19 -0500
-Received: by mail-io1-f66.google.com with SMTP id s2so5224034iog.10
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 13:52:18 -0800 (PST)
+        Thu, 5 Dec 2019 16:52:20 -0500
+Received: by mail-il1-f195.google.com with SMTP id u17so4414876ilq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 13:52:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YaXRbIcfrfy+6sOtLvNoOiV/KR6L6wO+a8T26somqJk=;
-        b=unAIKatQPjwBArX0E/TE5RpLs9pmJyVTw4L0vbydqRAjOJkwV6QGGF7yZwtGrD19rR
-         2jTSxrpM/XrNU7ADAUCMm0znq3mgaSRvb+nS9Sm/XXBs2PKWzEd2cSnUZCL5Vu3GNz/U
-         nfZv0FnUDy73za6qVST7mAX1xYUyEnGY9H0nYe776uo2aRYh/2sxjd3mMHsj1A7UT0EK
-         weuok8jWyrBeanPzyJjs2uxuLfUUGdMqyGXDy7o2gUkeZhKclILuCrx/yidb5xiljM6M
-         ZhYQzUhIJ1ovUmtgglPUnuviFVEqv99M4RoziHpMlEZNNhtp4aCnGv+X1tkCbzdyUveU
-         owfg==
+        bh=ECGG/XNVXiLaDg6OhX+pEjRtCpyeoVbqK1ISASeYZrc=;
+        b=b6gwEXQrHIf7BHdjWCsnNu1N0TJ583HXk5tZUmKGOGHX06pVvi4cx9hk0A+pnwo5pc
+         GNdZ2mSOfp7bX2aalSMtvHB7VLX6JjZgheAmNK9VS1GRAm+Rb1JMdr6WspHSAGV5Tiww
+         Or4Y0GVOHVFnus4/nGgfWC6fqReZzVMRNrM4maf3cLL8rpeqCkPL1KTudkLtpUGOOtmG
+         FNqTjqyTZN/xjhkDYm5jYyrG2M4hDmdwHWagTmqlEfZQLnkq11WC2HE1m4BgcC1gWFan
+         izBJehY8aTgbmrGSIjqydNSfiKqztCoDd8v72Tl8DF4s/sI7XQCrBna4eFwjcyVRGHP5
+         eVBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YaXRbIcfrfy+6sOtLvNoOiV/KR6L6wO+a8T26somqJk=;
-        b=YI5dPe98G+zjmjMMTY6Etr+uZMTu0LXzhafTihFqfuzWwUEpioBxJg3sS58bcsHR+Y
-         guykHJZ6VgYjBDWjJHeZrCRzKMCqSgFsPbnBh2XD1j1bUPFkkYVX1j0hTDJW2nwIuC/u
-         zyVA6EivtiBTSvS3rTLBkT6ahRcV3T1ykuOWHD5hN+ozuK48lpe/sbGov10eeTXW/9Zr
-         YXrQYWd4R6dWQNhHi3jWxOLAGYoz9PFyyRe+51PdueWBxy9ttfo4Wk0ZkQWKW0ikX26o
-         fnhPT9+MLjR0SVnQ5goxQdTAtP7Fkgsu12hDMyGhgmd23auRB+5mhWN5sgLphtfBHOZ7
-         4BGg==
-X-Gm-Message-State: APjAAAWMu5wixOWZjiMo1oTmj4c2+RSJ88JajCEfmQpF7NCp3H3BBY4g
-        VzBrF4iY6vkU9Gs5/oSc2+4=
-X-Google-Smtp-Source: APXvYqxXt5TiZxCOwghX+47z1s9SBHcobFUtVuRMnefSDaoq+zVFRjVn9UU9txV31GA3OVrdgzTo3A==
-X-Received: by 2002:a6b:731a:: with SMTP id e26mr7953547ioh.254.1575582738277;
-        Thu, 05 Dec 2019 13:52:18 -0800 (PST)
+        bh=ECGG/XNVXiLaDg6OhX+pEjRtCpyeoVbqK1ISASeYZrc=;
+        b=RDCU6BfkJVweMcc3dEZaAyL8jrbZojbbG02R7DRWsJBHvAPfjPafXOEuO8UIU0AXlU
+         l0drC2oZhBb5a7vsYL2qeugSGa4AK1vmGhYTl66p9uBgt7/SnDR2f1Txrxvnvk7v5RM+
+         79Fnx5h6f1mVBzcrdfkcH2NHAil5SqCP06T9FywHGSwaU1bRObvMIjB9YWWfu1Ig2d40
+         Drshl0TO0F6P31DdJ5aLuBV/9BJN/jBm8HkWwOZf3ansP0kGuKbDqtwiEBAbRVt+O8q9
+         JFf2lEgwivEkd5MgdtbJKjdZ/QOMKf1yQa27qFOru1vSila8uK7Cd6CR805hlvM95zof
+         3S3Q==
+X-Gm-Message-State: APjAAAXPYFCCYIefxRRchh4LGj4JBLiQVJ8dOzbJt557lRymx0tkAcEL
+        R0wwrZvu97my7AnSIfQp3J0=
+X-Google-Smtp-Source: APXvYqxCUug3AZKxeiE6c5qQwhyNzkgwITHxPiL6wu13W3NnnYZQSA7seOr2PEkb7B7XTbv1pzRqXg==
+X-Received: by 2002:a92:aa4d:: with SMTP id j74mr11284418ili.271.1575582739787;
+        Thu, 05 Dec 2019 13:52:19 -0800 (PST)
 Received: from localhost.localdomain (c-24-9-77-57.hsd1.co.comcast.net. [24.9.77.57])
-        by smtp.googlemail.com with ESMTPSA id n22sm740184iog.14.2019.12.05.13.52.17
+        by smtp.googlemail.com with ESMTPSA id n22sm740184iog.14.2019.12.05.13.52.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 13:52:17 -0800 (PST)
+        Thu, 05 Dec 2019 13:52:19 -0800 (PST)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, gregkh@linuxfoundation.org,
         linux-kernel@vger.kernel.org
 Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH 09/18] dyndbg: refactor ddebug_read_flags out of ddebug_parse_flags
-Date:   Thu,  5 Dec 2019 14:51:40 -0700
-Message-Id: <20191205215151.421926-10-jim.cromie@gmail.com>
+Subject: [PATCH 10/18] dyndbg: combine flags & mask into a struct, use that
+Date:   Thu,  5 Dec 2019 14:51:41 -0700
+Message-Id: <20191205215151.421926-11-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191205215151.421926-1-jim.cromie@gmail.com>
 References: <20191205215151.421926-1-jim.cromie@gmail.com>
@@ -74,87 +74,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, ddebug_parse_flags accepts [+-=][pflmt_]+ as flag-spec
-strings.  If we allow [pflmt_]*[+-=][pflmt_]+ instead, the (new) 1st
-flagset can be used as a filter to select callsites, before applying
-changes in the 2nd flagset.  1st step is to split out the flags-reader
-so we can use it again.
+combine flags & mask into a struct, and replace those 2 parameters in
+3 functions: ddebug_change, ddebug_parse_flags, ddebug_read_flags,
+altering the derefs in them accordingly.
 
-The point of this is to allow user to compose an arbitrary set of
-changes, by marking callsites with [fmlt] flags, and then to
-activate that composed set in a single query.
-
- #> echo '=_' > control			# clear all flags
- #> echo 'module usb* +fmlt' > control	# build the marked set, repeat
- #> echo 'fmlt+p' > control		# activate
+This simplifies the 3 function sigs, preparing for more changes.
+We dont yet need mask from ddebug_read_flags, but will soon.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- lib/dynamic_debug.c | 37 +++++++++++++++++++++++--------------
- 1 file changed, 23 insertions(+), 14 deletions(-)
+ lib/dynamic_debug.c | 46 +++++++++++++++++++++++----------------------
+ 1 file changed, 24 insertions(+), 22 deletions(-)
 
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 9fa6d4eeae5c..839f89b24474 100644
+index 839f89b24474..0d1b3dbdec1d 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -414,6 +414,26 @@ static int ddebug_parse_query(char *words[], int nwords,
+@@ -64,6 +64,11 @@ struct ddebug_iter {
+ 
+ struct flagsbuf { char buf[12]; };	/* big enough to hold all the flags */
+ 
++struct flagsettings {
++	unsigned int flags;
++	unsigned int mask;
++};
++
+ static DEFINE_MUTEX(ddebug_lock);
+ static LIST_HEAD(ddebug_tables);
+ static int verbose;
+@@ -142,7 +147,7 @@ static void vpr_info_dq(const struct ddebug_query *query, const char *msg)
+  * logs the changes.  Takes ddebug_lock.
+  */
+ static int ddebug_change(const struct ddebug_query *query,
+-			unsigned int pflags, unsigned int mask)
++			 struct flagsettings *mods)
+ {
+ 	int i;
+ 	struct ddebug_table *dt;
+@@ -191,14 +196,14 @@ static int ddebug_change(const struct ddebug_query *query,
+ 
+ 			nfound++;
+ 
+-			newflags = (dp->flags & mask) | pflags;
++			newflags = (dp->flags & mods->mask) | mods->flags;
+ 			if (newflags == dp->flags)
+ 				continue;
+ #ifdef CONFIG_JUMP_LABEL
+ 			if (dp->flags & _DPRINTK_FLAGS_PRINT) {
+-				if (!(pflags & _DPRINTK_FLAGS_PRINT))
++				if (!(mods->flags & _DPRINTK_FLAGS_PRINT))
+ 					static_branch_disable(&dp->key.dd_key_true);
+-			} else if (pflags & _DPRINTK_FLAGS_PRINT)
++			} else if (mods->flags & _DPRINTK_FLAGS_PRINT)
+ 				static_branch_enable(&dp->key.dd_key_true);
+ #endif
+ 			dp->flags = newflags;
+@@ -414,14 +419,14 @@ static int ddebug_parse_query(char *words[], int nwords,
  	return 0;
  }
  
-+static int ddebug_read_flags(const char *str, unsigned int *flags)
-+{
-+	int i;
-+
-+	for (; *str ; ++str) {
-+		for (i = ARRAY_SIZE(opt_array) - 1; i >= 0; i--) {
-+			if (*str == opt_array[i].opt_char) {
-+				*flags |= opt_array[i].flag;
-+				break;
-+			}
-+		}
-+		if (i < 0) {
-+			pr_err("unknown flag '%c' in \"%s\"\n", *str, str);
-+			return -EINVAL;
-+		}
-+	}
-+	vpr_info("flags=0x%x\n", *flags);
-+	return 0;
-+}
-+
- /*
-  * Parse `str' as a flags specification, format [-+=][p]+.
-  * Sets up *maskp and *flagsp to be used when changing the
-@@ -424,7 +444,7 @@ static int ddebug_parse_flags(const char *str, unsigned int *flagsp,
- 			       unsigned int *maskp)
+-static int ddebug_read_flags(const char *str, unsigned int *flags)
++static int ddebug_read_flags(const char *str, struct flagsettings *f)
  {
- 	unsigned flags = 0;
--	int op = '=', i;
-+	int op;
+ 	int i;
+ 
+ 	for (; *str ; ++str) {
+ 		for (i = ARRAY_SIZE(opt_array) - 1; i >= 0; i--) {
+ 			if (*str == opt_array[i].opt_char) {
+-				*flags |= opt_array[i].flag;
++				f->flags |= opt_array[i].flag;
+ 				break;
+ 			}
+ 		}
+@@ -430,7 +435,7 @@ static int ddebug_read_flags(const char *str, unsigned int *flags)
+ 			return -EINVAL;
+ 		}
+ 	}
+-	vpr_info("flags=0x%x\n", *flags);
++	vpr_info("flags=0x%x mask=0x%x\n", f->flags, f->mask);
+ 	return 0;
+ }
+ 
+@@ -440,10 +445,8 @@ static int ddebug_read_flags(const char *str, unsigned int *flags)
+  * flags fields of matched _ddebug's.  Returns 0 on success
+  * or <0 on error.
+  */
+-static int ddebug_parse_flags(const char *str, unsigned int *flagsp,
+-			       unsigned int *maskp)
++static int ddebug_parse_flags(const char *str, struct flagsettings *mods)
+ {
+-	unsigned flags = 0;
+ 	int op;
  
  	switch (*str) {
- 	case '+':
-@@ -438,19 +458,8 @@ static int ddebug_parse_flags(const char *str, unsigned int *flagsp,
+@@ -458,31 +461,30 @@ static int ddebug_parse_flags(const char *str, unsigned int *flagsp,
  	}
  	vpr_info("op='%c'\n", op);
  
--	for (; *str ; ++str) {
--		for (i = ARRAY_SIZE(opt_array) - 1; i >= 0; i--) {
--			if (*str == opt_array[i].opt_char) {
--				flags |= opt_array[i].flag;
--				break;
--			}
--		}
--		if (i < 0) {
--			pr_err("unknown flag '%c' in \"%s\"\n", *str, str);
--			return -EINVAL;
--		}
--	}
--	vpr_info("flags=0x%x\n", flags);
-+	if (ddebug_read_flags(str, &flags))
-+		return -EINVAL;
+-	if (ddebug_read_flags(str, &flags))
++	if (ddebug_read_flags(str, mods))
+ 		return -EINVAL;
  
- 	/* calculate final *flagsp, *maskp according to mask and op */
+-	/* calculate final *flagsp, *maskp according to mask and op */
++	/* calculate final flags, mask based upon op */
  	switch (op) {
+ 	case '=':
+-		*maskp = 0;
+-		*flagsp = flags;
++		mods->mask = 0;
+ 		break;
+ 	case '+':
+-		*maskp = ~0U;
+-		*flagsp = flags;
++		mods->mask = ~0U;
+ 		break;
+ 	case '-':
+-		*maskp = ~flags;
+-		*flagsp = 0;
++		mods->mask = ~mods->flags;
++		mods->flags = 0;
+ 		break;
+ 	}
+-	vpr_info("*flagsp=0x%x *maskp=0x%x\n", *flagsp, *maskp);
++	vpr_info("*flagsp=0x%x *maskp=0x%x\n", mods->flags, mods->mask);
++
+ 	return 0;
+ }
+ 
+ static int ddebug_exec_query(char *query_string, const char *modname)
+ {
+-	unsigned int flags = 0, mask = 0;
++	struct flagsettings mods = {};
+ 	struct ddebug_query query;
+ #define MAXWORDS 9
+ 	int nwords, nfound;
+@@ -494,7 +496,7 @@ static int ddebug_exec_query(char *query_string, const char *modname)
+ 		return -EINVAL;
+ 	}
+ 	/* check flags 1st (last arg) so query is pairs of spec,val */
+-	if (ddebug_parse_flags(words[nwords-1], &flags, &mask)) {
++	if (ddebug_parse_flags(words[nwords-1], &mods)) {
+ 		pr_err("flags parse failed\n");
+ 		return -EINVAL;
+ 	}
+@@ -503,7 +505,7 @@ static int ddebug_exec_query(char *query_string, const char *modname)
+ 		return -EINVAL;
+ 	}
+ 	/* actually go and implement the change */
+-	nfound = ddebug_change(&query, flags, mask);
++	nfound = ddebug_change(&query, &mods);
+ 	vpr_info_dq(&query, nfound ? "applied" : "no-match");
+ 
+ 	return nfound;
 -- 
 2.23.0
 
