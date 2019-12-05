@@ -2,94 +2,111 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503D0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3028C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D22A2464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BD1B2464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KqaiLT61"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="hoCaCJMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbfLETMG (ORCPT
+        id S1729426AbfLETPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 14:12:06 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44791 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfLETMF (ORCPT
+        Thu, 5 Dec 2019 14:15:15 -0500
+Received: from mail-40133.protonmail.ch ([185.70.40.133]:37001 "EHLO
+        mail-40133.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLETPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 14:12:05 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d62so3761772oia.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 11:12:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lbTgn4jNgsokf2M6goUMgel36hy0BJM0Dor775D7GSE=;
-        b=KqaiLT61/XGnqIJhyHQusP4pG9VwXR+bKLFriLrHG7+eWANmbvM2tv0SS0gLxwZVAU
-         nsmUBgaji2JlUcHgiQDOK6v3RPwyLG7HmyQ+b7bBZfvD03vCB90Ym/p77Py1195ubD4M
-         Lzkwqu6taOKa4HIz7qyRUfhUcEEHsEUfVmZfOoE73SX7H04DnFOSEw1+af0sto1/idf7
-         z1UqhwrzFEfVZKYMRDIEFScrL5o6Fzw5U8b842jXc6f6vNOSDmB0HYWzOBuJawEHmebm
-         NViX2VGHk77eRYN+46e8IBzsNFnxcFC2VEtgC0sYd5mbWZqrXldmWhSitZUJej3nXAdd
-         kHMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lbTgn4jNgsokf2M6goUMgel36hy0BJM0Dor775D7GSE=;
-        b=kioAKOJhiiCjvrF63HVLxj5oooN/wJidDUY2RTPj8tNqeG1DbPSrOmtO0V6/pMZKqu
-         Xh2hR3nIuY8RJ4GAcUEDpupzRc0LikaEsSl+jENxqCIb1yufR6UJR3dmcDp18W8LveY/
-         18yMj/HSkBZW+WP3E34DaSaZsLnDc4gw4soihyPlkjKknlUHGnmv/61jIuNs9B/vymw4
-         b1r6TyDTXLamIxXMv1BUhmvE7y3QVdSE+x/SIftEKplWI2Jnqhg7FjkSA5WFk8P37mVb
-         Mwm6VL4Y2gQ5Elkf0lSENPx6JQHz6k/7mbkd+gXycjn1UcP5iMu5C+URQ5IZIDSJbAPS
-         7oug==
-X-Gm-Message-State: APjAAAX63uYr0PCdk7afdboca/PJYEGhNz5ftNuGhIzAU3L2APfGtSxj
-        F57bzLUt563wonBhyRyeKhkR7QycxbTVNBzQvkC2Jw==
-X-Google-Smtp-Source: APXvYqwO24mcZkmRu8n96LRippWIZh/qu1VArRKN8KHPM7/mkUlrnXW//GsNTA2ZsMEsxE5rDQ505XtmyKjgLo6mZSc=
-X-Received: by 2002:aca:503:: with SMTP id 3mr2990513oif.24.1575573124553;
- Thu, 05 Dec 2019 11:12:04 -0800 (PST)
+        Thu, 5 Dec 2019 14:15:14 -0500
+Date:   Thu, 05 Dec 2019 19:15:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1575573312;
+        bh=vb4xN0McS6Sjd9AgIw6FMJzU4MIU0iiQYzK5EcMynOI=;
+        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
+        b=hoCaCJMp0ardbB4eMvVQDdkFvPwrTp8wFZttEepDfWwocHq1I9iSlP8nfVUTHaFwx
+         jh/KEdgFAp4Cvn01Yv/HzkB0/KRPtrQPfLMx5uUncNPN4ovwEOf9zX/7b24NeJY4mB
+         15kF/lNowyFXuiwakTuKTu0HtAs5ZeVyzlwDUuK4=
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Krzysztof Piecuch <piecuch@protonmail.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
+        "drake@endlessm.com" <drake@endlessm.com>,
+        "piecuch@protonmail.com" <piecuch@protonmail.com>,
+        "malat@debian.org" <malat@debian.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>
+Reply-To: Krzysztof Piecuch <piecuch@protonmail.com>
+Subject: [PATCH] x86/tsc: Don't use cpuid 0x16 leaf to determine cpu speed.
+Message-ID: <SoluZg51N39Rx0tDCSJFbEvvgMrDnJ_g0RdRdN5mtCfag4GahIOPfok7UbkyeO5Qpl3wUHp8H8y73JtClcZvr1ARSIOBIFQAne0Z712el8M=@protonmail.com>
+Feedback-ID: krphKiiPlx_XKIryTSpdJ_XtBwogkHXWA-Us-PsTeaBSrzOTAKWxwbFkseT4Z85b_7PMRvSnq3Ah7f9INXrOMw==:Ext:ProtonMail
 MIME-Version: 1.0
-References: <20190717222340.137578-1-saravanak@google.com> <20190717222340.137578-4-saravanak@google.com>
- <20191125112812.26jk5hsdwqfnofc2@vireshk-i7> <20191125112952.uwrmeukppkqu4hvm@vireshk-i7>
-In-Reply-To: <20191125112952.uwrmeukppkqu4hvm@vireshk-i7>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 5 Dec 2019 11:11:28 -0800
-Message-ID: <CAGETcx_uohJknvW8pDb6XXBkZveFqMvt5wRyecV5sye5a8vLpQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] OPP: Improve require-opps linking
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 3:29 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 25-11-19, 16:58, Viresh Kumar wrote:
-> > Message-Id: <8df083ca64d82ff57f778689271cc1be75aa99c4.1574681211.git.viresh.kumar@linaro.org>
-> > From: Viresh Kumar <viresh.kumar@linaro.org>
-> > Date: Mon, 25 Nov 2019 13:57:58 +0530
-> > Subject: [PATCH] opp: Allow lazy-linking of required-opps
->
-> Forgot to mention that this is based of pm/linux-next + following series
->
-> https://lore.kernel.org/lkml/befccaf76d647f30e03c115ed7a096ebd5384ecd.1574074666.git.viresh.kumar@linaro.org/
+This patch corrects tsc drift on systems with changed base clock frequency
+(e.g. overclocking).
 
-Thanks Viresh. Is there a git I can pull a branch that has your lazy
-linking patch series and whatever dependencies it has?
+We can't use 0x16 cpu leaf as it's documented as "not reflecting actual
+values" and is supposed to be used only as a mean to determine "processor
+brand string and for determining the appropriate range to use when
+displaying processor information e.g. frequency history graphs".
 
--Saravana
+Signed-off-by: Krzysztof Piecuch <piecuch@protonmail.com>
+---
+ arch/x86/kernel/tsc.c | 21 ++++-----------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
+
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 7e322e2daaf5..fc9a000a814c 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -641,29 +641,16 @@ unsigned long native_calibrate_tsc(void)
+ =09=09=09boot_cpu_data.x86_model =3D=3D INTEL_FAM6_ATOM_GOLDMONT_D)
+ =09=09crystal_khz =3D 25000;
+
++=09if (crystal_khz =3D=3D 0)
++=09=09return 0;
++
+ =09/*
+ =09 * TSC frequency reported directly by CPUID is a "hardware reported"
+ =09 * frequency and is the most accurate one so far we have. This
+ =09 * is considered a known frequency.
+ =09 */
+-=09if (crystal_khz !=3D 0)
+-=09=09setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+-
+-=09/*
+-=09 * Some Intel SoCs like Skylake and Kabylake don't report the crystal
+-=09 * clock, but we can easily calculate it to a high degree of accuracy
+-=09 * by considering the crystal ratio and the CPU speed.
+-=09 */
+-=09if (crystal_khz =3D=3D 0 && boot_cpu_data.cpuid_level >=3D 0x16) {
+-=09=09unsigned int eax_base_mhz, ebx, ecx, edx;
+-
+-=09=09cpuid(0x16, &eax_base_mhz, &ebx, &ecx, &edx);
+-=09=09crystal_khz =3D eax_base_mhz * 1000 *
+-=09=09=09eax_denominator / ebx_numerator;
+-=09}
+
+-=09if (crystal_khz =3D=3D 0)
+-=09=09return 0;
++=09setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+
+ =09/*
+ =09 * For Atom SoCs TSC is the only reliable clocksource.
+--
+2.17.1
+
