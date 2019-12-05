@@ -2,182 +2,394 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699BEC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C7EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33B6220675
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:02:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575547361;
-	bh=BAxhkMxV/JdepbzbxKMTfKvWaDCgrwZItC1j6AcXoLc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZTrc+HygeGQQIO5UQd3mwKngOOYKvNw+HDVqXhumpJtK4dmXpq1kwDubuPF488VRq
-	 pRLtVZw/BgEiWZVdYLIuM4d7xDB8exCo1EUrSY83eTIwiZ+PeD7WvBpb60vt4k7Q5J
-	 ifL6/Gaep3hYThtQJBaIUy8gU6bSpj9XjKCL6WO0=
+	by mail.kernel.org (Postfix) with ESMTP id 00AF420675
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:03:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729411AbfLEMCk (ORCPT
+        id S1729425AbfLEMC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 07:02:40 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43548 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729096AbfLEMCj (ORCPT
+        Thu, 5 Dec 2019 07:02:59 -0500
+Received: from jax4mhfb02.myregisteredsite.com ([64.69.218.95]:57714 "EHLO
+        jax4mhfb02.myregisteredsite.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729378AbfLEMC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 07:02:39 -0500
-Received: by mail-oi1-f194.google.com with SMTP id t25so2449992oij.10;
-        Thu, 05 Dec 2019 04:02:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w4JBrJi4italcxK/kzI1J1A3u7tKS51hMCOK7qyK8eo=;
-        b=F3DEMr99Al8FPSdcIoKkUXHu5xCy588SuaLkYCgD0qUdDU7wCLnqnh9dw2E4unrPM7
-         DnNVzlDTJ3fnryabG+4eAMAzS9ASfTV13GvXRSW3i93HXZLETE7UWfCPm3V9WHkO3rQq
-         VMZry/vc8bESLSqVMrvIM/h2X6pZXW/KP1xnUszpee2GtBHGzxQ7FWkMiK6uBPuuNqMz
-         TWrWGzIadbpMtbiwji7PWu5rt5VEUBaTlXVXZ6q6SqQv07KILu3PjjH/MgapBFeBUf7i
-         Z20ZY4SchUxEg8WGzJqcmrLjljJuTgGxxtuiQ4jwT+sTVuZM5cTErVj5noDDdPllXPy+
-         Nslw==
-X-Gm-Message-State: APjAAAW/GB35EC5sy6Fx1a9HFJCr06QG4TNgJlPpdTnyY5OW/sDXELVU
-        /MleQph+yekMeWTV6fjbHoHB47B5JHt/epjlyl8=
-X-Google-Smtp-Source: APXvYqw0NIqxRA57oNXeV+MvVIqGh9BQND6B0pTyBYHoN+ZmJXKGo8Oq2lIjQv7g2g1RsP3GbRXIkJfuUnlwDchRcX4=
-X-Received: by 2002:a05:6808:901:: with SMTP id w1mr1049809oih.57.1575547358310;
- Thu, 05 Dec 2019 04:02:38 -0800 (PST)
+        Thu, 5 Dec 2019 07:02:59 -0500
+X-Greylist: delayed 316 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Dec 2019 07:02:57 EST
+Received: from jax4mhob16.registeredsite.com (jax4mhob16.registeredsite.com [64.69.218.104])
+        by jax4mhfb02.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id xB5BvgxG012484
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Dec 2019 06:57:42 -0500
+Received: from mailpod.hostingplatform.com ([10.30.71.204])
+        by jax4mhob16.registeredsite.com (8.14.4/8.14.4) with ESMTP id xB5BvdNB122792
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Dec 2019 06:57:39 -0500
+Received: (qmail 15626 invoked by uid 0); 5 Dec 2019 11:57:39 -0000
+X-TCPREMOTEIP: 81.173.50.109
+X-Authenticated-UID: mike@milosoftware.com
+Received: from unknown (HELO mikebuntu.TOPIC.LOCAL) (mike@milosoftware.com@81.173.50.109)
+  by 0 with ESMTPA; 5 Dec 2019 11:57:39 -0000
+From:   Mike Looijmans <mike.looijmans@topic.nl>
+To:     linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH] clk, clk-si5341: Support multiple input ports
+Date:   Thu,  5 Dec 2019 12:57:34 +0100
+Message-Id: <20191205115734.6987-1-mike.looijmans@topic.nl>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <5961586.ml7s97geqL@kreacher> <3690440.Wzkxfdnirm@kreacher> <6c7863ab-8efc-ab2c-cab0-3cd68e415a57@linaro.org>
-In-Reply-To: <6c7863ab-8efc-ab2c-cab0-3cd68e415a57@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 5 Dec 2019 13:02:27 +0100
-Message-ID: <CAJZ5v0iPyY0075NeAZnguLJfQZSHjgMiLAi4YHwyfwd7a8E_uQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] cpuidle: Drop disabled field from struct cpuidle_state
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <len.brown@intel.com>, Len Brown <lenb@kernel.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 12:15 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 21/11/2019 19:41, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > After recent cpuidle updates the "disabled" field in struct
-> > cpuidle_state is only used by two drivers (intel_idle and shmobile
-> > cpuidle) for marking unusable idle states, but that may as well be
-> > achieved with the help of a state flag, so define an "unusable" idle
-> > state flag, CPUIDLE_FLAG_UNUSABLE, make the drivers in question use
-> > it instead of the "disabled" field and make the core set
-> > CPUIDLE_STATE_DISABLED_BY_DRIVER for the idle states with that flag
-> > set.
-> >
-> > After the above changes, the "disabled" field in struct cpuidle_state
-> > is not used any more, so drop it.
-> >
-> > No intentional functional impact.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >
-> > Changes from RFC:
-> >
-> >  - Do not add extra braces (unrelated to the rest of the patch).
-> >
-> > ---
-> >  arch/sh/kernel/cpu/shmobile/cpuidle.c |    8 ++++----
-> >  drivers/cpuidle/cpuidle.c             |    2 +-
-> >  drivers/cpuidle/poll_state.c          |    1 -
-> >  drivers/idle/intel_idle.c             |    6 +++---
-> >  include/linux/cpuidle.h               |    2 +-
-> >  5 files changed, 9 insertions(+), 10 deletions(-)
-> >
-> > Index: linux-pm/drivers/idle/intel_idle.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/idle/intel_idle.c
-> > +++ linux-pm/drivers/idle/intel_idle.c
-> > @@ -1291,8 +1291,8 @@ static void sklh_idle_state_table_update
-> >                       return;
-> >       }
-> >
-> > -     skl_cstates[5].disabled = 1;    /* C8-SKL */
-> > -     skl_cstates[6].disabled = 1;    /* C9-SKL */
-> > +     skl_cstates[5].flags |= CPUIDLE_FLAG_UNUSABLE;  /* C8-SKL */
-> > +     skl_cstates[6].flags |= CPUIDLE_FLAG_UNUSABLE;  /* C9-SKL */
-> >  }
-> >  /*
-> >   * intel_idle_state_table_update()
-> > @@ -1355,7 +1355,7 @@ static void __init intel_idle_cpuidle_dr
-> >                       continue;
-> >
-> >               /* if state marked as disabled, skip it */
-> > -             if (cpuidle_state_table[cstate].disabled != 0) {
-> > +             if (cpuidle_state_table[cstate].flags & CPUIDLE_FLAG_UNUSABLE) {
-> >                       pr_debug("state %s is disabled\n",
-> >                                cpuidle_state_table[cstate].name);
-> >                       continue;
-> > Index: linux-pm/include/linux/cpuidle.h
-> > ===================================================================
-> > --- linux-pm.orig/include/linux/cpuidle.h
-> > +++ linux-pm/include/linux/cpuidle.h
-> > @@ -54,7 +54,6 @@ struct cpuidle_state {
-> >       unsigned int    exit_latency; /* in US */
-> >       int             power_usage; /* in mW */
-> >       unsigned int    target_residency; /* in US */
-> > -     bool            disabled; /* disabled on all CPUs */
-> >
-> >       int (*enter)    (struct cpuidle_device *dev,
-> >                       struct cpuidle_driver *drv,
-> > @@ -77,6 +76,7 @@ struct cpuidle_state {
-> >  #define CPUIDLE_FLAG_POLLING BIT(0) /* polling state */
-> >  #define CPUIDLE_FLAG_COUPLED BIT(1) /* state applies to multiple cpus */
-> >  #define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
-> > +#define CPUIDLE_FLAG_UNUSABLE        BIT(3) /* avoid using this state */
-> >
-> >  struct cpuidle_device_kobj;
-> >  struct cpuidle_state_kobj;
-> > Index: linux-pm/arch/sh/kernel/cpu/shmobile/cpuidle.c
-> > ===================================================================
-> > --- linux-pm.orig/arch/sh/kernel/cpu/shmobile/cpuidle.c
-> > +++ linux-pm/arch/sh/kernel/cpu/shmobile/cpuidle.c
-> > @@ -67,7 +67,7 @@ static struct cpuidle_driver cpuidle_dri
-> >                       .enter = cpuidle_sleep_enter,
-> >                       .name = "C2",
-> >                       .desc = "SuperH Sleep Mode [SF]",
-> > -                     .disabled = true,
-> > +                     .flags = CPUIDLE_FLAG_UNUSABLE,
-> >               },
-> >               {
-> >                       .exit_latency = 2300,
-> > @@ -76,7 +76,7 @@ static struct cpuidle_driver cpuidle_dri
-> >                       .enter = cpuidle_sleep_enter,
-> >                       .name = "C3",
-> >                       .desc = "SuperH Mobile Standby Mode [SF]",
-> > -                     .disabled = true,
-> > +                     .flags = CPUIDLE_FLAG_UNUSABLE,
-> >               },
-> >       },
-> >       .safe_state_index = 0,
-> > @@ -86,10 +86,10 @@ static struct cpuidle_driver cpuidle_dri
-> >  int __init sh_mobile_setup_cpuidle(void)
-> >  {
-> >       if (sh_mobile_sleep_supported & SUSP_SH_SF)
-> > -             cpuidle_driver.states[1].disabled = false;
-> > +             cpuidle_driver.states[1].flags = CPUIDLE_FLAG_NONE;
->
-> That will overwrite other flags value, bit operation should be used here
-> to remove CPUIDLE_FLAG_UNUSABLE.
+The Si5341 and Si5340 have multiple input clock options. So far, the driver
+only supported the XTAL input, this adds support for the three external
+clock inputs as well.
 
-This is based on the observation that the other flags are not set by
-this driver anyway.
+If the clock chip is't programmed at boot, the driver will default to the
+XTAL input as before. If there is no "xtal" clock input available, it will
+pick the first connected input (e.g. "in0") as the input clock for the PLL.
+One can use clock-assigned-parents to select a particular clock as input.
+
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+ drivers/clk/clk-si5341.c | 213 +++++++++++++++++++++++++++++++++++----
+ 1 file changed, 196 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/clk/clk-si5341.c b/drivers/clk/clk-si5341.c
+index 6e780c2a9e6b..f7dba7698083 100644
+--- a/drivers/clk/clk-si5341.c
++++ b/drivers/clk/clk-si5341.c
+@@ -4,7 +4,6 @@
+  * Copyright (C) 2019 Topic Embedded Products
+  * Author: Mike Looijmans <mike.looijmans@topic.nl>
+  */
+-
+ #include <linux/clk.h>
+ #include <linux/clk-provider.h>
+ #include <linux/delay.h>
+@@ -16,6 +15,8 @@
+ #include <linux/slab.h>
+ #include <asm/unaligned.h>
+ 
++#define SI5341_NUM_INPUTS 4
++
+ #define SI5341_MAX_NUM_OUTPUTS 10
+ #define SI5340_MAX_NUM_OUTPUTS 4
+ 
+@@ -56,8 +57,8 @@ struct clk_si5341 {
+ 	struct i2c_client *i2c_client;
+ 	struct clk_si5341_synth synth[SI5341_NUM_SYNTH];
+ 	struct clk_si5341_output clk[SI5341_MAX_NUM_OUTPUTS];
+-	struct clk *pxtal;
+-	const char *pxtal_name;
++	struct clk *input_clk[SI5341_NUM_INPUTS];
++	const char *input_clk_name[SI5341_NUM_INPUTS];
+ 	const u16 *reg_output_offset;
+ 	const u16 *reg_rdiv_offset;
+ 	u64 freq_vco; /* 13500–14256 MHz */
+@@ -78,10 +79,25 @@ struct clk_si5341_output_config {
+ #define SI5341_DEVICE_REV	0x0005
+ #define SI5341_STATUS		0x000C
+ #define SI5341_SOFT_RST		0x001C
++#define SI5341_IN_SEL		0x0021
++#define SI5341_XAXB_CFG		0x090E
++#define SI5341_IN_EN		0x0949
++#define SI5341_INX_TO_PFD_EN	0x094A
++
++/* Input selection */
++#define SI5341_IN_SEL_MASK	0x06
++#define SI5341_IN_SEL_SHIFT	1
++#define SI5341_IN_SEL_REGCTRL	0x01
++#define SI5341_INX_TO_PFD_SHIFT	4
++
++/* XTAL config bits */
++#define SI5341_XAXB_CFG_EXTCLK_EN	BIT(0)
++#define SI5341_XAXB_CFG_PDNB		BIT(1)
+ 
+ /* Input dividers (48-bit) */
+ #define SI5341_IN_PDIV(x)	(0x0208 + ((x) * 10))
+ #define SI5341_IN_PSET(x)	(0x020E + ((x) * 10))
++#define SI5341_PX_UPD		0x0230
+ 
+ /* PLL configuration */
+ #define SI5341_PLL_M_NUM	0x0235
+@@ -120,6 +136,10 @@ struct si5341_reg_default {
+ 	u8 value;
+ };
+ 
++static const char * const si5341_input_clock_names[] = {
++	"in0", "in1", "in2", "xtal"
++};
++
+ /* Output configuration registers 0..9 are not quite logically organized */
+ static const u16 si5341_reg_output_offset[] = {
+ 	0x0108,
+@@ -390,7 +410,112 @@ static unsigned long si5341_clk_recalc_rate(struct clk_hw *hw,
+ 	return (unsigned long)res;
+ }
+ 
++static int si5341_clk_get_selected_input(struct clk_si5341 *data)
++{
++	int err;
++	u32 val;
++
++	err = regmap_read(data->regmap, SI5341_IN_SEL, &val);
++	if (err < 0)
++		return err;
++
++	return (val & SI5341_IN_SEL_MASK) >> SI5341_IN_SEL_SHIFT;
++}
++
++static unsigned char si5341_clk_get_parent(struct clk_hw *hw)
++{
++	struct clk_si5341 *data = to_clk_si5341(hw);
++	int res = si5341_clk_get_selected_input(data);
++
++	if (res < 0)
++		return 0; /* Apparently we cannot report errors */
++
++	return res;
++}
++
++static int si5341_clk_reparent(struct clk_si5341 *data, u8 index)
++{
++	int err;
++	u8 val;
++
++	val = (index << SI5341_IN_SEL_SHIFT) & SI5341_IN_SEL_MASK;
++	/* Enable register-based input selection */
++	val |= SI5341_IN_SEL_REGCTRL;
++
++	err = regmap_update_bits(data->regmap,
++		SI5341_IN_SEL, SI5341_IN_SEL_REGCTRL | SI5341_IN_SEL_MASK, val);
++	if (err < 0)
++		return err;
++
++	if (index < 3) {
++		/* Enable input buffer for selected input */
++		err = regmap_update_bits(data->regmap,
++				SI5341_IN_EN, 0x07, BIT(index));
++		if (err < 0)
++			return err;
++
++		/* Enables the input to phase detector */
++		err = regmap_update_bits(data->regmap, SI5341_INX_TO_PFD_EN,
++				0x7 << SI5341_INX_TO_PFD_SHIFT,
++				BIT(index + SI5341_INX_TO_PFD_SHIFT));
++		if (err < 0)
++			return err;
++
++		/* Power down XTAL oscillator and buffer */
++		err = regmap_update_bits(data->regmap, SI5341_XAXB_CFG,
++				SI5341_XAXB_CFG_PDNB, 0);
++		if (err < 0)
++			return err;
++
++		/*
++		 * Set the P divider to "1". There's no explanation in the
++		 * datasheet of these registers, but the clockbuilder software
++		 * programs a "1" when the input is being used.
++		 */
++		err = regmap_write(data->regmap, SI5341_IN_PDIV(index), 1);
++		if (err < 0)
++			return err;
++
++		err = regmap_write(data->regmap, SI5341_IN_PSET(index), 1);
++		if (err < 0)
++			return err;
++
++		/* Set update PDIV bit */
++		err = regmap_write(data->regmap, SI5341_PX_UPD, BIT(index));
++		if (err < 0)
++			return err;
++	} else {
++		/* Disable all input buffers */
++		err = regmap_update_bits(data->regmap, SI5341_IN_EN, 0x07, 0);
++		if (err < 0)
++			return err;
++
++		/* Disable input to phase detector */
++		err = regmap_update_bits(data->regmap, SI5341_INX_TO_PFD_EN,
++				0x7 << SI5341_INX_TO_PFD_SHIFT, 0);
++		if (err < 0)
++			return err;
++
++		/* Power up XTAL oscillator and buffer */
++		err = regmap_update_bits(data->regmap, SI5341_XAXB_CFG,
++				SI5341_XAXB_CFG_PDNB, SI5341_XAXB_CFG_PDNB);
++		if (err < 0)
++			return err;
++	}
++
++	return 0;
++}
++
++static int si5341_clk_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct clk_si5341 *data = to_clk_si5341(hw);
++
++	return si5341_clk_reparent(data, index);
++}
++
+ static const struct clk_ops si5341_clk_ops = {
++	.set_parent = si5341_clk_set_parent,
++	.get_parent = si5341_clk_get_parent,
+ 	.recalc_rate = si5341_clk_recalc_rate,
+ };
+ 
+@@ -985,7 +1110,8 @@ static const struct regmap_range si5341_regmap_volatile_range[] = {
+ 	regmap_reg_range(0x000C, 0x0012), /* Status */
+ 	regmap_reg_range(0x001C, 0x001E), /* reset, finc/fdec */
+ 	regmap_reg_range(0x00E2, 0x00FE), /* NVM, interrupts, device ready */
+-	/* Update bits for synth config */
++	/* Update bits for P divider and synth config */
++	regmap_reg_range(SI5341_PX_UPD, SI5341_PX_UPD),
+ 	regmap_reg_range(SI5341_SYNTH_N_UPD(0), SI5341_SYNTH_N_UPD(0)),
+ 	regmap_reg_range(SI5341_SYNTH_N_UPD(1), SI5341_SYNTH_N_UPD(1)),
+ 	regmap_reg_range(SI5341_SYNTH_N_UPD(2), SI5341_SYNTH_N_UPD(2)),
+@@ -1122,6 +1248,7 @@ static int si5341_initialize_pll(struct clk_si5341 *data)
+ 	struct device_node *np = data->i2c_client->dev.of_node;
+ 	u32 m_num = 0;
+ 	u32 m_den = 0;
++	int sel;
+ 
+ 	if (of_property_read_u32(np, "silabs,pll-m-num", &m_num)) {
+ 		dev_err(&data->i2c_client->dev,
+@@ -1135,7 +1262,11 @@ static int si5341_initialize_pll(struct clk_si5341 *data)
+ 	if (!m_num || !m_den) {
+ 		dev_err(&data->i2c_client->dev,
+ 			"PLL configuration invalid, assume 14GHz\n");
+-		m_den = clk_get_rate(data->pxtal) / 10;
++		sel = si5341_clk_get_selected_input(data);
++		if (sel < 0)
++			return sel;
++
++		m_den = clk_get_rate(data->input_clk[sel]) / 10;
+ 		m_num = 1400000000;
+ 	}
+ 
+@@ -1143,11 +1274,52 @@ static int si5341_initialize_pll(struct clk_si5341 *data)
+ 			SI5341_PLL_M_NUM, m_num, m_den);
+ }
+ 
++static int si5341_clk_select_active_input(struct clk_si5341 *data)
++{
++	int res;
++	int err;
++	int i;
++
++	res = si5341_clk_get_selected_input(data);
++	if (res < 0)
++		return res;
++
++	/* If the current register setting is invalid, pick the first input */
++	if (!data->input_clk[res]) {
++		dev_dbg(&data->i2c_client->dev,
++			"Input %d not connected, rerouting\n", res);
++		res = -ENODEV;
++		for (i = 0; i < SI5341_NUM_INPUTS; ++i) {
++			if (data->input_clk[i]) {
++				res = i;
++				break;
++			}
++		}
++		if (res < 0) {
++			dev_err(&data->i2c_client->dev,
++				"No clock input available\n");
++			return res;
++		}
++	}
++
++	/* Make sure the selected clock is also enabled and routed */
++	err = si5341_clk_reparent(data, res);
++	if (err < 0)
++		return err;
++
++	err = clk_prepare_enable(data->input_clk[res]);
++	if (err < 0)
++		return err;
++
++	return res;
++}
++
+ static int si5341_probe(struct i2c_client *client,
+ 		const struct i2c_device_id *id)
+ {
+ 	struct clk_si5341 *data;
+ 	struct clk_init_data init;
++	struct clk *input;
+ 	const char *root_clock_name;
+ 	const char *synth_clock_names[SI5341_NUM_SYNTH];
+ 	int err;
+@@ -1161,12 +1333,16 @@ static int si5341_probe(struct i2c_client *client,
+ 
+ 	data->i2c_client = client;
+ 
+-	data->pxtal = devm_clk_get(&client->dev, "xtal");
+-	if (IS_ERR(data->pxtal)) {
+-		if (PTR_ERR(data->pxtal) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-
+-		dev_err(&client->dev, "Missing xtal clock input\n");
++	for (i = 0; i < SI5341_NUM_INPUTS; ++i) {
++		input = devm_clk_get(&client->dev, si5341_input_clock_names[i]);
++		if (IS_ERR(input)) {
++			if (PTR_ERR(input) == -EPROBE_DEFER)
++				return -EPROBE_DEFER;
++			data->input_clk_name[i] = si5341_input_clock_names[i];
++		} else {
++			data->input_clk[i] = input;
++			data->input_clk_name[i] = __clk_get_name(input);
++		}
+ 	}
+ 
+ 	err = si5341_dt_parse_dt(client, config);
+@@ -1188,9 +1364,6 @@ static int si5341_probe(struct i2c_client *client,
+ 	if (err < 0)
+ 		return err;
+ 
+-	/* "Activate" the xtal (usually a fixed clock) */
+-	clk_prepare_enable(data->pxtal);
+-
+ 	if (of_property_read_bool(client->dev.of_node, "silabs,reprogram")) {
+ 		initialization_required = true;
+ 	} else {
+@@ -1223,7 +1396,14 @@ static int si5341_probe(struct i2c_client *client,
+ 					ARRAY_SIZE(si5341_reg_defaults));
+ 		if (err < 0)
+ 			return err;
++	}
++
++	/* Input must be up and running at this point */
++	err = si5341_clk_select_active_input(data);
++	if (err < 0)
++		return err;
+ 
++	if (initialization_required) {
+ 		/* PLL configuration is required */
+ 		err = si5341_initialize_pll(data);
+ 		if (err < 0)
+@@ -1231,9 +1411,8 @@ static int si5341_probe(struct i2c_client *client,
+ 	}
+ 
+ 	/* Register the PLL */
+-	data->pxtal_name = __clk_get_name(data->pxtal);
+-	init.parent_names = &data->pxtal_name;
+-	init.num_parents = 1; /* For now, only XTAL input supported */
++	init.parent_names = data->input_clk_name;
++	init.num_parents = SI5341_NUM_INPUTS;
+ 	init.ops = &si5341_clk_ops;
+ 	init.flags = 0;
+ 	data->hw.init = &init;
+-- 
+2.17.1
+
