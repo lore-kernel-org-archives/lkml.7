@@ -2,192 +2,192 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544FCC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 20:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7754EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 20:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B9924670
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 20:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314E824659
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 20:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="epHmOUmV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ES4/8iVU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730681AbfLEUwM (ORCPT
+        id S1730713AbfLEUwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 15:52:12 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:40777 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730264AbfLEUwL (ORCPT
+        Thu, 5 Dec 2019 15:52:23 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53324 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730264AbfLEUwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 15:52:11 -0500
-Received: by mail-yb1-f194.google.com with SMTP id n3so2057823ybm.7
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 12:52:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=esyZevaXdkhJjUMNx13nyp+9Eluo1ToosFQUPVH2VNs=;
-        b=epHmOUmVY5XkxCHYw6AAnfY9JySDXyEZKHaF6sJV4EyJ+bSwyM1GK54ZM1ailY+lV3
-         0Nn8ofg9UOzrfqHhstT6+V1J8dp1S6GUk3GaXYRaEp4zV6R37ZUkRxlcQ/c7xBqZDjDf
-         5l+JW4DDsiuYkaRkCF9f1HpLDPJb5/RHjHQEa7l1E7L+0Uzm7qStowX6lY825AjlSUHk
-         9Bc3lSgjBOhhquvmlFXzSoYCXi/uX8v+rUeerc/1jNz/R7/StUnAKsY6Zd8YIWWBay5c
-         fPZlwbiE9nc6uR+uedEJFOhetl59OSR/hH7G38atXZU7zQ2+hHXZHnA5uUUo2oDiFUcd
-         wHIA==
+        Thu, 5 Dec 2019 15:52:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575579141;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ukau8nHk3JHNMsHMDpYVTT6ajOucLhi5cgZ3nD7v6Ag=;
+        b=ES4/8iVUCWgqNbZ3zdnS1bTEMmJ9GymIfZ52OaPm9HSqfyjtkuiDC1yDNZF+pPLnlskxLk
+        yy0/IMjrjD+XE0ig0c7WhOMM73RXOmSjVHihu+a7n+QBJ+3bjrthLshLol8+nSXMrw1yVp
+        bSCh/0uwqwIAZ2ACO9KeFUh/U3mxBgU=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-a_Yo3je3MHix3WnEF-bTeA-1; Thu, 05 Dec 2019 15:52:20 -0500
+Received: by mail-qk1-f199.google.com with SMTP id a186so2980760qkb.18
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 12:52:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=esyZevaXdkhJjUMNx13nyp+9Eluo1ToosFQUPVH2VNs=;
-        b=Tja7TKjESE2jNG8AzA1N1GC7PG+ngNLm1pklp+5KtG4C6lVVBn/U2z5yQgilO9OjzV
-         AlNFzE2VUf3YpFm8R1H0W5CXQl8721wcbZNwos4tyAqD+/hNpVxfmCsfb51MAUsEsSt4
-         D/I150Irx2i8gJZkmYLQh7fWB5xID6/X6GGD3I4GqfqzD/tkyY92CHailVA773J00q5G
-         PQ1xmiF2NA46BdH1P6BM9E/WyaImVvEn/mSO8IyRze3zWzge63R/Fdoe+GAVCOf19lrc
-         XymJYPh1DruIoAFV76/bjEzfxyQ6TZwyCXOjpO9t0edfqkxsrGkhBlbXU5qEnI2C1t0Z
-         rRow==
-X-Gm-Message-State: APjAAAX0ELdRaE8/Azk7LSiuyBQDKGGRBU3JbeOKxI+DiS4CwxSbHDdO
-        iOj+PsnivG7U4DGdRRzMdZxfKA==
-X-Google-Smtp-Source: APXvYqzX6DhUtg5junDkGQ0xaFYdjCa3bCK6/wVaEApBqjt3MOGS/x0JQ/OSLlK0fbl0spyrdckXTQ==
-X-Received: by 2002:a25:bb87:: with SMTP id y7mr8259383ybg.473.1575579129251;
-        Thu, 05 Dec 2019 12:52:09 -0800 (PST)
-Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
-        by smtp.gmail.com with ESMTPSA id 199sm5159675ywn.52.2019.12.05.12.52.07
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+nan0X2ZxcxaKRMWlP3Ng1dSFJVnawsAGkBfHhOudcw=;
+        b=Lu1I06Veyt+Ft2UxohpAUvbBL3UHYJzdnq7hzcAtC3JExCWbZ1Qszz8zU5OQq6J/QM
+         qeR4PfWNVIDX4yyYyY0CUeeCRzpWjRvbv1o3wQxN0MhOLoO9uW9peFtHzU/aTHMrEte2
+         fK3uMvFuyjvrjGk5kuLCAzvUypCOaR7sNQi7SBBCBi+qTbANnWa5B9xIaCjUoF8nB9k0
+         yBZ1kwIelnVmqCWJrjocupXfsxbWenEbftqDfsUszG59frnO6vA/wPGk/NzwKil3sTZu
+         GBtD/zkbdC/SFciuBFwTG620iHLwlUqj3q7ZTjKT8ofCEE4ZSKyZ/P6jlVh83PLHAWYF
+         f7QA==
+X-Gm-Message-State: APjAAAVDD4/15QS0h8gQVjL32MzbSa4UKf0HM/iHeQYQwTRLGF2mEpMe
+        0Fm9WXL5v4okeT3Nd03ZuNTLCD1U3cfCTsmFfi43alj2WtfDJQecM+jBQeOgHWyHmp1FfLgqmup
+        lYGHUGFbmey99kQkSqUd+IojV
+X-Received: by 2002:a05:620a:10ac:: with SMTP id h12mr10475172qkk.227.1575579140227;
+        Thu, 05 Dec 2019 12:52:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzwyEX6v/GSs/j7WvTdEEwpF+JxmmUXueYjXIR7MhApFiRIOrMfcKVOm4kHBuLaw6T0im1WXw==
+X-Received: by 2002:a05:620a:10ac:: with SMTP id h12mr10475152qkk.227.1575579139869;
+        Thu, 05 Dec 2019 12:52:19 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id g62sm5287431qkd.25.2019.12.05.12.52.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 12:52:08 -0800 (PST)
-Date:   Thu, 5 Dec 2019 14:52:06 -0600
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Jack Wang <jack.wang.usish@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
+        Thu, 05 Dec 2019 12:52:19 -0800 (PST)
+Date:   Thu, 5 Dec 2019 15:52:18 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 067/306] KVM: nVMX: move check_vmentry_postreqs()
- call to nested_vmx_enter_non_root_mode()
-Message-ID: <20191205205206.2mnr3dj2slamuhrl@xps.therub.org>
-Mail-Followup-To: Jack Wang <jack.wang.usish@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-References: <20191127203114.766709977@linuxfoundation.org>
- <20191127203119.676489279@linuxfoundation.org>
- <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
- <20191204175033.smve4dleem2ht7st@xps.therub.org>
- <CA+res+SW7o4YpUtv4-UYXP4WSPm417tgow68YM7YjOEcZ5xO3w@mail.gmail.com>
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 00/15] KVM: Dirty ring interface
+Message-ID: <20191205205218.GB7201@xz-x1>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <b8f28d8c-2486-2d66-04fd-a2674b598cfd@redhat.com>
+ <20191202021337.GB18887@xz-x1>
+ <b893745e-96c1-d8e4-85ec-9da257d0d44e@redhat.com>
+ <20191205193055.GA7201@xz-x1>
+ <60888f25-2299-2a04-68c2-6eca171a2a18@redhat.com>
 MIME-Version: 1.0
+In-Reply-To: <60888f25-2299-2a04-68c2-6eca171a2a18@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-MC-Unique: a_Yo3je3MHix3WnEF-bTeA-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+res+SW7o4YpUtv4-UYXP4WSPm417tgow68YM7YjOEcZ5xO3w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 10:51:18AM +0100, Jack Wang wrote:
-> Dan Rue <dan.rue@linaro.org> 于2019年12月4日周三 下午6:50写道：
+On Thu, Dec 05, 2019 at 08:59:33PM +0100, Paolo Bonzini wrote:
+> On 05/12/19 20:30, Peter Xu wrote:
+> >> Try enabling kvmmmu tracepoints too, it will tell
+> >> you more of the path that was taken while processing the EPT violation=
+.
 > >
-> > On Mon, Dec 02, 2019 at 03:40:04PM +0100, Jack Wang wrote:
-> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> 于2019年11月27日周三 下午10:30写道：
-> > > >
-> > > > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > >
-> > > > [ Upstream commit 7671ce21b13b9596163a29f4712cb2451a9b97dc ]
-> > > >
-> > > > In preparation of supporting checkpoint/restore for nested state,
-> > > > commit ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
-> > > > modified check_vmentry_postreqs() to only perform the guest EFER
-> > > > consistency checks when nested_run_pending is true.  But, in the
-> > > > normal nested VMEntry flow, nested_run_pending is only set after
-> > > > check_vmentry_postreqs(), i.e. the consistency check is being skipped.
-> > > >
-> > > > Alternatively, nested_run_pending could be set prior to calling
-> > > > check_vmentry_postreqs() in nested_vmx_run(), but placing the
-> > > > consistency checks in nested_vmx_enter_non_root_mode() allows us
-> > > > to split prepare_vmcs02() and interleave the preparation with
-> > > > the consistency checks without having to change the call sites
-> > > > of nested_vmx_enter_non_root_mode().  In other words, the rest
-> > > > of the consistency check code in nested_vmx_run() will be joining
-> > > > the postreqs checks in future patches.
-> > > >
-> > > > Fixes: ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
-> > > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > > Cc: Jim Mattson <jmattson@google.com>
-> > > > Reviewed-by: Jim Mattson <jmattson@google.com>
-> > > > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > > ---
-> > > >  arch/x86/kvm/vmx.c | 10 +++-------
-> > > >  1 file changed, 3 insertions(+), 7 deletions(-)
-> > > >
-> > > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> > > > index fe7fdd666f091..bdf019f322117 100644
-> > > > --- a/arch/x86/kvm/vmx.c
-> > > > +++ b/arch/x86/kvm/vmx.c
-> > > > @@ -12694,6 +12694,9 @@ static int enter_vmx_non_root_mode(struct kvm_vcpu *vcpu, u32 *exit_qual)
-> > > >         if (likely(!evaluate_pending_interrupts) && kvm_vcpu_apicv_active(vcpu))
-> > > >                 evaluate_pending_interrupts |= vmx_has_apicv_interrupt(vcpu);
-> > > >
-> > > > +       if (from_vmentry && check_vmentry_postreqs(vcpu, vmcs12, exit_qual))
-> > > > +               return EXIT_REASON_INVALID_STATE;
-> > > > +
-> > > >         enter_guest_mode(vcpu);
-> > > >
-> > > >         if (!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS))
-> > > > @@ -12836,13 +12839,6 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
-> > > >          */
-> > > >         skip_emulated_instruction(vcpu);
-> > > >
-> > > > -       ret = check_vmentry_postreqs(vcpu, vmcs12, &exit_qual);
-> > > > -       if (ret) {
-> > > > -               nested_vmx_entry_failure(vcpu, vmcs12,
-> > > > -                                        EXIT_REASON_INVALID_STATE, exit_qual);
-> > > > -               return 1;
-> > > > -       }
-> > > > -
-> > > >         /*
-> > > >          * We're finally done with prerequisite checking, and can start with
-> > > >          * the nested entry.
-> > > > --
-> > > > 2.20.1
-> > > >
-> > > >
-> > > >
-> > > Hi all,
-> > >
-> > > This commit caused many kvm-unit-tests regression, cherry-pick
-> > > following commits from 4.20 fix the regression:
-> >
-> > Hi Jack - can you be more specific about the failing tests? What type of
-> > environment and which tests failed, which version of kvm-unit-tests? Do
-> > you have any logs available? I ask because we do run kvm-unit-tests on
-> > x86 and arm64 but we did not see these regressions.
-> >
-> > Thanks,
-> > Dan
-> >
-> Hi Dan,
-> 
-> I'm running at kvm-unit-tests commit b1414c5f0142 ("x86: vmx: fix
-> required alignment for posted interrupt descriptor")
-> 
-> using "run_tests.sh -a -t -j8" with qemu-2.7.1
-> 
-> Left side has only 78 tests ok, and right side has 112 tests ok.
+> > These new tracepoints are extremely useful (which I didn't notice
+> > before).
+>=20
+> Yes, they are!
 
-Thanks - so we run it with "run_tests.sh -v" and only see 43 passes in
-the best case. Besides missing -a, we see a skip for the vmx related
-tests because vmx isn't enabled in our environment.
+(I forgot to say thanks for teaching me that! :)
 
-We will fix those problems in LKFT so that we can catch regressions like
-this before they are released.
+>=20
+> > So here's the final culprit...
+> >=20
+> > void kvm_reset_dirty_gfn(struct kvm *kvm, u32 slot, u64 offset, u64 mas=
+k)
+> > {
+> >         ...
+> > =09spin_lock(&kvm->mmu_lock);
+> > =09/* FIXME: we should use a single AND operation, but there is no
+> > =09 * applicable atomic API.
+> > =09 */
+> > =09while (mask) {
+> > =09=09clear_bit_le(offset + __ffs(mask), memslot->dirty_bitmap);
+> > =09=09mask &=3D mask - 1;
+> > =09}
+> >=20
+> > =09kvm_arch_mmu_enable_log_dirty_pt_masked(kvm, memslot, offset, mask);
+> > =09spin_unlock(&kvm->mmu_lock);
+> > }
+> >=20
+> > The mask is cleared before reaching
+> > kvm_arch_mmu_enable_log_dirty_pt_masked()..
+>=20
+> I'm not sure why that results in two vmexits?  (clearing before
+> kvm_arch_mmu_enable_log_dirty_pt_masked is also what
+> KVM_{GET,CLEAR}_DIRTY_LOG does).
 
-Dan
+Sorry my fault to be not clear on this.
+
+The kvm_arch_mmu_enable_log_dirty_pt_masked() only explains why the
+same page is not written again after the ring-full userspace exit
+(which triggered the real dirty bit missing), and that's because the
+write bit is not removed during KVM_RESET_DIRTY_RINGS so the next
+vmenter will directly write to the previous page without vmexit.
+
+The two vmexits is another story - I tracked it is retried because
+mmu_notifier_seq has changed, hence it goes through this path:
+
+=09if (mmu_notifier_retry(vcpu->kvm, mmu_seq))
+=09=09goto out_unlock;
+
+It's because when try_async_pf(), we will do a writable page fault,
+which probably triggers both the invalidate_range_end and change_pte
+notifiers.  A reference trace when EPT enabled:
+
+        kvm_mmu_notifier_change_pte+1
+        __mmu_notifier_change_pte+82
+        wp_page_copy+1907
+        do_wp_page+478
+        __handle_mm_fault+3395
+        handle_mm_fault+196
+        __get_user_pages+681
+        get_user_pages_unlocked+172
+        __gfn_to_pfn_memslot+290
+        try_async_pf+141
+        tdp_page_fault+326
+        kvm_mmu_page_fault+115
+        kvm_arch_vcpu_ioctl_run+2675
+        kvm_vcpu_ioctl+536
+        do_vfs_ioctl+1029
+        ksys_ioctl+94
+        __x64_sys_ioctl+22
+        do_syscall_64+91
+
+I'm not sure whether that's ideal, but it makes sense to me.
+
+>=20
+> > The funny thing is that I did have a few more patches to even skip
+> > allocate the dirty_bitmap when dirty ring is enabled (hence in that
+> > tree I removed this while loop too, so that has no such problem).
+> > However I dropped those patches when I posted the RFC because I don't
+> > think it's mature, and the selftest didn't complain about that
+> > either..  Though, I do plan to redo that in v2 if you don't disagree.
+> > The major question would be whether the dirty_bitmap could still be
+> > for any use if dirty ring is enabled.
+>=20
+> Userspace may want a dirty bitmap in addition to a list (for example:
+> list for migration, bitmap for framebuffer update), but it can also do a
+> pass over the dirty rings in order to update an internal bitmap.
+>=20
+> So I think it make sense to make it either one or the other.
+
+Ok, then I'll do.
+
+Thanks,
+
+--=20
+Peter Xu
+
