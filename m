@@ -2,198 +2,95 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328E6C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161A9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC36C20659
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02062464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:37:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cFs1DKxx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dDwKcV9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbfLEJgf (ORCPT
+        id S1729122AbfLEJhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:36:35 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44611 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbfLEJge (ORCPT
+        Thu, 5 Dec 2019 04:37:36 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60064 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726096AbfLEJhg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:36:34 -0500
-Received: by mail-wr1-f66.google.com with SMTP id q10so2593806wrm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 01:36:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yDhpzGph/Sl3F5yiAxtDx7OozplQyiOLtDQYn1Ymcc4=;
-        b=cFs1DKxxrz3wBHesk8ew2n1s9xKJYKOoB799VoJIVv7vULGEjf8uPBSiTsC/uIEN0b
-         rGnDFF9fgPyFOi/HhbgkzTxaYPn89KCBGiQrMptVXesZLRn6BXw//WBBFa0NqxTTCRQ+
-         RYm7Bph9RQq5Vne74F/S8/agrOXEavnZbA/yzX/HKP0sZsASJ2kebR4VFGv4iVKJZaKY
-         B2MiD7qkcJeYtcY1CbGtrCvRNRRDzU81NWP49VI9Bh2UraywJ8vdE3cRdRwcs4CSyo8g
-         B7YRwjFxN/n21rzlbyVkyiiW1EQ1AHPhxHem+7IJD9doSzgLWCydSd1dVtnhKPTocYXg
-         BzLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yDhpzGph/Sl3F5yiAxtDx7OozplQyiOLtDQYn1Ymcc4=;
-        b=ZA8znjSxz9/jW2Ja25o/QMELgywZ6Wit/rIxk7r7f8nXi+oGZl6ONxhlv3BSY4EfLK
-         t2U3UOgu8xOFq+6V8oW0R0Io3/lPBh4ON6/+nsaaBhmdGmbZtkksowGpYeAhQlo1ipqy
-         xXwYUqvreaI8cJqQ+szV9soyN2DaYuLxu61RD5rvBY/eASrBKAGxVBY3G+GZPMPLrGu+
-         NMAXRIdXX1Oe7R76+qeLP3ViQ1Ssbl4FJV1CPkIglRacvPJiyXRDlY3Fhx6So+uccU6Q
-         jJBKc/aegSwSouhuDctOv/080GvlNt6x/ZDAYs5NGHd73t8Y+x7cx22jriOfVlb2e2gj
-         md3w==
-X-Gm-Message-State: APjAAAW3JDhhU+ryTTGrPYexQxTmqKiCXG3K5a/WWXo8Vec6NjS/PHEq
-        mw7HbVETshLenLf6xrXHBXAdggp0Ej5S02vvFiwD055S6cBZbJpd
-X-Google-Smtp-Source: APXvYqzV4yD5evgBaMe8lq6m+lD5/SimV/mRxPFn5FYoNCSYAHmao71QnHJ9x2c2DpakxxM1i1+QHz1VLBVG3mRVAi4=
-X-Received: by 2002:a5d:6652:: with SMTP id f18mr9267283wrw.246.1575538592021;
- Thu, 05 Dec 2019 01:36:32 -0800 (PST)
+        Thu, 5 Dec 2019 04:37:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575538654;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RgTZ0Y2VUw+Z4N1mKD1L2XaEnRTLuyDRai6jz97PnGk=;
+        b=dDwKcV9Zx3Q5mEMc/LDYJ7bNkNwSmR52byGkqbjaxpmOoRBHuFrQL8Rn2ioJfo1pmPoSnh
+        hJvyAOtkuJX/dUpnggM9AqOt8ti4+BhOQPJ4Q46/SLCKL7Ry8MTG1Coo8/BU+A6S1tocQv
+        +mNQtbJJk/j5vpiaoo1fQG8sZgdibmA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-79-4ieccuSzO8GpALfjAN5pKg-1; Thu, 05 Dec 2019 04:37:29 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 571BF800D5A;
+        Thu,  5 Dec 2019 09:37:28 +0000 (UTC)
+Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D78A76E702;
+        Thu,  5 Dec 2019 09:37:25 +0000 (UTC)
+Subject: Re: [RFC 3/3] KVM: arm64: pmu: Enforce PMEVTYPER evtCount size
+To:     Will Deacon <will@kernel.org>
+Cc:     eric.auger.pro@gmail.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        james.morse@arm.com, andrew.murray@arm.com, suzuki.poulose@arm.com,
+        drjones@redhat.com
+References: <20191204204426.9628-1-eric.auger@redhat.com>
+ <20191204204426.9628-4-eric.auger@redhat.com>
+ <20191205090232.GC8606@willie-the-truck>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <c1a876be-49ab-0b5f-8ddd-1a47bcf89300@redhat.com>
+Date:   Thu, 5 Dec 2019 10:37:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <5de7d155.1c69fb81.c06f8.3583@mx.google.com> <377fa169-7ae5-479f-023c-e282d8c19f3a@collabora.com>
-In-Reply-To: <377fa169-7ae5-479f-023c-e282d8c19f3a@collabora.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 5 Dec 2019 09:36:28 +0000
-Message-ID: <CAKv+Gu_LY29hJ9c+myomeappoOgJYHdNYoWOu=KyfH3zCcTkLw@mail.gmail.com>
-Subject: Re: ardb/for-kernelci bisection: boot on rk3288-rock2-square
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, mgalka@collabora.com,
-        Mark Brown <broonie@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        tomeu.vizoso@collabora.com, Kevin Hilman <khilman@baylibre.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191205090232.GC8606@willie-the-truck>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: 4ieccuSzO8GpALfjAN5pKg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(+ Eric)
+Hi Will,
 
-On Wed, 4 Dec 2019 at 17:17, Guillaume Tucker
-<guillaume.tucker@collabora.com> wrote:
->
-> On 04/12/2019 15:31, kernelci.org bot wrote:
-> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> > * This automated bisection report was sent to you on the basis  *
-> > * that you may be involved with the breaking commit it has      *
-> > * found.  No manual investigation has been done to verify it,   *
-> > * and the root cause of the problem may be somewhere else.      *
-> > *                                                               *
-> > * If you do send a fix, please include this trailer:            *
-> > *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> > *                                                               *
-> > * Hope this helps!                                              *
-> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> >
-> > ardb/for-kernelci bisection: boot on rk3288-rock2-square
-> >
-> > Summary:
-> >   Start:      16839329da69 enable extra tests by default
-> >   Details:    https://kernelci.org/boot/id/5de79104990bc03e5a960f0b
-> >   Plain log:  https://storage.kernelci.org//ardb/for-kernelci/v5.4-9340-g16839329da69/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/boot-rk3288-rock2-square.txt
-> >   HTML log:   https://storage.kernelci.org//ardb/for-kernelci/v5.4-9340-g16839329da69/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/boot-rk3288-rock2-square.html
-> >   Result:     16839329da69 enable extra tests by default
-> >
-> > Checks:
-> >   revert:     PASS
-> >   verify:     PASS
-> >
-> > Parameters:
-> >   Tree:       ardb
-> >   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git
-> >   Branch:     for-kernelci
-> >   Target:     rk3288-rock2-square
-> >   CPU arch:   arm
-> >   Lab:        lab-collabora
-> >   Compiler:   gcc-8
-> >   Config:     multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y
-> >   Test suite: boot
-> >
-> > Breaking commit found:
-> >
-> > -------------------------------------------------------------------------------
-> > commit 16839329da69263e7360f3819bae01bcf4b220ec
-> > Author: Ard Biesheuvel <ardb@kernel.org>
-> > Date:   Tue Dec 3 12:29:31 2019 +0000
-> >
-> >     enable extra tests by default
-> >
-> > diff --git a/crypto/Kconfig b/crypto/Kconfig
-> > index 5575d48473bd..36af840aa820 100644
-> > --- a/crypto/Kconfig
-> > +++ b/crypto/Kconfig
-> > @@ -140,7 +140,6 @@ if CRYPTO_MANAGER2
-> >
-> >  config CRYPTO_MANAGER_DISABLE_TESTS
-> >       bool "Disable run-time self tests"
-> > -     default y
-> >       help
-> >         Disable run-time self tests that normally take place at
-> >         algorithm registration.
-> > @@ -148,6 +147,7 @@ config CRYPTO_MANAGER_DISABLE_TESTS
-> >  config CRYPTO_MANAGER_EXTRA_TESTS
-> >       bool "Enable extra run-time crypto self tests"
-> >       depends on DEBUG_KERNEL && !CRYPTO_MANAGER_DISABLE_TESTS
-> > +     default y
-> >       help
-> >         Enable extra run-time self tests of registered crypto algorithms,
-> >         including randomized fuzz tests.
-> > diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-> > index 88f33c0efb23..5df87bcf6c4d 100644
-> > --- a/crypto/testmgr.c
-> > +++ b/crypto/testmgr.c
-> > @@ -40,7 +40,7 @@ static bool notests;
-> >  module_param(notests, bool, 0644);
-> >  MODULE_PARM_DESC(notests, "disable crypto self-tests");
-> >
-> > -static bool panic_on_fail;
-> > +static bool panic_on_fail = true;
-> >  module_param(panic_on_fail, bool, 0444);
-> >
-> >  #ifdef CONFIG_CRYPTO_MANAGER_EXTRA_TESTS
-> > -------------------------------------------------------------------------------
->
->
-> Seems legit, from the log:
->
-> <3>[   18.186181] rk3288-crypto ff8a0000.cypto-controller: [rk_load_data:123] pcopy err
-> <3>[   18.199432] alg: skcipher: ecb-aes-rk encryption failed on test vector \"random: len=0 klen=32\"; expected_error=0, actual_error=-22, cfg=\"random: inplace use_finup nosimd src_divs=[100.0%@+2054] key_offset=16\"
-> <0>[   18.220458] Kernel panic - not syncing: alg: self-tests for ecb-aes-rk (ecb(aes)) failed in panic_on_fail mode!
->
-> Let me know if you need any help with testing a fix on this
-> platform or anything.
->
+On 12/5/19 10:02 AM, Will Deacon wrote:
+> On Wed, Dec 04, 2019 at 09:44:26PM +0100, Eric Auger wrote:
+>> ARMv8.1-PMU supports 16-bit evtCount whereas 8.0 only supports
+>> 10 bits.
+>>
+>> On Seatlle which has an 8.0 PMU implementation, evtCount[15:10]
+>> are not read as 0, as expected. Fix that by applying a mask on
+>> the selected event that depends on the PMU version.
+> 
+> Are you sure about that? These bits are RES0 in 8.0 afaict, so this would be
+> a CPU erratum. Have you checked the SDEN document (I haven't)?
 
-This is an expected failure. I pushed this to my branch to check if
-Eric's new AEAD testing code identifies any new problems on the
-hardware we have in kernelCI, but it only found stuff we already knew
-about.
+You're right. It is RES0 and not RAZ. My mistake. Please ignore this patch.
 
-> Also, as you probably only want this to be enabled in KernelCI
-> and not merged upstream, we could have a config fragment to
-> enable the config with your branch and maybe even others.
->
+Thank you for the feedback.
 
-It would be *very* helpful if we could add Herbert's cryptodev branch
-[0] to kernelCI with a kconfig fragment that turns off
-CRYPTO_MANAGER_DISABLE_TESTS and turns on CRYPTO_MANAGER_EXTRA_TESTS,
-and passes cryptomgr.panic_on_fail=1 on the kernel command line. That
-way, we'll have rolling coverage of just the crypto changes queued up
-in linux-next, but tested thoroughly on actual hardware, and without
-the need to carry patches like the above to trigger the tests
-explicitly.
+Eric
+> 
+> Will
+> 
 
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git/
