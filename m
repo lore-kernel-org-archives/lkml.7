@@ -2,198 +2,135 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_RED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D93C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 833ADC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6345422525
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E382077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:49:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eTraJXdW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fn2cowhJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfLEGob (ORCPT
+        id S1726174AbfLEGtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 01:44:31 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46239 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfLEGob (ORCPT
+        Thu, 5 Dec 2019 01:49:46 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33668 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725867AbfLEGto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 01:44:31 -0500
-Received: by mail-pl1-f195.google.com with SMTP id k20so810629pll.13;
-        Wed, 04 Dec 2019 22:44:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JJ+TzLHDcOe2a66UupATU7so/38ErY2rdjO/+4opCJ8=;
-        b=eTraJXdW2kApg87qYZLb4fC25HuA9TjwSaOYN8nQF7Tvi0UgY+j0DXM2E2uul9Lbms
-         tRjobL19iNlCz2QKg1xolLERyIFEsN4I6XRh/D3LStIkFVU7Ed8MPF8HW8lSgTafPjJQ
-         U47Psc0jV8my1W262rMB8o2vhfSSlizhaZtV8SSgL37Mp2C4nnRf5nwAazirOogox/V9
-         6NTg/wR8siO9hKTLmc1b2U7M4ffQBGD+lZG0eGJFKuIxp1yCYStbzkW+7AUa6G4Ql7q9
-         v2J2LirMS1reO1KSbQfOsVIZ7/GNoBHoj1ppvln4gLD3m8J/VNBiQM3xPOAAJ5XrE52A
-         9qBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JJ+TzLHDcOe2a66UupATU7so/38ErY2rdjO/+4opCJ8=;
-        b=rBjYq4JSjsgXOA8LkrBMtc0x+IdkNr3sLWd6liHYPuS/pOwDzExnlzgKiGpHgF3HuR
-         +6AMuJIMh3Ym6VvlY6poFxHN4b89BBNKoS09BVbX8T6kp6CRx2IP0CTpWSjMLQyZnXfv
-         qPSMYOmG6Xf7/pazqHsYIRFUxU7Zzr8pjAGksAutdbopxfZzZOTYL6cFxiCmuFD+EPgB
-         FjWP12kmnQfjurkU/E4S+roC8m6ExQ9b2lbRVTio0Txb80wKRWja3hdcWzjmepoWEZ2L
-         hoSxDTh8kwtqmtAgZ4ZTJLTxPhSTJrnDgPyr2GiTEnJi3gg3hIfggP7SFWH3v8Bsl3M3
-         9/9g==
-X-Gm-Message-State: APjAAAUCbw4wCskKtL8Ct6F5brxPYb6tKaPOOAraCKoanMDn6POR/eD6
-        /DiDxp+lD4pLB+lgj4mOmmqWC6TC
-X-Google-Smtp-Source: APXvYqyu2Ew8K13y/YP8AGp/vwyfBJ54TZnh5mTZaeM5N4E4MJx/JUNlDE5lbqP11aA7HVdWnvD7xQ==
-X-Received: by 2002:a17:902:7898:: with SMTP id q24mr7359712pll.23.1575528269852;
-        Wed, 04 Dec 2019 22:44:29 -0800 (PST)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::f3d1])
-        by smtp.gmail.com with ESMTPSA id t8sm11334464pfq.92.2019.12.04.22.44.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Dec 2019 22:44:29 -0800 (PST)
-Date:   Wed, 4 Dec 2019 22:44:26 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
-Message-ID: <20191205064424.uzqopwr3kehfsabn@ast-mbp.dhcp.thefacebook.com>
-References: <87wobepgy0.fsf@toke.dk>
- <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
- <CAEf4BzZ+0XpH_zJ0P78vjzmFAH3kGZ21w3-LcSEG=B=+ZQWJ=w@mail.gmail.com>
- <20191204135405.3ffb9ad6@cakuba.netronome.com>
- <20191204233948.opvlopjkxe5o66lr@ast-mbp.dhcp.thefacebook.com>
- <20191204162348.49be5f1b@cakuba.netronome.com>
- <20191205010930.izft6kv5xlnejgog@ast-mbp.dhcp.thefacebook.com>
- <20191204181028.6cdb40d4@cakuba.netronome.com>
- <20191205031718.ax46kfv55zauuopt@ast-mbp.dhcp.thefacebook.com>
- <20191204202638.3b0b0c8c@cakuba.netronome.com>
+        Thu, 5 Dec 2019 01:49:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575528582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PN2kaQNnGa1We4eEVYDGchvloPKew2Z0oPxF8rZIDrk=;
+        b=Fn2cowhJkJVDo34R4ijjBG34Rqrll+3FGrCbMG7j4c2cE7IqdFKrqzBDpes4t70bU/24a8
+        HpvlwEQELymUqw3sbnyuSokEgRQ4SuRjj09NgdxOkSUrcuLXEiFrFTxPskvVxvDzcW7190
+        h7XmgGUQ9EalHL21YJhlPXUZldVY78Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-190-as2qfbUSPIK-R_i6Z0vlEQ-1; Thu, 05 Dec 2019 01:49:41 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4ACE1107ACCA;
+        Thu,  5 Dec 2019 06:49:40 +0000 (UTC)
+Received: from [10.72.12.247] (ovpn-12-247.pek2.redhat.com [10.72.12.247])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 11D7E10013A1;
+        Thu,  5 Dec 2019 06:49:32 +0000 (UTC)
+Subject: Re: [PATCH RFC 00/15] KVM: Dirty ring interface
+To:     Peter Xu <peterx@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <776732ca-06c8-c529-0899-9d2ffacf7789@redhat.com>
+ <20191204193357.GE19939@xz-x1>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <d24d7100-0100-b74f-0761-37196ce16f7f@redhat.com>
+Date:   Thu, 5 Dec 2019 14:49:30 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204202638.3b0b0c8c@cakuba.netronome.com>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20191204193357.GE19939@xz-x1>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: as2qfbUSPIK-R_i6Z0vlEQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 08:26:38PM -0800, Jakub Kicinski wrote:
-> On Wed, 4 Dec 2019 19:17:20 -0800, Alexei Starovoitov wrote:
-> > On Wed, Dec 04, 2019 at 06:10:28PM -0800, Jakub Kicinski wrote:
-> > > On Wed, 4 Dec 2019 17:09:32 -0800, Alexei Starovoitov wrote:  
-> > > > On Wed, Dec 04, 2019 at 04:23:48PM -0800, Jakub Kicinski wrote:  
-> > > > > On Wed, 4 Dec 2019 15:39:49 -0800, Alexei Starovoitov wrote:    
-> > > > > > > Agreed. Having libbpf on GH is definitely useful today, but one can hope
-> > > > > > > a day will come when distroes will get up to speed on packaging libbpf,
-> > > > > > > and perhaps we can retire it? Maybe 2, 3 years from now? Putting
-> > > > > > > bpftool in the same boat is just more baggage.      
-> > > > > > 
-> > > > > > Distros should be packaging libbpf and bpftool from single repo on github.
-> > > > > > Kernel tree is for packaging kernel.    
-> > > > > 
-> > > > > Okay, single repo on GitHub:
-> > > > > 
-> > > > > https://github.com/torvalds/linux    
-> > > > 
-> > > > and how will you git submodule only libbpf part of kernel github into bcc
-> > > > and other projects?  
-> > > 
-> > > Why does bcc have to submodule libbpf? Is it in a "special
-> > > relationship" with libbpf as well? 
-> > > 
-> > > dnf/apt install libbpf
-> > > 
-> > > Or rather:
-> > > 
-> > > dnf/apt install bcc
-> > > 
-> > > since BCC's user doesn't care about dependencies. The day distroes
-> > > started packaging libbpf and bpftool the game has changed.  
-> > 
-> > have you ever built bcc ? or bpftrace?
-> > I'm not sure how to answer such 'suggestion'.
-> 
-> Perhaps someone else has more patience to explain it - why bcc can't
-> just use binary libbpf distribution (static lib + headers) and link
-> against it like it links against other libraries?
 
-why systemd considered using libbpf as submodule ?
-When project like bcc needs to run on different distros and
-different versions of the same distro such project cannot force users
-to upgrade core libraries to get features that project might need.
-libbpf is far from stability of libc, libmnl, libelf.
-There are mature libraries and actively developed libraries.
-libbpf is at its infancy stage. We're trying hard to be stable,
-but accumulated baggage is already huge and it is slowing us down.
-systemd is considering to use libbpf without being submodule too,
-but it's mainly driven by systemd's CI limitations and nothing else.
+On 2019/12/5 =E4=B8=8A=E5=8D=883:33, Peter Xu wrote:
+> On Wed, Dec 04, 2019 at 06:39:48PM +0800, Jason Wang wrote:
+>> On 2019/11/30 =E4=B8=8A=E5=8D=885:34, Peter Xu wrote:
+>>> Branch is here:https://github.com/xzpeter/linux/tree/kvm-dirty-ring
+>>>
+>>> Overview
+>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>>
+>>> This is a continued work from Lei Cao<lei.cao@stratus.com>  and Paolo
+>>> on the KVM dirty ring interface.  To make it simple, I'll still start
+>>> with version 1 as RFC.
+>>>
+>>> The new dirty ring interface is another way to collect dirty pages for
+>>> the virtual machine, but it is different from the existing dirty
+>>> logging interface in a few ways, majorly:
+>>>
+>>>     - Data format: The dirty data was in a ring format rather than a
+>>>       bitmap format, so the size of data to sync for dirty logging does
+>>>       not depend on the size of guest memory any more, but speed of
+>>>       dirtying.  Also, the dirty ring is per-vcpu (currently plus
+>>>       another per-vm ring, so total ring number is N+1), while the dirt=
+y
+>>>       bitmap is per-vm.
+>>>
+>>>     - Data copy: The sync of dirty pages does not need data copy any mo=
+re,
+>>>       but instead the ring is shared between the userspace and kernel b=
+y
+>>>       page sharings (mmap() on either the vm fd or vcpu fd)
+>>>
+>>>     - Interface: Instead of using the old KVM_GET_DIRTY_LOG,
+>>>       KVM_CLEAR_DIRTY_LOG interfaces, the new ring uses a new interface
+>>>       called KVM_RESET_DIRTY_RINGS when we want to reset the collected
+>>>       dirty pages to protected mode again (works like
+>>>       KVM_CLEAR_DIRTY_LOG, but ring based)
+>>>
+>>> And more.
+>>
+>> Looks really interesting, I wonder if we can make this as a library then=
+ we
+>> can reuse it for vhost.
+> So iiuc this ring will majorly for (1) data exchange between kernel
+> and user, and (2) shared memory.  I think from that pov yeh it should
+> work even for vhost.
+>
+> It shouldn't be hard to refactor the interfaces to avoid kvm elements,
+> however I'm not sure how to do that best.  Maybe like irqbypass and
+> put it into virt/lib/ as a standlone module?  Would it worth it?
 
-> Share with us what you dislike about iproute2 so we can fix it. 
 
-let's start with 24-hr review cycle that we're trying hard to keep in bpf/net
-trees. Can you help with 24-hr review in iproute2 ?
+Maybe, and it looks to me some dirty pages reporting API for VFIO is=20
+proposed in the same time. It will be helpful to unify them (or at least=20
+leave a chance for other users).
 
-> Because libbpf just now entered the distroes, and you suggested the
-> distroes use the GH repo, so sure now it's wasted work.
+Thanks
 
-You got the timeline wrong. GH repo was done before some distros started
-packaging libbpf. libbpf is still not available in centos/rhel afaik.
-But bcc and bpftrace need to work there. Answer? submodules...
 
-> > Are you trolling? Do you understand why __ is there?
-> 
-> Not the point. Tell me how the coding style is different. The
-> underscores is the only thing I could think of that's not common 
-> in the kernel.
-
-we don't actively enforce xmas tree :)
-
-> But master of libbpf must have all features to test the kernel with,
-> right? So how do we branch of a release in the middle? That's only
-> possible if kernel cycle happens to not have had any features that
-> required libbpf yet?
-
-libbpf rate of changes is higher than bpf bits of the kernel.
-Amount of patches per week is higher as well.
-Something like skeleton work might warrant independent release just
-to get into the hands of people faster. Why wait 8 weeks for kernel
-release? No reason.
-
-> Or are you thinking 3 tier branching where we'd branch off libbpf
-> release, say 2.6.0 that corresponds to kernel X, 
-
-libbpf does not correspond to kernel.
-All libbpf releases must work with any kernel.
-
-> but it wouldn't be a
-> stable-only release, and we can still backport features added in kernel
-> X + 1 cycle, features which don't require kernel support, and release
-> libbpf 2.7.0?
-
-Say libbpf 0.1 was developed during kernel 5.4.
-We can 'backport' all libbpf features from kernel tree 5.5 into libbpf 0.1+
-and that libbpf 0.1+ must work with kernels 5.4 and 5.5.
-That is what existing github/libbpf CI is testing.
+>
+> Paolo, what's your take?
+>
 
