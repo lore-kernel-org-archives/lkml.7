@@ -2,114 +2,126 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F5FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A95C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 973AA2464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:25:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575566713;
-	bh=Rw7OSMPf9yit/kp3KVKphhbKGqVjIJjjc9QupnBWMos=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=amRQGiyCee5Z0qYOTU463dKtyZ4GuJ4i/15DiXsi1QDXqYt+r+Gp0QjheKb5Z2ffQ
-	 xEgQayz1S4q8Gbe4I2+Q6cq9Kvs6TX5G1hH4SPM9nnnPC6xowmoRBpLvvpdSDT0PUy
-	 OlNhrJ+WVQMNoD5mIfJIq2SCepCc0LEsxkRG/81Q=
+	by mail.kernel.org (Postfix) with ESMTP id 37A732464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:25:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbfLERZM (ORCPT
+        id S1730140AbfLERZQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 12:25:12 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34535 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbfLERZM (ORCPT
+        Thu, 5 Dec 2019 12:25:16 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31220 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730096AbfLERZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 12:25:12 -0500
-Received: by mail-lj1-f193.google.com with SMTP id m6so4544734ljc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 09:25:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wcGyAgv2BiiKMB4o1JPjh3c4/KLE1QL1Cs5ZGEHCDIc=;
-        b=h8R8qn2a8yMheUZxZicjSxy1mjJzLS/SXEZWNWhN2n29VR1l3aKAlm1cuqN3fZyRfk
-         7RiJ2tHBwlnu/dxOScE0uVy3iZQZ7SYeh67Cd1w1vNd2lAU44JJHrRfgT90jo1Vxdgk6
-         hfczULjbW6MoOj6k0umoQaFr+3JFVFJeh4/gg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wcGyAgv2BiiKMB4o1JPjh3c4/KLE1QL1Cs5ZGEHCDIc=;
-        b=Tkbu3fxnF7e6pvNOJorJtYvHx0AjbmU2UiTMPp/7HwkjBntsUHxDdjngFN7qXuTuO3
-         Vz65v5HPCjqVlBdx3RizxWQLcmGgh1MiVcUw5MbuRZqOVD2SPywlaQ9eccj5kLoDfrTm
-         dkXDrKz8BgDphzkb+fzGVT6Wmk6KkaM/t7iErGPaj6IiBUWmaUsnmyfiXYe9V9exa8LR
-         eLW9ILSeULlSRtfssn+gW4KWIHRFpFuwws2ASgpyqjWPnelOYHUbmXTmKGVdjegxSeOg
-         OMSE5SFO0Zfqx3J9GYKGYO8pbI7BCjKjPKV0AdipZbP/EOCyIn18/nPdtaWUuS5DxqO4
-         rrKQ==
-X-Gm-Message-State: APjAAAXscYxw1nQZEb1FtDp8QhN2SEWUzxiiceJtIEJepxEQkBIFoFDX
-        cwXgkAXzwBawMCd0bz8yJFQ5jhm9MRc=
-X-Google-Smtp-Source: APXvYqz2VJM8ZVPRpDQT84rjXDNMcGWVHpGyNjWX2XLM2z7lYSPQYPUBkgTbWm8PDdNvblPuiEktGQ==
-X-Received: by 2002:a2e:864f:: with SMTP id i15mr6020237ljj.29.1575566709312;
-        Thu, 05 Dec 2019 09:25:09 -0800 (PST)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id 145sm5266591ljj.69.2019.12.05.09.25.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 09:25:08 -0800 (PST)
-Received: by mail-lj1-f177.google.com with SMTP id s22so4490583ljs.7
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 09:25:08 -0800 (PST)
-X-Received: by 2002:a2e:91cb:: with SMTP id u11mr3763207ljg.82.1575566707941;
- Thu, 05 Dec 2019 09:25:07 -0800 (PST)
+        Thu, 5 Dec 2019 12:25:13 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB5HOL2O069785
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Dec 2019 12:25:12 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wpur48g24-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 12:25:12 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Thu, 5 Dec 2019 17:25:10 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Dec 2019 17:25:08 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB5HP67N59506886
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Dec 2019 17:25:06 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BB11AA4069;
+        Thu,  5 Dec 2019 17:25:06 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 67935A404D;
+        Thu,  5 Dec 2019 17:25:06 +0000 (GMT)
+Received: from localhost (unknown [9.199.48.150])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Dec 2019 17:25:06 +0000 (GMT)
+Date:   Thu, 05 Dec 2019 22:55:05 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH 0/3] pseries: Track and expose idle PURR and SPURR ticks
+To:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>
+Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+References: <1574856072-30972-1-git-send-email-ego@linux.vnet.ibm.com>
+        <87r21ju3ud.fsf@linux.ibm.com>
+        <48823589-b105-0da3-e532-f633ade8f0d9@linux.vnet.ibm.com>
+        <87k17au4rw.fsf@linux.ibm.com>
+In-Reply-To: <87k17au4rw.fsf@linux.ibm.com>
 MIME-Version: 1.0
-References: <31452.1574721589@warthog.procyon.org.uk> <20191205125826.GK2734@twin.jikos.cz>
- <1593.1575554217@warthog.procyon.org.uk> <CAHk-=wgwwJ+ZEtycujFdNmpS8TjwCYyT+oHfV7d-GekyaX91xg@mail.gmail.com>
-In-Reply-To: <CAHk-=wgwwJ+ZEtycujFdNmpS8TjwCYyT+oHfV7d-GekyaX91xg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 5 Dec 2019 09:24:51 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi_on1EAbVi1Q01i7=0_GL=nKmz6s9677YZf74H8=Sw0g@mail.gmail.com>
-Message-ID: <CAHk-=wi_on1EAbVi1Q01i7=0_GL=nKmz6s9677YZf74H8=Sw0g@mail.gmail.com>
-Subject: Re: [GIT PULL] pipe: Notification queue preparation
-To:     David Howells <dhowells@redhat.com>
-Cc:     David Sterba <dsterba@suse.cz>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19120517-0012-0000-0000-00000371BA17
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120517-0013-0000-0000-000021AD7FD0
+Message-Id: <1575566328.nhfi897fmd.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-05_05:2019-12-04,2019-12-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 bulkscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912050146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 9:12 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> It would be interesting to hear if somebody else is waiting on the
-> read side too.
+Hi Nathan,
 
-Looking once more at that commit, I find at least one bug, but I'm
-pretty sure that's not the cause of this problem.
+Nathan Lynch wrote:
+> Hi Kamalesh,
+> 
+> Kamalesh Babulal <kamalesh@linux.vnet.ibm.com> writes:
+>> On 12/5/19 3:54 AM, Nathan Lynch wrote:
+>>> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
+>>>>
+>>>> Tools such as lparstat which are used to compute the utilization need
+>>>> to know [S]PURR ticks when the cpu was busy or idle. The [S]PURR
+>>>> counters are already exposed through sysfs.  We already account for
+>>>> PURR ticks when we go to idle so that we can update the VPA area. This
+>>>> patchset extends support to account for SPURR ticks when idle, and
+>>>> expose both via per-cpu sysfs files.
+>>> 
+>>> Does anything really want to use PURR instead of SPURR? Seems like we
+>>> should expose only SPURR idle values if possible.
+>>> 
+>>
+>> lparstat is one of the consumers of PURR idle metric
+>> (https://groups.google.com/forum/#!topic/powerpc-utils-devel/fYRo69xO9r4). 
+>> Agree, on the argument that system utilization metrics based on SPURR
+>> accounting is accurate in comparison to PURR, which isn't proportional to
+>> CPU frequency.  PURR has been traditionally used to understand the system
+>> utilization, whereas SPURR is used for understanding how much capacity is
+>> left/exceeding in the system based on the current power saving mode.
+> 
+> I'll phrase my question differently: does SPURR complement or supercede
+> PURR? You seem to be saying they serve different purposes. If PURR is
+> actually useful rather then vestigial then I have no objection to
+> exposing idle_purr.
 
-DavidH, watch out for things like this:
+SPURR complements PURR, so we need both. SPURR/PURR ratio helps provide 
+an indication of the available headroom in terms of core resources, at 
+maximum frequency.
 
--       for (idx = 0; idx < pipe->nrbufs && rem < len; idx++)
-+       for (idx = tail; idx < head && rem < len; idx++)
 
-which is a completely buggy conversion.
+- Naveen
 
-You can't compare tail and head with an inequality, it gets the
-wraparound case wrong.
-
-But I found only one of those, and it's fuse-specific, plus the
-overflow would take a long time to trigger, so I'm pretty sure this
-isn't what DavidS is reporting.
-
-               Linus
