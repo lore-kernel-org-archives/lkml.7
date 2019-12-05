@@ -2,112 +2,127 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BD3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F5DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB752245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5187D2245C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sq8wL7AJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E9hsmWva"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729362AbfLEMGg (ORCPT
+        id S1729390AbfLEMIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 07:06:36 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40425 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729187AbfLEMGg (ORCPT
+        Thu, 5 Dec 2019 07:08:09 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53975 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729096AbfLEMII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 07:06:36 -0500
-Received: by mail-qt1-f194.google.com with SMTP id z22so3279812qto.7
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 04:06:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=F6zHO/WCNUOJMFt0div43uU4YpgZXs8QE00GO2bNAOk=;
-        b=sq8wL7AJ/+Mo4kdKlEjtVjVm2c/Kq/drIwY4aK59mtehKOQFqbYhnfUPP9a9T7XBP5
-         llKuSWKB+Iq09BIfDEE11CvsUde33Jst5tMP8UjZglnByVypwtPnrJv1w2U0ZNjKQfqe
-         he5q107St5f2RZEigfpMn9FVtBSs3ngX9ps9lxSUlm9UJIP26lR3KpAiuNHAW8nVBe4V
-         xLsa2kAC9b9QL4MV/UKcoCnjOOkTKuTah7l5yb6oGU0YMIRRg+Bq6DnZxp28wHkcIEHs
-         jwGCrvjtZU7fUDOXvNu25Tlw59oh9pgV/LwiUB73yMCksXnBt1P8O7shPafOjczJxJ4s
-         Fefg==
+        Thu, 5 Dec 2019 07:08:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575547687;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KKnePFkA3a3Jg8CAkFy2V9ZPhak/skft+CWcf44aQ2I=;
+        b=E9hsmWva3PFczTfk8cjepVm1S4/kqFrUW8TnW3GL7/r9wVZFUoCEXCwdAsYqJxvdVbismT
+        v6Ix0OzyNLh42JGPoUCriw3g13TZBF2AXJsqYbm82Iv3pPbx2JMTiN9F7ZY3QPJO1CarQb
+        +O5hEuCpeNirNPIGLEwjDEJwQg5XEQc=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-18-Z0a8k683OSycm3Jsm2exig-1; Thu, 05 Dec 2019 07:08:03 -0500
+Received: by mail-qk1-f197.google.com with SMTP id d26so1974443qkk.8
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 04:08:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=F6zHO/WCNUOJMFt0div43uU4YpgZXs8QE00GO2bNAOk=;
-        b=bGz9TWsdHSwYGiQxMk30tqfgUZ8rnXcRFAGtIuXGjzOr4246tO4BAgyKwG+VdCoaA8
-         RIXdqJggZAYg2aDZE8uI7e4Ej54Ydr5qc6ULFNKCatAYMR6IjiwuY4iXpnOaIHJUEmRc
-         Q3AkQvn8MQ5Rpef5NbmWAYbfMzCBJOmbW5YS/loQ1Gg+B+cAmhWULUbs2J9MQgHpysfO
-         gpM4ikXDYKyfU9ye34DnkexrKfDtbx6cWzVIos0mt9Tv6fo8vWUVyqOCdZCqxVg1I39G
-         W85q5E3wBFTdsZ487KVVpVO4p80o9iTtRcikzuOIQ/tVJ9QTBOw/6aDaZKv3kx9LUI37
-         RNKg==
-X-Gm-Message-State: APjAAAXC8GDKwLfIg3zj+Owsw9Y1lvO2akFkxZXHUyhPBe+MJBWRePhP
-        5R/e9sO8ri9P1wQjnMTud2E3D1xiE1cx1ZxSxhsr/g==
-X-Google-Smtp-Source: APXvYqxK7xrHkUmgrCjpi9ygm1HQIqL3Jgeu8IJMBF2nFA4+2cZshObi4EtuL33VHl3sWGSpOux7oC+IFCOGraccxWU=
-X-Received: by 2002:ac8:2489:: with SMTP id s9mr7142276qts.257.1575547594783;
- Thu, 05 Dec 2019 04:06:34 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Yem3+ayZlS+BgE7nY75md4w+1lEY3LEm7zBYY/k2QI0=;
+        b=jy4EWZ0hpnNTXM4r4Bu840fS2pPA8WL/g/CSp6yT+/+P4j6sMZ8uTTg9l78gW4nQ78
+         jHBUL1PfNrKwGRFN+G0jtIxu3EAc/bhUpdlkXRq/kB6CZTm4H1cLRTuZPmUsrBWZW6b4
+         qkgAiBFNWjOHhH87G+L8j48hTidkPIa/HcE+/GDQjfNS1tqG5qTTvSNav4DPoiSI7qe/
+         ECrDn5gaZVhMgxLw+vfu6OJP3CDG/k0j4wTny/YHoSB6MvdgiHLTo17+1KGdx1qDb5l8
+         XerK3VFO+nqo7qGkkvnHiG+Kv0GjZcBYxlpOf8EG9DmifZ7GiIy7XlWMfk0GCKtemXUk
+         atew==
+X-Gm-Message-State: APjAAAUMYcM8x9I0nIMKvOlyCyHGzYD4/lAqdl6ioUrQTc8w1f5pKcc0
+        /BH0h9qQpRBcy7ayV4Ir434nRyxtWCLZ7ogVSJLKuzQuQ8O9pMQDHsvWvCQrQNhTnVun/8wJnis
+        0lblhQkepal0f2pzoKkFCZtQV
+X-Received: by 2002:a37:4fd8:: with SMTP id d207mr8005351qkb.464.1575547683442;
+        Thu, 05 Dec 2019 04:08:03 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzv5vOShNoFbd+6gSSN/Gfy3KctDqYfqTl5MT4r+Q4WJy0wMFLWSpW3G+um69pHLx6/zwlxIA==
+X-Received: by 2002:a37:4fd8:: with SMTP id d207mr8005316qkb.464.1575547683077;
+        Thu, 05 Dec 2019 04:08:03 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c0:3f::3])
+        by smtp.gmail.com with ESMTPSA id y184sm4852359qkd.128.2019.12.05.04.08.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 04:08:02 -0800 (PST)
+Date:   Thu, 5 Dec 2019 07:08:00 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+Message-ID: <20191205120800.GA9673@xz-x1>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-5-peterx@redhat.com>
+ <1355422f-ab62-9dc3-2b48-71a6e221786b@redhat.com>
+ <a3e83e6b-4bfa-3a6b-4b43-5dd451e03254@redhat.com>
+ <20191204195230.GF19939@xz-x1>
+ <efa1523f-2cff-8d65-7b43-4a19eff89051@redhat.com>
 MIME-Version: 1.0
-References: <00000000000096009b056df92dc1@google.com> <beffba5d-e3d7-8b06-655b-bd04349177ea@kernel.org>
- <20191205100047.GA11438@Johanness-MacBook-Pro.local> <CACT4Y+Z-9g59XTwpfW+3fv1_jhbsskkvt8E8fx5F44BjofZ0ow@mail.gmail.com>
- <20191205113838.GC11438@Johanness-MacBook-Pro.local> <20191205115033.GJ2734@suse.cz>
-In-Reply-To: <20191205115033.GJ2734@suse.cz>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 5 Dec 2019 13:06:23 +0100
-Message-ID: <CACT4Y+Z9QezPoc-8nASbK0Bi_ihF=knQ2ngeO8ibdRWbdkEH5g@mail.gmail.com>
-Subject: Re: kernel BUG at fs/btrfs/volumes.c:LINE!
-To:     dsterba@suse.cz, Johannes Thumshirn <jthumshirn@suse.de>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        syzbot <syzbot+5b658d997a83984507a6@syzkaller.appspotmail.com>,
-        Chris Mason <clm@fb.com>, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <efa1523f-2cff-8d65-7b43-4a19eff89051@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-MC-Unique: Z0a8k683OSycm3Jsm2exig-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 12:50 PM David Sterba <dsterba@suse.cz> wrote:
->
-> On Thu, Dec 05, 2019 at 12:38:38PM +0100, Johannes Thumshirn wrote:
-> > On Thu, Dec 05, 2019 at 11:07:27AM +0100, Dmitry Vyukov wrote:
-> > > The correct syntax would be (no dash + colon):
-> > >
-> > > #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/jth/linux.git
-> > > close_fs_devices
-> >
-> > Ah ok, thanks.
-> >
-> > Although syzbot already said it can't test because it has no reproducer.
-> > Anyways good to know for future reports.
->
-> According to
->
-> https://syzkaller.appspot.com/bug?id=d50670eeb21302915bde3f25871dfb7ea43db1e4
->
-> there is a way how to test it, many reports and the last one about a
-> week old. Is there a way to instruct syzbot to run the same tests on a
-> given branch?
->
-> (The reproducer is basically setting up environment with limited amount
-> of memory available for allocation and this hits the BUG_ON.)
+On Thu, Dec 05, 2019 at 02:51:15PM +0800, Jason Wang wrote:
+>=20
+> On 2019/12/5 =E4=B8=8A=E5=8D=883:52, Peter Xu wrote:
+> > On Wed, Dec 04, 2019 at 12:04:53PM +0100, Paolo Bonzini wrote:
+> > > On 04/12/19 11:38, Jason Wang wrote:
+> > > > > +=C2=A0=C2=A0=C2=A0 entry =3D &ring->dirty_gfns[ring->dirty_index=
+ & (ring->size - 1)];
+> > > > > +=C2=A0=C2=A0=C2=A0 entry->slot =3D slot;
+> > > > > +=C2=A0=C2=A0=C2=A0 entry->offset =3D offset;
+> > > >=20
+> > > > Haven't gone through the whole series, sorry if it was a silly ques=
+tion
+> > > > but I wonder things like this will suffer from similar issue on
+> > > > virtually tagged archs as mentioned in [1].
+> > > There is no new infrastructure to track the dirty pages---it's just a
+> > > different way to pass them to userspace.
+> > >=20
+> > > > Is this better to allocate the ring from userspace and set to KVM
+> > > > instead? Then we can use copy_to/from_user() friends (a little bit =
+slow
+> > > > on recent CPUs).
+> > > Yeah, I don't think that would be better than mmap.
+> > Yeah I agree, because I didn't see how copy_to/from_user() helped to
+> > do icache/dcache flushings...
+>=20
+>=20
+> It looks to me one advantage is that exact the same VA is used by both
+> userspace and kernel so there will be no alias.
 
-syzkaller does this ("rerun the same tests") for every bug always. If
-it succeeds (kernel crashes again), it results in a reproducer, that
-can later be used for cause/fix bisection and patch testing. In this
-case it does not reproduce, so rerunning the same tests will not lead
-to anything useful (only if to false confirmation that a patch fixes
-the crash).
+Hmm.. but what if the page is mapped more than once in user?  Thanks,
 
-There is a large number of reasons why a kernel crash may not
-reproduce. It may be global accumulated state, non-hermetic tests,
-poor syzkaller btrfs descriptions (most likely true) and others.
+--=20
+Peter Xu
 
-Need to take a closer look, on first sight it looks like something
-that should be reproduced...
