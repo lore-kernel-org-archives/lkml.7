@@ -2,126 +2,86 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A95C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AA6C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37A732464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E71412464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:25:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gjjB6qzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730140AbfLERZQ convert rfc822-to-8bit (ORCPT
+        id S1730186AbfLERZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 12:25:16 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31220 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730096AbfLERZN (ORCPT
+        Thu, 5 Dec 2019 12:25:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53819 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730157AbfLERZb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 12:25:13 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB5HOL2O069785
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Dec 2019 12:25:12 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wpur48g24-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 12:25:12 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Thu, 5 Dec 2019 17:25:10 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Dec 2019 17:25:08 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB5HP67N59506886
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Dec 2019 17:25:06 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB11AA4069;
-        Thu,  5 Dec 2019 17:25:06 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 67935A404D;
-        Thu,  5 Dec 2019 17:25:06 +0000 (GMT)
-Received: from localhost (unknown [9.199.48.150])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Dec 2019 17:25:06 +0000 (GMT)
-Date:   Thu, 05 Dec 2019 22:55:05 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH 0/3] pseries: Track and expose idle PURR and SPURR ticks
-To:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>
-Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-References: <1574856072-30972-1-git-send-email-ego@linux.vnet.ibm.com>
-        <87r21ju3ud.fsf@linux.ibm.com>
-        <48823589-b105-0da3-e532-f633ade8f0d9@linux.vnet.ibm.com>
-        <87k17au4rw.fsf@linux.ibm.com>
-In-Reply-To: <87k17au4rw.fsf@linux.ibm.com>
+        Thu, 5 Dec 2019 12:25:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575566730;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=w59JjKWkV4ZxKRNKisQ9Y1kZnArUOKkU4g6jxO2GRWU=;
+        b=gjjB6qzl1hOgpkbSSGcDvkJhwqpULaN31RPQGPQhP0K9qTunYFSnXtiiWXANgDnrVbx2hT
+        Xj5m4i/lssARIP2ImXwU7pKH3J5n3+fQ9fYIHvJk4uA2FSkJI2+9QL8n+bwq4KTq7Pl2l8
+        e6d3p+UU55f+KRdVZHT5y9qX2c+iyY4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-252-3O5RBmQEOS2GZnfvW0B_UQ-1; Thu, 05 Dec 2019 12:25:26 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8264E107ACC4;
+        Thu,  5 Dec 2019 17:25:24 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-250.rdu2.redhat.com [10.10.120.250])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A463419756;
+        Thu,  5 Dec 2019 17:25:21 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20191205172127.GW2734@suse.cz>
+References: <20191205172127.GW2734@suse.cz> <20191205125826.GK2734@twin.jikos.cz> <31452.1574721589@warthog.procyon.org.uk> <1593.1575554217@warthog.procyon.org.uk>
+To:     dsterba@suse.cz
+Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] pipe: Notification queue preparation
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19120517-0012-0000-0000-00000371BA17
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120517-0013-0000-0000-000021AD7FD0
-Message-Id: <1575566328.nhfi897fmd.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-05_05:2019-12-04,2019-12-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- impostorscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- priorityscore=1501 lowpriorityscore=0 suspectscore=0 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912050146
+Content-ID: <21492.1575566720.1@warthog.procyon.org.uk>
+Date:   Thu, 05 Dec 2019 17:25:20 +0000
+Message-ID: <21493.1575566720@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: 3O5RBmQEOS2GZnfvW0B_UQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nathan,
+I've just posted a couple of patches - can you check to see if they fix you=
+r
+problem?
 
-Nathan Lynch wrote:
-> Hi Kamalesh,
-> 
-> Kamalesh Babulal <kamalesh@linux.vnet.ibm.com> writes:
->> On 12/5/19 3:54 AM, Nathan Lynch wrote:
->>> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
->>>>
->>>> Tools such as lparstat which are used to compute the utilization need
->>>> to know [S]PURR ticks when the cpu was busy or idle. The [S]PURR
->>>> counters are already exposed through sysfs.  We already account for
->>>> PURR ticks when we go to idle so that we can update the VPA area. This
->>>> patchset extends support to account for SPURR ticks when idle, and
->>>> expose both via per-cpu sysfs files.
->>> 
->>> Does anything really want to use PURR instead of SPURR? Seems like we
->>> should expose only SPURR idle values if possible.
->>> 
->>
->> lparstat is one of the consumers of PURR idle metric
->> (https://groups.google.com/forum/#!topic/powerpc-utils-devel/fYRo69xO9r4). 
->> Agree, on the argument that system utilization metrics based on SPURR
->> accounting is accurate in comparison to PURR, which isn't proportional to
->> CPU frequency.  PURR has been traditionally used to understand the system
->> utilization, whereas SPURR is used for understanding how much capacity is
->> left/exceeding in the system based on the current power saving mode.
-> 
-> I'll phrase my question differently: does SPURR complement or supercede
-> PURR? You seem to be saying they serve different purposes. If PURR is
-> actually useful rather then vestigial then I have no objection to
-> exposing idle_purr.
+https://lore.kernel.org/linux-fsdevel/157556649610.20869.853707964949534356=
+7.stgit@warthog.procyon.org.uk/T/#t
 
-SPURR complements PURR, so we need both. SPURR/PURR ratio helps provide 
-an indication of the available headroom in terms of core resources, at 
-maximum frequency.
-
-
-- Naveen
+Thanks,
+David
 
