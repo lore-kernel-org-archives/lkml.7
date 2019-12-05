@@ -2,167 +2,105 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2957DC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838CCC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F232321835
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:56:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dHIxLFOp"
+	by mail.kernel.org (Postfix) with ESMTP id 640C121823
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729128AbfLEK4C (ORCPT
+        id S1729336AbfLEK4T convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:56:02 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:21388 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726384AbfLEK4B (ORCPT
+        Thu, 5 Dec 2019 05:56:19 -0500
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:18248 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfLEK4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:56:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575543359;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dcSvDAAQF2KhEEObz4gP9gUoPID8X22sgxJqtYom4vk=;
-        b=dHIxLFOpBSaGAJ2NjmbrnSpu6bHEaAut6OiTOEnGrnGH9QZYqBcX19oRdVr2I/A+xWcoDc
-        dlG3UV1JD1isgYsEeumv0oYR+RfrP1LSbI0mMFqE7Lkdbczxv8vohG6FfNZnUFE3C4qYly
-        URdMXn7/l+AygeMyeWfjjoson7OQa4g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-274-3ho80iwfOzeRYyNYyHkmRA-1; Thu, 05 Dec 2019 05:55:56 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 357A2800D41;
-        Thu,  5 Dec 2019 10:55:54 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-23.pek2.redhat.com [10.72.12.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 813305D9C5;
-        Thu,  5 Dec 2019 10:55:49 +0000 (UTC)
-Date:   Thu, 5 Dec 2019 18:55:45 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Weiser <michael@weiser.dinsnail.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
- data to fix kexec breakage
-Message-ID: <20191205105545.GA6710@dhcp-128-65.nay.redhat.com>
-References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
- <20191204075917.GA10587@dhcp-128-65.nay.redhat.com>
- <20191204101412.GD114697@gmail.com>
+        Thu, 5 Dec 2019 05:56:18 -0500
+IronPort-SDR: EhnRgSnZ7ptNGwLo7p31k09YQW4Oab9ACLKU+R6bF2YmLtocmLxanO4CB2fh+Pz2/nkZfDGff0
+ NxEayFeJiuLfrAl4kax19XSvGmdLjgmPI4bg4ga/b5HEzeEnAlZ9v5vjz61B8OsBd8xhIkbCNC
+ 2BWwlxL6aFIMO2m3rHBrUHVn5wVylZctvUn3yEdaTvzXMG4Gm3rAGCXLDobztSJE9qg4LpDblH
+ UiUbJcLpylKoZdbRfvdFOFiY0jUIMZ08+0+mgan6fvuYojfyY9kGZJj9/AZ7mgGJ6SnMmLgjyw
+ l7I=
+X-IronPort-AV: E=Sophos;i="5.69,281,1571731200"; 
+   d="scan'208";a="43734030"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa2.mentor.iphmx.com with ESMTP; 05 Dec 2019 02:56:18 -0800
+IronPort-SDR: DHcOYqEYCIexs8/1AcHZUJt/AVUVRRn3LG7DYarWurKjbUc5CRciV0zPkyHhdTbPq3hE0Yd2SI
+ ySjs7UHV0sg/bXJxCHgfHIKpK/D0UqabGvs5lFNoclAyAE0Vx+n+21mAD2a6/OOg+WMDqttWPe
+ tkyHpXZUeTX99jm3WTAZrLVuX4CcLSZ3V+Ia3lag7ubVyS0bIeigMYORyjoGHrs+t2BPvH7cMg
+ YgPjtlGtf/I4tqzxqVBdGeApBWdYwSfzFsSpuFlTyRfULfwnf9urib6udEbZz80LmWt9L424mL
+ e5c=
+From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "walken@google.com" <walken@google.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>
+Subject: AW: Crash in fair scheduler
+Thread-Topic: Crash in fair scheduler
+Thread-Index: AQHVqbfg64Wqju89WkedWbWijDxswKeoNgIAgAADvACAADdAgIAC7eEg
+Date:   Thu, 5 Dec 2019 10:56:13 +0000
+Message-ID: <ad7d2769ae3b4d8a88e4f67d5fb800cf@SVR-IES-MBX-03.mgc.mentorg.com>
+References: <1575364273836.74450@mentor.com>
+ <20191203103046.GJ2827@hirez.programming.kicks-ass.net>
+ <656260cf50684c11a3122aca88dde0cb@SVR-IES-MBX-03.mgc.mentorg.com>
+ <20191203140153.GP2844@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191203140153.GP2844@hirez.programming.kicks-ass.net>
+Accept-Language: de-DE, en-IE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [137.202.0.90]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20191204101412.GD114697@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: 3ho80iwfOzeRYyNYyHkmRA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/04/19 at 11:14am, Ingo Molnar wrote:
->=20
-> * Dave Young <dyoung@redhat.com> wrote:
->=20
-> > On 12/04/19 at 03:52pm, Dave Young wrote:
-> > > Michael Weiser reported he got below error during a kexec rebooting:
-> > > esrt: Unsupported ESRT version 2904149718861218184.
-> > >=20
-> > > The ESRT memory stays in EFI boot services data, and it was reserved
-> > > in kernel via efi_mem_reserve().  The initial purpose of the reservat=
-ion
-> > > is to reuse the EFI boot services data across kexec reboot. For examp=
-le
-> > > the BGRT image data and some ESRT memory like Michael reported.=20
-> > >=20
-> > > But although the memory is reserved it is not updated in X86 e820 tab=
-le.
-> > > And kexec_file_load iterate system ram in io resource list to find pl=
-aces
-> > > for kernel, initramfs and other stuff. In Michael's case the kexec lo=
-aded
-> > > initramfs overwritten the ESRT memory and then the failure happened.
-> >=20
-> > s/overwritten/overwrote :)  If need a repost please let me know..
-> >=20
-> > >=20
-> > > Since kexec_file_load depends on the e820 to be updated, just fix thi=
-s
-> > > by updating the reserved EFI boot services memory as reserved type in=
- e820.
-> > >=20
-> > > Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute a=
-re
-> > > bypassed in the reservation code path because they are assumed as res=
-erved.
-> > > But the reservation is still needed for multiple kexec reboot.
-> > > And it is the only possible case we come here thus just drop the code
-> > > chunk then everything works without side effects.=20
-> > >=20
-> > > On my machine the ESRT memory sits in an EFI runtime data range, it d=
-oes
-> > > not trigger the problem, but I successfully tested with BGRT instead.
-> > > both kexec_load and kexec_file_load work and kdump works as well.
-> > >=20
-> > > Signed-off-by: Dave Young <dyoung@redhat.com>
->=20
->=20
-> So I edited this to:
->=20
->  From: Dave Young <dyoung@redhat.com>
->=20
->  Michael Weiser reported he got this error during a kexec rebooting:
->=20
->    esrt: Unsupported ESRT version 2904149718861218184.
->=20
->  The ESRT memory stays in EFI boot services data, and it was reserved
->  in kernel via efi_mem_reserve().  The initial purpose of the reservation
->  is to reuse the EFI boot services data across kexec reboot. For example
->  the BGRT image data and some ESRT memory like Michael reported.
->=20
->  But although the memory is reserved it is not updated in the X86 E820 ta=
-ble,
->  and kexec_file_load() iterates system RAM in the IO resource list to fin=
-d places
->  for kernel, initramfs and other stuff. In Michael's case the kexec loade=
-d
->  initramfs overwrote the ESRT memory and then the failure happened.
->=20
->  Since kexec_file_load() depends on the E820 table being updated, just fi=
-x this
->  by updating the reserved EFI boot services memory as reserved type in E8=
-20.
->=20
->  Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
->  bypassed in the reservation code path because they are assumed as reserv=
-ed.
->=20
->  But the reservation is still needed for multiple kexec reboots,
->  and it is the only possible case we come here thus just drop the code
->  chunk, then everything works without side effects.
->=20
->  On my machine the ESRT memory sits in an EFI runtime data range, it does
->  not trigger the problem, but I successfully tested with BGRT instead.
->  both kexec_load() and kexec_file_load() work and kdump works as well.
->=20
+> Von: Peter Zijlstra [mailto:peterz@infradead.org]
 
-Thanks for the amending, also thank all for the review and test.
+> 
+> Exatly.
+> 
+> 
+> I suppose one approach is to add code to both __enqueue_entity() and
+> __dequeue_entity() that compares ->rb_leftmost to the result of
+> rb_first(). That'd incur some overhead but it'd double check the logic.
 
-Dave
+As this is a ONCE without reproducer, i would prefer to use an approach
+to exactly check for this case in the code path where it crashed.
+Something like this (with pseudo-code):
 
+simple:
+....
+
+do {
+  se = pick_next_entity(..)
+  if (unlikely(!se)) { /* here we check for the issue */
+     write warning and some useful data to dmesg
+     if (cur_rq->rb_leftmost == NULL) { /* our case */
+       set cur_rq->rb_leftmost to itself as mentioned in the discussion
+       se = pick_next_entity(..)       /* should now return a valid pointer */
+     } else { /* another case happened, unknown */
+        write warning to dmesg UNKNOWN
+        panic() /* not known what to do here, would crash anyway. */
+     }
+  set_next_entity(se, ..)
+  cfs_rq = group_cfs_rq(...)
+} while (cfs_rq);
+
+This will definitely not fix the rb_leftmost being NULL, but we can't tell
+where this happened at all, so it's digging in the dark.
+Maybe the data written to dmesg will help to diagnose further, if the issue
+will happen again.
+And, this will not affect performance much, as i have to take care of this too.
+
+Thanks for all your suggestions.
+Carsten
