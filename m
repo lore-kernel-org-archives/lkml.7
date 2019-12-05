@@ -2,178 +2,243 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF843C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7EDC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46CD724652
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8776124652
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="HNhL63xC"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PAZrJdzh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729220AbfLEKDs (ORCPT
+        id S1729275AbfLEKEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:03:48 -0500
-Received: from fd.dlink.ru ([178.170.168.18]:38436 "EHLO fd.dlink.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbfLEKDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:03:47 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 0DCFD1B214D6; Thu,  5 Dec 2019 13:03:43 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 0DCFD1B214D6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1575540224; bh=yI7KF/bM4Qa4hyw06HNlRSt7/ikY+NEJAJCnnl7lFyY=;
-        h=From:To:Cc:Subject:Date;
-        b=HNhL63xCyq243WuhJA1bkWHqxknokV8KgpHTlCqpuj+wcYHSLqeU/yApJ6+XKsdAO
-         Wycy6lRs3et8dSpMHkLzzruDRj6O6CsfGMyJzfniIROvtEgCllYi+CmUFks1JsqRvs
-         TwpwZnQ4knnIjGAmVmZDBk8T5lpZlvWDle7S0jkw=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 403331B20144;
-        Thu,  5 Dec 2019 13:03:26 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 403331B20144
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 005F01B219AA;
-        Thu,  5 Dec 2019 13:03:24 +0300 (MSK)
-Received: from localhost.localdomain (unknown [196.196.203.126])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Thu,  5 Dec 2019 13:03:24 +0300 (MSK)
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Muciri Gatimu <muciri@openmesh.com>,
-        Shashidhar Lakkavalli <shashidhar.lakkavalli@openmesh.com>,
-        John Crispin <john@phrozen.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Matteo Croce <mcroce@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        Alexander Lobakin <alobakin@dlink.ru>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net] net: dsa: fix flow dissection on Tx path
-Date:   Thu,  5 Dec 2019 13:02:35 +0300
-Message-Id: <20191205100235.14195-1-alobakin@dlink.ru>
-X-Mailer: git-send-email 2.24.0
+        Thu, 5 Dec 2019 05:04:09 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54290 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfLEKEJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 05:04:09 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5A3skv115735;
+        Thu, 5 Dec 2019 04:03:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575540234;
+        bh=KVdOg686NGTO/lSscHFY4DTCJ8U0Ya2tIRngEQ14Ijs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=PAZrJdzhxj8TcFMU2LbHzqPQTAquU25WJVwbJvjcrp6rS5q5D/6lmMRqEBxNPw57T
+         UxmxubBtKczv0+AQm6pY4B/+5ha9Iv9OeYoalQ5xkmp+2mCt0Ty1Pnjd2oaMXRAJvP
+         KW2CUwf3L8wshbdRIPai6L6w3KYI85I7RdxlrIdk=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB5A3rtd019638
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 5 Dec 2019 04:03:54 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
+ 2019 04:03:53 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 5 Dec 2019 04:03:53 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5A3noL030226;
+        Thu, 5 Dec 2019 04:03:49 -0600
+Subject: Re: [PATCH 1/4] PCI: dwc: Add new feature to skip core initialization
+To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>,
+        <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191113090851.26345-1-vidyas@nvidia.com>
+ <20191113090851.26345-2-vidyas@nvidia.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <47c801ab-ddec-d436-1f0d-1dd0c4980869@ti.com>
+Date:   Thu, 5 Dec 2019 15:34:59 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191113090851.26345-2-vidyas@nvidia.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 43e665287f93 ("net-next: dsa: fix flow dissection") added an
-ability to override protocol and network offset during flow dissection
-for DSA-enabled devices (i.e. controllers shipped as switch CPU ports)
-in order to fix skb hashing for RPS on Rx path.
 
-However, skb_hash() and added part of code can be invoked not only on
-Rx, but also on Tx path if we have a multi-queued device and:
- - kernel is running on UP system or
- - XPS is not configured.
 
-The call stack in this two cases will be like: dev_queue_xmit() ->
-__dev_queue_xmit() -> netdev_core_pick_tx() -> netdev_pick_tx() ->
-skb_tx_hash() -> skb_get_hash().
+On 13/11/19 2:38 pm, Vidya Sagar wrote:
+> Add a new feature 'skip_core_init' that can be set by platform drivers
+> of devices that do not have their core registers available until reference
+> clock from host is available (Ex:- Tegra194) to indicate DesignWare
+> endpoint mode sub-system to not perform core registers initialization.
+> Existing dw_pcie_ep_init() is refactored and all the code that touches
+> registers is extracted to form a new API dw_pcie_ep_init_complete() that
+> can be called later by platform drivers setting 'skip_core_init' to '1'.
 
-The problem is that skbs queued for Tx have both network offset and
-correct protocol already set up even after inserting a CPU tag by DSA
-tagger, so calling tag_ops->flow_dissect() on this path actually only
-breaks flow dissection and hashing.
+No. pci_epc_features should only use constant values. This is used by 
+function drivers to know the controller capabilities.
 
-This can be observed by adding debug prints just before and right after
-tag_ops->flow_dissect() call to the related block of code:
+Thanks
+Kishon
 
-Before the patch:
-
-Rx path (RPS):
-
-[   19.240001] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   19.244271] tag_ops->flow_dissect()
-[   19.247811] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
-
-[   19.215435] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   19.219746] tag_ops->flow_dissect()
-[   19.223241] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
-
-[   18.654057] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   18.658332] tag_ops->flow_dissect()
-[   18.661826] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
-
-Tx path (UP system):
-
-[   18.759560] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
-[   18.763933] tag_ops->flow_dissect()
-[   18.767485] Tx: proto: 0x920b, nhoff: 34	/* junk */
-
-[   22.800020] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
-[   22.804392] tag_ops->flow_dissect()
-[   22.807921] Tx: proto: 0x920b, nhoff: 34	/* junk */
-
-[   16.898342] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
-[   16.902705] tag_ops->flow_dissect()
-[   16.906227] Tx: proto: 0x920b, nhoff: 34	/* junk */
-
-After:
-
-Rx path (RPS):
-
-[   16.520993] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   16.525260] tag_ops->flow_dissect()
-[   16.528808] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
-
-[   15.484807] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   15.490417] tag_ops->flow_dissect()
-[   15.495223] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
-
-[   17.134621] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   17.138895] tag_ops->flow_dissect()
-[   17.142388] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
-
-Tx path (UP system):
-
-[   15.499558] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
-
-[   20.664689] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
-
-[   18.565782] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
-
-In order to fix that we can add the check 'proto == htons(ETH_P_XDSA)'
-to prevent code from calling tag_ops->flow_dissect() on Tx.
-I also decided to initialize 'offset' variable so tagger callbacks can
-now safely leave it untouched without provoking a chaos.
-
-Fixes: 43e665287f93 ("net-next: dsa: fix flow dissection")
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
----
- net/core/flow_dissector.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
-index 69395b804709..d524a693e00f 100644
---- a/net/core/flow_dissector.c
-+++ b/net/core/flow_dissector.c
-@@ -969,9 +969,10 @@ bool __skb_flow_dissect(const struct net *net,
- 		nhoff = skb_network_offset(skb);
- 		hlen = skb_headlen(skb);
- #if IS_ENABLED(CONFIG_NET_DSA)
--		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev))) {
-+		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev) &&
-+			     proto == htons(ETH_P_XDSA))) {
- 			const struct dsa_device_ops *ops;
--			int offset;
-+			int offset = 0;
- 
- 			ops = skb->dev->dsa_ptr->tag_ops;
- 			if (ops->flow_dissect &&
--- 
-2.24.0
-
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>   .../pci/controller/dwc/pcie-designware-ep.c   | 72 +++++++++++--------
+>   drivers/pci/controller/dwc/pcie-designware.h  |  6 ++
+>   include/linux/pci-epc.h                       |  1 +
+>   3 files changed, 51 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 3dd2e2697294..06f4379be8a3 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -492,19 +492,53 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+>   	return 0;
+>   }
+>   
+> -int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>   {
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	unsigned int offset;
+> +	unsigned int nbars;
+> +	u8 hdr_type;
+> +	u32 reg;
+>   	int i;
+> +
+> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+> +	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
+> +		dev_err(pci->dev,
+> +			"PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
+> +			hdr_type);
+> +		return -EIO;
+> +	}
+> +
+> +	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+> +
+> +	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+> +
+> +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+> +	if (offset) {
+> +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+> +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+> +			PCI_REBAR_CTRL_NBAR_SHIFT;
+> +
+> +		dw_pcie_dbi_ro_wr_en(pci);
+> +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+> +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+> +		dw_pcie_dbi_ro_wr_dis(pci);
+> +	}
+> +
+> +	dw_pcie_setup(pci);
+> +
+> +	return 0;
+> +}
+> +
+> +int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> +{
+>   	int ret;
+> -	u32 reg;
+>   	void *addr;
+> -	u8 hdr_type;
+> -	unsigned int nbars;
+> -	unsigned int offset;
+>   	struct pci_epc *epc;
+>   	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>   	struct device *dev = pci->dev;
+>   	struct device_node *np = dev->of_node;
+> +	const struct pci_epc_features *epc_features;
+>   
+>   	if (!pci->dbi_base || !pci->dbi_base2) {
+>   		dev_err(dev, "dbi_base/dbi_base2 is not populated\n");
+> @@ -563,13 +597,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>   	if (ep->ops->ep_init)
+>   		ep->ops->ep_init(ep);
+>   
+> -	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+> -	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
+> -		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
+> -			hdr_type);
+> -		return -EIO;
+> -	}
+> -
+>   	ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
+>   	if (ret < 0)
+>   		epc->max_functions = 1;
+> @@ -587,23 +614,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>   		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+>   		return -ENOMEM;
+>   	}
+> -	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+>   
+> -	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+> -
+> -	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+> -	if (offset) {
+> -		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+> -		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+> -			PCI_REBAR_CTRL_NBAR_SHIFT;
+> -
+> -		dw_pcie_dbi_ro_wr_en(pci);
+> -		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+> -			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+> -		dw_pcie_dbi_ro_wr_dis(pci);
+> +	if (ep->ops->get_features) {
+> +		epc_features = ep->ops->get_features(ep);
+> +		if (epc_features->skip_core_init)
+> +			return 0;
+>   	}
+>   
+> -	dw_pcie_setup(pci);
+> -
+> -	return 0;
+> +	return dw_pcie_ep_init_complete(ep);
+>   }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 5accdd6bc388..340783e9032e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -399,6 +399,7 @@ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+>   #ifdef CONFIG_PCIE_DW_EP
+>   void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
+>   int dw_pcie_ep_init(struct dw_pcie_ep *ep);
+> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
+>   void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
+>   int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
+>   int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+> @@ -416,6 +417,11 @@ static inline int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>   	return 0;
+>   }
+>   
+> +static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+> +{
+> +	return 0;
+> +}
+> +
+>   static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+>   {
+>   }
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index 36644ccd32ac..241e6a6f39fb 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -121,6 +121,7 @@ struct pci_epc_features {
+>   	u8	bar_fixed_64bit;
+>   	u64	bar_fixed_size[PCI_STD_NUM_BARS];
+>   	size_t	align;
+> +	bool	skip_core_init;
+>   };
+>   
+>   #define to_pci_epc(device) container_of((device), struct pci_epc, dev)
+> 
