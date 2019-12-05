@@ -2,285 +2,396 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A77C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E12EC2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5C4206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:42:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="sHhQYvEK"
+	by mail.kernel.org (Postfix) with ESMTP id CF105206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:43:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575560622;
+	bh=wR/73kkZuBII+DhjHbfUJ/acwjPZO0PIekOe19ziukg=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=nfZCZSmigsgbLJx1zheuhN8ZfLOECWNxGK+FJz1G7tKKu9fgF/DkzOItCxb9+d/Zc
+	 9GGMOBgXkD9haap+gVi1IJmCZwtp7ZCUTitDtsLXW0h9bSn6CMqxZ5hO+lXrzoZJVG
+	 UiS1PsQcQZ1AvNbtuEseFF7gqn1oxLUiRt1KoNkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbfLEPmI (ORCPT
+        id S1729626AbfLEPnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:42:08 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33763 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLEPmI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 10:42:08 -0500
-Received: by mail-qt1-f196.google.com with SMTP id d5so3966393qto.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 07:42:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=OwOsp0F/TuvXuBAZVWFLSRxPXxk36KcaT4hqJzt5etw=;
-        b=sHhQYvEKZdpVgz+KkBfGyzTB1ZFIImEe0xnXX4IWG7/7VZ0REpiuhiM0nBf/9TYqXY
-         zZjAxQgdB0mZ1SlVRRho7P456XyC31q/08A0QZmhA9NOKlPfEltWBnGiUxNU7DS0foXY
-         IMq4HRDe9GJt0isPwnOIL+0C00a0JFUMq7VcD5I42vjJOmPfah9Ud4n1HVN5EdY+HO0Q
-         uB/1vlRyQgIKkaeNBdgUruAfwRTvF0MBFsyRUoaIy2EFZCta0k+y6KXkE89o6qyeOOJS
-         mpedKMcVhsRFhBHxkQlZAbnhMZ42XGe40YeiYrhQc1wAzG1P+C39frNT8AGTvl55eQaq
-         rYhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=OwOsp0F/TuvXuBAZVWFLSRxPXxk36KcaT4hqJzt5etw=;
-        b=OpotRE/ZZAPC2KNcNOytLu/Z7pnXOoASS1bA5dIRNZilO92hElImpLAEFtGPLaxCSF
-         I4pmTiix+s9D9n8yvLRQU1Qu5OaiKALHXK8OALQ0oQ568V7GccNm7aHhNCDuSHqxsIs2
-         F5schc6j/l0mdMRbLZpsQvWiCh4961eDdIcxJ3Caf7lpH6jhjL4Hckvtzq255pUOBhwm
-         rORQqb6sl0wfELKesHBUVMUpsbys9w97+aAnSlGV9QfrFHsfY0NQUd99DVLT2iLsCm7p
-         B7gQaLQHm5hta4255pmfVD0d3QwP1EsL3/XnK2+9+CXCA/bEYc4fn0YUobYCQ2mVme0R
-         RTig==
-X-Gm-Message-State: APjAAAW2Vl11UBpDi0LPRcZ3znLQf2wpSfZmcpGC+awLHIt5U1TpKJ1e
-        SS37x9aTh8i3GcvJe53PSSVnRw==
-X-Google-Smtp-Source: APXvYqxhgq9S3eqxIsafZmc422I3ktIWTflCu9l5FHoEmq6ZHKX4QXZyBnGD/72JxAfxFWgOiTdcTA==
-X-Received: by 2002:ac8:2201:: with SMTP id o1mr8155339qto.247.1575560527076;
-        Thu, 05 Dec 2019 07:42:07 -0800 (PST)
-Received: from tpx230-nicolas ([2610:98:8005::650])
-        by smtp.gmail.com with ESMTPSA id q73sm5026681qka.56.2019.12.05.07.42.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 07:42:05 -0800 (PST)
-Message-ID: <4ee20fdf5182b7bfe338e9ae044424b6125fed15.camel@ndufresne.ca>
-Subject: Re: [PATCH 0/5] media: meson: vdec: Add VP9 decoding support
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org,
-        hans.verkuil@cisco.com
-Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Date:   Thu, 05 Dec 2019 10:42:04 -0500
-In-Reply-To: <20191205092454.26075-1-narmstrong@baylibre.com>
-References: <20191205092454.26075-1-narmstrong@baylibre.com>
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-zFAtbRJdW+9MLmbh/mcs"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Thu, 5 Dec 2019 10:43:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfLEPnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 10:43:41 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54FA6206DB;
+        Thu,  5 Dec 2019 15:43:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575560619;
+        bh=wR/73kkZuBII+DhjHbfUJ/acwjPZO0PIekOe19ziukg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=LAAOqqAgLRspBzSn8oiggAEOdI7w51uBasju/uqnIkX2mDqJtmzSvW/tGOlWuN4L7
+         CZavjrNO6gf6W3F+b/R/QGZM6GDIof+H9Dk45ozPHjKhZT2cugvrr5UXhbZHp4dw0O
+         ck2ilcmGh4PdWSIdAZeUsJMHzQTi/ZuzNeY/v2OI=
+Date:   Thu, 5 Dec 2019 16:43:37 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.4.206
+Message-ID: <20191205154337.GA753689@kroah.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I'm announcing the release of the 4.4.206 kernel.
 
---=-zFAtbRJdW+9MLmbh/mcs
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+All users of the 4.4 kernel series must upgrade.
 
-Hi Neil,
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-Le jeudi 05 d=C3=A9cembre 2019 =C3=A0 10:24 +0100, Neil Armstrong a =C3=A9c=
-rit :
-> Hello,
->=20
-> This patchset aims to bring VP9 decoding support to Amlogic GXL, G12A & S=
-M1
-> platforms for the amlogic stateful video decoder driver.
->=20
-> With this, it passes v4l2-compliance with streaming on Amlogic G12A and
-> Amlogic SM1 SoCs successfully using the stream at [1] with a fixed
-> pyv4l2compliance script for VP9 at [2].
->=20
-> The original script kept the IVF headers in the stream, confusing the
-> decoder. The fixed script only extracts the payload from the IVF containe=
-r.
->=20
-> The decoder has been tested using the Google CTS TestVectorsIttiam VP9 yu=
-v420
-> samples, passing 82 resolutions test streams, with 13 fails by pixel
-> differences and 3 timeouts.
+thanks,
 
-How do you handle resolution changes on delta frames ? It's a bit of a
-challenge since the reference frames are not at the same resolution as
-the frames to be decoded. This breaks the assumption for the resolution
-changes mechanism as described in the spec.
+greg k-h
 
-On stateless side, Boris is introducing DESTROY_BUFS, so we can free
-the references when they are not used anymore. But the reference are
-managed by userspace and are not queued. While on stateful side so far,
-it was assumed that references are queued, and the semantic of S_FMT is
-that it must apply to the entire set of queued buffer.
+------------
 
-I think most streams will work and won't use this feature, but I'm
-worried that writing a compliant VP9 decoder is currently not possible.
+ Documentation/hid/uhid.txt                         |    2 
+ Makefile                                           |    2 
+ arch/arm/Kconfig.debug                             |   28 +++++------
+ arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi        |    8 ---
+ arch/arm/mach-ks8695/board-acs5k.c                 |    2 
+ arch/arm64/kernel/smp.c                            |    1 
+ arch/microblaze/Makefile                           |   12 ++--
+ arch/microblaze/boot/Makefile                      |    4 -
+ arch/openrisc/kernel/entry.S                       |    2 
+ arch/openrisc/kernel/head.S                        |    2 
+ arch/powerpc/boot/dts/bamboo.dts                   |    4 +
+ arch/powerpc/kernel/prom.c                         |    6 +-
+ arch/powerpc/mm/fault.c                            |   17 +++----
+ arch/powerpc/mm/ppc_mmu_32.c                       |    4 -
+ arch/powerpc/platforms/pseries/dlpar.c             |    4 +
+ arch/powerpc/xmon/xmon.c                           |    2 
+ arch/s390/kvm/kvm-s390.c                           |   17 +++++--
+ arch/um/Kconfig.debug                              |    1 
+ crypto/crypto_user.c                               |   37 ++++++++-------
+ drivers/acpi/acpi_lpss.c                           |    7 --
+ drivers/acpi/apei/ghes.c                           |   30 ++++++------
+ drivers/block/drbd/drbd_main.c                     |    1 
+ drivers/block/drbd/drbd_nl.c                       |    6 +-
+ drivers/block/drbd/drbd_receiver.c                 |   19 +++++++
+ drivers/block/drbd/drbd_state.h                    |    2 
+ drivers/char/hw_random/stm32-rng.c                 |    8 +++
+ drivers/clk/samsung/clk-exynos5420.c               |    6 ++
+ drivers/hid/hid-core.c                             |   51 ++++++++++++++++++---
+ drivers/infiniband/hw/qib/qib_sdma.c               |    4 +
+ drivers/infiniband/ulp/srp/ib_srp.c                |    1 
+ drivers/input/serio/gscps2.c                       |    4 -
+ drivers/input/serio/hp_sdc.c                       |    4 -
+ drivers/media/v4l2-core/v4l2-ctrls.c               |    1 
+ drivers/misc/mei/bus.c                             |    9 ++-
+ drivers/mtd/mtdcore.h                              |    2 
+ drivers/mtd/mtdpart.c                              |   35 ++++++++++++--
+ drivers/mtd/ubi/build.c                            |    2 
+ drivers/mtd/ubi/kapi.c                             |    2 
+ drivers/net/can/c_can/c_can.c                      |   26 ++++++++++
+ drivers/net/can/usb/peak_usb/pcan_usb.c            |   15 ++++--
+ drivers/net/ethernet/atheros/atl1e/atl1e_main.c    |    4 +
+ drivers/net/ethernet/cadence/macb.c                |   12 ++--
+ drivers/net/ethernet/sfc/ef10.c                    |   29 ++++++++---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c  |    4 +
+ drivers/net/macvlan.c                              |    3 -
+ drivers/net/slip/slip.c                            |    1 
+ drivers/net/wireless/ath/ath6kl/cfg80211.c         |    4 -
+ drivers/net/wireless/mwifiex/debugfs.c             |   14 ++---
+ drivers/net/wireless/mwifiex/scan.c                |   18 ++++---
+ drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c |    3 -
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c                |    9 ++-
+ drivers/pinctrl/sh-pfc/pfc-sh7734.c                |   16 +++---
+ drivers/platform/x86/hp-wmi.c                      |    6 +-
+ drivers/power/avs/smartreflex.c                    |    3 -
+ drivers/pwm/core.c                                 |    1 
+ drivers/pwm/pwm-samsung.c                          |    1 
+ drivers/regulator/palmas-regulator.c               |    5 +-
+ drivers/regulator/tps65910-regulator.c             |    4 +
+ drivers/scsi/csiostor/csio_init.c                  |    2 
+ drivers/scsi/libsas/sas_expander.c                 |   29 +++++++++++
+ drivers/scsi/lpfc/lpfc_scsi.c                      |   18 +++++++
+ drivers/scsi/qla2xxx/tcm_qla2xxx.c                 |   48 +++----------------
+ drivers/scsi/qla2xxx/tcm_qla2xxx.h                 |    3 -
+ drivers/staging/rtl8192e/rtl8192e/rtl_core.c       |    5 +-
+ drivers/tty/serial/max310x.c                       |    7 --
+ drivers/usb/serial/ftdi_sio.c                      |    3 +
+ drivers/usb/serial/ftdi_sio_ids.h                  |    7 ++
+ drivers/xen/xen-pciback/pci_stub.c                 |    3 -
+ fs/btrfs/delayed-ref.c                             |    3 -
+ fs/gfs2/bmap.c                                     |    2 
+ fs/ocfs2/journal.c                                 |    6 --
+ fs/xfs/xfs_ioctl32.c                               |    6 ++
+ fs/xfs/xfs_rtalloc.c                               |    4 -
+ include/linux/gpio/consumer.h                      |    2 
+ include/linux/netdevice.h                          |    2 
+ include/linux/reset-controller.h                   |    2 
+ include/net/sock.h                                 |    2 
+ lib/genalloc.c                                     |    5 +-
+ net/core/neighbour.c                               |   13 +++--
+ net/core/net_namespace.c                           |    3 -
+ net/core/sock.c                                    |    2 
+ net/decnet/dn_dev.c                                |    2 
+ net/openvswitch/datapath.c                         |   17 +++++--
+ net/sched/sch_mq.c                                 |    2 
+ net/sched/sch_mqprio.c                             |    3 -
+ net/sched/sch_multiq.c                             |    2 
+ net/sched/sch_prio.c                               |    2 
+ net/tipc/link.c                                    |    2 
+ net/tipc/netlink_compat.c                          |    8 ++-
+ net/vmw_vsock/af_vsock.c                           |    7 ++
+ scripts/gdb/linux/symbols.py                       |    3 -
+ sound/core/compress_offload.c                      |    2 
+ sound/soc/kirkwood/kirkwood-i2s.c                  |    8 +--
+ 93 files changed, 492 insertions(+), 270 deletions(-)
 
->=20
-> This patchset depends on :
-> - G12A enablement at [3]
-> - SM1 enablement at [4]
-> - H.264 and compliance at [5]
->=20
-> [1] https://github.com/superna9999/pyv4l2compliance/raw/tests/output/Jell=
-yfish_1080_10s_5MB.vp9.hdr
-> [2] https://github.com/superna9999/pyv4l2compliance
-> [3] https://lore.kernel.org/linux-media/20191120111430.29552-1-narmstrong=
-@baylibre.com
-> [4] https://lore.kernel.org/linux-media/20191121101429.23831-1-narmstrong=
-@baylibre.com
-> [5] https://lore.kernel.org/linux-media/20191126093733.32404-1-narmstrong=
-@baylibre.com
->=20
-> The compliance log is:
-> # v4l2-compliance --stream-from-hdr Jellyfish_1080_10s_5MB.vp9.hdr -s 200
-> v4l2-compliance SHA: 7ead0e1856b89f2e19369af452bb03fd0cd16793, 64 bits
->=20
-> Compliance test for meson-vdec device /dev/video0:
->=20
-> Driver Info:
-> 	Driver name      : meson-vdec
-> 	Card type        : Amlogic Video Decoder
-> 	Bus info         : platform:meson-vdec
-> 	Driver version   : 5.4.0
-> 	Capabilities     : 0x84204000
-> 		Video Memory-to-Memory Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 		Device Capabilities
-> 	Device Caps      : 0x04204000
-> 		Video Memory-to-Memory Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 	Detected Stateful Decoder
->=20
-> Required ioctls:
-> 	test VIDIOC_QUERYCAP: OK
->=20
-> Allow for multiple opens:
-> 	test second /dev/video0 open: OK
-> 	test VIDIOC_QUERYCAP: OK
-> 	test VIDIOC_G/S_PRIORITY: OK
-> 	test for unlimited opens: OK
->=20
-> Debug ioctls:
-> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
->=20
-> Input ioctls:
-> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> 	Inputs: 0 Audio Inputs: 0 Tuners: 0
->=20
-> Output ioctls:
-> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
->=20
-> Input/Output configuration ioctls:
-> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> 	test VIDIOC_G/S_EDID: OK (Not Supported)
->=20
-> Control ioctls:
-> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-> 	test VIDIOC_QUERYCTRL: OK
-> 	test VIDIOC_G/S_CTRL: OK
-> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> 	Standard Controls: 2 Private Controls: 0
->=20
-> Format ioctls:
-> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> 	test VIDIOC_G/S_PARM: OK (Not Supported)
-> 	test VIDIOC_G_FBUF: OK (Not Supported)
-> 	test VIDIOC_G_FMT: OK
-> 	test VIDIOC_TRY_FMT: OK
-> 	test VIDIOC_S_FMT: OK
-> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> 	test Cropping: OK (Not Supported)
-> 	test Composing: OK (Not Supported)
-> 	test Scaling: OK (Not Supported)
->=20
-> Codec ioctls:
-> 	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> 	test VIDIOC_(TRY_)DECODER_CMD: OK
->=20
-> Buffer ioctls:
-> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> 	test VIDIOC_EXPBUF: OK
-> 	test Requests: OK (Not Supported)
->=20
-> Test input 0:
->=20
-> Streaming ioctls:
-> 	test read/write: OK (Not Supported)
-> 	test blocking wait: OK
-> 	Video Capture Multiplanar: Captured 200 buffers  =20
-> 	test MMAP (select): OK
-> 	Video Capture Multiplanar: Captured 200 buffers  =20
-> 	test MMAP (epoll): OK
-> 	test USERPTR (select): OK (Not Supported)
-> 	test DMABUF: Cannot test, specify --expbuf-device
->=20
-> Total for meson-vdec device /dev/video0: 49, Succeeded: 49, Failed: 0, Wa=
-rnings: 0
->=20
-> Maxime Jourdan (4):
->   media: meson: vdec: add helpers for lossless framebuffer compression
->     buffers
->   media: meson: vdec: add common HEVC decoder support
->   media: meson: vdec: add VP9 input support
->   media: meson: vdec: add VP9 decoder support
->=20
-> Neil Armstrong (1):
->   media: meson: vdec: align stride on 32 bytes
->=20
->  drivers/staging/media/meson/vdec/Makefile     |    4 +-
->  .../media/meson/vdec/codec_hevc_common.c      |  285 ++++
->  .../media/meson/vdec/codec_hevc_common.h      |   77 ++
->  drivers/staging/media/meson/vdec/codec_vp9.c  | 1192 +++++++++++++++++
->  drivers/staging/media/meson/vdec/codec_vp9.h  |   13 +
->  drivers/staging/media/meson/vdec/esparser.c   |  142 +-
->  drivers/staging/media/meson/vdec/hevc_regs.h  |  218 +++
->  drivers/staging/media/meson/vdec/vdec.c       |   10 +-
->  .../staging/media/meson/vdec/vdec_helpers.c   |   31 +-
->  .../staging/media/meson/vdec/vdec_helpers.h   |    4 +
->  drivers/staging/media/meson/vdec/vdec_hevc.c  |  231 ++++
->  drivers/staging/media/meson/vdec/vdec_hevc.h  |   13 +
->  .../staging/media/meson/vdec/vdec_platform.c  |   38 +
->  13 files changed, 2245 insertions(+), 13 deletions(-)
->  create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_common.c
->  create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_common.h
->  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.c
->  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.h
->  create mode 100644 drivers/staging/media/meson/vdec/hevc_regs.h
->  create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.c
->  create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.h
->=20
+Aditya Pakki (1):
+      net/net_namespace: Check the return value of register_pernet_subsys()
 
---=-zFAtbRJdW+9MLmbh/mcs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Alexander Shiyan (1):
+      serial: max310x: Fix tx_empty() callback
 
------BEGIN PGP SIGNATURE-----
+Alexander Usyskin (1):
+      mei: bus: prefix device names on bus with the bus name
 
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXeklTAAKCRBxUwItrAao
-HB2IAKCwgusKW/k4VswQH6w3Jw59uL+q0gCgy5robqQi/K53oHyU3gtI9MC3ugY=
-=6Yaq
------END PGP SIGNATURE-----
+Anatoliy Glagolev (1):
+      scsi: qla2xxx: deadlock by configfs_depend_item
 
---=-zFAtbRJdW+9MLmbh/mcs--
+Andy Shevchenko (1):
+      net: dev: Use unsigned integer as an argument to left-shift
+
+Arnd Bergmann (1):
+      ARM: ks8695: fix section mismatch warning
+
+Bart Van Assche (1):
+      RDMA/srp: Propagate ib_post_send() failures to the SCSI mid-layer
+
+Benjamin Herrenschmidt (1):
+      powerpc/44x/bamboo: Fix PCI range
+
+Bert Kenward (1):
+      sfc: initialise found bitmap in efx_ef10_mtd_probe
+
+Bob Peterson (1):
+      gfs2: take jdata unstuff into account in do_grow
+
+Boris Brezillon (2):
+      mtd: Check add_mtd_device() ret code
+      mtd: Remove a debug trace in mtdpart.c
+
+Brian Norris (1):
+      mwifiex: debugfs: correct histogram spacing, formatting
+
+Candle Sun (1):
+      HID: core: check whether Usage Page item is after Usage ID items
+
+Christophe Leroy (4):
+      powerpc/book3s/32: fix number of bats in p/v_block_mapped()
+      powerpc/xmon: fix dump_segments()
+      powerpc/prom: fix early DEBUG messages
+      powerpc/mm: Make NULL pointer deferences explicit on bad page faults.
+
+Dan Carpenter (2):
+      block: drbd: remove a stray unlock in __drbd_send_protocol()
+      IB/qib: Fix an error code in qib_sdma_verbs_send()
+
+Darrick J. Wong (1):
+      xfs: require both realtime inodes to mount
+
+Dust Li (1):
+      net: sched: fix `tc -s class show` no bstats on class with nolock subqueues
+
+Edward Cree (1):
+      sfc: suppress duplicate nvmem partition types in efx_ef10_mtd_probe
+
+Eric Biggers (1):
+      crypto: user - support incremental algorithm dumps
+
+Eric Dumazet (1):
+      net: fix possible overflow in __sk_mem_raise_allocated()
+
+Eugen Hristev (1):
+      media: v4l2-ctrl: fix flags for DO_WHITE_BALANCE
+
+Fabio D'Urso (1):
+      USB: serial: ftdi_sio: add device IDs for U-Blox C099-F9P
+
+Fabio Estevam (1):
+      ARM: dts: imx53-voipac-dmm-668: Fix memory node duplication
+
+Geert Uytterhoeven (3):
+      pinctrl: sh-pfc: sh7264: Fix PFCR3 and PFCR0 register configuration
+      pinctrl: sh-pfc: sh7734: Fix shifted values in IPSR10
+      openrisc: Fix broken paths to arch/or32
+
+Gen Zhang (1):
+      powerpc/pseries/dlpar: Fix a missing check in dlpar_parse_cc_property()
+
+Greg Kroah-Hartman (1):
+      Linux 4.4.206
+
+Gustavo A. R. Silva (1):
+      tipc: fix memory leak in tipc_nl_compat_publ_dump
+
+Hans de Goede (2):
+      ACPI / LPSS: Ignore acpi_device_fix_up_power() return value
+      platform/x86: hp-wmi: Fix ACPI errors caused by too small buffer
+
+Helge Deller (2):
+      parisc: Fix serio address output
+      parisc: Fix HP SDC hpa address output
+
+Hoang Le (1):
+      tipc: fix skb may be leaky in tipc_link_input
+
+Huang Shijie (1):
+      lib/genalloc.c: use vzalloc_node() to allocate the bitmap
+
+Ilya Leoshkevich (1):
+      scripts/gdb: fix debugging modules compiled with hot/cold partitioning
+
+James Morse (1):
+      ACPI / APEI: Switch estatus pool to use vmalloc memory
+
+James Smart (1):
+      scsi: lpfc: Fix dif and first burst use in write commands
+
+Jeroen Hofstee (2):
+      can: peak_usb: report bus recovery as well
+      can: c_can: D_CAN: c_can_chip_config(): perform a sofware reset on open
+
+Johannes Berg (1):
+      decnet: fix DN_IFREQ_SIZE
+
+John Garry (2):
+      scsi: libsas: Support SATA PHY connection rate unmatch fixing during discovery
+      scsi: libsas: Check SMP PHY control function result
+
+John Rutherford (1):
+      tipc: fix link name length check
+
+Josef Bacik (1):
+      btrfs: only track ref_heads in delayed_ref_updates
+
+Jouni Hogander (1):
+      slip: Fix use-after-free Read in slip_open
+
+Junxiao Bi (1):
+      ocfs2: clear journal dirty flag after shutdown journal
+
+Kangjie Lu (5):
+      drivers/regulator: fix a missing check of return value
+      regulator: tps65910: fix a missing check of return value
+      net: stmicro: fix a missing check of clk_prepare
+      atl1e: checking the status of atl1e_write_phy_reg
+      tipc: fix a missing check of genlmsg_put
+
+Konstantin Khlebnikov (2):
+      net/core/neighbour: tell kmemleak about hash tables
+      net/core/neighbour: fix kmemleak minimal reference count for hash tables
+
+Krzysztof Kozlowski (1):
+      gpiolib: Fix return value of gpio_to_desc() stub if !GPIOLIB
+
+Kyle Roeschley (2):
+      ath6kl: Only use match sets when firmware supports it
+      ath6kl: Fix off by one error in scan completion
+
+Lars Ellenberg (1):
+      drbd: reject attach of unsuitable uuids even if connected
+
+Lepton Wu (1):
+      VSOCK: bind to random port for VMADDR_PORT_ANY
+
+Lionel Debieve (1):
+      hwrng: stm32 - fix unbalanced pm_runtime_enable
+
+Luc Van Oostenryck (1):
+      drbd: fix print_st_err()'s prototype to match the definition
+
+Luca Ceresoli (1):
+      net: macb: fix error format in dev_err()
+
+Marek Szyprowski (1):
+      clk: samsung: exynos5420: Preserve PLL configuration during suspend/resume
+
+Masahiro Yamada (2):
+      microblaze: adjust the help to the real behavior
+      microblaze: move "... is ready" messages to arch/microblaze/Makefile
+
+Menglong Dong (1):
+      macvlan: schedule bc_work even if error
+
+Michael Mueller (1):
+      KVM: s390: unregister debug feature on failing arch init
+
+Nick Bowler (1):
+      xfs: Align compat attrlist_by_handle with native implementation.
+
+Olof Johansson (1):
+      lib/genalloc.c: include vmalloc.h
+
+Pan Bian (5):
+      mwifiex: fix potential NULL dereference and use after free
+      rtl818x: fix potential use after free
+      ubi: Put MTD device after it is not used
+      ubi: Do not drop UBI device reference before using
+      staging: rtl8192e: fix potential use after free
+
+Paolo Abeni (3):
+      openvswitch: fix flow command message size
+      openvswitch: drop unneeded BUG_ON() in ovs_flow_cmd_build_info()
+      openvswitch: remove another BUG_ON()
+
+Peter Hutterer (1):
+      HID: doc: fix wrong data structure reference for UHID_OUTPUT
+
+Randy Dunlap (1):
+      reset: fix reset_control_ops kerneldoc comment
+
+Richard Weinberger (1):
+      um: Make GCOV depend on !KCOV
+
+Ross Lagerwall (1):
+      xen/pciback: Check dev_data before using it
+
+Russell King (1):
+      ASoC: kirkwood: fix external clock probe defer
+
+Suzuki K Poulose (1):
+      arm64: smp: Handle errors reported by the firmware
+
+Thomas Meyer (1):
+      PM / AVS: SmartReflex: NULL check before some freeing functions is not needed
+
+Uwe Kleine-König (2):
+      ARM: debug-imx: only define DEBUG_IMX_UART_PORT if needed
+      pwm: Clear chip_data in pwm_put()
+
+Varun Prakash (1):
+      scsi: csiostor: fix incorrect dma device in case of vport
+
+Xiaojun Sang (1):
+      ASoC: compress: fix unsigned integer overflow check
 
