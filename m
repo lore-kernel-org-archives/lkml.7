@@ -2,186 +2,285 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC9DC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A77C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3F0206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5C4206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:42:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gopFO7C0"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="sHhQYvEK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbfLEPkF (ORCPT
+        id S1729678AbfLEPmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:40:05 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:34734 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLEPkD (ORCPT
+        Thu, 5 Dec 2019 10:42:08 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33763 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLEPmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 10:40:03 -0500
-Received: by mail-qv1-f68.google.com with SMTP id o18so1440355qvf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 07:40:02 -0800 (PST)
+        Thu, 5 Dec 2019 10:42:08 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d5so3966393qto.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 07:42:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wqt17/O8Y7rvBVYZ7o7fDZNIdNzlEfuRTH0+EnFXCwc=;
-        b=gopFO7C09s5VI0YWLdHIV8Et9ssr/FP3k+hUed9ePI3ydQFxj2sbiOyXu7BNb/9GXO
-         mc8y1s7KCJZbosyl9HU/Ukd40/bYXZG4l6/1Gqq2Y4Trs00I2z0GA+A/cVU8AipuMyVV
-         oTKmV9MXE37xTST6BT5C50yi2iaIWXiMMIjhAnajHSaKi2Fs6CSTh2w1M5QtzkHEFF9C
-         TLytajpjsKROHrfy3GwelE5y0dt0mUUhKpmSuh5an5XpeFjpXmZsRKgmLjDoa1Jh7wzo
-         ZmdNRdwOy8aCjVeNYrEtzEFfHU92q7Cf4xL+6Wus2vy61eEQ7vwSGrzjSmTKT3Ec7nD3
-         d1HA==
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version;
+        bh=OwOsp0F/TuvXuBAZVWFLSRxPXxk36KcaT4hqJzt5etw=;
+        b=sHhQYvEKZdpVgz+KkBfGyzTB1ZFIImEe0xnXX4IWG7/7VZ0REpiuhiM0nBf/9TYqXY
+         zZjAxQgdB0mZ1SlVRRho7P456XyC31q/08A0QZmhA9NOKlPfEltWBnGiUxNU7DS0foXY
+         IMq4HRDe9GJt0isPwnOIL+0C00a0JFUMq7VcD5I42vjJOmPfah9Ud4n1HVN5EdY+HO0Q
+         uB/1vlRyQgIKkaeNBdgUruAfwRTvF0MBFsyRUoaIy2EFZCta0k+y6KXkE89o6qyeOOJS
+         mpedKMcVhsRFhBHxkQlZAbnhMZ42XGe40YeiYrhQc1wAzG1P+C39frNT8AGTvl55eQaq
+         rYhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wqt17/O8Y7rvBVYZ7o7fDZNIdNzlEfuRTH0+EnFXCwc=;
-        b=mvv9/FWQEdVwiR7YSXsohkv0/3Y6x0xmE+Ns56TqX6fSUNNkBxw2hEAy+PmIs/lRkP
-         nz9hblyUXtabY+AN0OB9x7f1OI0Sf0I/SqbjWyaAHn6QFVeL9SJGV8Ryufn9671GOAhY
-         WjmifW+awYmAwlMb/1LhprGOnrwSdgbt04Ue7+vukk14liBd6P87H5dUWQ23F3ZaioTs
-         XuTRuZXMiJCkZD3vB82o1kK1ser/DKQHc6nUICZdAVd040aQ+JpHvpewZi8Cyn4ikMgY
-         XmUVrYSVyQ19l6yDMGg7R41QL7eJ37Wi8iJhX3VbPUe+LxZ5WEFEZbjoZhbmO+DinnAo
-         jSUg==
-X-Gm-Message-State: APjAAAWxTt4gaAbC/89o813KUms9wZjZ/PTfmuaxV/OxESI0KJlNiE7g
-        JGLZAuPSE7STxuNTNZpJSp9JTyYM9WDzlmMQ8vt2U8Vj
-X-Google-Smtp-Source: APXvYqw7pKP51QHv5qfyJoXAWmeiOhvK5wu56QeojXDhUoeQ4qy/Kt9deCH0CgldhMqOAPD53VYluObFAqXUqNCU5gk=
-X-Received: by 2002:ad4:4364:: with SMTP id u4mr8094171qvt.27.1575560401814;
- Thu, 05 Dec 2019 07:40:01 -0800 (PST)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=OwOsp0F/TuvXuBAZVWFLSRxPXxk36KcaT4hqJzt5etw=;
+        b=OpotRE/ZZAPC2KNcNOytLu/Z7pnXOoASS1bA5dIRNZilO92hElImpLAEFtGPLaxCSF
+         I4pmTiix+s9D9n8yvLRQU1Qu5OaiKALHXK8OALQ0oQ568V7GccNm7aHhNCDuSHqxsIs2
+         F5schc6j/l0mdMRbLZpsQvWiCh4961eDdIcxJ3Caf7lpH6jhjL4Hckvtzq255pUOBhwm
+         rORQqb6sl0wfELKesHBUVMUpsbys9w97+aAnSlGV9QfrFHsfY0NQUd99DVLT2iLsCm7p
+         B7gQaLQHm5hta4255pmfVD0d3QwP1EsL3/XnK2+9+CXCA/bEYc4fn0YUobYCQ2mVme0R
+         RTig==
+X-Gm-Message-State: APjAAAW2Vl11UBpDi0LPRcZ3znLQf2wpSfZmcpGC+awLHIt5U1TpKJ1e
+        SS37x9aTh8i3GcvJe53PSSVnRw==
+X-Google-Smtp-Source: APXvYqxhgq9S3eqxIsafZmc422I3ktIWTflCu9l5FHoEmq6ZHKX4QXZyBnGD/72JxAfxFWgOiTdcTA==
+X-Received: by 2002:ac8:2201:: with SMTP id o1mr8155339qto.247.1575560527076;
+        Thu, 05 Dec 2019 07:42:07 -0800 (PST)
+Received: from tpx230-nicolas ([2610:98:8005::650])
+        by smtp.gmail.com with ESMTPSA id q73sm5026681qka.56.2019.12.05.07.42.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 07:42:05 -0800 (PST)
+Message-ID: <4ee20fdf5182b7bfe338e9ae044424b6125fed15.camel@ndufresne.ca>
+Subject: Re: [PATCH 0/5] media: meson: vdec: Add VP9 decoding support
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org,
+        hans.verkuil@cisco.com
+Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Date:   Thu, 05 Dec 2019 10:42:04 -0500
+In-Reply-To: <20191205092454.26075-1-narmstrong@baylibre.com>
+References: <20191205092454.26075-1-narmstrong@baylibre.com>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-zFAtbRJdW+9MLmbh/mcs"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
 MIME-Version: 1.0
-References: <174DB3D9-8C97-4022-A5B5-6A3E007440AF@oracle.com>
-In-Reply-To: <174DB3D9-8C97-4022-A5B5-6A3E007440AF@oracle.com>
-From:   Vitaly Mayatskih <v.mayatskih@gmail.com>
-Date:   Thu, 5 Dec 2019 10:39:50 -0500
-Message-ID: <CAGF4SLgoWVwRJaV4PhjzNM0jhg+6bTSEW21o75J74DD4ziOmYA@mail.gmail.com>
-Subject: Re: [PATCH ] kernel/crash_core.c - Add crashkernel=auto for x86 and Arm
-To:     John Donnelly <john.p.donnelly@oracle.com>
-Cc:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This generally depends on what goes into initrd. Kernel can't know
-upfront how big is kdump's initrd going to be. For example, I have
-systems with <1TB RAM and 750MB reserved for crashkernel.
 
-Don't think crashkernel=auto can be generalized. RHEL can implement
-=auto, because this is a controlled environment (well, in most cases).
+--=-zFAtbRJdW+9MLmbh/mcs
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 4, 2019 at 11:21 AM John Donnelly
-<john.p.donnelly@oracle.com> wrote:
->
-> This adds crashkernel=auto feature to configure reserved memory for
-> vmcore creation to both x86 and Arm platform as implemenented in
-> RH 4.18.0-147.el8 kernels. The values have been adjusted for x86 and
-> Arm based from 5.4.0 kernel crash testing.
->
-> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
-> Tested-by: John Donnelly <john.p.donnelly@oracle.com>
-> ---
->  Documentation/admin-guide/kdump/kdump.rst | 12 ++++++++++
->  kernel/crash_core.c                       | 28 +++++++++++++++++++++--
->  2 files changed, 38 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-> index ac7e131d2935..7635bbb4ab34 100644
-> --- a/Documentation/admin-guide/kdump/kdump.rst
-> +++ b/Documentation/admin-guide/kdump/kdump.rst
-> @@ -285,6 +285,18 @@ This would mean:
->      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
->      3) if the RAM size is larger than 2G, then reserve 128M
->
-> +Or you can use crashkernel=auto if you have enough memory.  The threshold
-> +is 1G on x86_64, 2G on arm64, ppc64 and ppc64le. The threshold is 4G for s390x.
-> +If your system memory is less than the threshold crashkernel=auto will not
-> +reserve memory.
-> +
-> +The automatically reserved memory size varies based on architecture.
-> +The size changes according to system memory size like below:
-> +    x86_64: 1G-64G:160M,64G-1T:280M,1T-:512M
-> +    s390x:  4G-64G:160M,64G-1T:256M,1T-:512M
-> +    arm64:  2G-:768M
-> +    ppc64:  2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G
-> +
->
->
->  Boot into System Kernel
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 9f1557b98468..564aca60e57f 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -7,6 +7,7 @@
->  #include <linux/crash_core.h>
->  #include <linux/utsname.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/kexec.h>
->
->  #include <asm/page.h>
->  #include <asm/sections.h>
-> @@ -39,6 +40,15 @@ static int __init parse_crashkernel_mem(char *cmdline,
->                                         unsigned long long *crash_base)
->  {
->         char *cur = cmdline, *tmp;
-> +       unsigned long long total_mem = system_ram;
-> +
-> +       /*
-> +        * Firmware sometimes reserves some memory regions for it's own use.
-> +        * so we get less than actual system memory size.
-> +        * Workaround this by round up the total size to 128M which is
-> +        * enough for most test cases.
-> +        */
-> +       total_mem = roundup(total_mem, SZ_128M);
->
->         /* for each entry of the comma-separated list */
->         do {
-> @@ -83,13 +93,13 @@ static int __init parse_crashkernel_mem(char *cmdline,
->                         return -EINVAL;
->                 }
->                 cur = tmp;
-> -               if (size >= system_ram) {
-> +               if (size >= total_mem) {
->                         pr_warn("crashkernel: invalid size\n");
->                         return -EINVAL;
->                 }
->
->                 /* match ? */
-> -               if (system_ram >= start && system_ram < end) {
-> +               if (total_mem >= start && total_mem < end) {
->                         *crash_size = size;
->                         break;
->                 }
-> @@ -248,6 +258,20 @@ static int __init __parse_crashkernel(char *cmdline,
->         if (suffix)
->                 return parse_crashkernel_suffix(ck_cmdline, crash_size,
->                                 suffix);
-> +
-> +       if (strncmp(ck_cmdline, "auto", 4) == 0) {
-> +#ifdef CONFIG_X86_64
-> +               ck_cmdline = "1G-64G:160M,64G-1T:280M,1T-:512M";
-> +#elif defined(CONFIG_S390)
-> +               ck_cmdline = "4G-64G:160M,64G-1T:256M,1T-:512M";
-> +#elif defined(CONFIG_ARM64)
-> +               ck_cmdline = "2G-:768M";
-> +#elif defined(CONFIG_PPC64)
-> +               ck_cmdline = "2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G";
-> +#endif
-> +               pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
-> +       }
-> +
->         /*
->          * if the commandline contains a ':', then that's the extended
->          * syntax -- if not, it must be the classic syntax
-> --
-> 2.20.1
->
->
+Hi Neil,
 
+Le jeudi 05 d=C3=A9cembre 2019 =C3=A0 10:24 +0100, Neil Armstrong a =C3=A9c=
+rit :
+> Hello,
+>=20
+> This patchset aims to bring VP9 decoding support to Amlogic GXL, G12A & S=
+M1
+> platforms for the amlogic stateful video decoder driver.
+>=20
+> With this, it passes v4l2-compliance with streaming on Amlogic G12A and
+> Amlogic SM1 SoCs successfully using the stream at [1] with a fixed
+> pyv4l2compliance script for VP9 at [2].
+>=20
+> The original script kept the IVF headers in the stream, confusing the
+> decoder. The fixed script only extracts the payload from the IVF containe=
+r.
+>=20
+> The decoder has been tested using the Google CTS TestVectorsIttiam VP9 yu=
+v420
+> samples, passing 82 resolutions test streams, with 13 fails by pixel
+> differences and 3 timeouts.
 
--- 
-wbr, Vitaly
+How do you handle resolution changes on delta frames ? It's a bit of a
+challenge since the reference frames are not at the same resolution as
+the frames to be decoded. This breaks the assumption for the resolution
+changes mechanism as described in the spec.
+
+On stateless side, Boris is introducing DESTROY_BUFS, so we can free
+the references when they are not used anymore. But the reference are
+managed by userspace and are not queued. While on stateful side so far,
+it was assumed that references are queued, and the semantic of S_FMT is
+that it must apply to the entire set of queued buffer.
+
+I think most streams will work and won't use this feature, but I'm
+worried that writing a compliant VP9 decoder is currently not possible.
+
+>=20
+> This patchset depends on :
+> - G12A enablement at [3]
+> - SM1 enablement at [4]
+> - H.264 and compliance at [5]
+>=20
+> [1] https://github.com/superna9999/pyv4l2compliance/raw/tests/output/Jell=
+yfish_1080_10s_5MB.vp9.hdr
+> [2] https://github.com/superna9999/pyv4l2compliance
+> [3] https://lore.kernel.org/linux-media/20191120111430.29552-1-narmstrong=
+@baylibre.com
+> [4] https://lore.kernel.org/linux-media/20191121101429.23831-1-narmstrong=
+@baylibre.com
+> [5] https://lore.kernel.org/linux-media/20191126093733.32404-1-narmstrong=
+@baylibre.com
+>=20
+> The compliance log is:
+> # v4l2-compliance --stream-from-hdr Jellyfish_1080_10s_5MB.vp9.hdr -s 200
+> v4l2-compliance SHA: 7ead0e1856b89f2e19369af452bb03fd0cd16793, 64 bits
+>=20
+> Compliance test for meson-vdec device /dev/video0:
+>=20
+> Driver Info:
+> 	Driver name      : meson-vdec
+> 	Card type        : Amlogic Video Decoder
+> 	Bus info         : platform:meson-vdec
+> 	Driver version   : 5.4.0
+> 	Capabilities     : 0x84204000
+> 		Video Memory-to-Memory Multiplanar
+> 		Streaming
+> 		Extended Pix Format
+> 		Device Capabilities
+> 	Device Caps      : 0x04204000
+> 		Video Memory-to-Memory Multiplanar
+> 		Streaming
+> 		Extended Pix Format
+> 	Detected Stateful Decoder
+>=20
+> Required ioctls:
+> 	test VIDIOC_QUERYCAP: OK
+>=20
+> Allow for multiple opens:
+> 	test second /dev/video0 open: OK
+> 	test VIDIOC_QUERYCAP: OK
+> 	test VIDIOC_G/S_PRIORITY: OK
+> 	test for unlimited opens: OK
+>=20
+> Debug ioctls:
+> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
+>=20
+> Input ioctls:
+> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+> 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+> 	Inputs: 0 Audio Inputs: 0 Tuners: 0
+>=20
+> Output ioctls:
+> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
+>=20
+> Input/Output configuration ioctls:
+> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+> 	test VIDIOC_G/S_EDID: OK (Not Supported)
+>=20
+> Control ioctls:
+> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+> 	test VIDIOC_QUERYCTRL: OK
+> 	test VIDIOC_G/S_CTRL: OK
+> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+> 	Standard Controls: 2 Private Controls: 0
+>=20
+> Format ioctls:
+> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+> 	test VIDIOC_G/S_PARM: OK (Not Supported)
+> 	test VIDIOC_G_FBUF: OK (Not Supported)
+> 	test VIDIOC_G_FMT: OK
+> 	test VIDIOC_TRY_FMT: OK
+> 	test VIDIOC_S_FMT: OK
+> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+> 	test Cropping: OK (Not Supported)
+> 	test Composing: OK (Not Supported)
+> 	test Scaling: OK (Not Supported)
+>=20
+> Codec ioctls:
+> 	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+> 	test VIDIOC_(TRY_)DECODER_CMD: OK
+>=20
+> Buffer ioctls:
+> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+> 	test VIDIOC_EXPBUF: OK
+> 	test Requests: OK (Not Supported)
+>=20
+> Test input 0:
+>=20
+> Streaming ioctls:
+> 	test read/write: OK (Not Supported)
+> 	test blocking wait: OK
+> 	Video Capture Multiplanar: Captured 200 buffers  =20
+> 	test MMAP (select): OK
+> 	Video Capture Multiplanar: Captured 200 buffers  =20
+> 	test MMAP (epoll): OK
+> 	test USERPTR (select): OK (Not Supported)
+> 	test DMABUF: Cannot test, specify --expbuf-device
+>=20
+> Total for meson-vdec device /dev/video0: 49, Succeeded: 49, Failed: 0, Wa=
+rnings: 0
+>=20
+> Maxime Jourdan (4):
+>   media: meson: vdec: add helpers for lossless framebuffer compression
+>     buffers
+>   media: meson: vdec: add common HEVC decoder support
+>   media: meson: vdec: add VP9 input support
+>   media: meson: vdec: add VP9 decoder support
+>=20
+> Neil Armstrong (1):
+>   media: meson: vdec: align stride on 32 bytes
+>=20
+>  drivers/staging/media/meson/vdec/Makefile     |    4 +-
+>  .../media/meson/vdec/codec_hevc_common.c      |  285 ++++
+>  .../media/meson/vdec/codec_hevc_common.h      |   77 ++
+>  drivers/staging/media/meson/vdec/codec_vp9.c  | 1192 +++++++++++++++++
+>  drivers/staging/media/meson/vdec/codec_vp9.h  |   13 +
+>  drivers/staging/media/meson/vdec/esparser.c   |  142 +-
+>  drivers/staging/media/meson/vdec/hevc_regs.h  |  218 +++
+>  drivers/staging/media/meson/vdec/vdec.c       |   10 +-
+>  .../staging/media/meson/vdec/vdec_helpers.c   |   31 +-
+>  .../staging/media/meson/vdec/vdec_helpers.h   |    4 +
+>  drivers/staging/media/meson/vdec/vdec_hevc.c  |  231 ++++
+>  drivers/staging/media/meson/vdec/vdec_hevc.h  |   13 +
+>  .../staging/media/meson/vdec/vdec_platform.c  |   38 +
+>  13 files changed, 2245 insertions(+), 13 deletions(-)
+>  create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_common.c
+>  create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_common.h
+>  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.c
+>  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.h
+>  create mode 100644 drivers/staging/media/meson/vdec/hevc_regs.h
+>  create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.c
+>  create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.h
+>=20
+
+--=-zFAtbRJdW+9MLmbh/mcs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXeklTAAKCRBxUwItrAao
+HB2IAKCwgusKW/k4VswQH6w3Jw59uL+q0gCgy5robqQi/K53oHyU3gtI9MC3ugY=
+=6Yaq
+-----END PGP SIGNATURE-----
+
+--=-zFAtbRJdW+9MLmbh/mcs--
+
