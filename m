@@ -2,93 +2,167 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61726C2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8DEC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 371302464E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BAE2245C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:01:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fsYN4aJV";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="AUJbB7wF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729523AbfLEM7N (ORCPT
+        id S1729327AbfLENBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 07:59:13 -0500
-Received: from www62.your-server.de ([213.133.104.62]:58488 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729503AbfLEM7M (ORCPT
+        Thu, 5 Dec 2019 08:01:36 -0500
+Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:56826
+        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729099AbfLENBg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 07:59:12 -0500
-Received: from 29.249.197.178.dynamic.dsl-lte-bonding.lssmb00p-msn.res.cust.swisscom.ch ([178.197.249.29] helo=localhost)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1icqii-00073e-Qh; Thu, 05 Dec 2019 13:59:02 +0100
-Date:   Thu, 5 Dec 2019 13:59:00 +0100
-From:   Daniel Borkmann <daniel@iogearbox.net>
-To:     Daniel Axtens <dja@axtens.net>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+82e323920b78d54aaed5@syzkaller.appspotmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Yonghong Song <yhs@fb.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Subject: Re: BUG: unable to handle kernel paging request in pcpu_alloc
-Message-ID: <20191205125900.GB29780@localhost.localdomain>
-References: <000000000000314c120598dc69bd@google.com>
- <CACT4Y+ZTXKP0MAT3ivr5HO-skZOjSVdz7RbDoyc522_Nbk8nKQ@mail.gmail.com>
- <877e3be6eu.fsf@dja-thinkpad.axtens.net>
+        Thu, 5 Dec 2019 08:01:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575550894;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=Qi8Ws3dJYpg8dYth9Lt99rfE6RWNu/B+qSfD+IOQ/M8=;
+        b=fsYN4aJVKclmwsUhraIGr1B7FwnaSUq9GlOLu8iBijpeu816jcuTvr7RubKpwzF8
+        /PyMz3dtrHpM5CF8OfqRsErHznSqhR8HpGWgCC5VJmEn0rzkr2ns8eVOy8CBLLxJ4nW
+        NNWhxH68lkphaz1VdbNThXGKF8Bly0ymEbm+hFAo=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575550894;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+        bh=Qi8Ws3dJYpg8dYth9Lt99rfE6RWNu/B+qSfD+IOQ/M8=;
+        b=AUJbB7wF5Y/zbYOrsyEVcvuUCG6XhJfnj2R+jzgVvyUh6bnDQpHlSTVef5Lfsamb
+        gnd6X927dUGkIibQAS1t9itvvMeC9bPsGkhianlOYPaOnjapjazdVGwvgUX4mcdUaPc
+        xhf7WuF/QTx8rVHd0YvHloeNWOY5fKk5afLjJVHY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8A804C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
+Subject: Re: [PATCH v0] irqchip/gic-v3: Avoid check of lpi configuration for
+ non existent cpu
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <1575543357-31892-1-git-send-email-gkohli@codeaurora.org>
+ <60f61282c1b1e512ca6ce638b6dfca09@www.loen.fr>
+From:   Gaurav Kohli <gkohli@codeaurora.org>
+Message-ID: <0101016ed626c22f-170ea43c-0db3-40aa-b360-21db453b391b-000000@us-west-2.amazonses.com>
+Date:   Thu, 5 Dec 2019 13:01:34 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <877e3be6eu.fsf@dja-thinkpad.axtens.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25654/Thu Dec  5 10:46:25 2019)
+In-Reply-To: <60f61282c1b1e512ca6ce638b6dfca09@www.loen.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SES-Outgoing: 2019.12.05-54.240.27.187
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 03:35:21PM +1100, Daniel Axtens wrote:
-> >> HEAD commit:    1ab75b2e Add linux-next specific files for 20191203
-> >> git tree:       linux-next
-> >> console output: https://syzkaller.appspot.com/x/log.txt?x=10edf2eae00000
-> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=de1505c727f0ec20
-> >> dashboard link: https://syzkaller.appspot.com/bug?extid=82e323920b78d54aaed5
-> >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=156ef061e00000
-> >> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11641edae00000
-> >>
-> >> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> >> Reported-by: syzbot+82e323920b78d54aaed5@syzkaller.appspotmail.com
-> >
-> > +Daniel, is it the same as:
-> > https://syzkaller.appspot.com/bug?id=f6450554481c55c131cc23d581fbd8ea42e63e18
-> > If so, is it possible to make KASAN detect this consistently with the
-> > same crash type so that syzbot does not report duplicates?
-> 
-> It looks like both of these occur immediately after failure injection. I
-> think my assumption that I could ignore the chance of failures in the
-> per-cpu allocation path will have to be revisited. That's annoying.
-> 
-> I'll try to spin something today but Andrey feel free to pip me at the
-> post again :)
-> 
-> I'm not 100% confident to call them dups just yet, but I'm about 80%
-> confident that they are.
 
-Ok. Double checked BPF side yesterday night, but looks sane to me and the
-fault also hints into pcpu_alloc() rather than BPF code. Daniel, from your
-above reply, I read that you are aware of how the bisected commit would
-have caused the fault?
 
-Thanks,
-Daniel
+On 12/5/2019 6:17 PM, Marc Zyngier wrote:
+> Hi Gaurav,
+> 
+> On 2019-12-05 10:55, Gaurav Kohli wrote:
+>> As per GIC specification, we can configure gic for more no of cpus
+>> then the available cpus in the soc, But this can cause mem abort
+>> while iterating lpi region for non existent cpu as we don't map
+> 
+> Which LPI region? We're talking about RDs, right... Or does LPI mean
+> something other than GIC LPIs for you?
+> 
+
+Yes RDs only.
+>> redistrubutor region for non-existent cpu.
+>>
+>> To avoid this issue, put one more check of valid mpidr.
+> 
+> Sorry, but I'm not sure I grasp your problem. Let me try and rephrase it:
+> 
+> - Your GIC is configured for (let's say) 8 CPUs, and your SoC has only 4.
+Yes, suppose gic is configured for 8 cpus but soc has only 4 cpus. Then 
+in this case gic_iterate will iterate till it get TYPER_LAST.
+
+But as gic is configured for 8, So last bit sets in eight redistributor 
+regions only.
+> 
+> - As part of the probing, the driver iterates on the RD regions and 
+> explodes
+>    because something isn't mapped?
+> 
+> That'd be a grave bug, but I believe the issue is somewhere else.
+
+There are 4 cpus present, that's why we have mapped 4 redistributor 
+only, but during probe below function keeps iterating and give mem abort 
+for 5th cpu.
+
+static void gic_update_vlpi_properties(void)
+{
+         gic_iterate_rdists(__gic_update_vlpi_properties);
+
+}
+
+We can solve this problem by mapping all eight redistributor in dt, but 
+ideally code should also able to handle this and we can avoid mappin?
+>
+>>
+>> Signed-off-by: Gaurav Kohli <gkohli@codeaurora.org>
+>>
+>> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+>> index 1edc993..adc9186 100644
+>> --- a/drivers/irqchip/irq-gic-v3.c
+>> +++ b/drivers/irqchip/irq-gic-v3.c
+>> @@ -766,6 +766,7 @@ static int gic_iterate_rdists(int (*fn)(struct
+>> redist_region *, void __iomem *))
+>>  {
+>>      int ret = -ENODEV;
+>>      int i;
+>> +    int cpu = 0;
+>>
+>>      for (i = 0; i < gic_data.nr_redist_regions; i++) {
+>>          void __iomem *ptr = gic_data.redist_regions[i].redist_base;
+>> @@ -780,6 +781,7 @@ static int gic_iterate_rdists(int (*fn)(struct
+>> redist_region *, void __iomem *))
+>>          }
+>>
+>>          do {
+>> +            cpu++;
+>>              typer = gic_read_typer(ptr + GICR_TYPER);
+>>              ret = fn(gic_data.redist_regions + i, ptr);
+>>              if (!ret)
+>> @@ -795,7 +797,8 @@ static int gic_iterate_rdists(int (*fn)(struct
+>> redist_region *, void __iomem *))
+>>                  if (typer & GICR_TYPER_VLPIS)
+>>                      ptr += SZ_64K * 2; /* Skip VLPI_base + reserved 
+>> page */
+>>              }
+>> -        } while (!(typer & GICR_TYPER_LAST));
+>> +        } while (!(typer & GICR_TYPER_LAST) &&
+>> +                    cpu_logical_map(cpu) != INVALID_HWID);
+>>      }
+>>
+>>      return ret ? -ENODEV : 0;
+> 
+> This makes little sense. A redistributor region contains a bunch of RDs,
+> each of which maps onto a given CPU. We iterate on the RDs, and not on the
+> CPUs, as it is the RD that tells us which CPU it is affine with, not the
+> other way around.
+> 
+> If a RD is for some reason unavailable, then it shouldn't be described in
+> the firmware the first place. If you end-up exposing RD regions that do
+> not have the last RD having GICR_TYPER.Last set, then your SoC is broken,
+> and this needs yet another quirk.
+> 
+>          M.
+
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
