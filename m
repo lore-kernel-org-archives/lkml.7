@@ -2,108 +2,77 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B06C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3222C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8912464E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:38:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ECN7i7g0"
+	by mail.kernel.org (Postfix) with ESMTP id 82F102464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbfLEJi4 (ORCPT
+        id S1729196AbfLEJkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:38:56 -0500
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:55684 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728707AbfLEJiw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:38:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575538733; x=1607074733;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=MiFuavq5Qnjsk7KrDh/upooxJoiEUmzFTrl7IlXIUqw=;
-  b=ECN7i7g06pIiVPa7rsFuPX36xqd/va0c5Jap2E5+owf+j/KcMWwD+vZI
-   /h1ubV2jcp88QSsYxCL72+aokNrV2SgfxcTZkzQqWq77Z6RA+BtOlbrun
-   ei++Bo4XnIdhSbRkA+hBLNTbJ7qrvYY/BvXRoHIrwUAl9XBkj9Dq6bBN+
-   g=;
-IronPort-SDR: 5PPOhAW7haH6EKJQEUeZiV1/p09w4tUcgXN3MGy0udA95frYz634gZcjrchm6JYYI7SstiQM18
- XnmLmRmNJvkw==
-X-IronPort-AV: E=Sophos;i="5.69,280,1571702400"; 
-   d="scan'208";a="7181812"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-8549039f.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 05 Dec 2019 09:38:52 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-8549039f.us-west-2.amazon.com (Postfix) with ESMTPS id 1A82FA1E55;
-        Thu,  5 Dec 2019 09:38:50 +0000 (UTC)
-Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 5 Dec 2019 09:38:49 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.100) by
- EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 5 Dec 2019 09:38:45 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <brendanhiggins@google.com>
-CC:     <sj38.park@gmail.com>, <corbet@lwn.net>,
-        <kunit-dev@googlegroups.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <shuah@kernel.org>, <sjpark@amazon.de>
-Subject: [PATCH v5 6/6] kunit/kunit_tool_test: Test '--build_dir' option run
-Date:   Thu, 5 Dec 2019 10:38:31 +0100
-Message-ID: <20191205093831.22925-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191205093440.21824-1-sjpark@amazon.com>
-References: <20191205093440.21824-1-sjpark@amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.100]
-X-ClientProxiedBy: EX13D05UWC003.ant.amazon.com (10.43.162.226) To
- EX13D31EUA004.ant.amazon.com (10.43.165.161)
+        Thu, 5 Dec 2019 04:40:23 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49978 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728629AbfLEJkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 04:40:23 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 38DBEB320;
+        Thu,  5 Dec 2019 09:40:21 +0000 (UTC)
+From:   Mian Yousaf Kaukab <ykaukab@suse.de>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        tharvey@gateworks.com, davem@davemloft.net, rric@kernel.org,
+        sgoutham@cavium.com, sergei.shtylyov@cogentembedded.com,
+        andrew@lunn.ch, Mian Yousaf Kaukab <ykaukab@suse.de>
+Subject: [PATCH net v2] net: thunderx: start phy before starting autonegotiation
+Date:   Thu,  5 Dec 2019 10:41:16 +0100
+Message-Id: <20191205094116.4904-1-ykaukab@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+Since commit 2b3e88ea6528 ("net: phy: improve phy state checking")
+phy_start_aneg() expects phy state to be >= PHY_UP. Call phy_start()
+before calling phy_start_aneg() during probe so that autonegotiation
+is initiated.
 
-This commit adds kunit tool test for the '--build_dir' option.
+As phy_start() takes care of calling phy_start_aneg(), drop the explicit
+call to phy_start_aneg().
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Network fails without this patch on Octeon TX.
+
+Fixes: 2b3e88ea6528 ("net: phy: improve phy state checking")
+Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
 ---
- tools/testing/kunit/kunit_tool_test.py | 8 ++++++++
- 1 file changed, 8 insertions(+)
+v2:
+-Add fixes tag and net tree as suggested by Andrew Lunn
+v1:
+-Remove call to phy_start_aneg() as suggested by Andrew Lunn
+-Fix reference to patch in change log as suggested by Sergei Shtylyov
 
-diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
-index 22f16e66b3c1..cba97756ac4a 100755
---- a/tools/testing/kunit/kunit_tool_test.py
-+++ b/tools/testing/kunit/kunit_tool_test.py
-@@ -174,6 +174,7 @@ class KUnitMainTest(unittest.TestCase):
- 		kunit.main(['run'], self.linux_source_mock)
- 		assert self.linux_source_mock.build_reconfig.call_count == 1
- 		assert self.linux_source_mock.run_kernel.call_count == 1
-+		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=300)
- 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
+ drivers/net/ethernet/cavium/thunder/thunder_bgx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+index 1e09fdb63c4f..c4f6ec0cd183 100644
+--- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
++++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+@@ -1115,7 +1115,7 @@ static int bgx_lmac_enable(struct bgx *bgx, u8 lmacid)
+ 				       phy_interface_mode(lmac->lmac_type)))
+ 			return -ENODEV;
  
- 	def test_run_passes_args_fail(self):
-@@ -202,5 +203,12 @@ class KUnitMainTest(unittest.TestCase):
- 		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=timeout)
- 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
+-		phy_start_aneg(lmac->phydev);
++		phy_start(lmac->phydev);
+ 		return 0;
+ 	}
  
-+	def test_run_builddir(self):
-+		build_dir = '.kunit'
-+		kunit.main(['run', '--build_dir', build_dir], self.linux_source_mock)
-+		assert self.linux_source_mock.build_reconfig.call_count == 1
-+		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=build_dir, timeout=300)
-+		self.print_mock.assert_any_call(StrContains('Testing complete.'))
-+
- if __name__ == '__main__':
- 	unittest.main()
 -- 
-2.17.1
+2.16.4
 
