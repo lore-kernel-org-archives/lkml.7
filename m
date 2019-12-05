@@ -2,137 +2,141 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E65C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D485BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5CF22525
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:45:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A18pMSgT"
+	by mail.kernel.org (Postfix) with ESMTP id AFC18205ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729788AbfLEQpf (ORCPT
+        id S1729858AbfLEQqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:45:35 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39452 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLEQpe (ORCPT
+        Thu, 5 Dec 2019 11:46:09 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:45149 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLEQqI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:45:34 -0500
-Received: by mail-qk1-f193.google.com with SMTP id d124so3889476qke.6
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 08:45:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VBet/bIZobzEfIAUk75Ti4RAy8XooAiOYVqu+hnKHI4=;
-        b=A18pMSgTuR1kAVWLezvNQ+EC+Hs0uA80wcQbNijo7N4Ix/7a1tU7cm7N2rQTw4+UIh
-         4iu9LwCetkxoehhPs7t16hTAq9W521UwYRXB7Oghj57ECN6X9Vm4oW/V/63y5P7TFOca
-         cdCKN1/ogTkKEMpDrbuQ1kfOdnt/uuSZ8+H6wxmmDpUO4ZHIpj7/dB3e7eA5Er0Rw9i/
-         Kri3ArIiSLagbh3J+2/x26uyTcnlse9wn8f2gKYoWac2Geb3AZL7OqZQIag7zXzGzLaH
-         jBZY5/CBTf3qF62jLSljdr+O2kMFLf/+AQ4JBm8+zGkBKIQOYwgN538tjP+91dB3/rdY
-         nHBQ==
+        Thu, 5 Dec 2019 11:46:08 -0500
+Received: by mail-io1-f69.google.com with SMTP id m18so2740121ioj.12
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 08:46:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VBet/bIZobzEfIAUk75Ti4RAy8XooAiOYVqu+hnKHI4=;
-        b=I3+MNKmvrWaH993mGVqN+2MAsqq2ZjOjuwMCM5rIA31oHU2ej366p23viYh8lrORRH
-         xwuNwBxThr94umEhQS0jg8db1XwRTHRJzLLPPkYI+Wv3ZU5/VnW4wWB93LHa2Fsx9k8J
-         CCQvkOPWxTudSfDKuuv3X9upeNfqQM0u64qj1NpJm58pjzhqmbwen/k1BTLj4aScrHEp
-         /eUZRyTfNA5neAJJFgy5AqkwI6Nxr58sUux5JfgTPsF3c0ALVpZiKFT0if1hZymHB7Kw
-         oWvs6bN7GWR9H2SQeI95tFafPQnBof8Nb1/4MODnc+eM5h9/Shp3ihJAp/eJqxEZ8Eam
-         LrXA==
-X-Gm-Message-State: APjAAAWcUCD6XO2ROFENkMhWfh2xH4MhNRHwvCsYssbyEStZkuU4+CEm
-        oUmXdaimV7boDGSJpWd/4Z9YfGKCTPzTAfrRVpebVw==
-X-Google-Smtp-Source: APXvYqwerl8XImN73VXaOFe2fMFNwgUDm+1VNfq91ocV1c1p8hyv/IzbQRvKMuNsJzHUygG2fax8WM/w50U/rYGR52g=
-X-Received: by 2002:a37:4782:: with SMTP id u124mr9350911qka.8.1575564333504;
- Thu, 05 Dec 2019 08:45:33 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=el9xpIdcMptmZt2OnW4Sxl4sCoF0ajfl1irtKsZuX1M=;
+        b=CSYqNRac9dDrR/8TEMc6LFXKaPeyEGaoLqpcjou8Us0+RPt9Z+hCODCfvhxnZ/Al4P
+         7feqRlH9cLio2YpyWnadH7pFe4sKV0fs3lVKTCjjcn720CwmedEkakXcUMjiGkrfgmOy
+         9fftmkAf6+UknUYjx0i2WjwpEoeS69vDssqua+61RyTwdbPOcJSe/7BSsVdBxGW9VZXS
+         hRnWI98OKHjlhT8AbeXdKgKt/a8IjP6icGHjMf4/SiDHncxR+opDldsRjN4No3QNE5MT
+         4N6LcTnRvCNg6ROss98/C71EtH6gn/6JfG28D5N1FNq5yDDaXnIfySkE5pEXiUh5Wd8W
+         bb+w==
+X-Gm-Message-State: APjAAAV/6WSqv9KLgpasRK4T2wVs3TnfbVsaIMNHxZ0WbvUlcLhTZmbu
+        zvoAu6G9JUFS5KFCg0CxBT0Gq9294+MGZRNPy6ZYZQDrW9N2
+X-Google-Smtp-Source: APXvYqxTkm9duM6qH7I6yKJ1pgvfZ/bkTv1Xng92UviG67uspy4Vq5S7O7iFUYcs2lvpl7G4PKKu3yrt2jhx2KcHCjrCr0TR5JGS
 MIME-Version: 1.0
-References: <0000000000006dff110598d25a9b@google.com> <000000000000bcf3bc0598f5090d@google.com>
- <CAKMK7uF4AR_tRxt5wBKxzz6gTPJmub3A=xyuh1HjgvfYy7RCBg@mail.gmail.com>
-In-Reply-To: <CAKMK7uF4AR_tRxt5wBKxzz6gTPJmub3A=xyuh1HjgvfYy7RCBg@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 5 Dec 2019 17:45:22 +0100
-Message-ID: <CACT4Y+ZjQSvpZAnLkp6w8erqtraZGkXB2O84BFmcRN_Rm6fs3Q@mail.gmail.com>
-Subject: Re: INFO: task hung in fb_open
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     syzbot <syzbot+a4ae1442ccc637162dc1@syzkaller.appspotmail.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Ayan Kumar Halder <ayan.halder@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Peter Rosin <peda@axentia.se>, Sam Ravnborg <sam@ravnborg.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        "Syrjala, Ville" <ville.syrjala@linux.intel.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a92:45d2:: with SMTP id z79mr9738056ilj.76.1575564368088;
+ Thu, 05 Dec 2019 08:46:08 -0800 (PST)
+Date:   Thu, 05 Dec 2019 08:46:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007b17010598f7aa1f@google.com>
+Subject: KASAN: global-out-of-bounds Read in bit_putcs
+From:   syzbot <syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 3:05 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
->
-> On Thu, Dec 5, 2019 at 2:38 PM syzbot
-> <syzbot+a4ae1442ccc637162dc1@syzkaller.appspotmail.com> wrote:
-> >
-> > syzbot has bisected this bug to:
-> >
-> > commit 979c11ef39cee79d6f556091a357890962be2580
-> > Author: Ayan Kumar Halder <ayan.halder@arm.com>
-> > Date:   Tue Jul 17 17:13:46 2018 +0000
-> >
-> >      drm/sun4i: Substitute sun4i_backend_format_is_yuv() with format->is_yuv
->
-> Pretty sure your GCD machine is not using the sun4i driver. It's also
-> very far away from the code that's blowing up. bisect gone wrong?
-> -Daniel
+Hello,
 
-Yes, this driver is not even enabled in the config.
-I see 2 issues with kernel in the bisect log:
-1. Unrelated machine hangs get in the way of bisection process (or
-that "no output" another manifestation of this bug?).
-2. Somehow this change to not compiled file changed vmlinux thus
-detection of unrelated changes failed. Non-deterministic kernel builds
-issue is tracked here:
-https://github.com/google/syzkaller/issues/1271#issuecomment-559093018
-but so far I don't have any glues/ideas.
+syzbot found the following crash on:
+
+HEAD commit:    2f13437b Merge tag 'trace-v5.5-2' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=104fcc2ae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=608557e57ce07817
+dashboard link: https://syzkaller.appspot.com/bug?extid=38a3699c7eaf165b97a6
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: global-out-of-bounds in __fb_pad_aligned_buffer  
+include/linux/fb.h:655 [inline]
+BUG: KASAN: global-out-of-bounds in bit_putcs_aligned  
+drivers/video/fbdev/core/bitblit.c:96 [inline]
+BUG: KASAN: global-out-of-bounds in bit_putcs+0xd5d/0xf10  
+drivers/video/fbdev/core/bitblit.c:185
+Read of size 1 at addr ffffffff88725b0f by task syz-executor.3/14961
+
+CPU: 0 PID: 14961 Comm: syz-executor.3 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:638
+  __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  __fb_pad_aligned_buffer include/linux/fb.h:655 [inline]
+  bit_putcs_aligned drivers/video/fbdev/core/bitblit.c:96 [inline]
+  bit_putcs+0xd5d/0xf10 drivers/video/fbdev/core/bitblit.c:185
+  fbcon_putcs+0x33c/0x3e0 drivers/video/fbdev/core/fbcon.c:1353
+  do_update_region+0x328/0x6f0 drivers/tty/vt/vt.c:667
+  redraw_screen+0x676/0x7d0 drivers/tty/vt/vt.c:1011
+  fbcon_do_set_font+0x829/0x960 drivers/video/fbdev/core/fbcon.c:2605
+  fbcon_copy_font+0x12c/0x190 drivers/video/fbdev/core/fbcon.c:2620
+  con_font_copy drivers/tty/vt/vt.c:4594 [inline]
+  con_font_op+0x69a/0x1250 drivers/tty/vt/vt.c:4609
+  vt_ioctl+0x181a/0x26d0 drivers/tty/vt/vt_ioctl.c:965
+  tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a679
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f8bdf6cfc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a679
+RDX: 0000000020000400 RSI: 0000000000004b72 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f8bdf6d06d4
+R13: 00000000004c37ab R14: 00000000004d8c38 R15: 00000000ffffffff
+
+The buggy address belongs to the variable:
+  oid_index+0x3cf/0xb80
+
+Memory state around the buggy address:
+  ffffffff88725a00: 03 fa fa fa fa fa fa fa 03 fa fa fa fa fa fa fa
+  ffffffff88725a80: 03 fa fa fa fa fa fa fa 00 07 fa fa fa fa fa fa
+> ffffffff88725b00: 00 07 fa fa fa fa fa fa 00 06 fa fa fa fa fa fa
+                       ^
+  ffffffff88725b80: 06 fa fa fa fa fa fa fa 00 00 00 04 fa fa fa fa
+  ffffffff88725c00: 00 00 fa fa fa fa fa fa 00 00 06 fa fa fa fa fa
+==================================================================
 
 
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15d2f97ee00000
-> > start commit:   596cf45c Merge branch 'akpm' (patches from Andrew)
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=13d2f97ee00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=7d8ab2e0e09c2a82
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=a4ae1442ccc637162dc1
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14273edae00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e7677ae00000
-> >
-> > Reported-by: syzbot+a4ae1442ccc637162dc1@syzkaller.appspotmail.com
-> > Fixes: 979c11ef39ce ("drm/sun4i: Substitute sun4i_backend_format_is_yuv()
-> > with format->is_yuv")
-> >
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->
->
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/CAKMK7uF4AR_tRxt5wBKxzz6gTPJmub3A%3Dxyuh1HjgvfYy7RCBg%40mail.gmail.com.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
