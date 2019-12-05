@@ -2,96 +2,124 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F787C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B05CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E27B20659
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B9620659
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:34:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LcsEQV1+"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="MPyjy2a0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbfLENdT (ORCPT
+        id S1729494AbfLENei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 08:33:19 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:32816 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729099AbfLENdS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 08:33:18 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2AE2B2E5;
-        Thu,  5 Dec 2019 14:33:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575552797;
-        bh=CM/D7ImuDda2Rno8YpyzWs+w1xLm2R0xK+5mrlUzuag=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LcsEQV1+tNRZ8+JNpWuKyv2NVE95IXgah30yaQpfG55D04a4e5y5hjCIrQ4DnI0gl
-         XkhhLhOfqjV+57w7t/Gsn5SGbZOv3qrahwvr1p341yaLFe/CFS7rL0fqvIneZqiSOj
-         Rdb9Kt1k2+7O0+J+TaGmQtBTrD617A6k/GDE513A=
-Date:   Thu, 5 Dec 2019 15:33:10 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH v2 18/28] drm/bridge: thc63: Use drm_bridge_init()
-Message-ID: <20191205133310.GE16034@pendragon.ideasonboard.com>
-References: <20191204114732.28514-1-mihail.atanassov@arm.com>
- <20191204114732.28514-19-mihail.atanassov@arm.com>
+        Thu, 5 Dec 2019 08:34:38 -0500
+Received: from mail.dlink.ru ([178.170.168.18]:40510 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729099AbfLENei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 08:34:38 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 8B1221B21254; Thu,  5 Dec 2019 16:34:35 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 8B1221B21254
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1575552875; bh=Sx8uJ3OCnuaKMNarVXnFV4HiDAvI2m8fmjUZHnprhIU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=MPyjy2a0YkoSIcF7ZAHzBW2/DwSF371h3Bk1ovMWCsvhB+swr5yVnp4L3Rt793TXQ
+         /4yQbJLhkJa69VM5cDmLtDr7KdSMzvH1IzwA6GStwtsDSr5YUy6RVldc7OTlNtoP4+
+         wUvWq4YXFkA0z4vgkQrCeNAlsXBnUZlOuNudPEeg=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id 0BA591B2010A;
+        Thu,  5 Dec 2019 16:34:24 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 0BA591B2010A
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id AE0621B217D8;
+        Thu,  5 Dec 2019 16:34:23 +0300 (MSK)
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Thu,  5 Dec 2019 16:34:23 +0300 (MSK)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191204114732.28514-19-mihail.atanassov@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 05 Dec 2019 16:34:23 +0300
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Muciri Gatimu <muciri@openmesh.com>,
+        Shashidhar Lakkavalli <shashidhar.lakkavalli@openmesh.com>,
+        John Crispin <john@phrozen.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Matteo Croce <mcroce@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: dsa: fix flow dissection on Tx path
+In-Reply-To: <20191205125827.GA28269@lunn.ch>
+References: <20191205100235.14195-1-alobakin@dlink.ru>
+ <20191205125827.GA28269@lunn.ch>
+User-Agent: Roundcube Webmail/1.4.0
+Message-ID: <2e03b82a8ec999fade26253ff35077c6@dlink.ru>
+X-Sender: alobakin@dlink.ru
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mihail,
-
-Thank you for the patch.
-
-On Wed, Dec 04, 2019 at 11:48:18AM +0000, Mihail Atanassov wrote:
-> No functional change.
+Andrew Lunn wrote 05.12.2019 15:58:
+> On Thu, Dec 05, 2019 at 01:02:35PM +0300, Alexander Lobakin wrote:
+>> Commit 43e665287f93 ("net-next: dsa: fix flow dissection") added an
+>> ability to override protocol and network offset during flow dissection
+>> for DSA-enabled devices (i.e. controllers shipped as switch CPU ports)
+>> in order to fix skb hashing for RPS on Rx path.
+>> 
+>> However, skb_hash() and added part of code can be invoked not only on
+>> Rx, but also on Tx path if we have a multi-queued device and:
+>>  - kernel is running on UP system or
+>>  - XPS is not configured.
+>> 
+>> The call stack in this two cases will be like: dev_queue_xmit() ->
+>> __dev_queue_xmit() -> netdev_core_pick_tx() -> netdev_pick_tx() ->
+>> skb_tx_hash() -> skb_get_hash().
+>> 
+>> The problem is that skbs queued for Tx have both network offset and
+>> correct protocol already set up even after inserting a CPU tag by DSA
+>> tagger, so calling tag_ops->flow_dissect() on this path actually only
+>> breaks flow dissection and hashing.
 > 
-> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
-> ---
->  drivers/gpu/drm/bridge/thc63lvd1024.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/thc63lvd1024.c b/drivers/gpu/drm/bridge/thc63lvd1024.c
-> index 3d74129b2995..abe806db5f4d 100644
-> --- a/drivers/gpu/drm/bridge/thc63lvd1024.c
-> +++ b/drivers/gpu/drm/bridge/thc63lvd1024.c
-> @@ -218,11 +218,8 @@ static int thc63_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> -	thc63->bridge.driver_private = thc63;
-> -	thc63->bridge.of_node = pdev->dev.of_node;
-> -	thc63->bridge.funcs = &thc63_bridge_func;
-> -	thc63->bridge.timings = &thc63->timings;
-> -
-> +	drm_bridge_init(&thc63->bridge, &pdev->dev, &thc63_bridge_func,
-> +			&thc63->timings, thc63);
+> Hi Alexander
 
-I think driver_private is unused, so the last argument can be NULL.
+Hi,
 
->  	drm_bridge_add(&thc63->bridge);
->  
->  	return 0;
+> What i'm missing here is an explanation why the flow dissector is
+> called here if the protocol is already set? It suggests there is a
+> case when the protocol is not correctly set, and we do need to look
+> into the frame?
 
--- 
+If we have a device with multiple Tx queues, but XPS is not configured
+or system is running on uniprocessor system, then networking core code
+selects Tx queue depending on the flow to utilize as much Tx queues as
+possible but without breaking frames order.
+This selection happens in net/core/dev.c:skb_tx_hash() as:
+
+reciprocal_scale(skb_get_hash(skb), qcount)
+
+where 'qcount' is the total number of Tx queues on the network device.
+
+If skb has not been hashed prior to this line, then skb_get_hash() will
+call flow dissector to generate a new hash. That's why flow dissection
+can occur on Tx path.
+
+>      Andrew
+
 Regards,
-
-Laurent Pinchart
+ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
