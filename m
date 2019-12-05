@@ -2,137 +2,204 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3A6C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A16AC2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE5472464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575571440;
-	bh=I2G1F94sqXHvuiCTC3eZrxLjsgdOMm4ffJD8vBgVHNg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v07PSEhfTut9OmnQzNj1lai2ATZ5Y3PVIxTuBWsQEWCDQ88QOuC8cfpTaUkL3dXwc
-	 VOi0YTwctEc3RRIJYxvR6aM58zSPq6qpNnpp7nhoCvXAYj0CSaT5GDpg8SSHdh7igq
-	 NMkP2/RxGSSROpYBrNlx0DMwamh4vER7/TaEftIE=
+	by mail.kernel.org (Postfix) with ESMTP id 46E012464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:44:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h5bcVW1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729770AbfLESoA (ORCPT
+        id S1729905AbfLESoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 13:44:00 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36787 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLESn7 (ORCPT
+        Thu, 5 Dec 2019 13:44:34 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56993 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726028AbfLESod (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 13:43:59 -0500
-Received: by mail-pl1-f194.google.com with SMTP id k20so1605071pls.3;
-        Thu, 05 Dec 2019 10:43:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FCp49Ui27dydwY8694hG4UdI57V9y5xaYI+0ibAx9Mc=;
-        b=EwfdDzeJebLnKRGKcgosgHey0wK42t0sQk9CWjBY+NVVlAlon+T2fEoqLBaEy1HPlm
-         1Ri4tZacXbJy/6Se+pXlXRSyqyWISZlgfR0tYvZ9YFMrX29wvt4WUYNhjD0W5PL+puhg
-         upOMLVdycTmy3Et4J8+t2i/FldEusxTr3XIc1oWKFvAe03nrUey9uUzzCGc3K8UHL74A
-         8tQyIuYY7AOM3R/4/xX7pkDg7SZc5Eq75AX8LQnnJcJRg/gXQt+L4EAV83L8BDsFr9IK
-         hZTSQBqtUo3mDpHYt1Gxzkmq+CYURP3lukQHxSyYOZ94cUsHr1cNNEAak2GN1yUWt+QL
-         iHNw==
-X-Gm-Message-State: APjAAAVYeWv45aEyP5zMaEMhQqYoSorxaTokpTjGi+9kI59PAJRo7FxO
-        fxmMQtYFF4BgAAIqT8QHxms=
-X-Google-Smtp-Source: APXvYqxEGWkHqf3SoqS5JfOUeYQylUakgL3ONZFsTaapa4Y7GVYOM+MlCU3V6fpr61txQqIa5+ArzQ==
-X-Received: by 2002:a17:90a:23a9:: with SMTP id g38mr11278130pje.128.1575571438433;
-        Thu, 05 Dec 2019 10:43:58 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
-        by smtp.gmail.com with ESMTPSA id p68sm13748345pfp.149.2019.12.05.10.43.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 10:43:57 -0800 (PST)
-Date:   Thu, 5 Dec 2019 10:44:50 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Alexander Lobakin <alobakin@dlink.ru>
-Cc:     Paul Burton <paul.burton@mips.com>,
-        Hassan Naveed <hnaveed@wavecomp.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: MIPS eBPF JIT support on pre-32R2
-Message-ID: <20191205184450.lbrkenmursz4zpdm@lantea.localdomain>
-References: <09d713a59665d745e21d021deeaebe0a@dlink.ru>
+        Thu, 5 Dec 2019 13:44:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575571471;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=xYjhz4SS9rMLveikBk3DdMnUG1sUZAf+yKvNu4LiK8c=;
+        b=h5bcVW1NWYEwHneaBxCPssJc2uQJB5vW5Rbw0f76o5Hw3yN4Kp6qpgKKE3/1NBTNjViOPX
+        ZoiL8bQTqtPbuyaTXKLetHh4u3r9f+gGEJexoHl+Zl8GpHTqYnWD+pDwiBecRxpvuqJl/s
+        NOw+6SbTeK7flo3Ugf2SVIq6jfhoEt8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-215-h7v8Dr15PYKm0CgPz-XRfg-1; Thu, 05 Dec 2019 13:44:30 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B65218557C3;
+        Thu,  5 Dec 2019 18:44:28 +0000 (UTC)
+Received: from shalem.localdomain.com (ovpn-116-55.ams2.redhat.com [10.36.116.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C38ED6013A;
+        Thu,  5 Dec 2019 18:44:23 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: [PATCH v9 00/10]  efi/firmware/platform-x86: Add EFI embedded fw support
+Date:   Thu,  5 Dec 2019 19:44:12 +0100
+Message-Id: <20191205184422.7316-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <09d713a59665d745e21d021deeaebe0a@dlink.ru>
-User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: h7v8Dr15PYKm0CgPz-XRfg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
+Hi All,
 
-On Thu, Dec 05, 2019 at 03:45:27PM +0300, Alexander Lobakin wrote:
-> Hey all,
-> 
-> I'm writing about lines arch/mips/net/ebpf_jit.c:1806-1807:
-> 
-> 	if (!prog->jit_requested || MIPS_ISA_REV < 2)
-> 		return prog;
-> 
-> Do pre-32R2 architectures (32R1, maybe even R3000-like) actually support
-> this eBPF JIT code?
+Here is v9 of my patch-set to add support for EFI embedded fw to the kernel=
+.
 
-No, they don't; the eBPF JIT makes unconditional use of at least the
-(d)ins & (d)ext instructions which were added in MIPSr2, so it would
-result in reserved instruction exceptions & panics if enabled on
-pre-MIPSr2 CPUs.
+The main new feature in this version is the addition of some selftests for
+the new firmware_request_platform api (patch 5 and 6, both new). My plan
+was to send the patches adding the selftests out as a follow up series.
 
-> If they do, then the condition 'MIPS_ISA_REV < 2'
-> should be removed as it is always true for them and tells CC to remove
-> JIT completely.
-> 
-> If they don't support instructions from this JIT, then the line
-> arch/mips/Kconfig:50:
-> 
-> 	select HAVE_EBPF_JIT if (!CPU_MICROMIPS)
-> 
-> should be changed to something like:
-> 
-> 	select HAVE_EBPF_JIT if !CPU_MICROMIPS && TARGET_ISA_REV >= 2
-> 
-> (and then the mentioned 'if' condition would become redundant)
+But during unrelated testing of my personal tree I found a small but nasty
+bug in the "efi: Add embedded peripheral firmware support" patch, the minor
+refactoring done in v8 exposed a bug which causes a hard crash on boot for
+devices which have a DMI match in the touchscreen_dmi_table but do not use
+EFI-embedded fw, this is fixed in this new version.
 
-Good spot; I agree entirely, this dependency should be reflected in
-Kconfig.
+Assuming the 2 new patches adding the selftests are ok, I believe that
+this series is ready for merging now.  I believe it would be best to merge
+patches 1-8 through Greg's driver-core tree where firmware-loader changes g=
+o.
+The non firmware patches already have Acked-by-s from the maintainers of
+the EFI/input trees.
 
-> At the moment it is possible to build a kernel without both JIT and
-> interpreter, but with CONFIG_BPF_SYSCALL=y (what should not be allowed
-> I suppose?) within the following configuration:
-> 
-> - select any pre-32R2 CPU (e.g. CONFIG_CPU_MIPS32_R1);
-> - enable CONFIG_BPF_JIT (CONFIG_MIPS_EBPF_JIT will be autoselected);
-> - enable CONFIG_BPF_JIT_ALWAYS_ON (this removes BPF interpreter from
->   the system).
-> 
-> I may prepare a proper patch by myself if needed (after clarification).
+Patches 9-10 touch a quirks file under drivers/platform/x86 which sees
+multipe updates each cycle. So my proposal is that once 1-8 has landed
+Greg creates an immutable branch with those changes and then
+Andy and/or Darren can merge in that branch and then apply 9 and 10.
 
-That would be great, thanks!
+Regards,
 
-One thing to note is that I hope we'll restore the cBPF JIT with this
-patch:
+Hans
 
-https://lore.kernel.org/linux-mips/20191205182318.2761605-1-paulburton@kernel.org/T/#u
 
-The cBPF JIT looks like it should work on older pre-MIPSr2 CPUs, so the
-only way this is relevant is that your patch might have a minor
-conflict. But I thought I'd mention it anyway :)
+Changes in v9:
+- Add 2 new patches adding selftests
+- At least touchscreen_dmi.c uses the same dmi_table for its own private
+  data and the fw_desc structs, putting the fw_desc struct first in the
+  data driver_data points to so that the dmi_table can be shared with
+  efi_check_for_embedded_firmwares(). But not all entries there have
+  embedded-fw so in some cases the fw_desc is empty (zero-ed out).
+  This can lead to a possible crash because fw_desc->length now is
+  less then 8, so if the segment size is close enough to a multiple of the
+  page_size, then the memcmp to check the prefix my segfault. Crashing the
+  machine. v9 checks for and skips these empty fw_desc entries avoiding thi=
+s.
+- Add static inline wrapper for firmware_request_platform() to firmware.h,
+  for when CONFIG_FW_LOADER is not set
 
-Thanks,
-    Paul
+Changes in v8:
+- Add pr_warn if there are mode then EFI_DEBUGFS_MAX_BLOBS boot service seg=
+ments
+- Document how the EFI debugfs boot_service_code? files can be used to chec=
+k for
+  embedded firmware
+- Properly deal with the case of an EFI segment being smaller then the fw w=
+e
+  are looking for
+- Log a warning when efi_get_embedded_fw get called while we did not (yet)
+  check for embedded firmwares
+- Only build fallback_platform.c if CONFIG_EFI_EMBEDDED_FIRMWARE is defined=
+,
+  otherwise make firmware_fallback_platform() a static inline stub
+
+Changes in v7:
+- Split drivers/firmware/efi and drivers/base/firmware_loader changes into
+  2 patches
+- Use new, standalone, lib/crypto/sha256.c code
+- Address kdoc comments from Randy Dunlap
+- Add new FW_OPT_FALLBACK_PLATFORM flag and firmware_request_platform()
+  _request_firmware() wrapper, as requested by Luis R. Rodriguez
+- Stop using "efi-embedded-firmware" device-property, now that drivers need=
+ to
+  use the new firmware_request_platform() to enable fallback to a device fw
+  copy embedded in the platform's main firmware, we no longer need a proper=
+ty
+  on the device to trigger this behavior
+- Use security_kernel_load_data instead of calling
+  security_kernel_read_file with a NULL file pointer argument
+- Move the docs to Documentation/driver-api/firmware/fallback-mechanisms.rs=
+t
+- Document the new firmware_request_platform() function in
+  Documentation/driver-api/firmware/request_firmware.rst
+- Add 2 new patches for the silead and chipone-icn8505 touchscreen drivers
+  to use the new firmware_request_platform() method
+- Rebased on top of 5.4-rc1
+
+Changes in v6:
+-Rework code to remove casts from if (prefix =3D=3D mem) comparison
+-Use SHA256 hashes instead of crc32 sums
+-Add new READING_FIRMWARE_EFI_EMBEDDED read_file_id and use it
+-Call security_kernel_read_file(NULL, READING_FIRMWARE_EFI_EMBEDDED)
+ to check if this is allowed before looking at EFI embedded fw
+-Document why we are not using the PI Firmware Volume protocol
+
+Changes in v5:
+-Rename the EFI_BOOT_SERVICES flag to EFI_PRESERVE_BS_REGIONS
+
+Changes in v4:
+-Drop note in docs about EFI_FIRMWARE_VOLUME_PROTOCOL, it is not part of
+ UEFI proper, so the EFI maintainers don't want us referring people to it
+-Use new EFI_BOOT_SERVICES flag
+-Put the new fw_get_efi_embedded_fw() function in its own fallback_efi.c
+ file which only gets built when EFI_EMBEDDED_FIRMWARE is selected
+-Define an empty stub for fw_get_efi_embedded_fw() in fallback.h hwen
+ EFI_EMBEDDED_FIRMWARE is not selected, to avoid the need for #ifdefs
+ in firmware_loader/main.c
+-Properly call security_kernel_post_read_file() on the firmware returned
+ by efi_get_embedded_fw() to make sure that we are allowed to use it
+
+Changes in v2:
+-Rebased on driver-core/driver-core-next
+-Add documentation describing the EFI embedded firmware mechanism to:
+ Documentation/driver-api/firmware/request_firmware.rst
+-Add a new EFI_EMBEDDED_FIRMWARE Kconfig bool and only build the embedded
+ fw support if this is set. This is an invisible option which should be
+ selected by drivers which need this
+-Remove the efi_embedded_fw_desc and dmi_system_id-s for known devices
+ from the efi-embedded-fw code, instead drivers using this are expected to
+ export a dmi_system_id array, with each entries' driver_data pointing to a
+ efi_embedded_fw_desc struct and register this with the efi-embedded-fw cod=
+e
+-Use kmemdup to make a copy instead of efi_mem_reserve()-ing the firmware,
+ this avoids us messing with the EFI memmap and avoids the need to make
+ changes to efi_mem_desc_lookup()
+-Make the firmware-loader code only fallback to efi_get_embedded_fw() if th=
+e
+ passed in device has the "efi-embedded-firmware" device-property bool set
+-Skip usermodehelper fallback when "efi-embedded-firmware" device-property
+ is set
+
