@@ -2,160 +2,98 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E3BC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EC5C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8A820659
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B49120659
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T6YA+GrM"
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="J/6Yuz7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbfLETJb (ORCPT
+        id S1729752AbfLETJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 14:09:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44229 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726028AbfLETJa (ORCPT
+        Thu, 5 Dec 2019 14:09:55 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40351 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729598AbfLETJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 14:09:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575572969;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=KMSt1fsmGsnUyD3THB0TYricfW4Ly8DVOePbhwwALGg=;
-        b=T6YA+GrMYUkH3t4RhMPpzFtfPb0KMX8wsZzMlCY6yTFySQhEbnshfuvuTvB8EnTlgLxWQJ
-        0SarfoYzCXYH+UWlLpAbpEGXtJX2mR3H3hlfL99dW4D+h1CokDWNtifeA4knjEiXDja/Gr
-        T8s08MFtUJ7GRzNcCQIRGk/3HFLBDJI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-278-jGkiYA4RNLefmEkpwXdxyg-1; Thu, 05 Dec 2019 14:09:23 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 162B8DB60;
-        Thu,  5 Dec 2019 19:09:22 +0000 (UTC)
-Received: from max.com (ovpn-205-78.brq.redhat.com [10.40.205.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 48CF8600D1;
-        Thu,  5 Dec 2019 19:09:18 +0000 (UTC)
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [GIT PULL] GFS2 changes for the 5.5 merge window
-Date:   Thu,  5 Dec 2019 20:09:15 +0100
-Message-Id: <20191205190915.5468-1-agruenba@redhat.com>
+        Thu, 5 Dec 2019 14:09:54 -0500
+Received: by mail-ot1-f66.google.com with SMTP id i15so3583807oto.7
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 11:09:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=20d5qRXT4h3Aj7j6m3duNxsgBzhRlyKJh3IbvE+5Fho=;
+        b=J/6Yuz7JdXcqnJPvChPIerIDa9QROqY9XuceIxTRIJYYxh0OtF8Bs4JZnx0/QW2Y2S
+         BbFuV06qeMU3tgcS62zJvmuFrVIhzkb+fuDi9EjVNwSImzsQEdytIrM+8Q6jT2r4tya7
+         qWiq61aneCmrFauYqz/1bKBg+3etIBaBaNsvvlAWGojYSV69Nfwph6Ccxu2ufaTavIl6
+         yadjiSHnPL7JHQEuK8fIkXV6+kFV/DoZOQUWISJArjne/MIGYEX/+gDHUiKS9vKfkcYV
+         4fssLTr58W6Y55iv2a1Lj5UzVrvDtTEb+tX5Eqt1nu7YCCjadB1dj1e1krgSYocY4mKh
+         bKuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=20d5qRXT4h3Aj7j6m3duNxsgBzhRlyKJh3IbvE+5Fho=;
+        b=X3pccgcS/whz5ayaEwSVzRcuBGz0zSj+4NK36K+Mnz4/6rx6YEJGH1xVfaGdZ5/cH1
+         II0JdVr8ynC2DNUD7F/mM8GmjtJ4pUn9eWOkr6QVeCJ1t90ibcR9kHPkNs5QBH9LAlhm
+         Q4EgOXTH66YU7xLoe5AIGj8uIBbWFXE0vxarWNJawrzMp58fdkJ5FGISTFwhE1yZZkWj
+         2LoKW2wR1a6GTzT46sJ3pr1ZEgUKg4AL6xZfgK9uvBlJux3gKLuFG/SSkJCHu+i6Z9le
+         zMFuK+19iiNbmJrJikh+xY2QLPGJdqN2hIVYdB7aFPxm4moMwcZE2dKgReo9ApDcQFrL
+         puWg==
+X-Gm-Message-State: APjAAAV8Wqz6NCmZ5+dA7tnBbTgmKKN5ZGVo6Jshf+1tH8dQ2uEwvCHp
+        n4GbxvDzg94aJ2IDPsGhyDW3bQ==
+X-Google-Smtp-Source: APXvYqzy1b6I1gohEeph6A4mtcIpvgBmIa8dfuXZRwioA7rXlcOMM5/Kec8/oh+PMQB4dB5OSG2BEA==
+X-Received: by 2002:a9d:3af:: with SMTP id f44mr7708161otf.332.1575572993685;
+        Thu, 05 Dec 2019 11:09:53 -0800 (PST)
+Received: from ?IPv6:2607:fb90:d77:c7b2:6680:99ff:fe6f:cb54? ([2607:fb90:d77:c7b2:6680:99ff:fe6f:cb54])
+        by smtp.googlemail.com with ESMTPSA id o2sm3853709oih.19.2019.12.05.11.09.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Dec 2019 11:09:53 -0800 (PST)
+Subject: Re: [PATCH v2] drivers: Fix boot problem on SuperH
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+References: <20191203205852.15659-1-linux@roeck-us.net>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <4e06aa64-59e1-888d-184a-0cb49ac175d5@landley.net>
+Date:   Thu, 5 Dec 2019 13:13:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: jGkiYA4RNLefmEkpwXdxyg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191203205852.15659-1-linux@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 12/3/19 2:58 PM, Guenter Roeck wrote:
+> SuperH images crash too eearly to display any console output. Bisect
+> points to commit 507fd01d5333 ("drivers: move the early platform device
+> support to arch/sh"). An analysis of that patch suggests that
+> early_platform_cleanup() is now called at the wrong time. Restoring its
+> call point fixes the problem.
+> 
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Fixes: 507fd01d5333 ("drivers: move the early platform device support to arch/sh")
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
-could you please consider pulling the following gfs2 changes?
+Yup, I need this too.
 
-Thanks a lot,
-Andreas
+Acked-by: Rob Landley <rob@landley.net>
 
-The following changes since commit d5798141fd54cea074c3429d5803f6c41ade0ca8=
-:
-
-  gfs2: Fix initialisation of args for remount (2019-10-30 12:16:53 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gf=
-s2-for-5.5
-
-for you to fetch changes up to ade48088937f53fe0467162177726176813b9564:
-
-  gfs2: Don't write log headers after file system withdraw (2019-11-21 11:3=
-7:41 +0100)
-
-----------------------------------------------------------------
-GFS2 changes for this merge window:
-
-Bob's extensive filesystem withdrawal and recovery testing:
-- Don't write log headers after file system withdraw
-- clean up iopen glock mess in gfs2_create_inode
-- Close timing window with GLF_INVALIDATE_IN_PROGRESS
-- Abort gfs2_freeze if io error is seen
-- Don't loop forever in gfs2_freeze if withdrawn
-- fix infinite loop in gfs2_ail1_flush on io error
-- Introduce function gfs2_withdrawn
-- fix glock reference problem in gfs2_trans_remove_revoke
-
-Filesystems with a block size smaller than the page size:
-- Fix end-of-file handling in gfs2_page_mkwrite
-- Improve mmap write vs. punch_hole consistency
-
-Other:
-- Remove active journal side effect from gfs2_write_log_header
-- Multi-block allocations in gfs2_page_mkwrite
-
-Minor cleanups and coding style fixes:
-- Remove duplicate call from gfs2_create_inode
-- make gfs2_log_shutdown static
-- make gfs2_fs_parameters static
-- Some whitespace cleanups
-- removed unnecessary semicolon
-
-----------------------------------------------------------------
-Aliasgar Surti (1):
-      gfs2: removed unnecessary semicolon
-
-Andreas Gruenbacher (6):
-      gfs2: Some whitespace cleanups
-      gfs2: Improve mmap write vs. punch_hole consistency
-      gfs2: Multi-block allocations in gfs2_page_mkwrite
-      gfs2: Fix end-of-file handling in gfs2_page_mkwrite
-      gfs2: Remove active journal side effect from gfs2_write_log_header
-      gfs2: Remove duplicate call from gfs2_create_inode
-
-Ben Dooks (Codethink) (1):
-      gfs2: make gfs2_fs_parameters static
-
-Bob Peterson (9):
-      gfs2: make gfs2_log_shutdown static
-      gfs2: fix glock reference problem in gfs2_trans_remove_revoke
-      gfs2: Introduce function gfs2_withdrawn
-      gfs2: fix infinite loop in gfs2_ail1_flush on io error
-      gfs2: Don't loop forever in gfs2_freeze if withdrawn
-      gfs2: Abort gfs2_freeze if io error is seen
-      gfs2: Close timing window with GLF_INVALIDATE_IN_PROGRESS
-      gfs2: clean up iopen glock mess in gfs2_create_inode
-      gfs2: Don't write log headers after file system withdraw
-
- fs/gfs2/aops.c       |  6 +++---
- fs/gfs2/bmap.c       | 11 +++++++++--
- fs/gfs2/file.c       | 56 ++++++++++++++++++++++++++++++++----------------=
-----
- fs/gfs2/glock.c      | 16 ++++++++++-----
- fs/gfs2/glops.c      |  4 ++--
- fs/gfs2/inode.c      | 16 +++++++--------
- fs/gfs2/log.c        | 25 +++++++++++++++++++----
- fs/gfs2/log.h        |  2 +-
- fs/gfs2/lops.c       | 34 +++++++++++++++----------------
- fs/gfs2/lops.h       |  3 ++-
- fs/gfs2/meta_io.c    |  6 +++---
- fs/gfs2/ops_fstype.c |  5 ++---
- fs/gfs2/quota.c      |  4 ++--
- fs/gfs2/recovery.c   |  8 +++++---
- fs/gfs2/super.c      | 33 ++++++++++++++++++-------------
- fs/gfs2/sys.c        |  2 +-
- fs/gfs2/trans.c      |  2 ++
- fs/gfs2/util.c       |  2 +-
- fs/gfs2/util.h       |  9 +++++++++
- 19 files changed, 152 insertions(+), 92 deletions(-)
-
+Rob
