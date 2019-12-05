@@ -2,90 +2,91 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43B3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D37C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6609420707
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D7C20707
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:30:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cYrkGVm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfLEWaQ (ORCPT
+        id S1727715AbfLEWaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 17:30:16 -0500
-Received: from hall.aurel32.net ([195.154.113.88]:41918 "EHLO hall.aurel32.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727194AbfLEWaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 17:30:15 -0500
-Received: from [2a01:e35:2fdd:a4e1:fe91:fc89:bc43:b814] (helo=ohm.rr44.fr)
-        by hall.aurel32.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <aurelien@aurel32.net>)
-        id 1iczdF-0004M3-RF; Thu, 05 Dec 2019 23:29:57 +0100
-Received: from aurel32 by ohm.rr44.fr with local (Exim 4.92.3)
-        (envelope-from <aurelien@aurel32.net>)
-        id 1iczdE-00114c-0g; Thu, 05 Dec 2019 23:29:56 +0100
-Date:   Thu, 5 Dec 2019 23:29:56 +0100
-From:   Aurelien Jarno <aurelien@aurel32.net>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] USB support on stm32mp157 boards
-Message-ID: <20191205222956.GA240447@aurel32.net>
-Mail-Followup-To: Amelie Delaunay <amelie.delaunay@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191121161152.25541-1-amelie.delaunay@st.com>
+        Thu, 5 Dec 2019 17:30:30 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37301 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727650AbfLEWaa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 17:30:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575585028;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=w7E5oF+2cttm86IlVc5CeQ8v5MMj9XUUWT8eYB5XTvc=;
+        b=cYrkGVm9d6O8XnC1j+3jk5FbbRkeb4Z7Q+0AaKWO+LTw+d9oA6TFbqZjUp4WCjN/5gbJef
+        fsLijeIaho8rXZXvnO7/o68Kw6sReMPbAP2mm186rKJEz0UKRj7jemrS8uf7/o6AKgmEPY
+        A6Ri2jJC+UyzcuYt99xY8MqHDO2MIKM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-NP7vG2PUNGuKNWjTY0R3_g-1; Thu, 05 Dec 2019 17:30:25 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B92888024C0;
+        Thu,  5 Dec 2019 22:30:24 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-250.rdu2.redhat.com [10.10.120.250])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8197A1001901;
+        Thu,  5 Dec 2019 22:30:23 +0000 (UTC)
+Subject: [PATCH 0/2] pipe: Fixes [ver #2]
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org, ebiggers@kernel.org
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 05 Dec 2019 22:30:22 +0000
+Message-ID: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121161152.25541-1-amelie.delaunay@st.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: NP7vG2PUNGuKNWjTY0R3_g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-21 17:11, Amelie Delaunay wrote:
-> This patchset adds support for USB (Host and OTG) on stm32mp157a-dk1.
-> USB OTG HS is forced in Peripheral mode.
-> This patchset also fixes USB on stm32mp157c-ev1: USB PHYS supplies were missing
-> (CONFIG_REGULATOR_STM32_PWR) and usbotg_hs node requires phy-names property to
-> get the phy.
-> 
-> Amelie Delaunay (5):
->   ARM: multi_v7_defconfig: enable STM32 PWR regulator
->   ARM: dts: stm32: enable USBPHYC on stm32mp157a-dk1
->   ARM: dts: stm32: enable USB Host (USBH) EHCI controller on
->     stm32mp157a-dk1
->   ARM: dts: stm32: enable USB OTG HS on stm32mp157a-dk1
->   ARM: dts: stm32: add phy-names to usbotg_hs on stm32mp157c-ev1
-> 
->  arch/arm/boot/dts/stm32mp157a-dk1.dts | 28 +++++++++++++++++++++++++++
->  arch/arm/boot/dts/stm32mp157c-ev1.dts |  1 +
->  arch/arm/configs/multi_v7_defconfig   |  1 +
->  3 files changed, 30 insertions(+)
 
-I tested the series on a stm32mp157c-dk2.
+Hi Linus, Eric,
 
-Tested-by: Aurelien Jarno <aurelien@aurel32.net>
+Here are a couple of patches to fix bugs syzbot found in the pipe changes:
 
--- 
-Aurelien Jarno                          GPG: 4096R/1DDD8C9B
-aurelien@aurel32.net                 http://www.aurel32.net
+ (1) An assertion check will sometimes trip when polling a pipe because the
+     ring size and indices used are approximate and may be being changed
+     simultaneously.
+
+     An equivalent approximate calculation was done previously, but without
+     the assertion check, so I've just dropped the check.  To make it
+     accurate, the pipe mutex would need to be taken or the spin lock could
+     be used - but usage of the spinlock would need to be rolled out into
+     splice, iov_iter and other places for that.
+
+ (2) The index mask and the max_usage values cannot be cached across
+     pipe_wait() as F_SETPIPE_SZ could have been called during the wait.
+     This can cause pipe_write() to break.
+
+David
+---
+David Howells (2):
+      pipe: Remove assertion from pipe_poll()
+      pipe: Fix missing mask update after pipe_wait()
+
+
+ fs/pipe.c |   21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
+
