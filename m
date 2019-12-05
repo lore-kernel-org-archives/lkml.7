@@ -2,224 +2,529 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4A7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5229CC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F44024249
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C6724648
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730232AbfLERpk (ORCPT
+        id S1730245AbfLERsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 12:45:40 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37878 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729396AbfLERpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 12:45:40 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 334FEB0E6;
-        Thu,  5 Dec 2019 17:45:37 +0000 (UTC)
-Date:   Thu, 5 Dec 2019 09:41:08 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        walken@google.com
-Subject: Re: Crash in fair scheduler
-Message-ID: <20191205174108.5qhbdeh25vhhc44u@linux-p48b>
-References: <1575364273836.74450@mentor.com>
- <20191203103046.GJ2827@hirez.programming.kicks-ass.net>
- <656260cf50684c11a3122aca88dde0cb@SVR-IES-MBX-03.mgc.mentorg.com>
- <20191203140153.GP2844@hirez.programming.kicks-ass.net>
+        Thu, 5 Dec 2019 12:48:46 -0500
+Received: from foss.arm.com ([217.140.110.172]:42126 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730142AbfLERsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 12:48:46 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FE9C31B;
+        Thu,  5 Dec 2019 09:48:44 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B69F3F52E;
+        Thu,  5 Dec 2019 09:48:38 -0800 (PST)
+Subject: Re: [PATCH v4 7/8] linux/log2.h: Fix 64bit calculations in
+ roundup/down_pow_two()
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio@elopez.com.ar>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thomas Graf <tgraf@suug.ch>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.con>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rdma@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netdev@vger.kernel.org, kexec@lists.infradead.org,
+        linux-nfs@vger.kernel.org
+References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
+ <20191203114743.1294-8-nsaenzjulienne@suse.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <70c6b704-a12a-fb44-e93f-a6db12ed928f@arm.com>
+Date:   Thu, 5 Dec 2019 17:48:36 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191203140153.GP2844@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191203114743.1294-8-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 03 Dec 2019, Peter Zijlstra wrote:
+On 03/12/2019 11:47 am, Nicolas Saenz Julienne wrote:
+> Some users need to make sure their rounding function accepts and returns
+> 64bit long variables regardless of the architecture. Sadly
+> roundup/rounddown_pow_two() takes and returns unsigned longs. It turns
+> out ilog2() already handles 32/64bit calculations properly, and being
+> the building block to the round functions we can rework them as a
+> wrapper around it.
 
->On Tue, Dec 03, 2019 at 10:51:46AM +0000, Schmid, Carsten wrote:
->
->> > > struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq)
->> > > {
->> > >	struct rb_node *left = rb_first_cached(&cfs_rq->tasks_timeline);
->> > >
->> > >	if (!left)
->> > >		return NULL; <<<<<<<<<< the case
->> > >
->> > >	return rb_entry(left, struct sched_entity, run_node);
->> > > }
->> >
->> > This the problem, for some reason the rbtree code got that rb_leftmost
->> > thing wrecked.
->> >
->> Any known issue on rbtree code regarding this?
->
->I don't recall ever having seen this before. :/ Adding Davidlohr and
->Michel who've poked at the rbtree code 'recently'.
+Neat! Although all the additional ULL casts this introduces seem 
+somewhat unwelcome - I suppose the (1ULL << (ilog2(n))) makes it 
+effectively always return unsigned long long now. Might it make sense to 
+cast the return value to typeof(n) to avoid this slightly non-obvious 
+behaviour (and the associated churn)?
 
-Yeah I had never seen this either, and would expect the world to fall
-appart if leftmost is buggy (much less a one time occurance), but the
-following certainly raises a red flag:
+Robin.
 
-    &cfs_rq->tasks_timeline->rb_leftmost
-  tasks_timeline = {
-    rb_root = {
-      rb_node = 0xffff99a9502e0d10
-    },
-    rb_leftmost = 0x0
-  },
-
->
->> > > Is this a corner case nobody thought of or do we have cfs_rq data that is
->> > unexpected in it's content?
->> >
->> > No, the rbtree is corrupt. Your tree has a single node (which matches
->> > with nr_running), but for some reason it thinks rb_leftmost is NULL.
->> > This is wrong, if the tree is non-empty, it must have a leftmost
->> > element.
->> Is there a chance to find the left-most element in the core dump?
->
->If there is only one entry in the tree, then that must also be the
->leftmost entry. See your own later question :-)
->
->> Maybe i can dig deeper to find the root c ause then.
->> Does any of the structs/data in this context point to some memory
->> where i can continue to search?
->
->There are only two places where rb_leftmost are updated,
->rb_insert_color_cached() and rb_erase_cached() (the scheduler does not
->use rb_replace_nod_cached).
->
->We can 'forget' to set leftmost on insertion if @leftmost is somehow
->false, and we can eroneously clear leftmost on erase if rb_next()
->malfunctions.
->
->No clues on which of those two cases happened.
-
-For a bug in insertion I'm certainly not seeing it: we only call
-insert into tasks_timeline in __enqueue_entity()... this is the standard
-way of using the api, and cannot see how leftmost would become false
-unless we take at least one path to the right while going down the tree.
-
-For the erase case, this is more involved than insertion (rb_next()),
-but this has not changed in years.
-
-Fwiw, there have been three flavors of the leftmost pointer caching:
-
-The first is the one the scheduler used by itself.
-
-The second is when we moved the logic into the rbtree cached api.
-bfb068892d3 (sched/fair: replace cfs_rq->rb_leftmost)
-
-The third was the recent simplifications and cleanups from Michel,
-which took out the caching checks into rbtree.h, instead of it being
-passed down to the internal functions that actually do the insert/delete.
-9f973cb3808 (lib/rbtree: avoid generating code twice for the cached versions)
-
-Specifically looking at 4.14.86, it is using the bfb068892d3 changes.
-
-Note how all three use the same logic to replace the rb_leftmost pointer.
-
->
->> Where should rb_leftmost point to if only one node is in the tree?
->> To the node itself?
->
->Exatly.
->
->
->I suppose one approach is to add code to both __enqueue_entity() and
->__dequeue_entity() that compares ->rb_leftmost to the result of
->rb_first(). That'd incur some overhead but it'd double check the logic.
-
-We could benefit from improved debugging in rbtrees, not only the cached
-flavor. Perhaps we can start with the following -- this would at least
-let us know if the case where the tree is non-empty and leftmost is nil
-was hit, whether in the scheduler or another user...
-
-Thanks,
-Davidlohr
-
-diff --git a/include/linux/rbtree.h b/include/linux/rbtree.h
-index 1fd61a9af45c..b4b4df3ad0fc 100644
---- a/include/linux/rbtree.h
-+++ b/include/linux/rbtree.h
-@@ -130,7 +130,28 @@ struct rb_root_cached {
- #define RB_ROOT_CACHED (struct rb_root_cached) { {NULL, }, NULL }
-
- /* Same as rb_first(), but O(1) */
--#define rb_first_cached(root) (root)->rb_leftmost
-+#define __rb_first_cached(root) (root)->rb_leftmost
-+
-+#ifndef CONFIG_RBTREE_DEBUG
-+# define rb_first_cached(root) __rb_first_cached(root)
-+# define rbtree_cached_debug(root) do { } while(0)
-+
-+#else
-+static inline struct rb_node *rb_first_cached(struct rb_root_cached *root)
-+{
-+	struct rb_node *leftmost = __rb_first_cached(root);
-+
-+	WARN_ON(leftmost != rb_first(&root->rb_root));
-+	return leftmost;
-+}
-+
-+#define rbtree_cached_debug(root)					\
-+do {									\
-+	WARN_ON(rb_first(&(root)->rb_root) != __rb_first_cached((root)));	\
-+	WARN_ON(!RB_EMPTY_ROOT(&(root)->rb_root) && !__rb_first_cached((root))); \
-+	WARN_ON(RB_EMPTY_ROOT(&(root)->rb_root) && __rb_first_cached((root))); \
-+} while (0)
-+#endif /* CONFIG_RBTREE_DEBUG */
-
- static inline void rb_insert_color_cached(struct rb_node *node,
-					  struct rb_root_cached *root,
-@@ -139,6 +160,8 @@ static inline void rb_insert_color_cached(struct rb_node *node,
-	if (leftmost)
-		root->rb_leftmost = node;
-	rb_insert_color(node, &root->rb_root);
-+
-+	rbtree_cached_debug(root);
- }
-
- static inline void rb_erase_cached(struct rb_node *node,
-@@ -147,6 +170,8 @@ static inline void rb_erase_cached(struct rb_node *node,
-	if (root->rb_leftmost == node)
-		root->rb_leftmost = rb_next(node);
-	rb_erase(node, &root->rb_root);
-+
-+	rbtree_cached_debug(root);
- }
-
- static inline void rb_replace_node_cached(struct rb_node *victim,
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 2f6fb96405af..62ab9f978bc6 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1727,6 +1727,16 @@ config BACKTRACE_SELF_TEST
-
-	  Say N if you are unsure.
-
-+config RBTREE_DEBUG
-+	bool "Red-Black tree sanity tests"
-+	depends on DEBUG_KERNEL
-+	help
-+	  This option enables runtime sanity checks on all variants
-+	  of the rbtree library. Doing so can cause significant overhead,
-+	  so only enable it in non-production environments.
-+
-+	  Say N if you are unsure.
-+
- config RBTREE_TEST
-	tristate "Red-Black tree test"
-	depends on DEBUG_KERNEL
+> Suggested-by: Robin Murphy <robin.murphy@arm.con>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>   drivers/clk/clk-divider.c                    |  8 ++--
+>   drivers/clk/sunxi/clk-sunxi.c                |  2 +-
+>   drivers/infiniband/hw/hfi1/chip.c            |  4 +-
+>   drivers/infiniband/hw/hfi1/init.c            |  4 +-
+>   drivers/infiniband/hw/mlx4/srq.c             |  2 +-
+>   drivers/infiniband/hw/mthca/mthca_srq.c      |  2 +-
+>   drivers/infiniband/sw/rxe/rxe_qp.c           |  4 +-
+>   drivers/iommu/intel-iommu.c                  |  4 +-
+>   drivers/iommu/intel-svm.c                    |  4 +-
+>   drivers/iommu/intel_irq_remapping.c          |  2 +-
+>   drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c |  4 +-
+>   drivers/net/ethernet/marvell/sky2.c          |  2 +-
+>   drivers/net/ethernet/rocker/rocker_hw.h      |  4 +-
+>   drivers/net/ethernet/sfc/ef10.c              |  2 +-
+>   drivers/net/ethernet/sfc/efx.h               |  2 +-
+>   drivers/net/ethernet/sfc/falcon/efx.h        |  2 +-
+>   drivers/pci/msi.c                            |  2 +-
+>   include/linux/log2.h                         | 44 +++++---------------
+>   kernel/kexec_core.c                          |  3 +-
+>   lib/rhashtable.c                             |  2 +-
+>   net/sunrpc/xprtrdma/verbs.c                  |  2 +-
+>   21 files changed, 41 insertions(+), 64 deletions(-)
+> 
+> diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
+> index 098b2b01f0af..ba947e4c8193 100644
+> --- a/drivers/clk/clk-divider.c
+> +++ b/drivers/clk/clk-divider.c
+> @@ -222,7 +222,7 @@ static int _div_round_up(const struct clk_div_table *table,
+>   	int div = DIV_ROUND_UP_ULL((u64)parent_rate, rate);
+>   
+>   	if (flags & CLK_DIVIDER_POWER_OF_TWO)
+> -		div = __roundup_pow_of_two(div);
+> +		div = roundup_pow_of_two(div);
+>   	if (table)
+>   		div = _round_up_table(table, div);
+>   
+> @@ -240,8 +240,8 @@ static int _div_round_closest(const struct clk_div_table *table,
+>   	down = parent_rate / rate;
+>   
+>   	if (flags & CLK_DIVIDER_POWER_OF_TWO) {
+> -		up = __roundup_pow_of_two(up);
+> -		down = __rounddown_pow_of_two(down);
+> +		up = roundup_pow_of_two(up);
+> +		down = rounddown_pow_of_two(down);
+>   	} else if (table) {
+>   		up = _round_up_table(table, up);
+>   		down = _round_down_table(table, down);
+> @@ -278,7 +278,7 @@ static int _next_div(const struct clk_div_table *table, int div,
+>   	div++;
+>   
+>   	if (flags & CLK_DIVIDER_POWER_OF_TWO)
+> -		return __roundup_pow_of_two(div);
+> +		return roundup_pow_of_two(div);
+>   	if (table)
+>   		return _round_up_table(table, div);
+>   
+> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> index 27201fd26e44..faec99dc09c0 100644
+> --- a/drivers/clk/sunxi/clk-sunxi.c
+> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> @@ -311,7 +311,7 @@ static void sun6i_get_ahb1_factors(struct factors_request *req)
+>   
+>   		calcm = DIV_ROUND_UP(div, 1 << calcp);
+>   	} else {
+> -		calcp = __roundup_pow_of_two(div);
+> +		calcp = roundup_pow_of_two(div);
+>   		calcp = calcp > 3 ? 3 : calcp;
+>   	}
+>   
+> diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+> index 9b1fb84a3d45..96b1d343c32f 100644
+> --- a/drivers/infiniband/hw/hfi1/chip.c
+> +++ b/drivers/infiniband/hw/hfi1/chip.c
+> @@ -14199,10 +14199,10 @@ static int qos_rmt_entries(struct hfi1_devdata *dd, unsigned int *mp,
+>   			max_by_vl = krcvqs[i];
+>   	if (max_by_vl > 32)
+>   		goto no_qos;
+> -	m = ilog2(__roundup_pow_of_two(max_by_vl));
+> +	m = ilog2(roundup_pow_of_two(max_by_vl));
+>   
+>   	/* determine bits for vl */
+> -	n = ilog2(__roundup_pow_of_two(num_vls));
+> +	n = ilog2(roundup_pow_of_two(num_vls));
+>   
+>   	/* reject if too much is used */
+>   	if ((m + n) > 7)
+> diff --git a/drivers/infiniband/hw/hfi1/init.c b/drivers/infiniband/hw/hfi1/init.c
+> index 26b792bb1027..838c789c7cce 100644
+> --- a/drivers/infiniband/hw/hfi1/init.c
+> +++ b/drivers/infiniband/hw/hfi1/init.c
+> @@ -467,7 +467,7 @@ int hfi1_create_ctxtdata(struct hfi1_pportdata *ppd, int numa,
+>   		 * MTU supported.
+>   		 */
+>   		if (rcd->egrbufs.size < hfi1_max_mtu) {
+> -			rcd->egrbufs.size = __roundup_pow_of_two(hfi1_max_mtu);
+> +			rcd->egrbufs.size = roundup_pow_of_two(hfi1_max_mtu);
+>   			hfi1_cdbg(PROC,
+>   				  "ctxt%u: eager bufs size too small. Adjusting to %u\n",
+>   				    rcd->ctxt, rcd->egrbufs.size);
+> @@ -1959,7 +1959,7 @@ int hfi1_setup_eagerbufs(struct hfi1_ctxtdata *rcd)
+>   	 * to satisfy the "multiple of 8 RcvArray entries" requirement.
+>   	 */
+>   	if (rcd->egrbufs.size <= (1 << 20))
+> -		rcd->egrbufs.rcvtid_size = max((unsigned long)round_mtu,
+> +		rcd->egrbufs.rcvtid_size = max((unsigned long long)round_mtu,
+>   			rounddown_pow_of_two(rcd->egrbufs.size / 8));
+>   
+>   	while (alloced_bytes < rcd->egrbufs.size &&
+> diff --git a/drivers/infiniband/hw/mlx4/srq.c b/drivers/infiniband/hw/mlx4/srq.c
+> index 8dcf6e3d9ae2..7e685600a7b3 100644
+> --- a/drivers/infiniband/hw/mlx4/srq.c
+> +++ b/drivers/infiniband/hw/mlx4/srq.c
+> @@ -96,7 +96,7 @@ int mlx4_ib_create_srq(struct ib_srq *ib_srq,
+>   	srq->msrq.max    = roundup_pow_of_two(init_attr->attr.max_wr + 1);
+>   	srq->msrq.max_gs = init_attr->attr.max_sge;
+>   
+> -	desc_size = max(32UL,
+> +	desc_size = max(32ULL,
+>   			roundup_pow_of_two(sizeof (struct mlx4_wqe_srq_next_seg) +
+>   					   srq->msrq.max_gs *
+>   					   sizeof (struct mlx4_wqe_data_seg)));
+> diff --git a/drivers/infiniband/hw/mthca/mthca_srq.c b/drivers/infiniband/hw/mthca/mthca_srq.c
+> index a85935ccce88..0c2e14b4142a 100644
+> --- a/drivers/infiniband/hw/mthca/mthca_srq.c
+> +++ b/drivers/infiniband/hw/mthca/mthca_srq.c
+> @@ -225,7 +225,7 @@ int mthca_alloc_srq(struct mthca_dev *dev, struct mthca_pd *pd,
+>   	else
+>   		srq->max = srq->max + 1;
+>   
+> -	ds = max(64UL,
+> +	ds = max(64ULL,
+>   		 roundup_pow_of_two(sizeof (struct mthca_next_seg) +
+>   				    srq->max_gs * sizeof (struct mthca_data_seg)));
+>   
+> diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
+> index e2c6d1cedf41..040b707b0877 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_qp.c
+> +++ b/drivers/infiniband/sw/rxe/rxe_qp.c
+> @@ -592,7 +592,7 @@ int rxe_qp_from_attr(struct rxe_qp *qp, struct ib_qp_attr *attr, int mask,
+>   	int err;
+>   
+>   	if (mask & IB_QP_MAX_QP_RD_ATOMIC) {
+> -		int max_rd_atomic = __roundup_pow_of_two(attr->max_rd_atomic);
+> +		int max_rd_atomic = roundup_pow_of_two(attr->max_rd_atomic);
+>   
+>   		qp->attr.max_rd_atomic = max_rd_atomic;
+>   		atomic_set(&qp->req.rd_atomic, max_rd_atomic);
+> @@ -600,7 +600,7 @@ int rxe_qp_from_attr(struct rxe_qp *qp, struct ib_qp_attr *attr, int mask,
+>   
+>   	if (mask & IB_QP_MAX_DEST_RD_ATOMIC) {
+>   		int max_dest_rd_atomic =
+> -			__roundup_pow_of_two(attr->max_dest_rd_atomic);
+> +			roundup_pow_of_two(attr->max_dest_rd_atomic);
+>   
+>   		qp->attr.max_dest_rd_atomic = max_dest_rd_atomic;
+>   
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 0c8d81f56a30..ce7c900bd666 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -1488,7 +1488,7 @@ static void iommu_flush_iotlb_psi(struct intel_iommu *iommu,
+>   				  unsigned long pfn, unsigned int pages,
+>   				  int ih, int map)
+>   {
+> -	unsigned int mask = ilog2(__roundup_pow_of_two(pages));
+> +	unsigned int mask = ilog2(roundup_pow_of_two(pages));
+>   	uint64_t addr = (uint64_t)pfn << VTD_PAGE_SHIFT;
+>   	u16 did = domain->iommu_did[iommu->seq_id];
+>   
+> @@ -3390,7 +3390,7 @@ static unsigned long intel_alloc_iova(struct device *dev,
+>   	/* Restrict dma_mask to the width that the iommu can handle */
+>   	dma_mask = min_t(uint64_t, DOMAIN_MAX_ADDR(domain->gaw), dma_mask);
+>   	/* Ensure we reserve the whole size-aligned region */
+> -	nrpages = __roundup_pow_of_two(nrpages);
+> +	nrpages = roundup_pow_of_two(nrpages);
+>   
+>   	if (!dmar_forcedac && dma_mask > DMA_BIT_MASK(32)) {
+>   		/*
+> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> index 9b159132405d..602caca3cd1a 100644
+> --- a/drivers/iommu/intel-svm.c
+> +++ b/drivers/iommu/intel-svm.c
+> @@ -115,7 +115,7 @@ static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_d
+>   			QI_EIOTLB_TYPE;
+>   		desc.qw1 = 0;
+>   	} else {
+> -		int mask = ilog2(__roundup_pow_of_two(pages));
+> +		int mask = ilog2(roundup_pow_of_two(pages));
+>   
+>   		desc.qw0 = QI_EIOTLB_PASID(svm->pasid) |
+>   				QI_EIOTLB_DID(sdev->did) |
+> @@ -142,7 +142,7 @@ static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_d
+>   			 * for example, an "address" value of 0x12345f000 will
+>   			 * flush from 0x123440000 to 0x12347ffff (256KiB). */
+>   			unsigned long last = address + ((unsigned long)(pages - 1) << VTD_PAGE_SHIFT);
+> -			unsigned long mask = __rounddown_pow_of_two(address ^ last);
+> +			unsigned long mask = rounddown_pow_of_two(address ^ last);
+>   
+>   			desc.qw1 = QI_DEV_EIOTLB_ADDR((address & ~mask) |
+>   					(mask - 1)) | QI_DEV_EIOTLB_SIZE;
+> diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel_irq_remapping.c
+> index 81e43c1df7ec..935657b2c661 100644
+> --- a/drivers/iommu/intel_irq_remapping.c
+> +++ b/drivers/iommu/intel_irq_remapping.c
+> @@ -113,7 +113,7 @@ static int alloc_irte(struct intel_iommu *iommu,
+>   		return -1;
+>   
+>   	if (count > 1) {
+> -		count = __roundup_pow_of_two(count);
+> +		count = roundup_pow_of_two(count);
+>   		mask = ilog2(count);
+>   	}
+>   
+> diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c b/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
+> index 6a757dadb5f1..fd5b12c23eaa 100644
+> --- a/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
+> +++ b/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
+> @@ -680,13 +680,13 @@ static int xgbe_set_ringparam(struct net_device *netdev,
+>   		return -EINVAL;
+>   	}
+>   
+> -	rx = __rounddown_pow_of_two(ringparam->rx_pending);
+> +	rx = rounddown_pow_of_two(ringparam->rx_pending);
+>   	if (rx != ringparam->rx_pending)
+>   		netdev_notice(netdev,
+>   			      "rx ring parameter rounded to power of two: %u\n",
+>   			      rx);
+>   
+> -	tx = __rounddown_pow_of_two(ringparam->tx_pending);
+> +	tx = rounddown_pow_of_two(ringparam->tx_pending);
+>   	if (tx != ringparam->tx_pending)
+>   		netdev_notice(netdev,
+>   			      "tx ring parameter rounded to power of two: %u\n",
+> diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+> index 5f56ee83e3b1..cc3a03b4a611 100644
+> --- a/drivers/net/ethernet/marvell/sky2.c
+> +++ b/drivers/net/ethernet/marvell/sky2.c
+> @@ -4139,7 +4139,7 @@ static int sky2_set_coalesce(struct net_device *dev,
+>    */
+>   static unsigned long roundup_ring_size(unsigned long pending)
+>   {
+> -	return max(128ul, roundup_pow_of_two(pending+1));
+> +	return max(128ull, roundup_pow_of_two(pending+1));
+>   }
+>   
+>   static void sky2_get_ringparam(struct net_device *dev,
+> diff --git a/drivers/net/ethernet/rocker/rocker_hw.h b/drivers/net/ethernet/rocker/rocker_hw.h
+> index 59f1f8b690d2..d8de15509e2c 100644
+> --- a/drivers/net/ethernet/rocker/rocker_hw.h
+> +++ b/drivers/net/ethernet/rocker/rocker_hw.h
+> @@ -88,8 +88,8 @@ enum rocker_dma_type {
+>   };
+>   
+>   /* Rocker DMA ring size limits and default sizes */
+> -#define ROCKER_DMA_SIZE_MIN		2ul
+> -#define ROCKER_DMA_SIZE_MAX		65536ul
+> +#define ROCKER_DMA_SIZE_MIN		2ull
+> +#define ROCKER_DMA_SIZE_MAX		65536ull
+>   #define ROCKER_DMA_CMD_DEFAULT_SIZE	32ul
+>   #define ROCKER_DMA_EVENT_DEFAULT_SIZE	32ul
+>   #define ROCKER_DMA_TX_DEFAULT_SIZE	64ul
+> diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
+> index 4d9bbccc6f89..4f4d9a5b3b75 100644
+> --- a/drivers/net/ethernet/sfc/ef10.c
+> +++ b/drivers/net/ethernet/sfc/ef10.c
+> @@ -27,7 +27,7 @@ enum {
+>   };
+>   /* The maximum size of a shared RSS context */
+>   /* TODO: this should really be from the mcdi protocol export */
+> -#define EFX_EF10_MAX_SHARED_RSS_CONTEXT_SIZE 64UL
+> +#define EFX_EF10_MAX_SHARED_RSS_CONTEXT_SIZE 64ULL
+>   
+>   /* The filter table(s) are managed by firmware and we have write-only
+>    * access.  When removing filters we must identify them to the
+> diff --git a/drivers/net/ethernet/sfc/efx.h b/drivers/net/ethernet/sfc/efx.h
+> index 2dd8d5002315..fea2add5860e 100644
+> --- a/drivers/net/ethernet/sfc/efx.h
+> +++ b/drivers/net/ethernet/sfc/efx.h
+> @@ -52,7 +52,7 @@ void efx_schedule_slow_fill(struct efx_rx_queue *rx_queue);
+>   
+>   #define EFX_MAX_DMAQ_SIZE 4096UL
+>   #define EFX_DEFAULT_DMAQ_SIZE 1024UL
+> -#define EFX_MIN_DMAQ_SIZE 512UL
+> +#define EFX_MIN_DMAQ_SIZE 512ULL
+>   
+>   #define EFX_MAX_EVQ_SIZE 16384UL
+>   #define EFX_MIN_EVQ_SIZE 512UL
+> diff --git a/drivers/net/ethernet/sfc/falcon/efx.h b/drivers/net/ethernet/sfc/falcon/efx.h
+> index d3b4646545fa..0d16257156d6 100644
+> --- a/drivers/net/ethernet/sfc/falcon/efx.h
+> +++ b/drivers/net/ethernet/sfc/falcon/efx.h
+> @@ -55,7 +55,7 @@ void ef4_schedule_slow_fill(struct ef4_rx_queue *rx_queue);
+>   
+>   #define EF4_MAX_DMAQ_SIZE 4096UL
+>   #define EF4_DEFAULT_DMAQ_SIZE 1024UL
+> -#define EF4_MIN_DMAQ_SIZE 512UL
+> +#define EF4_MIN_DMAQ_SIZE 512ULL
+>   
+>   #define EF4_MAX_EVQ_SIZE 16384UL
+>   #define EF4_MIN_EVQ_SIZE 512UL
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index c7709e49f0e4..f0391e88bc42 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -578,7 +578,7 @@ msi_setup_entry(struct pci_dev *dev, int nvec, struct irq_affinity *affd)
+>   	entry->msi_attrib.maskbit	= !!(control & PCI_MSI_FLAGS_MASKBIT);
+>   	entry->msi_attrib.default_irq	= dev->irq;	/* Save IOAPIC IRQ */
+>   	entry->msi_attrib.multi_cap	= (control & PCI_MSI_FLAGS_QMASK) >> 1;
+> -	entry->msi_attrib.multiple	= ilog2(__roundup_pow_of_two(nvec));
+> +	entry->msi_attrib.multiple	= ilog2(roundup_pow_of_two(nvec));
+>   
+>   	if (control & PCI_MSI_FLAGS_64BIT)
+>   		entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_64;
+> diff --git a/include/linux/log2.h b/include/linux/log2.h
+> index 83a4a3ca3e8a..53a727303dac 100644
+> --- a/include/linux/log2.h
+> +++ b/include/linux/log2.h
+> @@ -47,26 +47,6 @@ bool is_power_of_2(unsigned long n)
+>   	return (n != 0 && ((n & (n - 1)) == 0));
+>   }
+>   
+> -/**
+> - * __roundup_pow_of_two() - round up to nearest power of two
+> - * @n: value to round up
+> - */
+> -static inline __attribute__((const))
+> -unsigned long __roundup_pow_of_two(unsigned long n)
+> -{
+> -	return 1UL << fls_long(n - 1);
+> -}
+> -
+> -/**
+> - * __rounddown_pow_of_two() - round down to nearest power of two
+> - * @n: value to round down
+> - */
+> -static inline __attribute__((const))
+> -unsigned long __rounddown_pow_of_two(unsigned long n)
+> -{
+> -	return 1UL << (fls_long(n) - 1);
+> -}
+> -
+>   /**
+>    * const_ilog2 - log base 2 of 32-bit or a 64-bit constant unsigned value
+>    * @n: parameter
+> @@ -170,14 +150,11 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
+>    * - the result is undefined when n == 0
+>    * - this can be used to initialise global variables from constant data
+>    */
+> -#define roundup_pow_of_two(n)			\
+> -(						\
+> -	__builtin_constant_p(n) ? (		\
+> -		(n == 1) ? 1 :			\
+> -		(1UL << (ilog2((n) - 1) + 1))	\
+> -				   ) :		\
+> -	__roundup_pow_of_two(n)			\
+> - )
+> +#define roundup_pow_of_two(n)			  \
+> +(						  \
+> +	(__builtin_constant_p(n) && ((n) == 1)) ? \
+> +	1 : (1ULL << (ilog2((n) - 1) + 1))        \
+> +)
+>   
+>   /**
+>    * rounddown_pow_of_two - round the given value down to nearest power of two
+> @@ -187,12 +164,11 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
+>    * - the result is undefined when n == 0
+>    * - this can be used to initialise global variables from constant data
+>    */
+> -#define rounddown_pow_of_two(n)			\
+> -(						\
+> -	__builtin_constant_p(n) ? (		\
+> -		(1UL << ilog2(n))) :		\
+> -	__rounddown_pow_of_two(n)		\
+> - )
+> +#define rounddown_pow_of_two(n)			  \
+> +(						  \
+> +	(__builtin_constant_p(n) && ((n) == 1)) ? \
+> +	1 : (1ULL << (ilog2(n)))		  \
+> +)
+>   
+>   static inline __attribute_const__
+>   int __order_base_2(unsigned long n)
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 15d70a90b50d..bb9efc6944a4 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1094,7 +1094,8 @@ static int __init crash_notes_memory_init(void)
+>   	 * crash_notes is allocated inside one physical page.
+>   	 */
+>   	size = sizeof(note_buf_t);
+> -	align = min(roundup_pow_of_two(sizeof(note_buf_t)), PAGE_SIZE);
+> +	align = min(roundup_pow_of_two(sizeof(note_buf_t)),
+> +		    (unsigned long long)PAGE_SIZE);
+>   
+>   	/*
+>   	 * Break compile if size is bigger than PAGE_SIZE since crash_notes
+> diff --git a/lib/rhashtable.c b/lib/rhashtable.c
+> index bdb7e4cadf05..70908678c7a8 100644
+> --- a/lib/rhashtable.c
+> +++ b/lib/rhashtable.c
+> @@ -950,7 +950,7 @@ static size_t rounded_hashtable_size(const struct rhashtable_params *params)
+>   
+>   	if (params->nelem_hint)
+>   		retsize = max(roundup_pow_of_two(params->nelem_hint * 4 / 3),
+> -			      (unsigned long)params->min_size);
+> +			      (unsigned long long)params->min_size);
+>   	else
+>   		retsize = max(HASH_DEFAULT_SIZE,
+>   			      (unsigned long)params->min_size);
+> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+> index 77c7dd7f05e8..78fb8ccabddd 100644
+> --- a/net/sunrpc/xprtrdma/verbs.c
+> +++ b/net/sunrpc/xprtrdma/verbs.c
+> @@ -1015,7 +1015,7 @@ struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt, size_t size,
+>   	maxhdrsize = rpcrdma_fixed_maxsz + 3 +
+>   		     r_xprt->rx_ia.ri_max_segs * rpcrdma_readchunk_maxsz;
+>   	maxhdrsize *= sizeof(__be32);
+> -	rb = rpcrdma_regbuf_alloc(__roundup_pow_of_two(maxhdrsize),
+> +	rb = rpcrdma_regbuf_alloc(roundup_pow_of_two(maxhdrsize),
+>   				  DMA_TO_DEVICE, flags);
+>   	if (!rb)
+>   		goto out2;
+> 
