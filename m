@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B10BC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 010FBC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6381F206D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC732206D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575574364;
-	bh=8cd4bvbz9sQNlYIOKnGt9W2gIx0OgdJAbY687uV3Ffs=;
+	s=default; t=1575574370;
+	bh=yNSs6tj0nJ6GOwxEeF7ogJizlRezTsl3fsV+yHVbO3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BfEOZsq7VNkUZxYLp+5jMkv4v8+wMTKelWlRnhYvxR7z9x1YYEShdODVwJdZSDFvH
-	 jYvD1ZL3WBK106IvmU3EjczJfMtwy1e0RE92iXKs+cXj5+2hzjiKqO9jKbyjJ0L3ip
-	 fH9Xltwr90uZL9RYInVxeg/oX9/V+3HMoi+Jn13A=
+	b=j8uoEl9ymuJIF4o6lY7UDnVdhLzys1BLicVy7fEQilfc4xQ5z08oLmv8tQOWrgiCM
+	 aqSnKDQMi58KKin8WtmtbZYvjn/iah71srpaxhxQN2hv+AxchOmsHnK65i6YgbnaZO
+	 oDrrISNtZ50e1v0gV8HrsMGf52yDWh8Ex72hT5x0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729910AbfLETcn (ORCPT
+        id S1729956AbfLETct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 14:32:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55216 "EHLO mail.kernel.org"
+        Thu, 5 Dec 2019 14:32:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726257AbfLETcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 14:32:41 -0500
+        id S1726257AbfLETcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 14:32:47 -0500
 Received: from quaco.ghostprotocols.net (179-240-141-74.3g.claro.net.br [179.240.141.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 954612464D;
-        Thu,  5 Dec 2019 19:32:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81A8924652;
+        Thu,  5 Dec 2019 19:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575574361;
-        bh=8cd4bvbz9sQNlYIOKnGt9W2gIx0OgdJAbY687uV3Ffs=;
+        s=default; t=1575574367;
+        bh=yNSs6tj0nJ6GOwxEeF7ogJizlRezTsl3fsV+yHVbO3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dwBhfAI3Rhx3lPy/fxyU6HjWHQHbz1bn56ImdjohEKtYtyQWIfV9nsDW+Lq05VfxH
-         vyBMuchSfFtTA4MojYHfeNuNDc0bqxK/68yPfiGLCvY2EddH62MDfbPcQR5sLE3/jR
-         /sK49wVF7V0yNfoWcaK8RLN35sbU1E4QxHxYisdk=
+        b=vANjXxuLg2nnSLNdcjwx/nMlb1wpxMK1AnfTA5jJFEVBy7g7sx8ahxpwhxUIL846u
+         bydhK8eMyVq/2GoheXOcnzROaG6/RBgiNLaSfacN5Bs0OmBseCXvGvXcMJlwX8wvTv
+         ew1N7exiN7RaxzfT3wS/eAcG4P2SGegPQBW4vEss=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,15 +47,15 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
         Jin Yao <yao.jin@linux.intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 2/6] perf report: Make -F more strict like -s
-Date:   Thu,  5 Dec 2019 16:32:20 -0300
-Message-Id: <20191205193224.24629-3-acme@kernel.org>
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH 3/6] perf report: Bail out --mem-mode if mem info is not available
+Date:   Thu,  5 Dec 2019 16:32:21 -0300
+Message-Id: <20191205193224.24629-4-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191205193224.24629-1-acme@kernel.org>
 References: <20191205193224.24629-1-acme@kernel.org>
@@ -68,48 +68,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-Currently -F allows branch-mode / mem-mode fields with -F even
-when perf report is not running in that mode. Don't allow that.
+If perf.data is recorded without -d, don't allow user to use --mem-mode
+with 'perf report'. symbol_daddr and phys_daddr can be recorded
+separately and may be present in the perf.data but at the report time
+they are associated with mem-mode fields and thus this restriction
+applies to them as well.
+
+Before:
+  $ perf record ls
+  $ perf report --mem-mode --stdio
+  # Overhead  Local Weight  Memory access  Symbol
+  # ........  ............  .............  .......................
+      55.56%  0             N/A            [k] 0xffffffff81a00ae7
+
+After:
+  $ perf report --mem-mode --stdio
+  Error:
+  Selected --mem-mode but no mem data. Did you call perf record without -d?
 
 Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/20191114132213.5419-3-ravi.bangoria@linux.ibm.com
+Link: http://lore.kernel.org/lkml/20191114132213.5419-4-ravi.bangoria@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/sort.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/builtin-report.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 106d795574ba..9fcba2872130 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -2959,6 +2959,9 @@ int output_field_add(struct perf_hpp_list *list, char *tok)
- 		if (strncasecmp(tok, sd->name, strlen(tok)))
- 			continue;
- 
-+		if (sort__mode != SORT_MODE__MEMORY)
-+			return -EINVAL;
-+
- 		return __sort_dimension__add_output(list, sd);
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 830d563de889..387311c67264 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -388,6 +388,14 @@ static int report__setup_sample_type(struct report *rep)
+ 		}
  	}
  
-@@ -2968,6 +2971,9 @@ int output_field_add(struct perf_hpp_list *list, char *tok)
- 		if (strncasecmp(tok, sd->name, strlen(tok)))
- 			continue;
- 
-+		if (sort__mode != SORT_MODE__BRANCH)
-+			return -EINVAL;
++	if (sort__mode == SORT_MODE__MEMORY) {
++		if (!is_pipe && !(sample_type & PERF_SAMPLE_DATA_SRC)) {
++			ui__error("Selected --mem-mode but no mem data. "
++				  "Did you call perf record without -d?\n");
++			return -1;
++		}
++	}
 +
- 		return __sort_dimension__add_output(list, sd);
- 	}
- 
+ 	if (symbol_conf.use_callchain || symbol_conf.cumulate_callchain) {
+ 		if ((sample_type & PERF_SAMPLE_REGS_USER) &&
+ 		    (sample_type & PERF_SAMPLE_STACK_USER)) {
 -- 
 2.21.0
 
