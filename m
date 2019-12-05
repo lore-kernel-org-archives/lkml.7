@@ -2,186 +2,157 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=BITCOIN_SPAM_02,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC151C2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E506C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C4C20801
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4609020801
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:16:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="mpkRH/ij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729800AbfLEQPo (ORCPT
+        id S1729904AbfLEQQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:15:44 -0500
-Received: from mga14.intel.com ([192.55.52.115]:65475 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729290AbfLEQPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:15:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 08:15:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,281,1571727600"; 
-   d="scan'208";a="205816133"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 05 Dec 2019 08:15:43 -0800
-Received: from [10.125.252.254] (abudanko-mobl.ccr.corp.intel.com [10.125.252.254])
-        by linux.intel.com (Postfix) with ESMTP id 145AD5804A0;
-        Thu,  5 Dec 2019 08:15:39 -0800 (PST)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v1 0/3] Introduce CAP_SYS_PERFMON capability for secure Perf
- users groups
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        elena.reshetova@intel.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stephane Eranian <eranian@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Organization: Intel Corp.
-Message-ID: <283f09a5-33bd-eac3-bdfd-83d775045bf9@linux.intel.com>
-Date:   Thu, 5 Dec 2019 19:15:38 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Thu, 5 Dec 2019 11:16:32 -0500
+Received: from mail-eopbgr20053.outbound.protection.outlook.com ([40.107.2.53]:58114
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729540AbfLEQQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 11:16:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SatY+1r7pvCQpUcXNoE/t5jcvGj+RhlGv2BU5Y5WB92jDYD3KyWCOtakT0QY3su9jEGyl5z76oFUFVT2itKqrwj76u2JxO/gvnfuLbZ71FsE0C47caiiG+0qhkZRTOs2pWDokUdw1N3nFiN/EV2QxPNfZsNJ4U2UAeYi0oC7SyOz+DYD4ooNgwjIZEKO8T2U3t6b8JlIUa7OkvxG7vchgq2a8dvE1faqoEDzB/SdsocSNQhLvT382D6snD7JxCDA+9884bfXGMj9kZKyV4ZPZSmGSXTK2h9sBr3++f+S/SkqvMO/A2oK+l5bYXdPPfHW/9kEosJzjPOGj0OSsTNvhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JVg+QKT6VwCW2z5eNFy3nlRnO6o8PDsHQpQzMLWq8B4=;
+ b=WUBeJAa9+EZ1vlznM2QuOgn/0wo4wfQFALLZ5ze8DiNEjT6fWAgLLGv8o2kABZ4LNpZCTZH5kIctpZImCiNUzjWmEQAVtMHWI3a5rm8/msTK1yO91YMp3j7wwTWYK1bOgTpeJOG8kLuV/VQzScxVvZH5j8abj9TECMllpDbYK6yi7TGrp0Sct/5rOSRPxS1MEDItm5kmMDErBYxWU3+bSGQ486rJAZgnddqodteJc4ZO9zGJKUjDQID1IhgnCNyPHY+kR8cH6Y7BsLZJ2tSsiUnaO2WG+0B+sPxZbzdbTlEoAXIUJvPmCKUvO2XcKuqDYoXJOM1xMYSNZFfhrX8VlQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JVg+QKT6VwCW2z5eNFy3nlRnO6o8PDsHQpQzMLWq8B4=;
+ b=mpkRH/ijqGyW/dzvE8fvsTjrQDQUjk0wUEyfiKr9iCBqxx+QPg/gvzV/9tOQjLJt3+bXmSPfU2BUc6EKad2YXktM1cyuk5VAQjsZZSZfgjYwaRPmBQBeLPCIeb45SlPUrJB857BJPBRqGRMzdwdlFWhZQ6jLKGwqvNrJT3QXLps=
+Received: from AM0PR0502MB3603.eurprd05.prod.outlook.com (52.133.49.149) by
+ AM0PR0502MB4083.eurprd05.prod.outlook.com (52.133.36.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.22; Thu, 5 Dec 2019 16:16:22 +0000
+Received: from AM0PR0502MB3603.eurprd05.prod.outlook.com
+ ([fe80::71b6:d517:71ac:63fc]) by AM0PR0502MB3603.eurprd05.prod.outlook.com
+ ([fe80::71b6:d517:71ac:63fc%7]) with mapi id 15.20.2495.014; Thu, 5 Dec 2019
+ 16:16:22 +0000
+From:   Noam Stolero <noams@mellanox.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
+        Tal Gilboa <talgi@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Amir Ancel <amira@mellanox.com>,
+        Matan Nir <matann@mellanox.com>, Bar Tuaf <bartu@mellanox.com>,
+        "brouer@redhat.com" <brouer@redhat.com>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Moshe Shemesh <moshe@mellanox.com>
+Subject: Re: [PATCH v3 0/3] mm: kmemleak: Use a memory pool for kmemleak
+ object allocations
+Thread-Topic: [PATCH v3 0/3] mm: kmemleak: Use a memory pool for kmemleak
+ object allocations
+Thread-Index: AQHVqfGR6Skbhhwb2EindxaFzgFGGqeok84AgAMm9oA=
+Date:   Thu, 5 Dec 2019 16:16:22 +0000
+Message-ID: <25fb28e4-f3fe-4236-7d76-3aed04d84956@mellanox.com>
+References: <20190812160642.52134-1-catalin.marinas@arm.com>
+ <08847a90-c37b-890f-8d0e-3ae1c3a1dd71@mellanox.com>
+ <20191203160806.GB23522@arrakis.emea.arm.com>
+In-Reply-To: <20191203160806.GB23522@arrakis.emea.arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [193.47.165.251]
+x-clientproxiedby: AM0PR06CA0088.eurprd06.prod.outlook.com
+ (2603:10a6:208:fa::29) To AM0PR0502MB3603.eurprd05.prod.outlook.com
+ (2603:10a6:208:23::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=noams@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 87da02b2-1d06-485a-5030-08d7799e77ea
+x-ms-traffictypediagnostic: AM0PR0502MB4083:|AM0PR0502MB4083:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR0502MB4083BFBCF6C7BC07FBE29F12DB5C0@AM0PR0502MB4083.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 02426D11FE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(136003)(376002)(39860400002)(199004)(189003)(99286004)(26005)(2616005)(66946007)(2906002)(229853002)(14454004)(25786009)(305945005)(316002)(7416002)(8676002)(52116002)(6506007)(76176011)(53546011)(6486002)(11346002)(81166006)(8936002)(66446008)(64756008)(66476007)(86362001)(66556008)(186003)(102836004)(5660300002)(54906003)(81156014)(107886003)(31696002)(6916009)(6512007)(478600001)(71190400001)(31686004)(966005)(36756003)(71200400001)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0502MB4083;H:AM0PR0502MB3603.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: en9a3c4zPEmWhMdL0Y1BwsVjq3+B4nEVUfdadD2HmYMi8VcRc6chAspA1ftn8YY6k0wOXqSNA9iHGtrClJx3FW7KwQ1kDrQUUqm2BAVc/RhHwSceVzQtRyb7KDr3PXCLFcSln8jILtMxQSG/Hyp5g33V1ZzgHDuC6lMGi+m/kpX27ZPRGJ6M69pRsbI/tOHlMjO7WxjU1Io5fyCsGIO2o70yaxZ6AP/Y2dMpHZCRjVhaL5nkABJxePlkMGAhsCtRm7IaikVIwMZJXVPnwWT1j7+JOVcKlLI/CYpyrWLlDIyXsOHdXjiYNwS3SSiE9R45NKtyW6DC1fszZFkOqMQW9l510nrj/2pei4PhQ1KuN7gaDXf+BWfosl7yxWIvtJ5SqLWdJGmch7HXsqiEb6W1PuniP1DkJmGdU0xsOEfFO91XKzajPg7/SU00/XefBOShFIixFZM8hrn6i4KfZ97mBaxNwSxUReQ3dETQYhFsV64=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <70BDBCCD4C82204CB1F98F80E8104C7E@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87da02b2-1d06-485a-5030-08d7799e77ea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 16:16:22.1489
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IYXEgsxvwcEJGDxsV/SQvHkI2qjTR3LtLnEmsQeRlS7ht2CEb//Egh7aW07qjg9Yj70Outo3LvW0Ts2Ml5pwhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB4083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Currently access to perf_events functionality [1] beyond the scope permitted
-by perf_event_paranoid [1] kernel setting is allowed to a privileged process
-[2] with CAP_SYS_ADMIN capability enabled in the process effective set [3].
-
-This patch set introduces CAP_SYS_PERFMON capability devoted to secure performance
-monitoring activity so that CAP_SYS_PERFMON would assist CAP_SYS_ADMIN in its
-governing role for perf_events based performance monitoring of a system.
-
-CAP_SYS_PERFMON aims to harden system security and integrity when monitoring
-performance using perf_events subsystem by processes and Perf privileged users
-[2], thus decreasing attack surface that is available to CAP_SYS_ADMIN
-privileged processes [3].
-
-CAP_SYS_PERFMON aims to take over CAP_SYS_ADMIN credentials related to
-performance monitoring functionality of perf_events and balance amount of
-CAP_SYS_ADMIN credentials in accordance with the recommendations provided in
-the man page for CAP_SYS_ADMIN [3]: "Note: this capability is overloaded;
-see Notes to kernel developers, below."
-
-For backward compatibility reasons performance monitoring functionality of 
-perf_events subsystem remains available under CAP_SYS_ADMIN but its usage for
-secure performance monitoring use cases is discouraged with respect to the
-introduced CAP_SYS_PERFMON capability.
-
-In the suggested implementation CAP_SYS_PERFMON enables Perf privileged users
-[2] to conduct secure performance monitoring using perf_events in the scope
-of available online CPUs when executing code in kernel and user modes.
-
-Possible alternative solution to this capabilities balancing, system security
-hardening task could be to use the existing CAP_SYS_PTRACE capability to govern
-perf_events' performance monitoring functionality, since process debugging is
-similar to performance monitoring with respect to providing insights into
-process memory and execution details. However CAP_SYS_PTRACE still provides
-users with more credentials than are required for secure performance monitoring
-using perf_events subsystem and this excess is avoided by using the dedicated
-CAP_SYS_PERFMON capability.
-
-libcap library utilities [4], [5] and Perf tool can be used to apply
-CAP_SYS_PERFMON capability for secure performance monitoring beyond the scope
-permitted by system wide perf_event_paranoid kernel setting and below are the
-steps to evaluate the advancement suggested by the patch set:
-
-  - patch, build and boot the kernel
-  - patch, build Perf tool e.g. to /home/user/perf
-  ...
-  # git clone git://git.kernel.org/pub/scm/libs/libcap/libcap.git libcap
-  # pushd libcap
-  # patch libcap/include/uapi/linux/capabilities.h with [PATCH 1/3]
-  # make
-  # pushd progs
-  # ./setcap "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
-  # ./setcap -v "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
-  /home/user/perf: OK
-  # ./getcap /home/user/perf
-  /home/user/perf = cap_sys_ptrace,cap_syslog,cap_sys_perfmon+ep
-  # echo 2 > /proc/sys/kernel/perf_event_paranoid
-  # cat /proc/sys/kernel/perf_event_paranoid 
-  2
-  ...
-  $ /home/user/perf top
-    ... works as expected ...
-  $ cat /proc/`pidof perf`/status
-  Name:	perf
-  Umask:	0002
-  State:	S (sleeping)
-  Tgid:	2958
-  Ngid:	0
-  Pid:	2958
-  PPid:	9847
-  TracerPid:	0
-  Uid:	500	500	500	500
-  Gid:	500	500	500	500
-  FDSize:	256
-  ...
-  CapInh:	0000000000000000
-  CapPrm:	0000004400080000
-  CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
-                                     cap_sys_perfmon,cap_sys_ptrace,cap_syslog
-  CapBnd:	0000007fffffffff
-  CapAmb:	0000000000000000
-  NoNewPrivs:	0
-  Seccomp:	0
-  Speculation_Store_Bypass:	thread vulnerable
-  Cpus_allowed:	ff
-  Cpus_allowed_list:	0-7
-  ...
-
-Usage of cap_sys_perfmon effectively avoids unused credentials excess:
-- with cap_sys_admin:
-  CapEff:	0000007fffffffff => 01111111 11111111 11111111 11111111 11111111
-- with cap_sys_perfmon:
-  CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
-                                    38   34               19
-                           sys_perfmon   syslog           sys_ptrace
-
-The patch set is for tip perf/core repository:
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip perf/core
-  tip sha1: ceb9e77324fa661b1001a0ae66f061b5fcb4e4e6
-
-[1] http://man7.org/linux/man-pages/man2/perf_event_open.2.html
-[2] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
-[3] http://man7.org/linux/man-pages/man7/capabilities.7.html
-[4] http://man7.org/linux/man-pages/man8/setcap.8.html
-[5] https://git.kernel.org/pub/scm/libs/libcap/libcap.git
-[6] https://sites.google.com/site/fullycapable/, posix_1003.1e-990310.pdf
-
----
-Alexey Budankov (3):
-  capabilities: introduce CAP_SYS_PERFMON to kernel and user space
-  perf/core: apply CAP_SYS_PERFMON to CPUs and kernel monitoring
-  perf tool: extend Perf tool with CAP_SYS_PERFMON support
-
- include/linux/perf_event.h          |  6 ++++--
- include/uapi/linux/capability.h     | 10 +++++++++-
- security/selinux/include/classmap.h |  4 ++--
- tools/perf/design.txt               |  3 ++-
- tools/perf/util/cap.h               |  4 ++++
- tools/perf/util/evsel.c             | 10 +++++-----
- tools/perf/util/util.c              | 15 +++++++++++++--
- 7 files changed, 39 insertions(+), 13 deletions(-)
-
--- 
-2.20.1
+T24gMTIvMy8yMDE5IDY6MDggUE0sIENhdGFsaW4gTWFyaW5hcyB3cm90ZToNCj4gT24gVHVlLCBE
+ZWMgMDMsIDIwMTkgYXQgMDM6NTE6NTBQTSArMDAwMCwgTm9hbSBTdG9sZXJvIHdyb3RlOg0KPj4g
+T24gOC8xMi8yMDE5IDc6MDYgUE0sIENhdGFsaW4gTWFyaW5hcyB3cm90ZToNCj4+PiAgICAgIEZv
+bGxvd2luZyB0aGUgZGlzY3Vzc2lvbnMgb24gdjIgb2YgdGhpcyBwYXRjaChzZXQpIFsxXSwgdGhp
+cyBzZXJpZXMNCj4+PiAgICAgIHRha2VzIHNsaWdodGx5IGRpZmZlcmVudCBhcHByb2FjaDoNCj4+
+Pg0KPj4+ICAgICAgLSBpdCBpbXBsZW1lbnRzIGl0cyBvd24gc2ltcGxlIG1lbW9yeSBwb29sIHRo
+YXQgZG9lcyBub3QgcmVseSBvbiB0aGUNCj4+PiAgICAgICAgc2xhYiBhbGxvY2F0b3INCj4+Pg0K
+Pj4+ICAgICAgLSBkcm9wcyB0aGUgZWFybHkgbG9nIGJ1ZmZlciBsb2dpYyBlbnRpcmVseSBzaW5j
+ZSBpdCBjYW4gbm93IGFsbG9jYXRlDQo+Pj4gICAgICAgIG1ldGFkYXRhIGZyb20gdGhlIG1lbW9y
+eSBwb29sIGRpcmVjdGx5IGJlZm9yZSBrbWVtbGVhayBpcyBmdWxseQ0KPj4+ICAgICAgICBpbml0
+aWFsaXNlZA0KPj4+DQo+Pj4gICAgICAtIENPTkZJR19ERUJVR19LTUVNTEVBS19FQVJMWV9MT0df
+U0laRSBvcHRpb24gaXMgcmVuYW1lZCB0bw0KPj4+ICAgICAgICBDT05GSUdfREVCVUdfS01FTUxF
+QUtfTUVNX1BPT0xfU0laRQ0KPj4+DQo+Pj4gICAgICAtIG1vdmVzIHRoZSBrbWVtbGVha19pbml0
+KCkgY2FsbCBlYXJsaWVyIChtbV9pbml0KCkpDQo+Pj4NCj4+PiAgICAgIC0gdG8gYXZvaWQgYSBz
+ZXBhcmF0ZSBtZW1vcnkgcG9vbCBmb3Igc3RydWN0IHNjYW5fYXJlYSwgaXQgbWFrZXMgdGhlDQo+
+Pj4gICAgICAgIHRvb2wgcm9idXN0IHdoZW4gc3VjaCBhbGxvY2F0aW9ucyBmYWlsIGFzIHNjYW4g
+YXJlYXMgYXJlIHJhdGhlciBhbg0KPj4+ICAgICAgICBvcHRpbWlzYXRpb24NCj4+Pg0KPj4+ICAg
+ICAgWzFdIGh0dHA6Ly9sa21sLmtlcm5lbC5vcmcvci8yMDE5MDcyNzEzMjMzNC45MTg0LTEtY2F0
+YWxpbi5tYXJpbmFzQGFybS5jb20NCj4+Pg0KPj4+ICAgICAgQ2F0YWxpbiBNYXJpbmFzICgzKToN
+Cj4+PiAgICAgICAgbW06IGttZW1sZWFrOiBNYWtlIHRoZSB0b29sIHRvbGVyYW50IHRvIHN0cnVj
+dCBzY2FuX2FyZWEgYWxsb2NhdGlvbg0KPj4+ICAgICAgICAgIGZhaWx1cmVzDQo+Pj4gICAgICAg
+IG1tOiBrbWVtbGVhazogU2ltcGxlIG1lbW9yeSBhbGxvY2F0aW9uIHBvb2wgZm9yIGttZW1sZWFr
+IG9iamVjdHMNCj4+PiAgICAgICAgbW06IGttZW1sZWFrOiBVc2UgdGhlIG1lbW9yeSBwb29sIGZv
+ciBlYXJseSBhbGxvY2F0aW9ucw0KPj4+DQo+Pj4gICAgICAgaW5pdC9tYWluLmMgICAgICAgfCAg
+IDIgKy0NCj4+PiAgICAgICBsaWIvS2NvbmZpZy5kZWJ1ZyB8ICAxMSArLQ0KPj4+ICAgICAgIG1t
+L2ttZW1sZWFrLmMgICAgIHwgMzI1ICsrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0NCj4+PiAgICAgICAzIGZpbGVzIGNoYW5nZWQsIDkxIGluc2VydGlvbnMoKyks
+IDI0NyBkZWxldGlvbnMoLSkNCj4+IFdlIG9ic2VydmUgc2V2ZXJlIGRlZ3JhZGF0aW9uIGluIG91
+ciBuZXR3b3JrIHBlcmZvcm1hbmNlIGFmZmVjdGluZyBhbGwNCj4+IG9mIG91ciBOSUNzLiBUaGUg
+ZGVncmFkYXRpb24gaXMgZGlyZWN0bHkgbGlua2VkIHRvIHRoaXMgcGF0Y2guDQo+Pg0KPj4gV2hh
+dCB3ZSBydW46DQo+PiBTaW1wbGUgSXBlcmYgVENQIGxvb3BiYWNrIHdpdGggOCBzdHJlYW1zIG9u
+IENvbm5lY3RYNS0xMDBHYkUuDQo+PiBTaW5jZSBpdCdzIGEgbG9vcGJhY2sgdGVzdCwgdHJhZmZp
+YyBnb2VzIGZyb20gdGhlIHNvY2tldCB0aHJvdWdoIHRoZSBJUA0KPj4gc3RhY2sgYW5kIGJhY2sg
+dG8gdGhlIHNvY2tldCwgd2l0aG91dCBnb2luZyB0aHJvdWdoIHRoZSBOSUMgZHJpdmVyLg0KPiBT
+b21ldGhpbmcgc2ltaWxhciB3YXMgcmVwb3J0ZWQgYmVmb3JlLiBDYW4geW91IHRyeSBjb21taXQg
+MmFiZDgzOWFhN2U2DQo+ICgia21lbWxlYWs6IERvIG5vdCBjb3JydXB0IHRoZSBvYmplY3RfbGlz
+dCBkdXJpbmcgY2xlYW4tdXAiKSBhbmQgc2VlIGlmDQo+IGl0IGZpeGVzIHRoZSBwcm9ibGVtIGZv
+ciB5b3U/IEl0IHdhcyBtZXJnZWQgaW4gNS40LXJjNC4NCg0KSSd2ZSB0ZXN0ZWQgdGhpcyBjb21t
+aXQsIGFzIHdlbGwgYXMgNS40LjAtcmM2IGFuZCA1LjQuMCBHQSB2ZXJzaW9ucy4gV2UgDQpkb24n
+dCBzZWUgdGhlIGlzc3VlIEkndmUgbWVudGlvbmVkLg0KDQpUaGFuayB5b3UgZm9yIHRoZSBxdWlj
+ayByZXNwb25zZSBhbmQgdGhlIGFzc2lzdGFuY2UuDQo=
