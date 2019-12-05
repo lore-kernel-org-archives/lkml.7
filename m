@@ -2,229 +2,137 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE724C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3A6C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98AB2464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5472464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:44:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575571440;
+	bh=I2G1F94sqXHvuiCTC3eZrxLjsgdOMm4ffJD8vBgVHNg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v07PSEhfTut9OmnQzNj1lai2ATZ5Y3PVIxTuBWsQEWCDQ88QOuC8cfpTaUkL3dXwc
+	 VOi0YTwctEc3RRIJYxvR6aM58zSPq6qpNnpp7nhoCvXAYj0CSaT5GDpg8SSHdh7igq
+	 NMkP2/RxGSSROpYBrNlx0DMwamh4vER7/TaEftIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbfLESlU (ORCPT
+        id S1729770AbfLESoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 13:41:20 -0500
-Received: from mga17.intel.com ([192.55.52.151]:4158 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729935AbfLESlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 13:41:11 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 10:41:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,282,1571727600"; 
-   d="scan'208";a="214263547"
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by orsmga003.jf.intel.com with ESMTP; 05 Dec 2019 10:41:10 -0800
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH 3/3] x86/fpu/xstate: Invalidate fpregs when __fpu_restore_sig() fails
-Date:   Thu,  5 Dec 2019 10:26:48 -0800
-Message-Id: <20191205182648.32257-4-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191205182648.32257-1-yu-cheng.yu@intel.com>
-References: <20191205182648.32257-1-yu-cheng.yu@intel.com>
+        Thu, 5 Dec 2019 13:44:00 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36787 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLESn7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 13:43:59 -0500
+Received: by mail-pl1-f194.google.com with SMTP id k20so1605071pls.3;
+        Thu, 05 Dec 2019 10:43:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FCp49Ui27dydwY8694hG4UdI57V9y5xaYI+0ibAx9Mc=;
+        b=EwfdDzeJebLnKRGKcgosgHey0wK42t0sQk9CWjBY+NVVlAlon+T2fEoqLBaEy1HPlm
+         1Ri4tZacXbJy/6Se+pXlXRSyqyWISZlgfR0tYvZ9YFMrX29wvt4WUYNhjD0W5PL+puhg
+         upOMLVdycTmy3Et4J8+t2i/FldEusxTr3XIc1oWKFvAe03nrUey9uUzzCGc3K8UHL74A
+         8tQyIuYY7AOM3R/4/xX7pkDg7SZc5Eq75AX8LQnnJcJRg/gXQt+L4EAV83L8BDsFr9IK
+         hZTSQBqtUo3mDpHYt1Gxzkmq+CYURP3lukQHxSyYOZ94cUsHr1cNNEAak2GN1yUWt+QL
+         iHNw==
+X-Gm-Message-State: APjAAAVYeWv45aEyP5zMaEMhQqYoSorxaTokpTjGi+9kI59PAJRo7FxO
+        fxmMQtYFF4BgAAIqT8QHxms=
+X-Google-Smtp-Source: APXvYqxEGWkHqf3SoqS5JfOUeYQylUakgL3ONZFsTaapa4Y7GVYOM+MlCU3V6fpr61txQqIa5+ArzQ==
+X-Received: by 2002:a17:90a:23a9:: with SMTP id g38mr11278130pje.128.1575571438433;
+        Thu, 05 Dec 2019 10:43:58 -0800 (PST)
+Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
+        by smtp.gmail.com with ESMTPSA id p68sm13748345pfp.149.2019.12.05.10.43.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 10:43:57 -0800 (PST)
+Date:   Thu, 5 Dec 2019 10:44:50 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Alexander Lobakin <alobakin@dlink.ru>
+Cc:     Paul Burton <paul.burton@mips.com>,
+        Hassan Naveed <hnaveed@wavecomp.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: MIPS eBPF JIT support on pre-32R2
+Message-ID: <20191205184450.lbrkenmursz4zpdm@lantea.localdomain>
+References: <09d713a59665d745e21d021deeaebe0a@dlink.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <09d713a59665d745e21d021deeaebe0a@dlink.ru>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In __fpu_restore_sig(),'init_fpstate.xsave' and part of 'fpu->state.xsave'
-are restored separately to xregs.  However, as stated in __cpu_invalidate_
-fpregs_state(),
+Hi Alexander,
 
-  Any code that clobbers the FPU registers or updates the in-memory
-  FPU state for a task MUST let the rest of the kernel know that the
-  FPU registers are no longer valid for this task.
+On Thu, Dec 05, 2019 at 03:45:27PM +0300, Alexander Lobakin wrote:
+> Hey all,
+> 
+> I'm writing about lines arch/mips/net/ebpf_jit.c:1806-1807:
+> 
+> 	if (!prog->jit_requested || MIPS_ISA_REV < 2)
+> 		return prog;
+> 
+> Do pre-32R2 architectures (32R1, maybe even R3000-like) actually support
+> this eBPF JIT code?
 
-and this code violates that rule.  Should the restoration fail, the other
-task's context is corrupted.
+No, they don't; the eBPF JIT makes unconditional use of at least the
+(d)ins & (d)ext instructions which were added in MIPSr2, so it would
+result in reserved instruction exceptions & panics if enabled on
+pre-MIPSr2 CPUs.
 
-This problem does not occur very often because copy_*_to_xregs() succeeds
-most of the time.  It occurs, for instance, in copy_user_to_fpregs_
-zeroing() when the first half of the restoration succeeds and the other
-half fails.  This can be triggered by running glibc tests, where a non-
-present user stack page causes the XRSTOR to fail.
+> If they do, then the condition 'MIPS_ISA_REV < 2'
+> should be removed as it is always true for them and tells CC to remove
+> JIT completely.
+> 
+> If they don't support instructions from this JIT, then the line
+> arch/mips/Kconfig:50:
+> 
+> 	select HAVE_EBPF_JIT if (!CPU_MICROMIPS)
+> 
+> should be changed to something like:
+> 
+> 	select HAVE_EBPF_JIT if !CPU_MICROMIPS && TARGET_ISA_REV >= 2
+> 
+> (and then the mentioned 'if' condition would become redundant)
 
-The introduction of supervisor xstates and CET, while not contributing to
-the problem, makes it more detectable.  After init_fpstate and the Shadow
-Stack pointer have been restored to xregs, the XRSTOR from user stack
-fails and fpu_fpregs_owner_ctx is not updated.  The task currently owning
-fpregs then uses the corrupted Shadow Stack pointer and triggers a control-
-protection fault.
+Good spot; I agree entirely, this dependency should be reflected in
+Kconfig.
 
-Fix it by adding __cpu_invalidate_fpregs_state() to functions that copy
-fpstate to fpregs:
-  copy_*_to_xregs_*(), copy_*_to_fxregs_*(), and copy_*_to_fregs_*().
-The alternative is to hit all of the call sites themselves.
+> At the moment it is possible to build a kernel without both JIT and
+> interpreter, but with CONFIG_BPF_SYSCALL=y (what should not be allowed
+> I suppose?) within the following configuration:
+> 
+> - select any pre-32R2 CPU (e.g. CONFIG_CPU_MIPS32_R1);
+> - enable CONFIG_BPF_JIT (CONFIG_MIPS_EBPF_JIT will be autoselected);
+> - enable CONFIG_BPF_JIT_ALWAYS_ON (this removes BPF interpreter from
+>   the system).
+> 
+> I may prepare a proper patch by myself if needed (after clarification).
 
-The function __cpu_invalidate_fpregs_state() is chosen over fpregs_
-deactivate() as it is called under fpregs_lock() protection.
+That would be great, thanks!
 
-In addition to sigreturn, also checked all call sites of these functions:
+One thing to note is that I hope we'll restore the cBPF JIT with this
+patch:
 
-- copy_init_fpstate_to_fpregs();
-- copy_kernel_to_fpregs();
-- ex_handler_fprestore();
-- fpu__save(); and
-- fpu__copy().
+https://lore.kernel.org/linux-mips/20191205182318.2761605-1-paulburton@kernel.org/T/#u
 
-In fpu__save() and fpu__copy(), fpregs are re-activated because they are
-considered valid in both cases.
+The cBPF JIT looks like it should work on older pre-MIPSr2 CPUs, so the
+only way this is relevant is that your patch might have a minor
+conflict. But I thought I'd mention it anyway :)
 
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
----
- arch/x86/include/asm/fpu/internal.h | 14 ++++++++++++++
- arch/x86/kernel/fpu/core.c          | 15 +++++++++++++--
- 2 files changed, 27 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 4c95c365058a..cd380d14e4e2 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -142,6 +142,8 @@ extern void fpstate_sanitize_xstate(struct fpu *fpu);
- 		     _ASM_EXTABLE_HANDLE(1b, 2b, ex_handler_fprestore)	\
- 		     : output : input)
- 
-+static inline void __cpu_invalidate_fpregs_state(void);
-+
- static inline int copy_fregs_to_user(struct fregs_state __user *fx)
- {
- 	return user_insn(fnsave %[fx]; fwait,  [fx] "=m" (*fx), "m" (*fx));
-@@ -158,6 +160,8 @@ static inline int copy_fxregs_to_user(struct fxregs_state __user *fx)
- 
- static inline void copy_kernel_to_fxregs(struct fxregs_state *fx)
- {
-+	__cpu_invalidate_fpregs_state();
-+
- 	if (IS_ENABLED(CONFIG_X86_32))
- 		kernel_insn(fxrstor %[fx], "=m" (*fx), [fx] "m" (*fx));
- 	else
-@@ -166,6 +170,8 @@ static inline void copy_kernel_to_fxregs(struct fxregs_state *fx)
- 
- static inline int copy_kernel_to_fxregs_err(struct fxregs_state *fx)
- {
-+	__cpu_invalidate_fpregs_state();
-+
- 	if (IS_ENABLED(CONFIG_X86_32))
- 		return kernel_insn_err(fxrstor %[fx], "=m" (*fx), [fx] "m" (*fx));
- 	else
-@@ -174,6 +180,8 @@ static inline int copy_kernel_to_fxregs_err(struct fxregs_state *fx)
- 
- static inline int copy_user_to_fxregs(struct fxregs_state __user *fx)
- {
-+	__cpu_invalidate_fpregs_state();
-+
- 	if (IS_ENABLED(CONFIG_X86_32))
- 		return user_insn(fxrstor %[fx], "=m" (*fx), [fx] "m" (*fx));
- 	else
-@@ -182,16 +190,19 @@ static inline int copy_user_to_fxregs(struct fxregs_state __user *fx)
- 
- static inline void copy_kernel_to_fregs(struct fregs_state *fx)
- {
-+	__cpu_invalidate_fpregs_state();
- 	kernel_insn(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
- }
- 
- static inline int copy_kernel_to_fregs_err(struct fregs_state *fx)
- {
-+	__cpu_invalidate_fpregs_state();
- 	return kernel_insn_err(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
- }
- 
- static inline int copy_user_to_fregs(struct fregs_state __user *fx)
- {
-+	__cpu_invalidate_fpregs_state();
- 	return user_insn(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
- }
- 
-@@ -340,6 +351,7 @@ static inline void copy_kernel_to_xregs(struct xregs_state *xstate, u64 mask)
- 	u32 lmask = mask;
- 	u32 hmask = mask >> 32;
- 
-+	__cpu_invalidate_fpregs_state();
- 	XSTATE_XRESTORE(xstate, lmask, hmask);
- }
- 
-@@ -382,6 +394,7 @@ static inline int copy_user_to_xregs(struct xregs_state __user *buf, u64 mask)
- 	u32 hmask = mask >> 32;
- 	int err;
- 
-+	__cpu_invalidate_fpregs_state();
- 	stac();
- 	XSTATE_OP(XRSTOR, xstate, lmask, hmask, err);
- 	clac();
-@@ -399,6 +412,7 @@ static inline int copy_kernel_to_xregs_err(struct xregs_state *xstate, u64 mask)
- 	u32 hmask = mask >> 32;
- 	int err;
- 
-+	__cpu_invalidate_fpregs_state();
- 	XSTATE_OP(XRSTOR, xstate, lmask, hmask, err);
- 
- 	return err;
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 12c70840980e..743ff5ea4076 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -127,7 +127,12 @@ void fpu__save(struct fpu *fpu)
- 
- 	if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
- 		if (!copy_fpregs_to_fpstate(fpu)) {
-+			/*
-+			 * copy_kernel_to_fpregs deactivates fpregs;
-+			 * re-activate fpregs after that.
-+			 */
- 			copy_kernel_to_fpregs(&fpu->state);
-+			fpregs_activate(fpu);
- 		}
- 	}
- 
-@@ -191,11 +196,17 @@ int fpu__copy(struct task_struct *dst, struct task_struct *src)
- 	 *   register contents so we have to load them back. )
- 	 */
- 	fpregs_lock();
--	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-+	if (test_thread_flag(TIF_NEED_FPU_LOAD)) {
- 		memcpy(&dst_fpu->state, &src_fpu->state, fpu_kernel_xstate_size);
- 
--	else if (!copy_fpregs_to_fpstate(dst_fpu))
-+	} else if (!copy_fpregs_to_fpstate(dst_fpu)) {
-+		/*
-+		 * copy_kernel_to_fpregs deactivates fpregs;
-+		 * re-activate fpregs after that.
-+		 */
- 		copy_kernel_to_fpregs(&dst_fpu->state);
-+		fpregs_activate(src_fpu);
-+	}
- 
- 	fpregs_unlock();
- 
--- 
-2.17.1
-
+Thanks,
+    Paul
