@@ -2,102 +2,295 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D00DDC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4238C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73B82245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE8DD2077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:47:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sPG3P7lQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbfLEFpQ (ORCPT
+        id S1726097AbfLEFrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 00:45:16 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:57774 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbfLEFpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 00:45:16 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1icjwr-0007sG-8q; Thu, 05 Dec 2019 13:45:09 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1icjwn-0003y8-TT; Thu, 05 Dec 2019 13:45:05 +0800
-Date:   Thu, 5 Dec 2019 13:45:05 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     syzbot <syzbot+c2f1558d49e25cc36e5e@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [PATCH] crypto: af_alg - Use bh_lock_sock in sk_destruct
-Message-ID: <20191205054505.wulhkajz64lwwffc@gondor.apana.org.au>
-References: <0000000000003e5aa90598ed7415@google.com>
- <f7009e8d-a488-c6df-6875-e872265efec0@gmail.com>
+        Thu, 5 Dec 2019 00:47:15 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:6079 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbfLEFrO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 00:47:14 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de899e40000>; Wed, 04 Dec 2019 21:47:16 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 04 Dec 2019 21:47:12 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 04 Dec 2019 21:47:12 -0800
+Received: from [10.2.163.157] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec
+ 2019 05:47:11 +0000
+Subject: Re: [v2 PATCH] mm: move_pages: return valid node id in status if the
+ page is already on the target node
+To:     Yang Shi <yang.shi@linux.alibaba.com>, <fabecassis@nvidia.com>,
+        <mhocko@suse.com>, <cl@linux.com>, <vbabka@suse.cz>,
+        <mgorman@techsingularity.net>, <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <1575519678-86510-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <d4935b9f-39ef-fb91-1786-be84784dccd0@nvidia.com>
+Date:   Wed, 4 Dec 2019 21:44:22 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f7009e8d-a488-c6df-6875-e872265efec0@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1575519678-86510-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575524836; bh=3BzUfhn2L2EFnKI0pmf+h4twdu2lT7xDJGJSbSIlTSk=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=sPG3P7lQrHMdzhkufix7Ov4qDOGYBHDxCVVz7lyYgqHXbXyHQHY/o9tY1myCgUyK1
+         KUL1R27VMJxzT0f7Qzy60Cnt9d5FMt5xlnJ2zeNT7iuWn8YrlQ4cLLVT/+hot5iHfS
+         mnlbO887v7yrEDobZZkkwISpx6Xt0IXJGzBrquVjMN3dLnef9HJ0HMFqeQKxmGkbrm
+         sevaJ4HMeymYkcEZx3TJTAeZ/uHJHR2aO2LpY8Mr+x2wfzY30JnaVK/mI2QnatNVpV
+         8gRnd2r/uYnshCL6Ro/KeBvD8tgei1cRR2nwVizmSLoex/+ZzRmvFRmoWokjl1WZIb
+         vyYsWwtNRRGwQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 08:59:11PM -0800, Eric Dumazet wrote:
->
-> crypto layer (hash_sock_destruct()) is called from rcu callback (this in BH context) but tries to grab a socket lock.
+On 12/4/19 8:21 PM, Yang Shi wrote:
+> Felix Abecassis reports move_pages() would return random status if the
+> pages are already on the target node by the below test program:
 > 
-> A socket lock can schedule, which is illegal in BH context.
+> ---8<---
 
-Fair enough.  Although I was rather intrigued as to how the RCU call
-occured in the first place.  After some digging my theory is that
-this is due to a SO_ATTACH_REUSEPORT_CBPF or SO_ATTACH_REUSEPORT_EBPF
-setsockopt on the crypto socket.
+This is correct correct code, so:
 
-What are these filters even suppposed to do on an af_alg socket?
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
 
-Anyhow, this is a bug that could have been triggered even without
-this, but it would have been almost impossible to do it through
-syzbot as you need to have an outstanding async skcipher/aead request
-that is freed in BH context.
+...with a few nitpicky notes about comments, below, that might help:
 
----8<---
-As af_alg_release_parent may be called from BH context (most notably
-due to an async request that only completes after socket closure,
-or as reported here because of an RCU-delayed sk_destruct call), we
-must use bh_lock_sock instead of lock_sock.
+> 
+> int main(void)
+> {
+> 	const long node_id = 1;
+> 	const long page_size = sysconf(_SC_PAGESIZE);
+> 	const int64_t num_pages = 8;
+> 
+> 	unsigned long nodemask =  1 << node_id;
+> 	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
+> 	if (ret < 0)
+> 		return (EXIT_FAILURE);
+> 
+> 	void **pages = malloc(sizeof(void*) * num_pages);
+> 	for (int i = 0; i < num_pages; ++i) {
+> 		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
+> 				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
+> 				-1, 0);
+> 		if (pages[i] == MAP_FAILED)
+> 			return (EXIT_FAILURE);
+> 	}
+> 
+> 	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
+> 	if (ret < 0)
+> 		return (EXIT_FAILURE);
+> 
+> 	int *nodes = malloc(sizeof(int) * num_pages);
+> 	int *status = malloc(sizeof(int) * num_pages);
+> 	for (int i = 0; i < num_pages; ++i) {
+> 		nodes[i] = node_id;
+> 		status[i] = 0xd0; /* simulate garbage values */
+> 	}
+> 
+> 	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
+> 	printf("move_pages: %ld\n", ret);
+> 	for (int i = 0; i < num_pages; ++i)
+> 		printf("status[%d] = %d\n", i, status[i]);
+> }
+> ---8<---
+> 
+> Then running the program would return nonsense status values:
+> $ ./move_pages_bug
+> move_pages: 0
+> status[0] = 208
+> status[1] = 208
+> status[2] = 208
+> status[3] = 208
+> status[4] = 208
+> status[5] = 208
+> status[6] = 208
+> status[7] = 208
+> 
+> This is because the status is not set if the page is already on the
+> target node, but move_pages() should return valid status as long as it
+> succeeds.  The valid status may be errno or node id.
+> 
+> We can't simply initialize status array to zero since the pages may be
+> not on node 0.  Fix it by updating status with node id which the page is
+> already on.  And, it looks we have to update the status inside
+> add_page_for_migration() since the page struct is not available outside
+> it.
+> 
+> Make add_page_for_migration() return 1 if store_status() is failed in
+> order to not mix up the status value since -EFAULT is also a valid
+> status.
+> 
+> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+> Reported-by: Felix Abecassis <fabecassis@nvidia.com>
+> Tested-by: Felix Abecassis <fabecassis@nvidia.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: <stable@vger.kernel.org> 4.17+
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+> v2: *Correted the return value when add_page_for_migration() returns 1.
+> 
+> John noticed another return value inconsistency between the implementation and
+> the manpage.  The manpage says it should return -ENOENT if the page is already
+> on the target node, but it doesn't.  It looks the original code didn't return
+> -ENOENT either, I'm not sure if this is a document issue or not.  Anyway this
+> is another issue, once we confirm it we can fix it later.
+> 
+>   mm/migrate.c | 36 ++++++++++++++++++++++++++++++------
+>   1 file changed, 30 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index a8f87cb..f1090a0 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1512,17 +1512,21 @@ static int do_move_pages_to_node(struct mm_struct *mm,
+>   /*
+>    * Resolves the given address to a struct page, isolates it from the LRU and
+>    * puts it to the given pagelist.
+> - * Returns -errno if the page cannot be found/isolated or 0 when it has been
+> - * queued or the page doesn't need to be migrated because it is already on
+> - * the target node
+> + * Returns:
+> + *     errno - if the page cannot be found/isolated
+> + *     0 - when it has been queued or the page doesn't need to be migrated
+> + *         because it is already on the target node
+> + *     1 - if store_status() is failed
 
-Reported-by: syzbot+c2f1558d49e25cc36e5e@syzkaller.appspotmail.com
-Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
-Fixes: c840ac6af3f8 ("crypto: af_alg - Disallow bind/setkey/...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-diff --git a/crypto/af_alg.c b/crypto/af_alg.c
-index 0dceaabc6321..3d8e53010cda 100644
---- a/crypto/af_alg.c
-+++ b/crypto/af_alg.c
-@@ -134,11 +134,13 @@ void af_alg_release_parent(struct sock *sk)
- 	sk = ask->parent;
- 	ask = alg_sk(sk);
- 
--	lock_sock(sk);
-+	local_bh_disable();
-+	bh_lock_sock(sk);
- 	ask->nokey_refcnt -= nokey;
- 	if (!last)
- 		last = !--ask->refcnt;
--	release_sock(sk);
-+	bh_unlock_sock(sk);
-+	local_bh_enable();
- 
- 	if (last)
- 		sock_put(sk);
+I recommend this wording instead:
+
+  * Returns:
+  *     errno - if the page cannot be found/isolated
+  *     0 - when it has been queued or the page doesn't need to be migrated
+  *         because it is already on the target node
+  *     1 - The page doesn't need to be migrated because it is already on the
+  *         target node. However, attempting to store the node ID in the status
+  *         array failed. Unlike other failures in this function, this case
+  *         needs to turn into a fatal failure in the calling function.
+
+
+>    */
+>   static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+> -		int node, struct list_head *pagelist, bool migrate_all)
+> +		int node, struct list_head *pagelist, bool migrate_all,
+> +		int __user *status, int start)
+>   {
+>   	struct vm_area_struct *vma;
+>   	struct page *page;
+>   	unsigned int follflags;
+>   	int err;
+> +	bool same_node = false;
+>   
+>   	down_read(&mm->mmap_sem);
+>   	err = -EFAULT;
+> @@ -1543,8 +1547,10 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>   		goto out;
+>   
+>   	err = 0;
+> -	if (page_to_nid(page) == node)
+> +	if (page_to_nid(page) == node) {
+> +		same_node = true;
+>   		goto out_putpage;
+> +	}
+>   
+>   	err = -EACCES;
+>   	if (page_mapcount(page) > 1 && !migrate_all)
+> @@ -1578,6 +1584,16 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>   	put_page(page);
+>   out:
+>   	up_read(&mm->mmap_sem);
+> +
+> +	/*
+> +	 * Must call store_status() after releasing mmap_sem since put_user
+> +	 * need acquire mmap_sem too, otherwise potential deadlock may exist.
+> +	 */
+> +	if (same_node) {
+> +		if (store_status(status, start, node, 1))
+> +			err = 1;
+> +	}
+> +
+>   	return err;
+>   }
+>   
+> @@ -1639,10 +1655,18 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>   		 * report them via status
+>   		 */
+
+Let's change the comment above add_page_for_migration(), to read:
+
+		/*
+		 * Most errors in the page lookup or isolation are not fatal
+		 * and we simply report them via the status array. However,
+		 * positive error values are fatal.
+		 */
+
+
+>   		err = add_page_for_migration(mm, addr, current_node,
+> -				&pagelist, flags & MPOL_MF_MOVE_ALL);
+> +				&pagelist, flags & MPOL_MF_MOVE_ALL, status,
+> +				i);
+> +
+>   		if (!err)
+>   			continue;
+>   
+> +		/* store_status() failed in add_page_for_migration() */
+
+...and let's replace the above line, with the following:
+
+		/*
+		 * Most errors in the page lookup or isolation are not fatal
+		 * and we simply report them via the status array. However,
+		 * positive error values are fatal.
+		 */
+
+
+> +		if (err > 0) {
+> +			err = -EFAULT;
+> +			goto out_flush;
+> +		}
+> +
+>   		err = store_status(status, i, err, 1);
+>   		if (err)
+>   			goto out_flush;
+> 
+
+And with that, I think the comments help a little bit more, in reading
+through the code.
+
+
+thanks,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+John Hubbard
+NVIDIA
