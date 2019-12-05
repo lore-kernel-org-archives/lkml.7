@@ -2,248 +2,132 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3080FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D714C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F223B24249
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:01:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="deAQ7/9R"
+	by mail.kernel.org (Postfix) with ESMTP id 2870620659
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575572906;
+	bh=40P9n3emZPz0ZfLgusgo/yMSIxlr6E2qcaFz2UtC+Gk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e7ugrIWlW6/uJgPWUBr36eaQ39K3XT3eq3HskUEGd4DZHWfHZc+8A+gHRgXXbz0Qq
+	 Poxjf5JnReYbg6G20GuqDRBerJmHegXnHX4CB8BEoVi/EyRtjESz8hBDhLrftchv2N
+	 pbaB0oWK1VoKszVpwoQtEG6O75A4OK13i3tdEs8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730003AbfLETB4 (ORCPT
+        id S1729996AbfLETIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 14:01:56 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45047 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726946AbfLETBz (ORCPT
+        Thu, 5 Dec 2019 14:08:25 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44281 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfLETIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 14:01:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575572513;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D77fXphMC6NKMk8njAR4Uy6IgDlT5yzg7QnznzQx/3g=;
-        b=deAQ7/9RaQ5EViZsksqa29abmxLXmx5fZH2XB0Pn7TNfe0bxaw4HHboFAPl07LEQ4oimTY
-        g1Z3idVJL8n3rzEH+dGzxP6XxAT+1iNG0F3mlxUZLaYdVwW9DqAs8CJjZriADjOrK6MgLN
-        +8w25eDulXmjUIwpqp7Usz7r9D+MXyc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-259-98B_a_AMMLSvH1u_CCHl8w-1; Thu, 05 Dec 2019 14:01:50 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 976F5107ACC4;
-        Thu,  5 Dec 2019 19:01:48 +0000 (UTC)
-Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9324C5C1B5;
-        Thu,  5 Dec 2019 19:01:45 +0000 (UTC)
-Subject: Re: [RFC 2/3] KVM: arm64: pmu: Fix chained SW_INCR counters
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, james.morse@arm.com,
-        andrew.murray@arm.com, suzuki.poulose@arm.com, drjones@redhat.com
-References: <20191204204426.9628-1-eric.auger@redhat.com>
- <20191204204426.9628-3-eric.auger@redhat.com>
- <561ac6df385e977cc51d51a8ab28ee49@www.loen.fr>
- <2b30c1ca-3bc0-9f73-4bea-ee42bb74cbac@redhat.com>
- <15507faca89a980056df7119e105e82a@www.loen.fr>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <145cdd1c-266c-6252-9688-e9e4c6809dfd@redhat.com>
-Date:   Thu, 5 Dec 2019 20:01:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 5 Dec 2019 14:08:25 -0500
+Received: by mail-ot1-f68.google.com with SMTP id x3so3548152oto.11;
+        Thu, 05 Dec 2019 11:08:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GhI01COZ1PM4IuNCQYroNt43ak9q+ZJEl+5PK/vzrwc=;
+        b=Cpxk46pnI8ZCtT+1E/uZ9TbR/h1P8SsJPaKYiye7X/GQYWLPdjqvaz+oMhdikno/iS
+         FYrOI5mmb91YVoXZdVKnL55dVZVohuamF3PwGekZEuLfwbpQ2C4Up8C2Ggj+N4pat8rx
+         5uRz/YjEjnxrJw5lLbFuy636O9pvWMbuVXeBACKUjzort/4Uaml0fbFwaj8tjlcNJa+/
+         WhcfIFRGLgIO/tXMDp6f8FkRV+D5rJq1U4FFLyZOoLDFsvE3OJ5+xpzW9e+pxP/nMXms
+         vKwKedlnpTE+7BU60076cBgCR2IVy7lmRaMZqQXLeo3dHNChCy3pHypV0c0U4jTSxxGF
+         JTHQ==
+X-Gm-Message-State: APjAAAUr830AiXyS3XHnFbyM+/j5hENZ/YJJyoJqr8sYPLZYyt52REHA
+        lbNaU8VTe2dn7NTuiwHzKQ==
+X-Google-Smtp-Source: APXvYqyrDf3SjBOgDwQzOa4/THONdCOmBohqUk4Y5DGydGiSs0Q8JEOerKtxomNcothMl7/fKTTrlA==
+X-Received: by 2002:a9d:7357:: with SMTP id l23mr7568607otk.10.1575572903777;
+        Thu, 05 Dec 2019 11:08:23 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w8sm2157401ote.80.2019.12.05.11.08.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 11:08:22 -0800 (PST)
+Date:   Thu, 5 Dec 2019 13:08:21 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     freddy.hsin@mediatek.com
+Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wim@linux-watchdog.org,
+        linux@roeck-us.net, matthias.bgg@gmail.com,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, Chang-An.Chen@mediatek.com,
+        wsd_upstream@mediatek.com
+Subject: Re: [PATCH v1 4/4] dt-binding: power: reset: Add documentation for
+ MTK RGU (Reset Gernation Unit) reboot driver
+Message-ID: <20191205190821.GA25233@bogus>
+References: <1574746490-625-1-git-send-email-freddy.hsin@mediatek.com>
+ <1574746490-625-5-git-send-email-freddy.hsin@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <15507faca89a980056df7119e105e82a@www.loen.fr>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: 98B_a_AMMLSvH1u_CCHl8w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574746490-625-5-git-send-email-freddy.hsin@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+On Tue, Nov 26, 2019 at 01:34:50PM +0800, freddy.hsin@mediatek.com wrote:
+> From: Freddy Hsin <freddy.hsin@mediatek.com>
+> 
+> Add documentation for MTK RGU (Reset Generation Unit) reboot driver.
+> 
+> Signed-off-by: Freddy Hsin <freddy.hsin@mediatek.com>
+> ---
+>  .../devicetree/bindings/power/reset/mtk-reboot.txt |   30 ++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/mtk-reboot.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/reset/mtk-reboot.txt b/Documentation/devicetree/bindings/power/reset/mtk-reboot.txt
+> new file mode 100644
+> index 0000000..708d351
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/mtk-reboot.txt
+> @@ -0,0 +1,30 @@
+> +Generic MTK RGU mapped register reset driver
+> +
+> +This is a reset driver using toprgu to map its non-volatile register.
+> +The reset is generally performed with a write to the non-volatile register
+> +defined by the register map pointed by toprgu reference plus the offset
+> +with the mask defined in the reboot-mode node.
+> +
+> +Required properties:
+> +- compatible: should contain "toprgu-reboot-mode"
 
-On 12/5/19 3:52 PM, Marc Zyngier wrote:
-> On 2019-12-05 14:06, Auger Eric wrote:
->> Hi Marc,
->>
->> On 12/5/19 10:43 AM, Marc Zyngier wrote:
->>> Hi Eric,
->>>
->>> On 2019-12-04 20:44, Eric Auger wrote:
->>>> At the moment a SW_INCR counter always overflows on 32-bit
->>>> boundary, independently on whether the n+1th counter is
->>>> programmed as CHAIN.
->>>>
->>>> Check whether the SW_INCR counter is a 64b counter and if so,
->>>> implement the 64b logic.
->>>>
->>>> Fixes: 80f393a23be6 ("KVM: arm/arm64: Support chained PMU counters")
->>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>>> ---
->>>> =C2=A0virt/kvm/arm/pmu.c | 16 +++++++++++++++-
->>>> =C2=A01 file changed, 15 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
->>>> index c3f8b059881e..7ab477db2f75 100644
->>>> --- a/virt/kvm/arm/pmu.c
->>>> +++ b/virt/kvm/arm/pmu.c
->>>> @@ -491,6 +491,8 @@ void kvm_pmu_software_increment(struct kvm_vcpu
->>>> *vcpu, u64 val)
->>>>
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 enable =3D __vcpu_sys_reg(vcpu, PMCNTENSET_EL=
-0);
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < ARMV8_PMU_CYCLE_IDX; i++) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool chained =3D test_bit(=
-i >> 1, vcpu->arch.pmu.chained);
->>>> +
->>>
->>> I'd rather you use kvm_pmu_pmc_is_chained() rather than open-coding
->>> this. But see below:
->>>
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!(val & BIT(i)))
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 continue;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 type =3D __vcpu_sys_r=
-eg(vcpu, PMEVTYPER0_EL0 + i)
->>>> @@ -500,8 +502,20 @@ void kvm_pmu_software_increment(struct kvm_vcpu
->>>> *vcpu, u64 val)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 reg =3D __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) + 1;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 reg =3D lower_32_bits(reg);
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) =3D reg;
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if=
- (!reg)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if=
- (reg) /* no overflow */
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 continue;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if=
- (chained) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 reg =3D __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) +=
- 1;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 reg =3D lower_32_bits(reg);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) =3D reg;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 if (reg)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 continue;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 /* mark an overflow on high counter */
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 __vcpu_sys_reg(vcpu, PMOVSSET_EL0) |=3D BIT(i + 1);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } =
-else {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 /* mark an overflow */
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 __vcpu_sys_reg(vcpu, PMOVSSET_EL0) |=3D BIT(i);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> =C2=A0}
->>>
->>> I think the whole function is a bit of a mess, and could be better
->>> structured to treat 64bit counters as a first class citizen.
->>>
->>> I'm suggesting something along those lines, which tries to
->>> streamline things a bit and keep the flow uniform between the
->>> two word sizes. IMHO, it helps reasonning about it and gives
->>> scope to the ARMv8.5 full 64bit counters... It is of course
->>> completely untested.
->>
->> Looks OK to me as well. One remark though, don't we need to test if the
->> n+1th reg is enabled before incrementing it?
->=20
-> Hmmm. I'm not sure. I think we should make sure that we don't flag
-> a counter as being chained if the odd counter is disabled, rather
-> than checking it here. As long as the odd counter is not chained
-> *and* enabled, we shouldn't touch it.>
-> Again, untested:
->=20
-> diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
-> index cf371f643ade..47366817cd2a 100644
-> --- a/virt/kvm/arm/pmu.c
-> +++ b/virt/kvm/arm/pmu.c
-> @@ -15,6 +15,7 @@
-> =C2=A0#include <kvm/arm_vgic.h>
->=20
-> =C2=A0static void kvm_pmu_create_perf_event(struct kvm_vcpu *vcpu, u64
-> select_idx);
-> +static void kvm_pmu_update_pmc_chained(struct kvm_vcpu *vcpu, u64
-> select_idx);
->=20
-> =C2=A0#define PERF_ATTR_CFG1_KVM_PMU_CHAINED 0x1
->=20
-> @@ -298,6 +299,7 @@ void kvm_pmu_enable_counter_mask(struct kvm_vcpu
-> *vcpu, u64 val)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * For high counter=
-s of chained events we must recreate the
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * perf event with =
-the long (64bit) attribute set.
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kvm_pmu_update_pmc_chained(vc=
-pu, i);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (kvm_pmu_pmc_is_chain=
-ed(pmc) &&
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-kvm_pmu_idx_is_high_counter(i)) {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-kvm_pmu_create_perf_event(vcpu, i);
-> @@ -645,7 +647,8 @@ static void kvm_pmu_update_pmc_chained(struct
-> kvm_vcpu *vcpu, u64 select_idx)
-> =C2=A0=C2=A0=C2=A0=C2=A0 struct kvm_pmu *pmu =3D &vcpu->arch.pmu;
-> =C2=A0=C2=A0=C2=A0=C2=A0 struct kvm_pmc *pmc =3D &pmu->pmc[select_idx];
->=20
-> -=C2=A0=C2=A0=C2=A0 if (kvm_pmu_idx_has_chain_evtype(vcpu, pmc->idx)) {
-> +=C2=A0=C2=A0=C2=A0 if (kvm_pmu_idx_has_chain_evtype(vcpu, pmc->idx) &&
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kvm_pmu_counter_is_enabled(vc=
-pu, pmc->idx)) {
+What's wrong with syscon-reboot-mode?
 
-In create_perf_event(), has_chain_evtype() is used and a 64b sample
-period would be chosen even if the counters are disjoined (since the odd
-is disabled). We would need to use pmc_is_chained() instead.
+> +- regmap: this is phandle to the register map node
 
-With perf_events, the check of whether the odd register is enabled is
-properly done (create_perf_event). Then I understand whenever there is a
-change in enable state or type we delete the previous perf event and
-re-create a new one. Enable state check just is missing for SW_INCR.
+Make this node a child node of the phandle and get rid of this.
 
-Some other questions:
-- do we need a perf event to be created even if the counter is not
-enabled? For instance on counter resets, create_perf_events get called.
-- also actions are made for counters which are not implemented. loop
-until ARMV8_PMU_MAX_COUNTERS. Do you think it is valuable to have a
-bitmask of supported counters stored before pmu readiness?
-I can propose such changes if you think they are valuable.
-
-Thanks
-
-Eric
-
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * During promotion=
- from !chained to chained we must ensure
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * the adjacent cou=
-nter is stopped and its event destroyed
->=20
-> What do you think?
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 M.
-
+> +- offset: offset in the register map for the reboot-mode register (in bytes)
+> +- mask: the reset value written to the reboot register (32 bit access)
+> +
+> +Examples:
+> +	reboot-mode {
+> +	   compatible = "toprgu-reboot-mode";
+> +	   regmap = <&toprgu>;
+> +	   offset = <0x24>;
+> +	   mask = <0xF>;
+> +	};
+> +
+> +Optional properties - reboot mode value that will keep in toprgu nonrst RG:
+> +- mode-charger = <BOOT_CHARGER>;
+> +- mode-recovery = <BOOT_RECOVERY>;
+> +- mode-bootloader = <BOOT_BOOTLOADER>;
+> +- mode-dm-verity-dev-corrupt = <BOOT_DM_VERITY>;
+> +- mode-kpoc = <BOOT_KPOC>;
+> +- mode-ddr-reserve = <BOOT_DDR_RSVD>;
+> +- mode-meta = <BOOT_META>;
+> +- mode-rpmbpk = <BOOT_RPMBPK>;
+> -- 
+> 1.7.9.5
