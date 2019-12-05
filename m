@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1807C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 437D8C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B629206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A13206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:06:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEP91uss"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0jH72yL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729969AbfLEQG0 (ORCPT
+        id S1729989AbfLEQGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:06:26 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44370 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLEQG0 (ORCPT
+        Thu, 5 Dec 2019 11:06:41 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33693 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLEQGl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:06:26 -0500
-Received: by mail-pl1-f195.google.com with SMTP id bh2so301090plb.11;
-        Thu, 05 Dec 2019 08:06:25 -0800 (PST)
+        Thu, 5 Dec 2019 11:06:41 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y206so1838268pfb.0;
+        Thu, 05 Dec 2019 08:06:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=A6T5rNKNclcrc8zSiYoO2y70nKx7U2mYLpgDu385uMU=;
-        b=EEP91ussc+X9HzK01xBWThOjZtw6K6ZrLXNzwbhx0dgAQ2+XYaUBeVBxWnz48RsOmQ
-         wzF0BcUi17TxzODM5z06N5ysOw8YpjclnJfPSqF1G4L58tbBMLo71c4altUl4MJ9mlR1
-         6n6+6jKu6+dm10mC0loRoI8MTLMUhIt8wQUjfPvna6FxQZdJyVeHO0ppSNLY+Erl/o+k
-         1/R3gfasyxfoUDUOm890FZMyOYUK/rZ5u8gRvpg+IosslbZE7seueHOZVSvoQ8nZ4QXI
-         pRAsRYQQzjY904SOKIjYQnrmj0ZzVe06KeuB45tFS5xZiuH5wBoHnwbFMsB1yvsmZjah
-         PtwA==
+        bh=vIaDjzjUVZua/rYrb/jl7QK530FXe/2Wn3RwlERrkCo=;
+        b=d0jH72yLnpXqxHnMrTHriP3XhEHdk+f3kfafMkwUE3e3ICRC7ZWuoN/XszRzEaOwWi
+         8nOv4humeBKBYOm7WkR4TDNk8gkXwiemZGVltYsZvrHKeHQq5w0xIsbJKgEgzzdL9W6W
+         SFujGiFwbrtnpBLe2tY2yCR/D6eAv4haGfatOJIDDmlKujizGZZ6u/UelhIvF16XLIo7
+         JZTCPOiz5CX6yQO5wmNFLLwKV9N0jyM0Ye7zocY9IS1f9XV2SyRoM+MCZV9lyEcn8jhd
+         UBhBfNYSvvJeCNdAMdbtSg1EO7VHRYeX/T+ceK54Jzv6dsFhm3rS4m2Vg3uZXFWRHIf9
+         iEwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=A6T5rNKNclcrc8zSiYoO2y70nKx7U2mYLpgDu385uMU=;
-        b=TbJWJOZSlDWUKoOy535Ohvoj6uAlGgeZfiYZMXOYKIpewCK6lZqUaajPwoKl275leR
-         zzBkaesthFSKOQd7joNcqIlvtxhubofbygoKqS8gjF4yifEzrNxPXXRbvjrfnQvsIlnM
-         w4hXn5McV0vDmhwM+iRODfdbYcNxkZm5x8qZo5OsEX/XuYpfW5H3iS0Dute2KlhNxAc/
-         rs3CRGyqqsQyvL/OhHJ9BPq4r5n+bkvg1MauERTrN0RqgC2YhtGqhwrqhkG5YqycIvL1
-         E7IxoOSeLmNLrBdOaBNZQdmnH24AbV811CdUDOKQkmTu8AAV+DIQNVdVKmQBSKejxPne
-         Z/Ug==
-X-Gm-Message-State: APjAAAWei5Pa1TdMPnkDIkBG/qXP+qdilkL+t2rlvbL2z+8uE3P8rb4l
-        42kV6qPxtUB3114+bQ0Zuuk=
-X-Google-Smtp-Source: APXvYqz1TvZSptnZMQa6vC1oLdSukjuo/E1BH74lUOre/7W/SL+wHr7pmaLET0W6OUGj2U7BLAkn4A==
-X-Received: by 2002:a17:902:8494:: with SMTP id c20mr9822487plo.123.1575561985483;
-        Thu, 05 Dec 2019 08:06:25 -0800 (PST)
+        bh=vIaDjzjUVZua/rYrb/jl7QK530FXe/2Wn3RwlERrkCo=;
+        b=esoTPGRGcEivZCDetC/x8xZl4nTdwyiutl3qGSM70BlX4HOTYkOqnsJDHATdHeIgSD
+         AkfO3lJ+HWBvyd9g+jBqIvhsBosbF6dJKVIqZlJbuBfV2ND4NXIqDOt2TnWhElhPhGtd
+         fHMhmCCAzV+t0sKK/j2RO+OzBTTm95VJOgOsrF32NunF2HsOCxMORB9JbRp5mIe1da2d
+         hebjoqltYcU2+GZzTt4BStQXBssS+EhyOqvutZ4ariciy5CHXA/nZCs3ERaIFmOOQsZ3
+         2jsHcDCwyKs94udV8oWy+2kRFO5HIkJoC9cXKaW8uo+YROhzaj7QsZWci1IKCoFgyZqd
+         pjNA==
+X-Gm-Message-State: APjAAAVcSHf343YhLVjfaK5VOqNh+zO9b05pQP/9Fg8/fc1zrY7DC78S
+        BshoRHsJh6/mXACyB9pC96c=
+X-Google-Smtp-Source: APXvYqxrFIKp1hFOwTZtgbdNanH/gWLjg60RdtE37uDZJ0yHOAVyoOK1UB4By2GgKJn9695qkNj/zg==
+X-Received: by 2002:a63:214e:: with SMTP id s14mr9992681pgm.428.1575562000625;
+        Thu, 05 Dec 2019 08:06:40 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id f8sm171321pjg.28.2019.12.05.08.06.21
+        by smtp.gmail.com with ESMTPSA id k4sm5380616pfk.11.2019.12.05.08.06.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 08:06:24 -0800 (PST)
+        Thu, 05 Dec 2019 08:06:40 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] pxa168fb: fix release function mismatch in probe failure
-Date:   Fri,  6 Dec 2019 00:06:13 +0800
-Message-Id: <20191205160613.32075-1-hslester96@gmail.com>
+Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] RDMA/cma: add missed unregister_pernet_subsys in init failure
+Date:   Fri,  6 Dec 2019 00:06:32 +0800
+Message-Id: <20191205160632.32132-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,28 +73,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver uses kfree() to release the resource allocated by
-framebuffer_alloc(), which does not match.
-Use framebuffer_release() instead to fix it.
+The driver forgets to call unregister_pernet_subsys() in the error path
+of cma_init().
+Add the missed call to fix it.
 
-Fixes: 638772c7553f ("fb: add support of LCD display controller on pxa168/910 (base layer)")
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/video/fbdev/pxa168fb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/cma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/video/fbdev/pxa168fb.c b/drivers/video/fbdev/pxa168fb.c
-index 1410f476e135..b9435133b6f3 100644
---- a/drivers/video/fbdev/pxa168fb.c
-+++ b/drivers/video/fbdev/pxa168fb.c
-@@ -769,7 +769,7 @@ static int pxa168fb_probe(struct platform_device *pdev)
- 	dma_free_coherent(fbi->dev, info->fix.smem_len,
- 			info->screen_base, fbi->fb_start_dma);
- failed_free_info:
--	kfree(info);
-+	framebuffer_release(info);
- 
- 	dev_err(&pdev->dev, "frame buffer device init failed with %d\n", ret);
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index 25f2b70fd8ef..43a6f07e0afe 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -4763,6 +4763,7 @@ static int __init cma_init(void)
+ err:
+ 	unregister_netdevice_notifier(&cma_nb);
+ 	ib_sa_unregister_client(&sa_client);
++	unregister_pernet_subsys(&cma_pernet_operations);
+ err_wq:
+ 	destroy_workqueue(cma_wq);
  	return ret;
 -- 
 2.24.0
