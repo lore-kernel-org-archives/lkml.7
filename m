@@ -2,203 +2,149 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B63C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC38EC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2602245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22EF206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:36:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="HTnzmMsS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hEvfs86e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728972AbfLEEf0 (ORCPT
+        id S1729001AbfLEEgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 23:35:26 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:45506 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728132AbfLEEf0 (ORCPT
+        Wed, 4 Dec 2019 23:36:16 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:32820 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728470AbfLEEgQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 23:35:26 -0500
-Received: by mail-pj1-f68.google.com with SMTP id r11so735126pjp.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 20:35:25 -0800 (PST)
+        Wed, 4 Dec 2019 23:36:16 -0500
+Received: by mail-wr1-f67.google.com with SMTP id b6so1858141wrq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 20:36:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=s6emKmGGeuSq3wtIVxjBKVR6ZpCN8AX3rs92e/sQ08s=;
-        b=HTnzmMsSBoONgPFSO6kOgPwH5zOZehEChmShYIuAo0k4JTBQNF3A5wgx2GKkGvWf0/
-         S8wIIqluaiR7t7sEd8vDlFYt+v+8pBRbWU2LvgNKERIMYCO/15zH23xUkm5+HaCbsXdi
-         KrdfsJfxfqTl+g3UG1SnUBAB4DY29MLiQVxfc=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=keNUPJzqbpb1zvh7gwgj7wSZGJ1RcEtCjXcl9nIyRWA=;
+        b=hEvfs86e9uivc96esO1PqMIaSDQRwe6rRSEh3UTbWwRpAfK2D9o0OHW9jyWdUe+ImC
+         KM5sjitV4VYUSsac91vLm0LvC2QACkEbjm+0bQ9Usog5c782YsT0qny4ZFJy4VNaaSPj
+         EoxT4aPxXr+CxnhTvj6mg+0gI6BMQ0BvXkUSCTtK4JWxrfURYclITMO5RB0/bJH0GV9K
+         ICalID4puBDrItEojRVXbjuKsTJ/YPJt6Xlql9wzZ9RXhh3pubq8cEt3s5sYE1KzUS8x
+         QwAVJIhhZQaZkudwl6IhRSSzAGZ1MN263zCP8gq5tnsmIZCHCa1Ve0QoErHbRHURc2er
+         kWPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=s6emKmGGeuSq3wtIVxjBKVR6ZpCN8AX3rs92e/sQ08s=;
-        b=d6HiMkrH1Lk8cxsWJtIX8p6UJokztnEMTdHGpGducn0Yfhbe1eWRkxRaipbMtcvLtY
-         y8sEuYhnqf3dHH6wfY2Jf4pcMtyEot8zKcwa1NURmRnvVkmp5MXNDBql1Ztu/CzO8JXk
-         s9Nbjq4jCnbkHU5pZXD0tckMXv+tPNLKl8Lc7Fjng0bdKOJx3fBNsp8dX/aSER/FRFw3
-         mCZHRkejDoPQn/pItiXaGhFh7qX4hN5ikcT9DJHzx8GLCtBT0A+YV6F9yCWjfHysnj0W
-         PeQpoczS1yEfM2WSsC4NiEavaSTDDMk/TrBEz+mcjXzBI5C84IjpHa5twidllt3iYY8K
-         a3lQ==
-X-Gm-Message-State: APjAAAWFZE6PaobiVqVENmYSeh5mR34GeBAkn/UdYnlcbHFfizWqHMHE
-        zJtHCQtsWoxfHfmg76YWIsnaqw==
-X-Google-Smtp-Source: APXvYqxCZmeC4c8H+1S3gozzuwiEdfr5IAET6UGkXj4FIbbXUkTX+Q/yZHHnB0KOldDQ9QcNbSYcCw==
-X-Received: by 2002:a17:90a:bb0b:: with SMTP id u11mr7305972pjr.12.1575520525179;
-        Wed, 04 Dec 2019 20:35:25 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-7daa-d2ea-7edb-cfe8.static.ipv6.internode.on.net. [2001:44b8:1113:6700:7daa:d2ea:7edb:cfe8])
-        by smtp.gmail.com with ESMTPSA id c184sm10147599pfa.39.2019.12.04.20.35.23
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=keNUPJzqbpb1zvh7gwgj7wSZGJ1RcEtCjXcl9nIyRWA=;
+        b=T9VRrcIcRpL7JYkrYc4Nb6I6uPBQSSCcBOE6GxBG/XJxn83AaWDNW5Nc2euOaz7wIA
+         JmrJuvaA/12MF0lU43i+o2spTElPEhLt1Z4ZKg2alHyvuJsE4XVHz4eHPue5Mq3YWnJS
+         XaoZq0t/Y7Vh29t1VH2g4Y4B+DktOcbiLelC1lWmiCDhZP3sv5tuIcu8AsTQPBMesYcg
+         +1KBphSusA9++0WiLMGPO96G4IP276Yij3cvckz9Cd5dUR2Qyi2eqMlTa5YLH7mPNIHJ
+         ABjcqgR1vSJ1MSDSXmz9F83rw2CBDbFXGB/ukDW4KFolPeEHg3NxGoIX9J8691xq218k
+         FfMQ==
+X-Gm-Message-State: APjAAAVjZfL2zeMZkDisytrI77pIzVMO+LzvpqgJ21Y/y+BPw1oIrG1n
+        QiiBYZfWIrHWioKHBdFDY/syaQ==
+X-Google-Smtp-Source: APXvYqyAeuNq7VceTAS9eq+u2nkne8kbzO+3NySJpdhCTng6yAxjdC53noAT+TaQdRaTXEWhj0rzog==
+X-Received: by 2002:adf:fe86:: with SMTP id l6mr7357191wrr.252.1575520573537;
+        Wed, 04 Dec 2019 20:36:13 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id j12sm11408925wrw.54.2019.12.04.20.36.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 20:35:24 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+82e323920b78d54aaed5@syzkaller.appspotmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Yonghong Song <yhs@fb.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Subject: Re: BUG: unable to handle kernel paging request in pcpu_alloc
-In-Reply-To: <CACT4Y+ZTXKP0MAT3ivr5HO-skZOjSVdz7RbDoyc522_Nbk8nKQ@mail.gmail.com>
-References: <000000000000314c120598dc69bd@google.com> <CACT4Y+ZTXKP0MAT3ivr5HO-skZOjSVdz7RbDoyc522_Nbk8nKQ@mail.gmail.com>
-Date:   Thu, 05 Dec 2019 15:35:21 +1100
-Message-ID: <877e3be6eu.fsf@dja-thinkpad.axtens.net>
+        Wed, 04 Dec 2019 20:36:12 -0800 (PST)
+Date:   Thu, 5 Dec 2019 04:36:09 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Zhang Rui <rui.zhang@intel.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+Subject: Re: linux-next: Tree for Nov 15 (thermal:
+ THERMAL_GOV_POWER_ALLOCATOR)
+Message-ID: <20191205043609.GA231782@google.com>
+References: <20191115190525.77efdf6c@canb.auug.org.au>
+ <247cd41e-a07b-adf0-4ec2-6467f0257837@infradead.org>
+ <9436e207-8a65-f01b-c348-32a8a00f03d4@infradead.org>
+ <6d43c93a748872293df489d397f894b77b221bc9.camel@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d43c93a748872293df489d397f894b77b221bc9.camel@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> HEAD commit:    1ab75b2e Add linux-next specific files for 20191203
->> git tree:       linux-next
->> console output: https://syzkaller.appspot.com/x/log.txt?x=10edf2eae00000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=de1505c727f0ec20
->> dashboard link: https://syzkaller.appspot.com/bug?extid=82e323920b78d54aaed5
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=156ef061e00000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11641edae00000
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+82e323920b78d54aaed5@syzkaller.appspotmail.com
->
-> +Daniel, is it the same as:
-> https://syzkaller.appspot.com/bug?id=f6450554481c55c131cc23d581fbd8ea42e63e18
-> If so, is it possible to make KASAN detect this consistently with the
-> same crash type so that syzbot does not report duplicates?
+Hi all,
 
-It looks like both of these occur immediately after failure injection. I
-think my assumption that I could ignore the chance of failures in the
-per-cpu allocation path will have to be revisited. That's annoying.
+On Thursday 05 Dec 2019 at 12:27:47 (+0800), Zhang Rui wrote:
+> I overlooked the original report probably because I was not CCed.
+> 
+> This is introduced by commit a4e893e802e6("thermal: cpu_cooling:
+> Migrate to using the EM framework") which adds the dependency of
+> ENERGY_MODEL for THERMAL_GOV_POWER_ALLOCATOR.
+> 
+> To fix this, it's better to make THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
+> depends on THERMAL_GOV_POWER_ALLOCATOR instead.
+> 
+> Please confirm the problem is fixed by below patch.
+> 
+> thanks,
+> rui
+> 
+> From c9429f6e28ea2219686a4294d39f015ba373774b Mon Sep 17 00:00:00 2001
+> From: Zhang Rui <rui.zhang@intel.com>
+> Date: Thu, 5 Dec 2019 12:17:07 +0800
+> Subject: [PATCH] thermal: fix a Kconfig warning
+> 
+> Currently, THERMAL_GOV_POWER_ALLOCATOR is selected by
+> THERMAL_DEFAULT_GOV_POWER_ALLOCATOR even if it has some unmet
+> dependencies.
+> 
+> This causes the Kconfig warning
+>    WARNING: unmet direct dependencies detected for
+>       THERMAL_GOV_POWER_ALLOCATOR
+>       Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
+>       Selected by [y]:
+>       - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
+> 
+> Fix the problem by making THERMAL_DEFAULT_GOV_POWER_ALLOCATOR depends on
+> THERMAL_GOV_POWER_ALLOCATOR instead.
+> 
+> Fixes: a4e893e802e6("thermal: cpu_cooling: Migrate to using the EM framework")
+> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> ---
+>  drivers/thermal/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 59b79fc48266..79b27865c6f4 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -108,7 +108,7 @@ config THERMAL_DEFAULT_GOV_USER_SPACE
+>  
+>  config THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
+>  	bool "power_allocator"
+> -	select THERMAL_GOV_POWER_ALLOCATOR
+> +	depends on THERMAL_GOV_POWER_ALLOCATOR
+>  	help
+>  	  Select this if you want to control temperature based on
+>  	  system and device power allocation. This governor can only
+> -- 
+> 2.17.1
 
-I'll try to spin something today but Andrey feel free to pip me at the
-post again :)
+FWIW, a similar fix has been suggested a couple weeks back:
 
-I'm not 100% confident to call them dups just yet, but I'm about 80%
-confident that they are.
+  https://lore.kernel.org/lkml/20191113105313.41616-1-yuehaibing@huawei.com/
 
-Regards,
-Daniel
->
->> RDX: 000000000000003c RSI: 0000000020000080 RDI: 0c00000000000000
->> RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000000000
->> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000018
->> R13: 0000000000000004 R14: 0000000000000005 R15: 0000000000000000
->> BUG: unable to handle page fault for address: fffff91ffff00000
->> #PF: supervisor read access in kernel mode
->> #PF: error_code(0x0000) - not-present page
->> PGD 21ffe6067 P4D 21ffe6067 PUD aa56c067 PMD aa56d067 PTE 0
->> Oops: 0000 [#1] PREEMPT SMP KASAN
->> CPU: 1 PID: 8999 Comm: syz-executor865 Not tainted
->> 5.4.0-next-20191203-syzkaller #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
->> Google 01/01/2011
->> RIP: 0010:memory_is_nonzero mm/kasan/generic.c:121 [inline]
->> RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:135 [inline]
->> RIP: 0010:memory_is_poisoned mm/kasan/generic.c:166 [inline]
->> RIP: 0010:check_memory_region_inline mm/kasan/generic.c:182 [inline]
->> RIP: 0010:check_memory_region+0x9c/0x1a0 mm/kasan/generic.c:192
->> Code: c9 4d 0f 49 c1 49 c1 f8 03 45 85 c0 0f 84 10 01 00 00 41 83 e8 01 4e
->> 8d 44 c0 08 eb 0d 48 83 c0 08 4c 39 c0 0f 84 a7 00 00 00 <48> 83 38 00 74
->> ed 4c 8d 40 08 eb 09 48 83 c0 01 49 39 c0 74 53 80
->> RSP: 0018:ffffc90001f67a80 EFLAGS: 00010216
->> RAX: fffff91ffff00000 RBX: fffff91ffff01000 RCX: ffffffff819e1589
->> RDX: 0000000000000001 RSI: 0000000000008000 RDI: ffffe8ffff800000
->> RBP: ffffc90001f67a98 R08: fffff91ffff01000 R09: 0000000000001000
->> R10: fffff91ffff00fff R11: ffffe8ffff807fff R12: fffff91ffff00000
->> R13: 0000000000008000 R14: 0000000000000000 R15: ffff88821fffd100
->> FS:  00000000011a7880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: fffff91ffff00000 CR3: 00000000a94ad000 CR4: 00000000001406e0
->> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> Call Trace:
->>   memset+0x24/0x40 mm/kasan/common.c:107
->>   memset include/linux/string.h:410 [inline]
->>   pcpu_alloc+0x589/0x1380 mm/percpu.c:1734
->>   __alloc_percpu_gfp+0x28/0x30 mm/percpu.c:1783
->>   bpf_array_alloc_percpu kernel/bpf/arraymap.c:35 [inline]
->>   array_map_alloc+0x698/0x7d0 kernel/bpf/arraymap.c:159
->>   find_and_alloc_map kernel/bpf/syscall.c:123 [inline]
->>   map_create kernel/bpf/syscall.c:654 [inline]
->>   __do_sys_bpf+0x478/0x3810 kernel/bpf/syscall.c:3012
->>   __se_sys_bpf kernel/bpf/syscall.c:2989 [inline]
->>   __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:2989
->>   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
->>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->> RIP: 0033:0x442f99
->> Code: e8 ec 09 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
->> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
->> ff 0f 83 cb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
->> RSP: 002b:00007ffc8aa156d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
->> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000442f99
->> RDX: 000000000000003c RSI: 0000000020000080 RDI: 0c00000000000000
->> RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000000000
->> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000018
->> R13: 0000000000000004 R14: 0000000000000005 R15: 0000000000000000
->> Modules linked in:
->> CR2: fffff91ffff00000
->> ---[ end trace 449f8b43dad6ffb8 ]---
->> RIP: 0010:memory_is_nonzero mm/kasan/generic.c:121 [inline]
->> RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:135 [inline]
->> RIP: 0010:memory_is_poisoned mm/kasan/generic.c:166 [inline]
->> RIP: 0010:check_memory_region_inline mm/kasan/generic.c:182 [inline]
->> RIP: 0010:check_memory_region+0x9c/0x1a0 mm/kasan/generic.c:192
->> Code: c9 4d 0f 49 c1 49 c1 f8 03 45 85 c0 0f 84 10 01 00 00 41 83 e8 01 4e
->> 8d 44 c0 08 eb 0d 48 83 c0 08 4c 39 c0 0f 84 a7 00 00 00 <48> 83 38 00 74
->> ed 4c 8d 40 08 eb 09 48 83 c0 01 49 39 c0 74 53 80
->> RSP: 0018:ffffc90001f67a80 EFLAGS: 00010216
->> RAX: fffff91ffff00000 RBX: fffff91ffff01000 RCX: ffffffff819e1589
->> RDX: 0000000000000001 RSI: 0000000000008000 RDI: ffffe8ffff800000
->> RBP: ffffc90001f67a98 R08: fffff91ffff01000 R09: 0000000000001000
->> R10: fffff91ffff00fff R11: ffffe8ffff807fff R12: fffff91ffff00000
->> R13: 0000000000008000 R14: 0000000000000000 R15: ffff88821fffd100
->> FS:  00000000011a7880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: fffff91ffff00000 CR3: 00000000a94ad000 CR4: 00000000001406e0
->> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->>
->>
->> ---
->> This bug is generated by a bot. It may contain errors.
->> See https://goo.gl/tpsmEJ for more information about syzbot.
->> syzbot engineers can be reached at syzkaller@googlegroups.com.
->>
->> syzbot will keep track of this bug report. See:
->> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->> syzbot can test patches for this bug, for details see:
->> https://goo.gl/tpsmEJ#testing-patches
->>
->> --
->> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
->> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
->> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000314c120598dc69bd%40google.com.
+Thanks,
+Quentin
