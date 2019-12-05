@@ -2,149 +2,113 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C84BC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1EDC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EACB21744
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 951FA206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:51:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAlH3TSV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qjq9QecI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbfLECnA (ORCPT
+        id S1728635AbfLECv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 21:43:00 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41663 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728548AbfLECm7 (ORCPT
+        Wed, 4 Dec 2019 21:51:29 -0500
+Received: from mail-pg1-f174.google.com ([209.85.215.174]:46441 "EHLO
+        mail-pg1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728449AbfLECv3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 21:42:59 -0500
-Received: by mail-io1-f68.google.com with SMTP id z26so1966955iot.8;
-        Wed, 04 Dec 2019 18:42:59 -0800 (PST)
+        Wed, 4 Dec 2019 21:51:29 -0500
+Received: by mail-pg1-f174.google.com with SMTP id z124so833174pgb.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 18:51:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vSYXq7k3D7T0dUleEUNaJBpJRJeTNo0CbEMieQSFYHs=;
-        b=OAlH3TSVK/Ihtm0+HajQjItGYfwrIRCBBjFV/Jq4zFcQ4UILqZZ9O01MdQdPHTO94K
-         RXkSag1msFqS9qcpaCFw3tFi8LKwaRNbNzcCcP+txvSJTZUIZghbvmRKh0QCArK+6vjo
-         aQfdJj+3mDALDsspWeWTX26ZUmvxuU06vQbRezXjJ6wTuQPy7Qvurfu+7xtgTI7lGVhV
-         U5Ub0HJE67O8y9USyAtE2JrAxkf32WGOozmWkSLWsxOo+WiGUShQGn6xUrJFLTYafiZB
-         4Tt6Oiex20c6VWI9iZ5naBG3HddAx4DcJhCfwi37RXUs8pevPteod4qqWp9uuSipjM1D
-         jsqA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=YXOwxN1kP+K4jqhxg2yhpfqPO6sP7d2qL2AC9K9utQ4=;
+        b=qjq9QecI/wOJmuVH8+2KuOKZd77fkfhSNfn75KhTqEhICZ1dJqZObyHA6YA6REPVQI
+         qUmsq/SmFCy9XPAFYfIXDM60S+OakybcZPUjZwNhLBKA/7paGXMi9QCzMMNKwIcy84KA
+         qrUzznkALn//5SzE7Y0GRlKUOBJLtRKsJ+exXKT4ZeCTjv8MzL3d1bJ0gFGpG2AVAWW8
+         VSnlqKn3T7sw0ROo3Ch5kfswp5/6Wg/11JgpwIPSKHj2Cle8tT7pYIc3jUCsQQNHRp50
+         wcr4hxUQOifunSOuS23mTqe6Ex44OF3flMKDSiwqg0UF5UA0JxQVvbhHThGa8VT2rXIp
+         whyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vSYXq7k3D7T0dUleEUNaJBpJRJeTNo0CbEMieQSFYHs=;
-        b=dLylXVxn4mN+luOoEI69tsr9RqnmoshavUU772P17YU0i+2P7Ep8xcAk7EPhE04a9L
-         Ziw4J9/YbNHG3V2+/KtCuxRMT/5Ge0KZlsoYSpVgv6Q6xpCAXm86VpQ5vMmXv0fy8bnc
-         TRYLFTVebyX4+Qbqe+Ti5l5PHF6RhjLEpx4JIAgb4rDgxgrs8z43s7lVKFSBU1uG1oDz
-         ImlZgp7j80KkIh+gXDDE4zIawlt7sux/OxqEAQddejr8+o2y39SWB05aUC8eWD3XH5nJ
-         VVBb8b8ttiMMbus6ShE8KKaDj8oJmfFXg6jcMEt7AeKoZbkqvFRVoa5GDCaiXH1U6ggO
-         IOvQ==
-X-Gm-Message-State: APjAAAVkmi8IrVf/R+T+hu0zx3ztgr0/htm/Vf6yCH/pIRf6MFjrjL6D
-        b3zM4zi2VZHr7El1TTov77DOwXfn7Luuzy/vRbw=
-X-Google-Smtp-Source: APXvYqxjxJswzFYlrl9uW8u0CkKp94IvIZ2n+WI2Ew/dZQblDPXe5IPsqoDnmP6u7zEKBzaYLc2rUWnp2z1NuLM6VvA=
-X-Received: by 2002:a6b:ab07:: with SMTP id u7mr4543829ioe.27.1575513778857;
- Wed, 04 Dec 2019 18:42:58 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=YXOwxN1kP+K4jqhxg2yhpfqPO6sP7d2qL2AC9K9utQ4=;
+        b=hT+y8bfk/2leJkCuGs7bD7k/HAyZ1ldJSrBEGyUHymiOl08dFnHK4AAFJiWF+wH7bM
+         eNWA5KsUIxYVMHKAw4UrJHJLvTfObFEvJkQvGB2VzrSmQ2fuzZocr1cZNmRM6XSzhJKz
+         uPherFoG+sKg0xT+CGH3akTdCQhWfwhYtO5FlocsmDM/Tc4lZ9viCIZ/TvalBVUTaSRT
+         MPY9u+9N0h+myVxEjovZk2BLhJ6LRNCnY1XB8J6a2PPlypMjrCK2S58Riu3ASjAH38An
+         Mx+qw7Czf0zwGnIwSOByXcTzia/Jy045NOExLkYl4mVANdV6HB5pt3Q4E6pc67lUtskV
+         R+hg==
+X-Gm-Message-State: APjAAAUfB8hihF0BiUBKHHWZhozuSy/zMXMbpOVN5NdR55AXzUjfls/E
+        KfvtGP9fZPY79qB2HNxhYr3tOQ==
+X-Google-Smtp-Source: APXvYqyiIzUgOpbu5JKLdnKDPxQgFqCYX1OfETQq1MaukN74rbD9OAIBcUgXHGPceCG2ufABoZTxow==
+X-Received: by 2002:a63:fc5d:: with SMTP id r29mr7055870pgk.282.1575514288156;
+        Wed, 04 Dec 2019 18:51:28 -0800 (PST)
+Received: from localhost ([122.171.112.123])
+        by smtp.gmail.com with ESMTPSA id o31sm6605986pgb.56.2019.12.04.18.51.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Dec 2019 18:51:27 -0800 (PST)
+Date:   Thu, 5 Dec 2019 08:21:25 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     sumitg <sumitg@nvidia.com>, rjw@rjwysocki.net,
+        catalin.marinas@arm.com, will@kernel.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, talho@nvidia.com, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
+        mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ Patch 2/3] cpufreq: Add Tegra194 cpufreq driver
+Message-ID: <20191205025125.imxnao2qwyons5zl@vireshk-i7>
+References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
+ <1575394348-17649-2-git-send-email-sumitg@nvidia.com>
+ <20191204054043.o4ff7pnqec3fwdgu@vireshk-i7>
+ <7347caa6-43a3-f761-de83-481b45f7b22a@nvidia.com>
+ <20191204112749.jkwlyteal4hfvnhb@vireshk-i7>
+ <0b634341-ea2b-e9cd-4986-dc9a01c839bb@gmail.com>
 MIME-Version: 1.0
-References: <20191204031005.2638-1-gmayyyha@gmail.com> <20191204103629.GA22244@hermes.olymp>
-In-Reply-To: <20191204103629.GA22244@hermes.olymp>
-From:   Yanhu Cao <gmayyyha@gmail.com>
-Date:   Thu, 5 Dec 2019 10:42:46 +0800
-Message-ID: <CAB9OAC2vzPy=ELYzDRjBvA6m8T8AvwdJugS2NoCczwD1+Xb36Q@mail.gmail.com>
-Subject: Re: [PATCH] ceph: check set quota operation support before syncing setxattr.
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     jlayton@kernel.org, sage@redhat.com, idryomov@gmail.com,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0b634341-ea2b-e9cd-4986-dc9a01c839bb@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 6:36 PM Luis Henriques <lhenriques@suse.com> wrote:
->
-> On Wed, Dec 04, 2019 at 11:10:05AM +0800, Yanhu Cao wrote:
-> > Environment
-> > -----------
-> > ceph version: 12.2.*
-> > kernel version: 4.19+
-> >
-> > setfattr quota operation actually sends op to MDS, and settings
-> > effective. but kclient outputs 'Operation not supported'. This may conf=
-use
-> > users' understandings.
->
-> What exactly do you mean by "settings effective"?  There have been
-> changes in the way CephFS quotas work in mimic and, if you're using a
-> Luminous cluster (12.2.*) the kernel client effectively does *not*
-> support quotas -- you'll be able to exceed the quotas you've tried to
-> set because the client won't be checking the limits.  Thus, -EOPNOTSUPP
-> seems appropriate for this scenario.
->
-> I guess that the confusing part is that the xattr is actually set in
-> that case, but the kernel client won't be able to use it to validate
-> quotas in the filesystem tree because realms won't be created.
->
-Yes. we use kcephfs+nfs for CentOS6.*, it does not support ceph-fuse(12.2.*=
-).
-The operating system of other applications is CentOS7.*, which uses
-ceph-fuse and can get quota settings set by kclient.
+On 04-12-19, 16:57, Dmitry Osipenko wrote:
+> 04.12.2019 14:27, Viresh Kumar пишет:
+> > On 04-12-19, 16:25, sumitg wrote:
+> >> In T194, CCPLEX doesn't have access to set clocks and the
+> >>
+> >> clk_{get|set}_rate() functions set clocks by hook to BPMP R5.
+> >>
+> >> CPU freq can be directly set by CCPLEX using MSR(NVFREQ_REQ_EL1).
+> >>
+> >> As DVFS run's on BPMP, another MSR (NVFREQ_FEEDBACK_EL1) is
+> >>
+> >> used to read the counters and calculate "actual" cpu freq at CCPLEX.
+> >>
+> >> So, "cpuinfo_cur_freq" node gives the actual cpu frequency and not
+> >>
+> >> given by node "scaling_cur_freq".
+> > 
+> > Right, but why can't this be hidden in the CPU's clk driver instead,
+> > so cpufreq driver can just do clk_get_rate() and clk_set_rate() ?
+> 
+> What about to make use of dev_pm_opp_register_set_opp_helper()?
 
-Thanks.
-BRs
+It has a different purpose where we have to play with different
+regulators. And that won't help with clk_get_rate() anyway.
 
-> Cheers,
-> --
-> Lu=C3=ADs
-> >
-> > If the kernel version and ceph version are not compatible, should check
-> > quota operations are supported first, then do sync_setxattr.
-> >
-> > reference: https://docs.ceph.com/docs/master/cephfs/quota/
-> >
-> > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> > ---
-> >  fs/ceph/xattr.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-> > index cb18ee637cb7..189aace75186 100644
-> > --- a/fs/ceph/xattr.c
-> > +++ b/fs/ceph/xattr.c
-> > @@ -1132,8 +1132,8 @@ int __ceph_setxattr(struct inode *inode, const ch=
-ar *name,
-> >                                   "during filling trace\n", inode);
-> >               err =3D -EBUSY;
-> >       } else {
-> > -             err =3D ceph_sync_setxattr(inode, name, value, size, flag=
-s);
-> > -             if (err >=3D 0 && check_realm) {
-> > +             err =3D 0;
-> > +             if (check_realm) {
-> >                       /* check if snaprealm was created for quota inode=
- */
-> >                       spin_lock(&ci->i_ceph_lock);
-> >                       if ((ci->i_max_files || ci->i_max_bytes) &&
-> > @@ -1142,6 +1142,8 @@ int __ceph_setxattr(struct inode *inode, const ch=
-ar *name,
-> >                               err =3D -EOPNOTSUPP;
-> >                       spin_unlock(&ci->i_ceph_lock);
-> >               }
-> > +             if (err =3D=3D 0)
-> > +                     err =3D ceph_sync_setxattr(inode, name, value, si=
-ze, flags);
-> >       }
-> >  out:
-> >       ceph_free_cap_flush(prealloc_cf);
-> > --
-> > 2.21.0 (Apple Git-122.2)
-> >
+-- 
+viresh
