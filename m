@@ -2,118 +2,96 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9F5C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9C0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC8324648
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:45:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EUA+lKNk"
+	by mail.kernel.org (Postfix) with ESMTP id E23D924249
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575531943;
+	bh=ifbaeIoJpLRIvxZ4GbFj0GwuxwpkNX2lyM72QJGHXeI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ej7JHsR7JQ6bY3onw6tR9TJbA/24jjeWU66q+dQcv7M8S1XkU41k0l0anSnEyBDc/
+	 uLBnzAEHQOsn+bhy+qa9wghmOSODS3+rvIS8ig45iY7n6FPGHPatvLy7lJ1peceL8l
+	 BjDLQZPT+GyOfzBzUebVRQnH/OnrXpSoF+o5wMJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbfLEHpX (ORCPT
+        id S1728941AbfLEHpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 02:45:23 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33258 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726059AbfLEHpT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 02:45:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575531918;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SLzWEpcaGa6wr1EPFEAf/c8lYv/KcVaU9tGJq04LnjA=;
-        b=EUA+lKNkIagWML+M0hHUB3cfhQ0vd6hy9uz2fCrGrDv3u3FtkAx90OaYVoqsif8VGhfWKj
-        ysIJKaRGJbhAAYbM51v5djcWVnMFaVM6iFBxkh+szMg27W5po73r8SFpcbQ9L+rlvY3Xld
-        iH2/Teqw7zSKHPXfnYzvjFaP9Wolekw=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-343-Iccz3oRfN4WrtdVh7VYCZg-1; Thu, 05 Dec 2019 02:45:17 -0500
-Received: by mail-wr1-f72.google.com with SMTP id b2so1155489wrj.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 23:45:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=SLzWEpcaGa6wr1EPFEAf/c8lYv/KcVaU9tGJq04LnjA=;
-        b=r1KCHL/A8gxeKgXXE8tS171GncmY6QqRNmmNFgEONF0MwkIQE3qWFxY48EAsV15snV
-         mzTN5ox5ITeogSaTLFz/lYjYA20XlzDflX8v1KPvaL83BPFIiOUpo+M1l1B0SVhQR0Uh
-         2A5fSrQo9Ndkz2nzpQImxjWq3HlFf4j5ShrIIrxqZ0njcVYFDOmbQbbSNQ1k94ejhQE9
-         NtXt3RaSJJ9YMgrXwfDX581wqV1TkpRIiVRDEVb8Hz7/AGOXgeDswyiWZ0bxvceCYYx7
-         aTEoKugHf2T9iNc/ubojzBuAJfXkhOmBRPTpXqoa1VXAif5BF0sHr+e2Wzf5lEzY9s+b
-         Z9kQ==
-X-Gm-Message-State: APjAAAV+6FwGIiQZ0kwLbOIis0g+Rhb/zQKXMTpth3dNQJxiUNvOVYFn
-        /vt0akBJUeC6THiSS8glMM8g47YNhqIczjyJZqcbxyWwLrWKlq6yd7v30cVYdGzJI6+7+NCOQGQ
-        XPy+mcaONtK0wZKRCOq8GzSw2
-X-Received: by 2002:a1c:f214:: with SMTP id s20mr3499786wmc.81.1575531916746;
-        Wed, 04 Dec 2019 23:45:16 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyblt0LQhJu2lbPkXSi/NOLkFJ0Nhe+YL7hP+cdrXAjP0Xv03YzI+OOYAz1OuW7MJuzWvri9A==
-X-Received: by 2002:a1c:f214:: with SMTP id s20mr3499774wmc.81.1575531916543;
-        Wed, 04 Dec 2019 23:45:16 -0800 (PST)
-Received: from [192.168.3.122] (p5B0C6028.dip0.t-ipconnect.de. [91.12.96.40])
-        by smtp.gmail.com with ESMTPSA id t5sm11346030wrr.35.2019.12.04.23.45.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 23:45:16 -0800 (PST)
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] powerpc/pseries/cmm: fix wrong managed page count when migrating between zones
-Date:   Thu, 5 Dec 2019 08:45:15 +0100
-Message-Id: <478F1889-B2F7-4866-80E6-0128EBDAEA86@redhat.com>
-References: <87h82feau2.fsf@mpe.ellerman.id.au>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arun KS <arunks@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <87h82feau2.fsf@mpe.ellerman.id.au>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-X-Mailer: iPhone Mail (17A878)
-X-MC-Unique: Iccz3oRfN4WrtdVh7VYCZg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Thu, 5 Dec 2019 02:45:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbfLEHpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 02:45:41 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0B09205F4;
+        Thu,  5 Dec 2019 07:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575531941;
+        bh=ifbaeIoJpLRIvxZ4GbFj0GwuxwpkNX2lyM72QJGHXeI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YSqXt3Zi8p11o6bjxCkGZ09oHU42ylrGURXipbaQh9jJlV04nJ+el7v4gLvbVzzwL
+         xRemKqPXiO1xzqZgKMV8yjUj7Vssd7Pk1ESjnSShxlyIZ7U0lmYCRJWyBzLRTYNCon
+         kkm16HQeVq/2sEuIOIoGTGHS5LkhZd6Pw/jUnx3s=
+Date:   Wed, 4 Dec 2019 23:45:39 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     dhowells@redhat.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        syzbot <syzbot+838eb0878ffd51f27c41@syzkaller.appspotmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Write in pipe_write
+Message-ID: <20191205074539.GB3237@sol.localdomain>
+References: <000000000000a6324b0598b2eb59@google.com>
+ <000000000000d6c9870598bdf090@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000d6c9870598bdf090@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi David,
 
+On Mon, Dec 02, 2019 at 11:54:00AM -0800, syzbot wrote:
+> syzbot has bisected this bug to:
+> 
+> commit a194dfe6e6f6f7205eea850a420f2bc6a1541209
+> Author: David Howells <dhowells@redhat.com>
+> Date:   Fri Sep 20 15:32:19 2019 +0000
+> 
+>     pipe: Rearrange sequence in pipe_write() to preallocate slot
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16085abce00000
+> start commit:   b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=15085abce00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11085abce00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ff560c3de405258c
+> dashboard link: https://syzkaller.appspot.com/bug?extid=838eb0878ffd51f27c41
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146a9f86e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1791d82ae00000
+> 
+> Reported-by: syzbot+838eb0878ffd51f27c41@syzkaller.appspotmail.com
+> Fixes: a194dfe6e6f6 ("pipe: Rearrange sequence in pipe_write() to
+> preallocate slot")
+> 
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> 
 
-> Am 05.12.2019 um 03:59 schrieb Michael Ellerman <mpe@ellerman.id.au>:
->=20
-> =EF=BB=BFDavid Hildenbrand <david@redhat.com> writes:
->> Forgot to rename the subject to
->>=20
->> "powerpc/pseries/cmm: fix managed page counts when migrating pages
->> between zones"
->>=20
->> If I don't have to resend, would be great if that could be adjusted when
->> applying.
->=20
-> I can do that.
->=20
-> I'm inclined to wait until the virtio_balloon.c change is committed, in
-> case there's any changes to it during review, and so we can refer to
-> it's SHA in the change log of this commit.
->=20
-> Do you want to ping me when that happens?
+It looks like the 'mask' variable in pipe_write() is not being updated after the
+pipe mutex was dropped in pipe_wait(), to take into account the pipe size
+possibly having been changed in the mean time.
 
-Sounds like a good idea, we have time until 5.5. I=E2=80=98ll ping/resend.
+BTW, I see that the pipe changes were not in linux-next before being sent to
+Linus.  Please do this next time so that syzbot can find the obvious bugs before
+they reach mainline.  It's annoying having my system crash on latest mainline
+during normal use, due to a bug easily found in < 1 day by an automated system.
 
-Cheers!
-
->=20
-> cheers
->=20
-
+- Eric
