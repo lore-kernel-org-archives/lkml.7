@@ -8,64 +8,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA09C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4DDC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF2A21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F2DA21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:52:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vec6PHQ6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u9EJ3E9o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387404AbfLEVwN (ORCPT
+        id S2387427AbfLEVwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 16:52:13 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36839 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729914AbfLEVwL (ORCPT
+        Thu, 5 Dec 2019 16:52:19 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46358 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387408AbfLEVwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 16:52:11 -0500
-Received: by mail-io1-f67.google.com with SMTP id l17so5270267ioj.3;
-        Thu, 05 Dec 2019 13:52:10 -0800 (PST)
+        Thu, 5 Dec 2019 16:52:15 -0500
+Received: by mail-il1-f195.google.com with SMTP id t17so4346304ilm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 13:52:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0e87BZGmWkpLZLDiE87VOkYIktS/iX8I8E4fJx5a9NY=;
-        b=vec6PHQ65zFZ2AkEnLw268Kc2K0MR2UyTczNzpYXosCpx4+PN+NNkl8QjdysVOwrA8
-         xXFACPKcNfr0dz/2BqFFsKbAjquNsT+9p/dTGLBuEoOYryMjQ3UJrz7cYVJyAbEpLtQ8
-         KEZYXG7PD6GZl9MMrVPGTNWb9ymhE1IGtsfooGAX6huHWmbYd1Mch0N3yol2Cy2B+UKX
-         6yFkSKbpRK4Y1iJGBv2ttuzxsMySdegy0pXBw4eCvjzVTMvUNFHMZVn8j0ObxZVwIuM8
-         yI4daHXMFaW62aTyy5UgPJbvpYGFJ4M45ul9koCD7p9zrkhXDOBPPvOivFbIp7sdwEKp
-         4xLA==
+        bh=czlw2v1n44KvBNP8Ri+2G2naF0l2P1nitiHJyK13A/U=;
+        b=u9EJ3E9o639t3kAnoadfidXpqM8i75hfWT/AjwGATRRAXqt+vgdXk3o6NMYjSSYRIO
+         xdwWxq03v4+d3jx34V3lISTR0LB0c2glrCVbECdHrw9m8GF352a38IelDwX7LGhaHqsj
+         VNRwnDtMXjcdjn5G4f5Rms2R0e5BWp1xeoWgpUH+PKInJfVoIkgfYm7exfaCK+tCuw6b
+         8JM3h7CVakZaAQR/REWv0ug+A8PV/FN73Hh0DYGMXtkLD8RMvu/0ZfkiHIxfzNz1atIV
+         DrByREG8pAGzwYSNsLUQvMOTWdIIf4lDdWjWoxkY+tl7+4vZIwWhw7EqmGsHtoD6F4oI
+         4JgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0e87BZGmWkpLZLDiE87VOkYIktS/iX8I8E4fJx5a9NY=;
-        b=Or/yBkNaboyz1VqsN4zukYnKSJSuKofa4aGt8wA+wzwUbcOeJwF2uG+Ut3BprvWoV7
-         +w73Gf0+plZcjr8iETmDfUUc/pDo49azcr+6mo5X84wqLLhNT51Z4l4T+6gaWLVU9DJs
-         xPlmznrnV9daRWtQYutNiH3fOm/HWpT7IzCPVDYAAHPo8zXmzD8Tavp7zU7CIot/lnHN
-         3BMYE/7HE7WVW16sNywpVCRYy80FV2yIZ4wzQTkQvtkSRfwDqMAJGiSHR5Oqxt/GwU/W
-         UZYAv0wOH4FP0G/f4M1eQB3Wc4nV1w9aR1N5xCUhmjtSm51qyvd2omQGzEK9zqIFwogD
-         69CA==
-X-Gm-Message-State: APjAAAWg+yo/rmaHJ8e5znw9iX+w0CGtvi3DUjkuFQS+G91ZITjNA62H
-        sBGrhC+MoWBlMvWKdAJJw4AR+XH1sAY=
-X-Google-Smtp-Source: APXvYqw/su3Vu7qa5e4mwi0F+jZd4UYho+yw8impxRonTbKcXyESHJeH/YsM3ggchsm3ujlmrvxHNg==
-X-Received: by 2002:a5e:db0d:: with SMTP id q13mr8056229iop.199.1575582730008;
-        Thu, 05 Dec 2019 13:52:10 -0800 (PST)
+        bh=czlw2v1n44KvBNP8Ri+2G2naF0l2P1nitiHJyK13A/U=;
+        b=sQr8a6BhfsJpm0bCsLAdV8hrFAZ37MjLM2iUtuGGo4ZqsrXiBzidTdIw7xWDls20/Q
+         RBv1dwb5+NilzTVUPHcd7exc4U3kfU1mM1HJif++NlAv8GlFmozMRrynykDIeFWKYOtX
+         DQtDeTKY0iTGl6uk3j20RMPXPUWgi31FXCxD9fu+abMCDndT9G4b5g02G0Ndx69qURio
+         OKtxwFRi0oFmwKYxO4SHn0xCAxofMp+NvkiUHt+6EFFRw2g47FX3rnKsl/0a26nKJz8W
+         h1TDBC+pivag8hw6lgvF1c54NLF2fpGWqKhliX4koNjiYH3Nxva0XxklAUUW/uAhq2mx
+         fhxQ==
+X-Gm-Message-State: APjAAAVKx3b1sRWE+rjtGbLNhkGCrsYW05C7LuEOYh3ba5p62ub7uA/W
+        HXWa7WHUKYGVYaYfGKzU05vPUylUlgc=
+X-Google-Smtp-Source: APXvYqya6eFerJqElswc8s9VKDzi90BI3XEF+7SqiXw2fzyMVerqm1YuZsVmIbv5DqAIZk97Y/NsbQ==
+X-Received: by 2002:a92:5c8a:: with SMTP id d10mr11686219ilg.137.1575582734406;
+        Thu, 05 Dec 2019 13:52:14 -0800 (PST)
 Received: from localhost.localdomain (c-24-9-77-57.hsd1.co.comcast.net. [24.9.77.57])
-        by smtp.googlemail.com with ESMTPSA id n22sm740184iog.14.2019.12.05.13.52.08
+        by smtp.googlemail.com with ESMTPSA id n22sm740184iog.14.2019.12.05.13.52.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 13:52:09 -0800 (PST)
+        Thu, 05 Dec 2019 13:52:13 -0800 (PST)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, gregkh@linuxfoundation.org,
         linux-kernel@vger.kernel.org
-Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
-        linux-arch@vger.kernel.org
-Subject: [PATCH 04/18] dyndbg: rename __verbose section to __dyndbg
-Date:   Thu,  5 Dec 2019 14:51:35 -0700
-Message-Id: <20191205215151.421926-5-jim.cromie@gmail.com>
+Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>
+Subject: [PATCH 07/18] dyndbg: refactor parse_linerange out of ddebug_parse_query
+Date:   Thu,  5 Dec 2019 14:51:38 -0700
+Message-Id: <20191205215151.421926-8-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191205215151.421926-1-jim.cromie@gmail.com>
 References: <20191205215151.421926-1-jim.cromie@gmail.com>
@@ -76,116 +74,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dyndbg populates its callsite info into __verbose section, change that
-to a more specific and descriptive name, __dyndbg.
-
-Also, per checkpatch:
-  simplify __attribute(..) to __section(__dyndbg) declaration.
-
-and 1 spelling fix
+make the code-block reusable to later handle "file foo.c:101-200" etc.
+This should be a 90%+ code-move, with minimal adaptations; reindent,
+and maybe fixes for compile, behavior.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- include/asm-generic/vmlinux.lds.h |  6 +++---
- include/linux/dynamic_debug.h     |  4 ++--
- kernel/module.c                   |  2 +-
- lib/dynamic_debug.c               | 12 ++++++------
- 4 files changed, 12 insertions(+), 12 deletions(-)
+ lib/dynamic_debug.c | 61 +++++++++++++++++++++++++--------------------
+ 1 file changed, 34 insertions(+), 27 deletions(-)
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index dae64600ccbf..82694efe3a83 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -285,9 +285,9 @@
- 	*(__tracepoints)						\
- 	/* implement dynamic printk debug */				\
- 	. = ALIGN(8);							\
--	__start___verbose = .;						\
--	KEEP(*(__verbose))                                              \
--	__stop___verbose = .;						\
-+	__start___dyndbg = .;						\
-+	KEEP(*(__dyndbg))						\
-+	__stop___dyndbg = .;						\
- 	LIKELY_PROFILE()		       				\
- 	BRANCH_PROFILE()						\
- 	TRACE_PRINTKS()							\
-diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-index 4cf02ecd67de..802480ea8708 100644
---- a/include/linux/dynamic_debug.h
-+++ b/include/linux/dynamic_debug.h
-@@ -80,7 +80,7 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
- 
- #define DEFINE_DYNAMIC_DEBUG_METADATA(name, fmt)		\
- 	static struct _ddebug  __aligned(8)			\
--	__attribute__((section("__verbose"))) name = {		\
-+	__section(__dyndbg) name = {				\
- 		.modname = KBUILD_MODNAME,			\
- 		.function = __func__,				\
- 		.filename = __FILE__,				\
-@@ -133,7 +133,7 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
- 
- /*
-  * "Factory macro" for generating a call to func, guarded by a
-- * DYNAMIC_DEBUG_BRANCH. The dynamic debug decriptor will be
-+ * DYNAMIC_DEBUG_BRANCH. The dynamic debug descriptor will be
-  * initialized using the fmt argument. The function will be called with
-  * the address of the descriptor as first argument, followed by all
-  * the varargs. Note that fmt is repeated in invocations of this
-diff --git a/kernel/module.c b/kernel/module.c
-index ff2d7359a418..a9c052cc30c5 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3237,7 +3237,7 @@ static int find_module_sections(struct module *mod, struct load_info *info)
- 	if (section_addr(info, "__obsparm"))
- 		pr_warn("%s: Ignoring obsolete parameters\n", mod->name);
- 
--	info->debug = section_objs(info, "__verbose",
-+	info->debug = section_objs(info, "__dyndbg",
- 				   sizeof(*info->debug), &info->num_debug);
- 
- 	return 0;
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index c86c97154657..0a4588fe342e 100644
+index 49cb24948e12..f0cf90e672b8 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -39,8 +39,8 @@
+@@ -292,6 +292,39 @@ static inline int parse_lineno(const char *str, unsigned int *val)
+ 	return 0;
+ }
  
- #include <rdma/ib_verbs.h>
- 
--extern struct _ddebug __start___verbose[];
--extern struct _ddebug __stop___verbose[];
-+extern struct _ddebug __start___dyndbg[];
-+extern struct _ddebug __stop___dyndbg[];
- 
- struct ddebug_table {
- 	struct list_head link;
-@@ -1010,14 +1010,14 @@ static int __init dynamic_debug_init(void)
- 	int n = 0, entries = 0, modct = 0;
- 	int verbose_bytes = 0;
- 
--	if (__start___verbose == __stop___verbose) {
-+	if (__start___dyndbg == __stop___dyndbg) {
- 		pr_warn("_ddebug table is empty in a CONFIG_DYNAMIC_DEBUG build\n");
- 		return 1;
- 	}
--	iter = __start___verbose;
-+	iter = __start___dyndbg;
- 	modname = iter->modname;
- 	iter_start = iter;
--	for (; iter < __stop___verbose; iter++) {
-+	for (; iter < __stop___dyndbg; iter++) {
- 		entries++;
- 		verbose_bytes += strlen(iter->modname) + strlen(iter->function)
- 			+ strlen(iter->filename) + strlen(iter->format);
-@@ -1040,7 +1040,7 @@ static int __init dynamic_debug_init(void)
- 	ddebug_init_success = 1;
- 	vpr_info("%d modules, %d entries and %d bytes in ddebug tables, %d bytes in (readonly) verbose section\n",
- 		 modct, entries, (int)(modct * sizeof(struct ddebug_table)),
--		 verbose_bytes + (int)(__stop___verbose - __start___verbose));
-+		 verbose_bytes + (int)(__stop___dyndbg - __start___dyndbg));
- 
- 	/* apply ddebug_query boot param, dont unload tables on err */
- 	if (ddebug_setup_string[0] != '\0') {
++static int parse_linerange(struct ddebug_query *query, const char *first)
++{
++	char *last = strchr(first, '-');
++
++	if (query->first_lineno || query->last_lineno) {
++		pr_err("match-spec: line used 2x\n");
++		return -EINVAL;
++	}
++	if (last)
++		*last++ = '\0';
++	if (parse_lineno(first, &query->first_lineno) < 0)
++		return -EINVAL;
++	if (last) {
++		/* range <first>-<last> */
++		if (parse_lineno(last, &query->last_lineno) < 0)
++			return -EINVAL;
++
++		/* special case for last lineno not specified */
++		if (query->last_lineno == 0)
++			query->last_lineno = UINT_MAX;
++
++		if (query->last_lineno < query->first_lineno) {
++			pr_err("last-line:%d < 1st-line:%d\n",
++			       query->last_lineno,
++			       query->first_lineno);
++			return -EINVAL;
++		}
++	} else {
++		query->last_lineno = query->first_lineno;
++	}
++	return 0;
++}
++
+ static int check_set(const char **dest, char *src, char *name)
+ {
+ 	int rc = 0;
+@@ -350,34 +383,8 @@ static int ddebug_parse_query(char *words[], int nwords,
+ 							    UNESCAPE_SPECIAL);
+ 			rc = check_set(&query->format, words[i+1], "format");
+ 		} else if (!strcmp(words[i], "line")) {
+-			char *first = words[i+1];
+-			char *last = strchr(first, '-');
+-			if (query->first_lineno || query->last_lineno) {
+-				pr_err("match-spec: line used 2x\n");
+-				return -EINVAL;
+-			}
+-			if (last)
+-				*last++ = '\0';
+-			if (parse_lineno(first, &query->first_lineno) < 0)
++			if (parse_linerange(query, words[i+1]))
+ 				return -EINVAL;
+-			if (last) {
+-				/* range <first>-<last> */
+-				if (parse_lineno(last, &query->last_lineno) < 0)
+-					return -EINVAL;
+-
+-				/* special case for last lineno not specified */
+-				if (query->last_lineno == 0)
+-					query->last_lineno = UINT_MAX;
+-
+-				if (query->last_lineno < query->first_lineno) {
+-					pr_err("last-line:%d < 1st-line:%d\n",
+-						query->last_lineno,
+-						query->first_lineno);
+-					return -EINVAL;
+-				}
+-			} else {
+-				query->last_lineno = query->first_lineno;
+-			}
+ 		} else {
+ 			pr_err("unknown keyword \"%s\"\n", words[i]);
+ 			return -EINVAL;
 -- 
 2.23.0
 
