@@ -2,224 +2,121 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB23C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B04BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0A02073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D05612245C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575519602;
+	bh=i2PIqlRJ7sQMFV6ii943yJLdx+iIcnR8GRR57prfsxw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fC6+BCeKoAWrb8Ox+QvMKD/xbgI1PAbDK7zQRJ8sFZ5EOqzqpeNeCRUcolbSBINw7
+	 Tiz8BbbkxoBa+Jx0bdMP6MsfhtFVYEeH8G5cQ2euHRI+V0UhYiJ6E1j0AQuD2dq27u
+	 RK5tzG0WMxXWcOayZLXtABi98BVx3F8xtDoS23zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfLEESe (ORCPT
+        id S1728852AbfLEEUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 23:18:34 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:46767 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728321AbfLEESe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 23:18:34 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tk0Ukup_1575519497;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk0Ukup_1575519497)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 05 Dec 2019 12:18:26 +0800
-Subject: Re: [PATCH] mm: move_pages: return valid node id in status if the
- page is already on the target node
-To:     fabecassis@nvidia.com, jhubbard@nvidia.com, mhocko@suse.com,
-        cl@linux.com, vbabka@suse.cz, mgorman@techsingularity.net,
-        akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <1575518425-58788-1-git-send-email-yang.shi@linux.alibaba.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <caea0a50-a206-b4ec-4a3c-36163ac2df0d@linux.alibaba.com>
-Date:   Wed, 4 Dec 2019 20:18:16 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <1575518425-58788-1-git-send-email-yang.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 4 Dec 2019 23:20:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728132AbfLEEUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 23:20:01 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED9842073B;
+        Thu,  5 Dec 2019 04:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575519601;
+        bh=i2PIqlRJ7sQMFV6ii943yJLdx+iIcnR8GRR57prfsxw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IFhU+OVdep6Oru3Q3sqJPA9ZGxPVPlzywpRQHl1c3Yaw19nIQf+CLtTTArePS9hvQ
+         1XxiSzS2m6BVTgy+5EiXZNjN1Cb+OV6v5W8AnLk33ztTiU2jawo8ihutjJmRvm3KGs
+         0vNnxWXcgjJ/1N6ov3GG2CIRhlS4SpFQ5Y8Mpb1o=
+Date:   Thu, 5 Dec 2019 13:19:56 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     paulmck@kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -tip] kprobes: Lock rcu_read_lock() while searching
+ kprobe
+Message-Id: <20191205131956.5465722a947ff41ea22cbdf1@kernel.org>
+In-Reply-To: <20191204161239.GL2889@paulmck-ThinkPad-P72>
+References: <157527193358.11113.14859628506665612104.stgit@devnote2>
+        <20191202210854.GD17234@google.com>
+        <20191203071329.GC115767@gmail.com>
+        <20191203175712.GI2889@paulmck-ThinkPad-P72>
+        <20191204100549.GB114697@gmail.com>
+        <20191204161239.GL2889@paulmck-ThinkPad-P72>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ingo,
 
+On Wed, 4 Dec 2019 08:12:39 -0800
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-On 12/4/19 8:00 PM, Yang Shi wrote:
-> Felix Abecassis reports move_pages() would return random status if the
-> pages are already on the target node by the below test program:
->
-> ---8<---
->
-> int main(void)
-> {
-> 	const long node_id = 1;
-> 	const long page_size = sysconf(_SC_PAGESIZE);
-> 	const int64_t num_pages = 8;
->
-> 	unsigned long nodemask =  1 << node_id;
-> 	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
-> 	if (ret < 0)
-> 		return (EXIT_FAILURE);
->
-> 	void **pages = malloc(sizeof(void*) * num_pages);
-> 	for (int i = 0; i < num_pages; ++i) {
-> 		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
-> 				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
-> 				-1, 0);
-> 		if (pages[i] == MAP_FAILED)
-> 			return (EXIT_FAILURE);
-> 	}
->
-> 	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
-> 	if (ret < 0)
-> 		return (EXIT_FAILURE);
->
-> 	int *nodes = malloc(sizeof(int) * num_pages);
-> 	int *status = malloc(sizeof(int) * num_pages);
-> 	for (int i = 0; i < num_pages; ++i) {
-> 		nodes[i] = node_id;
-> 		status[i] = 0xd0; /* simulate garbage values */
-> 	}
->
-> 	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
-> 	printf("move_pages: %ld\n", ret);
-> 	for (int i = 0; i < num_pages; ++i)
-> 		printf("status[%d] = %d\n", i, status[i]);
-> }
-> ---8<---
->
-> Then running the program would return nonsense status values:
-> $ ./move_pages_bug
-> move_pages: 0
-> status[0] = 208
-> status[1] = 208
-> status[2] = 208
-> status[3] = 208
-> status[4] = 208
-> status[5] = 208
-> status[6] = 208
-> status[7] = 208
->
-> This is because the status is not set if the page is already on the
-> target node, but move_pages() should return valid status as long as it
-> succeeds.  The valid status may be errno or node id.
->
-> We can't simply initialize status array to zero since the pages may be
-> not on node 0.  Fix it by updating status with node id which the page is
-> already on.  And, it looks we have to update the status inside
-> add_page_for_migration() since the page struct is not available outside
-> it.
->
-> Make add_page_for_migration() return 1 if store_status() is failed in
-> order to not mix up the status value since -EFAULT is also a valid
-> status.
->
-> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
-> Reported-by: Felix Abecassis <fabecassis@nvidia.com>
-> Tested-by: Felix Abecassis <fabecassis@nvidia.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: <stable@vger.kernel.org> 4.17+
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
-> John found another return value inconsistency between the implementation and
-> the manpage.  The manpage says it should return -ENOENT if the page is already
-> on the target node, but it doesn't.  It looks the original code didn't return
-> -ENOENT either, I'm not sure if this is a document issue or not.  Anyway this
-> is another issue, once we confirm it we can fix it later.
->    
->   mm/migrate.c | 34 ++++++++++++++++++++++++++++------
->   1 file changed, 28 insertions(+), 6 deletions(-)
->
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index a8f87cb..c427bb2 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1512,17 +1512,21 @@ static int do_move_pages_to_node(struct mm_struct *mm,
->   /*
->    * Resolves the given address to a struct page, isolates it from the LRU and
->    * puts it to the given pagelist.
-> - * Returns -errno if the page cannot be found/isolated or 0 when it has been
-> - * queued or the page doesn't need to be migrated because it is already on
-> - * the target node
-> + * Returns:
-> + *     errno - if the page cannot be found/isolated
-> + *     0 - when it has been queued or the page doesn't need to be migrated
-> + *         because it is already on the target node
-> + *     1 - if store_status() is failed
->    */
->   static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
-> -		int node, struct list_head *pagelist, bool migrate_all)
-> +		int node, struct list_head *pagelist, bool migrate_all,
-> +		int __user *status, int start)
->   {
->   	struct vm_area_struct *vma;
->   	struct page *page;
->   	unsigned int follflags;
->   	int err;
-> +	bool same_node = false;
->   
->   	down_read(&mm->mmap_sem);
->   	err = -EFAULT;
-> @@ -1543,8 +1547,10 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
->   		goto out;
->   
->   	err = 0;
-> -	if (page_to_nid(page) == node)
-> +	if (page_to_nid(page) == node) {
-> +		same_node = true;
->   		goto out_putpage;
-> +	}
->   
->   	err = -EACCES;
->   	if (page_mapcount(page) > 1 && !migrate_all)
-> @@ -1578,6 +1584,16 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
->   	put_page(page);
->   out:
->   	up_read(&mm->mmap_sem);
-> +
-> +	/*
-> +	 * Must call store_status() after releasing mmap_sem since put_user
-> +	 * need acquire mmap_sem too, otherwise potential deadlock may exist.
-> +	 */
-> +	if (same_node) {
-> +		if (store_status(status, start, node, 1))
-> +			err = 1;
-> +	}
-> +
->   	return err;
->   }
->   
-> @@ -1639,10 +1655,16 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->   		 * report them via status
->   		 */
->   		err = add_page_for_migration(mm, addr, current_node,
-> -				&pagelist, flags & MPOL_MF_MOVE_ALL);
-> +				&pagelist, flags & MPOL_MF_MOVE_ALL, status,
-> +				i);
-> +
->   		if (!err)
->   			continue;
->   
-> +		/* store_status() failed in add_page_for_migration() */
-> +		if (err > 0)
+> On Wed, Dec 04, 2019 at 11:05:50AM +0100, Ingo Molnar wrote:
+> > 
+> > * Paul E. McKenney <paulmck@kernel.org> wrote:
+> > 
+> > > >  * This list-traversal primitive may safely run concurrently with
+> > > >  * the _rcu list-mutation primitives such as hlist_add_head_rcu()
+> > > >  * as long as the traversal is guarded by rcu_read_lock().
+> > > >  */
+> > > > #define hlist_for_each_entry_rcu(pos, head, member, cond...)            \
+> > > > 
+> > > > is actively harmful. Why is it there?
+> > > 
+> > > For cases where common code might be invoked both from the reader
+> > > (with RCU protection) and from the updater (protected by some
+> > > lock).  This common code can then use the optional argument to
+> > > hlist_for_each_entry_rcu() to truthfully tell lockdep that it might be
+> > > called with either form of protection in place.
+> > > 
+> > > This also combines with the __rcu tag used to mark RCU-protected
+> > > pointers, in which case sparse complains when a non-RCU API is applied
+> > > to these pointers, to get back to your earlier question about use of
+> > > hlist_for_each_entry_rcu() within the update-side lock.
+> > > 
+> > > But what are you seeing as actively harmful about all of this?
+> > > What should we be doing instead?
+> > 
+> > Yeah, so basically in the write-locked path hlist_for_each_entry() 
+> > generates (slightly) more efficient code than hlist_for_each_entry_rcu(), 
+> > correct?
+> 
+> Potentially yes, if the READ_ONCE() constrains the compiler.  Or not,
+> depending of course on the compiler and the surrounding code.
 
-Just spotted a problem here. This code may result in returning 1 for 
-this syscall, which is not a valid return value according to the 
-manpage. V2 is on its way, sorry for the inconvenience.
+For this kprobes case, I can introduce get_kprobe_locked() which uses
+ hlist_for_each_entry() instead of hlist_for_each_entry_rcu().
 
-> +			goto out_flush;
-> +
->   		err = store_status(status, i, err, 1);
->   		if (err)
->   			goto out_flush;
+However, this sounds like a bit strange choice, because get_kprobe
+(RCU version) should be used on "hot" paths (because it is lock-free),
+and get_kprobe_locked() is used on slow paths.
+If hlist_for_each_entry() can be more efficient, we will keep unefficient
+API for hot paths, but use the efficient one for slow paths.
 
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
