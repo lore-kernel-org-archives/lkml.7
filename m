@@ -2,126 +2,129 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5102C2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17567C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A88C52464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1C60224F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:16:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iqs3hhxM"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Dmnked13"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbfLEPO1 (ORCPT
+        id S1729798AbfLEPQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:14:27 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46498 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfLEPO1 (ORCPT
+        Thu, 5 Dec 2019 10:16:26 -0500
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:41101 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfLEPQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 10:14:27 -0500
-Received: by mail-pf1-f196.google.com with SMTP id y14so1740171pfm.13;
-        Thu, 05 Dec 2019 07:14:26 -0800 (PST)
+        Thu, 5 Dec 2019 10:16:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4KrZ84UljluamxNF+nH5kh1soJy0EOumBh8z5AiXj1M=;
-        b=Iqs3hhxMyajp6V6jOD9k8vmFZgFnE7RlH5Y5SIFEW8fHtSiT8WMNdMvH4Orv5qsVnY
-         ISzL7S362NFaevFh8wcBCvOnjDMqjeRa3xqLJXIk7QgpiCsap+7/QOAVOCI78pX52ki/
-         1iGqAct3hgHONi8QTfRTdMj/DFNsuBZyY8uIzcLhqDydv1LPSqccgf0eayjyO7lLusS9
-         Jloht0wmQC3Kwcf6ISB50SO/CZsro7ORzKDPuxdt0ItadsFYasg6pYViQvzfHeJm9phH
-         ty6sWpUnWREW4jEYCpVEw8a3W+5Drw2jihWJmNNWDDHx1kTvpoICF8bWE1PV+L42jQfB
-         lpqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4KrZ84UljluamxNF+nH5kh1soJy0EOumBh8z5AiXj1M=;
-        b=mcC94QU52K+vywoybxCj4b21/m4KJ2msHyE9aO4dmH7Q4/2CL2Fuk4hF2KFvOyuhTc
-         Vpz6+xJfDvLII/7yth6K6/QoMagAa2j6/JqiZw3ReqiIzohWNCiAmSZsYTWgO1jUcfbr
-         50OsxcKO3tEp77TL2vaNEta2iSWmYId1vPI5BKgC/Fba9Q/1pBuCJ0yy+Bew0vM9562g
-         W8010R3Jh70BDTr5Q7trVchCcYxlfhhdsGZzYrXH61c0M9IrTJMM8aCDVTAXNyKhlImI
-         4RgkRmSebopYhNv58Ufb61Ay0lotGm4Dm2LpxO/6fWBdG+ocLyXZ0WMHnymbQ5cunGxJ
-         PFgA==
-X-Gm-Message-State: APjAAAV/jbx73FHAJl9XCZcXfHA6wEwDAsB/karpx1vO17CceB1kDQkR
-        PhlraicP7GTe0ZRBt30BwXY=
-X-Google-Smtp-Source: APXvYqy/oc7fJO2/PLyS5gTXvu0Yq0ItJ+u+B2pLMSWHPIMKM4VcXxZPSU3Y9Rq9/t32w3QA2avRRg==
-X-Received: by 2002:a63:ec0a:: with SMTP id j10mr7305169pgh.178.1575558866248;
-        Thu, 05 Dec 2019 07:14:26 -0800 (PST)
-Received: from workstation-kernel-dev ([103.211.17.187])
-        by smtp.gmail.com with ESMTPSA id x13sm13397674pfc.171.2019.12.05.07.14.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 07:14:25 -0800 (PST)
-Date:   Thu, 5 Dec 2019 20:44:18 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, rcu@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: Re: [PATCH] doc: listRCU: Add some more listRCU patterns in the
- kernel
-Message-ID: <20191205151418.GA3424@workstation-kernel-dev>
-References: <20191203063941.6981-1-frextrite@gmail.com>
- <20191203064132.38d75348@lwn.net>
- <20191204082412.GA6959@workstation-kernel-dev>
- <20191204074833.44bcc079@lwn.net>
- <20191204153958.GA17404@google.com>
- <20191204084729.184480f3@lwn.net>
- <20191204163552.GE17404@google.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1575558984; x=1607094984;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=3b67Jvba8gIZpJXfm/xkjZkiUlmiLZrVurEcjDQr9gM=;
+  b=Dmnked13jT0UiEApZAy281HL9UYhEcsYtHuv6ZiYOyHZh5atLetBNSYa
+   mbKGdr5bjoGuPll/2sdqRh35TQOVB1a7i6GLhFQwC+tu6ABb8TwNyWw/X
+   OzLlLNq33hiIJQYKwAQSnYcTdBnaFVdiihSeS0bobnP5MxFPolRRU/Edj
+   4=;
+IronPort-SDR: P0031kteqDJXom+suS0YoL3vZtyZhvtmuu8SxhbS0cp8MRcu2sQ04TvZ7dRBYg+AB6KE8ujlDo
+ HL4sA5jG+dLQ==
+X-IronPort-AV: E=Sophos;i="5.69,281,1571702400"; 
+   d="scan'208";a="6355523"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 05 Dec 2019 15:16:22 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id C0567A18DE;
+        Thu,  5 Dec 2019 15:16:21 +0000 (UTC)
+Received: from EX13D04UEA001.ant.amazon.com (10.43.61.40) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 5 Dec 2019 15:16:21 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D04UEA001.ant.amazon.com (10.43.61.40) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 5 Dec 2019 15:16:21 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.28.85.76) by
+ mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 5 Dec 2019 15:16:20 +0000
+Subject: Re: [PATCH v2 0/1] xen/blkback: Aggressively shrink page pools if a
+ memory pressure is detected
+To:     <axboe@kernel.dk>, <konrad.wilk@oracle.com>, <roger.pau@citrix.com>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sj38.park@gmail.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+References: <20191205150932.3793-1-sjpark@amazon.com>
+From:   <sjpark@amazon.com>
+Message-ID: <af195033-23d5-38ed-b73b-f6e2e3b34541@amazon.com>
+Date:   Thu, 5 Dec 2019 16:16:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204163552.GE17404@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191205150932.3793-1-sjpark@amazon.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 11:35:52AM -0500, Joel Fernandes wrote:
-> On Wed, Dec 04, 2019 at 08:47:29AM -0700, Jonathan Corbet wrote:
-> > On Wed, 4 Dec 2019 10:39:58 -0500
-> > Joel Fernandes <joel@joelfernandes.org> wrote:
-> > 
-> > > Actually I had asked Amol privately to add the backticks. It appeared
-> > > super weird in my browser when some function calls were rendered
-> > > monospace while others weren't. Not all functions were successfully
-> > > cross referenced for me. May be it is my kernel version?
-> > 
-> > If you have an example of a failure to cross-reference a function that
-> > has kerneldoc comments *that are included in the toctree*, I'd like to see
-> > it; that's a bug.
-> > 
-> > Changing the font on functions without anything to cross-reference to is
-> > easy enough and should probably be done; I'll look into it when I get a
-> > chance.
-> 
-> I tried on a different machine (my work machine) and the cross-referencing is
-> working fine. So I am not sure if this could be something related to Sphinx
-> version or I had used an older kernel tree before. This kernel tree is
-> Linus's master.
-> 
+On 05.12.19 16:09, SeongJae Park wrote:
+> Each `blkif` has a free pages pool for the grant mapping.  The size of
+> the pool starts from zero and be increased on demand while processing
+> the I/O requests.  If current I/O requests handling is finished or 100
+> milliseconds has passed since last I/O requests handling, it checks and
+> shrinks the pool to not exceed the size limit, `max_buffer_pages`.
+>
+> Therefore, `blkfront` running guests can cause a memory pressure in the
+> `blkback` running guest by attaching a large number of block devices and
+> inducing I/O.  System administrators can avoid such problematic
+> situations by limiting the maximum number of devices each guest can
+> attach.  However, finding the optimal limit is not so easy.  Improper
+> set of the limit can result in the memory pressure or a resource
+> underutilization.  This commit avoids such problematic situations by
+> shrinking the pools aggressively (further the limit) for a while (users
+> can set this duration via a module parameter) if a memory pressure is
+> detected.
+>
+>
+> Base Version
+> ------------
+>
+> This patch is based on v5.4.  A complete tree is also available at my
+> public git repo:
+> https://github.com/sjp38/linux/tree/blkback_aggressive_shrinking_v2
+>
+>
+> Patch History
+> -------------
+>
+> Changes from v1 (https://lore.kernel.org/xen-devel/20191204113419.2298-1-sjpark@amazon.com/)
+>  - Adjust the description to not use the term, `arbitrarily` (suggested
+>    by Paul Durrant)
+>  - Specify time unit of the duration in the parameter description,
+>    (suggested by Maximilian Heyne)
+>  - Change default aggressive shrinking duration from 1ms to 10ms
+>  - Merged two patches into one single patch
+>
+>
+> SeongJae Park (1):
+>   xen/blkback: Aggressively shrink page pools if a memory pressure is
+>     detected
+>
+>  drivers/block/xen-blkback/blkback.c | 35 +++++++++++++++++++++++++++--
+>  1 file changed, 33 insertions(+), 2 deletions(-)
 
-This is great! I'll remove the "``" from function text and send in the
-updated version. However, should I leave in the "``CONSTANTS``" and
-"``variables``"? They dont' have any kernel docs to be cross-referenced
-with and also make them distinguishable from the normal text.
 
-Thanks
-Amol
+CC-ing xen-devel@lists.xenproject.org
 
-> thanks,
-> 
->  - Joel
-> 
+
+Thanks,
+SeongJae Park
+
+>
+
