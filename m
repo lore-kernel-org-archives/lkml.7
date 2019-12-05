@@ -2,143 +2,88 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F26C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2E0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7823824249
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:30:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TWhz6eI+"
+	by mail.kernel.org (Postfix) with ESMTP id 7302F21823
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbfLEIae (ORCPT
+        id S1728978AbfLEId4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 03:30:34 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:52166 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725974AbfLEIae (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 03:30:34 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB58SLJ9020757;
-        Thu, 5 Dec 2019 09:30:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=myUc//5L9CCr4hqe++W2Bj42igL3v+3NhNiVfYlVMt4=;
- b=TWhz6eI+6eXeuNFUTmKhAaWfY+k7Rr2ZRZ9vH0+8iogBEc5hjmxC1+bw/y8iX6+HMvrH
- LH78t37J7Ejx3Sx1jqmzy2Pxjc2QTZpRoae6xOjyFrJktFrR2byk4M3K4aiLDIPxjxxW
- BobvBEUnah6f4NmR6cess1ecLNBdtMCjIUEWiHG7wTCAncf39aLiYHyXLTpZgUs9BdXm
- FCzhFJQgVYKf2+tJk8PHtWKUf2G0SxFNsiP55UifP5qd9LR7rna99WJdoIHhrn/LMRAk
- DqkMQnjyEhqwsq4YTHgxH4hb83qaPRKjRty9eqwBvuBRP3KVBopnMHeNBtkAlsoXeH9A jg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wkg6ksdau-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Dec 2019 09:30:27 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 06D52100038;
-        Thu,  5 Dec 2019 09:30:27 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EBD092AF6A0;
-        Thu,  5 Dec 2019 09:30:26 +0100 (CET)
-Received: from SFHDAG6NODE1.st.com (10.75.127.16) by SFHDAG6NODE3.st.com
- (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec
- 2019 09:30:26 +0100
-Received: from SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27]) by
- SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27%20]) with mapi id
- 15.00.1473.003; Thu, 5 Dec 2019 09:30:26 +0100
-From:   Yannick FERTRE <yannick.fertre@st.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Philippe CORNU <philippe.cornu@st.com>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] Input: goodix - support gt9147 touchpanel
-Thread-Topic: [PATCH] Input: goodix - support gt9147 touchpanel
-Thread-Index: AQHVpQ11LDOqyllChkeeHL9myer67qekjkoAgAayLbA=
-Date:   Thu, 5 Dec 2019 08:30:26 +0000
-Message-ID: <bd51e553feb74f6fb3a7115463d52e66@SFHDAG6NODE1.st.com>
-References: <1574850526-13518-1-git-send-email-yannick.fertre@st.com>
- <20191201030818.GM248138@dtor-ws>
-In-Reply-To: <20191201030818.GM248138@dtor-ws>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.45]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 5 Dec 2019 03:33:56 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38160 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725974AbfLEId4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 03:33:56 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C314AACA5;
+        Thu,  5 Dec 2019 08:33:54 +0000 (UTC)
+Subject: Re: [PATCH 1/2] dt-bindings: arm: realtek: Document RTD1319 and
+ Realtek PymParticle EVB
+To:     James Tai <james.tai@realtek.com>
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-realtek-soc@lists.infradead.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20191205082555.22633-1-james.tai@realtek.com>
+ <20191205082555.22633-2-james.tai@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <ca3edb07-b2d4-7305-9a34-c4d55f30d778@suse.de>
+Date:   Thu, 5 Dec 2019 09:33:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-05_01:2019-12-04,2019-12-05 signatures=0
+In-Reply-To: <20191205082555.22633-2-james.tai@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-Dmitry,
-I forgot to modify the binding to declare the new compatible "gt9147".
-Rob,
-can I modify the binding without converting it first to yaml?
+Hi James,
 
-Best regards
-
-Yannick Fertr=E9
-
------Original Message-----
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>=20
-Sent: dimanche 1 d=E9cembre 2019 04:08
-To: Yannick FERTRE <yannick.fertre@st.com>; Rob Herring <robh+dt@kernel.org=
->
-Cc: Philippe CORNU <philippe.cornu@st.com>; Benjamin GAIGNARD <benjamin.gai=
-gnard@st.com>; Bastien Nocera <hadess@hadess.net>; linux-input@vger.kernel.=
-org; linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: goodix - support gt9147 touchpanel
-
-On Wed, Nov 27, 2019 at 11:28:46AM +0100, Yannick Fertre wrote:
-> From: Yannick Fertr=E9 <yannick.fertre@st.com>
->=20
-> Add support for it by adding compatible and supported chip data=20
-> (default settings used).
-> The chip data on GT9147 is similar to GT912, like
-> - config data register has 0x8047 address
-> - config data register max len is 240
-> - config data checksum has 8-bit
-
-If it is compatible with gt912 then the driver does not need another compat=
-ible in the code I think. Rob will tell more.
-
->=20
-> Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+Am 05.12.19 um 09:25 schrieb James Tai:
+> Define compatible strings for Realtek RTD1319 SoC and Realtek PymParticle
+> EVB.
+> 
+> Signed-off-by: James Tai <james.tai@realtek.com>
 > ---
->  drivers/input/touchscreen/goodix.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/input/touchscreen/goodix.c=20
-> b/drivers/input/touchscreen/goodix.c
-> index fb43aa7..b470773 100644
-> --- a/drivers/input/touchscreen/goodix.c
-> +++ b/drivers/input/touchscreen/goodix.c
-> @@ -1045,6 +1045,7 @@ static const struct of_device_id goodix_of_match[] =
-=3D {
->  	{ .compatible =3D "goodix,gt9271" },
->  	{ .compatible =3D "goodix,gt928" },
->  	{ .compatible =3D "goodix,gt967" },
-> +	{ .compatible =3D "goodix,gt9147",},
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, goodix_of_match);
-> --
-> 2.7.4
->=20
+>  Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
+> index 2444eff2c3d5..f018d683a544 100644
+> --- a/Documentation/devicetree/bindings/arm/realtek.yaml
+> +++ b/Documentation/devicetree/bindings/arm/realtek.yaml
+> @@ -39,4 +39,10 @@ properties:
+>            - enum:
+>                - realtek,mjolnir # Realtek Mjolnir EVB
+>            - const: realtek,rtd1619
+> +
+> +     # RTD1319 SoC based boards
+> +     - items:
+> +          - enum:
+> +              - realtek,pymparticle # Realtek PymParticle EVB
+> +          - const: realtek,rtd1319
+>  ...
 
---=20
-Dmitry
+I think it would be better to order this alphabetically before RTD1395.
+
+Otherwise looking good.
+
+Thanks,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
