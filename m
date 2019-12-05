@@ -2,164 +2,157 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D5CC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B842C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 337CC21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:25:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N9rHPKci"
+	by mail.kernel.org (Postfix) with ESMTP id F2F9B20707
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:27:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575584849;
+	bh=o+pMfB+dZRjNUEC+C1oSHkDVNuqkjUKAu5lRrNYxlVI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z5LPL4CbMTSqML4MVghHrZfblCvKFESX6acXlBxSp/lYxlHGAydXst+AAGXe0ZaH/
+	 e3nNl92i/8x5gLlSeTyVbxiIdt62M3uajAPiJefL2uR+t6P8HqKFUHuSO8ZrzBbADD
+	 rx4sL3xnziA9KQs8PVO6QMpP3lftB52vBpU0uinw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387400AbfLEWZU (ORCPT
+        id S1729817AbfLEW12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 17:25:20 -0500
-Received: from ozlabs.org ([203.11.71.1]:59863 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729240AbfLEWZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 17:25:20 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47TVf318Ddz9sP6;
-        Fri,  6 Dec 2019 09:25:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1575584716;
-        bh=Ejh9iBh3ag+152PoDCF8gcjANJaspPs1uplexIw40sk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=N9rHPKciPcR3XwIfHTXgRDVe+UA0Vf04c+7N5yUtr+crYrpUI+SD6kCBV8z3aclBF
-         dflfXESC9Y8bo9/YC5EC7kFBcLYvt7HjpMvRFxOy8tGEOVqYj3B2qhoxVnkoQYpOhr
-         tXp051Sq/UqybHHLMzLxnZV1tok7C5Pzhy/ueiqS+j5J2sAJYTe+tV3o4VH89GSD7s
-         IWVHoli75S20jNEepOQ3iPs0Xku1Eg5zcEe8kVkZQ1ovCuaZdvlGh7ebp0UZhwB3HJ
-         QPxYE4MoWdsszZs01g02naCPLj91J8aQjAGsWlGw5uZNvF0pIwZdYlJgegjsBELl/t
-         WtpmCZqUiMeyw==
-Date:   Fri, 6 Dec 2019 09:25:03 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: linux-next: build failure after merge of the printk tree
-Message-ID: <20191206092503.303d6a57@canb.auug.org.au>
+        Thu, 5 Dec 2019 17:27:28 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41126 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729187AbfLEW11 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 17:27:27 -0500
+Received: by mail-ot1-f66.google.com with SMTP id r27so4073284otc.8;
+        Thu, 05 Dec 2019 14:27:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=651QbfFxHbn+gIg6TglJPaA7sVi2egQeAs/aiyii6jY=;
+        b=syRlrXzudyJkSG4wXS1Nmz0qb679dLeZHPbzCfWHBIj76SIBorwJLjxTS08pXRuBws
+         nXoAUWHjKy4C2qxW16fWPRnr/3I3ftg1QE0xnuAPOn9Y5GaAmXl0lN37d6eKpLdM9lLp
+         JUvwZuO3VItaZNAZ2r5TlgEg66VAr4gDZKpM5OaadqxqzU5njN8NJ4fjl9eHwxLD7uMY
+         LIuHHffxK0bfem7bgJKxPUo9FjvMRtm/f6cTDuwIvqenFT/ZNEvM/BVwBVWqBke/y13i
+         xXrHn11DP2KZROWwMb33OWr67oYOca72IZNix+UoEcPyj+KlG4I+KnlKMOCea0xZLYe5
+         a2XA==
+X-Gm-Message-State: APjAAAVw/m3eGhUlcdjKJKSV0c1VZMZ2ZPKWDndQMIeXQgCjDxy3vWh4
+        D/r8GjAH7j16iRReao0z0g==
+X-Google-Smtp-Source: APXvYqw/PZNA3vwmc6UK37QzPywxm/gn6jJclg5Apod62JI2XI7Q9MTrj8/GmqtdSYdOOs7l2iZ8IQ==
+X-Received: by 2002:a05:6830:16c6:: with SMTP id l6mr8879987otr.186.1575584846734;
+        Thu, 05 Dec 2019 14:27:26 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w203sm2009701oia.12.2019.12.05.14.27.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 14:27:25 -0800 (PST)
+Date:   Thu, 5 Dec 2019 16:27:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     jic23@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
+        lars@metafoo.de, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pmeerw@pmeerw.net, knaack.h@gmx.de, fabrice.gasnier@st.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: iio: adc: convert sd modulator to
+ json-schema
+Message-ID: <20191205222725.GA7547@bogus>
+References: <20191127171642.6014-1-olivier.moysan@st.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/XmPSbCkYiN4/ZDkVNyp5qv+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127171642.6014-1-olivier.moysan@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/XmPSbCkYiN4/ZDkVNyp5qv+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Nov 27, 2019 at 06:16:42PM +0100, Olivier Moysan wrote:
+> Convert the sigma delta modulator bindings
+> to DT schema format using json-schema.
+> 
+> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> ---
+>  .../iio/adc/sigma-delta-modulator.txt         | 13 -------
+>  .../iio/adc/sigma-delta-modulator.yaml        | 35 +++++++++++++++++++
+>  2 files changed, 35 insertions(+), 13 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
+> deleted file mode 100644
+> index 59b92cd32552..000000000000
+> --- a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
+> +++ /dev/null
+> @@ -1,13 +0,0 @@
+> -Device-Tree bindings for sigma delta modulator
+> -
+> -Required properties:
+> -- compatible: should be "ads1201", "sd-modulator". "sd-modulator" can be use
+> -	as a generic SD modulator if modulator not specified in compatible list.
+> -- #io-channel-cells = <0>: See the IIO bindings section "IIO consumers".
+> -
+> -Example node:
+> -
+> -	ads1202: adc {
+> -		compatible = "sd-modulator";
+> -		#io-channel-cells = <0>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
+> new file mode 100644
+> index 000000000000..8967c6f06d9d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
+> @@ -0,0 +1,35 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/sigma-delta-modulator.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Device-Tree bindings for sigma delta modulator
+> +
+> +maintainers:
+> +  - Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> +
+> +properties:
+> +  compatible:
+> +    description: |
+> +      "sd-modulator" can be used as a generic SD modulator,
+> +      if the modulator is not specified in the compatible list.
+> +    enum:
+> +      - sd-modulator
+> +      - ads1201
+> +
+> +  '#io-channel-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - '#io-channel-cells'
 
-Hi all,
+Add:
 
-After merging the printk tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+additionalProperties: false
 
-kernel/trace/trace.c: In function 'register_tracer':
-kernel/trace/trace.c:1892:3: error: implicit declaration of function 'pr_wa=
-rning'; did you mean 'pr_warn'? [-Werror=3Dimplicit-function-declaration]
- 1892 |   pr_warning("Can not register tracer %s due to lockdown\n",
-      |   ^~~~~~~~~~
-      |   pr_warn
+> +
+> +examples:
+> +  - |
+> +    ads1202: adc@0 {
 
-Caused by commit
+No reg, so drop the unit-address.
 
-  55130ba7f010 ("printk: Drop pr_warning definition")
-
-interacting with commit
-
-  a356646a5685 ("tracing: Do not create directories if lockdown is in affec=
-t")
-
-from Linus' tree.
-
-I have applied the following merge fix patch for today:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Fri, 6 Dec 2019 09:21:57 +1100
-Subject: [PATCH] fix up for "printk: Drop pr_warning definition"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- kernel/trace/ring_buffer.c | 2 +-
- kernel/trace/trace.c       | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 4bf050fcfe3b..3f655371eaf6 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -5070,7 +5070,7 @@ static __init int test_ringbuffer(void)
- 	int ret =3D 0;
-=20
- 	if (security_locked_down(LOCKDOWN_TRACEFS)) {
--		pr_warning("Lockdown is enabled, skipping ring buffer tests\n");
-+		pr_warn("Lockdown is enabled, skipping ring buffer tests\n");
- 		return 0;
- 	}
-=20
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 23459d53d576..6c75410f9698 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1889,7 +1889,7 @@ int __init register_tracer(struct tracer *type)
- 	}
-=20
- 	if (security_locked_down(LOCKDOWN_TRACEFS)) {
--		pr_warning("Can not register tracer %s due to lockdown\n",
-+		pr_warn("Can not register tracer %s due to lockdown\n",
- 			   type->name);
- 		return -EPERM;
- 	}
-@@ -8796,7 +8796,7 @@ struct dentry *tracing_init_dentry(void)
- 	struct trace_array *tr =3D &global_trace;
-=20
- 	if (security_locked_down(LOCKDOWN_TRACEFS)) {
--		pr_warning("Tracing disabled due to lockdown\n");
-+		pr_warn("Tracing disabled due to lockdown\n");
- 		return ERR_PTR(-EPERM);
- 	}
-=20
-@@ -9244,7 +9244,7 @@ __init static int tracer_alloc_buffers(void)
-=20
-=20
- 	if (security_locked_down(LOCKDOWN_TRACEFS)) {
--		pr_warning("Tracing disabled due to lockdown\n");
-+		pr_warn("Tracing disabled due to lockdown\n");
- 		return -EPERM;
- 	}
-=20
---=20
-2.24.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/XmPSbCkYiN4/ZDkVNyp5qv+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3pg78ACgkQAVBC80lX
-0GyFLgf+KxqtMwAE/qH+G3dZN5VNNta2tlOcS8QJ5BAbSFBnrUDf1mCJ0S79REYa
-5OwGJKIS8RB9QmN4lcOPE1zNNqZk9tzvWuB153ranWdwQw4j54c7VljwZGvKEnK6
-Ey/JemkvESN7vraP4T4DYpgeMkVnVENbUH0BfbniZllL6moT/yGmrydxVwwLOt/y
-CpqDAcYaqBl5laGvU+7GAD30n/L0BPjeF46R7HD0RrjGgH6YTBESfbnIv8Pxy8ak
-RM1ebiAwUq2V8KuL7pEkrZw8rAqH/Rdjpd4Up2MWHVmFjZyjnkkRh338p86VBnyV
-Ki1f7JB84t3OhBOIJnZa7Tl1UKs4+w==
-=IK3o
------END PGP SIGNATURE-----
-
---Sig_/XmPSbCkYiN4/ZDkVNyp5qv+--
+> +      compatible = "sd-modulator";
+> +      #io-channel-cells = <0>;
+> +    };
+> +
+> +...
+> -- 
+> 2.17.1
+> 
