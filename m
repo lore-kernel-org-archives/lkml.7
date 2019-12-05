@@ -2,131 +2,151 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B945AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD72C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F5E205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A1B22464
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:14:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qPVow2Hk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="buIieAhF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbfLEGKv (ORCPT
+        id S1726116AbfLEGO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 01:10:51 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40445 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbfLEGKv (ORCPT
+        Thu, 5 Dec 2019 01:14:28 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38616 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfLEGO2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 01:10:51 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so2261460wmi.5;
-        Wed, 04 Dec 2019 22:10:49 -0800 (PST)
+        Thu, 5 Dec 2019 01:14:28 -0500
+Received: by mail-ed1-f68.google.com with SMTP id i6so490759edr.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 22:14:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ArLi67MutEfJm1xYk1UV39NkETu8w3LGxgZUr4uMUhM=;
-        b=qPVow2Hk4o5+1WIh/HU4A9dCAFKXssaxFnoREXVgfUNekkba6Xp6ZKKXTJfa7FqxiE
-         rNSNKrMGQERENYIfxVKffRhoBrS9s38aEA5Qgv40ZFBLXI1Vr6npC7a2yyOyK+UBau9H
-         7eG2IyAD2RIf18w9lax1HQfN8F/LhFVI3q1G+bySK0ebfH3mPCTDeHgJ0xkNa1fvk1qd
-         TQ1+bHp1zBEIrT7oM+ZLS7XoEbix4k2YfjcUpj8xmiOBtGjeKCa4g4PsP6KXXVgQTvXF
-         dz/ip/GEI6QzCy2w7iPG+e0kuazsRSkG5KTRmcwJgEOW80lZCnoK5yC+/1OJWwlDoSnw
-         R+Yg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pW0Hn3aQ9V6GllI+q5V9oU8MXeLBI73uZ2g1iNoE2vg=;
+        b=buIieAhFdrFpxCNwtChiUsQhKQY9qRW1+zBlZUCnjwiZXOQRmaaixxYsBaCsYma2rl
+         gkr9OLiC304ks0YXwxGL0tnCpWZFFrHBzLRFkOPXBEOIPeKERjnRdzC1VNSsjOkrnbIZ
+         Yuykw0lMDgAaStLRoXRnSqLmVKuCzwve88JsjLjfBxzBq4x3950MfxG7GfCFJ9R38sTu
+         +qewiulWTRBFToNmG4t/jHEN2iYOVqhz9V9kKdgDHrqFMvEZBEfYPNnERMon3IeBz4V9
+         dFNjaRqsomnlWE8N0HZP1hZUE0g7ZsgxutYf6XNhq5K4bAfAdkf4dQ303nz2L1XaWNuj
+         9B1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ArLi67MutEfJm1xYk1UV39NkETu8w3LGxgZUr4uMUhM=;
-        b=gb2BOIy3IGGoMZHx8Zd6lTDR7+Hak+socuDwi3qmi1zkmjY9ISE3ZyPWjLijn2X0jA
-         1t6/B2I16mQoiY7Al/6qfHstpNPeLPQHMpdfo2D7p82UM+0su0CX+cNBfEehm83Hzr3A
-         KTUWZG/83cSrwYGYl8AV+0/WCwfBgT8hXfP4fq5BpIirPwjicPxjD/eNgqtMj0rtKOSP
-         Eshimm5xlIZcDHfHCfygLH2/dgJf9VHCuTuGFbFqgUNLYiRZWKO1MhxW13Rh03R2wUqm
-         SsgXXElwtKEOnL0fGXS/fdxcFP5HdyOHWBs8CSFbPD4FRuY967Dd9FhH2/aosO5QbYVP
-         +LCA==
-X-Gm-Message-State: APjAAAWe/BCF1cAS+aAIgO6emoeJ8/0uH7TrNgZDhMP/XjV7VDFOT0ew
-        Ov9/c+HQ9JYnWuYJq881tTk=
-X-Google-Smtp-Source: APXvYqyaq4P8aZhdb+VYjY2oEPts6nfj2eJx99tS+iwSemPDHGSF/vEPXx8w+j2MAIM5a62SPtVpog==
-X-Received: by 2002:a1c:f404:: with SMTP id z4mr3069874wma.12.1575526248274;
-        Wed, 04 Dec 2019 22:10:48 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id e18sm12477940wrw.70.2019.12.04.22.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 22:10:47 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Changes for v5.5-rc1
-Date:   Thu,  5 Dec 2019 07:10:44 +0100
-Message-Id: <20191205061044.1006766-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pW0Hn3aQ9V6GllI+q5V9oU8MXeLBI73uZ2g1iNoE2vg=;
+        b=glclIF93iPMV9DC4Aej1M0IKyYJRT0GEJLIaw6CYDL84WBkJ7eDuGlJOGse5ICymR+
+         dq7/70iMN24u6agLqCLFs+cK7audMv0Yfp/F05EBMxOb9Avqxn4v7k3RR+X0rMHSr3zm
+         mEh4mWksSDECaGRuLTwuaFxmItIOliJWFiPi1NarXOIotSTHpNSZNbF/it3/8aMGBsw0
+         Qndm/43oHeAA2dDqx41BnH9g6ZWiJU00vpY86WyQnFMWbn1iezJbKMjM2aKS80uLvn+6
+         sbrDq7N+7i5ShBppGsV1PycV0owu4OjEhvKvDVcooTymlroyRr2i6fCLcwY9U+qCBNzG
+         Py9Q==
+X-Gm-Message-State: APjAAAU4z4UcqeMLtUYBDC8OlYuPfTTrhx73U0HS5eKKEXcELe6r43tv
+        66iylj3xtrE9B2/NAG/VOEjyT2476BjMgeYGZxAxeg==
+X-Google-Smtp-Source: APXvYqw7d8F1qpjujLQr+hMsCC4yCQhw5rhoXxi8TQKlMf99CufmanhMNflSvr2iRngV4FLd1cz3dO9uvA8PvMWUwK4=
+X-Received: by 2002:a17:906:3290:: with SMTP id 16mr7504457ejw.329.1575526465741;
+ Wed, 04 Dec 2019 22:14:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAHLCerOD2wOJq7QNGBOcLvkMz4wvc1+6Hk2+ZD__NFged3tLcw@mail.gmail.com>
+ <20191204215618.125826-1-wvw@google.com> <20191204215618.125826-2-wvw@google.com>
+ <CAHLCerMQ_734AFe=QCg+qi3TOvYPMB95NPP_EEHNbuODBSEfog@mail.gmail.com>
+In-Reply-To: <CAHLCerMQ_734AFe=QCg+qi3TOvYPMB95NPP_EEHNbuODBSEfog@mail.gmail.com>
+From:   Wei Wang <wvw@google.com>
+Date:   Wed, 4 Dec 2019 22:14:14 -0800
+Message-ID: <CAGXk5yr=jfXq+n7oB0sc=6LT0raURmQ9rgFWqrg0hxMDKYFDig@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] thermal: fix and clean up tz and cdev registration
+To:     Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Wei Wang <wei.vince.wang@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Dec 4, 2019 at 8:13 PM Amit Kucheria
+<amit.kucheria@verdurent.com> wrote:
+>
+> Hi Wei,
+>
+> On Thu, Dec 5, 2019 at 3:26 AM Wei Wang <wvw@google.com> wrote:
+> >
+> > Make cooling device registration behavior consistent with
+>
+> Consistent how? Please add details.
+>
+Consistent with
+https://lore.kernel.org/linux-pm/1478581767-7009-2-git-send-email-edubezval@gmail.com/
 
-The following changes since commit 40a6b9a00930fd6b59aa2eb6135abc2efe5440c3:
+will include aboce in next version.
 
-  Revert "pwm: Let pwm_get_state() return the last implemented state" (2019-10-21 16:48:52 +0200)
+> > thermal zone. This patch also cleans up a unnecessary
+> > nullptr check.
+> >
+> > Signed-off-by: Wei Wang <wvw@google.com>
+> > ---
+> >  drivers/thermal/thermal_core.c | 16 ++++++++++++----
+> >  1 file changed, 12 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> > index d4481cc8958f..64fbb59c2f44 100644
+> > --- a/drivers/thermal/thermal_core.c
+> > +++ b/drivers/thermal/thermal_core.c
+> > @@ -954,8 +954,16 @@ __thermal_cooling_device_register(struct device_node *np,
+> >         struct thermal_zone_device *pos = NULL;
+> >         int result;
+> >
+> > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH)
+> > -               return ERR_PTR(-EINVAL);
+> > +       if (!type || !type[0]) {
+> > +           pr_err("Error: No cooling device type defined\n");
+> > +           return ERR_PTR(-EINVAL);
+> > +       }
+> > +
+> > +       if (strlen(type) >= THERMAL_NAME_LENGTH) {
+> > +           pr_err("Error: Cooling device name (%s) too long, "
+> > +                  "should be under %d chars\n", type, THERMAL_NAME_LENGTH);
+>
+> Consider fitting into a single greppable string as "Error: Cooling
+> device name over %d chars: %s\n"
+>
+Was intentionally keep it the same as this
+https://lore.kernel.org/linux-pm/31a29628894a14e716fff113fd9ce945fe649c05.1562876950.git.amit.kucheria@linaro.org/
+Will make it shorter in both places next verion
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.5-rc1
-
-for you to fetch changes up to f5ff2628867b9c7cb4abb6c6a5a7eea079dad4b6:
-
-  pwm: imx27: Unconditionally write state to hardware (2019-10-21 16:58:09 +0200)
-
-Thanks,
-Thierry
-
-----------------------------------------------------------------
-pwm: Changes for v5.5-rc1
-
-Various changes and minor fixes across a couple of drivers.
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      pwm: sun4i: Drop redundant assignment to variable pval
-
-Fabrice Gasnier (3):
-      dt-bindings: pwm-stm32: Document pinctrl sleep state
-      pwm: stm32: Split breakinput apply routine to ease PM support
-      pwm: stm32: Add power management support
-
-Ondrej Jirman (1):
-      pwm: sun4i: Fix incorrect calculation of duty_cycle/period
-
-Rasmus Villemoes (1):
-      pwm: Update comment on struct pwm_ops::apply
-
-Thierry Reding (8):
-      dt-bindings: pwm: mediatek: Remove gratuitous compatible string for MT7629
-      pwm: stm32: Validate breakinput data from DT
-      pwm: stm32: Remove clutter from ternary operator
-      pwm: stm32: Pass breakinput instead of its values
-      pwm: Read initial hardware state at request time
-      pwm: cros-ec: Cache duty cycle value
-      pwm: imx27: Cache duty cycle register value
-      pwm: imx27: Unconditionally write state to hardware
-
- .../devicetree/bindings/pwm/pwm-mediatek.txt       |   2 +-
- .../devicetree/bindings/pwm/pwm-stm32.txt          |   8 +-
- drivers/pwm/core.c                                 |   6 +-
- drivers/pwm/pwm-cros-ec.c                          |  58 ++++++++-
- drivers/pwm/pwm-imx27.c                            | 137 ++++++++++++---------
- drivers/pwm/pwm-stm32.c                            | 112 ++++++++++++-----
- drivers/pwm/pwm-sun4i.c                            |   5 +-
- include/linux/mfd/stm32-timers.h                   |  12 +-
- include/linux/pwm.h                                |   5 +-
- 9 files changed, 228 insertions(+), 117 deletions(-)
+> > +           return ERR_PTR(-EINVAL);
+> > +       }
+> >
+> >         if (!ops || !ops->get_max_state || !ops->get_cur_state ||
+> >             !ops->set_cur_state)
+> > @@ -972,7 +980,7 @@ __thermal_cooling_device_register(struct device_node *np,
+> >         }
+> >
+> >         cdev->id = result;
+> > -       strlcpy(cdev->type, type ? : "", sizeof(cdev->type));
+> > +       strlcpy(cdev->type, type, sizeof(cdev->type));
+> >         mutex_init(&cdev->lock);
+> >         INIT_LIST_HEAD(&cdev->thermal_instances);
+> >         cdev->np = np;
+> > @@ -1250,7 +1258,7 @@ thermal_zone_device_register(const char *type, int trips, int mask,
+> >                 return ERR_PTR(-EINVAL);
+> >         }
+> >
+> > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH) {
+> > +       if (strlen(type) >= THERMAL_NAME_LENGTH) {
+> >                 pr_err("Error: Thermal zone name (%s) too long, should be under %d chars\n",
+> >                        type, THERMAL_NAME_LENGTH);
+> >                 return ERR_PTR(-EINVAL);
+> > --
+> > 2.24.0.393.g34dc348eaf-goog
+> >
