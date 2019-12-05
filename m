@@ -2,162 +2,85 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F52C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5E2C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9EC6224F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:56:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575554185;
-	bh=SI5/UqDvOLdW/ebXgeRPP0F1wEDuikwE8BLTviwj7zI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZOuH8M8/jKl7S+JV3azSVcv8BZeOZ/HEh9//W6SyCFIqem7VKxMZIe0oS36Fbk6iK
-	 M+CvvklCCSQjIZNhiLJp5dFCAplXKva+xnloZ3hKhJS94NiRZidgMY0drn8XoEc+Xg
-	 NopQPz5qVBwIklLrG4eSkNGqboN1Be4WXXDnM0NU=
+	by mail.kernel.org (Postfix) with ESMTP id 82A2B224F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:57:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dfF7Li9O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbfLEN4Y (ORCPT
+        id S1729538AbfLEN5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 08:56:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbfLEN4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 08:56:24 -0500
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 5 Dec 2019 08:57:08 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46015 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729290AbfLEN5I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 08:57:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575554227;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iwDpswnvJYEc51uYZ3w4B0L234MkONszPPNZVFbIUh8=;
+        b=dfF7Li9Om74K8UZAtOzofyxAJQf1Jo0nxWNa4ilYj9TpoVfo7gvlYGvkIH+PtbPYgPFqaV
+        SWFypS1kLqmD173MdCkaG3uM6f5LOC0whLF9oWeXMm8xyOyXbhoSxLgFIfOYOaj9PPqF/q
+        rOJR1xg/uzu0RTk0vTtrn4hf8boOibE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-314-i7QgFGW9O46JVqA37OrdIg-1; Thu, 05 Dec 2019 08:57:03 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41D1422525;
-        Thu,  5 Dec 2019 13:56:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575554183;
-        bh=SI5/UqDvOLdW/ebXgeRPP0F1wEDuikwE8BLTviwj7zI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yg7lntnXFYlbDO+rC98Zawl9736UXE/JoMSwLlGu7DSzz7ZIVo1Fn+kvVe5wFj8oX
-         ORE1V1NZRCFe2OD/LgTnjmhjR3dknHNDXRNDSgqnudzCaVzxk3wXXypAPX4W9yBJo/
-         IvY/jADxsCi/U5vhAWde20l3rRE8DKIdnpbdYnKY=
-Received: by mail-qk1-f180.google.com with SMTP id g15so3351553qka.8;
-        Thu, 05 Dec 2019 05:56:23 -0800 (PST)
-X-Gm-Message-State: APjAAAXnxAyCdpUF/kT0rPEg9X/NRMCpzg9nVS5m0TdkobzL+7eVYT7R
-        K4mWvs+KgtYlesl2KJcDMSb2LPvlcoSLOk0E9w==
-X-Google-Smtp-Source: APXvYqxTieNjxwOysjbfDY0Jzt7u28n6wJ0i4JI/0Df2CY+8bRxVrS6cJAN5zimj0f/y7nSsmjIvD9YzQK49P9OeD5Y=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr8502354qkg.152.1575554182339;
- Thu, 05 Dec 2019 05:56:22 -0800 (PST)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CD828107ACE6;
+        Thu,  5 Dec 2019 13:57:00 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-250.rdu2.redhat.com [10.10.120.250])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D52D4600D1;
+        Thu,  5 Dec 2019 13:56:57 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20191205125826.GK2734@twin.jikos.cz>
+References: <20191205125826.GK2734@twin.jikos.cz> <31452.1574721589@warthog.procyon.org.uk>
+To:     dsterba@suse.cz
+Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] pipe: Notification queue preparation
 MIME-Version: 1.0
-References: <20191205002503.13088-1-masneyb@onstation.org> <20191205002503.13088-5-masneyb@onstation.org>
-In-Reply-To: <20191205002503.13088-5-masneyb@onstation.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 5 Dec 2019 07:56:10 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+jpz6_N18sChREC_xGYt9sSFZFtWr3omb_6o7+MFxuHg@mail.gmail.com>
-Message-ID: <CAL_Jsq+jpz6_N18sChREC_xGYt9sSFZFtWr3omb_6o7+MFxuHg@mail.gmail.com>
-Subject: Re: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator bindings
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linux Input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-ID: <1592.1575554217.1@warthog.procyon.org.uk>
+Date:   Thu, 05 Dec 2019 13:56:57 +0000
+Message-ID: <1593.1575554217@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: i7QgFGW9O46JVqA37OrdIg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 6:25 PM Brian Masney <masneyb@onstation.org> wrote:
->
-> Add support for clock-based vibrator devices where the speed can be
-> controlled by changing the duty cycle.
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  .../bindings/input/clk-vibrator.yaml          | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/clk-vibrator.yaml
->
-> diff --git a/Documentation/devicetree/bindings/input/clk-vibrator.yaml b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> new file mode 100644
-> index 000000000000..2103a5694fad
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/input/clk-vibrator.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Clock vibrator
-> +
-> +maintainers:
-> +  - Brian Masney <masneyb@onstation.org>
-> +
-> +description: |
-> +  Support for clock-based vibrator devices where the speed can be controlled
-> +  by changing the duty cycle.
-> +
-> +properties:
-> +  compatible:
-> +    const: clk-vibrator
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    description: output clock that controls the speed
-> +    items:
-> +      - const: core
+David Sterba <dsterba@suse.cz> wrote:
 
-No point in making up a name when there's only one clock, so drop.
+> [<0>] pipe_write+0x1be/0x4b0
 
-> +
-> +  clock-frequency: true
+Can you get me a line number of that?  Assuming you've built with -g, load
+vmlinux into gdb and do "i li pipe_write+0x1be".
 
-Given the frequency is variable, what does this mean in this case?
+David
 
-> +  enable-gpios:
-> +    maxItems: 1
-> +
-> +  vcc-supply:
-> +    description: Regulator that provides power
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - clock-names
-> +  - clock-frequency
-
-Add:
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    vibrator {
-> +        compatible = "clk-vibrator";
-> +
-> +        vcc-supply = <&pm8941_l19>;
-> +
-> +        clocks = <&mmcc CAMSS_GP1_CLK>;
-> +        clock-names = "core";
-> +        clock-frequency = <24000>;
-> +
-> +        enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
-> +
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&vibrator_pin>;
-> +    };
-> --
-> 2.21.0
->
