@@ -2,175 +2,171 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 046CDC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A745EC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D2522525
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701EF22525
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:46:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="oWok4eKo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1e9u5DK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbfLEXo5 (ORCPT
+        id S1726175AbfLEXqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 18:44:57 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:32884 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbfLEXo5 (ORCPT
+        Thu, 5 Dec 2019 18:46:22 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45455 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbfLEXqV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 18:44:57 -0500
-Received: by mail-io1-f67.google.com with SMTP id 2so2627757ion.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 15:44:56 -0800 (PST)
+        Thu, 5 Dec 2019 18:46:21 -0500
+Received: by mail-ed1-f68.google.com with SMTP id v28so4224975edw.12;
+        Thu, 05 Dec 2019 15:46:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=O5y+I+NBTV3CYsi8Y0eKSA3qAmcKH+wARhoPSX/lhnU=;
-        b=oWok4eKo4kO/M/ELZaLHBxd9249/uSGFdhIPYjEeFF4Um05+bE8V9+78fCtaYydNLU
-         Jx9Koo3xkEW9jj2Y5REjKex5cZYRlAg4LsfPEfGnO/9bGoRu1oK1RQrTRlHTF5J3JdOe
-         JTrJ4qXawbqoWFiUY1rT1Sf/uMCnVue7+QLZM=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=X3UHinnr4q1+PBywuillgYBwtIiPsjLR3mv6xEMPmeU=;
+        b=i1e9u5DKyLCeVEEaz9SqMKZUA+bxMsI/lKCG+Aa3F1o1gBtBXn3/ng1CDx/pHZgzhB
+         zHJTGJFPWHL9IJiwlHE2wtqIwzcsiBHct8CNzCeGj+P+o33kvYXWedbF5snPD4bBOVWI
+         CymOZcAz/zore/U59+Uffzkr87BW+MEDHlCVWBmtOVSVIW0UD/odV8uTZ/+TXoBAIgA/
+         8SGF0IuqBZnl8oN0G+Hjm4rwH7+M7RXCuby+Dn3V47dT4tQpC2YHv6g3SET/UxhW1SyC
+         GK/ZkBFqrJirX7b9w4PcWxpgy58bDT2qNPgv8HmQxe+oB1n+tNpSpevhB81F44iu6rAp
+         jNrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=O5y+I+NBTV3CYsi8Y0eKSA3qAmcKH+wARhoPSX/lhnU=;
-        b=n+ITuHZquMk+RWEUl8G29SaMka9UAI5Sn/95VNKEDHwO892VSK0j9ZjXqLChAtjPyg
-         syyqkVmypdq/1P0iBZuZmFFGSb+UYxUcQGqb397U27G/Xk9Do3Tknz1wh5JQuVusjRqX
-         dWpxDJClQVlW86gxO6Rvq4muh+gt0LsEMXxL5ZhY4dEjU9xF98eFIDA6zMcVa0CUCqXK
-         MtBZRKm5+p4NzcEPiuBIdh9w4pdPY3z2cPSy88778g5wqwHI9OmKBJhQXDJWlCTSnwKX
-         qh+ABf9oOj7DeWfzS8IJPWK8sahcC2Yb4EhQLKJQEhwNQ2kINcnWaeVFFyZrZrlYibS/
-         ycxw==
-X-Gm-Message-State: APjAAAU5TKjGkKfs/q2ksuG3S6sJxM0MvRtZsHzFs6bVmgxvyPiPTydL
-        opSxftuL05KtUzdo9I4iPCsZGDQsIPE=
-X-Google-Smtp-Source: APXvYqwnRRAq+TLqz5SE1Zz+x68VXcrj8pQ7JAvbG+lT0lizID/I+3Jkqy1EW+f2W2XeI4wMQQ5XVA==
-X-Received: by 2002:a02:7086:: with SMTP id f128mr10927139jac.128.1575589495597;
-        Thu, 05 Dec 2019 15:44:55 -0800 (PST)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id z26sm2699172ior.44.2019.12.05.15.44.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Dec 2019 15:44:55 -0800 (PST)
-Date:   Thu, 5 Dec 2019 23:44:53 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org
-Cc:     tycho@tycho.ws
-Subject: [RFC PATCH] ptrace: add PTRACE_GETFD request
-Message-ID: <20191205234450.GA26369@ircssh-2.c.rugged-nimbus-611.internal>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=X3UHinnr4q1+PBywuillgYBwtIiPsjLR3mv6xEMPmeU=;
+        b=HqYzMeVzyIdNkS1sVvdAxPzr+eb7VOZenzp0xi978HtRPYEPpfFoXqn6HcmGlnCQll
+         QPUkkbPNzzZVGlyLwGtREU/ibdNXELfDMTXbh0DPF22zeuXi8h5/mHYcFMb3VqbCAcOL
+         FAEHlNl2nOyooFS324Gm7WE6hAqqy5o6YBt728+Yoko40m/ap2FMk+fLha7ZM1AE7h/a
+         y3I6xJ3fPF6KZDSehEB7kvyq8k+c/0bCqH6gWUM1KIvWnR9HymHyj4Usq9/AyDNmIlKM
+         D+IV1gmKqDctjW6NjnxlnRXPk2DTtzMGkIN0cshdJq133IpFbNOkJgqdbKBoe1J6ZuZF
+         M38A==
+X-Gm-Message-State: APjAAAUu4k5smzVWv7LHQN+jz2YQKWN8j5o3KFbnQGtzKoilUTaKTFjC
+        hUqpPsu6UNmfBF7nxlT0jN0=
+X-Google-Smtp-Source: APXvYqyWu2bj9aHfGtKqxZinpMqW8X9dpU95fIEyTdSV783cMmS5i+972Yj3VMYhWC46Rhq3yH7C3Q==
+X-Received: by 2002:a05:6402:149a:: with SMTP id e26mr13519867edv.198.1575589579142;
+        Thu, 05 Dec 2019 15:46:19 -0800 (PST)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id h8sm372358edw.91.2019.12.05.15.46.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2019 15:46:17 -0800 (PST)
+Subject: Re: [PATCH v2 00/13] phy: usb: Updates to Broadcom STB USB PHY driver
+To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+References: <20191115184223.41504-1-alcooperx@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <434eb83c-894a-3f0e-c89c-484c2c15ec24@gmail.com>
+Date:   Thu, 5 Dec 2019 15:46:14 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191115184223.41504-1-alcooperx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PTRACE_GETFD is a generic ptrace API that allows the tracer to
-get file descriptors from the traceee.
+On 11/15/19 10:42 AM, Al Cooper wrote:
+> This patchset contains various updates to the Broadcom STB USB Driver.
+> The updates include:
+> - Add support for 7216 and 7211 Broadcom SoCs which use the new
+>   Synopsis USB Controller.
+> - Add support for USB Wake
+> - Add various bug fixes.
+> 
+> v2 - Changes based on review feedback
+> - Add vendor prefix to DT property "syscon-piarbctl"
+> - Use standard "wakeup" instead of "wake" for DT "interrupt-names"
+> 
+> 
+> Al Cooper (13):
+>   phy: usb: EHCI DMA may lose a burst of DMA data for 7255xA0 family
+>   phy: usb: Get all drivers that use USB clks using correct
+>     enable/disable
+>   phy: usb: Put USB phys into IDDQ on suspend to save power in S2 mode
+>   phy: usb: Add "wake on" functionality
+>   phy: usb: Restructure in preparation for adding 7216 USB support
+>   dt-bindings: Add Broadcom STB USB PHY binding document
+>   phy: usb: Add support for new Synopsis USB controller on the 7216
+>   phy: usb: Add support for new Synopsis USB controller on the 7211b0
+>   phy: usb: fix driver to defer on clk_get defer
+>   phy: usb: PHY's MDIO registers not accessible without device installed
+>   phy: usb: bdc: Fix occasional failure with BDC on 7211
+>   phy: usb: USB driver is crashing during S3 resume on 7216
+>   phy: usb: Add support for wake and USB low power mode for 7211 S2/S5
 
-The primary reason to use this syscall is to allow sandboxers to
-take action on an FD on behalf of the tracee. For example, this
-can be combined with seccomp's user notification feature to extract
-a file descriptor and call privileged syscalls, like binding
-a socket to a privileged port.
+For what it's worth:
 
-Signed-off-by: Sargun Dhillon <sargun@sargun.me>
----
- include/uapi/linux/ptrace.h |  5 +++++
- kernel/ptrace.c             | 39 +++++++++++++++++++++++++++++++++++--
- 2 files changed, 42 insertions(+), 2 deletions(-)
-
-diff --git a/include/uapi/linux/ptrace.h b/include/uapi/linux/ptrace.h
-index a71b6e3b03eb..2b69f759826a 100644
---- a/include/uapi/linux/ptrace.h
-+++ b/include/uapi/linux/ptrace.h
-@@ -101,6 +101,11 @@ struct ptrace_syscall_info {
- 	};
- };
- 
-+/* This gets a file descriptor from a running process. It doesn't require the
-+ * process to be stopped.
-+ */
-+#define PTRACE_GETFD	0x420f
-+
- /*
-  * These values are stored in task->ptrace_message
-  * by tracehook_report_syscall_* to describe the current syscall-stop.
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index cb9ddcc08119..a1d7b289fe8e 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -31,6 +31,7 @@
- #include <linux/cn_proc.h>
- #include <linux/compat.h>
- #include <linux/sched/signal.h>
-+#include <linux/fdtable.h>
- 
- #include <asm/syscall.h>	/* for syscall_get_* */
- 
-@@ -994,6 +995,37 @@ ptrace_get_syscall_info(struct task_struct *child, unsigned long user_size,
- }
- #endif /* CONFIG_HAVE_ARCH_TRACEHOOK */
- 
-+static int ptrace_getfd(struct task_struct *child, unsigned long fd)
-+{
-+	struct files_struct *files;
-+	struct file *file;
-+	int ret = 0;
-+
-+	files = get_files_struct(child);
-+	if (!files)
-+		return -ENOENT;
-+
-+	spin_lock(&files->file_lock);
-+	file = fcheck_files(files, fd);
-+	if (!file)
-+		ret = -EBADF;
-+	else
-+		get_file(file);
-+	spin_unlock(&files->file_lock);
-+	put_files_struct(files);
-+
-+	if (ret)
-+		goto out;
-+
-+	ret = get_unused_fd_flags(0);
-+	if (ret >= 0)
-+		fd_install(ret, file);
-+
-+	fput(file);
-+out:
-+	return ret;
-+}
-+
- int ptrace_request(struct task_struct *child, long request,
- 		   unsigned long addr, unsigned long data)
- {
-@@ -1222,7 +1254,9 @@ int ptrace_request(struct task_struct *child, long request,
- 	case PTRACE_SECCOMP_GET_METADATA:
- 		ret = seccomp_get_metadata(child, addr, datavp);
- 		break;
--
-+	case PTRACE_GETFD:
-+		ret = ptrace_getfd(child, data);
-+		break;
- 	default:
- 		break;
- 	}
-@@ -1265,7 +1299,8 @@ SYSCALL_DEFINE4(ptrace, long, request, long, pid, unsigned long, addr,
- 	}
- 
- 	ret = ptrace_check_attach(child, request == PTRACE_KILL ||
--				  request == PTRACE_INTERRUPT);
-+				  request == PTRACE_INTERRUPT ||
-+				  request == PTRACE_GETFD);
- 	if (ret < 0)
- 		goto out_put_task_struct;
- 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.20.1
-
+Florian
