@@ -2,187 +2,156 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C79C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811AAC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9FA24249
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4782464F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:00:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbfLEH4k (ORCPT
+        id S1726413AbfLEIAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 02:56:40 -0500
-Received: from mga17.intel.com ([192.55.52.151]:20787 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbfLEH4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 02:56:40 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 23:56:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,280,1571727600"; 
-   d="scan'208";a="209067399"
-Received: from yuanwan1-mobl.ccr.corp.intel.com ([10.249.174.225])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Dec 2019 23:56:38 -0800
-Message-ID: <a9d9bc3b6ab7b6621157c61da92e55f9c7de0da1.camel@intel.com>
-Subject: Re: [PATCH v2 1/2] thermal: fix and clean up tz and cdev
- registration
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        Wei Wang <wvw@google.com>
-Cc:     Wei Wang <wei.vince.wang@gmail.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 05 Dec 2019 15:56:37 +0800
-In-Reply-To: <CAHLCerNT0p7cj+yAhJbNbqCkQguu8AMyngwuvbxaQYTSAB5GPA@mail.gmail.com>
-References: <CAHLCerOD2wOJq7QNGBOcLvkMz4wvc1+6Hk2+ZD__NFged3tLcw@mail.gmail.com>
-         <20191204215618.125826-1-wvw@google.com>
-         <20191204215618.125826-2-wvw@google.com>
-         <CAHLCerMQ_734AFe=QCg+qi3TOvYPMB95NPP_EEHNbuODBSEfog@mail.gmail.com>
-         <CAGXk5yr=jfXq+n7oB0sc=6LT0raURmQ9rgFWqrg0hxMDKYFDig@mail.gmail.com>
-         <CAHLCerOpv3Dqd7AB6=EEUUMpTWujNeLok3=ZpLntCdvHewGyww@mail.gmail.com>
-         <CAHLCerNT0p7cj+yAhJbNbqCkQguu8AMyngwuvbxaQYTSAB5GPA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 5 Dec 2019 03:00:01 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43167 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfLEIAA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 03:00:00 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1icm3L-0007fC-EI; Thu, 05 Dec 2019 08:59:59 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1icm3K-0000Ib-Sk; Thu, 05 Dec 2019 08:59:58 +0100
+Date:   Thu, 5 Dec 2019 08:59:58 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] pwm: Changes for v5.5-rc1
+Message-ID: <20191205075958.jrz3xuthyh7wv6uu@pengutronix.de>
+References: <20191205061044.1006766-1-thierry.reding@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191205061044.1006766-1-thierry.reding@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-12-05 at 12:36 +0530, Amit Kucheria wrote:
-> On Thu, Dec 5, 2019 at 11:56 AM Amit Kucheria
-> <amit.kucheria@verdurent.com> wrote:
-> > 
-> > On Thu, Dec 5, 2019 at 11:44 AM Wei Wang <wvw@google.com> wrote:
-> > > 
-> > > On Wed, Dec 4, 2019 at 8:13 PM Amit Kucheria
-> > > <amit.kucheria@verdurent.com> wrote:
-> > > > 
-> > > > Hi Wei,
-> > > > 
-> > > > On Thu, Dec 5, 2019 at 3:26 AM Wei Wang <wvw@google.com> wrote:
-> > > > > 
-> > > > > Make cooling device registration behavior consistent with
-> > > > 
-> > > > Consistent how? Please add details.
-> > > > 
-> > > 
-> > > Consistent with
-> > > 
-https://lore.kernel.org/linux-pm/1478581767-7009-2-git-send-email-edubezval@gmail.com/
-> 
-> Studying this a bit more, git blame pointed to this SHA[1] that fixed
-> it so that NULL value for 'type' is allowed, we just check for it.
-> However, none of the users of thermal_cooling_device_register() seem
-> to pass NULL.
-> 
-> Rui, any insight into the history of why we would NOT want to create
-> a
-> sysfs attribute by passing NULL?
+Hello Thierry,
 
-Actually, I don't recall there is any requirement that wants to
-register a cooling_device without "type".
-
->  Do we still need to allow for NULL
-> values or should we cleanup the API to prevent NULL values?
+On Thu, Dec 05, 2019 at 07:10:44AM +0100, Thierry Reding wrote:
+> The following changes since commit 40a6b9a00930fd6b59aa2eb6135abc2efe5440c3:
 > 
-well, my suggestion is to make this (do NULL check) a separate patch
-and see if we have any complains, if yes, we can revert it easily.
-
-thanks,
-rui
-
-> [1] 204dd1d39c32f39a95
+>   Revert "pwm: Let pwm_get_state() return the last implemented state" (2019-10-21 16:48:52 +0200)
 > 
+> are available in the Git repository at:
 > 
-> > > 
-> > > will include aboce in next version.
-> > 
-> > Thanks.
-> > 
-> > > 
-> > > > > thermal zone. This patch also cleans up a unnecessary
-> > > > > nullptr check.
-> > > > > 
-> > > > > Signed-off-by: Wei Wang <wvw@google.com>
-> > > > > ---
-> > > > >  drivers/thermal/thermal_core.c | 16 ++++++++++++----
-> > > > >  1 file changed, 12 insertions(+), 4 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/thermal/thermal_core.c
-> > > > > b/drivers/thermal/thermal_core.c
-> > > > > index d4481cc8958f..64fbb59c2f44 100644
-> > > > > --- a/drivers/thermal/thermal_core.c
-> > > > > +++ b/drivers/thermal/thermal_core.c
-> > > > > @@ -954,8 +954,16 @@ __thermal_cooling_device_register(struct
-> > > > > device_node *np,
-> > > > >         struct thermal_zone_device *pos = NULL;
-> > > > >         int result;
-> > > > > 
-> > > > > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH)
-> > > > > -               return ERR_PTR(-EINVAL);
-> > > > > +       if (!type || !type[0]) {
-> > > > > +           pr_err("Error: No cooling device type
-> > > > > defined\n");
-> > > > > +           return ERR_PTR(-EINVAL);
-> > > > > +       }
-> > > > > +
-> > > > > +       if (strlen(type) >= THERMAL_NAME_LENGTH) {
-> > > > > +           pr_err("Error: Cooling device name (%s) too long,
-> > > > > "
-> > > > > +                  "should be under %d chars\n", type,
-> > > > > THERMAL_NAME_LENGTH);
-> > > > 
-> > > > Consider fitting into a single greppable string as "Error:
-> > > > Cooling
-> > > > device name over %d chars: %s\n"
-> > > > 
-> > > 
-> > > Was intentionally keep it the same as this
-> > > 
-https://lore.kernel.org/linux-pm/31a29628894a14e716fff113fd9ce945fe649c05.1562876950.git.amit.kucheria@linaro.org/
-> > > Will make it shorter in both places next verion
-> > 
-> > Yes please, make it a separate patch. We didn't catch it during
-> > review.
-> > 
-> > > 
-> > > > > +           return ERR_PTR(-EINVAL);
-> > > > > +       }
-> > > > > 
-> > > > >         if (!ops || !ops->get_max_state || !ops-
-> > > > > >get_cur_state ||
-> > > > >             !ops->set_cur_state)
-> > > > > @@ -972,7 +980,7 @@ __thermal_cooling_device_register(struct
-> > > > > device_node *np,
-> > > > >         }
-> > > > > 
-> > > > >         cdev->id = result;
-> > > > > -       strlcpy(cdev->type, type ? : "", sizeof(cdev->type));
-> > > > > +       strlcpy(cdev->type, type, sizeof(cdev->type));
-> > > > >         mutex_init(&cdev->lock);
-> > > > >         INIT_LIST_HEAD(&cdev->thermal_instances);
-> > > > >         cdev->np = np;
-> > > > > @@ -1250,7 +1258,7 @@ thermal_zone_device_register(const char
-> > > > > *type, int trips, int mask,
-> > > > >                 return ERR_PTR(-EINVAL);
-> > > > >         }
-> > > > > 
-> > > > > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH) {
-> > > > > +       if (strlen(type) >= THERMAL_NAME_LENGTH) {
-> > > > >                 pr_err("Error: Thermal zone name (%s) too
-> > > > > long, should be under %d chars\n",
-> > > > >                        type, THERMAL_NAME_LENGTH);
-> > > > >                 return ERR_PTR(-EINVAL);
-> > > > > --
-> > > > > 2.24.0.393.g34dc348eaf-goog
-> > > > > 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.5-rc1
+> 
+> for you to fetch changes up to f5ff2628867b9c7cb4abb6c6a5a7eea079dad4b6:
+> 
+>   pwm: imx27: Unconditionally write state to hardware (2019-10-21 16:58:09 +0200)
+> 
+> Thanks,
+> Thierry
+> 
+> ----------------------------------------------------------------
+> pwm: Changes for v5.5-rc1
+> 
+> Various changes and minor fixes across a couple of drivers.
+> 
+> ----------------------------------------------------------------
+> Colin Ian King (1):
+>       pwm: sun4i: Drop redundant assignment to variable pval
+> 
+> Fabrice Gasnier (3):
+>       dt-bindings: pwm-stm32: Document pinctrl sleep state
+>       pwm: stm32: Split breakinput apply routine to ease PM support
+>       pwm: stm32: Add power management support
+> 
+> Ondrej Jirman (1):
+>       pwm: sun4i: Fix incorrect calculation of duty_cycle/period
+> 
+> Rasmus Villemoes (1):
+>       pwm: Update comment on struct pwm_ops::apply
+> 
+> Thierry Reding (8):
+>       dt-bindings: pwm: mediatek: Remove gratuitous compatible string for MT7629
+>       pwm: stm32: Validate breakinput data from DT
+>       pwm: stm32: Remove clutter from ternary operator
+>       pwm: stm32: Pass breakinput instead of its values
+>       pwm: Read initial hardware state at request time
+>       pwm: cros-ec: Cache duty cycle value
+>       pwm: imx27: Cache duty cycle register value
+>       pwm: imx27: Unconditionally write state to hardware
 
+It's a bit of a surprise for me that you included the three last patches
+as last minute changes. I'm not sure if I oppose them, but they were not
+in next (as of next-20191205) and I would really like to have some time
+for patches (that are not obvious fixes of course) there before they go
+into a pull request. And if it's only to get some transparency.
+(But in this case I had the impression that the discussion isn't over
+yet, your last mail in the thread said: "I'm not sure yet about the
+remainder of the series. Depending on what we decide to do about drivers
+that can't (or don't want to) write all state through to the hardware,
+patches 2-4 may become moot." in October which made me expect there is
+still something to come, at least a statement before the fact. Still
+more as also several further drivers are affected (according to my
+research described in
+https://patchwork.ozlabs.org/patch/1178351/#2282269).)
+
+In return there are a few patches I would really have liked to be seen
+here:
+
+ - The series "Updates for the atmel PWM driver" that didn't get any
+   response from you since August although it got some acks from the
+   atmel guys.
+   (https://patchwork.ozlabs.org/project/linux-pwm/list/?series=127096&state=*,
+   This is marked Superseeded for reasons unknown to me that I asked
+   about in October.)
+
+ - The series starting with "pwm: rcar: Drop useless call to
+   pwm_get_state" from October which got reviews by a renesas guy.
+   (https://patchwork.ozlabs.org/patch/1182649/,
+   https://patchwork.ozlabs.org/patch/1182648/,
+   Patchwork didn't identify this as a series, so listing the patches
+   individually.)
+
+ - The patch "pwm: implement tracing for .get_state() and
+   .apply_state()" that got an review by Steven Rostedt.
+   (https://patchwork.ozlabs.org/patch/1182679/)
+
+ - The series starting with "pwm: omap-dmtimer: remove pwmchip in
+   .remove before making it unfunctional" from November which IMHO is
+   simple and contains two fixes
+   (https://patchwork.ozlabs.org/project/linux-pwm/list/?series=142030)
+
+And I'm still waiting for feedback on
+
+ - "Documentation: pwm: rework documentation for the framework" (since
+   January)
+
+ - "pwm: add debug knob to help driver authors" (since August)
+
+:-(
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
