@@ -2,124 +2,148 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391AFC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAE9C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039742464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314052464F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Aepzbqy6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eYZMat2H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbfLEK3f (ORCPT
+        id S1729198AbfLEKbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:29:35 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:41206 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbfLEK3f (ORCPT
+        Thu, 5 Dec 2019 05:31:42 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:44737 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729017AbfLEKbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:29:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pf3VRmP8HmHiyiOcV+xYnOtrZTggWIGVma7A8JY6Tbc=; b=Aepzbqy6h4NAA4gWqcMM8WUWT
-        dbAK+bwyiwqtDY4+58NteAYnzBPqUPn3Dmtjk4bffOt+0/mQI1/9EFSIZDaoT1Zhy1IjCBEOalDoE
-        ui+oEGIjYETpUbbB/qVU4WpkbCEWys9PoT2WAes9SqLybHOMGNXLWXzk16Z3wwD0P+G0002bHVNb0
-        dLhvbk6JgmZ3XS4G0G44jBNTBn9O5PUyrUnpGciaCwARlxi0YOk2w4SxVUMJFmf2ATJFm9dwloR1y
-        wSnVsKBO2WLOrYx2Y3JedCNjIxFGc5j3tcwS9NQU9bGApBlm7PGlyn8es6BWEXRGaU5XxYMuWK9Jj
-        qK/9PvU6g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1icoO3-0003DQ-EV; Thu, 05 Dec 2019 10:29:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EAFC33011E0;
-        Thu,  5 Dec 2019 11:28:10 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1F0752B26E208; Thu,  5 Dec 2019 11:29:28 +0100 (CET)
-Date:   Thu, 5 Dec 2019 11:29:28 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Tejun Heo <tj@kernel.org>, jiangshanlai@gmail.com,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: Workqueues splat due to ending up on wrong CPU
-Message-ID: <20191205102928.GG2810@hirez.programming.kicks-ass.net>
-References: <20191125230312.GP2889@paulmck-ThinkPad-P72>
- <20191126183334.GE2867037@devbig004.ftw2.facebook.com>
- <20191126220533.GU2889@paulmck-ThinkPad-P72>
- <20191127155027.GA15170@paulmck-ThinkPad-P72>
- <20191128161823.GA24667@paulmck-ThinkPad-P72>
- <20191129155850.GA17002@paulmck-ThinkPad-P72>
- <20191202015548.GA13391@paulmck-ThinkPad-P72>
- <20191202201338.GH16681@devbig004.ftw2.facebook.com>
- <20191203095521.GH2827@hirez.programming.kicks-ass.net>
- <20191204201150.GA14040@paulmck-ThinkPad-P72>
+        Thu, 5 Dec 2019 05:31:40 -0500
+Received: by mail-qv1-f67.google.com with SMTP id n8so1059846qvg.11
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 02:31:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AIwfFBjY5pjo/AwQlYLo1XDjqkJbAe8kAMyvBg+3yAM=;
+        b=eYZMat2HE3FLjyOA43FqB/w1GkyQ6frF+j0XPKrIc1es0ljwtwwex1ueuRIGRIMTBZ
+         uD+v4Pu8j72Kr9PWzQSPmIJG+vAutrUoXY/DlvJLqYzq5Mb/MQS4MLbL7d8bKQHe1CLm
+         /obGnlsvGr3IPK2Vijtfo13yPAeYuZFUYqQkYHaAeMoqlrCkVVKjcDjzVsYKs3oi/E8k
+         b+AnNdv8b+VIdUWVko0227dY1YSR3tuiDGqWP2ttdlmRuhCA6DLLr4suNNTt1QEYRlE9
+         nBUheeQUAyU8L/9eU7qRmuCPsDRs7GTa8MiaTjkR0yLps1RW1cvnWRVFxTxEORtDL2EI
+         xkcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AIwfFBjY5pjo/AwQlYLo1XDjqkJbAe8kAMyvBg+3yAM=;
+        b=raHzFOnBj+KP9dgDpoj43xUMkVeK7fu8E95TFnzmqaUf7SQKki3i5z8azmcM42XvPB
+         HOrtuAWDnOofy2V4fB3eIHwMGKiiRsdm94KnDgEU6Rp0ljbgkJ9DUBtfyfWf/rEgW7Yc
+         vi6GDiNwvj2f3AfGY+GHT3aE1H6QYl59xNmDaxPsS11qkD78w+gpIAlN3222TDfMiMDv
+         kADJs8zTfcQc6jie1T3z7ywEOViAbuHbrOITu6/L/iKPymsF23l4zN+z8iUNZRKD4guY
+         YdagFmKobyX/v2LpxIaPdVn8Hv84LwdlHNNKl2fiTe9pl0dxoazBNUV5FMfkXgjCGc6Z
+         8D5Q==
+X-Gm-Message-State: APjAAAXjCpnG5JBjTqcLkA9qZDTUuSlVTbAmhmbIz1LBKB/ed7rdh5Jp
+        N/H9OEMSlKtdCMKgH4axzyGmWLjAOd88cAHgZkzHBQ==
+X-Google-Smtp-Source: APXvYqzUwvRfklGx7jn2Qx5E8Ckootk5Q7YtZLTMNHA7rrZOeakEoQMPUMd3z45mweABnO/Dvphg9v6UIqE2DS3Vf+k=
+X-Received: by 2002:a0c:f8d1:: with SMTP id h17mr6889518qvo.80.1575541898628;
+ Thu, 05 Dec 2019 02:31:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204201150.GA14040@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <0000000000003e640e0598e7abc3@google.com> <41c082f5-5d22-d398-3bdd-3f4bf69d7ea3@redhat.com>
+ <CACT4Y+bCHOCLYF+TW062n8+tqfK9vizaRvyjUXNPdneciq0Ahg@mail.gmail.com> <f4db22f2-53a3-68ed-0f85-9f4541530f5d@redhat.com>
+In-Reply-To: <f4db22f2-53a3-68ed-0f85-9f4541530f5d@redhat.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 5 Dec 2019 11:31:27 +0100
+Message-ID: <CACT4Y+ZHCmTu4tdfP+iCswU3r6+_NBM9M-pAZEypVSZ9DEq3TQ@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in fbcon_get_font
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     syzbot <syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI <dri-devel@lists.freedesktop.org>, ghalat@redhat.com,
+        Gleb Natapov <gleb@kernel.org>, gwshan@linux.vnet.ibm.com,
+        "H. Peter Anvin" <hpa@zytor.com>, James Morris <jmorris@namei.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        KVM list <kvm@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, stewart@linux.vnet.ibm.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 12:11:50PM -0800, Paul E. McKenney wrote:
+On Thu, Dec 5, 2019 at 11:22 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 05/12/19 11:16, Dmitry Vyukov wrote:
+> > On Thu, Dec 5, 2019 at 11:13 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >>
+> >> On 04/12/19 22:41, syzbot wrote:
+> >>> syzbot has bisected this bug to:
+> >>>
+> >>> commit 2de50e9674fc4ca3c6174b04477f69eb26b4ee31
+> >>> Author: Russell Currey <ruscur@russell.cc>
+> >>> Date:   Mon Feb 8 04:08:20 2016 +0000
+> >>>
+> >>>     powerpc/powernv: Remove support for p5ioc2
+> >>>
+> >>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=127a042ae00000
+> >>> start commit:   76bb8b05 Merge tag 'kbuild-v5.5' of
+> >>> git://git.kernel.org/p..
+> >>> git tree:       upstream
+> >>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=117a042ae00000
+> >>> console output: https://syzkaller.appspot.com/x/log.txt?x=167a042ae00000
+> >>> kernel config:  https://syzkaller.appspot.com/x/.config?x=dd226651cb0f364b
+> >>> dashboard link:
+> >>> https://syzkaller.appspot.com/bug?extid=4455ca3b3291de891abc
+> >>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11181edae00000
+> >>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=105cbb7ae00000
+> >>>
+> >>> Reported-by: syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com
+> >>> Fixes: 2de50e9674fc ("powerpc/powernv: Remove support for p5ioc2")
+> >>>
+> >>> For information about bisection process see:
+> >>> https://goo.gl/tpsmEJ#bisection
+> >>>
+> >>
+> >> Why is everybody being CC'd, even if the bug has nothing to do with the
+> >> person's subsystem?
+> >
+> > The To list should be intersection of 2 groups of emails: result of
+> > get_maintainers.pl on the file identified as culprit in the crash
+> > message + emails extracted from the bisected to commit.
+>
+> Ah, and because the machine is a KVM guest, kvm_wait appears in a lot of
+> backtrace and I get to share syzkaller's joy every time. :)
 
-> And the good news is that I didn't see the workqueue splat, though my
-> best guess is that I had about a 13% chance of not seeing it due to
-> random chance (and I am currently trying an idea that I hope will make
-> it more probable).  But I did get a couple of new complaints about RCU
-> being used illegally from an offline CPU.  Splats below.
+I don't see any mention of "kvm" in the crash report. And it's only 1
+file, not all of them, in this case I would expect it to be
+drivers/video/fbdev/core/fbcon.c. So it should be something different.
 
-Shiny!
+> This bisect result is bogus, though Tetsuo found the bug anyway.
+> Perhaps you can exclude commits that only touch architectures other than
+> x86?
 
-> Your patch did rearrange the CPU-online sequence, so let's see if I
-> can piece things together...
-> 
-> RCU considers a CPU to be online at rcu_cpu_starting() time.  This is
-> called from notify_cpu_starting(), which is called from the arch-specific
-> CPU-bringup code.  Any RCU readers before rcu_cpu_starting() will trigger
-> the warning I am seeing.
-
-Right.
-
-> The original location of the stop_machine_unpark() was in
-> bringup_wait_for_ap(), which is called from bringup_cpu(), which is in
-> the CPUHP_BRINGUP_CPU entry of cpuhp_hp_states[].  Which, if I am not
-> too confused, is invoked by some CPU other than the to-be-incoming CPU.
-
-Correct.
-
-> The new location of the stop_machine_unpark() is in cpuhp_online_idle(),
-> which is called from cpu_startup_entry(), which is invoked from
-> the arch-specific bringup code that runs on the incoming CPU.
-
-The new place is the final piece of bringup, it is right before where
-the freshly woken CPU will drop into the idle loop and start scheduling
-(for the first time).
-
-> Which
-> is the same code that invokes notify_cpu_starting(), so we need
-> notify_cpu_starting() to be invoked before cpu_startup_entry().
-
-Right, that is right before we run what used to be the CPU_STARTING
-notifiers. This is in fact (on x86) before the CPU is marked
-cpu_online(). It has to be before cpu_startup_entry(), before this is
-ran with IRQs disabled, while cpu_startup_entry() demands IRQs are
-enabled.
-
-> The order is not immediately obvious on IA64.  But it looks like
-> everything else does it in the required order, so I am a bit confused
-> about this.
-
-That makes two of us, afaict we have RCU up and running when we get to
-the idle loop.
+We do this. It work sometimes. But sometimes it hits non-deterministic
+kernel build bugs:
+https://github.com/google/syzkaller/issues/1271#issuecomment-559093018
+And in this case it hit some git bisect weirdness which I can't explain yet:
+https://github.com/google/syzkaller/issues/1527
