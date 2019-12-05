@@ -2,277 +2,137 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48B6C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E538C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A57562245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:27:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="NSsYEUAt"
+	by mail.kernel.org (Postfix) with ESMTP id 5F7AC206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfLEE1G (ORCPT
+        id S1728916AbfLEE1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 23:27:06 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45297 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728449AbfLEE1G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 23:27:06 -0500
-Received: by mail-lj1-f195.google.com with SMTP id d20so1835742ljc.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 20:27:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=IkVfhW3J2Ojg/cQ1sCp3mgS439i6j3OWnwWO8MYbCxw=;
-        b=NSsYEUAt7gTMqN1+NXjsIlxafwjK69m5mS0tNpnoWfy0UadHmm8CX1gfyuOz7v2Yxz
-         kbTNICGwY198z4xMarvH/6E3qlLNzPt0M3bLWDc36QSEXnyzvRmvUS9GbtdwCSNCUwKB
-         LqwNK4QR0XMrix+tuXNRqP7+Xlfwq6p6T7TVHRVvBbc9d8jBp2FsbfohKyc8J+6SLqEx
-         ipNT+xdBuLAZhFvi762ck9XdKMorIXUMkNKbYT0hTOESKGZD+gW+Kr6o0DDT//sUiEBG
-         K9mvLW6W7mAEhzaGPzN8TrezyiZIsFhJB8/GaaQwfj+atxTduv7WgKkc/rcNAuXF0HeI
-         u5kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=IkVfhW3J2Ojg/cQ1sCp3mgS439i6j3OWnwWO8MYbCxw=;
-        b=Y/veS7dlg+lAQvdOHm6NZD1oz19EZVd5dRkV/6aWrNk9b4rAQLNiusH8YiqzgJ9OwG
-         47I9TcmBWnpRiT/DeixPSOlFHR5V1Jikxy+zB9/86tSMQjZG2rnSS0Hrdf8BSVqyD/P3
-         rbqEkaNGWZjvmH2jXgCw/hMtFS6sVtFKGM/UgGKc4pL0fDLqfcUnIaVsxXO1qFfjdUBJ
-         ObBxWD+iKQo6CbLhrI8HBUBz3X5aBDgbdYjARviP/7cCyxteeJpzNBbz71OZLPf9U2FA
-         OBmk7ovvJ2sQ6ShRjCGtGZx+SErn56bWnyk7ngpkz0hhsWL0n1iO6vlXkACActldO1Mf
-         sGKw==
-X-Gm-Message-State: APjAAAV/nRZfdewBJyz2N1+N7dLBZa+3MdvRDR/cyAsuGJ5WMNyr5jKM
-        nWieCO8PMjEjWU7XWR/EtVNW7A==
-X-Google-Smtp-Source: APXvYqzYoC5e23Lvp57sngoz6hCJxFrnVW1oTzolrTDsnPYZcS0A9POyeQOteXLbSOwjOa9MJqsfdA==
-X-Received: by 2002:a2e:9741:: with SMTP id f1mr3881806ljj.123.1575520023206;
-        Wed, 04 Dec 2019 20:27:03 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id c12sm4251857ljk.77.2019.12.04.20.26.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 20:27:02 -0800 (PST)
-Date:   Wed, 4 Dec 2019 20:26:38 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Toke =?UTF-8?B?SMO4aWxh?= =?UTF-8?B?bmQtSsO4cmdlbnNlbg==?= 
-        <toke@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
-Message-ID: <20191204202638.3b0b0c8c@cakuba.netronome.com>
-In-Reply-To: <20191205031718.ax46kfv55zauuopt@ast-mbp.dhcp.thefacebook.com>
-References: <20191202131847.30837-1-jolsa@kernel.org>
-        <CAEf4BzY_D9JHjuU6K=ciS70NSy2UvSm_uf1NfN_tmFz1445Jiw@mail.gmail.com>
-        <87wobepgy0.fsf@toke.dk>
-        <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
-        <CAEf4BzZ+0XpH_zJ0P78vjzmFAH3kGZ21w3-LcSEG=B=+ZQWJ=w@mail.gmail.com>
-        <20191204135405.3ffb9ad6@cakuba.netronome.com>
-        <20191204233948.opvlopjkxe5o66lr@ast-mbp.dhcp.thefacebook.com>
-        <20191204162348.49be5f1b@cakuba.netronome.com>
-        <20191205010930.izft6kv5xlnejgog@ast-mbp.dhcp.thefacebook.com>
-        <20191204181028.6cdb40d4@cakuba.netronome.com>
-        <20191205031718.ax46kfv55zauuopt@ast-mbp.dhcp.thefacebook.com>
-Organization: Netronome Systems, Ltd.
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Wed, 4 Dec 2019 23:27:51 -0500
+Received: from mga18.intel.com ([134.134.136.126]:40139 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728374AbfLEE1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 23:27:51 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 20:27:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,279,1571727600"; 
+   d="scan'208";a="243106642"
+Received: from yuanwan1-mobl.ccr.corp.intel.com ([10.249.174.225])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Dec 2019 20:27:48 -0800
+Message-ID: <6d43c93a748872293df489d397f894b77b221bc9.camel@intel.com>
+Subject: Re: linux-next: Tree for Nov 15 (thermal:
+ THERMAL_GOV_POWER_ALLOCATOR)
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>, qperret@google.com
+Date:   Thu, 05 Dec 2019 12:27:47 +0800
+In-Reply-To: <9436e207-8a65-f01b-c348-32a8a00f03d4@infradead.org>
+References: <20191115190525.77efdf6c@canb.auug.org.au>
+         <247cd41e-a07b-adf0-4ec2-6467f0257837@infradead.org>
+         <9436e207-8a65-f01b-c348-32a8a00f03d4@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Dec 2019 19:17:20 -0800, Alexei Starovoitov wrote:
-> On Wed, Dec 04, 2019 at 06:10:28PM -0800, Jakub Kicinski wrote:
-> > On Wed, 4 Dec 2019 17:09:32 -0800, Alexei Starovoitov wrote: =20
-> > > On Wed, Dec 04, 2019 at 04:23:48PM -0800, Jakub Kicinski wrote: =20
-> > > > On Wed, 4 Dec 2019 15:39:49 -0800, Alexei Starovoitov wrote:   =20
-> > > > > > Agreed. Having libbpf on GH is definitely useful today, but one=
- can hope
-> > > > > > a day will come when distroes will get up to speed on packaging=
- libbpf,
-> > > > > > and perhaps we can retire it? Maybe 2, 3 years from now? Putting
-> > > > > > bpftool in the same boat is just more baggage.     =20
-> > > > >=20
-> > > > > Distros should be packaging libbpf and bpftool from single repo o=
-n github.
-> > > > > Kernel tree is for packaging kernel.   =20
-> > > >=20
-> > > > Okay, single repo on GitHub:
-> > > >=20
-> > > > https://github.com/torvalds/linux   =20
-> > >=20
-> > > and how will you git submodule only libbpf part of kernel github into=
- bcc
-> > > and other projects? =20
-> >=20
-> > Why does bcc have to submodule libbpf? Is it in a "special
-> > relationship" with libbpf as well?=20
-> >=20
-> > dnf/apt install libbpf
-> >=20
-> > Or rather:
-> >=20
-> > dnf/apt install bcc
-> >=20
-> > since BCC's user doesn't care about dependencies. The day distroes
-> > started packaging libbpf and bpftool the game has changed. =20
->=20
-> have you ever built bcc ? or bpftrace?
-> I'm not sure how to answer such 'suggestion'.
+On Wed, 2019-12-04 at 08:25 -0800, Randy Dunlap wrote:
+> On 11/15/19 3:44 PM, Randy Dunlap wrote:
+> > On 11/15/19 12:05 AM, Stephen Rothwell wrote:
+> > > Hi all,
+> > > 
+> > > Changes since 20191114:
+> > > 
+> > 
+> > on i386:
+> > 
+> > WARNING: unmet direct dependencies detected for
+> > THERMAL_GOV_POWER_ALLOCATOR
+> >   Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
+> >   Selected by [y]:
+> >   - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
+> > 
+> > 
+> > THERMAL_GOV_POWER_ALLOCATOR is selected by
+> > THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
+> > even though ENERGY_MODEL is not set/enabled.
+> > 
+> > 
+> 
+> This Kconfig warning is still happening in linux-next of 20191204.
+> 
+I overlooked the original report probably because I was not CCed.
 
-Perhaps someone else has more patience to explain it - why bcc can't
-just use binary libbpf distribution (static lib + headers) and link
-against it like it links against other libraries?
+This is introduced by commit a4e893e802e6("thermal: cpu_cooling:
+Migrate to using the EM framework") which adds the dependency of
+ENERGY_MODEL for THERMAL_GOV_POWER_ALLOCATOR.
 
-> > Please accept iproute2 as an example of a user space toolset closely
-> > related to the kernel. If kernel release model and process made no
-> > sense in user space, why do iproute2s developers continue to follow it
-> > for years?  =20
->=20
-> imo iproute2 is an example how things should not be run.
-> But that's a very different topic.
+To fix this, it's better to make THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
+depends on THERMAL_GOV_POWER_ALLOCATOR instead.
 
-Please explain, the topic is how to maintain user space closely related
-to the kernel.
+Please confirm the problem is fixed by below patch.
 
-Share with us what you dislike about iproute2 so we can fix it. Instead
-of adding parts of it to bpftool and then pretending that the API added
-to libbpf to facilitate that duplication is some internal bpftool-only
-magic which then prevents us from dynamic linking..... =F0=9F=98=A0
+thanks,
+rui
 
-> > > Packaging is different. =20
-> >=20
-> > There are mostly disadvantages, but the process should be well known.
-> > perf has been packaged for years. =20
->=20
-> perf was initially seen as something that should match kernel one to one.
-> yet it diverged over years. I think it's a counter example.
->=20
-> > What do you mean? I've sure as hell sent patches to net with Fixes tags=
- =20
->=20
-> which was complete waste of time for people who were sending these
-> patches, for maintainers who applied them and for all stables folks
-> who carried them into kernel stable releases.
-> Not a single libbpf build was made out of those sources.
+From c9429f6e28ea2219686a4294d39f015ba373774b Mon Sep 17 00:00:00 2001
+From: Zhang Rui <rui.zhang@intel.com>
+Date: Thu, 5 Dec 2019 12:17:07 +0800
+Subject: [PATCH] thermal: fix a Kconfig warning
 
-Because libbpf just now entered the distroes, and you suggested the
-distroes use the GH repo, so sure now it's wasted work.
+Currently, THERMAL_GOV_POWER_ALLOCATOR is selected by
+THERMAL_DEFAULT_GOV_POWER_ALLOCATOR even if it has some unmet
+dependencies.
 
-IIRC there were bpftool crash fixes which landed in Fedora via stable.
+This causes the Kconfig warning
+   WARNING: unmet direct dependencies detected for
+      THERMAL_GOV_POWER_ALLOCATOR
+      Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
+      Selected by [y]:
+      - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
 
-> > > Even coding style is different. =20
-> >=20
-> > Is it? You mean the damn underscores people are making fun of? :/ =20
->=20
-> Are you trolling? Do you understand why __ is there?
+Fix the problem by making THERMAL_DEFAULT_GOV_POWER_ALLOCATOR depends on
+THERMAL_GOV_POWER_ALLOCATOR instead.
 
-Not the point. Tell me how the coding style is different. The
-underscores is the only thing I could think of that's not common=20
-in the kernel.
+Fixes: a4e893e802e6("thermal: cpu_cooling: Migrate to using the EM framework")
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+---
+ drivers/thermal/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > libbpf doesn't have a roadmap either,  =20
->=20
-> I think you're contrasting that with kernel and saying
-> that kernel has a roadmap ? What is kernel roadmap?
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index 59b79fc48266..79b27865c6f4 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -108,7 +108,7 @@ config THERMAL_DEFAULT_GOV_USER_SPACE
+ 
+ config THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
+ 	bool "power_allocator"
+-	select THERMAL_GOV_POWER_ALLOCATOR
++	depends on THERMAL_GOV_POWER_ALLOCATOR
+ 	help
+ 	  Select this if you want to control temperature based on
+ 	  system and device power allocation. This governor can only
+-- 
+2.17.1
 
-Kernel road map is the same as libbpf's road map.
 
-> > it's not really a full-on project
-> > on its own. What's 0.1.0 gonna be? =20
->=20
-> whenever this bpf community decides to call it 0.1.0.
->
-> > Besides stuff lands in libbpf before it hits a major kernel release.
-> > So how are you gonna make libbpf releases independently from kernel
-> > ones? What if a feature gets a last minute revert in the kernel and it's
-> > in libbpf's ABI? =20
->=20
-> You mean when kernel gets new feature, then libbpf gets new feature, then
-> libbpf is released, but then kernel feature is reverted? Obviously we sho=
-uld
-> avoid making a libbpf release that relies on kernel features that didn't =
-reach
-> the mainline. Yet there could be plenty of reasons why making libbpf rele=
-ase in
-> the middle of kernel development cycle makes perfect sense.
 
-But master of libbpf must have all features to test the kernel with,
-right? So how do we branch of a release in the middle? That's only
-possible if kernel cycle happens to not have had any features that
-required libbpf yet?
-
-Or are you thinking 3 tier branching where we'd branch off libbpf
-release, say 2.6.0 that corresponds to kernel X, but it wouldn't be a
-stable-only release, and we can still backport features added in kernel
-X + 1 cycle, features which don't require kernel support, and release
-libbpf 2.7.0?
-
-Could work but it'd get tricky, cause if we want to break ABI we'd
-actually need 4 tiers. ABI compat, kernel version, feature version,
-stable version.
-
-> Also reaching Linus's tree in rc1 is also not a guarantee of non-revert. =
-Yet we
-> release libbpf around rc1 because everyone expects bug-fixes after rc1.=20
-
-I consider current process to be broken. Hopefully we can improve it.
-
-> So it's an exception that solidifies the rule.
->
-> > > libbpf has to run on all kernels. Newer and older. How do you support
-> > > that if libbpf is tied with the kernel? =20
-> >=20
-> > Say I have built N kernels UM or for a VM, and we have some test
-> > suite: I pull libbpf, build it, run its tests. The only difference
-> > between in tree and out of tree is that "pull libbpf" means pulling
-> > smaller or larger repo. Doesn't matter that match, it's a low --depth
-> > local clone. =20
->=20
-> The expected CI is:
-> 1. pull-req proposed.
-> 2. CI picks it up, builds, run tests.
-> 3. humans see results and land or reject pull-req.
-> Now try to think through how CI on top of full kernel tree will
-> be able to pick just the right commits to start build/test cycle.
-> Is it going to cherry-pick from patchworks? That would be awesome.
-> Yet intel 0bot results show that it's easier said than done.
-> I'm not saying it's not possible. Just complex.
-> If you have cycles to integrate *-next into kernelci.org, please go ahead.
-
-Yes, it is very complex, I know. I've been hacking on something along
-those lines for the last few weeks. Hopefully I'll have results at some
-point..
-
-First stab is just doing build testing, checkpatch, verify tags etc.
-Uploading to patchwork, and sending an email if there were failures.
-
-Even that's not easy as a weekend/evening task :( And it requires a lot
-of manual inspection upfront before it's unleashed on the ML, because it
-will catch a lot of stupid little stuff and a lot of people will get
-grumpy.
-
-We need to modernize the process across the board. I don't think having
-zombie read-only repos on GitHub will give contributors confidence so
-it's not a step in right direction. We should start from the hard
-problem, that is the CI itself.
-
-The problem of correlating user space and kernel patches will have to=20
-be solved for netdev, because netdev tests depend on iproute2.
