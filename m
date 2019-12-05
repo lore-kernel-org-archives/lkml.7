@@ -2,263 +2,273 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909F1C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA455C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 452092245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA95C2464E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:08:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dZJZp7fM"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="YSP7XlpR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbfLEOHD (ORCPT
+        id S1729549AbfLEOII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 09:07:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38167 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729236AbfLEOHD (ORCPT
+        Thu, 5 Dec 2019 09:08:08 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:45132 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729096AbfLEOII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 09:07:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575554821;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=azQp6+u/OaRhFbUGciXV+zkPwn2tSlr6PlcS27y4L7s=;
-        b=dZJZp7fMgCf2IRWlLeM7a7KMJwPmG5oLVK4No/D8FHBjZ9k18NRG40REk+NmRqjE/IaocV
-        5rDOiaq+hzAyTcHtnStzyF15Nflhr7hxQoC7cszSgYMaNQcCt8KRpqhNdq+K8/UIGfxyoO
-        DSFOPU1iJzSNfGfwbdAE6F4LmMsx7xk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-334-McVFv0HuOfSqDAGpiofMiA-1; Thu, 05 Dec 2019 09:07:00 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A455A593D7;
-        Thu,  5 Dec 2019 14:06:58 +0000 (UTC)
-Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4FE566012E;
-        Thu,  5 Dec 2019 14:06:56 +0000 (UTC)
-Subject: Re: [RFC 2/3] KVM: arm64: pmu: Fix chained SW_INCR counters
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, james.morse@arm.com,
-        andrew.murray@arm.com, suzuki.poulose@arm.com, drjones@redhat.com
-References: <20191204204426.9628-1-eric.auger@redhat.com>
- <20191204204426.9628-3-eric.auger@redhat.com>
- <561ac6df385e977cc51d51a8ab28ee49@www.loen.fr>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <2b30c1ca-3bc0-9f73-4bea-ee42bb74cbac@redhat.com>
-Date:   Thu, 5 Dec 2019 15:06:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 5 Dec 2019 09:08:08 -0500
+Received: by mail-pj1-f67.google.com with SMTP id r11so1335764pjp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 06:08:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=gDPaTgf8omrU7t5A7U4CSa0w+DMkgZN9EG6vHr/qYkw=;
+        b=YSP7XlpR2jJ7qCKyKlGeGTKNGaIJuuFdmrfOw19RyX8iEXsgcnk3K/q0SsrsWSPXo3
+         xs7UU7shhfC6KRV1pJfAWCc1rOROffV3+7afWsBdLjun4bJwylWpJ5qGMFBybIJfNtL0
+         V9/YDFf75kg42W296KYmdgpwI/Xa1KJaLBDEk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=gDPaTgf8omrU7t5A7U4CSa0w+DMkgZN9EG6vHr/qYkw=;
+        b=Mj9yVlyQ0QaqNUM9rFiequxWXyXjx8Mxf4tS9vZu1YRB2+wdBwVVVg9yTFMafamtuG
+         zEfh1dafMn5vjnPwmvTUQ5HqbtCAaWIOp+t0iO+ceeJ9B6DuEqhf5PBDFw0oHukNLapy
+         uhR/C/j2ESyNcJcK6HvVTlC/pIejtjN9K/0YCWLOpKu6DSuB2HOz0VRCryDc6PXGQmqf
+         zxFLSLE6dmLadOKLDu6p/Z4EahzOtOdpVrcbctHXlEFYxq4ktOZRext4PZssqWmOxSTM
+         PxTGA3sRLwAHSVnrPpgxyTuMN2GQJTx4Zi6Io7FRfN8dldhu8ZyfkwwmV9iibDvN/jBV
+         mnBA==
+X-Gm-Message-State: APjAAAVVOIzGMCXOcctg2SZlcs9AAuC5enSLj6B3x1+cTC0enIZ3xQT7
+        fUR5i4kAXvXa552CsgVq+lKkwADsfPM=
+X-Google-Smtp-Source: APXvYqx2OuJizyreJW2uKgN4cgwgLo7td5SIERtcLheczecEWOStUAIOpWbG0OB6XPz1Otxk3fGjTg==
+X-Received: by 2002:a17:90a:8989:: with SMTP id v9mr9477111pjn.119.1575554886778;
+        Thu, 05 Dec 2019 06:08:06 -0800 (PST)
+Received: from localhost (2001-44b8-111e-5c00-61b9-031c-bed1-3502.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:61b9:31c:bed1:3502])
+        by smtp.gmail.com with ESMTPSA id n26sm11980521pgd.46.2019.12.05.06.08.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 06:08:05 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        Qian Cai <cai@lca.pw>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: Re: [PATCH 2/2] kasan: Don't allocate page tables in kasan_release_vmalloc()
+In-Reply-To: <87eexjekml.fsf@dja-thinkpad.axtens.net>
+References: <20191204204534.32202-1-aryabinin@virtuozzo.com> <20191204204534.32202-2-aryabinin@virtuozzo.com> <87eexjekml.fsf@dja-thinkpad.axtens.net>
+Date:   Fri, 06 Dec 2019 01:08:02 +1100
+Message-ID: <87y2vqdfwd.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-In-Reply-To: <561ac6df385e977cc51d51a8ab28ee49@www.loen.fr>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: McVFv0HuOfSqDAGpiofMiA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Daniel Axtens <dja@axtens.net> writes:
 
-On 12/5/19 10:43 AM, Marc Zyngier wrote:
-> Hi Eric,
->=20
-> On 2019-12-04 20:44, Eric Auger wrote:
->> At the moment a SW_INCR counter always overflows on 32-bit
->> boundary, independently on whether the n+1th counter is
->> programmed as CHAIN.
+> Andrey Ryabinin <aryabinin@virtuozzo.com> writes:
+>
+> Ah you beat me by a few hours, I was going to send a similar but
+> slightly simpler patch - we should be able to use apply_to_page_range
+> for the 'inner' part of the range and just walk the page table for the
+> possible pages on the edges of the range. That means we could avoid a
+> full, loop-driven page table walker. But I'd also be very open to
+> generalising apply_to_page_range(); I think I'd add
+> apply_to_existing_pages() and add an argument to the static walker
+> functions.
+>
+> Let me try that out and we'll see what it looks like.
+
+I had a go, it's here:
+
+https://lore.kernel.org/linux-mm/20191205140407.1874-1-dja@axtens.net/T/#t
+
+I think it's ugly but not so ugly as to not be worth it. There's also
+another patch for syzkaller bugs that Dmitry picked up as patch 3 of the
+series, it works and is needed whether you want to go with my approach
+or Andrey's.
+
+Regards,
+Daniel
+
+>
+> Regards,
+> Daniel
+>
+>> The purpose of kasan_release_vmalloc() is to unmap and deallocate shadow
+>> memory. The usage of apply_to_page_range() isn't suitable in that scenario
+>> because it allocates pages to fill missing page tables entries.
+>> This also cause sleep in atomic bug:
 >>
->> Check whether the SW_INCR counter is a 64b counter and if so,
->> implement the 64b logic.
+>> 	BUG: sleeping function called from invalid context at mm/page_alloc.c:4681
+>> 	in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 15087, name:
 >>
->> Fixes: 80f393a23be6 ("KVM: arm/arm64: Support chained PMU counters")
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>> 	Call Trace:
+>> 	 __dump_stack lib/dump_stack.c:77 [inline]
+>> 	 dump_stack+0x199/0x216 lib/dump_stack.c:118
+>> 	 ___might_sleep.cold.97+0x1f5/0x238 kernel/sched/core.c:6800
+>> 	 __might_sleep+0x95/0x190 kernel/sched/core.c:6753
+>> 	 prepare_alloc_pages mm/page_alloc.c:4681 [inline]
+>> 	 __alloc_pages_nodemask+0x3cd/0x890 mm/page_alloc.c:4730
+>> 	 alloc_pages_current+0x10c/0x210 mm/mempolicy.c:2211
+>> 	 alloc_pages include/linux/gfp.h:532 [inline]
+>> 	 __get_free_pages+0xc/0x40 mm/page_alloc.c:4786
+>> 	 __pte_alloc_one_kernel include/asm-generic/pgalloc.h:21 [inline]
+>> 	 pte_alloc_one_kernel include/asm-generic/pgalloc.h:33 [inline]
+>> 	 __pte_alloc_kernel+0x1d/0x200 mm/memory.c:459
+>> 	 apply_to_pte_range mm/memory.c:2031 [inline]
+>> 	 apply_to_pmd_range mm/memory.c:2068 [inline]
+>> 	 apply_to_pud_range mm/memory.c:2088 [inline]
+>> 	 apply_to_p4d_range mm/memory.c:2108 [inline]
+>> 	 apply_to_page_range+0x77d/0xa00 mm/memory.c:2133
+>> 	 kasan_release_vmalloc+0xa7/0xc0 mm/kasan/common.c:970
+>> 	 __purge_vmap_area_lazy+0xcbb/0x1f30 mm/vmalloc.c:1313
+>> 	 try_purge_vmap_area_lazy mm/vmalloc.c:1332 [inline]
+>> 	 free_vmap_area_noflush+0x2ca/0x390 mm/vmalloc.c:1368
+>> 	 free_unmap_vmap_area mm/vmalloc.c:1381 [inline]
+>> 	 remove_vm_area+0x1cc/0x230 mm/vmalloc.c:2209
+>> 	 vm_remove_mappings mm/vmalloc.c:2236 [inline]
+>> 	 __vunmap+0x223/0xa20 mm/vmalloc.c:2299
+>> 	 __vfree+0x3f/0xd0 mm/vmalloc.c:2356
+>> 	 __vmalloc_area_node mm/vmalloc.c:2507 [inline]
+>> 	 __vmalloc_node_range+0x5d5/0x810 mm/vmalloc.c:2547
+>> 	 __vmalloc_node mm/vmalloc.c:2607 [inline]
+>> 	 __vmalloc_node_flags mm/vmalloc.c:2621 [inline]
+>> 	 vzalloc+0x6f/0x80 mm/vmalloc.c:2666
+>> 	 alloc_one_pg_vec_page net/packet/af_packet.c:4233 [inline]
+>> 	 alloc_pg_vec net/packet/af_packet.c:4258 [inline]
+>> 	 packet_set_ring+0xbc0/0x1b50 net/packet/af_packet.c:4342
+>> 	 packet_setsockopt+0xed7/0x2d90 net/packet/af_packet.c:3695
+>> 	 __sys_setsockopt+0x29b/0x4d0 net/socket.c:2117
+>> 	 __do_sys_setsockopt net/socket.c:2133 [inline]
+>> 	 __se_sys_setsockopt net/socket.c:2130 [inline]
+>> 	 __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2130
+>> 	 do_syscall_64+0xfa/0x780 arch/x86/entry/common.c:294
+>> 	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>>
+>> Add kasan_unmap_page_range() which skips empty page table entries instead
+>> of allocating them.
+>>
+>> Fixes: 3c5c3cfb9ef4 ("kasan: support backing vmalloc space with real shadow memory")
+>> Reported-by: Dmitry Vyukov <dvyukov@google.com>
+>> Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
 >> ---
->> =C2=A0virt/kvm/arm/pmu.c | 16 +++++++++++++++-
->> =C2=A01 file changed, 15 insertions(+), 1 deletion(-)
+>>  mm/kasan/common.c | 82 +++++++++++++++++++++++++++++++++++++++--------
+>>  1 file changed, 68 insertions(+), 14 deletions(-)
 >>
->> diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
->> index c3f8b059881e..7ab477db2f75 100644
->> --- a/virt/kvm/arm/pmu.c
->> +++ b/virt/kvm/arm/pmu.c
->> @@ -491,6 +491,8 @@ void kvm_pmu_software_increment(struct kvm_vcpu
->> *vcpu, u64 val)
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0 enable =3D __vcpu_sys_reg(vcpu, PMCNTENSET_EL0)=
-;
->> =C2=A0=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < ARMV8_PMU_CYCLE_IDX; i++) {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool chained =3D test_bit(i =
->> 1, vcpu->arch.pmu.chained);
+>> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+>> index a1e6273be8c3..e9ba7d8ad324 100644
+>> --- a/mm/kasan/common.c
+>> +++ b/mm/kasan/common.c
+>> @@ -857,22 +857,77 @@ void kasan_unpoison_vmalloc(const void *start, unsigned long size)
+>>  	kasan_unpoison_shadow(start, size);
+>>  }
+>>  
+>> -static int kasan_depopulate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+>> -					void *unused)
+>> +static void kasan_unmap_pte_range(pmd_t *pmd, unsigned long addr,
+>> +				unsigned long end)
+>>  {
+>> -	unsigned long page;
+>> +	pte_t *pte;
+>>  
+>> -	page = (unsigned long)__va(pte_pfn(*ptep) << PAGE_SHIFT);
+>> +	pte = pte_offset_kernel(pmd, addr);
+>> +	do {
+>> +		pte_t ptent = ptep_get_and_clear(&init_mm, addr, pte);
+>>  
+>> -	spin_lock(&init_mm.page_table_lock);
+>> +		if (!pte_none(ptent))
+>> +			__free_page(pte_page(ptent));
+>> +	} while (pte++, addr += PAGE_SIZE, addr != end);
+>> +}
+>>  
+>> -	if (likely(!pte_none(*ptep))) {
+>> -		pte_clear(&init_mm, addr, ptep);
+>> -		free_page(page);
+>> -	}
+>> -	spin_unlock(&init_mm.page_table_lock);
+>> +static void kasan_unmap_pmd_range(pud_t *pud, unsigned long addr,
+>> +				unsigned long end)
+>> +{
+>> +	pmd_t *pmd;
+>> +	unsigned long next;
+>>  
+>> -	return 0;
+>> +	pmd = pmd_offset(pud, addr);
+>> +	do {
+>> +		next = pmd_addr_end(addr, end);
+>> +		if (pmd_none_or_clear_bad(pmd))
+>> +			continue;
+>> +		kasan_unmap_pte_range(pmd, addr, next);
+>> +	} while (pmd++, addr = next, addr != end);
+>> +}
 >> +
->=20
-> I'd rather you use kvm_pmu_pmc_is_chained() rather than open-coding
-> this. But see below:
->=20
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!(val & BIT(i)))
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- continue;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 type =3D __vcpu_sys_reg=
-(vcpu, PMEVTYPER0_EL0 + i)
->> @@ -500,8 +502,20 @@ void kvm_pmu_software_increment(struct kvm_vcpu
->> *vcpu, u64 val)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- reg =3D __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) + 1;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- reg =3D lower_32_bits(reg);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) =3D reg;
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (=
-!reg)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (=
-reg) /* no overflow */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 continue;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (=
-chained) {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 reg =3D __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) +=
- 1;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 reg =3D lower_32_bits(reg);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) =3D reg;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 if (reg)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 continue;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 /* mark an overflow on high counter */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 __vcpu_sys_reg(vcpu, PMOVSSET_EL0) |=3D BIT(i + 1);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } el=
-se {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 /* mark an overflow */
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 __vcpu_sys_reg(vcpu, PMOVSSET_EL0) |=3D BIT(i);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> =C2=A0=C2=A0=C2=A0=C2=A0 }
->> =C2=A0}
->=20
-> I think the whole function is a bit of a mess, and could be better
-> structured to treat 64bit counters as a first class citizen.
->=20
-> I'm suggesting something along those lines, which tries to
-> streamline things a bit and keep the flow uniform between the
-> two word sizes. IMHO, it helps reasonning about it and gives
-> scope to the ARMv8.5 full 64bit counters... It is of course
-> completely untested.
-
-Looks OK to me as well. One remark though, don't we need to test if the
-n+1th reg is enabled before incrementing it?
-
-Thanks
-
-Eric
->=20
-> Thoughts?
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 M.
->=20
-> diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
-> index 8731dfeced8b..cf371f643ade 100644
-> --- a/virt/kvm/arm/pmu.c
-> +++ b/virt/kvm/arm/pmu.c
-> @@ -480,26 +480,43 @@ static void kvm_pmu_perf_overflow(struct
-> perf_event *perf_event,
-> =C2=A0 */
-> =C2=A0void kvm_pmu_software_increment(struct kvm_vcpu *vcpu, u64 val)
-> =C2=A0{
-> +=C2=A0=C2=A0=C2=A0 struct kvm_pmu *pmu =3D &vcpu->arch.pmu;
-> =C2=A0=C2=A0=C2=A0=C2=A0 int i;
-> -=C2=A0=C2=A0=C2=A0 u64 type, enable, reg;
->=20
-> -=C2=A0=C2=A0=C2=A0 if (val =3D=3D 0)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
-> +=C2=A0=C2=A0=C2=A0 /* Weed out disabled counters */
-> +=C2=A0=C2=A0=C2=A0 val &=3D __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
->=20
-> -=C2=A0=C2=A0=C2=A0 enable =3D __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
-> =C2=A0=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < ARMV8_PMU_CYCLE_IDX; i++) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u64 type, reg;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ovs =3D i;
-> +
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!(val & BIT(i)))
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-continue;
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 type =3D __vcpu_sys_reg(vcpu,=
- PMEVTYPER0_EL0 + i)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 & ARMV8_PMU_EVTYPE_EVENT;
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ((type =3D=3D ARMV8_PMUV3_=
-PERFCTR_SW_INCR)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 && (e=
-nable & BIT(i))) {
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =
-=3D __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) + 1;
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =
-=3D lower_32_bits(reg);
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __vcp=
-u_sys_reg(vcpu, PMEVCNTR0_EL0 + i) =3D reg;
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!=
-reg)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 __vcpu_sys_reg(vcpu, PMOVSSET_EL0) |=3D BIT(i);
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* PMSWINC only applies to ..=
-. SW_INC! */
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 type =3D __vcpu_sys_reg(vcpu,=
- PMEVTYPER0_EL0 + i);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 type &=3D ARMV8_PMU_EVTYPE_EV=
-ENT;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (type !=3D ARMV8_PMUV3_PER=
-FCTR_SW_INCR)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 conti=
-nue;
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Potential 64bit value */
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D kvm_pmu_get_counter_v=
-alue(vcpu, i) + 1;
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Start by writing back the =
-low 32bits */
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __vcpu_sys_reg(vcpu, PMEVCNTR=
-0_EL0 + i) =3D lower_32_bits(reg);
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * 64bit counter? Write =
-back the upper bits and target
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * the overflow bit at t=
-he next counter
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (kvm_pmu_pmc_is_chained(&p=
-mu->pmc[i])) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =
-=3D upper_32_bits(reg);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __vcp=
-u_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) =3D reg;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ovs++=
-;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!lower_32_bits(reg))
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __vcp=
-u_sys_reg(vcpu, PMOVSSET_EL0) |=3D BIT(ovs);
-> =C2=A0=C2=A0=C2=A0=C2=A0 }
-> =C2=A0}
->=20
->=20
-
+>> +static void kasan_unmap_pud_range(p4d_t *p4d, unsigned long addr,
+>> +				unsigned long end)
+>> +{
+>> +	pud_t *pud;
+>> +	unsigned long next;
+>> +
+>> +	pud = pud_offset(p4d, addr);
+>> +	do {
+>> +		next = pud_addr_end(addr, end);
+>> +		if (pud_none_or_clear_bad(pud))
+>> +			continue;
+>> +		kasan_unmap_pmd_range(pud, addr, next);
+>> +	} while (pud++, addr = next, addr != end);
+>> +}
+>> +
+>> +static void kasan_unmap_p4d_range(pgd_t *pgd, unsigned long addr,
+>> +				unsigned long end)
+>> +{
+>> +	p4d_t *p4d;
+>> +	unsigned long next;
+>> +
+>> +	p4d = p4d_offset(pgd, addr);
+>> +	do {
+>> +		next = p4d_addr_end(addr, end);
+>> +		if (p4d_none_or_clear_bad(p4d))
+>> +			continue;
+>> +		kasan_unmap_pud_range(p4d, addr, next);
+>> +	} while (p4d++, addr = next, addr != end);
+>> +}
+>> +
+>> +static void kasan_unmap_page_range(unsigned long addr, unsigned long end)
+>> +{
+>> +	pgd_t *pgd;
+>> +	unsigned long next;
+>> +
+>> +	pgd = pgd_offset_k(addr);
+>> +	do {
+>> +		next = pgd_addr_end(addr, end);
+>> +		if (pgd_none_or_clear_bad(pgd))
+>> +			continue;
+>> +		kasan_unmap_p4d_range(pgd, addr, next);
+>> +	} while (pgd++, addr = next, addr != end);
+>>  }
+>>  
+>>  /*
+>> @@ -978,9 +1033,8 @@ void kasan_release_vmalloc(unsigned long start, unsigned long end,
+>>  	shadow_end = kasan_mem_to_shadow((void *)region_end);
+>>  
+>>  	if (shadow_end > shadow_start) {
+>> -		apply_to_page_range(&init_mm, (unsigned long)shadow_start,
+>> -				    (unsigned long)(shadow_end - shadow_start),
+>> -				    kasan_depopulate_vmalloc_pte, NULL);
+>> +		kasan_unmap_page_range((unsigned long)shadow_start,
+>> +				    (unsigned long)shadow_end);
+>>  		flush_tlb_kernel_range((unsigned long)shadow_start,
+>>  				       (unsigned long)shadow_end);
+>>  	}
+>> -- 
+>> 2.23.0
