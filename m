@@ -2,433 +2,272 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC01FC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09B2C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3E621744
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F5D205ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kM3AmubE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Thn+k6tk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbfLECaH (ORCPT
+        id S1728784AbfLECbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 21:30:07 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:38248 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728321AbfLECaH (ORCPT
+        Wed, 4 Dec 2019 21:31:01 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43745 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728393AbfLECbB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 21:30:07 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191205023002epoutp04092b31bf6e2f944242196e6158ba09b0~dWLpoQzsA0600406004epoutp04E
-        for <linux-kernel@vger.kernel.org>; Thu,  5 Dec 2019 02:30:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191205023002epoutp04092b31bf6e2f944242196e6158ba09b0~dWLpoQzsA0600406004epoutp04E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1575513002;
-        bh=xbucTyOyREF5meUyQSLulUXE71x8nxaKe9G52STj/fU=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=kM3AmubES3GAbwHu2NP1Io1QtURJ/lGDaA+lBNM3Ozrdum9oLHJENbSwBnlFkagO9
-         X1WjXU4ZRWpq9ROaaCN7GOBK2L8zBvgL3GCFWm7r3g7wRJJTP5POyP/f+/6hnvNsmX
-         8GEGdutfrIKXhUb3uTmXaHkKxcgbgLPOtFHiGIQE=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191205023001epcas1p106a6b1a5dd25d446e3ef1ba24b210f38~dWLpFOQRT1269412694epcas1p1F;
-        Thu,  5 Dec 2019 02:30:01 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47T06v08VNzMqYky; Thu,  5 Dec
-        2019 02:29:59 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B7.12.48019.6AB68ED5; Thu,  5 Dec 2019 11:29:58 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191205022958epcas1p17f0a9e0e9eab0cf0a694488a6ea600e8~dWLmIOJO13049230492epcas1p1Z;
-        Thu,  5 Dec 2019 02:29:58 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191205022958epsmtrp10453ecaaba8a07de06d53e080f850b2a~dWLmHYiXM2210222102epsmtrp1T;
-        Thu,  5 Dec 2019 02:29:58 +0000 (GMT)
-X-AuditID: b6c32a38-23fff7000001bb93-2b-5de86ba6e638
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        ED.94.10238.6AB68ED5; Thu,  5 Dec 2019 11:29:58 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191205022958epsmtip2895550fb1dc64ea8aa192e53892d5d02~dWLl2eFut2086620866epsmtip2Z;
-        Thu,  5 Dec 2019 02:29:58 +0000 (GMT)
-Subject: Re: [RFC PATCH v2 09/11] devfreq: exynos-bus: Add interconnect
- functionality to exynos-bus
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     myungjoo.ham@samsung.com, inki.dae@samsung.com,
-        sw0312.kim@samsung.com, georgi.djakov@linaro.org,
-        leonard.crestez@nxp.com, m.szyprowski@samsung.com,
-        b.zolnierkie@samsung.com, krzk@kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <1050604c-00e7-ca81-032b-1aee9a3f8c9f@samsung.com>
-Date:   Thu, 5 Dec 2019 11:36:12 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Wed, 4 Dec 2019 21:31:01 -0500
+Received: by mail-pf1-f196.google.com with SMTP id h14so816549pfe.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 18:31:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y7Ee+dNHq54/7afYHD+UmtJjTH9smfXBulTry9R0FkI=;
+        b=Thn+k6tk3XAXYITVNqhSJ+4N0+izNtsGUvABmDpnSR1IwTELS0KwBKxwk7UQ7rn6Ty
+         umt/AFtjgw5HG9B1Vw5DmFkBfGUkjk8NsxXQToq4x2kCW+9zWH0YSahqVuvqketU9cGI
+         mOwVSN3cP20uwpDuB0kELiE7Rc/YkC5xwws+s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y7Ee+dNHq54/7afYHD+UmtJjTH9smfXBulTry9R0FkI=;
+        b=N7Zz/lLJwxT9OnXq9AhuV7lFWZ6IjWyMSQkhX+fjUxkFWHG6p7dLUTnv5gnDIIZY53
+         kdf3RIqHcMJ2mWrI40h3oHZLXtWRd2hQuCuQiQqyD1qfLMvQZOdH3BxdcYhEGPSKPKit
+         k/IakqqomAqX8SQ1EqdYv39mjxUWBlO1d/fbUd55CrCrNX4QZGhbR9+aetFclMc3iT9t
+         mQ2a02swYDx2Seh3RvodoH3eqr2ovKz+4ieIvVUS87AqbtPGqwbXeU4I/yeI9sZ6Ek9Q
+         vQC/FkBoNauXX/fpWI3dNtvV0k63gmDTm0IQqupXOV4Ek3PmAXjvwxz79QFjT/ozF6uJ
+         Jy1Q==
+X-Gm-Message-State: APjAAAVhwmIdNSLhyYhnPP215BA0gjM3p2PhtrMj39NbcFynl0ROg6b+
+        S/0MBwNTMG2nlNHE/tveVf2DqA==
+X-Google-Smtp-Source: APXvYqyOdLLYrYiBx7emxUHQXoL+NtXJVUM7x47UAozTKa86tXu0VL7qz2ZM/f7flmKp37j0OOC9Gw==
+X-Received: by 2002:a62:7b46:: with SMTP id w67mr6732042pfc.113.1575513060108;
+        Wed, 04 Dec 2019 18:31:00 -0800 (PST)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id x12sm9174425pfm.130.2019.12.04.18.30.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 18:30:59 -0800 (PST)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        linux-input@vger.kernel.org
+Cc:     linux-bluetooth@vger.kernel.org,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kirill Smelkov <kirr@nexedi.com>
+Subject: [PATCH v4] Input: uinput - Add UI_SET_PHYS_STR and UI_SET_UNIQ_STR
+Date:   Wed,  4 Dec 2019 18:30:54 -0800
+Message-Id: <20191204182942.v4.1.Ib53f70556ffe94d9a1903632ee9b0dc929f94557@changeid>
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
 MIME-Version: 1.0
-In-Reply-To: <9b3b21d3e4678946724531c58ad7f9c7a3993a95.camel@samsung.com>
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBJsWRmVeSWpSXmKPExsWy7bCmnu6y7BexBkfmWFvcn9fKaLFxxnpW
-        i/lHzrFaXPn6ns1i+t5NbBaT7k9gsTh/fgO7xYq7H1ktNj2+xmpxedccNovPvUcYLWac38dk
-        sfbIXXaL240r2CxmTH7J5sDvsWlVJ5vHnWt72Dzudx9n8ti8pN5j47sdTB59W1YxenzeJBfA
-        HpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQN0t5JC
-        WWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwLJArzgxt7g0L10vOT/XytDAwMgUqDAh
-        O2PXJO2Cg94Ve5+vYGpgbLPtYuTkkBAwkdj/qJe5i5GLQ0hgB6PEjdfL2CGcT4wSe2a9ZoVw
-        vjFKLL3dwQzTcvz+aTaIxF5Giat7t0G1vGeU2PnxKQtIlbBAqsSctdvBBosI/GeUOL1sJdgs
-        ZoFjjBJ77/wEq2IT0JLY/+IGG4jNL6AocfXHY0YQm1fATmLOnVfsIDaLgIrErM0XmEBsUYEw
-        iZPbWqBqBCVOznwCNodTwFPi7JZ3YDazgLjErSfzmSBseYnmrbPBrpAQ2Mcu8fbaWSaIJ1wk
-        Tm3+zwphC0u8Or6FHcKWknjZ3wZlV0usPHmEDaK5g1Fiy/4LUA3GEvuXTgYaxAG0QVNi/S59
-        iLCixM7fcxkhFvNJvPvawwpSIiHAK9HRJgRRoixx+cFdqBMkJRa3d7JNYFSaheSdWUhemIXk
-        hVkIyxYwsqxiFEstKM5NTy02LDBBju9NjOBUrWWxg3HPOZ9DjAIcjEo8vA2bnscKsSaWFVfm
-        HmKU4GBWEuHdJvE0Vog3JbGyKrUoP76oNCe1+BCjKTC0JzJLiSbnA/NIXkm8oamRsbGxhYmh
-        mamhoZI4L8ePi7FCAumJJanZqakFqUUwfUwcnFINjByVHvcKJxmYdO9xMG3ssVqSMOlE0fGK
-        v5c7ps9waWtcskBo+jPbPw+KTMMirv3u3N6/uvBOhWHcvLuzre+XLzmbz2p354j5uh1vr/K1
-        e/m5cS11MrFdKr7ygmVdReQkTZMNr4QZ/8d4T/28+Gx+w5LTW1o0p6f637jY0vTt+04P3zce
-        TU93f1FiKc5INNRiLipOBABRkh746wMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsWy7bCSvO6y7BexBsc+iVvcn9fKaLFxxnpW
-        i/lHzrFaXPn6ns1i+t5NbBaT7k9gsTh/fgO7xYq7H1ktNj2+xmpxedccNovPvUcYLWac38dk
-        sfbIXXaL240r2CxmTH7J5sDvsWlVJ5vHnWt72Dzudx9n8ti8pN5j47sdTB59W1YxenzeJBfA
-        HsVlk5Kak1mWWqRvl8CVsWuSdsFB74q9z1cwNTC22XYxcnJICJhIHL9/mq2LkYtDSGA3o8Sf
-        ZX/ZIRKSEtMuHmXuYuQAsoUlDh8uhqh5yyixc+t0VpAaYYFUiTlrtzODJEQE/jNKPGw7xgji
-        MAscY5T4uGI9K0TLBiaJ27/6wVrYBLQk9r+4wQZi8wsoSlz98ZgRxOYVsJOYc+cV2GoWARWJ
-        WZsvMIHYogJhEjuXPGaCqBGUODnzCQuIzSngKXF2yzswm1lAXeLPvEvMELa4xK0n85kgbHmJ
-        5q2zmScwCs9C0j4LScssJC2zkLQsYGRZxSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yfu4kR
-        HLNamjsYLy+JP8QowMGoxMPbsOl5rBBrYllxZe4hRgkOZiUR3m0ST2OFeFMSK6tSi/Lji0pz
-        UosPMUpzsCiJ8z7NOxYpJJCeWJKanZpakFoEk2Xi4JRqYFze2724vVslWKfUn/l5WdSdutXi
-        pWaLDs+LN3onPj+4ZP+sT34vTnbfNahS/Pxk42fJ9hSnkIuT5ZLY9k3YeD+r+NrFmPPcNhOq
-        uH0PaGnu2Rl4LFbv1/+Ebd96u/bET8peV9Xe8cg12l+mZWFz4S5bv+V8PPuaGPNrTq2Yd8BI
-        /b/GpG63V0osxRmJhlrMRcWJAPwoDGfVAgAA
-X-CMS-MailID: 20191205022958epcas1p17f0a9e0e9eab0cf0a694488a6ea600e8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190919142329eucas1p2e53992eab9ec6b404f716f955b3c228e
-References: <20190919142236.4071-1-a.swigon@samsung.com>
-        <CGME20190919142329eucas1p2e53992eab9ec6b404f716f955b3c228e@eucas1p2.samsung.com>
-        <20190919142236.4071-10-a.swigon@samsung.com>
-        <e004bedd-294b-172b-5e34-bf7afcfd04bc@samsung.com>
-        <9b3b21d3e4678946724531c58ad7f9c7a3993a95.camel@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Artur,
+The ioctl definition for UI_SET_PHYS is ambiguous because it is defined
+with size = sizeof(char*) but is expected to be given a variable length
+string. Add a deprecation notice for UI_SET_PHYS and provide
+UI_SET_PHYS_STR(len) which expects a size from the user.
 
-On 12/3/19 2:05 AM, Artur Świgoń wrote:
-> Hi Chanwoo,
-> 
-> On Wed, 2019-09-25 at 16:03 +0900, Chanwoo Choi wrote:
->> Hi,
->>
->> I need the time to dig the ICC framework
->> to understand them detailed. After that, I'll review this.
-> 
-> Any updates on this topic?
+Also support setting the uniq attribute of the input device. The uniq
+attribute is used as a unique identifier for the connected device.
 
-I'm sorry for delaying the review of  this topic related to icc.
-The review and merge of devfreq pm-qos feature will be finished over soon.
-Because this series depends on the devfreq pm-qos feature
+For example, uinput devices created by BlueZ will store the address of
+the connected device as the uniq property.
 
-I'll dig into ICC related patches for exynos and imx[1].
-[1] https://lore.kernel.org/linux-arm-kernel/008f2fa973b23fc716d678c5bd35af54@akkea.ca/T/
-[PATCH RFC v6 0/9] interconnect: Add imx support via devfreq
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+---
+Hi input maintainers,
 
-> 
-> Regardless of the purpose of this RFC, I think patches 01-04
-> are still beneficial to devfreq. I can rebase and post them
-> as a separate series if you wish.
+Here is an updated patch that refactors the ioctl handlers (properly
+allowing the size to be set from userspace). When calling the new
+ioctls, the call signature will look like this:
 
-Yes. please split out patch1-4 from this series
-and send them based on linux-next.git separately.
+```
+ioctl(fd, UI_SET_PHYS_STR(18), "00:11:22:33:44:55");
+```
 
-> 
->> Basically, I agree this approach. But, I'm wondering
->> the existing binding method between 'bus_leftbus' and 'bus_dmc'.
->> From before, I thought that devfreq framework need to
->> enhance the binding method between parent devfreq device
->> and passive devfreq device instead of 'devfreq' property.
->>
->> On this patch, use the same binding way between
->> 'bus_leftbus' and 'bus_dmc' with 'parent' property
->> as following:
->>
->> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
->> @@ -106,6 +106,7 @@
->>  &bus_leftbus {
->>  	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
->>  	vdd-supply = <&buck3_reg>;
->> +	parent = <&bus_dmc>;
->>  	status = "okay";
->>  };
->>
->> I'm not sure about continuing to use this method for new feature.
->> If possible, hope to replace the existing binding style
->> with new method like of_graph. Actually, I don't know the correct method.
->>
->>
->> On 19. 9. 19. 오후 11:22, Artur Świgoń wrote:
->>> From: Artur Świgoń <a.swigon@partner.samsung.com>
->>>
->>> This patch adds interconnect functionality to the exynos-bus devfreq
->>> driver.
->>>
->>> The SoC topology is a graph (or, more specifically, a tree) and most of
->>> its edges are taken from the devfreq parent-child hierarchy (cf.
->>> Documentation/devicetree/bindings/devfreq/exynos-bus.txt). Due to
->>> unspecified relative probing order, -EPROBE_DEFER may be propagated to
->>> guarantee that a child is probed before its parent.
->>>
->>> Each bus is now an interconnect provider and an interconnect node as well
->>> (cf. Documentation/interconnect/interconnect.rst), i.e. every bus registers
->>> itself as a node. Node IDs are not hardcoded but rather assigned at
->>> runtime, in probing order (subject to the above-mentioned exception
->>> regarding relative order). This approach allows for using this driver with
->>> various Exynos SoCs.
->>>
->>> Frequencies requested via the interconnect API for a given node are
->>> propagated to devfreq using dev_pm_qos_update_request(). Please note that
->>> it is not an error when CONFIG_INTERCONNECT is 'n', in which case all
->>> interconnect API functions are no-op.
->>>
->>> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
->>> ---
->>>  drivers/devfreq/exynos-bus.c | 153 +++++++++++++++++++++++++++++++++++
->>>  1 file changed, 153 insertions(+)
->>>
->>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
->>> index 8d44810cac69..e0232202720d 100644
->>> --- a/drivers/devfreq/exynos-bus.c
->>> +++ b/drivers/devfreq/exynos-bus.c
->>> @@ -14,14 +14,19 @@
->>>  #include <linux/devfreq-event.h>
->>>  #include <linux/device.h>
->>>  #include <linux/export.h>
->>> +#include <linux/idr.h>
->>> +#include <linux/interconnect-provider.h>
->>>  #include <linux/module.h>
->>>  #include <linux/of.h>
->>>  #include <linux/pm_opp.h>
->>> +#include <linux/pm_qos.h>
->>>  #include <linux/platform_device.h>
->>>  #include <linux/regulator/consumer.h>
->>>  
->>>  #define DEFAULT_SATURATION_RATIO	40
->>>  
->>> +#define icc_units_to_khz(x) ((x) / 8)
->>> +
->>>  struct exynos_bus {
->>>  	struct device *dev;
->>>  
->>> @@ -35,6 +40,12 @@ struct exynos_bus {
->>>  	struct opp_table *opp_table;
->>>  	struct clk *clk;
->>>  	unsigned int ratio;
->>> +
->>> +	/* One provider per bus, one node per provider */
->>> +	struct icc_provider provider;
->>> +	struct icc_node *node;
->>> +
->>> +	struct dev_pm_qos_request qos_req;
->>>  };
->>>  
->>>  /*
->>> @@ -59,6 +70,13 @@ exynos_bus_ops_edev(enable_edev);
->>>  exynos_bus_ops_edev(disable_edev);
->>>  exynos_bus_ops_edev(set_event);
->>>  
->>> +static int exynos_bus_next_id(void)
->>> +{
->>> +	static DEFINE_IDA(exynos_bus_icc_ida);
->>> +
->>> +	return ida_alloc(&exynos_bus_icc_ida, GFP_KERNEL);
->>> +}
->>> +
->>>  static int exynos_bus_get_event(struct exynos_bus *bus,
->>>  				struct devfreq_event_data *edata)
->>>  {
->>> @@ -171,6 +189,38 @@ static void exynos_bus_passive_exit(struct device *dev)
->>>  	clk_disable_unprepare(bus->clk);
->>>  }
->>>  
->>> +static int exynos_bus_icc_set(struct icc_node *src, struct icc_node *dst)
->>> +{
->>> +	struct exynos_bus *src_bus = src->data, *dst_bus = dst->data;
->>> +	s32 src_freq = icc_units_to_khz(src->avg_bw);
->>> +	s32 dst_freq = icc_units_to_khz(dst->avg_bw);
->>> +
->>> +	dev_pm_qos_update_request(&src_bus->qos_req, src_freq);
->>> +	dev_pm_qos_update_request(&dst_bus->qos_req, dst_freq);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int exynos_bus_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
->>> +				    u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
->>> +{
->>> +	*agg_avg += avg_bw;
->>> +	*agg_peak = max(*agg_peak, peak_bw);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static struct icc_node *exynos_bus_icc_xlate(struct of_phandle_args *spec,
->>> +					     void *data)
->>> +{
->>> +	struct exynos_bus *bus = data;
->>> +
->>> +	if (spec->np != bus->dev->of_node)
->>> +		return ERR_PTR(-EINVAL);
->>> +
->>> +	return bus->node;
->>> +}
->>> +
->>>  static int exynos_bus_parent_parse_of(struct device_node *np,
->>>  					struct exynos_bus *bus)
->>>  {
->>> @@ -366,6 +416,101 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
->>>  	return 0;
->>>  }
->>>  
->>> +static int exynos_bus_icc_connect(struct exynos_bus *bus)
->>> +{
->>> +	struct device_node *np = bus->dev->of_node;
->>> +	struct devfreq *parent_devfreq;
->>> +	struct icc_node *parent_node = NULL;
->>> +	struct of_phandle_args args;
->>> +	int ret = 0;
->>> +
->>> +	parent_devfreq = devfreq_get_devfreq_by_phandle(bus->dev, 0);
->>> +	if (!IS_ERR(parent_devfreq)) {
->>> +		struct exynos_bus *parent_bus;
->>> +
->>> +		parent_bus = dev_get_drvdata(parent_devfreq->dev.parent);
->>> +		parent_node = parent_bus->node;
->>> +	} else {
->>> +		/* Look for parent in DT */
->>> +		int num = of_count_phandle_with_args(np, "parent",
->>> +						     "#interconnect-cells");
->>> +		if (num != 1)
->>> +			goto out; /* 'parent' is optional */
->>> +
->>> +		ret = of_parse_phandle_with_args(np, "parent",
->>> +						 "#interconnect-cells",
->>> +						 0, &args);
->>> +		if (ret < 0)
->>> +			goto out;
->>> +
->>> +		of_node_put(args.np);
->>> +
->>> +		parent_node = of_icc_get_from_provider(&args);
->>> +		if (IS_ERR(parent_node)) {
->>> +			/* May be -EPROBE_DEFER */
->>> +			ret = PTR_ERR(parent_node);
->>> +			goto out;
->>> +		}
->>> +	}
->>
->>
->>
->>> +
->>> +	ret = icc_link_create(bus->node, parent_node->id);
->>> +
->>> +out:
->>> +	return ret;
->>> +}
->>> +
->>> +static int exynos_bus_icc_init(struct exynos_bus *bus)
->>> +{
->>> +	struct device *dev = bus->dev;
->>> +	struct icc_provider *provider = &bus->provider;
->>> +	struct icc_node *node;
->>> +	int id, ret;
->>> +
->>> +	/* Initialize the interconnect provider */
->>> +	provider->set = exynos_bus_icc_set;
->>> +	provider->aggregate = exynos_bus_icc_aggregate;
->>> +	provider->xlate = exynos_bus_icc_xlate;
->>> +	provider->dev = dev;
->>> +	provider->data = bus;
->>> +
->>> +	ret = icc_provider_add(provider);
->>> +	if (ret < 0)
->>> +		goto out;
->>> +
->>> +	ret = id = exynos_bus_next_id();
->>> +	if (ret < 0)
->>> +		goto err_node;
->>> +
->>> +	node = icc_node_create(id);
->>> +	if (IS_ERR(node)) {
->>> +		ret = PTR_ERR(node);
->>> +		goto err_node;
->>> +	}
->>> +
->>> +	bus->node = node;
->>> +	node->name = dev->of_node->name;
->>> +	node->data = bus;
->>> +	icc_node_add(node, provider);
->>> +
->>> +	ret = exynos_bus_icc_connect(bus);
->>> +	if (ret < 0)
->>> +		goto err_connect;
->>> +
->>> +	ret = dev_pm_qos_add_request(bus->devfreq->dev.parent, &bus->qos_req,
->>> +				     DEV_PM_QOS_MIN_FREQUENCY, 0);
->>> +
->>> +out:
->>> +	return ret;
->>> +
->>> +err_connect:
->>> +	icc_node_del(node);
->>> +	icc_node_destroy(id);
->>> +err_node:
->>> +	icc_provider_del(provider);
->>> +
->>> +	return ret;
->>> +}
->>> +
->>>  static int exynos_bus_probe(struct platform_device *pdev)
->>>  {
->>>  	struct device *dev = &pdev->dev;
->>> @@ -415,6 +560,14 @@ static int exynos_bus_probe(struct platform_device *pdev)
->>>  	if (ret < 0)
->>>  		goto err;
->>>  
->>> +	/*
->>> +	 * Initialize interconnect provider. A return value of -ENOTSUPP means
->>> +	 * that CONFIG_INTERCONNECT is disabled.
->>> +	 */
->>> +	ret = exynos_bus_icc_init(bus);
->>> +	if (ret < 0 && ret != -ENOTSUPP)
->>> +		goto err;
->>> +
->>>  	max_state = bus->devfreq->profile->max_state;
->>>  	min_freq = (bus->devfreq->profile->freq_table[0] / 1000);
->>>  	max_freq = (bus->devfreq->profile->freq_table[max_state - 1] / 1000);
->>>
->>
-> 
-> Best regards,
-> 
+I've tested this on a Chromebook running kernel v4.19 with a sample
+program compiled for both 32-bit (i.e. gcc -m32 test.c) and 64-bit.
+
+The final uinput device looks like this:
+
+```
+udevadm info -a -p /devices/virtual/input/input18
+
+Udevadm info starts with the device specified by the devpath and then
+walks up the chain of parent devices. It prints for every device
+found, all possible attributes in the udev rules key format.
+A rule to match, can be composed by the attributes of the device
+and the attributes from one single parent device.
+
+  looking at device '/devices/virtual/input/input18':
+    KERNEL=="input18"
+    SUBSYSTEM=="input"
+    DRIVER==""
+    ATTR{inhibited}=="0"
+    ATTR{name}=="Test"
+    ATTR{phys}=="00:00:00:33:44:55"
+    ATTR{properties}=="0"
+    ATTR{uniq}=="00:11:22:00:00:00"
+
+```
 
 
+Changes in v4:
+- Added uinput_get_user_str
+
+Changes in v3:
+- Added UI_SET_PHYS_STR(len) and UI_SET_UNIQ_STR(len) and added
+  deprecation notice for UI_SET_PHYS
+
+Changes in v2:
+- Added compat handling for UI_SET_UNIQ
+
+ drivers/input/misc/uinput.c | 48 +++++++++++++++++++++++++------------
+ include/uapi/linux/uinput.h |  5 ++++
+ 2 files changed, 38 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
+index 84051f20b18a..2c3180370a02 100644
+--- a/drivers/input/misc/uinput.c
++++ b/drivers/input/misc/uinput.c
+@@ -20,6 +20,7 @@
+  */
+ #include <uapi/linux/uinput.h>
+ #include <linux/poll.h>
++#include <linux/printk.h>
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+@@ -280,7 +281,7 @@ static int uinput_dev_flush(struct input_dev *dev, struct file *file)
+ 
+ static void uinput_destroy_device(struct uinput_device *udev)
+ {
+-	const char *name, *phys;
++	const char *name, *phys, *uniq;
+ 	struct input_dev *dev = udev->dev;
+ 	enum uinput_state old_state = udev->state;
+ 
+@@ -289,6 +290,7 @@ static void uinput_destroy_device(struct uinput_device *udev)
+ 	if (dev) {
+ 		name = dev->name;
+ 		phys = dev->phys;
++		uniq = dev->uniq;
+ 		if (old_state == UIST_CREATED) {
+ 			uinput_flush_requests(udev);
+ 			input_unregister_device(dev);
+@@ -297,6 +299,7 @@ static void uinput_destroy_device(struct uinput_device *udev)
+ 		}
+ 		kfree(name);
+ 		kfree(phys);
++		kfree(uniq);
+ 		udev->dev = NULL;
+ 	}
+ }
+@@ -831,6 +834,24 @@ static int uinput_str_to_user(void __user *dest, const char *str,
+ 	return ret ? -EFAULT : len;
+ }
+ 
++static int uinput_get_user_str(struct uinput_device *udev, const char **kptr,
++			       const char *uptr, unsigned int size)
++{
++	char *tmp;
++
++	if (udev->state == UIST_CREATED)
++		return -EINVAL;
++
++	tmp = strndup_user(uptr, size);
++	if (IS_ERR(tmp))
++		return PTR_ERR(tmp);
++
++	kfree(*kptr);
++	*kptr = tmp;
++
++	return 0;
++}
++
+ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
+ 				 unsigned long arg, void __user *p)
+ {
+@@ -839,7 +860,6 @@ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
+ 	struct uinput_ff_upload ff_up;
+ 	struct uinput_ff_erase  ff_erase;
+ 	struct uinput_request   *req;
+-	char			*phys;
+ 	const char		*name;
+ 	unsigned int		size;
+ 
+@@ -916,19 +936,8 @@ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
+ 		goto out;
+ 
+ 	case UI_SET_PHYS:
+-		if (udev->state == UIST_CREATED) {
+-			retval = -EINVAL;
+-			goto out;
+-		}
+-
+-		phys = strndup_user(p, 1024);
+-		if (IS_ERR(phys)) {
+-			retval = PTR_ERR(phys);
+-			goto out;
+-		}
+-
+-		kfree(udev->dev->phys);
+-		udev->dev->phys = phys;
++		pr_warn_once("uinput: UI_SET_PHYS is deprecated. Use UI_SET_PHYS_STR");
++		retval = uinput_get_user_str(udev, &udev->dev->phys, p, 1024);
+ 		goto out;
+ 
+ 	case UI_BEGIN_FF_UPLOAD:
+@@ -1023,6 +1032,15 @@ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
+ 	case UI_ABS_SETUP & ~IOCSIZE_MASK:
+ 		retval = uinput_abs_setup(udev, p, size);
+ 		goto out;
++
++	case UI_SET_PHYS_STR(0):
++		retval = uinput_get_user_str(udev, &udev->dev->phys, p, size);
++		goto out;
++
++	case UI_SET_UNIQ_STR(0):
++		retval = uinput_get_user_str(udev, &udev->dev->uniq, p, size);
++		goto out;
++
+ 	}
+ 
+ 	retval = -EINVAL;
+diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux/uinput.h
+index c9e677e3af1d..84d4fa142830 100644
+--- a/include/uapi/linux/uinput.h
++++ b/include/uapi/linux/uinput.h
+@@ -142,9 +142,14 @@ struct uinput_abs_setup {
+ #define UI_SET_LEDBIT		_IOW(UINPUT_IOCTL_BASE, 105, int)
+ #define UI_SET_SNDBIT		_IOW(UINPUT_IOCTL_BASE, 106, int)
+ #define UI_SET_FFBIT		_IOW(UINPUT_IOCTL_BASE, 107, int)
++
++/* DEPRECATED: Data size is ambiguous. Use UI_SET_PHYS_STR instead. */
+ #define UI_SET_PHYS		_IOW(UINPUT_IOCTL_BASE, 108, char*)
++
+ #define UI_SET_SWBIT		_IOW(UINPUT_IOCTL_BASE, 109, int)
+ #define UI_SET_PROPBIT		_IOW(UINPUT_IOCTL_BASE, 110, int)
++#define UI_SET_PHYS_STR(len)	_IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, len)
++#define UI_SET_UNIQ_STR(len)	_IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 112, len)
+ 
+ #define UI_BEGIN_FF_UPLOAD	_IOWR(UINPUT_IOCTL_BASE, 200, struct uinput_ff_upload)
+ #define UI_END_FF_UPLOAD	_IOW(UINPUT_IOCTL_BASE, 201, struct uinput_ff_upload)
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.24.0.393.g34dc348eaf-goog
+
