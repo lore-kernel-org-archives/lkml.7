@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F66C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE724C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76022464E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98AB2464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbfLESlN (ORCPT
+        id S1730065AbfLESlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 13:41:13 -0500
+        Thu, 5 Dec 2019 13:41:20 -0500
 Received: from mga17.intel.com ([192.55.52.151]:4158 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729290AbfLESlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 13:41:10 -0500
+        id S1729935AbfLESlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 13:41:11 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 10:41:09 -0800
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 10:41:11 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,282,1571727600"; 
-   d="scan'208";a="214263519"
+   d="scan'208";a="214263547"
 Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by orsmga003.jf.intel.com with ESMTP; 05 Dec 2019 10:41:08 -0800
+  by orsmga003.jf.intel.com with ESMTP; 05 Dec 2019 10:41:10 -0800
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org,
         "H. Peter Anvin" <hpa@zytor.com>,
@@ -43,9 +43,9 @@ To:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>,
         Peter Zijlstra <peterz@infradead.org>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH 1/3] x86/fpu/xstate: Fix small issues before adding supervisor xstates
-Date:   Thu,  5 Dec 2019 10:26:46 -0800
-Message-Id: <20191205182648.32257-2-yu-cheng.yu@intel.com>
+Subject: [PATCH 3/3] x86/fpu/xstate: Invalidate fpregs when __fpu_restore_sig() fails
+Date:   Thu,  5 Dec 2019 10:26:48 -0800
+Message-Id: <20191205182648.32257-4-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191205182648.32257-1-yu-cheng.yu@intel.com>
 References: <20191205182648.32257-1-yu-cheng.yu@intel.com>
@@ -54,69 +54,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In response to earlier comments, fix small issues before introducing XSAVES
-supervisor states:
-- Add spaces around '*'.
-- Fix comments of xfeature_is_supervisor().
-- Replace ((u64)1 << 63) with XCOMP_BV_COMPACTED_FORMAT.
+In __fpu_restore_sig(),'init_fpstate.xsave' and part of 'fpu->state.xsave'
+are restored separately to xregs.  However, as stated in __cpu_invalidate_
+fpregs_state(),
 
-No functional changes from this patch.
+  Any code that clobbers the FPU registers or updates the in-memory
+  FPU state for a task MUST let the rest of the kernel know that the
+  FPU registers are no longer valid for this task.
+
+and this code violates that rule.  Should the restoration fail, the other
+task's context is corrupted.
+
+This problem does not occur very often because copy_*_to_xregs() succeeds
+most of the time.  It occurs, for instance, in copy_user_to_fpregs_
+zeroing() when the first half of the restoration succeeds and the other
+half fails.  This can be triggered by running glibc tests, where a non-
+present user stack page causes the XRSTOR to fail.
+
+The introduction of supervisor xstates and CET, while not contributing to
+the problem, makes it more detectable.  After init_fpstate and the Shadow
+Stack pointer have been restored to xregs, the XRSTOR from user stack
+fails and fpu_fpregs_owner_ctx is not updated.  The task currently owning
+fpregs then uses the corrupted Shadow Stack pointer and triggers a control-
+protection fault.
+
+Fix it by adding __cpu_invalidate_fpregs_state() to functions that copy
+fpstate to fpregs:
+  copy_*_to_xregs_*(), copy_*_to_fxregs_*(), and copy_*_to_fregs_*().
+The alternative is to hit all of the call sites themselves.
+
+The function __cpu_invalidate_fpregs_state() is chosen over fpregs_
+deactivate() as it is called under fpregs_lock() protection.
+
+In addition to sigreturn, also checked all call sites of these functions:
+
+- copy_init_fpstate_to_fpregs();
+- copy_kernel_to_fpregs();
+- ex_handler_fprestore();
+- fpu__save(); and
+- fpu__copy().
+
+In fpu__save() and fpu__copy(), fpregs are re-activated because they are
+considered valid in both cases.
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 ---
- arch/x86/kernel/fpu/xstate.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ arch/x86/include/asm/fpu/internal.h | 14 ++++++++++++++
+ arch/x86/kernel/fpu/core.c          | 15 +++++++++++++--
+ 2 files changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index e5cb67d67c03..cfcac7b42e5e 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -60,7 +60,7 @@ u64 xfeatures_mask __read_mostly;
+diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+index 4c95c365058a..cd380d14e4e2 100644
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -142,6 +142,8 @@ extern void fpstate_sanitize_xstate(struct fpu *fpu);
+ 		     _ASM_EXTABLE_HANDLE(1b, 2b, ex_handler_fprestore)	\
+ 		     : output : input)
  
- static unsigned int xstate_offsets[XFEATURE_MAX] = { [ 0 ... XFEATURE_MAX - 1] = -1};
- static unsigned int xstate_sizes[XFEATURE_MAX]   = { [ 0 ... XFEATURE_MAX - 1] = -1};
--static unsigned int xstate_comp_offsets[sizeof(xfeatures_mask)*8];
-+static unsigned int xstate_comp_offsets[sizeof(xfeatures_mask) * 8];
- 
- /*
-  * The XSAVE area of kernel can be in standard or compacted format;
-@@ -110,12 +110,9 @@ EXPORT_SYMBOL_GPL(cpu_has_xfeatures);
- static int xfeature_is_supervisor(int xfeature_nr)
++static inline void __cpu_invalidate_fpregs_state(void);
++
+ static inline int copy_fregs_to_user(struct fregs_state __user *fx)
  {
- 	/*
--	 * We currently do not support supervisor states, but if
--	 * we did, we could find out like this.
--	 *
--	 * SDM says: If state component 'i' is a user state component,
--	 * ECX[0] return 0; if state component i is a supervisor
--	 * state component, ECX[0] returns 1.
-+	 * Extended State Enumeration Sub-leaves (EAX = 0DH, ECX = n, n > 1)
-+	 * returns ECX[0] set to (1) for a supervisor state, and cleared (0)
-+	 * for a user state.
+ 	return user_insn(fnsave %[fx]; fwait,  [fx] "=m" (*fx), "m" (*fx));
+@@ -158,6 +160,8 @@ static inline int copy_fxregs_to_user(struct fxregs_state __user *fx)
+ 
+ static inline void copy_kernel_to_fxregs(struct fxregs_state *fx)
+ {
++	__cpu_invalidate_fpregs_state();
++
+ 	if (IS_ENABLED(CONFIG_X86_32))
+ 		kernel_insn(fxrstor %[fx], "=m" (*fx), [fx] "m" (*fx));
+ 	else
+@@ -166,6 +170,8 @@ static inline void copy_kernel_to_fxregs(struct fxregs_state *fx)
+ 
+ static inline int copy_kernel_to_fxregs_err(struct fxregs_state *fx)
+ {
++	__cpu_invalidate_fpregs_state();
++
+ 	if (IS_ENABLED(CONFIG_X86_32))
+ 		return kernel_insn_err(fxrstor %[fx], "=m" (*fx), [fx] "m" (*fx));
+ 	else
+@@ -174,6 +180,8 @@ static inline int copy_kernel_to_fxregs_err(struct fxregs_state *fx)
+ 
+ static inline int copy_user_to_fxregs(struct fxregs_state __user *fx)
+ {
++	__cpu_invalidate_fpregs_state();
++
+ 	if (IS_ENABLED(CONFIG_X86_32))
+ 		return user_insn(fxrstor %[fx], "=m" (*fx), [fx] "m" (*fx));
+ 	else
+@@ -182,16 +190,19 @@ static inline int copy_user_to_fxregs(struct fxregs_state __user *fx)
+ 
+ static inline void copy_kernel_to_fregs(struct fregs_state *fx)
+ {
++	__cpu_invalidate_fpregs_state();
+ 	kernel_insn(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
+ }
+ 
+ static inline int copy_kernel_to_fregs_err(struct fregs_state *fx)
+ {
++	__cpu_invalidate_fpregs_state();
+ 	return kernel_insn_err(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
+ }
+ 
+ static inline int copy_user_to_fregs(struct fregs_state __user *fx)
+ {
++	__cpu_invalidate_fpregs_state();
+ 	return user_insn(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
+ }
+ 
+@@ -340,6 +351,7 @@ static inline void copy_kernel_to_xregs(struct xregs_state *xstate, u64 mask)
+ 	u32 lmask = mask;
+ 	u32 hmask = mask >> 32;
+ 
++	__cpu_invalidate_fpregs_state();
+ 	XSTATE_XRESTORE(xstate, lmask, hmask);
+ }
+ 
+@@ -382,6 +394,7 @@ static inline int copy_user_to_xregs(struct xregs_state __user *buf, u64 mask)
+ 	u32 hmask = mask >> 32;
+ 	int err;
+ 
++	__cpu_invalidate_fpregs_state();
+ 	stac();
+ 	XSTATE_OP(XRSTOR, xstate, lmask, hmask, err);
+ 	clac();
+@@ -399,6 +412,7 @@ static inline int copy_kernel_to_xregs_err(struct xregs_state *xstate, u64 mask)
+ 	u32 hmask = mask >> 32;
+ 	int err;
+ 
++	__cpu_invalidate_fpregs_state();
+ 	XSTATE_OP(XRSTOR, xstate, lmask, hmask, err);
+ 
+ 	return err;
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 12c70840980e..743ff5ea4076 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -127,7 +127,12 @@ void fpu__save(struct fpu *fpu)
+ 
+ 	if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
+ 		if (!copy_fpregs_to_fpstate(fpu)) {
++			/*
++			 * copy_kernel_to_fpregs deactivates fpregs;
++			 * re-activate fpregs after that.
++			 */
+ 			copy_kernel_to_fpregs(&fpu->state);
++			fpregs_activate(fpu);
+ 		}
+ 	}
+ 
+@@ -191,11 +196,17 @@ int fpu__copy(struct task_struct *dst, struct task_struct *src)
+ 	 *   register contents so we have to load them back. )
  	 */
- 	u32 eax, ebx, ecx, edx;
+ 	fpregs_lock();
+-	if (test_thread_flag(TIF_NEED_FPU_LOAD))
++	if (test_thread_flag(TIF_NEED_FPU_LOAD)) {
+ 		memcpy(&dst_fpu->state, &src_fpu->state, fpu_kernel_xstate_size);
  
-@@ -342,7 +339,7 @@ static int xfeature_is_aligned(int xfeature_nr)
-  */
- static void __init setup_xstate_comp(void)
- {
--	unsigned int xstate_comp_sizes[sizeof(xfeatures_mask)*8];
-+	unsigned int xstate_comp_sizes[sizeof(xfeatures_mask) * 8];
- 	int i;
+-	else if (!copy_fpregs_to_fpstate(dst_fpu))
++	} else if (!copy_fpregs_to_fpstate(dst_fpu)) {
++		/*
++		 * copy_kernel_to_fpregs deactivates fpregs;
++		 * re-activate fpregs after that.
++		 */
+ 		copy_kernel_to_fpregs(&dst_fpu->state);
++		fpregs_activate(src_fpu);
++	}
  
- 	/*
-@@ -415,7 +412,8 @@ static void __init setup_init_fpu_buf(void)
- 	print_xstate_features();
+ 	fpregs_unlock();
  
- 	if (boot_cpu_has(X86_FEATURE_XSAVES))
--		init_fpstate.xsave.header.xcomp_bv = (u64)1 << 63 | xfeatures_mask;
-+		init_fpstate.xsave.header.xcomp_bv = XCOMP_BV_COMPACTED_FORMAT |
-+						     xfeatures_mask;
- 
- 	/*
- 	 * Init all the features state with header.xfeatures being 0x0
 -- 
 2.17.1
 
