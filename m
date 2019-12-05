@@ -2,82 +2,100 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CF3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E43EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DDE214B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D621206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:03:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="QKySukuX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbfLEDBj (ORCPT
+        id S1728826AbfLEDDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 22:01:39 -0500
-Received: from mga17.intel.com ([192.55.52.151]:38152 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728321AbfLEDBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 22:01:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 19:01:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,279,1571727600"; 
-   d="scan'208";a="223484568"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga002.jf.intel.com with ESMTP; 04 Dec 2019 19:01:35 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org
-Cc:     rdunlap@infradead.org, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH 1/1] pinctrl: Modify Kconfig to fix linker error
-Date:   Thu,  5 Dec 2019 11:01:31 +0800
-Message-Id: <ba937f271d1a2173828a2325990d62cb36d61595.1575514110.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1575514110.git.rahul.tanwar@linux.intel.com>
-References: <cover.1575514110.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1575514110.git.rahul.tanwar@linux.intel.com>
-References: <cover.1575514110.git.rahul.tanwar@linux.intel.com>
+        Wed, 4 Dec 2019 22:03:22 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35358 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728459AbfLEDDV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 22:03:21 -0500
+Received: by mail-il1-f194.google.com with SMTP id g12so1658847ild.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 19:03:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=DDaxXfCxsiOyqMSO9KYcmqVtM/PNL1XNRneVF7PtEEk=;
+        b=QKySukuX+whyDlwTei1UZnZksz7c546kdE1Q+t6mhe/INeqiwSx/Pk/RJiJZbOtRd6
+         giQJPsRdGlSjiHECuRruZEWSBvWnNW3YZlCwVezmQA4x9AlwZrO9YCUgsY/TV2VXEOgx
+         JTqrpo8Yfz6IpPoASBfaTkbgkdymob1DtfD0OkGjk3yTa+AYbeMPbk3dZrtH7gwXiQP6
+         2ucQMO3dMfiWQWK18vtoPyMjp2Tf3PEg5jXBOcvCbUdFQCKwYnu4yilSU5bcW5bM3esk
+         pP7BWROiTfbyMWcefykLoXmV2DQOybkonJhJCb9BuhJmdJPjSIDaIk1TsdfjtplayCTZ
+         WiKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=DDaxXfCxsiOyqMSO9KYcmqVtM/PNL1XNRneVF7PtEEk=;
+        b=tVp5xbwObrpquBuax08ebMnIHTpA23FHdh0CRnAZs3K4gHNpSIsec6ZnM1ifDtshQv
+         NQicdKdrisELOUG9ZV7hACEdr4D9Eflq8jIKV2VbfaJCRHQIpapcRtTvd5SACECiGHWu
+         0iULsuUad+FG0sq11VEcP6MwsEwbAaj4LPKsyJQAIcO7LmiOWz+xS69xDa6QI4lAkbVH
+         2lOkgwfYx7aKaD2FPmdlFfYdpan3Zr7i8IAK14tM0hqRMQ5KfBolWxWjfsz/0OdRrOf5
+         TTRrKJfTjEyxgT5cTeoirxZ2K+dwP5E4SZQW1t6RBrvs3cEDb4rBdjrLeJdszyYnrBvg
+         U09w==
+X-Gm-Message-State: APjAAAWWMyS7c+0BEZ6fVGHcf+gLnkXAcJrJoGiBJbkz0J1xdi9ds6D9
+        8SDwLH81ZKPYMoqmUknBm+pcJQ==
+X-Google-Smtp-Source: APXvYqyNnDI4WPiQUe9ac+q6KSTTvsCXeGX7VU41qKjhR8914xo5CQA56RjP81NH34TxvX8az+BIKw==
+X-Received: by 2002:a92:1b89:: with SMTP id f9mr6567185ill.122.1575515001113;
+        Wed, 04 Dec 2019 19:03:21 -0800 (PST)
+Received: from localhost (67-0-26-4.albq.qwest.net. [67.0.26.4])
+        by smtp.gmail.com with ESMTPSA id e1sm2365633ill.47.2019.12.04.19.03.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 19:03:20 -0800 (PST)
+Date:   Wed, 4 Dec 2019 19:03:19 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Anup Patel <Anup.Patel@wdc.com>
+cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Anup Patel <anup@brainfault.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] RISC-V: Add debug defconfigs
+In-Reply-To: <20191205005601.1559-1-anup.patel@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1912041859070.215427@viisi.sifive.com>
+References: <20191205005601.1559-1-anup.patel@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix below linker error
+On Thu, 5 Dec 2019, Anup Patel wrote:
 
-    ld: drivers/pinctrl/pinctrl-equilibrium.o: in function
-    `pinconf_generic_dt_node_to_map_all':
-    pinctrl-equilibrium.c:(.text+0xb): undefined reference
-    to `pinconf_generic_dt_node_to_map'
+> Various Linux kernel DEBUG options have big performance impact
+> so these should not be enabled in RISC-V normal defconfigs.
+> 
+> Instead we should have separate RISC-V debug defconfigs having
+> these DEBUG options enabled. This way Linux RISC-V can build both
+> non-debug and debug kernels separately.
 
-Caused by below commit
+I respect your point of view, but until the RISC-V kernel port is more 
+mature, I personally am not planning to merge this patch, for reasons 
+discussed in the defconfig patch descriptions and the subsequent pull 
+request threads.
 
-    1948d5c51dba ("pinctrl: Add pinmux & GPIO controller driver for a new SoC")
+I'm sure we'll revisit this in the future to realign with the defconfig 
+debug settings for more mature architecture ports - but my guess is that 
+we'll probably avoid creating debug_defconfigs, since only S390 does that.
 
-by adding 'depends on OF' in Kconfig driver entry.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>>
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- drivers/pinctrl/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 3bfbf2ff6e2b..ba0cad4bd072 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -422,6 +422,7 @@ config PINCTRL_TB10X
- 
- config PINCTRL_EQUILIBRIUM
- 	tristate "Generic pinctrl and GPIO driver for Intel Lightning Mountain SoC"
-+	depends on OF
- 	select PINMUX
- 	select PINCONF
- 	select GPIOLIB
--- 
-2.11.0
-
+- Paul
