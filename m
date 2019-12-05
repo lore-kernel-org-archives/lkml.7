@@ -4,360 +4,379 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE561C2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F38C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A034924249
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7560A24652
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730208AbfLERP6 (ORCPT
+        id S1730223AbfLERQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 12:15:58 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31806 "EHLO
+        Thu, 5 Dec 2019 12:16:00 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64504 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730104AbfLERPi (ORCPT
+        by vger.kernel.org with ESMTP id S1730101AbfLERPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 5 Dec 2019 12:15:38 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB5H7rSX092784;
-        Thu, 5 Dec 2019 12:15:17 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wq1kk5r0s-1
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB5H8dFI034691;
+        Thu, 5 Dec 2019 12:15:21 -0500
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wq2tuttq5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Dec 2019 12:15:17 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB5HFMUh032137;
-        Thu, 5 Dec 2019 17:15:22 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma01wdc.us.ibm.com with ESMTP id 2wkg26rdj4-1
+        Thu, 05 Dec 2019 12:15:21 -0500
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB5HFGJL016932;
+        Thu, 5 Dec 2019 17:15:20 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma05wdc.us.ibm.com with ESMTP id 2wkg27reqa-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Dec 2019 17:15:22 +0000
+        Thu, 05 Dec 2019 17:15:20 +0000
 Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB5HFFS613304298
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB5HFJRs48234986
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Dec 2019 17:15:16 GMT
+        Thu, 5 Dec 2019 17:15:19 GMT
 Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD64F6E050;
-        Thu,  5 Dec 2019 17:15:15 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id B0D2E6E053;
+        Thu,  5 Dec 2019 17:15:19 +0000 (GMT)
 Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 079AE6E04E;
-        Thu,  5 Dec 2019 17:15:15 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 0A8C76E04C;
+        Thu,  5 Dec 2019 17:15:19 +0000 (GMT)
 Received: from talon7.ibm.com (unknown [9.41.103.158])
         by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Dec 2019 17:15:14 +0000 (GMT)
+        Thu,  5 Dec 2019 17:15:18 +0000 (GMT)
 From:   Eddie James <eajames@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, jason@lakedaemon.net,
         linux-aspeed@lists.ozlabs.org, maz@kernel.org, robh+dt@kernel.org,
         tglx@linutronix.de, mark.rutland@arm.com, joel@jms.id.au,
         andrew@aj.id.au
-Subject: [PATCH v2 02/12] irqchip: Add Aspeed SCU interrupt controller
-Date:   Thu,  5 Dec 2019 11:15:02 -0600
-Message-Id: <1575566112-11658-3-git-send-email-eajames@linux.ibm.com>
+Subject: [PATCH v2 07/12] drivers/soc: xdma: Add user interface
+Date:   Thu,  5 Dec 2019 11:15:07 -0600
+Message-Id: <1575566112-11658-8-git-send-email-eajames@linux.ibm.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1575566112-11658-1-git-send-email-eajames@linux.ibm.com>
 References: <1575566112-11658-1-git-send-email-eajames@linux.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-05_05:2019-12-04,2019-12-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- clxscore=1015 bulkscore=0 adultscore=0 lowpriorityscore=0
- priorityscore=1501 suspectscore=1 mlxlogscore=999 spamscore=0
- impostorscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912050144
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 impostorscore=0
+ phishscore=0 spamscore=0 suspectscore=4 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912050144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Aspeed SOCs provide some interrupts through the System Control
-Unit registers. Add an interrupt controller that provides these
-interrupts to the system.
+This commits adds a miscdevice to provide a user interface to the XDMA
+engine. The interface provides the write operation to start DMA
+operations. The DMA parameters are passed as the data to the write call.
+The actual data to transfer is NOT passed through write. Note that both
+directions of DMA operation are accomplished through the write command;
+BMC to host and host to BMC.
+
+The XDMA engine is restricted to only accessing the reserved memory
+space on the AST2500, typically used by the VGA. For this reason, the
+VGA memory space is pooled and allocated with genalloc. Users calling
+mmap allocate pages from this pool for their usage. The space allocated
+by a client will be the space used in the DMA operation. For an
+"upstream" (BMC to host) operation, the data in the client's area will
+be transferred to the host. For a "downstream" (host to BMC) operation,
+the host data will be placed in the client's memory area.
+
+Poll is also provided in order to determine when the DMA operation is
+complete for non-blocking IO.
 
 Signed-off-by: Eddie James <eajames@linux.ibm.com>
 ---
 Changes since v1:
- - Use the parent SCU regmap rather than iomap its register range.
- - Use handle_level_irq rather than handle_simple_irq.
+ - Add file_lock comment
+ - Bring user reset up to date with new reset method
 
- MAINTAINERS                         |   1 +
- drivers/irqchip/Makefile            |   2 +-
- drivers/irqchip/irq-aspeed-scu-ic.c | 239 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 241 insertions(+), 1 deletion(-)
- create mode 100644 drivers/irqchip/irq-aspeed-scu-ic.c
+ drivers/soc/aspeed/aspeed-xdma.c | 224 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 224 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6bbb194..398861a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2696,6 +2696,7 @@ M:	Eddie James <eajames@linux.ibm.com>
- L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
- S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
-+F:	drivers/irqchip/irq-aspeed-scu-ic.c
- F:	include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
+diff --git a/drivers/soc/aspeed/aspeed-xdma.c b/drivers/soc/aspeed/aspeed-xdma.c
+index a9b3eeb..d4b96a7 100644
+--- a/drivers/soc/aspeed/aspeed-xdma.c
++++ b/drivers/soc/aspeed/aspeed-xdma.c
+@@ -13,6 +13,7 @@
+ #include <linux/io.h>
+ #include <linux/jiffies.h>
+ #include <linux/mfd/syscon.h>
++#include <linux/miscdevice.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/of_device.h>
+@@ -206,6 +207,8 @@ struct aspeed_xdma {
+ 	struct clk *clock;
+ 	struct reset_control *reset;
  
- ASPEED VIDEO ENGINE DRIVER
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index e806dda..6c9262c 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -87,7 +87,7 @@ obj-$(CONFIG_MVEBU_SEI)			+= irq-mvebu-sei.o
- obj-$(CONFIG_LS_EXTIRQ)			+= irq-ls-extirq.o
- obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
- obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
--obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o
-+obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o irq-aspeed-scu-ic.o
- obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
- obj-$(CONFIG_QCOM_IRQ_COMBINER)		+= qcom-irq-combiner.o
- obj-$(CONFIG_IRQ_UNIPHIER_AIDET)	+= irq-uniphier-aidet.o
-diff --git a/drivers/irqchip/irq-aspeed-scu-ic.c b/drivers/irqchip/irq-aspeed-scu-ic.c
-new file mode 100644
-index 0000000..c90a334
---- /dev/null
-+++ b/drivers/irqchip/irq-aspeed-scu-ic.c
-@@ -0,0 +1,239 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Aspeed AST24XX, AST25XX, and AST26XX SCU Interrupt Controller
-+ * Copyright 2019 IBM Corporation
-+ *
-+ * Eddie James <eajames@linux.ibm.com>
-+ */
++	/* file_lock serializes reads of current_client */
++	struct mutex file_lock;
+ 	struct aspeed_xdma_client *current_client;
+ 
+ 	/* start_lock protects cmd_idx, cmdq, and the state of the engine */
+@@ -227,6 +230,8 @@ struct aspeed_xdma {
+ 	dma_addr_t cmdq_vga_phys;
+ 	void *cmdq_vga_virt;
+ 	struct gen_pool *vga_pool;
 +
-+#include <linux/bitops.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_irq.h>
-+#include <linux/regmap.h>
-+
-+#define ASPEED_SCU_IC_REG		0x018
-+#define ASPEED_SCU_IC_SHIFT		0
-+#define ASPEED_SCU_IC_ENABLE		GENMASK(6, ASPEED_SCU_IC_SHIFT)
-+#define ASPEED_SCU_IC_NUM_IRQS		7
-+#define ASPEED_SCU_IC_STATUS_SHIFT	16
-+
-+#define ASPEED_AST2600_SCU_IC0_REG	0x560
-+#define ASPEED_AST2600_SCU_IC0_SHIFT	0
-+#define ASPEED_AST2600_SCU_IC0_ENABLE	\
-+	GENMASK(5, ASPEED_AST2600_SCU_IC0_SHIFT)
-+#define ASPEED_AST2600_SCU_IC0_NUM_IRQS	6
-+
-+#define ASPEED_AST2600_SCU_IC1_REG	0x570
-+#define ASPEED_AST2600_SCU_IC1_SHIFT	4
-+#define ASPEED_AST2600_SCU_IC1_ENABLE	\
-+	GENMASK(5, ASPEED_AST2600_SCU_IC1_SHIFT)
-+#define ASPEED_AST2600_SCU_IC1_NUM_IRQS	2
-+
-+struct aspeed_scu_ic {
-+	unsigned long irq_enable;
-+	unsigned long irq_shift;
-+	unsigned int num_irqs;
-+	unsigned int reg;
-+	struct regmap *scu;
-+	struct irq_domain *irq_domain;
-+};
-+
-+static void aspeed_scu_ic_irq_handler(struct irq_desc *desc)
++	struct miscdevice misc;
+ };
+ 
+ struct aspeed_xdma_client {
+@@ -517,6 +522,207 @@ static irqreturn_t aspeed_xdma_pcie_irq(int irq, void *arg)
+ 	return IRQ_HANDLED;
+ }
+ 
++static ssize_t aspeed_xdma_write(struct file *file, const char __user *buf,
++				 size_t len, loff_t *offset)
 +{
-+	unsigned int irq;
-+	unsigned int sts;
-+	unsigned long bit;
-+	unsigned long enabled;
-+	unsigned long max;
-+	unsigned long status;
-+	struct aspeed_scu_ic *scu_ic = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned int mask = scu_ic->irq_enable << ASPEED_SCU_IC_STATUS_SHIFT;
++	int rc;
++	struct aspeed_xdma_op op;
++	struct aspeed_xdma_client *client = file->private_data;
++	struct aspeed_xdma *ctx = client->ctx;
++	u32 offs = client->phys ? (client->phys - ctx->vga_phys) :
++		XDMA_CMDQ_SIZE;
 +
-+	chained_irq_enter(chip, desc);
++	if (len != sizeof(op))
++		return -EINVAL;
 +
-+	/*
-+	 * The SCU IC has just one register to control its operation and read
-+	 * status. The interrupt enable bits occupy the lower 16 bits of the
-+	 * register, while the interrupt status bits occupy the upper 16 bits.
-+	 * The status bit for a given interrupt is always 16 bits shifted from
-+	 * the enable bit for the same interrupt.
-+	 * Therefore, perform the IRQ operations in the enable bit space by
-+	 * shifting the status down to get the mapping and then back up to
-+	 * clear the bit.
-+	 */
-+	regmap_read(scu_ic->scu, scu_ic->reg, &sts);
-+	enabled = sts & scu_ic->irq_enable;
-+	status = (sts >> ASPEED_SCU_IC_STATUS_SHIFT) & enabled;
++	rc = copy_from_user(&op, buf, len);
++	if (rc)
++		return rc;
 +
-+	bit = scu_ic->irq_shift;
-+	max = scu_ic->num_irqs + bit;
++	if (op.direction == ASPEED_XDMA_DIRECTION_RESET) {
++		unsigned long flags;
 +
-+	for_each_set_bit_from(bit, &status, max) {
-+		irq = irq_find_mapping(scu_ic->irq_domain,
-+				       bit - scu_ic->irq_shift);
-+		generic_handle_irq(irq);
++		spin_lock_irqsave(&ctx->reset_lock, flags);
++		if (ctx->in_reset) {
++			spin_unlock_irqrestore(&ctx->reset_lock, flags);
++			return len;
++		}
 +
-+		regmap_update_bits(scu_ic->scu, scu_ic->reg, mask,
-+				   BIT(bit + ASPEED_SCU_IC_STATUS_SHIFT));
++		ctx->in_reset = true;
++		spin_unlock_irqrestore(&ctx->reset_lock, flags);
++
++		mutex_lock(&ctx->start_lock);
++
++		aspeed_xdma_reset(ctx);
++
++		mutex_unlock(&ctx->start_lock);
++
++		return len;
++	} else if (op.direction > ASPEED_XDMA_DIRECTION_RESET) {
++		return -EINVAL;
 +	}
 +
-+	chained_irq_exit(chip, desc);
++	if (op.len > ctx->vga_size - offs)
++		return -EINVAL;
++
++	if (file->f_flags & O_NONBLOCK) {
++		if (!mutex_trylock(&ctx->file_lock))
++			return -EAGAIN;
++
++		if (ctx->current_client) {
++			mutex_unlock(&ctx->file_lock);
++			return -EAGAIN;
++		}
++	} else {
++		mutex_lock(&ctx->file_lock);
++
++		rc = wait_event_interruptible(ctx->wait, !ctx->current_client);
++		if (rc) {
++			mutex_unlock(&ctx->file_lock);
++			return -EINTR;
++		}
++	}
++
++	aspeed_xdma_start(ctx, &op, ctx->vga_phys + offs, client);
++
++	mutex_unlock(&ctx->file_lock);
++
++	if (!(file->f_flags & O_NONBLOCK)) {
++		rc = wait_event_interruptible(ctx->wait, !client->in_progress);
++		if (rc)
++			return -EINTR;
++
++		if (client->error)
++			return -EIO;
++	}
++
++	return len;
 +}
 +
-+static void aspeed_scu_ic_irq_mask(struct irq_data *data)
++static __poll_t aspeed_xdma_poll(struct file *file,
++				 struct poll_table_struct *wait)
 +{
-+	struct aspeed_scu_ic *scu_ic = irq_data_get_irq_chip_data(data);
-+	unsigned int mask = BIT(data->hwirq + scu_ic->irq_shift) |
-+		(scu_ic->irq_enable << ASPEED_SCU_IC_STATUS_SHIFT);
++	__poll_t mask = 0;
++	__poll_t req = poll_requested_events(wait);
++	struct aspeed_xdma_client *client = file->private_data;
++	struct aspeed_xdma *ctx = client->ctx;
 +
-+	/*
-+	 * Status bits are cleared by writing 1. In order to prevent the mask
-+	 * operation from clearing the status bits, they should be under the
-+	 * mask and written with 0.
-+	 */
-+	regmap_update_bits(scu_ic->scu, scu_ic->reg, mask, 0);
++	if (req & (EPOLLIN | EPOLLRDNORM)) {
++		if (client->in_progress)
++			poll_wait(file, &ctx->wait, wait);
++
++		if (!client->in_progress) {
++			if (client->error)
++				mask |= EPOLLERR;
++			else
++				mask |= EPOLLIN | EPOLLRDNORM;
++		}
++	}
++
++	if (req & (EPOLLOUT | EPOLLWRNORM)) {
++		if (ctx->current_client)
++			poll_wait(file, &ctx->wait, wait);
++
++		if (!ctx->current_client)
++			mask |= EPOLLOUT | EPOLLWRNORM;
++	}
++
++	return mask;
 +}
 +
-+static void aspeed_scu_ic_irq_unmask(struct irq_data *data)
++static void aspeed_xdma_vma_close(struct vm_area_struct *vma)
 +{
-+	struct aspeed_scu_ic *scu_ic = irq_data_get_irq_chip_data(data);
-+	unsigned int bit = BIT(data->hwirq + scu_ic->irq_shift);
-+	unsigned int mask = bit |
-+		(scu_ic->irq_enable << ASPEED_SCU_IC_STATUS_SHIFT);
++	struct aspeed_xdma_client *client = vma->vm_private_data;
 +
-+	/*
-+	 * Status bits are cleared by writing 1. In order to prevent the unmask
-+	 * operation from clearing the status bits, they should be under the
-+	 * mask and written with 0.
-+	 */
-+	regmap_update_bits(scu_ic->scu, scu_ic->reg, mask, bit);
++	gen_pool_free(client->ctx->vga_pool, (unsigned long)client->virt,
++		      client->size);
++
++	client->virt = NULL;
++	client->phys = 0;
++	client->size = 0;
 +}
 +
-+static int aspeed_scu_ic_irq_set_affinity(struct irq_data *data,
-+					  const struct cpumask *dest,
-+					  bool force)
-+{
-+	return -EINVAL;
-+}
-+
-+static struct irq_chip aspeed_scu_ic_chip = {
-+	.name			= "aspeed-scu-ic",
-+	.irq_mask		= aspeed_scu_ic_irq_mask,
-+	.irq_unmask		= aspeed_scu_ic_irq_unmask,
-+	.irq_set_affinity	= aspeed_scu_ic_irq_set_affinity,
++static const struct vm_operations_struct aspeed_xdma_vm_ops = {
++	.close =	aspeed_xdma_vma_close,
 +};
 +
-+static int aspeed_scu_ic_map(struct irq_domain *domain, unsigned int irq,
-+			     irq_hw_number_t hwirq)
++static int aspeed_xdma_mmap(struct file *file, struct vm_area_struct *vma)
 +{
-+	irq_set_chip_and_handler(irq, &aspeed_scu_ic_chip, handle_level_irq);
-+	irq_set_chip_data(irq, domain->host_data);
++	int rc;
++	struct aspeed_xdma_client *client = file->private_data;
++	struct aspeed_xdma *ctx = client->ctx;
++
++	/* restrict file to one mapping */
++	if (client->size)
++		return -ENOMEM;
++
++	client->size = vma->vm_end - vma->vm_start;
++	client->virt = gen_pool_dma_alloc(ctx->vga_pool, client->size,
++					  &client->phys);
++	if (!client->virt) {
++		client->phys = 0;
++		client->size = 0;
++		return -ENOMEM;
++	}
++
++	vma->vm_pgoff = (client->phys - ctx->vga_phys) >> PAGE_SHIFT;
++	vma->vm_ops = &aspeed_xdma_vm_ops;
++	vma->vm_private_data = client;
++	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
++
++	rc = io_remap_pfn_range(vma, vma->vm_start, client->phys >> PAGE_SHIFT,
++				client->size, vma->vm_page_prot);
++	if (rc) {
++		gen_pool_free(ctx->vga_pool, (unsigned long)client->virt,
++			      client->size);
++
++		client->virt = NULL;
++		client->phys = 0;
++		client->size = 0;
++		return rc;
++	}
++
++	dev_dbg(ctx->dev, "mmap: v[%08lx] to p[%08x], s[%08x]\n",
++		vma->vm_start, (u32)client->phys, client->size);
 +
 +	return 0;
 +}
 +
-+static const struct irq_domain_ops aspeed_scu_ic_domain_ops = {
-+	.map = aspeed_scu_ic_map,
++static int aspeed_xdma_open(struct inode *inode, struct file *file)
++{
++	struct miscdevice *misc = file->private_data;
++	struct aspeed_xdma *ctx = container_of(misc, struct aspeed_xdma, misc);
++	struct aspeed_xdma_client *client = kzalloc(sizeof(*client),
++						    GFP_KERNEL);
++
++	if (!client)
++		return -ENOMEM;
++
++	client->ctx = ctx;
++	file->private_data = client;
++	return 0;
++}
++
++static int aspeed_xdma_release(struct inode *inode, struct file *file)
++{
++	struct aspeed_xdma_client *client = file->private_data;
++
++	if (client->ctx->current_client == client)
++		client->ctx->current_client = NULL;
++
++	kfree(client);
++	return 0;
++}
++
++static const struct file_operations aspeed_xdma_fops = {
++	.owner			= THIS_MODULE,
++	.write			= aspeed_xdma_write,
++	.poll			= aspeed_xdma_poll,
++	.mmap			= aspeed_xdma_mmap,
++	.open			= aspeed_xdma_open,
++	.release		= aspeed_xdma_release,
 +};
 +
-+static int aspeed_scu_ic_of_init_common(struct aspeed_scu_ic *scu_ic,
-+					struct device_node *node)
-+{
-+	int irq;
-+	int rc = 0;
+ static int aspeed_xdma_probe(struct platform_device *pdev)
+ {
+ 	int irq;
+@@ -539,6 +745,7 @@ static int aspeed_xdma_probe(struct platform_device *pdev)
+ 	ctx->chip = md;
+ 	ctx->dev = dev;
+ 	platform_set_drvdata(pdev, ctx);
++	mutex_init(&ctx->file_lock);
+ 	mutex_init(&ctx->start_lock);
+ 	INIT_WORK(&ctx->reset_work, aspeed_xdma_reset_work);
+ 	spin_lock_init(&ctx->reset_lock);
+@@ -678,6 +885,22 @@ static int aspeed_xdma_probe(struct platform_device *pdev)
+ 
+ 	aspeed_xdma_init_eng(ctx);
+ 
++	ctx->misc.minor = MISC_DYNAMIC_MINOR;
++	ctx->misc.fops = &aspeed_xdma_fops;
++	ctx->misc.name = "aspeed-xdma";
++	ctx->misc.parent = dev;
++	rc = misc_register(&ctx->misc);
++	if (rc) {
++		dev_err(dev, "Failed to register xdma miscdevice.\n");
 +
-+	if (!node->parent) {
-+		rc = -ENODEV;
-+		goto err;
++		gen_pool_free(ctx->vga_pool, (unsigned long)ctx->cmdq_vga_virt,
++			      XDMA_CMDQ_SIZE);
++
++		reset_control_assert(ctx->reset);
++		clk_disable_unprepare(ctx->clock);
++		return rc;
 +	}
 +
-+	scu_ic->scu = syscon_node_to_regmap(node->parent);
-+	if (IS_ERR(scu_ic->scu)) {
-+		rc = PTR_ERR(scu_ic->scu);
-+		goto err;
-+	}
-+
-+	irq = irq_of_parse_and_map(node, 0);
-+	if (irq < 0) {
-+		rc = irq;
-+		goto err;
-+	}
-+
-+	scu_ic->irq_domain = irq_domain_add_linear(node, scu_ic->num_irqs,
-+						   &aspeed_scu_ic_domain_ops,
-+						   scu_ic);
-+	if (!scu_ic->irq_domain) {
-+		rc = -ENOMEM;
-+		goto err;
-+	}
-+
-+	irq_set_chained_handler_and_data(irq, aspeed_scu_ic_irq_handler,
-+					 scu_ic);
-+
-+	return 0;
-+
-+err:
-+	kfree(scu_ic);
-+
-+	return rc;
-+}
-+
-+static int __init aspeed_scu_ic_of_init(struct device_node *node,
-+					struct device_node *parent)
-+{
-+	struct aspeed_scu_ic *scu_ic = kzalloc(sizeof(*scu_ic), GFP_KERNEL);
-+
-+	if (!scu_ic)
-+		return -ENOMEM;
-+
-+	scu_ic->irq_enable = ASPEED_SCU_IC_ENABLE;
-+	scu_ic->irq_shift = ASPEED_SCU_IC_SHIFT;
-+	scu_ic->num_irqs = ASPEED_SCU_IC_NUM_IRQS;
-+	scu_ic->reg = ASPEED_SCU_IC_REG;
-+
-+	return aspeed_scu_ic_of_init_common(scu_ic, node);
-+}
-+
-+static int __init aspeed_ast2600_scu_ic0_of_init(struct device_node *node,
-+						 struct device_node *parent)
-+{
-+	struct aspeed_scu_ic *scu_ic = kzalloc(sizeof(*scu_ic), GFP_KERNEL);
-+
-+	if (!scu_ic)
-+		return -ENOMEM;
-+
-+	scu_ic->irq_enable = ASPEED_AST2600_SCU_IC0_ENABLE;
-+	scu_ic->irq_shift = ASPEED_AST2600_SCU_IC0_SHIFT;
-+	scu_ic->num_irqs = ASPEED_AST2600_SCU_IC0_NUM_IRQS;
-+	scu_ic->reg = ASPEED_AST2600_SCU_IC0_REG;
-+
-+	return aspeed_scu_ic_of_init_common(scu_ic, node);
-+}
-+
-+static int __init aspeed_ast2600_scu_ic1_of_init(struct device_node *node,
-+						 struct device_node *parent)
-+{
-+	struct aspeed_scu_ic *scu_ic = kzalloc(sizeof(*scu_ic), GFP_KERNEL);
-+
-+	if (!scu_ic)
-+		return -ENOMEM;
-+
-+	scu_ic->irq_enable = ASPEED_AST2600_SCU_IC1_ENABLE;
-+	scu_ic->irq_shift = ASPEED_AST2600_SCU_IC1_SHIFT;
-+	scu_ic->num_irqs = ASPEED_AST2600_SCU_IC1_NUM_IRQS;
-+	scu_ic->reg = ASPEED_AST2600_SCU_IC1_REG;
-+
-+	return aspeed_scu_ic_of_init_common(scu_ic, node);
-+}
-+
-+IRQCHIP_DECLARE(ast2400_scu_ic, "aspeed,ast2400-scu-ic", aspeed_scu_ic_of_init);
-+IRQCHIP_DECLARE(ast2500_scu_ic, "aspeed,ast2500-scu-ic", aspeed_scu_ic_of_init);
-+IRQCHIP_DECLARE(ast2600_scu_ic0, "aspeed,ast2600-scu-ic0",
-+		aspeed_ast2600_scu_ic0_of_init);
-+IRQCHIP_DECLARE(ast2600_scu_ic1, "aspeed,ast2600-scu-ic1",
-+		aspeed_ast2600_scu_ic1_of_init);
+ 	/*
+ 	 * This interrupt could fire immediately so only request it once the
+ 	 * engine and driver are initialized.
+@@ -699,6 +922,7 @@ static int aspeed_xdma_remove(struct platform_device *pdev)
+ {
+ 	struct aspeed_xdma *ctx = platform_get_drvdata(pdev);
+ 
++	misc_deregister(&ctx->misc);
+ 	gen_pool_free(ctx->vga_pool, (unsigned long)ctx->cmdq_vga_virt,
+ 		      XDMA_CMDQ_SIZE);
+ 
 -- 
 1.8.3.1
 
