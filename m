@@ -2,96 +2,104 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9C0C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747F8C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E23D924249
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC0D20707
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575531943;
-	bh=ifbaeIoJpLRIvxZ4GbFj0GwuxwpkNX2lyM72QJGHXeI=;
+	s=default; t=1575532000;
+	bh=NiljB489Y/43/ZIndfXFi3w3tI/6+UAK72peDWZObKE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ej7JHsR7JQ6bY3onw6tR9TJbA/24jjeWU66q+dQcv7M8S1XkU41k0l0anSnEyBDc/
-	 uLBnzAEHQOsn+bhy+qa9wghmOSODS3+rvIS8ig45iY7n6FPGHPatvLy7lJ1peceL8l
-	 BjDLQZPT+GyOfzBzUebVRQnH/OnrXpSoF+o5wMJM=
+	b=XlPPkU2008zW+Zjbga6vvJOEVCLQJZzLTyV9EHqiEZEnNrUJDFgxEjOTSIuMv9qsu
+	 0S0ys5zo+bo6TwYr2c9ysl9LmrcLN/IngtNlGlyL5/lGqZvWHPY0+vuFhQEiYcK1ib
+	 jE6+BibLBxvXNATthAKTVUqw3zos8wH7JFJQc3oE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbfLEHpl (ORCPT
+        id S1728764AbfLEHqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 02:45:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41384 "EHLO mail.kernel.org"
+        Thu, 5 Dec 2019 02:46:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbfLEHpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 02:45:41 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        id S1725909AbfLEHqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 02:46:39 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0B09205F4;
-        Thu,  5 Dec 2019 07:45:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ECFA20637;
+        Thu,  5 Dec 2019 07:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575531941;
-        bh=ifbaeIoJpLRIvxZ4GbFj0GwuxwpkNX2lyM72QJGHXeI=;
+        s=default; t=1575531998;
+        bh=NiljB489Y/43/ZIndfXFi3w3tI/6+UAK72peDWZObKE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YSqXt3Zi8p11o6bjxCkGZ09oHU42ylrGURXipbaQh9jJlV04nJ+el7v4gLvbVzzwL
-         xRemKqPXiO1xzqZgKMV8yjUj7Vssd7Pk1ESjnSShxlyIZ7U0lmYCRJWyBzLRTYNCon
-         kkm16HQeVq/2sEuIOIoGTGHS5LkhZd6Pw/jUnx3s=
-Date:   Wed, 4 Dec 2019 23:45:39 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     dhowells@redhat.com
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        syzbot <syzbot+838eb0878ffd51f27c41@syzkaller.appspotmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Write in pipe_write
-Message-ID: <20191205074539.GB3237@sol.localdomain>
-References: <000000000000a6324b0598b2eb59@google.com>
- <000000000000d6c9870598bdf090@google.com>
+        b=Dzp1nSJmPERJFLKwzdtKDZw8FRZtiGEqC/Ei6U3HHNiIOpcHeijObPYqqVGJ7OP99
+         +/j5ciASBKzmGTEtWbSEfvFYz4r36QXZ0uibIQCpEJun3m4QL40E+ObC9v9HgTApLg
+         oLjhSS4zooQAZc+F9xWl08kiYTCUtsj/WUnxQkCk=
+Date:   Thu, 5 Dec 2019 08:46:36 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Jack Wang <jack.wang.usish@gmail.com>,
+        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 067/306] KVM: nVMX: move check_vmentry_postreqs()
+ call to nested_vmx_enter_non_root_mode()
+Message-ID: <20191205074636.GA184738@kroah.com>
+References: <20191127203119.676489279@linuxfoundation.org>
+ <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
+ <20191202145105.GA571975@kroah.com>
+ <bccbfccd-0e96-29c3-b2ba-2b1800364b08@redhat.com>
+ <CA+res+SffBsmmeEBYfoDwyLHvL8nqW+O=ZKedWCxccmQ9X6itA@mail.gmail.com>
+ <828cf8b7-11ac-e707-57b6-cb598cc37f1b@redhat.com>
+ <CA+res+Qo1mX_UFEqDD+sm80PZeW4bRN8VZeNudMDaQ=5-Ss=0g@mail.gmail.com>
+ <1387d9b8-0e08-a22e-6dd1-4b7ea58567b3@redhat.com>
+ <20191203191655.GC2734645@kroah.com>
+ <835e996b-711e-f6fb-a489-db3899c053a2@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000000000000d6c9870598bdf090@google.com>
+In-Reply-To: <835e996b-711e-f6fb-a489-db3899c053a2@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On Wed, Dec 04, 2019 at 12:42:06PM +0100, Paolo Bonzini wrote:
+> On 03/12/19 20:16, Greg Kroah-Hartman wrote:
+> > On Tue, Dec 03, 2019 at 01:52:47PM +0100, Paolo Bonzini wrote:
+> >> On 03/12/19 13:27, Jack Wang wrote:
+> >>>>> Should we simply revert the patch, maybe also
+> >>>>> 9fe573d539a8 ("KVM: nVMX: reset cache/shadows when switching loaded VMCS")
+> >>>>>
+> >>>>> Both of them are from one big patchset:
+> >>>>> https://patchwork.kernel.org/cover/10616179/
+> >>>>>
+> >>>>> Revert both patches recover the regression I see on kvm-unit-tests.
+> >>>> Greg already included the patches that the bot missed, so it's okay.
+> >>>>
+> >>>> Paolo
+> >>>>
+> >>> Sorry, I think I gave wrong information initially, it's 9fe573d539a8
+> >>> ("KVM: nVMX: reset cache/shadows when switching loaded VMCS")
+> >>> which caused regression.
+> >>>
+> >>> Should we revert or there's following up fix we should backport?
+> >>
+> >> Hmm, let's revert all four.  This one, the two follow-ups and 9fe573d539a8.
+> > 
+> > 4?  I see three patches here, the 2 follow-up patches that I applied to
+> > the queue, and the "original" backport of b7031fd40fcc ("KVM: nVMX:
+> > reset cache/shadows when switching loaded VMCS") which showed up in the
+> > 4.14.157 and 4.19.87 kernels.
+> 
+> The fourth is commit 9fe573d539a8 ("KVM: nVMX: reset cache/shadows when
+> switching loaded VMCS"), which was also autoselected.
 
-On Mon, Dec 02, 2019 at 11:54:00AM -0800, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit a194dfe6e6f6f7205eea850a420f2bc6a1541209
-> Author: David Howells <dhowells@redhat.com>
-> Date:   Fri Sep 20 15:32:19 2019 +0000
-> 
->     pipe: Rearrange sequence in pipe_write() to preallocate slot
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16085abce00000
-> start commit:   b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=15085abce00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11085abce00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ff560c3de405258c
-> dashboard link: https://syzkaller.appspot.com/bug?extid=838eb0878ffd51f27c41
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146a9f86e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1791d82ae00000
-> 
-> Reported-by: syzbot+838eb0878ffd51f27c41@syzkaller.appspotmail.com
-> Fixes: a194dfe6e6f6 ("pipe: Rearrange sequence in pipe_write() to
-> preallocate slot")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> 
+Ah, thanks, I missed that.  Should all now be fixed up here, and in the
+4.14.y tree.
 
-It looks like the 'mask' variable in pipe_write() is not being updated after the
-pipe mutex was dropped in pipe_wait(), to take into account the pipe size
-possibly having been changed in the mean time.
-
-BTW, I see that the pipe changes were not in linux-next before being sent to
-Linus.  Please do this next time so that syzbot can find the obvious bugs before
-they reach mainline.  It's annoying having my system crash on latest mainline
-during normal use, due to a bug easily found in < 1 day by an automated system.
-
-- Eric
+greg k-h
