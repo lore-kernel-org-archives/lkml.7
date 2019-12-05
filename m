@@ -2,94 +2,311 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAD6C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBC7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D82921823
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41EA2464E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:04:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="Asq26IOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbfLEOEE (ORCPT
+        id S1729565AbfLEOEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 09:04:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:35414 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbfLEOEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 09:04:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42AE5328;
-        Thu,  5 Dec 2019 06:04:03 -0800 (PST)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BEE03F68E;
-        Thu,  5 Dec 2019 06:04:00 -0800 (PST)
-Subject: Re: [RFC 0/3] Introduce per-task latency_tolerance for scheduler
- hints
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        Parth Shah <parth@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        patrick.bellasi@matbug.net, qais.yousef@arm.com, pavel@ucw.cz,
-        dhaval.giani@oracle.com, qperret@qperret.net,
-        David.Laight@ACULAB.COM, morten.rasmussen@arm.com, pjt@google.com,
-        tj@kernel.org, viresh.kumar@linaro.org, rafael.j.wysocki@intel.com,
-        daniel.lezcano@linaro.org
-References: <20191125094618.30298-1-parth@linux.ibm.com>
- <450fc7e2-49d5-d809-281f-7d9a99d3e530@arm.com>
- <c26f7909-0e4e-a897-bf84-0aa9e5389a0d@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <838f233e-fa4c-d5a3-9b50-69e2e121edda@arm.com>
-Date:   Thu, 5 Dec 2019 15:03:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 5 Dec 2019 09:04:14 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:45830 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729099AbfLEOEO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 09:04:14 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r11so1331539pjp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 06:04:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t4U/eRKLWH+P5sMJLg1gBzVLKge0A2yZRS0R5HxW/2Q=;
+        b=Asq26IOS4TK4UH/qiyh65Rf6Gr9j+ebjMp/2ndN/f+KYSq7JoZhW7CZZ9l0NUtx7F/
+         D971GvtNwZ9/Qe+xfSy1AxrMHUomDx1ah/2ishZe6/U0/f+D78ScE6nZr2haNxoGneyD
+         1zGIhbom3N20ZR2ykUs4QpDlxZcovOxbWDBv0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t4U/eRKLWH+P5sMJLg1gBzVLKge0A2yZRS0R5HxW/2Q=;
+        b=RTFHSpAQnSWFelpr5iYeFLQFa/6w3Mq5TzEsqtPYbHKKd2XGudrLI+vYlaczZ5nniw
+         dEtCGW8gKDeYAdd0bz8TnxktHgufuAXMnbGZG7a6C7yIa3DGvfDf7DxK5WKpz83+a+7X
+         iCVGl53vPhwpje57leXJbN6535nR3LyWq4Kf8ylU6/TaQBVE9sv9p9swuvXYtchqSt6Z
+         IocvNuOAVd2qqRQlAagHBW/GYPfsuowYWH6ohALmy9fVBX2f//ppNvCmv7nAcgGyWCDz
+         4V9YZzt8I75UA19moyjKERr5n12AT5td4CzrTHboyhvc3XWuo+Sjg+dZVpLtKhnEm9Qc
+         qUOQ==
+X-Gm-Message-State: APjAAAVdIwBcsz1KOcxjXPmUBQKymj3a+zwOPY/1MvkvppQcGRlIFEEo
+        ouuCYItuf7IoVQnkpdiIMtVMdg==
+X-Google-Smtp-Source: APXvYqxGnHj16INKJIl3VHlcRQsBG6NIPPJh7U8CsqZ9o1m2ipnW1nsPbtHWYsdeFTLs3zRnM8rE8w==
+X-Received: by 2002:a17:902:54f:: with SMTP id 73mr9434121plf.213.1575554653485;
+        Thu, 05 Dec 2019 06:04:13 -0800 (PST)
+Received: from localhost (2001-44b8-111e-5c00-61b9-031c-bed1-3502.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:61b9:31c:bed1:3502])
+        by smtp.gmail.com with ESMTPSA id q185sm12628423pfq.110.2019.12.05.06.04.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 06:04:12 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        aryabinin@virtuozzo.com, glider@google.com,
+        linux-kernel@vger.kernel.org, dvyukov@google.com
+Cc:     daniel@iogearbox.net, cai@lca.pw, Daniel Axtens <dja@axtens.net>
+Subject: [PATCH 1/3] mm: add apply_to_existing_pages helper
+Date:   Fri,  6 Dec 2019 01:04:05 +1100
+Message-Id: <20191205140407.1874-1-dja@axtens.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <c26f7909-0e4e-a897-bf84-0aa9e5389a0d@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/12/2019 11:49, Valentin Schneider wrote:
->  
-> On 05/12/2019 09:24, Dietmar Eggemann wrote:
->> On 25/11/2019 10:46, Parth Shah wrote:
->>> This patch series is based on the discussion started as the "Usecases for
->>> the per-task latency-nice attribute"[1]
->>>
->>> This patch series introduces a new per-task attribute latency_tolerance to
->>> provide the scheduler hints about the latency requirements of the task.
->>
->> I forgot but is there a chance to have this as a per-taskgroup attribute
->> as well?
->>
-> 
-> Peter argued we should go for task attributes first, and then
-> cgroup/taskgroups later on:
-> 
-> https://lore.kernel.org/lkml/20190905083127.GA2332@hirez.programming.kicks-ass.net/
+apply_to_page_range takes an address range, and if any parts of it
+are not covered by the existing page table hierarchy, it allocates
+memory to fill them in.
 
-OK, I went through this thread again. So Google or we have to provide
-the missing per-taskgroup API via cpu controller's attributes (like for
-uclamp) for the EAS usecase.
+In some use cases, this is not what we want - we want to be able to
+operate exclusively on PTEs that are already in the tables.
 
-After reading:
+Add apply_to_existing_pages for this. Adjust the walker functions
+for apply_to_page_range to take 'create', which switches them between
+the old and new modes.
 
-https://lore.kernel.org/r/20190905114030.GL2349@hirez.programming.kicks-ass.net
+This will be used in KASAN vmalloc.
 
-IMHO the following mapping of the existing Android (binary)
-latency_sensitive per-taskgroup flag makes sense:
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+---
+ include/linux/mm.h |   3 ++
+ mm/memory.c        | 131 +++++++++++++++++++++++++++++++++------------
+ 2 files changed, 99 insertions(+), 35 deletions(-)
 
-latency_sensitive=1 -> latency_tolerance*[-20 .. -1] (less tolerant,
-more sensitive)
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index c97ea3b694e6..f4dba827d76e 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2621,6 +2621,9 @@ static inline int vm_fault_to_errno(vm_fault_t vm_fault, int foll_flags)
+ typedef int (*pte_fn_t)(pte_t *pte, unsigned long addr, void *data);
+ extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
+ 			       unsigned long size, pte_fn_t fn, void *data);
++extern int apply_to_existing_pages(struct mm_struct *mm, unsigned long address,
++				   unsigned long size, pte_fn_t fn,
++				   void *data);
+ 
+ #ifdef CONFIG_PAGE_POISONING
+ extern bool page_poisoning_enabled(void);
+diff --git a/mm/memory.c b/mm/memory.c
+index 606da187d1de..e508ba7e0a19 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2021,26 +2021,34 @@ EXPORT_SYMBOL(vm_iomap_memory);
+ 
+ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+ 				     unsigned long addr, unsigned long end,
+-				     pte_fn_t fn, void *data)
++				     pte_fn_t fn, void *data, bool create)
+ {
+ 	pte_t *pte;
+-	int err;
++	int err = 0;
+ 	spinlock_t *uninitialized_var(ptl);
+ 
+-	pte = (mm == &init_mm) ?
+-		pte_alloc_kernel(pmd, addr) :
+-		pte_alloc_map_lock(mm, pmd, addr, &ptl);
+-	if (!pte)
+-		return -ENOMEM;
++	if (create) {
++		pte = (mm == &init_mm) ?
++			pte_alloc_kernel(pmd, addr) :
++			pte_alloc_map_lock(mm, pmd, addr, &ptl);
++		if (!pte)
++			return -ENOMEM;
++	} else {
++		pte = (mm == &init_mm) ?
++			pte_offset_kernel(pmd, addr) :
++			pte_offset_map_lock(mm, pmd, addr, &ptl);
++	}
+ 
+ 	BUG_ON(pmd_huge(*pmd));
+ 
+ 	arch_enter_lazy_mmu_mode();
+ 
+ 	do {
+-		err = fn(pte++, addr, data);
+-		if (err)
+-			break;
++		if (create || !pte_none(*pte)) {
++			err = fn(pte++, addr, data);
++			if (err)
++				break;
++		}
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+ 	arch_leave_lazy_mmu_mode();
+@@ -2052,62 +2060,83 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+ 
+ static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
+ 				     unsigned long addr, unsigned long end,
+-				     pte_fn_t fn, void *data)
++				     pte_fn_t fn, void *data, bool create)
+ {
+ 	pmd_t *pmd;
+ 	unsigned long next;
+-	int err;
++	int err = 0;
+ 
+ 	BUG_ON(pud_huge(*pud));
+ 
+-	pmd = pmd_alloc(mm, pud, addr);
+-	if (!pmd)
+-		return -ENOMEM;
++	if (create) {
++		pmd = pmd_alloc(mm, pud, addr);
++		if (!pmd)
++			return -ENOMEM;
++	} else {
++		pmd = pmd_offset(pud, addr);
++	}
+ 	do {
+ 		next = pmd_addr_end(addr, end);
+-		err = apply_to_pte_range(mm, pmd, addr, next, fn, data);
+-		if (err)
+-			break;
++		if (create || !pmd_none_or_clear_bad(pmd)) {
++			err = apply_to_pte_range(mm, pmd, addr, next, fn, data,
++						 create);
++			if (err)
++				break;
++		}
+ 	} while (pmd++, addr = next, addr != end);
+ 	return err;
+ }
+ 
+ static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
+ 				     unsigned long addr, unsigned long end,
+-				     pte_fn_t fn, void *data)
++				     pte_fn_t fn, void *data, bool create)
+ {
+ 	pud_t *pud;
+ 	unsigned long next;
+-	int err;
++	int err = 0;
+ 
+-	pud = pud_alloc(mm, p4d, addr);
+-	if (!pud)
+-		return -ENOMEM;
++	if (create) {
++		pud = pud_alloc(mm, p4d, addr);
++		if (!pud)
++			return -ENOMEM;
++	} else {
++		pud = pud_offset(p4d, addr);
++	}
+ 	do {
+ 		next = pud_addr_end(addr, end);
+-		err = apply_to_pmd_range(mm, pud, addr, next, fn, data);
+-		if (err)
+-			break;
++		if (create || !pud_none_or_clear_bad(pud)) {
++			err = apply_to_pmd_range(mm, pud, addr, next, fn, data,
++						 create);
++			if (err)
++				break;
++		}
+ 	} while (pud++, addr = next, addr != end);
+ 	return err;
+ }
+ 
+ static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
+ 				     unsigned long addr, unsigned long end,
+-				     pte_fn_t fn, void *data)
++				     pte_fn_t fn, void *data, bool create)
+ {
+ 	p4d_t *p4d;
+ 	unsigned long next;
+-	int err;
++	int err = 0;
+ 
+-	p4d = p4d_alloc(mm, pgd, addr);
+-	if (!p4d)
+-		return -ENOMEM;
++	if (create) {
++		p4d = p4d_alloc(mm, pgd, addr);
++		if (!p4d)
++			return -ENOMEM;
++	} else {
++		p4d = p4d_offset(pgd, addr);
++	}
+ 	do {
+ 		next = p4d_addr_end(addr, end);
+-		err = apply_to_pud_range(mm, p4d, addr, next, fn, data);
+-		if (err)
+-			break;
++		if (create || !p4d_none_or_clear_bad(p4d)) {
++			err = apply_to_pud_range(mm, p4d, addr, next, fn, data,
++						 create);
++			if (err)
++				break;
++		}
+ 	} while (p4d++, addr = next, addr != end);
+ 	return err;
+ }
+@@ -2130,7 +2159,7 @@ int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+ 	pgd = pgd_offset(mm, addr);
+ 	do {
+ 		next = pgd_addr_end(addr, end);
+-		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data);
++		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data, true);
+ 		if (err)
+ 			break;
+ 	} while (pgd++, addr = next, addr != end);
+@@ -2139,6 +2168,38 @@ int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+ }
+ EXPORT_SYMBOL_GPL(apply_to_page_range);
+ 
++/*
++ * Scan a region of virtual memory, calling a provided function on
++ * each leaf page table where it exists.
++ *
++ * Unlike apply_to_page_range, this does _not_ fill in page tables
++ * where they are absent.
++ */
++int apply_to_existing_pages(struct mm_struct *mm, unsigned long addr,
++			    unsigned long size, pte_fn_t fn, void *data)
++{
++	pgd_t *pgd;
++	unsigned long next;
++	unsigned long end = addr + size;
++	int err = 0;
++
++	if (WARN_ON(addr >= end))
++		return -EINVAL;
++
++	pgd = pgd_offset(mm, addr);
++	do {
++		next = pgd_addr_end(addr, end);
++		if (pgd_none_or_clear_bad(pgd))
++			continue;
++		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data, false);
++		if (err)
++			break;
++	} while (pgd++, addr = next, addr != end);
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(apply_to_existing_pages);
++
+ /*
+  * handle_pte_fault chooses page fault handler according to an entry which was
+  * read non-atomically.  Before making any commitment, on those architectures
+-- 
+2.20.1
 
-latency_sensitive=0 -> latency_tolerance[0 .. 19] (more tolerant, less
-sensitive)
-
-Default value is 0 so not latency_sensitive.
-
-* Since we use [-20 .. 19] as values for latency_tolerance we could name
-it latency_nice. It's shorter ... ?
