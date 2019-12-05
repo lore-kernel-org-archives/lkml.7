@@ -2,249 +2,205 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B781C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF379C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA97A21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:49:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="e5KRiGJ+";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="izcisppH"
+	by mail.kernel.org (Postfix) with ESMTP id C0E21224F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575568251;
+	bh=IEqN5jALA/tA1YwYPL5ex66SSXu8AQtHWEUKdGhqRN4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=u1wKcfA+UM1vCrOY7wZbckeyXNfWuoobtQSTKj+q/872cAWCdbhlb8/llIdMgACFa
+	 78rzO5rbbmLIQOAhjp1fiwQ+IizORP0BqfR4VHdGckq7K4HWNgPFsGhRgcWFFaRGhm
+	 cHoWBGUsFpQo0VBGu449KTSW0FeQxbBqrT8ZK56E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbfLERt1 (ORCPT
+        id S1730281AbfLERuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 12:49:27 -0500
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:18202 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729711AbfLERt1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 12:49:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1575568167; x=1607104167;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=Nv+hKdooAxKdH7glM0Jj2+irDxDGqNkVa/qgilBCHLw=;
-  b=e5KRiGJ+PEJ8fsoDvb4DEjx0vM2OVXQuUqssIH6gyoyrrKzlJMN2xQBK
-   qq4G+kkCldllQQv07DT49vEk10IrHt7tatLbaMIu3vh3sW4i8NnsmT8L0
-   uvUDSRGXf4tj3eblR3cNLUC30YluPWY2OiJlwctFlEqg9ZIwe/U41bHLr
-   X01D6j/6KtrbqgkxJJPel6oPKFFuZC7QyO4cuAhrQmcFtUD1HTQkraq1f
-   RB+aIyUIbvgxi0zk9Q4JgAovtKiTYvsiKHK3UjlIQLBymM4f9pBqYsjbi
-   dKKpmxKbqMGL6AtIRQuBE2ZclChPrWWE18m7yl4Ak3QZ+ThaQ0mYpbpOu
-   A==;
-IronPort-SDR: N90IWYwHtka/3jr+sRCmL/gdNbzkS8rCVSWNO0wKCpjO8cqiYzv//LWN++g9ovfIDpTXIHWYcJ
- WGNvS1E/W4YUjRqpbvRaxf9MlsZUV0B98Jxj8iqYZiZLLkKwsndpj0XV5XvpNZSh0geOVlPs0d
- iBsVhGMCWUltiREaKNyCMF2ZRrHjmPZ5JOkvTI2Gh4ai6r9JBR1fvuU1XMpa8tD7EujW3LVbkf
- W8gE2a114eJptNpkuWUpLe7ddrXRYTjcJdZX/WOgiUO/iar9dTlY7sOKP+cq+iJGz1j2kBO9Ye
- QYw=
-X-IronPort-AV: E=Sophos;i="5.69,282,1571673600"; 
-   d="scan'208";a="126317378"
-Received: from mail-bn7nam10lp2102.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.102])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Dec 2019 01:49:21 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i5pQwroMe3CK2L+JZcZQKz1Y8cX3WTW+ZOJ4o4ocwAztPursYCUox3DNnoyxN9NneOM8nqiKNIwo00vY7uvVZZP1yjbyxtJ6nCFZGfQYW6wmvikjHgjuFyVl4qns7eW5/grfUap5jrQOpawiKPRIy5vRZtS6W4u5oJlTKaPjWOMKgjGYviqylJQKlCh+76P1hRDcKZMU7/n1bmHMNHNBfYvnJ3w/rz2TYALYO1BZOX8d1n9quRXc13YISPi+De6dmyDY4csNmheRz+Ifqgp8f34/FqDStJoio7A5ivihRiO5PK+xH8TBdGCv0Xk6ogSKm5Amcg/tlxcbzph69O+CgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UagiJ3yabGHLC/4UK5yBUQWCgrH9neO76NQ4ftHS9YQ=;
- b=JWgDuYUQA8IQ7IApOL8YQQpAFwBRMyrP6if62qiZDZT3TE2wif8l1vzhM6uZdqhcUcaghFaL2Le3fJQXMT/8QyOxeKQmaIVyZJh5RweaC1bur79IM7zZu4rkcTlVp7FDD/7DhkR4CKRlbnJb5SazpWyzUoy1rBsyc+hp+o8DAAfsnTaZTiOH2xYob6JT/7aBn5De5xM9NMrPdsRKKjZ4YE109jgcj2gF+1CJhnZ2lKXwMWSBXxwO9JtFBpgu0P/xSZ0JUShgYIxqA4JRLgCXxD+jvccLysqdZroTwE9+DcjJ3apoipfuOWGGQAnIxO48PjoCsAJKUD377TLnhSyU5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UagiJ3yabGHLC/4UK5yBUQWCgrH9neO76NQ4ftHS9YQ=;
- b=izcisppHVMUvZibO1kIxmpMxnjHXFE8n5PURRSTljvkiUEmZqMwpUQZRFA9F7Fme7dj8sqp4GJPvXNxjOMtsqL4EyqgCjTLdLWUWQy3bfde2ztUJHubdYlZ9SY70Sf1Uh/dQ4RUCO3zpVp7VQ4rHih97+jZraj7z60fUGoyuSwQ=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB6349.namprd04.prod.outlook.com (52.132.171.7) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.14; Thu, 5 Dec 2019 17:49:19 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::7949:d205:5ad1:1d30]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::7949:d205:5ad1:1d30%7]) with mapi id 15.20.2516.014; Thu, 5 Dec 2019
- 17:49:18 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-CC:     Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Anup Patel <anup@brainfault.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v2] RISC-V: Add fragmented config for debug options
-Thread-Topic: [PATCH v2] RISC-V: Add fragmented config for debug options
-Thread-Index: AQHVq5RRWtXKoOVpQ06lEm6d7kwovw==
-Date:   Thu, 5 Dec 2019 17:49:18 +0000
-Message-ID: <20191205174902.4935-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR03CA0021.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::34) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [199.255.44.170]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ab38c3c0-d51d-4b07-8185-08d779ab738b
-x-ms-traffictypediagnostic: MN2PR04MB6349:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB6349BF287A6FAEE0467582908D5C0@MN2PR04MB6349.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 02426D11FE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(39860400002)(136003)(396003)(376002)(189003)(199004)(2616005)(25786009)(99286004)(52116002)(186003)(54906003)(44832011)(316002)(4326008)(478600001)(14454004)(71200400001)(50226002)(36756003)(71190400001)(6506007)(102836004)(110136005)(81156014)(66556008)(66476007)(66446008)(66946007)(64756008)(8936002)(6486002)(6512007)(5660300002)(305945005)(1076003)(2906002)(8676002)(86362001)(81166006)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6349;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: M2i3qUBh4bXx2bgGlVy4L5xXQ/SIsT1xP6Ek04kuLfYtITtwCo0JEXmugFE2kH4cmQD5XI0cAoyR9P9BOFy5tOVDwF/gdaXGjt9aXc/k6Kl5FDRee8bSih9HL1kck57pAUe60OWZezPldQz5WRFSyxZzkoeyGbP1zOEZn1Rjv1X6b0Kn7t2IWn9TnrZ6vf8bydxLO1M2MuqO2eEU6eeQSmfbjauA76xxR42v6Im2MjcKRRWSPm7HASllJYde/hf8nynECSHBVvokCZeVeslcAER7ar5uN7xw1s32Ji6JxKYZH7LWK7LgnMmFmk8xVX//k+AMJiRNyY8jR1+JWRbBWz2ac1YUbqgIZ1itQnqlQg6sXSar6RQi5lLBbFpDR6WmOGauOsTgMUtVxtonPexZCwFZW0iI2uLHI6ndgtxycFubxgPsqPKmarfCmZ3Tyx+y
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 5 Dec 2019 12:50:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730003AbfLERuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 12:50:50 -0500
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 338D7224F8;
+        Thu,  5 Dec 2019 17:50:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575568249;
+        bh=IEqN5jALA/tA1YwYPL5ex66SSXu8AQtHWEUKdGhqRN4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jv3ZvTVd98uAIGB6m+6El9AuZjrji4nvWOsrKMNDD8TiCO5nT87xnA3Yf1QeziTxN
+         lk5rB0wL3h59uQ5dhlTyHfKZ30ogmZebK3SrY2JPBgIediOyDtZPGo0FWQSZ4cDplx
+         RsASs/RLUC1ViKTYH7YovnPzW8ckzMXRL5RuTDgg=
+Received: by mail-qv1-f45.google.com with SMTP id y8so1605386qvk.6;
+        Thu, 05 Dec 2019 09:50:49 -0800 (PST)
+X-Gm-Message-State: APjAAAXlNAYAE925RqL7cD/HeD+VNLzuIa1l++epG0vzSmkFKNgiQSia
+        bLB/omhMpO0MW6LJl4Hk5G94dZu0sXGwZH+Cfg==
+X-Google-Smtp-Source: APXvYqxvPvfcZUTfd2X07Gu3YCHbfqmczpAcwIz+b4jGQZwl3ynTJkYLAYgYk4otbiDmIz2Cwk7T274xtOb2NDzSwfs=
+X-Received: by 2002:ad4:450a:: with SMTP id k10mr8183566qvu.136.1575568248163;
+ Thu, 05 Dec 2019 09:50:48 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab38c3c0-d51d-4b07-8185-08d779ab738b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 17:49:18.6422
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: d4e0Y7wTaL23SMEMWzuVSCF+rsv0mHVp0D17zgqsIPFh+MMa49xEge7pOFs3d3GevomeaFxARvRrJJpTuAldWA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6349
+References: <cover.5630f63168ad5cddf02e9796106f8e086c196907.1575376664.git-series.andrew@aj.id.au>
+ <3da2492c244962c27b21aad87bfa6bf74f568f1d.1575376664.git-series.andrew@aj.id.au>
+ <CAL_Jsq+3qXJbTu9G42g11PLJH-A0XeSQmJKj0obO32QFna3dEA@mail.gmail.com> <40d554c0-de62-4d45-bbcc-dd3a3aa12a65@www.fastmail.com>
+In-Reply-To: <40d554c0-de62-4d45-bbcc-dd3a3aa12a65@www.fastmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 5 Dec 2019 11:50:36 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLgmU8m-zT8-K=peENshJx7Gx2Hn9RoZ-zbnqLUmqBQpw@mail.gmail.com>
+Message-ID: <CAL_JsqLgmU8m-zT8-K=peENshJx7Gx2Hn9RoZ-zbnqLUmqBQpw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: ipmi: aspeed: Introduce a v2 binding for KCS
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     openipmi-developer@lists.sourceforge.net,
+        Corey Minyard <minyard@acm.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Various Linux kernel DEBUG options have big performance impact so
-these should not be enabled in RISC-V normal defconfigs.
+On Wed, Dec 4, 2019 at 11:12 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+>
+>
+> On Wed, 4 Dec 2019, at 01:01, Rob Herring wrote:
+> > On Tue, Dec 3, 2019 at 6:36 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> > >
+> > > The v2 binding utilises reg and renames some of the v1 properties.
+> > >
+> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > ---
+> > >  Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt | 20 +++++---
+> > >  1 file changed, 14 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt b/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
+> > > index d98a9bf45d6c..76b180ebbde4 100644
+> > > --- a/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
+> > > +++ b/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
+> > > @@ -1,9 +1,10 @@
+> > > -* Aspeed KCS (Keyboard Controller Style) IPMI interface
+> > > +# Aspeed KCS (Keyboard Controller Style) IPMI interface
+> > >
+> > >  The Aspeed SOCs (AST2400 and AST2500) are commonly used as BMCs
+> > >  (Baseboard Management Controllers) and the KCS interface can be
+> > >  used to perform in-band IPMI communication with their host.
+> > >
+> > > +## v1
+> > >  Required properties:
+> > >  - compatible : should be one of
+> > >      "aspeed,ast2400-kcs-bmc"
+> > > @@ -12,14 +13,21 @@ Required properties:
+> > >  - kcs_chan : The LPC channel number in the controller
+> > >  - kcs_addr : The host CPU IO map address
+> > >
+> > > +## v2
+> > > +Required properties:
+> > > +- compatible : should be one of
+> > > +    "aspeed,ast2400-kcs-bmc-v2"
+> > > +    "aspeed,ast2500-kcs-bmc-v2"
+> > > +- reg : The address and size of the IDR, ODR and STR registers
+> > > +- interrupts : interrupt generated by the controller
+> > > +- slave-reg : The host CPU IO map address
+> >
+> > aspeed,slave-reg
+>
+> I don't agree, as it's not an aspeed-specific behaviour. This property
+> controls where the device appears in the host's LPC IO address space,
+> which is a common problem for any LPC IO device exposed by the BMC
+> to the host.
 
-Instead we should have separate RISC-V fragmented config for enabling
-these DEBUG options. This way Linux RISC-V kernel can be built for
-both non-debug and debug purposes using same defconfig.
+Then document it as such. Common properties go into common binding documents.
 
-This patch moves additional DEBUG options to extra_debug.config.
+> > >  Example:
+> > >
+> > > -    kcs3: kcs3@0 {
+> > > -        compatible = "aspeed,ast2500-kcs-bmc";
+> > > -        reg = <0x0 0x80>;
+> > > +    kcs3: kcs@24 {
+> > > +        compatible = "aspeed,ast2500-kcs-bmc-v2";
+> > > +        reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
+> >
+> > What are the other registers in this address space? I'm not so sure
+> > this is an improvement if you end up with a bunch of nodes with single
+> > registers.
+>
+> Put into practice the bindings give the following patch: on the AST2500:
 
-To configure a non-debug RV64 kernel, we use our normal defconfig:
-   $ make O=3D<linux_build_directory> defconfig
-Wherease to configure a debug RV64 kernel, we use extra_debug.config:
-   $ make O=3D<linux_build_directory> defconfig extra_debug.config
+Okay, that's an unfortunate interleaving, but seems fine.
 
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
----
-Changes since v1:
- - Use fragmented .config instead of separate debug defconfigs.
----
- arch/riscv/configs/defconfig          | 23 -----------------------
- arch/riscv/configs/extra_debug.config | 21 +++++++++++++++++++++
- arch/riscv/configs/rv32_defconfig     | 23 -----------------------
- 3 files changed, 21 insertions(+), 46 deletions(-)
- create mode 100644 arch/riscv/configs/extra_debug.config
-
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index e2ff95cb3390..f0710d8f50cc 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -101,27 +101,4 @@ CONFIG_CRYPTO_USER_API_HASH=3Dy
- CONFIG_CRYPTO_DEV_VIRTIO=3Dy
- CONFIG_PRINTK_TIME=3Dy
- CONFIG_DEBUG_FS=3Dy
--CONFIG_DEBUG_PAGEALLOC=3Dy
--CONFIG_DEBUG_VM=3Dy
--CONFIG_DEBUG_VM_PGFLAGS=3Dy
--CONFIG_DEBUG_MEMORY_INIT=3Dy
--CONFIG_DEBUG_PER_CPU_MAPS=3Dy
--CONFIG_SOFTLOCKUP_DETECTOR=3Dy
--CONFIG_WQ_WATCHDOG=3Dy
--CONFIG_SCHED_STACK_END_CHECK=3Dy
--CONFIG_DEBUG_TIMEKEEPING=3Dy
--CONFIG_DEBUG_RT_MUTEXES=3Dy
--CONFIG_DEBUG_SPINLOCK=3Dy
--CONFIG_DEBUG_MUTEXES=3Dy
--CONFIG_DEBUG_RWSEMS=3Dy
--CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
--CONFIG_STACKTRACE=3Dy
--CONFIG_DEBUG_LIST=3Dy
--CONFIG_DEBUG_PLIST=3Dy
--CONFIG_DEBUG_SG=3Dy
- # CONFIG_RCU_TRACE is not set
--CONFIG_RCU_EQS_DEBUG=3Dy
--CONFIG_DEBUG_BLOCK_EXT_DEVT=3Dy
--# CONFIG_FTRACE is not set
--# CONFIG_RUNTIME_TESTING_MENU is not set
--CONFIG_MEMTEST=3Dy
-diff --git a/arch/riscv/configs/extra_debug.config b/arch/riscv/configs/ext=
-ra_debug.config
-new file mode 100644
-index 000000000000..66c58bb645a4
---- /dev/null
-+++ b/arch/riscv/configs/extra_debug.config
-@@ -0,0 +1,21 @@
-+CONFIG_DEBUG_PAGEALLOC=3Dy
-+CONFIG_DEBUG_VM=3Dy
-+CONFIG_DEBUG_VM_PGFLAGS=3Dy
-+CONFIG_DEBUG_MEMORY_INIT=3Dy
-+CONFIG_DEBUG_PER_CPU_MAPS=3Dy
-+CONFIG_SOFTLOCKUP_DETECTOR=3Dy
-+CONFIG_WQ_WATCHDOG=3Dy
-+CONFIG_SCHED_STACK_END_CHECK=3Dy
-+CONFIG_DEBUG_TIMEKEEPING=3Dy
-+CONFIG_DEBUG_RT_MUTEXES=3Dy
-+CONFIG_DEBUG_SPINLOCK=3Dy
-+CONFIG_DEBUG_MUTEXES=3Dy
-+CONFIG_DEBUG_RWSEMS=3Dy
-+CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
-+CONFIG_STACKTRACE=3Dy
-+CONFIG_DEBUG_LIST=3Dy
-+CONFIG_DEBUG_PLIST=3Dy
-+CONFIG_DEBUG_SG=3Dy
-+CONFIG_RCU_EQS_DEBUG=3Dy
-+CONFIG_DEBUG_BLOCK_EXT_DEVT=3Dy
-+CONFIG_MEMTEST=3Dy
-diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_de=
-fconfig
-index eb519407c841..bdec58e6c5f7 100644
---- a/arch/riscv/configs/rv32_defconfig
-+++ b/arch/riscv/configs/rv32_defconfig
-@@ -98,27 +98,4 @@ CONFIG_CRYPTO_USER_API_HASH=3Dy
- CONFIG_CRYPTO_DEV_VIRTIO=3Dy
- CONFIG_PRINTK_TIME=3Dy
- CONFIG_DEBUG_FS=3Dy
--CONFIG_DEBUG_PAGEALLOC=3Dy
--CONFIG_DEBUG_VM=3Dy
--CONFIG_DEBUG_VM_PGFLAGS=3Dy
--CONFIG_DEBUG_MEMORY_INIT=3Dy
--CONFIG_DEBUG_PER_CPU_MAPS=3Dy
--CONFIG_SOFTLOCKUP_DETECTOR=3Dy
--CONFIG_WQ_WATCHDOG=3Dy
--CONFIG_SCHED_STACK_END_CHECK=3Dy
--CONFIG_DEBUG_TIMEKEEPING=3Dy
--CONFIG_DEBUG_RT_MUTEXES=3Dy
--CONFIG_DEBUG_SPINLOCK=3Dy
--CONFIG_DEBUG_MUTEXES=3Dy
--CONFIG_DEBUG_RWSEMS=3Dy
--CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
--CONFIG_STACKTRACE=3Dy
--CONFIG_DEBUG_LIST=3Dy
--CONFIG_DEBUG_PLIST=3Dy
--CONFIG_DEBUG_SG=3Dy
- # CONFIG_RCU_TRACE is not set
--CONFIG_RCU_EQS_DEBUG=3Dy
--CONFIG_DEBUG_BLOCK_EXT_DEVT=3Dy
--# CONFIG_FTRACE is not set
--# CONFIG_RUNTIME_TESTING_MENU is not set
--CONFIG_MEMTEST=3Dy
---=20
-2.17.1
-
+>
+> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+> index e8feb8b66a2f..5d51f469cbf0 100644
+> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+> @@ -399,22 +399,22 @@
+>                                         #size-cells = <1>;
+>                                         ranges = <0x0 0x0 0x80>;
+>
+> -                                       kcs1: kcs1@0 {
+> -                                               compatible = "aspeed,ast2500-kcs-bmc";
+> +                                       kcs1: kcs@24 {
+> +                                               compatible = "aspeed,ast2500-kcs-bmc-v2";
+> +                                               reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
+>                                                 interrupts = <8>;
+> -                                               kcs_chan = <1>;
+>                                                 status = "disabled";
+>                                         };
+> -                                       kcs2: kcs2@0 {
+> -                                               compatible = "aspeed,ast2500-kcs-bmc";
+> +                                       kcs2: kcs@28 {
+> +                                               compatible = "aspeed,ast2500-kcs-bmc-v2";
+> +                                               reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
+>                                                 interrupts = <8>;
+> -                                               kcs_chan = <2>;
+>                                                 status = "disabled";
+>                                         };
+> -                                       kcs3: kcs3@0 {
+> -                                               compatible = "aspeed,ast2500-kcs-bmc";
+> +                                       kcs3: kcs@2c {
+> +                                               compatible = "aspeed,ast2500-kcs-bmc-v2";
+> +                                               reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
+>                                                 interrupts = <8>;
+> -                                               kcs_chan = <3>;
+>                                                 status = "disabled";
+>                                         };
+>                                 };
+> @@ -428,10 +428,10 @@
+>                                         #size-cells = <1>;
+>                                         ranges = <0x0 0x80 0x1e0>;
+>
+> -                                       kcs4: kcs4@0 {
+> -                                               compatible = "aspeed,ast2500-kcs-bmc";
+> +                                       kcs4: kcs@94 {
+> +                                               compatible = "aspeed,ast2500-kcs-bmc-v2";
+> +                                               reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
+>                                                 interrupts = <8>;
+> -                                               kcs_chan = <4>;
+>                                                 status = "disabled";
+>                                         };
+>
+> The aim is to fix these warnings which appear for every aspeed-based devicetree:
+>
+>         arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: node has a unit name, but no reg property
+>         arch/arm/boot/dts/aspeed-g5.dtsi:382.19-387.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0: node has a unit name, but no reg property
+>         arch/arm/boot/dts/aspeed-g5.dtsi:388.19-393.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0: node has a unit name, but no reg property
+>         arch/arm/boot/dts/aspeed-g5.dtsi:405.19-410.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-host@80/kcs4@0: node has a unit name, but no reg property
+>         arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0)
+>         arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0)
+>         arch/arm/boot/dts/aspeed-g5.dtsi:382.19-387.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0)
+>         arch/arm/boot/dts/aspeed-g5.dtsi:405.19-410.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-host@80/kcs4@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-host@80/lpc-ctrl@0)
+>
+> Andrew
