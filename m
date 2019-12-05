@@ -7,63 +7,65 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D853FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E717C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E70420675
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B95B72464E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:05:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="poq9slUM"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="tD2M7TNf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbfLESFL (ORCPT
+        id S1730347AbfLESFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 13:05:11 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:43958 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729022AbfLESFL (ORCPT
+        Thu, 5 Dec 2019 13:05:15 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41598 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729022AbfLESFN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 13:05:11 -0500
-Received: by mail-pj1-f68.google.com with SMTP id g4so1587344pjs.10
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 10:05:10 -0800 (PST)
+        Thu, 5 Dec 2019 13:05:13 -0500
+Received: by mail-pf1-f196.google.com with SMTP id s18so1960955pfd.8
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 10:05:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v97x35mcpN8JQ3xNEjelWQZ7gcIwbkYh1aMgJhhWZpo=;
-        b=poq9slUM5UFrWvspWWqsQ3Lsf9nfuNepIAWjbcyJJIxIHo1rlExOZnM9HC0dVOIvFQ
-         brQQ9mxhT7n2oNzlIfxnV1cE+gW6rr3eudRp79uoNFJKQxJlhrnnwMMrUmaRrAMuluoW
-         9A6MZNclwv+KZPuui7NwYZsYr/T/QPK/ObM6Isuh6MGvUh5h3VYx4FaYThwQyXMS5wOW
-         hFu+/LPwkDS6XhIHYPYkLX45/kz8U7JPao/00mGgzkQbSUnpBZ8No0F85PLLz572RRh4
-         A5RmeNZEdh6rC/4g2QoTi5pwYSBZTC0g9ZfGW36NrApHJWX3cgWEv2rjnQXm3SYNKyde
-         bauQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Wnx8aWFPrdZWJZChkqkTTs9tF6XG+P/6HVuY6YT0MRU=;
+        b=tD2M7TNfnbyfVPQALlAdrBpqv5t52tq4bBD89QgBrM7wLdUcYI/1NrXe8pYeaHkA6M
+         Qg8lJY5Mkaxbsy/J5nHrofQbP0LoBU803ar7U/JtHUJYkVMpbSjzFz7yNSuz1Ywp9Z4A
+         2w6MNeH6YUeku3yvyDxhqkURrZPG9rvpWaTMGAVpLbD185M3zJ2j/Weez5Ryf530gc0n
+         IFiH4rQ/OkBz+TYQqOQweBxwawwasjSTPhKMBFoBh0xidYAM/zWJdz9zVWZgY8ebHsXd
+         keeQbb6m3cDhtgHQ4OJczQwaTJa7ceA7xDGhzpuHhYZ4KYfF23Q8m8sc/K602U93/m4y
+         zmHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v97x35mcpN8JQ3xNEjelWQZ7gcIwbkYh1aMgJhhWZpo=;
-        b=ek1g6sFfPLHO1aHbdzCKm+/O3kjyRTYlFQQ3+X5XqjpmIXHazYubGeYusTWfNsKQwM
-         NY02pQTCYud5p0PHij5ri1WEExJ7KsrbE4YvmIgGLgXWxkYCziL47yH2Dh1eG5o9BChg
-         SZwjHcntyheVZXZ2ae8EEE34WmRVIDV4QpSd6DQc89G68kEn2D7LfkpuAPP2eTo8sjO/
-         JGA71NlpmUTeii+TBPwDnNkF/Y9Q/joxMyu0yic7hGkSmP70VqtGC67v2xKw952MQnGl
-         CilfB8PY0HBrGXthL6xdGrIrGiSE2v0t5qM+W5rAvFe5o3ZUwpQqNMjfFNuJLRcfb7Od
-         +mDg==
-X-Gm-Message-State: APjAAAXbWmxNgOetHoEu7T+V24TP/ZxTSZdijya4kWGkBF+/rvasM+IF
-        ADEWOaNXe/R4VRPOj4grNdF1PQ==
-X-Google-Smtp-Source: APXvYqwu3nB0FGPlKtOCNzKkFM2Ty+s87nejfHhWpj1pojZVwTSYW/34PSqIRjkuCg3mWA77YqYbcg==
-X-Received: by 2002:a17:902:700c:: with SMTP id y12mr10026365plk.227.1575569109861;
-        Thu, 05 Dec 2019 10:05:09 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Wnx8aWFPrdZWJZChkqkTTs9tF6XG+P/6HVuY6YT0MRU=;
+        b=l2fuaQcVHk5cxPh01cudAu3pfe8VYD9AtiGtkWBOi8zgHapQjH3u8oN2mHrKhLwQ1g
+         mvBbbwd7JRdsbLFvKyUcsdh9evIpzAm+b/gWkBWQdgLGEQ2woQ9K90+rqr4BmBCk//od
+         X/DjxY2fQvMsm/iG5AySRxTNIE1g/NYIRPuMTBtU3b5q4B9hx6a1k2v1x6+igkzcxD/e
+         JAuZRtMPgJfXTisGmaaMWfttomaVDvceSgHp1e9/cSRwqF0KIG/ZKJatnk/nTHWxrOed
+         fCmPgi0iEafOMKbvBgRycrx+kbzUPb8PpjWmP77VBlQ7n49bNM2YBibPFdUClxx6gQs5
+         TubA==
+X-Gm-Message-State: APjAAAUTTV6hfxnWNQG5mI18cRNMxsU2DoAka+JWDHJPJuQkvNLm7nlr
+        Z6Ck98e28RhHVBUDtIR53RwmMg==
+X-Google-Smtp-Source: APXvYqzGbHYRL7CJ0Ga9/+jWoC95yB5uVapEgVqmZSc+1m1XAr5HrQ1n2q8XPlg2O+doMsU2BdtL+w==
+X-Received: by 2002:a63:1f16:: with SMTP id f22mr10225135pgf.2.1575569112047;
+        Thu, 05 Dec 2019 10:05:12 -0800 (PST)
 Received: from localhost.localdomain (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
-        by smtp.gmail.com with ESMTPSA id s22sm386918pjr.5.2019.12.05.10.05.07
+        by smtp.gmail.com with ESMTPSA id s22sm386918pjr.5.2019.12.05.10.05.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Dec 2019 10:05:08 -0800 (PST)
+        Thu, 05 Dec 2019 10:05:10 -0800 (PST)
 From:   Olof Johansson <olof@lixom.net>
 To:     torvalds@linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         soc@kernel.org, arm@kernel.org, Olof Johansson <olof@lixom.net>
-Subject: [GIT PULL 1/4] ARM: SoC platform updates
-Date:   Thu,  5 Dec 2019 10:04:50 -0800
-Message-Id: <20191205180453.14056-1-olof@lixom.net>
+Subject: [GIT PULL 2/4] ARM: SoC-related driver updates
+Date:   Thu,  5 Dec 2019 10:04:51 -0800
+Message-Id: <20191205180453.14056-2-olof@lixom.net>
 X-Mailer: git-send-email 2.22.GIT
+In-Reply-To: <20191205180453.14056-1-olof@lixom.net>
+References: <20191205180453.14056-1-olof@lixom.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -72,215 +74,480 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most of these are for MMP (seeing a bunch of cleanups and refactorings
-for the first time in a while), and for OMAP (a bunch of cleanups and
-added support for voltage controller on OMAP4430).
+Various driver updates for platforms:
 
-Conflicts:
+- A larger set of work on Tegra 2/3 around memory controller and
+regulator features, some fuse cleanups, etc..
 
-include/Kbuild: File deleted in mainline, just git rm here as well.
+- MMP platform drivers, in particular for USB PHY, and other smaller
+additions.
+
+- Samsung Exynos 5422 driver for DMC (dynamic memory configuration),
+and ASV (adaptive voltage), allowing the platform to run at more
+optimal operating points.
+
+- Misc refactorings and support for RZ/G2N and R8A774B1 from Renesas
+
+- Clock/reset control driver for TI/OMAP
+
+- Meson-A1 reset controller support
+
+- Qualcomm sdm845 and sda845 SoC IDs for socinfo
+
+
+Conflicts: None
 
 ----------------------------------------------------------------
 
-The following changes since commit 2f13437b8917627119d163d62f73e7a78a92303a:
+The following changes since commit 1334a11c1c6f3e5603acfc8d39215110e3087d64:
 
-  Merge tag 'trace-v5.5-2' of git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace
+  Merge tag 'armsoc-soc' into HEAD
 
 are available in the git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-soc
+  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-drivers
 
-for you to fetch changes up to ab818f0999dc73af3f966194d087e9f6650f939f:
+for you to fetch changes up to 3f6939aec712a15152c32516c1c543a91ac1e717:
 
-  Merge tag 'omap-for-v5.5/maintainers-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap into arm/soc
+  Merge tag 'scmi-fix-5.5' of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into arm/drivers
 
 ----------------------------------------------------------------
 
-Adam Ford (1):
-      MAINTAINERS: Add logicpd-som-lv and logicpd-torpedo to OMAP TREE
-
 Andreas Färber (2):
-      MAINTAINERS: Add mailing list for Realtek SoCs
-      arm64: realtek: Select reset controller
+      reset: simple: Keep alphabetical order
+      reset: simple: Add Realtek RTD1195/RTD1295
 
-Andrey Smirnov (1):
-      ARM: imx: Drop imx_anatop_usb_chrg_detect_disable()
+Andy Shevchenko (2):
+      firmware: meson_sm: use %*ph to print small buffer
+      reset: Remove copy'n'paste redundancy in the comments
 
-Anson Huang (1):
-      ARM: imx: Add serial number support for i.MX6/7 SoCs
+Angelo G. Del Regno (2):
+      soc: qcom: smd-rpm: Add MSM8976 compatible
+      dt-bindings: power: Add missing rpmpd smd performance level
 
-Ben Dooks (6):
-      ARM: bcm: include local platsmp.h for bcm2836_smp_ops
-      ARM: bcm: fix missing __iomem in bcm_kona_smc.c
-      ARM: OMAP2+: do not export am43xx_control functions
-      ARM: OMAP2+: make dra7xx_sha0_hwmod static
-      ARM: OMAP2+: prm44xx: make prm_{save,restore}_context static
-      ARM: OMAP2+: make omap44xx_sha0_hwmod and omap44xx_l3_main_2__des static
+AngeloGioacchino Del Regno (1):
+      soc: qcom: rpmpd: Add rpm power domains for msm8976
+
+Anson Huang (3):
+      firmware: imx: Skip return value check for some special SCU firmware APIs
+      soc: imx8: Using existing serial_number instead of UID
+      soc: imx-scu: Using existing serial_number instead of UID
 
 Ben Dooks (Codethink) (1):
-      OMAP2: fixup doc comments in omap_device
+      firmware: imx: add missing include of <linux/firmware/imx/sci.h>
 
-Dmitry Osipenko (2):
-      ARM: tegra: Fix FLOW_CTLR_HALT register clobbering by tegra_resume()
-      ARM: tegra: Use WFE for power-gating on Tegra30
+Biju Das (4):
+      soc: renesas: Add Renesas R8A774B1 config option
+      soc: renesas: Identify RZ/G2N
+      soc: renesas: rcar-rst: Add support for RZ/G2N
+      soc: renesas: rcar-sysc: Add r8a774b1 support
 
-Florian Fainelli (1):
-      Merge tag 'tags/bcm2835-soc-next-2019-10-15' into soc/next
+Bjorn Andersson (1):
+      MAINTAINERS: Add myself as co-maintainer for QCOM
 
-Geert Uytterhoeven (1):
-      ARM: shmobile: rcar-gen2: Drop legacy DT clock support
+Carlo Caione (3):
+      firmware: meson_sm: Mark chip struct as static const
+      nvmem: meson-efuse: bindings: Add secure-monitor phandle
+      firmware: meson_sm: Rework driver as a proper platform driver
 
-Jonathan Neuschäfer (1):
-      ARM: OMAP1: ams-delta FIQ: Fix a typo ("Initiaize")
+Christian Hewitt (2):
+      soc: amlogic: meson-gx-socinfo: Add S905X3 ID for VIM3L
+      soc: amlogic: meson-gx-socinfo: Fix S905D3 ID for VIM3L
 
-Kefeng Wang (1):
-      ARM: hisi: drop useless depend on ARCH_MULTI_V7
+Colin Ian King (1):
+      memory: samsung: exynos5422-dmc: Fix spelling mistake "counld" -> "could"
 
-Krzysztof Kozlowski (2):
-      ARM: s3c: Rename s3c64xx_spi_setname() function
-      ARM: s3c: Rename s5p_usb_phy functions
+Dan Carpenter (1):
+      soc: samsung: exynos-asv: Potential NULL dereference in exynos_asv_update_opps()
 
-Lubomir Rintel (10):
-      ARM: l2c: add definition for FWA in PL310 aux register
-      ARM: mmp: don't select CACHE_TAUROS2 on all ARCH_MMP
-      ARM: mmp: map the PGU as well
-      ARM: mmp: DT: convert timer driver to use TIMER_OF_DECLARE
-      ARM: mmp: define MMP_CHIPID by the means of CIU_REG()
-      ARM: mmp: add support for MMP3 SoC
-      ARM: mmp: add SMP support
-      ARM: mmp: move cputype.h to include/linux/soc/
-      ARM: mmp: remove MMP3 USB PHY registers from regs-usb.h
-      MAINTAINERS: mmp: add Git repository
+Daniel Baluta (1):
+      firmware: imx: Remove call to devm_of_platform_populate
 
-Markus Elfring (1):
-      ARM: OMAP2+: Add missing put_device() call in omapdss_init_of()
+Dinh Nguyen (1):
+      reset: build simple reset controller driver for Agilex
 
-Mihaela Martinas (1):
-      arm64: Introduce config for S32
+Dmitry Osipenko (14):
+      soc/tegra: regulators: Add regulators coupler for Tegra20
+      soc/tegra: regulators: Add regulators coupler for Tegra30
+      soc/tegra: pmc: Query PCLK clock rate at probe time
+      soc/tegra: pmc: Remove unnecessary memory barrier
+      memory: tegra: Don't set EMC rate to maximum on probe for Tegra20
+      memory: tegra: Adapt for Tegra20 clock driver changes
+      memory: tegra: Include io.h instead of iopoll.h
+      memory: tegra: Pre-configure debug register on Tegra20
+      memory: tegra: Print a brief info message about EMC timings
+      memory: tegra: Increase handshake timeout on Tegra20
+      memory: tegra: Do not handle error from wait_for_completion_timeout()
+      memory: tegra: Introduce Tegra30 EMC driver
+      memory: tegra: Ensure timing control debug features are disabled
+      memory: tegra: Consolidate registers definition into common header
 
-Olof Johansson (11):
-      Merge tag 'mmp-soc-for-v5.5-2' of git://git.kernel.org/.../lkundrak/linux-mmp into arm/soc
-      Merge tag 'arm-soc/for-5.5/soc' of https://github.com/Broadcom/stblinux into arm/soc
-      Merge tag 'omap-for-v5.5/soc-signed' of git://git.kernel.org/.../tmlind/linux-omap into arm/soc
-      Merge tag 'realtek-arm64-soc-for-5.5' of git://git.kernel.org/.../afaerber/linux-realtek into arm/soc
-      Merge tag 'hisi-armv7-soc-for-5.5' of git://github.com/hisilicon/linux-hisi into arm/soc
-      Merge tag 'renesas-arm-soc-for-v5.5-tag1' of git://git.kernel.org/.../geert/renesas-devel into arm/soc
-      Merge tag 'tegra-for-5.5-arm-core' of git://git.kernel.org/.../tegra/linux into arm/soc
-      Merge tag 'samsung-soc-5.5' of https://git.kernel.org/.../krzk/linux into arm/soc
-      Merge tag 'imx-soc-5.5' of git://git.kernel.org/.../shawnguo/linux into arm/soc
-      Merge tag 'omap-for-v5.5/soc-late-signed' of git://git.kernel.org/.../tmlind/linux-omap into arm/soc
-      Merge tag 'omap-for-v5.5/maintainers-signed' of git://git.kernel.org/.../tmlind/linux-omap into arm/soc
+Florian Fainelli (2):
+      memory: brcmstb: dpfe: Compute checksum at __send_command() time
+      memory: brcmstb: dpfe: Fixup API version/commands for 7211
 
-Sebastian Reichel (1):
-      ARM: OMAP2+: pdata-quirks: drop TI_ST/KIM support
+Geert Uytterhoeven (17):
+      soc: renesas: rcar-sysc: Prepare for fixing power request conflicts
+      soc: renesas: r8a7795-sysc: Fix power request conflicts
+      soc: renesas: r8a7796-sysc: Fix power request conflicts
+      soc: renesas: r8a77965-sysc: Fix power request conflicts
+      soc: renesas: r8a77970-sysc: Fix power request conflicts
+      soc: renesas: r8a77980-sysc: Fix power request conflicts
+      soc: renesas: r8a77990-sysc: Fix power request conflicts
+      soc: renesas: r8a774c0-sysc: Fix power request conflicts
+      soc: renesas: rcar-sysc: Remove unneeded inclusion of <linux/bug.h>
+      soc: renesas: Add missing check for non-zero product register address
+      Merge tag 'renesas-r8a77961-dt-binding-defs-tag' into renesas-drivers-for-v5.5
+      soc: renesas: Rename SYSC_R8A7796 to SYSC_R8A77960
+      soc: renesas: Add ARCH_R8A77960 for existing R-Car M3-W
+      soc: renesas: Add ARCH_R8A77961 for new R-Car M3-W+
+      soc: renesas: Identify R-Car M3-W+
+      soc: renesas: rcar-rst: Add R8A77961 support
+      soc: renesas: rcar-sysc: Add R8A77961 support
 
-Stefan Agner (1):
-      ARM: imx: use generic function to exit coherency
+Georgi Djakov (1):
+      soc: qcom: smd-rpm: Create RPM interconnect proxy child device
 
-Stefan Wahren (1):
-      ARM: bcm: Add support for BCM2711 SoC
+Jerome Brunet (2):
+      reset: dt-bindings: meson: update arb bindings for sm1
+      reset: meson-audio-arb: add sm1 support
 
-Sylwester Nawrocki (1):
-      ARM: exynos: Enable exynos-asv driver for ARCH_EXYNOS
+Jianxin Pan (1):
+      soc: amlogic: meson-gx-socinfo: Add A1 and A113L IDs
 
-Tao Ren (1):
-      ARM: ASPEED: update default ARCH_NR_GPIO for ARCH_ASPEED
+John Garry (5):
+      lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration
+      logic_pio: Define PIO_INDIRECT_SIZE for !CONFIG_INDIRECT_PIO
+      bus: hisi_lpc: Clean some types
+      bus: hisi_lpc: Expand build test coverage
+      logic_pio: Build into a library
 
-Tony Lindgren (14):
-      ARM: OMAP2+: Remove unused wakeup_cpu
-      ARM: OMAP2+: Drop bogus wkup domain oswr setting
-      ARM: OMAP2+: Remove bogus warnings for machines without twl PMIC
-      ARM: OMAP2+: Update 4430 voltage controller operating points
-      ARM: OMAP2+: Configure voltage controller for cpcap
-      ARM: OMAP2+: Allow per oswr for omap4
-      ARM: OMAP2+: Allow core oswr for omap4
-      ARM: OMAP2+: Initialize voltage controller for omap4
-      ARM: OMAP2+: Drop unused enable_wakeup and disable_wakeup
-      ARM: OMAP2+: Simplify code for clkdm_clock_enable and disable
-      ARM: OMAP2+: Configure voltage controller for retention
-      ARM: OMAP2+: Configure voltage controller for cpcap to low-speed
-      Merge branch 'omap-for-v5.5/pm' into omap-for-v5.5/soc
-      Merge branch 'omap-for-v5.5/omap1' into omap-for-v5.5/soc
+Jolly Shah (2):
+      dt-bindings: firmware: Add bindings for Versal firmware
+      firmware: xilinx: Add support for versal soc
 
-Uwe Kleine-König (1):
-      ARM: OMAP1: drop duplicated dependency on ARCH_OMAP1
+Kamel Bouhara (1):
+      soc: at91: Add Atmel SFR SN (Serial Number) support
+
+Krzysztof Kozlowski (1):
+      Merge tag 'opp-5.4-support-adjust-voltages' of https://git.kernel.org/.../vireshk/pm into next/drivers
+
+Kunihiko Hayashi (1):
+      reset: uniphier-glue: Add Pro5 USB3 support
+
+Leonard Crestez (2):
+      firmware: imx: warn on unexpected RX
+      soc: imx8mq: Read SOC revision from TF-A
+
+Lubomir Rintel (2):
+      phy: Add USB2 PHY driver for Marvell MMP3 SoC
+      MAINTAINERS: phy: add entry for USB PHY drivers on MMP SoCs
+
+Lukasz Luba (4):
+      memory: Extend of_memory with LPDDR3 support
+      memory: Add DMC driver for Exynos5422
+      memory: samsung: exynos5422-dmc: Fix kfree() of devm-allocated memory and missing static
+      memory: samsung: exynos5422-dmc: Add support for interrupt from performance counters
+
+Markus Mayer (6):
+      memory: brcmstb: dpfe: rename struct private_data
+      memory: brcmstb: dpfe: initialize priv->dev
+      memory: brcmstb: dpfe: add locking around DCPU enable/disable
+      memory: brcmstb: dpfe: move init_data into brcmstb_dpfe_download_firmware()
+      memory: brcmstb: dpfe: pass *priv as argument to brcmstb_dpfe_download_firmware()
+      memory: brcmstb: dpfe: support for deferred firmware download
+
+Nagarjuna Kristam (1):
+      soc/tegra: fuse: Add FUSE clock check in tegra_fuse_readl()
+
+Nicolas Ferre (1):
+      ARM: at91: Documentation: update the sama5d3 and armv7m datasheets
+
+Olof Johansson (22):
+      Merge tag 'renesas-drivers-for-v5.5-tag1' of git://git.kernel.org/.../geert/renesas-devel into arm/drivers
+      Merge tag 'samsung-drivers-dmc-5.5' of https://git.kernel.org/.../krzk/linux into arm/drivers
+      Merge tag 'mmp-drivers-for-v5.5' of git://git.kernel.org/.../lkundrak/linux-mmp into arm/drivers
+      soc: mmp: guard include of asm/cputype.h with CONFIG_ARM{,64}
+      Merge tag 'omap-for-v5.5/ti-sysc-signed' of git://git.kernel.org/.../tmlind/linux-omap into arm/drivers
+      Merge tag 'arm-soc/for-5.5/drivers' of https://github.com/Broadcom/stblinux into arm/drivers
+      Merge tag 'reset-for-v5.5' of git://git.pengutronix.de/git/pza/linux into arm/drivers
+      Merge branch 'for_5.5/driver-soc' of git://git.kernel.org/.../ssantosh/linux-keystone into arm/drivers
+      Merge tag 'renesas-drivers-for-v5.5-tag2' of git://git.kernel.org/.../geert/renesas-devel into arm/drivers
+      Merge tag 'tegra-for-5.5-firmware' of git://git.kernel.org/.../tegra/linux into arm/drivers
+      Merge tag 'tegra-for-5.5-soc' of git://git.kernel.org/.../tegra/linux into arm/drivers
+      Merge tag 'samsung-drivers-5.5' of https://git.kernel.org/.../krzk/linux into arm/drivers
+      Merge tag 'imx-drivers-5.5' of git://git.kernel.org/.../shawnguo/linux into arm/drivers
+      Merge tag 'qcom-drivers-for-5.5' of git://git.kernel.org/.../qcom/linux into arm/drivers
+      Merge tag 'zynqmp-soc-for-v5.5' of https://github.com/Xilinx/linux-xlnx into arm/drivers
+      Merge tag 'at91-5.5-drivers' of git://git.kernel.org/.../at91/linux into arm/drivers
+      Merge tag 'amlogic-drivers' of https://git.kernel.org/.../khilman/linux-amlogic into arm/drivers
+      Merge tag 'v5.4-next-soc' of https://git.kernel.org/.../matthias.bgg/linux into arm/drivers
+      Merge tag 'hisi-drivers-for-5.5' of git://github.com/hisilicon/linux-hisi into arm/drivers
+      Merge tag 'tegra-for-5.5-memory-v2' of git://git.kernel.org/.../tegra/linux into arm/drivers
+      Merge tag 'soc-fsl-next-v5.5' of git://git.kernel.org/.../leo/linux into arm/drivers
+      Merge tag 'scmi-fix-5.5' of git://git.kernel.org/.../sudeep.holla/linux into arm/drivers
+
+Philipp Zabel (5):
+      reset: hisilicon: hi3660: Make reset_control_ops const
+      reset: zynqmp: Make reset_control_ops const
+      MAINTAINERS: add reset controller framework keywords
+      reset: improve of_xlate documentation
+      reset: document (devm_)reset_control_get_optional variants
+
+Ran Wang (3):
+      PM: wakeup: Add routine to help fetch wakeup source object.
+      dt-bindings: fsl: rcpm: Add 'little-endian' and update Chassis definition
+      soc: fsl: add RCPM driver
+
+Sai Prakash Ranjan (2):
+      dt-bindings: msm: Convert LLCC bindings to YAML
+      dt-bindings: msm: Add LLCC for SC7180
+
+Sibi Sankar (2):
+      dt-bindings: reset: aoss: Convert AOSS reset bindings to yaml
+      dt-bindings: reset: pdc: Convert PDC Global bindings to yaml
+
+Sowjanya Komatineni (4):
+      soc/tegra: pmc: Support wake events on more Tegra SoCs
+      soc/tegra: pmc: Add wake event support on Tegra210
+      soc/tegra: pmc: Configure core power request polarity
+      soc/tegra: pmc: Configure deep sleep control settings
+
+Srinivas Kandagatla (1):
+      soc: qcom: socinfo: add sdm845 and sda845 soc ids
+
+Stephen Boyd (3):
+      soc: qcom: llcc: Name regmaps to avoid collisions
+      soc: qcom: llcc: Move regmap config to local variable
+      PM / OPP: Support adjusting OPP voltages at runtime
+
+Sudeep Holla (1):
+      firmware: arm_scmi: Fix doorbell ring logic for !CONFIG_64BIT
+
+Sylwester Nawrocki (3):
+      soc: samsung: chipid: Make exynos_chipid_early_init() static
+      soc: samsung: Add Exynos Adaptive Supply Voltage driver
+      soc: samsung: chipid: Drop "syscon" compatible requirement
+
+Tejas Patel (1):
+      soc: xilinx: Set CAP_UNUSABLE requirement for versal while powering down domain
+
+Tero Kristo (12):
+      bus: ti-sysc: re-order reset and main clock controls
+      bus: ti-sysc: drop the extra hardreset during init
+      bus: ti-sysc: avoid toggling power state of module during probe
+      dt-bindings: omap: add new binding for PRM instances
+      soc: ti: add initial PRM driver with reset control support
+      soc: ti: omap-prm: poll for reset complete during de-assert
+      soc: ti: omap-prm: add support for denying idle for reset clockdomain
+      soc: ti: omap-prm: add omap4 PRM data
+      soc: ti: omap-prm: add data for am33xx
+      soc: ti: omap-prm: add dra7 PRM data
+      soc: ti: omap-prm: add am4 PRM data
+      soc: ti: omap-prm: add omap5 PRM data
+
+Thierry Reding (8):
+      soc/tegra: pmc: Fix crashes for hierarchical interrupts
+      soc/tegra: fuse: Restore base on sysfs failure
+      soc/tegra: fuse: Implement nvmem device
+      soc/tegra: fuse: Add cell information
+      soc/tegra: fuse: Register cell lookups for compatibility
+      Merge branch 'for-5.5/clk' into for-5.5/memory
+      memory: tegra: Set DMA mask based on supported address bits
+      memory: tegra: Add gr2d and gr3d to DRM IOMMU group
+
+Tony Lindgren (3):
+      Merge branch 'watchdog-fix' into omap-for-v5.5/ti-sysc
+      bus: ti-sysc: Handle mstandby quirk and use it for musb
+      bus: ti-sysc: Use swsup quirks also for am335x musb
+
+Tudor Ambarus (2):
+      memory: atmel-ebi: move NUM_CS definition inside EBI driver
+      memory: atmel-ebi: switch to SPDX license identifiers
+
+Vidya Sagar (1):
+      firmware: tegra: Move BPMP resume to noirq phase
+
+Vivek Gautam (4):
+      soc: qcom: llcc cleanup to get rid of sdm845 specific driver file
+      soc: qcom: Rename llcc-slice to llcc-qcom
+      soc: qcom: Make llcc-qcom a generic driver
+      soc: qcom: llcc: Add configuration data for SC7180
+
+Wei Yongjun (1):
+      soc: ti: omap-prm: fix return value check in omap_prm_probe()
+
+Weiyi Lu (5):
+      soc: mediatek: Refactor polling timeout and documentation
+      soc: mediatek: Refactor regulator control
+      soc: mediatek: Refactor clock control
+      soc: mediatek: Refactor sram control
+      soc: mediatek: Refactor bus protection control
+
+Xingyu Chen (2):
+      dt-bindings: reset: add bindings for the Meson-A1 SoC Reset Controller
+      reset: add support for the Meson-A1 SoC Reset Controller
 
 YueHaibing (2):
-      ARM: OMAP2+: Make some functions static
-      ARM: OMAP2+: Remove duplicated include from pmic-cpcap.c
+      soc: qcom: Fix llcc-qcom definitions to include
+      memory: emif: remove set but not used variables 'cs1_used' and 'custom_configs'
 
 
- MAINTAINERS                                     |   5 +
- arch/arm/Kconfig                                |   2 +-
- arch/arm/include/asm/hardware/cache-l2x0.h      |   2 +
- arch/arm/mach-bcm/Kconfig                       |   4 +-
- arch/arm/mach-bcm/Makefile                      |   3 +-
- arch/arm/mach-bcm/bcm2711.c                     |  24 ++
- arch/arm/mach-bcm/bcm_kona_smc.c                |   2 +-
- arch/arm/mach-bcm/platsmp.c                     |   2 +
- arch/arm/mach-exynos/Kconfig                    |   1 +
- arch/arm/mach-hisi/Kconfig                      |  16 +-
- arch/arm/mach-imx/anatop.c                      |  20 +-
- arch/arm/mach-imx/cpu.c                         |  38 ++-
- arch/arm/mach-imx/hotplug.c                     |  24 +-
- arch/arm/mach-mmp/Kconfig                       |  22 +-
- arch/arm/mach-mmp/Makefile                      |   4 +
- arch/arm/mach-mmp/addr-map.h                    |   7 +
- arch/arm/mach-mmp/common.c                      |  19 +-
- arch/arm/mach-mmp/common.h                      |   1 +
- arch/arm/mach-mmp/devices.c                     |   2 +-
- arch/arm/mach-mmp/mmp-dt.c                      |   5 +-
- arch/arm/mach-mmp/mmp2-dt.c                     |   7 +-
- arch/arm/mach-mmp/mmp2.c                        |   2 +-
- arch/arm/mach-mmp/mmp3.c                        |  29 ++
- arch/arm/mach-mmp/platsmp.c                     |  32 +++
- arch/arm/mach-mmp/pm-mmp2.c                     |   2 +-
- arch/arm/mach-mmp/pm-pxa910.c                   |   2 +-
- arch/arm/mach-mmp/pxa168.c                      |   2 +-
- arch/arm/mach-mmp/pxa910.c                      |   2 +-
- arch/arm/mach-mmp/regs-usb.h                    |  94 -------
- arch/arm/mach-mmp/time.c                        |  43 +--
- arch/arm/mach-omap1/Kconfig                     |  33 +--
- arch/arm/mach-omap1/ams-delta-fiq.c             |   2 +-
- arch/arm/mach-omap2/Makefile                    |   5 +
- arch/arm/mach-omap2/clockdomain.c               |  78 ++----
- arch/arm/mach-omap2/control.c                   |   4 +-
- arch/arm/mach-omap2/control.h                   |   1 +
- arch/arm/mach-omap2/display.c                   |   1 +
- arch/arm/mach-omap2/omap-mpuss-lowpower.c       |   2 -
- arch/arm/mach-omap2/omap_device.c               |  19 +-
- arch/arm/mach-omap2/omap_hwmod.c                |  97 -------
- arch/arm/mach-omap2/omap_hwmod.h                |   3 -
- arch/arm/mach-omap2/omap_hwmod_44xx_data.c      |   4 +-
- arch/arm/mach-omap2/omap_hwmod_7xx_data.c       |   2 +-
- arch/arm/mach-omap2/omap_twl.c                  |   8 +-
- arch/arm/mach-omap2/opp4xxx_data.c              |  16 +-
- arch/arm/mach-omap2/pdata-quirks.c              |  52 ----
- arch/arm/mach-omap2/pm.c                        |   1 +
- arch/arm/mach-omap2/pm.h                        |  14 +
- arch/arm/mach-omap2/pm44xx.c                    |  13 +-
- arch/arm/mach-omap2/pmic-cpcap.c                | 271 +++++++++++++++++++
- arch/arm/mach-omap2/prm44xx.c                   |   4 +-
- arch/arm/mach-omap2/vc.c                        |  57 +++-
- arch/arm/mach-omap2/vc.h                        |   2 +-
- arch/arm/mach-s3c24xx/s3c2416.c                 |   2 +-
- arch/arm/mach-s3c24xx/s3c2443.c                 |   2 +-
- arch/arm/mach-s3c24xx/spi-core.h                |   2 +-
- arch/arm/mach-s3c64xx/setup-usb-phy.c           |   4 +-
- arch/arm/mach-shmobile/setup-rcar-gen2.c        |   1 -
- arch/arm/mach-tegra/reset-handler.S             |   6 +-
- arch/arm/mach-tegra/sleep-tegra30.S             |   4 +-
- arch/arm/mm/Kconfig                             |   2 +-
- arch/arm/plat-samsung/devs.c                    |   4 +-
- arch/arm/plat-samsung/include/plat/usb-phy.h    |   4 +-
- arch/arm64/Kconfig.platforms                    |  11 +-
- drivers/clk/Kconfig                             |   5 +
- drivers/clk/mmp/Makefile                        |   2 +-
- drivers/soc/tegra/flowctrl.c                    |  19 +-
- .../linux/soc/mmp}/cputype.h                    |  27 ++
- 68 files changed, 708 insertions(+), 494 deletions(-)
- create mode 100644 arch/arm/mach-bcm/bcm2711.c
- create mode 100644 arch/arm/mach-mmp/mmp3.c
- create mode 100644 arch/arm/mach-mmp/platsmp.c
- create mode 100644 arch/arm/mach-omap2/pmic-cpcap.c
- rename {arch/arm/mach-mmp => include/linux/soc/mmp}/cputype.h (71%)
+ Documentation/arm/microchip.rst                 |    4 +-
+ .../devicetree/bindings/arm/msm/qcom,llcc.txt   |   41 -
+ .../devicetree/bindings/arm/msm/qcom,llcc.yaml  |   55 +
+ .../devicetree/bindings/arm/omap/prm-inst.txt   |   29 +
+ .../firmware/xilinx/xlnx,zynqmp-firmware.txt    |   16 +-
+ .../devicetree/bindings/nvmem/amlogic-efuse.txt |    6 +
+ .../devicetree/bindings/power/qcom,rpmpd.txt    |    1 +
+ .../reset/amlogic,meson-axg-audio-arb.txt       |    3 +-
+ .../bindings/reset/amlogic,meson-reset.yaml     |    1 +
+ .../bindings/reset/qcom,aoss-reset.txt          |   52 -
+ .../bindings/reset/qcom,aoss-reset.yaml         |   47 +
+ .../bindings/reset/qcom,pdc-global.txt          |   52 -
+ .../bindings/reset/qcom,pdc-global.yaml         |   47 +
+ .../bindings/reset/uniphier-reset.txt           |    5 +-
+ .../devicetree/bindings/soc/fsl/rcpm.txt        |   14 +-
+ .../bindings/soc/qcom/qcom,smd-rpm.txt          |    1 +
+ MAINTAINERS                                     |   17 +
+ arch/arm/mach-omap2/Kconfig                     |    1 +
+ drivers/base/power/wakeup.c                     |   54 +
+ drivers/bus/Kconfig                             |    5 +-
+ drivers/bus/hisi_lpc.c                          |    9 +-
+ drivers/bus/ti-sysc.c                           |   87 +-
+ drivers/firmware/arm_scmi/perf.c                |    2 +-
+ drivers/firmware/imx/imx-dsp.c                  |    2 +-
+ drivers/firmware/imx/imx-scu-irq.c              |    1 +
+ drivers/firmware/imx/imx-scu.c                  |   24 +-
+ drivers/firmware/meson/meson_sm.c               |  110 +-
+ drivers/firmware/tegra/bpmp.c                   |    2 +-
+ drivers/firmware/xilinx/zynqmp.c                |    8 +-
+ drivers/memory/atmel-ebi.c                      |   11 +-
+ drivers/memory/brcmstb_dpfe.c                   |  164 +-
+ drivers/memory/emif.c                           |    5 +-
+ drivers/memory/jedec_ddr.h                      |   61 +
+ drivers/memory/of_memory.c                      |  149 ++
+ drivers/memory/of_memory.h                      |   18 +
+ drivers/memory/samsung/Kconfig                  |   13 +
+ drivers/memory/samsung/Makefile                 |    1 +
+ drivers/memory/samsung/exynos5422-dmc.c         | 1550 ++++++++++++++++++
+ drivers/memory/tegra/Kconfig                    |   10 +
+ drivers/memory/tegra/Makefile                   |    1 +
+ drivers/memory/tegra/mc.c                       |   52 +-
+ drivers/memory/tegra/mc.h                       |   74 +-
+ drivers/memory/tegra/tegra114.c                 |   10 +-
+ drivers/memory/tegra/tegra124.c                 |   30 +-
+ drivers/memory/tegra/tegra20-emc.c              |  134 +-
+ drivers/memory/tegra/tegra30-emc.c              | 1232 ++++++++++++++
+ drivers/memory/tegra/tegra30.c                  |   34 +-
+ drivers/nvmem/meson-efuse.c                     |   24 +-
+ drivers/phy/marvell/Kconfig                     |   11 +
+ drivers/phy/marvell/Makefile                    |    1 +
+ drivers/phy/marvell/phy-mmp3-usb.c              |  291 ++++
+ drivers/reset/Kconfig                           |    5 +-
+ drivers/reset/core.c                            |    8 +-
+ drivers/reset/hisilicon/reset-hi3660.c          |    2 +-
+ drivers/reset/reset-meson-audio-arb.c           |   43 +-
+ drivers/reset/reset-meson.c                     |   35 +-
+ drivers/reset/reset-uniphier-glue.c             |    4 +
+ drivers/reset/reset-zynqmp.c                    |    2 +-
+ drivers/soc/amlogic/meson-gx-socinfo.c          |    3 +
+ drivers/soc/atmel/Kconfig                       |   11 +
+ drivers/soc/atmel/Makefile                      |    1 +
+ drivers/soc/atmel/sfr.c                         |   99 ++
+ drivers/soc/fsl/Kconfig                         |   10 +
+ drivers/soc/fsl/Makefile                        |    1 +
+ drivers/soc/fsl/rcpm.c                          |  151 ++
+ drivers/soc/imx/soc-imx-scu.c                   |   34 +-
+ drivers/soc/imx/soc-imx8.c                      |   49 +-
+ drivers/soc/mediatek/mtk-scpsys.c               |  214 ++-
+ drivers/soc/qcom/Kconfig                        |   14 +-
+ drivers/soc/qcom/Makefile                       |    3 +-
+ drivers/soc/qcom/{llcc-slice.c => llcc-qcom.c}  |  130 +-
+ drivers/soc/qcom/llcc-sdm845.c                  |  100 --
+ drivers/soc/qcom/rpmpd.c                        |   23 +
+ drivers/soc/qcom/smd-rpm.c                      |   18 +-
+ drivers/soc/qcom/socinfo.c                      |    2 +
+ drivers/soc/renesas/Kconfig                     |   32 +-
+ drivers/soc/renesas/Makefile                    |    4 +-
+ drivers/soc/renesas/r8a7743-sysc.c              |    1 -
+ drivers/soc/renesas/r8a7745-sysc.c              |    1 -
+ drivers/soc/renesas/r8a77470-sysc.c             |    1 -
+ drivers/soc/renesas/r8a774a1-sysc.c             |    1 -
+ drivers/soc/renesas/r8a774b1-sysc.c             |   37 +
+ drivers/soc/renesas/r8a774c0-sysc.c             |    4 +-
+ drivers/soc/renesas/r8a7779-sysc.c              |    1 -
+ drivers/soc/renesas/r8a7790-sysc.c              |    1 -
+ drivers/soc/renesas/r8a7791-sysc.c              |    1 -
+ drivers/soc/renesas/r8a7792-sysc.c              |    1 -
+ drivers/soc/renesas/r8a7794-sysc.c              |    1 -
+ drivers/soc/renesas/r8a7795-sysc.c              |   33 +-
+ drivers/soc/renesas/r8a7796-sysc.c              |   30 +-
+ drivers/soc/renesas/r8a77965-sysc.c             |    4 +-
+ drivers/soc/renesas/r8a77970-sysc.c             |    4 +-
+ drivers/soc/renesas/r8a77980-sysc.c             |    4 +-
+ drivers/soc/renesas/r8a77990-sysc.c             |    4 +-
+ drivers/soc/renesas/r8a77995-sysc.c             |    1 -
+ drivers/soc/renesas/rcar-rst.c                  |    2 +
+ drivers/soc/renesas/rcar-sysc.c                 |   26 +-
+ drivers/soc/renesas/rcar-sysc.h                 |    9 +-
+ drivers/soc/renesas/renesas-soc.c               |   15 +-
+ drivers/soc/samsung/Kconfig                     |   10 +
+ drivers/soc/samsung/Makefile                    |    3 +
+ drivers/soc/samsung/exynos-asv.c                |  177 ++
+ drivers/soc/samsung/exynos-asv.h                |   71 +
+ drivers/soc/samsung/exynos-chipid.c             |   12 +-
+ drivers/soc/samsung/exynos5422-asv.c            |  505 ++++++
+ drivers/soc/samsung/exynos5422-asv.h            |   31 +
+ drivers/soc/tegra/Kconfig                       |   10 +
+ drivers/soc/tegra/Makefile                      |    2 +
+ drivers/soc/tegra/fuse/fuse-tegra.c             |  198 ++-
+ drivers/soc/tegra/fuse/fuse-tegra30.c           |  154 ++
+ drivers/soc/tegra/fuse/fuse.h                   |    8 +
+ drivers/soc/tegra/pmc.c                         |  232 ++-
+ drivers/soc/tegra/regulators-tegra20.c          |  365 +++++
+ drivers/soc/tegra/regulators-tegra30.c          |  317 ++++
+ drivers/soc/ti/Makefile                         |    1 +
+ drivers/soc/ti/omap_prm.c                       |  391 +++++
+ drivers/soc/xilinx/zynqmp_pm_domains.c          |   10 +-
+ include/dt-bindings/power/qcom-rpmpd.h          |    9 +
+ .../dt-bindings/reset/amlogic,meson-a1-reset.h  |   74 +
+ .../reset/amlogic,meson-axg-audio-arb.h         |    2 +
+ include/linux/firmware/meson/meson_sm.h         |   15 +-
+ include/linux/firmware/xlnx-zynqmp.h            |    3 +-
+ include/linux/logic_pio.h                       |    4 +-
+ include/linux/mfd/syscon/atmel-matrix.h         |    1 -
+ include/linux/platform_data/ti-prm.h            |   21 +
+ include/linux/pm_wakeup.h                       |    9 +
+ include/linux/reset-controller.h                |    3 +-
+ include/linux/reset.h                           |   46 +
+ include/linux/soc/mmp/cputype.h                 |    2 +
+ include/linux/soc/qcom/llcc-qcom.h              |   94 +-
+ include/soc/tegra/mc.h                          |    2 +-
+ lib/Makefile                                    |    2 +-
+ lib/logic_pio.c                                 |   14 +-
+ 133 files changed, 7611 insertions(+), 939 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+ delete mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.yaml
+ delete mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-global.yaml
+ create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
+ create mode 100644 drivers/memory/tegra/tegra30-emc.c
+ create mode 100644 drivers/phy/marvell/phy-mmp3-usb.c
+ create mode 100644 drivers/soc/atmel/sfr.c
+ create mode 100644 drivers/soc/fsl/rcpm.c
+ rename drivers/soc/qcom/{llcc-slice.c => llcc-qcom.c} (68%)
+ delete mode 100644 drivers/soc/qcom/llcc-sdm845.c
+ create mode 100644 drivers/soc/renesas/r8a774b1-sysc.c
+ create mode 100644 drivers/soc/samsung/exynos-asv.c
+ create mode 100644 drivers/soc/samsung/exynos-asv.h
+ create mode 100644 drivers/soc/samsung/exynos5422-asv.c
+ create mode 100644 drivers/soc/samsung/exynos5422-asv.h
+ create mode 100644 drivers/soc/tegra/regulators-tegra20.c
+ create mode 100644 drivers/soc/tegra/regulators-tegra30.c
+ create mode 100644 drivers/soc/ti/omap_prm.c
+ create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
+ create mode 100644 include/linux/platform_data/ti-prm.h
