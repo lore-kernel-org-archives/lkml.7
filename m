@@ -2,117 +2,182 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C77C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 878BEC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3697B20659
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:15:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="i3jTCa8y"
+	by mail.kernel.org (Postfix) with ESMTP id 61F2120675
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:19:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729951AbfLEWP2 (ORCPT
+        id S1729773AbfLEWTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 17:15:28 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37148 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729240AbfLEWP2 (ORCPT
+        Thu, 5 Dec 2019 17:19:32 -0500
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:35396 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729154AbfLEWTc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 17:15:28 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w15so5594928wru.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 14:15:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T74LspN/Sim+aWkc3QHBB9fwPjBZNd60Uk/Nv28Du/s=;
-        b=i3jTCa8yIkbx58G3q/lJhtF3uXRMcCBgX05lrNWCZ17Wzwy1NodjGtRuyLoT4LMqKj
-         k/GElPm4yaYnYMETcCdJLQArY2ISn53cMG2CyfS5HiU4a1vxFkeL8yg6b8juEIuv+rPG
-         r8HQyM2HJvKduKGqrFcHTYWdMDIVchw7pgoNE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=T74LspN/Sim+aWkc3QHBB9fwPjBZNd60Uk/Nv28Du/s=;
-        b=N48mcIJgTYEa2ztTSA4B8BBRhr2EcZ2PH8VDtCwyF4+c2RuOfKLyQmQv+HTQ3tXIkm
-         EwdDAx0NzAjco+W3F9grNEqqVPtMsEE4tRSiVGfgNGwwmsBn2KrDnZFDogshO/m3DVzw
-         1/vJTTfZ5NWf/Bmyu/MBeMoU/TDqvJg/Ap9kGIqvcSmak8cl3yuuOEIJiJ6QWEsyWZj4
-         nYmCtIrAamoorHi3s4cLQD+5Or1qifHw3dTnY1TrxdCPKKrjsJEeiJq5+0CK9hx12IxQ
-         SAyZfIInEbvxPbW+cvV9LhV9YM41cZPedMJRkLBxwqODnpzmJsDNYROkp5FYok1HSb2i
-         eYnA==
-X-Gm-Message-State: APjAAAUJHtAUm2mLTOKR/jC4nfLscoyhZJn4i1zSLO7vbAIhq94/06Nm
-        3HI3qc4V1PkAk8S0CrZmoL3KyA==
-X-Google-Smtp-Source: APXvYqz2KJmQcVZo2r5BWhzFvwZPfcySceP+bjA7xkG8teU2GR/4Qey+iWFI3/WNGKhPpgOSz0qn9A==
-X-Received: by 2002:a5d:6703:: with SMTP id o3mr12955371wru.235.1575584126055;
-        Thu, 05 Dec 2019 14:15:26 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id t8sm13854615wrp.69.2019.12.05.14.15.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 14:15:25 -0800 (PST)
-Date:   Thu, 5 Dec 2019 23:15:23 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, robh@kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] drm: call drm_gem_object_funcs.mmap with fake
- offset
-Message-ID: <20191205221523.GN624164@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, robh@kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@linux.ie>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191127092523.5620-1-kraxel@redhat.com>
- <20191127092523.5620-2-kraxel@redhat.com>
- <20191128113930.yhckvneecpvfhlls@sirius.home.kraxel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128113930.yhckvneecpvfhlls@sirius.home.kraxel.org>
-X-Operating-System: Linux phenom 5.3.0-2-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Thu, 5 Dec 2019 17:19:32 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Tk4Lq1Z_1575584354;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk4Lq1Z_1575584354)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 06 Dec 2019 06:19:21 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     fabecassis@nvidia.com, jhubbard@nvidia.com, mhocko@suse.com,
+        cl@linux.com, vbabka@suse.cz, mgorman@techsingularity.net,
+        akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [v4 PATCH] mm: move_pages: return valid node id in status if the page is already on the target node
+Date:   Fri,  6 Dec 2019 06:19:13 +0800
+Message-Id: <1575584353-125392-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 12:39:30PM +0100, Gerd Hoffmann wrote:
-> On Wed, Nov 27, 2019 at 10:25:22AM +0100, Gerd Hoffmann wrote:
-> > The fake offset is going to stay, so change the calling convention for
-> > drm_gem_object_funcs.mmap to include the fake offset.  Update all users
-> > accordingly.
-> > 
-> > Note that this reverts 83b8a6f242ea ("drm/gem: Fix mmap fake offset
-> > handling for drm_gem_object_funcs.mmap") and on top then adds the fake
-> > offset to  drm_gem_prime_mmap to make sure all paths leading to
-> > obj->funcs->mmap are consistent.
-> > 
-> > v3: move fake-offset tweak in drm_gem_prime_mmap() so we have this code
-> >     only once in the function (Rob Herring).
-> 
-> Now this series fails in Intel CI.  Can't see why though.  The
-> difference between v2 and v3 is just the place where vma->vm_pgoff gets
-> updated, and no code between the v2 and v3 location touches vma ...
+Felix Abecassis reports move_pages() would return random status if the
+pages are already on the target node by the below test program:
 
-Looks like unrelated flukes, this happens occasionally. If you're paranoid
-hit the retest button on patchwork to double-check.
--Daniel
+---8<---
+
+int main(void)
+{
+	const long node_id = 1;
+	const long page_size = sysconf(_SC_PAGESIZE);
+	const int64_t num_pages = 8;
+
+	unsigned long nodemask =  1 << node_id;
+	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
+	if (ret < 0)
+		return (EXIT_FAILURE);
+
+	void **pages = malloc(sizeof(void*) * num_pages);
+	for (int i = 0; i < num_pages; ++i) {
+		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
+				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
+				-1, 0);
+		if (pages[i] == MAP_FAILED)
+			return (EXIT_FAILURE);
+	}
+
+	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
+	if (ret < 0)
+		return (EXIT_FAILURE);
+
+	int *nodes = malloc(sizeof(int) * num_pages);
+	int *status = malloc(sizeof(int) * num_pages);
+	for (int i = 0; i < num_pages; ++i) {
+		nodes[i] = node_id;
+		status[i] = 0xd0; /* simulate garbage values */
+	}
+
+	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
+	printf("move_pages: %ld\n", ret);
+	for (int i = 0; i < num_pages; ++i)
+		printf("status[%d] = %d\n", i, status[i]);
+}
+---8<---
+
+Then running the program would return nonsense status values:
+$ ./move_pages_bug
+move_pages: 0
+status[0] = 208
+status[1] = 208
+status[2] = 208
+status[3] = 208
+status[4] = 208
+status[5] = 208
+status[6] = 208
+status[7] = 208
+
+This is because the status is not set if the page is already on the
+target node, but move_pages() should return valid status as long as it
+succeeds.  The valid status may be errno or node id.
+
+We can't simply initialize status array to zero since the pages may be
+not on node 0.  Fix it by updating status with node id which the page is
+already on.
+
+Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+Reported-by: Felix Abecassis <fabecassis@nvidia.com>
+Tested-by: Felix Abecassis <fabecassis@nvidia.com>
+Suggested-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Acked-by: Christoph Lameter <cl@linux.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: <stable@vger.kernel.org> 4.17+
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+v4: * Fixed the comments from Christopher and John and added their Acked-by
+      and Reviewed-by.
+v3: * Adopted the suggestion from Michal.
+v2: * Correted the return value when add_page_for_migration() returns 1.
+
+ mm/migrate.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/mm/migrate.c b/mm/migrate.c
+index a8f87cb..6b44818f 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1512,9 +1512,11 @@ static int do_move_pages_to_node(struct mm_struct *mm,
+ /*
+  * Resolves the given address to a struct page, isolates it from the LRU and
+  * puts it to the given pagelist.
+- * Returns -errno if the page cannot be found/isolated or 0 when it has been
+- * queued or the page doesn't need to be migrated because it is already on
+- * the target node
++ * Returns:
++ *     errno - if the page cannot be found/isolated
++ *     0 - when it doesn't have to be migrated because it is already on the
++ *         target node
++ *     1 - when it has been queued
+  */
+ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+ 		int node, struct list_head *pagelist, bool migrate_all)
+@@ -1553,7 +1555,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+ 	if (PageHuge(page)) {
+ 		if (PageHead(page)) {
+ 			isolate_huge_page(page, pagelist);
+-			err = 0;
++			err = 1;
+ 		}
+ 	} else {
+ 		struct page *head;
+@@ -1563,7 +1565,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+ 		if (err)
+ 			goto out_putpage;
+ 
+-		err = 0;
++		err = 1;
+ 		list_add_tail(&head->lru, pagelist);
+ 		mod_node_page_state(page_pgdat(head),
+ 			NR_ISOLATED_ANON + page_is_file_cache(head),
+@@ -1640,8 +1642,17 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+ 		 */
+ 		err = add_page_for_migration(mm, addr, current_node,
+ 				&pagelist, flags & MPOL_MF_MOVE_ALL);
+-		if (!err)
++
++		if (!err) {
++			/* The page is already on the target node */
++			err = store_status(status, i, current_node, 1);
++			if (err)
++				goto out_flush;
+ 			continue;
++		} else if (err > 0) {
++			/* The page is successfully queued for migration */
++			continue;
++		}
+ 
+ 		err = store_status(status, i, err, 1);
+ 		if (err)
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+1.8.3.1
+
