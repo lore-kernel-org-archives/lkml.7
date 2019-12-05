@@ -2,127 +2,112 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA8EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AB8C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE3E2077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:51:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gw8ND8Pk"
+	by mail.kernel.org (Postfix) with ESMTP id EAE622077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:53:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbfLEGv3 (ORCPT
+        id S1726211AbfLEGxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 01:51:29 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20356 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725953AbfLEGv2 (ORCPT
+        Thu, 5 Dec 2019 01:53:25 -0500
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:36856 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725909AbfLEGxZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 01:51:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575528688;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+DU3T5dQyNYaNnp2KSExVI3M/SSBxmIkMbbcIbwNecU=;
-        b=Gw8ND8PkMYA5bghbamyW+DcXMQjnu3luguFp2WTAmNOaVgPheH8v7P9ab3JbEMeZH8Y/gf
-        tSU/VDJCtA3MHLqxuoXEoCh1KfHyxrtWIdPFVGU5TjQoQydjq/03lHQinIUNmLpVnjBNR8
-        G3VsI+Y4JXLXcpMIq98cSm+IQi+EAKo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-283-WWP2KC1HNgCn_njLjEo2vg-1; Thu, 05 Dec 2019 01:51:27 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 13365800D4C;
-        Thu,  5 Dec 2019 06:51:26 +0000 (UTC)
-Received: from [10.72.12.247] (ovpn-12-247.pek2.redhat.com [10.72.12.247])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A44CE19481;
-        Thu,  5 Dec 2019 06:51:17 +0000 (UTC)
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
-To:     Peter Xu <peterx@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-5-peterx@redhat.com>
- <1355422f-ab62-9dc3-2b48-71a6e221786b@redhat.com>
- <a3e83e6b-4bfa-3a6b-4b43-5dd451e03254@redhat.com>
- <20191204195230.GF19939@xz-x1>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <efa1523f-2cff-8d65-7b43-4a19eff89051@redhat.com>
-Date:   Thu, 5 Dec 2019 14:51:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Dec 2019 01:53:25 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0Tk0sC2w_1575528794;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Tk0sC2w_1575528794)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 05 Dec 2019 14:53:15 +0800
+Subject: [PATCH v5 0/2] sched/numa: introduce numa locality
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+ <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
+ <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
+ <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
+Message-ID: <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
+Date:   Thu, 5 Dec 2019 14:53:14 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191204195230.GF19939@xz-x1>
+In-Reply-To: <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: WWP2KC1HNgCn_njLjEo2vg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since v4:
+  * improved documentation
+Since v3:
+  * fix comments and improved documentation
+Since v2:
+  * simplified the locality concept & implementation
+Since v1:
+  * improved documentation
 
-On 2019/12/5 =E4=B8=8A=E5=8D=883:52, Peter Xu wrote:
-> On Wed, Dec 04, 2019 at 12:04:53PM +0100, Paolo Bonzini wrote:
->> On 04/12/19 11:38, Jason Wang wrote:
->>>> +=C2=A0=C2=A0=C2=A0 entry =3D &ring->dirty_gfns[ring->dirty_index & (r=
-ing->size - 1)];
->>>> +=C2=A0=C2=A0=C2=A0 entry->slot =3D slot;
->>>> +=C2=A0=C2=A0=C2=A0 entry->offset =3D offset;
->>>
->>> Haven't gone through the whole series, sorry if it was a silly question
->>> but I wonder things like this will suffer from similar issue on
->>> virtually tagged archs as mentioned in [1].
->> There is no new infrastructure to track the dirty pages---it's just a
->> different way to pass them to userspace.
->>
->>> Is this better to allocate the ring from userspace and set to KVM
->>> instead? Then we can use copy_to/from_user() friends (a little bit slow
->>> on recent CPUs).
->> Yeah, I don't think that would be better than mmap.
-> Yeah I agree, because I didn't see how copy_to/from_user() helped to
-> do icache/dcache flushings...
+Modern production environment could use hundreds of cgroup to control
+the resources for different workloads, along with the complicated
+resource binding.
 
+On NUMA platforms where we have multiple nodes, things become even more
+complicated, we hope there are more local memory access to improve the
+performance, and NUMA Balancing keep working hard to achieve that,
+however, wrong memory policy or node binding could easily waste the
+effort, result a lot of remote page accessing.
 
-It looks to me one advantage is that exact the same VA is used by both=20
-userspace and kernel so there will be no alias.
+We need to notice such problems, then we got chance to fix it before
+there are too much damages, however, there are no good monitoring
+approach yet to help catch the mouse who introduced the remote access.
 
-Thanks
+This patch set is trying to fill in the missing pieces， by introduce
+the per-cgroup NUMA locality info, with this new statistics, we could
+achieve the daily monitoring on NUMA efficiency, to give warning when
+things going too wrong.
 
+Please check the second patch for more details.
 
->
-> Some context here: Jason raised this question offlist first on whether
-> we should also need these flush_dcache_cache() helpers for operations
-> like kvm dirty ring accesses.  I feel like it should, however I've got
-> two other questions, on:
->
->    - if we need to do flush_dcache_page() on kernel modified pages
->      (assuming the same page has mapped to userspace), then why don't
->      we need flush_cache_page() too on the page, where
->      flush_cache_page() is defined not-a-nop on those archs?
->
->    - assuming an arch has not-a-nop impl for flush_[d]cache_page(),
->      would atomic operations like cmpxchg really work for them
->      (assuming that ISAs like cmpxchg should depend on cache
->      consistency).
->
-> Sorry I think these are for sure a bit out of topic for kvm dirty ring
-> patchset, but since we're at it, I'm raising the questions up in case
-> there're answers..
->
-> Thanks,
->
+Michael Wang (2):
+  sched/numa: introduce per-cgroup NUMA locality info
+  sched/numa: documentation for per-cgroup numa statistics
+
+ Documentation/admin-guide/cg-numa-stat.rst      | 178 ++++++++++++++++++++++++
+ Documentation/admin-guide/index.rst             |   1 +
+ Documentation/admin-guide/kernel-parameters.txt |   4 +
+ Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
+ include/linux/sched.h                           |  15 ++
+ include/linux/sched/sysctl.h                    |   6 +
+ init/Kconfig                                    |  11 ++
+ kernel/sched/core.c                             |  75 ++++++++++
+ kernel/sched/fair.c                             |  62 +++++++++
+ kernel/sched/sched.h                            |  12 ++
+ kernel/sysctl.c                                 |  11 ++
+ 11 files changed, 384 insertions(+)
+ create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
+
+-- 
+2.14.4.44.g2045bb6
 
