@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EA1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B21C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69032466E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D6821835
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uvZDJ1iP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9UtKpvd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbfLEVwQ (ORCPT
+        id S2387438AbfLEVwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 16:52:16 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35332 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbfLEVwN (ORCPT
+        Thu, 5 Dec 2019 16:52:22 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44426 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387415AbfLEVwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 16:52:13 -0500
-Received: by mail-il1-f195.google.com with SMTP id g12so4417737ild.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 13:52:13 -0800 (PST)
+        Thu, 5 Dec 2019 16:52:17 -0500
+Received: by mail-il1-f194.google.com with SMTP id z12so4362262iln.11;
+        Thu, 05 Dec 2019 13:52:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HkLmBXFUJUiujXB1umDLKcn6FYwNM55ntuOqjeXmxO4=;
-        b=uvZDJ1iP/hTiQQei6qNd5edPtpj8+WFZeK7DwvLijsBtII26bvvcKVxIwg3MJ2njgx
-         zKwrqjYNmf+CEoDqHeQQ+2c3IOVVIrl8yPWxe5XZqPXMY3DcwlWQy+P3+EA+0LHXRzEn
-         72APYh4KqslHKfUag34IIq6j/LQX3hhTX3k4Gqpc0UzCQOsgBGrT5lhcuZSUQJGb3pEe
-         9xvjgiDH8iNoRHqtAV9bCQxr0xI2i8PyZPDTevOaVjg5crXU6RmawhZMYoZrKSdJo9Sz
-         hJaNRLv54wKrEkv6CKdKtbbZEh+gY71/tgk1kLsdOaRFzQclcgA41AL1WNYqZ4IGiDIe
-         iQPQ==
+        bh=grd1rakogw2BEn4tAE432N08EqUy4BjMhxHYtZmywo4=;
+        b=g9UtKpvdmqkb8LED/sHy5z6LtpDExLhvMqpSfIh3BH/8egEL2QzxM92WHpXPCKU/UX
+         GQ47PT8+lOFHuU0CAsJK0RDtfoID7GvXBTrYwH2X35rNqD2d5LCeLY3EZqNnYUrWDSpz
+         H+mdzlSVK2GwM23/ydBj7qGdjqeKzIA422ZVXoJtmk7cJs6SRhQweobQ8nhP0fPKTz/R
+         7CQWJSmsFd5ZNbU/CJsRJbowVaAUx6G+QnyJIIvnnkuHxVHXST+uTFU84XeLJuDSW8z8
+         MhkKBlslHA7XdUaE9N9BI9tf3DBd7WT4pTh/uzyq5X5cgMpnYAMY3SM0O59uMRX/hObP
+         WJcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HkLmBXFUJUiujXB1umDLKcn6FYwNM55ntuOqjeXmxO4=;
-        b=C1PtKWjm9CQ2ngSniCs/TZZP6wOEpf6k3QzV39otUobGlaOZZrIOcm9wB4/9fGIKeK
-         AV3XDoxYuOP4Tp2XUCBkKzdMN/bBlGcSwIIsrZnuRkkBWR8mf1s1BzYTNNw4uD4RAfY5
-         DlraOah5g9DrK6KI72WZ6JgyyXEVPB+I37n6aTb5wqJQJKVji+TVdHORyuFjSL5G9qBT
-         Xb+rQh7UlImuWrEzbZA3OzZO7J6Ykpy094KH0x5egW4la+y8v9izG+G7zQOFQMdE0ezE
-         DhK9j72eX4nyhZtgpb1wZmP/MuRP7fKUC13K6rhsIdc/fgHpWC56uaFzwHs08yNyYo9i
-         ouUg==
-X-Gm-Message-State: APjAAAXW7wSzEqRrpm/W0JpOKJu7SoxZFV2D5UJqiG+K7dqDV8D/aGVU
-        Pu7pf86htLNXe3ZTOCl/6bU=
-X-Google-Smtp-Source: APXvYqwO5tg7/sePvTEP6dRzFzvMCj3SPNLSAgdlMd6H7TKKL+oFQSQY9GWGR5FciYZBa2UB6WKznQ==
-X-Received: by 2002:a92:5b1a:: with SMTP id p26mr11463935ilb.9.1575582732990;
-        Thu, 05 Dec 2019 13:52:12 -0800 (PST)
+        bh=grd1rakogw2BEn4tAE432N08EqUy4BjMhxHYtZmywo4=;
+        b=GjgjrYA/SU2io/wFgaZe+QJQsCaKFublfFcsI5AE/bw5MuTISN3I36T4fFmwXbHCaU
+         HTgj9Ul5zhsHb83ox5wS3wRgBQ0l7af6kFhgF0UYSdgXeuxxATcGk9iXdY5z25+Heh2C
+         4NxLvM3TIVbqM0qQ0aB7FrDWUAlTCmKKQGhJkUGMFZXB3riQSHM8DJ4qSTIu4hljOWvf
+         kCwAvdg2yXaZ5PEG58EcEcOkxkZdwfzvmqegJeCHgHn0Rt4XaWLcpDY1wCYESgWSy9Yu
+         s4gK6FdIUw38hXJKFM4ZdxdleCR5XJe1peU476zj4qMVOefqbyztjjYma8n40GsBpc3E
+         vNyw==
+X-Gm-Message-State: APjAAAWMQT87Ywzt0TEQVNdjqXs2l2xwz0g6apQmeEJ1fkJAMJDayeDM
+        shGsEVco7l0WghA00ihyO/Y=
+X-Google-Smtp-Source: APXvYqxtsOguVD5OjiAl2LXWs61tkwUaHZgqCoQ81BONy+REW3HUxgS8dbNMif1KAdlVb9lXygxS6w==
+X-Received: by 2002:a92:cd4f:: with SMTP id v15mr11425153ilq.230.1575582736991;
+        Thu, 05 Dec 2019 13:52:16 -0800 (PST)
 Received: from localhost.localdomain (c-24-9-77-57.hsd1.co.comcast.net. [24.9.77.57])
-        by smtp.googlemail.com with ESMTPSA id n22sm740184iog.14.2019.12.05.13.52.11
+        by smtp.googlemail.com with ESMTPSA id n22sm740184iog.14.2019.12.05.13.52.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 13:52:12 -0800 (PST)
+        Thu, 05 Dec 2019 13:52:16 -0800 (PST)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, gregkh@linuxfoundation.org,
         linux-kernel@vger.kernel.org
 Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH 06/18] dyndbg: fix a BUG_ON in ddebug_describe_flags
-Date:   Thu,  5 Dec 2019 14:51:37 -0700
-Message-Id: <20191205215151.421926-7-jim.cromie@gmail.com>
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: [PATCH 08/18] dyndbg: accept 'file foo.c:func1' and 'file foo.c:10-100'
+Date:   Thu,  5 Dec 2019 14:51:39 -0700
+Message-Id: <20191205215151.421926-9-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191205215151.421926-1-jim.cromie@gmail.com>
 References: <20191205215151.421926-1-jim.cromie@gmail.com>
@@ -75,124 +75,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ddebug_describe_flags currently fills a caller provided string buffer,
-after testing its size (also passed) in a BUG_ON.  Fix this with a
-struct containing a known-big-enough string buffer, and passing it
-instead.
+Accept these additional query forms:
 
-Also simplify ddebug_describe_flags sig, and de-ref the struct in the
-caller; this makes function reusable (soon) in contexts where flags
-are already unpacked.
+   echo "file $filestr +_" > control
 
--v3 fix compile err introduced in patchset grooming.
-Reported-by: kbuild test robot <lkp@intel.com>
+       path/to/file.c:100	# as from control, column 1
+       path/to/file.c:1-100	# or any legal line-range
+       path/to/file.c:func_A	# as from an editor/browser
+       path/to/file.c:drm_\*	# wildcards still work
+       path/to/file.c:*_foo	# lead wildcard too
+
+1st 2 examples are treated as line-ranges, 3,4 are treated as func's
+
+Doc these changes, and sprinkle in a few extra wild-card examples and
+trailing # explanation texts.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- lib/dynamic_debug.c | 31 +++++++++++++++----------------
- 1 file changed, 15 insertions(+), 16 deletions(-)
+ .../admin-guide/dynamic-debug-howto.rst       |  5 +++++
+ lib/dynamic_debug.c                           | 20 ++++++++++++++++++-
+ 2 files changed, 24 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+index e011f8907116..689a30316589 100644
+--- a/Documentation/admin-guide/dynamic-debug-howto.rst
++++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+@@ -156,6 +156,7 @@ func
+     of each callsite.  Example::
+ 
+ 	func svc_tcp_accept
++	func *recv*		# in rfcomm, bluetooth, ping, tcp
+ 
+ file
+     The given string is compared against either the src-root relative
+@@ -164,6 +165,9 @@ file
+ 
+ 	file svcsock.c
+ 	file kernel/freezer.c	# ie column 1 of control file
++	file drivers/usb/*	# all callsites under it
++	file inode.c:start_*	# parse :tail as a func (above)
++	file inode.c:1-100	# parse :tail as a line-range (above)
+ 
+ module
+     The given string is compared against the module name
+@@ -173,6 +177,7 @@ module
+ 
+ 	module sunrpc
+ 	module nfsd
++	module drm*	# both drm, drm_kms_helper
+ 
+ format
+     The given string is searched for in the dynamic debug format
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index b5fb0aa0fbc3..49cb24948e12 100644
+index f0cf90e672b8..9fa6d4eeae5c 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -62,6 +62,8 @@ struct ddebug_iter {
- 	unsigned int idx;
- };
- 
-+struct flagsbuf { char buf[12]; };	/* big enough to hold all the flags */
-+
- static DEFINE_MUTEX(ddebug_lock);
- static LIST_HEAD(ddebug_tables);
- static int verbose;
-@@ -88,21 +90,19 @@ static struct { unsigned flag:8; char opt_char; } opt_array[] = {
- };
- 
- /* format a string into buf[] which describes the _ddebug's flags */
--static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
--				    size_t maxlen)
-+static char *ddebug_describe_flags(unsigned int flags, struct flagsbuf *fb)
- {
--	char *p = buf;
-+	char *p = fb->buf;
- 	int i;
- 
--	BUG_ON(maxlen < 6);
- 	for (i = 0; i < ARRAY_SIZE(opt_array); ++i)
--		if (dp->flags & opt_array[i].flag)
-+		if (flags & opt_array[i].flag)
- 			*p++ = opt_array[i].opt_char;
--	if (p == buf)
-+	if (p == fb->buf)
- 		*p++ = '_';
- 	*p = '\0';
- 
--	return buf;
-+	return fb->buf;
+@@ -322,6 +322,8 @@ static int parse_linerange(struct ddebug_query *query, const char *first)
+ 	} else {
+ 		query->last_lineno = query->first_lineno;
+ 	}
++	vpr_info("parsed line %d-%d\n", query->first_lineno,
++		 query->last_lineno);
+ 	return 0;
  }
  
- #define vnpr_info(lvl, fmt, ...)				\
-@@ -142,13 +142,13 @@ static void vpr_info_dq(const struct ddebug_query *query, const char *msg)
-  * logs the changes.  Takes ddebug_lock.
-  */
- static int ddebug_change(const struct ddebug_query *query,
--			unsigned int flags, unsigned int mask)
-+			unsigned int pflags, unsigned int mask)
+@@ -358,6 +360,7 @@ static int ddebug_parse_query(char *words[], int nwords,
  {
- 	int i;
- 	struct ddebug_table *dt;
- 	unsigned int newflags;
- 	unsigned int nfound = 0;
--	char flagbuf[10];
-+	struct flagsbuf flags;
+ 	unsigned int i;
+ 	int rc = 0;
++	char *fline;
  
- 	/* search for matching ddebugs */
- 	mutex_lock(&ddebug_lock);
-@@ -191,22 +191,21 @@ static int ddebug_change(const struct ddebug_query *query,
- 
- 			nfound++;
- 
--			newflags = (dp->flags & mask) | flags;
-+			newflags = (dp->flags & mask) | pflags;
- 			if (newflags == dp->flags)
- 				continue;
- #ifdef CONFIG_JUMP_LABEL
- 			if (dp->flags & _DPRINTK_FLAGS_PRINT) {
--				if (!(flags & _DPRINTK_FLAGS_PRINT))
-+				if (!(pflags & _DPRINTK_FLAGS_PRINT))
- 					static_branch_disable(&dp->key.dd_key_true);
--			} else if (flags & _DPRINTK_FLAGS_PRINT)
-+			} else if (pflags & _DPRINTK_FLAGS_PRINT)
- 				static_branch_enable(&dp->key.dd_key_true);
- #endif
- 			dp->flags = newflags;
- 			vpr_info("changed %s:%d [%s]%s =%s\n",
- 				 trim_prefix(dp->filename), dp->lineno,
- 				 dt->mod_name, dp->function,
--				 ddebug_describe_flags(dp, flagbuf,
--						       sizeof(flagbuf)));
-+				 ddebug_describe_flags(dp->flags, &flags));
- 		}
- 	}
- 	mutex_unlock(&ddebug_lock);
-@@ -820,7 +819,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
- {
- 	struct ddebug_iter *iter = m->private;
- 	struct _ddebug *dp = p;
--	char flagsbuf[10];
-+	struct flagsbuf flags;
- 
- 	v9pr_info("called m=%p p=%p\n", m, p);
- 
-@@ -833,7 +832,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
- 	seq_printf(m, "%s:%u [%s]%s =%s \"",
- 		   trim_prefix(dp->filename), dp->lineno,
- 		   iter->table->mod_name, dp->function,
--		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
-+		   ddebug_describe_flags(dp->flags, &flags));
- 	seq_escape(m, dp->format, "\t\r\n\"");
- 	seq_puts(m, "\"\n");
- 
+ 	/* check we have an even number of words */
+ 	if (nwords % 2 != 0) {
+@@ -374,7 +377,22 @@ static int ddebug_parse_query(char *words[], int nwords,
+ 		if (!strcmp(words[i], "func")) {
+ 			rc = check_set(&query->function, words[i+1], "func");
+ 		} else if (!strcmp(words[i], "file")) {
+-			rc = check_set(&query->filename, words[i+1], "file");
++			if (check_set(&query->filename, words[i+1], "file"))
++				return -EINVAL;
++
++			/* tail :$info is function or line-range */
++			fline = strchr(query->filename, ':');
++			if (!fline)
++				break;
++			*fline++ = '\0';
++			if (isalpha(*fline) || *fline == '*' || *fline == '?') {
++				/* take as function name */
++				if (check_set(&query->function, fline, "func"))
++					return -EINVAL;
++			} else
++				if (parse_linerange(query, fline))
++					return -EINVAL;
++
+ 		} else if (!strcmp(words[i], "module")) {
+ 			rc = check_set(&query->module, words[i+1], "module");
+ 		} else if (!strcmp(words[i], "format")) {
 -- 
 2.23.0
 
