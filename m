@@ -2,121 +2,157 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3620C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B46C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F8D214B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7462073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:30:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uLg9Z/kp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QW45i/Iq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfLED3v (ORCPT
+        id S1728856AbfLEDaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 22:29:51 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:40818 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728132AbfLED3v (ORCPT
+        Wed, 4 Dec 2019 22:30:52 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:33281 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728132AbfLEDaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 22:29:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:To:From:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LEOOsUIAzaPk42eK67DM0XZJ5DKLzWY6tFldhWQMUFQ=; b=uLg9Z/kpfMIj32k0grGfLYso8
-        BDhMq2JUx+VTTw5+GupQbd/dCr3I63PVeV5sZGw0qUjgqpp1zuZWFEo2PnLaGHFVhHx3OAyWuWjNr
-        T5AGUhkYEnj2DYPieiKIboMha6SOmafIkrq10+qlPHuUDwieAQRiTw8JTe+c6BEHknzR8PWcQI/Wy
-        A/keZYW8WpGeyP+DZNTQoQyDJv/akNwD4xl4zRo3INRoeufj0RBy6fMaW6P0ED0boQzwijcUo9WQZ
-        Qlo8Zz3Qwnjb13Mi4aQ+M387WwvCYLFd0Gjvrg6YioMWxuYwn9A6As408s+jnvT8CFE6ZDf3IhWRI
-        iV/Jvx13A==;
-Received: from [2601:1c0:6280:3f0::3deb]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ichps-0001pN-LB; Thu, 05 Dec 2019 03:29:48 +0000
-Subject: Re: [PATCH v4 1/2] sched/numa: introduce per-cgroup NUMA locality
- info
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
- <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
- <89416266-0a06-ce1c-1d78-11171f0c80b8@linux.alibaba.com>
- <fde5d43b-447d-1b54-1bad-3a5d67e6c1f2@infradead.org>
-Message-ID: <c757f282-e89c-78f6-71cd-1273d2624429@infradead.org>
-Date:   Wed, 4 Dec 2019 19:29:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 4 Dec 2019 22:30:52 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r67so697997pjb.0;
+        Wed, 04 Dec 2019 19:30:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BXdzCUHz/0CUvTusmPE8UcGK3GWtUgd8km1icsllXOg=;
+        b=QW45i/IqmcQvZkporhXT8EO5ToLaAbCGL/b1RoAOfSm5lzJyavLqTH2OcxF6RiD47j
+         WLgMc3V570O5zbd5JT8GHU932RpsaOWp4CAXLRwztcf2aQ5EYWfe0yCgM+9kYfrEg+VJ
+         D6AeXBf9kmHAriB/pzzOqiZ3pn9UB8sDra2IzyZ5cpeOWNpPPsxb4ld0+YhilGnXF3CD
+         Vc8kXbcjaCLE14n8JK7l8pRNHs+ezihQauWQpaAaoVwGaatOjkzqYn7ovKds06pOG9kO
+         8xO3Yl4e5Dh7ya1K/ujgasBHxzDBbsFDYWOxdPIDeBZT1+kN2dHmgzxLyfBLYT5Vekbk
+         OUZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=BXdzCUHz/0CUvTusmPE8UcGK3GWtUgd8km1icsllXOg=;
+        b=lJgDI2tA5yQFq+g56NNEklcEy6O/FuRzNKerIdVLZUye/g43FrmpFmrmZlQhvv1QkU
+         CgH7+YRJhiYl4HKKsD3/wkmvMiTVinRjZUx6tBqs0VEQpY6SyXZYQrxVfpiNzTPnwfZx
+         2ky2DYAYnZqVmoviUMPO336X4BHfQhvvyot1tWaQY+5XnohGUxdTc8T9bXhCvf9VyIMk
+         4uBl9QON6koF5HHF/l1qzE1NHKwvmonWMeFabhrcCvqHDRwTrKeBvqUOxo1m24TD6LkY
+         vZ8S0Uxl0MRIAlCEgQO4cLlO2e736WLEEIIsv5eQXFF+0zsnDhs/IgNwKePQxkugcTNE
+         DkYg==
+X-Gm-Message-State: APjAAAWHb/3OoHfdRNG/Svl1zNPE5meyAYu1p7xbyx0mrN5UdfiUqc3L
+        NrbfOvaWWip1FeERJWVO5o0=
+X-Google-Smtp-Source: APXvYqwK/1WZRj1uu7EMum6yvtMmypv7Sf3DOWIbAHoH49lkvzJUyxZnzdpeEW6KiyGbfC1o1VmCOg==
+X-Received: by 2002:a17:90b:110d:: with SMTP id gi13mr7054526pjb.113.1575516651238;
+        Wed, 04 Dec 2019 19:30:51 -0800 (PST)
+Received: from debian ([103.231.91.70])
+        by smtp.gmail.com with ESMTPSA id 136sm8854121pgg.74.2019.12.04.19.30.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 19:30:50 -0800 (PST)
+Date:   Thu, 5 Dec 2019 09:00:38 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] Enlist running kernel modules information
+Message-ID: <20191205033035.GB3981@debian>
+Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191203094845.610692-1-unixbhaskar@gmail.com>
+ <CAK7LNASyrYv+pufwe4CfiNvd7NtriLw=FRdLOtu7CrbmZDSVHg@mail.gmail.com>
+ <20191204041543.GA1086470@ArchLinux>
+ <6ff74f67-11d3-d16f-8aeb-828c01455961@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <fde5d43b-447d-1b54-1bad-3a5d67e6c1f2@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GRPZ8SYKNexpdSJ7"
+Content-Disposition: inline
+In-Reply-To: <6ff74f67-11d3-d16f-8aeb-828c01455961@metux.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/4/19 7:28 PM, Randy Dunlap wrote:
-> Hi,
-> 
-> It seems that you missed my previous comments...
-> 
-> 
-> On 12/3/19 11:59 PM, 王贇 wrote:
->> diff --git a/init/Kconfig b/init/Kconfig
->> index 4d8d145c41d2..fb7182a0d017 100644
->> --- a/init/Kconfig
->> +++ b/init/Kconfig
->> @@ -817,6 +817,15 @@ config NUMA_BALANCING_DEFAULT_ENABLED
->>  	  If set, automatic NUMA balancing will be enabled if running on a NUMA
->>  	  machine.
->>
->> +config CGROUP_NUMA_LOCALITY
->> +	bool "The per-cgroup NUMA Locality"
-> 
-> Drop "The"
-> 
->> +	default n
->> +	depends on CGROUP_SCHED && NUMA_BALANCING
->> +	help
->> +	  This option enable the collection of per-cgroup NUMA locality info,
-> 
-> 	              enables
-> 
->> +	  to tell whether NUMA Balancing is working well for a particular
->> +	  workload, also imply the NUMA efficiency.
->> +
->>  menuconfig CGROUPS
->>  	bool "Control Group support"
->>  	select KERNFS
-> 
-> 
-> thanks.
-> 
 
-Ah, the changes are in patch 2/2/ for some reason.  OK, thanks.
+--GRPZ8SYKNexpdSJ7
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-~Randy
+On 14:48 Wed 04 Dec 2019, Enrico Weigelt, metux IT consult wrote:
+>On 04.12.19 05:22, Bhaskar Chowdhury wrote:
+>
+>Hi,
+>
+>> I think the usefulness comes from developers wants to see what are the
+>> modules are using by the running kernel in formatted way.
+>> This is very simple way to enlist all the modules with descriptions of
+>> it.So , they can easily parse it with other scripts.
+>
+>IMHO, this is a good thing to have. I can even imagine it shipped by
+>distros, for better bug reports.
+>
+>OTOH, if it's about the currently running kernel and loaded modules, why
+>not putting this into /proc or /sys ?
 
+The reason being not putting in the /proc or /sys is, it is not
+dynamically generated stuff. This is small script which do a specific
+task ,out of the information available  in /proc or /sys.
+
+And essentially resides in the scripts directory for easy finding and
+using. =20
+
+:)
+
+~Bhaskar
+>
+>
+>--mtx
+>
+>--=20
+>Dringender Hinweis: aufgrund existenzieller Bedrohung durch "Emotet"
+>sollten Sie *niemals* MS-Office-Dokumente via E-Mail annehmen/=F6ffenen,
+>selbst wenn diese von vermeintlich vertrauensw=FCrdigen Absendern zu
+>stammen scheinen. Andernfalls droht Totalschaden.
+>---
+>Hinweis: unverschl=FCsselte E-Mails k=F6nnen leicht abgeh=F6rt und manipul=
+iert
+>werden ! F=FCr eine vertrauliche Kommunikation senden Sie bitte ihren
+>GPG/PGP-Schl=FCssel zu.
+>---
+>Enrico Weigelt, metux IT consult
+>Free software and Linux embedded engineering
+>info@metux.net -- +49-151-27565287
+
+--GRPZ8SYKNexpdSJ7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3oedgACgkQsjqdtxFL
+KRX1EQf/bM+T/selwfgcqWcb3hw5h1W4xeF8v3MgFwzyiBKWHIbSHd8+ly1G4iO+
+YMzDeOSceRGjE3p/GnsR9D2Z2Oz/2Bb9U7LH6QO72TQMsP9yfZCXu2jOgxFWdkns
+KKybGCo4udo/Ui8RiLZm+0agD3mJClJoRxPAXEgMZ0euRh/oja4r2FF4qfclfKnW
+dCuDmLV8eiFElFez+qR1KK4JzmJLcI+RX+0KgATUBNIwbwv+inu/xLKt+nPg2pPu
+L0ui74Slc/RKz0CzEs5HA8jsKF1ErqlKNzweK6GoeHGGGx14vRDwyRmjyU08OIcy
+Yx69fTPorBKBHJxyJbWdzPRhhL+UMw==
+=Tgd4
+-----END PGP SIGNATURE-----
+
+--GRPZ8SYKNexpdSJ7--
