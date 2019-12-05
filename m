@@ -2,83 +2,113 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2BEC2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020B6C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A69BB20801
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:34:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XUtVhPuj"
+	by mail.kernel.org (Postfix) with ESMTP id CD03120801
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575563747;
+	bh=oS6AH9I28DIojblp5rvJHlU7WHNUxh/UKExFa5LBKK0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yeWUAPwJpPBeQnssgBbePfkEsveP+yHGDQN4W4SqD35oAHWsDgLAUgjK8zySMk7V2
+	 OQ8wpRKpArp/t00wWD/VPLnahI3GTn2xGwjTaLO7zA34UFzS01yCTG2vL0ghZcMlUP
+	 tpSBCmMoXvAlvxTMIjIdQEoHhu3TlmDAt6SZU8wA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729836AbfLEQeE (ORCPT
+        id S1729659AbfLEQfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:34:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26185 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729022AbfLEQeE (ORCPT
+        Thu, 5 Dec 2019 11:35:47 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:51166 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLEQfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:34:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575563643;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qxYFzUuTTdheWGBhhn3zwDRBiNCvQHjX+pYVvWctuZk=;
-        b=XUtVhPujoCWCgmS4s6sLmeFgfaWvNS6S3661vl509+NEoo/f/trdn3Bn9EQQLFNfpW//ER
-        rR6F+uBWvnQZAqtEOc75JdoQzFdyML8VYAbRHX1Bch42m6Jncg2Utga6O4yEZD91d7+mQW
-        UJ1LU6pxFqgwWXZOMv0SHH2iMEwaKVM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-94-PYFfFydZOzOTHH3KkbAciA-1; Thu, 05 Dec 2019 11:34:00 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5B85183B736;
-        Thu,  5 Dec 2019 16:33:58 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-250.rdu2.redhat.com [10.10.120.250])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 809039F41;
-        Thu,  5 Dec 2019 16:33:57 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20191205074539.GB3237@sol.localdomain>
-References: <20191205074539.GB3237@sol.localdomain> <000000000000a6324b0598b2eb59@google.com> <000000000000d6c9870598bdf090@google.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk,
-        syzbot <syzbot+838eb0878ffd51f27c41@syzkaller.appspotmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Write in pipe_write
+        Thu, 5 Dec 2019 11:35:46 -0500
+X-Greylist: delayed 643 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Dec 2019 11:35:44 EST
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id xB5GZbeR012511;
+        Fri, 6 Dec 2019 01:35:38 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com xB5GZbeR012511
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1575563738;
+        bh=7RCDcjbdBnI4J3nN6AHAC7zNOa70/0tQQctWWWxqHVE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=K+sX0gQSEDOv3hlCLCk0H490Uvi9xOJY2FhfZG8BT0piTlz41BGs/PWe6T54gg1r8
+         x8EVzSNI+ok9ftZzNrDwsMvigJ9GH64I/KR/GAJF8snCe2tB6MP5cCKVR5aC4+q82V
+         HLCnk8/5rRarKRkIcxmlHpwFIgn6QqXVcigo9GvWGhu1LDhe8x9nRX/Mjbj1qGqzD1
+         hVaR1yNRw4Ai5rSLjgVgEFynr35E+5CARAAJUUGmUpqFq/J8fXTTOHOxK6axa/UZeU
+         jMD3TNrxrY08qbwstY+5e6uYXY+yhSsNVT/a9uHMrt2nsFOIE+yi/LfOO0PWijgU0F
+         u5S5vRI4KMDqw==
+X-Nifty-SrcIP: [209.85.217.43]
+Received: by mail-vs1-f43.google.com with SMTP id y13so2803880vsd.9;
+        Thu, 05 Dec 2019 08:35:37 -0800 (PST)
+X-Gm-Message-State: APjAAAVGOHSE33IgCktsjriPNL4ZaSFELXDblP2ynUyMRLHy3sffAaD3
+        +X42fzXdNbmTrj0/B7pomrE+V16Hu4dIhwD4D2M=
+X-Google-Smtp-Source: APXvYqzfKqOvSJIEPElm1pWyU91oSt+UAToUSwzfhcnUqdq07YjSNh+po5u8xZMLJOi0lM/11guvf1dzZCIubdiGkoI=
+X-Received: by 2002:a05:6102:757:: with SMTP id v23mr6280994vsg.215.1575563736733;
+ Thu, 05 Dec 2019 08:35:36 -0800 (PST)
 MIME-Version: 1.0
-Content-ID: <29473.1575563636.1@warthog.procyon.org.uk>
-Date:   Thu, 05 Dec 2019 16:33:56 +0000
-Message-ID: <29474.1575563636@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: PYFfFydZOzOTHH3KkbAciA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+References: <20191204225446.202981-1-dima@golovin.in> <CAKwvOdm-bhuJMRRN3tyNdb88+_TFd4m3b-7gX0-91VG4djzp+Q@mail.gmail.com>
+ <23883331575506134@vla1-3991b5027d7d.qloud-c.yandex.net>
+In-Reply-To: <23883331575506134@vla1-3991b5027d7d.qloud-c.yandex.net>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 6 Dec 2019 01:35:00 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATA=OsFVY7D9T_5qCv=2MKc5o4wto8HCd=2qScDAyRrgg@mail.gmail.com>
+Message-ID: <CAK7LNATA=OsFVY7D9T_5qCv=2MKc5o4wto8HCd=2qScDAyRrgg@mail.gmail.com>
+Subject: Re: [PATCH] x86/boot: kbuild: allow readelf executable to be specified
+To:     Dmitry Golovin <dima@golovin.in>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Ross Philipson <ross.philipson@oracle.com>,
+        Ross Burton <ross.burton@intel.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eric Biggers <ebiggers@kernel.org> wrote:
+On Thu, Dec 5, 2019 at 9:41 AM Dmitry Golovin <dima@golovin.in> wrote:
+>
+> 05.12.2019, 01:18, "'Nick Desaulniers' via Clang Built Linux" <clang-built-linux@googlegroups.com>:
+> >
+> > Grepping the kernel sources for `READELF`, it looks like
+> > arch/ia64/Makefile makes the same mistake. Would you mind fixing both
+> > cases in the same patch (v2)? I'm also curious about it's use in
+> > arch/ia64/scripts/unwcheck.py, and scripts/faddr2line. +ia64
+> > maintainers and list.
+> >
+> > I think if you simply remove the assignment on line 17 of
+> > arch/ia64/Makefile you should be fine.
+>
+> Perhaps something should be done to NM on line 16 of this file as well. Also
+> found similar invocation of `objcopy` in arch/riscv/kernel/vdso/Makefile.
+> I think IA64 and RISC-V changes should be made as separate commits.
+>
+> -- Dmitry
 
-> It looks like the 'mask' variable in pipe_write() is not being updated af=
-ter
-> the pipe mutex was dropped in pipe_wait(), to take into account the pipe
-> size possibly having been changed in the mean time.
+I am fine with either way.
+I can take this patch, and also a one for IA64.
 
-There's that, but not only that.  Weirdness ensues if the ring size is 1 -
-this may have to do with the mask then being 0.
+You can send a patch for arch/riscv/kernel/vdso/Makefile
+to the riscv maintainer since it has no patch dependency.
 
-David
 
+-- 
+Best Regards
+Masahiro Yamada
