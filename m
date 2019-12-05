@@ -2,499 +2,302 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C47B9C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9C6C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8618F205ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD94A24648
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:52:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="zN7Oc4OO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dCnsKpXc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbfLEKuz (ORCPT
+        id S1729326AbfLEKwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:50:55 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40087 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729344AbfLEKuz (ORCPT
+        Thu, 5 Dec 2019 05:52:12 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45994 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfLEKwM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:50:55 -0500
-Received: by mail-il1-f195.google.com with SMTP id b15so2560682ila.7
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 02:50:54 -0800 (PST)
+        Thu, 5 Dec 2019 05:52:12 -0500
+Received: by mail-wr1-f68.google.com with SMTP id j42so2883471wrj.12;
+        Thu, 05 Dec 2019 02:52:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9BdHzs9O4amv4O1LyS6C8atucVQFEyL5BJWdTBk2m0s=;
-        b=zN7Oc4OOhyO49lvahOqaj/byV4m7Aka0azhiGbZDv//1fM8Fnvb05a96GgWzSaNMJt
-         /fyUAVWQQTxPOvKFrzsaCoZ8icxMbneRMoxWZEjTfyNOTpod0leQYVNILazwljM1vgA2
-         RZqW2OOvpoFkLx3pEhKU7GmbLIoFOWaMWGPsBLsP4+zWh2HuInjBBxCBtU1ZtmYCGHbQ
-         s5fBoRsD1DW2xrXSXEmX0P299wQl+bg7jE8Cpp5bbwqsinWSQ2XjzbjEJ1IxneOGO57W
-         z9YaUMhH74NCkcU6du0oqIlnCAYy9lZ5Q+C7zYNnr25BwawpODOSG6ohfZYbXFcJUIK9
-         LUzA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=p85VsrX3ECzdm36DFyDlG2D2pkyRyFnVJjwosFkrD4w=;
+        b=dCnsKpXcP7vCU/eq8Y7O5Epj7BUYShX5lPBX+beAgidPfAB756ABOQ1+7jpXpi4NDy
+         tKglSMljMBJL4PiJ0I1p7azJPpeyepKrbQEYoMZRkJL1ppLBCqaFoSIgrFiM+ezHIDJJ
+         1cqibpZOcZ4hjEhHrv0sTgyVrv5dvqQuypzDKAs8iFjmsF/73czz7uNJQUW0/n0t8w6R
+         Cy+5VomCJjsRW/lbhWTu2auJMKVNWlSUoKQ48DeD8H06/nMIM74RNaWW5vn4iOavCbS4
+         mKqUfc1LgBaI95AVC1GUC763nLJeew/jvU59WQwZlx2Vqxg9Q/WtlVLVDUT5BQb0KfnF
+         O3+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9BdHzs9O4amv4O1LyS6C8atucVQFEyL5BJWdTBk2m0s=;
-        b=QYE1pe41qxnn3nXOnWa2d5PdgILCkXLJOQK7EYUejt88me3EaC6ZBAQ+jaExArstxM
-         UAGcXdkyFlKZ9d0f4dOoXtAtK0rgi013SMMxQgGkV4XqTNuxLc+1cwof7Gc/JyKEX9Kf
-         MB5oBKV1jwS5W8xk0Z+UweB4znN7IIvexevurm/6jK3hC5MR6RfGBOUxDvwBx9syjNSM
-         753STyihNEScN0+of+8fTY2KdEu+2KT59OqxBuBkfYKgnvxpUVfoEzcLJXV8m9PoNR18
-         F6HG00nZ4jzigHbmdjuWbSwO8tPW2JLCSo7x1/fwBHmgV1PIrhj8AbRzG3ps69oR1mJA
-         h0Ug==
-X-Gm-Message-State: APjAAAU120Ez8CjBa78v5z3tpsr0OB6GbVEg0V1T8yXkGvf0hezRwGZX
-        d3509wAI6+xmjvZtEcxBCx3JKgj+DRj5DjoNjGA8aA==
-X-Google-Smtp-Source: APXvYqxPjSnO/Y6qu+9Pk9B0sYfjXvJs4yIXhHSqt0Muh49VYKyktABljrowLdMK4Sa0rdJY6D0jUXrKHln30xWTYC8=
-X-Received: by 2002:a92:96c2:: with SMTP id g185mr8264405ilh.40.1575543054004;
- Thu, 05 Dec 2019 02:50:54 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=p85VsrX3ECzdm36DFyDlG2D2pkyRyFnVJjwosFkrD4w=;
+        b=L/5NyQaPtEA5qAtHV4T/2ZjLvNKhembBhJZkIQ/YcdBUYeGfYm9WR4sUZvxgjfeoFT
+         7onlMbQJJnU6ZoafOearTsLTpa80/YPHicjtrfy1Dwhy9ygckkL4cqtH+srT8oqorFGL
+         ruHG9bW0xLZRgw4rCcMOgY6MZPLieZtbI8S3JrVHapEzuV/NZWHpdIx/kbKIhM2wPEP4
+         YeEnNdWq0rmS/78uQN7WkLuD2cogmS0fGYnJvjqBgHTFMV8RgqlyNUr1cweMCKexgVDJ
+         kco7+x3+xPUfcHuLQEl2IWwsZ5Xa17ejN9SwRbyyau+rlDxDaBFoexsDge0KP84gxP8t
+         GOJQ==
+X-Gm-Message-State: APjAAAW32NDBaNcsHmfdzKknuNTJwpqsyKVIBHQwWeR1ed+y/s+jToln
+        +xCh6R4YJnSHDt2rfo7Or8A=
+X-Google-Smtp-Source: APXvYqyfXgo0Z/jF1MOhGe7X9WKWcwEtVop8t+b9nI2Ejfz2Q+YwyiKOa6SGEoW+wVC5Kw3sEcTbqg==
+X-Received: by 2002:a5d:4b88:: with SMTP id b8mr9277090wrt.343.1575543128766;
+        Thu, 05 Dec 2019 02:52:08 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id v20sm10198616wmj.32.2019.12.05.02.52.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 05 Dec 2019 02:52:07 -0800 (PST)
+Date:   Thu, 5 Dec 2019 11:52:06 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        linux-input@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
+Message-ID: <20191205105206.slibwytrcteicx6y@pali>
+References: <20191127185139.65048-1-abhishekpandit@chromium.org>
+ <20191201145357.ybq5gfty4ulnfasq@pali>
+ <20191202012305.GQ248138@dtor-ws>
+ <20191202084750.k7lafzzrf3yq2tqs@pali>
+ <20191202175440.GA50317@dtor-ws>
+ <20191202185340.nae4lljten5jqp3y@pali>
+ <20191202193628.GI50317@dtor-ws>
+ <20191202230947.ld5ibnczdpkekfcm@pali>
+ <20191203173821.4u6uzxeaqnt3gyz3@pali>
+ <20191203191112.GJ50317@dtor-ws>
 MIME-Version: 1.0
-References: <20191204155941.17814-1-brgl@bgdev.pl> <20191205104728.GA9443@sol>
-In-Reply-To: <20191205104728.GA9443@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 5 Dec 2019 11:50:42 +0100
-Message-ID: <CAMRc=MePnUaLku6sL2aH1GRrsCKCvtXaF5+7GRWG102OQiAKFg@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes
- in line info
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191203191112.GJ50317@dtor-ws>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 5 gru 2019 o 11:47 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
-:
->
-> On Wed, Dec 04, 2019 at 04:59:40PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Currently there is no way for user-space to be informed about changes
-> > in status of GPIO lines e.g. when someone else requests the line or its
-> > config changes. We can only periodically re-read the line-info. This
-> > is fine for simple one-off user-space tools, but any daemon that provid=
-es
-> > a centralized access to GPIO chips would benefit hugely from an event
-> > driven line info synchronization.
-> >
-> > This patch adds a new ioctl() that allows user-space processes to reuse
-> > the file descriptor associated with the character device for watching
-> > any changes in line properties. Every such event contains the updated
-> > line information.
-> >
-> > Currently the events are generated on three types of status changes: wh=
-en
-> > a line is requested, when it's released and when its config is changed.
-> > The first two are self-explanatory. For the third one: this will only
-> > happen when another user-space process calls the new SET_CONFIG ioctl()
-> > as any changes that can happen from within the kernel (i.e.
-> > set_transitory() or set_debounce()) are of no interest to user-space.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >  drivers/gpio/gpiolib.c    | 177 ++++++++++++++++++++++++++++++++++++--
-> >  drivers/gpio/gpiolib.h    |   2 +
-> >  include/uapi/linux/gpio.h |  24 ++++++
-> >  3 files changed, 195 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index 711963aa9239..2ff15ef0bbe0 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -547,6 +547,9 @@ static long linehandle_set_config(struct linehandle=
-_state *lh,
-> >                       if (ret)
-> >                               return ret;
-> >               }
-> > +
-> > +             atomic_notifier_call_chain(&desc->gdev->notifier,
-> > +                                        GPIOLINE_CHANGED_CONFIG, desc)=
-;
-> >       }
-> >       return 0;
-> >  }
-> > @@ -1199,14 +1202,24 @@ static void gpio_desc_to_lineinfo(struct gpio_d=
-esc *desc,
-> >       spin_unlock_irqrestore(&gpio_lock, flags);
-> >  }
-> >
-> > +struct gpio_chardev_data {
-> > +     struct gpio_device *gdev;
-> > +     wait_queue_head_t wait;
-> > +     DECLARE_KFIFO(events, struct gpioline_info_changed, 32);
-> > +     struct notifier_block lineinfo_changed_nb;
-> > +};
-> > +
-> >  /*
-> >   * gpio_ioctl() - ioctl handler for the GPIO chardev
-> >   */
-> >  static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned l=
-ong arg)
-> >  {
-> > -     struct gpio_device *gdev =3D filp->private_data;
-> > +     struct gpio_chardev_data *priv =3D filp->private_data;
-> > +     struct gpio_device *gdev =3D priv->gdev;
-> >       struct gpio_chip *chip =3D gdev->chip;
-> >       void __user *ip =3D (void __user *)arg;
-> > +     struct gpio_desc *desc;
-> > +     __u32 offset;
-> >
-> >       /* We fail any subsequent ioctl():s when the chip is gone */
-> >       if (!chip)
-> > @@ -1228,9 +1241,9 @@ static long gpio_ioctl(struct file *filp, unsigne=
-d int cmd, unsigned long arg)
-> >               if (copy_to_user(ip, &chipinfo, sizeof(chipinfo)))
-> >                       return -EFAULT;
-> >               return 0;
-> > -     } else if (cmd =3D=3D GPIO_GET_LINEINFO_IOCTL) {
-> > +     } else if (cmd =3D=3D GPIO_GET_LINEINFO_IOCTL ||
-> > +                cmd =3D=3D GPIO_GET_LINEINFO_WATCH_IOCTL) {
-> >               struct gpioline_info lineinfo;
-> > -             struct gpio_desc *desc;
-> >
-> >               if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
-> >                       return -EFAULT;
-> > @@ -1243,11 +1256,25 @@ static long gpio_ioctl(struct file *filp, unsig=
-ned int cmd, unsigned long arg)
-> >
-> >               if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
-> >                       return -EFAULT;
-> > +
-> > +             if (cmd =3D=3D GPIO_GET_LINEINFO_WATCH_IOCTL)
-> > +                     set_bit(FLAG_WATCHED, &desc->flags);
-> > +
->
-> The WATCHED flag is stored globally in the gdev->descs?
-> Shouldn't it be stored in struct gpio_chardev_data?
-> Otherwise I can open the chip and disable your watches.
->
+On Tuesday 03 December 2019 11:11:12 Dmitry Torokhov wrote:
+> On Tue, Dec 03, 2019 at 06:38:21PM +0100, Pali Rohár wrote:
+> > On Tuesday 03 December 2019 00:09:47 Pali Rohár wrote:
+> > > On Monday 02 December 2019 11:36:28 Dmitry Torokhov wrote:
+> > > > On Mon, Dec 02, 2019 at 07:53:40PM +0100, Pali Rohár wrote:
+> > > > > On Monday 02 December 2019 09:54:40 Dmitry Torokhov wrote:
+> > > > > > On Mon, Dec 02, 2019 at 09:47:50AM +0100, Pali Rohár wrote:
+> > > > > > > On Sunday 01 December 2019 17:23:05 Dmitry Torokhov wrote:
+> > > > > > > > Hi Pali,
+> > > > > > > > 
+> > > > > > > > On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Rohár wrote:
+> > > > > > > > > Hello!
+> > > > > > > > > 
+> > > > > > > > > On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Subedi wrote:
+> > > > > > > > > > Support setting the uniq attribute of the input device. The uniq
+> > > > > > > > > > attribute is used as a unique identifier for the connected device.
+> > > > > > > > > > 
+> > > > > > > > > > For example, uinput devices created by BlueZ will store the address of
+> > > > > > > > > > the connected device as the uniq property.
+> > > > > > > > > > 
+> > > > > > > > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > > > > > > > > 
+> > > > > > > > > ...
+> > > > > > > > > 
+> > > > > > > > > > diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux/uinput.h
+> > > > > > > > > > index c9e677e3af1d..d5b7767c1b02 100644
+> > > > > > > > > > --- a/include/uapi/linux/uinput.h
+> > > > > > > > > > +++ b/include/uapi/linux/uinput.h
+> > > > > > > > > > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
+> > > > > > > > > >  #define UI_SET_PHYS		_IOW(UINPUT_IOCTL_BASE, 108, char*)
+> > > > > > > > > >  #define UI_SET_SWBIT		_IOW(UINPUT_IOCTL_BASE, 109, int)
+> > > > > > > > > >  #define UI_SET_PROPBIT		_IOW(UINPUT_IOCTL_BASE, 110, int)
+> > > > > > > > > > +#define UI_SET_UNIQ		_IOW(UINPUT_IOCTL_BASE, 111, char*)
+> > > > > > > > > 
+> > > > > > > > > I think that usage of char* as type in _IOW would cause compatibility
+> > > > > > > > > problems like it is for UI_SET_PHYS (there is UI_SET_PHYS_COMPAT). Size
+> > > > > > > > > of char* pointer depends on userspace (32 vs 64bit), so 32bit process on
+> > > > > > > > > 64bit kernel would not be able to call this new UI_SET_UNIQ ioctl.
+> > > > > > > > > 
+> > > > > > > > > I would suggest to define this ioctl as e.g.:
+> > > > > > > > > 
+> > > > > > > > >   #define UI_SET_UNIQ		_IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
+> > > > > > > > > 
+> > > > > > > > > And then in uinput.c code handle it as:
+> > > > > > > > > 
+> > > > > > > > >   case UI_SET_UNIQ & ~IOCSIZE_MASK:
+> > > > > > > > > 
+> > > > > > > > > as part of section /* Now check variable-length commands */
+> > > > > > > > 
+> > > > > > > > If we did not have UI_SET_PHYS in its current form, I'd agree with you,
+> > > > > > > > but I think there is benefit in having UI_SET_UNIQ be similar to
+> > > > > > > > UI_SET_PHYS.
+> > > > > > > 
+> > > > > > > I thought that ioctl is just number, so we can define it as we want. And
+> > > > > > > because uinput.c has already switch for variable-length commands it
+> > > > > > > would be easy to use it. Final handling can be in separate function like
+> > > > > > > for UI_SET_PHYS which can look like same.
+> > > > > > 
+> > > > > > Yes, we can define ioctl number as whatever we want. What I was trying
+> > > > > > to say, right now users do this:
+> > > > > > 
+> > > > > > 	rc = ioctl(fd, UI_SET_PHYS, "whatever");
+> > > > > > 	...
+> > > > > > 
+> > > > > > and with UI_SET_UNIQ they expect the following to work:
+> > > > > > 
+> > > > > > 	rc = ioctl(fd, UI_SET_UNIQ, "whatever");
+> > > > > > 	...
+> > > > > 
+> > > > > And would not following definition
+> > > > > 
+> > > > >   #define UI_SET_UNIQ _IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
+> > > > > 
+> > > > > allow userspace to call
+> > > > > 
+> > > > >   rc = ioctl(fd, UI_SET_UNIQ, "whatever");
+> > > > > 
+> > > > > as you want?
+> > > > 
+> > > > OK, so what you are saying is that we can have whatever in the size
+> > > > portion of ioctl number and simply ignore it in the driver
+> > > 
+> > > Yes.
+> > > 
+> > > > (and I do not
+> > > > think we need to do any of "UI_SET_UNIQ & ~IOCSIZE_MASK" really).
+> > > 
+> > > You are right, we do not need to clear any IOCSIZE_MASK. As ioctl number
+> > > would be always sam constant number. So it would be really simple. So
+> > > original patch would work if UI_SET_UNIQ define would be changed to
+> > > above with _IOW() macro.
+> > > 
+> > > > While this would work, I am not sure it is the best option as I think
+> > > > we'd have to comment extensively why we have arbitrary number in place
+> > > > of the size.
+> > > 
+> > > Comment can be added. But this is as ioctl is going to accept variable
+> > > length array (not fixed array), zero value make sense for me (zero as we
+> > > do not know exact size).
+> > > 
+> > > > And we still do not really save anything, as we still have to go through
+> > > > compat ioctl handler (since we have it already) and it is very simple to
+> > > > add a case for UI_SET_UNIQ there...
+> > > 
+> > > Yes, compat ioctl is still used. But my proposed solution does not
+> > > involve to define a new compact ioctl number just for sizeof(char *).
+> > > 
+> > > I'm looking at this particular problem from side, that there is no
+> > > reason to define two new ioctl numbers for UI_SET_UNIQ (one normal
+> > > number and one compat number), when one number is enough. It is one new
+> > > ioctl call, so one ioctl number should be enough.
+> > > 
+> > > And also with my proposed solution with ioctl size=0 it simplify
+> > > implementation of UI_SET_UNIQ as it is not needed to implement also
+> > > UI_SET_UNIQ_COMPAT ioctl nor touch compat ioct code path. Basically
+> > > original patch (with changed UI_SET_UNIQ macro) is enough.
+> > > 
+> > > But of of course, this is my view of this problem and I would not be
+> > > against your decision from maintainer position. Both solutions would
+> > > work correctly and bring same behavior for userspace applications.
+> > 
+> > 
+> > Hi Dmitry!
+> > 
+> > I was looking again at those _IOW defines for ioctl calls and I have
+> > another argument why not specify 'char *' in _IOW:
+> > 
+> > All ioctls in _IOW() specify as a third macro argument type which is
+> > passed as pointer to the third argument for ioctl() syscall.
+> > 
+> > So e.g.:
+> > 
+> >   #define EVIOCSCLOCKID _IOW('E', 0xa0, int)
+> > 
+> > is called from userspace as:
+> > 
+> >   int val;
+> >   ioctl(fd, EVIOCSCLOCKID, &val);
+> > 
+> > Or
+> > 
+> >   #define EVIOCSMASK _IOW('E', 0x93, struct input_mask)
+> > 
+> > is called as:
+> > 
+> >   struct input_mask val;
+> >   ioctl(fd, EVIOCSMASK, &val);
+> > 
+> > So basically third argument for _IOW specify size of byte buffer passed
+> > as third argument for ioctl(). In _IOW is not specified pointer to
+> > struct input_mask, but struct input_mask itself.
+> > 
+> > And in case you define
+> > 
+> >   #define MY_NEW_IOCTL _IOW(UINPUT_IOCTL_BASE, 200, char*)
+> > 
+> > then you by above usage you should pass data as:
+> > 
+> >   char *val = "DATA";
+> >   ioctl(fd, MY_NEW_IOCTL, &val);
+> > 
+> > Which is not same as just:
+> > 
+> >   ioctl(fd, MY_NEW_IOCTL, "DATA");
+> > 
+> > As in former case you passed pointer to pointer to data and in later
+> > case you passed only pointer to data.
+> > 
+> > It just mean that UI_SET_PHYS is already defined inconsistently which is
+> > also reason why compat ioctl for it was introduced.
+> 
+> Yes, you are right. UI_SET_PHYS is messed up. I guess the question is
+> what to do with all of this...
+> 
+> Maybe we should define
+> 
+> #define UI_SET_PHYS_STR(len)	_IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, len)
+> #define UI_SET_UNIQ_STR(len)	_IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 112, len)
 
-Yes, I feel stupid now. :)
+I'm not sure if this is ideal. Normally in C strings are nul-termined,
+so functions/macros do not take buffer length. _STR therefore in names
+looks inconsistent.
 
-Of course. I guess a bitmap for all the lines as part of the
-chardev_data will be fine.
+Maybe this is something which should be handled and unified at global
+scope of linux include files. Or al least make consensus how should be
+new ioctls for linux written.
 
-Bart
+Otherwise each API would use different ioctl schema and mess would be
+still there. Which means that defining a new ioctl UI_SET_PHYS_STR for
+existing one UI_SET_PHYS does not fix anything -- but rather make mess a
+big larger.
 
-> Kent.
->
->
-> >               return 0;
-> >       } else if (cmd =3D=3D GPIO_GET_LINEHANDLE_IOCTL) {
-> >               return linehandle_create(gdev, ip);
-> >       } else if (cmd =3D=3D GPIO_GET_LINEEVENT_IOCTL) {
-> >               return lineevent_create(gdev, ip);
-> > +     } else if (cmd =3D=3D GPIO_GET_LINEINFO_UNWATCH_IOCTL) {
-> > +             if (copy_from_user(&offset, ip, sizeof(offset)))
-> > +                     return -EFAULT;
-> > +
-> > +             desc =3D gpiochip_get_desc(chip, offset);
-> > +             if (IS_ERR(desc))
-> > +                     return PTR_ERR(desc);
-> > +
-> > +             clear_bit(FLAG_WATCHED, &desc->flags);
-> > +             return 0;
-> >       }
-> >       return -EINVAL;
-> >  }
-> > @@ -1260,6 +1287,99 @@ static long gpio_ioctl_compat(struct file *filp,=
- unsigned int cmd,
-> >  }
-> >  #endif
-> >
-> > +static struct gpio_chardev_data *
-> > +to_gpio_chardev_data(struct notifier_block *nb)
-> > +{
-> > +     return container_of(nb, struct gpio_chardev_data, lineinfo_change=
-d_nb);
-> > +}
-> > +
-> > +static int lineinfo_changed_notify(struct notifier_block *nb,
-> > +                                unsigned long action, void *data)
-> > +{
-> > +     struct gpio_chardev_data *priv =3D to_gpio_chardev_data(nb);
-> > +     struct gpioline_info_changed chg;
-> > +     struct gpio_desc *desc =3D data;
-> > +     int ret =3D NOTIFY_DONE;
-> > +
-> > +     if (test_bit(FLAG_WATCHED, &desc->flags)) {
-> > +             memset(&chg, 0, sizeof(chg));
-> > +             chg.info.line_offset =3D gpio_chip_hwgpio(desc);
-> > +             chg.event_type =3D action;
-> > +             chg.timestamp =3D ktime_get_real_ns();
-> > +             gpio_desc_to_lineinfo(desc, &chg.info);
-> > +
-> > +             ret =3D kfifo_in_spinlocked(&priv->events, &chg,
-> > +                                       1, &priv->wait.lock);
-> > +             if (ret)
-> > +                     wake_up_poll(&priv->wait, EPOLLIN);
-> > +             else
-> > +                     pr_debug_ratelimited(
-> > +                             "%s: lineinfo event FIFO is full - event =
-dropped\n",
-> > +                             __func__);
-> > +
-> > +             ret =3D NOTIFY_OK;
-> > +     }
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static __poll_t lineinfo_watch_poll(struct file *filep,
-> > +                                 struct poll_table_struct *pollt)
-> > +{
-> > +     struct gpio_chardev_data *priv =3D filep->private_data;
-> > +     __poll_t events =3D 0;
-> > +
-> > +     poll_wait(filep, &priv->wait, pollt);
-> > +
-> > +     spin_lock(&priv->wait.lock);
-> > +     if (!kfifo_is_empty(&priv->events))
-> > +             events =3D EPOLLIN | EPOLLRDNORM;
-> > +     spin_unlock(&priv->wait.lock);
-> > +
-> > +     return events;
-> > +}
-> > +
-> > +static ssize_t lineinfo_watch_read(struct file *filep, char __user *bu=
-f,
-> > +                                size_t count, loff_t *off)
-> > +{
-> > +     struct gpio_chardev_data *priv =3D filep->private_data;
-> > +     struct gpioline_info_changed event;
-> > +     int ret;
-> > +
-> > +     if (count < sizeof(event))
-> > +             return -EINVAL;
-> > +
-> > +     for (;;) {
-> > +             spin_lock(&priv->wait.lock);
-> > +             if (kfifo_is_empty(&priv->events)) {
-> > +                     if (filep->f_flags & O_NONBLOCK) {
-> > +                             spin_unlock(&priv->wait.lock);
-> > +                             return -EAGAIN;
-> > +                     }
-> > +
-> > +                     ret =3D wait_event_interruptible_locked(priv->wai=
-t,
-> > +                                     !kfifo_is_empty(&priv->events));
-> > +                     if (ret) {
-> > +                             spin_unlock(&priv->wait.lock);
-> > +                             return ret;
-> > +                     }
-> > +             }
-> > +
-> > +             ret =3D kfifo_out(&priv->events, &event, 1);
-> > +             spin_unlock(&priv->wait.lock);
-> > +             if (ret =3D=3D 1)
-> > +                     break;
-> > +
-> > +             /* We should never get here. See lineevent_read(). */
-> > +     }
-> > +
-> > +     ret =3D copy_to_user(buf, &event, sizeof(event));
-> > +     if (ret)
-> > +             return -EFAULT;
-> > +
-> > +     return sizeof(event);
-> > +}
-> > +
-> >  /**
-> >   * gpio_chrdev_open() - open the chardev for ioctl operations
-> >   * @inode: inode for this chardev
-> > @@ -1270,14 +1390,42 @@ static int gpio_chrdev_open(struct inode *inode=
-, struct file *filp)
-> >  {
-> >       struct gpio_device *gdev =3D container_of(inode->i_cdev,
-> >                                             struct gpio_device, chrdev)=
-;
-> > +     struct gpio_chardev_data *priv;
-> > +     int ret;
-> >
-> >       /* Fail on open if the backing gpiochip is gone */
-> >       if (!gdev->chip)
-> >               return -ENODEV;
-> > +
-> > +     priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
-> > +     if (!priv)
-> > +             return -ENOMEM;
-> > +
-> > +     init_waitqueue_head(&priv->wait);
-> > +     INIT_KFIFO(priv->events);
-> > +     priv->gdev =3D gdev;
-> > +
-> > +     priv->lineinfo_changed_nb.notifier_call =3D lineinfo_changed_noti=
-fy;
-> > +     ret =3D atomic_notifier_chain_register(&gdev->notifier,
-> > +                                          &priv->lineinfo_changed_nb);
-> > +     if (ret)
-> > +             goto out_free_priv;
-> > +
-> >       get_device(&gdev->dev);
-> > -     filp->private_data =3D gdev;
-> > +     filp->private_data =3D priv;
-> > +
-> > +     ret =3D nonseekable_open(inode, filp);
-> > +     if (ret)
-> > +             goto out_unregister_notifier;
-> >
-> > -     return nonseekable_open(inode, filp);
-> > +     return ret;
-> > +
-> > +out_unregister_notifier:
-> > +     atomic_notifier_chain_unregister(&gdev->notifier,
-> > +                                      &priv->lineinfo_changed_nb);
-> > +out_free_priv:
-> > +     kfree(priv);
-> > +     return ret;
-> >  }
-> >
-> >  /**
-> > @@ -1288,17 +1436,22 @@ static int gpio_chrdev_open(struct inode *inode=
-, struct file *filp)
-> >   */
-> >  static int gpio_chrdev_release(struct inode *inode, struct file *filp)
-> >  {
-> > -     struct gpio_device *gdev =3D container_of(inode->i_cdev,
-> > -                                           struct gpio_device, chrdev)=
-;
-> > +     struct gpio_chardev_data *priv =3D filp->private_data;
-> > +     struct gpio_device *gdev =3D priv->gdev;
-> >
-> > +     atomic_notifier_chain_unregister(&gdev->notifier,
-> > +                                      &priv->lineinfo_changed_nb);
-> >       put_device(&gdev->dev);
-> > +     kfree(priv);
-> > +
-> >       return 0;
-> >  }
-> >
-> > -
-> >  static const struct file_operations gpio_fileops =3D {
-> >       .release =3D gpio_chrdev_release,
-> >       .open =3D gpio_chrdev_open,
-> > +     .poll =3D lineinfo_watch_poll,
-> > +     .read =3D lineinfo_watch_read,
-> >       .owner =3D THIS_MODULE,
-> >       .llseek =3D no_llseek,
-> >       .unlocked_ioctl =3D gpio_ioctl,
-> > @@ -1509,6 +1662,8 @@ int gpiochip_add_data_with_key(struct gpio_chip *=
-chip, void *data,
-> >       for (i =3D 0; i < chip->ngpio; i++)
-> >               gdev->descs[i].gdev =3D gdev;
-> >
-> > +     ATOMIC_INIT_NOTIFIER_HEAD(&gdev->notifier);
-> > +
-> >  #ifdef CONFIG_PINCTRL
-> >       INIT_LIST_HEAD(&gdev->pin_ranges);
-> >  #endif
-> > @@ -2848,6 +3003,8 @@ static int gpiod_request_commit(struct gpio_desc =
-*desc, const char *label)
-> >       }
-> >  done:
-> >       spin_unlock_irqrestore(&gpio_lock, flags);
-> > +     atomic_notifier_call_chain(&desc->gdev->notifier,
-> > +                                GPIOLINE_CHANGED_REQUESTED, desc);
-> >       return ret;
-> >  }
-> >
-> > @@ -2945,6 +3102,9 @@ static bool gpiod_free_commit(struct gpio_desc *d=
-esc)
-> >       }
-> >
-> >       spin_unlock_irqrestore(&gpio_lock, flags);
-> > +     atomic_notifier_call_chain(&desc->gdev->notifier,
-> > +                                GPIOLINE_CHANGED_RELEASED, desc);
-> > +
-> >       return ret;
-> >  }
-> >
-> > @@ -3107,6 +3267,7 @@ static int gpio_set_bias(struct gpio_chip *chip, =
-struct gpio_desc *desc)
-> >               if (ret !=3D -ENOTSUPP)
-> >                       return ret;
-> >       }
-> > +
-> >       return 0;
-> >  }
-> >
-> > diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> > index a1cbeabadc69..4fca77241fb0 100644
-> > --- a/drivers/gpio/gpiolib.h
-> > +++ b/drivers/gpio/gpiolib.h
-> > @@ -54,6 +54,7 @@ struct gpio_device {
-> >       const char              *label;
-> >       void                    *data;
-> >       struct list_head        list;
-> > +     struct atomic_notifier_head notifier;
-> >
-> >  #ifdef CONFIG_PINCTRL
-> >       /*
-> > @@ -112,6 +113,7 @@ struct gpio_desc {
-> >  #define FLAG_PULL_UP    13   /* GPIO has pull up enabled */
-> >  #define FLAG_PULL_DOWN  14   /* GPIO has pull down enabled */
-> >  #define FLAG_BIAS_DISABLE    15      /* GPIO has pull disabled */
-> > +#define FLAG_WATCHED 16      /* GPIO line is being watched by user-spa=
-ce */
-> >
-> >       /* Connection label */
-> >       const char              *label;
-> > diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-> > index 799cf823d493..2401028ae7de 100644
-> > --- a/include/uapi/linux/gpio.h
-> > +++ b/include/uapi/linux/gpio.h
-> > @@ -59,6 +59,28 @@ struct gpioline_info {
-> >  /* Maximum number of requested handles */
-> >  #define GPIOHANDLES_MAX 64
-> >
-> > +/* Possible line status change events */
-> > +enum {
-> > +     GPIOLINE_CHANGED_REQUESTED =3D 1,
-> > +     GPIOLINE_CHANGED_RELEASED,
-> > +     GPIOLINE_CHANGED_CONFIG,
-> > +};
-> > +
-> > +/**
-> > + * struct gpioline_info_changed - Information about a change in status
-> > + * of a GPIO line
-> > + * @timestamp: estimate of time of status change occurrence, in nanose=
-conds
-> > + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RE=
-LEASED
-> > + * and GPIOLINE_CHANGED_CONFIG
-> > + * @info: updated line information
-> > + */
-> > +struct gpioline_info_changed {
-> > +     __u64 timestamp;
-> > +     __u32 event_type;
-> > +     struct gpioline_info info;
-> > +     __u32 padding[4]; /* for future use */
-> > +};
-> > +
-> >  /* Linerequest flags */
-> >  #define GPIOHANDLE_REQUEST_INPUT     (1UL << 0)
-> >  #define GPIOHANDLE_REQUEST_OUTPUT    (1UL << 1)
-> > @@ -176,6 +198,8 @@ struct gpioevent_data {
-> >
-> >  #define GPIO_GET_CHIPINFO_IOCTL _IOR(0xB4, 0x01, struct gpiochip_info)
-> >  #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info=
-)
-> > +#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0b, struct gpiolin=
-e_info)
-> > +#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0c, __u32)
-> >  #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_=
-request)
-> >  #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_re=
-quest)
-> >
-> > --
-> > 2.23.0
-> >
+Or is there already some discussion on LKML about this ioctl problem?
+
+> and mark UI_SET_PHYS as deprecated/wrong? This will allow us to specify
+> exactly how much data kernel is supposed to fetch from userspace instead
+> of trying to rely on a null-terminated string.
+> 
+> It would also be very helpful if BlueZ did not accept changes that use
+> this brand new ioctl until after we agreed on how it should look like.
+> Luiz, can it be reverted for now please?
+> 
+> Thanks.
+> 
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
