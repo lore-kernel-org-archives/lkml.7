@@ -2,142 +2,89 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EBFC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A34EC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57EF21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC2D21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:00:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="FBHT35gX"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="IONzYt78"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfLEO7O (ORCPT
+        id S1729710AbfLEPAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 09:59:14 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:49430 "EHLO fd.dlink.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbfLEO7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 09:59:14 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 266FB1B2130C; Thu,  5 Dec 2019 17:59:11 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 266FB1B2130C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1575557951; bh=KjNFJ+fpJBLEMDN29X7yO2/5Hj/TQQQOQnbnHQPMaPU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=FBHT35gXSJaj0BgKN/jH8RITpkruadh0TgkSPrwRil5DanevqLTEH7ckjAIvtSlqN
-         V6OzaqnZKdWTjTCkRQFH35r7ryV7W8pRopUcNG34XBmaFDc66TwrJ+9HWRjWaBnBtT
-         Gx9ggQhG+1YrWwniVc50N9/kZ6olg5jt2Jwh/LX8=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id B0BBD1B2025D;
-        Thu,  5 Dec 2019 17:58:57 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru B0BBD1B2025D
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 687D01B2265F;
-        Thu,  5 Dec 2019 17:58:57 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Thu,  5 Dec 2019 17:58:57 +0300 (MSK)
+        Thu, 5 Dec 2019 10:00:42 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:36998 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729187AbfLEPAl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 10:00:41 -0500
+Received: by mail-il1-f195.google.com with SMTP id t9so3260407iln.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 07:00:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=F5mXGgQfdcX4ulNvMgJjySGQKhJoMGbY4UManmb5rnw=;
+        b=IONzYt788nj+bQP2DMnWzbIsVtvCFVv2q6kQwcurdaDuXq17O2n/Dz3sP337r4xXmb
+         cCYaeWsw6A6b+gGxworEyXUUjtWh7q+Hd2lIEgPAWiPeNIZ0eIeiHV0h9Kk0dnG9aDSA
+         SswE0cfdhCdZ143x1FjVlUplkNtdBbCEA6KKcuXXB+43ZKbXGx4etEdt6tEL0Y3wEhqX
+         EJWUhVgFESZKT6os3cMmoYDQ9OD72ahcrPnZP0VTak8sFIvI6Goeq96q8Vk1yzE99e3G
+         uoCDSIkKp+/PPwoOO9WAeAxqVNreJMKLHsET3MvKV8DAXrrYjORfeUsMuRnW43otuvGW
+         GYTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=F5mXGgQfdcX4ulNvMgJjySGQKhJoMGbY4UManmb5rnw=;
+        b=Que+Gz8LrM9Du1Zu6hqeU/VzmaRl3hX1dTgU3tx9boBmAWQ8hxiNe6nU1YW4Tsg707
+         ExL/6xHNRoTMQ/CJFjYIAKUbEr5586Svl2wW2yLxpLWVutTLyfRvPKEKoTBL7/2yFyZR
+         RvzSlet+y+tcLAuOhWqNPJpNzTvkKaPzdUuYqw7yhJAN8ps3HGerP3L/4QvsVp63Vqgo
+         EswL/H3EKl5pyiYpZWBYCRUZOpfCyTsBD4/jaN4GgPnBQ65F1jMpF3xb3azxz8WUM0tp
+         qyTIBPI6gVm9amxgDMqKUMfwLxNh/Wm5Pb0PqgyONXv8ve8YuZuj+VKFl8u+i6OPC4Lw
+         BIgQ==
+X-Gm-Message-State: APjAAAWxe6/ms5Ac7PAIlLpdLplr9qMWNWUxpTsEToLtrO8gBHMdRKfW
+        VsceCBcv9lYgeWq3EeiGn26qX80kYmThMw==
+X-Google-Smtp-Source: APXvYqxIYA4JrNV5BxAT0DEq/LbOrIBZ+ExgEHJoa8r5nn9zo9eBUe6YgDO9mP2pcqCfGBRcYrltUQ==
+X-Received: by 2002:a92:9885:: with SMTP id a5mr9316849ill.107.1575558040476;
+        Thu, 05 Dec 2019 07:00:40 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id o83sm2874577ild.13.2019.12.05.07.00.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2019 07:00:39 -0800 (PST)
+Subject: Re: [PATCH 0/3] blk-mq: optimise plugging
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1574974577.git.asml.silence@gmail.com>
+ <da7f8969-b2ee-2bfd-c61c-50f12eb7dc16@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0f7be0b5-1d70-ae41-ad15-2e1ae7c73f09@kernel.dk>
+Date:   Thu, 5 Dec 2019 08:00:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Thu, 05 Dec 2019 17:58:57 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Muciri Gatimu <muciri@openmesh.com>,
-        Shashidhar Lakkavalli <shashidhar.lakkavalli@openmesh.com>,
-        John Crispin <john@phrozen.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Matteo Croce <mcroce@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: dsa: fix flow dissection on Tx path
-In-Reply-To: <20191205140132.GD28269@lunn.ch>
-References: <20191205100235.14195-1-alobakin@dlink.ru>
- <20191205125827.GA28269@lunn.ch> <2e03b82a8ec999fade26253ff35077c6@dlink.ru>
- <20191205140132.GD28269@lunn.ch>
-User-Agent: Roundcube Webmail/1.4.0
-Message-ID: <72a21c5f03abdc3d2d1c1bb85fd4489d@dlink.ru>
-X-Sender: alobakin@dlink.ru
+In-Reply-To: <da7f8969-b2ee-2bfd-c61c-50f12eb7dc16@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew Lunn wrote 05.12.2019 17:01:
->> Hi,
->> 
->> > What i'm missing here is an explanation why the flow dissector is
->> > called here if the protocol is already set? It suggests there is a
->> > case when the protocol is not correctly set, and we do need to look
->> > into the frame?
->> 
->> If we have a device with multiple Tx queues, but XPS is not configured
->> or system is running on uniprocessor system, then networking core code
->> selects Tx queue depending on the flow to utilize as much Tx queues as
->> possible but without breaking frames order.
->> This selection happens in net/core/dev.c:skb_tx_hash() as:
->> 
->> reciprocal_scale(skb_get_hash(skb), qcount)
->> 
->> where 'qcount' is the total number of Tx queues on the network device.
->> 
->> If skb has not been hashed prior to this line, then skb_get_hash() 
->> will
->> call flow dissector to generate a new hash. That's why flow dissection
->> can occur on Tx path.
-> 
-> 
-> Hi Alexander
-> 
-> So it looks like you are now skipping this hash. Which in your
-> testing, give better results, because the protocol is already set
-> correctly. But are there cases when the protocol is not set correctly?
-> We really do need to look into the frame?
+On 12/5/19 6:19 AM, Pavel Begunkov wrote:
+> On 29/11/2019 00:11, Pavel Begunkov wrote:
+>> Clean and optimise blk_mq_flush_plug_list().
+>>
+> ping
 
-Actually no, I'm not skipping the entire hashing, I'm only skipping
-tag_ops->flow_dissect() (helper that only alters network offset and
-replaces fake ETH_P_XDSA with the actual protocol) call on Tx path,
-because this only breaks flow dissection logics. All skbs are still
-processed and hashed by the generic code that goes after that call.
+Looks good to me, I've been waiting a bit on this as I'll queue it up
+for 5.6.
 
-> How about when an outer header has just been removed? The frame was
-> received on a GRE tunnel, the GRE header has just been removed, and
-> now the frame is on its way out? Is the protocol still GRE, and we
-> should look into the frame to determine if it is IPv4, ARP etc?
-> 
-> Your patch looks to improve things for the cases you have tested, but
-> i'm wondering if there are other use cases where we really do need to
-> look into the frame? In which case, your fix is doing the wrong thing.
-> Should we be extending the tagger to handle the TX case as well as the
-> RX case?
+-- 
+Jens Axboe
 
-We really have two options: don't call tag_ops->flow_dissect() on Tx
-(this patch), or extend tagger callbacks to handle Tx path too. I was
-using both of this for several months each and couldn't detect cases
-where the first one was worse than the second.
-I mean, there _might_ be such cases in theory, and if they will appear
-we should extend our taggers. But for now I don't see the necessity to
-do this as generic flow dissection logics works as expected after this
-patch and is completely broken without it.
-And remember that we have the reverse logic on Tx and all skbs are
-firstly queued on slave netdevice and only then on master/CPU port.
-
-It would be nice to see what other people think about it anyways.
-
->    Andrew
-
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
