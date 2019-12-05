@@ -2,298 +2,138 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26DDC2D0BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC5DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C6B2073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895902073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:25:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="phmsT3F4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbfLEBXQ (ORCPT
+        id S1728625AbfLEBZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 20:23:16 -0500
-Received: from mga05.intel.com ([192.55.52.43]:11477 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727146AbfLEBXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 20:23:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 17:23:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,279,1571727600"; 
-   d="scan'208";a="385977676"
-Received: from spandruv-mobl3.jf.intel.com ([10.252.134.55])
-  by orsmga005.jf.intel.com with ESMTP; 04 Dec 2019 17:23:12 -0800
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rjw@rjwysocki.net, lenb@kernel.org, rui.zhang@intel.com,
-        corbet@lwn.net
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [UPDATE][PATCH] ACPI / fan: Display fan performance state information
-Date:   Wed,  4 Dec 2019 17:23:09 -0800
-Message-Id: <20191205012309.23868-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.17.2
+        Wed, 4 Dec 2019 20:25:31 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34201 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728100AbfLEBZa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 20:25:30 -0500
+Received: by mail-pg1-f195.google.com with SMTP id r11so771201pgf.1;
+        Wed, 04 Dec 2019 17:25:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wXoUdUAHKBaISydzla24j9JfZxsUNvCsquV32FT8FOQ=;
+        b=phmsT3F4dF0M14EPNcg1am1sOwSFkUyx2bfTW7oyKgyBs6tMSSUqmQybaTa+SxoT8l
+         4R7XUIrwJohdQmYQsh0vmaFM1ddr0vjA2GinZKjqo8H2LshXlCu7S6RFyds0WDMO0d1g
+         z/+OlyBHFg5S7gyP932sjS2IOw/LCWfFvWNuV8p+BIJDXXUjiPOhSTOGbeneW4bhk/es
+         dvMFkLXqByYlBcuhwT7w8dIRrfyd/mpgGc6f6gfgzhtW0Ukscvu/KvTq82qV1VBQ+5VI
+         uO15mPsEf9USZPfc+63kqOnecNcfz9WZoeIEgHz+N9keViErJuJwSU5IE7Ej4lYHF1z7
+         PAJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wXoUdUAHKBaISydzla24j9JfZxsUNvCsquV32FT8FOQ=;
+        b=dZVZgrGDEzjxfYYQo2xML8zb+ixwy9jzjr+fKFTO0JZMCKR0+RprKNpLLIXuVbguru
+         eAz/Km0VQqS8NGkqkrLN62NevfFXI3VkUfst1AQFDyIdbxKfK8yPOgL70Poxvll2As6r
+         eCbKNaJw0fF/NNdb9N4t38E8wrn3ArP0PZJmab6IX0kThHhhe6u2XZ0XxGtRSTjM1s0l
+         dscO598TYACn8sLi96gEEk3NLKMWrqLHlvQZ7NisO8v4Zch6ge5gVofRqm3fQOA2VIln
+         CI6N0QzdnYKrOuozOLo4TWxJvCpXItYJT3et0MSHAAKsQ9Pz4HU2kVUxUaFREL9DDLKd
+         y07A==
+X-Gm-Message-State: APjAAAW5t1GztWdmepr/qQdfw2rLMzqdAZg86Cv+tflelY3Nsa7JXnXH
+        IiOcFnnZWPcjSd7zi7Id7Ik=
+X-Google-Smtp-Source: APXvYqzmIQuYJ2DE6q81jtTR+ElGMC0qA/OyVhOQZZGU/rOaWupztTcnh3V+XBhGZqkkjdMUYLQDwQ==
+X-Received: by 2002:a63:5657:: with SMTP id g23mr6554594pgm.452.1575509129665;
+        Wed, 04 Dec 2019 17:25:29 -0800 (PST)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::f9fe])
+        by smtp.gmail.com with ESMTPSA id c68sm9907694pfc.156.2019.12.04.17.25.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Dec 2019 17:25:28 -0800 (PST)
+Date:   Wed, 4 Dec 2019 17:25:26 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     andrii.nakryiko@gmail.com, toke@redhat.com, jolsa@kernel.org,
+        acme@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, mingo@kernel.org,
+        namhyung@kernel.org, alexander.shishkin@linux.intel.com,
+        a.p.zijlstra@chello.nl, mpetlan@redhat.com, brouer@redhat.com,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, andriin@fb.com, quentin.monnet@netronome.com
+Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
+Message-ID: <20191205012525.lpp5ilieupftpqrd@ast-mbp.dhcp.thefacebook.com>
+References: <20191204135405.3ffb9ad6@cakuba.netronome.com>
+ <20191204233948.opvlopjkxe5o66lr@ast-mbp.dhcp.thefacebook.com>
+ <20191204162348.49be5f1b@cakuba.netronome.com>
+ <20191204.162929.2216543178968689201.davem@davemloft.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204.162929.2216543178968689201.davem@davemloft.net>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When _FPS object indicates support of variable speed fan, thermal cooling
-devices for fan shows max performance state count using attribute
-"max_state" greater than or equal to 1.
+On Wed, Dec 04, 2019 at 04:29:29PM -0800, David Miller wrote:
+> From: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Date: Wed, 4 Dec 2019 16:23:48 -0800
+> 
+> > Jokes aside, you may need to provide some reasoning on this one..
+> > The recommendation for packaging libbpf from GitHub never had any 
+> > clear justification either AFAICR.
+> > 
+> > I honestly don't see why location matters. bpftool started out on GitHub
+> > but we moved it into the tree for... ease of packaging/distribution(?!)
+> > Now it's handy to have it in the tree to reuse the uapi headers.
+> > 
+> > As much as I don't care if we move it (back) out of the tree - having
+> > two copies makes no sense to me. As does having it in the libbpf repo.
+> > The sync effort is not warranted. User confusion is not warranted.
+> 
+> Part of this story has to do with how bug fixes propagate via bpf-next
+> instead of the bpf tree, as I understand it.
+> 
+> But yeah it would be nice to have a clear documentation on all of the
+> reasoning.
+> 
+> On the distro side, people seem to not want to use the separate repo.
+> If you're supporting enterprise customers you don't just sync with
+> upstream, you cherry pick.  When cherry picking gets too painful, you
+> sync with upstream possibly eliding upstream new features you don't
+> want to appear in your supported product yet.
+> 
+> I agree with tying bpftool and libbpf into the _resulting_ binary
+> distro package, but I'm not totally convinced about separating them
+> out of the kernel source tree.
 
-But the thermal cooling device doesn't display properties of each
-performance state. This is not enough for smart fan control user space
-software, which also considers speed, power and noise level.
+Looks like there is a confusion here.
+I'm not proposing to move bpftool out of kernel tree.
+The kernel+libbpf+bpftool+selftests already come as single patch set.
+bpftool has to stay in the kernel tree otherwise things like skeleton
+patchset won't be possible to accomplish without a lot of coordination
+between different trees and propagation delays.
 
-This change presents fan performance states attributes under acpi
-device for the fan. This will be under:
-/sys/bus/acpi/devices/devices/INT3404:00
-or
-/sys/bus/platform/devices/PNP0C0B:00.
+I'm proposing to tweak github/libbpf sync script to sync bpftool
+sources from kernel into github, so both libbpf and bpftool can be
+tested and packaged together.
+People are working on adding proper CI to github/libbpf.
+bpftool testing will automatically get more mileage out of that effort.
 
-For more information refer to:
-Documentation/acpi/fan_performance_states.txt
+github/libbpf is self contained. It should be built and tested
+on many different kernels and build environments (like any user
+space package should be). That's an important goal of CI.
+When bpftool is part of github/libbpf it will get the same treatment.
+I see only advantages and not a single disadvantage of building,
+testing, packaging bpftool out of github/libbpf.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Tested-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
----
-updated version:
-	Removed one unnecessary platoform_device* conversion from
-	acpi_device* in the function argument.
-
- Documentation/acpi/fan_performance_states.txt |  39 +++++++
- drivers/acpi/fan.c                            | 106 ++++++++++++++++--
- 2 files changed, 138 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/acpi/fan_performance_states.txt
-
-diff --git a/Documentation/acpi/fan_performance_states.txt b/Documentation/acpi/fan_performance_states.txt
-new file mode 100644
-index 000000000000..06fd8eb002f2
---- /dev/null
-+++ b/Documentation/acpi/fan_performance_states.txt
-@@ -0,0 +1,39 @@
-+When the optional object _FPS is present for ACPI devices PNP0C0B or INT3404,
-+additional attributes are displayed under acpi device object. These attributes
-+display information about each performance state.
-+
-+For example
-+$ ls /sys/bus/acpi/devices/INT3404\:00
-+description        fan_perf_state_11  fan_perf_state_5  fan_perf_state_9  physical_node  uevent
-+fan_perf_state_0   fan_perf_state_2   fan_perf_state_6  hid               power          uid
-+fan_perf_state_1   fan_perf_state_3   fan_perf_state_7  modalias          status         wakeup
-+fan_perf_state_10  fan_perf_state_4   fan_perf_state_8  path              subsystem
-+
-+Each fan_perf_state_* contains the information about the fields for each state as
-+defined by the ACPI specification.
-+
-+For example
-+$ grep . /sys/bus/acpi/devices/INT3404\:00/fan_perf_state_1/*
-+/sys/bus/acpi/devices/INT3404:00/fan_perf_state_1/control_percent:25
-+/sys/bus/acpi/devices/INT3404:00/fan_perf_state_1/noise_level_mdb:12500
-+/sys/bus/acpi/devices/INT3404:00/fan_perf_state_1/power_mw:1250
-+/sys/bus/acpi/devices/INT3404:00/fan_perf_state_1/speed_rpm:3200
-+/sys/bus/acpi/devices/INT3404:00/fan_perf_state_1/trip_point_index:invalid
-+
-+Fields
-+control_percent: Indicates the value to be used to set the fan speed to a
-+specific level using the _FSL object. The value here is from 0-100 percent.
-+
-+noise_level_mdb: Indicates the audible noise emitted by the fan. By the
-+specification the value represents the noise in 10ths of decibels. Here
-+it is multiplied with 100 to present in milli-db, to avoid loss of
-+precision. When not populated, "not-defined" is displayed.
-+
-+speed_rpm: Indicates the speed of the fan in revolutions per minute.
-+
-+power_mw: Indicates the power consumption in milliwatts. When not populated,
-+"not-defined" is displayed.
-+
-+trip_point_index: The active cooling trip point number that corresponds to this
-+performance state. The range is from 0-9. For any other values, "invalid" is
-+be displayed.
-diff --git a/drivers/acpi/fan.c b/drivers/acpi/fan.c
-index 816b0803f7fb..f5e9f67e6a5f 100644
---- a/drivers/acpi/fan.c
-+++ b/drivers/acpi/fan.c
-@@ -50,6 +50,7 @@ struct acpi_fan_fps {
- 	u64 speed;
- 	u64 noise_level;
- 	u64 power;
-+	struct kobject kobj;
- };
- 
- struct acpi_fan_fif {
-@@ -265,6 +266,64 @@ static int acpi_fan_speed_cmp(const void *a, const void *b)
- 	return fps1->speed - fps2->speed;
- }
- 
-+#define to_fps_state(k) container_of(k, struct acpi_fan_fps, kobj)
-+
-+#define DEFINE_ONE_FPS_ATTR_RO(_name)\
-+	static struct kobj_attribute _name =\
-+		__ATTR(_name, 0444, show_##_name, NULL)
-+
-+#define FPS_INFO_SHOW(name, object, multiplier)\
-+static ssize_t show_##name(struct kobject *kobj,\
-+			   struct kobj_attribute *attr,\
-+			   char *buf)\
-+{\
-+	struct acpi_fan_fps *fps = to_fps_state(kobj);\
-+\
-+	if (fps->object == 0xFFFFFFFF)\
-+		return sprintf(buf, "not-defined\n");\
-+\
-+	return sprintf(buf, "%llu\n", multiplier * fps->object);\
-+}
-+
-+FPS_INFO_SHOW(control_percent, control, 1)
-+FPS_INFO_SHOW(speed_rpm, speed, 1)
-+FPS_INFO_SHOW(power_mw, power, 1)
-+FPS_INFO_SHOW(noise_level_mdb, noise_level, 100)
-+
-+static ssize_t show_trip_point_index(struct kobject *kobj,
-+				     struct kobj_attribute *attr,
-+				     char *buf)
-+{
-+	struct acpi_fan_fps *fps = to_fps_state(kobj);
-+
-+	if (fps->trip_point > 9)
-+		return sprintf(buf, "invalid\n");
-+
-+	return sprintf(buf, "%llu\n", fps->trip_point);
-+}
-+
-+DEFINE_ONE_FPS_ATTR_RO(control_percent);
-+DEFINE_ONE_FPS_ATTR_RO(trip_point_index);
-+DEFINE_ONE_FPS_ATTR_RO(speed_rpm);
-+DEFINE_ONE_FPS_ATTR_RO(noise_level_mdb);
-+DEFINE_ONE_FPS_ATTR_RO(power_mw);
-+
-+static struct attribute *fps_attrs[] = {
-+	&control_percent.attr,
-+	&trip_point_index.attr,
-+	&speed_rpm.attr,
-+	&noise_level_mdb.attr,
-+	&power_mw.attr,
-+	NULL
-+};
-+
-+static struct kobj_type fps_ktype = {
-+	.sysfs_ops = &kobj_sysfs_ops,
-+	.default_attrs = fps_attrs,
-+};
-+
-+#define ACPI_FPS_NAME_LEN	20
-+
- static int acpi_fan_get_fps(struct acpi_device *device)
- {
- 	struct acpi_fan *fan = acpi_driver_data(device);
-@@ -295,12 +354,13 @@ static int acpi_fan_get_fps(struct acpi_device *device)
- 	}
- 	for (i = 0; i < fan->fps_count; i++) {
- 		struct acpi_buffer format = { sizeof("NNNNN"), "NNNNN" };
--		struct acpi_buffer fps = { sizeof(fan->fps[i]), &fan->fps[i] };
-+		struct acpi_buffer fps = { offsetof(struct acpi_fan_fps, kobj),
-+						&fan->fps[i] };
- 		status = acpi_extract_package(&obj->package.elements[i + 1],
- 					      &format, &fps);
- 		if (ACPI_FAILURE(status)) {
- 			dev_err(&device->dev, "Invalid _FPS element\n");
--			break;
-+			goto err;
- 		}
- 	}
- 
-@@ -308,6 +368,21 @@ static int acpi_fan_get_fps(struct acpi_device *device)
- 	sort(fan->fps, fan->fps_count, sizeof(*fan->fps),
- 	     acpi_fan_speed_cmp, NULL);
- 
-+	for (i = 0; i < fan->fps_count; ++i) {
-+		char name[ACPI_FPS_NAME_LEN];
-+
-+		snprintf(name, ACPI_FPS_NAME_LEN, "fan_perf_state_%d", i);
-+		status = kobject_init_and_add(&fan->fps[i].kobj, &fps_ktype,
-+					      &device->dev.kobj, name);
-+		if (status) {
-+			int j;
-+
-+			for (j = 0; j < i; ++j)
-+				kobject_put(&fan->fps[j].kobj);
-+			break;
-+		}
-+	}
-+
- err:
- 	kfree(obj);
- 	return status;
-@@ -331,13 +406,13 @@ static int acpi_fan_probe(struct platform_device *pdev)
- 
- 	if (acpi_fan_is_acpi4(device)) {
- 		if (acpi_fan_get_fif(device) || acpi_fan_get_fps(device))
--			goto end;
-+			goto err_end;
- 		fan->acpi4 = true;
- 	} else {
- 		result = acpi_device_update_power(device, NULL);
- 		if (result) {
- 			dev_err(&device->dev, "Failed to set initial power state\n");
--			goto end;
-+			goto err_end;
- 		}
- 	}
- 
-@@ -350,7 +425,7 @@ static int acpi_fan_probe(struct platform_device *pdev)
- 						&fan_cooling_ops);
- 	if (IS_ERR(cdev)) {
- 		result = PTR_ERR(cdev);
--		goto end;
-+		goto err_end;
- 	}
- 
- 	dev_dbg(&pdev->dev, "registered as cooling_device%d\n", cdev->id);
-@@ -365,10 +440,21 @@ static int acpi_fan_probe(struct platform_device *pdev)
- 	result = sysfs_create_link(&cdev->device.kobj,
- 				   &pdev->dev.kobj,
- 				   "device");
--	if (result)
-+	if (result) {
- 		dev_err(&pdev->dev, "Failed to create sysfs link 'device'\n");
-+		goto err_end;
-+	}
-+
-+	return 0;
-+
-+err_end:
-+	if (fan->acpi4) {
-+		int i;
-+
-+		for (i = 0; i < fan->fps_count; ++i)
-+			kobject_put(&fan->fps[i].kobj);
-+	}
- 
--end:
- 	return result;
- }
- 
-@@ -376,6 +462,12 @@ static int acpi_fan_remove(struct platform_device *pdev)
- {
- 	struct acpi_fan *fan = platform_get_drvdata(pdev);
- 
-+	if (fan->acpi4) {
-+		int i;
-+
-+		for (i = 0; i < fan->fps_count; ++i)
-+			kobject_put(&fan->fps[i].kobj);
-+	}
- 	sysfs_remove_link(&pdev->dev.kobj, "thermal_cooling");
- 	sysfs_remove_link(&fan->cdev->device.kobj, "device");
- 	thermal_cooling_device_unregister(fan->cdev);
--- 
-2.17.2
+To support stable libbpf+bpftool releases we can branch in github and push
+fixes into branches. Same CI can test master and stable branches.
 
