@@ -2,117 +2,103 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D5AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF44EC2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7117A205ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:19:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iLsbC5cE"
+	by mail.kernel.org (Postfix) with ESMTP id 8B347205ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbfLEKTi (ORCPT
+        id S1729339AbfLEKTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:19:38 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56981 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729041AbfLEKTi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:19:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575541176;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ln8ZUNvOPrVi4maH8Z61jrB9tpqjzLpExI55MiJBJ2w=;
-        b=iLsbC5cE0A6FhwRuG9h0eV+HveaxcMxr6mxrhhvc2LWZivLwXT7VzR3r/RYCBKJXIEwLoD
-        N9Dn7ror4DmEDVeyN9GD7ew1NKj7YGfzrfWKpWTMXK/wZfH1peq9nzCa7ULzirM6DfoZ3n
-        g+6qRCt8f+z+1rcXOlczPSJCXJSbPoc=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-398-mjGcqNRXPE6UFdONGmwsKQ-1; Thu, 05 Dec 2019 05:19:36 -0500
-Received: by mail-wr1-f72.google.com with SMTP id t3so1297322wrm.23
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 02:19:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ln8ZUNvOPrVi4maH8Z61jrB9tpqjzLpExI55MiJBJ2w=;
-        b=dfr3nRdsYdP2GwTE41VJpgiTayy0KvENFTUoKHIdyZrJpV9Cl50JVtR8/laRwyn0NM
-         eNR2067+RKmGuLX6/2ikIPUHD4AKSxVXuU5ckKpW+YR+x9w7EMtSeWC/EX+0OlDuEb02
-         l3w9Xrde/JjKtALDG3OZeOMEHxKWC/tLtKlDsoLqKREkRgu89WuSEqoAmzdUx49E8Zkf
-         fOWOu/FgcqT886N28K5x+P9I7wuTOveGvLxbLaH/Cp+MI+7YhLL/KwMV4gAsLuqW6TWV
-         ygQzArbmMpefrfUkX0KbnBlqN1zS+FV9AvSIEDGTbJDrgHqVyLRj7hSMLjfy2/4Wq0Bu
-         HQNA==
-X-Gm-Message-State: APjAAAUggQZRY2YoVXtVqn6lLXdzbB2r+nRJ9Lq/qpq/CBBskKpDdlzf
-        k75Th2mq5bkgn4+ZD6eFDU85ccCLosWPuNbspqcc/s88KREkgxRxYlUeRHyc6C0f1vPNBe4Lpdh
-        0hAPl2t4jfj7S+81gXEDa+8Ub
-X-Received: by 2002:a1c:3803:: with SMTP id f3mr4446400wma.134.1575541174626;
-        Thu, 05 Dec 2019 02:19:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxGZwu2osdsqyQJM4F16+Z0qPXhHN5OwXXbgylNZNCRn6oWdfdmCqf0PLAgBUweCD/FWfQW/g==
-X-Received: by 2002:a1c:3803:: with SMTP id f3mr4446378wma.134.1575541174401;
-        Thu, 05 Dec 2019 02:19:34 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:541f:a977:4b60:6802? ([2001:b07:6468:f312:541f:a977:4b60:6802])
-        by smtp.gmail.com with ESMTPSA id u18sm11656947wrt.26.2019.12.05.02.19.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 02:19:33 -0800 (PST)
-Subject: Re: [PATCH] KVM: explicitly set rmap_head->val to 0 in
- pte_list_desc_remove_entry()
-To:     linmiaohe <linmiaohe@huawei.com>, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-References: <1575517216-5571-1-git-send-email-linmiaohe@huawei.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e9469628-dc2c-c738-5589-2ac19c01109c@redhat.com>
-Date:   Thu, 5 Dec 2019 11:19:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 5 Dec 2019 05:19:43 -0500
+Received: from mx20.baidu.com ([111.202.115.85]:33047 "EHLO baidu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729222AbfLEKTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 05:19:42 -0500
+Received: from BJHW-Mail-Ex16.internal.baidu.com (unknown [10.127.64.39])
+        by Forcepoint Email with ESMTPS id E24DFD9791CE1;
+        Thu,  5 Dec 2019 18:19:36 +0800 (CST)
+Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
+ BJHW-Mail-Ex16.internal.baidu.com (10.127.64.39) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Thu, 5 Dec 2019 18:19:37 +0800
+Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
+ BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
+ 15.01.1713.004; Thu, 5 Dec 2019 18:19:37 +0800
+From:   "Li,Rongqing" <lirongqing@baidu.com>
+To:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "sergey.senozhatsky.work@gmail.com" 
+        <sergey.senozhatsky.work@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Kan.liang@intel.com" <Kan.liang@intel.com>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIXVt2Ml0gd2F0Y2hkb2cvaGFyZGxvY2t1cDogcmVhc3Np?=
+ =?gb2312?Q?gn_last=5Ftimestamp_when_enable_nmi_event?=
+Thread-Topic: [PATCH][v2] watchdog/hardlockup: reassign last_timestamp when
+ enable nmi event
+Thread-Index: AQHVhIbsJWHFXEYJak262w7TdcNcAad/qiDwgCv3FSA=
+Date:   Thu, 5 Dec 2019 10:19:36 +0000
+Message-ID: <f22b9fa4a2b74bdfa4fd2cb0d26a313a@baidu.com>
+References: <1571121247-19392-1-git-send-email-lirongqing@baidu.com>
+ <2142496f954e4f688056c8cc347369a8@baidu.com>
+In-Reply-To: <2142496f954e4f688056c8cc347369a8@baidu.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.198.17]
+x-baidu-bdmsfe-datecheck: 1_BJHW-Mail-Ex16_2019-12-05 18:19:37:652
+x-baidu-bdmsfe-viruscheck: BJHW-Mail-Ex16_GRAY_Inside_WithoutAtta_2019-12-05
+ 18:19:37:621
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <1575517216-5571-1-git-send-email-linmiaohe@huawei.com>
-Content-Language: en-US
-X-MC-Unique: mjGcqNRXPE6UFdONGmwsKQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/12/19 04:40, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> When we reach here, we have desc->sptes[j] = NULL with j = 0.
-> So we can replace desc->sptes[0] with 0 to make it more clear.
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 6f92b40d798c..a81c605abbba 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -1410,7 +1410,7 @@ pte_list_desc_remove_entry(struct kvm_rmap_head *rmap_head,
->  	if (j != 0)
->  		return;
->  	if (!prev_desc && !desc->more)
-> -		rmap_head->val = (unsigned long)desc->sptes[0];
-> +		rmap_head->val = 0;
->  	else
->  		if (prev_desc)
->  			prev_desc->more = desc->more;
-> 
-
-Queued, thanks.
-
-Paolo
-
+UGluZw0KDQp0aGFua3MNCg0KLUxpDQoNCg0KPj4gW1BBVENIXVt2Ml0gd2F0Y2hkb2cvaGFyZGxv
+Y2t1cDogcmVhc3NpZ24gbGFzdF90aW1lc3RhbXAgd2hlbg0KPiA+IGVuYWJsZSBubWkgZXZlbnQN
+Cj4gPg0KPiA+IGxhc3RfdGltZXN0YW1wIGlzIG5vdCBpbml0aWFsaXplZCBhbmQgaXMgemVybyBh
+ZnRlciBib290LCBvciBzdG9wIHRvDQo+ID4gZm9yd2FyZCB3aGVuIG5taSB3YXRjaGRvZyBpcyBk
+aXNhYmxlZDsgYW5kIGZhbHNlIHBvc2l0aXZlcyBzdGlsbCBpcw0KPiA+IHBvc3NpYmxlIHdoZW4g
+cmVzdGFydCBOTUkgdGltZXIgYWZ0ZXIgc3RvcHBpbmcgMTIwIHNlY29uZHMNCj4gPg0KPiA+IHNv
+IHJlYXNzaWduIGxhc3RfdGltZXN0YW1wIGFsd2F5cyB3aGVuIGVuYWJsZSBubWkgZXZlbnQNCj4g
+Pg0KPiA+IEZpeGVzOiA3ZWRhZWI2ODQxZGYgKCJrZXJuZWwvd2F0Y2hkb2c6IFByZXZlbnQgZmFs
+c2UgcG9zaXRpdmVzIHdpdGgNCj4gPiB0dXJibw0KPiA+IG1vZGVzIikNCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBMaSBSb25nUWluZyA8bGlyb25ncWluZ0BiYWlkdS5jb20+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogWmhhbmcgWXUgPHpoYW5neXUzMUBiYWlkdS5jb20+DQo+ID4gLS0tDQo+ID4NCj4gPiB2MS0t
+PnYyOiBtYWtlIGl0IGJlIGFibGUgdG8gYmUgY29tcGlsZWQgb24gbm8NCj4gPiB2MS0tPkNPTkZJ
+R19IQVJETE9DS1VQX0NIRUNLX1RJTUVTVEFNUCBwbGF0Zm9ybQ0KPiA+DQo+ID4ga2VybmVsL3dh
+dGNoZG9nX2hsZC5jIHwgMTggKysrKysrKysrKysrKysrKystDQo+ID4gIDEgZmlsZSBjaGFuZ2Vk
+LCAxNyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEv
+a2VybmVsL3dhdGNoZG9nX2hsZC5jIGIva2VybmVsL3dhdGNoZG9nX2hsZC5jIGluZGV4DQo+ID4g
+MjQ3YmYwYjE1ODJjLi5mMTRkMTgyODAzODcgMTAwNjQ0DQo+ID4gLS0tIGEva2VybmVsL3dhdGNo
+ZG9nX2hsZC5jDQo+ID4gKysrIGIva2VybmVsL3dhdGNoZG9nX2hsZC5jDQo+ID4gQEAgLTkxLDEx
+ICs5MSwyNCBAQCBzdGF0aWMgYm9vbCB3YXRjaGRvZ19jaGVja190aW1lc3RhbXAodm9pZCkNCj4g
+PiAgCV9fdGhpc19jcHVfd3JpdGUobGFzdF90aW1lc3RhbXAsIG5vdyk7DQo+ID4gIAlyZXR1cm4g
+dHJ1ZTsNCj4gPiAgfQ0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgd2F0Y2hkb2dfdG91Y2hfdGlt
+ZXN0YW1wKGludCBjcHUpIHsNCj4gPiArDQo+ID4gKwlrdGltZV90IG5vdyA9IGt0aW1lX2dldF9t
+b25vX2Zhc3RfbnMoKTsNCj4gPiArDQo+ID4gKwlwZXJfY3B1KGxhc3RfdGltZXN0YW1wLCBjcHUp
+ID0gbm93Ow0KPiA+ICt9DQo+ID4gICNlbHNlDQo+ID4gIHN0YXRpYyBpbmxpbmUgYm9vbCB3YXRj
+aGRvZ19jaGVja190aW1lc3RhbXAodm9pZCkgIHsNCj4gPiAgCXJldHVybiB0cnVlOw0KPiA+ICB9
+DQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9pZCB3YXRjaGRvZ190b3VjaF90aW1lc3RhbXAoaW50IGNw
+dSkgew0KPiA+ICsNCj4gPiArfQ0KPiA+ICAjZW5kaWYNCj4gPg0KPiA+ICBzdGF0aWMgc3RydWN0
+IHBlcmZfZXZlbnRfYXR0ciB3ZF9od19hdHRyID0geyBAQCAtMTk2LDYgKzIwOSw3IEBAIHZvaWQN
+Cj4gPiBoYXJkbG9ja3VwX2RldGVjdG9yX3BlcmZfZW5hYmxlKHZvaWQpDQo+ID4gIAlpZiAoIWF0
+b21pY19mZXRjaF9pbmMoJndhdGNoZG9nX2NwdXMpKQ0KPiA+ICAJCXByX2luZm8oIkVuYWJsZWQu
+IFBlcm1hbmVudGx5IGNvbnN1bWVzIG9uZSBody1QTVUgY291bnRlci5cbiIpOw0KPiA+DQo+ID4g
+Kwl3YXRjaGRvZ190b3VjaF90aW1lc3RhbXAoc21wX3Byb2Nlc3Nvcl9pZCgpKTsNCj4gPiAgCXBl
+cmZfZXZlbnRfZW5hYmxlKHRoaXNfY3B1X3JlYWQod2F0Y2hkb2dfZXYpKTsNCj4gPiAgfQ0KPiA+
+DQo+ID4gQEAgLTI3NCw4ICsyODgsMTAgQEAgdm9pZCBfX2luaXQgaGFyZGxvY2t1cF9kZXRlY3Rv
+cl9wZXJmX3Jlc3RhcnQodm9pZCkNCj4gPiAgCWZvcl9lYWNoX29ubGluZV9jcHUoY3B1KSB7DQo+
+ID4gIAkJc3RydWN0IHBlcmZfZXZlbnQgKmV2ZW50ID0gcGVyX2NwdSh3YXRjaGRvZ19ldiwgY3B1
+KTsNCj4gPg0KPiA+IC0JCWlmIChldmVudCkNCj4gPiArCQlpZiAoZXZlbnQpIHsNCj4gPiArCQkJ
+d2F0Y2hkb2dfdG91Y2hfdGltZXN0YW1wKGNwdSk7DQo+ID4gIAkJCXBlcmZfZXZlbnRfZW5hYmxl
+KGV2ZW50KTsNCj4gPiArCQl9DQo+ID4gIAl9DQo+ID4gIH0NCj4gPg0KPiA+IC0tDQoNCj4gPiAy
+LjE2LjINCg0K
