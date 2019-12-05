@@ -2,178 +2,97 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F81C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E05C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40FD222525
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D57224648
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yRW0ila8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WVUhFM/G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbfLEQi4 (ORCPT
+        id S1729672AbfLEQkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:38:56 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43829 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfLEQiz (ORCPT
+        Thu, 5 Dec 2019 11:40:35 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39346 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729022AbfLEQkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:38:55 -0500
-Received: by mail-wr1-f67.google.com with SMTP id d16so4372128wre.10
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 08:38:53 -0800 (PST)
+        Thu, 5 Dec 2019 11:40:35 -0500
+Received: by mail-io1-f67.google.com with SMTP id c16so4268338ioh.6
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 08:40:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+rPpV85Ioqv2xtks5OONWqK+n5i6dViTlGicJhAqFfY=;
-        b=yRW0ila80HkXR5BZvLIDkxLL+sEVXfHq8Eg/gymPOM+KCLryjWVyIq9c1mgSciZMwv
-         q2GTER2tsekvw/Etk/BArSlSi1jE7iIvOMh6nMX8dDhSBD5algPqnoUAliQXfkDguyZq
-         tWAPYUBkr1m7+d4QKUfITKjxuBFP1xaF1k2ouuBe9pzosSX2ekntzu0YuIHAgP0ZfVrI
-         CmPKWJD+D+wl5h30x64ThbDDKYSegClcXt3AdCZ3VuxVB3wVCZdl3AkU56+kFYb6mnFD
-         xGAg5JYfW3gNngyBju1j5prq0ua1kprxlragbb+mql8f9ewVpoajHXoWUO40zHMxnZzf
-         VuqA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YnSZ1HocZmFXibZc/RmleTCK7QzGnhXUqE2Wqe01NTg=;
+        b=WVUhFM/Gu50kF5obPXp291eiDa3l4PfApYvEAiDm+pzyIVPqSFwEvdshHnE49VWUtV
+         0sxHOexRG8QRvCbiheB/EO7/MV32WnC2flHRnrWoKjYhEsxjhPWB+CmnYEpWJjjslWXY
+         JbNCfR5Ddm3do9T9YzQyeAGUjLjRvcbc0gz2E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+rPpV85Ioqv2xtks5OONWqK+n5i6dViTlGicJhAqFfY=;
-        b=bu1zh8wtp8uPieyymBZYmnQ+ZnsaF3P93wGXwpMAlgO9tLgUXFSTF1XU1kX/A+/xEQ
-         /3L72Re2oNcuhFG4U5jD3dhBan5R0ediozQcMEfcTmcP8f7gqOga279hJF2vuVvZ/9/h
-         hbXKnBVHwmkVsV0nbZxO2scjYpKC8tkiCgCDf1BPjeYr3FbOPhdejSXuKIltGdyq9San
-         fPiasazI+ak9EzeELQOgZh9Q4edAlFImZ4E6tIYCnXbphJxfXuJjIKOIGmpgD7MZ31Je
-         Z8PSnSwpLV8NtanmaE40yaHJdftivh1IOkNuEytmIfSRf/Zeq3RbU7fyLomfYgIMTedX
-         /0gA==
-X-Gm-Message-State: APjAAAWaCwwbVhveFUuOmgpkhrClcU9zvGSlRajSimHuEzKMZ7y0GEtc
-        Xrv2s3z4S/mGNJf1//+8qE4onw==
-X-Google-Smtp-Source: APXvYqwyMoJrdKNhs+fUTVnbzv+O/QQJtlYzjU+/jSJsY2EZgVlKFOJ3IJS6GGGHadEc2+MywNCOKA==
-X-Received: by 2002:adf:f80c:: with SMTP id s12mr10956740wrp.1.1575563932666;
-        Thu, 05 Dec 2019 08:38:52 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:24c3:ebb3:9dd5:81c6? ([2a01:e34:ed2f:f020:24c3:ebb3:9dd5:81c6])
-        by smtp.googlemail.com with ESMTPSA id m8sm417890wmf.8.2019.12.05.08.38.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 08:38:51 -0800 (PST)
-Subject: Re: [PATCH v2 0/8] Add Mediatek thermal dirver and dtsi
-To:     "michael.kao" <michael.kao@mediatek.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <1557494826-6044-1-git-send-email-michael.kao@mediatek.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
- sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
- 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
- 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
- 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
- xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
- P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
- 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
- wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
- eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABzSpEYW5pZWwgTGV6
- Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz7Cwa4EEwEIAEECGwEFCwkIBwIGFQoJ
- CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAh
- CRCP9LjScWdVJxYhBCTWJvJTvp6H5s5b9I/0uNJxZ1Un69gQAJK0ODuKzYl0TvHPU8W7uOeu
- U7OghN/DTkG6uAkyqW+iIVi320R5QyXN1Tb6vRx6+yZ6mpJRW5S9fO03wcD8Sna9xyZacJfO
- UTnpfUArs9FF1pB3VIr95WwlVoptBOuKLTCNuzoBTW6jQt0sg0uPDAi2dDzf+21t/UuF7I3z
- KSeVyHuOfofonYD85FkQJN8lsbh5xWvsASbgD8bmfI87gEbt0wq2ND5yuX+lJK7FX4lMO6gR
- ZQ75g4KWDprOO/w6ebRxDjrH0lG1qHBiZd0hcPo2wkeYwb1sqZUjQjujlDhcvnZfpDGR4yLz
- 5WG+pdciQhl6LNl7lctNhS8Uct17HNdfN7QvAumYw5sUuJ+POIlCws/aVbA5+DpmIfzPx5Ak
- UHxthNIyqZ9O6UHrVg7SaF3rvqrXtjtnu7eZ3cIsfuuHrXBTWDsVwub2nm1ddZZoC530BraS
- d7Y7eyKs7T4mGwpsi3Pd33Je5aC/rDeF44gXRv3UnKtjq2PPjaG/KPG0fLBGvhx0ARBrZLsd
- 5CTDjwFA4bo+pD13cVhTfim3dYUnX1UDmqoCISOpzg3S4+QLv1bfbIsZ3KDQQR7y/RSGzcLE
- z164aDfuSvl+6Myb5qQy1HUQ0hOj5Qh+CzF3CMEPmU1v9Qah1ThC8+KkH/HHjPPulLn7aMaK
- Z8t6h7uaAYnGzjMEXZLIEhYJKwYBBAHaRw8BAQdAGdRDglTydmxI03SYiVg95SoLOKT5zZW1
- 7Kpt/5zcvt3CwhsEGAEIACAWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXZLIEgIbAgCvCRCP
- 9LjScWdVJ40gBBkWCAAdFiEEbinX+DPdhovb6oob3uarTi9/eqYFAl2SyBIAIQkQ3uarTi9/
- eqYWIQRuKdf4M92Gi9vqihve5qtOL396pnZGAP0c3VRaj3RBEOUGKxHzcu17ZUnIoJLjpHdk
- NfBnWU9+UgD/bwTxE56Wd8kQZ2e2UTy4BM8907FsJgAQLL4tD2YZggwWIQQk1ibyU76eh+bO
- W/SP9LjScWdVJ5CaD/0YQyfUzjpR1GnCSkbaLYTEUsyaHuWPI/uSpKTtcbttpYv+QmYsIwD9
- 8CeH3zwY0Xl/1fE9Hy59z6Vxv9YVapLx0nPDOA1zDVNq2MnutxHb8t+Imjz4ERCxysqtfYrv
- gao3E/h0c8SEeh+bh5MkjwmU8CwZ3doWyiVdULKESe7/Gs5OuhFzaDVPCpWdsKdCAGyUuP/+
- qRWwKGVpWP0Rrt6MTK24Ibeu3xEZO8c3XOEXH5d9nf6YRqBEIizAecoCr00E9c+6BlRS0AqR
- OQC3/Mm7rWtco3+WOridqVXkko9AcZ8AiM5nu0F8AqYGKg0y7vkL2LOP8us85L0p57MqIR1u
- gDnITlTY0x4RYRWJ9+k7led5WsnWlyv84KNzbDqQExTm8itzeZYW9RvbTS63r/+FlcTa9Cz1
- 5fW3Qm0BsyECvpAD3IPLvX9jDIR0IkF/BQI4T98LQAkYX1M/UWkMpMYsL8tLObiNOWUl4ahb
- PYi5Yd8zVNYuidXHcwPAUXqGt3Cs+FIhihH30/Oe4jL0/2ZoEnWGOexIFVFpue0jdqJNiIvA
- F5Wpx+UiT5G8CWYYge5DtHI3m5qAP9UgPuck3N8xCihbsXKX4l8bdHfziaJuowief7igeQs/
- WyY9FnZb0tl29dSa7PdDKFWu+B+ZnuIzsO5vWMoN6hMThTl1DxS+jc7ATQRb/8z6AQgAvSkg
- 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
- +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
- dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
- XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
- bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABwsGNBBgBCAAgFiEE
- JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwAIQkQj/S40nFnVScWIQQk1ibyU76eh+bO
- W/SP9LjScWdVJ/g6EACFYk+OBS7pV9KZXncBQYjKqk7Kc+9JoygYnOE2wN41QN9Xl0Rk3wri
- qO7PYJM28YjK3gMT8glu1qy+Ll1bjBYWXzlsXrF4szSqkJpm1cCxTmDOne5Pu6376dM9hb4K
- l9giUinI4jNUCbDutlt+Cwh3YuPuDXBAKO8YfDX2arzn/CISJlk0d4lDca4Cv+4yiJpEGd/r
- BVx2lRMUxeWQTz+1gc9ZtbRgpwoXAne4iw3FlR7pyg3NicvR30YrZ+QOiop8psWM2Fb1PKB9
- 4vZCGT3j2MwZC50VLfOXC833DBVoLSIoL8PfTcOJOcHRYU9PwKW0wBlJtDVYRZ/CrGFjbp2L
- eT2mP5fcF86YMv0YGWdFNKDCOqOrOkZVmxai65N9d31k8/O9h1QGuVMqCiOTULy/h+FKpv5q
- t35tlzA2nxPOX8Qj3KDDqVgQBMYJRghZyj5+N6EKAbUVa9Zq8xT6Ms2zz/y7CPW74G1GlYWP
- i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
- X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
- fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
-Message-ID: <98c34033-91e0-ce9e-3245-c9b8ed2745f7@linaro.org>
-Date:   Thu, 5 Dec 2019 17:38:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YnSZ1HocZmFXibZc/RmleTCK7QzGnhXUqE2Wqe01NTg=;
+        b=es4j+u4zRP6wZIuATQTJpSRqU/+c5crxZCNbnK01dQctutMBDdDiJVrnddPYuzhIMs
+         wEXx6/QDwrRVCgs/cuzkG3YchvZ6BHTqf6U1rTI6+dP6ru5w/UfqjJA8ZtcaalYEEZph
+         WluEPSAZta145Tm27k+DhOJB7YEohJvi1qe342Bm3sU5CTcR4amd9lKnF97Hggv7amw6
+         gFEE+xL7FqH6DENmhp54XC1w6Vg+ULFY0D+Vp7BNExppCc5wEcWBjzcOXFFxfKg/tXKa
+         u8lYDwWGXLxigEy9F7+hO8pao7/KffzL6/dGIRa0cjikmsZJOwQ2A/1tPBrRVc2fGcjx
+         VHvA==
+X-Gm-Message-State: APjAAAUIQiOVRwg3rtJ+Uy5JWtjK6Kc3Ly6QJeHs9qqZ0xyspvHgPvsJ
+        IFmubSntnp84Ygsn3g1zXvN9pLVWOWIsY1CyS1TmnQ==
+X-Google-Smtp-Source: APXvYqwvrkf93Tp7ZF+8isPCaGzNcsH1taXJLgkRqEuBouTDgW9mh284rB06SYQo3eRERN3v/u2u6S4p0JdI9cJgNBQ=
+X-Received: by 2002:a02:9f09:: with SMTP id z9mr8866500jal.119.1575564034137;
+ Thu, 05 Dec 2019 08:40:34 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1557494826-6044-1-git-send-email-michael.kao@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <157554844882.11018.13436399905210284553.stgit@devnote2>
+In-Reply-To: <157554844882.11018.13436399905210284553.stgit@devnote2>
+From:   Micah Morton <mortonm@chromium.org>
+Date:   Thu, 5 Dec 2019 08:40:23 -0800
+Message-ID: <CAJ-EccNKk30b_wtvz=PUVmMVfF8YNagXMcy3Uhj53DzFbgmb6A@mail.gmail.com>
+Subject: Re: [BUGFIX PATCH v2 0/3] selftests: safesetid: Fix some bugs in
+ safesetid test
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        jaswinder.singh@linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Dec 5, 2019 at 4:20 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> Hi,
+>
+> Here is the v2 series to fix build warnings and erorrs on
+> kselftest safesetid.
+> This version includes a fix for a runtime error.
+>
+> Thank you,
+>
+> ---
+>
+> Masami Hiramatsu (3):
+>       selftests: safesetid: Move link library to LDLIBS
+>       selftests: safesetid: Check the return value of setuid/setgid
+>       selftests: safesetid: Fix Makefile to set correct test program
 
-What is the status of this series? Shouldn't we have a V3?
+These 3 fixes look good, thanks. Were you thinking they would go
+through my SafeSetID tree or is there a dedicated one for selftests? I
+guess if you're not sure someone else on here can chime in, or I can
+just take them through my tree if I don't hear anything.
 
-On 10/05/2019 15:26, michael.kao wrote:
-> This patchset supports for MT8183 chip to mtk_thermal.c.
-> Add thermal zone of all the thermal sensor in SoC for
-> another get temperatrue. They don't need to thermal throttle.
-> And we bind coolers for thermal zone nodes of cpu_thermal.
-> 
-> This patch series base on these patches [1][2][3][4].
-> 
-> [1]support for reading chip ID and efuse (https://patchwork.kernel.org/patch/10902131/)
-> [2]arm64: dts: mt8183: Add reset-cells in infracfg (https://patchwork.kernel.org/patch/10908653/)
-> [3]clk: reset: Modify reset-controller driver (https://patchwork.kernel.org/patch/10908657/)
-> [4]PM / AVS: SVS: Introduce SVS engine (https://patchwork.kernel.org/patch/10923289/)
-> 
-> Matthias Kaehlcke (2):
-> 	arm64: dts: mt8183: Configure CPU cooling
-> 	arm64: dts: mt8183: Increase polling frequency for CPU thermal zone
-> 
-> Michael Kao (6):
-> 	arm64: dts: mt8183: add thermal zone node
-> 	arm64: dts: mt8183: add/update dynamic power coefficients
-> 	arm64: dts: mt8183: Add #cooling-cells to CPU nodes
-> 	thermal: mediatek: mt8183: fix bank number settings
-> 	thermal: mediatek: add another get_temp ops for thermal sensors
-> 	thermal: mediatek: use spinlock to protect PTPCORESEL
-> 
-> arch/arm64/boot/dts/mediatek/mt8183.dtsi | 158 +++++++++++++++++++++++++++++++
-> drivers/thermal/mtk_thermal.c            |  82 +++++++++++++---
-> 2 files changed, 226 insertions(+), 14 deletions(-)
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+>
+>
+>  tools/testing/selftests/safesetid/Makefile         |    5 +++--
+>  tools/testing/selftests/safesetid/safesetid-test.c |   15 ++++++++++-----
+>  2 files changed, 13 insertions(+), 7 deletions(-)
+>
+> --
+> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
