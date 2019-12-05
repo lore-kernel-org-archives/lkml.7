@@ -6,126 +6,153 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A92C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDD9C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857DF22525
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D8B2464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:47:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LcZXnD3Y"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="IIj3urk0";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="pWzB2EuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbfLEQrN (ORCPT
+        id S1729912AbfLEQrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:47:13 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35685 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfLEQrN (ORCPT
+        Thu, 5 Dec 2019 11:47:25 -0500
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:58826 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726589AbfLEQrY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:47:13 -0500
-Received: by mail-wr1-f67.google.com with SMTP id g17so4487510wro.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 08:47:10 -0800 (PST)
+        Thu, 5 Dec 2019 11:47:24 -0500
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB5Gg0bJ004655;
+        Thu, 5 Dec 2019 08:47:14 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=PMLAAzKKMqVAZMaAWfGvXkyYIYDiJtfBOA47bmY8HKM=;
+ b=IIj3urk05p6h7hrrp3iWtin8/uTtS4RWPGh5/TZPALlA6K4NKOmoYHPu08rhgq/BV4H2
+ 5xQAg3mMhZj2oyPK5+4d4630D/jghmg4kHh2xpCvBHR1tqf7cxKh5qvcdCgyJlyJVndW
+ IRzUtzIKhhlAn9cZb8dlIZeyO6yFth0uDN8sVHdZqowAjfz5pYMW94Kpzut0hLKWiIeF
+ ODE6lUU2W887qSYgpfS0271hcemB+aAsMd1m1kYAKahOPTx1Ix9bKZVgSgXtRElMKLlG
+ T2ZjH2KtatrrfqHu60U7D38f5MLG7BsHZDtqEeNSB4CbV26GKLvl/zeEiLPGlQ/mfOLr YA== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2wpybwhgns-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 05 Dec 2019 08:47:14 -0800
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 5 Dec
+ 2019 08:47:12 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.109)
+ by SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 5 Dec 2019 08:47:12 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GYNwqcKXsFeGGWteZXU+rozgAMabYHeBUY7o/Obyrxg8bjPWZu9P0nlM0B+BuLmpZt9a+pW4iCpHcHERW2IFYgIr8rzxuD0TL44vKvo+b8PPU+0ymYUzyXIz0qaEBSrZFbC7dsGbiBq5R5ldw/cSjjVfA/7U+JK1Ennge4gB/6/WeWEWQ2rzEJ7Ez7Xnii7eBqeIRGVQlT8ycDygug+i0c63AKT1ZcyOyROjv5biB0YHPFYVQ1/V5tf+kRdYHMh+9+z4uNelNK8ca2sMP34WqV3EvrSBQTaxA4Lwss1jn3Sm5FzXbKPNq000PgbXsOg8qTwsb+P5IpwumxawztFrPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PMLAAzKKMqVAZMaAWfGvXkyYIYDiJtfBOA47bmY8HKM=;
+ b=kcf0nLp58NAtoajrfiCaclPzfP1QAEz2pN4Cr8pPH0fdxg7NXZ3jaaDlHMicyibcgVVXRluTTIr3/Yi4xlGvr5djYlFupdCTN89WSB4+WsvK2wyyF265fiLgu99nEiGDTK4On+u2A3mJeC4NjwzkaxqtRsNOJsD80B49nqODyB47jyIvZ1wVY6ADR/6rCYmhACJy9D3TJfcxHYax6oHqrLMXdC0meUj63AGIom1A49ieuwTaectQdqSFkxkjcjg72XYX4cqxQRS+fDAK9NvpMYPuIv+X7Ea2dsDLele9m+1L7DB7N3lMMoeI5QRQguzee8gKSaFoQlnMnsjQfdMCjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AdQa7zTKef6TuZxKVd+h8OUJjd3AmkT97EW9UuGI8tU=;
-        b=LcZXnD3YjMu/Pbxt/Ydw9eKqW8gdmIaRYKADYygtoqvEo6IIXdgpV0JqAsWl3K2/Ca
-         EltGH3cV30xoAJLPmAak2GlMoCGbIAoAM51s+z/cdY+rgZECV9zQ50zs59tkB8+1pGRB
-         0AlFBnseVf3UdmZ2uDkg15T3tZSFDa/3evXCQONPuTtfRT5AWOMxmmi0XmRTElTxhslO
-         pP1UEtPAz3rwW+nNu5pmiN2kJtx2nY0wcaKWhAnp8sX3WlTbfXuL16bo58lqTDhwjy8H
-         czTS+P4u0gIOLgoYKLDp2a6GqqQRd3DCS7toqlSjc7EQXgkapMMhgnMgd0RugAy4uAZI
-         hDrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AdQa7zTKef6TuZxKVd+h8OUJjd3AmkT97EW9UuGI8tU=;
-        b=cNqD/JMYo8qUoh7ZdyofUnkOSNvBB2IDk723vHHazOAt+i/7Bw/a7iamh8O0MVrKFF
-         M0R0EowiKUsYTKswbjeeYzCn7IqNKRVVa+KtTjgx/4y8YzJQ8QzIJVY6XRdatC3T6f63
-         B7kuuR6uDrX1cased/DgWqZszgFGP9U+4Lb09nTYj3xwmlH7tFIvwRQdx/q38UsgpwnN
-         oMPQ623QdZAXdeMQ+pJajqW3aRSbpdaXU9t4wKDCjTfKfiZ4RSQjpeGOfovuN5Nb9G9p
-         1e9fWwa2ooDC/VExMqFFaqTVcytyA2MLLHKxgqZWM8zXoZI7Ckl+MnyflVOzYxEy7Bpm
-         t+cA==
-X-Gm-Message-State: APjAAAWsykoVinwR3yF7MtXqKo1pCJsHqRUMaSQuaMy3hQU1sJ9DkcFY
-        JT7jAgdRFUGo4mew3Z5HFS5oPQ==
-X-Google-Smtp-Source: APXvYqz4gVCYwOJxOWID1BItB7GKwi7oY6Ha1hp6BkimbdykmDf/yOM6pIVFeamJPsKrrtFWz9c6BA==
-X-Received: by 2002:adf:ee88:: with SMTP id b8mr11827870wro.249.1575564429477;
-        Thu, 05 Dec 2019 08:47:09 -0800 (PST)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id x132sm2398633wmg.0.2019.12.05.08.47.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 08:47:08 -0800 (PST)
-Date:   Thu, 5 Dec 2019 16:47:06 +0000
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] RISC-V: Add debug defconfigs
-Message-ID: <20191205164706.svarpjp2kdokl2pg@holly.lan>
-References: <20191205005601.1559-1-anup.patel@wdc.com>
- <alpine.DEB.2.21.9999.1912041859070.215427@viisi.sifive.com>
- <CAAhSdy1RQw3MVcVT5y1EHr72LDNADKRL5nO2E8OrzBi+tpuvtA@mail.gmail.com>
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PMLAAzKKMqVAZMaAWfGvXkyYIYDiJtfBOA47bmY8HKM=;
+ b=pWzB2EuAExvYJo67dKa925+7t0gYd1iFO6eRdbWBFaEWMnsYjtK3TeNSHJJMuV4csd4o1w1QXTb2Pj9aAgNqaWC3sK8E3ooZQF7CI/gQPc8ifn3h1ypFiQHv/aLRNdZE+/yox6i86pqCZf57qRCd3lJhip1M/N9VyIAxDVQl1sU=
+Received: from MN2PR18MB2719.namprd18.prod.outlook.com (20.178.255.156) by
+ MN2PR18MB2463.namprd18.prod.outlook.com (20.179.82.217) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.21; Thu, 5 Dec 2019 16:47:10 +0000
+Received: from MN2PR18MB2719.namprd18.prod.outlook.com
+ ([fe80::1435:34ad:dbff:5089]) by MN2PR18MB2719.namprd18.prod.outlook.com
+ ([fe80::1435:34ad:dbff:5089%7]) with mapi id 15.20.2495.014; Thu, 5 Dec 2019
+ 16:47:10 +0000
+From:   Himanshu Madhani <hmadhani@marvell.com>
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 084/321] scsi: qla2xxx: Fix NPIV handling for FC-NVMe
+Thread-Topic: [PATCH 4.19 084/321] scsi: qla2xxx: Fix NPIV handling for
+ FC-NVMe
+Thread-Index: AQHVquyLRjY+eSFPF020YeMjBWRRf6erXNaA
+Date:   Thu, 5 Dec 2019 16:47:10 +0000
+Message-ID: <DBFA5257-A719-4A62-8DE1-2497B025D4E8@marvell.com>
+References: <20191203223427.103571230@linuxfoundation.org>
+ <20191203223431.527072152@linuxfoundation.org> <20191204214800.GD7678@amd>
+In-Reply-To: <20191204214800.GD7678@amd>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Microsoft-MacOutlook/10.1f.0.191110
+x-originating-ip: [2600:1700:211:eb30:88a6:d8fe:176e:8e0d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ecada224-76c3-492e-05f4-08d779a2c5d7
+x-ms-traffictypediagnostic: MN2PR18MB2463:
+x-microsoft-antispam-prvs: <MN2PR18MB24630C8ED02C91164713A606D65C0@MN2PR18MB2463.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:569;
+x-forefront-prvs: 02426D11FE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(136003)(376002)(396003)(39860400002)(54534003)(189003)(199004)(305945005)(81166006)(81156014)(8936002)(99286004)(8676002)(76116006)(966005)(91956017)(36756003)(11346002)(14454004)(2906002)(2616005)(4326008)(66446008)(66556008)(66476007)(66946007)(64756008)(229853002)(478600001)(186003)(102836004)(6486002)(86362001)(316002)(6506007)(5660300002)(6512007)(71190400001)(71200400001)(58126008)(76176011)(33656002)(54906003)(110136005)(25786009)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2463;H:MN2PR18MB2719.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: u5CmxQqMdeRaC5rWu1afFI5Pikl7sxaFIcsxy4xHYTzs7slxkezb835kBdW2oEwmfAhPQHmw9RscjVw2QM042VTkiHjl8NdqMcPWhLaWGeWk4qp1w1ZXG+/27iLc5zrZoAV3y3HdeWdeyrWXWbkdvGHbLGbSoSG8WPhHIaPYdAuGbX1d8fDcBpP8JP6F6YpCnhz6izriSt9TZ09OPqlQzQtgOk2zyEzVb8nsL72TnZBPlDo5mHLDi9bjAdYmFxb1lKdt4WWRo+t55/unyzeDeATXkvYKUR9bTch3o1z5MXpM6wDeL6ahm+aZLf7h3F3pAbQrS82uMhBUD9Lh9zPjTHxyM00Mf1KgACxnxw7fJ5Uh2z/Fe6Cp/3xFRTY79KxNBMUur0GhxsPT5NgEggQeXJputBe401I/k2KXrawao2kdexvZ2l3nSLNtnURdhSUdZsMxvs+V6TJp6F9KrKWRmVjpDmZfimWLbjIwj6KBnujvi2FM50etOCjuPVvxxpvwpGjoG1VV8jjVSxAI7vFajL+S41ECVLvXWWcy0XVBaJo=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E052A0DAAAA6AC488EBC6FD4C79263DD@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhSdy1RQw3MVcVT5y1EHr72LDNADKRL5nO2E8OrzBi+tpuvtA@mail.gmail.com>
+X-MS-Exchange-CrossTenant-Network-Message-Id: ecada224-76c3-492e-05f4-08d779a2c5d7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 16:47:10.5831
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 05hmz0Y6gXUVK0AhvHhuy+4QWSo4F0GBL7X6Y2s7ebxbwAq7YmRe4TGOYj+Od4N/hr03hlOVr5zSb7OZXGeY4Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2463
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-05_05:2019-12-04,2019-12-05 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 10:03:34PM +0530, Anup Patel wrote:
-> On Thu, Dec 5, 2019 at 8:33 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
-> >
-> > On Thu, 5 Dec 2019, Anup Patel wrote:
-> >
-> > > Various Linux kernel DEBUG options have big performance impact
-> > > so these should not be enabled in RISC-V normal defconfigs.
-> > >
-> > > Instead we should have separate RISC-V debug defconfigs having
-> > > these DEBUG options enabled. This way Linux RISC-V can build both
-> > > non-debug and debug kernels separately.
-> >
-> > I respect your point of view, but until the RISC-V kernel port is more
-> > mature, I personally am not planning to merge this patch, for reasons
-> > discussed in the defconfig patch descriptions and the subsequent pull
-> > request threads.
-> >
-> > I'm sure we'll revisit this in the future to realign with the defconfig
-> > debug settings for more mature architecture ports - but my guess is that
-> > we'll probably avoid creating debug_defconfigs, since only S390 does that.
-> 
-> We have a lot of users (Yocto and Buildroot) dependent on the Linux
-> defconfig. I understand that you need DEBUG options for SiFive internal
-> use but this does not mean all users dependent on Linux defconfig
-> should be penalized in-terms of performance.
-> 
-> This is the right time to introduce debug defconfigs so that you can
-> use it for your SiFive internal use and all users dependent on normal
-> defconfigs are not penalized in-terms of performance.
-> 
-> If you still don't want debug defconfigs then I recommend reverting
-> your DEBUG options patch and you can find an alternative way to
-> enable DEBUG options for SiFive internal use.
-
-None of my business (except that I watch threads with debug in the
-subject line) but why propose putting debug options into any kind
-of defconfig. If you want standardized set debug options to chase
-problems why can't they into a .config file rather than a defconfig
-file.
-
-In use it will look like:
-  make defconfig extra_debug.config
-
-That way you don't have to maintain two almost identical files that will
-inevitably drift apart.
-
-
-Daniel.
+SGVsbG8sIA0KDQrvu79PbiAxMi80LzE5LCAzOjQ4IFBNLCAiUGF2ZWwgTWFjaGVrIiA8bGludXgt
+a2VybmVsLW93bmVyQHZnZXIua2VybmVsLm9yZyBvbiBiZWhhbGYgb2YgcGF2ZWxAZGVueC5kZT4g
+d3JvdGU6DQoNCiAgICBIaSENCiAgICANCiAgICA+IEZyb206IEhpbWFuc2h1IE1hZGhhbmkgPGht
+YWRoYW5pQG1hcnZlbGwuY29tPg0KICAgID4gDQogICAgPiBbIFVwc3RyZWFtIGNvbW1pdCA1ZTY4
+MDNiNDA5YmEzYzE4NDM0ZGU2NjkzMDYyZDk4YTQ3MGJjYjFlIF0NCiAgICA+IA0KICAgID4gVGhp
+cyBwYXRjaCBmaXhlcyBpc3N1ZXMgd2l0aCBOUElWIHBvcnQgd2l0aCBGQy1OVk1lLiBDbGVhbiB1
+cCBjb2RlIGZvcg0KICAgID4gcmVtb3RlcG9ydCBkZWxldGUgYW5kIGFsc28gY2FsbCBudm1lX2Rl
+bGV0ZSB3aGVuIGRlbGV0aW5nIFZQcy4NCiAgICANCiAgICA+IEBAIC01NjQsNyArNTU0LDcgQEAg
+c3RhdGljIHZvaWQgcWxhX252bWVfcmVtb3RlcG9ydF9kZWxldGUoc3RydWN0IG52bWVfZmNfcmVt
+b3RlX3BvcnQgKnJwb3J0KQ0KICAgID4gIAkJc2NoZWR1bGVfd29yaygmZmNwb3J0LT5mcmVlX3dv
+cmspOw0KICAgID4gIAl9DQogICAgPiAgDQogICAgPiAtCWZjcG9ydC0+bnZtZV9mbGFnICY9IH4o
+TlZNRV9GTEFHX1JFR0lTVEVSRUQgfCBOVk1FX0ZMQUdfREVMRVRJTkcpOw0KICAgID4gKwlmY3Bv
+cnQtPm52bWVfZmxhZyAmPSB+TlZNRV9GTEFHX0RFTEVUSU5HOw0KICAgID4gIAlxbF9sb2cocWxf
+bG9nX2luZm8sIGZjcG9ydC0+dmhhLCAweDIxMTAsDQogICAgPiAgCSAgICAicmVtb3RlcG9ydF9k
+ZWxldGUgb2YgJXAgY29tcGxldGVkLlxuIiwgZmNwb3J0KTsNCiAgICA+ICB9DQogICAgDQogICAg
+Q3VycmVudCAtbmV4dC0yMDE5MTIwNCBjb250YWlucw0KICAgIA0KICAgICBmY3BvcnQtPm52bWVf
+ZmxhZyAmPSB+TlZNRV9GTEFHX1JFR0lTVEVSRUQ7DQogICAgIGZjcG9ydC0+bnZtZV9mbGFnICY9
+IH4gTlZNRV9GTEFHX0RFTEVUSU5HOw0KICAgIA0KICAgIC4uLiBhbmQgdGhlcmUncyBubyBleHBs
+YW5hdGlvbiBpbiBjaGFuZ2Vsb2cgd2h5IHJlbW92aW5nDQogICAgTlZNRV9GTEFHX1JFR0lTVEVS
+RUQgaXMgZ29vZCBpZGVhLg0KDQpUaGlzIHBhdGNoIHdhcyBtb3N0bHkgY2xlYW51cCBhbmQgaWYg
+eW91IG5vdGljZSBvbiBsaW5lIDU0MSB3ZSBhcmUgYWxyZWFkeSBjbGVhcmluZyB1cCBOVk1FX0ZM
+QUdfUkVHSVNURVJFRCBmbGFnLg0KDQplODQwNjdkNzQzMDEwIChEdWFuZSBHcmlnc2J5ICAgICAg
+ICAgICAgICAgMjAxNy0wNi0yMSAxMzo0ODo0MyAtMDcwMCA1NDEpICAgICAgIGZjcG9ydC0+bnZt
+ZV9mbGFnICY9IH5OVk1FX0ZMQUdfUkVHSVNURVJFRDsNCg0Kc28gdGhpcyBwYXRjaCBpcyBqdXN0
+IHJlbW92aW5nIGR1cGxpY2F0ZSBjbGVhcmluZy4gQXQgc29tZSBwb2ludCB3ZSB3aWxsIG5lZWQg
+dG8gZml4IGRvdWJsZSBsaW5lIG9mIGNsZWFyaW5nIE5WTUVfRkxBR19SRUdJU1RFUkVEIGFuZCBO
+Vk1FX0ZMQUdfREVMRVRJTkcNCmluIG9uZSBsaW5lLiBJJ2xsIHNlbmQgcGF0Y2ggdG8gZml4IHRo
+YXQgZm9yIG5ldC1uZXh0LiANCg0KVGhhbmtzLA0KSGltYW5zaHUNCiAgICANCiAgICBBcmUgeW91
+IHN1cmUgdGhpcyBjaGFuZ2UgaXMgY29ycmVjdCBhbmQgc3VpdGFibGUgZm9yIC1zdGFibGU/DQog
+ICAgIAkJCQkJCQkJUGF2ZWwNCiAgICAtLSANCiAgICAoZW5nbGlzaCkgaHR0cDovL3d3dy5saXZl
+am91cm5hbC5jb20vfnBhdmVsbWFjaGVrDQogICAgKGNlc2t5LCBwaWN0dXJlcykgaHR0cDovL2F0
+cmV5Lmthcmxpbi5tZmYuY3VuaS5jei9+cGF2ZWwvcGljdHVyZS9ob3JzZXMvYmxvZy5odG1sDQog
+ICAgDQoNCg0K
