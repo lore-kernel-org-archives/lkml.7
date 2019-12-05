@@ -7,65 +7,64 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CEAC2D0BF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20E9C2D0B1
 	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE032464D
+	by mail.kernel.org (Postfix) with ESMTP id 84AE921823
 	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:10:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f/EVziDY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZJRP8vF3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbfLEAK1 (ORCPT
+        id S1728619AbfLEAKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 19:10:27 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35376 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728624AbfLEAKU (ORCPT
+        Wed, 4 Dec 2019 19:10:17 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:44401 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728576AbfLEAKP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 19:10:20 -0500
-Received: by mail-pg1-f195.google.com with SMTP id l24so678092pgk.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 16:10:20 -0800 (PST)
+        Wed, 4 Dec 2019 19:10:15 -0500
+Received: by mail-pj1-f67.google.com with SMTP id w5so484167pjh.11
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 16:10:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7yE3ZHkR69UGcsqSedpJxhASD5SeB0FinXe1byG56UQ=;
-        b=f/EVziDY7KK0UVtP07zeQE8P/OZC24lNIxT+R0yrkPhKCRQlrqlzCOrH5fi8fvczJ5
-         bhXqfRmivbfuDr2Tu6VTuKi28nf92jc1ge/UxVZlXwVOvxwsjHB0e4vv9oMBJYuLmvcB
-         d+qDYPPdtKxm9l1gNlaJYeQGZJZ06L4X45ZUM=
+        bh=sl9+RtgVbb7KwtMxDxQLj2F2VAZGCx1aAKzBbfOxt1g=;
+        b=ZJRP8vF30U0k7vaqJoBuANMFiYYfPxKnryHE+msf40PIzZ2XSlMmsYPF0mGufSJdUR
+         4H2AxF8qdpgOFyXbO2LGTs5xyhXmVdZWKtNq5VikWN//N+UtZBGPCJGRg0Anl75AVr85
+         uHT83t8RIonezj2yYKWA+eGP1srhqMzW/Z7Ys=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7yE3ZHkR69UGcsqSedpJxhASD5SeB0FinXe1byG56UQ=;
-        b=DUVU5NyYgHhDB49h166m3yXKqn1iXvOlPXn+Ik6o0h3dQnPX1xNpFCmX7+Kmb4vJ4E
-         5M5iodUFVRf+dRKmyg0eWOh9kuN27RDeBCkkFuPOu6jBldfP3a+g7c5Z0tm+JyM5SfRs
-         uUjHRN9a+/oq7G7ih/bPRD9B1SqDm4mBh7R50yTIG4CKZRrXUmjUJTGt5DILBxyZGhBU
-         d4lKEkRvyGh9KGgOAGX+DdxbiAtkXNmWs7acrblJL579d4OaSPBt8uMtTqMjIuJKEAQ5
-         lWSGtm3JNDPscmodxTp98vtRXOQzOH8BmUwKltVFHVQ3x5NQB4/X5Qw8FDve59NTzGwJ
-         ANeA==
-X-Gm-Message-State: APjAAAV9RsZx92p5xG2mVcnkUFOO1Ih/EBHSvYRI3f/2OQ2wXFjpgcZa
-        jbY8TO16To5RseOjxZIHt/WSbA==
-X-Google-Smtp-Source: APXvYqwCkYksA3H9gQM8Dd/UpM0c4sw+LmMk/E0hmNMYq/n4Q5BnskCCI0QZYAt9KoQF8+EThAaDog==
-X-Received: by 2002:a63:3f4f:: with SMTP id m76mr6186602pga.353.1575504619867;
-        Wed, 04 Dec 2019 16:10:19 -0800 (PST)
+        bh=sl9+RtgVbb7KwtMxDxQLj2F2VAZGCx1aAKzBbfOxt1g=;
+        b=oXvlUMIXo2vmzKLMprLKuUzspTrYmNIUiqweULUG0N+wCokV+6+W3I4mFLjUPIqMp3
+         UrOsGA6gfAPD1GibiJrw0BKkgdBpVH223NLc5HNR7Gr7LSTcW3Avuj1IThUi4IJL/6iO
+         RO0SlBHBSJJ7J8tbK37BCud6U0mBTpyFWeTwrBabPf0lo/DfxWmSbqEJG5xXWPv738z/
+         Gm2lE+LEUKRki29Btc1oqDuNejmmECTgKg2PGEiJ31ZmG1j2tdzn3P2vnlIYkEvaZK7+
+         B8DlJgQqW2nLK7ARXSVOSm8PXj5jQEwpR7sq7YvgdBl0mIxHVLQE1qAXwe31Jl+K9OsB
+         WlAA==
+X-Gm-Message-State: APjAAAVfVssnP/5kNJtokNRADo4xV6LvMgtw1GQwq9PrF7bQqYGCz0Sx
+        LHrw2+AG28GAK0lfffXueTQX7A==
+X-Google-Smtp-Source: APXvYqyUZRhwcUxDg88BSvcVoZjK0y9Ie8prRgjXiPT5oLIYZyeO09SYIVpYFNvdP8jyPMYnr2JPiw==
+X-Received: by 2002:a17:902:d881:: with SMTP id b1mr6107230plz.170.1575504615218;
+        Wed, 04 Dec 2019 16:10:15 -0800 (PST)
 Received: from thgarnie.kir.corp.google.com ([2620:0:1008:1100:d6ba:ac27:4f7b:28d7])
-        by smtp.gmail.com with ESMTPSA id 73sm8422303pgc.13.2019.12.04.16.10.19
+        by smtp.gmail.com with ESMTPSA id 73sm8422303pgc.13.2019.12.04.16.10.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 16:10:19 -0800 (PST)
+        Wed, 04 Dec 2019 16:10:14 -0800 (PST)
 From:   Thomas Garnier <thgarnie@chromium.org>
 To:     kernel-hardening@lists.openwall.com
 Cc:     kristen@linux.intel.com, keescook@chromium.org,
         Thomas Garnier <thgarnie@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Len Brown <len.brown@intel.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v10 06/11] x86/CPU: Adapt assembly for PIE support
-Date:   Wed,  4 Dec 2019 16:09:43 -0800
-Message-Id: <20191205000957.112719-7-thgarnie@chromium.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v10 04/11] x86/entry/64: Adapt assembly for PIE support
+Date:   Wed,  4 Dec 2019 16:09:41 -0800
+Message-Id: <20191205000957.112719-5-thgarnie@chromium.org>
 X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
 In-Reply-To: <20191205000957.112719-1-thgarnie@chromium.org>
 References: <20191205000957.112719-1-thgarnie@chromium.org>
@@ -83,30 +82,61 @@ Position Independent Executable (PIE) support will allow to extend the
 KASLR randomization range below 0xffffffff80000000.
 
 Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/processor.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/entry/entry_64.S | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 0340aad3f2fc..77fa291a60bb 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -742,11 +742,13 @@ static inline void sync_core(void)
- 		"pushfq\n\t"
- 		"mov %%cs, %0\n\t"
- 		"pushq %q0\n\t"
--		"pushq $1f\n\t"
-+		"leaq 1f(%%rip), %q0\n\t"
-+		"pushq %q0\n\t"
- 		"iretq\n\t"
- 		UNWIND_HINT_RESTORE
- 		"1:"
--		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
-+		: "=&r" (tmp), ASM_CALL_CONSTRAINT
-+		: : "cc", "memory");
- #endif
- }
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 76942cbd95a1..f14363625f4b 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1329,7 +1329,8 @@ SYM_CODE_START_LOCAL(error_entry)
+ 	movl	%ecx, %eax			/* zero extend */
+ 	cmpq	%rax, RIP+8(%rsp)
+ 	je	.Lbstep_iret
+-	cmpq	$.Lgs_change, RIP+8(%rsp)
++	leaq	.Lgs_change(%rip), %rcx
++	cmpq	%rcx, RIP+8(%rsp)
+ 	jne	.Lerror_entry_done_lfence
  
+ 	/*
+@@ -1529,10 +1530,10 @@ SYM_CODE_START(nmi)
+ 	 * resume the outer NMI.
+ 	 */
+ 
+-	movq	$repeat_nmi, %rdx
++	leaq	repeat_nmi(%rip), %rdx
+ 	cmpq	8(%rsp), %rdx
+ 	ja	1f
+-	movq	$end_repeat_nmi, %rdx
++	leaq	end_repeat_nmi(%rip), %rdx
+ 	cmpq	8(%rsp), %rdx
+ 	ja	nested_nmi_out
+ 1:
+@@ -1586,7 +1587,8 @@ nested_nmi:
+ 	pushq	%rdx
+ 	pushfq
+ 	pushq	$__KERNEL_CS
+-	pushq	$repeat_nmi
++	leaq	repeat_nmi(%rip), %rdx
++	pushq	%rdx
+ 
+ 	/* Put stack back */
+ 	addq	$(6*8), %rsp
+@@ -1625,7 +1627,11 @@ first_nmi:
+ 	addq	$8, (%rsp)	/* Fix up RSP */
+ 	pushfq			/* RFLAGS */
+ 	pushq	$__KERNEL_CS	/* CS */
+-	pushq	$1f		/* RIP */
++	pushq	$0		/* Future return address */
++	pushq	%rdx		/* Save RAX */
++	leaq	1f(%rip), %rdx	/* RIP */
++	movq    %rdx, 8(%rsp)   /* Put 1f on return address */
++	popq	%rdx		/* Restore RAX */
+ 	iretq			/* continues at repeat_nmi below */
+ 	UNWIND_HINT_IRET_REGS
+ 1:
 -- 
 2.24.0.393.g34dc348eaf-goog
 
