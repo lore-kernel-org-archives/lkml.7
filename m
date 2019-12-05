@@ -2,69 +2,88 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3252DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE990C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D352467E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:30:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575581431;
-	bh=vWDD8QLAEMy4QmRuuYEUXWx412poeFLuomWD9V3/2Es=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=S4r96BkO3ALu4WpWgtqyyzxt+yYRKpmN0qKJMZmw3lfu5jxO9058qPujysXKlAwEr
-	 RTc12o7wZua1ZHMeQcoCdc5yjgbg2UmTBLwiAlDe4M0GWmmg6KkpGRe15g2caZ4+mK
-	 GFv38QUbJvl4ctdTw6tUFqNcA79Tm05qUPXVWbqc=
+	by mail.kernel.org (Postfix) with ESMTP id 7D0E2206D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730389AbfLEVaa (ORCPT
+        id S1730419AbfLEVay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 16:30:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727236AbfLEVa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 16:30:28 -0500
-Subject: Re: [GIT PULL] GFS2 changes for the 5.5 merge window
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575581427;
-        bh=vWDD8QLAEMy4QmRuuYEUXWx412poeFLuomWD9V3/2Es=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=UUMcc4MWndaSvKi9vU0xSjME2tTIX5Y2r9XqH24Rjc9yEGzVln2B/7I75PUUzcBcC
-         yS7E7Xi34yT16YlnbOlRQc64/DxHg19nSgcIXqMUYmmHM7E6vs+tH5sKYPv4PY6FXV
-         ItHXCR7dHBMd/3FK71jjOcyH6OBqx8vDrlNDAyjc=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191205190915.5468-1-agruenba@redhat.com>
-References: <20191205190915.5468-1-agruenba@redhat.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191205190915.5468-1-agruenba@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git
- tags/gfs2-for-5.5
-X-PR-Tracked-Commit-Id: ade48088937f53fe0467162177726176813b9564
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3f1266ec704d3efcfc8179c71bed9a75963b6344
-Message-Id: <157558142773.8243.15014524712940034870.pr-tracker-bot@kernel.org>
-Date:   Thu, 05 Dec 2019 21:30:27 +0000
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
-        Andreas Gruenbacher <agruenba@redhat.com>
+        Thu, 5 Dec 2019 16:30:54 -0500
+Received: from heinz.dinsnail.net ([81.169.187.250]:42578 "EHLO
+        heinz.dinsnail.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729656AbfLEVay (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 16:30:54 -0500
+Received: from heinz.dinsnail.net ([IPv6:0:0:0:0:0:0:0:1])
+        by heinz.dinsnail.net (8.15.2/8.15.2) with ESMTP id xB5LUEC0010903;
+        Thu, 5 Dec 2019 22:30:14 +0100
+Received: from eldalonde.UUCP (uucp@localhost)
+        by heinz.dinsnail.net (8.15.2/8.15.2/Submit) with bsmtp id xB5LUDNb010898;
+        Thu, 5 Dec 2019 22:30:13 +0100
+Received: from eldalonde.weiser.dinsnail.net (localhost [IPv6:0:0:0:0:0:0:0:1])
+        by eldalonde.weiser.dinsnail.net (8.15.2/8.15.2) with ESMTP id xB5LFWAK010648;
+        Thu, 5 Dec 2019 22:15:32 +0100
+Received: (from michael@localhost)
+        by eldalonde.weiser.dinsnail.net (8.15.2/8.15.2/Submit) id xB5LFWDY010647;
+        Thu, 5 Dec 2019 22:15:32 +0100
+Date:   Thu, 5 Dec 2019 22:15:32 +0100
+From:   Michael Weiser <michael@weiser.dinsnail.net>
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
+ data to fix kexec breakage
+Message-ID: <20191205211532.GA10177@weiser.dinsnail.net>
+References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+ <20191204075917.GA10587@dhcp-128-65.nay.redhat.com>
+ <20191204101412.GD114697@gmail.com>
+ <20191205105545.GA6710@dhcp-128-65.nay.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191205105545.GA6710@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-dinsnail-net-MailScanner-Information: Please contact the ISP for more information
+X-dinsnail-net-MailScanner-ID: xB5LUEC0010903
+X-dinsnail-net-MailScanner: Found to be clean
+X-dinsnail-net-MailScanner-From: michael@weiser.dinsnail.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu,  5 Dec 2019 20:09:15 +0100:
+On Thu, Dec 05, 2019 at 06:55:45PM +0800, Dave Young wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-for-5.5
+> >    esrt: Unsupported ESRT version 2904149718861218184.
+> > 
+> >  The ESRT memory stays in EFI boot services data, and it was reserved
+> >  in kernel via efi_mem_reserve().  The initial purpose of the reservation
+> >  is to reuse the EFI boot services data across kexec reboot. For example
+> >  the BGRT image data and some ESRT memory like Michael reported.
+> > 
+> >  But although the memory is reserved it is not updated in the X86 E820 table,
+> >  and kexec_file_load() iterates system RAM in the IO resource list to find places
+> >  for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+> >  initramfs overwrote the ESRT memory and then the failure happened.
+> > 
+> >  Since kexec_file_load() depends on the E820 table being updated, just fix this
+> >  by updating the reserved EFI boot services memory as reserved type in E820.
+> Thanks for the amending, also thank all for the review and test.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3f1266ec704d3efcfc8179c71bed9a75963b6344
-
-Thank you!
-
+Same from me, particularly everyone's patience with my haphazard
+guesswork around an area I clearly know nothing about. :)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Thanks,
+Michael
