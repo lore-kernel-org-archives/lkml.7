@@ -2,288 +2,229 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC5AC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E78C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B85F42464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885BB2464F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Lt3QshLy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUFpBprd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbfLEJsx (ORCPT
+        id S1729102AbfLEJt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:48:53 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37033 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfLEJsw (ORCPT
+        Thu, 5 Dec 2019 04:49:56 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45324 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfLEJt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:48:52 -0500
-Received: by mail-io1-f67.google.com with SMTP id k24so2949506ioc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 01:48:52 -0800 (PST)
+        Thu, 5 Dec 2019 04:49:56 -0500
+Received: by mail-wr1-f65.google.com with SMTP id j42so2629126wrj.12;
+        Thu, 05 Dec 2019 01:49:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uETehSid0KbgkrMqALuI9xpJZ+8tQuqfj+BUwHEHAkU=;
-        b=Lt3QshLyBDNGtHfxD8XyRrfuTO5PvedlequdU0OKg3+cNK1MbXUhvdxLtH1BWOymU/
-         8p09ygPx3hl6x39mAaM2p2zTkHERx7E+gBOU8q8FkO9aZ9TGhGENt9UvziTKPNvt7hDe
-         x1wh/WquvPJvYiSrgqO11EN5flIVkCyyHmLY6HEsA7Cs/4uiWz39vf21T9nSXedbOjIj
-         oKEK8mqPKPR53mi7dXBocsDm0L6/XCy17RFxZD3HmQ+URVPZis8M7dfBVWb9q6Gh4L2d
-         t1QHBp5OxFWvE+u7qoVTMCTl9v2ZWwJQlr1nmFxzLrspoHm9Nq+LocYo+u2LDRlfHnUT
-         XPCg==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VDCRarATB8BrPGGFa2oJ0ZXIsVlkqssojKkWxJIt7Sw=;
+        b=IUFpBprd5cUy49LefBNJcPOz24gxeLYCdnSeVp1swiaikpzNAnnAlqYiGzP2niYWe1
+         UvdkMutU0vvWqvDe5BEGqWYvlx9yhm3cpLv7F5nFIBe47KnZpscevQ5mDt8wa25lMhfe
+         OnnNqqFGtiXDZ6ApeG7JZWxVHK7UdgDoHf/HFRbFRwa7A81/W5jojgvuKTj1Auy2wECl
+         4MMqj9BXx1Ejr3J6Qjk2ENvFaFaLhp8IbqYv51GqaO3KSvVxPFoGi6+bvxgWyiFHdgmU
+         Zrh76yVlrfzDW+Ku65z/PfC4NnPmC69s+TonPU3vk+mwQfNOcN3DGhmpFhEMmaaVHTqP
+         KD2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uETehSid0KbgkrMqALuI9xpJZ+8tQuqfj+BUwHEHAkU=;
-        b=KLmeNOrPcJNQlR/onHt8680IpMt2fLMQ+Z8YhoX6lnUBKfcjfj2+2/bpy6oFnhhFIe
-         JsWJkiFJfHi05ub8cfFy6Mxa+5bj/lKLrcbb266BODic5/W1jddaAEq2/Oi1Kes7hojb
-         e4TRd37b+YJY1/U9/XuKR9Ie7XoTUcimJ/8OcdRIhnU2jaKy5phRl/+v0srm6Ntx4YcT
-         /+nxZRKUl9pE18WQZl3YaJVA5V3DvxoVCoMwmwLoQmueiwlnOt+dbQCTSeFiQxafZihP
-         oyDjsuxGvLPSzLQrc/0bKpceceg64j/PuhzcT0CAnpqDwsJKUgYSD3JzZ6Yo4jL2Jg/2
-         8LSA==
-X-Gm-Message-State: APjAAAXHrL8pzUhTls9faAqCDpoBBF52ndxOj4YVrw9qcNmmYOOaEiHp
-        R4yMZO1umvWnUSQGxdhrD6yhqqhh6q6Hdot0XsyXjA==
-X-Google-Smtp-Source: APXvYqwuSdBxkw7QMwW/k06DWq9pdxGmWL6HmYR6bBcgQjcroGUDE5/pbI9BZQpy7u1azgf7Ugyv1UX3dUn08qxbl5w=
-X-Received: by 2002:a5d:9dd9:: with SMTP id 25mr5741439ioo.287.1575539331814;
- Thu, 05 Dec 2019 01:48:51 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VDCRarATB8BrPGGFa2oJ0ZXIsVlkqssojKkWxJIt7Sw=;
+        b=Vi+iH/u9yqWDx8X+gcaQ2OrvWw4/YvLvaMHM1h38IHHFWd4GK4lRSihqOZ1d7GIW+C
+         p0F6RUlayRp/l9DB89++Xgk3FAViUaYmo1N+k0ne8U/tFxe8uw9zwEK1xVuJUSM7+uVe
+         ZwCuJzu+yEJMD5m53B47XCz3rOUsfUqFDKGGl+5KsO7ebi/NeOYD3foqFjDqsSStf71e
+         lo5OSCbaZWo0vLTjAVawuEJhjwGJk+K0CJIlE1aZ3j13MdpYbb+GGWcIaVB1CgURQaLx
+         hBsN0ppflUtGhp5j18rzWKeKJvlTAc/xohZzO/Q9nnv2NKrZVEp2CzTYaMijHOiaOKvN
+         9Axg==
+X-Gm-Message-State: APjAAAW0cU2rB9a43M4mZg/SIAFU+PbkuNocqJb5BxLpnP5EVLnP/y9/
+        ius1XdlOocaLuEtAWPrM0b6hEdUO
+X-Google-Smtp-Source: APXvYqxBtpkgOdAW7CRYJrvAlE0K8uKX4b6YMw5evwxxJGel49FacekG2njBKu1+ODO53PFLBi35DQ==
+X-Received: by 2002:adf:eb46:: with SMTP id u6mr9246213wrn.239.1575539393159;
+        Thu, 05 Dec 2019 01:49:53 -0800 (PST)
+Received: from [192.168.1.35] (182.red-88-21-103.staticip.rima-tde.net. [88.21.103.182])
+        by smtp.gmail.com with ESMTPSA id u18sm11562183wrt.26.2019.12.05.01.49.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2019 01:49:52 -0800 (PST)
+Subject: Re: [PATCH v3 07/15] KVM: Refactor error handling for setting memory
+ region
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>
+References: <20191024230744.14543-1-sean.j.christopherson@intel.com>
+ <20191024230744.14543-8-sean.j.christopherson@intel.com>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
+Message-ID: <3b6cd050-2551-d262-aded-051e25044519@amsat.org>
+Date:   Thu, 5 Dec 2019 10:49:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191204155941.17814-1-brgl@bgdev.pl> <20191204155941.17814-2-brgl@bgdev.pl>
- <20191205094408.GA9303@sol>
-In-Reply-To: <20191205094408.GA9303@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 5 Dec 2019 10:48:40 +0100
-Message-ID: <CAMRc=Md8sm0WqN+PjR1yjh+MHPn0YM-3KbDfkOj3VE7qQa42QA@mail.gmail.com>
-Subject: Re: [PATCH v2 11/11] tools: gpio: implement gpio-watch
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191024230744.14543-8-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 5 gru 2019 o 10:44 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
-:
->
-> On Wed, Dec 04, 2019 at 04:59:41PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Add a simple program that allows to test the new LINECHANGED_FD ioctl()=
-.
-> >
->
-> A minor nit - the ioctl has since been changed to LINEINFO_WATCH.
+On 10/25/19 1:07 AM, Sean Christopherson wrote:
+> Replace a big pile o' gotos with returns to make it more obvious what
+> error code is being returned, and to prepare for refactoring the
+> functional, i.e. post-checks, portion of __kvm_set_memory_region().
+> 
+> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>   virt/kvm/kvm_main.c | 40 ++++++++++++++++++----------------------
+>   1 file changed, 18 insertions(+), 22 deletions(-)
+> 
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index a43902d9036d..e2f47d60f696 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -942,34 +942,33 @@ int __kvm_set_memory_region(struct kvm *kvm,
+>   
+>   	r = check_memory_region_flags(mem);
+>   	if (r)
+> -		goto out;
+> +		return r;
+>   
+> -	r = -EINVAL;
+>   	as_id = mem->slot >> 16;
+>   	id = (u16)mem->slot;
+>   
+>   	/* General sanity checks */
+>   	if (mem->memory_size & (PAGE_SIZE - 1))
+> -		goto out;
+> +		return -EINVAL;
+>   	if (mem->guest_phys_addr & (PAGE_SIZE - 1))
+> -		goto out;
+> +		return -EINVAL;
+>   	/* We can read the guest memory with __xxx_user() later on. */
+>   	if ((id < KVM_USER_MEM_SLOTS) &&
+>   	    ((mem->userspace_addr & (PAGE_SIZE - 1)) ||
+>   	     !access_ok((void __user *)(unsigned long)mem->userspace_addr,
+>   			mem->memory_size)))
+> -		goto out;
+> +		return -EINVAL;
+>   	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_MEM_SLOTS_NUM)
+> -		goto out;
+> +		return -EINVAL;
+>   	if (mem->guest_phys_addr + mem->memory_size < mem->guest_phys_addr)
+> -		goto out;
+> +		return -EINVAL;
+>   
+>   	slot = id_to_memslot(__kvm_memslots(kvm, as_id), id);
+>   	base_gfn = mem->guest_phys_addr >> PAGE_SHIFT;
+>   	npages = mem->memory_size >> PAGE_SHIFT;
+>   
+>   	if (npages > KVM_MEM_MAX_NR_PAGES)
+> -		goto out;
+> +		return -EINVAL;
+>   
+>   	new = old = *slot;
+>   
+> @@ -986,20 +985,18 @@ int __kvm_set_memory_region(struct kvm *kvm,
+>   			if ((new.userspace_addr != old.userspace_addr) ||
+>   			    (npages != old.npages) ||
+>   			    ((new.flags ^ old.flags) & KVM_MEM_READONLY))
+> -				goto out;
+> +				return -EINVAL;
+>   
+>   			if (base_gfn != old.base_gfn)
+>   				change = KVM_MR_MOVE;
+>   			else if (new.flags != old.flags)
+>   				change = KVM_MR_FLAGS_ONLY;
+> -			else { /* Nothing to change. */
+> -				r = 0;
+> -				goto out;
+> -			}
+> +			else /* Nothing to change. */
+> +				return 0;
+>   		}
+>   	} else {
+>   		if (!old.npages)
+> -			goto out;
+> +			return -EINVAL;
+>   
+>   		change = KVM_MR_DELETE;
+>   		new.base_gfn = 0;
+> @@ -1008,29 +1005,29 @@ int __kvm_set_memory_region(struct kvm *kvm,
+>   
+>   	if ((change == KVM_MR_CREATE) || (change == KVM_MR_MOVE)) {
+>   		/* Check for overlaps */
+> -		r = -EEXIST;
+>   		kvm_for_each_memslot(slot, __kvm_memslots(kvm, as_id)) {
+>   			if (slot->id == id)
+>   				continue;
+>   			if (!((base_gfn + npages <= slot->base_gfn) ||
+>   			      (base_gfn >= slot->base_gfn + slot->npages)))
+> -				goto out;
+> +				return -EEXIST;
+>   		}
+>   	}
+>   
+> -	r = -ENOMEM;
+> -
+>   	/* Allocate/free page dirty bitmap as needed */
+>   	if (!(new.flags & KVM_MEM_LOG_DIRTY_PAGES))
+>   		new.dirty_bitmap = NULL;
+>   	else if (!new.dirty_bitmap) {
+> -		if (kvm_create_dirty_bitmap(&new) < 0)
+> -			goto out;
+> +		r = kvm_create_dirty_bitmap(&new);
+> +		if (r)
+> +			return r;
 
-Will fix, thanks.
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
 
->
-> Do you have anything else to test the ioctls?
-> Either way, I'll try to find some time to add some to my gpiod library.
->
-
-The time I can spend on this is limited, so I decided to go with the
-kernel API first with a simple user-space test in the kernel source.
-Once we agree upon it, I'll add support for this to libgpiod. The
-user-space part would then probably be merged after v5.6-rc1 is tagged
-and it leaves us 7 weeks to fix any bugs.
-
-This is what I plan on doing with your series too. I hope to merge it
-next week and then we can fix any potential bugs and do a libgpiod
-release simultaneous with linux v5.5.
-
-Bart
-
-> Kent.
->
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >  tools/gpio/.gitignore   |   1 +
-> >  tools/gpio/Build        |   1 +
-> >  tools/gpio/Makefile     |  11 +++-
-> >  tools/gpio/gpio-watch.c | 112 ++++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 124 insertions(+), 1 deletion(-)
-> >  create mode 100644 tools/gpio/gpio-watch.c
-> >
-> > diff --git a/tools/gpio/.gitignore b/tools/gpio/.gitignore
-> > index a94c0e83b209..fffd32969d62 100644
-> > --- a/tools/gpio/.gitignore
-> > +++ b/tools/gpio/.gitignore
-> > @@ -1,4 +1,5 @@
-> >  gpio-event-mon
-> >  gpio-hammer
-> >  lsgpio
-> > +gpio-watch
-> >  include/linux/gpio.h
-> > diff --git a/tools/gpio/Build b/tools/gpio/Build
-> > index 4141f35837db..67c7b7f6a717 100644
-> > --- a/tools/gpio/Build
-> > +++ b/tools/gpio/Build
-> > @@ -2,3 +2,4 @@ gpio-utils-y +=3D gpio-utils.o
-> >  lsgpio-y +=3D lsgpio.o gpio-utils.o
-> >  gpio-hammer-y +=3D gpio-hammer.o gpio-utils.o
-> >  gpio-event-mon-y +=3D gpio-event-mon.o gpio-utils.o
-> > +gpio-watch-y +=3D gpio-watch.o
-> > diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-> > index 6080de58861f..842287e42c83 100644
-> > --- a/tools/gpio/Makefile
-> > +++ b/tools/gpio/Makefile
-> > @@ -18,7 +18,7 @@ MAKEFLAGS +=3D -r
-> >
-> >  override CFLAGS +=3D -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
-> >
-> > -ALL_TARGETS :=3D lsgpio gpio-hammer gpio-event-mon
-> > +ALL_TARGETS :=3D lsgpio gpio-hammer gpio-event-mon gpio-watch
-> >  ALL_PROGRAMS :=3D $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
-> >
-> >  all: $(ALL_PROGRAMS)
-> > @@ -66,6 +66,15 @@ $(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-ut=
-ils-in.o
-> >  $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
-> >       $(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-> >
-> > +#
-> > +# gpio-watch
-> > +#
-> > +GPIO_WATCH_IN :=3D $(OUTPUT)gpio-watch-in.o
-> > +$(GPIO_WATCH_IN): prepare FORCE
-> > +     $(Q)$(MAKE) $(build)=3Dgpio-watch
-> > +$(OUTPUT)gpio-watch: $(GPIO_WATCH_IN)
-> > +     $(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-> > +
-> >  clean:
-> >       rm -f $(ALL_PROGRAMS)
-> >       rm -f $(OUTPUT)include/linux/gpio.h
-> > diff --git a/tools/gpio/gpio-watch.c b/tools/gpio/gpio-watch.c
-> > new file mode 100644
-> > index 000000000000..69aee43655ae
-> > --- /dev/null
-> > +++ b/tools/gpio/gpio-watch.c
-> > @@ -0,0 +1,112 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * gpio-watch - monitor unrequested lines for property changes using t=
-he
-> > + *              character device
-> > + *
-> > + * Copyright (C) 2019 BayLibre SAS
-> > + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > + */
-> > +
-> > +#include <ctype.h>
-> > +#include <errno.h>
-> > +#include <fcntl.h>
-> > +#include <linux/gpio.h>
-> > +#include <poll.h>
-> > +#include <stdbool.h>
-> > +#include <stdio.h>
-> > +#include <stdlib.h>
-> > +#include <string.h>
-> > +#include <sys/ioctl.h>
-> > +#include <unistd.h>
-> > +
-> > +static bool isnumber(const char *str)
-> > +{
-> > +     size_t sz =3D strlen(str);
-> > +     int i;
-> > +
-> > +     for (i =3D 0; i < sz; i++) {
-> > +             if (!isdigit(str[i]))
-> > +                     return false;
-> > +     }
-> > +
-> > +     return true;
-> > +}
-> > +
-> > +int main(int argc, char **argv)
-> > +{
-> > +     struct gpioline_info_changed chg;
-> > +     struct gpioline_info req;
-> > +     struct pollfd pfd;
-> > +     int fd, i, j, ret;
-> > +     char *event;
-> > +     ssize_t rd;
-> > +
-> > +     if (argc < 3)
-> > +             goto err_usage;
-> > +
-> > +     fd =3D open(argv[1], O_RDWR | O_CLOEXEC);
-> > +     if (fd < 0) {
-> > +             perror("unable to open gpiochip");
-> > +             return EXIT_FAILURE;
-> > +     }
-> > +
-> > +     for (i =3D 0, j =3D 2; i < argc - 2; i++, j++) {
-> > +             if (!isnumber(argv[j]))
-> > +                     goto err_usage;
-> > +
-> > +             memset(&req, 0, sizeof(req));
-> > +             req.line_offset =3D atoi(argv[j]);
-> > +
-> > +             ret =3D ioctl(fd, GPIO_GET_LINEINFO_WATCH_IOCTL, &req);
-> > +             if (ret) {
-> > +                     perror("unable to set up line watch");
-> > +                     return EXIT_FAILURE;
-> > +             }
-> > +     }
-> > +
-> > +     pfd.fd =3D fd;
-> > +     pfd.events =3D POLLIN | POLLPRI;
-> > +
-> > +     for (;;) {
-> > +             ret =3D poll(&pfd, 1, 5000);
-> > +             if (ret < 0) {
-> > +                     perror("error polling the linechanged fd");
-> > +                     return EXIT_FAILURE;
-> > +             } else if (ret > 0) {
-> > +                     memset(&chg, 0, sizeof(chg));
-> > +                     rd =3D read(pfd.fd, &chg, sizeof(chg));
-> > +                     if (rd < 0 || rd !=3D sizeof(chg)) {
-> > +                             if (rd !=3D sizeof(chg))
-> > +                                     errno =3D EIO;
-> > +
-> > +                             perror("error reading line change event")=
-;
-> > +                             return EXIT_FAILURE;
-> > +                     }
-> > +
-> > +                     switch (chg.event_type) {
-> > +                     case GPIOLINE_CHANGED_REQUESTED:
-> > +                             event =3D "requested";
-> > +                             break;
-> > +                     case GPIOLINE_CHANGED_RELEASED:
-> > +                             event =3D "released";
-> > +                             break;
-> > +                     case GPIOLINE_CHANGED_CONFIG:
-> > +                             event =3D "config changed";
-> > +                             break;
-> > +                     default:
-> > +                             fprintf(stderr,
-> > +                                     "invalid event type received from=
- the kernel\n");
-> > +                             return EXIT_FAILURE;
-> > +                     }
-> > +
-> > +                     printf("line %u: %s at %llu\n",
-> > +                            chg.info.line_offset, event, chg.timestamp=
-);
-> > +             }
-> > +     }
-> > +
-> > +     return 0;
-> > +
-> > +err_usage:
-> > +     printf("%s: <gpiochip> <line0> <line1> ...\n", argv[0]);
-> > +     return EXIT_FAILURE;
-> > +}
-> > --
-> > 2.23.0
-> >
+>   	}
+>   
+>   	slots = kvzalloc(sizeof(struct kvm_memslots), GFP_KERNEL_ACCOUNT);
+> -	if (!slots)
+> +	if (!slots) {
+> +		r = -ENOMEM;
+>   		goto out_bitmap;
+> +	}
+>   	memcpy(slots, __kvm_memslots(kvm, as_id), sizeof(struct kvm_memslots));
+>   
+>   	if ((change == KVM_MR_DELETE) || (change == KVM_MR_MOVE)) {
+> @@ -1081,7 +1078,6 @@ int __kvm_set_memory_region(struct kvm *kvm,
+>   out_bitmap:
+>   	if (new.dirty_bitmap && !old.dirty_bitmap)
+>   		kvm_destroy_dirty_bitmap(&new);
+> -out:
+>   	return r;
+>   }
+>   EXPORT_SYMBOL_GPL(__kvm_set_memory_region);
+> 
