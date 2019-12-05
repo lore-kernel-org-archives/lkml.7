@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 137EEC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9C7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A8624671
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC6A24672
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575581404;
-	bh=oZwr/JAPXTXrcsPq69YsGQO2h51xC7nCTpePfVOHBx8=;
+	s=default; t=1575581428;
+	bh=53gsHQqClcL7Aoql6lXSgoCQDVGew2OQgpP6KIPSa0A=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=RprCV/k1mMC0hKi6oavGlgQRxAT1VXxiadtGj88RYaIYqzi1ixjsJ8aiESSFsriM9
-	 u/bfb3ENPKSb1EOyGniJyj/XfUSBojbs3lVyq9+qIEpkUuUNI4LZv3qrdPSXSG2bCZ
-	 Caul68gzFzXnNPtADuMlEmC3Awh4jbvBdnhemJBo=
+	b=gw6SHdh2fMzsvV7F6BM4FGBisDWVucxCB1OaYKOdf2lgz2nrx03BfvpZZwXp547P0
+	 ReY6fuQpqA2QPyHk/R0PGC8rkLoF/1D/UXgz40g+9utq5ULklPpQEHqf+wx7ZzXuEA
+	 eQGTxKuDzVoGQSEZ7f9Y9PcJ2mL/E182/VVdvOq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730287AbfLEVaE (ORCPT
+        id S1730356AbfLEVa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 16:30:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55446 "EHLO mail.kernel.org"
+        Thu, 5 Dec 2019 16:30:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727236AbfLEVaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 16:30:03 -0500
-Subject: Re: [GIT PULL] fuse update for 5.5
+        id S1727236AbfLEVa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 16:30:26 -0500
+Subject: Re: [GIT PULL] Ceph updates for 5.5-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575581403;
-        bh=oZwr/JAPXTXrcsPq69YsGQO2h51xC7nCTpePfVOHBx8=;
+        s=default; t=1575581426;
+        bh=53gsHQqClcL7Aoql6lXSgoCQDVGew2OQgpP6KIPSa0A=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=b7M5HOIafjNroCh/e1g/9+1WiQd8egsUqQZLNNg4SBZO63pRSOr/2X7xREm9mVgkI
-         PA5K+dKVGT/lRCtbMs9D4nPi279H7B1nCVJLsb91mHvhiSBm97twyDvgmBbvGUuS7d
-         C7G3/AZf0DoABRFTfEfwrmlHyNqt3kcI3vZGGtns=
+        b=eSpNdX9kP0dDK8YXRUf7OuUQUmrgmsqgGcxcWfnSP7GQV0hTUxW/kqhzUFQLD6Yuj
+         myeFOXznzNzTNXzVSxWyVOCkUF95tmKlug84XDKGT1PAvhhs42OPSFgFlCGIg+fGEO
+         YNA44a7dPeq0y/T4gXL/lIvomYeivgx21auy7ZW0=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191204091059.GB16668@miu.piliscsaba.redhat.com>
-References: <20191204091059.GB16668@miu.piliscsaba.redhat.com>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191204091059.GB16668@miu.piliscsaba.redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git
- tags/fuse-update-5.5
-X-PR-Tracked-Commit-Id: 8d66fcb7488486bf144eab852e87e03a45e0fd3a
+In-Reply-To: <20191204200307.21047-1-idryomov@gmail.com>
+References: <20191204200307.21047-1-idryomov@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191204200307.21047-1-idryomov@gmail.com>
+X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git
+ tags/ceph-for-5.5-rc1
+X-PR-Tracked-Commit-Id: 82995cc6c5ae4bf4d72edef381a085e52d5b5905
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7ce4fab8191396a1b8e4bc42d3b90029876b2bcd
-Message-Id: <157558140312.8243.12648934323249833371.pr-tracker-bot@kernel.org>
-Date:   Thu, 05 Dec 2019 21:30:03 +0000
-To:     Miklos Szeredi <miklos@szeredi.hu>
+X-PR-Merge-Commit-Id: a231582359ec27e121bf4bb0ab3df8355f919d1d
+Message-Id: <157558142612.8243.11548479580688352353.pr-tracker-bot@kernel.org>
+Date:   Thu, 05 Dec 2019 21:30:26 +0000
+To:     Ilya Dryomov <idryomov@gmail.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 4 Dec 2019 10:10:59 +0100:
+The pull request you sent on Wed,  4 Dec 2019 21:03:07 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git tags/fuse-update-5.5
+> https://github.com/ceph/ceph-client.git tags/ceph-for-5.5-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7ce4fab8191396a1b8e4bc42d3b90029876b2bcd
+https://git.kernel.org/torvalds/c/a231582359ec27e121bf4bb0ab3df8355f919d1d
 
 Thank you!
 
