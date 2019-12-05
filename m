@@ -2,117 +2,139 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9AAC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FE5C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E28762464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:45:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A/uquqn7"
+	by mail.kernel.org (Postfix) with ESMTP id AF5742464E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbfLEJpq (ORCPT
+        id S1729272AbfLEJqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:45:46 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52396 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728707AbfLEJpn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:45:43 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p9so2881241wmc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 01:45:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IAHAPcfNyYPZewTfBhsG7qwba+YQCk2356CRIqll3K8=;
-        b=A/uquqn7fzUQpqmYGO+PEXKF1NoPRxYMZ0y2sW+aDKN2NiVkv7K16K/R63JFJt3fdo
-         PAqzhlml/ixjVKxynF0FGEbQBpjyn/orMffUA7RtohOKEsDFu0I2e/m4o3RSxCMcHRPl
-         WxFBf9N9tp3la/OS19JL1VNiHJKI3y4h+yBPMpEsRQkJuXKF10bWuSYlx8+xHkw3mGwu
-         CgsV630jVK1HXVfmmOrNxjhvEIF/6CNZuTECWJ6ux4arJzFKOk9C+ztBFKrFZ5gFiQkG
-         qHjrP2okiVzBNHwpyOOJH+7tZvfC46DiMArQ1geFD4nelFOWtjAoXRxpDUIjaPrhLngI
-         kI9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IAHAPcfNyYPZewTfBhsG7qwba+YQCk2356CRIqll3K8=;
-        b=Mjw//Wz0a4Gr0BPMk8uVtx/2tud0sYvHCko4j0HBSgoomPg6QzBScdUK2/e2cqJVYT
-         nq/iqEKRhInevEdulPMc9ELE8NDTqtzRQZUdcH5Gc0uH64TR+JgpnNPE5Fe3TevOWv5m
-         3hxiQaIL+AZjYjKNhj/nzmrGPxAxRRuXLs5fwOLXGhLDtm4sbjNOySy5Urx27FbZfuCu
-         hJyEfy1PXPBqumHCVXjTyfvSexrqBqoJ1JCOXLrNuqTxFTJUMaMFBry3ozuAkn5jU727
-         APwRsKOPxb2+HhMUduulElE4rCEIfMmiXFl2nLA6MD8MFwiWjgU70plqPQvsAnxRCfug
-         Cbzg==
-X-Gm-Message-State: APjAAAXF0rzgzJxpLNwiEA1RHVy5d/QWgfXGlWRxZh1FdiGCDhp1mzY1
-        kTBr38YQMQVpha3H1IWwnGagMiKlbHjIB6VLKQw=
-X-Google-Smtp-Source: APXvYqwcYRc0fuaLRFVleqfgSmiyl3I2fPNK6AKFa5K8/dfNSEFtx+axt8WpebIoZlIVYXmSl6OmkUOLn9wJyytUYes=
-X-Received: by 2002:a1c:4944:: with SMTP id w65mr4047032wma.39.1575539141872;
- Thu, 05 Dec 2019 01:45:41 -0800 (PST)
+        Thu, 5 Dec 2019 04:46:30 -0500
+Received: from mail.phunq.net ([66.183.183.73]:48442 "EHLO phunq.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728604AbfLEJqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 04:46:30 -0500
+Received: from [172.16.1.14]
+        by phunq.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+        (Exim 4.92.3)
+        (envelope-from <daniel@phunq.net>)
+        id 1icniN-0002Yo-Lt; Thu, 05 Dec 2019 01:46:27 -0800
+Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
+To:     Vyacheslav Dubeyko <slava@dubeyko.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
+ <20191127142508.GB5143@mit.edu>
+ <6b6242d9-f88b-824d-afe9-d42382a93b34@phunq.net>
+ <9ed62cfea37bfebfb76e378d482bd521c7403c1f.camel@dubeyko.com>
+From:   Daniel Phillips <daniel@phunq.net>
+Message-ID: <c61706fb-3534-72b9-c4ae-0f0972bc566b@phunq.net>
+Date:   Thu, 5 Dec 2019 01:46:27 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191128223802.18228-1-michael@walle.cc> <CAEnQRZCnQAUVowOJw5aPe9rYWU5DKR4bFbmQLYV2BzYqOhRJmQ@mail.gmail.com>
- <a5accae02f840f7e25099c2ccd7b02ff@walle.cc>
-In-Reply-To: <a5accae02f840f7e25099c2ccd7b02ff@walle.cc>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Thu, 5 Dec 2019 11:45:30 +0200
-Message-ID: <CAEnQRZBm2=BrQ2VQW6ZNYSshNi_90-RdHKCYbtXi0=u3oxG3SA@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: fsl_sai: add IRQF_SHARED
-To:     Michael Walle <michael@walle.cc>
-Cc:     Linux-ALSA <alsa-devel@alsa-project.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9ed62cfea37bfebfb76e378d482bd521c7403c1f.camel@dubeyko.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 11:18 AM Michael Walle <michael@walle.cc> wrote:
->
-> Hi Daniel,
->
-> Am 2019-12-05 09:43, schrieb Daniel Baluta:
-> > On Fri, Nov 29, 2019 at 12:40 AM Michael Walle <michael@walle.cc>
-> > wrote:
-> >>
-> >> The LS1028A SoC uses the same interrupt line for adjacent SAIs. Use
-> >> IRQF_SHARED to be able to use these SAIs simultaneously.
-> >
-> > Hi Michael,
-> >
-> > Thanks for the patch. We have a similar change inside our internal tree
-> > (it is on my long TODO list to upstream :D).
-> >
-> > We add the shared flag conditionally on a dts property.
-> >
-> > Do you think it is a good idea to always add shared flag? I'm thinking
-> > on SAI IP integrations where the interrupt is edge triggered.
->
-> Mhh, I don't really get the point to make the flag conditionally. If
-> there is only one user, the flag won't hurt, correct?
->
-> If there are two users, we need the flag anyway.
->
-> > AFAIK edge triggered interrupts do not get along very well
-> > with sharing an interrupt line.
->
-> So in that case you shouldn't use shared edge triggered interrupts in
-> the
-> SoC in the first place, I guess.
+On 2019-12-04 7:55 a.m., Vyacheslav Dubeyko wrote:
+>> That is it for media format. Very simple, is it not? My next post
+>> will explain the Shardmap directory block format, with a focus on
+>> deficiencies of the traditional Ext2 format that were addressed.
+> 
+> I've tried to take a look into the source code. And it was not easy
+> try. :)
 
-I think you make a good point. I was thinking that it would hurt the single
-user case. But it is fine.
+Let's see what we can do about that, starting with removing the duopack
+(media index entry) and tripack (cache index entry) templates. Now that
+the design has settled down we don't need that level of generality so
+much any more. The replacements are mostly C-style now and by the time
+the Tux3 kernel port is done, will be officially C.
 
-Thanks for the patch.
+So far I only described the media format, implemented in define_layout(),
+which I hope is self explanatory. You should be able to tie it back to
+this diagram pretty easily.
 
-Acked-by: Daniel Baluta <daniel.baluta@nxp.com>
+   https://github.com/danielbot/Shardmap/wiki/Shardmap-media-format
+
+> I expected to have the bird-fly understanding from shardmap.h
+> file. My expectation was to find the initial set of structure
+> declarations with the good comments.
+
+Our wiki is slowly getting populated with design documentation. Most of
+what you see in shardmap.h is concerned with the Shardmap cache form,
+where all the action happens. I have not said much about that yet, but
+there is a post on the way. The main structures are struct shard (a
+self contained hash table) and struct keymap (a key value store
+populated with shards). Those are obvious I think, please correct me
+if I am wrong. A more tricky one is struct tier, which implements our
+incremental hash table expansion. You might expect that to be a bit
+subtle, and it is.
+
+Before getting into those details, there is an upcoming post about
+the record block format, which is pretty non-abstract and, I think,
+easy enough to understand from the API declaration in shardmap.h and
+the code in recops.c.
+
+There is a diagram here:
+
+   https://github.com/danielbot/Shardmap/wiki/Shardmap-record-block-format
+
+but the post this belongs to is not quite ready to go out yet. That one
+will be an interlude before for the cache form discussion, which is
+where the magic happens, things like rehash and reshard and add_tier,
+and the way the hash code gets chopped up as it runs through the access
+stack.
+
+Here is a diagram of the cache structures, very simple:
+
+   https://github.com/danielbot/Shardmap/wiki/Shardmap-cache-format
+
+And here is a diagram of the Shardmap three level hashing scheme,
+which ties everything together:
+
+   https://github.com/danielbot/Shardmap/wiki/Shardmap-hashing-scheme
+
+This needs explanation. It is something new that you won't find in any
+textbook, this is the big reveal right here.
+
+> But, frankly speaking, it's very
+> complicated path for the concept understanding. Even from C++ point of
+> view, the class declarations look very complicated if there are mixing
+> of fields with methods declarations.
+
+In each class, fields are declared first, then methods. In the kernel
+port of course we will not have classes, and the function names will be
+longer as usual.
+
+> So, I believe it makes sense to declare the necessary set of structures
+> in the file's beginning with the good comments. Even it will be good to
+> split the structure declarations and methods in different files. I
+> believe it will ease the way to understand the concept. Otherwise, it
+> will be tough to review such code.
+
+Declaring structures and functions in the same file is totally normal
+for kernel code, you don't really want these in separate files unless
+they break out naturally that way.
+
+This code is dense, there is a lot going on in not very many lines. So
+we need lots of lines of documentation to make up for that, which has
+not been a priority until now, so please bear with me. And please do
+not hesitate to ask specific questions - the answers may well end up in
+the wiki.
+
+Regards,
+
+Daniel
