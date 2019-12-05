@@ -2,62 +2,143 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECE9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F26C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C909921835
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7823824249
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:30:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TWhz6eI+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbfLEI2p (ORCPT
+        id S1728918AbfLEIae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 03:28:45 -0500
-Received: from verein.lst.de ([213.95.11.211]:54012 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbfLEI2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 03:28:45 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 4D04768C4E; Thu,  5 Dec 2019 09:28:38 +0100 (CET)
-Date:   Thu, 5 Dec 2019 09:28:37 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ram Pai <linuxram@us.ibm.com>
-Cc:     David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@ozlabs.org,
-        mdroth@linux.vnet.ibm.com, hch@lst.de, andmike@us.ibm.com,
-        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
-        cai@lca.pw, tglx@linutronix.de, bauerman@linux.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] powerpc/pseries/iommu: Share the per-cpu TCE
- page with the hypervisor.
-Message-ID: <20191205082837.GA20298@lst.de>
-References: <20191203020850.GA12354@oc0525413822.ibm.com> <0b56ce3e-6c32-5f3b-e7cc-0d419a61d71d@ozlabs.ru> <20191203040509.GB12354@oc0525413822.ibm.com> <a0f19e65-81eb-37bd-928b-7a57a8660e3d@ozlabs.ru> <20191203165204.GA5079@oc0525413822.ibm.com> <3a17372a-fcee-efbf-0a05-282ffb1adc90@ozlabs.ru> <20191204004958.GB5063@oc0525413822.ibm.com> <5963ff32-2119-be7c-d1e5-63457888a73b@ozlabs.ru> <20191204033618.GA5031@umbus.fritz.box> <20191204204232.GE5063@oc0525413822.ibm.com>
+        Thu, 5 Dec 2019 03:30:34 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:52166 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725974AbfLEIae (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 03:30:34 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB58SLJ9020757;
+        Thu, 5 Dec 2019 09:30:27 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=myUc//5L9CCr4hqe++W2Bj42igL3v+3NhNiVfYlVMt4=;
+ b=TWhz6eI+6eXeuNFUTmKhAaWfY+k7Rr2ZRZ9vH0+8iogBEc5hjmxC1+bw/y8iX6+HMvrH
+ LH78t37J7Ejx3Sx1jqmzy2Pxjc2QTZpRoae6xOjyFrJktFrR2byk4M3K4aiLDIPxjxxW
+ BobvBEUnah6f4NmR6cess1ecLNBdtMCjIUEWiHG7wTCAncf39aLiYHyXLTpZgUs9BdXm
+ FCzhFJQgVYKf2+tJk8PHtWKUf2G0SxFNsiP55UifP5qd9LR7rna99WJdoIHhrn/LMRAk
+ DqkMQnjyEhqwsq4YTHgxH4hb83qaPRKjRty9eqwBvuBRP3KVBopnMHeNBtkAlsoXeH9A jg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wkg6ksdau-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Dec 2019 09:30:27 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 06D52100038;
+        Thu,  5 Dec 2019 09:30:27 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EBD092AF6A0;
+        Thu,  5 Dec 2019 09:30:26 +0100 (CET)
+Received: from SFHDAG6NODE1.st.com (10.75.127.16) by SFHDAG6NODE3.st.com
+ (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec
+ 2019 09:30:26 +0100
+Received: from SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27]) by
+ SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27%20]) with mapi id
+ 15.00.1473.003; Thu, 5 Dec 2019 09:30:26 +0100
+From:   Yannick FERTRE <yannick.fertre@st.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Philippe CORNU <philippe.cornu@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] Input: goodix - support gt9147 touchpanel
+Thread-Topic: [PATCH] Input: goodix - support gt9147 touchpanel
+Thread-Index: AQHVpQ11LDOqyllChkeeHL9myer67qekjkoAgAayLbA=
+Date:   Thu, 5 Dec 2019 08:30:26 +0000
+Message-ID: <bd51e553feb74f6fb3a7115463d52e66@SFHDAG6NODE1.st.com>
+References: <1574850526-13518-1-git-send-email-yannick.fertre@st.com>
+ <20191201030818.GM248138@dtor-ws>
+In-Reply-To: <20191201030818.GM248138@dtor-ws>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.45]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204204232.GE5063@oc0525413822.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-05_01:2019-12-04,2019-12-05 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 12:42:32PM -0800, Ram Pai wrote:
-> > The other approach we could use for that - which would still allow
-> > H_PUT_TCE_INDIRECT, would be to allocate the TCE buffer page from the
-> > same pool that we use for the bounce buffers.  I assume there must
-> > already be some sort of allocator for that?
-> 
-> The allocator for swiotlb is buried deep in the swiotlb code. It is 
-> not exposed to the outside-swiotlb world. Will have to do major surgery
-> to expose it.
+Hello,
+Dmitry,
+I forgot to modify the binding to declare the new compatible "gt9147".
+Rob,
+can I modify the binding without converting it first to yaml?
 
-I don't think it would require all that much changes, but I'd really
-hate the layering of calling into it directly.  Do we have a struct
-device associated with the iommu that doesn't get iommu translations
-themselves?  If we do a dma_alloc_coherent on that you'll get the
-memory pool for free.
+Best regards
+
+Yannick Fertr=E9
+
+-----Original Message-----
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>=20
+Sent: dimanche 1 d=E9cembre 2019 04:08
+To: Yannick FERTRE <yannick.fertre@st.com>; Rob Herring <robh+dt@kernel.org=
+>
+Cc: Philippe CORNU <philippe.cornu@st.com>; Benjamin GAIGNARD <benjamin.gai=
+gnard@st.com>; Bastien Nocera <hadess@hadess.net>; linux-input@vger.kernel.=
+org; linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: goodix - support gt9147 touchpanel
+
+On Wed, Nov 27, 2019 at 11:28:46AM +0100, Yannick Fertre wrote:
+> From: Yannick Fertr=E9 <yannick.fertre@st.com>
+>=20
+> Add support for it by adding compatible and supported chip data=20
+> (default settings used).
+> The chip data on GT9147 is similar to GT912, like
+> - config data register has 0x8047 address
+> - config data register max len is 240
+> - config data checksum has 8-bit
+
+If it is compatible with gt912 then the driver does not need another compat=
+ible in the code I think. Rob will tell more.
+
+>=20
+> Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+> ---
+>  drivers/input/touchscreen/goodix.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/input/touchscreen/goodix.c=20
+> b/drivers/input/touchscreen/goodix.c
+> index fb43aa7..b470773 100644
+> --- a/drivers/input/touchscreen/goodix.c
+> +++ b/drivers/input/touchscreen/goodix.c
+> @@ -1045,6 +1045,7 @@ static const struct of_device_id goodix_of_match[] =
+=3D {
+>  	{ .compatible =3D "goodix,gt9271" },
+>  	{ .compatible =3D "goodix,gt928" },
+>  	{ .compatible =3D "goodix,gt967" },
+> +	{ .compatible =3D "goodix,gt9147",},
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, goodix_of_match);
+> --
+> 2.7.4
+>=20
+
+--=20
+Dmitry
