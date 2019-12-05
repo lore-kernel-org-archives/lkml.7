@@ -2,101 +2,273 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC5FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA6DC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 411EB2245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43EC32245C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:21:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JXRGtTEA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbfLELTc (ORCPT
+        id S1729244AbfLELVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 06:19:32 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47966 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729017AbfLELTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 06:19:32 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9B570BC9944553746866;
-        Thu,  5 Dec 2019 19:19:28 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 5 Dec 2019 19:19:19 +0800
-From:   Hongbo Yao <yaohongbo@huawei.com>
-To:     <haver@linux.ibm.com>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>
-CC:     <yaohongbo@huawei.com>, <linuxarm@huawei.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] misc: genwqe: fix compile warnings
-Date:   Thu, 5 Dec 2019 19:16:55 +0800
-Message-ID: <20191205111655.170382-1-yaohongbo@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 5 Dec 2019 06:21:07 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59166 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729017AbfLELVH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 06:21:07 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5BKuPh053390;
+        Thu, 5 Dec 2019 05:20:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575544856;
+        bh=Aw7GprFDO9w2I0bI/UyUztLL0uF3dC6VNrttSY25G0I=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JXRGtTEAZypzaSt+YXgOJI8a2WTOBCJqsykWMh6s8TRMhUk400NPe7xm8HH2wr6vs
+         rqqYhHkKIPcCIK93t6UUU5Db1L2VbpOLhgV8o7BL44R0/Bp/aa+wB48QRqQcfL9fe/
+         Uy4HvVkmbbz6q54lLEaCaaIilMiOmx4p1NHGU0ck=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5BKuK8086560;
+        Thu, 5 Dec 2019 05:20:56 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
+ 2019 05:20:56 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 5 Dec 2019 05:20:56 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5BKpxL102091;
+        Thu, 5 Dec 2019 05:20:52 -0600
+Subject: Re: [PATCH 4/4] PCI: pci-epf-test: Add support to defer core
+ initialization
+To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>,
+        <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191113090851.26345-1-vidyas@nvidia.com>
+ <20191113090851.26345-5-vidyas@nvidia.com>
+ <e8e3b8b6-d115-b4d4-19c5-1eae1d8abd0f@ti.com>
+ <958fcc14-6794-0328-5c31-0dcc845ee646@nvidia.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <c7877f72-97e0-ac48-06c3-8e3ecec87cd5@ti.com>
+Date:   Thu, 5 Dec 2019 16:52:02 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <958fcc14-6794-0328-5c31-0dcc845ee646@nvidia.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using the following command will get compile warnings:
-make W=1 drivers/misc/genwqe/card_ddcb.o ARCH=x86_64
+Hi,
 
-drivers/misc/genwqe/card_ddcb.c: In function setup_ddcb_queue:
-drivers/misc/genwqe/card_ddcb.c:1024:6: warning: variable rc set but not
-used [-Wunused-but-set-variable]
-drivers/misc/genwqe/card_ddcb.c: In function genwqe_card_thread:
-drivers/misc/genwqe/card_ddcb.c:1190:23: warning: variable rc set but
-not used [-Wunused-but-set-variable]
+On 01/12/19 7:59 pm, Vidya Sagar wrote:
+> On 11/27/2019 2:50 PM, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On 13/11/19 2:38 PM, Vidya Sagar wrote:
+>>> Add support to defer core initialization and to receive a notifier
+>>> when core is ready to accommodate platforms where core is not for
+>>> initialization untile reference clock from host is available.
+>>>
+>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>> ---
+>>>   drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++------
+>>>   1 file changed, 77 insertions(+), 37 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c 
+>>> b/drivers/pci/endpoint/functions/pci-epf-test.c
+>>> index bddff15052cc..068024fab544 100644
+>>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>>> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct 
+>>> work_struct *work)
+>>>                  msecs_to_jiffies(1));
+>>>   }
+>>> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned 
+>>> long val,
+>>> -                 void *data)
+>>> -{
+>>> -    struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+>>> -    struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>> -
+>>> -    queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+>>> -               msecs_to_jiffies(1));
+>>> -
+>>> -    return NOTIFY_OK;
+>>> -}
+>>> -
+>>>   static void pci_epf_test_unbind(struct pci_epf *epf)
+>>>   {
+>>>       struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf 
+>>> *epf)
+>>>       return 0;
+>>>   }
+>>> +static int pci_epf_test_core_init(struct pci_epf *epf)
+>>> +{
+>>> +    struct pci_epf_header *header = epf->header;
+>>> +    const struct pci_epc_features *epc_features;
+>>> +    struct pci_epc *epc = epf->epc;
+>>> +    struct device *dev = &epf->dev;
+>>> +    bool msix_capable = false;
+>>> +    bool msi_capable = true;
+>>> +    int ret;
+>>> +
+>>> +    epc_features = pci_epc_get_features(epc, epf->func_no);
+>>> +    if (epc_features) {
+>>> +        msix_capable = epc_features->msix_capable;
+>>> +        msi_capable = epc_features->msi_capable;
+>>> +    }
+>>> +
+>>> +    ret = pci_epc_write_header(epc, epf->func_no, header);
+>>> +    if (ret) {
+>>> +        dev_err(dev, "Configuration header write failed\n");
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    ret = pci_epf_test_set_bar(epf);
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>> +    if (msi_capable) {
+>>> +        ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+>>> +        if (ret) {
+>>> +            dev_err(dev, "MSI configuration failed\n");
+>>> +            return ret;
+>>> +        }
+>>> +    }
+>>> +
+>>> +    if (msix_capable) {
+>>> +        ret = pci_epc_set_msix(epc, epf->func_no, 
+>>> epf->msix_interrupts);
+>>> +        if (ret) {
+>>> +            dev_err(dev, "MSI-X configuration failed\n");
+>>> +            return ret;
+>>> +        }
+>>> +    }
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned 
+>>> long val,
+>>> +                 void *data)
+>>> +{
+>>> +    struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+>>> +    struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>> +    int ret;
+>>> +
+>>> +    switch (val) {
+>>> +    case CORE_INIT:
+>>> +        ret = pci_epf_test_core_init(epf);
+>>> +        if (ret)
+>>> +            return NOTIFY_BAD;
+>>> +        break;
+>>> +
+>>> +    case LINK_UP:
+>>> +        queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+>>> +                   msecs_to_jiffies(1));
+>>> +        break;
+>>> +
+>>> +    default:
+>>> +        dev_err(&epf->dev, "Invalid EPF test notifier event\n");
+>>> +        return NOTIFY_BAD;
+>>> +    }
+>>> +
+>>> +    return NOTIFY_OK;
+>>> +}
+>>> +
+>>>   static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>>>   {
+>>>       struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>> @@ -496,12 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>>   {
+>>>       int ret;
+>>>       struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>> -    struct pci_epf_header *header = epf->header;
+>>>       const struct pci_epc_features *epc_features;
+>>>       enum pci_barno test_reg_bar = BAR_0;
+>>>       struct pci_epc *epc = epf->epc;
+>>> -    struct device *dev = &epf->dev;
+>>>       bool linkup_notifier = false;
+>>> +    bool skip_core_init = false;
+>>>       bool msix_capable = false;
+>>>       bool msi_capable = true;
+>>> @@ -511,6 +570,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>>       epc_features = pci_epc_get_features(epc, epf->func_no);
+>>>       if (epc_features) {
+>>>           linkup_notifier = epc_features->linkup_notifier;
+>>> +        skip_core_init = epc_features->skip_core_init;
+>>>           msix_capable = epc_features->msix_capable;
+>>>           msi_capable = epc_features->msi_capable;
+>>
+>> Are these used anywhere in this function?
+> Nope. I'll remove them.
+> 
+>>>           test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+>>> @@ -520,34 +580,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>>       epf_test->test_reg_bar = test_reg_bar;
+>>>       epf_test->epc_features = epc_features;
+>>> -    ret = pci_epc_write_header(epc, epf->func_no, header);
+>>> -    if (ret) {
+>>> -        dev_err(dev, "Configuration header write failed\n");
+>>> -        return ret;
+>>> -    }
+>>> -
+>>>       ret = pci_epf_test_alloc_space(epf);
+>>>       if (ret)
+>>>           return ret;
+>>> -    ret = pci_epf_test_set_bar(epf);
+>>> -    if (ret)
+>>> -        return ret;
+>>> -
+>>> -    if (msi_capable) {
+>>> -        ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+>>> -        if (ret) {
+>>> -            dev_err(dev, "MSI configuration failed\n");
+>>> -            return ret;
+>>> -        }
+>>> -    }
+>>> -
+>>> -    if (msix_capable) {
+>>> -        ret = pci_epc_set_msix(epc, epf->func_no, 
+>>> epf->msix_interrupts);
+>>> -        if (ret) {
+>>> -            dev_err(dev, "MSI-X configuration failed\n");
+>>> +    if (!skip_core_init) {
+>>> +        ret = pci_epf_test_core_init(epf);
+>>> +        if (ret)
+>>>               return ret;
+>>> -        }
+>>>       }
+>>>       if (linkup_notifier) {
+>>
+>> This could as well be moved to pci_epf_test_core_init().
+> Yes, but I would like to keep only the code that touches hardware in 
+> pci_epf_test_core_init()
+> to minimize the time it takes to execute it. Is there any strong reason 
+> to move it? if not,
+> I would prefer to leave it here in this function itself.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
----
- drivers/misc/genwqe/card_ddcb.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+There is no point in scheduling a work to check for commands from host 
+when the EP itself is not initialized.
 
-diff --git a/drivers/misc/genwqe/card_ddcb.c b/drivers/misc/genwqe/card_ddcb.c
-index 026c6ca24540..905106579935 100644
---- a/drivers/misc/genwqe/card_ddcb.c
-+++ b/drivers/misc/genwqe/card_ddcb.c
-@@ -1084,7 +1084,7 @@ static int setup_ddcb_queue(struct genwqe_dev *cd, struct ddcb_queue *queue)
- 				queue->ddcb_daddr);
- 	queue->ddcb_vaddr = NULL;
- 	queue->ddcb_daddr = 0ull;
--	return -ENODEV;
-+	return rc;
- 
- }
- 
-@@ -1179,7 +1179,7 @@ static irqreturn_t genwqe_vf_isr(int irq, void *dev_id)
-  */
- static int genwqe_card_thread(void *data)
- {
--	int should_stop = 0, rc = 0;
-+	int should_stop = 0;
- 	struct genwqe_dev *cd = (struct genwqe_dev *)data;
- 
- 	while (!kthread_should_stop()) {
-@@ -1187,12 +1187,12 @@ static int genwqe_card_thread(void *data)
- 		genwqe_check_ddcb_queue(cd, &cd->queue);
- 
- 		if (GENWQE_POLLING_ENABLED) {
--			rc = wait_event_interruptible_timeout(
-+			wait_event_interruptible_timeout(
- 				cd->queue_waitq,
- 				genwqe_ddcbs_in_flight(cd) ||
- 				(should_stop = kthread_should_stop()), 1);
- 		} else {
--			rc = wait_event_interruptible_timeout(
-+			wait_event_interruptible_timeout(
- 				cd->queue_waitq,
- 				genwqe_next_ddcb_ready(cd) ||
- 				(should_stop = kthread_should_stop()), HZ);
--- 
-2.20.1
-
+Thanks
+Kishon
