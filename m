@@ -2,181 +2,140 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F738C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7641CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3267820707
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:30:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ABJq57Uq"
+	by mail.kernel.org (Postfix) with ESMTP id 48BEA2466E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:30:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575585050;
+	bh=rwc2W/J/V58JZoKOWg2doRruK6KWPbQgM5Sb2F/Ai60=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=aDvUmlK5W58dTS8J5Aj8wGtlb+lhnwqGfJFNlPkzyqMTSjuc/GwXQoKDaRL/MJXhB
+	 ZwvImg/iaTWgzuPfX87kIs7lYmFV1osOboqttxot57ton/mMCr06Sxw7teed9Zg9Lg
+	 3+lmKhLr4BLI2TCod2FO+YwX76nSLObjkdk/8JIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfLEWap (ORCPT
+        id S1727985AbfLEWat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 17:30:45 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35128 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727595AbfLEWao (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 17:30:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575585043;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=38xi2TGNPFhGvwzO4gnWgKizEkSGuV4mkJf443b5kzE=;
-        b=ABJq57UqQedJmbwVSOV+pGYWttwsM9PL6vD7+cquwbxiLCkxzMRUGGJxvwFp68CaHNNr5H
-        6CxztlJ3hIbFhz+AK+Jz7rdloqaY5uxhL7Uj7JrGHa10SxFV6Y1RSpk5mp2YlI+z+tf7UN
-        YdWHFq/5JDN/kbn+k+uaXDuD1qlD8fk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-131-10AAV6W9MlCauT2HZuk5hQ-1; Thu, 05 Dec 2019 17:30:40 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 5 Dec 2019 17:30:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727595AbfLEWas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 17:30:48 -0500
+Received: from localhost (mobile-166-170-221-197.mycingular.net [166.170.221.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0BB94593A2;
-        Thu,  5 Dec 2019 22:30:39 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-250.rdu2.redhat.com [10.10.120.250])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D388160C80;
-        Thu,  5 Dec 2019 22:30:37 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 2/2] pipe: Fix missing mask update after pipe_wait() [ver #2]
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org, ebiggers@kernel.org
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 05 Dec 2019 22:30:37 +0000
-Message-ID: <157558503716.10278.17734879104574600890.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
-References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        by mail.kernel.org (Postfix) with ESMTPSA id 84F6520707;
+        Thu,  5 Dec 2019 22:30:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575585047;
+        bh=rwc2W/J/V58JZoKOWg2doRruK6KWPbQgM5Sb2F/Ai60=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=cliOZcUxDWzGZ1UQTKJkPsD++s/EPrjyE7H/snJuA3uqE7NURH520sOnVje6nd0Ts
+         Td38CmfeZyMBlRyr+Rypsepv/EG8hoAOa7B7sJiJzOVgMDkiBquX3yxdZnHzKOkS/c
+         BBv+wew7DxEj2QDNBsIebdp/nYnu0CS5l8OPwMaM=
+Date:   Thu, 5 Dec 2019 16:30:44 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thomas Graf <tgraf@suug.ch>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.con>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rdma@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netdev@vger.kernel.org, kexec@lists.infradead.org,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v4 7/8] linux/log2.h: Fix 64bit calculations in
+ roundup/down_pow_two()
+Message-ID: <20191205223044.GA250573@google.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: 10AAV6W9MlCauT2HZuk5hQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203114743.1294-8-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix pipe_write() to not cache the ring index mask and max_usage as their
-values are invalidated by calling pipe_wait() because the latter function
-drops the pipe lock, thereby allowing F_SETPIPE_SZ change them.  Without
-this, pipe_write() may subsequently miscalculate the array indices and pipe
-fullness, leading to an oops like the following:
+You got the "n" on "down" in the subject, but still missing "of" ;)
 
- BUG: KASAN: slab-out-of-bounds in pipe_write+0xc25/0xe10 fs/pipe.c:481
- Write of size 8 at addr ffff8880771167a8 by task syz-executor.3/7987
- ...
- CPU: 1 PID: 7987 Comm: syz-executor.3 Not tainted 5.4.0-rc2-syzkaller #0
- ...
- Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x113/0x167 lib/dump_stack.c:113
-  print_address_description.constprop.8.cold.10+0x9/0x31d mm/kasan/report.c:374
-  __kasan_report.cold.11+0x1b/0x3a mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:634
-  __asan_report_store8_noabort+0x17/0x20 mm/kasan/generic_report.c:137
-  pipe_write+0xc25/0xe10 fs/pipe.c:481
-  call_write_iter include/linux/fs.h:1895 [inline]
-  new_sync_write+0x3fd/0x7e0 fs/read_write.c:483
-  __vfs_write+0x94/0x110 fs/read_write.c:496
-  vfs_write+0x18a/0x520 fs/read_write.c:558
-  ksys_write+0x105/0x220 fs/read_write.c:611
-  __do_sys_write fs/read_write.c:623 [inline]
-  __se_sys_write fs/read_write.c:620 [inline]
-  __x64_sys_write+0x6e/0xb0 fs/read_write.c:620
-  do_syscall_64+0xca/0x5d0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+On Tue, Dec 03, 2019 at 12:47:40PM +0100, Nicolas Saenz Julienne wrote:
+> Some users need to make sure their rounding function accepts and returns
+> 64bit long variables regardless of the architecture. Sadly
+> roundup/rounddown_pow_two() takes and returns unsigned longs. It turns
+> out ilog2() already handles 32/64bit calculations properly, and being
+> the building block to the round functions we can rework them as a
+> wrapper around it.
 
-This is not a problem for pipe_read() as the mask is recalculated on each
-pass of the loop, after pipe_wait() has been called.
+Missing "of" in the function names here.
+s/a wrapper/wrappers/
 
-Fixes: 8cefc107ca54 ("pipe: Use head and tail pointers for the ring, not cursor and length")
-Reported-by: syzbot+838eb0878ffd51f27c41@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Eric Biggers <ebiggers@kernel.org>
----
+IIUC the point of this is that roundup_pow_of_two() returned
+"unsigned long", which can be either 32 or 64 bits (worth pointing
+out, I think), and many callers need something that returns
+"unsigned long long" (always 64 bits).
 
- fs/pipe.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+It's a nice simplification to remove the "__" variants.  Just as a
+casual reader of this commit message, I'd like to know why we had both
+the roundup and the __roundup versions in the first place, and why we
+no longer need both.
 
-diff --git a/fs/pipe.c b/fs/pipe.c
-index da782ee251d2..8061b093140d 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -389,7 +389,7 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
- {
- 	struct file *filp = iocb->ki_filp;
- 	struct pipe_inode_info *pipe = filp->private_data;
--	unsigned int head, max_usage, mask;
-+	unsigned int head;
- 	ssize_t ret = 0;
- 	int do_wakeup = 0;
- 	size_t total_len = iov_iter_count(from);
-@@ -408,13 +408,12 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 	}
- 
- 	head = pipe->head;
--	max_usage = pipe->max_usage;
--	mask = pipe->ring_size - 1;
- 
- 	/* We try to merge small writes */
- 	chars = total_len & (PAGE_SIZE-1); /* size of the last buffer */
- 	if (!pipe_empty(head, pipe->tail) && chars != 0) {
--		struct pipe_buffer *buf = &pipe->bufs[(head - 1) & mask];
-+		struct pipe_buffer *buf =
-+			&pipe->bufs[(head - 1) & (pipe->ring_size - 1)];
- 		int offset = buf->offset + buf->len;
- 
- 		if (pipe_buf_can_merge(buf) && offset + chars <= PAGE_SIZE) {
-@@ -443,8 +442,9 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 		}
- 
- 		head = pipe->head;
--		if (!pipe_full(head, pipe->tail, max_usage)) {
--			struct pipe_buffer *buf = &pipe->bufs[head & mask];
-+		if (!pipe_full(head, pipe->tail, pipe->max_usage)) {
-+			struct pipe_buffer *buf =
-+				&pipe->bufs[head & (pipe->ring_size - 1)];
- 			struct page *page = pipe->tmp_page;
- 			int copied;
- 
-@@ -465,7 +465,7 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 			spin_lock_irq(&pipe->wait.lock);
- 
- 			head = pipe->head;
--			if (pipe_full(head, pipe->tail, max_usage)) {
-+			if (pipe_full(head, pipe->tail, pipe->max_usage)) {
- 				spin_unlock_irq(&pipe->wait.lock);
- 				continue;
- 			}
-@@ -484,7 +484,7 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 			kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
- 
- 			/* Insert it into the buffer array */
--			buf = &pipe->bufs[head & mask];
-+			buf = &pipe->bufs[head & (pipe->ring_size - 1)];
- 			buf->page = page;
- 			buf->ops = &anon_pipe_buf_ops;
- 			buf->offset = 0;
-@@ -510,7 +510,7 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 				break;
- 		}
- 
--		if (!pipe_full(head, pipe->tail, max_usage))
-+		if (!pipe_full(head, pipe->tail, pipe->max_usage))
- 			continue;
- 
- 		/* Wait for buffer space to become available. */
+> -#define roundup_pow_of_two(n)			\
+> -(						\
+> -	__builtin_constant_p(n) ? (		\
+> -		(n == 1) ? 1 :			\
+> -		(1UL << (ilog2((n) - 1) + 1))	\
+> -				   ) :		\
+> -	__roundup_pow_of_two(n)			\
+> - )
+> +#define roundup_pow_of_two(n)			  \
+> +(						  \
+> +	(__builtin_constant_p(n) && ((n) == 1)) ? \
+> +	1 : (1ULL << (ilog2((n) - 1) + 1))        \
+> +)
 
+Should the resulting type of this expression always be a ULL, even
+when n==1, i.e., should it be this?
+
+  1ULL : (1ULL << (ilog2((n) - 1) + 1))        \
+
+Or maybe there's no case where that makes a difference?
+
+Bjorn
