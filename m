@@ -2,135 +2,136 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE9EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAEBC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA6822464
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B3E21823
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:53:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Dwjcnt5J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbfLEFub (ORCPT
+        id S1726076AbfLEFx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 00:50:31 -0500
-Received: from mga12.intel.com ([192.55.52.136]:19127 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbfLEFub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 00:50:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 21:50:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,279,1571727600"; 
-   d="scan'208";a="361814167"
-Received: from yuanwan1-mobl.ccr.corp.intel.com ([10.249.174.225])
-  by orsmga004.jf.intel.com with ESMTP; 04 Dec 2019 21:50:27 -0800
-Message-ID: <f948e348f4d3a096d42b80f79288cb88903ad800.camel@intel.com>
-Subject: Re: linux-next: Tree for Nov 15 (thermal:
- THERMAL_GOV_POWER_ALLOCATOR)
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Quentin Perret <qperret@google.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Thu, 05 Dec 2019 13:50:27 +0800
-In-Reply-To: <20191205043609.GA231782@google.com>
-References: <20191115190525.77efdf6c@canb.auug.org.au>
-         <247cd41e-a07b-adf0-4ec2-6467f0257837@infradead.org>
-         <9436e207-8a65-f01b-c348-32a8a00f03d4@infradead.org>
-         <6d43c93a748872293df489d397f894b77b221bc9.camel@intel.com>
-         <20191205043609.GA231782@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 5 Dec 2019 00:53:28 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13518 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbfLEFx1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 00:53:27 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de89b460000>; Wed, 04 Dec 2019 21:53:10 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 04 Dec 2019 21:53:26 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 04 Dec 2019 21:53:26 -0800
+Received: from [10.2.163.157] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec
+ 2019 05:53:26 +0000
+Subject: Re: [v2 PATCH] mm: move_pages: return valid node id in status if the
+ page is already on the target node
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>, <fabecassis@nvidia.com>,
+        <mhocko@suse.com>, <cl@linux.com>, <vbabka@suse.cz>,
+        <mgorman@techsingularity.net>, <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <1575519678-86510-1-git-send-email-yang.shi@linux.alibaba.com>
+ <d4935b9f-39ef-fb91-1786-be84784dccd0@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <565bf53f-1a08-d472-30ac-cf9953e1490a@nvidia.com>
+Date:   Wed, 4 Dec 2019 21:50:37 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <d4935b9f-39ef-fb91-1786-be84784dccd0@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575525191; bh=fcuwO+qF7oSQ+luHDShI2/Xlyftz/4idYXdV3q3Mch0=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Dwjcnt5J5LvzvJBffj8B2N/ltqQn5cKac3cmsokwj8ehF2Tuyf4UkltlP3JiuOYGD
+         lXOJkJlWp867qETui/MZlkheM+VapeBQwRZORmakbX3GB/x6Ehp2Nzfr0YBmlbMtLU
+         MAoPyiRDKM02I8d8ZrJzTWKWtaabl7WegDuxXmSLtpM/MLbb5WumxKRrkPQtqO9bbC
+         gmbm4nRNYKzWH8h2xfU0tyQtRGI6uKU1z2yC846tTCEwUzthb3jbTVZvD7OVoBmEYw
+         fwzbkJ0YoKvQRm+SgtV7zdwYay3hXJRxOd0elGYyMQlQcFHH3wr0E+ijirQwcp6obs
+         bDDcS84I+g8Fg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-12-05 at 04:36 +0000, Quentin Perret wrote:
-> Hi all,
-> 
-> On Thursday 05 Dec 2019 at 12:27:47 (+0800), Zhang Rui wrote:
-> > I overlooked the original report probably because I was not CCed.
-> > 
-> > This is introduced by commit a4e893e802e6("thermal: cpu_cooling:
-> > Migrate to using the EM framework") which adds the dependency of
-> > ENERGY_MODEL for THERMAL_GOV_POWER_ALLOCATOR.
-> > 
-> > To fix this, it's better to make
-> > THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
-> > depends on THERMAL_GOV_POWER_ALLOCATOR instead.
-> > 
-> > Please confirm the problem is fixed by below patch.
-> > 
-> > thanks,
-> > rui
-> > 
-> > From c9429f6e28ea2219686a4294d39f015ba373774b Mon Sep 17 00:00:00
-> > 2001
-> > From: Zhang Rui <rui.zhang@intel.com>
-> > Date: Thu, 5 Dec 2019 12:17:07 +0800
-> > Subject: [PATCH] thermal: fix a Kconfig warning
-> > 
-> > Currently, THERMAL_GOV_POWER_ALLOCATOR is selected by
-> > THERMAL_DEFAULT_GOV_POWER_ALLOCATOR even if it has some unmet
-> > dependencies.
-> > 
-> > This causes the Kconfig warning
-> >    WARNING: unmet direct dependencies detected for
-> >       THERMAL_GOV_POWER_ALLOCATOR
-> >       Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
-> >       Selected by [y]:
-> >       - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
-> > 
-> > Fix the problem by making THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
-> > depends on
-> > THERMAL_GOV_POWER_ALLOCATOR instead.
-> > 
-> > Fixes: a4e893e802e6("thermal: cpu_cooling: Migrate to using the EM
-> > framework")
-> > Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> > ---
-> >  drivers/thermal/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> > index 59b79fc48266..79b27865c6f4 100644
-> > --- a/drivers/thermal/Kconfig
-> > +++ b/drivers/thermal/Kconfig
-> > @@ -108,7 +108,7 @@ config THERMAL_DEFAULT_GOV_USER_SPACE
-> >  
-> >  config THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
-> >  	bool "power_allocator"
-> > -	select THERMAL_GOV_POWER_ALLOCATOR
-> > +	depends on THERMAL_GOV_POWER_ALLOCATOR
-> >  	help
-> >  	  Select this if you want to control temperature based on
-> >  	  system and device power allocation. This governor can only
-> > -- 
-> > 2.17.1
-> 
-> FWIW, a similar fix has been suggested a couple weeks back:
-> 
->   
-> https://lore.kernel.org/lkml/20191113105313.41616-1-yuehaibing@huawei.com/
+On 12/4/19 9:44 PM, John Hubbard wrote:
+...=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>=20
+> Let's change the comment above add_page_for_migration(), to read:
+>=20
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Most errors in the pa=
+ge lookup or isolation are not fatal
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * and we simply report =
+them via the status array. However,
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * positive error values=
+ are fatal.
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>=20
+>=20
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D add_page_=
+for_migration(mm, addr, current_node,
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 &pagelist, flags & MPOL_MF_MOVE_ALL);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 &pagelist, flags & MPOL_MF_MOVE_ALL, status,
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 i);
+>> +
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!err)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 continue;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* store_status() failed in =
+add_page_for_migration() */
+>=20
+> ...and let's replace the above line, with the following:
+>=20
 
-Right, this patch was just merged by Daniel. It seems that we need a
-second PR in this merge window.
+Correction, I experienced a fatal editor copy-paste mistake here. :) I mean=
+t to
+suggest this:
+
+		/*
+		 * add_page_for_migration() experienced a fatal failure (see the
+		 * comments in that routine for details).
+		 */
+
+>=20
+>=20
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err > 0) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =
+=3D -EFAULT;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto=
+ out_flush;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> +
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D store_sta=
+tus(status, i, err, 1);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 goto out_flush;
+>>
 
 thanks,
-rui
-> 
-> Thanks,
-> Quentin
-
+--=20
+John Hubbard
+NVIDIA
