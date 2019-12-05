@@ -2,110 +2,94 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AA2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59327C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9445F24658
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 239B824658
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:15:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="X9WHG7rg"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="fF7LHLt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbfLEXO1 (ORCPT
+        id S1726184AbfLEXPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 18:14:27 -0500
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:42612 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbfLEXO1 (ORCPT
+        Thu, 5 Dec 2019 18:15:02 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:43271 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbfLEXPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 18:14:27 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 47TWkp1jHlz9vklR
-        for <linux-kernel@vger.kernel.org>; Thu,  5 Dec 2019 23:14:26 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0GIaP6le0V1G for <linux-kernel@vger.kernel.org>;
-        Thu,  5 Dec 2019 17:14:26 -0600 (CST)
-Received: from mail-yw1-f71.google.com (mail-yw1-f71.google.com [209.85.161.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 47TWkp0WvCz9vklF
-        for <linux-kernel@vger.kernel.org>; Thu,  5 Dec 2019 17:14:26 -0600 (CST)
-Received: by mail-yw1-f71.google.com with SMTP id i70so3760256ywe.23
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 15:14:26 -0800 (PST)
+        Thu, 5 Dec 2019 18:15:01 -0500
+Received: by mail-il1-f195.google.com with SMTP id u16so4549928ilg.10
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 15:14:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=oSYnes0/l1u+4rIUZLMW/yKpeiqYc5kOnZtn2XTe1+4=;
-        b=X9WHG7rgvwbxw7JgkQDFD0KoZjBvbTkWObbXVHZ2899dH/a4k32yNqM14o9vSaifdk
-         y0ODLMeZIUC96L+JdSPfLbLcI/yEApv/yVGB3FzktZqL+ZBKQ6NhWKBAmqrmZj1LV/OO
-         14gIkdUKkJXjIXt5L/UC2fKDhoQv6TJPhYX4cjlqmxsQyMime7tgHwuQrqXOJjmUraJV
-         uIRVeyUfyRyLcsC3fA2UTx3a9MsMK9voa5m9oXcbUyeJolSY7MeFSBzkNuOJxmlRcfP5
-         D1tUy8qpYW/YuBUN21HwKjywMavWUB1lT0GyA4mBsMuRwhwm0ULlplKhT4s+s0doRzuz
-         tTEQ==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=StZhfAUYQQoX4hSeN7hmhB8YxNwfE6easEwqsPBfh9o=;
+        b=fF7LHLt5NfogWQmdGHQc1p/sFHLwFSySpSt8RlN6ociIGyw6Qrui71XT6rSxFOrlGj
+         u+mz5XhPYWipDeJMktJSJ0399DtB7JygbnK98hSZLw+ewDoPIY9NxJkW2jeDgXgr2MyQ
+         4h7bYy9AfTg0wuk+auK6Tt78//6AIpCBjas1/3E0OAhT+VBhf8qR5axwBS5KTJ1+RCdU
+         y1GedK2ClGrCdjAe9BammfNeqk0dpewSESqeiE0hGh8e8qRi2ErrIvoIkTZf4SBglCEO
+         VJFMgbqp4a3Bc6QZggD+Lx1UhbBnOfNoI8DivihSsgAc8GapXu/n2byIJUlCJvtPC8Bs
+         ftiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oSYnes0/l1u+4rIUZLMW/yKpeiqYc5kOnZtn2XTe1+4=;
-        b=LPdRt2AEDkyHnfnLmyznAbFkmoVj3ZA5uO3/0fG0nTc0oIYBasJq4GfSecOcY1B07s
-         fceWO7zzqSA4gdDLNTD3LlM8A2DdAU0aaTBDKIntAWccNo4W2kb8cnq1ubF5GW6CUE3d
-         agQ774z3XYqtp5mGmnG/ji8zp2txopb5Zxwlm/Z1PTNw7Q0p51RCMZLDbyJ87x50H/A/
-         cd0Tck+QHGRgN6oaKjjCYOjFHQRhkfQdogEA1TLv4lPNv/YWFpM7PCZzYUnnhZqVsYg6
-         vAuoQMCJO/eAWvfMBX4siKtpoLXrtK3wAyDcazALsq0exhhlnah8V2CK1DkztsAq5Pm5
-         Qvjg==
-X-Gm-Message-State: APjAAAXQYNK9dmjvaEjM2ZWO9SUjxrHzqJlEQmpHE3n562wZ9vA3ZlhY
-        jI2crrXXtBzjkCsJUYLiuhrcsU/C7wQKxOZzjuJrEWjbJaiiKPa7wwyidNBp6j2vIE08EHaet9/
-        j1Px1p475zZyILytJRWu0lzBRcf95
-X-Received: by 2002:a25:7c44:: with SMTP id x65mr7863558ybc.382.1575587665408;
-        Thu, 05 Dec 2019 15:14:25 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyLAnU6KbwAtj46DpMUNEmC9R9ezFXcb1I4FJWdCTx69wIk0nVCGHH0hGfZCalPe1Upg56GnQ==
-X-Received: by 2002:a25:7c44:: with SMTP id x65mr7863541ybc.382.1575587665127;
-        Thu, 05 Dec 2019 15:14:25 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id e198sm5681470ywa.51.2019.12.05.15.14.24
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=StZhfAUYQQoX4hSeN7hmhB8YxNwfE6easEwqsPBfh9o=;
+        b=rXIdoTuk3ObOt1s662Q2mLcXbVyzMDuo7uLqK882pQ1nQ/qL4pwIFNRoQ7LJ53yXF/
+         BgQOGDkWQ4ALSqKx5FYp8ehpm9NrlpmD/yHsTHj1BC2yjRJXT26a+4AbhEPsOnoGoJqQ
+         xmf6vfeHqViewacrTvMZeOhx439N5sLtz97DgdcldLuC6LLsvioILCmCB6hD8ewt617z
+         blOtS6M0IZswYK6l9qcYnDr5PWWRBqa5Y9PMZUYypdl6/uez3Znm3iksDx0QJOw3X1hv
+         sXfsgVKkogCyKrgBfhHfkRlssp9A9bCXfu+8kq7KCpE/eH959mifH4qrTYtOnWUkBAsH
+         VHPQ==
+X-Gm-Message-State: APjAAAUFISH2kxDzrTrmrUMzIwseGuMaE0ITbzzQvrly9Y0cRm1N7K+6
+        yDcA5ADHB0P9GGZ2zEF158H+KTIgqPQ=
+X-Google-Smtp-Source: APXvYqydf7mBx0+Uo1plA0d7tO+7ImshuSiBG4WEJNBPDdtWKuLvED1KnHVqzaPR8FxH2svgWvllyA==
+X-Received: by 2002:a92:8458:: with SMTP id l85mr11587638ild.296.1575587699432;
+        Thu, 05 Dec 2019 15:14:59 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id l26sm1721358ioj.73.2019.12.05.15.14.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 15:14:24 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Mark Brown <broonie@kernel.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: dw: Avoid BUG_ON() in case of host failure
-Date:   Thu,  5 Dec 2019 17:14:21 -0600
-Message-Id: <20191205231421.9333-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Thu, 05 Dec 2019 15:14:58 -0800 (PST)
+Date:   Thu, 5 Dec 2019 15:14:55 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Anup Patel <anup@brainfault.org>
+cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] RISC-V: Add debug defconfigs
+In-Reply-To: <CAAhSdy2ySO_TGL9EYsHnk2p=tceRGaVfogyhthqJEJf-AoOCYw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.1912051512590.239155@viisi.sifive.com>
+References: <20191205005601.1559-1-anup.patel@wdc.com> <alpine.DEB.2.21.9999.1912041859070.215427@viisi.sifive.com> <CAAhSdy1RQw3MVcVT5y1EHr72LDNADKRL5nO2E8OrzBi+tpuvtA@mail.gmail.com> <alpine.DEB.2.21.9999.1912050900030.218941@viisi.sifive.com>
+ <CAAhSdy2ySO_TGL9EYsHnk2p=tceRGaVfogyhthqJEJf-AoOCYw@mail.gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If dws is NULL in dw_spi_host_add(), we return the error to the
-upper callers instead of crashing. The patch replaces BUG_ON by
-returning -EINVAL to the caller.
+On Thu, 5 Dec 2019, Anup Patel wrote:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/spi/spi-dw.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> On Thu, Dec 5, 2019 at 10:31 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+> > What leads you to conclude that this was done for SiFive internal use?
+> 
+> Why else you need it ?
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index a92aa5cd4fbe..a160d9a141ea 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -460,7 +460,8 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
- 	struct spi_controller *master;
- 	int ret;
- 
--	BUG_ON(dws == NULL);
-+	if (!dws)
-+		return -EINVAL;
- 
- 	master = spi_alloc_master(dev, 0);
- 	if (!master)
--- 
-2.17.1
+Suppose you were to assume that I had reasons for doing it that aren't 
+related to SiFive.  What might they be?
 
+
+- Paul
