@@ -2,97 +2,224 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EFCC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4A7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F58724648
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:44:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Q3JXPcJb"
+	by mail.kernel.org (Postfix) with ESMTP id 5F44024249
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbfLERo1 (ORCPT
+        id S1730232AbfLERpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 12:44:27 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46460 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730195AbfLERo0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 12:44:26 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5Hi8aW031074;
-        Thu, 5 Dec 2019 11:44:08 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575567848;
-        bh=B2u+1EXUJef+VRu1rBJvXbM0zJ7qX1rNIdIdh6bNero=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Q3JXPcJbFBQEDUSNRLbb6GuGRHBlATmYP9m+KM8YCnDxfRk89cDyTwH0kUsm/oaMM
-         3cyZmE3+XPzybQPniK+QbyGbh0TIzxDjHVemRgYrkA4SMp0BZ2L4jK9IVNkFlJcdMt
-         uIMLjick/RUJkiewxarhUa6zK/uy2so4h3Rs+E6o=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB5Hi870019722
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 5 Dec 2019 11:44:08 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
- 2019 11:44:08 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 5 Dec 2019 11:44:08 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5Hi74E048911;
-        Thu, 5 Dec 2019 11:44:08 -0600
-Subject: Re: [PATCH] MAINTAINERS: add myself as maintainer of MCAN MMIO device
- driver
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sriram Dash <sriram.dash@samsung.com>,
-        <linux-kernel@vger.kernel.org>, <linux-can@vger.kernel.org>,
-        <wg@grandegger.com>
-CC:     <mchehab+samsung@kernel.org>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <robh@kernel.org>,
-        <rcsekar@samsung.com>, <pankaj.dubey@samsung.com>,
-        <pankj.sharma@samsung.com>
-References: <CGME20191203043533epcas5p19bfc21e2b03db7f27c6d84cda6824d27@epcas5p1.samsung.com>
- <1575347349-32689-1-git-send-email-sriram.dash@samsung.com>
- <9c9b1f4d-e092-957a-150c-41f2348810e5@pengutronix.de>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <946fbd81-a024-04e4-74d8-90e9f5e9979a@ti.com>
-Date:   Thu, 5 Dec 2019 11:42:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 5 Dec 2019 12:45:40 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37878 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729396AbfLERpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 12:45:40 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 334FEB0E6;
+        Thu,  5 Dec 2019 17:45:37 +0000 (UTC)
+Date:   Thu, 5 Dec 2019 09:41:08 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        walken@google.com
+Subject: Re: Crash in fair scheduler
+Message-ID: <20191205174108.5qhbdeh25vhhc44u@linux-p48b>
+References: <1575364273836.74450@mentor.com>
+ <20191203103046.GJ2827@hirez.programming.kicks-ass.net>
+ <656260cf50684c11a3122aca88dde0cb@SVR-IES-MBX-03.mgc.mentorg.com>
+ <20191203140153.GP2844@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <9c9b1f4d-e092-957a-150c-41f2348810e5@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191203140153.GP2844@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc
+On Tue, 03 Dec 2019, Peter Zijlstra wrote:
 
-On 12/3/19 3:55 AM, Marc Kleine-Budde wrote:
-> On 12/3/19 5:29 AM, Sriram Dash wrote:
->> Since we are actively working on MMIO MCAN device driver,
->> as discussed with Marc, I am adding myself as a maintainer.
->>
->> Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
->> ---
-> Added to linux-can.
+>On Tue, Dec 03, 2019 at 10:51:46AM +0000, Schmid, Carsten wrote:
+>
+>> > > struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq)
+>> > > {
+>> > >	struct rb_node *left = rb_first_cached(&cfs_rq->tasks_timeline);
+>> > >
+>> > >	if (!left)
+>> > >		return NULL; <<<<<<<<<< the case
+>> > >
+>> > >	return rb_entry(left, struct sched_entity, run_node);
+>> > > }
+>> >
+>> > This the problem, for some reason the rbtree code got that rb_leftmost
+>> > thing wrecked.
+>> >
+>> Any known issue on rbtree code regarding this?
+>
+>I don't recall ever having seen this before. :/ Adding Davidlohr and
+>Michel who've poked at the rbtree code 'recently'.
 
-When I add my maintainership for TCAN I am also going to add the 
-m_can.c, m_can.h as well as the dt doc.
+Yeah I had never seen this either, and would expect the world to fall
+appart if leftmost is buggy (much less a one time occurance), but the
+following certainly raises a red flag:
 
-Or if you want me to add my email to the MMIO as well that is fine as we 
-have devices that have the embedded Bosch IP as well
+    &cfs_rq->tasks_timeline->rb_leftmost
+  tasks_timeline = {
+    rb_root = {
+      rb_node = 0xffff99a9502e0d10
+    },
+    rb_leftmost = 0x0
+  },
 
-Dan
+>
+>> > > Is this a corner case nobody thought of or do we have cfs_rq data that is
+>> > unexpected in it's content?
+>> >
+>> > No, the rbtree is corrupt. Your tree has a single node (which matches
+>> > with nr_running), but for some reason it thinks rb_leftmost is NULL.
+>> > This is wrong, if the tree is non-empty, it must have a leftmost
+>> > element.
+>> Is there a chance to find the left-most element in the core dump?
+>
+>If there is only one entry in the tree, then that must also be the
+>leftmost entry. See your own later question :-)
+>
+>> Maybe i can dig deeper to find the root c ause then.
+>> Does any of the structs/data in this context point to some memory
+>> where i can continue to search?
+>
+>There are only two places where rb_leftmost are updated,
+>rb_insert_color_cached() and rb_erase_cached() (the scheduler does not
+>use rb_replace_nod_cached).
+>
+>We can 'forget' to set leftmost on insertion if @leftmost is somehow
+>false, and we can eroneously clear leftmost on erase if rb_next()
+>malfunctions.
+>
+>No clues on which of those two cases happened.
 
+For a bug in insertion I'm certainly not seeing it: we only call
+insert into tasks_timeline in __enqueue_entity()... this is the standard
+way of using the api, and cannot see how leftmost would become false
+unless we take at least one path to the right while going down the tree.
+
+For the erase case, this is more involved than insertion (rb_next()),
+but this has not changed in years.
+
+Fwiw, there have been three flavors of the leftmost pointer caching:
+
+The first is the one the scheduler used by itself.
+
+The second is when we moved the logic into the rbtree cached api.
+bfb068892d3 (sched/fair: replace cfs_rq->rb_leftmost)
+
+The third was the recent simplifications and cleanups from Michel,
+which took out the caching checks into rbtree.h, instead of it being
+passed down to the internal functions that actually do the insert/delete.
+9f973cb3808 (lib/rbtree: avoid generating code twice for the cached versions)
+
+Specifically looking at 4.14.86, it is using the bfb068892d3 changes.
+
+Note how all three use the same logic to replace the rb_leftmost pointer.
+
+>
+>> Where should rb_leftmost point to if only one node is in the tree?
+>> To the node itself?
+>
+>Exatly.
+>
+>
+>I suppose one approach is to add code to both __enqueue_entity() and
+>__dequeue_entity() that compares ->rb_leftmost to the result of
+>rb_first(). That'd incur some overhead but it'd double check the logic.
+
+We could benefit from improved debugging in rbtrees, not only the cached
+flavor. Perhaps we can start with the following -- this would at least
+let us know if the case where the tree is non-empty and leftmost is nil
+was hit, whether in the scheduler or another user...
+
+Thanks,
+Davidlohr
+
+diff --git a/include/linux/rbtree.h b/include/linux/rbtree.h
+index 1fd61a9af45c..b4b4df3ad0fc 100644
+--- a/include/linux/rbtree.h
++++ b/include/linux/rbtree.h
+@@ -130,7 +130,28 @@ struct rb_root_cached {
+ #define RB_ROOT_CACHED (struct rb_root_cached) { {NULL, }, NULL }
+
+ /* Same as rb_first(), but O(1) */
+-#define rb_first_cached(root) (root)->rb_leftmost
++#define __rb_first_cached(root) (root)->rb_leftmost
++
++#ifndef CONFIG_RBTREE_DEBUG
++# define rb_first_cached(root) __rb_first_cached(root)
++# define rbtree_cached_debug(root) do { } while(0)
++
++#else
++static inline struct rb_node *rb_first_cached(struct rb_root_cached *root)
++{
++	struct rb_node *leftmost = __rb_first_cached(root);
++
++	WARN_ON(leftmost != rb_first(&root->rb_root));
++	return leftmost;
++}
++
++#define rbtree_cached_debug(root)					\
++do {									\
++	WARN_ON(rb_first(&(root)->rb_root) != __rb_first_cached((root)));	\
++	WARN_ON(!RB_EMPTY_ROOT(&(root)->rb_root) && !__rb_first_cached((root))); \
++	WARN_ON(RB_EMPTY_ROOT(&(root)->rb_root) && __rb_first_cached((root))); \
++} while (0)
++#endif /* CONFIG_RBTREE_DEBUG */
+
+ static inline void rb_insert_color_cached(struct rb_node *node,
+					  struct rb_root_cached *root,
+@@ -139,6 +160,8 @@ static inline void rb_insert_color_cached(struct rb_node *node,
+	if (leftmost)
+		root->rb_leftmost = node;
+	rb_insert_color(node, &root->rb_root);
++
++	rbtree_cached_debug(root);
+ }
+
+ static inline void rb_erase_cached(struct rb_node *node,
+@@ -147,6 +170,8 @@ static inline void rb_erase_cached(struct rb_node *node,
+	if (root->rb_leftmost == node)
+		root->rb_leftmost = rb_next(node);
+	rb_erase(node, &root->rb_root);
++
++	rbtree_cached_debug(root);
+ }
+
+ static inline void rb_replace_node_cached(struct rb_node *victim,
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 2f6fb96405af..62ab9f978bc6 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1727,6 +1727,16 @@ config BACKTRACE_SELF_TEST
+
+	  Say N if you are unsure.
+
++config RBTREE_DEBUG
++	bool "Red-Black tree sanity tests"
++	depends on DEBUG_KERNEL
++	help
++	  This option enables runtime sanity checks on all variants
++	  of the rbtree library. Doing so can cause significant overhead,
++	  so only enable it in non-production environments.
++
++	  Say N if you are unsure.
++
+ config RBTREE_TEST
+	tristate "Red-Black tree test"
+	depends on DEBUG_KERNEL
