@@ -2,67 +2,106 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD84C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B32BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C266C24682
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 197F12467B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:09:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aic1torb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbfLEWJP (ORCPT
+        id S1730080AbfLEWJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 17:09:15 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:42641 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729154AbfLEWJO (ORCPT
+        Thu, 5 Dec 2019 17:09:29 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41519 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729154AbfLEWJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 17:09:14 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Tk4-uwA_1575583745;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk4-uwA_1575583745)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 06 Dec 2019 06:09:09 +0800
-Subject: Re: [v3 PATCH] mm: move_pages: return valid node id in status if the
- page is already on the target node
-To:     Qian Cai <cai@lca.pw>
-Cc:     fabecassis@nvidia.com, jhubbard@nvidia.com, mhocko@suse.com,
-        cl@linux.com, vbabka@suse.cz, mgorman@techsingularity.net,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <d96e3849-5fd4-26c0-31cf-02523085ed37@linux.alibaba.com>
- <A5A53ED8-D17C-4BCD-9832-93DB0D9302A0@lca.pw>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <ff202f9f-4124-7e63-a5fb-ebeb2a263632@linux.alibaba.com>
-Date:   Thu, 5 Dec 2019 14:09:04 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <A5A53ED8-D17C-4BCD-9832-93DB0D9302A0@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Thu, 5 Dec 2019 17:09:29 -0500
+Received: by mail-wr1-f65.google.com with SMTP id c9so5545059wrw.8;
+        Thu, 05 Dec 2019 14:09:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZdWkas9byKVfGyALn++Pdl/V75AST1LWkimI5TQuCt8=;
+        b=Aic1torb6kGicyy1Kxl7CYGpjIvGJzikRSSQi48R0AAciQuBLK8sm2M7Iz8otIBsDi
+         vCmo9bbznvkuSV6xUvhc/r5ZIJ42EBlXJNcvJkzzPJtJQliGgot2Ep6IhoadKFYPRoUl
+         ILOsLgX/qkJH3wB8jYUuAM7LDmzyXGra2kXLDw7zFjla0xAl/QevXLJ0v6bAg/XP7lnM
+         lTlAVxfEJCBHQJUAOSsdVCmaq4XvyhAImLcVcvWXKmoSFivSpDdWePvIDmRusTRWS3Mp
+         egUb2zTuJjM0vuXHSMd7kmXwtmqorXftYg9Dfdt2c/hIStv3DSHhGHEEmdi1sEOfDeOD
+         cy9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZdWkas9byKVfGyALn++Pdl/V75AST1LWkimI5TQuCt8=;
+        b=nYg+kIUusmngIxzpYKcAQkkaO0g02cq5GVMZV1HkpFvIb9u5bIMRXI43xg3GL6mHwR
+         YgLKnQMpL5ySUmzT7QOVEPkkcPp0Ah6MUplnEDuAW+zFKMjkVY09UiD4o7UnhTnV51+Z
+         Kssseh4255U9eZ9fNpwTmTlC5ua+/qZA6NTinkpdNzXQISBV8oKRbOXnCD0WHar6zjzf
+         i1djQr0THFCDnmKY7n96UfQZQBr+Da+gYE9ZvvMGCMsxLpdMTzEZXXt+oNKynicg+ZX/
+         MhcnYCorBM52QKV3ItEZMJJMoa2fPQrCw7ZGsbcLdLIIa3vHkj9KKPnTrQZjruLthQJL
+         csww==
+X-Gm-Message-State: APjAAAWTEKoNCqJKYxyI+qOFHDDsy4Kusfeh2dsqIGP1AjrSVNlCf6z9
+        pzMOjag7JA1/SH19DZr7NGZHMorD
+X-Google-Smtp-Source: APXvYqxeB/YeEEM0D5Pf0nxgd8z88nl5855wEpEkfrtY49r648WrOwnowpSaVuHS758CiDlDpZABbw==
+X-Received: by 2002:adf:f508:: with SMTP id q8mr9233060wro.334.1575583767329;
+        Thu, 05 Dec 2019 14:09:27 -0800 (PST)
+Received: from localhost.localdomain (ip5f5bfdc6.dynamic.kabel-deutschland.de. [95.91.253.198])
+        by smtp.gmail.com with ESMTPSA id n14sm551180wmk.0.2019.12.05.14.09.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 14:09:26 -0800 (PST)
+From:   Bean Huo <huobean@gmail.com>
+To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] scsi: ufs: delete unused structure filed tr
+Date:   Thu,  5 Dec 2019 23:09:12 +0100
+Message-Id: <20191205220912.5696-1-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bean Huo <beanhuo@micron.com>
 
+Delete unused structure field tr in structure utp_upiu_req, since
+no person uses it for task management.
 
-On 12/5/19 11:34 AM, Qian Cai wrote:
->
->> On Dec 5, 2019, at 2:27 PM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
->>
->> John noticed another return value inconsistency between the implementation and the manpage. The manpage says it should return -ENOENT if the page is already on the target node, but it doesn't. It looks the original code didn't return -ENOENT either, I'm not sure if this is a document issue or not. Anyway this is another issue, once we confirm it we can fix it later.
-> No, I think it is important to figure out this in the first place. Otherwise, it is pointless to touch this piece of code over and over again, i.e., this is not another issue but the core of this problem on hand.
+Fixes: df032bf27a41 ("scsi: ufs: Add a bsg endpoint that supports UPIUs")
+Signed-off-by: Bean Huo <beanhuo@micron.com>
+---
+ include/uapi/scsi/scsi_bsg_ufs.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-As I said the status return value issue is a regression, but the -ENOENT 
-issue has been there since the syscall was introduced (The visual 
-inspection shows so I didn't actually run test against 2.6.x kernel, but 
-it returns 0 for >= 3.10 at least). It does need further clarification 
-(doc problem or code problem).
+diff --git a/include/uapi/scsi/scsi_bsg_ufs.h b/include/uapi/scsi/scsi_bsg_ufs.h
+index 9988db6ad244..d55f2176dfd4 100644
+--- a/include/uapi/scsi/scsi_bsg_ufs.h
++++ b/include/uapi/scsi/scsi_bsg_ufs.h
+@@ -68,14 +68,13 @@ struct utp_upiu_cmd {
+  * @header:UPIU header structure DW-0 to DW-2
+  * @sc: fields structure for scsi command DW-3 to DW-7
+  * @qr: fields structure for query request DW-3 to DW-7
++ * @uc: use utp_upiu_query to host the 4 dwords of uic command
+  */
+ struct utp_upiu_req {
+ 	struct utp_upiu_header header;
+ 	union {
+ 		struct utp_upiu_cmd		sc;
+ 		struct utp_upiu_query		qr;
+-		struct utp_upiu_query		tr;
+-		/* use utp_upiu_query to host the 4 dwords of uic command */
+ 		struct utp_upiu_query		uc;
+ 	};
+ };
+-- 
+2.17.1
 
-Michal also noticed several inconsistencies when he was reworking 
-move_pages(), and I agree with him that we'd better not touch them 
-without a clear usecase.
