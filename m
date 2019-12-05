@@ -2,111 +2,118 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DED5C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B5BC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632D8206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7556206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:51:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I0YX2aPy";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="dYisZPGV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbfLEPuT (ORCPT
+        id S1729933AbfLEPvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:50:19 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42334 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726028AbfLEPuT (ORCPT
+        Thu, 5 Dec 2019 10:51:35 -0500
+Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:43070
+        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726257AbfLEPve (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 10:50:19 -0500
-Received: from [167.98.27.226] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ictOQ-0001Ug-Rq; Thu, 05 Dec 2019 15:50:14 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ictOO-00048x-Fj; Thu, 05 Dec 2019 15:50:12 +0000
-Message-ID: <64c5b8b423774029c3030ae778bf214d36499d2a.camel@decadent.org.uk>
-Subject: Re: [PATCH 4.9 45/47] Smack: Dont ignore other bprm->unsafe flags
- if LSM_UNSAFE_PTRACE is set
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Jann Horn <jannh@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Cc:     stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 05 Dec 2019 15:50:07 +0000
-In-Reply-To: <20191006172019.260683324@linuxfoundation.org>
-References: <20191006172016.873463083@linuxfoundation.org>
-         <20191006172019.260683324@linuxfoundation.org>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-WzXc7kbU+hI7YjTyITy7"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 5 Dec 2019 10:51:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575561093;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        bh=9pymZMREs0aDkOkin38Qg0017bN8aBp0lR9eje0eErE=;
+        b=I0YX2aPyE1wmJuAEsRH7NG882VDFs1+W5HNYeqtHYLS+RCmrI85rJy4kN59Z2iun
+        N1ORqJaKoNb822rVVHaLduZXXxwcWENX9aqZyxUffln8idHIl1OkUl57WsCnfBurF9n
+        kh7cCK2GsYe9Z2w6PDGqSeTdmSS4NvsBAIK3Y9wI=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575561093;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
+        bh=9pymZMREs0aDkOkin38Qg0017bN8aBp0lR9eje0eErE=;
+        b=dYisZPGV5kT0zFkXYf4Ja0qXK7puDCqj0ENz+EncOwW1SpkZ1dLJB4gQP2YijdTE
+        3j/cSRj2CQULLqQxFBRRu/HT4YgCw2B6wneHiiEQs9kwx/c8Aro0XuBsiCeH9z3YXmh
+        cB4UR2rKaiKWbtwGIDUgPqlb9yTCRE7gsorh1a8U=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 17A40C447B1
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Thu, 5 Dec 2019 15:51:33 +0000
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     iommu@lists.linux-foundation.org, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v2 4/8] iommu/arm-smmu: Add split pagetables for Adreno
+ IOMMU implementations
+Message-ID: <0101016ed6c26118-3bccfc33-005d-4824-a0d1-55ef6beeaeb8-000000@us-west-2.amazonses.com>
+Mail-Followup-To: Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>
+References: <1574465484-7115-1-git-send-email-jcrouse@codeaurora.org>
+ <0101016e95752703-78491f46-41db-441c-b0fb-9a760e4d56cb-000000@us-west-2.amazonses.com>
+ <2a43c49e-064e-1e95-6726-8d1e761f6749@arm.com>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 167.98.27.226
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a43c49e-064e-1e95-6726-8d1e761f6749@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-SES-Outgoing: 2019.12.05-54.240.27.188
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 04, 2019 at 04:44:59PM +0000, Robin Murphy wrote:
+> On 22/11/2019 11:31 pm, Jordan Crouse wrote:
+> >Add implementation specific support to enable split pagetables for
+> >SMMU implementations attached to Adreno GPUs on Qualcomm targets.
+> >
+> >To enable split pagetables the driver will set an attribute on the domain.
+> >if conditions are correct, set up the hardware to support equally sized
+> >TTBR0 and TTBR1 regions and programs the domain pagetable to TTBR1 to make
+> >it available for global buffers while allowing the GPU the chance to
+> >switch the TTBR0 at runtime for per-context pagetables.
+> >
+> >After programming the context, the value of the domain attribute can be
+> >queried to see if split pagetables were successfully programmed. The
+> >domain geometry will be updated so that the caller can determine the
+> >start of the region to generate correct virtual addresses.
+> 
+> Why is any of this in impl? It all looks like perfectly generic
+> architectural TTBR1 setup to me. As long as DOMAIN_ATTR_SPLIT_TABLES is
+> explicitly an opt-in for callers, I'm OK with them having to trust that
+> SEP_UPSTREAM is good enough. Or, even better, make the value of
+> DOMAIN_ATTR_SPLIT_TABLES not a boolean but the actual split point, where the
+> default of 0 would logically mean "no split".
 
---=-WzXc7kbU+hI7YjTyITy7
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+(apologies if you get multiple copies of this email, I have tickets in with the
+CAF IT folks).
 
-On Sun, 2019-10-06 at 19:21 +0200, Greg Kroah-Hartman wrote:
-> From: Jann Horn <jannh@google.com>
->=20
-> commit 3675f052b43ba51b99b85b073c7070e083f3e6fb upstream.
-[...]
-> --- a/security/smack/smack_lsm.c
-> +++ b/security/smack/smack_lsm.c
-> @@ -949,7 +949,8 @@ static int smack_bprm_set_creds(struct l
-> =20
->  		if (rc !=3D 0)
->  			return rc;
-> -	} else if (bprm->unsafe)
-> +	}
-> +	if (bprm->unsafe & ~LSM_UNSAFE_PTRACE)
+I made it impl specific because my impression from the previous conversations
+was that setting up the T0 space but leaving TTBR0 un-programmed was a silly
+thing that was unique to the Adreno GPU. I don't mind moving it to the generic
+code since that saves us from some silly compatible string games.
 
-I think this needs to be ~(LSM_UNSAFE_PTRACE | LSM_UNSAFE_PTRACE_CAP)
-for 4.9 and older branches.
+I like the idea of DOMAIN_ATTR_SPLIT_TABLES returning the split point but would
+we want to allow the user to try to specific a desired split point ahead of
+time? It is my impression that we only have a handful of valid SEP values and
+I'm not sure what the right response would be if the user specified an incorrect
+one.
 
-Ben.
+So far I've not found a use for anything except SEP_UPSTREAM but I have the
+extreme luxury of a SMMU with an actual 49 bit IAS.
 
->  		return -EPERM;
-> =20
->  	bsp->smk_task =3D isp->smk_task;
->=20
->=20
---=20
-Ben Hutchings
-Every program is either trivial or else contains at least one bug
+New patchset coming soon.
 
+Thanks,
+Jordan
 
---=-WzXc7kbU+hI7YjTyITy7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3pJy8ACgkQ57/I7JWG
-EQmkkA//UD3fSIdKqnWIbSozwT+fUUEodPEtil8oS6YYfxQ30ozagDG/xri/pnc8
-gvpAdqfdw1jMv31OSPJKimWj3vN7GGzrNuIM3Xx+GUiV3xkCu52yhW7WONUPJG9n
-BHmp2Sq0iCYZfufHTY4p0lqdSw4BYKEQKH9+mPc+SD06tAXazjDVnxmfJYyb3RBY
-XzUJYhHJ78pJuuUeQdZ+gZq+CS22i0H/vfX+EwbxiNHu3skGz42/TuQ9aJVnGJLa
-kM/14+MLXAqJ82JRQ53LRn5aPJEkbnHAijx5f1tdPJ6wZ7QQejfCJux1uKL6ow2f
-exfVmpr2sBz5c9vW3/hmzzQ7DACMnLikQyGHw3M5niR9WloDLroDaPwzI5D0KjrV
-SobwoY0nv19vyOiSO7qnZ3QAk5lsCgGIfEP6gt67a/VXnzyLN4DEj+1jPgxyAs2M
-h4HPPfZRcGk9D8AiNnn4gM/5vAibscWFb1QUBakP/e9396VRP2LUAAWa6wW7x1jH
-iV93B0jve4/vHMYY7k2KqY+GU2mgt13hOT3kE9j/IzVUSZNWpup5+fcavnf8bnX7
-vZw96C7TTxYPOFNaw06R5PxjQ3M1mA1pFDHWY7SfXewrD6V0HkIQ3q9uvWyr6Poi
-k26kOColNp1s6r/NBr5+USxQawr8F4xAB2/Z75yyfU9CDbvOuLs=
-=8ruJ
------END PGP SIGNATURE-----
-
---=-WzXc7kbU+hI7YjTyITy7--
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
