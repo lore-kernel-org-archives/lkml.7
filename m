@@ -2,251 +2,125 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F0FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9788BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5D76224F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:54:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hac7YA/6"
+	by mail.kernel.org (Postfix) with ESMTP id 73C63224F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbfLEJyy (ORCPT
+        id S1729564AbfLEJzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:54:54 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50434 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729402AbfLEJyx (ORCPT
+        Thu, 5 Dec 2019 04:55:10 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:37356 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729180AbfLEJzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:54:53 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p9so2940735wmg.0;
-        Thu, 05 Dec 2019 01:54:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DQAhGy9NIgRWmctc8n8PEHCVr8wavboJn+39LOkMnnE=;
-        b=hac7YA/61scaeO1ZPDjnWRMzcy75dsYruAt43uzR4MuSNEz5hLw5EdT0z6Pk1oKaf2
-         fTx/UHnJFbfc4yz5OxSDaux8zk2LpeT53fJ2LG+/5yqQgpjOTz3h53GTnIdVAcTKJu7t
-         xG/FEOdrDW23jBF3o46Cmb8RLZ0MeIO1x8zWgY8AzwOkcpJXe8WvLpubqc2McKiHLLNr
-         eXSDqObg1oCx4MHRo8Iua/WzAIC2j2e4ETJSFvHsUBnEfO5ALS1gU+pCdLNKtcDPo9fg
-         ea2NuzaE3VVvgcbVAosn8fyIucElmMVU0IXGeAX739GIzKDJD5KlcSees5Ss3hDd40c5
-         9IwQ==
+        Thu, 5 Dec 2019 04:55:10 -0500
+Received: by mail-io1-f72.google.com with SMTP id p2so2031658iof.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 01:55:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DQAhGy9NIgRWmctc8n8PEHCVr8wavboJn+39LOkMnnE=;
-        b=hF73vov5gw6rh9rLXvUqvE2eengLL8UZdDKPKSNZIjb8anHpRibYxP+NQPai7ddkoU
-         0y/n0M8lHMqOlyuQ3yjqxdR6RoRksjIL+/qAUUTiAcBLlTRzYUfUPf/aLucOVjjUoupV
-         crzEDFJ9Spp3cqWynF57/Cj+ITn1JLidFjSDH4D+v2walAToRDkD3rUnLwIRrRYbc0Kc
-         FoMJN6OzvGTWySCdo0egpWRHT9hs6buvv0Hst0kYTRkh2K+RC8bTenqJK8qVqmy0M/ZB
-         3dkY2jF+HdTdVbBimHIzDHuArW+MkW4jlyFUPsZM76nqiakTMGRo2CIHLNRsR5e4pkpS
-         4Urg==
-X-Gm-Message-State: APjAAAXCoAznZsNjRacC2bEQ3E4kZuJ7YDEZCYJH8U8vk0uNuwfWUaoz
-        p+mDtOpcuAeGsZJdqSiFEgE=
-X-Google-Smtp-Source: APXvYqx3wMGWvFWz+VWzb3/gBJ7AfPMRQqK+25vc1Q2imL/LDYGpX95tPaj1m7INL2O5Ql2/5WubRg==
-X-Received: by 2002:a05:600c:282:: with SMTP id 2mr3954319wmk.73.1575539690435;
-        Thu, 05 Dec 2019 01:54:50 -0800 (PST)
-Received: from [192.168.1.35] (182.red-88-21-103.staticip.rima-tde.net. [88.21.103.182])
-        by smtp.gmail.com with ESMTPSA id u26sm9723665wmj.9.2019.12.05.01.54.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 01:54:49 -0800 (PST)
-Subject: Re: [PATCH v3 08/15] KVM: Move setting of memslot into helper routine
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>
-References: <20191024230744.14543-1-sean.j.christopherson@intel.com>
- <20191024230744.14543-9-sean.j.christopherson@intel.com>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-Message-ID: <a606c931-ffeb-95e9-79eb-df68fed7af65@amsat.org>
-Date:   Thu, 5 Dec 2019 10:54:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=UEstprLMXsCJ/HcpDk+4IwZmvggk9j9Se+yVTAfNs9w=;
+        b=PKGA2OutywOLhVrLiWRtuovv8HFesPPMOmSPhjjHt6zRt0Xf9d0rmvqizucS31IAWl
+         1zQK1ct/2l8bdwlBiyg1bvkLTmGV4I9X/2xFVxcZv8D6uFJ+NjVtTwbufaGeXH7Wz8iX
+         ZbqMCtFW7rIQskH3HDKv/QBfkglJ3qPtVizOI/K7dkwdwIzMZt/r/dpn3v3MEQcjrAND
+         v7znKizmg7W8FhHSXmEYP9KkC3H8R0ClfMTnj/cHuwBgdA95ODQ2+F0V9T4R4Z5qjNr8
+         BxSuJOb+jvcLTiithl+UJ9zPSOU8yMBXXqNQXRpEZ+9ekrzbmbVR7aQwH2ZfcUpkT4/z
+         TFYQ==
+X-Gm-Message-State: APjAAAUo8ivHdJnAMvVGxU+XEUCQfM3RNX0pT7CiqvZNECiU//6UbRCD
+        f2qtXcsquCNwgvcFL7yLFGu78IFRdT3+9LHkngN9NwUaXSPj
+X-Google-Smtp-Source: APXvYqxEC5Hd+oGaUcY0dxSeF8ga0fUvD8JgCnawrnQBgpnq74Q3Bc3hsmSle+e1lMUiawGmo49tPO6f/EJzGkzv5s9tyC1W32Sd
 MIME-Version: 1.0
-In-Reply-To: <20191024230744.14543-9-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a02:ca42:: with SMTP id i2mr7387961jal.87.1575539709420;
+ Thu, 05 Dec 2019 01:55:09 -0800 (PST)
+Date:   Thu, 05 Dec 2019 01:55:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b5aff60598f1ec45@google.com>
+Subject: memory leak in genl_rcv_msg
+From:   syzbot <syzbot+21f04f481f449c8db840@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jakub.kicinski@netronome.com,
+        jiri@mellanox.com, johannes.berg@intel.com,
+        linux-kernel@vger.kernel.org, marcel@holtmann.org,
+        mkubecek@suse.cz, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, yuehaibing@huawei.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 1:07 AM, Sean Christopherson wrote:
-> Split out the core functionality of setting a memslot into a separate
-> helper in preparation for moving memslot deletion into its own routine.
-> 
-> Tested-by: Christoffer Dall <christoffer.dall@arm.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->   virt/kvm/kvm_main.c | 106 ++++++++++++++++++++++++++------------------
->   1 file changed, 63 insertions(+), 43 deletions(-)
-> 
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index e2f47d60f696..860de4fadce6 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -920,6 +920,66 @@ static struct kvm_memslots *install_new_memslots(struct kvm *kvm,
->   	return old_memslots;
->   }
->   
-> +static int kvm_set_memslot(struct kvm *kvm,
-> +			   const struct kvm_userspace_memory_region *mem,
-> +			   const struct kvm_memory_slot *old,
-> +			   struct kvm_memory_slot *new, int as_id,
-> +			   enum kvm_mr_change change)
-> +{
-> +	struct kvm_memory_slot *slot;
-> +	struct kvm_memslots *slots;
-> +	int r;
-> +
-> +	slots = kvzalloc(sizeof(struct kvm_memslots), GFP_KERNEL_ACCOUNT);
-> +	if (!slots)
-> +		return -ENOMEM;
-> +	memcpy(slots, __kvm_memslots(kvm, as_id), sizeof(struct kvm_memslots));
-> +
-> +	if (change == KVM_MR_DELETE || change == KVM_MR_MOVE) {
-> +		/*
-> +		 * Note, the INVALID flag needs to be in the appropriate entry
-> +		 * in the freshly allocated memslots, not in @old or @new.
-> +		 */
-> +		slot = id_to_memslot(slots, old->id);
-> +		slot->flags |= KVM_MEMSLOT_INVALID;
-> +
-> +		/*
-> +		 * We can re-use the old memslots, the only difference from the
-> +		 * newly installed memslots is the invalid flag, which will get
-> +		 * dropped by update_memslots anyway.  We'll also revert to the
-> +		 * old memslots if preparing the new memory region fails.
-> +		 */
-> +		slots = install_new_memslots(kvm, as_id, slots);
-> +
-> +		/* From this point no new shadow pages pointing to a deleted,
-> +		 * or moved, memslot will be created.
-> +		 *
-> +		 * validation of sp->gfn happens in:
-> +		 *	- gfn_to_hva (kvm_read_guest, gfn_to_pfn)
-> +		 *	- kvm_is_visible_gfn (mmu_check_roots)
-> +		 */
-> +		kvm_arch_flush_shadow_memslot(kvm, slot);
-> +	}
-> +
-> +	r = kvm_arch_prepare_memory_region(kvm, new, mem, change);
-> +	if (r)
-> +		goto out_slots;
-> +
-> +	update_memslots(slots, new, change);
-> +	slots = install_new_memslots(kvm, as_id, slots);
-> +
-> +	kvm_arch_commit_memory_region(kvm, mem, old, new, change);
-> +
-> +	kvfree(slots);
-> +	return 0;
-> +
-> +out_slots:
-> +	if (change == KVM_MR_DELETE || change == KVM_MR_MOVE)
-> +		slots = install_new_memslots(kvm, as_id, slots);
-> +	kvfree(slots);
-> +	return r;
-> +}
-> +
->   /*
->    * Allocate some memory and give it an address in the guest physical address
->    * space.
-> @@ -936,7 +996,6 @@ int __kvm_set_memory_region(struct kvm *kvm,
->   	unsigned long npages;
->   	struct kvm_memory_slot *slot;
->   	struct kvm_memory_slot old, new;
-> -	struct kvm_memslots *slots;
->   	int as_id, id;
->   	enum kvm_mr_change change;
->   
-> @@ -1023,58 +1082,19 @@ int __kvm_set_memory_region(struct kvm *kvm,
->   			return r;
->   	}
->   
-> -	slots = kvzalloc(sizeof(struct kvm_memslots), GFP_KERNEL_ACCOUNT);
-> -	if (!slots) {
-> -		r = -ENOMEM;
-> -		goto out_bitmap;
-> -	}
-> -	memcpy(slots, __kvm_memslots(kvm, as_id), sizeof(struct kvm_memslots));
-> -
-> -	if ((change == KVM_MR_DELETE) || (change == KVM_MR_MOVE)) {
-> -		slot = id_to_memslot(slots, id);
-> -		slot->flags |= KVM_MEMSLOT_INVALID;
-> -
-> -		/*
-> -		 * We can re-use the old memslots, the only difference from the
-> -		 * newly installed memslots is the invalid flag, which will get
-> -		 * dropped by update_memslots anyway.  We'll also revert to the
-> -		 * old memslots if preparing the new memory region fails.
-> -		 */
-> -		slots = install_new_memslots(kvm, as_id, slots);
-> -
-> -		/* From this point no new shadow pages pointing to a deleted,
-> -		 * or moved, memslot will be created.
-> -		 *
-> -		 * validation of sp->gfn happens in:
-> -		 *	- gfn_to_hva (kvm_read_guest, gfn_to_pfn)
-> -		 *	- kvm_is_visible_gfn (mmu_check_roots)
-> -		 */
-> -		kvm_arch_flush_shadow_memslot(kvm, slot);
-> -	}
-> -
-> -	r = kvm_arch_prepare_memory_region(kvm, &new, mem, change);
-> -	if (r)
-> -		goto out_slots;
-> -
->   	/* actual memory is freed via old in kvm_free_memslot below */
->   	if (change == KVM_MR_DELETE) {
->   		new.dirty_bitmap = NULL;
->   		memset(&new.arch, 0, sizeof(new.arch));
->   	}
->   
-> -	update_memslots(slots, &new, change);
-> -	slots = install_new_memslots(kvm, as_id, slots);
-> -
-> -	kvm_arch_commit_memory_region(kvm, mem, &old, &new, change);
-> +	r = kvm_set_memslot(kvm, mem, &old, &new, as_id, change);
-> +	if (r)
-> +		goto out_bitmap;
->   
->   	kvm_free_memslot(kvm, &old, &new);
-> -	kvfree(slots);
->   	return 0;
->   
-> -out_slots:
-> -	if (change == KVM_MR_DELETE || change == KVM_MR_MOVE)
-> -		slots = install_new_memslots(kvm, as_id, slots);
-> -	kvfree(slots);
->   out_bitmap:
->   	if (new.dirty_bitmap && !old.dirty_bitmap)
->   		kvm_destroy_dirty_bitmap(&new);
-> 
+Hello,
 
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+syzbot found the following crash on:
+
+HEAD commit:    32ef9553 Merge tag 'fsnotify_for_v5.5-rc1' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10e778eae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3ceab2bd652d6555
+dashboard link: https://syzkaller.appspot.com/bug?extid=21f04f481f449c8db840
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11808adae00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=137058eae00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+21f04f481f449c8db840@syzkaller.appspotmail.com
+
+BUG: memory leak
+unreferenced object 0xffff888121379340 (size 32):
+   comm "syz-executor138", pid 7118, jiffies 4294943875 (age 7.840s)
+   hex dump (first 32 bytes):
+     40 e9 11 84 ff ff ff ff d8 0a b4 83 ff ff ff ff  @...............
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<000000005c57b8f8>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000005c57b8f8>] slab_post_alloc_hook mm/slab.h:586 [inline]
+     [<000000005c57b8f8>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000005c57b8f8>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+     [<000000005e5d1167>] kmalloc include/linux/slab.h:556 [inline]
+     [<000000005e5d1167>] genl_dumpit_info_alloc net/netlink/genetlink.c:463  
+[inline]
+     [<000000005e5d1167>] genl_family_rcv_msg_dumpit  
+net/netlink/genetlink.c:597 [inline]
+     [<000000005e5d1167>] genl_family_rcv_msg net/netlink/genetlink.c:714  
+[inline]
+     [<000000005e5d1167>] genl_rcv_msg+0x385/0x580  
+net/netlink/genetlink.c:734
+     [<00000000f3f6d30b>] netlink_rcv_skb+0x61/0x170  
+net/netlink/af_netlink.c:2477
+     [<000000007bebabc8>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:745
+     [<0000000013f3b7b9>] netlink_unicast_kernel  
+net/netlink/af_netlink.c:1302 [inline]
+     [<0000000013f3b7b9>] netlink_unicast+0x223/0x310  
+net/netlink/af_netlink.c:1328
+     [<00000000bd3e2e68>] netlink_sendmsg+0x29f/0x550  
+net/netlink/af_netlink.c:1917
+     [<0000000061329f0f>] sock_sendmsg_nosec net/socket.c:638 [inline]
+     [<0000000061329f0f>] sock_sendmsg+0x54/0x70 net/socket.c:658
+     [<000000006ede6ef7>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2329
+     [<000000008306e582>] ___sys_sendmsg+0x9c/0x100 net/socket.c:2383
+     [<00000000194a34f7>] __sys_sendmsg+0x80/0xf0 net/socket.c:2429
+     [<00000000a228fcfc>] __do_sys_sendmsg net/socket.c:2438 [inline]
+     [<00000000a228fcfc>] __se_sys_sendmsg net/socket.c:2436 [inline]
+     [<00000000a228fcfc>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2436
+     [<0000000035c29044>] do_syscall_64+0x73/0x220  
+arch/x86/entry/common.c:294
+     [<000000005e1aef5b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
