@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8687C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 378B8C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B33472464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E970122525
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:37:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="skXEWJ+H"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="eZlig54E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbfLEGhp (ORCPT
+        id S1728560AbfLEGhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 01:37:45 -0500
-Received: from mail-dm6nam11on2049.outbound.protection.outlook.com ([40.107.223.49]:6200
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        Thu, 5 Dec 2019 01:37:47 -0500
+Received: from mail-bn8nam11on2046.outbound.protection.outlook.com ([40.107.236.46]:32804
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725963AbfLEGhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725905AbfLEGhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 5 Dec 2019 01:37:42 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XiZfO6QfPOY4K6g9I4wWWvW8FewkB1/NvpJ0d/AQfNdryzYtFjY9OrUTYBNDnrv77H/DJeyEQ41XFXXr6cQJitM74NZ/D8BjwNTVb1BLZSLUNBz5QQwINfQbW3sAS4gU4PRz0pf8jQhhi4dvnMxsjO/xt/vL32SVXo8Sac+nbB4n3AJqgEKopZSPqebVZzJJENBeyiEQppiEaAdcct8e+QlcSsPTEeZfwps1Qba+xJmya7i88ldEZz0g4BAbKbe6/RtUjfs0w2u7SZHu1CTxEQ6zrOdo4SKpG7zXqNqNYlID6VvPwuT416Cm/kLCdWw3lZJVDSjXEIP8VilHCH3gSA==
+ b=hb51dMaV0k6bGrW6oIJ8+WzzXRlrkuzWRpuxzC/chobkJ4xgmn6+i62txzQpy36cWLRdUDqTYKwKAvgbk/c42+ypz4aQWOhaq4vicUnX+SDMIndXIvZOPoFcecXTPKbWHybHaynyh/m+XFXaJzkBAxKkpb8h1Ctyf1yeSvxt1jqAZ+urAKB79hMriGaAPLhHPlz6jcN8TFQDG0kGLrcyvEyirCnRR+LYI3W/S07Sj8gOvIu+dMEgkzpjlr+axsJrLIgOrboqltr+ROJG04235atf93C6C3oilvrAg03KWws/RjCUnoBpgN2XEngp+jKwodaLghlmHyBEXn0O92GP8w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f2ZBg83lGfUj0DfhyWSb64nyUYJNXtQgQndPSIHkG7k=;
- b=Bnyp7BbaKMdV6X+M/9/Un3kSPju37LjBR3dqtuwdzFXQirO6H8rBeKdb+Aa9Y80j5VCP+PVZBJ197fJI2LIaPcCxmeGS9y0L4ctVTY7slI0xpJ6RdZaw3EiyeIwR26pJX+I6QEhM3YYsDskbISK0BplYxmrvfd8HPTdVzhhkyV4nPtIAB7pp/3ejZue3GXghchQTULSQBvb6RRF4S5fTyRMipG8aakRRJUvfH+iGWAb0T0VqUjEoHdWDtSkS7W6ub9+KwmeFOwsMU8CX8ClO+79jWGVVpuBHim7g7TIg2awH3VgfnsL2JHLDdeEdaZ/VdUJEVU14hTWjzAa69USuzA==
+ bh=7dR6wQU33M3UN4w3m+4SyVhcnGxaxC++sn5renW2Kpg=;
+ b=Dwcln5Uv3neNsT+GqpYLR4LVP0qLcFZKeH5zPPI0V/dcfDODSMP0aKXti1V9LDqLXl9WvtlKXqjkgeoOb0mH6nugjfYbylDZ+8vJqKcTv+0heNtRmVBs9bN8MTsBH6P4qkDUvk/FXVxONhxYiL+S3YpaPC363qcLQ0PGpHXD7b7tMy+sBc488fm/1tyIyGY9ONcYJ7oJH5sCaS7BlyhY/HwL4nhwIhacg664e1C8QyJEE0yCqBICefawupLc8u9Du1DTuF+88EM2S31rmaalc6YDeQWciu2H5crNUCdqjp0QSE9HMV5iJ1raFKy/G/tn74H9q0s68d4v+PitPeVNqw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=lists.infradead.org
  smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
@@ -37,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f2ZBg83lGfUj0DfhyWSb64nyUYJNXtQgQndPSIHkG7k=;
- b=skXEWJ+HIoFZjAtDLv/0C8mMf/kSZ8OT1X73a0l9Ayy9aNsylHKgi6BfQSRCjrD+YmomPxS+w8nMdMk1l7LM3ZQMwKfH5qKx4zQ+ui2camKG/GzErJD/Dn0S8SZL42FpMu0ixnrQidn/XqYiYA5qmET9FfJ3XSlnq0QaiSof2CI=
-Received: from CY4PR02CA0040.namprd02.prod.outlook.com (2603:10b6:903:117::26)
- by BN7PR02MB4211.namprd02.prod.outlook.com (2603:10b6:406:fc::23) with
+ bh=7dR6wQU33M3UN4w3m+4SyVhcnGxaxC++sn5renW2Kpg=;
+ b=eZlig54EW0aN4Nc14hv5PgoFOCq4ph0GOy3aiq6Aer5ZS6aUopYOkummcJMpW82JDOxTt/TVgHSKRew+UBSwGOXvMzp0PEObjLXMbSbG0fg55Mg4NdLlDbhaxkae0pQp80hg6J3RzjfomzoUB2hPU+hXulxbJ/ndzK8gnOWh0kc=
+Received: from CY4PR02CA0001.namprd02.prod.outlook.com (2603:10b6:903:18::11)
+ by SN4PR0201MB3486.namprd02.prod.outlook.com (2603:10b6:803:51::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.18; Thu, 5 Dec
- 2019 06:37:36 +0000
-Received: from CY1NAM02FT056.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::207) by CY4PR02CA0040.outlook.office365.com
- (2603:10b6:903:117::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.22; Thu, 5 Dec
+ 2019 06:37:35 +0000
+Received: from CY1NAM02FT049.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::207) by CY4PR02CA0001.outlook.office365.com
+ (2603:10b6:903:18::11) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12 via Frontend
- Transport; Thu, 5 Dec 2019 06:37:36 +0000
+ Transport; Thu, 5 Dec 2019 06:37:35 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; lists.infradead.org; dkim=none (message not signed)
  header.d=none;lists.infradead.org; dmarc=bestguesspass action=none
@@ -57,24 +57,24 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT056.mail.protection.outlook.com (10.152.74.160) with Microsoft SMTP
+ CY1NAM02FT049.mail.protection.outlook.com (10.152.75.83) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Thu, 5 Dec 2019 06:37:36 +0000
+ via Frontend Transport; Thu, 5 Dec 2019 06:37:35 +0000
 Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <rajan.vaja@xilinx.com>)
-        id 1ickla-0000xJ-HF; Wed, 04 Dec 2019 22:37:34 -0800
+        id 1ickla-0000xL-QY; Wed, 04 Dec 2019 22:37:34 -0800
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <rajan.vaja@xilinx.com>)
-        id 1icklV-0000XV-E0; Wed, 04 Dec 2019 22:37:29 -0800
-Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB56bJb4003541;
+        id 1icklV-0000XV-NB; Wed, 04 Dec 2019 22:37:29 -0800
+Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB56bJ9Q010327;
         Wed, 4 Dec 2019 22:37:20 -0800
 Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <rajan.vaja@xilinx.com>)
-        id 1icklL-0000WL-Sx; Wed, 04 Dec 2019 22:37:19 -0800
+        id 1icklL-0000WL-Ok; Wed, 04 Dec 2019 22:37:19 -0800
 From:   Rajan Vaja <rajan.vaja@xilinx.com>
 To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com, michal.simek@xilinx.com,
@@ -84,9 +84,9 @@ To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
 Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Rajan Vaja <rajan.vaja@xilinx.com>
-Subject: [PATCH v3 3/6] clk: zynqmp: Warn user if clock user are more than allowed
-Date:   Wed,  4 Dec 2019 22:35:56 -0800
-Message-Id: <1575527759-26452-4-git-send-email-rajan.vaja@xilinx.com>
+Subject: [PATCH v3 1/6] dt-bindings: clock: Add bindings for versal clock driver
+Date:   Wed,  4 Dec 2019 22:35:54 -0800
+Message-Id: <1575527759-26452-2-git-send-email-rajan.vaja@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1575527759-26452-1-git-send-email-rajan.vaja@xilinx.com>
 References: <1574415814-19797-1-git-send-email-rajan.vaja@xilinx.com>
@@ -96,96 +96,255 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(346002)(39860400002)(189003)(199004)(356004)(9786002)(50226002)(5660300002)(6666004)(51416003)(36756003)(16586007)(7696005)(2906002)(8936002)(81166006)(81156014)(8676002)(44832011)(426003)(2616005)(478600001)(11346002)(336012)(48376002)(26005)(70586007)(107886003)(14444005)(7416002)(316002)(70206006)(36386004)(76176011)(4326008)(305945005)(50466002)(186003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4211;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(396003)(136003)(199004)(189003)(2616005)(6666004)(107886003)(70586007)(426003)(478600001)(11346002)(5660300002)(36756003)(966005)(336012)(4326008)(356004)(305945005)(316002)(76176011)(7416002)(7696005)(50226002)(6306002)(16586007)(14444005)(2906002)(186003)(9786002)(81156014)(51416003)(48376002)(8936002)(81166006)(70206006)(44832011)(8676002)(36386004)(26005)(50466002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN4PR0201MB3486;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7c1ad22b-481b-4231-00ef-08d7794d9db7
-X-MS-TrafficTypeDiagnostic: BN7PR02MB4211:
-X-Microsoft-Antispam-PRVS: <BN7PR02MB4211CDC677292EF18F50D2A0B75C0@BN7PR02MB4211.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: ea3d4a13-e2ee-42f2-f1f6-08d7794d9d4f
+X-MS-TrafficTypeDiagnostic: SN4PR0201MB3486:
+X-Microsoft-Antispam-PRVS: <SN4PR0201MB3486ACA15F3726CED33A0F7AB75C0@SN4PR0201MB3486.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:46;
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-Forefront-PRVS: 02426D11FE
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UH5uRED0BhVVNnFuM4DfjtIabJw3Urtd5yXbeWddBYGe820Rix6L176tLVroh28f1YToHMPp32QTewaKISzrgRwbG4lAVjnxrQT7BBtWKq6rpaqXo4HHEbeorSQoj+pAZttQzNPbOsd3wWB8x8TjpRw4Y4zIi+ebvKKZggDDM783GP4cWXIHkOaghK0kKNQ2WknFrAXyA97Pb5QAjRoLCuWsFdUG7wcsEFMEiZp/33na9HfvsfmgEeeJStragz6AhqONn/8v/p+rsbOQyqiFLDnNIsiyiYAwqlFiqncIjty4ItTAq93yIXE/WOUK7vgY6suJO3jhtzInZjFZ4tDfGhCWa9/UIthoUVZ+WZRgfmTJXwAyzBEoc6UPKFkXpmy2Nwe5UliwsqD6W71XJdpri+zbrRZlJfZuv8vhJxJogysgoCFl5h5inyIj4wl7XU0ysebGTXx+vihxjXAajdQpX9QOst0J0nSGkLOPobh95tm03xbKgBRVOZYHfDqdzVLo
+X-Microsoft-Antispam-Message-Info: Ja40FRGjix7VUXJUESx/OJCmLuzJwOFc++QcMVcLqdAZPBxWjB40EphE0gtcdor2jOkqjXrv8bz4uJEvz0HEB6uQC3s445GGHmjvOtnrg25e7MRguTP24AfmZoTj7exTlxWnEIjbrtp+PbDijdWU4Xf9eTrcqb/+LJpJxrP3rbzObK76sERYJJoNLPaeESINN3CRA00txK4UiD2DRV3JHWUJT1SziltBg1Rgt+2/LBMvisZnbUX+4xoGfWeduHBaNzsnqXkuHzjbLuaPKcL6xy+Y3hzEK3fmVPaUK/ygGoqnQIwD2crnMmEgVo7yA9gvGqs8B5tr3nKrazbLu0/3Ut/mYnJwSqEnUsOXhdIUtJADIkScWpnEvwnERrHScEdKi9UFCHKaAg2jfjorVUr0R3c3x0LguAZydOKAw4XBFa/qBrD6ePmRsNkQwddwMthZ8c80LLAimVNnInkeqJbs3wm5vfaUGxTNZzQai2l8J6J2YzgkyjMgVQn+GJRgQuNCTbRdk1tYQMfXUpzIBXX3Fvdesnfu4Qhct2Lz7oaB8Q0=
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2019 06:37:36.0372
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2019 06:37:35.3198
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c1ad22b-481b-4231-00ef-08d7794d9db7
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea3d4a13-e2ee-42f2-f1f6-08d7794d9d4f
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4211
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB3486
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Warn user if clock is used by more than allowed devices.
-This check is done by firmware and returns respective
-error code. Upon receiving error code for excessive user,
-warn user for the same.
+Add documentation to describe Xilinx Versal clock driver
+bindings.
 
-This change is done to restrict VPLL use count. It is
-assumed that VPLL is used by one user only.
-
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
+Changes in v3:
+ - Update SPDX-License-Identifier.
 Changes in v2:
- - Leave the existing warning as it is and print new warning in case of
-   -EUSERS instead of printing error and warning both.
----
- drivers/clk/zynqmp/pll.c             | 6 ++++--
- drivers/firmware/xilinx/zynqmp.c     | 2 ++
- include/linux/firmware/xlnx-zynqmp.h | 1 +
- 3 files changed, 7 insertions(+), 2 deletions(-)
+ - Correct description.
+ - Add "select: false" field to avoid failing when firmware schema is
+   available.
+ - Remove "_clk" from clock names.
+ - Remove minItems and maxItems fields.
 
-diff --git a/drivers/clk/zynqmp/pll.c b/drivers/clk/zynqmp/pll.c
-index a541397..89b5995 100644
---- a/drivers/clk/zynqmp/pll.c
-+++ b/drivers/clk/zynqmp/pll.c
-@@ -188,10 +188,12 @@ static int zynqmp_pll_set_rate(struct clk_hw *hw, unsigned long rate,
- 		frac = (parent_rate * f) / FRAC_DIV;
- 
- 		ret = eemi_ops->clock_setdivider(clk_id, m);
--		if (ret)
-+		if (ret == -EUSERS)
-+			WARN(1, "More than allowed devices are using the %s, which is forbidden\n",
-+			     clk_name);
-+		else if (ret)
- 			pr_warn_once("%s() set divider failed for %s, ret = %d\n",
- 				     __func__, clk_name, ret);
--
- 		eemi_ops->ioctl(0, IOCTL_SET_PLL_FRAC_DATA, clk_id, f, NULL);
- 
- 		return rate + frac;
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 75bdfaa..74d9f13 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -48,6 +48,8 @@ static int zynqmp_pm_ret_code(u32 ret_status)
- 		return -EACCES;
- 	case XST_PM_ABORT_SUSPEND:
- 		return -ECANCELED;
-+	case XST_PM_MULT_USER:
-+		return -EUSERS;
- 	case XST_PM_INTERNAL:
- 	case XST_PM_CONFLICT:
- 	case XST_PM_INVALID_NODE:
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index adb14bc..a3b0a39 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -89,6 +89,7 @@ enum pm_ret_status {
- 	XST_PM_INVALID_NODE,
- 	XST_PM_DOUBLE_REQ,
- 	XST_PM_ABORT_SUSPEND,
-+	XST_PM_MULT_USER = 2008,
- };
- 
- enum pm_ioctl_id {
+NOTE: firmware dt-bindings in yaml format will be added in a separate
+      change and $ref of this yaml to firmware will be added.
+---
+ .../devicetree/bindings/clock/xlnx,versal-clk.yaml |  64 +++++++++++
+ include/dt-bindings/clock/xlnx-versal-clk.h        | 123 +++++++++++++++++++++
+ 2 files changed, 187 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
+ create mode 100644 include/dt-bindings/clock/xlnx-versal-clk.h
+
+diff --git a/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
+new file mode 100644
+index 0000000..f1150ca
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/xlnx,versal-clk.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx Versal clock controller
++
++maintainers:
++  - Michal Simek <michal.simek@xilinx.com>
++  - Jolly Shah <jolly.shah@xilinx.com>
++  - Rajan Vaja <rajan.vaja@xilinx.com>
++
++description: |
++  The clock controller is a hardware block of Xilinx versal clock tree. It
++  reads required input clock frequencies from the devicetree and acts as clock
++  provider for all clock consumers of PS clocks.
++
++select: false
++
++properties:
++  compatible:
++    const: xlnx,versal-clk
++
++  "#clock-cells":
++    const: 1
++
++  clocks:
++    description: List of clock specifiers which are external input
++      clocks to the given clock controller.
++    items:
++      - description: reference clock
++      - description: alternate reference clock
++      - description: alternate reference clock for programmable logic
++
++  clock-names:
++    items:
++      - const: ref
++      - const: alt_ref
++      - const: pl_alt_ref
++
++required:
++  - compatible
++  - "#clock-cells"
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    firmware {
++      zynqmp_firmware: zynqmp-firmware {
++        compatible = "xlnx,zynqmp-firmware";
++        method = "smc";
++        versal_clk: clock-controller {
++          #clock-cells = <1>;
++          compatible = "xlnx,versal-clk";
++          clocks = <&ref>, <&alt_ref>, <&pl_alt_ref>;
++          clock-names = "ref", "alt_ref", "pl_alt_ref";
++        };
++      };
++    };
++...
+diff --git a/include/dt-bindings/clock/xlnx-versal-clk.h b/include/dt-bindings/clock/xlnx-versal-clk.h
+new file mode 100644
+index 0000000..264d634
+--- /dev/null
++++ b/include/dt-bindings/clock/xlnx-versal-clk.h
+@@ -0,0 +1,123 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ *  Copyright (C) 2019 Xilinx Inc.
++ *
++ */
++
++#ifndef _DT_BINDINGS_CLK_VERSAL_H
++#define _DT_BINDINGS_CLK_VERSAL_H
++
++#define PMC_PLL					1
++#define APU_PLL					2
++#define RPU_PLL					3
++#define CPM_PLL					4
++#define NOC_PLL					5
++#define PLL_MAX					6
++#define PMC_PRESRC				7
++#define PMC_POSTCLK				8
++#define PMC_PLL_OUT				9
++#define PPLL					10
++#define NOC_PRESRC				11
++#define NOC_POSTCLK				12
++#define NOC_PLL_OUT				13
++#define NPLL					14
++#define APU_PRESRC				15
++#define APU_POSTCLK				16
++#define APU_PLL_OUT				17
++#define APLL					18
++#define RPU_PRESRC				19
++#define RPU_POSTCLK				20
++#define RPU_PLL_OUT				21
++#define RPLL					22
++#define CPM_PRESRC				23
++#define CPM_POSTCLK				24
++#define CPM_PLL_OUT				25
++#define CPLL					26
++#define PPLL_TO_XPD				27
++#define NPLL_TO_XPD				28
++#define APLL_TO_XPD				29
++#define RPLL_TO_XPD				30
++#define EFUSE_REF				31
++#define SYSMON_REF				32
++#define IRO_SUSPEND_REF				33
++#define USB_SUSPEND				34
++#define SWITCH_TIMEOUT				35
++#define RCLK_PMC				36
++#define RCLK_LPD				37
++#define WDT					38
++#define TTC0					39
++#define TTC1					40
++#define TTC2					41
++#define TTC3					42
++#define GEM_TSU					43
++#define GEM_TSU_LB				44
++#define MUXED_IRO_DIV2				45
++#define MUXED_IRO_DIV4				46
++#define PSM_REF					47
++#define GEM0_RX					48
++#define GEM0_TX					49
++#define GEM1_RX					50
++#define GEM1_TX					51
++#define CPM_CORE_REF				52
++#define CPM_LSBUS_REF				53
++#define CPM_DBG_REF				54
++#define CPM_AUX0_REF				55
++#define CPM_AUX1_REF				56
++#define QSPI_REF				57
++#define OSPI_REF				58
++#define SDIO0_REF				59
++#define SDIO1_REF				60
++#define PMC_LSBUS_REF				61
++#define I2C_REF					62
++#define TEST_PATTERN_REF			63
++#define DFT_OSC_REF				64
++#define PMC_PL0_REF				65
++#define PMC_PL1_REF				66
++#define PMC_PL2_REF				67
++#define PMC_PL3_REF				68
++#define CFU_REF					69
++#define SPARE_REF				70
++#define NPI_REF					71
++#define HSM0_REF				72
++#define HSM1_REF				73
++#define SD_DLL_REF				74
++#define FPD_TOP_SWITCH				75
++#define FPD_LSBUS				76
++#define ACPU					77
++#define DBG_TRACE				78
++#define DBG_FPD					79
++#define LPD_TOP_SWITCH				80
++#define ADMA					81
++#define LPD_LSBUS				82
++#define CPU_R5					83
++#define CPU_R5_CORE				84
++#define CPU_R5_OCM				85
++#define CPU_R5_OCM2				86
++#define IOU_SWITCH				87
++#define GEM0_REF				88
++#define GEM1_REF				89
++#define GEM_TSU_REF				90
++#define USB0_BUS_REF				91
++#define UART0_REF				92
++#define UART1_REF				93
++#define SPI0_REF				94
++#define SPI1_REF				95
++#define CAN0_REF				96
++#define CAN1_REF				97
++#define I2C0_REF				98
++#define I2C1_REF				99
++#define DBG_LPD					100
++#define TIMESTAMP_REF				101
++#define DBG_TSTMP				102
++#define CPM_TOPSW_REF				103
++#define USB3_DUAL_REF				104
++#define OUTCLK_MAX				105
++#define REF_CLK					106
++#define PL_ALT_REF_CLK				107
++#define MUXED_IRO				108
++#define PL_EXT					109
++#define PL_LB					110
++#define MIO_50_OR_51				111
++#define MIO_24_OR_25				112
++
++#endif
 -- 
 2.7.4
 
