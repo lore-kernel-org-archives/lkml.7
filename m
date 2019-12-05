@@ -2,91 +2,72 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B291C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8968EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5DDE206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:36:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QewMc9bC"
+	by mail.kernel.org (Postfix) with ESMTP id 62D11206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbfLEDgf (ORCPT
+        id S1728714AbfLEDkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 22:36:35 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41096 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728490AbfLEDgf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 22:36:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uA8qdYUY/WlI1NyihsW/y2NRPNtIlPbJremcOrIeCmU=; b=QewMc9bCiS/dK894Y8pt17kDe
-        afDW8/WAHpIXExgn9DoNlklkrmrnlSqi6g17i6uxxWr3v1xLhaBhrdUZByt63bINxKgh5Hdg5kvf9
-        R5HjdxBEleCSLwQ0e5yeDv0UV2Y9Yp79/momOuuxE6ftqvgYJsXzFFWW65bjZoVGukfBTtCjW0ZwM
-        PWogwktMzqz3cQipb3xjkLP1ARjK/2ihIh6zL/tgtyY8g32IGoNnUOg5SX+qlVW648qZlp8J6GuJ8
-        bsXLZu/qP2gaNx8mMgh+Vsv9B8/jwlQY5G4i7IifsbvAPaNlZNY0btLmykXdniyT5aLSM5kTsmUKM
-        l+XfYAu8Q==;
-Received: from [2601:1c0:6280:3f0::3deb]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ichwQ-0004vz-2e; Thu, 05 Dec 2019 03:36:34 +0000
-Subject: Re: [PATCH 2/2] fix the SPDX syntax and bash interprester pointer
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        yamada.masahiro@socionext.com, michal.lkml@markovi.net
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191203095339.615774-1-unixbhaskar@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <56303cd3-fcf8-49cd-f66a-4db7e382774c@infradead.org>
-Date:   Wed, 4 Dec 2019 19:36:32 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 4 Dec 2019 22:40:31 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44090 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728321AbfLEDkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 22:40:31 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E28AD3E158DAB2F72557;
+        Thu,  5 Dec 2019 11:40:28 +0800 (CST)
+Received: from huawei.com (10.175.105.18) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Dec 2019
+ 11:40:22 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
+        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
+        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>
+CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
+Subject: [PATCH] KVM: explicitly set rmap_head->val to 0 in pte_list_desc_remove_entry()
+Date:   Thu, 5 Dec 2019 11:40:16 +0800
+Message-ID: <1575517216-5571-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-In-Reply-To: <20191203095339.615774-1-unixbhaskar@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.105.18]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/3/19 1:53 AM, Bhaskar Chowdhury wrote:
-> SPDX syntax was complining by checkpatch fixed it,added space before it.
-> And add bash interpreter to find by the env .
-> 
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-> ---
->  scripts/kernel_modules_info.sh | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/scripts/kernel_modules_info.sh b/scripts/kernel_modules_info.sh
-> index f005c47a3aa6..3a9b00988ed3 100755
-> --- a/scripts/kernel_modules_info.sh
-> +++ b/scripts/kernel_modules_info.sh
-> @@ -1,5 +1,5 @@
-> -#!/bin/bash - 
-> -#SPDX-License-Identifier: GPL-2.0
-> +#!/usr/bin/env bash 
-> +# SPDX-License-Identifier: GPL-2.0
->  #===============================================================================
->  #
->  #          FILE: kernel_modules_info.sh
-> 
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-a.  There is no good reason for patch 2/2.  Just merge the 2 patches.
+When we reach here, we have desc->sptes[j] = NULL with j = 0.
+So we can replace desc->sptes[0] with 0 to make it more clear.
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-b.  The big header comment in patch 1/2 is not needed and is unwanted.
-Just put some or all of that in the patch description/comment message.
-
-
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 6f92b40d798c..a81c605abbba 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1410,7 +1410,7 @@ pte_list_desc_remove_entry(struct kvm_rmap_head *rmap_head,
+ 	if (j != 0)
+ 		return;
+ 	if (!prev_desc && !desc->more)
+-		rmap_head->val = (unsigned long)desc->sptes[0];
++		rmap_head->val = 0;
+ 	else
+ 		if (prev_desc)
+ 			prev_desc->more = desc->more;
 -- 
-~Randy
+2.19.1
 
