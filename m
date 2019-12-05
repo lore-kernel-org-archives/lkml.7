@@ -2,130 +2,195 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 121B6C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D46C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E05D12464E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1512464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:43:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575538993;
+	bh=VduUfVfA8PM37btz6X32oexkSwdeJa5kpENuaCbHiV8=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=EelkgKDZF4QB5D3ummk1YRTldQktdTkEuGwGMmDTry22hAnu8cB8pH4DTh/3+lI3P
+	 xGgs1+pjS4f062Hizdjjt30XCLWKafuUWOqZsOR3Y1gjdxpvxrSDv56Hyxmi7q+h3D
+	 Mz9a4I5BthGip3RWFHzzPDGY1NcwwZa0aplBNJLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbfLEJmx convert rfc822-to-8bit (ORCPT
+        id S1729212AbfLEJnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:42:53 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:40982 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfLEJmw (ORCPT
+        Thu, 5 Dec 2019 04:43:13 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:56981 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726239AbfLEJnM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:42:52 -0500
-Received: by mail-yw1-f65.google.com with SMTP id l22so944168ywc.8;
-        Thu, 05 Dec 2019 01:42:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kEo6iDTk72UPkuZt6wUZlPDmPtU2DQIfzehH/YGLNyo=;
-        b=GHepMebT9XToFw9eC1u3ojJY7qk38u5TOQWVeNCZcWFrIdZgCI1ZVPFZaqF0egLlOC
-         Ht5QRBBy5443ObKm8hgNMkbggolpX3boR/MoQox5B6oAsu9fDA2RZSl9KPLalqRnDSRK
-         TOWFr9nEAUQLwt7P6QVnFUdDjJIVH8qW67q7xnmqKQPTYbqWrFw//TGKfsu0PmN7Q/12
-         WZ49ouvW3Dj++2VKlbTQ4NbHr24X1vLdm77yUODybu7thZSfwcefsR9ad5p4fu41y4aI
-         QbggRwjWaKQiTKEDRzZ7WRI+eZFrU7JcgeTNspB1wckXs9tJJ5y88gXWz1niiR/zoioC
-         iVLw==
-X-Gm-Message-State: APjAAAVy16xwBZ2dRWfdEQ4C9QP+fkd26uZPISEQEMZeultQo2cDDp5s
-        GeGuBVofwaDRuvQ3T73nHbbDLh/Zd1sNaJrN78c=
-X-Google-Smtp-Source: APXvYqz4kznUSQvdv/ngOv0iEdQ0ZJNgjOnxMQ0UYbg7Gk6Wjsf6QyUquiKhub2bpXPNcu8NSv/BsISxF1Rp+Tl01Fc=
-X-Received: by 2002:a81:98c6:: with SMTP id p189mr5176776ywg.443.1575538971148;
- Thu, 05 Dec 2019 01:42:51 -0800 (PST)
+        Thu, 5 Dec 2019 04:43:12 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1icnfB-0003Vq-GN; Thu, 05 Dec 2019 10:43:09 +0100
+To:     Eric Auger <eric.auger@redhat.com>
+Subject: Re: [RFC 2/3] KVM: arm64: pmu: Fix chained =?UTF-8?Q?SW=5FINCR=20?=  =?UTF-8?Q?counters?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
- <20190621095252.32307-17-vincenzo.frascino@arm.com> <20191204135159.GA7210@roeck-us.net>
- <6cdf4734-4065-09c1-8623-1bf523b38c1b@arm.com> <20191204161641.GA28130@roeck-us.net>
- <e35a7f71-2477-fa52-01e4-301199e99c2e@arm.com>
-In-Reply-To: <e35a7f71-2477-fa52-01e4-301199e99c2e@arm.com>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Thu, 5 Dec 2019 10:42:40 +0100
-Message-ID: <CAAdtpL71ED3zbkHMqtd1XFQwToOctWJpy2WPqahxHR81fKdTkg@mail.gmail.com>
-Subject: Re: [PATCH v7 16/25] arm: Add support for generic vDSO (causing crash)
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 05 Dec 2019 09:43:09 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <eric.auger.pro@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <kvmarm@lists.cs.columbia.edu>, <james.morse@arm.com>,
+        <andrew.murray@arm.com>, <suzuki.poulose@arm.com>,
+        <drjones@redhat.com>
+In-Reply-To: <20191204204426.9628-3-eric.auger@redhat.com>
+References: <20191204204426.9628-1-eric.auger@redhat.com>
+ <20191204204426.9628-3-eric.auger@redhat.com>
+Message-ID: <561ac6df385e977cc51d51a8ab28ee49@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: eric.auger@redhat.com, eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu, james.morse@arm.com, andrew.murray@arm.com, suzuki.poulose@arm.com, drjones@redhat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 6:23 PM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
-> On 12/4/19 4:16 PM, Guenter Roeck wrote:
-[...]
-> --->8---
->
-> Author: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Date:   Wed Dec 4 16:58:55 2019 +0000
->
->     arm: Fix __arch_get_hw_counter() access to CNTVCT
->
->     __arch_get_hw_counter() should check clock_mode to see if it can access
->     CNTVCT. With the conversion to unified vDSO this check has been left out.
->
->     This causes on imx v6 and v7 (imx_v6_v7_defconfig) and other platforms to
->     hang at boot during the execution of the init process as per below:
->
->     [   19.976852] Run /sbin/init as init process
->     [   20.044931] Kernel panic - not syncing: Attempted to kill init!
->     exitcode=0x00000004
->
->     Fix the problem verifying that clock_mode is set coherently before
->     accessing CNTVCT.
->
->     Cc: Russell King <linux@armlinux.org.uk>
->     Reported-by: Guenter Roeck <linux@roeck-us.net>
->     Investigated-by: Arnd Bergmann <arnd@arndb.de>
+Hi Eric,
 
-There are only 2 "Investigated-by" vs 7k+ "Suggested-by"... Is there a
-real difference?
-
->     Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+On 2019-12-04 20:44, Eric Auger wrote:
+> At the moment a SW_INCR counter always overflows on 32-bit
+> boundary, independently on whether the n+1th counter is
+> programmed as CHAIN.
 >
-> diff --git a/arch/arm/include/asm/vdso/gettimeofday.h
-> b/arch/arm/include/asm/vdso/gettimeofday.h
-> index 5b879ae7afc1..0ad2429c324f 100644
-> --- a/arch/arm/include/asm/vdso/gettimeofday.h
-> +++ b/arch/arm/include/asm/vdso/gettimeofday.h
-> @@ -75,6 +75,9 @@ static __always_inline u64 __arch_get_hw_counter(int clock_mode)
->  #ifdef CONFIG_ARM_ARCH_TIMER
->         u64 cycle_now;
+> Check whether the SW_INCR counter is a 64b counter and if so,
+> implement the 64b logic.
 >
-> +       if (!clock_mode)
-> +               return -EINVAL;
+> Fixes: 80f393a23be6 ("KVM: arm/arm64: Support chained PMU counters")
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> ---
+>  virt/kvm/arm/pmu.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+>
+> diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
+> index c3f8b059881e..7ab477db2f75 100644
+> --- a/virt/kvm/arm/pmu.c
+> +++ b/virt/kvm/arm/pmu.c
+> @@ -491,6 +491,8 @@ void kvm_pmu_software_increment(struct kvm_vcpu
+> *vcpu, u64 val)
+>
+>  	enable = __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
+>  	for (i = 0; i < ARMV8_PMU_CYCLE_IDX; i++) {
+> +		bool chained = test_bit(i >> 1, vcpu->arch.pmu.chained);
 > +
 
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+I'd rather you use kvm_pmu_pmc_is_chained() rather than open-coding
+this. But see below:
 
->         isb();
->         cycle_now = read_sysreg(CNTVCT);
->
->
+>  		if (!(val & BIT(i)))
+>  			continue;
+>  		type = __vcpu_sys_reg(vcpu, PMEVTYPER0_EL0 + i)
+> @@ -500,8 +502,20 @@ void kvm_pmu_software_increment(struct kvm_vcpu
+> *vcpu, u64 val)
+>  			reg = __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) + 1;
+>  			reg = lower_32_bits(reg);
+>  			__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) = reg;
+> -			if (!reg)
+> +			if (reg) /* no overflow */
+> +				continue;
+> +			if (chained) {
+> +				reg = __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) + 1;
+> +				reg = lower_32_bits(reg);
+> +				__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) = reg;
+> +				if (reg)
+> +					continue;
+> +				/* mark an overflow on high counter */
+> +				__vcpu_sys_reg(vcpu, PMOVSSET_EL0) |= BIT(i + 1);
+> +			} else {
+> +				/* mark an overflow */
+>  				__vcpu_sys_reg(vcpu, PMOVSSET_EL0) |= BIT(i);
+> +			}
+>  		}
+>  	}
+>  }
+
+I think the whole function is a bit of a mess, and could be better
+structured to treat 64bit counters as a first class citizen.
+
+I'm suggesting something along those lines, which tries to
+streamline things a bit and keep the flow uniform between the
+two word sizes. IMHO, it helps reasonning about it and gives
+scope to the ARMv8.5 full 64bit counters... It is of course
+completely untested.
+
+Thoughts?
+
+         M.
+
+diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
+index 8731dfeced8b..cf371f643ade 100644
+--- a/virt/kvm/arm/pmu.c
++++ b/virt/kvm/arm/pmu.c
+@@ -480,26 +480,43 @@ static void kvm_pmu_perf_overflow(struct 
+perf_event *perf_event,
+   */
+  void kvm_pmu_software_increment(struct kvm_vcpu *vcpu, u64 val)
+  {
++	struct kvm_pmu *pmu = &vcpu->arch.pmu;
+  	int i;
+-	u64 type, enable, reg;
+
+-	if (val == 0)
+-		return;
++	/* Weed out disabled counters */
++	val &= __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
+
+-	enable = __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
+  	for (i = 0; i < ARMV8_PMU_CYCLE_IDX; i++) {
++		u64 type, reg;
++		int ovs = i;
++
+  		if (!(val & BIT(i)))
+  			continue;
+-		type = __vcpu_sys_reg(vcpu, PMEVTYPER0_EL0 + i)
+-		       & ARMV8_PMU_EVTYPE_EVENT;
+-		if ((type == ARMV8_PMUV3_PERFCTR_SW_INCR)
+-		    && (enable & BIT(i))) {
+-			reg = __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) + 1;
+-			reg = lower_32_bits(reg);
+-			__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) = reg;
+-			if (!reg)
+-				__vcpu_sys_reg(vcpu, PMOVSSET_EL0) |= BIT(i);
++
++		/* PMSWINC only applies to ... SW_INC! */
++		type = __vcpu_sys_reg(vcpu, PMEVTYPER0_EL0 + i);
++		type &= ARMV8_PMU_EVTYPE_EVENT;
++		if (type != ARMV8_PMUV3_PERFCTR_SW_INCR)
++			continue;
++
++		/* Potential 64bit value */
++		reg = kvm_pmu_get_counter_value(vcpu, i) + 1;
++
++		/* Start by writing back the low 32bits */
++		__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) = lower_32_bits(reg);
++
++		/*
++		 * 64bit counter? Write back the upper bits and target
++		 * the overflow bit at the next counter
++		 */
++		if (kvm_pmu_pmc_is_chained(&pmu->pmc[i])) {
++			reg = upper_32_bits(reg);
++			__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) = reg;
++			ovs++;
+  		}
++
++		if (!lower_32_bits(reg))
++			__vcpu_sys_reg(vcpu, PMOVSSET_EL0) |= BIT(ovs);
+  	}
+  }
+
+
+-- 
+Jazz is not dead. It just smells funny...
