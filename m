@@ -2,86 +2,84 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1BDC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5C9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC4B20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4866320675
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:07:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbfLEJHV (ORCPT
+        id S1729082AbfLEJH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:07:21 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:58081 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbfLEJHV (ORCPT
+        Thu, 5 Dec 2019 04:07:58 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:42185 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfLEJH5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:07:21 -0500
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1icn6J-0007cF-8V; Thu, 05 Dec 2019 09:07:07 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     alex_lu@realsil.com.cn, pkshih@realtek.com,
-        linux-bluetooth@vger.kernel.or, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH] Bluetooth: btusb: Disable runtime suspend on Realtek devices
-Date:   Thu,  5 Dec 2019 17:07:01 +0800
-Message-Id: <20191205090701.12440-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 5 Dec 2019 04:07:57 -0500
+Received: from mail-lf1-f42.google.com ([209.85.167.42]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MDQRy-1iVgMe44Tm-00AZOa; Thu, 05 Dec 2019 10:07:55 +0100
+Received: by mail-lf1-f42.google.com with SMTP id n25so1930431lfl.0;
+        Thu, 05 Dec 2019 01:07:54 -0800 (PST)
+X-Gm-Message-State: APjAAAWaX08cRKCjC9kcRjUAcKbVHB6rq2Rap8epvqa5d/be0qLqWlRj
+        NRkNh18YjbBt6U1M1LNYl3e+ju7bTX/N+jI1V/8=
+X-Google-Smtp-Source: APXvYqypV1X5EMz2sl1SKkaAbf4BM9c0wEFFQFI//IuQIHowR6BnovlkX8ELT08+5Z0laudy+q0gKPhwMe9Yp9XTz5g=
+X-Received: by 2002:a19:22cc:: with SMTP id i195mr4781773lfi.148.1575536874347;
+ Thu, 05 Dec 2019 01:07:54 -0800 (PST)
+MIME-Version: 1.0
+References: <20191205052220.GC1158@sol.localdomain> <20191205055419.13435-1-ebiggers@kernel.org>
+In-Reply-To: <20191205055419.13435-1-ebiggers@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 5 Dec 2019 10:07:37 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2Fka2tuCnYAsSM8DHVzV9Zpvj_J7rkGg6zgWLEsU3KAw@mail.gmail.com>
+Message-ID: <CAK8P3a2Fka2tuCnYAsSM8DHVzV9Zpvj_J7rkGg6zgWLEsU3KAw@mail.gmail.com>
+Subject: Re: [PATCH] ppp: fix out-of-bounds access in bpf_prog_create()
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Paul Mackerras <paulus@samba.org>, bpf@vger.kernel.org,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-ppp@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+eb853b51b10f1befa0b7@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:XiJIUuR/OeqRdx0q/I6GwluGTGsdAMHUl4MQ9R4EKyAkzHom6AR
+ ODog5/k3OD8ftZArXfJ9gzj1bXo0vd6KSsKxMFDh3mq2+UwAwqIozNJjbNFrXoh3ufgFf3E
+ OD6F2mOrYl8HpkOW+aw4YeYHuOkyEDjuukaYJ9XE3e7BcYzz0NtpxN9q1SKaXb6SMWmyObG
+ hqBWPR75Zc9ym6LDePlNA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BEadTGh7wNM=:DRgQGSU66b4UPkvk7ATasF
+ 9Ey/O0yUQ/4D8Y3kcFbWOJ22PXJZ+G1+in5J4mGtqCBlhlQOa/30d+J+6hOmwWE85MDzf8GYO
+ Ejwb/qGjHW1Tijz1FK7yAw7TcIv5g8BG0I96YWzrwInHuFpxx2jlo/MVlj5bpj2vt56F0/JGL
+ iMBTG/+kBKyAQkzHyuv1JSLMn2bm9Ypox57hUDOjQMiBy7gPIuyYtHrjNI7rPXbAyX7TTpX1n
+ nQ0TLqGZJeB542oEvsd3KJ8BwvA3lvze5U16/LibU4XGKakmhY2Gvuhs51UrVSXh6ij58XM6K
+ 2pz/GFcbbMcDKw9lI9KF+OzQkhsPQCHj3ybp9rMEAqW2mnGP0G7IrUwze1kECDwFOh1tijywr
+ FgDva/kTC7hqTriwW5ubDBxWmEEnnoAv5YgbhpX/5xmV7PrgZ3yN8nizgPE+rg6QzGetnYUhS
+ lYJb4bHNBXRBH27/lIyjINtLv5ifRrUpu17pCxoVIOFouAJaDt7xw/EkBtKrG3Cra4rJ7x/T8
+ obrytdlwYs0+o/fDez1/bCGetN8y7zkMsgk8hTxQROqwG4GVT9XbNa0fDhCDxp7+CLPNjLzlA
+ DaePrBcufmX8GH9kbTZ5SXuQU8Rnq/BF9gVsdtsuqSV/qfaBcuuAg1AwrVb8qa42iMAi8gjP5
+ PczD6sUn6cSNmnFn0yi7ndsP2ebW9iDadXqw1MTPEvsi8Nzo+sKFifRN24NBjq+mJ/JtI2DlH
+ S47b0iUG55hZa2aGRPakliTMe1Qwkd6hPhvSrLJt1cFp7W3T/4GRaLvY7LE70SpvAJEaLzPof
+ FMvvPfs9M6DUNo6jeDxXP/4fS4u2E5NZyWgfc+o3XWUWo74pIg0OqgNInpVshdq/s+26OZFxZ
+ Y7PkkYEzHZzXLMaMSiXA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 9e45524a0111 ("Bluetooth: btusb: Fix suspend issue for
-Realtek devices") both WiFi and Bluetooth stop working after reboot:
-[   34.322617] usb 1-8: reset full-speed USB device number 3 using xhci_hcd
-[   34.450401] usb 1-8: device descriptor read/64, error -71
-[   34.694375] usb 1-8: device descriptor read/64, error -71
-...
-[   44.599111] rtw_pci 0000:02:00.0: failed to poll offset=0x5 mask=0x3 value=0x0
-[   44.599113] rtw_pci 0000:02:00.0: mac power on failed
-[   44.599114] rtw_pci 0000:02:00.0: failed to power on mac
-[   44.599114] rtw_pci 0000:02:00.0: leave idle state failed
-[   44.599492] rtw_pci 0000:02:00.0: failed to leave ips state
-[   44.599493] rtw_pci 0000:02:00.0: failed to leave idle state
+On Thu, Dec 5, 2019 at 6:55 AM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> From: Eric Biggers <ebiggers@google.com>
+>
+> sock_fprog_kern::len is in units of struct sock_filter, not bytes.
+>
+> Fixes: 3e859adf3643 ("compat_ioctl: unify copy-in of ppp filters")
+> Reported-by: syzbot+eb853b51b10f1befa0b7@syzkaller.appspotmail.com
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
 
-That commit removed USB_QUIRK_RESET_RESUME, which not only resets the USB
-device after resume, it also prevents the device from being runtime
-suspended by USB core. My experiment shows if the Realtek btusb device
-ever runtime suspends once, the entire wireless module becomes useless
-after reboot.
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-So let's explicitly disable runtime suspend on Realtek btusb device for
-now.
-
-Fixes: 9e45524a0111 ("Bluetooth: btusb: Fix suspend issue for Realtek devices")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/bluetooth/btusb.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index d9cd0677d41c..0eaeca0a64fb 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -3832,6 +3832,10 @@ static int btusb_probe(struct usb_interface *intf,
- 		 * (DEVICE_REMOTE_WAKEUP)
- 		 */
- 		set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
-+
-+		err = usb_autopm_get_interface(intf);
-+		if (err < 0)
-+			goto out_free_dev;
- 	}
- 
- 	if (id->driver_info & BTUSB_AMP) {
--- 
-2.17.1
-
+Thanks for fixing the bug I introduced!
