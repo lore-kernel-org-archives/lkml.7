@@ -2,138 +2,106 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 425EFC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2286EC2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6F2206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA8020801
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:05:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nazofESi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729930AbfLEQDG (ORCPT
+        id S1729862AbfLEQFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:03:06 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51578 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLEQDF (ORCPT
+        Thu, 5 Dec 2019 11:05:36 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37016 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLEQFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:03:05 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 6395D2923CC
-Message-ID: <9dc26a0a51fe60206265cc1495b63e1f1d5e661d.camel@collabora.com>
-Subject: Re: [PATCH v3 2/3] media: hantro: Support color conversion via
- post-processing
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org
-Cc:     kernel@collabora.com, Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
-Date:   Thu, 05 Dec 2019 13:02:54 -0300
-In-Reply-To: <2d2524129c6287c13e9d83d1d885046483e75117.camel@pengutronix.de>
-References: <20191113175603.24742-1-ezequiel@collabora.com>
-         <20191113175603.24742-3-ezequiel@collabora.com>
-         <1e1c7a0e3d25187723ccac1a8360b5aae9aed8cd.camel@pengutronix.de>
-         <dc637b43a4ef4609f9200f3fc91ee76fef75f64a.camel@collabora.com>
-         <88a48cb78843458b55896eeb3af2f46488d42744.camel@collabora.com>
-         <2d2524129c6287c13e9d83d1d885046483e75117.camel@pengutronix.de>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 5 Dec 2019 11:05:35 -0500
+Received: by mail-pl1-f194.google.com with SMTP id bb5so1429990plb.4;
+        Thu, 05 Dec 2019 08:05:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UKlXFmsyCCcDDwPIPUpIzSPGgE4nu5epjuY/dy6jNM4=;
+        b=nazofESih7AXvfwNZmyfhH0uQR3YVRvZN2HjlxMs6kzxGlLd7vjEgyDgq2QKlLD9qm
+         HegcL1lC8G4DghBfGBWCM2AeXXNK+XSWTbIcJ+Vi+CQ4f+xakpNN9p/bSCYyRNUMvWDa
+         tHrFvhdjoSmH7UhcqLfGN/0+9G/k18RkB7bmI3lxPtNtJozmq8fv9+Kl6S6b5My5Su5V
+         O2yvei4BgLjTbtnOPUslo8F1w2Xj+ao5bVUEj78KNq6EG7niaoQgsRQmL75lAzW/+jcG
+         phxjFgczueN+Pmwyd/tT7G1VYS1hyD7DufECR5GxWgmD4ODqTTZq57h4oPlmAN4RofC6
+         d/Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UKlXFmsyCCcDDwPIPUpIzSPGgE4nu5epjuY/dy6jNM4=;
+        b=e6UA2DQtnRirFisNMHdliJhxBj5CfrJVf75vbpvbLRaJF/dKH76vKhLDCEJQ3r9FZS
+         K2BkIre8QrNrCaZ294Yc44mSI9Wx+nnbLzTxJPEbElufIKYWPIXsoIRARdvIFfpZBbHA
+         5Y3eftJ1leu8uB7YqGcz3g4HzgoSe7uoRET1tSQCYB/bWxVW4EqUoH4//hatxwPt8TnD
+         gbIzHamJ4xGR67vvtCdlscPwMCW2oUeOj/MU7hjhiqNpgKxXPD/lT61IzhrPr0qgVD7j
+         oyeYLF0+lFHN2vjAax2+lEhmL+DZSp50IuIgtzVoIIl9rN/75A01XeARodbRB9F8I96o
+         ioBg==
+X-Gm-Message-State: APjAAAXeCRLHLt41usKLzLmp+jZ1GukjQntUXHUFa5VhV98K/K6WD9aV
+        zNfVmqdMku1bco9FXdOIFiI=
+X-Google-Smtp-Source: APXvYqyg6jDDIuUjk0ppe+Py08NjE/qtzDD1oo0Tm7cVTE7k/KaRbCfv99/ONFToupOaJS3e3I5RMw==
+X-Received: by 2002:a17:902:bb83:: with SMTP id m3mr9424484pls.94.1575561934927;
+        Thu, 05 Dec 2019 08:05:34 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id b2sm13229869pff.6.2019.12.05.08.05.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 08:05:34 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH resend] drm/exynos: gsc: add missed component_del
+Date:   Fri,  6 Dec 2019 00:05:20 +0800
+Message-Id: <20191205160520.31955-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-12-05 at 15:46 +0100, Philipp Zabel wrote:
-> On Thu, 2019-12-05 at 11:33 -0300, Ezequiel Garcia wrote:
-> > Hello Philipp,
-> > 
-> > On Fri, 2019-11-15 at 12:44 -0300, Ezequiel Garcia wrote:
-> > > Hello Philipp,
-> > > 
-> > > Thanks for reviewing.
-> > > 
-> > > On Thu, 2019-11-14 at 10:48 +0100, Philipp Zabel wrote:
-> > > > Hi Ezequiel,
-> > > > 
-> > > > On Wed, 2019-11-13 at 14:56 -0300, Ezequiel Garcia wrote:
-> > > > > The Hantro G1 decoder is able to enable a post-processor
-> > > > > on the decoding pipeline, which can be used to perform
-> > > > > scaling and color conversion.
-> > > > > 
-> > > > > The post-processor is integrated to the decoder, and it's
-> > > > > possible to use it in a way that is completely transparent
-> > > > > to the user.
-> > > > > 
-> > > > > This commit enables color conversion via post-processing,
-> > > > > which means the driver now exposes YUV packed, in addition to NV12.
-> > > > > 
-> > > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > > > ---
-> > > > >  drivers/staging/media/hantro/Makefile         |   1 +
-> > > > >  drivers/staging/media/hantro/hantro.h         |  64 +++++++-
-> > > > >  drivers/staging/media/hantro/hantro_drv.c     |   8 +-
-> > > > >  .../staging/media/hantro/hantro_g1_h264_dec.c |   2 +-
-> > > > >  .../media/hantro/hantro_g1_mpeg2_dec.c        |   2 +-
-> > > > >  drivers/staging/media/hantro/hantro_g1_regs.h |  53 +++++++
-> > > > >  .../staging/media/hantro/hantro_g1_vp8_dec.c  |   2 +-
-> > > > >  drivers/staging/media/hantro/hantro_h264.c    |   6 +-
-> > > > >  drivers/staging/media/hantro/hantro_hw.h      |  13 ++
-> > > > >  .../staging/media/hantro/hantro_postproc.c    | 141 ++++++++++++++++++
-> > > > >  drivers/staging/media/hantro/hantro_v4l2.c    |  52 ++++++-
-> > > > >  drivers/staging/media/hantro/rk3288_vpu_hw.c  |  10 ++
-> > > > >  12 files changed, 343 insertions(+), 11 deletions(-)
-> > > > >  create mode 100644 drivers/staging/media/hantro/hantro_postproc.c
-> > > > > 
-> > > > > 
-> > [..]
-> > > > >  			pix_mp->plane_fmt[0].sizeimage +=
-> > > > >  				128 * DIV_ROUND_UP(pix_mp->width, 16) *
-> > > > >  				      DIV_ROUND_UP(pix_mp->height, 16);
-> > > > > @@ -611,10 +643,23 @@ static int hantro_start_streaming(struct vb2_queue *q, unsigned int count)
-> > > > >  
-> > > > >  		vpu_debug(4, "Codec mode = %d\n", codec_mode);
-> > > > >  		ctx->codec_ops = &ctx->dev->variant->codec_ops[codec_mode];
-> > > > > -		if (ctx->codec_ops->init)
-> > > > > +		if (ctx->codec_ops->init) {
-> > > > >  			ret = ctx->codec_ops->init(ctx);
-> > > > > +			if (ret)
-> > > > > +				return ret;
-> > > > > +		}
-> > > > > +
-> > > > > +		if (hantro_needs_postproc(ctx)) {
-> > > > > +			ret = hantro_postproc_alloc(ctx);
-> > > > 
-> > > > Why is this done in start_streaming? Wouldn't capture side REQBUFS be a
-> > > > better place for this?
-> > > > 
-> > > 
-> > > Yes, makes sense as well.
-> > > 
-> > 
-> > This didn't work so well, so I have decided to leave it as-is in the
-> > just submitted v4 series.
-> > 
-> > The vb2 framework provides two mechanism for drivers to allocate
-> > buffers, REQBUFS and CREATEBUFS, so the bounce buffer allocation
-> > has to be hooked on both of them.
-> 
-> That is a good point, now that we don't allocate VB2_MAX_FRAME bounce
-> buffers at start_streaming time anymore, what happens if additional
-> capture buffers are created with CREATEBUFS while streaming?
-> 
+The driver forgets to call component_del in remove to match component_add
+in probe.
+Add the missed call to fix it.
 
-If I understand vb2 logic correctly, then I do not think anything
-will happen, because the newly created buffers won't be queued. 
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/gpu/drm/exynos/exynos_drm_gsc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Regards,
-Ezequiel
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_gsc.c b/drivers/gpu/drm/exynos/exynos_drm_gsc.c
+index 7ae087b0504d..88b6fcaa20be 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_gsc.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_gsc.c
+@@ -1313,6 +1313,7 @@ static int gsc_remove(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 
++	component_del(dev, &gsc_component_ops);
+ 	pm_runtime_dont_use_autosuspend(dev);
+ 	pm_runtime_disable(dev);
+ 
+-- 
+2.24.0
 
