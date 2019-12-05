@@ -2,124 +2,94 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A245CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22C2C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD3E2245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA8AE2245C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:58:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ISS+iwm4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbfLEM6g (ORCPT
+        id S1729482AbfLEM6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 07:58:36 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39370 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729048AbfLEM6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 07:58:35 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 66F10AB87;
-        Thu,  5 Dec 2019 12:58:32 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id B24BCDA733; Thu,  5 Dec 2019 13:58:26 +0100 (CET)
-Date:   Thu, 5 Dec 2019 13:58:26 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     David Howells <dhowells@redhat.com>
-Cc:     torvalds@linux-foundation.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] pipe: Notification queue preparation
-Message-ID: <20191205125826.GK2734@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, David Howells <dhowells@redhat.com>,
-        torvalds@linux-foundation.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>, keyrings@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <31452.1574721589@warthog.procyon.org.uk>
+        Thu, 5 Dec 2019 07:58:50 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:38046 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729099AbfLEM6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 07:58:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Re18R+zvHW22gTZUWM5G+y1mglFdF33WZZhd8u13ENU=; b=ISS+iwm4GEajcnWmdI+CAx1dLq
+        /pA0TK0twSbpVXEiHZUfMswjcFncqO8a+fpeQuEx9p4FYARYyLozq/Jtwd5/XCSxYyY67Jk/7Sl7I
+        hxY5Z3ZwD+8yUG/F1DJbo/zGql4/FJ/wj0M/YlPTTIBK/g0KfqVbGKLSUWXZF7RifIJE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1icqiB-0007OM-Fl; Thu, 05 Dec 2019 13:58:27 +0100
+Date:   Thu, 5 Dec 2019 13:58:27 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexander Lobakin <alobakin@dlink.ru>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Muciri Gatimu <muciri@openmesh.com>,
+        Shashidhar Lakkavalli <shashidhar.lakkavalli@openmesh.com>,
+        John Crispin <john@phrozen.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Matteo Croce <mcroce@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: dsa: fix flow dissection on Tx path
+Message-ID: <20191205125827.GA28269@lunn.ch>
+References: <20191205100235.14195-1-alobakin@dlink.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <31452.1574721589@warthog.procyon.org.uk>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20191205100235.14195-1-alobakin@dlink.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 10:39:49PM +0000, David Howells wrote:
-> David Howells (12):
->       pipe: Reduce #inclusion of pipe_fs_i.h
->       Remove the nr_exclusive argument from __wake_up_sync_key()
->       Add wake_up_interruptible_sync_poll_locked()
->       pipe: Use head and tail pointers for the ring, not cursor and length
+On Thu, Dec 05, 2019 at 01:02:35PM +0300, Alexander Lobakin wrote:
+> Commit 43e665287f93 ("net-next: dsa: fix flow dissection") added an
+> ability to override protocol and network offset during flow dissection
+> for DSA-enabled devices (i.e. controllers shipped as switch CPU ports)
+> in order to fix skb hashing for RPS on Rx path.
+> 
+> However, skb_hash() and added part of code can be invoked not only on
+> Rx, but also on Tx path if we have a multi-queued device and:
+>  - kernel is running on UP system or
+>  - XPS is not configured.
+> 
+> The call stack in this two cases will be like: dev_queue_xmit() ->
+> __dev_queue_xmit() -> netdev_core_pick_tx() -> netdev_pick_tx() ->
+> skb_tx_hash() -> skb_get_hash().
+> 
+> The problem is that skbs queued for Tx have both network offset and
+> correct protocol already set up even after inserting a CPU tag by DSA
+> tagger, so calling tag_ops->flow_dissect() on this path actually only
+> breaks flow dissection and hashing.
 
-This commit (8cefc107ca54c8b06438b7dc9) causes hangs of 'btrfs send'
-commands, that's eg. inside fstests or in btrfs-progs testsuite. The
-'send' uses pipe/splice to get data from kernel to userspace.
+Hi Alexander
 
-The test that reliably worked for me leaves the process hanging with
-this stacktrace (no CPU or IO activity):
+What i'm missing here is an explanation why the flow dissector is
+called here if the protocol is already set? It suggests there is a
+case when the protocol is not correctly set, and we do need to look
+into the frame?
 
-[<0>] pipe_write+0x1be/0x4b0
-[<0>] new_sync_write+0x11e/0x1c0
-[<0>] vfs_write+0xc1/0x1d0
-[<0>] kernel_write+0x2c/0x40
-[<0>] send_cmd+0x78/0xf0 [btrfs]
-[<0>] send_extent_data+0x4b1/0x52c [btrfs]
-[<0>] process_extent+0xe46/0xe9d [btrfs]
-[<0>] changed_cb+0xcf5/0xd2f [btrfs]
-[<0>] send_subvol+0x8ad/0xc0b [btrfs]
-[<0>] btrfs_ioctl_send+0xe50/0xf30 [btrfs]
-[<0>] _btrfs_ioctl_send+0x80/0x110 [btrfs]
-[<0>] btrfs_ioctl+0x18e1/0x3450 [btrfs]
-[<0>] do_vfs_ioctl+0xa5/0x710
-[<0>] ksys_ioctl+0x70/0x80
-[<0>] __x64_sys_ioctl+0x16/0x20
-[<0>] do_syscall_64+0x56/0x220
-[<0>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-I've bisected that to the mentioned commit, using test in btrfs-progs
-testsuite with command "make TEST=016\* test-misc". Normally the test
-can run up to 10 seconds, in the buggy case it stays there.
-
-I can help testing fixes or gathering more information, please let me
-know.
-
-Full bisect log:
-
-# bad: [3c0edea9b29f9be6c093f236f762202b30ac9431] pipe: Remove sync on wake_ups
-# good: [da0c9ea146cbe92b832f1b0f694840ea8eb33cce] Linux 5.4-rc2
-git bisect start '3c0edea9b29f9be6c093f236f762202b30ac9431' 'd055b4fb4d165b06d912e7f846610d120c3bb9fb^'
-# bad: [b667b867344301e24f21d4a4c844675ff61d89e1] pipe: Advance tail pointer inside of wait spinlock in pipe_read()
-git bisect bad b667b867344301e24f21d4a4c844675ff61d89e1
-# good: [f94df9890e98f2090c6a8d70c795134863b70201] Add wake_up_interruptible_sync_poll_locked()
-git bisect good f94df9890e98f2090c6a8d70c795134863b70201
-# bad: [6718b6f855a0b4962d54bd625be2718cb820cec6] pipe: Allow pipes to have kernel-reserved slots
-git bisect bad 6718b6f855a0b4962d54bd625be2718cb820cec6
-# bad: [8cefc107ca54c8b06438b7dc9cc08bc0a11d5b98] pipe: Use head and tail pointers for the ring, not cursor and length
-git bisect bad 8cefc107ca54c8b06438b7dc9cc08bc0a11d5b98
-# first bad commit: [8cefc107ca54c8b06438b7dc9cc08bc0a11d5b98] pipe: Use head and tail pointers for the ring, not cursor and length
-
->       pipe: Allow pipes to have kernel-reserved slots
->       pipe: Advance tail pointer inside of wait spinlock in pipe_read()
->       pipe: Conditionalise wakeup in pipe_read()
->       pipe: Rearrange sequence in pipe_write() to preallocate slot
->       pipe: Remove redundant wakeup from pipe_write()
->       pipe: Check for ring full inside of the spinlock in pipe_write()
->       pipe: Increase the writer-wakeup threshold to reduce context-switch count
->       pipe: Remove sync on wake_ups
+     Andrew
