@@ -2,185 +2,133 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D4DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDB4C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B242464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:24:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Evrq0hv+"
+	by mail.kernel.org (Postfix) with ESMTP id 4A6822464F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:24:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbfLEKYM (ORCPT
+        id S1729263AbfLEKYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:24:12 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:27324 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726384AbfLEKYM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:24:12 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB5AHC2D030733;
-        Thu, 5 Dec 2019 11:23:55 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=bYJoKqSpjYlvlrkfQCWNl7XM5Zz+YVY0F66tUt9Lv5M=;
- b=Evrq0hv+4EXFBTUY63KjEO9dgcCc8GftpyzGI6h4ZoHwWct3vXnx+L/Awrt+RVB3XpiT
- TDhXFK5Bg5jdnMhoMCYyg4nV4MNIhfj3bL7eypE918AC34fLusy4I/vz//mq6N6R4Tor
- hGR2+zK3RvxKz6khhydUa6hfD6SSNspJufH4MBI556zsnbCkhB0DmKSfNdHhJWhG9SMm
- gvII4gzP8TebM1t5XVgxI+0PLtsbDmp0GNdIcusAjwrwApM4SlwBuo58uJLBImx/ucC3
- nC7lHpkGoYGzdNkYjYzZhpmpegv+5lA66WLHEwvkFOLpFlk7j9AA12Ny3U2TevCKapNE Zw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wkf2y25f0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Dec 2019 11:23:55 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DB6CE10002A;
-        Thu,  5 Dec 2019 11:23:52 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ACFD52B85DB;
-        Thu,  5 Dec 2019 11:23:52 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec
- 2019 11:23:52 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Thu, 5 Dec 2019 11:23:52 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "yakui.zhao@intel.com" <yakui.zhao@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH] drm/modes: remove unused variables
-Thread-Topic: [PATCH] drm/modes: remove unused variables
-Thread-Index: AQHVnt/VSP/oKiq2AUetqzXw/N41gKepveoAgAAI6ICAAY8BAIAAB9aA
-Date:   Thu, 5 Dec 2019 10:23:51 +0000
-Message-ID: <f3a86fe8-6bf8-6767-2ec5-d6fecd81231f@st.com>
-References: <20191119134706.10893-1-benjamin.gaignard@st.com>
- <8056f838-3ebf-26db-f5be-3e78d61aa512@suse.de>
- <f210413f-2d2f-9887-ca3b-a3c48564d9d6@st.com> <87tv6fgkpn.fsf@intel.com>
-In-Reply-To: <87tv6fgkpn.fsf@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <308C22EC813B4843BE2B56928F6C15BB@st.com>
-Content-Transfer-Encoding: base64
+        Thu, 5 Dec 2019 05:24:37 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56154 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726384AbfLEKYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 05:24:36 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3F1DEAE88;
+        Thu,  5 Dec 2019 10:24:34 +0000 (UTC)
+Date:   Thu, 5 Dec 2019 10:24:33 +0000
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Yanhu Cao <gmayyyha@gmail.com>
+Cc:     jlayton@kernel.org, sage@redhat.com, idryomov@gmail.com,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ceph: check set quota operation support before syncing
+ setxattr.
+Message-ID: <20191205102433.GA5758@hermes.olymp>
+References: <20191204031005.2638-1-gmayyyha@gmail.com>
+ <20191204103629.GA22244@hermes.olymp>
+ <CAB9OAC2vzPy=ELYzDRjBvA6m8T8AvwdJugS2NoCczwD1+Xb36Q@mail.gmail.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-05_02:2019-12-04,2019-12-05 signatures=0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAB9OAC2vzPy=ELYzDRjBvA6m8T8AvwdJugS2NoCczwD1+Xb36Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KyBaaGFvIFlha3VpDQoNCk9uIDEyLzUvMTkgMTA6NTUgQU0sIEphbmkgTmlrdWxhIHdyb3RlOg0K
-PiBPbiBXZWQsIDA0IERlYyAyMDE5LCBCZW5qYW1pbiBHQUlHTkFSRCA8YmVuamFtaW4uZ2FpZ25h
-cmRAc3QuY29tPiB3cm90ZToNCj4+IE9uIDEyLzQvMTkgMTA6MzUgQU0sIFRob21hcyBaaW1tZXJt
-YW5uIHdyb3RlOg0KPj4+IEhpDQo+Pj4NCj4+PiBBbSAxOS4xMS4xOSB1bSAxNDo0NyBzY2hyaWVi
-IEJlbmphbWluIEdhaWduYXJkOg0KPj4+PiBXaGVuIGNvbXBpbGluZyB3aXRoIFc9MSBmZXcgd2Fy
-bmluZ3MgYWJvdXQgdW51c2VkIHZhcmlhYmxlcyBzaG93IHVwLg0KPj4+PiBUaGlzIHBhdGNoIHJl
-bW92ZXMgYWxsIHRoZSBpbnZvbHZlZCB2YXJpYWJsZXMuDQo+Pj4+DQo+Pj4+IFNpZ25lZC1vZmYt
-Ynk6IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQo+Pj4+IC0t
-LQ0KPj4+PiAgICBkcml2ZXJzL2dwdS9kcm0vZHJtX21vZGVzLmMgfCAyMiArKystLS0tLS0tLS0t
-LS0tLS0tLS0tDQo+Pj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDE5IGRl
-bGV0aW9ucygtKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2RybV9t
-b2Rlcy5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9tb2Rlcy5jDQo+Pj4+IGluZGV4IDg4MjMyNjk4
-ZDdhMC4uYWNhOTAxYWZmMDQyIDEwMDY0NA0KPj4+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vZHJt
-X21vZGVzLmMNCj4+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2RybV9tb2Rlcy5jDQo+Pj4+IEBA
-IC0yMzMsNyArMjMzLDcgQEAgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKmRybV9jdnRfbW9kZShz
-dHJ1Y3QgZHJtX2RldmljZSAqZGV2LCBpbnQgaGRpc3BsYXksDQo+Pj4+ICAgIAkJLyogMykgTm9t
-aW5hbCBIU3luYyB3aWR0aCAoJSBvZiBsaW5lIHBlcmlvZCkgLSBkZWZhdWx0IDggKi8NCj4+Pj4g
-ICAgI2RlZmluZSBDVlRfSFNZTkNfUEVSQ0VOVEFHRQk4DQo+Pj4+ICAgIAkJdW5zaWduZWQgaW50
-IGhibGFua19wZXJjZW50YWdlOw0KPj4+PiAtCQlpbnQgdnN5bmNhbmRiYWNrX3BvcmNoLCB2YmFj
-a19wb3JjaCwgaGJsYW5rOw0KPj4+PiArCQlpbnQgdnN5bmNhbmRiYWNrX3BvcmNoLCBoYmxhbms7
-DQo+Pj4+ICAgIA0KPj4+PiAgICAJCS8qIGVzdGltYXRlZCB0aGUgaG9yaXpvbnRhbCBwZXJpb2Qg
-Ki8NCj4+Pj4gICAgCQl0bXAxID0gSFZfRkFDVE9SICogMTAwMDAwMCAgLQ0KPj4+PiBAQCAtMjQ5
-LDcgKzI0OSw2IEBAIHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICpkcm1fY3Z0X21vZGUoc3RydWN0
-IGRybV9kZXZpY2UgKmRldiwgaW50IGhkaXNwbGF5LA0KPj4+PiAgICAJCWVsc2UNCj4+Pj4gICAg
-CQkJdnN5bmNhbmRiYWNrX3BvcmNoID0gdG1wMTsNCj4+Pj4gICAgCQkvKiAxMC4gRmluZCBudW1i
-ZXIgb2YgbGluZXMgaW4gYmFjayBwb3JjaCAqLw0KPj4+PiAtCQl2YmFja19wb3JjaCA9IHZzeW5j
-YW5kYmFja19wb3JjaCAtIHZzeW5jOw0KPj4+PiAgICAJCWRybV9tb2RlLT52dG90YWwgPSB2ZGlz
-cGxheV9ybmQgKyAyICogdm1hcmdpbiArDQo+Pj4+ICAgIAkJCQl2c3luY2FuZGJhY2tfcG9yY2gg
-KyBDVlRfTUlOX1ZfUE9SQ0g7DQo+Pj4+ICAgIAkJLyogNSkgRGVmaW5pdGlvbiBvZiBIb3Jpem9u
-dGFsIGJsYW5raW5nIHRpbWUgbGltaXRhdGlvbiAqLw0KPj4+PiBAQCAtMzg2LDkgKzM4NSw4IEBA
-IGRybV9ndGZfbW9kZV9jb21wbGV4KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYsIGludCBoZGlzcGxh
-eSwgaW50IHZkaXNwbGF5LA0KPj4+PiAgICAJaW50IHRvcF9tYXJnaW4sIGJvdHRvbV9tYXJnaW47
-DQo+Pj4+ICAgIAlpbnQgaW50ZXJsYWNlOw0KPj4+PiAgICAJdW5zaWduZWQgaW50IGhmcmVxX2Vz
-dDsNCj4+Pj4gLQlpbnQgdnN5bmNfcGx1c19icCwgdmJhY2tfcG9yY2g7DQo+Pj4+IC0JdW5zaWdu
-ZWQgaW50IHZ0b3RhbF9saW5lcywgdmZpZWxkcmF0ZV9lc3QsIGhwZXJpb2Q7DQo+Pj4+IC0JdW5z
-aWduZWQgaW50IHZmaWVsZF9yYXRlLCB2ZnJhbWVfcmF0ZTsNCj4+Pj4gKwlpbnQgdnN5bmNfcGx1
-c19icDsNCj4+Pj4gKwl1bnNpZ25lZCBpbnQgdnRvdGFsX2xpbmVzOw0KPj4+PiAgICAJaW50IGxl
-ZnRfbWFyZ2luLCByaWdodF9tYXJnaW47DQo+Pj4+ICAgIAl1bnNpZ25lZCBpbnQgdG90YWxfYWN0
-aXZlX3BpeGVscywgaWRlYWxfZHV0eV9jeWNsZTsNCj4+Pj4gICAgCXVuc2lnbmVkIGludCBoYmxh
-bmssIHRvdGFsX3BpeGVscywgcGl4ZWxfZnJlcTsNCj4+Pj4gQEAgLTQ1MSwyMyArNDQ5LDkgQEAg
-ZHJtX2d0Zl9tb2RlX2NvbXBsZXgoc3RydWN0IGRybV9kZXZpY2UgKmRldiwgaW50IGhkaXNwbGF5
-LCBpbnQgdmRpc3BsYXksDQo+Pj4+ICAgIAkvKiBbViBTWU5DK0JQXSA9IFJJTlQoKFtNSU4gVlNZ
-TkMrQlBdICogaGZyZXFfZXN0IC8gMTAwMDAwMCkpICovDQo+Pj4+ICAgIAl2c3luY19wbHVzX2Jw
-ID0gTUlOX1ZTWU5DX1BMVVNfQlAgKiBoZnJlcV9lc3QgLyAxMDAwOw0KPj4+PiAgICAJdnN5bmNf
-cGx1c19icCA9ICh2c3luY19wbHVzX2JwICsgNTAwKSAvIDEwMDA7DQo+Pj4+IC0JLyogIDkuIEZp
-bmQgdGhlIG51bWJlciBvZiBsaW5lcyBpbiBWIGJhY2sgcG9yY2ggYWxvbmU6ICovDQo+Pj4+IC0J
-dmJhY2tfcG9yY2ggPSB2c3luY19wbHVzX2JwIC0gVl9TWU5DX1JRRDsNCj4+Pj4gICAgCS8qICAx
-MC4gRmluZCB0aGUgdG90YWwgbnVtYmVyIG9mIGxpbmVzIGluIFZlcnRpY2FsIGZpZWxkIHBlcmlv
-ZDogKi8NCj4+Pj4gICAgCXZ0b3RhbF9saW5lcyA9IHZkaXNwbGF5X3JuZCArIHRvcF9tYXJnaW4g
-KyBib3R0b21fbWFyZ2luICsNCj4+Pj4gICAgCQkJdnN5bmNfcGx1c19icCArIEdURl9NSU5fVl9Q
-T1JDSDsNCj4+Pj4gLQkvKiAgMTEuIEVzdGltYXRlIHRoZSBWZXJ0aWNhbCBmaWVsZCBmcmVxdWVu
-Y3k6ICovDQo+Pj4+IC0JdmZpZWxkcmF0ZV9lc3QgPSBoZnJlcV9lc3QgLyB2dG90YWxfbGluZXM7
-DQo+Pj4+IC0JLyogIDEyLiBGaW5kIHRoZSBhY3R1YWwgaG9yaXpvbnRhbCBwZXJpb2Q6ICovDQo+
-Pj4+IC0JaHBlcmlvZCA9IDEwMDAwMDAgLyAodmZpZWxkcmF0ZV9ycWQgKiB2dG90YWxfbGluZXMp
-Ow0KPj4+PiAtDQo+Pj4+IC0JLyogIDEzLiBGaW5kIHRoZSBhY3R1YWwgVmVydGljYWwgZmllbGQg
-ZnJlcXVlbmN5OiAqLw0KPj4+PiAtCXZmaWVsZF9yYXRlID0gaGZyZXFfZXN0IC8gdnRvdGFsX2xp
-bmVzOw0KPj4+PiAtCS8qICAxNC4gRmluZCB0aGUgVmVydGljYWwgZnJhbWUgZnJlcXVlbmN5OiAq
-Lw0KPj4+PiAtCWlmIChpbnRlcmxhY2VkKQ0KPj4+PiAtCQl2ZnJhbWVfcmF0ZSA9IHZmaWVsZF9y
-YXRlIC8gMjsNCj4+Pj4gLQllbHNlDQo+Pj4+IC0JCXZmcmFtZV9yYXRlID0gdmZpZWxkX3JhdGU7
-DQo+Pj4gVGhlIGFtb3VudCBvZiB1bnVzZWQgY29kZSBpcyBxdWl0ZSBsYXJnZSwgd2hpY2ggbWFr
-ZXMgbWUgd29uZGVyIGlmDQo+Pj4gdGhlcmUncyBzb21ldGhpbmcgbWlzc2luZyBiZWxvdyB3aGVy
-ZSB0aGVzZSB2YXJpYWJsZXMgYXJlIHN1cHBvc2VkIHRvIGJlDQo+Pj4gdXNlZC4NCj4+Pg0KPj4+
-IElmIHRoZXNlIHZhcmlhYmxlcyBjYW4gYmUgcmVtb3ZlZCwgY29tbWVudHMgc2hvdWxkIG1lbnRp
-b24gdGhhdCBzdGVwcyA5DQo+Pj4gYW5kIDExIHRvIDE0IGFyZSBiZWluZyBsZWZ0IG91dC4gQWZ0
-ZXIgYWxsLCB0aGUgZnVuY3Rpb24gaXMgZmFpcmx5DQo+Pj4gZXhwbGljaXQgYWJvdXQgaW1wbGVt
-ZW50aW5nIHRoZSBHVEYgYWxnb3JpdGhtIHN0ZXAgYnkgc3RlcC4NCj4+Pg0KPj4+IEJlc3QgcmVn
-YXJkcw0KPj4+IFRob21hcw0KPj4gSWYgdGhlIGdvYWwgaXMgdG8ga2VlcCBhbGwgdGhlIHN0ZXBz
-IHRoZW4gSSBjb3VsZCBwcmVmaXggYWxsIHByb2JsZW1hdGljDQo+PiB2YXJpYWJsZXMgd2l0aCBf
-X21heWJlX3VudXNlZCBtYWNyby4NCj4gVGhlIGVmZmVjdCBpcyB0aGUgc2FtZTsgaXQgaGlkZXMg
-YSBwb3RlbnRpYWwgYnVnIHRoYXQgc2hvdWxkIGJlIGFuYWx5emVkDQo+IGFuZCBmaXhlZC4gSWYg
-eW91IGhhdmUgdGhlIHRpbWUsIHBsZWFzZSBsb29rIGF0IHRoZSBjb2RlIGFuZCBmaWd1cmUgb3V0
-DQo+IHdoYXQgaXQncyBzdXBwb3NlZCB0byBkbywgYW5kIHdoeSBpc24ndCBpdCB1c2luZyB0aGUg
-aW5mb3JtYXRpb24uIExvb2sNCj4gYXQgZ2l0IGJsYW1lIGFuZCBsb2csIHdhcyBpdCBhbHdheXMg
-c28sIG9yIGRpZCBzb21ldGhpbmcgY2hhbmdlPw0KPg0KPiBUaGUgd2FybmluZ3MgYXJlIGFib3V0
-IHBvdGVudGlhbCBidWdzLiBUaGUgb2JqZWN0aXZlIG9yIGVuZCBnb2FsIGlzIHRvDQo+IGZpeCB0
-aGUgYnVncywgbm90IHRvIHNpbGVuY2UgdGhlIHdhcm5pbmdzLg0KVGhpcyBjb2RlIGhhdmVuJ3Qg
-Y2hhbmdlIHNpbmNlIGl0IGhhcyBiZWVuIGFkZGVkIGJ5IGNvbW1pdDoNCjI2YmJkYWRhZDM1NmUg
-KCJkcm0vbW9kZTogYWRkIHRoZSBHVEYgYWxnb3JpdGhtIGluIGtlcm5lbCBzcGFjZSIpDQpUaGUg
-dmFyaWFibGVzIHRoYXQgSSdtIHJlbW92aW5nIGFyZSBub3QgdXNlZCBhbnl3aGVyZSBlbHNlLg0K
-VGhlIGFsZ29yaXRobSBpcyBjb3B5IGZyb20geHNlcnZlci9ody94ZnJlZTg2L21vZGVzL3hmODZn
-dGYuYyB3aGVyZQ0KdmZyYW1lX3JhdGUgYW5kIHZfYmFja19wb3JjaCBhcmUgdXNlZCB3aXRoICh2
-b2lkKSBjYWxsczoNCih2b2lkKSB2X2JhY2tfcG9yY2g7DQoodm9pZCkgdl9mcmFtZV9yYXRlOw0K
-SXQgaXMgYW5vdGhlciB3YXkgYXZvaWQgdGhlIHdhcm5pbmdzLg0KTm90ZSB0aGF0IGlmIHlvdSBz
-dGFydCByZW1vdmluZyB2X2ZyYW1lX3JhdGUgdGhlbiB2ZmllbGRfcmF0ZSBiZWNvbWVzIA0KdW51
-c2VkLCBldGMuLi4NCg0KQmVuamFtaW4NCg0KPg0KPiBCUiwNCj4gSmFuaS4NCj4NCj4NCj4+IEJl
-bmphbWluDQo+Pg0KPj4+PiAgICAJLyogIDE1LiBGaW5kIG51bWJlciBvZiBwaXhlbHMgaW4gbGVm
-dCBtYXJnaW46ICovDQo+Pj4+ICAgIAlpZiAobWFyZ2lucykNCj4+Pj4gICAgCQlsZWZ0X21hcmdp
-biA9IChoZGlzcGxheV9ybmQgKiBHVEZfTUFSR0lOX1BFUkNFTlRBR0UgKyA1MDApIC8NCj4+Pj4N
-Cj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+PiBk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0DQo+PiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-DQo+PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbA==
+On Thu, Dec 05, 2019 at 10:42:46AM +0800, Yanhu Cao wrote:
+> On Wed, Dec 4, 2019 at 6:36 PM Luis Henriques <lhenriques@suse.com> wrote:
+> >
+> > On Wed, Dec 04, 2019 at 11:10:05AM +0800, Yanhu Cao wrote:
+> > > Environment
+> > > -----------
+> > > ceph version: 12.2.*
+> > > kernel version: 4.19+
+> > >
+> > > setfattr quota operation actually sends op to MDS, and settings
+> > > effective. but kclient outputs 'Operation not supported'. This may confuse
+> > > users' understandings.
+> >
+> > What exactly do you mean by "settings effective"?  There have been
+> > changes in the way CephFS quotas work in mimic and, if you're using a
+> > Luminous cluster (12.2.*) the kernel client effectively does *not*
+> > support quotas -- you'll be able to exceed the quotas you've tried to
+> > set because the client won't be checking the limits.  Thus, -EOPNOTSUPP
+> > seems appropriate for this scenario.
+> >
+> > I guess that the confusing part is that the xattr is actually set in
+> > that case, but the kernel client won't be able to use it to validate
+> > quotas in the filesystem tree because realms won't be created.
+> >
+> Yes. we use kcephfs+nfs for CentOS6.*, it does not support ceph-fuse(12.2.*).
+> The operating system of other applications is CentOS7.*, which uses
+> ceph-fuse and can get quota settings set by kclient.
+
+Ok, so if I understand correctly, you're setting quotas with the kernel
+client but actually using ceph-fuse on CentOS7 (I'm assuming a Luminous
+cluster).  This should work fine for the fuse-client, but please note
+that the kernel client will not respect quotas.
+
+Anyway, the ideal solution for this would be for the kernel to not set
+the xattr if the cluster doesn't support the new quotas format
+introduced in Mimic.  Unfortunately, the only way we have to find that
+out is to set the xattr and see if we get a snap_realm. 
+
+Cheers,
+--
+Luís
+
+> 
+> Thanks.
+> BRs
+> 
+> > Cheers,
+> > --
+> > Luís
+> > >
+> > > If the kernel version and ceph version are not compatible, should check
+> > > quota operations are supported first, then do sync_setxattr.
+> > >
+> > > reference: https://docs.ceph.com/docs/master/cephfs/quota/
+> > >
+> > > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+> > > ---
+> > >  fs/ceph/xattr.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+> > > index cb18ee637cb7..189aace75186 100644
+> > > --- a/fs/ceph/xattr.c
+> > > +++ b/fs/ceph/xattr.c
+> > > @@ -1132,8 +1132,8 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+> > >                                   "during filling trace\n", inode);
+> > >               err = -EBUSY;
+> > >       } else {
+> > > -             err = ceph_sync_setxattr(inode, name, value, size, flags);
+> > > -             if (err >= 0 && check_realm) {
+> > > +             err = 0;
+> > > +             if (check_realm) {
+> > >                       /* check if snaprealm was created for quota inode */
+> > >                       spin_lock(&ci->i_ceph_lock);
+> > >                       if ((ci->i_max_files || ci->i_max_bytes) &&
+> > > @@ -1142,6 +1142,8 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+> > >                               err = -EOPNOTSUPP;
+> > >                       spin_unlock(&ci->i_ceph_lock);
+> > >               }
+> > > +             if (err == 0)
+> > > +                     err = ceph_sync_setxattr(inode, name, value, size, flags);
+> > >       }
+> > >  out:
+> > >       ceph_free_cap_flush(prealloc_cf);
+> > > --
+> > > 2.21.0 (Apple Git-122.2)
+> > >
