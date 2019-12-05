@@ -2,530 +2,198 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9956C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328E6C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 966D52464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC36C20659
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:36:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="md40lg4+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cFs1DKxx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729279AbfLEJfh (ORCPT
+        id S1729093AbfLEJgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:35:37 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41240 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729249AbfLEJff (ORCPT
+        Thu, 5 Dec 2019 04:36:35 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44611 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbfLEJge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:35:35 -0500
-Received: by mail-lf1-f66.google.com with SMTP id m30so1943113lfp.8
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 01:35:32 -0800 (PST)
+        Thu, 5 Dec 2019 04:36:34 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q10so2593806wrm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 01:36:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xlBRhTw/jtQIcsHp5WmEd30ut2aD0xyE9yaT+wUTc3I=;
-        b=md40lg4+8ino9LXdrRZD9ROuX9NvQbPOGvNZ/eVcceTDIhtdLWHy9ECt5z1dQAD4MM
-         DdH87tABqmZ3T0s9VvKZuw2d48mq5SaZVrPzQ48tNJ1OpKH6wXWvLIPK2FThEc7d7NnG
-         df2dTl4M0F5i6I7nAScI9mhQo2yFc8PapwURaegnN4Eq8iHNfJqzHsFE+pExVO0BQzeF
-         3qtDe7gefJwITWPwQKgDCOyGtrXiPMs4P0FfR/glCJp/gubzKE7/YksaEdjJv1HQDO6M
-         w5jdH6pM9zDLm/aB8bHU9rUW2s1DqemW8bbBVh9gnaamzATpoaEPrIeTIhA6GFEGfdn7
-         EaDw==
+         :cc;
+        bh=yDhpzGph/Sl3F5yiAxtDx7OozplQyiOLtDQYn1Ymcc4=;
+        b=cFs1DKxxrz3wBHesk8ew2n1s9xKJYKOoB799VoJIVv7vULGEjf8uPBSiTsC/uIEN0b
+         rGnDFF9fgPyFOi/HhbgkzTxaYPn89KCBGiQrMptVXesZLRn6BXw//WBBFa0NqxTTCRQ+
+         RYm7Bph9RQq5Vne74F/S8/agrOXEavnZbA/yzX/HKP0sZsASJ2kebR4VFGv4iVKJZaKY
+         B2MiD7qkcJeYtcY1CbGtrCvRNRRDzU81NWP49VI9Bh2UraywJ8vdE3cRdRwcs4CSyo8g
+         B7YRwjFxN/n21rzlbyVkyiiW1EQ1AHPhxHem+7IJD9doSzgLWCydSd1dVtnhKPTocYXg
+         BzLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xlBRhTw/jtQIcsHp5WmEd30ut2aD0xyE9yaT+wUTc3I=;
-        b=nqUBtvLCmDGlDybI+njjz27/VTR9HM/VTLhXYcVF35JQ3eg+HmSGQvndBeTH3qqweL
-         jtBwYY3hRfOd85tKuME4JLLkx9Qx3uI6X3tpKuen1m22MKbt6D7l4YacOnYqAc9Viw3s
-         FcRRkb3gCJgS5nsyv8bdpAgBWWLR9HpgyT8F1PgnGPI3LVSck+gqUCziAhjHO6FaNLDT
-         DnCv5E+xVOWce6+B8iryG/uVAwm/oUzeBsgKzO5c2JJMVJkB/TEn2DEBAsMhCQjDuBD3
-         LDKkq746fbBrX5/ig1SR+1vtsZIYJmpWZz1c1gpJzVTXS1g5rU76YUWTzFhbNkKoIXjo
-         5xNw==
-X-Gm-Message-State: APjAAAUtiM4I7XC8I7hkuFd7kf+kmcSv8bfXTC/PTLHzHYw7DfqQPj/z
-        Yxr8uDp5STMww4SlRmxYgoRcPDUkZfOSjyyTilYtWw==
-X-Google-Smtp-Source: APXvYqxrfnFijgMewMwGGAyu6M2ppVO81Ru7vemD6fccdEP1qKQwpHm3knUpDelBbZnkhe5FhD+wd3Bf8X1vkMcSuF8=
-X-Received: by 2002:ac2:4244:: with SMTP id m4mr4610896lfl.85.1575538531007;
- Thu, 05 Dec 2019 01:35:31 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=yDhpzGph/Sl3F5yiAxtDx7OozplQyiOLtDQYn1Ymcc4=;
+        b=ZA8znjSxz9/jW2Ja25o/QMELgywZ6Wit/rIxk7r7f8nXi+oGZl6ONxhlv3BSY4EfLK
+         t2U3UOgu8xOFq+6V8oW0R0Io3/lPBh4ON6/+nsaaBhmdGmbZtkksowGpYeAhQlo1ipqy
+         xXwYUqvreaI8cJqQ+szV9soyN2DaYuLxu61RD5rvBY/eASrBKAGxVBY3G+GZPMPLrGu+
+         NMAXRIdXX1Oe7R76+qeLP3ViQ1Ssbl4FJV1CPkIglRacvPJiyXRDlY3Fhx6So+uccU6Q
+         jJBKc/aegSwSouhuDctOv/080GvlNt6x/ZDAYs5NGHd73t8Y+x7cx22jriOfVlb2e2gj
+         md3w==
+X-Gm-Message-State: APjAAAW3JDhhU+ryTTGrPYexQxTmqKiCXG3K5a/WWXo8Vec6NjS/PHEq
+        mw7HbVETshLenLf6xrXHBXAdggp0Ej5S02vvFiwD055S6cBZbJpd
+X-Google-Smtp-Source: APXvYqzV4yD5evgBaMe8lq6m+lD5/SimV/mRxPFn5FYoNCSYAHmao71QnHJ9x2c2DpakxxM1i1+QHz1VLBVG3mRVAi4=
+X-Received: by 2002:a5d:6652:: with SMTP id f18mr9267283wrw.246.1575538592021;
+ Thu, 05 Dec 2019 01:36:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20191023001206.15741-1-rajatja@google.com> <20191104194147.185642-1-rajatja@google.com>
- <20191104194147.185642-3-rajatja@google.com> <87r222wpvv.fsf@intel.com>
-In-Reply-To: <87r222wpvv.fsf@intel.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 5 Dec 2019 01:34:53 -0800
-Message-ID: <CACK8Z6EU3UvPZUqfPhNQ0x5hdbT+hJnRJ2J0f_WF3yr9+mTRog@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] drm/i915: Add support for integrated privacy screens
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
+References: <5de7d155.1c69fb81.c06f8.3583@mx.google.com> <377fa169-7ae5-479f-023c-e282d8c19f3a@collabora.com>
+In-Reply-To: <377fa169-7ae5-479f-023c-e282d8c19f3a@collabora.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 5 Dec 2019 09:36:28 +0000
+Message-ID: <CAKv+Gu_LY29hJ9c+myomeappoOgJYHdNYoWOu=KyfH3zCcTkLw@mail.gmail.com>
+Subject: Re: ardb/for-kernelci bisection: boot on rk3288-rock2-square
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, mgalka@collabora.com,
+        Mark Brown <broonie@kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        tomeu.vizoso@collabora.com, Kevin Hilman <khilman@baylibre.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx@lists.freedesktop.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mat King <mathewk@google.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        Sean Paul <seanpaul@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rajat Jain <rajatxjain@gmail.com>
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 7:04 AM Jani Nikula <jani.nikula@linux.intel.com> w=
-rote:
->
-> On Mon, 04 Nov 2019, Rajat Jain <rajatja@google.com> wrote:
-> > Certain laptops now come with panels that have integrated privacy
-> > screens on them. This patch adds support for such panels by adding
-> > a privacy-screen property to the intel_connector for the panel, that
-> > the userspace can then use to control and check the status.
-> >
-> > Identifying the presence of privacy screen, and controlling it, is done
-> > via ACPI _DSM methods.
-> >
-> > Currently, this is done only for the Intel display ports. But in future=
-,
-> > this can be done for any other ports if the hardware becomes available
-> > (e.g. external monitors supporting integrated privacy screens?).
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > Change-Id: Ic9ff07fc4a50797d2d0dfb919f11aa0821a4b548
-> > ---
-> > v2: Formed by splitting the original patch into multiple patches.
-> >     - All code has been moved into i915 now.
-> >     - Privacy screen is a i915 property
-> >     - Have a local state variable to store the prvacy screen. Don't rea=
-d
-> >       it from hardware.
-> >
-> >  drivers/gpu/drm/i915/Makefile                 |  3 +-
-> >  drivers/gpu/drm/i915/display/intel_atomic.c   | 13 +++-
-> >  .../gpu/drm/i915/display/intel_connector.c    | 35 ++++++++++
-> >  .../gpu/drm/i915/display/intel_connector.h    |  1 +
-> >  .../drm/i915/display/intel_display_types.h    |  4 ++
-> >  drivers/gpu/drm/i915/display/intel_dp.c       |  5 ++
-> >  .../drm/i915/display/intel_privacy_screen.c   | 70 +++++++++++++++++++
-> >  .../drm/i915/display/intel_privacy_screen.h   | 25 +++++++
-> >  include/uapi/drm/i915_drm.h                   | 14 ++++
-> >  9 files changed, 166 insertions(+), 4 deletions(-)
-> >  create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.c
-> >  create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.h
-> >
-> > diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makef=
-ile
-> > index 2587ea834f06..3589ebcf27bc 100644
-> > --- a/drivers/gpu/drm/i915/Makefile
-> > +++ b/drivers/gpu/drm/i915/Makefile
-> > @@ -185,7 +185,8 @@ i915-y +=3D \
-> >       display/intel_tc.o
-> >  i915-$(CONFIG_ACPI) +=3D \
-> >       display/intel_acpi.o \
-> > -     display/intel_opregion.o
-> > +     display/intel_opregion.o \
-> > +     display/intel_privacy_screen.o
->
-> Mmmh, wonder if there'll be non-ACPI based privacy screens. I guess we
-> can sort this out then. *shrug*
->
-> >  i915-$(CONFIG_DRM_FBDEV_EMULATION) +=3D \
-> >       display/intel_fbdev.o
-> >
-> > diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/=
-drm/i915/display/intel_atomic.c
-> > index d3fb75bb9eb1..378772d3449c 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_atomic.c
-> > +++ b/drivers/gpu/drm/i915/display/intel_atomic.c
-> > @@ -37,6 +37,7 @@
-> >  #include "intel_atomic.h"
-> >  #include "intel_display_types.h"
-> >  #include "intel_hdcp.h"
-> > +#include "intel_privacy_screen.h"
-> >  #include "intel_sprite.h"
-> >
-> >  /**
-> > @@ -57,11 +58,14 @@ int intel_digital_connector_atomic_get_property(str=
-uct drm_connector *connector,
-> >       struct drm_i915_private *dev_priv =3D to_i915(dev);
-> >       struct intel_digital_connector_state *intel_conn_state =3D
-> >               to_intel_digital_connector_state(state);
-> > +     struct intel_connector *intel_connector =3D to_intel_connector(co=
-nnector);
-> >
-> >       if (property =3D=3D dev_priv->force_audio_property)
-> >               *val =3D intel_conn_state->force_audio;
-> >       else if (property =3D=3D dev_priv->broadcast_rgb_property)
-> >               *val =3D intel_conn_state->broadcast_rgb;
-> > +     else if (property =3D=3D intel_connector->privacy_screen_property=
-)
-> > +             *val =3D intel_conn_state->privacy_screen_status;
-> >       else {
-> >               DRM_DEBUG_ATOMIC("Unknown property [PROP:%d:%s]\n",
-> >                                property->base.id, property->name);
-> > @@ -89,15 +93,18 @@ int intel_digital_connector_atomic_set_property(str=
-uct drm_connector *connector,
-> >       struct drm_i915_private *dev_priv =3D to_i915(dev);
-> >       struct intel_digital_connector_state *intel_conn_state =3D
-> >               to_intel_digital_connector_state(state);
-> > +     struct intel_connector *intel_connector =3D to_intel_connector(co=
-nnector);
-> >
-> >       if (property =3D=3D dev_priv->force_audio_property) {
-> >               intel_conn_state->force_audio =3D val;
-> >               return 0;
-> > -     }
-> > -
-> > -     if (property =3D=3D dev_priv->broadcast_rgb_property) {
-> > +     } else if (property =3D=3D dev_priv->broadcast_rgb_property) {
-> >               intel_conn_state->broadcast_rgb =3D val;
-> >               return 0;
-> > +     } else if (property =3D=3D intel_connector->privacy_screen_proper=
-ty) {
-> > +             intel_privacy_screen_set_val(intel_connector, val);
-> > +             intel_conn_state->privacy_screen_status =3D val;
-> > +             return 0;
-> >       }
-> >
-> >       DRM_DEBUG_ATOMIC("Unknown property [PROP:%d:%s]\n",
-> > diff --git a/drivers/gpu/drm/i915/display/intel_connector.c b/drivers/g=
-pu/drm/i915/display/intel_connector.c
-> > index 308ec63207ee..3ccbf52aedf9 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_connector.c
-> > +++ b/drivers/gpu/drm/i915/display/intel_connector.c
-> > @@ -281,3 +281,38 @@ intel_attach_colorspace_property(struct drm_connec=
-tor *connector)
-> >               drm_object_attach_property(&connector->base,
-> >                                          connector->colorspace_property=
-, 0);
-> >  }
-> > +
-> > +static const struct drm_prop_enum_list privacy_screen_enum[] =3D {
-> > +     { PRIVACY_SCREEN_DISABLED, "Disabled" },
-> > +     { PRIVACY_SCREEN_ENABLED, "Enabled" },
-> > +};
-> > +
-> > +/**
-> > + * intel_attach_privacy_screen_property -
-> > + *     create and attach the connecter's privacy-screen property. *
-> > + * @connector: connector for which to init the privacy-screen property
-> > + *
-> > + * This function creates and attaches the "privacy-screen" property to=
- the
-> > + * connector. Initial state of privacy-screen is set to disabled.
-> > + */
-> > +void
-> > +intel_attach_privacy_screen_property(struct drm_connector *connector)
-> > +{
-> > +     struct intel_connector *intel_connector =3D to_intel_connector(co=
-nnector);
-> > +     struct drm_property *prop;
-> > +
-> > +     if (!intel_connector->privacy_screen_property) {
-> > +             prop =3D drm_property_create_enum(connector->dev,
-> > +                                             DRM_MODE_PROP_ENUM,
-> > +                                             "privacy-screen",
-> > +                                             privacy_screen_enum,
-> > +                                         ARRAY_SIZE(privacy_screen_enu=
-m));
-> > +             if (!prop)
-> > +                     return;
-> > +
-> > +             intel_connector->privacy_screen_property =3D prop;
-> > +     }
-> > +
-> > +     drm_object_attach_property(&connector->base, prop,
-> > +                                PRIVACY_SCREEN_DISABLED);
-> > +}
->
-> I think this should be a drm core level property in drm_connector.[ch]
-> so that *all* drivers would use the same thing for privacy screens. Not
-> i915 specific.
->
-> I think this is the biggest issue in the patch series.
+(+ Eric)
 
-I actually would be happy to make it a drm_connector property, like I
-had in my original patch series. I changed it to i915 specific because
-it seemed to me based on the comments that the general sentiment is
-that anything to do with acpi should be in i915.
-
-Note that the privacy screen property essentially needs an ACPI handle
-to work on, so if I were to move the property into drm_connector, I'd
-likely rename the intel_privacy_screen* code to dem_privacy_screen*
-code, and it'll still operate on an ACPI handle (stored in
-drm_connector structure). The i915's job will then be to lookup that
-ACPI handle (because lookup requires display index) and populate it in
-drm_connector. Does this sound OK?
-
+On Wed, 4 Dec 2019 at 17:17, Guillaume Tucker
+<guillaume.tucker@collabora.com> wrote:
 >
-> > diff --git a/drivers/gpu/drm/i915/display/intel_connector.h b/drivers/g=
-pu/drm/i915/display/intel_connector.h
-> > index 93a7375c8196..61005f37a338 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_connector.h
-> > +++ b/drivers/gpu/drm/i915/display/intel_connector.h
-> > @@ -31,5 +31,6 @@ void intel_attach_force_audio_property(struct drm_con=
-nector *connector);
-> >  void intel_attach_broadcast_rgb_property(struct drm_connector *connect=
-or);
-> >  void intel_attach_aspect_ratio_property(struct drm_connector *connecto=
-r);
-> >  void intel_attach_colorspace_property(struct drm_connector *connector)=
-;
-> > +void intel_attach_privacy_screen_property(struct drm_connector *connec=
-tor);
+> On 04/12/2019 15:31, kernelci.org bot wrote:
+> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> > * This automated bisection report was sent to you on the basis  *
+> > * that you may be involved with the breaking commit it has      *
+> > * found.  No manual investigation has been done to verify it,   *
+> > * and the root cause of the problem may be somewhere else.      *
+> > *                                                               *
+> > * If you do send a fix, please include this trailer:            *
+> > *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> > *                                                               *
+> > * Hope this helps!                                              *
+> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 > >
-> >  #endif /* __INTEL_CONNECTOR_H__ */
-> > diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drive=
-rs/gpu/drm/i915/display/intel_display_types.h
-> > index c2706afc069b..83b8c98049a7 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_display_types.h
-> > +++ b/drivers/gpu/drm/i915/display/intel_display_types.h
-> > @@ -426,6 +426,9 @@ struct intel_connector {
-> >       struct work_struct modeset_retry_work;
+> > ardb/for-kernelci bisection: boot on rk3288-rock2-square
 > >
-> >       struct intel_hdcp hdcp;
-> > +
-> > +     /* Optional "privacy-screen" property for the connector panel */
-> > +     struct drm_property *privacy_screen_property;
-> >  };
+> > Summary:
+> >   Start:      16839329da69 enable extra tests by default
+> >   Details:    https://kernelci.org/boot/id/5de79104990bc03e5a960f0b
+> >   Plain log:  https://storage.kernelci.org//ardb/for-kernelci/v5.4-9340-g16839329da69/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/boot-rk3288-rock2-square.txt
+> >   HTML log:   https://storage.kernelci.org//ardb/for-kernelci/v5.4-9340-g16839329da69/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/boot-rk3288-rock2-square.html
+> >   Result:     16839329da69 enable extra tests by default
 > >
-> >  struct intel_digital_connector_state {
-> > @@ -433,6 +436,7 @@ struct intel_digital_connector_state {
+> > Checks:
+> >   revert:     PASS
+> >   verify:     PASS
 > >
-> >       enum hdmi_force_audio force_audio;
-> >       int broadcast_rgb;
-> > +     enum intel_privacy_screen_status privacy_screen_status;
-> >  };
+> > Parameters:
+> >   Tree:       ardb
+> >   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git
+> >   Branch:     for-kernelci
+> >   Target:     rk3288-rock2-square
+> >   CPU arch:   arm
+> >   Lab:        lab-collabora
+> >   Compiler:   gcc-8
+> >   Config:     multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y
+> >   Test suite: boot
 > >
-> >  #define to_intel_digital_connector_state(x) container_of(x, struct int=
-el_digital_connector_state, base)
-> > diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/=
-i915/display/intel_dp.c
-> > index 4fac408a4299..1963e92404ba 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> > +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> > @@ -62,6 +62,7 @@
-> >  #include "intel_lspcon.h"
-> >  #include "intel_lvds.h"
-> >  #include "intel_panel.h"
-> > +#include "intel_privacy_screen.h"
-> >  #include "intel_psr.h"
-> >  #include "intel_sideband.h"
-> >  #include "intel_tc.h"
-> > @@ -6358,6 +6359,10 @@ intel_dp_add_properties(struct intel_dp *intel_d=
-p, struct drm_connector *connect
+> > Breaking commit found:
 > >
-> >               /* Lookup the ACPI node corresponding to the connector */
-> >               intel_connector_lookup_acpi_node(intel_connector);
-> > +
-> > +             /* Check for integrated Privacy screen support */
-> > +             if (intel_privacy_screen_present(intel_connector))
-> > +                     intel_attach_privacy_screen_property(connector);
-> >       }
-> >  }
+> > -------------------------------------------------------------------------------
+> > commit 16839329da69263e7360f3819bae01bcf4b220ec
+> > Author: Ard Biesheuvel <ardb@kernel.org>
+> > Date:   Tue Dec 3 12:29:31 2019 +0000
 > >
-> > diff --git a/drivers/gpu/drm/i915/display/intel_privacy_screen.c b/driv=
-ers/gpu/drm/i915/display/intel_privacy_screen.c
-> > new file mode 100644
-> > index 000000000000..4c422e38c51a
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/i915/display/intel_privacy_screen.c
-> > @@ -0,0 +1,70 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> >     enable extra tests by default
+> >
+> > diff --git a/crypto/Kconfig b/crypto/Kconfig
+> > index 5575d48473bd..36af840aa820 100644
+> > --- a/crypto/Kconfig
+> > +++ b/crypto/Kconfig
+> > @@ -140,7 +140,6 @@ if CRYPTO_MANAGER2
+> >
+> >  config CRYPTO_MANAGER_DISABLE_TESTS
+> >       bool "Disable run-time self tests"
+> > -     default y
+> >       help
+> >         Disable run-time self tests that normally take place at
+> >         algorithm registration.
+> > @@ -148,6 +147,7 @@ config CRYPTO_MANAGER_DISABLE_TESTS
+> >  config CRYPTO_MANAGER_EXTRA_TESTS
+> >       bool "Enable extra run-time crypto self tests"
+> >       depends on DEBUG_KERNEL && !CRYPTO_MANAGER_DISABLE_TESTS
+> > +     default y
+> >       help
+> >         Enable extra run-time self tests of registered crypto algorithms,
+> >         including randomized fuzz tests.
+> > diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+> > index 88f33c0efb23..5df87bcf6c4d 100644
+> > --- a/crypto/testmgr.c
+> > +++ b/crypto/testmgr.c
+> > @@ -40,7 +40,7 @@ static bool notests;
+> >  module_param(notests, bool, 0644);
+> >  MODULE_PARM_DESC(notests, "disable crypto self-tests");
+> >
+> > -static bool panic_on_fail;
+> > +static bool panic_on_fail = true;
+> >  module_param(panic_on_fail, bool, 0444);
+> >
+> >  #ifdef CONFIG_CRYPTO_MANAGER_EXTRA_TESTS
+> > -------------------------------------------------------------------------------
 >
-> Please read http://mid.mail-archive.com/CAKMK7uH-8+tbKsAoiChsxELEc_77RVVx=
-P2wapHWhqB+0Viifog@mail.gmail.com
-
-OK, I changed it to SPDX-License-Identifier: GPL-2.0 OR MIT
-
-
 >
-> > +/*
-> > + * Intel ACPI privacy screen code
-> > + *
-> > + * Copyright =C2=A9 2019 Google Inc.
-> > + */
-> > +
-> > +#include <linux/acpi.h>
-> > +
-> > +#include "intel_privacy_screen.h"
-> > +
-> > +#define CONNECTOR_DSM_REVID 1
-> > +
-> > +#define CONNECTOR_DSM_FN_PRIVACY_ENABLE              2
-> > +#define CONNECTOR_DSM_FN_PRIVACY_DISABLE             3
-> > +
-> > +static const guid_t drm_conn_dsm_guid =3D
-> > +     GUID_INIT(0xC7033113, 0x8720, 0x4CEB,
-> > +               0x90, 0x90, 0x9D, 0x52, 0xB3, 0xE5, 0x2D, 0x73);
-> > +
-> > +/* Makes _DSM call to set privacy screen status */
-> > +static void acpi_privacy_screen_call_dsm(acpi_handle conn_handle, u64 =
-func)
-> > +{
-> > +     union acpi_object *obj;
-> > +
-> > +     obj =3D acpi_evaluate_dsm(conn_handle, &drm_conn_dsm_guid,
-> > +                             CONNECTOR_DSM_REVID, func, NULL);
-> > +     if (!obj) {
-> > +             DRM_DEBUG_DRIVER("failed to evaluate _DSM for fn %llx\n",=
- func);
-> > +             return;
-> > +     }
-> > +
-> > +     ACPI_FREE(obj);
-> > +}
-> > +
-> > +void intel_privacy_screen_set_val(struct intel_connector *intel_connec=
-tor,
-> > +                               enum intel_privacy_screen_status val)
+> Seems legit, from the log:
 >
-> Just name the parameter connector, not intel_connector. This throughout.
-
-Done.
-
+> <3>[   18.186181] rk3288-crypto ff8a0000.cypto-controller: [rk_load_data:123] pcopy err
+> <3>[   18.199432] alg: skcipher: ecb-aes-rk encryption failed on test vector \"random: len=0 klen=32\"; expected_error=0, actual_error=-22, cfg=\"random: inplace use_finup nosimd src_divs=[100.0%@+2054] key_offset=16\"
+> <0>[   18.220458] Kernel panic - not syncing: alg: self-tests for ecb-aes-rk (ecb(aes)) failed in panic_on_fail mode!
 >
-> > +{
-> > +     acpi_handle acpi_handle =3D intel_connector->acpi_handle;
-> > +
-> > +     if (!acpi_handle)
-> > +             return;
-> > +
-> > +     if (val =3D=3D PRIVACY_SCREEN_DISABLED)
-> > +             acpi_privacy_screen_call_dsm(acpi_handle,
-> > +                                          CONNECTOR_DSM_FN_PRIVACY_DIS=
-ABLE);
-> > +     else if (val =3D=3D PRIVACY_SCREEN_ENABLED)
-> > +             acpi_privacy_screen_call_dsm(acpi_handle,
-> > +                                          CONNECTOR_DSM_FN_PRIVACY_ENA=
-BLE);
->
-> else complain?
+> Let me know if you need any help with testing a fix on this
+> platform or anything.
 >
 
-Done.
+This is an expected failure. I pushed this to my branch to check if
+Eric's new AEAD testing code identifies any new problems on the
+hardware we have in kernelCI, but it only found stuff we already knew
+about.
 
-> > +}
-> > +
-> > +bool intel_privacy_screen_present(struct intel_connector *intel_connec=
-tor)
-> > +{
-> > +     acpi_handle handle =3D intel_connector->acpi_handle;
-> > +
-> > +     if (!handle)
-> > +             return false;
-> > +
-> > +     if (!acpi_check_dsm(handle, &drm_conn_dsm_guid,
-> > +                         CONNECTOR_DSM_REVID,
-> > +                         1 << CONNECTOR_DSM_FN_PRIVACY_ENABLE |
-> > +                         1 << CONNECTOR_DSM_FN_PRIVACY_DISABLE)) {
-> > +             DRM_WARN("%s: Odd, connector ACPI node but no privacy scr=
-n?\n",
-> > +                      dev_name(intel_connector->base.dev->dev));
-> > +             return false;
-> > +     }
-> > +     DRM_DEV_INFO(intel_connector->base.dev->dev,
-> > +                  "supports privacy screen\n");
-> > +     return true;
-> > +}
-> > diff --git a/drivers/gpu/drm/i915/display/intel_privacy_screen.h b/driv=
-ers/gpu/drm/i915/display/intel_privacy_screen.h
-> > new file mode 100644
-> > index 000000000000..212f73349a00
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/i915/display/intel_privacy_screen.h
-> > @@ -0,0 +1,25 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> > +/*
-> > + * Copyright =C2=A9 2019 Google Inc.
-> > + */
-> > +
-> > +#ifndef __DRM_PRIVACY_SCREEN_H__
-> > +#define __DRM_PRIVACY_SCREEN_H__
-> > +
-> > +#include "intel_display_types.h"
-> > +
-> > +#ifdef CONFIG_ACPI
-> > +bool intel_privacy_screen_present(struct intel_connector *intel_connec=
-tor);
-> > +void intel_privacy_screen_set_val(struct intel_connector *intel_connec=
-tor,
-> > +                               enum intel_privacy_screen_status val);
-> > +#else
-> > +bool intel_privacy_screen_present(struct intel_connector *intel_connec=
-tor);
-> > +{
-> > +     return false;
-> > +}
-> > +void intel_privacy_screen_set_val(struct intel_connector *intel_connec=
-tor,
-> > +                               enum intel_privacy_screen_status val)
-> > +{ }
-> > +#endif /* CONFIG_ACPI */
-> > +
-> > +#endif /* __DRM_PRIVACY_SCREEN_H__ */
-> > diff --git a/include/uapi/drm/i915_drm.h b/include/uapi/drm/i915_drm.h
-> > index 469dc512cca3..cf08d5636363 100644
-> > --- a/include/uapi/drm/i915_drm.h
-> > +++ b/include/uapi/drm/i915_drm.h
-> > @@ -2123,6 +2123,20 @@ struct drm_i915_query_engine_info {
-> >       struct drm_i915_engine_info engines[];
-> >  };
-> >
-> > +/**
-> > + * enum intel_privacy_screen_status - privacy_screen status
-> > + *
-> > + * This enum is used to track and control the state of the integrated =
-privacy
-> > + * screen present on some display panels, via the "privacy-screen" pro=
-perty.
-> > + *
-> > + * @PRIVACY_SCREEN_DISABLED: The privacy-screen on the panel is disabl=
-ed
-> > + * @PRIVACY_SCREEN_ENABLED:  The privacy-screen on the panel is enable=
-d
-> > + **/
-> > +enum intel_privacy_screen_status {
-> > +     PRIVACY_SCREEN_DISABLED =3D 0,
-> > +     PRIVACY_SCREEN_ENABLED =3D 1,
-> > +};
-> > +
+> Also, as you probably only want this to be enabled in KernelCI
+> and not merged upstream, we could have a config fragment to
+> enable the config with your branch and maybe even others.
 >
-> The drm_property interface UAPI is based on the strings, *not* on the
-> values. Please move the enum out of uapi into the drm code.
 
-Oh, so we don't have to expose this to userspace? Understand, so I
-moved it to intel_display_types.h
+It would be *very* helpful if we could add Herbert's cryptodev branch
+[0] to kernelCI with a kconfig fragment that turns off
+CRYPTO_MANAGER_DISABLE_TESTS and turns on CRYPTO_MANAGER_EXTRA_TESTS,
+and passes cryptomgr.panic_on_fail=1 on the kernel command line. That
+way, we'll have rolling coverage of just the crypto changes queued up
+in linux-next, but tested thoroughly on actual hardware, and without
+the need to carry patches like the above to trigger the tests
+explicitly.
 
-Thanks,
-
-Rajat.
-
-
->
-> BR,
-> jani.
->
-> >  #if defined(__cplusplus)
-> >  }
-> >  #endif
->
-> --
-> Jani Nikula, Intel Open Source Graphics Center
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git/
