@@ -2,111 +2,112 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD61EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234AEC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E10320707
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:29:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575559770;
-	bh=NMm0/3XxuzYATSrBmkGz2JzVxQjnOlc5/5CPMSabyOE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=szc2iSzg2O66Jh6Of2u/8FhfnixrEF6s11/m3f8HyNO2PZ1Jux3qeRrFBQduIk+sh
-	 /IoVeL/mDua5bB0NRogrzMWh6PXwabK+Gkd0A6Qfdpj6ys7F6usR52lAo5VR1L8JdS
-	 v/aLpKp4dQxNhxAvEU9IaK07kOXovBi8IsUYLMHo=
+	by mail.kernel.org (Postfix) with ESMTP id D38B62464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:29:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ABix7BZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbfLEP33 (ORCPT
+        id S1729785AbfLEP3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:29:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfLEP33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 10:29:29 -0500
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4286624653;
-        Thu,  5 Dec 2019 15:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575559768;
-        bh=NMm0/3XxuzYATSrBmkGz2JzVxQjnOlc5/5CPMSabyOE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LcDzJEL4CKtdqpWOmTmqLWocNjuQ+85SZvwibD0RVzpXYsft26NOCaHlHBuddGuj6
-         NdU/VnuqqgGK+g2CzuIkyn8FhOJngQA9QEYSiRxF8K7Vyh21I1dHw/1+ha9Yb+oDgJ
-         DHJ2pAb6+nEVYMMvh0sovbXOKkseGpmKEBOaPB2U=
-Received: by mail-lj1-f178.google.com with SMTP id e28so4032509ljo.9;
-        Thu, 05 Dec 2019 07:29:28 -0800 (PST)
-X-Gm-Message-State: APjAAAXTTXkN3aV4j6iPpdx1T4WMFe/vuJh0xAm8WHZo6DcWZW6LyFWQ
-        LM+aOb1E1q6eB+przUUG8Gwz/ZiaYVr8cP9XvVo=
-X-Google-Smtp-Source: APXvYqy3vunKQdsEkMwS0MLF+dMbKsGSvNEtu7hlvqcw9Q9bM3/Wn6K7JcsMr8ryLkDM0QohCmuXR8Qi8xqF7voNyCs=
-X-Received: by 2002:a2e:9d9a:: with SMTP id c26mr5974608ljj.225.1575559766374;
- Thu, 05 Dec 2019 07:29:26 -0800 (PST)
+        Thu, 5 Dec 2019 10:29:50 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55780 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729099AbfLEP3u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 10:29:50 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so4310003wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 07:29:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cP+oM3NA7KncqmbMbjVli5611B4S2UpI7p/XGvy4+VM=;
+        b=ABix7BZQE6/oBKIKzeq9oQL81G5DErroX9yrN0/xNE9ctYSu1ppRCD8sQMK77lOdts
+         Mfr15V5jwVQ2rcMIcysM2MiH6VZLtLggMq0L0SRa1qBRPmMnHNXiOVbnOHvMqyCmHKRo
+         6FOfi054BSOc5EOTe54VmuigHJSnbORH6oTtwGSAZ62YJOXkuowcArCg5VWS+hry7iqA
+         BYAUeO6RGrCTf9WYI7VME/NZ8tbhZ9ObrWccYrSxw8c/16qUUnKIE2p4AArXHFhDovwA
+         2FRNRjaSfG+YETDxzNHli16KZ1Pf0ZSSGdK2F/Pi7gjD94kcwr4bWPw9FAao/PFHNcVh
+         925A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cP+oM3NA7KncqmbMbjVli5611B4S2UpI7p/XGvy4+VM=;
+        b=J6zJDC4XK/xgZcQ+H5RF4wRudNMYRrf8D1U6pRKT8iSEcxnAXvyqcYdNrwAlgOUFMR
+         4Ei49DcoFCaGqdtyliifik8kVZJgQxoEWaqvwl1ckF+aUQDl9+P2NTMANKEgxFDXBoyc
+         Sf3q1vQrU3g6y9/lJdYTTnwcDPAgkAce9QgBO9WO+QlhIYlqmoSING7l6MNGrM6vjAfJ
+         w45msSQXPgtL04SAzZ+1o/sH/IhcDF6MT+uD0sKvhduW81F36DIdBl+j1WLtgK97bh8N
+         KfAmMfCXIKxzhB710hKJ0qofaFIVkbJM0B2ZSerG7nX+sG7XWvnqBTN/BloqQuPPswy5
+         XwEA==
+X-Gm-Message-State: APjAAAWN54pZMGCtvFePu7CcGbpxvZ6PKCGftv26lhrLmfUXp5Gvg7bl
+        2eRfCU0sjKNOSrkM0X3x423s2Q==
+X-Google-Smtp-Source: APXvYqwg7r5WIGyCZhCUyuc9pK/Q411mfTgj34TL5oqoEJcHF0kVbf5N6U5FZZj3N86LNm+WlNwMbQ==
+X-Received: by 2002:a1c:61d7:: with SMTP id v206mr5704907wmb.13.1575559788631;
+        Thu, 05 Dec 2019 07:29:48 -0800 (PST)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id z64sm176283wmg.30.2019.12.05.07.29.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 07:29:47 -0800 (PST)
+Date:   Thu, 5 Dec 2019 16:29:45 +0100
+From:   LABBE Corentin <clabbe@baylibre.com>
+To:     David Airlie <airlied@redhat.com>
+Cc:     airlied <airlied@linux.ie>, arnd@arndb.de, fenghua.yu@intel.com,
+        "KH, Greg" <gregkh@linuxfoundation.org>,
+        "Luck, Tony" <tony.luck@intel.com>, linux-ia64@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/5] agp: minor fixes, does the maintainer still there
+ ?
+Message-ID: <20191205152945.GB10549@Red>
+References: <1574324085-4338-1-git-send-email-clabbe@baylibre.com>
+ <20191202133254.GA21550@Red>
+ <CAMwc25obOebugXGSNVWd1bjPN+tR82wwFJ6PgqnvZXK4O6xAFw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191205150500.21762-1-hyunki00.koo@gmail.com>
-In-Reply-To: <20191205150500.21762-1-hyunki00.koo@gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 5 Dec 2019 16:29:15 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPemBE2AHW4aju+SzvHA-rRCNwYhpHpG8ThsY_W2v1tzoA@mail.gmail.com>
-Message-ID: <CAJKOXPemBE2AHW4aju+SzvHA-rRCNwYhpHpG8ThsY_W2v1tzoA@mail.gmail.com>
-Subject: Re: [PATCH] ANDROID: i2c: exynos5: remove default enable in Kconfig
-To:     Hyunki Koo <hyunki00.koo@gmail.com>
-Cc:     wsa@the-dreams.de, Hyunki Koo <hyunki00.koo@samsung.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Max Staudt <max@enpas.org>,
-        Juergen Fitschen <jfi@ssv-embedded.de>,
-        Elie Morisse <syniurge@gmail.com>, Stefan Roese <sr@denx.de>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-i2c@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMwc25obOebugXGSNVWd1bjPN+tR82wwFJ6PgqnvZXK4O6xAFw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Dec 2019 at 16:05, Hyunki Koo <hyunki00.koo@gmail.com> wrote:
->
-> From: Hyunki Koo <hyunki00.koo@samsung.com>
->
-> There are many exynos device and not all exynos device does not have
-> HSI2C controllers. Thus remove select this by default
->
-> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
-> ---
->  drivers/i2c/busses/Kconfig | 1 -
->  1 file changed, 1 deletion(-)
+On Tue, Dec 03, 2019 at 06:01:15AM +1000, David Airlie wrote:
+> On Mon, Dec 2, 2019 at 11:33 PM LABBE Corentin <clabbe@baylibre.com> wrote:
+> >
+> > On Thu, Nov 21, 2019 at 08:14:40AM +0000, Corentin Labbe wrote:
+> > > Hello
+> > >
+> > > This patch serie fixes some minor problem found in the agp subsystem
+> > > There are no change since v1 (posted two years ago)
+> > > This is simply a repost for trying to get an answer (gentle ping 6 month
+> > > ago got no answer also).
+> > >
+> > > Regards
+> > >
+> >
+> > Hello
+> >
+> > Does the AGP maintainer still maintain it ?
+> 
+> It's maintained but really loathe to touch it, I've no hw to validate
+> any changes on so making any changes to it really has to get past my
+> internal, I care enough about this change to risk applying anything to
+> AGP.
+> 
+> I'll try and look and apply those patches today.
+> 
 
-Thanks for the patch but this is not a proper solution because:
-1. Basically you disabled this driver on exynos, multi_v7 and ARMv8 defconfigs.
-2. We provide one kernel for all ARMv7 Exynos and one for all ARMv8
-platforms therefore this driver should be there. Having unnecessary
-driver also does not hurt - it will not match by compatible.
+Thanks for applying.
+Perhaps you need to fix your address in MAINTAINERS.
 
-So really no.
+When you has hardware, What was your tests procedure ?
+I can on my freetime add some AGP hw on my kernelCI lab.
 
-Best regards,
-Krzysztof
-
-> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> index 6a0aa76859f3..3955315f48c7 100644
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -612,7 +612,6 @@ config I2C_EMEV2
->  config I2C_EXYNOS5
->         tristate "Exynos5 high-speed I2C driver"
->         depends on ARCH_EXYNOS && OF
-> -       default y
->         help
->           High-speed I2C controller on Exynos5 based Samsung SoCs.
->
-> --
-> 2.17.1
->
+Regards
