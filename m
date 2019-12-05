@@ -6,119 +6,192 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7222C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0941C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6F720707
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BEB320707
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbfLELm2 (ORCPT
+        id S1729346AbfLELnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 06:42:28 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49050 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728735AbfLELm2 (ORCPT
+        Thu, 5 Dec 2019 06:43:53 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58795 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729017AbfLELnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 06:42:28 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB5Bg3Z0029052
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Dec 2019 06:42:26 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wpupb5hw8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 06:42:26 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Thu, 5 Dec 2019 11:42:24 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Dec 2019 11:42:19 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB5BfcpB49676716
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Dec 2019 11:41:38 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E25CFAE059;
-        Thu,  5 Dec 2019 11:42:18 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2DFB3AE051;
-        Thu,  5 Dec 2019 11:42:16 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.35.37])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Dec 2019 11:42:16 +0000 (GMT)
-Subject: Re: [RFC 1/3] Introduce latency-tolerance as an per-task attribute
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        patrick.bellasi@matbug.net, valentin.schneider@arm.com,
-        pavel@ucw.cz, dhaval.giani@oracle.com, qperret@qperret.net,
-        David.Laight@ACULAB.COM, morten.rasmussen@arm.com, pjt@google.com,
-        tj@kernel.org, viresh.kumar@linaro.org, rafael.j.wysocki@intel.com,
-        daniel.lezcano@linaro.org
-References: <20191125094618.30298-1-parth@linux.ibm.com>
- <20191125094618.30298-2-parth@linux.ibm.com>
- <20191203083654.3ctttimdiujdt7tl@e107158-lin.cambridge.arm.com>
- <59044b60-a7d8-9508-4975-06afdcfd33cd@linux.ibm.com>
- <d6a1d7ae-fe5e-7f52-60b5-4daac9a70107@arm.com>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Thu, 5 Dec 2019 17:12:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 5 Dec 2019 06:43:53 -0500
+Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <o.rempel@pengutronix.de>)
+        id 1icpXv-0008MZ-RZ; Thu, 05 Dec 2019 12:43:47 +0100
+Subject: Re: [v6] i2c: imx: support slave mode for imx I2C driver
+To:     Sascha Hauer <s.hauer@pengutronix.de>, Biwen Li <biwen.li@nxp.com>
+Cc:     shawnguo@kernel.org, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, wsa@the-dreams.de, leoyang.li@nxp.com,
+        aisheng.dong@nxp.com, xiaoning.wang@nxp.com, xiaobo.xie@nxp.com,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        jiafei.pan@nxp.com, linux-arm-kernel@lists.infradead.org,
+        laurentiu.tudor@nxp.com
+References: <20191203114809.21226-1-biwen.li@nxp.com>
+ <20191204100005.r56huywxa7h3c6zr@pengutronix.de>
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+Message-ID: <9a1a00c1-e9fa-36a1-0e79-3492d9b98d9f@pengutronix.de>
+Date:   Thu, 5 Dec 2019 12:43:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <d6a1d7ae-fe5e-7f52-60b5-4daac9a70107@arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191204100005.r56huywxa7h3c6zr@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120511-0020-0000-0000-000003944997
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120511-0021-0000-0000-000021EB7681
-Message-Id: <f2df49f4-0396-0b90-d491-719a76bd6a1e@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-05_03:2019-12-04,2019-12-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- lowpriorityscore=0 phishscore=0 malwarescore=0 clxscore=1015
- impostorscore=0 adultscore=0 mlxlogscore=915 mlxscore=0 priorityscore=1501
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912050097
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
+X-SA-Exim-Mail-From: o.rempel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+
+On 04.12.19 11:00, Sascha Hauer wrote:
+> Hi,
+> 
+> The patch looks ok to me now, but I still do not like the #ifdeffery
+> around CONFIG_I2C_SLAVE. With the patch I just sent (You are on Cc:)
+> we could apply the following on your patch which makes it more readable
+> and increases compile coverage.
+> 
+> Wolfram, Biwen, what do you think?
 
 
-On 12/5/19 2:54 PM, Dietmar Eggemann wrote:
-> On 03/12/2019 16:47, Parth Shah wrote:
->>
->> On 12/3/19 2:06 PM, Qais Yousef wrote:
->>> On 11/25/19 15:16, Parth Shah wrote:
->>>> Latency-tolerance indicates the latency requirements of a task with respect
->>>> to the other tasks in the system. The value of the attribute can be within
->>>> the range of [-20, 19] both inclusive to be in-line with the values just
->>>> like task nice values.
->>>>
->>>> latency_tolerance = -20 indicates the task to have the least latency as
->>>> compared to the tasks having latency_tolerance = +19.
->>>>
->>>> The latency_tolerance may affect only the CFS SCHED_CLASS by getting
->>>> latency requirements from the userspace.
-> 
-> [...]
-> 
->>>> diff --git a/include/linux/sched/latency_tolerance.h b/include/linux/sched/latency_tolerance.h
-> 
-> Do we really need an extra header file for this? I know there is
-> linux/sched/prio.h but couldn't this go into kernel/sched/sched.h?
+RCAR depends on slave:
+config I2C_RCAR 
 
-We can include this in kernel/sched/sched.h itself unless we have any plans
-to use it outside the scheduler subsystem. I will then add it as specified
-in next revision.
+         tristate "Renesas R-Car I2C Controller" 
+
+         depends on ARCH_RENESAS || COMPILE_TEST 
+
+         select I2C_SLAVE
+see:
+drivers/i2c/busses/i2c-rcar.c
+
+So, I would suggest to do the same in imx.
+
+So far, I tested this patch on iMX6S. It works in one board (i2c-gpio + i2c-imx) and
+two board (i2c-imx + i2c-imx) configuration.
+Tested-by: Oleksij Rempel <o.rempel@pengutronix.de>
+
 
 > 
-> [...]
+> Sascha
+> 
+> ---------------------------8<------------------------------
+> 
+>  From 52f7c2bf59db61d4b27b59ca6404136e3ed77310 Mon Sep 17 00:00:00 2001
+> From: Sascha Hauer <s.hauer@pengutronix.de>
+> Date: Wed, 4 Dec 2019 10:56:34 +0100
+> Subject: [PATCH] fixup! i2c: imx: support slave mode for imx I2C driver
+> 
+> ---
+>   drivers/i2c/busses/i2c-imx.c | 21 ++++++++++-----------
+>   1 file changed, 10 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> index 40ccfca600bf..c5d9ae8226cd 100644
+> --- a/drivers/i2c/busses/i2c-imx.c
+> +++ b/drivers/i2c/busses/i2c-imx.c
+> @@ -203,9 +203,7 @@ struct imx_i2c_struct {
+>   	struct pinctrl_state *pinctrl_pins_gpio;
+>   
+>   	struct imx_i2c_dma	*dma;
+> -#if IS_ENABLED(CONFIG_I2C_SLAVE)
+>   	struct i2c_client	*slave;
+> -#endif
+>   };
+>   
+>   static const struct imx_i2c_hwdata imx1_i2c_hwdata = {
+> @@ -913,12 +911,10 @@ static int i2c_imx_xfer(struct i2c_adapter *adapter,
+>   
+>   	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
+>   
+> -#if IS_ENABLED(CONFIG_I2C_SLAVE)
+>   	if (i2c_imx->slave) {
+>   		dev_err(&i2c_imx->adapter.dev, "Please not do operations of master mode in slave mode");
+>   		return -EBUSY;
+>   	}
+> -#endif
+>   
+>   	result = pm_runtime_get_sync(i2c_imx->adapter.dev.parent);
+>   	if (result < 0)
+> @@ -1068,7 +1064,6 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
+>   		| I2C_FUNC_SMBUS_READ_BLOCK_DATA;
+>   }
+>   
+> -#if IS_ENABLED(CONFIG_I2C_SLAVE)
+>   static int i2c_imx_slave_init(struct imx_i2c_struct *i2c_imx)
+>   {
+>   	int temp;
+> @@ -1159,6 +1154,10 @@ static int i2c_imx_reg_slave(struct i2c_client *client)
+>   {
+>   	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
+>   	int ret;
+> +
+> +	if (!IS_ENABLED(CONFIG_I2C_SLAVE))
+> +		return -EINVAL;
+> +
+>   	if (i2c_imx->slave)
+>   		return -EBUSY;
+>   
+> @@ -1173,6 +1172,9 @@ static int i2c_imx_unreg_slave(struct i2c_client *client)
+>   {
+>   	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
+>   
+> +	if (!IS_ENABLED(CONFIG_I2C_SLAVE))
+> +		return -EINVAL;
+> +
+>   	if (!i2c_imx->slave)
+>   		return -EINVAL;
+>   
+> @@ -1188,15 +1190,12 @@ static int i2c_imx_unreg_slave(struct i2c_client *client)
+>   
+>   	return 0;
+>   }
+> -#endif
+>   
+>   static const struct i2c_algorithm i2c_imx_algo = {
+>   	.master_xfer	= i2c_imx_xfer,
+>   	.functionality	= i2c_imx_func,
+> -#if IS_ENABLED(CONFIG_I2C_SLAVE)
+>   	.reg_slave	= i2c_imx_reg_slave,
+>   	.unreg_slave	= i2c_imx_unreg_slave,
+> -#endif
+>   };
+>   
+>   static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
+> @@ -1208,10 +1207,10 @@ static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
+>   
+>   	if (status & I2SR_IIF) {
+>   		i2c_imx_clr_if_bit(status, i2c_imx);
+> -#if IS_ENABLED(CONFIG_I2C_SLAVE)
+> -		if (i2c_imx->slave)
+> +
+> +		if (IS_ENABLED(CONFIG_I2C_SLAVE) && i2c_imx->slave)
+>   			return i2c_imx_slave_isr(i2c_imx);
+> -#endif
+> +
+>   		i2c_imx->i2csr = status;
+>   		return i2c_imx_master_isr(i2c_imx);
+>   	}
 > 
 
+Kind regards,
+Oleksij Rempel
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
