@@ -2,97 +2,112 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF40C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BD3C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2F324249
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB752245C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:06:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sq8wL7AJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbfLEMD1 (ORCPT
+        id S1729362AbfLEMGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 07:03:27 -0500
-Received: from mailout3.hostsharing.net ([176.9.242.54]:53339 "EHLO
-        mailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729165AbfLEMD1 (ORCPT
+        Thu, 5 Dec 2019 07:06:36 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40425 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729187AbfLEMGg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 07:03:27 -0500
-X-Greylist: delayed 504 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Dec 2019 07:03:26 EST
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by mailout3.hostsharing.net (Postfix) with ESMTPS id 3A438101E6845;
-        Thu,  5 Dec 2019 12:55:01 +0100 (CET)
-Received: from localhost (pd95be530.dip0.t-ipconnect.de [217.91.229.48])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id C877561A257C;
-        Thu,  5 Dec 2019 12:55:00 +0100 (CET)
-X-Mailbox-Line: From ca92998ccc054b4f2bfd60ef3adbab2913171eac Mon Sep 17 00:00:00 2001
-Message-Id: <ca92998ccc054b4f2bfd60ef3adbab2913171eac.1575546234.git.lukas@wunner.de>
-In-Reply-To: <201912051630.Cb4fFTp2%lkp@intel.com>
-References: <201912051630.Cb4fFTp2%lkp@intel.com>
-From:   Lukas Wunner <lukas@wunner.de>
-Date:   Thu, 5 Dec 2019 12:54:49 +0100
-Subject: [PATCH] dmaengine: Fix access to uninitialized dma_slave_caps
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
+        Thu, 5 Dec 2019 07:06:36 -0500
+Received: by mail-qt1-f194.google.com with SMTP id z22so3279812qto.7
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 04:06:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=F6zHO/WCNUOJMFt0div43uU4YpgZXs8QE00GO2bNAOk=;
+        b=sq8wL7AJ/+Mo4kdKlEjtVjVm2c/Kq/drIwY4aK59mtehKOQFqbYhnfUPP9a9T7XBP5
+         llKuSWKB+Iq09BIfDEE11CvsUde33Jst5tMP8UjZglnByVypwtPnrJv1w2U0ZNjKQfqe
+         he5q107St5f2RZEigfpMn9FVtBSs3ngX9ps9lxSUlm9UJIP26lR3KpAiuNHAW8nVBe4V
+         xLsa2kAC9b9QL4MV/UKcoCnjOOkTKuTah7l5yb6oGU0YMIRRg+Bq6DnZxp28wHkcIEHs
+         jwGCrvjtZU7fUDOXvNu25Tlw59oh9pgV/LwiUB73yMCksXnBt1P8O7shPafOjczJxJ4s
+         Fefg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=F6zHO/WCNUOJMFt0div43uU4YpgZXs8QE00GO2bNAOk=;
+        b=bGz9TWsdHSwYGiQxMk30tqfgUZ8rnXcRFAGtIuXGjzOr4246tO4BAgyKwG+VdCoaA8
+         RIXdqJggZAYg2aDZE8uI7e4Ej54Ydr5qc6ULFNKCatAYMR6IjiwuY4iXpnOaIHJUEmRc
+         Q3AkQvn8MQ5Rpef5NbmWAYbfMzCBJOmbW5YS/loQ1Gg+B+cAmhWULUbs2J9MQgHpysfO
+         gpM4ikXDYKyfU9ye34DnkexrKfDtbx6cWzVIos0mt9Tv6fo8vWUVyqOCdZCqxVg1I39G
+         W85q5E3wBFTdsZ487KVVpVO4p80o9iTtRcikzuOIQ/tVJ9QTBOw/6aDaZKv3kx9LUI37
+         RNKg==
+X-Gm-Message-State: APjAAAXC8GDKwLfIg3zj+Owsw9Y1lvO2akFkxZXHUyhPBe+MJBWRePhP
+        5R/e9sO8ri9P1wQjnMTud2E3D1xiE1cx1ZxSxhsr/g==
+X-Google-Smtp-Source: APXvYqxK7xrHkUmgrCjpi9ygm1HQIqL3Jgeu8IJMBF2nFA4+2cZshObi4EtuL33VHl3sWGSpOux7oC+IFCOGraccxWU=
+X-Received: by 2002:ac8:2489:: with SMTP id s9mr7142276qts.257.1575547594783;
+ Thu, 05 Dec 2019 04:06:34 -0800 (PST)
+MIME-Version: 1.0
+References: <00000000000096009b056df92dc1@google.com> <beffba5d-e3d7-8b06-655b-bd04349177ea@kernel.org>
+ <20191205100047.GA11438@Johanness-MacBook-Pro.local> <CACT4Y+Z-9g59XTwpfW+3fv1_jhbsskkvt8E8fx5F44BjofZ0ow@mail.gmail.com>
+ <20191205113838.GC11438@Johanness-MacBook-Pro.local> <20191205115033.GJ2734@suse.cz>
+In-Reply-To: <20191205115033.GJ2734@suse.cz>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 5 Dec 2019 13:06:23 +0100
+Message-ID: <CACT4Y+Z9QezPoc-8nASbK0Bi_ihF=knQ2ngeO8ibdRWbdkEH5g@mail.gmail.com>
+Subject: Re: kernel BUG at fs/btrfs/volumes.c:LINE!
+To:     dsterba@suse.cz, Johannes Thumshirn <jthumshirn@suse.de>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        syzbot <syzbot+5b658d997a83984507a6@syzkaller.appspotmail.com>,
+        Chris Mason <clm@fb.com>, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dmaengine_desc_set_reuse() allocates a struct dma_slave_caps on the
-stack, populates it using dma_get_slave_caps() and then accesses one
-of its members.
+On Thu, Dec 5, 2019 at 12:50 PM David Sterba <dsterba@suse.cz> wrote:
+>
+> On Thu, Dec 05, 2019 at 12:38:38PM +0100, Johannes Thumshirn wrote:
+> > On Thu, Dec 05, 2019 at 11:07:27AM +0100, Dmitry Vyukov wrote:
+> > > The correct syntax would be (no dash + colon):
+> > >
+> > > #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/jth/linux.git
+> > > close_fs_devices
+> >
+> > Ah ok, thanks.
+> >
+> > Although syzbot already said it can't test because it has no reproducer.
+> > Anyways good to know for future reports.
+>
+> According to
+>
+> https://syzkaller.appspot.com/bug?id=d50670eeb21302915bde3f25871dfb7ea43db1e4
+>
+> there is a way how to test it, many reports and the last one about a
+> week old. Is there a way to instruct syzbot to run the same tests on a
+> given branch?
+>
+> (The reproducer is basically setting up environment with limited amount
+> of memory available for allocation and this hits the BUG_ON.)
 
-However dma_get_slave_caps() may fail and this isn't accounted for,
-leading to a legitimate warning of gcc-4.9 (but not newer versions):
+syzkaller does this ("rerun the same tests") for every bug always. If
+it succeeds (kernel crashes again), it results in a reproducer, that
+can later be used for cause/fix bisection and patch testing. In this
+case it does not reproduce, so rerunning the same tests will not lead
+to anything useful (only if to false confirmation that a patch fixes
+the crash).
 
-   In file included from drivers/spi/spi-bcm2835.c:19:0:
-   drivers/spi/spi-bcm2835.c: In function 'dmaengine_desc_set_reuse':
->> include/linux/dmaengine.h:1370:10: warning: 'caps.descriptor_reuse' is used uninitialized in this function [-Wuninitialized]
-     if (caps.descriptor_reuse) {
+There is a large number of reasons why a kernel crash may not
+reproduce. It may be global accumulated state, non-hermetic tests,
+poor syzkaller btrfs descriptions (most likely true) and others.
 
-Fix it, thereby also silencing the gcc-4.9 warning.
-
-The issue has been present for 4 years but surfaces only now that
-the first caller of dmaengine_desc_set_reuse() has been added in
-spi-bcm2835.c. Another user of reusable DMA descriptors has existed
-for a while in pxa_camera.c, but it sets the DMA_CTRL_REUSE flag
-directly instead of calling dmaengine_desc_set_reuse(). Nevertheless,
-tag this commit for stable in case there are out-of-tree users.
-
-Fixes: 272420214d26 ("dmaengine: Add DMA_CTRL_REUSE")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v4.3+
----
- include/linux/dmaengine.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 8fcdee1c0cf9..dad4a68fa009 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1364,8 +1364,11 @@ static inline int dma_get_slave_caps(struct dma_chan *chan,
- static inline int dmaengine_desc_set_reuse(struct dma_async_tx_descriptor *tx)
- {
- 	struct dma_slave_caps caps;
-+	int ret;
- 
--	dma_get_slave_caps(tx->chan, &caps);
-+	ret = dma_get_slave_caps(tx->chan, &caps);
-+	if (ret)
-+		return ret;
- 
- 	if (caps.descriptor_reuse) {
- 		tx->flags |= DMA_CTRL_REUSE;
--- 
-2.24.0
-
+Need to take a closer look, on first sight it looks like something
+that should be reproduced...
