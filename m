@@ -2,87 +2,99 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB531C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB062C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A04D7224F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:18:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575559087;
-	bh=9YSgBEX3Of0BZkNkYZ9oZDnRtUuyam2FLRsMmfXpbJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lkJnH0SzcH1wsVYp6TUk3t0qS9EWXLoPH1TE65uCNYI17BA6prLwYORiDmSC9fu4O
-	 Ylx5tHb6iTM38lQaXnIUiP/HABeiDFik9z8qXPm0Wt6uB7DyEBp8DrOda5/sKtynzB
-	 DvN9Jr8von5PPHBtGWhsgyZ+qxjeZyX3JIdW2lmk=
+	by mail.kernel.org (Postfix) with ESMTP id C25B5224F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:18:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n1JOO18r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbfLEPSG (ORCPT
+        id S1729863AbfLEPS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:18:06 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46104 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfLEPSG (ORCPT
+        Thu, 5 Dec 2019 10:18:29 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56676 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfLEPS3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 10:18:06 -0500
-Received: by mail-oi1-f196.google.com with SMTP id a124so2996281oii.13;
-        Thu, 05 Dec 2019 07:18:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=zqhZAZGkDdkxiUbtVKwjzLYnsHkdCRqaPtvFRBEAazc=;
-        b=sLvQfwf2NC6CGqDQ0wArCc83WxeKuWhK8PQSRwULXJN3kkc03KihhWgyC+ZktTqq37
-         gDk6L7VqBRXKj9W4aaAbq5wOXsueTAh78WkiMG+E1476hYD17v1sQIulS0PXyCXDHmJf
-         Ow8W7hbsYytA43YOylOUWL9A7b/NkMJP5HDOGZHvTHKC3xa+XWO4iXHLcAY1HnF/wOUI
-         l8ZsIO9JtYXmJyFL6M82g9gydDkxjGhYgV6XJcLBcNQv/BgZAG4ysTMn9ZbfK5ltK5+L
-         nQc99FQLqDvXoeHnyBctWSpocpJBsHKCoL8/ThHORB4xYAWxJe47fe249wm633eH7cgR
-         y00A==
-X-Gm-Message-State: APjAAAWkASmhfhDB7wwAKraLnVo66qJpa1NkbgiMWjk6fVxlHP130L5N
-        hokoyWk56YM/0HUwYg9GGQ==
-X-Google-Smtp-Source: APXvYqx7NjjdIbgArEWQaF8DmmYAXEnb3idpC0UtmO9ygdIx+x5XydOKAeoS9ZQZJ5Njo9l3MyPGNw==
-X-Received: by 2002:aca:3442:: with SMTP id b63mr7804158oia.36.1575559085415;
-        Thu, 05 Dec 2019 07:18:05 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i20sm3442756otp.14.2019.12.05.07.18.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 07:18:04 -0800 (PST)
-Date:   Thu, 5 Dec 2019 09:18:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 6/8] dt-bindings: arm: realtek: Add Realtek
- Horseradish EVB
-Message-ID: <20191205151804.GA13693@bogus>
-References: <20191123203759.20708-1-afaerber@suse.de>
- <20191123203759.20708-7-afaerber@suse.de>
+        Thu, 5 Dec 2019 10:18:29 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5FIQPw091134;
+        Thu, 5 Dec 2019 09:18:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575559107;
+        bh=FN7arxalvgtdlHgsmKCtOqN9pssrajHom/pTRS6HmeQ=;
+        h=From:To:CC:Subject:Date;
+        b=n1JOO18rl/BL6/tPVRXfzTwDVMi/vQh6wwwSc0bgU4Wh5LfVMXUclL9BxjLhkCnkf
+         9Jt9Y2BL6d/x9ByPh5J/ZhdGd5M4I5nuvo1lQ8Vfqn4iUwzoChxdkDFQgI+db1z6gu
+         abwK8/Xp4vkewoFBP4DxrFprIU7rIGAMOB8ZrL6M=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5FIQPw053264;
+        Thu, 5 Dec 2019 09:18:26 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
+ 2019 09:18:26 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 5 Dec 2019 09:18:26 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5FIP3H126067;
+        Thu, 5 Dec 2019 09:18:26 -0600
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     <netdev@vger.kernel.org>, "David S . Miller" <davem@davemloft.net>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] net: ethernet: ti: cpsw: fix extra rx interrupt
+Date:   Thu, 5 Dec 2019 17:18:17 +0200
+Message-ID: <20191205151817.1076-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191123203759.20708-7-afaerber@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 Nov 2019 21:37:57 +0100, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
-> Define a compatible string for Realtek Horseradish EVB for RTD1195 SoC.
-> 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  v4: New
->  
->  Documentation/devicetree/bindings/arm/realtek.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Now RX interrupt is triggered twice every time, because in
+cpsw_rx_interrupt() it is asked first and then disabled. So there will be
+pending interrupt always, when RX interrupt is enabled again in NAPI
+handler.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Fix it by first disabling IRQ and then do ask.
+
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+Hi
+
+This is an old issue, but I can't specify Fixes tag. And, unfortunatelly,
+it can't be backported as is even in v5.4.
+
+ drivers/net/ethernet/ti/cpsw_priv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
+index b833cc1d188c..707d5eb480ce 100644
+--- a/drivers/net/ethernet/ti/cpsw_priv.c
++++ b/drivers/net/ethernet/ti/cpsw_priv.c
+@@ -100,8 +100,8 @@ irqreturn_t cpsw_rx_interrupt(int irq, void *dev_id)
+ {
+ 	struct cpsw_common *cpsw = dev_id;
+ 
+-	cpdma_ctlr_eoi(cpsw->dma, CPDMA_EOI_RX);
+ 	writel(0, &cpsw->wr_regs->rx_en);
++	cpdma_ctlr_eoi(cpsw->dma, CPDMA_EOI_RX);
+ 
+ 	if (cpsw->quirk_irq) {
+ 		disable_irq_nosync(cpsw->irqs_table[0]);
+-- 
+2.17.1
+
