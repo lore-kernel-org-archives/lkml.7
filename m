@@ -2,126 +2,180 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67EBC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0664C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89DE524671
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4D9824672
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uAP8Dkaa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUz/4ExN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbfLEVZL (ORCPT
+        id S1729906AbfLEV04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 16:25:11 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38291 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfLEVZL (ORCPT
+        Thu, 5 Dec 2019 16:26:56 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:39874 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729187AbfLEV0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 16:25:11 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y17so5412731wrh.5;
-        Thu, 05 Dec 2019 13:25:10 -0800 (PST)
+        Thu, 5 Dec 2019 16:26:55 -0500
+Received: by mail-yb1-f193.google.com with SMTP id o22so2103352ybg.6
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 13:26:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=yY42JF5Ppbct0NGiQDwjXUceg9GH5Esb/q4oxlJF5qw=;
-        b=uAP8DkaagDA5XCZA52x4WgfUbVA9q789oq4FW+bqh2SxP+GJQUv01OJeVDdzQy5H7h
-         +ekIj0ufiUWBl7FnkDm8hW0yPfXIVH0h/jdHGPq9CC7PcyflKdNtQlZVKMmMnorTvKms
-         47ZriPVNAHqGh8dJYlLc8b7kLROyrE5Nm5ugiP8mAizY0Iotva7So+mvqGYwd14HwQXq
-         PuAM6XTj2+5TAOyJxz/f4hsCFLD04g6GboNFEX6XKSLcmooJsrAFY5tfC9YfcZ7hSIH1
-         mTSecf9R1fYhLuqQCqTRvnShHX9sORcKt1xANaC2N6jPgNZe2WyIwDGx5Y+R+4f1LMIK
-         vd5Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gT1ClJrzlicYHNnv+GE3TcH0cs8/Jr/m+AGF+oufN9g=;
+        b=SUz/4ExNWxtOEv7we2Vo0pS6UW+Sb9Enu/Wvb3u5aLbJUm/zSQMNcjZK3Tb1mt3BMU
+         HkCXtN9ZIcSVfyvPe/61CyGcsurAKs92zacPWZ/BOxlM2tz2zn6/6qToOCtUeGbzV7Ex
+         MCi6ebiMfr/UWN++SqkSKYDPeiNkE0ww0hJsLO4dBdxrqqkjpEoa2Sj3T8CcsJgETYp4
+         oR5moE+naiQ+KaFj96+WoDDZWv/a9aXcmGuBy5MtsZYKWA0+N+xW1Z7C8Zz0aUdOzXAq
+         r2MiFcJkaax1UFkybfI6qhVGKtnurdH+SSqwf9Z16QQL9R2prxUCfh9aPd9z4iOnobt2
+         fjIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=yY42JF5Ppbct0NGiQDwjXUceg9GH5Esb/q4oxlJF5qw=;
-        b=bWZ2zo7VG2mdoSAOxt8hTCiH1NC1akvjd0qTGfFkEcHbs9mOER7kx0K/Hk3kn3YQX4
-         INknKinGxDNpymUWLkafOe4hyuJh0XutYwItgADV7iuVGVB6A6Gp3WDfp9Vy+8XJFYth
-         pd6We3Uuh8bMpur2feXby9rjyzZCcs/2xjEluJ7z1qVu0A3VFXDqlEdVuualKiSTN2sa
-         DntItjI3kAYyq0NBlCqw/qmR5TA332y6YNLI2hZnyA2MESrwxK11h2hzsal3S3/m7YMV
-         dIteMzN0CLPlqvVYvtukG1Vlndi0JEbpRXKsWgCAYPNP7HrCXt6QAEzDm44lUD/Rftt+
-         MlHg==
-X-Gm-Message-State: APjAAAVApXv/9J8TFQTmSA4PZ9pI7iyyMHChFB6phkcdXT8SMA9dyeqP
-        bkh242GJik8oP9UFSEWX8C30rsbU
-X-Google-Smtp-Source: APXvYqwaboVPNTOwrCpASOTss9LBf6Ia2nVc18UsatHmw2eCvYx3QC8rfGHlQCA+tvHR0TmXvucpDQ==
-X-Received: by 2002:a05:6000:11c5:: with SMTP id i5mr12023435wrx.102.1575581109200;
-        Thu, 05 Dec 2019 13:25:09 -0800 (PST)
-Received: from myhost.home (bla66.neoplus.adsl.tpnet.pl. [83.28.194.66])
-        by smtp.gmail.com with ESMTPSA id b17sm13860558wrx.15.2019.12.05.13.25.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Dec 2019 13:25:08 -0800 (PST)
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-To:     linux-leds@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, jacek.anaszewski@gmail.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH] leds: gpio: Fix uninitialized gpio label for fwnode based probe
-Date:   Thu,  5 Dec 2019 22:25:01 +0100
-Message-Id: <20191205212501.9163-1-jacek.anaszewski@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gT1ClJrzlicYHNnv+GE3TcH0cs8/Jr/m+AGF+oufN9g=;
+        b=MblcF/6jV9V1dVVcoiHGyHQA6oesIzWU7NQejGjO3eeDqChfwQAVgRvOqdBo93ON9V
+         ti2v4wvjLR5CbhBb4z4nKV5ipzgSDLcPyFlWBLIS17xvf/XV5RqcN4iA4rKPyOwep8XR
+         0TxO9dn9o2u1N6Wi71Cbs658nQI32++Us0ksMVeo3EaKJUYb7ONu588AD+UXdxqlF8at
+         VAt6qdqutxEcvVY146sf2uFxCN2F0v+5zn58ZmvAOOI+XE9dIRFxkSmgxZOBP+AQuZc7
+         Ij0yxcDCBRsoD1DWC0J0Fbpb7mYfJB9LTi7LZ/BIb6pR03gvO6coPxGFxDcO90dxBFHP
+         0TVg==
+X-Gm-Message-State: APjAAAWy7BU5zRPY3bxjYqaC4zpAR4dfTlggN1awdQZMrXbuqMAVvxQ+
+        RXst+k83uia6Vq2TdJzfezxknrUq
+X-Google-Smtp-Source: APXvYqx1WP7grUxpkwa55jO37UnlxAQ/Rk51yssvA/KOUu2eSoUnfB7c7pOr41hQt5y8dIyX02tKjA==
+X-Received: by 2002:a25:578a:: with SMTP id l132mr7777675ybb.479.1575581212799;
+        Thu, 05 Dec 2019 13:26:52 -0800 (PST)
+Received: from mail-yw1-f45.google.com (mail-yw1-f45.google.com. [209.85.161.45])
+        by smtp.gmail.com with ESMTPSA id i84sm5124530ywc.43.2019.12.05.13.26.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2019 13:26:51 -0800 (PST)
+Received: by mail-yw1-f45.google.com with SMTP id w11so1821594ywj.9
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 13:26:51 -0800 (PST)
+X-Received: by 2002:a0d:e886:: with SMTP id r128mr7567719ywe.357.1575581210643;
+ Thu, 05 Dec 2019 13:26:50 -0800 (PST)
+MIME-Version: 1.0
+References: <20191204.165528.1483577978366613524.davem@davemloft.net>
+ <20191205064118.8299-1-vvidic@valentin-vidic.from.hr> <20191205113411.5e672807@cakuba.netronome.com>
+ <CA+FuTSe=GSP41GG+QYKEmQ0eDUEoFeQ+oGAsgGJEZTe=hJq4Tw@mail.gmail.com> <20191205204343.GA20116@valentin-vidic.from.hr>
+In-Reply-To: <20191205204343.GA20116@valentin-vidic.from.hr>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Thu, 5 Dec 2019 16:26:14 -0500
+X-Gmail-Original-Message-ID: <CA+FuTSeu-ouuT37d9r40o62=_PcGBUmE_HaOAr9EsNPzpTw=ag@mail.gmail.com>
+Message-ID: <CA+FuTSeu-ouuT37d9r40o62=_PcGBUmE_HaOAr9EsNPzpTw=ag@mail.gmail.com>
+Subject: Re: [PATCH v3] net/tls: Fix return values to avoid ENOTSUPP
+To:     =?UTF-8?Q?Valentin_Vidi=C4=87?= <vvidic@valentin-vidic.from.hr>
+Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        Aviad Yehezkel <aviadye@mellanox.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When switching to using generic LED name composition mechanism via
-devm_led_classdev_register_ext() API the part of code initializing
-struct gpio_led's template name property was removed alongside.
-It was however overlooked that the property was also passed to
-devm_fwnode_get_gpiod_from_child() in place of "label" parameter,
-which when set to NULL, results in gpio label being initialized to '?'.
+On Thu, Dec 5, 2019 at 3:44 PM Valentin Vidi=C4=87
+<vvidic@valentin-vidic.from.hr> wrote:
+>
+> On Thu, Dec 05, 2019 at 03:06:55PM -0500, Willem de Bruijn wrote:
+> > On Thu, Dec 5, 2019 at 2:34 PM Jakub Kicinski
+> > <jakub.kicinski@netronome.com> wrote:
+> > >
+> > > On Thu,  5 Dec 2019 07:41:18 +0100, Valentin Vidic wrote:
+> > > > ENOTSUPP is not available in userspace, for example:
+> > > >
+> > > >   setsockopt failed, 524, Unknown error 524
+> > > >
+> > > > Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+> > >
+> > > > diff --git a/net/tls/tls_device.c b/net/tls/tls_device.c
+> > > > index 0683788bbef0..cd91ad812291 100644
+> > > > --- a/net/tls/tls_device.c
+> > > > +++ b/net/tls/tls_device.c
+> > > > @@ -429,7 +429,7 @@ static int tls_push_data(struct sock *sk,
+> > > >
+> > > >       if (flags &
+> > > >           ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL | MSG_SENDPAGE_N=
+OTLAST))
+> > > > -             return -ENOTSUPP;
+> > > > +             return -EOPNOTSUPP;
+> > > >
+> > > >       if (unlikely(sk->sk_err))
+> > > >               return -sk->sk_err;
+> > > > @@ -571,7 +571,7 @@ int tls_device_sendpage(struct sock *sk, struct=
+ page *page,
+> > > >       lock_sock(sk);
+> > > >
+> > > >       if (flags & MSG_OOB) {
+> > > > -             rc =3D -ENOTSUPP;
+> > > > +             rc =3D -EOPNOTSUPP;
+> > >
+> > > Perhaps the flag checks should return EINVAL? Willem any opinions?
+> >
+> > No strong opinion. Judging from do_tcp_sendpages MSG_OOB is a
+> > supported flag in general for sendpage, so signaling that the TLS
+> > variant cannot support that otherwise valid request sounds fine to me.
+>
+> I based these on the description from the sendmsg manpage, but you decide=
+:
+>
+> EOPNOTSUPP
+>     Some bit in the flags argument is inappropriate for the socket type.
 
-It could be observed in debugfs and failed to properly identify
-gpio association with LED consumer.
+Interesting. That is a narrower interpretation than asm-generic/errno.h
 
-Fix this shortcoming by updating the GPIO label after the LED is
-registered and its final name is known.
+  #define EOPNOTSUPP      95      /* Operation not supported on
+transport endpoint */
 
-Fixes: d7235f5feaa0 ("leds: gpio: Use generic support for composing LED names")
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Russell King <linux@armlinux.org.uk>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
----
- drivers/leds/leds-gpio.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+which is also the string that strerror() generates.
 
-diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-index a5c73f3d5f79..43eeed096d0d 100644
---- a/drivers/leds/leds-gpio.c
-+++ b/drivers/leds/leds-gpio.c
-@@ -151,9 +151,14 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
- 		struct gpio_led led = {};
- 		const char *state = NULL;
- 
-+		/**
-+		 * Acquire gpiod from DT with uninitialized label, which
-+		 * will be updated after LED class device is registered,
-+		 * Only then the final LED name is known.
-+		 */
- 		led.gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
- 							     GPIOD_ASIS,
--							     led.name);
-+							     NULL);
- 		if (IS_ERR(led.gpiod)) {
- 			fwnode_handle_put(child);
- 			return ERR_CAST(led.gpiod);
-@@ -186,6 +191,9 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
- 			fwnode_handle_put(child);
- 			return ERR_PTR(ret);
- 		}
-+		/* Set gpiod label to match the corresponding LED name. */
-+		gpiod_set_consumer_name(led_dat->gpiod,
-+					led_dat->cdev.dev->kobj.name);
- 		priv->num_leds++;
- 	}
- 
--- 
-2.11.0
+>
+> > > > diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
+> > > > index bdca31ffe6da..5830b8e02a36 100644
+> > > > --- a/net/tls/tls_main.c
+> > > > +++ b/net/tls/tls_main.c
+> > > > @@ -496,7 +496,7 @@ static int do_tls_setsockopt_conf(struct sock *=
+sk, char __user *optval,
+> > > >       /* check version */
+> > > >       if (crypto_info->version !=3D TLS_1_2_VERSION &&
+> > > >           crypto_info->version !=3D TLS_1_3_VERSION) {
+> > > > -             rc =3D -ENOTSUPP;
+> > > > +             rc =3D -EINVAL;
+> > >
+> > > This one I think Willem asked to be EOPNOTSUPP OTOH.
+> >
+> > Indeed (assuming no one disagrees). Based on the same rationale: the
+> > request may be valid, it just cannot be accommodated (yet).
+>
+> In this case other checks in the same function like crypto_info->cipher_t=
+ype
+> return EINVAL, so I used the same here.
 
+That makes sense.
+
+I think there is a fundamental difference between, say, passing an
+argument of incorrect length (optlen < sizeof(..)) and asking for a
+possibly unsupported cipher mode. But consistency trumps that.
+
+I don't mean to drag this out by bike-shedding.
+
+Happy to defer to maintainers on whether the errno on published code
+can and should be changed, which is the more fundamental issue than
+the exact errno.
+
+FWIW, I also did not see existing openssl and gnutls callers test the
+specific errno. The calls just fail on any setsockopt return value -1.
