@@ -2,51 +2,54 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69AEC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D81C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE2E24648
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC7124648
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575548454;
-	bh=uIUv41va5yaHQx+UtxnPI1aouIJjYFJRX8SbnOfox9U=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=pCi7yiFof2HTcdyPskBbeoIlfIWU7dbU0WUU6g77Kf8HQW5yGz/3szsfwnLMB30UN
-	 2oZKDQKMRLYPyFl2jW1JafkHdAoUDAPEjU/L2OSJrUbC4IQR9ZVMomjDXBM7WDPxKh
-	 al6T/c6K4TzYKjkvH7s7VLQYfxqN7pK62vaOulpY=
+	s=default; t=1575548464;
+	bh=edquYFBHaofPMU3DDDEksKNwbLIT1/Uva327KZiKnv0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DswfMFXUmeO8NDrhFi8GAo2KutYhsIc3cyb6SpEztFM0hHF/klAAk8znKg3FfKN2k
+	 Z8ikhw8eBjlyODcOnNwMyZv5Exe1gA3zpyNCgU6DiMMpXEKsBkNcVZVn2sQjejr3Xm
+	 ezGWqrGLhyO+zRQwznz0frWSlMc5IWYC5nUaluyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbfLEMUx (ORCPT
+        id S1729413AbfLEMVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 07:20:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36970 "EHLO mail.kernel.org"
+        Thu, 5 Dec 2019 07:21:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729074AbfLEMUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 07:20:53 -0500
+        id S1729074AbfLEMVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 07:21:02 -0500
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68D862245C;
-        Thu,  5 Dec 2019 12:20:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 956EB24249;
+        Thu,  5 Dec 2019 12:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575548452;
-        bh=uIUv41va5yaHQx+UtxnPI1aouIJjYFJRX8SbnOfox9U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ULP20YFiMAzHdk971hN4rjF37Itr0qXAWTOjvWePGTUK86TS/w+OafYkhx/l6hVXc
-         Sp24YIUcXwj49Hxc4nMRhhXtI1S/lBcVHrGCJAuGTY6Dk0ITQH9mUm3eebChJK3xV1
-         dGFMchDc8bVO1jbL1+Z46GF48NG6ifdgrilU+atU=
+        s=default; t=1575548461;
+        bh=edquYFBHaofPMU3DDDEksKNwbLIT1/Uva327KZiKnv0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UN6nYKbFRYTVks+DlN6AqIMri32etT5PbonNAOXosiwERnrxzF1krAtvzBBbofrpj
+         pPfjnRG1NRuC6qbcpGm2Mo1w9PIo+HbLhOI7cSf69hmFTSVSfNHOAxT8XNgOyCPh5M
+         U+EPq1v4+ubxg8ZMMeMGAD4i4BoN54lMyCPP3aVQ=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Shuah Khan <shuah@kernel.org>
 Cc:     Micah Morton <mortonm@chromium.org>,
         linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
         jaswinder.singh@linaro.org
-Subject: [BUGFIX PATCH v2 0/3] selftests: safesetid: Fix some bugs in safesetid test
-Date:   Thu,  5 Dec 2019 21:20:49 +0900
-Message-Id: <157554844882.11018.13436399905210284553.stgit@devnote2>
+Subject: [BUGFIX PATCH v2 1/3] selftests: safesetid: Move link library to LDLIBS
+Date:   Thu,  5 Dec 2019 21:20:58 +0900
+Message-Id: <157554845808.11018.11000592632669206853.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <157554844882.11018.13436399905210284553.stgit@devnote2>
+References: <157554844882.11018.13436399905210284553.stgit@devnote2>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -56,25 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Move -lcap to LDLIBS from CFLAGS because it is a library
+to be linked.
 
-Here is the v2 series to fix build warnings and erorrs on
-kselftest safesetid.
-This version includes a fix for a runtime error.
+Without this, safesetid failed to build with link error
+as below.
 
-Thank you,
+----
+/usr/bin/ld: /tmp/ccL8rZHT.o: in function `drop_caps':
+safesetid-test.c:(.text+0xe7): undefined reference to `cap_get_proc'
+/usr/bin/ld: safesetid-test.c:(.text+0x107): undefined reference to `cap_set_flag'
+/usr/bin/ld: safesetid-test.c:(.text+0x10f): undefined reference to `cap_set_proc'
+/usr/bin/ld: safesetid-test.c:(.text+0x117): undefined reference to `cap_free'
+/usr/bin/ld: safesetid-test.c:(.text+0x136): undefined reference to `cap_clear'
+collect2: error: ld returned 1 exit status
+----
 
+Fixes: c67e8ec03f3f ("LSM: SafeSetID: add selftest")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
+ tools/testing/selftests/safesetid/Makefile |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Masami Hiramatsu (3):
-      selftests: safesetid: Move link library to LDLIBS
-      selftests: safesetid: Check the return value of setuid/setgid
-      selftests: safesetid: Fix Makefile to set correct test program
+diff --git a/tools/testing/selftests/safesetid/Makefile b/tools/testing/selftests/safesetid/Makefile
+index 98da7a504737..cac42cd36a1b 100644
+--- a/tools/testing/selftests/safesetid/Makefile
++++ b/tools/testing/selftests/safesetid/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for mount selftests.
+-CFLAGS = -Wall -lcap -O2
++CFLAGS = -Wall -O2
++LDLIBS = -lcap
+ 
+ TEST_PROGS := run_tests.sh
+ TEST_GEN_FILES := safesetid-test
 
-
- tools/testing/selftests/safesetid/Makefile         |    5 +++--
- tools/testing/selftests/safesetid/safesetid-test.c |   15 ++++++++++-----
- 2 files changed, 13 insertions(+), 7 deletions(-)
-
---
-Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
