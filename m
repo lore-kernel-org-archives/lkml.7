@@ -2,137 +2,218 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 238FCC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD80BC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF2524678
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A8E24675
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730195AbfLEWAK (ORCPT
+        id S2387419AbfLEWAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 17:00:10 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:49243 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfLEWAJ (ORCPT
+        Thu, 5 Dec 2019 17:00:40 -0500
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:12080 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387396AbfLEWAk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 17:00:09 -0500
-Received: by mail-il1-f197.google.com with SMTP id t13so3653059ilk.16
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 14:00:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=rqKNJoogyBIXbrrIQOudJFLVAY8klXYSSzbXypPx8rY=;
-        b=NzGUzy9+SsspEshQr5Du/iarTGEWu2Zs1VIFiVlSQZFhEmb8e6jTZZqOuoM+Jm7AS4
-         CBhJv3xHTfBjkiHNKeXk3lo4kVrDRuDf7j0slyHBU+Z5k4IYxwbjp7EPDO6bhl4+tFRB
-         9ei4U7S7VrzmREf4yj2Z3634W+d5h9ydw7GWksCVcCBvmZZ/ZIn4cFjguqcSrSGqj/jF
-         hv+fRmvAA5VUWUiXmxq2zew7Ws1iFalqVEa1YHaUZVxFgLkDQjNcoMpNRa4KS3j4XXfD
-         bf02XPdDdmeqU+K42dkCnWzwmW+9V4MuL+XYhBCqbx0U+Idg8jRATr9jzx+0BXb/iwRx
-         r1Dw==
-X-Gm-Message-State: APjAAAU6W4av8N11VYxWmekjo3TAiy/xR7NJ6melXy8QBP/r2D/qIc2E
-        16Qm8k/qUnTxxIGWptP7m5vTlaWQxdjz0wFnw2FxgD0hs7Qt
-X-Google-Smtp-Source: APXvYqyE9PkibPNobZ7dU9QSFTt3qJLMtiwgZJ4QcmOmhpqP52xB/eawHA1fzjRV1ZBCCn8gaguYA+bPELElLCHZBVlGtxY+TqEj
+        Thu, 5 Dec 2019 17:00:40 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tk4-tJ8_1575583231;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk4-tJ8_1575583231)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 06 Dec 2019 06:00:35 +0800
+Subject: Re: [v3 PATCH] mm: move_pages: return valid node id in status if the
+ page is already on the target node
+To:     John Hubbard <jhubbard@nvidia.com>, fabecassis@nvidia.com,
+        mhocko@suse.com, cl@linux.com, vbabka@suse.cz,
+        mgorman@techsingularity.net, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <1575572053-128363-1-git-send-email-yang.shi@linux.alibaba.com>
+ <d09644da-8a8c-bb89-c01b-75a4dbdfa719@nvidia.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <93b8f639-baff-b198-84b5-713df9406a51@linux.alibaba.com>
+Date:   Thu, 5 Dec 2019 14:00:31 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:404:: with SMTP id q4mr4105868jap.115.1575583208802;
- Thu, 05 Dec 2019 14:00:08 -0800 (PST)
-Date:   Thu, 05 Dec 2019 14:00:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007992840598fc0d2b@google.com>
-Subject: WARNING: refcount bug in put_watch
-From:   syzbot <syzbot+f4c16a389966647e346e@syzkaller.appspotmail.com>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <d09644da-8a8c-bb89-c01b-75a4dbdfa719@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    282ffdf3 Add linux-next specific files for 20191205
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17897aeae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=29372c0243b4b980
-dashboard link: https://syzkaller.appspot.com/bug?extid=f4c16a389966647e346e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131aa42ae00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=168dcb7ae00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f4c16a389966647e346e@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 1 PID: 9318 at lib/refcount.c:28  
-refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 9318 Comm: syz-executor327 Not tainted  
-5.4.0-next-20191205-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x3e kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
-Code: e9 d8 fe ff ff 48 89 df e8 01 52 23 fe e9 85 fe ff ff e8 b7 ae e5 fd  
-48 c7 c7 e0 b7 6f 88 c6 05 5d d5 ec 06 01 e8 b3 5a b6 fd <0f> 0b e9 ac fe  
-ff ff 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 55 48
-RSP: 0018:ffffc90001e77bf0 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815e5896 RDI: fffff520003cef70
-RBP: ffffc90001e77c00 R08: ffff8880a7154640 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000003
-R13: ffff8880950c5e58 R14: ffff8880950c5e00 R15: ffffffff8a0218c0
-  refcount_sub_and_test include/linux/refcount.h:261 [inline]
-  refcount_dec_and_test include/linux/refcount.h:281 [inline]
-  kref_put include/linux/kref.h:64 [inline]
-  put_watch+0xa2/0xb0 drivers/misc/watch_queue.c:633
-  watch_queue_clear drivers/misc/watch_queue.c:826 [inline]
-  watch_queue_release+0x34b/0xc40 drivers/misc/watch_queue.c:842
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  exit_task_work include/linux/task_work.h:22 [inline]
-  do_exit+0x8e7/0x2ef0 kernel/exit.c:797
-  do_group_exit+0x135/0x360 kernel/exit.c:895
-  __do_sys_exit_group kernel/exit.c:906 [inline]
-  __se_sys_exit_group kernel/exit.c:904 [inline]
-  __x64_sys_exit_group+0x44/0x50 kernel/exit.c:904
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x43edb8
-Code: Bad RIP value.
-RSP: 002b:00007ffc74c09078 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043edb8
-RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-RBP: 00000000004be5c8 R08: 00000000000000e7 R09: ffffffffffffffd0
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00000000006d0180 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On 12/5/19 1:27 PM, John Hubbard wrote:
+> On 12/5/19 10:54 AM, Yang Shi wrote:
+>> Felix Abecassis reports move_pages() would return random status if the
+>> pages are already on the target node by the below test program:
+>>
+>> ---8<---
+>>
+>> int main(void)
+>> {
+>> 	const long node_id = 1;
+>> 	const long page_size = sysconf(_SC_PAGESIZE);
+>> 	const int64_t num_pages = 8;
+>>
+>> 	unsigned long nodemask =  1 << node_id;
+>> 	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
+>> 	if (ret < 0)
+>> 		return (EXIT_FAILURE);
+>>
+>> 	void **pages = malloc(sizeof(void*) * num_pages);
+>> 	for (int i = 0; i < num_pages; ++i) {
+>> 		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
+>> 				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
+>> 				-1, 0);
+>> 		if (pages[i] == MAP_FAILED)
+>> 			return (EXIT_FAILURE);
+>> 	}
+>>
+>> 	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
+>> 	if (ret < 0)
+>> 		return (EXIT_FAILURE);
+>>
+>> 	int *nodes = malloc(sizeof(int) * num_pages);
+>> 	int *status = malloc(sizeof(int) * num_pages);
+>> 	for (int i = 0; i < num_pages; ++i) {
+>> 		nodes[i] = node_id;
+>> 		status[i] = 0xd0; /* simulate garbage values */
+>> 	}
+>>
+>> 	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
+>> 	printf("move_pages: %ld\n", ret);
+>> 	for (int i = 0; i < num_pages; ++i)
+>> 		printf("status[%d] = %d\n", i, status[i]);
+>> }
+>> ---8<---
+>>
+>> Then running the program would return nonsense status values:
+>> $ ./move_pages_bug
+>> move_pages: 0
+>> status[0] = 208
+>> status[1] = 208
+>> status[2] = 208
+>> status[3] = 208
+>> status[4] = 208
+>> status[5] = 208
+>> status[6] = 208
+>> status[7] = 208
+>>
+>> This is because the status is not set if the page is already on the
+>> target node, but move_pages() should return valid status as long as it
+>> succeeds.  The valid status may be errno or node id.
+>>
+>> We can't simply initialize status array to zero since the pages may be
+>> not on node 0.  Fix it by updating status with node id which the page is
+>> already on.
+>>
+>> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+>> Reported-by: Felix Abecassis <fabecassis@nvidia.com>
+>> Tested-by: Felix Abecassis <fabecassis@nvidia.com>
+>> Suggested-by: Michal Hocko <mhocko@suse.com>
+>> Cc: John Hubbard <jhubbard@nvidia.com>
+>> Cc: Christoph Lameter <cl@linux.com>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>> Cc: <stable@vger.kernel.org> 4.17+
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>> v3: * Adopted the suggestion from Michal.
+>> v2: * Correted the return value when add_page_for_migration() returns 1.
+>>
+>>   mm/migrate.c | 24 ++++++++++++++++++------
+>>   1 file changed, 18 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index a8f87cb..9c172f4 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -1512,9 +1512,11 @@ static int do_move_pages_to_node(struct mm_struct *mm,
+>>   /*
+>>    * Resolves the given address to a struct page, isolates it from the LRU and
+>>    * puts it to the given pagelist.
+>> - * Returns -errno if the page cannot be found/isolated or 0 when it has been
+>> - * queued or the page doesn't need to be migrated because it is already on
+>> - * the target node
+>> + * Returns:
+>> + *     errno - if the page cannot be found/isolated
+>> + *     0 - when it doesn't have to be migrated because it is already on the
+>> + *         target node
+>> + *     1 - when it has been queued
+>>    */
+>>   static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>>   		int node, struct list_head *pagelist, bool migrate_all)
+>> @@ -1553,7 +1555,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>>   	if (PageHuge(page)) {
+>>   		if (PageHead(page)) {
+>>   			isolate_huge_page(page, pagelist);
+>> -			err = 0;
+>> +			err = 1;
+>>   		}
+>>   	} else {
+>>   		struct page *head;
+>> @@ -1563,7 +1565,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>>   		if (err)
+>>   			goto out_putpage;
+>>   
+>> -		err = 0;
+>> +		err = 1;
+>>   		list_add_tail(&head->lru, pagelist);
+>>   		mod_node_page_state(page_pgdat(head),
+>>   			NR_ISOLATED_ANON + page_is_file_cache(head),
+>> @@ -1578,6 +1580,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>>   	put_page(page);
+>>   out:
+>>   	up_read(&mm->mmap_sem);
+>> +
+>>   	return err;
+>>   }
+>>   
+>> @@ -1640,8 +1643,17 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>>   		 */
+>>   		err = add_page_for_migration(mm, addr, current_node,
+>>   				&pagelist, flags & MPOL_MF_MOVE_ALL);
+>> -		if (!err)
+>> +
+>> +		/* The page is already on the target node */
+>> +		if (!err) {
+>> +			err = store_status(status, i, current_node, 1);
+>> +			if (err)
+>> +				goto out_flush;
+>>   			continue;
+>> +		/* The page is successfully queued */
+> Nit: could you move this comment down one line, so that it's clear that it
+> applies to the "else" branch? Like this:
+>
+> 		} else if (err > 0) {
+> 			/* The page is successfully queued for migration */
+> 			continue;
+> 		}
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Sure.
+
+>
+>
+>> +		} else if (err > 0) {
+>> +			continue;
+>> +		}
+>>   
+>>   		err = store_status(status, i, err, 1);
+>>   		if (err)
+>>
+> Also agree with Christopher's requests, but all of these don't affect the
+> correct operation of the patch, so you can add:
+>
+> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+>
+> thanks,
+
