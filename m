@@ -2,138 +2,178 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C2FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF843C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CA124654
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CD724652
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:03:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bwQGX8IP"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="HNhL63xC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbfLEKDM (ORCPT
+        id S1729220AbfLEKDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:03:12 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:42696 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfLEKDL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:03:11 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB59s8DM008065;
-        Thu, 5 Dec 2019 10:02:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=05vzxwu12UNKNbD54baLfuh1gECkS613qjdy5dBFgIM=;
- b=bwQGX8IPVR/KB98qtE61W0h+HQk2zsbbcdvm8dNGdmUghr74ST7VgDqa6kiCjDdAlf3L
- DIWly2HJDk13Xp16BjnodJ1NBmIIpFIlegTjRgC6+uzbaqBx40jeL4uLYz+XPPOMKFQM
- gW48eiz52vzOapFcUlp9w/T++uFXGE58/OUwFGkvcGJuwteqQq9mLWgV1s+CkzWY0/SO
- bYI7ZebdY4/EVCepgV06AE3DHV3swGy9Ip54ZqEC1Boroh1GhoXHuHRbjNorgElPOkfm
- 0EWJMOiR7ojmnDKnaQ8hfGMsGUNYN00Ib3zJFIDNaozySRc6SNiLJXJKF0oE2kXZ2Wlm qA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2wkfuum8h6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 05 Dec 2019 10:02:34 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB59s0ki037084;
-        Thu, 5 Dec 2019 10:02:33 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2wpp73usc1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 05 Dec 2019 10:02:32 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB5A2SRk019046;
-        Thu, 5 Dec 2019 10:02:30 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Dec 2019 02:02:27 -0800
-Date:   Thu, 5 Dec 2019 13:02:20 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] Silence an uninitialized variable warning
-Message-ID: <20191205100220.GH1765@kadam>
-References: <20191126121934.kuolgbm55dirfbay@kili.mountain>
- <20191204092640.692c95af@gandalf.local.home>
- <20191204184247.GG1765@kadam>
- <20191205093229.GE2810@hirez.programming.kicks-ass.net>
+        Thu, 5 Dec 2019 05:03:48 -0500
+Received: from fd.dlink.ru ([178.170.168.18]:38436 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726239AbfLEKDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 05:03:47 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 0DCFD1B214D6; Thu,  5 Dec 2019 13:03:43 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 0DCFD1B214D6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1575540224; bh=yI7KF/bM4Qa4hyw06HNlRSt7/ikY+NEJAJCnnl7lFyY=;
+        h=From:To:Cc:Subject:Date;
+        b=HNhL63xCyq243WuhJA1bkWHqxknokV8KgpHTlCqpuj+wcYHSLqeU/yApJ6+XKsdAO
+         Wycy6lRs3et8dSpMHkLzzruDRj6O6CsfGMyJzfniIROvtEgCllYi+CmUFks1JsqRvs
+         TwpwZnQ4knnIjGAmVmZDBk8T5lpZlvWDle7S0jkw=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id 403331B20144;
+        Thu,  5 Dec 2019 13:03:26 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 403331B20144
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 005F01B219AA;
+        Thu,  5 Dec 2019 13:03:24 +0300 (MSK)
+Received: from localhost.localdomain (unknown [196.196.203.126])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Thu,  5 Dec 2019 13:03:24 +0300 (MSK)
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Muciri Gatimu <muciri@openmesh.com>,
+        Shashidhar Lakkavalli <shashidhar.lakkavalli@openmesh.com>,
+        John Crispin <john@phrozen.org>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Matteo Croce <mcroce@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        Alexander Lobakin <alobakin@dlink.ru>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net] net: dsa: fix flow dissection on Tx path
+Date:   Thu,  5 Dec 2019 13:02:35 +0300
+Message-Id: <20191205100235.14195-1-alobakin@dlink.ru>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191205093229.GE2810@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9461 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912050080
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9461 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912050080
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 10:32:29AM +0100, Peter Zijlstra wrote:
-> On Wed, Dec 04, 2019 at 09:42:47PM +0300, Dan Carpenter wrote:
-> 
-> > > The current code has this:
-> > > 
-> > > static int __init syscall_enter_define_fields(struct trace_event_call *call)
-> > > {
-> > > 	struct syscall_trace_enter trace;
-> > > 	struct syscall_metadata *meta = call->data;
-> > > 	int ret;
-> > > 	int i;
-> > > 	int offset = offsetof(typeof(trace), args);
-> > > 
-> > > 	ret = trace_define_field(call, SYSCALL_FIELD(int, nr, __syscall_nr),
-> > > 				 FILTER_OTHER);
-> > 
-> > In linux-next this ret = trace_define_field() assignment is removed.
-> > That was commit 60fdad00827c ("ftrace: Rework event_create_dir()").
-> 
-> Yep, mea culpa.
-> 
-> > > 	if (ret)
-> > > 		return ret;
-> > > 
-> > > 	for (i = 0; i < meta->nb_args; i++) {
-> > > 		ret = trace_define_field(call, meta->types[i],
-> > > 					 meta->args[i], offset,
-> > > 					 sizeof(unsigned long), 0,
-> > > 					 FILTER_OTHER);
-> > > 		offset += sizeof(unsigned long);
-> > > 	}
-> > > 
-> > > 	return ret;
-> > > }
-> > > 
-> > > 
-> > > How can ret possibly be uninitialized?
-> > 
-> > I should have written this commit more carefully and verified whether
-> > meta->nb_args can actually be zero instead of just assuming it was a
-> > false positive...
-> 
-> Right, I'm thinking this is in fact possible. We have syscalls without
-> arguments (sys_sched_yield for exmaple).
+Commit 43e665287f93 ("net-next: dsa: fix flow dissection") added an
+ability to override protocol and network offset during flow dissection
+for DSA-enabled devices (i.e. controllers shipped as switch CPU ports)
+in order to fix skb hashing for RPS on Rx path.
 
-Well, it would have triggered a run time bug because of that thing with
-GCC where it sometimes initializes variables to zero.
+However, skb_hash() and added part of code can be invoked not only on
+Rx, but also on Tx path if we have a multi-queued device and:
+ - kernel is running on UP system or
+ - XPS is not configured.
 
-Let me resend properly with a Fixes tag.
+The call stack in this two cases will be like: dev_queue_xmit() ->
+__dev_queue_xmit() -> netdev_core_pick_tx() -> netdev_pick_tx() ->
+skb_tx_hash() -> skb_get_hash().
 
-regards,
-dan carpenter
+The problem is that skbs queued for Tx have both network offset and
+correct protocol already set up even after inserting a CPU tag by DSA
+tagger, so calling tag_ops->flow_dissect() on this path actually only
+breaks flow dissection and hashing.
+
+This can be observed by adding debug prints just before and right after
+tag_ops->flow_dissect() call to the related block of code:
+
+Before the patch:
+
+Rx path (RPS):
+
+[   19.240001] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+[   19.244271] tag_ops->flow_dissect()
+[   19.247811] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
+
+[   19.215435] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+[   19.219746] tag_ops->flow_dissect()
+[   19.223241] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
+
+[   18.654057] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+[   18.658332] tag_ops->flow_dissect()
+[   18.661826] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
+
+Tx path (UP system):
+
+[   18.759560] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
+[   18.763933] tag_ops->flow_dissect()
+[   18.767485] Tx: proto: 0x920b, nhoff: 34	/* junk */
+
+[   22.800020] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
+[   22.804392] tag_ops->flow_dissect()
+[   22.807921] Tx: proto: 0x920b, nhoff: 34	/* junk */
+
+[   16.898342] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
+[   16.902705] tag_ops->flow_dissect()
+[   16.906227] Tx: proto: 0x920b, nhoff: 34	/* junk */
+
+After:
+
+Rx path (RPS):
+
+[   16.520993] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+[   16.525260] tag_ops->flow_dissect()
+[   16.528808] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
+
+[   15.484807] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+[   15.490417] tag_ops->flow_dissect()
+[   15.495223] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
+
+[   17.134621] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+[   17.138895] tag_ops->flow_dissect()
+[   17.142388] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
+
+Tx path (UP system):
+
+[   15.499558] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
+
+[   20.664689] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
+
+[   18.565782] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
+
+In order to fix that we can add the check 'proto == htons(ETH_P_XDSA)'
+to prevent code from calling tag_ops->flow_dissect() on Tx.
+I also decided to initialize 'offset' variable so tagger callbacks can
+now safely leave it untouched without provoking a chaos.
+
+Fixes: 43e665287f93 ("net-next: dsa: fix flow dissection")
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+---
+ net/core/flow_dissector.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
+index 69395b804709..d524a693e00f 100644
+--- a/net/core/flow_dissector.c
++++ b/net/core/flow_dissector.c
+@@ -969,9 +969,10 @@ bool __skb_flow_dissect(const struct net *net,
+ 		nhoff = skb_network_offset(skb);
+ 		hlen = skb_headlen(skb);
+ #if IS_ENABLED(CONFIG_NET_DSA)
+-		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev))) {
++		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev) &&
++			     proto == htons(ETH_P_XDSA))) {
+ 			const struct dsa_device_ops *ops;
+-			int offset;
++			int offset = 0;
+ 
+ 			ops = skb->dev->dsa_ptr->tag_ops;
+ 			if (ops->flow_dissect &&
+-- 
+2.24.0
+
