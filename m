@@ -2,156 +2,99 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811AAC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128BDC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4782464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D67C024648
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:06:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmGXMlWX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfLEIAB (ORCPT
+        id S1728374AbfLEIGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 03:00:01 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43167 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfLEIAA (ORCPT
+        Thu, 5 Dec 2019 03:06:15 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41045 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfLEIGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 03:00:00 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1icm3L-0007fC-EI; Thu, 05 Dec 2019 08:59:59 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1icm3K-0000Ib-Sk; Thu, 05 Dec 2019 08:59:58 +0100
-Date:   Thu, 5 Dec 2019 08:59:58 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] pwm: Changes for v5.5-rc1
-Message-ID: <20191205075958.jrz3xuthyh7wv6uu@pengutronix.de>
-References: <20191205061044.1006766-1-thierry.reding@gmail.com>
+        Thu, 5 Dec 2019 03:06:14 -0500
+Received: by mail-pf1-f193.google.com with SMTP id s18so1222802pfd.8;
+        Thu, 05 Dec 2019 00:06:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sbOWUl/LYyug4BpNjD/sLnbb5ya8VzzTl8Cu9V2yvRY=;
+        b=nmGXMlWXu2JCqHKwG7oK8kS1mCgH+HBN4/eM/NOEeCk2in3RGF5oWu656B48kWYzV4
+         mY3bSWyZ30MR/SPNmvS/GgUUll2YMsfMQo4qX+RVLHY0NPjYtazSfiBM5ugleCHjtKdG
+         /Pbz/f5x5rYSo2Hy4VnzwlqqGlLPdKzWeC6AtTnUUMau3dNCpKjv7aAy3QyOCwm8dRb9
+         s41ylI9rrYu3yOGBb4X3BRQLyBLwUu77hjkAhn3AKb1ti3c9OPbwoPdLzlc1yuCbLZrO
+         P8A/jaKiNBktktPIGGLu3Ewlo84+vLm4GxiQksazqDrPb7d4VxWAHjyWP95q5eFbVCuR
+         KDNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sbOWUl/LYyug4BpNjD/sLnbb5ya8VzzTl8Cu9V2yvRY=;
+        b=UEmitdjxm1vAbrx39eGB5WN7xneSAdVbVQot9uj4nmwAWC4YnFF18L1WHCMqRgJYxS
+         76lmoraRcC0jADevtaGLwvbTQyCs3u6OzoS/gpDfHm9V79coIlJLXbfcsy9C/Js+BDoR
+         qmimz9ylo7U3L+CaxfxY47kxekYcJxCoJj99MRxIjBTfdLRN9hV9cXCPPnNUv7aJU8hS
+         LALIh4O2FjhSXD7Q61Q1R5T8pHGGzYsEsIoad0kMWAVKI1eEGUrpMnnMy5NUkCoz1H0+
+         SNlZG0pPYIZ81doBSKUExdI96QX54qbtk7qEPMQHRx2ynTzerPZ3LBPL2TLEQeW8Co6b
+         5YDQ==
+X-Gm-Message-State: APjAAAWNIB5AUamyA8hEa3HK4dhyTVwmPjS+8ue79G0GGCqSZkc3h2ew
+        7rAe0AJSxDPQ6fAMjnftfl0=
+X-Google-Smtp-Source: APXvYqyk7FdG4hnofsNwSjWrXOupDwiMK/1MsIp6Jp00Uhte+xvNi4jEmcD2YJExVKTWuST0cGuFFg==
+X-Received: by 2002:a63:3cb:: with SMTP id 194mr8219400pgd.123.1575533173934;
+        Thu, 05 Dec 2019 00:06:13 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
+        by smtp.gmail.com with ESMTPSA id w4sm8996292pjt.21.2019.12.05.00.06.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 00:06:12 -0800 (PST)
+Date:   Thu, 5 Dec 2019 17:06:11 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: meson: add missing allocation failure check on
+ new_buf
+Message-ID: <20191205080611.GY93017@google.com>
+References: <20191204141159.1432387-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191205061044.1006766-1-thierry.reding@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20191204141159.1432387-1-colin.king@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Thierry,
+On (19/12/04 14:11), Colin King wrote:
+[..]
+> diff --git a/drivers/staging/media/meson/vdec/vdec.c b/drivers/staging/media/meson/vdec/vdec.c
+> index 0a1a04fd5d13..8dd1396909d7 100644
+> --- a/drivers/staging/media/meson/vdec/vdec.c
+> +++ b/drivers/staging/media/meson/vdec/vdec.c
+> @@ -133,6 +133,8 @@ vdec_queue_recycle(struct amvdec_session *sess, struct vb2_buffer *vb)
+>  	struct amvdec_buffer *new_buf;
+>
+>  	new_buf = kmalloc(sizeof(*new_buf), GFP_KERNEL);
+> +	if (!new_buf)
+> +		return;
+>  	new_buf->vb = vb;
 
-On Thu, Dec 05, 2019 at 07:10:44AM +0100, Thierry Reding wrote:
-> The following changes since commit 40a6b9a00930fd6b59aa2eb6135abc2efe5440c3:
-> 
->   Revert "pwm: Let pwm_get_state() return the last implemented state" (2019-10-21 16:48:52 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.5-rc1
-> 
-> for you to fetch changes up to f5ff2628867b9c7cb4abb6c6a5a7eea079dad4b6:
-> 
->   pwm: imx27: Unconditionally write state to hardware (2019-10-21 16:58:09 +0200)
-> 
-> Thanks,
-> Thierry
-> 
-> ----------------------------------------------------------------
-> pwm: Changes for v5.5-rc1
-> 
-> Various changes and minor fixes across a couple of drivers.
-> 
-> ----------------------------------------------------------------
-> Colin Ian King (1):
->       pwm: sun4i: Drop redundant assignment to variable pval
-> 
-> Fabrice Gasnier (3):
->       dt-bindings: pwm-stm32: Document pinctrl sleep state
->       pwm: stm32: Split breakinput apply routine to ease PM support
->       pwm: stm32: Add power management support
-> 
-> Ondrej Jirman (1):
->       pwm: sun4i: Fix incorrect calculation of duty_cycle/period
-> 
-> Rasmus Villemoes (1):
->       pwm: Update comment on struct pwm_ops::apply
-> 
-> Thierry Reding (8):
->       dt-bindings: pwm: mediatek: Remove gratuitous compatible string for MT7629
->       pwm: stm32: Validate breakinput data from DT
->       pwm: stm32: Remove clutter from ternary operator
->       pwm: stm32: Pass breakinput instead of its values
->       pwm: Read initial hardware state at request time
->       pwm: cros-ec: Cache duty cycle value
->       pwm: imx27: Cache duty cycle register value
->       pwm: imx27: Unconditionally write state to hardware
+So the buffer is not getting recycled? IOW is leaked?
 
-It's a bit of a surprise for me that you included the three last patches
-as last minute changes. I'm not sure if I oppose them, but they were not
-in next (as of next-20191205) and I would really like to have some time
-for patches (that are not obvious fixes of course) there before they go
-into a pull request. And if it's only to get some transparency.
-(But in this case I had the impression that the discussion isn't over
-yet, your last mail in the thread said: "I'm not sure yet about the
-remainder of the series. Depending on what we decide to do about drivers
-that can't (or don't want to) write all state through to the hardware,
-patches 2-4 may become moot." in October which made me expect there is
-still something to come, at least a statement before the fact. Still
-more as also several further drivers are affected (according to my
-research described in
-https://patchwork.ozlabs.org/patch/1178351/#2282269).)
-
-In return there are a few patches I would really have liked to be seen
-here:
-
- - The series "Updates for the atmel PWM driver" that didn't get any
-   response from you since August although it got some acks from the
-   atmel guys.
-   (https://patchwork.ozlabs.org/project/linux-pwm/list/?series=127096&state=*,
-   This is marked Superseeded for reasons unknown to me that I asked
-   about in October.)
-
- - The series starting with "pwm: rcar: Drop useless call to
-   pwm_get_state" from October which got reviews by a renesas guy.
-   (https://patchwork.ozlabs.org/patch/1182649/,
-   https://patchwork.ozlabs.org/patch/1182648/,
-   Patchwork didn't identify this as a series, so listing the patches
-   individually.)
-
- - The patch "pwm: implement tracing for .get_state() and
-   .apply_state()" that got an review by Steven Rostedt.
-   (https://patchwork.ozlabs.org/patch/1182679/)
-
- - The series starting with "pwm: omap-dmtimer: remove pwmchip in
-   .remove before making it unfunctional" from November which IMHO is
-   simple and contains two fixes
-   (https://patchwork.ozlabs.org/project/linux-pwm/list/?series=142030)
-
-And I'm still waiting for feedback on
-
- - "Documentation: pwm: rework documentation for the framework" (since
-   January)
-
- - "pwm: add debug knob to help driver authors" (since August)
-
-:-(
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+	-ss
