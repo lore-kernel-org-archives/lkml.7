@@ -2,235 +2,213 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4111C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E256FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67AAC21744
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8C821823
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:17:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2dIQj0n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fWnVCCFO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbfLEDPu (ORCPT
+        id S1728844AbfLEDRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 22:15:50 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37037 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728470AbfLEDPu (ORCPT
+        Wed, 4 Dec 2019 22:17:25 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42082 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728374AbfLEDRZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 22:15:50 -0500
-Received: by mail-io1-f68.google.com with SMTP id k24so2063098ioc.4;
-        Wed, 04 Dec 2019 19:15:49 -0800 (PST)
+        Wed, 4 Dec 2019 22:17:25 -0500
+Received: by mail-pl1-f194.google.com with SMTP id x13so604941plr.9;
+        Wed, 04 Dec 2019 19:17:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4rq2BJZhNOEuuzLU02HzB8M493P6N6+V/gQh4jwiaHE=;
-        b=S2dIQj0nTQmFcq11dgqMrtTbRUHNAKCUlMCO2MQqgkoVFwVNFY/QBMyJSqrSWZfV2u
-         G077FZCLInZjM66KsukFRg/28j+rwyun2iVf0r4kCs3v25HFQd1RltmyhH2xPTWcVyQz
-         mOKySLfyhid4ptvSoVQcjqrFjnSXeUJPK5w5gXkRX5jb44WM/dMIipHQdJoHVj0cnE38
-         XIfced7OHX1Vkb6XIB+csC4FbOWIvFscxCJzjkNSZPFOYei8pan38xHEMNHylUGkO8ny
-         r9aMDdeFqjSLaxoZbk4EOcQDuYMOkHc85ZWuvrnfQVIWPJqmzl2aHBcBRD+q9fval8HH
-         RieA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zLpHyfDlF7oQvCvT4lYlP0xSLBE9XB3er9Iyz3kTfxs=;
+        b=fWnVCCFOkDeBoEPZ4BsVcKyU4UgXHt+5LD09GawCHJ+CpHS2M8OqoXDHqH48slnSMQ
+         AcXyOuR/f2qRCdXcVoDDQJjChjZ6kn187QJXKpUb47nkGO9UwfvmGHG4efEOf8dZpwZV
+         Vu719TqWqWvPZiVyB/pHimURNPG5EZFgxg9InXNchwcNFTrc6DpW+1Aw/lorprKli7yo
+         32sS8P/hy4Bln43s2hBTlpIAGWntvzZX9b6+UpYzEVsiDhyvZUKaF20FITVlNV0BRDLQ
+         XVtSlx/+bbwgucaTj0Xvr9/2FSlpgpRr654jdcXwWOsl1ZBjbRxiRH/c7ZRegdMyAdwM
+         KDjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4rq2BJZhNOEuuzLU02HzB8M493P6N6+V/gQh4jwiaHE=;
-        b=tM6EjnpiAdh5ygLFtuABCSWndHi71Up9HQ9LkgSNrKN2ab1Ag4HqBxnwuTfdac0bp0
-         saCG0eZohpMmlpAB3EKldS8J8BbmPbRxfQn1bWW0NMdTJ+nKRYaSOF7fbjQGvmFpGWa5
-         EEHP3GMI3UBOkWlK72kdVjxtNrk747KxA7T6vpvpvOuYg4xrbnKjrI5js5zRc9sgP2u5
-         OWssY7/hFDgNdKdIHuAwI470IsJEIEzAUHxuvfOVPT8K5lcswEE8GGXzgYMB0Me401Lr
-         PfBmIthRZkYdLAdlK40SjTX6h/g0f77md/sxzLpYXd0umT0WUKvHMIOrbHrDWF+x0Zf3
-         T4qg==
-X-Gm-Message-State: APjAAAXBeWgUJBN1NAnYLaC1RpHl/+yqZbLw+owY0S0p8l/XGvwSSh8o
-        SQ+TZC6mZ2XuBUbrXnNRVxdn+BTZSz4WEkcFRbY=
-X-Google-Smtp-Source: APXvYqzA6x95/jEC5NspnWmfwG71rVSkxJrtiBiE16XWfNxWiXgjBk5LXMFVrb7iQ7I9+KP4K/03ei+gMG3m6W4sNqw=
-X-Received: by 2002:a6b:7316:: with SMTP id e22mr4838252ioh.205.1575515748972;
- Wed, 04 Dec 2019 19:15:48 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zLpHyfDlF7oQvCvT4lYlP0xSLBE9XB3er9Iyz3kTfxs=;
+        b=Ehkw65bxj8NJTSlIF7chzJ0CAwitE4LAhvjPyHdfG4FQnrZP80QmbewsN4F9ju+tCw
+         7klyfvUEmZMkoPea3bx48qVOJv9Bcx4L+TITdPmwr1Sk/lnCOoSv0s02DVR0h1HMqmtK
+         5duTOHZTGGNp6ud/UTIY4JEU1rTu6hnh6Rqb+EIPeaP1+O5REfgk8SdynvjLcM5OhKSK
+         tWBJ0ikyRWu25K2xhFAz3SRk3JuzbrS0mL2vDIBDVNeN3J28qdIqg+Yr7NFGuL8dLtYM
+         FLnSzz7PBwxew09HQ0ZA4nBTzRAayUNd00F7wX/02BkNDwefv22FDSnr08uBl6chnXac
+         hgeg==
+X-Gm-Message-State: APjAAAUU0Cui/+vztDpvsK/jaJ+pI7xp/8GqGmy9pxMyA76M9cGlAyyu
+        fy+Tj9uywwgJM74FAjHuFOw=
+X-Google-Smtp-Source: APXvYqzmJ9DBP5chyXAdhaajV8T/LkxZLnhB5DjwpqMtcFnQ/T53yodnmDxLbLnHHjcTU1sHLLEyqg==
+X-Received: by 2002:a17:902:b70e:: with SMTP id d14mr6402427pls.51.1575515843852;
+        Wed, 04 Dec 2019 19:17:23 -0800 (PST)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::f9fe])
+        by smtp.gmail.com with ESMTPSA id b16sm9209616pfo.64.2019.12.04.19.17.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Dec 2019 19:17:23 -0800 (PST)
+Date:   Wed, 4 Dec 2019 19:17:20 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
+Message-ID: <20191205031718.ax46kfv55zauuopt@ast-mbp.dhcp.thefacebook.com>
+References: <20191202131847.30837-1-jolsa@kernel.org>
+ <CAEf4BzY_D9JHjuU6K=ciS70NSy2UvSm_uf1NfN_tmFz1445Jiw@mail.gmail.com>
+ <87wobepgy0.fsf@toke.dk>
+ <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
+ <CAEf4BzZ+0XpH_zJ0P78vjzmFAH3kGZ21w3-LcSEG=B=+ZQWJ=w@mail.gmail.com>
+ <20191204135405.3ffb9ad6@cakuba.netronome.com>
+ <20191204233948.opvlopjkxe5o66lr@ast-mbp.dhcp.thefacebook.com>
+ <20191204162348.49be5f1b@cakuba.netronome.com>
+ <20191205010930.izft6kv5xlnejgog@ast-mbp.dhcp.thefacebook.com>
+ <20191204181028.6cdb40d4@cakuba.netronome.com>
 MIME-Version: 1.0
-References: <20191205021924.25188-1-aford173@gmail.com> <20191205021924.25188-6-aford173@gmail.com>
- <DB7PR04MB517877B39D4659568F69B813875C0@DB7PR04MB5178.eurprd04.prod.outlook.com>
-In-Reply-To: <DB7PR04MB517877B39D4659568F69B813875C0@DB7PR04MB5178.eurprd04.prod.outlook.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 4 Dec 2019 21:15:37 -0600
-Message-ID: <CAHCN7xLwJvqb=Pc8oOxdRLOExjw-cDKaEmm4-bR3Yt=t+OwY6Q@mail.gmail.com>
-Subject: Re: [PATCH 5/7] arm64: dts: imx8mm: add GPC power domains
-To:     Jacky Bai <ping.bai@nxp.com>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204181028.6cdb40d4@cakuba.netronome.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 8:37 PM Jacky Bai <ping.bai@nxp.com> wrote:
->
-> > -----Original Message-----
-> > From: Adam Ford <aford173@gmail.com>
-> > Sent: Thursday, December 5, 2019 10:19 AM
-> > To: linux-arm-kernel@lists.infradead.org
-> > Cc: Adam Ford <aford173@gmail.com>; Rob Herring <robh+dt@kernel.org>;
-> > Mark Rutland <mark.rutland@arm.com>; Shawn Guo
-> > <shawnguo@kernel.org>; Sascha Hauer <s.hauer@pengutronix.de>;
-> > Pengutronix Kernel Team <kernel@pengutronix.de>; Fabio Estevam
-> > <festevam@gmail.com>; dl-linux-imx <linux-imx@nxp.com>;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: [PATCH 5/7] arm64: dts: imx8mm: add GPC power domains
-> >
-> > There is a power domain controller on the i.XM8M Mini used for handling
-> > interrupts and controlling certain peripherals like USB OTG and PCIe, which
-> > are currently unavailable.
-> >
-> > This patch enables support the controller itself to the help facilitate enabling
-> > additional peripherals.
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 82
-> > ++++++++++++++++++++++-
-> >  1 file changed, 81 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > index 23c8fad7932b..d05c5b617a4d 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > @@ -4,6 +4,7 @@
-> >   */
-> >
-> >  #include <dt-bindings/clock/imx8mm-clock.h>
-> > +#include <dt-bindings/power/imx8m-power.h>
-> >  #include <dt-bindings/gpio/gpio.h>
-> >  #include <dt-bindings/input/input.h>
-> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > @@ -13,7 +14,7 @@
-> >
-> >  / {
-> >       compatible = "fsl,imx8mm";
-> > -     interrupt-parent = <&gic>;
-> > +     interrupt-parent = <&gpc>;
->
-> NACK, for imx8mm, imx8mn & future i.MX8M SOC, we don't treat GPC as interrupt controller in linux anymore.
-> Above change will break the low power mode support(suspend/resume)
+On Wed, Dec 04, 2019 at 06:10:28PM -0800, Jakub Kicinski wrote:
+> On Wed, 4 Dec 2019 17:09:32 -0800, Alexei Starovoitov wrote:
+> > On Wed, Dec 04, 2019 at 04:23:48PM -0800, Jakub Kicinski wrote:
+> > > On Wed, 4 Dec 2019 15:39:49 -0800, Alexei Starovoitov wrote:  
+> > > > > Agreed. Having libbpf on GH is definitely useful today, but one can hope
+> > > > > a day will come when distroes will get up to speed on packaging libbpf,
+> > > > > and perhaps we can retire it? Maybe 2, 3 years from now? Putting
+> > > > > bpftool in the same boat is just more baggage.    
+> > > > 
+> > > > Distros should be packaging libbpf and bpftool from single repo on github.
+> > > > Kernel tree is for packaging kernel.  
+> > > 
+> > > Okay, single repo on GitHub:
+> > > 
+> > > https://github.com/torvalds/linux  
+> > 
+> > and how will you git submodule only libbpf part of kernel github into bcc
+> > and other projects?
+> 
+> Why does bcc have to submodule libbpf? Is it in a "special
+> relationship" with libbpf as well? 
+> 
+> dnf/apt install libbpf
+> 
+> Or rather:
+> 
+> dnf/apt install bcc
+> 
+> since BCC's user doesn't care about dependencies. The day distroes
+> started packaging libbpf and bpftool the game has changed.
 
-What makes it different than the i.MX8MQ?  The I basically copied this
-from the i.MX8MQ and updated the bit locations and tried to leave
-everything else the same.
+have you ever built bcc ? or bpftrace?
+I'm not sure how to answer such 'suggestion'.
 
-I'm OK with removing the interrupt controller stuff, but if that's
-required, I'd like to understand why it's still in the i.MX8Q.
+> Please accept iproute2 as an example of a user space toolset closely
+> related to the kernel. If kernel release model and process made no
+> sense in user space, why do iproute2s developers continue to follow it
+> for years? 
 
-adam
->
-> BR
-> Jacky Bai
->
-> >       #address-cells = <2>;
-> >       #size-cells = <2>;
-> >
-> > @@ -495,6 +496,85 @@
-> >                               interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> >                               #reset-cells = <1>;
-> >                       };
-> > +
-> > +                     gpc: gpc@303a0000 {
-> > +                             compatible = "fsl,imx8mm-gpc";
-> > +                             reg = <0x303a0000 0x10000>;
-> > +                             interrupt-parent = <&gic>;
-> > +                             interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-> > +                             interrupt-controller;
-> > +                             #interrupt-cells = <3>;
-> > +
-> > +                             pgc {
-> > +                                     #address-cells = <1>;
-> > +                                     #size-cells = <0>;
-> > +
-> > +                                     pgc_mipi: power-domain@0 {
-> > +                                             #power-domain-cells = <0>;
-> > +                                             reg = <IMX8MM_POWER_DOMAIN_MIPI>;
-> > +                                     };
-> > +
-> > +                                     pgc_pcie: power-domain@1 {
-> > +                                             #power-domain-cells = <0>;
-> > +                                             reg = <IMX8MM_POWER_DOMAIN_PCIE>;
-> > +                                     };
-> > +
-> > +                                     pgc_otg1: power-domain@2 {
-> > +                                             #power-domain-cells = <0>;
-> > +                                             reg =
-> > <IMX8MM_POWER_DOMAIN_USB_OTG1>;
-> > +                                     };
-> > +
-> > +                                     pgc_otg2: power-domain@3 {
-> > +                                             #power-domain-cells = <0>;
-> > +                                             reg =
-> > <IMX8MM_POWER_DOMAIN_USB_OTG2>;
-> > +                                     };
-> > +
-> > +                                     pgc_ddr1: power-domain@4 {
-> > +                                             #power-domain-cells = <0>;
-> > +                                             reg = <IMX8MM_POWER_DOMAIN_DDR1>;
-> > +                                     };
-> > +
-> > +                                     pgc_gpu2d: power-domain@5 {
-> > +                                             #power-domain-cells = <0>;
-> > +                                             reg = <IMX8MM_POWER_DOMAIN_GPU2D>;
-> > +                                     };
-> > +
-> > +                                     pgc_gpu: power-domain@6 {
-> > +                                             #power-domain-cells = <0>;
-> > +                                             reg = <IMX8MM_POWER_DOMAIN_GPU>;
-> > +                                     };
-> > +
-> > +                                     pgc_vpu: power-domain@7 {
-> > +                                             #power-domain-cells = <0>;
-> > +                                             reg = <IMX8MM_POWER_DOMAIN_VPU>;
-> > +                                     };
-> > +
-> > +                                     pgc_gpu3d: power-domain@8 {
-> > +                                             #power-domain-cells = <0>;
-> > +                                             reg = <IMX8MM_POWER_DOMAIN_GPU3D>;
-> > +                                     };
-> > +
-> > +                                     pgc_disp: power-domain@9 {
-> > +                                             #power-domain-cells = <0>;
-> > +                                             reg = <IMX8MM_POWER_DOMAIN_DISP>;
-> > +                                     };
-> > +
-> > +                                     pgc_vpu_g1: power-domain@a {
-> > +                                             #power-domain-cells = <0>;
-> > +                                             reg = <IMX8MM_POWER_VPU_G1>;
-> > +                                     };
-> > +
-> > +                                     pgc_vpu_g2: power-domain@b {
-> > +                                             #power-domain-cells = <0>;
-> > +                                             reg = <IMX8MM_POWER_VPU_G2>;
-> > +                                     };
-> > +
-> > +                                     pgc_vpu_h1: power-domain@c {
-> > +                                             #power-domain-cells = <0>;
-> > +                                             reg = <IMX8MM_POWER_VPU_H1>;
-> > +                                     };
-> > +                             };
-> > +                     };
-> >               };
-> >
-> >               aips2: bus@30400000 {
-> > --
-> > 2.20.1
->
+imo iproute2 is an example how things should not be run.
+But that's a very different topic.
+
+> > Packaging is different.
+> 
+> There are mostly disadvantages, but the process should be well known.
+> perf has been packaged for years.
+
+perf was initially seen as something that should match kernel one to one.
+yet it diverged over years. I think it's a counter example.
+
+> What do you mean? I've sure as hell sent patches to net with Fixes tags
+
+which was complete waste of time for people who were sending these
+patches, for maintainers who applied them and for all stables folks
+who carried them into kernel stable releases.
+Not a single libbpf build was made out of those sources.
+
+> S-o-B and all that jazz for libbpf and bpftool.
+
+Many open source projects use SOB. It's not kernel specific.
+
+> 
+> > Even coding style is different.
+> 
+> Is it? You mean the damn underscores people are making fun of? :/
+
+Are you trolling? Do you understand why __ is there?
+
+> libbpf doesn't have a roadmap either, 
+
+I think you're contrasting that with kernel and saying
+that kernel has a roadmap ? What is kernel roadmap?
+
+> it's not really a full-on project
+> on its own. What's 0.1.0 gonna be?
+
+whenever this bpf community decides to call it 0.1.0.
+
+> Besides stuff lands in libbpf before it hits a major kernel release.
+> So how are you gonna make libbpf releases independently from kernel
+> ones? What if a feature gets a last minute revert in the kernel and it's
+> in libbpf's ABI?
+
+You mean when kernel gets new feature, then libbpf gets new feature, then
+libbpf is released, but then kernel feature is reverted? Obviously we should
+avoid making a libbpf release that relies on kernel features that didn't reach
+the mainline. Yet there could be plenty of reasons why making libbpf release in
+the middle of kernel development cycle makes perfect sense.
+
+Also reaching Linus's tree in rc1 is also not a guarantee of non-revert. Yet we
+release libbpf around rc1 because everyone expects bug-fixes after rc1. So it's
+an exception that solidifies the rule.
+
+> > libbpf has to run on all kernels. Newer and older. How do you support
+> > that if libbpf is tied with the kernel?
+> 
+> Say I have built N kernels UM or for a VM, and we have some test
+> suite: I pull libbpf, build it, run its tests. The only difference
+> between in tree and out of tree is that "pull libbpf" means pulling
+> smaller or larger repo. Doesn't matter that match, it's a low --depth
+> local clone.
+
+The expected CI is:
+1. pull-req proposed.
+2. CI picks it up, builds, run tests.
+3. humans see results and land or reject pull-req.
+Now try to think through how CI on top of full kernel tree will
+be able to pick just the right commits to start build/test cycle.
+Is it going to cherry-pick from patchworks? That would be awesome.
+Yet intel 0bot results show that it's easier said than done.
+I'm not saying it's not possible. Just complex.
+If you have cycles to integrate *-next into kernelci.org, please go ahead.
+
