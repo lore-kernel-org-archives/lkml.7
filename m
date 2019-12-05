@@ -2,88 +2,187 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E3DC2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C79C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8762124249
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9FA24249
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:56:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbfLEH41 (ORCPT
+        id S1728574AbfLEH4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 02:56:27 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:49826 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725963AbfLEH41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 02:56:27 -0500
-Received: from [10.130.0.36] (unknown [123.138.236.242])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxTxQGuOhdmTgHAA--.9S3;
-        Thu, 05 Dec 2019 15:55:59 +0800 (CST)
-Subject: Re: [PATCH v2] fs: introduce is_dot_dotdot helper for cleanup
-To:     Matthew Wilcox <willy@infradead.org>
-References: <1575377810-3574-1-git-send-email-yangtiezhu@loongson.cn>
- <20191203135651.GU20752@bombadil.infradead.org>
- <0003a252-b003-0a8c-b4ac-6280557ece06@loongson.cn>
- <20191205070646.GA29612@bombadil.infradead.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <b3f23eef-3799-6ddd-43ba-11a90f49279d@loongson.cn>
-Date:   Thu, 5 Dec 2019 15:55:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <20191205070646.GA29612@bombadil.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Thu, 5 Dec 2019 02:56:40 -0500
+Received: from mga17.intel.com ([192.55.52.151]:20787 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbfLEH4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 02:56:40 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 23:56:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,280,1571727600"; 
+   d="scan'208";a="209067399"
+Received: from yuanwan1-mobl.ccr.corp.intel.com ([10.249.174.225])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Dec 2019 23:56:38 -0800
+Message-ID: <a9d9bc3b6ab7b6621157c61da92e55f9c7de0da1.camel@intel.com>
+Subject: Re: [PATCH v2 1/2] thermal: fix and clean up tz and cdev
+ registration
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        Wei Wang <wvw@google.com>
+Cc:     Wei Wang <wei.vince.wang@gmail.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Thu, 05 Dec 2019 15:56:37 +0800
+In-Reply-To: <CAHLCerNT0p7cj+yAhJbNbqCkQguu8AMyngwuvbxaQYTSAB5GPA@mail.gmail.com>
+References: <CAHLCerOD2wOJq7QNGBOcLvkMz4wvc1+6Hk2+ZD__NFged3tLcw@mail.gmail.com>
+         <20191204215618.125826-1-wvw@google.com>
+         <20191204215618.125826-2-wvw@google.com>
+         <CAHLCerMQ_734AFe=QCg+qi3TOvYPMB95NPP_EEHNbuODBSEfog@mail.gmail.com>
+         <CAGXk5yr=jfXq+n7oB0sc=6LT0raURmQ9rgFWqrg0hxMDKYFDig@mail.gmail.com>
+         <CAHLCerOpv3Dqd7AB6=EEUUMpTWujNeLok3=ZpLntCdvHewGyww@mail.gmail.com>
+         <CAHLCerNT0p7cj+yAhJbNbqCkQguu8AMyngwuvbxaQYTSAB5GPA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9DxTxQGuOhdmTgHAA--.9S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7XFyfJr4fAFWDJry7Cr4fGrg_yoW3Wrc_uw
-        4kWrZ7Aws8tFZ09Fs8Ga1FqrZxKaya9rykJrn3t3Wjy345X39xCrWDCrn5Wwn3Ga1xJrsI
-        qrWavrn8JwnagjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbT8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7
-        Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s
-        026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-        JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-        v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xva
-        j40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
-        4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUc3xhDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/05/2019 03:06 PM, Matthew Wilcox wrote:
-> On Thu, Dec 05, 2019 at 08:56:07AM +0800, Tiezhu Yang wrote:
->>> And, as I asked twice in the last round of review, did you benchmark
->>> this change?
->> Before sending this v2 patch, I have done the test used with your test
->> program and already pointed out the following implementation is better:
-> I didn't mean "have you run the test program i wrote".  I meant "have you
-> booted a kernel with this change and done some performance measurements
-> to see if you've changed anything".
+On Thu, 2019-12-05 at 12:36 +0530, Amit Kucheria wrote:
+> On Thu, Dec 5, 2019 at 11:56 AM Amit Kucheria
+> <amit.kucheria@verdurent.com> wrote:
+> > 
+> > On Thu, Dec 5, 2019 at 11:44 AM Wei Wang <wvw@google.com> wrote:
+> > > 
+> > > On Wed, Dec 4, 2019 at 8:13 PM Amit Kucheria
+> > > <amit.kucheria@verdurent.com> wrote:
+> > > > 
+> > > > Hi Wei,
+> > > > 
+> > > > On Thu, Dec 5, 2019 at 3:26 AM Wei Wang <wvw@google.com> wrote:
+> > > > > 
+> > > > > Make cooling device registration behavior consistent with
+> > > > 
+> > > > Consistent how? Please add details.
+> > > > 
+> > > 
+> > > Consistent with
+> > > 
+https://lore.kernel.org/linux-pm/1478581767-7009-2-git-send-email-edubezval@gmail.com/
+> 
+> Studying this a bit more, git blame pointed to this SHA[1] that fixed
+> it so that NULL value for 'type' is allowed, we just check for it.
+> However, none of the users of thermal_cooling_device_register() seem
+> to pass NULL.
+> 
+> Rui, any insight into the history of why we would NOT want to create
+> a
+> sysfs attribute by passing NULL?
 
-Oh, no, it is hard to measure the performance influence with this patch.
-Based on the above analysis, I think the performance influence is very
-small due to is_dot_dotdot() is a such short static inline function.
+Actually, I don't recall there is any requirement that wants to
+register a cooling_device without "type".
 
-Thanks,
+>  Do we still need to allow for NULL
+> values or should we cleanup the API to prevent NULL values?
+> 
+well, my suggestion is to make this (do NULL check) a separate patch
+and see if we have any complains, if yes, we can revert it easily.
 
-Tiezhu Yang
+thanks,
+rui
+
+> [1] 204dd1d39c32f39a95
+> 
+> 
+> > > 
+> > > will include aboce in next version.
+> > 
+> > Thanks.
+> > 
+> > > 
+> > > > > thermal zone. This patch also cleans up a unnecessary
+> > > > > nullptr check.
+> > > > > 
+> > > > > Signed-off-by: Wei Wang <wvw@google.com>
+> > > > > ---
+> > > > >  drivers/thermal/thermal_core.c | 16 ++++++++++++----
+> > > > >  1 file changed, 12 insertions(+), 4 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/thermal/thermal_core.c
+> > > > > b/drivers/thermal/thermal_core.c
+> > > > > index d4481cc8958f..64fbb59c2f44 100644
+> > > > > --- a/drivers/thermal/thermal_core.c
+> > > > > +++ b/drivers/thermal/thermal_core.c
+> > > > > @@ -954,8 +954,16 @@ __thermal_cooling_device_register(struct
+> > > > > device_node *np,
+> > > > >         struct thermal_zone_device *pos = NULL;
+> > > > >         int result;
+> > > > > 
+> > > > > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH)
+> > > > > -               return ERR_PTR(-EINVAL);
+> > > > > +       if (!type || !type[0]) {
+> > > > > +           pr_err("Error: No cooling device type
+> > > > > defined\n");
+> > > > > +           return ERR_PTR(-EINVAL);
+> > > > > +       }
+> > > > > +
+> > > > > +       if (strlen(type) >= THERMAL_NAME_LENGTH) {
+> > > > > +           pr_err("Error: Cooling device name (%s) too long,
+> > > > > "
+> > > > > +                  "should be under %d chars\n", type,
+> > > > > THERMAL_NAME_LENGTH);
+> > > > 
+> > > > Consider fitting into a single greppable string as "Error:
+> > > > Cooling
+> > > > device name over %d chars: %s\n"
+> > > > 
+> > > 
+> > > Was intentionally keep it the same as this
+> > > 
+https://lore.kernel.org/linux-pm/31a29628894a14e716fff113fd9ce945fe649c05.1562876950.git.amit.kucheria@linaro.org/
+> > > Will make it shorter in both places next verion
+> > 
+> > Yes please, make it a separate patch. We didn't catch it during
+> > review.
+> > 
+> > > 
+> > > > > +           return ERR_PTR(-EINVAL);
+> > > > > +       }
+> > > > > 
+> > > > >         if (!ops || !ops->get_max_state || !ops-
+> > > > > >get_cur_state ||
+> > > > >             !ops->set_cur_state)
+> > > > > @@ -972,7 +980,7 @@ __thermal_cooling_device_register(struct
+> > > > > device_node *np,
+> > > > >         }
+> > > > > 
+> > > > >         cdev->id = result;
+> > > > > -       strlcpy(cdev->type, type ? : "", sizeof(cdev->type));
+> > > > > +       strlcpy(cdev->type, type, sizeof(cdev->type));
+> > > > >         mutex_init(&cdev->lock);
+> > > > >         INIT_LIST_HEAD(&cdev->thermal_instances);
+> > > > >         cdev->np = np;
+> > > > > @@ -1250,7 +1258,7 @@ thermal_zone_device_register(const char
+> > > > > *type, int trips, int mask,
+> > > > >                 return ERR_PTR(-EINVAL);
+> > > > >         }
+> > > > > 
+> > > > > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH) {
+> > > > > +       if (strlen(type) >= THERMAL_NAME_LENGTH) {
+> > > > >                 pr_err("Error: Thermal zone name (%s) too
+> > > > > long, should be under %d chars\n",
+> > > > >                        type, THERMAL_NAME_LENGTH);
+> > > > >                 return ERR_PTR(-EINVAL);
+> > > > > --
+> > > > > 2.24.0.393.g34dc348eaf-goog
+> > > > > 
 
