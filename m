@@ -2,273 +2,112 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA6DC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1F0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43EC32245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:21:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JXRGtTEA"
+	by mail.kernel.org (Postfix) with ESMTP id B8CF32464E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbfLELVH (ORCPT
+        id S1729304AbfLELVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 06:21:07 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59166 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729017AbfLELVH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 06:21:07 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5BKuPh053390;
-        Thu, 5 Dec 2019 05:20:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575544856;
-        bh=Aw7GprFDO9w2I0bI/UyUztLL0uF3dC6VNrttSY25G0I=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JXRGtTEAZypzaSt+YXgOJI8a2WTOBCJqsykWMh6s8TRMhUk400NPe7xm8HH2wr6vs
-         rqqYhHkKIPcCIK93t6UUU5Db1L2VbpOLhgV8o7BL44R0/Bp/aa+wB48QRqQcfL9fe/
-         Uy4HvVkmbbz6q54lLEaCaaIilMiOmx4p1NHGU0ck=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5BKuK8086560;
-        Thu, 5 Dec 2019 05:20:56 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
- 2019 05:20:56 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 5 Dec 2019 05:20:56 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5BKpxL102091;
-        Thu, 5 Dec 2019 05:20:52 -0600
-Subject: Re: [PATCH 4/4] PCI: pci-epf-test: Add support to defer core
- initialization
-To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>
-CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <20191113090851.26345-5-vidyas@nvidia.com>
- <e8e3b8b6-d115-b4d4-19c5-1eae1d8abd0f@ti.com>
- <958fcc14-6794-0328-5c31-0dcc845ee646@nvidia.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <c7877f72-97e0-ac48-06c3-8e3ecec87cd5@ti.com>
-Date:   Thu, 5 Dec 2019 16:52:02 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 5 Dec 2019 06:21:24 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2158 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729017AbfLELVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 06:21:24 -0500
+Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 7FD9DD56C9737AD06B31;
+        Thu,  5 Dec 2019 11:21:22 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml707-cah.china.huawei.com (10.201.108.48) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 5 Dec 2019 11:21:22 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Thu, 5 Dec 2019
+ 11:21:21 +0000
+Subject: Re: [PATCH 3/3] mtd: spi-nor: Add USE_FSR flag for n25q* entries
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+CC:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Ashish Kumar <Ashish.Kumar@nxp.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        chenxiang <chenxiang66@hisilicon.com>
+References: <20191205065935.5727-1-vigneshr@ti.com>
+ <20191205065935.5727-4-vigneshr@ti.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <36213198-a09c-a969-1f57-092e0fb7cd68@huawei.com>
+Date:   Thu, 5 Dec 2019 11:21:20 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <958fcc14-6794-0328-5c31-0dcc845ee646@nvidia.com>
+In-Reply-To: <20191205065935.5727-4-vigneshr@ti.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 01/12/19 7:59 pm, Vidya Sagar wrote:
-> On 11/27/2019 2:50 PM, Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On 13/11/19 2:38 PM, Vidya Sagar wrote:
->>> Add support to defer core initialization and to receive a notifier
->>> when core is ready to accommodate platforms where core is not for
->>> initialization untile reference clock from host is available.
->>>
->>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>> ---
->>>   drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++------
->>>   1 file changed, 77 insertions(+), 37 deletions(-)
->>>
->>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c 
->>> b/drivers/pci/endpoint/functions/pci-epf-test.c
->>> index bddff15052cc..068024fab544 100644
->>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
->>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
->>> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct 
->>> work_struct *work)
->>>                  msecs_to_jiffies(1));
->>>   }
->>> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned 
->>> long val,
->>> -                 void *data)
->>> -{
->>> -    struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
->>> -    struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->>> -
->>> -    queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
->>> -               msecs_to_jiffies(1));
->>> -
->>> -    return NOTIFY_OK;
->>> -}
->>> -
->>>   static void pci_epf_test_unbind(struct pci_epf *epf)
->>>   {
->>>       struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->>> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf 
->>> *epf)
->>>       return 0;
->>>   }
->>> +static int pci_epf_test_core_init(struct pci_epf *epf)
->>> +{
->>> +    struct pci_epf_header *header = epf->header;
->>> +    const struct pci_epc_features *epc_features;
->>> +    struct pci_epc *epc = epf->epc;
->>> +    struct device *dev = &epf->dev;
->>> +    bool msix_capable = false;
->>> +    bool msi_capable = true;
->>> +    int ret;
->>> +
->>> +    epc_features = pci_epc_get_features(epc, epf->func_no);
->>> +    if (epc_features) {
->>> +        msix_capable = epc_features->msix_capable;
->>> +        msi_capable = epc_features->msi_capable;
->>> +    }
->>> +
->>> +    ret = pci_epc_write_header(epc, epf->func_no, header);
->>> +    if (ret) {
->>> +        dev_err(dev, "Configuration header write failed\n");
->>> +        return ret;
->>> +    }
->>> +
->>> +    ret = pci_epf_test_set_bar(epf);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    if (msi_capable) {
->>> +        ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
->>> +        if (ret) {
->>> +            dev_err(dev, "MSI configuration failed\n");
->>> +            return ret;
->>> +        }
->>> +    }
->>> +
->>> +    if (msix_capable) {
->>> +        ret = pci_epc_set_msix(epc, epf->func_no, 
->>> epf->msix_interrupts);
->>> +        if (ret) {
->>> +            dev_err(dev, "MSI-X configuration failed\n");
->>> +            return ret;
->>> +        }
->>> +    }
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned 
->>> long val,
->>> +                 void *data)
->>> +{
->>> +    struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
->>> +    struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->>> +    int ret;
->>> +
->>> +    switch (val) {
->>> +    case CORE_INIT:
->>> +        ret = pci_epf_test_core_init(epf);
->>> +        if (ret)
->>> +            return NOTIFY_BAD;
->>> +        break;
->>> +
->>> +    case LINK_UP:
->>> +        queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
->>> +                   msecs_to_jiffies(1));
->>> +        break;
->>> +
->>> +    default:
->>> +        dev_err(&epf->dev, "Invalid EPF test notifier event\n");
->>> +        return NOTIFY_BAD;
->>> +    }
->>> +
->>> +    return NOTIFY_OK;
->>> +}
->>> +
->>>   static int pci_epf_test_alloc_space(struct pci_epf *epf)
->>>   {
->>>       struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->>> @@ -496,12 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>>   {
->>>       int ret;
->>>       struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->>> -    struct pci_epf_header *header = epf->header;
->>>       const struct pci_epc_features *epc_features;
->>>       enum pci_barno test_reg_bar = BAR_0;
->>>       struct pci_epc *epc = epf->epc;
->>> -    struct device *dev = &epf->dev;
->>>       bool linkup_notifier = false;
->>> +    bool skip_core_init = false;
->>>       bool msix_capable = false;
->>>       bool msi_capable = true;
->>> @@ -511,6 +570,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>>       epc_features = pci_epc_get_features(epc, epf->func_no);
->>>       if (epc_features) {
->>>           linkup_notifier = epc_features->linkup_notifier;
->>> +        skip_core_init = epc_features->skip_core_init;
->>>           msix_capable = epc_features->msix_capable;
->>>           msi_capable = epc_features->msi_capable;
->>
->> Are these used anywhere in this function?
-> Nope. I'll remove them.
+On 05/12/2019 06:59, Vignesh Raghavendra wrote:
+> Add USE_FSR flag to all variants of n25q entries that support Flag Status
+> Register.
 > 
->>>           test_reg_bar = pci_epc_get_first_free_bar(epc_features);
->>> @@ -520,34 +580,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>>       epf_test->test_reg_bar = test_reg_bar;
->>>       epf_test->epc_features = epc_features;
->>> -    ret = pci_epc_write_header(epc, epf->func_no, header);
->>> -    if (ret) {
->>> -        dev_err(dev, "Configuration header write failed\n");
->>> -        return ret;
->>> -    }
->>> -
->>>       ret = pci_epf_test_alloc_space(epf);
->>>       if (ret)
->>>           return ret;
->>> -    ret = pci_epf_test_set_bar(epf);
->>> -    if (ret)
->>> -        return ret;
->>> -
->>> -    if (msi_capable) {
->>> -        ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
->>> -        if (ret) {
->>> -            dev_err(dev, "MSI configuration failed\n");
->>> -            return ret;
->>> -        }
->>> -    }
->>> -
->>> -    if (msix_capable) {
->>> -        ret = pci_epc_set_msix(epc, epf->func_no, 
->>> epf->msix_interrupts);
->>> -        if (ret) {
->>> -            dev_err(dev, "MSI-X configuration failed\n");
->>> +    if (!skip_core_init) {
->>> +        ret = pci_epf_test_core_init(epf);
->>> +        if (ret)
->>>               return ret;
->>> -        }
->>>       }
->>>       if (linkup_notifier) {
->>
->> This could as well be moved to pci_epf_test_core_init().
-> Yes, but I would like to keep only the code that touches hardware in 
-> pci_epf_test_core_init()
-> to minimize the time it takes to execute it. Is there any strong reason 
-> to move it? if not,
-> I would prefer to leave it here in this function itself.
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 
-There is no point in scheduling a work to check for commands from host 
-when the EP itself is not initialized.
+Tested-by: John Garry <john.garry@huawei.com> #for n25q128a13
 
-Thanks
-Kishon
+> ---
+>   drivers/mtd/spi-nor/spi-nor.c | 15 ++++++++++-----
+>   1 file changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index a5cb647378f0..1082b6bb1393 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -2454,16 +2454,21 @@ static const struct flash_info spi_nor_ids[] = {
+>   	{ "n25q032a",	 INFO(0x20bb16, 0, 64 * 1024,   64, SPI_NOR_QUAD_READ) },
+>   	{ "n25q064",     INFO(0x20ba17, 0, 64 * 1024,  128, SECT_4K | SPI_NOR_QUAD_READ) },
+>   	{ "n25q064a",    INFO(0x20bb17, 0, 64 * 1024,  128, SECT_4K | SPI_NOR_QUAD_READ) },
+> -	{ "n25q128a11",  INFO(0x20bb18, 0, 64 * 1024,  256, SECT_4K | SPI_NOR_QUAD_READ) },
+> -	{ "n25q128a13",  INFO(0x20ba18, 0, 64 * 1024,  256, SECT_4K | SPI_NOR_QUAD_READ) },
+> +	{ "n25q128a11",  INFO(0x20bb18, 0, 64 * 1024,  256, SECT_4K |
+> +			      USE_FSR | SPI_NOR_QUAD_READ) },
+> +	{ "n25q128a13",  INFO(0x20ba18, 0, 64 * 1024,  256, SECT_4K |
+> +			      USE_FSR | SPI_NOR_QUAD_READ) },
+>   	{ "mt25ql256a",  INFO6(0x20ba19, 0x104400, 64 * 1024,  512,
+>   			       SECT_4K | USE_FSR | SPI_NOR_DUAL_READ |
+>   			       SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
+> -	{ "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+> +	{ "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K |
+> +			      USE_FSR | SPI_NOR_DUAL_READ |
+> +			      SPI_NOR_QUAD_READ) },
+>   	{ "mt25qu256a",  INFO6(0x20bb19, 0x104400, 64 * 1024,  512,
+>   			       SECT_4K | USE_FSR | SPI_NOR_DUAL_READ |
+>   			       SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
+> -	{ "n25q256ax1",  INFO(0x20bb19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_QUAD_READ) },
+> +	{ "n25q256ax1",  INFO(0x20bb19, 0, 64 * 1024,  512, SECT_4K |
+> +			      USE_FSR | SPI_NOR_QUAD_READ) },
+>   	{ "mt25ql512a",  INFO6(0x20ba20, 0x104400, 64 * 1024, 1024,
+>   			       SECT_4K | USE_FSR | SPI_NOR_DUAL_READ |
+>   			       SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
+> @@ -2472,7 +2477,7 @@ static const struct flash_info spi_nor_ids[] = {
+>   			       SECT_4K | USE_FSR | SPI_NOR_DUAL_READ |
+>   			       SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
+>   	{ "n25q512a",    INFO(0x20bb20, 0, 64 * 1024, 1024, SECT_4K |
+> -			      SPI_NOR_QUAD_READ) },
+> +			      USE_FSR | SPI_NOR_QUAD_READ) },
+>   	{ "n25q00",      INFO(0x20ba21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+>   	{ "n25q00a",     INFO(0x20bb21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+>   	{ "mt25ql02g",   INFO(0x20ba22, 0, 64 * 1024, 4096,
+> 
+
