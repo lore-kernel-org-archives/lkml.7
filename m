@@ -2,134 +2,281 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F2AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E24CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79AB206D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A38206D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:31:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DXkGuzbr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729726AbfLETa0 (ORCPT
+        id S1729801AbfLETbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 14:30:26 -0500
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:35353 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726028AbfLETaZ (ORCPT
+        Thu, 5 Dec 2019 14:31:03 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41351 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726028AbfLETbC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 14:30:25 -0500
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.85)
-          with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id <1icwpO-003oDr-Vj>; Thu, 05 Dec 2019 20:30:19 +0100
-Received: from p5b13af92.dip0.t-ipconnect.de ([91.19.175.146] helo=[192.168.178.40])
-          by inpost2.zedat.fu-berlin.de (Exim 4.85)
-          with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id <1icwpO-002dK4-PB>; Thu, 05 Dec 2019 20:30:18 +0100
-Subject: Re: [PATCH v6 10/18] sh/tlb: Convert SH to generic mmu_gather
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-References: <20190219103148.192029670@infradead.org>
- <20190219103233.443069009@infradead.org>
- <CAMuHMdW3nwckjA9Bt-_Dmf50B__sZH+9E5s0_ziK1U_y9onN=g@mail.gmail.com>
- <20191204104733.GR2844@hirez.programming.kicks-ass.net>
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
- mQINBE3JE9wBEADMrYGNfz3oz6XLw9XcWvuIxIlPWoTyw9BxTicfGAv0d87wngs9U+d52t/R
- EggPePf34gb7/k8FBY1IgyxnZEB5NxUb1WtW0M3GUxpPx6gBZqOm7SK1ZW3oSORw+T7Aezl3
- Zq4Nr4Nptqx7fnLpXfRDs5iYO/GX8WuL8fkGS/gIXtxKewd0LkTlb6jq9KKq8qn8/BN5YEKq
- JlM7jsENyA5PIe2npN3MjEg6p+qFrmrzJRuFjjdf5vvGfzskrXCAKGlNjMMA4TgZvugOFmBI
- /iSyV0IOaj0uKhes0ZNX+lQFrOB4j6I5fTBy7L/T3W/pCWo3wVkknNYa8TDYT73oIZ7Aimv+
- k7OzRfnxsSOAZT8Re1Yt8mvzr6FHVFjr/VdyTtO5JgQZ6LEmvo4Ro+2ByBmCHORCQ0NJhD1U
- 3avjGfvfslG999W0WEZLTeaGkBAN1yG/1bgGAytQQkD9NsVXqBy7S3LVv9bB844ysW5Aj1nv
- tgIz14E2WL8rbpfjJMXi7B5ha6Lxf3rFOgxpr6ZoEn+bGG4hmrO+/ReA4SerfMqwSTnjZsZv
- xMJsx2B9c8DaZE8GsA4I6lsihbJmXhw8i7Cta8Dx418wtEbXhL6m/UEk60O7QD1VBgGqDMnJ
- DFSlvKa9D+tZde/kHSNmQmLLzxtDbNgBgmR0jUlmxirijnm8bwARAQABtFRKb2huIFBhdWwg
- QWRyaWFuIEdsYXViaXR6IChGcmVpZSBVbml2ZXJzaXRhZXQgQmVybGluKSA8Z2xhdWJpdHpA
- cGh5c2lrLmZ1LWJlcmxpbi5kZT6JAlEEEwEIADsCGwMFCwkIBwMFFQoJCAsFFgIDAQACHgEC
- F4AWIQRi/4p1hOApVpVGAAZ0Jjs39bX5EwUCWhQoUgIZAQAKCRB0Jjs39bX5Ez/ID/98r9c4
- WUSgOHVPSMVcOVziMOi+zPWfF1OhOXW+atpTM4LSSp66196xOlDFHOdNNmO6kxckXAX9ptvp
- Bc0mRxa7OrC168fKzqR7P75eTsJnVaOu+uI/vvgsbUIosYdkkekCxDAbYCUwmzNotIspnFbx
- iSPMNrpw7Ud/yQkS9TDYeXnrZDhBp7p5+naWCD/yMvh7yVCA4Ea8+xDVoX+kjv6EHJrwVupO
- pMa39cGs2rKYZbWTazcflKH+bXG3FHBrwh9XRjA6A1CTeC/zTVNgGF6wvw/qT2x9tS7WeeZ1
- jvBCJub2cb07qIfuvxXiGcYGr+W4z9GuLCiWsMmoff/Gmo1aeMZDRYKLAZLGlEr6zkYh1Abt
- iz0YLqIYVbZAnf8dCjmYhuwPq77IeqSjqUqI2Cb0oOOlwRKVWDlqAeo0Bh8DrvZvBAojJf4H
- nQZ/pSz0yaRed/0FAmkVfV+1yR6BtRXhkRF6NCmguSITC96IzE26C6n5DBb43MR7Ga/mof4M
- UufnKADNG4qz57CBwENHyx6ftWJeWZNdRZq10o0NXuCJZf/iulHCWS/hFOM5ygfONq1Vsj2Z
- DSWvVpSLj+Ufd2QnmsnrCr1ZGcl72OC24AmqFWJY+IyReHWpuABEVZVeVDQooJ0K4yqucmrF
- R7HyH7oZGgR0CgYHCI+9yhrXHrQpyLkCDQRNyRQuARAArCaWhVbMXw9iHmMH0BN/TuSmeKtV
- h/+QOT5C5Uw+XJ3A+OHr9rB+SpndJEcDIhv70gLrpEuloXhZI9VYazfTv6lrkCZObXq/NgDQ
- Mnu+9E/E/PE9irqnZZOMWpurQRh41MibRii0iSr+AH2IhRL6CN2egZID6f93Cdu7US53ZqIx
- bXoguqGB2CK115bcnsswMW9YiVegFA5J9dAMsCI9/6M8li+CSYICi9gq0LdpODdsVfaxmo4+
- xYFdXoDN33b8Yyzhbh/I5gtVIRpfL+Yjfk8xAsfz78wzifSDckSB3NGPAXvs6HxKc50bvf+P
- 6t2tLpmB/KrpozlZazq16iktY97QulyEY9JWCiEgDs6EKb4wTx+lUe4yS9eo95cBV+YlL+BX
- kJSAMyxgSOy35BeBaeUSIrYqfHpbNn6/nidwDhg/nxyJs8mPlBvHiCLwotje2AhtYndDEhGQ
- KEtEaMQEhDi9MsCGHe+00QegCv3FRveHwzGphY1YlRItLjF4TcFz1SsHn30e7uLTDe/pUMZU
- Kd1xU73WWr0NlWG1g49ITyaBpwdv/cs/RQ5laYYeivnag81TcPCDbTm7zXiwo53aLQOZj4u3
- gSQvAUhgYTQUstMdkOMOn0PSIpyVAq3zrEFEYf7bNSTcdGrgwCuCBe4DgI3Vu4LOoAeI428t
- 2dj1K1EAEQEAAYkCHwQYAQgACQUCTckULgIbDAAKCRB0Jjs39bX5E683EAC1huywL4BlxTj7
- FTm7FiKd5/KEH5/oaxLQN26mn8yRkP/L3xwiqXxdd0hnrPyUe8mUOrSg7KLMul+pSRxPgaHA
- xt1I1hQZ30cJ1j/SkDIV2ImSf75Yzz5v72fPiYLq9+H3qKZwrgof9yM/s0bfsSX/GWyFatvo
- Koo+TgrE0rmtQw82vv7/cbDAYceQm1bRB8Nr8agPyGXYcjohAj7NJcra4hnu1wUw3yD05p/B
- Rntv7NvPWV3Oo7DKCWIS4RpEd6I6E+tN3GCePqROeK1nDv+FJWLkyvwLigfNaCLro6/292YK
- VMdBISNYN4s6IGPrXGGvoDwo9RVo6kBhlYEfg6+2eaPCwq40IVfKbYNwLLB2MR2ssL4yzmDo
- OR3rQFDPj+QcDvH4/0gCQ+qRpYATIegS8zU5xQ8nPL8lba9YNejaOMzw8RB80g+2oPOJ3Wzx
- oMsmw8taUmd9TIw/bJ2VO1HniiJUGUXCqoeg8homvBOQ0PmWAWIwjC6nf6CIuIM4Egu2I5Kl
- jEF9ImTPcYZpw5vhdyPwBdXW2lSjV3EAqknWujRgcsm84nycuJnImwJptR481EWmtuH6ysj5
- YhRVGbQPfdsjVUQfZdRdkEv4CZ90pdscBi1nRqcqANtzC+WQFwekDzk2lGqNRDg56s+q0KtY
- scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <3c83eaec-8f33-1b90-1c70-9e7c1c8b1855@physik.fu-berlin.de>
-Date:   Thu, 5 Dec 2019 20:30:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 5 Dec 2019 14:31:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575574260;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u8Hn6V4xZsuhZskjbMnVwI4YXgtPw6vOPW0xXiTZfTE=;
+        b=DXkGuzbrcrN0rX1rZ7dTriRIoSsDv5TplSdVc7emijn0ZI1f7RkDrwy5KbVh6qhYzDea2Q
+        soblxK3NV1Znpnhj2iUzSJEhtHfX87EOw/zgJDKLN7/UWbPO041/YDx+sxYbb1cdedhLtC
+        X3v9O1Q5HJQds8SVKb9O289DO/EFefg=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-333-4DLSkD7_Pc6JRqhHGpc4SA-1; Thu, 05 Dec 2019 14:30:58 -0500
+Received: by mail-qv1-f70.google.com with SMTP id e11so2653856qvv.18
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 11:30:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1U5LLMCJYsaS3NRWFAvsUrEB3QRcXFbIGnRHSgYXow0=;
+        b=WVpdUiIyAvf7b5Susb1hIw7RTxjV1ed+GJbjuJIYpeN7RBZ2/0sXXeNvUVSB+3RpEy
+         fiwnusT3xbAfDM/Y9JzK0rSQDltbNbYd7J1OfvG6ooUVmFWqcCC0Q3i4H35f8VqeFYAo
+         kMyMuq6nmajKtWDEVi5GE9HNapoxfvpSIrwXXa7ALu9f+t3MHibKQKIftOauv1aBY0Ba
+         sbpxMRDiGDSBW4rKUjBJiZPMSjbWGKVrBaf8vtpw+/gn1LPVLJ4VTsGYmGQFQjYi//3Y
+         4QeAD7y2Z5o5G0vF+5Pd+GNVc6bJqXtMyGtv0VhKSC4aIPh+l+QxQf3u4pRPf0NLfXxL
+         skzw==
+X-Gm-Message-State: APjAAAXdCTO4tBPTRsw2uSskX1oIKB8cFtkG1l729QV1bpL1cbhDvOkG
+        g+JxQ/Ak83EkUIXEXjCSg747VMZepJDCp/jksm0e0+z8noOrlP3cw+AF1I5TDeF3TVtzODuVhBQ
+        1qn8LSI1lv+zoA9PPs/YUFTq7
+X-Received: by 2002:ac8:7698:: with SMTP id g24mr9087560qtr.200.1575574258068;
+        Thu, 05 Dec 2019 11:30:58 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwkpVoVUz3h5zS5xwC/ju/ihohoRopafm52tKSbPSkxG8tN5YoTguSF+NAKckwaCdGYC1NwIg==
+X-Received: by 2002:ac8:7698:: with SMTP id g24mr9087522qtr.200.1575574257677;
+        Thu, 05 Dec 2019 11:30:57 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id q35sm5665033qta.19.2019.12.05.11.30.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 11:30:56 -0800 (PST)
+Date:   Thu, 5 Dec 2019 14:30:55 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 00/15] KVM: Dirty ring interface
+Message-ID: <20191205193055.GA7201@xz-x1>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <b8f28d8c-2486-2d66-04fd-a2674b598cfd@redhat.com>
+ <20191202021337.GB18887@xz-x1>
+ <b893745e-96c1-d8e4-85ec-9da257d0d44e@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191204104733.GR2844@hirez.programming.kicks-ass.net>
+In-Reply-To: <b893745e-96c1-d8e4-85ec-9da257d0d44e@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-MC-Unique: 4DLSkD7_Pc6JRqhHGpc4SA-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: 91.19.175.146
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Tue, Dec 03, 2019 at 02:59:14PM +0100, Paolo Bonzini wrote:
+> On 02/12/19 03:13, Peter Xu wrote:
+> >> This is not needed, it will just be a false negative (dirty page that
+> >> actually isn't dirty).  The dirty bit will be cleared when userspace
+> >> resets the ring buffer; then the instruction will be executed again an=
+d
+> >> mark the page dirty again.  Since ring full is not a common condition,
+> >> it's not a big deal.
+> >=20
+> > Actually I added this only because it failed one of the unit tests
+> > when verifying the dirty bits..  But now after a second thought, I
+> > probably agree with you that we can change the userspace too to fix
+> > this.
+>=20
+> I think there is already a similar case in dirty_log_test when a page is
+> dirty but we called KVM_GET_DIRTY_LOG just before it got written to.
 
-On 12/4/19 11:47 AM, Peter Zijlstra wrote:
->> I got remote access to an SH7722-based Migo-R again, which spews a long
->> sequence of BUGs during userspace startup.  I've bisected this to commit
->> c5b27a889da92f4a ("sh/tlb: Convert SH to generic mmu_gather").
-> 
-> Whoopsy.. also, is this really the first time anybody booted an SH
-> kernel in over a year ?!?
+If you mean the host_bmap_track (in dirty_log_test.c), that should be
+a reversed version of this race (that's where the data is written,
+while we didn't see the dirty bit set).  But yes I think I can
+probably use the same bitmap to fix the test case, because in both
+cases what we want to do is to make sure "the dirty bit of this page
+should be set in next round".
 
-I have to admit, I have been very lazy with kernel updates. I have been
-planning to upgrade to a much more recent release on my boards for a while
-now, I have just been postponing it since the machines run very stable
-with the current kernel I am using.
+>=20
+> > I think the steps of the failed test case could be simplified into
+> > something like this (assuming the QEMU migration context, might be
+> > easier to understand):
+> >=20
+> >   1. page P has data P1
+> >   2. vcpu writes to page P, with date P2
+> >   3. vmexit (P is still with data P1)
+> >   4. mark P as dirty, ring full, user exit
+> >   5. collect dirty bit P, migrate P with data P1
+> >   6. vcpu run due to some reason, P was written with P2, user exit agai=
+n
+> >      (because ring is already reaching soft limit)
+> >   7. do KVM_RESET_DIRTY_RINGS
+>=20
+> Migration should only be done after KVM_RESET_DIRTY_RINGS (think of
+> KVM_RESET_DIRTY_RINGS as the equivalent of KVM_CLEAR_DIRTY_LOG).
 
-Adrian
+Totally agree for migration.  It's probably just that the test case
+needs fixing.
 
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer - glaubitz@debian.org
-`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+>=20
+> >   dirty_log_test-29003 [001] 184503.384328: kvm_entry:            vcpu =
+1
+> >   dirty_log_test-29003 [001] 184503.384329: kvm_exit:             reaso=
+n EPT_VIOLATION rip 0x40359f info 582 0
+> >   dirty_log_test-29003 [001] 184503.384329: kvm_page_fault:       addre=
+ss 7fc036d000 error_code 582
+> >   dirty_log_test-29003 [001] 184503.384331: kvm_entry:            vcpu =
+1
+> >   dirty_log_test-29003 [001] 184503.384332: kvm_exit: reason EPT_VIOLAT=
+ION rip 0x40359f info 582 0
+> >   dirty_log_test-29003 [001] 184503.384332: kvm_page_fault:       addre=
+ss 7fc036d000 error_code 582
+> >   dirty_log_test-29003 [001] 184503.384332: kvm_dirty_ring_push:  ring =
+1: dirty 0x37f reset 0x1c0 slot 1 offset 0x37e ret 0 (used 447)
+> >   dirty_log_test-29003 [001] 184503.384333: kvm_entry:            vcpu =
+1
+> >   dirty_log_test-29003 [001] 184503.384334: kvm_exit:             reaso=
+n EPT_VIOLATION rip 0x40359f info 582 0
+> >   dirty_log_test-29003 [001] 184503.384334: kvm_page_fault:       addre=
+ss 7fc036e000 error_code 582
+> >   dirty_log_test-29003 [001] 184503.384336: kvm_entry:            vcpu =
+1
+> >   dirty_log_test-29003 [001] 184503.384336: kvm_exit:             reaso=
+n EPT_VIOLATION rip 0x40359f info 582 0
+> >   dirty_log_test-29003 [001] 184503.384336: kvm_page_fault:       addre=
+ss 7fc036e000 error_code 582
+> >   dirty_log_test-29003 [001] 184503.384337: kvm_dirty_ring_push:  ring =
+1: dirty 0x380 reset 0x1c0 slot 1 offset 0x37f ret 1 (used 448)
+> >   dirty_log_test-29003 [001] 184503.384337: kvm_dirty_ring_exit:  vcpu =
+1
+> >   dirty_log_test-29003 [001] 184503.384338: kvm_fpu:              unloa=
+d
+> >   dirty_log_test-29003 [001] 184503.384340: kvm_userspace_exit:   reaso=
+n 0x1d (29)
+> >   dirty_log_test-29000 [006] 184503.505103: kvm_dirty_ring_reset: ring =
+1: dirty 0x380 reset 0x380 (used 0)
+> >   dirty_log_test-29003 [001] 184503.505184: kvm_fpu:              load
+> >   dirty_log_test-29003 [001] 184503.505187: kvm_entry:            vcpu =
+1
+> >   dirty_log_test-29003 [001] 184503.505193: kvm_exit:             reaso=
+n EPT_VIOLATION rip 0x40359f info 582 0
+> >   dirty_log_test-29003 [001] 184503.505194: kvm_page_fault:       addre=
+ss 7fc036f000 error_code 582              <-------- [1]
+> >   dirty_log_test-29003 [001] 184503.505206: kvm_entry:            vcpu =
+1
+> >   dirty_log_test-29003 [001] 184503.505207: kvm_exit:             reaso=
+n EPT_VIOLATION rip 0x40359f info 582 0
+> >   dirty_log_test-29003 [001] 184503.505207: kvm_page_fault:       addre=
+ss 7fc036f000 error_code 582
+> >   dirty_log_test-29003 [001] 184503.505226: kvm_dirty_ring_push:  ring =
+1: dirty 0x381 reset 0x380 slot 1 offset 0x380 ret 0 (used 1)
+> >   dirty_log_test-29003 [001] 184503.505226: kvm_entry:            vcpu =
+1
+> >   dirty_log_test-29003 [001] 184503.505227: kvm_exit:             reaso=
+n EPT_VIOLATION rip 0x40359f info 582 0
+> >   dirty_log_test-29003 [001] 184503.505228: kvm_page_fault:       addre=
+ss 7fc0370000 error_code 582
+> >   dirty_log_test-29003 [001] 184503.505231: kvm_entry:            vcpu =
+1
+> >   ...
+> >=20
+> > The test was trying to continuously write to pages, from above log
+> > starting from 7fc036d000. The reason 0x1d (29) is the new dirty ring
+> > full exit reason.
+> >=20
+> > So far I'm still unsure of two things:
+> >=20
+> >   1. Why for each page we faulted twice rather than once.  Take the
+> >      example of page at 7fc036e000 above, the first fault didn't
+> >      trigger the marking dirty path, while only until the 2nd ept
+> >      violation did we trigger kvm_dirty_ring_push.
+>=20
+> Not sure about that.  Try enabling kvmmmu tracepoints too, it will tell
+> you more of the path that was taken while processing the EPT violation.
+
+These new tracepoints are extremely useful (which I didn't notice
+before).
+
+So here's the final culprit...
+
+void kvm_reset_dirty_gfn(struct kvm *kvm, u32 slot, u64 offset, u64 mask)
+{
+        ...
+=09spin_lock(&kvm->mmu_lock);
+=09/* FIXME: we should use a single AND operation, but there is no
+=09 * applicable atomic API.
+=09 */
+=09while (mask) {
+=09=09clear_bit_le(offset + __ffs(mask), memslot->dirty_bitmap);
+=09=09mask &=3D mask - 1;
+=09}
+
+=09kvm_arch_mmu_enable_log_dirty_pt_masked(kvm, memslot, offset, mask);
+=09spin_unlock(&kvm->mmu_lock);
+}
+
+The mask is cleared before reaching
+kvm_arch_mmu_enable_log_dirty_pt_masked()..
+
+The funny thing is that I did have a few more patches to even skip
+allocate the dirty_bitmap when dirty ring is enabled (hence in that
+tree I removed this while loop too, so that has no such problem).
+However I dropped those patches when I posted the RFC because I don't
+think it's mature, and the selftest didn't complain about that
+either..  Though, I do plan to redo that in v2 if you don't disagree.
+The major question would be whether the dirty_bitmap could still be
+for any use if dirty ring is enabled.
+
+>=20
+> If your machine has PML, what you're seeing is likely not-present
+> violation, not dirty-protect violation.  Try disabling pml and see if
+> the trace changes.
+>=20
+> >   2. Why we didn't get the last page written again after
+> >      kvm_userspace_exit (last page was 7fc036e000, and the test failed
+> >      because 7fc036e000 detected change however dirty bit unset).  In
+> >      this case the first write after KVM_RESET_DIRTY_RINGS is the line
+> >      pointed by [1], I thought it should be a rewritten of page
+> >      7fc036e000 because when the user exit happens logically the write
+> >      should not happen yet and eip should keep.  However at [1] it's
+> >      already writting to a new page.
+>=20
+> IIUC you should get, with PML enabled:
+>=20
+> - guest writes to page
+> - PML marks dirty bit, causes vmexit
+> - host copies PML log to ring, causes userspace exit
+> - userspace calls KVM_RESET_DIRTY_RINGS
+>   - host marks page as clean
+> - userspace calls KVM_RUN
+>   - guest writes again to page
+>=20
+> but the page won't be in the ring until after another vmexit happens.
+> Therefore, it's okay to reap the pages in the ring asynchronously, but
+> there must be a synchronization point in the testcase sooner or later,
+> where all CPUs are kicked out of KVM_RUN.  This synchronization point
+> corresponds to the migration downtime.
+
+Yep, currently in the test case I used the same signal trick to kick
+the vcpu out to make sure PML buffers are flushed during the vmexit,
+before the main thread starts to collect dirty bits.
+
+Thanks,
+
+--=20
+Peter Xu
+
