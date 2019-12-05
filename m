@@ -2,285 +2,214 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D295CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D91C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964F72464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:10:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="OW9Yn/Za"
+	by mail.kernel.org (Postfix) with ESMTP id E71B52464F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575558762;
+	bh=JzjNkX/2Nbo6GlblPPluACsjcHZsfz/p6Nojkr11NQA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I24QRcHQ0Sr+KE24/GXOnfOuWdy/Sz48CdzIYukio6OUmKgxB8evh5afQ0eH9PqSo
+	 Enr6ooE/gyMFdtBHzODzOi9qTwn/kxRkoDSjkQ7Q5fI+3F8zIYqigpWgBDoR5rgI0P
+	 BS2XBIVc2HKZCse5oS3z0I6JKiu/6QFjzOaqBWlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729734AbfLEPKU (ORCPT
+        id S1729718AbfLEPMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:10:20 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:3944 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729187AbfLEPKU (ORCPT
+        Thu, 5 Dec 2019 10:12:40 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44098 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLEPMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 10:10:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575558619; x=1607094619;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=SrfasP8IAPqd8vrwXng/eZJeZ7Albzeeh72IDkV4jQI=;
-  b=OW9Yn/ZaWJ//CBZeq8rGeDvcuJIk918UrrPch8wATbipy3qQVv6yuHor
-   oQBLoPu9CAF6fms32pZB2riXH5OPO6W/fEWKnGS7USneM5hAWewSv1hpF
-   wGxcfyel2/oFm7ytwq4hIe+4BD2cadgXIoBj2Jowd0JGtKm83bW0oPLHZ
-   4=;
-IronPort-SDR: 6VkidmQTW/ue9jNioio6TGxd5tu1XHQKcxD/T+VEDx8tDzmBagjTN63qVU/t5lYWXCLkKtZIph
- 1/OCyc1d8QPg==
-X-IronPort-AV: E=Sophos;i="5.69,281,1571702400"; 
-   d="scan'208";a="11821889"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 05 Dec 2019 15:10:02 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 93E92A201D;
-        Thu,  5 Dec 2019 15:10:00 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 5 Dec 2019 15:09:59 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.171) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 5 Dec 2019 15:09:55 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <axboe@kernel.dk>, <konrad.wilk@oracle.com>, <roger.pau@citrix.com>
-CC:     <sjpark@amazon.com>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sj38.park@gmail.com>,
-        SeongJae Park <sjpark@amazon.de>
-Subject: [PATCH v2 1/1] xen/blkback: Aggressively shrink page pools if a memory pressure is detected
-Date:   Thu, 5 Dec 2019 16:09:32 +0100
-Message-ID: <20191205150932.3793-2-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191205150932.3793-1-sjpark@amazon.com>
-References: <20191205150932.3793-1-sjpark@amazon.com>
+        Thu, 5 Dec 2019 10:12:40 -0500
+Received: by mail-oi1-f194.google.com with SMTP id d62so2999560oia.11;
+        Thu, 05 Dec 2019 07:12:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ct3cztTVPY5fqFtFxY79enKS5M3PxUPj5Gr6za0FKzc=;
+        b=RNRAYxSWpyztyJp4emajf5yG2rj4ydxeUA5TIUulBhEsLpXEsEJRVUih/mbvfMTp2t
+         bj6cmhsvRpRprjIZwZax9srD2XVB+8doGDHpZN8zve52FAGK+LP4OGFczpFoBq2QDdw3
+         x9eikJ7a7cV+PmdWeB0I669B9pZu+M6Wx1i9lKHU3aImRkCn2lCqvaO1eLjd1VxydMoe
+         PvbIYKkA1WQ3Y/iWKcsG1duFr8QVN/TiV21npghlgUio9ukH3Zu+gYTAejHwXXntoCFR
+         mTbBXajcawgIZGc0GK/K3JLptI1w7BZh/+9gdZS+eOXWnRtRrPteUKYz1k4gdeQMm7o/
+         1yNg==
+X-Gm-Message-State: APjAAAVH3NO+asi2m16qUt5uSC2W5NSSrArhIG1qnPbsrzbrptQo1FFY
+        y4Irab6nCVvQTX9w2ldqww==
+X-Google-Smtp-Source: APXvYqyEn64lxv2I6QD1cuSgRAQUS0/AMs3S4yVo81pvB0lnM7FD5eedCJJ/HwIkntkujI43KeChfQ==
+X-Received: by 2002:a05:6808:996:: with SMTP id a22mr7208327oic.146.1575558759243;
+        Thu, 05 Dec 2019 07:12:39 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m7sm2064241otl.20.2019.12.05.07.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 07:12:38 -0800 (PST)
+Date:   Thu, 5 Dec 2019 09:12:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Orson Zhai <orson.zhai@spreadtrum.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Orson Zhai <orson.zhai@unisoc.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kevin.tang@unisoc.com, baolin.wang@unisoc.com,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: Re: [PATCH V2 1/2] dt-bindings: syscon: Add syscon-names to refer to
+ syscon easily
+Message-ID: <20191205151237.GA30195@bogus>
+References: <20191120154148.22067-1-orson.zhai@unisoc.com>
+ <20191120154148.22067-2-orson.zhai@unisoc.com>
+ <20191204163830.GA25135@bogus>
+ <CAK8P3a3_r6z6Qk133=4gUzJ0rYmMH7sDDqpEF8ZVXS_bc3OtkQ@mail.gmail.com>
+ <20191204192639.GA15786@bogus>
+ <CAK8P3a165hqB=5LmMiTPGJxvsSJqrbFf5EC9WnqtFRYFok+xKw@mail.gmail.com>
+ <20191205125539.GH21613@lenovo>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.171]
-X-ClientProxiedBy: EX13D12UWA004.ant.amazon.com (10.43.160.168) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191205125539.GH21613@lenovo>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Thu, Dec 05, 2019 at 08:55:39PM +0800, Orson Zhai wrote:
+> Hi Arnd & Rob,
+> 
+> On Thu, Dec 05, 2019 at 10:20:03AM +0100, Arnd Bergmann wrote:
+> > On Wed, Dec 4, 2019 at 8:26 PM Rob Herring <robh@kernel.org> wrote:
+> > > On Wed, Dec 04, 2019 at 06:00:17PM +0100, Arnd Bergmann wrote:
+> > > > On Wed, Dec 4, 2019 at 5:38 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > > > I think generally speaking this would be useful for random registers that
+> > > > logically belong to one device but are grouped with other unrelated
+> > > > registers in a syscon, and that are in a different register offset for
+> > > > each chip that has them. Using named properties instead of a list
+> > > > of phandle/arg tuples with names is clearly a simpler alternative
+> > > > and more like we do it today, but I can also see some API simplification
+> > > > with Orson's patch without the binding getting out of hand.
+> > >
+> > > I understand when a phandle to a syscon is used. That's nothing new.
+> > > What's special about Unisoc SoC that needs something new/different?
+> > > I saw there's a large number of syscons, but I don't understand what's
+> > > in them.
+> > >
+> > > If the API is this:
+> > >
+> > > struct regmap *syscon_regmap_lookup_by_name(struct device_node *np,
+> > >                                        const char *name,
+> > >                                        int arg_count, __u32 *out_args)
+> > >
+> > > How is 'name' being an entry in syscon-names simpler than just being the
+> > > property name? The implementation for the latter would certainly be
+> > > simpler.
+> > >
+> > > It also makes the property unparseable without knowledge outside of the
+> > > DT (i.e. in the driver). I suppose if the number of cells for each entry
+> > > is fixed, we could count the number of syscon-names entries to figure
+> > > out the stride. But then if one entry needs a lot of cells, then they
+> > > all have to have padding cells.
+> >
+> > Good point. The syscon_regmap_lookup_by_name() interface would
+> > work just as well when passing a property name compared to
+> > a name listed in another property, and this would still be more in
+> > line with what we do on other SoCs.
+> >
+> 
+> udx710-modem.dtsi:69:   syscons = <&pmu_apb_regs 0x18 0x2000000>,
+> udx710-modem.dtsi-70-           <&pmu_apb_regs 0x544 0x1>,
+> udx710-modem.dtsi-71-           <&aon_apb_regs 0x218 0x7e00>,
+> udx710-modem.dtsi-72-           <&pmu_apb_regs 0xb0 0x20000>,
+> udx710-modem.dtsi-73-           <&pmu_apb_regs 0xff 0x100>;
+> udx710-modem.dtsi:74:   syscon-names = "shutdown", "deepsleep", "corereset",
+> udx710-modem.dtsi-75-                  "sysreset", "getstatus";
 
-Each `blkif` has a free pages pool for the grant mapping.  The size of
-the pool starts from zero and be increased on demand while processing
-the I/O requests.  If current I/O requests handling is finished or 100
-milliseconds has passed since last I/O requests handling, it checks and
-shrinks the pool to not exceed the size limit, `max_buffer_pages`.
+Reset at least has a standard binding.
 
-Therefore, `blkfront` running guests can cause a memory pressure in the
-`blkback` running guest by attaching a large number of block devices and
-inducing I/O.  System administrators can avoid such problematic
-situations by limiting the maximum number of devices each guest can
-attach.  However, finding the optimal limit is not so easy.  Improper
-set of the limit can result in the memory pressure or a resource
-underutilization.  This commit avoids such problematic situations by
-shrinking the pools aggressively (further the limit) for a while (users
-can set this duration via a module parameter) if a memory pressure is
-detected.
 
-Discussions
-===========
+> ud710.dtsi:1268:        syscons = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PRESENT_32K>,
+> ud710.dtsi-1269-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PROTECT_32K>,
+> ud710.dtsi-1270-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_EN_32K>,
+> ud710.dtsi-1271-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_THD_32K>;
+> ud710.dtsi:1272:        syscon-names =  "sd_detect_pol",
+> ud710.dtsi-1273-                        "sd_hotplug_protect_en",
+> ud710.dtsi-1274-                        "sd_hotplug_debounce_en",
+> ud710.dtsi-1275-                        "sd_hotplug_debounce_cn";
 
-The `blkback`'s original shrinking mechanism returns only pages in the
-pool which are not currently be used by `blkback`.  In other words, the
-pages that will be shrunk are not mapped with foreign pages.  Because
-this commit is changing only the shrink limit but uses the shrinking
-mechanism as is, this commit does not introduce improper mappings
-related security issues.
+This looks to me like it should be a single phandle. How many different 
+register layouts across how many SoCs do you need to support?
 
-Once a memory pressure is detected, this commit keeps the aggressive
-shrinking limit for a user-specified time duration.  The duration should
-be neither too long nor too short.  If it is too long, free pages pool
-shrinking overhead can reduce the I/O performance.  If it is too short,
-`blkback` will not free enough pages to reduce the memory pressure.
-This commit sets the value as `10 milliseconds` by default because it is
-a short time in terms of I/O while it is a long time in terms of memory
-operations.  Also, as the original shrinking mechanism works for at
-least every 100 milliseconds, this could be a somewhat reasonable
-choice.  I also tested other durations (refer to the below section for
-more details) and confirmed that 10 milliseconds is the one that works
-best.  That said, the proper duration depends on actual configurations
-and workloads.  That's why this commit is allowing users to set it as
-their optimal value via the module parameter.
+> > The only advantage I can see in having a list of phandle/arg tuples
+> > rather than a set of properties is that it is a slightly more compact
+> > representation in source form, but otherwise they should be equivalent
+> 
+> Yes, I agree.
+> They are equivalent.
+> 
+> But sprd SoCs have too many registers and the representation might matter.
+> Here's some real code from local,
+> 
+> orca.dtsi:1276:         syscons = <&pmu_apb_regs REG_PMU_APB_RF_PD_AUDCP_SYS_CFG MASK_PMU_APB_RF_PD_AUDCP_SYS_FORCE_SHUTDOWN >,
+> orca.dtsi-1277-                 <&pmu_apb_regs REG_PMU_APB_RF_PD_AUDCP_AUDDSP_CFG MASK_PMU_APB_RF_PD_AUDCP_AUDDSP_AUTO_SHUTDOWN_EN>,
+> orca.dtsi-1278-                 <&pmu_apb_regs REG_PMU_APB_RF_SLEEP_CTRL MASK_PMU_APB_RF_AUDCP_FORCE_DEEP_SLEEP>,
+> orca.dtsi-1279-                 <&pmu_apb_regs REG_PMU_APB_RF_CP_SOFT_RST MASK_PMU_APB_RF_AUDCP_AUDDSP_SOFT_RST>,
+> orca.dtsi-1280-                 <&pmu_apb_regs REG_PMU_APB_RF_CP_SOFT_RST MASK_PMU_APB_RF_AUDCP_SYS_SOFT_RST>,
+> orca.dtsi-1281-                 <&pmu_apb_regs REG_PMU_APB_RF_SOFT_RST_SEL MASK_PMU_APB_RF_SOFT_RST_SEL>,
+> orca.dtsi-1282-                 <&pmu_apb_regs REG_PMU_APB_RF_PWR_STATUS3_DBG MASK_PMU_APB_RF_PD_AUDCP_SYS_STATE>,
+> orca.dtsi-1283-                 <&pmu_apb_regs REG_PMU_APB_RF_PWR_STATUS3_DBG MASK_PMU_APB_RF_PD_AUDCP_AUDDSP_STATE>,
+> orca.dtsi-1284-                 <&pmu_apb_regs REG_PMU_APB_RF_SLEEP_STATUS MASK_PMU_APB_RF_AUDCP_SLP_STATUS>,
+> --
+> orca.dtsi:1288:         syscon-names = "sysshutdown", "coreshutdown", "deepsleep", "corereset",
+> orca.dtsi-1289-                 "sysreset", "reset_sel", "sysstatus", "corestatus", "sleepstatus",
+> orca.dtsi-1290-                 "bootprotect", "bootvector", "bootaddress_sel";
 
-Memory Pressure Test
-====================
+Again, reset has standard binding. 
 
-To show how this commit fixes the above mentioned memory pressure
-situation well, I configured a test environment on a xen-running system.
-On the `blkfront` running guest instances, I attach a large number of
-network-backed volume devices and induce I/O to those.  Meanwhile, I
-measure the number of pages that swapped in and out on the `blkback`
-running guest.  The test ran twice, once for the `blkback` before this
-commit and once for that after this commit.  As shown below, this commit
-has dramatically reduced the memory pressure:
+Also consider if you really need to access all of these vs. assuming a 
+fixed mode that the firmware/bootloader sets up.
 
-                pswpin  pswpout
-    before      76,672  185,799
-    after          212    3,325
+> ud710.dtsi:1268:        syscons = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PRESENT_32K>,
+> ud710.dtsi-1269-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PROTECT_32K>,
+> ud710.dtsi-1270-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_EN_32K>,
+> ud710.dtsi-1271-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_THD_32K>;
+> ud710.dtsi:1272:        syscon-names =  "sd_detect_pol",
+> ud710.dtsi-1273-                        "sd_hotplug_protect_en",
+> ud710.dtsi-1274-                        "sd_hotplug_debounce_en",
+> ud710.dtsi-1275-                        "sd_hotplug_debounce_cn";
+> 
+> Compare to following,
+> 
+> sd_hotplug_protect_en-syscon = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PRESENT_32K>;
+> sd_hotplug_debounce_en-syscon = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PROTECT_32K>;
+> sd_hotplug_debounce_cn-syscon = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_THD_32K>;
+> .....
+> 
+> For me, my choice would be the former.
+> It looks more clear.
+> 
+> > and agree about this being harder to parse in an automated way.
+> >
+> > Orson, do you see any other reason for the combined property?
+> No other reason.
+> 
+> > If not, could you respin the series once more with
+> > syscon_regmap_lookup_by_name() replaced by something like:?
+> >
+> > struct regmap *
+> > syscon_regmap_lookup_args_by_phandle(struct device_node *np,
+> >                                         const char *property,
+> >                                         int arg_count, __u32 *out_args)
+> 
+> I like this idea. syscon_regmap_lookup_by_phandle_args() would be better?
+> 
+> May I impelement them both?
 
-Optimal Aggressive Shrinking Duration
--------------------------------------
+No.
 
-To find a best aggressive shrinking duration, I repeated the test with
-three different durations (1ms, 10ms, and 100ms).  The results are as
-below:
-
-    duration    pswpin  pswpout
-    1           852     6,424
-    10          212     3,325
-    100         203     3,340
-
-As expected, the numbers have further decreased by increasing the
-duration, but the reduction stopped from the `10ms`.  Based on this
-results, I chose the default duration as 10ms.
-
-Performance Overhead Test
-=========================
-
-This commit could incur I/O performance degradation under severe memory
-pressure because the aggressive shrinking will require more page
-allocations per I/O.  To show the overhead, I artificially made an
-aggressive pages pool shrinking situation and measured the I/O
-performance of a `blkfront` running guest.
-
-For the artificial shrinking, I set the `blkback.max_buffer_pages` using
-the `/sys/module/xen_blkback/parameters/max_buffer_pages` file.  We set
-the value to `1024` and `0`.  The `1024` is the default value.  Setting
-the value as `0` is same to a situation doing the aggressive shrinking
-always (worst-case).
-
-For the I/O performance measurement, I use a simple `dd` command.
-
-Default Performance
--------------------
-
-    [dom0]# echo 1024 >
-/sys/module/xen_blkback/parameters/max_buffer_pages
-    [instance]$ for i in {1..5}; do dd if=/dev/zero of=file bs=4k
-count=$((256*512)); sync; done
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 11.7257 s, 45.8 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8827 s, 38.7 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8781 s, 38.7 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8737 s, 38.7 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8702 s, 38.7 MB/s
-
-Worst-case Performance
-----------------------
-
-    [dom0]# echo 0 >
-/sys/module/xen_blkback/parameters/max_buffer_pages
-    [instance]$ for i in {1..5}; do dd if=/dev/zero of=file bs=4k
-count=$((256*512)); sync; done
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 11.7257 s, 45.8 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.878 s, 38.7 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8746 s, 38.7 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8786 s, 38.7 MB/s
-    131072+0 records in
-    131072+0 records out
-    536870912 bytes (537 MB) copied, 13.8749 s, 38.7 MB/s
-
-In short, even worst case aggressive shrinking makes no visible
-performance degradation.  I think this is due to the slow speed of the
-I/O.  In other words, the additional page allocation overhead is hidden
-under the much slower I/O latency.
-
-Nevertheless, pleaset note that this is just a very simple and minimal
-test.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- drivers/block/xen-blkback/blkback.c | 35 +++++++++++++++++++++++++++--
- 1 file changed, 33 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
-index 3666afa639d1..72d068328ef1 100644
---- a/drivers/block/xen-blkback/blkback.c
-+++ b/drivers/block/xen-blkback/blkback.c
-@@ -135,6 +135,31 @@ module_param(log_stats, int, 0644);
- /* Number of free pages to remove on each call to gnttab_free_pages */
- #define NUM_BATCH_FREE_PAGES 10
- 
-+/*
-+ * Once a memory pressure is detected, keep aggressive shrinking of the free
-+ * page pools for this time (milliseconds)
-+ */
-+static int xen_blkif_aggressive_shrinking_duration = 10;
-+module_param_named(aggressive_shrinking_duration,
-+		xen_blkif_aggressive_shrinking_duration, int, 0644);
-+MODULE_PARM_DESC(aggressive_shrinking_duration,
-+"Duration in ms to do aggressive shrinking when a memory pressure is detected");
-+
-+static unsigned long xen_blk_mem_pressure_end;
-+
-+static unsigned long blkif_shrink_count(struct shrinker *shrinker,
-+				struct shrink_control *sc)
-+{
-+	xen_blk_mem_pressure_end = jiffies +
-+		msecs_to_jiffies(xen_blkif_aggressive_shrinking_duration);
-+	return 0;
-+}
-+
-+static struct shrinker blkif_shrinker = {
-+	.count_objects = blkif_shrink_count,
-+	.seeks = DEFAULT_SEEKS,
-+};
-+
- static inline bool persistent_gnt_timeout(struct persistent_gnt *persistent_gnt)
- {
- 	return xen_blkif_pgrant_timeout &&
-@@ -656,8 +681,11 @@ int xen_blkif_schedule(void *arg)
- 			ring->next_lru = jiffies + msecs_to_jiffies(LRU_INTERVAL);
- 		}
- 
--		/* Shrink if we have more than xen_blkif_max_buffer_pages */
--		shrink_free_pagepool(ring, xen_blkif_max_buffer_pages);
-+		/* Shrink the free pages pool if it is too large. */
-+		if (time_before(jiffies, xen_blk_mem_pressure_end))
-+			shrink_free_pagepool(ring, 0);
-+		else
-+			shrink_free_pagepool(ring, xen_blkif_max_buffer_pages);
- 
- 		if (log_stats && time_after(jiffies, ring->st_print))
- 			print_stats(ring);
-@@ -1500,6 +1528,9 @@ static int __init xen_blkif_init(void)
- 	if (rc)
- 		goto failed_init;
- 
-+	if (register_shrinker(&blkif_shrinker))
-+		pr_warn("shrinker registration failed\n");
-+
-  failed_init:
- 	return rc;
- }
--- 
-2.17.1
-
+Rob
