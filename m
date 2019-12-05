@@ -2,85 +2,73 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6B5C2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023D0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC7D2464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575569895;
-	bh=/R5wJaZqNnIuo+1BXsLviZvvpnCUnVbIf0AU9MbVPsg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pFC+ZKmAnJMMubSOmDQvJT2hWLw1vM36SWZAqcUirWYZyMnvp2aPz/QwWxndm+JT/
-	 nytU1cxGnMoUiSNpA84csSjN/F/pWLURBMN/cyx4ef5gG1b2u+jLcZAJZFHIorItSS
-	 axEQ3l7qc+p58tGkYktm5ditS/h10PekPB2TmGIo=
+	by mail.kernel.org (Postfix) with ESMTP id D01E82464F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:18:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729948AbfLESSO (ORCPT
+        id S1730031AbfLESSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 13:18:14 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34616 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLESSN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 13:18:13 -0500
-Received: by mail-ot1-f68.google.com with SMTP id a15so3478341otf.1;
-        Thu, 05 Dec 2019 10:18:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ctt78cWwZCaPfsbkOwoWRKaRaaHO7Q0cJcGkZb/xygE=;
-        b=PP0xWugIq0GoEYCNfpnzOcmD+zugany1CzZU2uNXlm5AGKhkYb5pdxIJ9WB9HLxolI
-         l9JQMvCFOsA1NOZJvTNfZByu0P3sHnGq2rmSMGyXPyCpQo6gu3z3xC7LCbG1Vqx28XJu
-         +OEvUwfbQ+bszhAnhId8ufjPMYf+jVOyv7xTHR/dJQc3xT2LPXhIyUy/jRAzvMRKNK+q
-         mFVdD4rb9frydus/PlG27zTlmOc+fP86McmDfOsMCGPY+UclV7oQwK9StFD3GXDwg54S
-         aphRCzUfvPk8IoGot8Gw1n8mfN6FTYkUBEdsXgPPz+PaJ/a4aZVrCFYBBdjYggEQwIVW
-         95bQ==
-X-Gm-Message-State: APjAAAWk29KH/r2vfk4ihaKRvGxVk/mu1YEzgUI5GNS9s34zerbSSGtL
-        sVgvtqfuBfPNC8M8Ly+ZAA==
-X-Google-Smtp-Source: APXvYqyfs8OhUj0eeDczAIKIgi1gk0+FRTxh0W2z3IWAj0xjcIUjt8xn3BxVAR2EWbyK3UtPCpCimw==
-X-Received: by 2002:a9d:554f:: with SMTP id h15mr8059510oti.338.1575569892874;
-        Thu, 05 Dec 2019 10:18:12 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n16sm3596887otk.25.2019.12.05.10.18.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 10:18:12 -0800 (PST)
-Date:   Thu, 5 Dec 2019 12:18:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org, dhar@codeaurora.org,
-        jsanka@codeaurora.org, chandanu@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [PATCH 1/4] dt-bindings: msm:disp: add sc7180 DPU variant
-Message-ID: <20191205181811.GA5706@bogus>
-References: <1574683169-19342-1-git-send-email-kalyan_t@codeaurora.org>
- <1574683169-19342-2-git-send-email-kalyan_t@codeaurora.org>
+        Thu, 5 Dec 2019 13:18:18 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51778 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726028AbfLESSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 13:18:17 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 19D9CAEF9;
+        Thu,  5 Dec 2019 18:18:15 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id B1D0EDA733; Thu,  5 Dec 2019 19:18:09 +0100 (CET)
+Date:   Thu, 5 Dec 2019 19:18:09 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] pipe: Notification queue preparation
+Message-ID: <20191205181809.GX2734@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, David Howells <dhowells@redhat.com>,
+        torvalds@linux-foundation.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>, keyrings@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191205172127.GW2734@suse.cz>
+ <20191205125826.GK2734@twin.jikos.cz>
+ <31452.1574721589@warthog.procyon.org.uk>
+ <1593.1575554217@warthog.procyon.org.uk>
+ <21493.1575566720@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1574683169-19342-2-git-send-email-kalyan_t@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <21493.1575566720@warthog.procyon.org.uk>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Nov 2019 17:29:26 +0530, Kalyan Thota wrote:
-> Add a compatible string to support sc7180 dpu version.
+On Thu, Dec 05, 2019 at 05:25:20PM +0000, David Howells wrote:
+> I've just posted a couple of patches - can you check to see if they fix your
+> problem?
 > 
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/display/msm/dpu.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
+> https://lore.kernel.org/linux-fsdevel/157556649610.20869.8537079649495343567.stgit@warthog.procyon.org.uk/T/#t
 
-Acked-by: Rob Herring <robh@kernel.org>
+Not fixed, the test still hangs with the same call stack.
