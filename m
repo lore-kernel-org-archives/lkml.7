@@ -2,272 +2,285 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09B2C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1853C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F5D205ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EEE5206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:33:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Thn+k6tk"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KN71RLzT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbfLECbB (ORCPT
+        id S1728638AbfLECdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 21:31:01 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43745 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728393AbfLECbB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 21:31:01 -0500
-Received: by mail-pf1-f196.google.com with SMTP id h14so816549pfe.10
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 18:31:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y7Ee+dNHq54/7afYHD+UmtJjTH9smfXBulTry9R0FkI=;
-        b=Thn+k6tk3XAXYITVNqhSJ+4N0+izNtsGUvABmDpnSR1IwTELS0KwBKxwk7UQ7rn6Ty
-         umt/AFtjgw5HG9B1Vw5DmFkBfGUkjk8NsxXQToq4x2kCW+9zWH0YSahqVuvqketU9cGI
-         mOwVSN3cP20uwpDuB0kELiE7Rc/YkC5xwws+s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y7Ee+dNHq54/7afYHD+UmtJjTH9smfXBulTry9R0FkI=;
-        b=N7Zz/lLJwxT9OnXq9AhuV7lFWZ6IjWyMSQkhX+fjUxkFWHG6p7dLUTnv5gnDIIZY53
-         kdf3RIqHcMJ2mWrI40h3oHZLXtWRd2hQuCuQiQqyD1qfLMvQZOdH3BxdcYhEGPSKPKit
-         k/IakqqomAqX8SQ1EqdYv39mjxUWBlO1d/fbUd55CrCrNX4QZGhbR9+aetFclMc3iT9t
-         mQ2a02swYDx2Seh3RvodoH3eqr2ovKz+4ieIvVUS87AqbtPGqwbXeU4I/yeI9sZ6Ek9Q
-         vQC/FkBoNauXX/fpWI3dNtvV0k63gmDTm0IQqupXOV4Ek3PmAXjvwxz79QFjT/ozF6uJ
-         Jy1Q==
-X-Gm-Message-State: APjAAAVhwmIdNSLhyYhnPP215BA0gjM3p2PhtrMj39NbcFynl0ROg6b+
-        S/0MBwNTMG2nlNHE/tveVf2DqA==
-X-Google-Smtp-Source: APXvYqyOdLLYrYiBx7emxUHQXoL+NtXJVUM7x47UAozTKa86tXu0VL7qz2ZM/f7flmKp37j0OOC9Gw==
-X-Received: by 2002:a62:7b46:: with SMTP id w67mr6732042pfc.113.1575513060108;
-        Wed, 04 Dec 2019 18:31:00 -0800 (PST)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id x12sm9174425pfm.130.2019.12.04.18.30.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 18:30:59 -0800 (PST)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        linux-input@vger.kernel.org
-Cc:     linux-bluetooth@vger.kernel.org,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kirill Smelkov <kirr@nexedi.com>
-Subject: [PATCH v4] Input: uinput - Add UI_SET_PHYS_STR and UI_SET_UNIQ_STR
-Date:   Wed,  4 Dec 2019 18:30:54 -0800
-Message-Id: <20191204182942.v4.1.Ib53f70556ffe94d9a1903632ee9b0dc929f94557@changeid>
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+        Wed, 4 Dec 2019 21:33:55 -0500
+Received: from mail-eopbgr20079.outbound.protection.outlook.com ([40.107.2.79]:1958
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728132AbfLECdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 21:33:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dDZGNigPBc68i5ntdsr04At7Ey3Zr5CJdih7YLqewWR5YyQsRreVBHCSOKXpzvQIi8h4P6uk3DWZetp38SiqR4hOZ6MKgyjLlEyrlRFRWkwLTf5dxx7vtMkWS1KSq2TlggDAC6JDlwTkHAhghm5HpIFx8CAr8CupqBswJ8hG5/vDeSg9W4W8rV4UzmeAsWwOQQxDxGFaHVsHxu4nqyn67AR9WGgerG0PsyjLkvgfc90/14l/VXPXQQuvU1S7fT3mESTtZVLNr3N5KdZSfZLOaaJYf+1mnBiNuarlSeKPCMzslFBTHu+rV1/5/8RgbFHVh6fG2cKlWdfMKYhP+WRy+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YNAkQVoJSExG6W26jHOS95u4PgXsroccmhb2aMp+7lI=;
+ b=dy3+4x1/zphucUwO5e0wNaNHIcatDzHDGBg+JxHKaDDlq5CWqbCrCUfFukCTgt/PaTXVLxaBdBA5Fu1pV68vE2OehAFlu1EZHsAHljSAf/gT2AH0a7YGWUZcPcRI/Q8E5L5Xl+76EHdn0XrXf7h0bxVPi5Gi5gRI7wiAvIvYqJk0UtG66JaXru6YfBFxC4/o0vVTsSl7T6s59Gq1EjydSXCyi78WHuNGxnOpMl9AIpxiwRjXXld9+f/yyF7iFUcxeMxwI7z+mjQHLJ8wL6QPoHWBfGB3RxHs8EiKsA6SdNXdD34uXfIcHgo6nvWIzvOCzMc+17zHTIWB90RVEd8PBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YNAkQVoJSExG6W26jHOS95u4PgXsroccmhb2aMp+7lI=;
+ b=KN71RLzThqjKo7cjM9gsT9VnuERhJYaGAMI9Yd0t/uu1DR3dtEqlc5B5bcVH/G/UqqUqejvmNgq5ZG4UhTzdEPJ7Y1huxXlFWwddgCWzJZsKq0z4Y9e1WrJ22ihOS9bUBky4U/HQHBzR9wkwwADwC900pG/Dk0YGe8VUGFm6wFk=
+Received: from DB7PR04MB5178.eurprd04.prod.outlook.com (20.176.234.92) by
+ DB7PR04MB4171.eurprd04.prod.outlook.com (52.135.130.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.22; Thu, 5 Dec 2019 02:33:44 +0000
+Received: from DB7PR04MB5178.eurprd04.prod.outlook.com
+ ([fe80::1551:2aea:3229:156c]) by DB7PR04MB5178.eurprd04.prod.outlook.com
+ ([fe80::1551:2aea:3229:156c%4]) with mapi id 15.20.2516.014; Thu, 5 Dec 2019
+ 02:33:44 +0000
+From:   Jacky Bai <ping.bai@nxp.com>
+To:     Adam Ford <aford173@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 3/7] soc: imx: gpcv2: add support for i.MX8M Mini SoC
+Thread-Topic: [PATCH 3/7] soc: imx: gpcv2: add support for i.MX8M Mini SoC
+Thread-Index: AQHVqxJ561uBl4FlrkCHhfaEiJdWHqeqz80g
+Date:   Thu, 5 Dec 2019 02:33:44 +0000
+Message-ID: <DB7PR04MB51785089112C79F97A2BC213875C0@DB7PR04MB5178.eurprd04.prod.outlook.com>
+References: <20191205021924.25188-1-aford173@gmail.com>
+ <20191205021924.25188-4-aford173@gmail.com>
+In-Reply-To: <20191205021924.25188-4-aford173@gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ping.bai@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 371b18e6-a557-4f13-a852-08d7792b8cbe
+x-ms-traffictypediagnostic: DB7PR04MB4171:|DB7PR04MB4171:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB417194F437B425D74EFC9942875C0@DB7PR04MB4171.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-forefront-prvs: 02426D11FE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(396003)(346002)(376002)(13464003)(199004)(189003)(2906002)(14454004)(74316002)(66556008)(66476007)(64756008)(66446008)(7736002)(54906003)(110136005)(305945005)(316002)(66946007)(6246003)(6116002)(3846002)(76116006)(7416002)(11346002)(9686003)(55016002)(26005)(25786009)(5660300002)(186003)(6436002)(478600001)(99286004)(4326008)(6506007)(53546011)(86362001)(14444005)(7696005)(76176011)(33656002)(102836004)(81166006)(2501003)(229853002)(8676002)(8936002)(52536014)(81156014)(71190400001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4171;H:DB7PR04MB5178.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: j/k8tcF6lbxwKY3nmx27eJh4Ah2U7lY7006KMq4rrnc4G34NuzpSmzaBOSv0ipYnqstGt0jMiBpyy9ENSItqyeaB/kEzORkNghI4Jh8zhvFEexIjtLGqXhZ7URuVNolhWzhzHDFy66ySDLWeu6rVW21o8u0Csf3Fx0Bz5wjiSDqwyX1NXHJuSzxnn45FDxirLT34XCoWVDrdlL2zMT4kgGFY81yHylEocaPiy01YjHm+/+P+F1GHP+5IoRJg43vlenxVVEnvnd8l5fjQZ890Dy6IE7BklA9GZmVkpGQVrRBqCHGPonv6G5j9XbiqQllWk/HVjFd6I9NAqTdb85dAcUZ6429QIPpxtzXGM7qJVqwDcIbepsXU2WGPpsgsSs9oX2ROnM0hBSt6uj6JQyZKB9EoCUN3c9gINyUJKxnxo4EUK/CVMEBFJz1A73r87e7CT232jLAizKlfeao7ml5AUGz8nf7+XQPtydGw9IULTKH9Wy+BH42GBnoABdLt5HjW
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 371b18e6-a557-4f13-a852-08d7792b8cbe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 02:33:44.6984
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0n6GJM4NHKQE/PRmwGf3WwVQWp8YfdoVAu+VUVaEN7OZU0V08YRbRH+QDSuEXGkQypgaqI8eTDGfdMvUp5dmlA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ioctl definition for UI_SET_PHYS is ambiguous because it is defined
-with size = sizeof(char*) but is expected to be given a variable length
-string. Add a deprecation notice for UI_SET_PHYS and provide
-UI_SET_PHYS_STR(len) which expects a size from the user.
-
-Also support setting the uniq attribute of the input device. The uniq
-attribute is used as a unique identifier for the connected device.
-
-For example, uinput devices created by BlueZ will store the address of
-the connected device as the uniq property.
-
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
-Hi input maintainers,
-
-Here is an updated patch that refactors the ioctl handlers (properly
-allowing the size to be set from userspace). When calling the new
-ioctls, the call signature will look like this:
-
-```
-ioctl(fd, UI_SET_PHYS_STR(18), "00:11:22:33:44:55");
-```
-
-I've tested this on a Chromebook running kernel v4.19 with a sample
-program compiled for both 32-bit (i.e. gcc -m32 test.c) and 64-bit.
-
-The final uinput device looks like this:
-
-```
-udevadm info -a -p /devices/virtual/input/input18
-
-Udevadm info starts with the device specified by the devpath and then
-walks up the chain of parent devices. It prints for every device
-found, all possible attributes in the udev rules key format.
-A rule to match, can be composed by the attributes of the device
-and the attributes from one single parent device.
-
-  looking at device '/devices/virtual/input/input18':
-    KERNEL=="input18"
-    SUBSYSTEM=="input"
-    DRIVER==""
-    ATTR{inhibited}=="0"
-    ATTR{name}=="Test"
-    ATTR{phys}=="00:00:00:33:44:55"
-    ATTR{properties}=="0"
-    ATTR{uniq}=="00:11:22:00:00:00"
-
-```
-
-
-Changes in v4:
-- Added uinput_get_user_str
-
-Changes in v3:
-- Added UI_SET_PHYS_STR(len) and UI_SET_UNIQ_STR(len) and added
-  deprecation notice for UI_SET_PHYS
-
-Changes in v2:
-- Added compat handling for UI_SET_UNIQ
-
- drivers/input/misc/uinput.c | 48 +++++++++++++++++++++++++------------
- include/uapi/linux/uinput.h |  5 ++++
- 2 files changed, 38 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
-index 84051f20b18a..2c3180370a02 100644
---- a/drivers/input/misc/uinput.c
-+++ b/drivers/input/misc/uinput.c
-@@ -20,6 +20,7 @@
-  */
- #include <uapi/linux/uinput.h>
- #include <linux/poll.h>
-+#include <linux/printk.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-@@ -280,7 +281,7 @@ static int uinput_dev_flush(struct input_dev *dev, struct file *file)
- 
- static void uinput_destroy_device(struct uinput_device *udev)
- {
--	const char *name, *phys;
-+	const char *name, *phys, *uniq;
- 	struct input_dev *dev = udev->dev;
- 	enum uinput_state old_state = udev->state;
- 
-@@ -289,6 +290,7 @@ static void uinput_destroy_device(struct uinput_device *udev)
- 	if (dev) {
- 		name = dev->name;
- 		phys = dev->phys;
-+		uniq = dev->uniq;
- 		if (old_state == UIST_CREATED) {
- 			uinput_flush_requests(udev);
- 			input_unregister_device(dev);
-@@ -297,6 +299,7 @@ static void uinput_destroy_device(struct uinput_device *udev)
- 		}
- 		kfree(name);
- 		kfree(phys);
-+		kfree(uniq);
- 		udev->dev = NULL;
- 	}
- }
-@@ -831,6 +834,24 @@ static int uinput_str_to_user(void __user *dest, const char *str,
- 	return ret ? -EFAULT : len;
- }
- 
-+static int uinput_get_user_str(struct uinput_device *udev, const char **kptr,
-+			       const char *uptr, unsigned int size)
-+{
-+	char *tmp;
-+
-+	if (udev->state == UIST_CREATED)
-+		return -EINVAL;
-+
-+	tmp = strndup_user(uptr, size);
-+	if (IS_ERR(tmp))
-+		return PTR_ERR(tmp);
-+
-+	kfree(*kptr);
-+	*kptr = tmp;
-+
-+	return 0;
-+}
-+
- static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
- 				 unsigned long arg, void __user *p)
- {
-@@ -839,7 +860,6 @@ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
- 	struct uinput_ff_upload ff_up;
- 	struct uinput_ff_erase  ff_erase;
- 	struct uinput_request   *req;
--	char			*phys;
- 	const char		*name;
- 	unsigned int		size;
- 
-@@ -916,19 +936,8 @@ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
- 		goto out;
- 
- 	case UI_SET_PHYS:
--		if (udev->state == UIST_CREATED) {
--			retval = -EINVAL;
--			goto out;
--		}
--
--		phys = strndup_user(p, 1024);
--		if (IS_ERR(phys)) {
--			retval = PTR_ERR(phys);
--			goto out;
--		}
--
--		kfree(udev->dev->phys);
--		udev->dev->phys = phys;
-+		pr_warn_once("uinput: UI_SET_PHYS is deprecated. Use UI_SET_PHYS_STR");
-+		retval = uinput_get_user_str(udev, &udev->dev->phys, p, 1024);
- 		goto out;
- 
- 	case UI_BEGIN_FF_UPLOAD:
-@@ -1023,6 +1032,15 @@ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
- 	case UI_ABS_SETUP & ~IOCSIZE_MASK:
- 		retval = uinput_abs_setup(udev, p, size);
- 		goto out;
-+
-+	case UI_SET_PHYS_STR(0):
-+		retval = uinput_get_user_str(udev, &udev->dev->phys, p, size);
-+		goto out;
-+
-+	case UI_SET_UNIQ_STR(0):
-+		retval = uinput_get_user_str(udev, &udev->dev->uniq, p, size);
-+		goto out;
-+
- 	}
- 
- 	retval = -EINVAL;
-diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux/uinput.h
-index c9e677e3af1d..84d4fa142830 100644
---- a/include/uapi/linux/uinput.h
-+++ b/include/uapi/linux/uinput.h
-@@ -142,9 +142,14 @@ struct uinput_abs_setup {
- #define UI_SET_LEDBIT		_IOW(UINPUT_IOCTL_BASE, 105, int)
- #define UI_SET_SNDBIT		_IOW(UINPUT_IOCTL_BASE, 106, int)
- #define UI_SET_FFBIT		_IOW(UINPUT_IOCTL_BASE, 107, int)
-+
-+/* DEPRECATED: Data size is ambiguous. Use UI_SET_PHYS_STR instead. */
- #define UI_SET_PHYS		_IOW(UINPUT_IOCTL_BASE, 108, char*)
-+
- #define UI_SET_SWBIT		_IOW(UINPUT_IOCTL_BASE, 109, int)
- #define UI_SET_PROPBIT		_IOW(UINPUT_IOCTL_BASE, 110, int)
-+#define UI_SET_PHYS_STR(len)	_IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, len)
-+#define UI_SET_UNIQ_STR(len)	_IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 112, len)
- 
- #define UI_BEGIN_FF_UPLOAD	_IOWR(UINPUT_IOCTL_BASE, 200, struct uinput_ff_upload)
- #define UI_END_FF_UPLOAD	_IOW(UINPUT_IOCTL_BASE, 201, struct uinput_ff_upload)
--- 
-2.24.0.393.g34dc348eaf-goog
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBZGFtIEZvcmQgPGFmb3JkMTcz
+QGdtYWlsLmNvbT4NCj4gU2VudDogVGh1cnNkYXksIERlY2VtYmVyIDUsIDIwMTkgMTA6MTkgQU0N
+Cj4gVG86IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBDYzogQWRhbSBG
+b3JkIDxhZm9yZDE3M0BnbWFpbC5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3Jn
+PjsNCj4gTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFNoYXduIEd1bw0KPiA8
+c2hhd25ndW9Aa2VybmVsLm9yZz47IFNhc2NoYSBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5k
+ZT47DQo+IFBlbmd1dHJvbml4IEtlcm5lbCBUZWFtIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBG
+YWJpbyBFc3RldmFtDQo+IDxmZXN0ZXZhbUBnbWFpbC5jb20+OyBkbC1saW51eC1pbXggPGxpbnV4
+LWlteEBueHAuY29tPjsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogW1BBVENIIDMvN10gc29jOiBpbXg6IGdwY3Yy
+OiBhZGQgc3VwcG9ydCBmb3IgaS5NWDhNIE1pbmkgU29DDQo+IA0KPiBUaGUgR1BDdjIgb24gdGhl
+IEZyZWVzY2FsZSBpLk1YOE0gTWluaSBTb0Mgd29ya3MgaW4gdGhlIHNhbWUgd2F5IGFzIHRoZQ0K
+PiBHUEN2MiBvbiB0aGUgaS5NWDhNUSwgYnV0IHdpdGggc2xpZ2h0bHkgZGlmZmVyZW50IHBvd2Vy
+IGRvbWFpbnMgYW5kDQo+IG1hcHBpbmcuDQo+IA0KDQpIYXZlIHlvdSB0ZXN0ZWQgYWxsIHRoZSBw
+b3dlciBkb21haW4/IFNvbWUgcG93ZXIgZG9tYWlucyBoYXZlIHRvIGRvIHNwZWNpYWwgcG93ZXIg
+dXAgc2VxdWVuY2UuIEkgYW0gc3VyZQ0KYmVsb3cgY2hhbmdlIGNhbiBOT1Qgd29yayBmb3IgR1BV
+ICYgVlBVIHBvd2VyIGRvbWFpbi4gQWRkaW5nIGNvZGUgaW4gdGhlIEdQQ3YyIGRyaXZlciB3aWxs
+IG1ha2UgdGhpcyBkcml2ZXINCmhhcmQgdG8gbWFpbnRhaW4gb3ZlciB0aW1lLiBpLk1YOE1NLCBp
+Lk1YOE1OLCBhbmQgaW4gdGhlIGZ1dHVyZSwgd2UgaGF2ZSBvdGhlciBuZXcgU09DLCBkaWZmZXJl
+bnQgU09DIGhhcw0KZGlmZmVyZW50IHBvd2VyIGRvbWFpbiBkZXNpZ24gJiBvbi9vZmYgc2VxdWVu
+Y2UuIEZpbmFsbHksIGl0IHdpbGwgbWFrZSB0aGUgR1BDdjIgdmVyeSB1Z2x5Lg0KDQo+IFRoaXMg
+cGF0Y2ggYWRkcyB0aGUgbmVjZXNzYXJ5IHRhYmxlcyBzbyB0aGUgR1BDIGNhbiBvcGVyYXRlIG9u
+IHRoZSBpLk1YOE0NCj4gTWluaS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFkYW0gRm9yZCA8YWZv
+cmQxNzNAZ21haWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvc29jL2lteC9ncGN2Mi5jIHwgMjQ0
+DQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gIDEgZmlsZSBj
+aGFuZ2VkLCAyNDQgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29j
+L2lteC9ncGN2Mi5jIGIvZHJpdmVycy9zb2MvaW14L2dwY3YyLmMgaW5kZXgNCj4gMjUwZjc0MGQy
+MzE0Li41MjY2OGU5ODVlOGUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc29jL2lteC9ncGN2Mi5j
+DQo+ICsrKyBiL2RyaXZlcnMvc29jL2lteC9ncGN2Mi5jDQo+IEBAIC00MSw2ICs0MSwyMCBAQA0K
+PiAgI2RlZmluZSBJTVg4TV9QQ0lFMV9BNTNfRE9NQUlOCQkJQklUKDMpDQo+ICAjZGVmaW5lIElN
+WDhNX01JUElfQTUzX0RPTUFJTgkJCUJJVCgyKQ0KPiANCj4gKyNkZWZpbmUgSU1YOE1NX1ZQVV9I
+MV9BNTNfRE9NQUlOCQlCSVQoMTUpDQo+ICsjZGVmaW5lIElNWDhNTV9WUFVfRzJfQTUzX0RPTUFJ
+TgkJQklUKDE0KQ0KPiArI2RlZmluZSBJTVg4TU1fVlBVX0cxX0E1M19ET01BSU4JCUJJVCgxMykN
+Cj4gKyNkZWZpbmUgSU1YOE1NX0RJU1BfTUlYX0E1M19ET01BSU4JCUJJVCgxMikNCj4gKyNkZWZp
+bmUgSU1YOE1NX0dQVV8zRF9BNTNfRE9NQUlOCQlCSVQoMTEpDQo+ICsjZGVmaW5lIElNWDhNTV9W
+UFVNSVhfQTUzX0RPTUFJTgkJQklUKDEwKQ0KPiArI2RlZmluZSBJTVg4TU1fR1BVTUlYX0E1M19E
+T01BSU4JCUJJVCg5KQ0KPiArI2RlZmluZSBJTVg4TU1fR1BVXzJEX0E1M19ET01BSU4JCUJJVCg4
+KQ0KPiArI2RlZmluZSBJTVg4TU1fRERSMV9BNTNfRE9NQUlOCQkJQklUKDcpDQo+ICsjZGVmaW5l
+IElNWDhNTV9PVEcyX0E1M19ET01BSU4JCQlCSVQoNSkNCj4gKyNkZWZpbmUgSU1YOE1NX09URzFf
+QTUzX0RPTUFJTgkJCUJJVCg0KQ0KPiArI2RlZmluZSBJTVg4TU1fUENJRV9BNTNfRE9NQUlOCQkJ
+QklUKDMpDQo+ICsjZGVmaW5lIElNWDhNTV9NSVBJX0E1M19ET01BSU4JCQlCSVQoMikNCj4gKw0K
+PiAgI2RlZmluZSBHUENfUFVfUEdDX1NXX1BVUF9SRVEJCTB4MGY4DQo+ICAjZGVmaW5lIEdQQ19Q
+VV9QR0NfU1dfUEROX1JFUQkJMHgxMDQNCj4gDQo+IEBAIC02NCw2ICs3OCwyMCBAQA0KPiAgI2Rl
+ZmluZSBJTVg4TV9QQ0lFMV9TV19QeHhfUkVRCQkJQklUKDEpDQo+ICAjZGVmaW5lIElNWDhNX01J
+UElfU1dfUHh4X1JFUQkJCUJJVCgwKQ0KPiANCj4gKyNkZWZpbmUgSU1YOE1NX1ZQVV9IMV9TV19Q
+eHhfUkVRCQlCSVQoMTMpDQo+ICsjZGVmaW5lIElNWDhNTV9WUFVfRzJfU1dfUHh4X1JFUQkJQklU
+KDEyKQ0KPiArI2RlZmluZSBJTVg4TU1fVlBVX0cxX1NXX1B4eF9SRVEJCUJJVCgxMSkNCj4gKyNk
+ZWZpbmUgSU1YOE1NX0RJU1BfU1dfUHh4X1JFUQkJCUJJVCgxMCkNCj4gKyNkZWZpbmUgSU1YOE1N
+X0dQVV8zRF9TV19QeHhfUkVRCQlCSVQoOSkNCj4gKyNkZWZpbmUgSU1YOE1NX1ZQVV9TV19QeHhf
+UkVRCQkJQklUKDgpDQo+ICsjZGVmaW5lIElNWDhNTV9HUFVfU1dfUHh4X1JFUQkJCUJJVCg3KQ0K
+PiArI2RlZmluZSBJTVg4TU1fR1BVXzJEX1NXX1BYWF9SRVEJCUJJVCg2KQ0KPiArI2RlZmluZSBJ
+TVg4TU1fRERSMV9TV19QeHhfUkVRCQkJQklUKDUpDQo+ICsjZGVmaW5lIElNWDhNTV9PVEcyX1NX
+X1B4eF9SRVEJCQlCSVQoMykNCj4gKyNkZWZpbmUgSU1YOE1NX09URzFfU1dfUHh4X1JFUQkJCUJJ
+VCgyKQ0KPiArI2RlZmluZSBJTVg4TU1fUENJRV9TV19QeHhfUkVRCQkJQklUKDEpDQo+ICsjZGVm
+aW5lIElNWDhNTV9NSVBJX1NXX1B4eF9SRVEJCQlCSVQoMCkNCj4gKw0KPiAgI2RlZmluZSBHUENf
+TTRfUFVfUEROX0ZMRwkJMHgxYmMNCj4gDQo+ICAjZGVmaW5lIEdQQ19QVV9QV1JIU0sJCQkweDFm
+Yw0KPiBAQCAtNzIsNiArMTAwLDEwIEBADQo+ICAjZGVmaW5lIElNWDhNX1ZQVV9IU0tfUFdSRE5S
+RVFOCQkJQklUKDUpDQo+ICAjZGVmaW5lIElNWDhNX0RJU1BfSFNLX1BXUkROUkVRTgkJQklUKDQp
+DQo+IA0KPiArI2RlZmluZSBJTVg4TU1fR1BVX0hTS19QV1JETlJFUU4JCUJJVCg5KQ0KPiArI2Rl
+ZmluZSBJTVg4TU1fVlBVX0hTS19QV1JETlJFUU4JCUJJVCg4KQ0KPiArI2RlZmluZSBJTVg4TU1f
+RElTUF9IU0tfUFdSRE5SRVFOCQlCSVQoNykNCj4gKw0KPiAgLyoNCj4gICAqIFRoZSBQR0Mgb2Zm
+c2V0IHZhbHVlcyBpbiBSZWZlcmVuY2UgTWFudWFsDQo+ICAgKiAoUmV2LiAxLCAwMS8yMDE4IGFu
+ZCB0aGUgb2xkZXIgb25lcykgR1BDIGNoYXB0ZXIncyBAQCAtOTQsNiArMTI2LDI0DQo+IEBADQo+
+ICAjZGVmaW5lIElNWDhNX1BHQ19NSVBJX0NTSTIJCTI4DQo+ICAjZGVmaW5lIElNWDhNX1BHQ19Q
+Q0lFMgkJCTI5DQo+IA0KPiArLyoNCj4gKyAqIFRha2VuIGZyb20gaS5NWDhNIE1pbmkgdmFsdWVz
+IGZyb20gUmVmZXJlbmNlDQo+ICsgKiBNYW51YWwsIFJldi4gMiwgMDgvMjAxOQ0KPiArICovDQo+
+ICsjZGVmaW5lIElNWDhNTV9QR0NfTUlQSQkJCTE2DQo+ICsjZGVmaW5lIElNWDhNTV9QR0NfUENJ
+RQkJCTE3DQo+ICsjZGVmaW5lIElNWDhNTV9QR0NfT1RHMQkJCTE4DQo+ICsjZGVmaW5lIElNWDhN
+TV9QR0NfT1RHMgkJCTE5DQo+ICsjZGVmaW5lIElNWDhNTV9QR0NfRERSMQkJCTIxDQo+ICsjZGVm
+aW5lIElNWDhNTV9QR0NfR1BVMkQJCTIyDQo+ICsjZGVmaW5lIElNWDhNTV9QR0NfR1BVCQkJMjMN
+Cj4gKyNkZWZpbmUgSU1YOE1NX1BHQ19WUFUJCQkyNA0KPiArI2RlZmluZSBJTVg4TU1fUEdDX0dQ
+VTNECQkyNQ0KPiArI2RlZmluZSBJTVg4TU1fUEdDX0RJU1AJCQkyNg0KPiArI2RlZmluZSBJTVg4
+TU1fUEdDX1ZQVV9HMQkJMjcNCj4gKyNkZWZpbmUgSU1YOE1NX1BHQ19WUFVfRzIJCTI4DQo+ICsj
+ZGVmaW5lIElNWDhNTV9QR0NfVlBVX0gxCQkyOQ0KPiArDQo+ICAjZGVmaW5lIEdQQ19QR0NfQ1RS
+TChuKQkJCSgweDgwMCArIChuKSAqIDB4NDApDQo+ICAjZGVmaW5lIEdQQ19QR0NfU1IobikJCQko
+R1BDX1BHQ19DVFJMKG4pICsgMHhjKQ0KPiANCj4gQEAgLTI3OCw2ICszMjgsNyBAQCBzdGF0aWMg
+Y29uc3Qgc3RydWN0IGlteF9wZ2NfZG9tYWluX2RhdGENCj4gaW14N19wZ2NfZG9tYWluX2RhdGEg
+PSB7DQo+ICAJLnJlZ19hY2Nlc3NfdGFibGUgPSAmaW14N19hY2Nlc3NfdGFibGUsICB9Ow0KPiAN
+Cj4gKy8qIGkuTVg4TSBkdWFsL1F1YWRMaXRlL1F1YWQgKi8NCj4gIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgaW14X3BnY19kb21haW4gaW14OG1fcGdjX2RvbWFpbnNbXSA9IHsNCj4gIAlbSU1YOE1fUE9X
+RVJfRE9NQUlOX01JUEldID0gew0KPiAgCQkuZ2VucGQgPSB7DQo+IEBAIC00NDIsNiArNDkzLDE5
+OCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGlteF9wZ2NfZG9tYWluX2RhdGENCj4gaW14OG1fcGdj
+X2RvbWFpbl9kYXRhID0gew0KPiAgCS5yZWdfYWNjZXNzX3RhYmxlID0gJmlteDhtX2FjY2Vzc190
+YWJsZSwgIH07DQo+IA0KPiArLyogaS5NWDhNIE1pbmkgKi8NCj4gK3N0YXRpYyBjb25zdCBzdHJ1
+Y3QgaW14X3BnY19kb21haW4gaW14OG1tX3BnY19kb21haW5zW10gPSB7DQo+ICsJW0lNWDhNTV9Q
+T1dFUl9ET01BSU5fTUlQSV0gPSB7DQo+ICsJCS5nZW5wZCA9IHsNCj4gKwkJCS5uYW1lICAgICAg
+PSAibWlwaSIsDQo+ICsJCX0sDQo+ICsJCS5iaXRzICA9IHsNCj4gKwkJCS5weHggPSBJTVg4TU1f
+TUlQSV9TV19QeHhfUkVRLA0KPiArCQkJLm1hcCA9IElNWDhNTV9NSVBJX0E1M19ET01BSU4sDQo+
+ICsJCX0sDQo+ICsJCS5wZ2MJICAgPSBJTVg4TV9QR0NfTUlQSSwNCj4gKwl9LA0KPiArDQo+ICsJ
+W0lNWDhNTV9QT1dFUl9ET01BSU5fUENJRV0gPSB7DQo+ICsJCS5nZW5wZCA9IHsNCj4gKwkJCS5u
+YW1lID0gInBjaWUxIiwNCj4gKwkJfSwNCj4gKwkJLmJpdHMgID0gew0KPiArCQkJLnB4eCA9IElN
+WDhNTV9QQ0lFX1NXX1B4eF9SRVEsDQo+ICsJCQkubWFwID0gSU1YOE1NX1BDSUVfQTUzX0RPTUFJ
+TiwNCj4gKwkJfSwNCj4gKwkJLnBnYyAgID0gSU1YOE1NX1BHQ19QQ0lFLA0KPiArCX0sDQo+ICsN
+Cj4gKwlbSU1YOE1NX1BPV0VSX0RPTUFJTl9VU0JfT1RHMV0gPSB7DQo+ICsJCS5nZW5wZCA9IHsN
+Cj4gKwkJCS5uYW1lID0gInVzYi1vdGcxIiwNCj4gKwkJfSwNCj4gKwkJLmJpdHMgID0gew0KPiAr
+CQkJLnB4eCA9IElNWDhNTV9PVEcxX1NXX1B4eF9SRVEsDQo+ICsJCQkubWFwID0gSU1YOE1NX09U
+RzFfQTUzX0RPTUFJTiwNCj4gKwkJfSwNCj4gKwkJLnBnYyAgID0gSU1YOE1fUEdDX09URzEsDQo+
+ICsJfSwNCj4gKw0KPiArCVtJTVg4TU1fUE9XRVJfRE9NQUlOX1VTQl9PVEcyXSA9IHsNCj4gKwkJ
+LmdlbnBkID0gew0KPiArCQkJLm5hbWUgPSAidXNiLW90ZzIiLA0KPiArCQl9LA0KPiArCQkuYml0
+cyAgPSB7DQo+ICsJCQkucHh4ID0gSU1YOE1NX09URzJfU1dfUHh4X1JFUSwNCj4gKwkJCS5tYXAg
+PSBJTVg4TU1fT1RHMl9BNTNfRE9NQUlOLA0KPiArCQl9LA0KPiArCQkucGdjICAgPSBJTVg4TV9Q
+R0NfT1RHMiwNCj4gKwl9LA0KPiArDQo+ICsJW0lNWDhNTV9QT1dFUl9ET01BSU5fRERSMV0gPSB7
+DQo+ICsJCS5nZW5wZCA9IHsNCj4gKwkJCS5uYW1lID0gImRkcjEiLA0KPiArCQl9LA0KPiArCQku
+Yml0cyAgPSB7DQo+ICsJCQkucHh4ID0gSU1YOE1NX0REUjFfU1dfUHh4X1JFUSwNCj4gKwkJCS5t
+YXAgPSBJTVg4TU1fRERSMV9BNTNfRE9NQUlOLA0KPiArCQl9LA0KPiArCQkucGdjICAgPSBJTVg4
+TV9QR0NfRERSMSwNCj4gKwl9LA0KPiArDQo+ICsJW0lNWDhNTV9QT1dFUl9ET01BSU5fR1BVMkRd
+ID0gew0KPiArCQkuZ2VucGQgPSB7DQo+ICsJCQkubmFtZSA9ICJncHUyZCIsDQo+ICsJCX0sDQo+
+ICsJCS5iaXRzICA9IHsNCj4gKwkJCS5weHggPSBJTVg4TU1fR1BVXzJEX1NXX1BYWF9SRVEsDQo+
+ICsJCQkubWFwID0gSU1YOE1NX0dQVV8yRF9BNTNfRE9NQUlOLA0KPiArCQkJLmhzayA9IElNWDhN
+TV9HUFVfSFNLX1BXUkROUkVRTiwNCj4gKwkJfSwNCj4gKwkJLnBnYyAgID0gSU1YOE1NX1BHQ19H
+UFUyRCwNCj4gKwl9LA0KPiArDQo+ICsNCj4gKwlbSU1YOE1NX1BPV0VSX0RPTUFJTl9HUFVdID0g
+ew0KPiArCQkuZ2VucGQgPSB7DQo+ICsJCQkubmFtZSA9ICJncHUiLA0KPiArCQl9LA0KPiArCQku
+Yml0cyAgPSB7DQo+ICsJCQkucHh4ID0gSU1YOE1NX0dQVV9TV19QeHhfUkVRLA0KPiArCQkJLm1h
+cCA9IElNWDhNTV9HUFVNSVhfQTUzX0RPTUFJTiwNCj4gKwkJCS5oc2sgPSBJTVg4TU1fR1BVX0hT
+S19QV1JETlJFUU4sDQo+ICsJCX0sDQo+ICsJCS5wZ2MgICA9IElNWDhNX1BHQ19HUFUsDQo+ICsJ
+fSwNCj4gKw0KPiArCVtJTVg4TU1fUE9XRVJfRE9NQUlOX1ZQVV0gPSB7DQo+ICsJCS5nZW5wZCA9
+IHsNCj4gKwkJCS5uYW1lID0gInZwdSIsDQo+ICsJCX0sDQo+ICsJCS5iaXRzICA9IHsNCj4gKwkJ
+CS5weHggPSBJTVg4TU1fVlBVX1NXX1B4eF9SRVEsDQo+ICsJCQkubWFwID0gSU1YOE1NX1ZQVU1J
+WF9BNTNfRE9NQUlOLA0KPiArCQkJLmhzayA9IElNWDhNTV9WUFVfSFNLX1BXUkROUkVRTiwNCj4g
+KwkJfSwNCj4gKwkJLnBnYyAgID0gSU1YOE1fUEdDX1ZQVSwNCj4gKwl9LA0KPiArDQo+ICsJW0lN
+WDhNTV9QT1dFUl9ET01BSU5fR1BVM0RdID0gew0KPiArCQkuZ2VucGQgPSB7DQo+ICsJCQkubmFt
+ZSA9ICJncHUzZCIsDQo+ICsJCX0sDQo+ICsJCS5iaXRzICA9IHsNCj4gKwkJCS5weHggPSBJTVg4
+TU1fR1BVXzNEX1NXX1B4eF9SRVEsDQo+ICsJCQkubWFwID0gSU1YOE1NX0dQVV8zRF9BNTNfRE9N
+QUlOLA0KPiArCQkJLmhzayA9IElNWDhNTV9HUFVfSFNLX1BXUkROUkVRTiwNCj4gKwkJfSwNCj4g
+KwkJLnBnYyAgID0gSU1YOE1NX1BHQ19HUFUyRCwNCj4gKwl9LA0KPiArDQo+ICsJW0lNWDhNTV9Q
+T1dFUl9ET01BSU5fRElTUF0gPSB7DQo+ICsJCS5nZW5wZCA9IHsNCj4gKwkJCS5uYW1lID0gImRp
+c3AiLA0KPiArCQl9LA0KPiArCQkuYml0cyAgPSB7DQo+ICsJCQkucHh4ID0gSU1YOE1NX0RJU1Bf
+U1dfUHh4X1JFUSwNCj4gKwkJCS5tYXAgPSBJTVg4TU1fRElTUF9NSVhfQTUzX0RPTUFJTiwNCj4g
+KwkJCS5oc2sgPSBJTVg4TU1fRElTUF9IU0tfUFdSRE5SRVFOLA0KPiArCQl9LA0KPiArCQkucGdj
+ICAgPSBJTVg4TV9QR0NfRElTUCwNCj4gKwl9LA0KPiArDQo+ICsJW0lNWDhNTV9QT1dFUl9WUFVf
+RzFdID0gew0KPiArCQkuZ2VucGQgPSB7DQo+ICsJCQkubmFtZSA9ICJ2cHVfZzEiLA0KPiArCQl9
+LA0KPiArCQkuYml0cyAgPSB7DQo+ICsJCQkucHh4ID0gSU1YOE1NX1ZQVV9HMV9TV19QeHhfUkVR
+LA0KPiArCQkJLm1hcCA9IElNWDhNTV9WUFVfRzFfQTUzX0RPTUFJTiwNCj4gKwkJfSwNCj4gKwkJ
+LnBnYyAgID0gSU1YOE1fUEdDX01JUElfQ1NJMSwNCj4gKwl9LA0KPiArDQo+ICsJW0lNWDhNTV9Q
+T1dFUl9WUFVfRzJdID0gew0KPiArCQkuZ2VucGQgPSB7DQo+ICsJCQkubmFtZSA9ICJ2cHVfZzIi
+LA0KPiArCQl9LA0KPiArCQkuYml0cyAgPSB7DQo+ICsJCQkucHh4ID0gSU1YOE1NX1ZQVV9HMl9T
+V19QeHhfUkVRLA0KPiArCQkJLm1hcCA9IElNWDhNTV9WUFVfRzJfQTUzX0RPTUFJTiwNCj4gKwkJ
+fSwNCj4gKwkJLnBnYyAgID0gSU1YOE1fUEdDX01JUElfQ1NJMiwNCj4gKwl9LA0KPiArDQo+ICsJ
+W0lNWDhNTV9QT1dFUl9WUFVfSDFdID0gew0KPiArCQkuZ2VucGQgPSB7DQo+ICsJCQkubmFtZSA9
+ICJ2cHVfaDEiLA0KPiArCQl9LA0KPiArCQkuYml0cyAgPSB7DQo+ICsJCQkucHh4ID0gSU1YOE1N
+X1ZQVV9IMV9TV19QeHhfUkVRLA0KPiArCQkJLm1hcCA9IElNWDhNTV9WUFVfSDFfQTUzX0RPTUFJ
+TiwNCj4gKwkJfSwNCj4gKwkJLnBnYyAgID0gSU1YOE1fUEdDX1BDSUUyLA0KPiArCX0sDQo+ICt9
+Ow0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHJlZ21hcF9yYW5nZSBpbXg4bW1feWVzX3Jh
+bmdlc1tdID0gew0KPiArCQlyZWdtYXBfcmVnX3JhbmdlKEdQQ19MUENSX0FfQ09SRV9CU0MsDQo+
+ICsJCQkJIEdQQ19QVV9QV1JIU0spLA0KPiArCQlyZWdtYXBfcmVnX3JhbmdlKEdQQ19QR0NfQ1RS
+TChJTVg4TU1fUEdDX01JUEkpLA0KPiArCQkJCSBHUENfUEdDX1NSKElNWDhNTV9QR0NfTUlQSSkp
+LA0KPiArCQlyZWdtYXBfcmVnX3JhbmdlKEdQQ19QR0NfQ1RSTChJTVg4TU1fUEdDX1BDSUUpLA0K
+PiArCQkJCSBHUENfUEdDX1NSKElNWDhNTV9QR0NfUENJRSkpLA0KPiArCQlyZWdtYXBfcmVnX3Jh
+bmdlKEdQQ19QR0NfQ1RSTChJTVg4TU1fUEdDX09URzEpLA0KPiArCQkJCSBHUENfUEdDX1NSKElN
+WDhNTV9QR0NfT1RHMSkpLA0KPiArCQlyZWdtYXBfcmVnX3JhbmdlKEdQQ19QR0NfQ1RSTChJTVg4
+TU1fUEdDX09URzIpLA0KPiArCQkJCSBHUENfUEdDX1NSKElNWDhNTV9QR0NfT1RHMikpLA0KPiAr
+CQlyZWdtYXBfcmVnX3JhbmdlKEdQQ19QR0NfQ1RSTChJTVg4TU1fUEdDX0REUjEpLA0KPiArCQkJ
+CSBHUENfUEdDX1NSKElNWDhNTV9QR0NfRERSMSkpLA0KPiArCQlyZWdtYXBfcmVnX3JhbmdlKEdQ
+Q19QR0NfQ1RSTChJTVg4TU1fUEdDX0dQVTJEKSwNCj4gKwkJCQkgR1BDX1BHQ19TUihJTVg4TU1f
+UEdDX0dQVTJEKSksDQo+ICsJCXJlZ21hcF9yZWdfcmFuZ2UoR1BDX1BHQ19DVFJMKElNWDhNTV9Q
+R0NfR1BVKSwNCj4gKwkJCQkgR1BDX1BHQ19TUihJTVg4TU1fUEdDX0dQVSkpLA0KPiArCQlyZWdt
+YXBfcmVnX3JhbmdlKEdQQ19QR0NfQ1RSTChJTVg4TU1fUEdDX1ZQVSksDQo+ICsJCQkJIEdQQ19Q
+R0NfU1IoSU1YOE1NX1BHQ19WUFUpKSwNCj4gKwkJcmVnbWFwX3JlZ19yYW5nZShHUENfUEdDX0NU
+UkwoSU1YOE1NX1BHQ19ESVNQKSwNCj4gKwkJCQkgR1BDX1BHQ19TUihJTVg4TU1fUEdDX0RJU1Ap
+KSwNCj4gKwkJcmVnbWFwX3JlZ19yYW5nZShHUENfUEdDX0NUUkwoSU1YOE1NX1BHQ19WUFVfRzEp
+LA0KPiArCQkJCSBHUENfUEdDX1NSKElNWDhNTV9QR0NfVlBVX0cxKSksDQo+ICsJCXJlZ21hcF9y
+ZWdfcmFuZ2UoR1BDX1BHQ19DVFJMKElNWDhNTV9QR0NfVlBVX0cyKSwNCj4gKwkJCQkgR1BDX1BH
+Q19TUihJTVg4TU1fUEdDX1ZQVV9HMikpLA0KPiArCQlyZWdtYXBfcmVnX3JhbmdlKEdQQ19QR0Nf
+Q1RSTChJTVg4TU1fUEdDX1ZQVV9IMSksDQo+ICsJCQkJIEdQQ19QR0NfU1IoSU1YOE1NX1BHQ19W
+UFVfSDEpKSwNCj4gK307DQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcmVnbWFwX2FjY2Vz
+c190YWJsZSBpbXg4bW1fYWNjZXNzX3RhYmxlID0gew0KPiArCS55ZXNfcmFuZ2VzCT0gaW14OG1t
+X3llc19yYW5nZXMsDQo+ICsJLm5feWVzX3Jhbmdlcwk9IEFSUkFZX1NJWkUoaW14OG1tX3llc19y
+YW5nZXMpLA0KPiArfTsNCj4gKw0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBpbXhfcGdjX2RvbWFp
+bl9kYXRhIGlteDhtbV9wZ2NfZG9tYWluX2RhdGEgPSB7DQo+ICsJLmRvbWFpbnMgPSBpbXg4bW1f
+cGdjX2RvbWFpbnMsDQo+ICsJLmRvbWFpbnNfbnVtID0gQVJSQVlfU0laRShpbXg4bW1fcGdjX2Rv
+bWFpbnMpLA0KPiArCS5yZWdfYWNjZXNzX3RhYmxlID0gJmlteDhtbV9hY2Nlc3NfdGFibGUsIH07
+DQo+ICsNCj4gIHN0YXRpYyBpbnQgaW14X3BnY19nZXRfY2xvY2tzKHN0cnVjdCBpbXhfcGdjX2Rv
+bWFpbiAqZG9tYWluKSAgew0KPiAgCWludCBpLCByZXQ7DQo+IEBAIC02NDEsNiArODg0LDcgQEAg
+c3RhdGljIGludCBpbXhfZ3BjdjJfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAqcGRl
+dikgIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGlteF9ncGN2Ml9kdF9pZHNbXSA9
+IHsNCj4gIAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg3ZC1ncGMiLCAuZGF0YSA9ICZpbXg3X3Bn
+Y19kb21haW5fZGF0YSwgfSwNCj4gIAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg4bXEtZ3BjIiwg
+LmRhdGEgPSAmaW14OG1fcGdjX2RvbWFpbl9kYXRhLCB9LA0KPiArCXsgLmNvbXBhdGlibGUgPSAi
+ZnNsLGlteDhtbS1ncGMiLCAuZGF0YSA9DQo+ICZpbXg4bW1fcGdjX2RvbWFpbl9kYXRhLCB9LA0K
+PiAgCXsgfQ0KPiAgfTsNCj4gDQo+IC0tDQo+IDIuMjAuMQ0KDQo=
