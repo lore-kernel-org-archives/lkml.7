@@ -2,196 +2,106 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0941C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A71C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BEB320707
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1EB24651
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:45:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729346AbfLELnx (ORCPT
+        id S1729364AbfLELpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 06:43:53 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58795 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729017AbfLELnx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 06:43:53 -0500
-Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <o.rempel@pengutronix.de>)
-        id 1icpXv-0008MZ-RZ; Thu, 05 Dec 2019 12:43:47 +0100
-Subject: Re: [v6] i2c: imx: support slave mode for imx I2C driver
-To:     Sascha Hauer <s.hauer@pengutronix.de>, Biwen Li <biwen.li@nxp.com>
-Cc:     shawnguo@kernel.org, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, wsa@the-dreams.de, leoyang.li@nxp.com,
-        aisheng.dong@nxp.com, xiaoning.wang@nxp.com, xiaobo.xie@nxp.com,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        jiafei.pan@nxp.com, linux-arm-kernel@lists.infradead.org,
-        laurentiu.tudor@nxp.com
-References: <20191203114809.21226-1-biwen.li@nxp.com>
- <20191204100005.r56huywxa7h3c6zr@pengutronix.de>
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <9a1a00c1-e9fa-36a1-0e79-3492d9b98d9f@pengutronix.de>
-Date:   Thu, 5 Dec 2019 12:43:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 5 Dec 2019 06:45:13 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6755 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729017AbfLELpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 06:45:13 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CEAE47D68C66BE4C2628;
+        Thu,  5 Dec 2019 19:45:10 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 5 Dec 2019 19:45:03 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <bhelgaas@google.com>
+CC:     <wangxiongfeng2@huawei.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <huawei.libin@huawei.com>, <guohanjun@huawei.com>
+Subject: [PATCH] PCI: Add quirk to disable unused BAR for hisilicon NP devices 5896
+Date:   Thu, 5 Dec 2019 19:40:41 +0800
+Message-ID: <1575546041-50907-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-In-Reply-To: <20191204100005.r56huywxa7h3c6zr@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
-X-SA-Exim-Mail-From: o.rempel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Add pci quirk for hisilicon PCI Network Processor devices 5896.
+The size of the unused BAR3 is set as 265T wrongly. This patch disalbes
+this bar.
 
-On 04.12.19 11:00, Sascha Hauer wrote:
-> Hi,
-> 
-> The patch looks ok to me now, but I still do not like the #ifdeffery
-> around CONFIG_I2C_SLAVE. With the patch I just sent (You are on Cc:)
-> we could apply the following on your patch which makes it more readable
-> and increases compile coverage.
-> 
-> Wolfram, Biwen, what do you think?
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+---
+ drivers/pci/quirks.c    | 29 +++++++++++++++++++++++++++++
+ include/linux/pci_ids.h |  1 +
+ 2 files changed, 30 insertions(+)
 
-
-RCAR depends on slave:
-config I2C_RCAR 
-
-         tristate "Renesas R-Car I2C Controller" 
-
-         depends on ARCH_RENESAS || COMPILE_TEST 
-
-         select I2C_SLAVE
-see:
-drivers/i2c/busses/i2c-rcar.c
-
-So, I would suggest to do the same in imx.
-
-So far, I tested this patch on iMX6S. It works in one board (i2c-gpio + i2c-imx) and
-two board (i2c-imx + i2c-imx) configuration.
-Tested-by: Oleksij Rempel <o.rempel@pengutronix.de>
-
-
-> 
-> Sascha
-> 
-> ---------------------------8<------------------------------
-> 
->  From 52f7c2bf59db61d4b27b59ca6404136e3ed77310 Mon Sep 17 00:00:00 2001
-> From: Sascha Hauer <s.hauer@pengutronix.de>
-> Date: Wed, 4 Dec 2019 10:56:34 +0100
-> Subject: [PATCH] fixup! i2c: imx: support slave mode for imx I2C driver
-> 
-> ---
->   drivers/i2c/busses/i2c-imx.c | 21 ++++++++++-----------
->   1 file changed, 10 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-> index 40ccfca600bf..c5d9ae8226cd 100644
-> --- a/drivers/i2c/busses/i2c-imx.c
-> +++ b/drivers/i2c/busses/i2c-imx.c
-> @@ -203,9 +203,7 @@ struct imx_i2c_struct {
->   	struct pinctrl_state *pinctrl_pins_gpio;
->   
->   	struct imx_i2c_dma	*dma;
-> -#if IS_ENABLED(CONFIG_I2C_SLAVE)
->   	struct i2c_client	*slave;
-> -#endif
->   };
->   
->   static const struct imx_i2c_hwdata imx1_i2c_hwdata = {
-> @@ -913,12 +911,10 @@ static int i2c_imx_xfer(struct i2c_adapter *adapter,
->   
->   	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
->   
-> -#if IS_ENABLED(CONFIG_I2C_SLAVE)
->   	if (i2c_imx->slave) {
->   		dev_err(&i2c_imx->adapter.dev, "Please not do operations of master mode in slave mode");
->   		return -EBUSY;
->   	}
-> -#endif
->   
->   	result = pm_runtime_get_sync(i2c_imx->adapter.dev.parent);
->   	if (result < 0)
-> @@ -1068,7 +1064,6 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
->   		| I2C_FUNC_SMBUS_READ_BLOCK_DATA;
->   }
->   
-> -#if IS_ENABLED(CONFIG_I2C_SLAVE)
->   static int i2c_imx_slave_init(struct imx_i2c_struct *i2c_imx)
->   {
->   	int temp;
-> @@ -1159,6 +1154,10 @@ static int i2c_imx_reg_slave(struct i2c_client *client)
->   {
->   	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
->   	int ret;
-> +
-> +	if (!IS_ENABLED(CONFIG_I2C_SLAVE))
-> +		return -EINVAL;
-> +
->   	if (i2c_imx->slave)
->   		return -EBUSY;
->   
-> @@ -1173,6 +1172,9 @@ static int i2c_imx_unreg_slave(struct i2c_client *client)
->   {
->   	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
->   
-> +	if (!IS_ENABLED(CONFIG_I2C_SLAVE))
-> +		return -EINVAL;
-> +
->   	if (!i2c_imx->slave)
->   		return -EINVAL;
->   
-> @@ -1188,15 +1190,12 @@ static int i2c_imx_unreg_slave(struct i2c_client *client)
->   
->   	return 0;
->   }
-> -#endif
->   
->   static const struct i2c_algorithm i2c_imx_algo = {
->   	.master_xfer	= i2c_imx_xfer,
->   	.functionality	= i2c_imx_func,
-> -#if IS_ENABLED(CONFIG_I2C_SLAVE)
->   	.reg_slave	= i2c_imx_reg_slave,
->   	.unreg_slave	= i2c_imx_unreg_slave,
-> -#endif
->   };
->   
->   static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
-> @@ -1208,10 +1207,10 @@ static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
->   
->   	if (status & I2SR_IIF) {
->   		i2c_imx_clr_if_bit(status, i2c_imx);
-> -#if IS_ENABLED(CONFIG_I2C_SLAVE)
-> -		if (i2c_imx->slave)
-> +
-> +		if (IS_ENABLED(CONFIG_I2C_SLAVE) && i2c_imx->slave)
->   			return i2c_imx_slave_isr(i2c_imx);
-> -#endif
-> +
->   		i2c_imx->i2csr = status;
->   		return i2c_imx_master_isr(i2c_imx);
->   	}
-> 
-
-Kind regards,
-Oleksij Rempel
-
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 4937a08..7dfb272 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5431,3 +5431,32 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+ 			      PCI_CLASS_DISPLAY_VGA, 8,
+ 			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
++
++static void quirk_hisi_fixup_np_class(struct pci_dev *pdev)
++{
++	u32 class = pdev->class;
++
++	pdev->class = PCI_BASE_CLASS_NETWORK << 8;
++	pci_info(pdev, "PCI class overriden (%#08x -> %#08x)\n",
++		 class, pdev->class);
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
++			quirk_hisi_fixup_np_class);
++
++/*
++ * Hisilicon NP devices 5896 BAR3 size is misreported as 256T. Actually, this
++ * BAR is unused, so let's disable it.
++ */
++#define HISI_5896_WRONG_BAR 3
++static void quirk_hisi_fixup_np_bar(struct pci_dev *pdev)
++{
++	struct resource *r = &pdev->resource[HISI_5896_WRONG_BAR];
++
++	r->start = 0;
++	r->end = 0;
++	r->flags = 0;
++
++	pci_info(pdev, "disable BAR %d\n", HISI_5896_WRONG_BAR);
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
++			 quirk_hisi_fixup_np_bar);
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 2302d133..56e2b91 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2558,6 +2558,7 @@
+ #define PCI_DEVICE_ID_KORENIX_JETCARDF3	0x17ff
+ 
+ #define PCI_VENDOR_ID_HUAWEI		0x19e5
++#define PCI_DEVICE_ID_HISI_5896        0x5896 /* Hisilicon NP devices 5896 */
+ 
+ #define PCI_VENDOR_ID_NETRONOME		0x19ee
+ #define PCI_DEVICE_ID_NETRONOME_NFP4000	0x4000
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.7.12.4
+
