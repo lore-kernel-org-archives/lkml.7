@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DA1C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1B0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E4920707
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E98620707
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:35:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbfLEGcJ (ORCPT
+        id S1726244AbfLEGfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 01:32:09 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:43799 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfLEGcI (ORCPT
+        Thu, 5 Dec 2019 01:35:08 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:43072 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfLEGfH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 01:32:08 -0500
-Received: by mail-io1-f72.google.com with SMTP id b17so1714985ioh.10
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 22:32:08 -0800 (PST)
+        Thu, 5 Dec 2019 01:35:07 -0500
+Received: by mail-il1-f198.google.com with SMTP id j17so1731915ilc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 22:35:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=gFm1gwUBe3aCgV86v6LWZ9hjXuYSquYhbKNTONEAZTg=;
-        b=NTPiBACMwecK1ualrfg6u25icux7fzoqpIKc0ZjXZtpeBRDTNcKR/wCAbrUGCil7tn
-         E42ENxbxOe4aTROs3vbnXQ6kEBjnoXySbGpd2G7nZ5P/WaX1oeF5Zo6ie9xA/n1FvLJH
-         G8G3nv1GLYNTtH7mt0EtyO/hkAuDV1mFWuxLAVf+fHYXDgsXjtRbunxv5pECx0EJ1qWk
-         0XT3GIzWtW0cTplntLagH9vyalyaefEDu6dJ8VTGeoazLF1jqTtk1FvSgMIVb4j6QeBq
-         P+zjhlQoa6Ntpwe0Po28C+KKuac4Lla/8XsjZsHaKCszy/pd6PwAnRglY+EFC97FJ+LJ
-         4QfA==
-X-Gm-Message-State: APjAAAU4ADfiaZ86WrgsxwuklJdaDJ4MN4hzWYax/yG9Euve5mghSOOs
-        waevNyXZdyUg09PnJC0qEzWRsSZDMOT2ILV7PC/SffLjN+Po
-X-Google-Smtp-Source: APXvYqxQQwL/9K+MlUOghBiyJ/HODZZ+EZ24A0kMBBi2MlWWUzTliZxJ8mnm6quXBgQishvvvlTIOO/1XfndCqccGX1zpuvagG+2
+        bh=sWlaImi5B4uVh73w3PHyR9//P49nAec4x6mydwyswqI=;
+        b=bslcDjwClzwE1Z0KfVJ/bW1ns7psfhbp6Oocyg6KgrZuJ9ftjt0uvaLn1a7JLTRJG3
+         hGxyCzwuzETLe5k1PAyhHzzDsAmNSu4wIwFPkMc71N3WBGiABRRWArcL6c+FfRgPestY
+         lg1RJ016FW3ZGWkBq+MtQa+OqaXATOWI+kewGwsveQc5uANvSLpir4XlB+2vgCNL7PaW
+         jMaAl0dDgHIvHHy/TjR7RhemtVJAl27AXRBSSOF8GDSZy/DOkbBe4uyBOam0iKGKB2L0
+         9EF6V0G2eNTo+aN0SEgXIwUaNwrzCCn9pLDsgOunUClmlHa2G0BZupq2LwQrJ0j/uC6C
+         tydw==
+X-Gm-Message-State: APjAAAWHZF9eBljPtTWgJqZkBO7Kr0e1ijNSY7WnEpYBJI1rVaSdhnJl
+        g7Ow1gXzKJoVkzMSOuIqNw+3Jt9BPAvvs4ToZRKJiXOK7Hgq
+X-Google-Smtp-Source: APXvYqyTtejw80rTQ+CvFHMjZ29IKsVykf637q7u88PD0v7dSr0tMfseJhNiwYx/dKnjCd9NiH1jHxoe84au5O7n2k3Y1oufRx2G
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca8b:: with SMTP id t11mr7760516ilo.227.1575527528013;
- Wed, 04 Dec 2019 22:32:08 -0800 (PST)
-Date:   Wed, 04 Dec 2019 22:32:08 -0800
+X-Received: by 2002:a6b:5a13:: with SMTP id o19mr5063163iob.120.1575527706944;
+ Wed, 04 Dec 2019 22:35:06 -0800 (PST)
+Date:   Wed, 04 Dec 2019 22:35:06 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a4293f0598ef165e@google.com>
-Subject: KASAN: vmalloc-out-of-bounds Write in bitfill_aligned
-From:   syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
-To:     b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000004e6eed0598ef2184@google.com>
+Subject: KASAN: slab-out-of-bounds Write in decode_data
+From:   syzbot <syzbot+fc8cd9a673d4577fb2e4@syzkaller.appspotmail.com>
+To:     ajk@comnets.uni-bremen.de, davem@davemloft.net,
+        linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,46 +59,70 @@ syzbot found the following crash on:
 
 HEAD commit:    63de3747 Merge tag 'tag-chrome-platform-for-v5.5' of git:/..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1040fc41e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=165a7c82e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=1d189d07c6717979
-dashboard link: https://syzkaller.appspot.com/bug?extid=e5fd3e65515b48c02a30
+dashboard link: https://syzkaller.appspot.com/bug?extid=fc8cd9a673d4577fb2e4
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15379c2ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=133cf97ee00000
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Bisection is inconclusive: the bug happens on the oldest tested release.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=150e2861e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=170e2861e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=130e2861e00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com
+Reported-by: syzbot+fc8cd9a673d4577fb2e4@syzkaller.appspotmail.com
 
 ==================================================================
-BUG: KASAN: vmalloc-out-of-bounds in bitfill_aligned  
-drivers/video/fbdev/core/sysfillrect.c:54 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in bitfill_aligned+0x356/0x410  
-drivers/video/fbdev/core/sysfillrect.c:25
-Write of size 8 at addr ffffc90008b11000 by task syz-executor.2/9476
+BUG: KASAN: slab-out-of-bounds in decode_data.part.0+0x23b/0x270  
+drivers/net/hamradio/6pack.c:843
+Write of size 1 at addr ffff8880993bd04e by task kworker/u4:2/25
 
-CPU: 2 PID: 9476 Comm: syz-executor.2 Not tainted 5.4.0-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS  
-rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+CPU: 1 PID: 25 Comm: kworker/u4:2 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events_unbound flush_to_ldisc
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
   __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
   kasan_report+0x12/0x20 mm/kasan/common.c:638
-  __asan_report_store8_noabort+0x17/0x20 mm/kasan/generic_report.c:140
-  bitfill_aligned drivers/video/fbdev/core/sysfillrect.c:54 [inline]
-  bitfill_aligned+0x356/0x410 drivers/video/fbdev/core/sysfillrect.c:25
-  sys_fillrect+0x421/0x7c0 drivers/video/fbdev/core/sysfillrect.c:291
-  drm_fb_helper_sys_fillrect+0x21/0x190 drivers/gpu/drm/drm_fb_helper.c:736
-  bit_clear_margins+0x30b/0x530 drivers/video/fbdev/core/bitblit.c:232
-  fbcon_clear_margins+0x1e9/0x250 drivers/video/fbdev/core/fbcon.c:1372
-  fbcon_switch+0xd7f/0x17f0 drivers/video/fbdev/core/fbcon.c:2354
-  redraw_screen+0x2b6/0x7d0 drivers/tty/vt/vt.c:997
-  fbcon_modechanged+0x5c3/0x790 drivers/video/fbdev/core/fbcon.c:2991
-  fbcon_update_vcs+0x42/0x50 drivers/video/fbdev/core/fbcon.c:3038
-  fb_set_var+0xb32/0xdd0 drivers/video/fbdev/core/fbmem.c:1051
-  do_fb_ioctl+0x390/0x7d0 drivers/video/fbdev/core/fbmem.c:1104
-  fb_ioctl+0xe6/0x130 drivers/video/fbdev/core/fbmem.c:1180
+  __asan_report_store1_noabort+0x17/0x20 mm/kasan/generic_report.c:137
+  decode_data.part.0+0x23b/0x270 drivers/net/hamradio/6pack.c:843
+  decode_data drivers/net/hamradio/6pack.c:965 [inline]
+  sixpack_decode drivers/net/hamradio/6pack.c:968 [inline]
+  sixpack_receive_buf drivers/net/hamradio/6pack.c:458 [inline]
+  sixpack_receive_buf+0xde4/0x1420 drivers/net/hamradio/6pack.c:435
+  tty_ldisc_receive_buf+0x15f/0x1c0 drivers/tty/tty_buffer.c:465
+  tty_port_default_receive_buf+0x7d/0xb0 drivers/tty/tty_port.c:38
+  receive_buf drivers/tty/tty_buffer.c:481 [inline]
+  flush_to_ldisc+0x222/0x390 drivers/tty/tty_buffer.c:533
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Allocated by task 8864:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:512 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:485
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:526
+  __do_kmalloc_node mm/slab.c:3616 [inline]
+  __kmalloc_node+0x4e/0x70 mm/slab.c:3623
+  kmalloc_node include/linux/slab.h:579 [inline]
+  kvmalloc_node+0x68/0x100 mm/util.c:574
+  kvmalloc include/linux/mm.h:655 [inline]
+  kvzalloc include/linux/mm.h:663 [inline]
+  alloc_netdev_mqs+0x98/0xde0 net/core/dev.c:9730
+  sixpack_open+0x104/0xaaf drivers/net/hamradio/6pack.c:563
+  tty_ldisc_open.isra.0+0xa3/0x110 drivers/tty/tty_ldisc.c:464
+  tty_set_ldisc+0x30e/0x6b0 drivers/tty/tty_ldisc.c:591
+  tiocsetd drivers/tty/tty_io.c:2337 [inline]
+  tty_ioctl+0xe8d/0x14f0 drivers/tty/tty_io.c:2597
   vfs_ioctl fs/ioctl.c:47 [inline]
   file_ioctl fs/ioctl.c:545 [inline]
   do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
@@ -108,25 +132,53 @@ Call Trace:
   __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a759
-Code: bd b1 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 8b b1 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f8280324c88 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 000000000072bf00 RCX: 000000000045a759
-RDX: 0000000020000040 RSI: 0000000000004601 RDI: 0000000000000003
-RBP: 0000000000000003 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f82803256d4
-R13: 00000000004a9e78 R14: 00000000006ec2d8 R15: 00000000ffffffff
 
+Freed by task 8605:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  kasan_set_free_info mm/kasan/common.c:334 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:473
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:482
+  __cache_free mm/slab.c:3426 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3757
+  skb_free_head+0x93/0xb0 net/core/skbuff.c:591
+  skb_release_data+0x551/0x8d0 net/core/skbuff.c:611
+  skb_release_all+0x4d/0x60 net/core/skbuff.c:665
+  __kfree_skb net/core/skbuff.c:679 [inline]
+  consume_skb net/core/skbuff.c:838 [inline]
+  consume_skb+0xfb/0x410 net/core/skbuff.c:832
+  skb_free_datagram+0x1b/0x100 net/core/datagram.c:328
+  netlink_recvmsg+0x6c6/0xf50 net/netlink/af_netlink.c:1996
+  sock_recvmsg_nosec net/socket.c:873 [inline]
+  sock_recvmsg net/socket.c:891 [inline]
+  sock_recvmsg+0xce/0x110 net/socket.c:887
+  ____sys_recvmsg+0x236/0x550 net/socket.c:2562
+  ___sys_recvmsg+0xff/0x190 net/socket.c:2603
+  __sys_recvmsg+0x102/0x1d0 net/socket.c:2650
+  __do_sys_recvmsg net/socket.c:2660 [inline]
+  __se_sys_recvmsg net/socket.c:2657 [inline]
+  __x64_sys_recvmsg+0x78/0xb0 net/socket.c:2657
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880993bc000
+  which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 78 bytes to the right of
+  4096-byte region [ffff8880993bc000, ffff8880993bd000)
+The buggy address belongs to the page:
+page:ffffea000264ef00 refcount:1 mapcount:0 mapping:ffff8880aa402000  
+index:0x0 compound_mapcount: 0
+raw: 00fffe0000010200 ffffea000262c288 ffffea00029bc908 ffff8880aa402000
+raw: 0000000000000000 ffff8880993bc000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
 
 Memory state around the buggy address:
-  ffffc90008b10f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ffffc90008b10f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> ffffc90008b11000: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-                    ^
-  ffffc90008b11080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-  ffffc90008b11100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  ffff8880993bcf00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880993bcf80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff8880993bd000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                                               ^
+  ffff8880993bd080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880993bd100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
 ==================================================================
 
 
@@ -137,3 +189,6 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
