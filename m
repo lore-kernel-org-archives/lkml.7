@@ -2,130 +2,114 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0ABC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F81C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789EC205ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C7C205ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 13:13:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CQSeaQfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbfLENLj (ORCPT
+        id S1729458AbfLENNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 08:11:39 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55482 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729096AbfLENLi (ORCPT
+        Thu, 5 Dec 2019 08:13:24 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37335 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729096AbfLENNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 08:11:38 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB5D89Yv092484
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Dec 2019 08:11:37 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wpuwndr7v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 08:11:37 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 5 Dec 2019 13:11:35 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Dec 2019 13:11:32 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB5DBVaS43057616
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Dec 2019 13:11:31 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2162CA405F;
-        Thu,  5 Dec 2019 13:11:31 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62861A405C;
-        Thu,  5 Dec 2019 13:11:30 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.8.135])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  5 Dec 2019 13:11:30 +0000 (GMT)
-Date:   Thu, 5 Dec 2019 15:11:28 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Wentao Wang <witallwang@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 200/321] mm/page_alloc.c: deduplicate
- __memblock_free_early() and memblock_free()
-References: <20191203223427.103571230@linuxfoundation.org>
- <20191203223437.527630884@linuxfoundation.org>
- <20191205115043.GA25107@duo.ucw.cz>
+        Thu, 5 Dec 2019 08:13:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575551602;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6r1mJ8nXQoZMPn6qaVxM4ay08sZZBHL2nKfUet71uGI=;
+        b=CQSeaQfZl5gAIc1EqpIMcq9B09Bn/uRpwPMSPXX77Rl45s2kOe0M1aLSdI11TPNSUakJqT
+        z+jX2eAbOMth1S+51fa7kCBj+Jeum5IrOXtVYWqSKmvVWKhqa8RoVliCqhEy8FUUelOYcL
+        v5Fcd9tIpkx46DAIK6JXtQVgHXwPDkc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-148-hAnpWs5TOLifaQ46gRFRJg-1; Thu, 05 Dec 2019 08:13:21 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 64A4F1005502;
+        Thu,  5 Dec 2019 13:13:20 +0000 (UTC)
+Received: from [10.72.12.247] (ovpn-12-247.pek2.redhat.com [10.72.12.247])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 26B635D9C5;
+        Thu,  5 Dec 2019 13:13:01 +0000 (UTC)
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-5-peterx@redhat.com>
+ <1355422f-ab62-9dc3-2b48-71a6e221786b@redhat.com>
+ <a3e83e6b-4bfa-3a6b-4b43-5dd451e03254@redhat.com>
+ <20191204195230.GF19939@xz-x1>
+ <efa1523f-2cff-8d65-7b43-4a19eff89051@redhat.com>
+ <20191205120800.GA9673@xz-x1>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <4d3e6552-8cbd-a644-b418-2605e637834f@redhat.com>
+Date:   Thu, 5 Dec 2019 21:12:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191205115043.GA25107@duo.ucw.cz>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19120513-0020-0000-0000-0000039452F3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120513-0021-0000-0000-000021EB8058
-Message-Id: <20191205131128.GA25566@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-05_03:2019-12-04,2019-12-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- bulkscore=0 malwarescore=0 spamscore=0 mlxlogscore=822 clxscore=1015
- impostorscore=0 suspectscore=2 lowpriorityscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912050111
+In-Reply-To: <20191205120800.GA9673@xz-x1>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: hAnpWs5TOLifaQ46gRFRJg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 12:50:43PM +0100, Pavel Machek wrote:
-> Hi!
-> On Tue 2019-12-03 23:34:26, Greg Kroah-Hartman wrote:
-> > From: Wentao Wang <witallwang@gmail.com>
-> > 
-> > [ Upstream commit d31cfe7bff9109476da92c245b56083e9b48d60a ]
-> 
-> 
-> > @@ -1537,12 +1537,7 @@ void * __init memblock_virt_alloc_try_nid(
-> >   */
-> >  void __init __memblock_free_early(phys_addr_t base, phys_addr_t size)
-> >  {
-> > -	phys_addr_t end = base + size - 1;
-> > -
-> > -	memblock_dbg("%s: [%pa-%pa] %pF\n",
-> > -		     __func__, &base, &end, (void *)_RET_IP_);
-> > -	kmemleak_free_part_phys(base, size);
-> > -	memblock_remove_range(&memblock.reserved, base, size);
-> > +	memblock_free(base, size);
-> >  }
-> 
-> This makes the memblock_dbg() less useful: _RET_IP_ will now be one of
-> __memblock_free_early(), not of the original caller.
-> 
-> That may be okay, but I guess it should be mentioned in changelog, and
-> I don't really see why it is queued for -stable.
 
-Not sure why this one was picked for -stable, but in upstream there is a
-followup commit 4d72868c8f7c ("memblock: replace usage of
-__memblock_free_early() with memblock_free()") that completely eliminates
-__memblock_free_early(). IMHO it would make sense to either to take both or
-to drop both.
- 
-> Best regards,
-> 									Pavel
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+On 2019/12/5 =E4=B8=8B=E5=8D=888:08, Peter Xu wrote:
+> On Thu, Dec 05, 2019 at 02:51:15PM +0800, Jason Wang wrote:
+>> On 2019/12/5 =E4=B8=8A=E5=8D=883:52, Peter Xu wrote:
+>>> On Wed, Dec 04, 2019 at 12:04:53PM +0100, Paolo Bonzini wrote:
+>>>> On 04/12/19 11:38, Jason Wang wrote:
+>>>>>> +=C2=A0=C2=A0=C2=A0 entry =3D &ring->dirty_gfns[ring->dirty_index & =
+(ring->size - 1)];
+>>>>>> +=C2=A0=C2=A0=C2=A0 entry->slot =3D slot;
+>>>>>> +=C2=A0=C2=A0=C2=A0 entry->offset =3D offset;
+>>>>> Haven't gone through the whole series, sorry if it was a silly questi=
+on
+>>>>> but I wonder things like this will suffer from similar issue on
+>>>>> virtually tagged archs as mentioned in [1].
+>>>> There is no new infrastructure to track the dirty pages---it's just a
+>>>> different way to pass them to userspace.
+>>>>
+>>>>> Is this better to allocate the ring from userspace and set to KVM
+>>>>> instead? Then we can use copy_to/from_user() friends (a little bit sl=
+ow
+>>>>> on recent CPUs).
+>>>> Yeah, I don't think that would be better than mmap.
+>>> Yeah I agree, because I didn't see how copy_to/from_user() helped to
+>>> do icache/dcache flushings...
+>>
+>> It looks to me one advantage is that exact the same VA is used by both
+>> userspace and kernel so there will be no alias.
+> Hmm.. but what if the page is mapped more than once in user?  Thanks,
 
 
+Then it's the responsibility of userspace program to do the flush I think.
 
--- 
-Sincerely yours,
-Mike.
+Thanks
+
+>
 
