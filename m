@@ -2,104 +2,103 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0A3C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792C8C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE8C02466E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE26B24658
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:17:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="QMwk2s8t"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="RWGUAIt6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfLEXRC (ORCPT
+        id S1726259AbfLEXRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 18:17:02 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37945 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbfLEXRB (ORCPT
+        Thu, 5 Dec 2019 18:17:06 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37835 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfLEXRF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 18:17:01 -0500
-Received: by mail-qt1-f193.google.com with SMTP id 14so5265515qtf.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 15:17:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=I3RTGY6vLoKZQaf8k+i6VV46bgDUyZoMR04eSUnqJf0=;
-        b=QMwk2s8tLZKS8OI9lKFCtGA1Z1mb6Ixu7TaH2nsww7Lj0gh8lINdDdlSzcHZAWEInW
-         2KHOV9F3S5b+/8KO7htuWlGq2589aUsBKHXl+siySmyqT43otw5mtaebqS6RQJEswuOf
-         Wm1v7ZdD2ynX24lCpTt8zvdihVdqodAt4imdnB05SO6kdz/mBmuM/irBoFLMm5OE6Dlb
-         4SGQ7uk+nb6R94v4xN5l8oRC3qNAM/ObPCn8OdDcl46UZzLR5I4wU13HBhi6tNR53+AR
-         iFu1Riilb1NS0ajglxhMpYgNlbPnGdPUuMUoUmSN4qdWVO+hK9ADEWS253c1N3QDWMmb
-         JuBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=I3RTGY6vLoKZQaf8k+i6VV46bgDUyZoMR04eSUnqJf0=;
-        b=iSJwRV3WtbsQzbdx5Whf8g0jPVU0etgf0jGspjV9Sh20PiNTjK/ZwWGzbhzCKtYvi+
-         IY8DTidSKQP0Nchc00+/Sk5AxHQRmL9oCQ4qfJxihCdunbSopksRIjRIjpuDvJi5VQbm
-         iR1UdGhfxJ0hMe6AjKRMXl4YovQH5ika/AEJ5w0i7mUrGyn6jf7DFofRl3OWU2ZBHRvA
-         xII3fUffa+ShPxD8s2JaZJAXSKlBA8hdVgw9tWuAPjub96qZaxvMmdaCH2ZBNrepxZ4v
-         lf2+HtcbgyUHrAx5jqO7vgqEewFD6I5Hh9TIkD9Nbk83Piozi+HBXBgQL2Y4GhfIMegs
-         GHNQ==
-X-Gm-Message-State: APjAAAUtWqyQT7twphUgMjRB3zpLnHP9pRTYy4jEYs8iSqIcI6G20vTw
-        /UUMbG9uza4fLxPIqgZFmbb1SA==
-X-Google-Smtp-Source: APXvYqzMNgSvzkY3NFpm0uElw07fgY3Oc+zNdS7EukDtvaMDWAC/GHg5qCYP6d3VQTnEZEFY8DGvDQ==
-X-Received: by 2002:ac8:1410:: with SMTP id k16mr9890823qtj.27.1575587820355;
-        Thu, 05 Dec 2019 15:17:00 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id j12sm5343442qkk.36.2019.12.05.15.16.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 15:16:59 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
+        Thu, 5 Dec 2019 18:17:05 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id E255E891AC;
+        Fri,  6 Dec 2019 12:17:02 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1575587822;
+        bh=7sD4hvugn6rCsxPSuCEvgRnlt+qYR3Ims+ZEAMUX4+k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=RWGUAIt6c18JHB5f1lDrLQBRfBUM49WMD5oC6k5vTtw3sADE/lwVrYhkBTOV3CzAX
+         m1MQTw7NZ34GenL00WbkvEW2VmbiMmGrQznrB2VZS2U5++Ykusv7SkbAiI6dU1yvJv
+         wO7vdLeGZk4g0SwTq4tRwXGEaFTZCAL2am34W0jufVww59hnRTIe1OXaaavUODDMQf
+         kqwb9h35YQu8MbeU1JsXckWC/Ewdm0qUbHX1XNXB325fWjOd5YjreFHlOOlIRTKQ28
+         ZjGt2F6EciPXXzL7e26qydRDEE0nBgHJCp/sBv0nZPOTHxgLgVF3BiVGQcDbpJHyn2
+         tGuG9neSwZJ7Q==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5de98feb0000>; Fri, 06 Dec 2019 12:17:02 +1300
+Received: from luukp-dl.ws.atlnz.lc (luukp-dl.ws.atlnz.lc [10.33.25.31])
+        by smtp (Postfix) with ESMTP id 839E213EED2;
+        Fri,  6 Dec 2019 12:16:58 +1300 (NZDT)
+Received: by luukp-dl.ws.atlnz.lc (Postfix, from userid 1137)
+        id A403C261D87; Fri,  6 Dec 2019 12:16:59 +1300 (NZDT)
+From:   Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>
+To:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>
+Subject: [PATCH v2] hwmon: (adt7475) Make volt2reg return same reg as reg2volt input
+Date:   Fri,  6 Dec 2019 12:16:59 +1300
+Message-Id: <20191205231659.1301-1-luuk.paulussen@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191205225755.GC2532@roeck-us.net>
+References: <20191205225755.GC2532@roeck-us.net>
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [v3 PATCH] mm: move_pages: return valid node id in status if the page is already on the target node
-Date:   Thu, 5 Dec 2019 18:16:58 -0500
-Message-Id: <4C589824-CA40-41A3-8F2B-C2AA2A924510@lca.pw>
-References: <bd3f2ee5-9cbd-ed4f-9863-8859866da810@nvidia.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>, fabecassis@nvidia.com,
-        mhocko@suse.com, cl@linux.com, vbabka@suse.cz,
-        mgorman@techsingularity.net, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-In-Reply-To: <bd3f2ee5-9cbd-ed4f-9863-8859866da810@nvidia.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-X-Mailer: iPhone Mail (17B111)
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+reg2volt returns the voltage that matches a given register value.
+Converting this back the other way with volt2reg didn't return the same
+register value because it used truncation instead of rounding.
 
+This meant that values read from sysfs could not be written back to sysfs
+to set back the same register value.
 
-> On Dec 5, 2019, at 5:41 PM, John Hubbard <jhubbard@nvidia.com> wrote:
->=20
-> Please recall how this started: it was due to a report from a real end use=
-r, who was=20
-> seeing a real problem. After a few emails, it was clear that there's not a=
- good
-> work around available for cases like this:
->=20
-> * User space calls move_pages(), gets 0 (success) returned, and based on t=
-hat,
-> proceeds to iterate through the status array.
->=20
-> * The status array remains untouched by the move_pages() call, so confusio=
-n and
-> wrong behavior ensues.
->=20
-> After some further discussion, we decided that the current behavior really=
- is=20
-> incorrect, and that it needs fixing in the kernel. Which this patch does.
+With this change, volt2reg will return the same value for every voltage
+previously returned by reg2volt (for the set of possible input values)
 
-Well, that test code itself  does not really tell any real world use case.  A=
-lso, thanks to the discussion, it brought to me it is more obvious and criti=
-cal  that the return code is wrong according to the spec. Then, if that part=
- is taking care of, it would kill two-bird with one stone because there is n=
-o need to return status array anymore. Make sense?=
+Signed-off-by: Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>
+---
+ changes in v2:
+ - remove unnecessary braces.
+ drivers/hwmon/adt7475.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
+index 6c64d50c9aae..01c2eeb02aa9 100644
+--- a/drivers/hwmon/adt7475.c
++++ b/drivers/hwmon/adt7475.c
+@@ -294,9 +294,10 @@ static inline u16 volt2reg(int channel, long volt, u=
+8 bypass_attn)
+ 	long reg;
+=20
+ 	if (bypass_attn & (1 << channel))
+-		reg =3D (volt * 1024) / 2250;
++		reg =3D DIV_ROUND_CLOSEST(volt * 1024, 2250);
+ 	else
+-		reg =3D (volt * r[1] * 1024) / ((r[0] + r[1]) * 2250);
++		reg =3D DIV_ROUND_CLOSEST(volt * r[1] * 1024,
++					(r[0] + r[1]) * 2250);
+ 	return clamp_val(reg, 0, 1023) & (0xff << 2);
+ }
+=20
+--=20
+2.24.0
+
