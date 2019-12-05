@@ -7,64 +7,65 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20E9C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE927C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84AE921823
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C566121823
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZJRP8vF3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bEkm8Gxi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbfLEAKR (ORCPT
+        id S1728696AbfLEAK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 19:10:17 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:44401 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728576AbfLEAKP (ORCPT
+        Wed, 4 Dec 2019 19:10:29 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43354 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728644AbfLEAKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 19:10:15 -0500
-Received: by mail-pj1-f67.google.com with SMTP id w5so484167pjh.11
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 16:10:15 -0800 (PST)
+        Wed, 4 Dec 2019 19:10:23 -0500
+Received: by mail-pf1-f194.google.com with SMTP id h14so655496pfe.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 16:10:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=sl9+RtgVbb7KwtMxDxQLj2F2VAZGCx1aAKzBbfOxt1g=;
-        b=ZJRP8vF30U0k7vaqJoBuANMFiYYfPxKnryHE+msf40PIzZ2XSlMmsYPF0mGufSJdUR
-         4H2AxF8qdpgOFyXbO2LGTs5xyhXmVdZWKtNq5VikWN//N+UtZBGPCJGRg0Anl75AVr85
-         uHT83t8RIonezj2yYKWA+eGP1srhqMzW/Z7Ys=
+        bh=Bvtp7PhLfJQZeHXECkSv3FhI1NErWyMTeUAZ1On118k=;
+        b=bEkm8Gxis3TcLMrQK/O3kffjb1WvsBNakAbPX0QbwZ1pwClz/FKwdldVkZ8SoGnhuq
+         Gu09c92s2HUmTipHCa6Qomcdu6FUNz+30JcUXlMMe8UgQDsNboOQc5uCn1QnbC/a9JwJ
+         gkncFq9vbXJAS0ui3YNCs92RDjLvMC0X5jdpI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=sl9+RtgVbb7KwtMxDxQLj2F2VAZGCx1aAKzBbfOxt1g=;
-        b=oXvlUMIXo2vmzKLMprLKuUzspTrYmNIUiqweULUG0N+wCokV+6+W3I4mFLjUPIqMp3
-         UrOsGA6gfAPD1GibiJrw0BKkgdBpVH223NLc5HNR7Gr7LSTcW3Avuj1IThUi4IJL/6iO
-         RO0SlBHBSJJ7J8tbK37BCud6U0mBTpyFWeTwrBabPf0lo/DfxWmSbqEJG5xXWPv738z/
-         Gm2lE+LEUKRki29Btc1oqDuNejmmECTgKg2PGEiJ31ZmG1j2tdzn3P2vnlIYkEvaZK7+
-         B8DlJgQqW2nLK7ARXSVOSm8PXj5jQEwpR7sq7YvgdBl0mIxHVLQE1qAXwe31Jl+K9OsB
-         WlAA==
-X-Gm-Message-State: APjAAAVfVssnP/5kNJtokNRADo4xV6LvMgtw1GQwq9PrF7bQqYGCz0Sx
-        LHrw2+AG28GAK0lfffXueTQX7A==
-X-Google-Smtp-Source: APXvYqyUZRhwcUxDg88BSvcVoZjK0y9Ie8prRgjXiPT5oLIYZyeO09SYIVpYFNvdP8jyPMYnr2JPiw==
-X-Received: by 2002:a17:902:d881:: with SMTP id b1mr6107230plz.170.1575504615218;
-        Wed, 04 Dec 2019 16:10:15 -0800 (PST)
+        bh=Bvtp7PhLfJQZeHXECkSv3FhI1NErWyMTeUAZ1On118k=;
+        b=MEPR/a4w+TABhcj25t/3fcF+tWG9+uV24UMrJ+AD307Jy14mdytqMvJNKuIBfDlkFW
+         rRoBB9JJn9Hro9SvkYhuFUu+Wu28d/94yvCh37JlSasLS5do0Z2PTDS08CAj+OK1Q4VO
+         VbbBlcMyz39hI41yVsjjvan8gFT9MK3YxIZL76VGBZOIFQIsZ/IW2yILc4w7sB10W7d8
+         mM8/tG09d8izaT1ZMfjJavyJYZDsyU5X6QuOCRbwOir73s+L5zTi3bxy9vRtLu+njDFm
+         gEqNYYHT1Pnskq5Fqpg8hdNMmTXAOoNRjB2F+D98DwD87q9XjAcou7FW+6do73Vm23Dl
+         a+WQ==
+X-Gm-Message-State: APjAAAWaSNMT02jb+/XoMyfnacYAurwhigVnm0UHeFg/0FFaa6dqnfl0
+        /KdmsErgvx+GKaqvls55B3feew==
+X-Google-Smtp-Source: APXvYqxnbG88LdR3MCSnkD4TJXy10ExbjaE5WpyEp4RxlLVQEHycA/D0B77X7KbnCQ7VIqp8L5Jl6g==
+X-Received: by 2002:aa7:8146:: with SMTP id d6mr5975089pfn.171.1575504622966;
+        Wed, 04 Dec 2019 16:10:22 -0800 (PST)
 Received: from thgarnie.kir.corp.google.com ([2620:0:1008:1100:d6ba:ac27:4f7b:28d7])
-        by smtp.gmail.com with ESMTPSA id 73sm8422303pgc.13.2019.12.04.16.10.14
+        by smtp.gmail.com with ESMTPSA id 73sm8422303pgc.13.2019.12.04.16.10.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 16:10:14 -0800 (PST)
+        Wed, 04 Dec 2019 16:10:22 -0800 (PST)
 From:   Thomas Garnier <thgarnie@chromium.org>
 To:     kernel-hardening@lists.openwall.com
 Cc:     kristen@linux.intel.com, keescook@chromium.org,
         Thomas Garnier <thgarnie@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jiri Slaby <jslaby@suse.cz>, Juergen Gross <jgross@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v10 04/11] x86/entry/64: Adapt assembly for PIE support
-Date:   Wed,  4 Dec 2019 16:09:41 -0800
-Message-Id: <20191205000957.112719-5-thgarnie@chromium.org>
+Subject: [PATCH v10 08/11] x86/boot/64: Adapt assembly for PIE support
+Date:   Wed,  4 Dec 2019 16:09:45 -0800
+Message-Id: <20191205000957.112719-9-thgarnie@chromium.org>
 X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
 In-Reply-To: <20191205000957.112719-1-thgarnie@chromium.org>
 References: <20191205000957.112719-1-thgarnie@chromium.org>
@@ -75,8 +76,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the assembly code to use only relative references of symbols for the
-kernel to be PIE compatible.
+Change the assembly code to use absolute reference for transition
+between address spaces and relative references when referencing global
+variables in the same address space. Ensure the kernel built with PIE
+references the correct addresses based on context.
 
 Position Independent Executable (PIE) support will allow to extend the
 KASLR randomization range below 0xffffffff80000000.
@@ -84,59 +87,58 @@ KASLR randomization range below 0xffffffff80000000.
 Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/entry/entry_64.S | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ arch/x86/kernel/head_64.S | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 76942cbd95a1..f14363625f4b 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1329,7 +1329,8 @@ SYM_CODE_START_LOCAL(error_entry)
- 	movl	%ecx, %eax			/* zero extend */
- 	cmpq	%rax, RIP+8(%rsp)
- 	je	.Lbstep_iret
--	cmpq	$.Lgs_change, RIP+8(%rsp)
-+	leaq	.Lgs_change(%rip), %rcx
-+	cmpq	%rcx, RIP+8(%rsp)
- 	jne	.Lerror_entry_done_lfence
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 4bbc770af632..40a467f8e116 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -87,7 +87,8 @@ SYM_CODE_START_NOALIGN(startup_64)
+ 	popq	%rsi
  
- 	/*
-@@ -1529,10 +1530,10 @@ SYM_CODE_START(nmi)
- 	 * resume the outer NMI.
+ 	/* Form the CR3 value being sure to include the CR3 modifier */
+-	addq	$(early_top_pgt - __START_KERNEL_map), %rax
++	movabs  $(early_top_pgt - __START_KERNEL_map), %rcx
++	addq    %rcx, %rax
+ 	jmp 1f
+ SYM_CODE_END(startup_64)
+ 
+@@ -119,7 +120,8 @@ SYM_CODE_START(secondary_startup_64)
+ 	popq	%rsi
+ 
+ 	/* Form the CR3 value being sure to include the CR3 modifier */
+-	addq	$(init_top_pgt - __START_KERNEL_map), %rax
++	movabs	$(init_top_pgt - __START_KERNEL_map), %rcx
++	addq    %rcx, %rax
+ 1:
+ 
+ 	/* Enable PAE mode, PGE and LA57 */
+@@ -137,7 +139,7 @@ SYM_CODE_START(secondary_startup_64)
+ 	movq	%rax, %cr3
+ 
+ 	/* Ensure I am executing from virtual addresses */
+-	movq	$1f, %rax
++	movabs  $1f, %rax
+ 	ANNOTATE_RETPOLINE_SAFE
+ 	jmp	*%rax
+ 1:
+@@ -234,11 +236,12 @@ SYM_CODE_START(secondary_startup_64)
+ 	 *	REX.W + FF /5 JMP m16:64 Jump far, absolute indirect,
+ 	 *		address given in m16:64.
  	 */
- 
--	movq	$repeat_nmi, %rdx
-+	leaq	repeat_nmi(%rip), %rdx
- 	cmpq	8(%rsp), %rdx
- 	ja	1f
--	movq	$end_repeat_nmi, %rdx
-+	leaq	end_repeat_nmi(%rip), %rdx
- 	cmpq	8(%rsp), %rdx
- 	ja	nested_nmi_out
- 1:
-@@ -1586,7 +1587,8 @@ nested_nmi:
- 	pushq	%rdx
- 	pushfq
- 	pushq	$__KERNEL_CS
--	pushq	$repeat_nmi
-+	leaq	repeat_nmi(%rip), %rdx
-+	pushq	%rdx
- 
- 	/* Put stack back */
- 	addq	$(6*8), %rsp
-@@ -1625,7 +1627,11 @@ first_nmi:
- 	addq	$8, (%rsp)	/* Fix up RSP */
- 	pushfq			/* RFLAGS */
- 	pushq	$__KERNEL_CS	/* CS */
--	pushq	$1f		/* RIP */
-+	pushq	$0		/* Future return address */
-+	pushq	%rdx		/* Save RAX */
-+	leaq	1f(%rip), %rdx	/* RIP */
-+	movq    %rdx, 8(%rsp)   /* Put 1f on return address */
-+	popq	%rdx		/* Restore RAX */
- 	iretq			/* continues at repeat_nmi below */
- 	UNWIND_HINT_IRET_REGS
- 1:
+-	pushq	$.Lafter_lret	# put return address on stack for unwinder
++	movabs  $.Lafter_lret, %rax
++	pushq	%rax		# put return address on stack for unwinder
+ 	xorl	%ebp, %ebp	# clear frame pointer
+-	movq	initial_code(%rip), %rax
++	leaq	initial_code(%rip), %rax
+ 	pushq	$__KERNEL_CS	# set correct cs
+-	pushq	%rax		# target address in negative space
++	pushq	(%rax)		# target address in negative space
+ 	lretq
+ .Lafter_lret:
+ SYM_CODE_END(secondary_startup_64)
 -- 
 2.24.0.393.g34dc348eaf-goog
 
