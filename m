@@ -2,132 +2,160 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D714C2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E3BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2870620659
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575572906;
-	bh=40P9n3emZPz0ZfLgusgo/yMSIxlr6E2qcaFz2UtC+Gk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e7ugrIWlW6/uJgPWUBr36eaQ39K3XT3eq3HskUEGd4DZHWfHZc+8A+gHRgXXbz0Qq
-	 Poxjf5JnReYbg6G20GuqDRBerJmHegXnHX4CB8BEoVi/EyRtjESz8hBDhLrftchv2N
-	 pbaB0oWK1VoKszVpwoQtEG6O75A4OK13i3tdEs8w=
+	by mail.kernel.org (Postfix) with ESMTP id 0B8A820659
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:09:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T6YA+GrM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729996AbfLETIZ (ORCPT
+        id S1729530AbfLETJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 14:08:25 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44281 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfLETIZ (ORCPT
+        Thu, 5 Dec 2019 14:09:31 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44229 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726028AbfLETJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 14:08:25 -0500
-Received: by mail-ot1-f68.google.com with SMTP id x3so3548152oto.11;
-        Thu, 05 Dec 2019 11:08:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GhI01COZ1PM4IuNCQYroNt43ak9q+ZJEl+5PK/vzrwc=;
-        b=Cpxk46pnI8ZCtT+1E/uZ9TbR/h1P8SsJPaKYiye7X/GQYWLPdjqvaz+oMhdikno/iS
-         FYrOI5mmb91YVoXZdVKnL55dVZVohuamF3PwGekZEuLfwbpQ2C4Up8C2Ggj+N4pat8rx
-         5uRz/YjEjnxrJw5lLbFuy636O9pvWMbuVXeBACKUjzort/4Uaml0fbFwaj8tjlcNJa+/
-         WhcfIFRGLgIO/tXMDp6f8FkRV+D5rJq1U4FFLyZOoLDFsvE3OJ5+xpzW9e+pxP/nMXms
-         vKwKedlnpTE+7BU60076cBgCR2IVy7lmRaMZqQXLeo3dHNChCy3pHypV0c0U4jTSxxGF
-         JTHQ==
-X-Gm-Message-State: APjAAAUr830AiXyS3XHnFbyM+/j5hENZ/YJJyoJqr8sYPLZYyt52REHA
-        lbNaU8VTe2dn7NTuiwHzKQ==
-X-Google-Smtp-Source: APXvYqyrDf3SjBOgDwQzOa4/THONdCOmBohqUk4Y5DGydGiSs0Q8JEOerKtxomNcothMl7/fKTTrlA==
-X-Received: by 2002:a9d:7357:: with SMTP id l23mr7568607otk.10.1575572903777;
-        Thu, 05 Dec 2019 11:08:23 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w8sm2157401ote.80.2019.12.05.11.08.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 11:08:22 -0800 (PST)
-Date:   Thu, 5 Dec 2019 13:08:21 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     freddy.hsin@mediatek.com
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wim@linux-watchdog.org,
-        linux@roeck-us.net, matthias.bgg@gmail.com,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, Chang-An.Chen@mediatek.com,
-        wsd_upstream@mediatek.com
-Subject: Re: [PATCH v1 4/4] dt-binding: power: reset: Add documentation for
- MTK RGU (Reset Gernation Unit) reboot driver
-Message-ID: <20191205190821.GA25233@bogus>
-References: <1574746490-625-1-git-send-email-freddy.hsin@mediatek.com>
- <1574746490-625-5-git-send-email-freddy.hsin@mediatek.com>
+        Thu, 5 Dec 2019 14:09:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575572969;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=KMSt1fsmGsnUyD3THB0TYricfW4Ly8DVOePbhwwALGg=;
+        b=T6YA+GrMYUkH3t4RhMPpzFtfPb0KMX8wsZzMlCY6yTFySQhEbnshfuvuTvB8EnTlgLxWQJ
+        0SarfoYzCXYH+UWlLpAbpEGXtJX2mR3H3hlfL99dW4D+h1CokDWNtifeA4knjEiXDja/Gr
+        T8s08MFtUJ7GRzNcCQIRGk/3HFLBDJI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-278-jGkiYA4RNLefmEkpwXdxyg-1; Thu, 05 Dec 2019 14:09:23 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 162B8DB60;
+        Thu,  5 Dec 2019 19:09:22 +0000 (UTC)
+Received: from max.com (ovpn-205-78.brq.redhat.com [10.40.205.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 48CF8600D1;
+        Thu,  5 Dec 2019 19:09:18 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [GIT PULL] GFS2 changes for the 5.5 merge window
+Date:   Thu,  5 Dec 2019 20:09:15 +0100
+Message-Id: <20191205190915.5468-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574746490-625-5-git-send-email-freddy.hsin@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: jGkiYA4RNLefmEkpwXdxyg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 01:34:50PM +0800, freddy.hsin@mediatek.com wrote:
-> From: Freddy Hsin <freddy.hsin@mediatek.com>
-> 
-> Add documentation for MTK RGU (Reset Generation Unit) reboot driver.
-> 
-> Signed-off-by: Freddy Hsin <freddy.hsin@mediatek.com>
-> ---
->  .../devicetree/bindings/power/reset/mtk-reboot.txt |   30 ++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/mtk-reboot.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/mtk-reboot.txt b/Documentation/devicetree/bindings/power/reset/mtk-reboot.txt
-> new file mode 100644
-> index 0000000..708d351
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/mtk-reboot.txt
-> @@ -0,0 +1,30 @@
-> +Generic MTK RGU mapped register reset driver
-> +
-> +This is a reset driver using toprgu to map its non-volatile register.
-> +The reset is generally performed with a write to the non-volatile register
-> +defined by the register map pointed by toprgu reference plus the offset
-> +with the mask defined in the reboot-mode node.
-> +
-> +Required properties:
-> +- compatible: should contain "toprgu-reboot-mode"
+Hi Linus,
 
-What's wrong with syscon-reboot-mode?
+could you please consider pulling the following gfs2 changes?
 
-> +- regmap: this is phandle to the register map node
+Thanks a lot,
+Andreas
 
-Make this node a child node of the phandle and get rid of this.
+The following changes since commit d5798141fd54cea074c3429d5803f6c41ade0ca8=
+:
 
-> +- offset: offset in the register map for the reboot-mode register (in bytes)
-> +- mask: the reset value written to the reboot register (32 bit access)
-> +
-> +Examples:
-> +	reboot-mode {
-> +	   compatible = "toprgu-reboot-mode";
-> +	   regmap = <&toprgu>;
-> +	   offset = <0x24>;
-> +	   mask = <0xF>;
-> +	};
-> +
-> +Optional properties - reboot mode value that will keep in toprgu nonrst RG:
-> +- mode-charger = <BOOT_CHARGER>;
-> +- mode-recovery = <BOOT_RECOVERY>;
-> +- mode-bootloader = <BOOT_BOOTLOADER>;
-> +- mode-dm-verity-dev-corrupt = <BOOT_DM_VERITY>;
-> +- mode-kpoc = <BOOT_KPOC>;
-> +- mode-ddr-reserve = <BOOT_DDR_RSVD>;
-> +- mode-meta = <BOOT_META>;
-> +- mode-rpmbpk = <BOOT_RPMBPK>;
-> -- 
-> 1.7.9.5
+  gfs2: Fix initialisation of args for remount (2019-10-30 12:16:53 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gf=
+s2-for-5.5
+
+for you to fetch changes up to ade48088937f53fe0467162177726176813b9564:
+
+  gfs2: Don't write log headers after file system withdraw (2019-11-21 11:3=
+7:41 +0100)
+
+----------------------------------------------------------------
+GFS2 changes for this merge window:
+
+Bob's extensive filesystem withdrawal and recovery testing:
+- Don't write log headers after file system withdraw
+- clean up iopen glock mess in gfs2_create_inode
+- Close timing window with GLF_INVALIDATE_IN_PROGRESS
+- Abort gfs2_freeze if io error is seen
+- Don't loop forever in gfs2_freeze if withdrawn
+- fix infinite loop in gfs2_ail1_flush on io error
+- Introduce function gfs2_withdrawn
+- fix glock reference problem in gfs2_trans_remove_revoke
+
+Filesystems with a block size smaller than the page size:
+- Fix end-of-file handling in gfs2_page_mkwrite
+- Improve mmap write vs. punch_hole consistency
+
+Other:
+- Remove active journal side effect from gfs2_write_log_header
+- Multi-block allocations in gfs2_page_mkwrite
+
+Minor cleanups and coding style fixes:
+- Remove duplicate call from gfs2_create_inode
+- make gfs2_log_shutdown static
+- make gfs2_fs_parameters static
+- Some whitespace cleanups
+- removed unnecessary semicolon
+
+----------------------------------------------------------------
+Aliasgar Surti (1):
+      gfs2: removed unnecessary semicolon
+
+Andreas Gruenbacher (6):
+      gfs2: Some whitespace cleanups
+      gfs2: Improve mmap write vs. punch_hole consistency
+      gfs2: Multi-block allocations in gfs2_page_mkwrite
+      gfs2: Fix end-of-file handling in gfs2_page_mkwrite
+      gfs2: Remove active journal side effect from gfs2_write_log_header
+      gfs2: Remove duplicate call from gfs2_create_inode
+
+Ben Dooks (Codethink) (1):
+      gfs2: make gfs2_fs_parameters static
+
+Bob Peterson (9):
+      gfs2: make gfs2_log_shutdown static
+      gfs2: fix glock reference problem in gfs2_trans_remove_revoke
+      gfs2: Introduce function gfs2_withdrawn
+      gfs2: fix infinite loop in gfs2_ail1_flush on io error
+      gfs2: Don't loop forever in gfs2_freeze if withdrawn
+      gfs2: Abort gfs2_freeze if io error is seen
+      gfs2: Close timing window with GLF_INVALIDATE_IN_PROGRESS
+      gfs2: clean up iopen glock mess in gfs2_create_inode
+      gfs2: Don't write log headers after file system withdraw
+
+ fs/gfs2/aops.c       |  6 +++---
+ fs/gfs2/bmap.c       | 11 +++++++++--
+ fs/gfs2/file.c       | 56 ++++++++++++++++++++++++++++++++----------------=
+----
+ fs/gfs2/glock.c      | 16 ++++++++++-----
+ fs/gfs2/glops.c      |  4 ++--
+ fs/gfs2/inode.c      | 16 +++++++--------
+ fs/gfs2/log.c        | 25 +++++++++++++++++++----
+ fs/gfs2/log.h        |  2 +-
+ fs/gfs2/lops.c       | 34 +++++++++++++++----------------
+ fs/gfs2/lops.h       |  3 ++-
+ fs/gfs2/meta_io.c    |  6 +++---
+ fs/gfs2/ops_fstype.c |  5 ++---
+ fs/gfs2/quota.c      |  4 ++--
+ fs/gfs2/recovery.c   |  8 +++++---
+ fs/gfs2/super.c      | 33 ++++++++++++++++++-------------
+ fs/gfs2/sys.c        |  2 +-
+ fs/gfs2/trans.c      |  2 ++
+ fs/gfs2/util.c       |  2 +-
+ fs/gfs2/util.h       |  9 +++++++++
+ 19 files changed, 152 insertions(+), 92 deletions(-)
+
