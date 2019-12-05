@@ -2,102 +2,80 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267DFC2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 20:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8942C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 20:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C3224670
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 20:23:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ipIsPEHW"
+	by mail.kernel.org (Postfix) with ESMTP id 7BE1E20707
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 20:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbfLEUXG (ORCPT
+        id S1729870AbfLEU0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 15:23:06 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37408 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729154AbfLEUXG (ORCPT
+        Thu, 5 Dec 2019 15:26:01 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:44890 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729240AbfLEU0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 15:23:06 -0500
-Received: by mail-pl1-f195.google.com with SMTP id bb5so1707250plb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 12:23:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jRayL2fPl6QXTU1X2IWavTR7Yo2eBg/CqXK33XYBy24=;
-        b=ipIsPEHW5UTXPYiz3f6QtrmZgRxejUQdh7nqa7uCLrBiB1pCIUwQLjKY+Hx3W8tpoG
-         4JZH2HQj0kzSPqYsqUvaQY7ExySSj+PnYoqpRE0lr5b+1x5913Xotg9pssTMfbRZZGGH
-         5pgKb163uie0tO5bmMpj/imErYbNd+oMzjpV0=
+        Thu, 5 Dec 2019 15:26:01 -0500
+Received: by mail-il1-f198.google.com with SMTP id h87so3446251ild.11
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 12:26:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jRayL2fPl6QXTU1X2IWavTR7Yo2eBg/CqXK33XYBy24=;
-        b=G9QFBiLgZXSUaNLDiKw5ByVLoAIaxYBYxjfS1Aar769GZ+dagv3QT1cMr5/Car0k2L
-         P53ICMcnR8U7YGQI7CDe8Cb6mitlRhDhlwIyNiYm0xQ5EiAw/R2QLHha6Ub4gDnv0Ke/
-         w0yw2Nt9tu8wANgAEvxGdc08lCc1Ii5LeUdS4OcwMVVe1+ix2bHhaA/nF3bFtmrLQI44
-         l6r9NDtkXwfKje83faVNqFGLbM7toieUW+LYIH1/xcIfF/JyyMhRHxUKzfcfsjqYNAn9
-         ocbY1AUezhMrLxQK3WQqcBtFssA4jVmM6PRDvfvx2SnhJjzWTkod3TBcMgMnTLoFgMMg
-         bw2Q==
-X-Gm-Message-State: APjAAAXabi14LzuGzO5AamDiTkRGlNRtkiCeCpaWeI9trx4xCwLqSmEu
-        CUUI7Cvic1nRziDMOuQmMSi3Ig==
-X-Google-Smtp-Source: APXvYqyhuW24FCLFzDv7K5KLFR+I/VPosr2uRJN/oZqO0hNSV+b/CSnMTJFLXtEYNnOjNboxSKC8AQ==
-X-Received: by 2002:a17:90a:d344:: with SMTP id i4mr11653491pjx.42.1575577385316;
-        Thu, 05 Dec 2019 12:23:05 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id o12sm560691pjf.19.2019.12.05.12.23.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 12:23:04 -0800 (PST)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org,
-        Rocky Liao <rjliao@codeaurora.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Harish Bandi <c-hbandi@codeaurora.org>,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: [PATCH] dt-bindings: net: bluetooth: Add compatible string for WCN3991
-Date:   Thu,  5 Dec 2019 12:22:59 -0800
-Message-Id: <20191205122241.1.I6c86a40ce133428b6fab21f24f6ff6fec7e74e62@changeid>
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=AMndx8hKdrf5iaXiiQjZKFNKn0Vs2y02qLzZazcs3CU=;
+        b=hthHIRZ/cAoR3aUxiQeVEgYG+vQkn2BK84S/LBjSNpuft1Pt50arj3XoavtkYTQQGp
+         TtM1ggHYFyymuxgwQgNX1alFGUiW2/UlDlrTIy2JM9ZhGXGo86iR6ltOAh7r450XMadM
+         yQd3fi4GCS+j4x/B7Ejntxi2lMch53BYfTvOlECTYOgQIBt/ezqlrQWSrXg+pG18k8Dl
+         vxJptcBnzyWtpEJr1QaRGo/fD+lX2c/0dZlyxAfUxzNCxnQPZp70VrtuInhqvSLU+sOF
+         ypj2+pIJ1h1QwwH9W3lMO2OvMzB2nNKbwKQa2TueKLQRy6/IpzOZYys2KFBaEsbKJmX0
+         FHEA==
+X-Gm-Message-State: APjAAAW/M+y2M2Fa/ddltTdLQrdGiW6ELdd/XpZjz6AgoZkaewMQyS/6
+        fIayzJKdlzoyAeaEQto2uTAxOHydwvcgQwjVjtp2k6I5uLQQ
+X-Google-Smtp-Source: APXvYqwiSIAto3Fuczl3Mloud2GJhz4nWhZmFjdSE7R2+4HUud1uZ12DR1iX6fOWVWwSNwnDp6A3S3YOROzLJiWU36yLPucT+7Cj
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:2541:: with SMTP id j1mr7805807ioe.239.1575577560491;
+ Thu, 05 Dec 2019 12:26:00 -0800 (PST)
+Date:   Thu, 05 Dec 2019 12:26:00 -0800
+In-Reply-To: <000000000000675cea057e201cbb@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cf2c140598fabc5c@google.com>
+Subject: Re: BUG: unable to handle kernel paging request in slhc_free
+From:   syzbot <syzbot+6c5d567447bfa30f78e2@syzkaller.appspotmail.com>
+To:     adobriyan@gmail.com, akinobu.mita@gmail.com,
+        akpm@linux-foundation.org, ben@decadent.org.uk,
+        davem@davemloft.net, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, mhocko@kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tejaswit@codeaurora.org, torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7d250a062f75 ("Bluetooth: hci_qca: Add support for Qualcomm
-Bluetooth SoC WCN3991") added the compatible string 'qcom,wcn3991-bt'
-to the Qualcomm Bluetooth driver, however the string is not listed
-in the binding. Add the 'qcom,wcn3991-bt' to the supported compatible
-strings.
+syzbot suspects this bug was fixed by commit:
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
+commit baf76f0c58aec435a3a864075b8f6d8ee5d1f17e
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu Apr 25 23:13:58 2019 +0000
 
- Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
- 1 file changed, 1 insertion(+)
+     slip: make slhc_free() silently accept an error pointer
 
-diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-index 68b67d9db63a3..999aceadb9853 100644
---- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-@@ -11,6 +11,7 @@ Required properties:
-  - compatible: should contain one of the following:
-    * "qcom,qca6174-bt"
-    * "qcom,wcn3990-bt"
-+   * "qcom,wcn3991-bt"
-    * "qcom,wcn3998-bt"
- 
- Optional properties for compatible string qcom,qca6174-bt:
--- 
-2.24.0.393.g34dc348eaf-goog
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=114af97ee00000
+start commit:   8fe28cb5 Linux 4.20
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7d581260bae0899a
+dashboard link: https://syzkaller.appspot.com/bug?extid=6c5d567447bfa30f78e2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=136130fd400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1607c563400000
 
+If the result looks correct, please mark the bug fixed by replying with:
+
+#syz fix: slip: make slhc_free() silently accept an error pointer
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
