@@ -2,46 +2,131 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4285AC2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CF6C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F5920675
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008C8206EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:03:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DkZcgNP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbfLESBp (ORCPT
+        id S1729967AbfLESDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 13:01:45 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53718 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729154AbfLESBp (ORCPT
+        Thu, 5 Dec 2019 13:03:03 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33427 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729022AbfLESDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 13:01:45 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id 0AC2728A9C9
-Subject: Re: [PATCH v3 RESEND] media: vimc: fla: Add virtual flash subdevice
-To:     =?UTF-8?Q?Lucas_Magalh=c3=a3es?= <lucmaga@gmail.com>
-Cc:     linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org,
-        Helen Koike <helen.koike@collabora.com>,
-        Eduardo Barretto <edusbarretto@gmail.com>,
-        lkcamp@lists.libreplanetbr.org
-References: <20191203230148.2442-1-lucmaga@gmail.com>
- <dba2fa57-2101-b24a-a482-97878895fb92@collabora.com>
- <CAK0xOaELnX_axasmBaqanWfaoj+AF3kFZjLdzxjEgnHtzFkX5A@mail.gmail.com>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <e0d05406-9ceb-ed7c-162d-4d98e34522a6@collabora.com>
-Date:   Thu, 5 Dec 2019 19:01:37 +0100
+        Thu, 5 Dec 2019 13:03:02 -0500
+Received: by mail-wr1-f66.google.com with SMTP id b6so4782405wrq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 10:03:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PbTndd+QidTobY58gwyktgPeVAc9czoOPLjMcmY0Pz0=;
+        b=DkZcgNP5fD5mN33BKMJA8NJUf+fINTsJ4tEtrnt5pO/p7Md6XSfqIUQWYt2vNWLoyb
+         g3/+YZhzt4p0rMmC0k7eYNGAdVHN1R0ZwiQ1ls/lclVEBV63ZtuXMijnhJanConS5cPn
+         my9bm9JzdTDCf20lIMfrfHR5QKcLeMN12zql75UYnfmjY+Tpn6OPK40qaT4lTq8auwqy
+         Ec01/hSioGgZS26Tb1oFKe+YkisG55l+mxljPqkqOrhOHf6zpIDAkXOvy9V1yugDz7e7
+         YrzJ62NmFt9K2CI5DsVyRhukvgszz5xWuYhHXuLN4yy4klZVmPqW6VG6UDpU40g9rU3z
+         9z1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=PbTndd+QidTobY58gwyktgPeVAc9czoOPLjMcmY0Pz0=;
+        b=OnaSwbf5kAnuPEOmmnARO9a5xqUavr7fYHkZD07Saxj/xuFrQMIhWfa0lInk4PxNQS
+         P/fb3oCAOD0fvqWgOMWXOhvtwcyTO8ZTvLtty0xwV0FfJrPYHF0tUqkalQcAJOMf6Iif
+         R/japiui/3Rw+ZfJJ+/VIOAJgPtbarv0L1yDegJr0eAH68EIFfGUtvsanzas4iW5FnNR
+         YOa/yBOs1i4pk0QPkKzKHNTklq/uuLjmEqwVVaMf2jdhjWege8HgIUOaOz4QPTQXoxBn
+         o4OshpBU8GUZ+MrrqFjGb+uhFwAjWQRwffjKoU3oUDLL+H35/MGARAtZX/q4oWiYRtiy
+         p77A==
+X-Gm-Message-State: APjAAAUHhaU+iS5+dCTt76NMS1XVTdXzcbjaHzV6O5o9mBDJATPuvrTZ
+        H89tc6NfMQ3ZX/QBKlNETFZmSQ==
+X-Google-Smtp-Source: APXvYqwsuY06lolgE9F4L30cleoaE0K4wrnDCTh3JjvjEtuNzg1KnBvNSuj4y1lbblpDurLzSRMYTQ==
+X-Received: by 2002:adf:ef0b:: with SMTP id e11mr11497455wro.128.1575568979260;
+        Thu, 05 Dec 2019 10:02:59 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:24c3:ebb3:9dd5:81c6? ([2a01:e34:ed2f:f020:24c3:ebb3:9dd5:81c6])
+        by smtp.googlemail.com with ESMTPSA id 5sm13532198wrh.5.2019.12.05.10.02.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2019 10:02:58 -0800 (PST)
+Subject: Re: [PATCH V6 2/3] cpuidle: play_idle: Specify play_idle with an idle
+ state
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     mathieu.poirier@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org
+References: <20191030075141.1039-2-daniel.lezcano@linaro.org>
+ <20191205170438.4318-1-martin.kepplinger@puri.sm>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <0682ae10-b7c2-5a79-5101-4daf036fbbfb@linaro.org>
+Date:   Thu, 5 Dec 2019 19:02:57 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <CAK0xOaELnX_axasmBaqanWfaoj+AF3kFZjLdzxjEgnHtzFkX5A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191205170438.4318-1-martin.kepplinger@puri.sm>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,470 +134,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On 05/12/2019 18:04, Martin Kepplinger wrote:
+> hi Daniel,
+> 
+> Since there's been quite some changes in cpuidle recently, how's your plans
+> to move this patchset forward? I, at least, need it.
 
-On 12/5/19 12:12 AM, Lucas Magalhães wrote:
-> Hi Dafna,
-> Thanks for the review.
-> 
-> On Wed, Dec 4, 2019 at 7:03 AM Dafna Hirschfeld
-> <dafna.hirschfeld@collabora.com> wrote:
->>
->> Hi,
->> Thanks for the patch
->>
->> On 12/4/19 12:01 AM, Lucas A. M. Magalhães wrote:
->>> From: Lucas A. M. Magalhaes <lucmaga@gmail.com>
->>>
->>> Add a virtual subdevice to simulate the flash control API.
->>> Those are the supported controls:
->>> v4l2-ctl -d /dev/v4l-subdev6 -L
->>> Flash Controls
->>>
->>>                          led_mode 0x009c0901 (menu)   : min=0 max=2 default=1 value=1
->>>                                   0: Off
->>>                                   1: Flash
->>>                                   2: Torch
->>>                     strobe_source 0x009c0902 (menu)   : min=0 max=1 default=0 value=0
->>>                                   0: Software
->>>                                   1: External
->>>                            strobe 0x009c0903 (button) : flags=write-only, execute-on-write
->>>                       stop_strobe 0x009c0904 (button) : flags=write-only, execute-on-write
->>>                     strobe_status 0x009c0905 (bool)   : default=0 value=0 flags=read-only
->>>                    strobe_timeout 0x009c0906 (int)    : min=50 max=400 step=50 default=50 value=400
->>>              intensity_flash_mode 0x009c0907 (int)    : min=23040 max=1499600 step=11718 default=23040 value=23040
->>>              intensity_torch_mode 0x009c0908 (int)    : min=2530 max=187100 step=1460 default=2530 value=2530
->>>               intensity_indicator 0x009c0909 (int)    : min=0 max=255 step=1 default=0 value=0
->>>                            faults 0x009c090a (bitmask): max=0x00000002 default=0x00000000 value=0x00000000
->>>
->>> Co-authored-by: Eduardo Barretto <edusbarretto@gmail.com>
->>> Signed-off-by: Eduardo Barretto <edusbarretto@gmail.com>
->>> Signed-off-by: Lucas A. M. Magalhães <lucmaga@gmail.com>
->>>
->>> ---
->>> Hi,
->>>
->>> I've copied some values from another driver (lm3646) to make it more
->>> realistic, as suggested by Hans. All values except for
->>> V4L2_CID_FLASH_INDICATOR_INTENSITY, which I couldn't find any
->>> implementation.
->>>
->>> The v4l-compliance is failing. From the documentation
->>> V4L2_CID_FLASH_STROBE should just work if the
->>> V4L2_CID_FLASH_STROBE_SOURCE is "Software" and the
->>> V4L2_CID_FLASH_LED_MODE is "Flash", otherwise it should fail. With the
->>> standard values configured for the V4L2_CID_FLASH_STROBE will not fail.
->>> But during the tests v4l-compliance sets V4L2_CID_FLASH_LED_MODE to
->>> "Torch" and V4L2_CID_FLASH_STROBE_SOURCE to "External" which makes
->>> V4L2_CID_FLASH_STROBE to fail. How do I proceed? Should the
->>> v4l-compliance be changed?
->>>
->>> Changes in v3:
->>>        - Fix style errors
->>>        - Use more realistic numbers for the controllers
->>>        - Change from kthread to workqueue
->>>        - Change commit message for the new controllers values
->>>
->>> Changes in v2:
->>>        - Fix v4l2-complience errors
->>>        - Add V4L2_CID_FLASH_STROBE_STATUS behavior
->>>        - Add V4L2_CID_FLASH_STROBE restrictions
->>>        - Remove vimc_fla_g_volatile_ctrl
->>>        - Remove unnecessarie V4L2_CID_FLASH_CLASS
->>>        - Change varables names
->>>
->>>    drivers/media/platform/vimc/Makefile      |   2 +-
->>>    drivers/media/platform/vimc/vimc-common.c |   2 +
->>>    drivers/media/platform/vimc/vimc-common.h |   4 +
->>>    drivers/media/platform/vimc/vimc-core.c   |   5 +
->>>    drivers/media/platform/vimc/vimc-flash.c  | 248 ++++++++++++++++++++++
->>>    5 files changed, 260 insertions(+), 1 deletion(-)
->>>    create mode 100644 drivers/media/platform/vimc/vimc-flash.c
->>>
->>> diff --git a/drivers/media/platform/vimc/Makefile b/drivers/media/platform/vimc/Makefile
->>> index a53b2b532e9f..e759bbb04b14 100644
->>> --- a/drivers/media/platform/vimc/Makefile
->>> +++ b/drivers/media/platform/vimc/Makefile
->>> @@ -1,6 +1,6 @@
->>>    # SPDX-License-Identifier: GPL-2.0
->>>    vimc-y := vimc-core.o vimc-common.o vimc-streamer.o vimc-capture.o \
->>> -             vimc-debayer.o vimc-scaler.o vimc-sensor.o
->>> +             vimc-debayer.o vimc-scaler.o vimc-sensor.o vimc-flash.o
->>>
->>>    obj-$(CONFIG_VIDEO_VIMC) += vimc.o
->>>
->>> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
->>> index a3120f4f7a90..cb786de75573 100644
->>> --- a/drivers/media/platform/vimc/vimc-common.c
->>> +++ b/drivers/media/platform/vimc/vimc-common.c
->>> @@ -203,6 +203,8 @@ struct media_pad *vimc_pads_init(u16 num_pads, const unsigned long *pads_flag)
->>>        struct media_pad *pads;
->>>        unsigned int i;
->>>
->>> +     if (!num_pads)
->>> +             return NULL;
->> Please rebase on top of latest master,
->> this function was removed in patch 'media: vimc: embed the pads of entities in the entities' structs'
->>
-> Ok.
-> 
->>>        /* Allocate memory for the pads */
->>>        pads = kcalloc(num_pads, sizeof(*pads), GFP_KERNEL);
->>>        if (!pads)
->>> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
->>> index 698db7c07645..19815f0f4d40 100644
->>> --- a/drivers/media/platform/vimc/vimc-common.h
->>> +++ b/drivers/media/platform/vimc/vimc-common.h
->>> @@ -169,6 +169,10 @@ struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
->>>                                     const char *vcfg_name);
->>>    void vimc_sen_rm(struct vimc_device *vimc, struct vimc_ent_device *ved);
->>>
->>> +struct vimc_ent_device *vimc_fla_add(struct vimc_device *vimc,
->>> +                                  const char *vcfg_name);
->> This should be lined with the opening '('
->>
-> That's strange. I'm sure it's not like this here. Maybe my smtp is alterating
-> my code for some reason. I will look this.
-Hi, apparently it is my email client that does not show the alignment correctly
-sorry for the false comment
+This series was merged but instead of specifying an idle state, we
+specify an exit latency [1].
 
-> 
->>> +void vimc_fla_rm(struct vimc_device *vimc, struct vimc_ent_device *ved);
->>> +
->>>    /**
->>>     * vimc_pads_init - initialize pads
->>>     *
->>> diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
->>> index 6e3e5c91ae39..5f6c750d3d8d 100644
->>> --- a/drivers/media/platform/vimc/vimc-core.c
->>> +++ b/drivers/media/platform/vimc/vimc-core.c
->>> @@ -91,6 +91,11 @@ static struct vimc_ent_config ent_config[] = {
->>>                .add = vimc_cap_add,
->>>                .rm = vimc_cap_rm,
->>>        },
->>> +     {
->>> +             .name = "Flash Controller",
->>> +             .add = vimc_fla_add,
->>> +             .rm = vimc_fla_rm,
->>> +     }
->>>    };
->>>
->>>    static const struct vimc_ent_link ent_links[] = {
->>> diff --git a/drivers/media/platform/vimc/vimc-flash.c b/drivers/media/platform/vimc/vimc-flash.c
->>> new file mode 100644
->>> index 000000000000..3918beecec57
->>> --- /dev/null
->>> +++ b/drivers/media/platform/vimc/vimc-flash.c
->>> @@ -0,0 +1,248 @@
->>> +// SPDX-License-Identifier: GPL-2.0+
->>> +/*
->>> + * vimc-flash.c Virtual Media Controller Driver
->>> + *
->>> + * Copyright (C) 2019
->>> + * Contributors: Lucas A. M. Magalhães <lamm@lucmaga.dev>
->>> + *               Eduardo Barretto <edusbarretto@gmail.com>
->>> + *
->>> + */
->>> +
->>> +#include <linux/delay.h>
->>> +#include <linux/workqueue.h>
->>> +#include <linux/sched.h>
->>> +#include <linux/vmalloc.h>
->>> +#include <media/v4l2-ctrls.h>
->>> +#include <media/v4l2-event.h>
->>> +#include <media/v4l2-subdev.h>
->>> +
->>> +#include "vimc-common.h"
->>> +
->>> +/*
->>> + * Flash timeout in ms
->>> + */
->>> +#define VIMC_FLASH_TIMEOUT_MS_MIN 50
->>> +#define VIMC_FLASH_TIMEOUT_MS_MAX 400
->>> +#define VIMC_FLASH_TIMEOUT_MS_STEP 50
->>> +
->>> +/*
->>> + * Torch intencity in uA
->>> + */
->>> +#define VIMC_FLASH_TORCH_UA_MIN 2530
->>> +#define VIMC_FLASH_TORCH_UA_MAX 187100
->>> +#define VIMC_FLASH_TORCH_UA_STEP 1460
->>> +
->>> +/*
->>> + * Flash intencity in uA
->>> + */
->>> +#define VIMC_FLASH_FLASH_UA_MIN 23040
->>> +#define VIMC_FLASH_FLASH_UA_MAX 1499600
->>> +#define VIMC_FLASH_FLASH_UA_STEP 11718
->>> +
->>> +struct vimc_fla_device {
->>> +     struct vimc_ent_device ved;
->>> +     struct v4l2_subdev sd;
->>> +     struct v4l2_ctrl_handler hdl;
->>> +     int strobe_source;
->>> +     bool is_strobe;
->>> +     int led_mode;
->>> +     int indicator_intensity;
->>> +     int torch_intensity;
->>> +     int flash_intensity;
->>> +     u64 timeout;
->>> +     u64 last_strobe;
->>> +     struct workqueue_struct *wq;
->>> +     struct work_struct work;
->>> +     struct v4l2_ctrl *strobe_status_ctl;
->>> +};
->>> +
->>> +static void vimc_fla_strobe_work(struct work_struct *work)
->>> +{
->>> +     struct vimc_fla_device *vfla =
->>> +             container_of(work, struct vimc_fla_device, work);
->>> +     v4l2_ctrl_s_ctrl(vfla->strobe_status_ctl, true);
->>> +     vfla->last_strobe = ktime_get_ns();
->>> +     while (vfla->is_strobe &&
->>> +            vfla->last_strobe + vfla->timeout > ktime_get_ns()) {
->>> +             msleep_interruptible(VIMC_FLASH_TIMEOUT_MS_STEP);
->>> +     }
->>> +     v4l2_ctrl_s_ctrl(vfla->strobe_status_ctl, false);
->>> +}
->>> +
->>> +static int vimc_fla_s_ctrl(struct v4l2_ctrl *c)
->>> +{
->>> +     struct vimc_fla_device *vfla =
->>> +             container_of(c->handler, struct vimc_fla_device, hdl);
->>> +
->>> +     switch (c->id) {
->>> +     case V4L2_CID_FLASH_LED_MODE:
->>> +             vfla->led_mode = c->val;
->>> +             return 0;
->>> +     case V4L2_CID_FLASH_STROBE_SOURCE:
->>> +             vfla->strobe_source = c->val;
->>> +             return 0;
->>> +     case V4L2_CID_FLASH_STROBE:
->>> +             if (vfla->led_mode != V4L2_FLASH_LED_MODE_FLASH ||
->>> +                 vfla->strobe_source != V4L2_FLASH_STROBE_SOURCE_SOFTWARE){
->> you can add error/warning debug here,
->> if you choose not to, then the parentheses are redundant.
->> Additionally, the opening '{' should come after a space
->> You can run srctipts/checkpatch.pl before submitting to catch such issues
->>
->>> +                     return -EINVAL;
->>> +             }
->>> +             queue_work(vfla->wq, &vfla->work);
->>> +             return 0;
->>> +     case V4L2_CID_FLASH_STROBE_STATUS:
->>> +             vfla->is_strobe = c->val;
->>> +             return 0;
->>> +     case V4L2_CID_FLASH_STROBE_STOP:
->>> +             vfla->is_strobe = false;
->>> +             return 0;
->>> +     case V4L2_CID_FLASH_TIMEOUT:
->>> +             vfla->timeout = c->val * 1000000; /* MS to NS */
->>> +             return 0;
->>> +     case V4L2_CID_FLASH_INTENSITY:
->>> +             vfla->flash_intensity = c->val;
->>> +             return 0;
->>> +     case V4L2_CID_FLASH_TORCH_INTENSITY:
->>> +             vfla->torch_intensity = c->val;
->>> +             return 0;
->>> +     case V4L2_CID_FLASH_INDICATOR_INTENSITY:
->>> +             vfla->indicator_intensity = c->val;
->>> +             return 0;
->>> +     default:
->>> +             return -EINVAL;
->>> +     }
->>> +     return 0;
->>> +}
->>> +
->>> +static const struct v4l2_ctrl_ops vimc_fla_ctrl_ops = {
->>> +     .s_ctrl = vimc_fla_s_ctrl,
->>> +};
->>> +
->>> +static const struct v4l2_subdev_core_ops vimc_fla_core_ops = {
->>> +     .subscribe_event = v4l2_ctrl_subdev_subscribe_event,
->>> +     .unsubscribe_event = v4l2_event_subdev_unsubscribe,
->>> +};
->>> +
->>> +static const struct v4l2_subdev_ops vimc_fla_ops = {
->>> +     .core = &vimc_fla_core_ops,
->>> +};
->>> +
->>> +static void vimc_fla_release(struct v4l2_subdev *sd)
->>> +{
->>> +     struct vimc_fla_device *vfla =
->>> +                             container_of(sd, struct vimc_fla_device, sd);
->> one tab is enough
->>> +
->>> +     v4l2_ctrl_handler_free(&vfla->hdl);
->>> +     kfree(vfla);
->>> +}
->>> +
->>> +static const struct v4l2_subdev_internal_ops vimc_fla_int_ops = {
->>> +     .release = vimc_fla_release,
->>> +};
->>> +
->>> +/* initialize device */
->>> +struct vimc_ent_device *vimc_fla_add(struct vimc_device *vimc,
->>> +                                  const char *vcfg_name)
->>> +{
->>> +     struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
->>> +     struct vimc_fla_device *vfla;
->>> +     int ret;
->>> +
->>> +     /* Allocate the vfla struct */
->>> +     vfla = kzalloc(sizeof(*vfla), GFP_KERNEL);
->>> +     if (!vfla)
->>> +             return NULL;
->> I think it is better to change the return values of the .add calbbacks
->> to return ERR_PTR upon error and not just NULL so that different types of
->> errors can be distinguished.
->> (This is not related specifically to this patch),
->> If you want you can send a patch fixing that.
->>
-> 
-> Sure. I will change it.
-cool, thanks
-> 
->>> +
->>> +     v4l2_ctrl_handler_init(&vfla->hdl, 4);
->>> +     v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                            V4L2_CID_FLASH_LED_MODE,
->>> +                            V4L2_FLASH_LED_MODE_TORCH, ~0x7,
->>> +                            V4L2_FLASH_LED_MODE_FLASH);
->>> +     v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                            V4L2_CID_FLASH_STROBE_SOURCE, 0x1, ~0x3,
->>> +                            V4L2_FLASH_STROBE_SOURCE_SOFTWARE);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_STROBE, 0, 0, 0, 0);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_STROBE_STOP, 0, 0, 0, 0);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_TIMEOUT, VIMC_FLASH_TIMEOUT_MS_MIN,
->>> +                       VIMC_FLASH_TIMEOUT_MS_MAX,
->>> +                       VIMC_FLASH_TIMEOUT_MS_STEP,
->>> +                       VIMC_FLASH_TIMEOUT_MS_MIN);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_TORCH_INTENSITY,
->>> +                       VIMC_FLASH_TORCH_UA_MIN,
->>> +                       VIMC_FLASH_TORCH_UA_MAX,
->>> +                       VIMC_FLASH_TORCH_UA_STEP,
->>> +                       VIMC_FLASH_TORCH_UA_MIN);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_INTENSITY,
->>> +                       VIMC_FLASH_FLASH_UA_MIN,
->>> +                       VIMC_FLASH_FLASH_UA_MAX,
->>> +                       VIMC_FLASH_FLASH_UA_STEP,
->>> +                       VIMC_FLASH_FLASH_UA_MIN);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_INDICATOR_INTENSITY,
->>> +                       0,
->>> +                       255,
->>> +                       1,
->>> +                       0);
->> why not having one line with "0,255,1,0);" ?
->>
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_STROBE_STATUS, 0, 1, 1, 0);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_FAULT, 0,
->>> +                       V4L2_FLASH_FAULT_TIMEOUT, 0, 0);
->>> +     vfla->sd.ctrl_handler = &vfla->hdl;
->>> +     if (vfla->hdl.error) {
->>> +             ret = vfla->hdl.error;
->>> +             goto err_free_vfla;
->>> +     }
->>> +     vfla->strobe_status_ctl = v4l2_ctrl_find(&vfla->hdl,
->>> +                                              V4L2_CID_FLASH_STROBE_STATUS);
->>> +
->>> +     /* Initialize ved and sd */
->>> +     ret = vimc_ent_sd_register(&vfla->ved, &vfla->sd, v4l2_dev,
->>> +                                vcfg_name,
->>> +                                MEDIA_ENT_F_FLASH, 0, NULL,
->>> +                                &vimc_fla_int_ops, &vimc_fla_ops);
->>> +     if (ret)
->>> +             goto err_free_hdl;
->>> +
->>> +     /* Create processing workqueue */
->>> +     vfla->wq = alloc_workqueue("%s", 0, 0, "vimc-flash thread");
->>> +     if (!vfla->wq)
->>> +             goto err_unregister;
->>> +
->>> +     INIT_WORK(&vfla->work, vimc_fla_strobe_work);
->>> +     /* Initialize standard values */
->>> +     vfla->indicator_intensity = 0;
->>> +     vfla->torch_intensity = 0;
->>> +     vfla->flash_intensity = 0;
->>> +     vfla->is_strobe = false;
->>> +     vfla->timeout = 0;
->>> +     vfla->last_strobe = 0;
->>> +     vfla->strobe_source = V4L2_FLASH_STROBE_SOURCE_SOFTWARE;
->>> +     vfla->led_mode = V4L2_FLASH_LED_MODE_FLASH;
->>> +
->>> +     return &vfla->ved;
->>> +
->>> +err_unregister:
->>> +     vimc_ent_sd_unregister(&vfla->ved, &vfla->sd);
->>> +err_free_hdl:
->>> +     v4l2_ctrl_handler_free(&vfla->hdl);
->>> +err_free_vfla:
->>> +     kfree(vfla);
->>> +
->>> +     return NULL;
->>> +}
->>> +
->>> +void vimc_fla_rm(struct vimc_device *vimc, struct vimc_ent_device *ved)
->>> +{
->>> +     struct vimc_fla_device *vfla;
->>> +
->>> +     if (!ved)
->>> +             return;
->>> +
->>> +     vfla = container_of(ved, struct vimc_fla_device, ved);
->>> +     destroy_workqueue(vfla->wq);
->>> +     vimc_ent_sd_unregister(ved, &vfla->sd);
->>> +}
->>>
->> Not sure but I think there are indentation issues in this patch, a tab should be 8 spaces
-> 
-> This is strange. I already had style issues on the v2 so I runned the
-> checkpatch.pl on the
-> patch before sent and it didn't point this identation issues.
-> 
-> Here is the checkpatch.pl output. It could be the case that my smtp is
-> alterating the
-> it before transmission.
-Sorry, as I wrote, this is my thunderbird client
+The cooling device itself is at V4 with some review tags. It should be
+merged soon [2].
 
-Dafna
+  -- Daniel
 
-> 
-> $ scripts/checkpatch.pl
-> patchset/0001-media-vimc-fla-Add-virtual-flash-subdevice.patch
-> WARNING: Possible unwrapped commit description (prefer a maximum 75
-> chars per line)
-> #14:
->                         led_mode 0x009c0901 (menu)   : min=0 max=2
-> default=1 value=1
-> 
-> WARNING: Non-standard signature: Co-authored-by:
-> #30:
-> Co-authored-by: Eduardo Barretto <edusbarretto@gmail.com>
-> 
-> WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
-> #131:
-> new file mode 100644
-> 
-> total: 0 errors, 3 warnings, 284 lines checked
-> 
-> NOTE: For some of the reported defects, checkpatch may be able to
->        mechanically convert to the typical style using --fix or --fix-inplace.
-> 
-> patchset/0001-media-vimc-fla-Add-virtual-flash-subdevice.patch has
-> style problems, please review.
-> 
-> NOTE: If any of the errors are false positives, please report
->        them to the maintainer, see CHECKPATCH in MAINTAINERS.
-> 
-> 
-> Thanks,
-> Lucas
-> 
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c55b51a06b01d67a99457bb82a8c31081c7faa23
+
+[2] https://lkml.org/lkml/2019/12/4/563
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
