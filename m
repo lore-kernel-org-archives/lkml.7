@@ -2,87 +2,99 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA44C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDF9C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58530224F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:44:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mx51vNNm"
+	by mail.kernel.org (Postfix) with ESMTP id EC487224F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 08:48:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575535687;
+	bh=YtB2fOqwzxp8zm7BFBVnMAxbxDUlajcsusZ6yuLGx7M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WPuwbfEwksBKlBVjiRum19dyGTyAi/UWbLmLc7YWsJTN8+rxlZAQMcoEXTfbynqi1
+	 D3a9nsfu9eCpcl2WvpfQ1WqKXfkAJ9RYXMCHe1TsWK6HBmwI94+OEXWQz/ZcLeu3lU
+	 s/oERoiZspxnG4kSF62gY4c0kthGHTkwz5IH0NfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbfLEIo2 (ORCPT
+        id S1728988AbfLEIsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 03:44:28 -0500
-Received: from mail-io1-f46.google.com ([209.85.166.46]:44546 "EHLO
-        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbfLEIo1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 03:44:27 -0500
-Received: by mail-io1-f46.google.com with SMTP id z23so2700140iog.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 00:44:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wt9G2vozOpMT2hGMgKE0ip5uoYB13lnK1YvlPurVBq4=;
-        b=mx51vNNmXng2Ai4iTAblfI1F6ComWE5BNDOYZ4xrxfULaKGleW01zww0J9E6sEvEGm
-         lfLcgIvUw/0nKHL3PF9n6k428lWT/lZXzBTmVRVLyRjWQMqUnL/4r42HLnAkItilGkYS
-         rEOKRmjE51Iy/fCKvADi2jVYm4ok8Pi5z2RxI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wt9G2vozOpMT2hGMgKE0ip5uoYB13lnK1YvlPurVBq4=;
-        b=PyedXjLEf1vR18QiTPhp5H1mDa5F6H56mcDTjWJNHV033oOrXyZ9dW7RFGnQzts5DX
-         k2BtNHs6EQSWZKy+uyT7E6FlBeBIRkUoEwZps/j5gNFdM1LNzDcg6plHglNUf6U0zXqq
-         0l+QRS7VbX3LwMjBMSiLl4pRbxrzH3VpMm/6v04Gh0QKx9gi2BXCggk+8ts3nWEnEgSx
-         LrjtoxnehXZI81V6D49CemtB3GsXH/Pir4AtiXLeioAU0mIHdJhlLdl028wa0dTKVnwA
-         ImAbSswTbt2tAwNQgZT7niCmLSQ+BlFXM+evNiPX70dosLFS7Wl649WDFeqYGOnkKk32
-         65FQ==
-X-Gm-Message-State: APjAAAUcFlRtKFfae5bM1lizuT/IH5pMLLpydI8cNCs/g5/SsdSRWfsQ
-        Yulld5FzdNmqS7LCDn2D8TXuf0/M2A8QveYngQ7C/w==
-X-Google-Smtp-Source: APXvYqzsTUeVlvYNSc46o8MgjJIitMPOpzSQhh53SIxsiMDq5akjwRzVyhJ8uX4NGcPMJOsXZfEjVH38FLKYx8LYJGo=
-X-Received: by 2002:a5d:8cd6:: with SMTP id k22mr5264840iot.283.1575535467112;
- Thu, 05 Dec 2019 00:44:27 -0800 (PST)
+        Thu, 5 Dec 2019 03:48:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbfLEIsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 03:48:05 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7175F205ED;
+        Thu,  5 Dec 2019 08:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575535684;
+        bh=YtB2fOqwzxp8zm7BFBVnMAxbxDUlajcsusZ6yuLGx7M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XSTIUav6yzp2HJQrUeeGLlunNiBJmCuwx4kcWOnD5ql/EoPhgXb3rqqYH+PLLDd79
+         o+qc6f0JOJ5fV0yyNxsZ/hNPcShiVqNNX5IOmzNtcwouul5oNDCFLl0vkfOCJnCFtz
+         fy+hmfMo4yNKKnoHmbS7e6//Gx4XLKr0mWEk7NlU=
+Date:   Thu, 5 Dec 2019 09:48:02 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 4.14 000/209] 4.14.158-stable review
+Message-ID: <20191205084802.GA302248@kroah.com>
+References: <20191204175321.609072813@linuxfoundation.org>
+ <675c0291-fb9b-10b5-fe50-d9b6b889a981@nvidia.com>
 MIME-Version: 1.0
-References: <1574817475-22378-2-git-send-email-yongqiang.niu@mediatek.com>
- <CAJMQK-iDnOWCYmxcREGschD=sDfU6yKpUu+koP3YDeO3MPCdhQ@mail.gmail.com> <1575529976.9400.4.camel@mhfsdcap03>
-In-Reply-To: <1575529976.9400.4.camel@mhfsdcap03>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Thu, 5 Dec 2019 16:44:01 +0800
-Message-ID: <CAJMQK-jGTAm7YS3ov3ok0SkrH7dWEL4umC21O6RSchrfDs5omw@mail.gmail.com>
-Subject: Re: [v1,1/2] drm/mediatek: Fixup external display black screen issue
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        CK Hu <ck.hu@mediatek.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <675c0291-fb9b-10b5-fe50-d9b6b889a981@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 3:13 PM Yongqiang Niu <yongqiang.niu@mediatek.com> wrote:
->
-> please double confirm is this dump stack log is ruining on MT8173 real
-> IC or not.
-> if yes, that may caused ovl hang when disable layer not in blanking,
-> then cause vblank time out.
-> i will disable overlay with cmdq in next version.
->
-It is running on MT8173 acer chromebook. Error only happens when
-turning off display.
->
+On Thu, Dec 05, 2019 at 06:59:55AM +0000, Jon Hunter wrote:
+> 
+> On 04/12/2019 17:53, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.14.158 release.
+> > There are 209 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Fri, 06 Dec 2019 17:50:10 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.158-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> > -------------
+> 
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v4.14:
+>     8 builds:	8 pass, 0 fail
+>     16 boots:	16 pass, 0 fail
+>     24 tests:	24 pass, 0 fail
+> 
+> Linux version:	4.14.158-rc1-gce267d7b1d71
+> Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra30-cardhu-a04
+> 
+
+Thanks for testing all of these and letting me know.
+
+greg k-h
