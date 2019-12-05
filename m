@@ -2,150 +2,133 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358FBC2D0BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC91FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DAD2073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:09:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpVPjjIS"
+	by mail.kernel.org (Postfix) with ESMTP id A0706205ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:18:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbfLEBJh (ORCPT
+        id S1728533AbfLEBSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 20:09:37 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33647 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728459AbfLEBJg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 20:09:36 -0500
-Received: by mail-pl1-f194.google.com with SMTP id ay6so498869plb.0;
-        Wed, 04 Dec 2019 17:09:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ViAayKR33rl8zoSyX9hQw1dJ+O1axe3RVZLwKJ3XZ7M=;
-        b=gpVPjjISpjaQDzRkWgoacbeNWtX3XqEujzMcmQTYYJKAyJOVxwUNJNkSO8Qtswy8c9
-         M69PdRWMKIzgyp78ulFAaJSW/MF6DCfouFUVX7Z2vkyIStA2z9oXrVqZiR1IPBqied8v
-         oFpu8HM/Wr4OmyR97uwqRXqrrUzhQlC/Ru2gEvSWhKpOmn6r5DWolobjaw3aNlEK2Z6j
-         s1bpcvZ8DKkRnlpuFKqexZB9ZnaGlbpRANjY1YB/stprGxt9QUDUAQMByrJqMmcLKI/k
-         RLyOKiBXQUJCut95xszk6iEpFf1AEn35Wv3yOk1sqmT15hdb1iIHdMJkEn08akIAM9HR
-         2L5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ViAayKR33rl8zoSyX9hQw1dJ+O1axe3RVZLwKJ3XZ7M=;
-        b=W7mgVqmptyuWGOpOM+VhCVF+dwYyyUku+j+5uBK95l1qronp8zrsOByTueGqgSfMIv
-         oqc7f9xSSOMCm4goSqo390iNZo9rT39GY/X53JSNj8nyrNo7TslPA+aQ/KmiXbL1QKXy
-         NJBlUaFYsum/dnz4pJM7hzcbZ5bwQZbiSilpwUkazuQfd/wdRcv1FeU76jqsuCDkmcr7
-         xbrB0C3ybcyDuTilpck/nLvoM06CRlb/P7Hs01JP8QHiukuKa7kvJ3oiMxxJo5VcGp/K
-         UYLXe/psfwZA9FgJYI5aLBn+oS8LAwGlBcf1eo9qDqxF7PcS7JPeKVCmI6UfXncKTTHr
-         CRHA==
-X-Gm-Message-State: APjAAAXOwT0XOyFpRxGijlxl+m3CJgQyS11BECarqXioZzoON3Ub+OWa
-        N/FTYPH9+EYtahpYqHOPHMA=
-X-Google-Smtp-Source: APXvYqxucCMfUYo4o+CNZalKxqwuG8BC6llJtVcFLGRk6pwcY+EmrNa58uOkgZ9fPjL4nMVVjE7HoA==
-X-Received: by 2002:a17:902:be10:: with SMTP id r16mr6417014pls.169.1575508175325;
-        Wed, 04 Dec 2019 17:09:35 -0800 (PST)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::f9fe])
-        by smtp.gmail.com with ESMTPSA id b73sm9923090pfb.72.2019.12.04.17.09.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Dec 2019 17:09:34 -0800 (PST)
-Date:   Wed, 4 Dec 2019 17:09:32 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
-Message-ID: <20191205010930.izft6kv5xlnejgog@ast-mbp.dhcp.thefacebook.com>
-References: <20191202131847.30837-1-jolsa@kernel.org>
- <CAEf4BzY_D9JHjuU6K=ciS70NSy2UvSm_uf1NfN_tmFz1445Jiw@mail.gmail.com>
- <87wobepgy0.fsf@toke.dk>
- <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
- <CAEf4BzZ+0XpH_zJ0P78vjzmFAH3kGZ21w3-LcSEG=B=+ZQWJ=w@mail.gmail.com>
- <20191204135405.3ffb9ad6@cakuba.netronome.com>
- <20191204233948.opvlopjkxe5o66lr@ast-mbp.dhcp.thefacebook.com>
- <20191204162348.49be5f1b@cakuba.netronome.com>
+        Wed, 4 Dec 2019 20:18:08 -0500
+Received: from mga03.intel.com ([134.134.136.65]:2377 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727146AbfLEBSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 20:18:08 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 17:18:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,279,1571727600"; 
+   d="scan'208";a="208989540"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Dec 2019 17:18:03 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1icfmJ-0009QL-P1; Thu, 05 Dec 2019 09:17:59 +0800
+Date:   Thu, 5 Dec 2019 09:17:15 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     kbuild-all@lists.01.org, Theodore Ts'o <tytso@mit.edu>,
+        linux-ext4@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com, Daniel Rosenberg <drosen@google.com>
+Subject: Re: [PATCH 5/8] f2fs: Handle casefolding with Encryption
+Message-ID: <201912050955.3f2DMo5g%lkp@intel.com>
+References: <20191203051049.44573-6-drosen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191204162348.49be5f1b@cakuba.netronome.com>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20191203051049.44573-6-drosen@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 04:23:48PM -0800, Jakub Kicinski wrote:
-> On Wed, 4 Dec 2019 15:39:49 -0800, Alexei Starovoitov wrote:
-> > > Agreed. Having libbpf on GH is definitely useful today, but one can hope
-> > > a day will come when distroes will get up to speed on packaging libbpf,
-> > > and perhaps we can retire it? Maybe 2, 3 years from now? Putting
-> > > bpftool in the same boat is just more baggage.  
-> > 
-> > Distros should be packaging libbpf and bpftool from single repo on github.
-> > Kernel tree is for packaging kernel.
-> 
-> Okay, single repo on GitHub:
-> 
-> https://github.com/torvalds/linux
+Hi Daniel,
 
-and how will you git submodule only libbpf part of kernel github into bcc
-and other projects?
+Thank you for the patch! Perhaps something to improve:
 
-> You also said a few times you don't want to merge fixes into bpf/net.
-> That divergence from kernel development process is worrying.
+[auto build test WARNING on linus/master]
+[also build test WARNING on next-20191202 next-20191204]
+[cannot apply to ext4/dev f2fs/dev-test v5.4 v5.4-rc8 v5.4-rc7 v5.4]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-worrying - why? what exactly the concern you see?
-Tying user space release into kernel release and user space process into
-kernel process makes little sense to me. Packaging is different. Compatibility
-requirements are different. CI is different. Integration with other projects is
-different.
+url:    https://github.com/0day-ci/linux/commits/Daniel-Rosenberg/Support-for-Casefolding-and-Encryption/20191203-131410
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 76bb8b05960c3d1668e6bee7624ed886cbd135ba
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-91-g817270f-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-libbpf source code is in the kernel tree only because kernel changes plus
-libbpf changes plus selftests changes come as single patchset. That is really
-the only reason. Packaging scripts, CI scripts, etc should be kept out of
-kernel tree. All that stuff belongs at github/libbpf.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-> None of this makes very much sense to me. We're diverging from well
-> established development practices without as much as a justification.
 
-The kernel development process was never used for libbpf. Even coding style is
-different. I'm puzzled why you think user space should be tied to kernel.
-Everything is so vastly different.
-Some people say that 8 weeks to bump libbpf version is too long.
-Other people say that it's too often.
-libbpf version numbers != kernel version numbers.
-There is no definition of LTS for libbpf. One day it will be
-and the version of libbpf picked for LTS will likely have
-nothing to do with kernel LTS choices.
-libbpf has to run on all kernels. Newer and older. How do you support that if
-libbpf is tied with the kernel?
+sparse warnings: (new ones prefixed by >>)
 
-> Perhaps I'm not clever enough to follow. But if I'm allowed to make an
-> uneducated guess it would be that it's some Facebook internal reason,
-> like it's hard to do backports? :/
+>> fs/f2fs/dir.c:205:13: sparse: sparse: incorrect type in assignment (different base types) @@    expected int len @@    got restricted __le16 [usertyint len @@
+>> fs/f2fs/dir.c:205:13: sparse:    expected int len
+   fs/f2fs/dir.c:205:13: sparse:    got restricted __le16 [usertype] name_len
+--
+>> fs/f2fs/hash.c:90:27: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted __le32 [usertype] f2fs_hash @@    got __le32 [usertype] f2fs_hash @@
+>> fs/f2fs/hash.c:90:27: sparse:    expected restricted __le32 [usertype] f2fs_hash
+>> fs/f2fs/hash.c:90:27: sparse:    got unsigned long long
+   fs/f2fs/hash.c:133:24: sparse: sparse: incorrect type in return expression (different base types) @@    expected restricted __le32 @@    got e32 @@
+   fs/f2fs/hash.c:133:24: sparse:    expected restricted __le32
+   fs/f2fs/hash.c:133:24: sparse:    got int
+   fs/f2fs/hash.c:141:11: sparse: sparse: incorrect type in assignment (different base types) @@    expected int r @@    got restricted __int r @@
+   fs/f2fs/hash.c:141:11: sparse:    expected int r
+   fs/f2fs/hash.c:141:11: sparse:    got restricted __le32
+   fs/f2fs/hash.c:144:16: sparse: sparse: incorrect type in return expression (different base types) @@    expected restricted __le32 @@    got le32 @@
+   fs/f2fs/hash.c:144:16: sparse:    expected restricted __le32
+   fs/f2fs/hash.c:144:16: sparse:    got int r
 
-hard to do backports? of what?
+vim +205 fs/f2fs/dir.c
 
+   199	
+   200		if (de->hash_code != namehash)
+   201			return false;
+   202	
+   203	#ifdef CONFIG_UNICODE
+   204		name = d->filename[bit_pos];
+ > 205		len = de->name_len;
+   206	
+   207		if (sb->s_encoding && needs_casefold(parent)) {
+   208			if (cf_str->name) {
+   209				struct qstr cf = {.name = cf_str->name,
+   210						  .len = cf_str->len};
+   211				return !f2fs_ci_compare(parent, &cf, name, len, true);
+   212			}
+   213			return !f2fs_ci_compare(parent, fname->usr_fname, name, len,
+   214						false);
+   215		}
+   216	#endif
+   217		if (fscrypt_match_name(fname, d->filename[bit_pos],
+   218					le16_to_cpu(de->name_len)))
+   219			return true;
+   220		return false;
+   221	}
+   222	
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
