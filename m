@@ -2,143 +2,72 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8302EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F48C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A3924653
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:23:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZsNkXEXz"
+	by mail.kernel.org (Postfix) with ESMTP id A999824648
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:24:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbfLEQXJ (ORCPT
+        id S1729815AbfLEQYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:23:09 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:45147 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730055AbfLEQXJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:23:09 -0500
-Received: by mail-qv1-f68.google.com with SMTP id c2so1477580qvp.12;
-        Thu, 05 Dec 2019 08:23:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=d/px5ol/IpLIQI4VHOPlH6LMGgBauhkI55UKC6oSPnc=;
-        b=ZsNkXEXzID1OTeSbGw/Kx3vdFdGzOrO8l5j9134wteIppk2pQIJoLnnIfvWa3qrolw
-         Q19AiKvcxhHLQfsrjNSRQ/9Dls1la3DHIcx0TxCYc4dlI026GwSCIS8yIdgrh8LnHefh
-         Oal98xdFl5LFD/ICNhGu8ewYrQdtshgRQCnyotfHjEypFCJi3sytxu4vYS9Luqeshs51
-         dBXvfFopLK7HEybFfYTZVqqby7KvjxdXrjMfx/b+Ag5KVK8VcUsEJnYM4ATDBYwWAhdT
-         ZHz654EssUkrAMwJLN6pknPCgSh28TXqsDF4jAJc0PymSp7+4dk9+M7z4Y4F7jPCElsW
-         z/Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=d/px5ol/IpLIQI4VHOPlH6LMGgBauhkI55UKC6oSPnc=;
-        b=hBhgFcQmtHHRWp3mjUOazuRjIso4VOR5o8ihheakCp45BwbvmpAtV1SQDQMsKYqq5A
-         Mmq3k8e8ZCIk/ED6QYKexux6VCdd9N0lKaTIjHKvWMmz1xG17QEE6BULIMoc9SHzqwQ0
-         nDxakTMKkGBf23qpnCSEixbNri3U40d/Hqknx80X43x5kbE3+rFd2Y2lriZYJ9u2HZ9O
-         vpJ2YO/4TM+w5Ju+UWLnn+r6jfmQrKu99ITXihbqGfRr6Oc9m9l4EAWhmfK1QxPQK9qT
-         MfFX1rjJeS59snJiB2r7Np4Xvx1GqrJ0w0fVhedxWrhOUCpBABDHUohn2aG5BpnOLxqy
-         xkLA==
-X-Gm-Message-State: APjAAAXBeZArMgOUkFFqACKVceL91EIz2yS6BCB4NwZf4Xtd/9yoW6Cx
-        kvLn/SAucPQPC+SwHmHbpa4=
-X-Google-Smtp-Source: APXvYqyYiTP/iSYcxMoRgDysWgCYayNyROdgRBDPsb/IpTlb6ehCw3ju7P+6L8PufabVp5RjMx4Shw==
-X-Received: by 2002:a0c:b40d:: with SMTP id u13mr807826qve.54.1575562987657;
-        Thu, 05 Dec 2019 08:23:07 -0800 (PST)
-Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
-        by smtp.gmail.com with ESMTPSA id g64sm4915241qke.43.2019.12.05.08.23.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Dec 2019 08:23:07 -0800 (PST)
-Subject: [PATCH v15 7/7] mm: Add free page reporting documentation
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com,
-        osalvador@suse.de
-Date:   Thu, 05 Dec 2019 08:23:04 -0800
-Message-ID: <20191205162304.19548.33406.stgit@localhost.localdomain>
-In-Reply-To: <20191205161928.19548.41654.stgit@localhost.localdomain>
-References: <20191205161928.19548.41654.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 5 Dec 2019 11:24:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:39610 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729396AbfLEQYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 11:24:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA68E31B;
+        Thu,  5 Dec 2019 08:24:02 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7660C3F52E;
+        Thu,  5 Dec 2019 08:24:01 -0800 (PST)
+Date:   Thu, 5 Dec 2019 16:23:56 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        andrew.murray@arm.com, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, rdunlap@infradead.org,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v1 0/1]Fix build warning and errors
+Message-ID: <20191205162356.GA19365@e121166-lin.cambridge.arm.com>
+References: <cover.1574929426.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1574929426.git.eswara.kota@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Thu, Nov 28, 2019 at 04:31:12PM +0800, Dilip Kota wrote:
+> Mark Intel PCIe driver depends on MSI IRQ Domain to fix
+> the below warnings and respective build errors.
+> 
+> WARNING: unmet direct dependencies detected for PCIE_DW_HOST
+>   Depends on [n]: PCI [=y] && PCI_MSI_IRQ_DOMAIN [=n]
+>   Selected by [y]:
+>   - PCIE_INTEL_GW [=y] && PCI [=y] && OF [=y] && (X86 [=y] || COMPILE_TEST [=n])
+> 
+> Dilip Kota (1):
+>   PCI: dwc: Kconfig: Mark intel PCIe driver depends on MSI IRQ Domain
+> 
+>  drivers/pci/controller/dwc/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-Add documentation for free page reporting. Currently the only consumer is
-virtio-balloon, however it is possible that other drivers might make use of
-this so it is best to add a bit of documetation explaining at a high level
-how to use the API.
+Hi Dilip,
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- Documentation/vm/free_page_reporting.rst |   41 ++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/vm/free_page_reporting.rst
+would you mind squashing this patch into the initial series and repost
+it (rebase it against current mainline) straight away ? I will
+rebase it to -rc1 and push it out next week (I am asking since then
+I am afk for a month so I would like to get your code queued asap,
+it is ready).
 
-diff --git a/Documentation/vm/free_page_reporting.rst b/Documentation/vm/free_page_reporting.rst
-new file mode 100644
-index 000000000000..33f54a450a4a
---- /dev/null
-+++ b/Documentation/vm/free_page_reporting.rst
-@@ -0,0 +1,41 @@
-+.. _free_page_reporting:
-+
-+=====================
-+Free Page Reporting
-+=====================
-+
-+Free page reporting is an API by which a device can register to receive
-+lists of pages that are currently unused by the system. This is useful in
-+the case of virtualization where a guest is then able to use this data to
-+notify the hypervisor that it is no longer using certain pages in memory.
-+
-+For the driver, typically a balloon driver, to use of this functionality
-+it will allocate and initialize a page_reporting_dev_info structure. The
-+field within the structure it will populate is the "report" function
-+pointer used to process the scatterlist. It must also guarantee that it can
-+handle at least PAGE_REPORTING_CAPACITY worth of scatterlist entries per
-+call to the function. A call to page_reporting_register will register the
-+page reporting interface with the reporting framework assuming no other
-+page reporting devices are already registered.
-+
-+Once registered the page reporting API will begin reporting batches of
-+pages to the driver. The API will start reporting pages 2 seconds after
-+the interface is registered and will continue to do so 2 seconds after any
-+page of a sufficiently high order is freed.
-+
-+Pages reported will be stored in the scatterlist passed to the reporting
-+function with the final entry having the end bit set in entry nent - 1.
-+While pages are being processed by the report function they will not be
-+accessible to the allocator. Once the report function has been completed
-+the pages will be returned to the free area from which they were obtained.
-+
-+Prior to removing a driver that is making use of free page reporting it
-+is necessary to call page_reporting_unregister to have the
-+page_reporting_dev_info structure that is currently in use by free page
-+reporting removed. Doing this will prevent further reports from being
-+issued via the interface. If another driver or the same driver is
-+registered it is possible for it to resume where the previous driver had
-+left off in terms of reporting free pages.
-+
-+Alexander Duyck, Dec 04, 2019
-+
-
+Thanks,
+Lorenzo
