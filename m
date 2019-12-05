@@ -2,272 +2,153 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052E6C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8EBC2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5228206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:24:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575555888;
-	bh=jN17Ga8kf5HoaOx3s+oL4/naaLNCleezKFlMKQT6iZs=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=dSg5W4sJEd7B26A/aLaIfq4p126RXygbOy5iTfcwSKZE5rImwTO1c5mOA0RBF56/4
-	 cTUGULjVQcI67M1vmpE0PtLa0nill0lNUg9yjY0/dmf90g8vVN5TulCZJh1hCru3VM
-	 6dT7Q4nYAv2+iKzgPqA/WvsAuaEepgLa2OWuxuU8=
+	by mail.kernel.org (Postfix) with ESMTP id DD5C3206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbfLEOYr (ORCPT
+        id S1729716AbfLEOZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 09:24:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729165AbfLEOYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 09:24:46 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F207206DB;
-        Thu,  5 Dec 2019 14:24:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575555885;
-        bh=jN17Ga8kf5HoaOx3s+oL4/naaLNCleezKFlMKQT6iZs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=xm3AuUvczXN0AA/RlOFU6XFj7Wp4JS5yDWkI48662/3Tji5h0qOfTnU343GObCB1h
-         dqupHspdKG2602TdxJHOe89KPZZ2c9dyzZe7Bh2sOb/J2QPGQX9xFk4ptlxsn9kHVB
-         l1dO4CFPDgtJsaukKH5JMN2qZXAS6GJm14SRmp+c=
-Date:   Thu, 5 Dec 2019 15:24:43 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 5.4.2
-Message-ID: <20191205142443.GA693797@kroah.com>
+        Thu, 5 Dec 2019 09:25:19 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49382 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729684AbfLEOZR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 09:25:17 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 60AFC292243
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     kernel@collabora.com, Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v4 0/4] Enable Hantro G1 post-processor
+Date:   Thu,  5 Dec 2019 11:24:39 -0300
+Message-Id: <20191205142443.1298-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The Hantro G1 VPU post-processor block can be pipelined with
+the decoder hardware, allowing to perform operations such as
+color conversion, scaling, rotation, cropping, among others.
 
-I'm announcing the release of the 5.4.2 kernel.
+When the post-processor is enabled, the decoder hardware
+needs its own set of NV12 buffers (the native decoder format),
+and the post-processor is the owner of the CAPTURE buffers,
+allocated for the post-processed format.
 
-All users of the 5.4 kernel series must upgrade.
+This way, applications obtain post-processed
+(scaled, converted, etc) buffers transparently.
 
-The updated 5.4.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
-x-5.4.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
-ummary
+This feature is implemented by exposing the post-processed pixel
+formats on ENUM_FMT, ordered as "preferred pixelformat first":
 
-thanks,
+v4l2-ctl -d 1 --list-formats
+ioctl: VIDIOC_ENUM_FMT
+	Type: Video Capture Multiplanar
 
-greg k-h
+	[0]: 'NV12' (Y/CbCr 4:2:0)
+	[1]: 'YUYV' (YUYV 4:2:2)
 
-------------
+The order of preference in ENUM_FMT can be used as a hint
+by applications. This series updates the uAPI specification
+accordingly.
 
- Makefile                                     |    2=20
- arch/x86/include/asm/fpu/internal.h          |    2=20
- drivers/base/platform.c                      |    7 -
- drivers/crypto/Kconfig                       |    1=20
- drivers/crypto/inside-secure/safexcel.c      |    4=20
- drivers/hid/hid-core.c                       |   51 ++++++-
- drivers/misc/mei/bus.c                       |    9 -
- drivers/misc/mei/hw-me-regs.h                |    1=20
- drivers/misc/mei/pci-me.c                    |    1=20
- drivers/net/dsa/sja1105/sja1105_main.c       |   10 -
- drivers/net/ethernet/cadence/macb_main.c     |    1=20
- drivers/net/ethernet/google/gve/gve_main.c   |    3=20
- drivers/net/ethernet/realtek/r8169_main.c    |    3=20
- drivers/net/macvlan.c                        |    3=20
- drivers/net/phy/mdio_bus.c                   |    6=20
- drivers/net/slip/slip.c                      |    1=20
- drivers/platform/x86/hp-wmi.c                |   10 -
- drivers/staging/rtl8192e/rtl8192e/rtl_core.c |    5=20
- drivers/staging/rtl8723bs/os_dep/sdio_intf.c |    7 -
- drivers/staging/wilc1000/wilc_hif.c          |   25 ++-
- drivers/thunderbolt/switch.c                 |   54 ++++++-
- drivers/usb/dwc2/core.c                      |    2=20
- drivers/usb/serial/ftdi_sio.c                |    3=20
- drivers/usb/serial/ftdi_sio_ids.h            |    7 +
- fs/ext4/inode.c                              |   15 ++
- fs/ext4/super.c                              |   21 +--
- fs/io_uring.c                                |   23 +++
- fs/jffs2/nodelist.c                          |    2=20
- include/linux/skmsg.h                        |   26 +--
- include/net/sctp/structs.h                   |    3=20
- include/net/tls.h                            |    3=20
- net/core/filter.c                            |    8 -
- net/core/skmsg.c                             |    2=20
- net/ipv4/tcp_bpf.c                           |    2=20
- net/openvswitch/datapath.c                   |   17 ++
- net/psample/psample.c                        |    2=20
- net/sched/sch_mq.c                           |    3=20
- net/sched/sch_mqprio.c                       |    4=20
- net/sched/sch_multiq.c                       |    2=20
- net/sched/sch_prio.c                         |    2=20
- net/sctp/associola.c                         |    1=20
- net/sctp/endpointola.c                       |    1=20
- net/sctp/input.c                             |    4=20
- net/sctp/sm_statefuns.c                      |    4=20
- net/socket.c                                 |  184 +++++++++++++++++++---=
------
- net/tipc/netlink_compat.c                    |    4=20
- net/tls/tls_main.c                           |   13 -
- net/tls/tls_sw.c                             |   32 ++--
- tools/testing/selftests/bpf/test_sockmap.c   |   47 ++++--
- tools/testing/selftests/bpf/xdping.c         |    2=20
- tools/testing/selftests/net/pmtu.sh          |    5=20
- tools/testing/selftests/net/tls.c            |   60 ++++++++
- 52 files changed, 504 insertions(+), 206 deletions(-)
+When the application sets a pixel format other than NV12,
+the post-processor is transparently enabled.
 
-Ajay Singh (1):
-      staging: wilc1000: fix illegal memory access in wilc_parse_join_bss_p=
-aram()
+Patch 1 updates the uAPI specification.
+Patch 2 and 3 are cleanups to easier integrate the post-processor.
+Patch 4 introduces the post-processing support.
 
-Alexander Usyskin (2):
-      mei: bus: prefix device names on bus with the bus name
-      mei: me: add comet point V device id
+This is tested on RK3288 platforms with MPEG-2, VP8 and
+H264 streams, decoding to YUY2 surfaces. For now, this series
+is only adding support for NV12-to-YUY2 conversion.
 
-Candle Sun (1):
-      HID: core: check whether Usage Page item is after Usage ID items
+Applies to media/master.
 
-Chuhong Yuan (1):
-      net: macb: add missed tasklet_kill
+Changelog
+---------
 
-David Bauer (1):
-      mdio_bus: don't use managed reset-controller
+Changes v4:
 
-Dust Li (1):
-      net: sched: fix `tc -s class show` no bstats on class with nolock sub=
-queues
+* Make the post-proc queue as deep as the capture queue.
+* Rework the mmio read/write/relaxed helpers to avoid impacting
+  the VP8 implementation.
+* Rename prepare/finish_run to avoid confusion.
+* Remove HANTRO_PP_REG_WRITE unneeded checks. 
+* Add a comment in vidioc_enum_fmt regarding the format enumeration
+  order.
 
-Fabio D'Urso (1):
-      USB: serial: ftdi_sio: add device IDs for U-Blox C099-F9P
+Changes v3:
 
-Greg Kroah-Hartman (1):
-      Linux 5.4.2
+* After discussing with Hans and Tomasz during the media summit
+in ELCE, we decided to go back on the MC changes. The MC topology
+is now untouched. This means the series is now similar to v1,
+except we explicitly use the ENUM_FMT to hint about the post-processed
+formats.
 
-Hans de Goede (4):
-      staging: rtl8723bs: Drop ACPI device ids
-      staging: rtl8723bs: Add 024c:0525 to the list of SDIO device-ids
-      platform/x86: hp-wmi: Fix ACPI errors caused by too small buffer
-      platform/x86: hp-wmi: Fix ACPI errors caused by passing 0 as input si=
-ze
+Changes v2:
 
-Heiner Kallweit (2):
-      r8169: fix jumbo configuration for RTL8168evl
-      r8169: fix resume on cable plug-in
+* The decoder->post-processor topology is now exposed
+  explicitly and applications need to configure the pipeline.
+  By default, the decoder is enabled and the post-processor
+  is disabled.
 
-Herbert Xu (1):
-      crypto: talitos - Fix build error by selecting LIB_DES
+* RGB post-processing output has been dropped. We might
+  add this in the future, but for now, it seems it would
+  make the code more complex without a use-case in mind.
+  RGB is much more memory-consuming so less attractive
+  than YUV, and modern GPUs and display controllers support YUV.
 
-Jakub Kicinski (8):
-      net/tls: take into account that bpf_exec_tx_verdict() may free the re=
-cord
-      net/tls: free the record on encryption error
-      net: skmsg: fix TLS 1.3 crash with full sk_msg
-      selftests/tls: add a test for fragmented messages
-      net/tls: remove the dead inplace_crypto code
-      net/tls: use sg_next() to walk sg entries
-      selftests: bpf: test_sockmap: handle file creation failures gracefully
-      selftests: bpf: correct perror strings
+* The post-processor implementation still supports RK3288
+  only. However, a generic register infrastructure is introduced
+  to make addition of other variants such as RK3399 really easy.
 
-Jens Axboe (3):
-      io_uring: async workers should inherit the user creds
-      net: separate out the msghdr copy from ___sys_{send,recv}msg()
-      net: disallow ancillary data for __sys_{send,recv}msg_file()
+Ezequiel Garcia (4):
+  media: vidioc-enum-fmt.rst: clarify format preference
+  media: hantro: Cleanup format negotiation helpers
+  hantro: Rename {prepare,finish}_run to {start,end}_prepare_run
+  media: hantro: Support color conversion via post-processing
 
-Jeroen de Borst (1):
-      gve: Fix the queue page list allocated pages count
+ .../media/uapi/v4l/vidioc-enum-fmt.rst        |   4 +-
+ drivers/staging/media/hantro/Makefile         |   1 +
+ drivers/staging/media/hantro/hantro.h         |  66 +++++++-
+ drivers/staging/media/hantro/hantro_drv.c     |  11 +-
+ .../staging/media/hantro/hantro_g1_h264_dec.c |   4 +-
+ .../media/hantro/hantro_g1_mpeg2_dec.c        |   6 +-
+ drivers/staging/media/hantro/hantro_g1_regs.h |  53 +++++++
+ .../staging/media/hantro/hantro_g1_vp8_dec.c  |   6 +-
+ .../staging/media/hantro/hantro_h1_jpeg_enc.c |   4 +-
+ drivers/staging/media/hantro/hantro_h264.c    |   2 +-
+ drivers/staging/media/hantro/hantro_hw.h      |  17 ++-
+ .../staging/media/hantro/hantro_postproc.c    | 142 ++++++++++++++++++
+ drivers/staging/media/hantro/hantro_v4l2.c    | 109 +++++++++-----
+ drivers/staging/media/hantro/rk3288_vpu_hw.c  |  10 ++
+ .../media/hantro/rk3399_vpu_hw_jpeg_enc.c     |   4 +-
+ .../media/hantro/rk3399_vpu_hw_mpeg2_dec.c    |   4 +-
+ .../media/hantro/rk3399_vpu_hw_vp8_dec.c      |   4 +-
+ 17 files changed, 384 insertions(+), 63 deletions(-)
+ create mode 100644 drivers/staging/media/hantro/hantro_postproc.c
 
-Joel Stanley (1):
-      Revert "jffs2: Fix possible null-pointer dereferences in jffs2_add_fr=
-ag_to_fragtree()"
+-- 
+2.22.0
 
-John Rutherford (1):
-      tipc: fix link name length check
-
-Jouni Hogander (1):
-      slip: Fix use-after-free Read in slip_open
-
-Mathias Kresin (1):
-      usb: dwc2: use a longer core rest timeout in dwc2_core_reset()
-
-Menglong Dong (1):
-      macvlan: schedule bc_work even if error
-
-Mika Westerberg (1):
-      thunderbolt: Power cycle the router if NVM authentication fails
-
-Navid Emamdoost (1):
-      sctp: Fix memory leak in sctp_sf_do_5_2_4_dupcook
-
-Nikolay Aleksandrov (1):
-      net: psample: fix skb_over_panic
-
-Oleksij Rempel (1):
-      net: dsa: sja1105: fix sja1105_parse_rgmii_delays()
-
-Pan Bian (1):
-      staging: rtl8192e: fix potential use after free
-
-Paolo Abeni (3):
-      openvswitch: fix flow command message size
-      openvswitch: drop unneeded BUG_ON() in ovs_flow_cmd_build_info()
-      openvswitch: remove another BUG_ON()
-
-Pascal van Leeuwen (1):
-      crypto: inside-secure - Fix stability issue with Macchiatobin
-
-Sami Tolvanen (1):
-      driver core: platform: use the correct callback type for bus_find_dev=
-ice
-
-Sebastian Andrzej Siewior (1):
-      x86/fpu: Don't cache access to fpu_fpregs_owner_ctx
-
-Thadeu Lima de Souza Cascardo (1):
-      selftests: pmtu: use -oneline for ip route list cache
-
-Theodore Ts'o (1):
-      ext4: add more paranoia checking in ext4_expand_extra_isize handling
-
-Xin Long (1):
-      sctp: cache netns in sctp_ep_common
-
-
---r5Pyd7+fXNt84Ff3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl3pEysACgkQONu9yGCS
-aT5LlRAAi3zI2RTma6gBGAs7EZHDVqyJvWo4os49/Gv3uyMOTGOoWsyjjtqCDXfY
-eVrILFdvwHBHLyy4dm1dSj6o3P1BUjUdmF5WPeB38TEBiszcon+dAOaz71HGHVWJ
-Ek4trg/MWtlx+JFaR6Opo+ojyedU89KykWyI4/OQ/VmvEbQ+4vdnqQzaD6TUUyh5
-iijxlwfeaL2sOouJW2nhqg65U78RCqEL6FxnDGAh2OtEmYyb9YM2fPjUZzuaS2Bb
-m1XIHgFhUbBEthQHIvNm0KjTBlGyKlcYW5oHxQCQ3rjLswiyYvZFYg0XVJMxHeGL
-NP3zJzAYn2PDn27HqoGsqDC7zPWZ79tZiCR+swP7YeJMDe6RhiaUUqTxmXHEBnMW
-T9kDtrFJR+AqmvXtjQaGzP3iiqDbigfoCsRl++GM+vB1dXKi/aXQzkiQ8k4c1UTo
-+yQoQn4ASliSbDzsR8HUjcopUrPkKE64n6sfzL5D797YYtWwVdWFwDiEncvSNm8B
-Q1oKTAJTaowHEZnkQLqspE1pIkfsxBGCEb4D56qbJ2h8bDyNw3ZagXjgwaa1+w1r
-EFMFiHewv649EQAOhBUnvlz2GkNrtWGosR7AZKQeZAPoZVDzn/hQJLKN096jd742
-hrkeWUjM8C62RAAoOhhqjzFRdzoc5NAalUP1PKhP4pr+wsvEuEQ=
-=yyqz
------END PGP SIGNATURE-----
-
---r5Pyd7+fXNt84Ff3--
