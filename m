@@ -2,111 +2,164 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD0CC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D5CC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1EDB20707
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 337CC21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 22:25:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nhguw729"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N9rHPKci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730026AbfLEWZE (ORCPT
+        id S2387400AbfLEWZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 17:25:04 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43311 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729430AbfLEWZE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 17:25:04 -0500
-Received: by mail-pf1-f193.google.com with SMTP id h14so2261756pfe.10;
-        Thu, 05 Dec 2019 14:25:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i7d8gLjd+sLoiJpXei1q6a6kERigQFuSYg7tC9xLpLQ=;
-        b=Nhguw729g/WUMhWFkxEF7GWHFRtvnBoAnkFhvhi7jPBIXNhvjwFDNssMX1ScVNCjVY
-         dW8HB3etskB92IitKyrS5OMjiXsowoD2PjZKU1GmTTxwR2hxRQyVEsiJv4lVR/kqOpD3
-         nEw2j1J0191duIdNWJmeI4q0fWmk9pkWe0I0N2ae+Co2AWVGtk9CJ0C+tKyA1YTZ0+ez
-         48pGKZFjF7owmWUoJIbih8f5sRKw+VwGRUOA2WxacA6mFFm6rBHZBE/qQVGvCYFNdJYa
-         GLtYcGVHUtWACOHYF9ybZSqr//+XnNMD71B5OmkWLgxbYOQ34mM975xOfvQDjHQEBcRA
-         GczQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i7d8gLjd+sLoiJpXei1q6a6kERigQFuSYg7tC9xLpLQ=;
-        b=acY+3j5os/SbzpHWqWTeqRHOI+WXZCTJImL/Dz/muGr3oKBT10U4Roy3cAXcTW7oz0
-         OFvXOMtFJfSYjZtLkmIfeZ0oLgZunBdHH4S27r8u2PBa91C/DQstwHtZOvgrgV4h56GY
-         rYBsTUGglzOhDaHH+AjNrAp3B82IGYd+F8lw/eoAUfpPVfhVbu/KS5vT4DCJ4O7XpBN1
-         V+1TlKI+0dMR54UfT5yxJcOyXHNNV4vVtgsfy0w2xZxzluoolMNJYZfqThjL3tLh3mOc
-         jqecxMr+D2/rr3mpk6GZtJ0l6aopLbzdZ8D2gGI+VYoIFmh7VXYqboo0lZ3gox8ptJFZ
-         jF2w==
-X-Gm-Message-State: APjAAAXZ6Baeck6SRkXo/2oHUuwjJEAOlXQSvseCGLq9d2FJdlYglE3n
-        +4gB9U5s6T0WEpQuIRMZmevptdZwHvIWBunlZy4=
-X-Google-Smtp-Source: APXvYqxMbd1CA+h65ymSEClEw1SnfCASsf92gbJSoej2Vn3nUlZUtazzWber25+lZzHthoOXsseTrIP4ugkGyOQ1uYg=
-X-Received: by 2002:a65:490e:: with SMTP id p14mr2933470pgs.4.1575584703737;
- Thu, 05 Dec 2019 14:25:03 -0800 (PST)
-MIME-Version: 1.0
-References: <20191205215151.421926-1-jim.cromie@gmail.com> <20191205215151.421926-20-jim.cromie@gmail.com>
-In-Reply-To: <20191205215151.421926-20-jim.cromie@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 6 Dec 2019 00:24:52 +0200
-Message-ID: <CAHp75VcSkm4M7VOuMWnNUOMAPbbvmodGfn9_Pu25H213pMuxFA@mail.gmail.com>
-Subject: Re: [PATCH 17/18] dyndbg: rename dynamic_debug to dyndbg
-To:     Jim Cromie <jim.cromie@gmail.com>
-Cc:     jbaron@akamai.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thu, 5 Dec 2019 17:25:20 -0500
+Received: from ozlabs.org ([203.11.71.1]:59863 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729240AbfLEWZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 17:25:20 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47TVf318Ddz9sP6;
+        Fri,  6 Dec 2019 09:25:15 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1575584716;
+        bh=Ejh9iBh3ag+152PoDCF8gcjANJaspPs1uplexIw40sk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=N9rHPKciPcR3XwIfHTXgRDVe+UA0Vf04c+7N5yUtr+crYrpUI+SD6kCBV8z3aclBF
+         dflfXESC9Y8bo9/YC5EC7kFBcLYvt7HjpMvRFxOy8tGEOVqYj3B2qhoxVnkoQYpOhr
+         tXp051Sq/UqybHHLMzLxnZV1tok7C5Pzhy/ueiqS+j5J2sAJYTe+tV3o4VH89GSD7s
+         IWVHoli75S20jNEepOQ3iPs0Xku1Eg5zcEe8kVkZQ1ovCuaZdvlGh7ebp0UZhwB3HJ
+         QPxYE4MoWdsszZs01g02naCPLj91J8aQjAGsWlGw5uZNvF0pIwZdYlJgegjsBELl/t
+         WtpmCZqUiMeyw==
+Date:   Fri, 6 Dec 2019 09:25:03 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Documentation List <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: linux-next: build failure after merge of the printk tree
+Message-ID: <20191206092503.303d6a57@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/XmPSbCkYiN4/ZDkVNyp5qv+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 11:54 PM Jim Cromie <jim.cromie@gmail.com> wrote:
->
-> This rename fixes a subtle usage wrinkle; the __setup() names didn't
-> match the fake "dyndbg" module parameter used to enable dynamic-printk
-> callsites in modules.  See the last change in Docs for the effect.
->
-> It also shortens the "__FILE__:__func__" prefix in dyndbg.verbose
-> messages, effectively s/dynamic_debug/dyndbg/
->
-> This is a 99.9% rename; trim_prefix and debugfs_create_dir arg excepted.
-> Nonetheless, it also changes both /sys appearances:
->
-> bash-5.0# ls -R /sys/kernel/debug/dyndbg/ /sys/module/dyndbg/parameters/
-> /sys/kernel/debug/dyndbg/:
-> control
+--Sig_/XmPSbCkYiN4/ZDkVNyp5qv+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> /sys/module/dyndbg/parameters/:
+Hi all,
 
-Isn't this path a part of ABI?
+After merging the printk tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-> verbose
->
-> Finally, paths in docs are ~= s|/dynamic_debug/|/dyndbg/|,
-> plus the kernel cmdline example tweak cited above.
+kernel/trace/trace.c: In function 'register_tracer':
+kernel/trace/trace.c:1892:3: error: implicit declaration of function 'pr_wa=
+rning'; did you mean 'pr_warn'? [-Werror=3Dimplicit-function-declaration]
+ 1892 |   pr_warning("Can not register tracer %s due to lockdown\n",
+      |   ^~~~~~~~~~
+      |   pr_warn
 
+Caused by commit
 
--- 
-With Best Regards,
-Andy Shevchenko
+  55130ba7f010 ("printk: Drop pr_warning definition")
+
+interacting with commit
+
+  a356646a5685 ("tracing: Do not create directories if lockdown is in affec=
+t")
+
+from Linus' tree.
+
+I have applied the following merge fix patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 6 Dec 2019 09:21:57 +1100
+Subject: [PATCH] fix up for "printk: Drop pr_warning definition"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ kernel/trace/ring_buffer.c | 2 +-
+ kernel/trace/trace.c       | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 4bf050fcfe3b..3f655371eaf6 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5070,7 +5070,7 @@ static __init int test_ringbuffer(void)
+ 	int ret =3D 0;
+=20
+ 	if (security_locked_down(LOCKDOWN_TRACEFS)) {
+-		pr_warning("Lockdown is enabled, skipping ring buffer tests\n");
++		pr_warn("Lockdown is enabled, skipping ring buffer tests\n");
+ 		return 0;
+ 	}
+=20
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 23459d53d576..6c75410f9698 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1889,7 +1889,7 @@ int __init register_tracer(struct tracer *type)
+ 	}
+=20
+ 	if (security_locked_down(LOCKDOWN_TRACEFS)) {
+-		pr_warning("Can not register tracer %s due to lockdown\n",
++		pr_warn("Can not register tracer %s due to lockdown\n",
+ 			   type->name);
+ 		return -EPERM;
+ 	}
+@@ -8796,7 +8796,7 @@ struct dentry *tracing_init_dentry(void)
+ 	struct trace_array *tr =3D &global_trace;
+=20
+ 	if (security_locked_down(LOCKDOWN_TRACEFS)) {
+-		pr_warning("Tracing disabled due to lockdown\n");
++		pr_warn("Tracing disabled due to lockdown\n");
+ 		return ERR_PTR(-EPERM);
+ 	}
+=20
+@@ -9244,7 +9244,7 @@ __init static int tracer_alloc_buffers(void)
+=20
+=20
+ 	if (security_locked_down(LOCKDOWN_TRACEFS)) {
+-		pr_warning("Tracing disabled due to lockdown\n");
++		pr_warn("Tracing disabled due to lockdown\n");
+ 		return -EPERM;
+ 	}
+=20
+--=20
+2.24.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/XmPSbCkYiN4/ZDkVNyp5qv+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3pg78ACgkQAVBC80lX
+0GyFLgf+KxqtMwAE/qH+G3dZN5VNNta2tlOcS8QJ5BAbSFBnrUDf1mCJ0S79REYa
+5OwGJKIS8RB9QmN4lcOPE1zNNqZk9tzvWuB153ranWdwQw4j54c7VljwZGvKEnK6
+Ey/JemkvESN7vraP4T4DYpgeMkVnVENbUH0BfbniZllL6moT/yGmrydxVwwLOt/y
+CpqDAcYaqBl5laGvU+7GAD30n/L0BPjeF46R7HD0RrjGgH6YTBESfbnIv8Pxy8ak
+RM1ebiAwUq2V8KuL7pEkrZw8rAqH/Rdjpd4Up2MWHVmFjZyjnkkRh338p86VBnyV
+Ki1f7JB84t3OhBOIJnZa7Tl1UKs4+w==
+=IK3o
+-----END PGP SIGNATURE-----
+
+--Sig_/XmPSbCkYiN4/ZDkVNyp5qv+--
