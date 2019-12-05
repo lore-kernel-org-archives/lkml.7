@@ -2,125 +2,110 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E51C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A983AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5162464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:21:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ngs7dVDd"
+	by mail.kernel.org (Postfix) with ESMTP id 7D9192464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbfLERV6 (ORCPT
+        id S1730047AbfLERXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 12:21:58 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24885 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729994AbfLERV5 (ORCPT
+        Thu, 5 Dec 2019 12:23:45 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9166 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729450AbfLERXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 12:21:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575566516;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ly/epWve+/cPaZY37VoFmJhJWai9+r3sAb3SoA4680E=;
-        b=Ngs7dVDdQ8ZoA5287/LHOgAJ2s/5qtRXjQlUMth3X0PKeAv7CZ1HU//6Kv+8FVNf7rn0XJ
-        wV2XB9swANis+5axeZkNs2bT2ex5GhUuI4A/CR5VvpUL6RNw7AoNRNP4iN8M4OzTzPlnCj
-        JT+Snz/Aog0KIT+vbiTqyLW7Bi2piRA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231--maKD96LN0SRlq_ZR4R3mg-1; Thu, 05 Dec 2019 12:21:53 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B735DB60;
-        Thu,  5 Dec 2019 17:21:52 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-250.rdu2.redhat.com [10.10.120.250])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F2E816E702;
-        Thu,  5 Dec 2019 17:21:50 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 2/2] pipe: Fix missing mask update after pipe_wait()
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org, ebiggers@kernel.org
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 05 Dec 2019 17:21:50 +0000
-Message-ID: <157556651022.20869.2027577608881946885.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157556649610.20869.8537079649495343567.stgit@warthog.procyon.org.uk>
-References: <157556649610.20869.8537079649495343567.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: -maKD96LN0SRlq_ZR4R3mg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Thu, 5 Dec 2019 12:23:45 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB5HM8pJ109396
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Dec 2019 12:23:44 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wq2xc21sb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 12:23:43 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Thu, 5 Dec 2019 17:23:40 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Dec 2019 17:23:36 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB5HNZf638993934
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Dec 2019 17:23:35 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C66DFA4040;
+        Thu,  5 Dec 2019 17:23:35 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87993A4051;
+        Thu,  5 Dec 2019 17:23:33 +0000 (GMT)
+Received: from srikart450.in.ibm.com (unknown [9.199.46.156])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Dec 2019 17:23:33 +0000 (GMT)
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH] sched/fair: Optimize select_idle_core
+Date:   Thu,  5 Dec 2019 22:53:16 +0530
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19120517-0012-0000-0000-00000371B9F0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120517-0013-0000-0000-000021AD7FA6
+Message-Id: <20191205172316.8198-1-srikar@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-05_05:2019-12-04,2019-12-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 mlxlogscore=999 bulkscore=0 mlxscore=0 adultscore=0
+ clxscore=1015 spamscore=0 suspectscore=0 malwarescore=0 impostorscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912050146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix pipe_write() to regenerate the ring index mask and update max_usage
-after calling pipe_wait().
+Currently we loop through all threads of a core to evaluate if the core
+is idle or not. This is unnecessary. If a thread of a core is not
+idle, skip evaluating other threads of a core.
 
-This is necessary as the latter function drops the pipe lock, thereby
-allowing F_SETPIPE_SZ change it.  Without this, pipe_write() may
-subsequently miscalculate the array indices and pipe fullness, leading to
-an oops like the following:
-
- BUG: KASAN: slab-out-of-bounds in pipe_write+0xc25/0xe10 fs/pipe.c:481
- Write of size 8 at addr ffff8880771167a8 by task syz-executor.3/7987
- ...
- CPU: 1 PID: 7987 Comm: syz-executor.3 Not tainted 5.4.0-rc2-syzkaller #0
- ...
- Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x113/0x167 lib/dump_stack.c:113
-  print_address_description.constprop.8.cold.10+0x9/0x31d mm/kasan/report.c:374
-  __kasan_report.cold.11+0x1b/0x3a mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:634
-  __asan_report_store8_noabort+0x17/0x20 mm/kasan/generic_report.c:137
-  pipe_write+0xc25/0xe10 fs/pipe.c:481
-  call_write_iter include/linux/fs.h:1895 [inline]
-  new_sync_write+0x3fd/0x7e0 fs/read_write.c:483
-  __vfs_write+0x94/0x110 fs/read_write.c:496
-  vfs_write+0x18a/0x520 fs/read_write.c:558
-  ksys_write+0x105/0x220 fs/read_write.c:611
-  __do_sys_write fs/read_write.c:623 [inline]
-  __se_sys_write fs/read_write.c:620 [inline]
-  __x64_sys_write+0x6e/0xb0 fs/read_write.c:620
-  do_syscall_64+0xca/0x5d0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 8cefc107ca54 ("pipe: Use head and tail pointers for the ring, not cursor and length")
-Reported-by: syzbot+838eb0878ffd51f27c41@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 ---
+ kernel/sched/fair.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
- fs/pipe.c |    2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/pipe.c b/fs/pipe.c
-index 5f89f73d4366..4d2a7bbc5d31 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -526,6 +526,8 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 69a81a5709ff..b9d628128cfc 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5872,10 +5872,12 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
+ 		bool idle = true;
+ 
+ 		for_each_cpu(cpu, cpu_smt_mask(core)) {
+-			__cpumask_clear_cpu(cpu, cpus);
+-			if (!available_idle_cpu(cpu))
++			if (!available_idle_cpu(cpu)) {
+ 				idle = false;
++				break;
++			}
  		}
- 		pipe->waiting_writers++;
- 		pipe_wait(pipe);
-+		mask = pipe->ring_size - 1;
-+		max_usage = pipe->max_usage;
- 		pipe->waiting_writers--;
- 	}
- out:
++		cpumask_andnot(cpus, cpus, cpu_smt_mask(core));
+ 
+ 		if (idle)
+ 			return core;
+-- 
+2.18.1
 
