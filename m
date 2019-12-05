@@ -2,182 +2,138 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53333C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425EFC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A00122525
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:02:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575561767;
-	bh=lMnO+rWwvbvlRGsDD/qOZFz4FisJZWp5f44VpRhrrmk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c3yvlQjHpdMlSVySgvKqtPt/ZbDhU/hi9kc3AvUvfq4W7cqGkui1AfQxOTaW1VGs1
-	 e1odzf3GNV1a9JFV/MijwJIeRPL3Awvk2Lmoqe0FdlayzuZIFGcxO0NFSxyHBq0Mt6
-	 i1OdOiqb+9jOYhvoUojSUxtGDAjcjrNGOxI1Cewk=
+	by mail.kernel.org (Postfix) with ESMTP id 1A6F2206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729890AbfLEQCq (ORCPT
+        id S1729930AbfLEQDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:02:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfLEQCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:02:46 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2CB4206DB;
-        Thu,  5 Dec 2019 16:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575561765;
-        bh=lMnO+rWwvbvlRGsDD/qOZFz4FisJZWp5f44VpRhrrmk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c5a8PFL/ROjGYadcziWrl4SW+usO0sfBvNAGStPsepBtWK7Tv/ea6iT9wB2tlaa1j
-         qvA9luZd03j8qx7x+chpVEU7v1i9NBnmuDEAjDBj9Y3g/uNsM92xCKvdRSveRFxBwj
-         owpxdHs/j5dSEz/uUAYGh0e5dUf4uyXawsvvVGNY=
-Date:   Thu, 5 Dec 2019 17:02:43 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Hyunki Koo <kkoos00@naver.com>, jslaby@suse.com,
-        linux-serial@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kkoos00@gmail.com, Shinbeom Choi <sbeom.choi@samsung.com>,
-        Hyunki Koo <hyunki00.koo@samsung.com>
-Subject: Re: [PATCH] tty: serial: samsung: support driver modulization
-Message-ID: <20191205160243.GA757198@kroah.com>
-References: <20191201075914.23512-1-kkoos00@naver.com>
- <20191201080314.GA3716559@kroah.com>
- <CAJKOXPet=RyJ3nrcOooHdN0GSO33Ce82-9L_X0oYC2MjN7nOig@mail.gmail.com>
+        Thu, 5 Dec 2019 11:03:06 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51578 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLEQDF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 11:03:05 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 6395D2923CC
+Message-ID: <9dc26a0a51fe60206265cc1495b63e1f1d5e661d.camel@collabora.com>
+Subject: Re: [PATCH v3 2/3] media: hantro: Support color conversion via
+ post-processing
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org
+Cc:     kernel@collabora.com, Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
+Date:   Thu, 05 Dec 2019 13:02:54 -0300
+In-Reply-To: <2d2524129c6287c13e9d83d1d885046483e75117.camel@pengutronix.de>
+References: <20191113175603.24742-1-ezequiel@collabora.com>
+         <20191113175603.24742-3-ezequiel@collabora.com>
+         <1e1c7a0e3d25187723ccac1a8360b5aae9aed8cd.camel@pengutronix.de>
+         <dc637b43a4ef4609f9200f3fc91ee76fef75f64a.camel@collabora.com>
+         <88a48cb78843458b55896eeb3af2f46488d42744.camel@collabora.com>
+         <2d2524129c6287c13e9d83d1d885046483e75117.camel@pengutronix.de>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPet=RyJ3nrcOooHdN0GSO33Ce82-9L_X0oYC2MjN7nOig@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 04:36:48PM +0100, Krzysztof Kozlowski wrote:
-> On Sun, 1 Dec 2019 at 09:05, Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Sun, Dec 01, 2019 at 04:59:14PM +0900, Hyunki Koo wrote:
-> > > From: Shinbeom Choi <sbeom.choi@samsung.com>
-> > >
-> > > This commit enables modulization of samsung uart driver.
-> > >
-> > > There was no way to make use of this driver in other module,
-> > > because uart functions were static.
-> > >
-> > > By exporting required functions, user can use this driver
-> > > in other module.
-> > >
-> > > Signed-off-by: Shinbeom Choi <sbeom.choi@samsung.com>
-> > > Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
-> > > ---
-> > >  drivers/tty/serial/samsung.h     | 32 ++++++++++++
-> > >  drivers/tty/serial/samsung_tty.c | 85 +++++++++++++++-----------------
-> > >  2 files changed, 73 insertions(+), 44 deletions(-)
-> > >
-> > > diff --git a/drivers/tty/serial/samsung.h b/drivers/tty/serial/samsung.h
-> > > index f93022113f59..25be0962284d 100644
-> > > --- a/drivers/tty/serial/samsung.h
-> > > +++ b/drivers/tty/serial/samsung.h
-> > > @@ -144,4 +144,36 @@ static inline void s3c24xx_clear_bit(struct uart_port *port, int idx,
-> > >       local_irq_restore(flags);
-> > >  }
-> > >
-> > > +#if defined(CONFIG_ARCH_EXYNOS)
-> > > +#define EXYNOS_COMMON_SERIAL_DRV_DATA                                \
-> > > +     .info = &(struct s3c24xx_uart_info) {                   \
-> > > +             .name           = "Samsung Exynos UART",        \
-> > > +             .type           = PORT_S3C6400,                 \
-> > > +             .has_divslot    = 1,                            \
-> > > +             .rx_fifomask    = S5PV210_UFSTAT_RXMASK,        \
-> > > +             .rx_fifoshift   = S5PV210_UFSTAT_RXSHIFT,       \
-> > > +             .rx_fifofull    = S5PV210_UFSTAT_RXFULL,        \
-> > > +             .tx_fifofull    = S5PV210_UFSTAT_TXFULL,        \
-> > > +             .tx_fifomask    = S5PV210_UFSTAT_TXMASK,        \
-> > > +             .tx_fifoshift   = S5PV210_UFSTAT_TXSHIFT,       \
-> > > +             .def_clk_sel    = S3C2410_UCON_CLKSEL0,         \
-> > > +             .num_clks       = 1,                            \
-> > > +             .clksel_mask    = 0,                            \
-> > > +             .clksel_shift   = 0,                            \
-> > > +     },                                                      \
-> > > +     .def_cfg = &(struct s3c2410_uartcfg) {                  \
-> > > +             .ucon           = S5PV210_UCON_DEFAULT,         \
-> > > +             .ufcon          = S5PV210_UFCON_DEFAULT,        \
-> > > +             .has_fracval    = 1,                            \
-> > > +     }                                                       \
-> > > +
-> > > +#endif
-> > > +
-> > > +int s3c24xx_serial_get_ports(struct s3c24xx_uart_port **ourport, int index);
-> > > +int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
-> > > +                                 struct platform_device *platdev);
-> > > +int s3c24xx_serial_unregister_port(struct platform_device *dev);
-> > > +int s3c24xx_serial_suspend(struct device *dev);
-> > > +int s3c24xx_serial_resume(struct device *dev);
-> > > +int s3c24xx_serial_resume_noirq(struct device *dev);
-> > >  #endif
-> > > diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-> > > index 83fd51607741..15414ecd9008 100644
-> > > --- a/drivers/tty/serial/samsung_tty.c
-> > > +++ b/drivers/tty/serial/samsung_tty.c
-> > > @@ -1735,7 +1735,7 @@ static int s3c24xx_serial_enable_baudclk(struct s3c24xx_uart_port *ourport)
-> > >   * initialise a single serial port from the platform device given
-> > >   */
-> > >
-> > > -static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
-> > > +int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
-> > >                                   struct platform_device *platdev)
-> > >  {
-> > >       struct uart_port *port = &ourport->port;
-> > > @@ -1842,12 +1842,24 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
-> > >       /* reset the fifos (and setup the uart) */
-> > >       s3c24xx_serial_resetport(port, cfg);
-> > >
-> > > +     if (!s3c24xx_uart_drv.state) {
-> > > +             ret = uart_register_driver(&s3c24xx_uart_drv);
-> > > +             if (ret < 0) {
-> > > +                     dev_err(port->dev, "Failed to register Samsung UART driver\n");
-> > > +                     return ret;
-> > > +             }
-> > > +     }
-> > > +
-> > > +     dbg("%s: adding port\n", __func__);
-> > > +     uart_add_one_port(&s3c24xx_uart_drv, &ourport->port);
-> > > +
-> > >       return 0;
-> > >
-> > >  err:
-> > >       port->mapbase = 0;
-> > >       return ret;
-> > >  }
-> > > +EXPORT_SYMBOL_GPL(s3c24xx_serial_init_port);
-> >
-> > Why are you exporting all of these functions?  What other code uses
-> > them?  Why are you converting them all to global functions I don't see
-> > any other in-kernel callers, so why are those changes needed here?
-> >
-> > totally confused,
+On Thu, 2019-12-05 at 15:46 +0100, Philipp Zabel wrote:
+> On Thu, 2019-12-05 at 11:33 -0300, Ezequiel Garcia wrote:
+> > Hello Philipp,
+> > 
+> > On Fri, 2019-11-15 at 12:44 -0300, Ezequiel Garcia wrote:
+> > > Hello Philipp,
+> > > 
+> > > Thanks for reviewing.
+> > > 
+> > > On Thu, 2019-11-14 at 10:48 +0100, Philipp Zabel wrote:
+> > > > Hi Ezequiel,
+> > > > 
+> > > > On Wed, 2019-11-13 at 14:56 -0300, Ezequiel Garcia wrote:
+> > > > > The Hantro G1 decoder is able to enable a post-processor
+> > > > > on the decoding pipeline, which can be used to perform
+> > > > > scaling and color conversion.
+> > > > > 
+> > > > > The post-processor is integrated to the decoder, and it's
+> > > > > possible to use it in a way that is completely transparent
+> > > > > to the user.
+> > > > > 
+> > > > > This commit enables color conversion via post-processing,
+> > > > > which means the driver now exposes YUV packed, in addition to NV12.
+> > > > > 
+> > > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > > > ---
+> > > > >  drivers/staging/media/hantro/Makefile         |   1 +
+> > > > >  drivers/staging/media/hantro/hantro.h         |  64 +++++++-
+> > > > >  drivers/staging/media/hantro/hantro_drv.c     |   8 +-
+> > > > >  .../staging/media/hantro/hantro_g1_h264_dec.c |   2 +-
+> > > > >  .../media/hantro/hantro_g1_mpeg2_dec.c        |   2 +-
+> > > > >  drivers/staging/media/hantro/hantro_g1_regs.h |  53 +++++++
+> > > > >  .../staging/media/hantro/hantro_g1_vp8_dec.c  |   2 +-
+> > > > >  drivers/staging/media/hantro/hantro_h264.c    |   6 +-
+> > > > >  drivers/staging/media/hantro/hantro_hw.h      |  13 ++
+> > > > >  .../staging/media/hantro/hantro_postproc.c    | 141 ++++++++++++++++++
+> > > > >  drivers/staging/media/hantro/hantro_v4l2.c    |  52 ++++++-
+> > > > >  drivers/staging/media/hantro/rk3288_vpu_hw.c  |  10 ++
+> > > > >  12 files changed, 343 insertions(+), 11 deletions(-)
+> > > > >  create mode 100644 drivers/staging/media/hantro/hantro_postproc.c
+> > > > > 
+> > > > > 
+> > [..]
+> > > > >  			pix_mp->plane_fmt[0].sizeimage +=
+> > > > >  				128 * DIV_ROUND_UP(pix_mp->width, 16) *
+> > > > >  				      DIV_ROUND_UP(pix_mp->height, 16);
+> > > > > @@ -611,10 +643,23 @@ static int hantro_start_streaming(struct vb2_queue *q, unsigned int count)
+> > > > >  
+> > > > >  		vpu_debug(4, "Codec mode = %d\n", codec_mode);
+> > > > >  		ctx->codec_ops = &ctx->dev->variant->codec_ops[codec_mode];
+> > > > > -		if (ctx->codec_ops->init)
+> > > > > +		if (ctx->codec_ops->init) {
+> > > > >  			ret = ctx->codec_ops->init(ctx);
+> > > > > +			if (ret)
+> > > > > +				return ret;
+> > > > > +		}
+> > > > > +
+> > > > > +		if (hantro_needs_postproc(ctx)) {
+> > > > > +			ret = hantro_postproc_alloc(ctx);
+> > > > 
+> > > > Why is this done in start_streaming? Wouldn't capture side REQBUFS be a
+> > > > better place for this?
+> > > > 
+> > > 
+> > > Yes, makes sense as well.
+> > > 
+> > 
+> > This didn't work so well, so I have decided to leave it as-is in the
+> > just submitted v4 series.
+> > 
+> > The vb2 framework provides two mechanism for drivers to allocate
+> > buffers, REQBUFS and CREATEBUFS, so the bounce buffer allocation
+> > has to be hooked on both of them.
 > 
-> I cannot find the original email from Hyunki on mailing lists (neither
-> LKML nor serial) so this was not even public till Greg replied.
+> That is a good point, now that we don't allocate VB2_MAX_FRAME bounce
+> buffers at start_streaming time anymore, what happens if additional
+> capture buffers are created with CREATEBUFS while streaming?
+> 
 
-I think it might have been sent in html format.
+If I understand vb2 logic correctly, then I do not think anything
+will happen, because the newly created buffers won't be queued. 
 
-> Anyway, probably this is for new Android and some out-of-tree usage...
-> but it is wrong.
+Regards,
+Ezequiel
 
-Making the driver be able to be built as a module is a good thing, no
-matter what project is causing the work to have happen.
-
-And yes, it's Android :)
-
-thanks,
-
-greg k-h
