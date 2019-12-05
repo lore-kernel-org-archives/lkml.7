@@ -2,269 +2,408 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73879C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76740C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4048620674
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3976120674
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 01:39:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j1PtrmYc"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="P6npovJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbfLEBjJ (ORCPT
+        id S1728664AbfLEBj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 20:39:09 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33493 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728098AbfLEBjI (ORCPT
+        Wed, 4 Dec 2019 20:39:58 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:20474 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727146AbfLEBj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 20:39:08 -0500
-Received: by mail-pf1-f196.google.com with SMTP id y206so785334pfb.0;
-        Wed, 04 Dec 2019 17:39:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=y5OyeMAaXxgAsXOOHmvpW7WsRUDMj2ghMVP9WbA7dSs=;
-        b=j1PtrmYci3d/o0TYIkz5oe2dZc+fncrSlHwG2Cz/22uIuV0HbESTZVKJobQqM7O8yD
-         23nbMjdwKw7DZ56b0WhciP4cHHohnyGHiSya9Pgz5nHSeqALQ7Uwret3AbSUICgdzQD2
-         bF+0xHH4NKKjThpBQg0xhwS/PkbBbXds6Ittdhj1YACepzB75Smsr+0zXANEJ7nttC+F
-         1nf6fyG0F5Jjgtxod5j7EKhYgYETqMntBdAxxjfaLJy17IA4kbTWk81y6Hq5Di++hY4b
-         IlLjXk9RcR5Q02NWXwHPSpD7KnwVQcelpcvnMorufOeFqcggXw4HbwCC7ZEGH1OFHdaK
-         4lvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y5OyeMAaXxgAsXOOHmvpW7WsRUDMj2ghMVP9WbA7dSs=;
-        b=e7QtGRjrnuO1K/6hD+otlQqtNwT54tqUwukx5ohdplaBBlCMFevptVclbz8Ep+Q/vl
-         2e/H7cqErz+TkmXVN8FAK+XteKkJExhETPKxJC+eeLSvNCSh0GCwkKqMa99/gX0wRUef
-         R/Wx/BelocqAAWObisawqaut4OfbzdWW3QWUKBjOpZWdlbXCy0jQx8xo6sqL7IzJNTzH
-         VQSlvOctpnbUXqeQxcwdPuVfIWSv6rUnGLxM/AbnsW1BAeZiPoaXC+gZeN/OFIdp01V8
-         a3ZIjojfpybxjVfSaEN90X345ULU8lKqDzg4Pt8EnEUCLbmPmP32j5aGHJBxmNy7xofg
-         fRrQ==
-X-Gm-Message-State: APjAAAXv2wSDzG78BlfobubSo5RmleiEHNoH1OOFi2z0w7/9hMpu3RWO
-        T4EYZptCslnz/LRtVPitjO5gh61X
-X-Google-Smtp-Source: APXvYqwFqAwj3MS1h2cksEMfVvAy936l/QbzPKm8apLobvEv6uBGeDB7j98JanOCdwvnbayc54gGhg==
-X-Received: by 2002:a63:e0c:: with SMTP id d12mr6455249pgl.3.1575509947770;
-        Wed, 04 Dec 2019 17:39:07 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id j17sm9319208pfr.2.2019.12.04.17.39.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 17:39:07 -0800 (PST)
-Date:   Wed, 4 Dec 2019 17:39:04 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
-        linux-input@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [PATCH v3] Input: uinput - Add UI_SET_PHYS_STR and
- UI_SET_UNIQ_STR
-Message-ID: <20191205013904.GP50317@dtor-ws>
-References: <20191204135434.v3.1.Ib53f70556ffe94d9a1903632ee9b0dc929f94557@changeid>
+        Wed, 4 Dec 2019 20:39:57 -0500
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191205013954epoutp01efb5e3765cc1872bb019164467c26541~dVf42bHvA2097820978epoutp01E
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Dec 2019 01:39:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191205013954epoutp01efb5e3765cc1872bb019164467c26541~dVf42bHvA2097820978epoutp01E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575509995;
+        bh=Oen/BZ4nHuK59SCJ3/7TEzX5BQ5jhiau93R7/9rMCHE=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=P6npovJD3GV/0ZpmTG4B8cyowBN1WP2bICMwjOSSEgnpJYAXBjQJOKG0Jn2JCCiha
+         BomnjRLkmUWfcjtE5O7MOu2QH8Vn36T55YOuOMwcU5rjgaebp3fudsPb3LQM3ti3lu
+         XObLogzezbBfA0YE3AFHB+f9fpBQIB1xP4FG2pz0=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191205013954epcas1p2c5fd64539222a380514069461dc4ad63~dVf4gBb1u2158221582epcas1p2i;
+        Thu,  5 Dec 2019 01:39:54 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.153]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47Sz143sKMzMqYkj; Thu,  5 Dec
+        2019 01:39:52 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E3.73.48019.3EF58ED5; Thu,  5 Dec 2019 10:39:47 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20191205013947epcas1p41f02dd65aadd1586c7c0916877229b87~dVfxsrMSw0802308023epcas1p4j;
+        Thu,  5 Dec 2019 01:39:47 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191205013947epsmtrp2528896711cdce69b7c6c124dcfbf67a8~dVfxr9Fsk0448804488epsmtrp2u;
+        Thu,  5 Dec 2019 01:39:47 +0000 (GMT)
+X-AuditID: b6c32a38-23fff7000001bb93-0a-5de85fe3c5ff
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        8F.20.10238.3EF58ED5; Thu,  5 Dec 2019 10:39:47 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191205013947epsmtip19bd04f40d2ca2aab0df997b83b31c1e5~dVfxdUZKt0562305623epsmtip1-;
+        Thu,  5 Dec 2019 01:39:47 +0000 (GMT)
+Subject: Re: [PATCH v2 3/3] devfreq: move statistics to separate struct
+To:     Kamil Konieczny <k.konieczny@samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <0298e7c0-72ea-ad1d-1a69-68bfaf0d62d1@samsung.com>
+Date:   Thu, 5 Dec 2019 10:46:01 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204135434.v3.1.Ib53f70556ffe94d9a1903632ee9b0dc929f94557@changeid>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191204150018.5234-4-k.konieczny@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmnu7j+BexBr1HNC02zljParHg0wxW
+        i/PnN7BbnG16w25xedccNovPvUcYLdYeuctucbtxBZsDh8emVZ1sHn1bVjF6fN4kF8AclW2T
+        kZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk4hOg65aZA3SBkkJZYk4p
+        UCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafAskCvODG3uDQvXS85P9fK0MDAyBSoMCE74/q+
+        f8wF030rFmydzNLAeNO2i5GDQ0LAROLMupouRi4OIYEdjBIv2rcwdjFyAjmfGCXW/XOASHxj
+        lFgz8TMbSAKk4cWK7ywQib2MEgdPdrFCOO8ZJR6c72AFqRIWcJd4v6OJHcQWEdCVeLNjKTNI
+        EbPAPCaJN9MugBWxCWhJ7H9xA2wsv4CixNUfj8F28wrYSezvmcAMYrMIqEgcm/yOBcQWFQiT
+        OLmtBapGUOLkzCdgcU4BG4nTcxeBzWEWEJe49WQ+E4QtL7H97RywxRIC79kkzh65wgTxg4tE
+        ++oOFghbWOLV8S3sELaUxOd3e6H+rJZYefIIG0RzB6PElv0QV0sIGEvsXzqZCRR6zAKaEut3
+        6UOEFSV2/p7LCLGYT+Ld1x5WSADzSnS0CUGUKEtcfnAX6gRJicXtnWwTGJVmIXlnFpIXZiF5
+        YRbCsgWMLKsYxVILinPTU4sNC0yQY3sTIzh1alnsYNxzzucQowAHoxIPb8Om57FCrIllxZW5
+        hxglOJiVRHi3STyNFeJNSaysSi3Kjy8qzUktPsRoCgzticxSosn5wLSeVxJvaGpkbGxsYWJo
+        ZmpoqCTOy/HjYqyQQHpiSWp2ampBahFMHxMHp1QD48xaz6unW0WXv1714IiumY/OhP+BQi+7
+        bwpNstOb+eaos1KeRfeS6qcJVfUaneyCT5ifddy4q/ojXkpiwYOpT6w3G1T/iPqyRKtv5q6M
+        p3+SCg5UZJyVvXnY8RK38u/M5B41LhvfOP1lnNvyHrVeurM6IDTkwQmeuqCPO1q8l2dk6Bq4
+        zwk+pMRSnJFoqMVcVJwIAMq0bZ2zAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42LZdlhJTvdx/ItYg32ruCw2zljParHg0wxW
+        i/PnN7BbnG16w25xedccNovPvUcYLdYeuctucbtxBZsDh8emVZ1sHn1bVjF6fN4kF8AcxWWT
+        kpqTWZZapG+XwJVxfd8/5oLpvhULtk5maWC8advFyMkhIWAi8WLFd5YuRi4OIYHdjBLPVv1k
+        hEhISky7eJS5i5EDyBaWOHy4GKLmLaNE5/LbzCA1wgLuEu93NLGD2CICuhJvdixlBiliFljA
+        JDH/5kSoqQcZJS53HGABqWIT0JLY/+IGG4jNL6AocfXHY7BtvAJ2Evt7JoBNZRFQkTg2+R1Y
+        vahAmMTOJY+ZIGoEJU7OfAIW5xSwkTg9dxHYHGYBdYk/8y4xQ9jiEreezGeCsOUltr+dwzyB
+        UXgWkvZZSFpmIWmZhaRlASPLKkbJ1ILi3PTcYsMCw7zUcr3ixNzi0rx0veT83E2M4DjS0tzB
+        eHlJ/CFGAQ5GJR7ehk3PY4VYE8uKK3MPMUpwMCuJ8G6TeBorxJuSWFmVWpQfX1Sak1p8iFGa
+        g0VJnPdp3rFIIYH0xJLU7NTUgtQimCwTB6dUA6Ot5aGW5Y/4Zldcdxd59LXr5FKZzmWH8zRn
+        iHq2tVfl+0q+KIw4eWVNYPneEO5eyYKPp391Ps3K/PVsx4s9/CUy+rGRs47Z+wXOevZx9SeN
+        GbtkumMnxhow1jvc+D7RceH0g/6NmRlfqgNUPq1fazD3y2luriUaybP/7wnPuvjnZEVv7p6w
+        jR+VWIozEg21mIuKEwHjYGbQnwIAAA==
+X-CMS-MailID: 20191205013947epcas1p41f02dd65aadd1586c7c0916877229b87
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191204150034eucas1p1b6e7f43a6be59ed2e0a4e55ccdefc750
+References: <20191204150018.5234-1-k.konieczny@samsung.com>
+        <CGME20191204150034eucas1p1b6e7f43a6be59ed2e0a4e55ccdefc750@eucas1p1.samsung.com>
+        <20191204150018.5234-4-k.konieczny@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 01:55:35PM -0800, Abhishek Pandit-Subedi wrote:
-> The ioctl definition for UI_SET_PHYS is ambiguous because it is defined
-> with size = sizeof(char*) but is expected to be given a variable length
-> string. Add a deprecation notice for UI_SET_PHYS and provide
-> UI_SET_PHYS_STR(len) which expects a size from the user.
+On 12/5/19 12:00 AM, Kamil Konieczny wrote:
+> Count time and transitions between devfreq frequencies in separate struct
+> for improved code readability and maintenance.
 > 
-> Also support setting the uniq attribute of the input device. The uniq
-> attribute is used as a unique identifier for the connected device.
-> 
-> For example, uinput devices created by BlueZ will store the address of
-> the connected device as the uniq property.
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
 > ---
-> Hi input maintainers,
-> 
-> Here is an updated patch that refactors the ioctl handlers (properly
-> allowing the size to be set from userspace). When calling the new
-> ioctls, the call signature will look like this:
-> 
-> ```
-> ioctl(fd, UI_SET_PHYS_STR(18), "00:11:22:33:44:55");
-> ```
-> 
-> I've tested this on a Chromebook running kernel v4.19 with a sample
-> program compiled for both 32-bit (i.e. gcc -m32 test.c) and 64-bit.
-> 
-> The final uinput device looks like this:
-> 
-> ```
-> udevadm info -a -p /devices/virtual/input/input18
-> 
-> Udevadm info starts with the device specified by the devpath and then
-> walks up the chain of parent devices. It prints for every device
-> found, all possible attributes in the udev rules key format.
-> A rule to match, can be composed by the attributes of the device
-> and the attributes from one single parent device.
-> 
->   looking at device '/devices/virtual/input/input18':
->     KERNEL=="input18"
->     SUBSYSTEM=="input"
->     DRIVER==""
->     ATTR{inhibited}=="0"
->     ATTR{name}=="Test"
->     ATTR{phys}=="00:00:00:33:44:55"
->     ATTR{properties}=="0"
->     ATTR{uniq}=="00:11:22:00:00:00"
-> 
-> ```
-> 
-> 
-> Changes in v3:
-> - Added UI_SET_PHYS_STR(len) and UI_SET_UNIQ_STR(len) and added
->   deprecation notice for UI_SET_PHYS
-> 
 > Changes in v2:
-> - Added compat handling for UI_SET_UNIQ
+>  squash three patches into one, do not modify devfreq_profile and separate stats
+>  into devfreq_stats
 > 
->  drivers/input/misc/uinput.c | 41 ++++++++++++++++++++++++++++++++++++-
->  include/uapi/linux/uinput.h |  5 +++++
->  2 files changed, 45 insertions(+), 1 deletion(-)
+>  drivers/devfreq/devfreq.c | 68 +++++++++++++++++++++++----------------
+>  include/linux/devfreq.h   | 31 ++++++++++++------
+>  2 files changed, 62 insertions(+), 37 deletions(-)
 > 
-> diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
-> index 84051f20b18a..27a750896c71 100644
-> --- a/drivers/input/misc/uinput.c
-> +++ b/drivers/input/misc/uinput.c
-> @@ -20,6 +20,7 @@
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index 901af3b66a76..4d50c8f10bd2 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -198,6 +198,7 @@ static int set_freq_table(struct devfreq *devfreq)
 >   */
->  #include <uapi/linux/uinput.h>
->  #include <linux/poll.h>
-> +#include <linux/printk.h>
->  #include <linux/sched.h>
->  #include <linux/slab.h>
->  #include <linux/module.h>
-> @@ -280,7 +281,7 @@ static int uinput_dev_flush(struct input_dev *dev, struct file *file)
->  
->  static void uinput_destroy_device(struct uinput_device *udev)
+>  int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
 >  {
-> -	const char *name, *phys;
-> +	const char *name, *phys, *uniq;
->  	struct input_dev *dev = udev->dev;
->  	enum uinput_state old_state = udev->state;
+> +	struct devfreq_stats *stats = devfreq->stats;
+>  	int lev, prev_lev, ret = 0;
+>  	unsigned long long cur_time;
 >  
-> @@ -289,6 +290,7 @@ static void uinput_destroy_device(struct uinput_device *udev)
->  	if (dev) {
->  		name = dev->name;
->  		phys = dev->phys;
-> +		uniq = dev->uniq;
->  		if (old_state == UIST_CREATED) {
->  			uinput_flush_requests(udev);
->  			input_unregister_device(dev);
-> @@ -297,6 +299,7 @@ static void uinput_destroy_device(struct uinput_device *udev)
->  		}
->  		kfree(name);
->  		kfree(phys);
-> +		kfree(uniq);
->  		udev->dev = NULL;
+> @@ -214,8 +215,8 @@ int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+>  		goto out;
 >  	}
+>  
+> -	devfreq->time_in_state[prev_lev] +=
+> -			 cur_time - devfreq->last_stat_updated;
+> +	stats->time_in_state[prev_lev] +=
+> +			 cur_time - stats->last_stat_updated;
+>  
+>  	lev = devfreq_get_freq_level(devfreq, freq);
+>  	if (lev < 0) {
+> @@ -224,13 +225,12 @@ int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+>  	}
+>  
+>  	if (lev != prev_lev) {
+> -		devfreq->trans_table[(prev_lev *
+> -				devfreq->profile->max_state) + lev]++;
+> -		devfreq->total_trans++;
+> +		stats->trans_table[(prev_lev * stats->max_state) + lev]++;
+> +		stats->total_trans++;
+>  	}
+>  
+>  out:
+> -	devfreq->last_stat_updated = cur_time;
+> +	stats->last_stat_updated = cur_time;
+>  	return ret;
 >  }
-> @@ -840,6 +843,7 @@ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
->  	struct uinput_ff_erase  ff_erase;
->  	struct uinput_request   *req;
->  	char			*phys;
-> +	char			*uniq;
->  	const char		*name;
->  	unsigned int		size;
+>  EXPORT_SYMBOL(devfreq_update_status);
+> @@ -525,7 +525,7 @@ void devfreq_monitor_resume(struct devfreq *devfreq)
+>  			msecs_to_jiffies(devfreq->profile->polling_ms));
 >  
-> @@ -916,6 +920,8 @@ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
->  		goto out;
+>  out_update:
+> -	devfreq->last_stat_updated = get_jiffies_64();
+> +	devfreq->stats->last_stat_updated = get_jiffies_64();
+>  	devfreq->stop_polling = false;
 >  
->  	case UI_SET_PHYS:
-> +		pr_warn_once("uinput: UI_SET_PHYS is deprecated. Use UI_SET_PHYS_STR");
-> +
->  		if (udev->state == UIST_CREATED) {
->  			retval = -EINVAL;
->  			goto out;
-> @@ -1023,6 +1029,39 @@ static long uinput_ioctl_handler(struct file *file, unsigned int cmd,
->  	case UI_ABS_SETUP & ~IOCSIZE_MASK:
->  		retval = uinput_abs_setup(udev, p, size);
->  		goto out;
-> +
-> +	case UI_SET_PHYS_STR(0):
-> +		if (udev->state == UIST_CREATED) {
-> +			retval = -EINVAL;
-> +			goto out;
-> +		}
-> +
-> +		phys = strndup_user(p, size);
-> +		if (IS_ERR(phys)) {
-> +			retval = PTR_ERR(phys);
-> +			goto out;
-> +		}
-> +
-> +		kfree(udev->dev->phys);
-> +		udev->dev->phys = phys;
-
-Could we maybe refactor this into uinput_get_user_str(udev,
-&udev->dev->phys, p, size) ?
-
-> +		goto out;
-> +
-> +	case UI_SET_UNIQ_STR(0):
-> +		if (udev->state == UIST_CREATED) {
-> +			retval = -EINVAL;
-> +			goto out;
-> +		}
-> +
-> +		uniq = strndup_user(p, size);
-> +		if (IS_ERR(uniq)) {
-> +			retval = PTR_ERR(uniq);
-> +			goto out;
-> +		}
-> +
-> +		kfree(udev->dev->uniq);
-> +		udev->dev->uniq = uniq;
-> +		goto out;
-> +
+>  	if (devfreq->profile->get_cur_freq &&
+> @@ -735,28 +735,38 @@ struct devfreq *devfreq_add_device(struct device *dev,
+>  		goto err_out;
 >  	}
 >  
->  	retval = -EINVAL;
-> diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux/uinput.h
-> index c9e677e3af1d..84d4fa142830 100644
-> --- a/include/uapi/linux/uinput.h
-> +++ b/include/uapi/linux/uinput.h
-> @@ -142,9 +142,14 @@ struct uinput_abs_setup {
->  #define UI_SET_LEDBIT		_IOW(UINPUT_IOCTL_BASE, 105, int)
->  #define UI_SET_SNDBIT		_IOW(UINPUT_IOCTL_BASE, 106, int)
->  #define UI_SET_FFBIT		_IOW(UINPUT_IOCTL_BASE, 107, int)
+> -	devfreq->trans_table = devm_kzalloc(&devfreq->dev,
+> +	devfreq->stats = devm_kzalloc(&devfreq->dev, sizeof(*devfreq->stats),
+> +				      GFP_KERNEL);
+
+Each devfreq has only one stats structure always. Don't need to define
+it with pointer type. It is enough to define as following without pointer type:
+
+	struct devfreq_stats stats;
+
+
+> +	if (!devfreq->stats) {
+> +		mutex_unlock(&devfreq->lock);
+> +		err = -ENOMEM;
+> +		goto err_devfreq;
+> +	}
 > +
-> +/* DEPRECATED: Data size is ambiguous. Use UI_SET_PHYS_STR instead. */
->  #define UI_SET_PHYS		_IOW(UINPUT_IOCTL_BASE, 108, char*)
-> +
->  #define UI_SET_SWBIT		_IOW(UINPUT_IOCTL_BASE, 109, int)
->  #define UI_SET_PROPBIT		_IOW(UINPUT_IOCTL_BASE, 110, int)
-> +#define UI_SET_PHYS_STR(len)	_IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, len)
-> +#define UI_SET_UNIQ_STR(len)	_IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 112, len)
+> +	devfreq->stats->freq_table = devfreq->profile->freq_table;
+> +	devfreq->stats->max_state = devfreq->profile->max_state;
+> +	devfreq->stats->trans_table = devm_kzalloc(&devfreq->dev,
+>  			array3_size(sizeof(unsigned int),
+> -				    devfreq->profile->max_state,
+> -				    devfreq->profile->max_state),
+> +				    devfreq->stats->max_state,
+> +				    devfreq->stats->max_state),
+>  			GFP_KERNEL);
+> -	if (!devfreq->trans_table) {
+> +	if (!devfreq->stats->trans_table) {
+>  		mutex_unlock(&devfreq->lock);
+>  		err = -ENOMEM;
+>  		goto err_devfreq;
+>  	}
 >  
->  #define UI_BEGIN_FF_UPLOAD	_IOWR(UINPUT_IOCTL_BASE, 200, struct uinput_ff_upload)
->  #define UI_END_FF_UPLOAD	_IOW(UINPUT_IOCTL_BASE, 201, struct uinput_ff_upload)
-> -- 
-> 2.24.0.393.g34dc348eaf-goog
+> -	devfreq->time_in_state = devm_kcalloc(&devfreq->dev,
+> -			devfreq->profile->max_state,
+> -			sizeof(*devfreq->time_in_state),
+> +	devfreq->stats->time_in_state = devm_kcalloc(&devfreq->dev,
+> +			devfreq->stats->max_state,
+> +			sizeof(*devfreq->stats->time_in_state),
+>  			GFP_KERNEL);
+
+Actually, this patch will be conflict with patch[1].
+[1] https://www.spinics.net/lists/arm-kernel/msg768822.html
+
+First of all, I have to merge patches[1][2] for the devfreq pm-qos
+during v5.5-rc period. It requires the linux-pm's maintainer.
+[2] https://www.spinics.net/lists/arm-kernel/msg769761.html
+
+After finishing the job[1][2], I'll merge this patch
+if finished the review of this patch. Just share the possible merge
+conflict to you.
+
+
+> -	if (!devfreq->time_in_state) {
+> +	if (!devfreq->stats->time_in_state) {
+>  		mutex_unlock(&devfreq->lock);
+>  		err = -ENOMEM;
+>  		goto err_devfreq;
+>  	}
+>  
+> -	devfreq->last_stat_updated = get_jiffies_64();
+> +	devfreq->stats->last_stat_updated = get_jiffies_64();
+>  
+>  	srcu_init_notifier_head(&devfreq->transition_notifier_list);
+>  
+> @@ -1435,9 +1445,10 @@ static ssize_t trans_stat_show(struct device *dev,
+>  			       struct device_attribute *attr, char *buf)
+>  {
+>  	struct devfreq *devfreq = to_devfreq(dev);
+> +	struct devfreq_stats *stats = devfreq->stats;
+> +	unsigned int max_state = stats->max_state;
+>  	ssize_t len;
+>  	int i, j;
+> -	unsigned int max_state = devfreq->profile->max_state;
+>  
+>  	if (max_state == 0)
+>  		return sprintf(buf, "Not Supported.\n");
+> @@ -1454,28 +1465,28 @@ static ssize_t trans_stat_show(struct device *dev,
+>  	len += sprintf(buf + len, "           :");
+>  	for (i = 0; i < max_state; i++)
+>  		len += sprintf(buf + len, "%10lu",
+> -				devfreq->profile->freq_table[i]);
+> +				stats->freq_table[i]);
+>  
+>  	len += sprintf(buf + len, "   time(ms)\n");
+>  
+>  	for (i = 0; i < max_state; i++) {
+> -		if (devfreq->profile->freq_table[i]
+> +		if (stats->freq_table[i]
+>  					== devfreq->previous_freq) {
+>  			len += sprintf(buf + len, "*");
+>  		} else {
+>  			len += sprintf(buf + len, " ");
+>  		}
+>  		len += sprintf(buf + len, "%10lu:",
+> -				devfreq->profile->freq_table[i]);
+> +				stats->freq_table[i]);
+>  		for (j = 0; j < max_state; j++)
+>  			len += sprintf(buf + len, "%10u",
+> -				devfreq->trans_table[(i * max_state) + j]);
+> +				stats->trans_table[(i * max_state) + j]);
+>  		len += sprintf(buf + len, "%10llu\n", (u64)
+> -			jiffies64_to_msecs(devfreq->time_in_state[i]));
+> +			jiffies64_to_msecs(stats->time_in_state[i]));
+>  	}
+>  
+>  	len += sprintf(buf + len, "Total transition : %u\n",
+> -					devfreq->total_trans);
+> +					stats->total_trans);
+>  	return len;
+>  }
+>  
+> @@ -1484,16 +1495,17 @@ static ssize_t trans_stat_store(struct device *dev,
+>  				const char *buf, size_t count)
+>  {
+>  	struct devfreq *df = to_devfreq(dev);
+> -	unsigned int cnt = df->profile->max_state;
+> +	struct devfreq_stats *stats = df->stats;
+> +	unsigned int cnt = stats->max_state;
+>  
+>  	if (cnt == 0)
+>  		return count;
+>  
+>  	mutex_lock(&df->lock);
+> -	memset(df->time_in_state, 0, cnt * sizeof(u64));
+> -	memset(df->trans_table, 0, cnt * cnt * sizeof(int));
+> -	df->last_stat_updated = get_jiffies_64();
+> -	df->total_trans = 0;
+> +	memset(stats->time_in_state, 0, cnt * sizeof(u64));
+> +	memset(stats->trans_table, 0, cnt * cnt * sizeof(int));
+> +	stats->last_stat_updated = get_jiffies_64();
+> +	stats->total_trans = 0;
+>  	mutex_unlock(&df->lock);
+>  
+>  	return count;
+> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+> index b81a86e47fb9..2715719924e7 100644
+> --- a/include/linux/devfreq.h
+> +++ b/include/linux/devfreq.h
+> @@ -106,6 +106,25 @@ struct devfreq_dev_profile {
+>  	unsigned int max_state;
+>  };
+>  
+> +/**
+> + * struct devfreq_stats - Devfreq's transitions stats counters
+
+Devfreq's transitions stats counters -> Statistics of devfreq device behavior
+
+> + * @freq_table:		List of frequencies in ascending order.
+> + * @max_state:		The size of freq_table.
+> + * @total_trans:	Number of devfreq transitions.
+> + * @trans_table:	Statistics of devfreq transitions.
+> + * @time_in_state:	Statistics of devfreq states.
+> + * @last_stat_updated:	The last time stats were updated.
+> + */
+> +struct devfreq_stats {
+> +	unsigned long *freq_table;
+> +	unsigned int max_state;
+
+Acutally, I'm sorry I has not yet completely agreed to move
+'freq_table and 'max_state' from struct devfreq to struct devfreq_stats.
+It has not any critical benefit and any problem.
+So, don't move 'freq_table' and 'max_state'. 
+
+> +
+> +	unsigned int total_trans;
+> +	unsigned int *trans_table;
+> +	u64 *time_in_state;
+> +	unsigned long long last_stat_updated;
+> +};
+> +
+>  /**
+>   * struct devfreq - Device devfreq structure
+>   * @node:	list node - contains the devices with devfreq that have been
+> @@ -131,10 +150,7 @@ struct devfreq_dev_profile {
+>   * @suspend_freq:	 frequency of a device set during suspend phase.
+>   * @resume_freq:	 frequency of a device set in resume phase.
+>   * @suspend_count:	 suspend requests counter for a device.
+> - * @total_trans:	Number of devfreq transitions
+> - * @trans_table:	Statistics of devfreq transitions
+> - * @time_in_state:	Statistics of devfreq states
+> - * @last_stat_updated:	The last time stat updated
+> + * @stats:	Statistics of devfreq transitions and states times
+
+Statistics of devfreq transitions and states times
+-> Statistics of devfreq device behavior
+
+>   * @transition_notifier_list: list head of DEVFREQ_TRANSITION_NOTIFIER notifier
+>   *
+>   * This structure stores the devfreq information for a give device.
+> @@ -171,11 +187,8 @@ struct devfreq {
+>  	unsigned long resume_freq;
+>  	atomic_t suspend_count;
+>  
+> -	/* information for device frequency transition */
+> -	unsigned int total_trans;
+> -	unsigned int *trans_table;
+> -	u64 *time_in_state;
+> -	unsigned long long last_stat_updated;
+> +	/* information for device frequency transitions */
+> +	struct devfreq_stats *stats;
+
+Each devfreq has only one stats structure always. Don't need to define
+it with pointer type. It is enough to define as following without pointer type:
+
+	struct devfreq_stats stats;
+
+>  
+>  	struct srcu_notifier_head transition_notifier_list;
+>  };
 > 
+
+
+
 
 -- 
-Dmitry
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
