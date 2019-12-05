@@ -2,236 +2,87 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F52DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C842C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D562464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:24:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YlwAMbZ9"
+	by mail.kernel.org (Postfix) with ESMTP id D5F7C24651
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbfLEJYe (ORCPT
+        id S1729088AbfLEJYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:24:34 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23152 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726096AbfLEJYd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:24:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575537871;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=J26eL/Qneqeb8lxIMubff3fK1SSsc72Uv7vw6agP32Y=;
-        b=YlwAMbZ9Ly518hAJ1ck/giCiUrzVQkp4BgGlX2y4Ii6/e0m+9mCPqbBYxllzda3Tf5hDLB
-        gfJVM36rBbZ+C8szMnP2Aov19uQAdKyqmCqso0uDwfqPY6sB4scJoZ2C5ysaYGduUjcDzO
-        7qcL4V2hWCkvggPZ+NZGYyfX3RJ//fA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-dn3o6PC8P9u6M3q0hpFDrQ-1; Thu, 05 Dec 2019 04:24:30 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC7D2800D5A;
-        Thu,  5 Dec 2019 09:24:28 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-117-254.ams2.redhat.com [10.36.117.254])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BA7F6EE39;
-        Thu,  5 Dec 2019 09:24:20 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Yumei Huang <yuhuang@redhat.com>, stable@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Jiang Liu <liuj97@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v2] virtio-balloon: fix managed page counts when migrating pages between zones
-Date:   Thu,  5 Dec 2019 10:24:20 +0100
-Message-Id: <20191205092420.6934-1-david@redhat.com>
+        Thu, 5 Dec 2019 04:24:47 -0500
+Received: from foss.arm.com ([217.140.110.172]:55140 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726239AbfLEJYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 04:24:46 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9D6A328;
+        Thu,  5 Dec 2019 01:24:45 -0800 (PST)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A00F3F68E;
+        Thu,  5 Dec 2019 01:24:43 -0800 (PST)
+Subject: Re: [RFC 0/3] Introduce per-task latency_tolerance for scheduler
+ hints
+To:     Parth Shah <parth@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        patrick.bellasi@matbug.net, valentin.schneider@arm.com,
+        qais.yousef@arm.com, pavel@ucw.cz, dhaval.giani@oracle.com,
+        qperret@qperret.net, David.Laight@ACULAB.COM,
+        morten.rasmussen@arm.com, pjt@google.com, tj@kernel.org,
+        viresh.kumar@linaro.org, rafael.j.wysocki@intel.com,
+        daniel.lezcano@linaro.org
+References: <20191125094618.30298-1-parth@linux.ibm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <450fc7e2-49d5-d809-281f-7d9a99d3e530@arm.com>
+Date:   Thu, 5 Dec 2019 10:24:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: dn3o6PC8P9u6M3q0hpFDrQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191125094618.30298-1-parth@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case we have to migrate a ballon page to a newpage of another zone, the
-managed page count of both zones is wrong. Paired with memory offlining
-(which will adjust the managed page count), we can trigger kernel crashes
-and all kinds of different symptoms.
+On 25/11/2019 10:46, Parth Shah wrote:
+> This patch series is based on the discussion started as the "Usecases for
+> the per-task latency-nice attribute"[1]
+> 
+> This patch series introduces a new per-task attribute latency_tolerance to
+> provide the scheduler hints about the latency requirements of the task.
 
-One way to reproduce:
-1. Start a QEMU guest with 4GB, no NUMA
-2. Hotplug a 1GB DIMM and only the memory to ZONE_NORMAL
-3. Inflate the balloon to 1GB
-4. Unplug the DIMM (be quick, otherwise unmovable data ends up on it)
-5. Observe /proc/zoneinfo
-  Node 0, zone   Normal
-    pages free     16810
-          min      24848885473806
-          low      18471592959183339
-          high     36918337032892872
-          spanned  262144
-          present  262144
-          managed  18446744073709533486
-6. Do anything that requires some memory (e.g., inflate the balloon some
-more). The OOM goes crazy and the system crashes
-  [  238.324946] Out of memory: Killed process 537 (login) total-vm:27584kB=
-, anon-rss:860kB, file-rss:0kB, shmem-rss:00
-  [  238.338585] systemd invoked oom-killer: gfp_mask=3D0x100cca(GFP_HIGHUS=
-ER_MOVABLE), order=3D0, oom_score_adj=3D0
-  [  238.339420] CPU: 0 PID: 1 Comm: systemd Tainted: G      D W         5.=
-4.0-next-20191204+ #75
-  [  238.340139] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIO=
-S rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu4
-  [  238.341121] Call Trace:
-  [  238.341337]  dump_stack+0x8f/0xd0
-  [  238.341630]  dump_header+0x61/0x5ea
-  [  238.341942]  oom_kill_process.cold+0xb/0x10
-  [  238.342299]  out_of_memory+0x24d/0x5a0
-  [  238.342625]  __alloc_pages_slowpath+0xd12/0x1020
-  [  238.343024]  __alloc_pages_nodemask+0x391/0x410
-  [  238.343407]  pagecache_get_page+0xc3/0x3a0
-  [  238.343757]  filemap_fault+0x804/0xc30
-  [  238.344083]  ? ext4_filemap_fault+0x28/0x42
-  [  238.344444]  ext4_filemap_fault+0x30/0x42
-  [  238.344789]  __do_fault+0x37/0x1a0
-  [  238.345087]  __handle_mm_fault+0x104d/0x1ab0
-  [  238.345450]  handle_mm_fault+0x169/0x360
-  [  238.345790]  do_user_addr_fault+0x20d/0x490
-  [  238.346154]  do_page_fault+0x31/0x210
-  [  238.346468]  async_page_fault+0x43/0x50
-  [  238.346797] RIP: 0033:0x7f47eba4197e
-  [  238.347110] Code: Bad RIP value.
-  [  238.347387] RSP: 002b:00007ffd7c0c1890 EFLAGS: 00010293
-  [  238.347834] RAX: 0000000000000002 RBX: 000055d196a20a20 RCX: 00007f47e=
-ba4197e
-  [  238.348437] RDX: 0000000000000033 RSI: 00007ffd7c0c18c0 RDI: 000000000=
-0000004
-  [  238.349047] RBP: 00007ffd7c0c1c20 R08: 0000000000000000 R09: 000000000=
-0000033
-  [  238.349660] R10: 00000000ffffffff R11: 0000000000000293 R12: 000000000=
-0000001
-  [  238.350261] R13: ffffffffffffffff R14: 0000000000000000 R15: 00007ffd7=
-c0c18c0
-  [  238.350878] Mem-Info:
-  [  238.351085] active_anon:3121 inactive_anon:51 isolated_anon:0
-  [  238.351085]  active_file:12 inactive_file:7 isolated_file:0
-  [  238.351085]  unevictable:0 dirty:0 writeback:0 unstable:0
-  [  238.351085]  slab_reclaimable:5565 slab_unreclaimable:10170
-  [  238.351085]  mapped:3 shmem:111 pagetables:155 bounce:0
-  [  238.351085]  free:720717 free_pcp:2 free_cma:0
-  [  238.353757] Node 0 active_anon:12484kB inactive_anon:204kB active_file=
-:48kB inactive_file:28kB unevictable:0kB iss
-  [  238.355979] Node 0 DMA free:11556kB min:36kB low:48kB high:60kB reserv=
-ed_highatomic:0KB active_anon:152kB inactivB
-  [  238.358345] lowmem_reserve[]: 0 2955 2884 2884 2884
-  [  238.358761] Node 0 DMA32 free:2677864kB min:7004kB low:10028kB high:13=
-052kB reserved_highatomic:0KB active_anon:0B
-  [  238.361202] lowmem_reserve[]: 0 0 72057594037927865 72057594037927865 =
-72057594037927865
-  [  238.361888] Node 0 Normal free:193448kB min:99395541895224kB low:73886=
-371836733356kB high:147673348131571488kB reB
-  [  238.364765] lowmem_reserve[]: 0 0 0 0 0
-  [  238.365101] Node 0 DMA: 7*4kB (U) 5*8kB (UE) 6*16kB (UME) 2*32kB (UM) =
-1*64kB (U) 2*128kB (UE) 3*256kB (UME) 2*512B
-  [  238.366379] Node 0 DMA32: 0*4kB 1*8kB (U) 2*16kB (UM) 2*32kB (UM) 2*64=
-kB (UM) 1*128kB (U) 1*256kB (U) 1*512kB (U)B
-  [  238.367654] Node 0 Normal: 1985*4kB (UME) 1321*8kB (UME) 844*16kB (UME=
-) 524*32kB (UME) 300*64kB (UME) 138*128kB (B
-  [  238.369184] Node 0 hugepages_total=3D0 hugepages_free=3D0 hugepages_su=
-rp=3D0 hugepages_size=3D2048kB
-  [  238.369915] 130 total pagecache pages
-  [  238.370241] 0 pages in swap cache
-  [  238.370533] Swap cache stats: add 0, delete 0, find 0/0
-  [  238.370981] Free swap  =3D 0kB
-  [  238.371239] Total swap =3D 0kB
-  [  238.371488] 1048445 pages RAM
-  [  238.371756] 0 pages HighMem/MovableOnly
-  [  238.372090] 306992 pages reserved
-  [  238.372376] 0 pages cma reserved
-  [  238.372661] 0 pages hwpoisoned
+I forgot but is there a chance to have this as a per-taskgroup attribute
+as well?
 
-In another instance (older kernel), I was able to observe this
-(negative page count :/):
-  [  180.896971] Offlined Pages 32768
-  [  182.667462] Offlined Pages 32768
-  [  184.408117] Offlined Pages 32768
-  [  186.026321] Offlined Pages 32768
-  [  187.684861] Offlined Pages 32768
-  [  189.227013] Offlined Pages 32768
-  [  190.830303] Offlined Pages 32768
-  [  190.833071] Built 1 zonelists, mobility grouping on.  Total pages: -36=
-920272750453009
+> Latency_tolerance is a ranged attribute of a task with the value ranging
+> from [-20, 19] both inclusive which makes it align with the task nice
+> value.
+> 
+> The value should provide scheduler hints about the relative latency
+> requirements of tasks, meaning the task with "latency_tolerance = -20"
+> should have lower latency than compared to those tasks with higher values.
+> Similarly a task with "latency_tolerance = 19" can have higher latency and
+> hence such tasks may bot care much about the latency numbers.
+> 
+> The default value is set to 0. The usecases defined in [1] can use this
+> range of [-20, 19] for latency_tolerance for the specific purpose. This
+> patch does not define any use cases for such attribute so that any change
+> in naming or range does not affect much to the other (future) patches using
+> this. The actual use of latency_tolerance during task wakeup and
+> load-balancing is yet to be coded for each of those usecases.
 
-In another instance (older kernel), I was no longer able to start any
-process:
-  [root@vm ~]# [  214.348068] Offlined Pages 32768
-  [  215.973009] Offlined Pages 32768
-  cat /proc/meminfo
-  -bash: fork: Cannot allocate memory
-  [root@vm ~]# cat /proc/meminfo
-  -bash: fork: Cannot allocate memory
+This can definitely be useful for Android/EAS by replacing the current
+proprietary solution in android-google-common android-5.4:
 
-Fix it by properly adjusting the managed page count when migrating if
-the zone changed. The managed page count of the zones now looks after
-unplug of the DIMM (and after deflating the balloon) just like before
-inflating the balloon (and plugging+onlining the DIMM).
+commit 760b82c9b88d ("ANDROID: sched/fair: Bias EAS placement for latency")
+commit c28f9d3945f1 ("ANDROID: sched/core: Add a latency-sensitive flag
+to uclamp")
 
-We'll temporarily modify the totalram page count. If this ever becomes a
-problem, we can fine tune by providing helpers that don't touch
-the totalram pages (e.g., adjust_zone_managed_page_count()).
-
-Reported-by: Yumei Huang <yuhuang@redhat.com>
-Fixes: 3dcc0571cd64 ("mm: correctly update zone->managed_pages")
-Cc: <stable@vger.kernel.org> # v3.11+
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Jiang Liu <liuj97@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: virtualization@lists.linux-foundation.org
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
-
-v1 -> v2:
-- Adjust count before enquing newpage (and it possibly gets free form the
-  balloon)
-- Check if the zone changed
-
----
- drivers/virtio/virtio_balloon.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloo=
-n.c
-index 15b7f1d8c334..3078e1ac2a8f 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -722,6 +722,13 @@ static int virtballoon_migratepage(struct balloon_dev_=
-info *vb_dev_info,
-=20
- =09get_page(newpage); /* balloon reference */
-=20
-+=09/* fixup the managed page count (esp. of the zone) */
-+=09if (!virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM) &&
-+=09    page_zone(page) !=3D page_zone(newpage)) {
-+=09=09adjust_managed_page_count(page, 1);
-+=09=09adjust_managed_page_count(newpage, -1);
-+=09}
-+
- =09/* balloon's page migration 1st step  -- inflate "newpage" */
- =09spin_lock_irqsave(&vb_dev_info->pages_lock, flags);
- =09balloon_page_insert(vb_dev_info, newpage);
---=20
-2.21.0
-
+which links to usercase 6 (EAS) in [1].
