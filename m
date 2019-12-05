@@ -2,108 +2,124 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2C5C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 391AFC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 900AA2464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039742464F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GuUc0Wc5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Aepzbqy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbfLEK1T (ORCPT
+        id S1729142AbfLEK3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:27:19 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36423 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfLEK1T (ORCPT
+        Thu, 5 Dec 2019 05:29:35 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:41206 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfLEK3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:27:19 -0500
-Received: by mail-pf1-f193.google.com with SMTP id b19so1417579pfd.3;
-        Thu, 05 Dec 2019 02:27:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9Ef/ULU1Kge+LKFh8Fh5zno0Gs8s7Fac2gwZZitwvws=;
-        b=GuUc0Wc5oPylsUhp/ivxIYWhGZFVRu3CxWq0tIaLEh3KLexjIu0YF3inaKgRxemq/o
-         smcUmURO+bnsWrG37RAr2SMr34mupk/9PlGAex674fldyEUUirLHIco1DfPPIyvB8IS7
-         Lgaq2w4woRVywywkz43F0vt9jCVNtoYs6Jx/Uxp4ksGW5qYtpFGlSa1fq6lL0OiM9VMR
-         ZBYkACskHxGYQlqRwDTBjqTKwXuWMNttuIXCVCpV42BVsC/0q+mo5y6DSvz1ybhWQBku
-         C2zQRCx5AFpWBjbMHX+yode12nEUapPRrCTAsM0PNaGWFPXTSmvvJQDGVzS5tIq4EBnd
-         dZjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9Ef/ULU1Kge+LKFh8Fh5zno0Gs8s7Fac2gwZZitwvws=;
-        b=lCp4jGbHVYu6XSx3WJZfVcJA/TvKDFmTW9GDWTNZ6PLgZNaGg4Eth9FPYxUxxemUpi
-         Lqsl1woQlQ0n4+ezW3a8RTkRghvonPQAwKxS9c3dtTaj/sSLB0GhPEgd74ytVcsF5Bd4
-         IR7SyzVz/NQreVzI5WHGadPf2QzI/NHYYYMTQjn7Bc/D59YzgfT/LQkW7JT6GXl26XFt
-         A6QMTM+ypvv2PW0raziL0y0Y840mxtZcouEN69jSFuetTxy9/Q4g6jQDRaODYyBhyeUN
-         2k+s4EV1qu2xFMXXqzxBhvImICNGuNcs9oES09vLiZFGz4lyMKYM2fHjP9gvb6i4+9WW
-         aDpQ==
-X-Gm-Message-State: APjAAAWdhdxQdKGQBoVoGlZ4J/4RjbzbcuBg7qHMyxQtmipe2rQEG9sv
-        vAMRi2GqKOBUWJethJPlOHJjEpuyRsznGdIB3RHeyNh6
-X-Google-Smtp-Source: APXvYqxvHJo0ElWDiYwwFrbf1lm4Gp70OeitmtEpDaFZAsEn8ACG2g/DsguKfDXwFnPH/5HOLgQXM+FyqErLXso4fZc=
-X-Received: by 2002:a63:e14a:: with SMTP id h10mr8394575pgk.74.1575541638530;
- Thu, 05 Dec 2019 02:27:18 -0800 (PST)
+        Thu, 5 Dec 2019 05:29:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pf3VRmP8HmHiyiOcV+xYnOtrZTggWIGVma7A8JY6Tbc=; b=Aepzbqy6h4NAA4gWqcMM8WUWT
+        dbAK+bwyiwqtDY4+58NteAYnzBPqUPn3Dmtjk4bffOt+0/mQI1/9EFSIZDaoT1Zhy1IjCBEOalDoE
+        ui+oEGIjYETpUbbB/qVU4WpkbCEWys9PoT2WAes9SqLybHOMGNXLWXzk16Z3wwD0P+G0002bHVNb0
+        dLhvbk6JgmZ3XS4G0G44jBNTBn9O5PUyrUnpGciaCwARlxi0YOk2w4SxVUMJFmf2ATJFm9dwloR1y
+        wSnVsKBO2WLOrYx2Y3JedCNjIxFGc5j3tcwS9NQU9bGApBlm7PGlyn8es6BWEXRGaU5XxYMuWK9Jj
+        qK/9PvU6g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1icoO3-0003DQ-EV; Thu, 05 Dec 2019 10:29:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EAFC33011E0;
+        Thu,  5 Dec 2019 11:28:10 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1F0752B26E208; Thu,  5 Dec 2019 11:29:28 +0100 (CET)
+Date:   Thu, 5 Dec 2019 11:29:28 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Tejun Heo <tj@kernel.org>, jiangshanlai@gmail.com,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: Workqueues splat due to ending up on wrong CPU
+Message-ID: <20191205102928.GG2810@hirez.programming.kicks-ass.net>
+References: <20191125230312.GP2889@paulmck-ThinkPad-P72>
+ <20191126183334.GE2867037@devbig004.ftw2.facebook.com>
+ <20191126220533.GU2889@paulmck-ThinkPad-P72>
+ <20191127155027.GA15170@paulmck-ThinkPad-P72>
+ <20191128161823.GA24667@paulmck-ThinkPad-P72>
+ <20191129155850.GA17002@paulmck-ThinkPad-P72>
+ <20191202015548.GA13391@paulmck-ThinkPad-P72>
+ <20191202201338.GH16681@devbig004.ftw2.facebook.com>
+ <20191203095521.GH2827@hirez.programming.kicks-ass.net>
+ <20191204201150.GA14040@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-References: <20191204155941.17814-1-brgl@bgdev.pl> <CAHp75VdiAtHtdrUP2EmLULh86oO37ha8si10gFKYRavXCEwRRQ@mail.gmail.com>
- <CAMpxmJVXVVVMPA_hRbs3mUsFs=s_VtQK9SvvYK3Xc5X27NPTKw@mail.gmail.com>
-In-Reply-To: <CAMpxmJVXVVVMPA_hRbs3mUsFs=s_VtQK9SvvYK3Xc5X27NPTKw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Dec 2019 12:27:08 +0200
-Message-ID: <CAHp75VfXc88Fa6=zs=9iToz27QdXHqRCDPQwBPs2P-rsBF8nHw@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes
- in line info
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204201150.GA14040@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 11:42 AM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> =C5=9Br., 4 gru 2019 o 23:34 Andy Shevchenko <andy.shevchenko@gmail.com> =
-napisa=C5=82(a):
-> > On Wed, Dec 4, 2019 at 6:03 PM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
-e:
+On Wed, Dec 04, 2019 at 12:11:50PM -0800, Paul E. McKenney wrote:
 
-> > > +struct gpioline_info_changed {
-> > > +       __u64 timestamp;
-> > > +       __u32 event_type;
-> > > +       struct gpioline_info info;
-> > > +       __u32 padding[4]; /* for future use */
-> > > +};
-> >
-> > Has this been tested against 64-bit kernel / 32-bit userspace case?
-> >
->
-> No. Since this is a new thing - do you think it's possible to simply
-> arrange the fields or add padding such that the problem doesn't even
-> appear in the first place?
+> And the good news is that I didn't see the workqueue splat, though my
+> best guess is that I had about a 13% chance of not seeing it due to
+> random chance (and I am currently trying an idea that I hope will make
+> it more probable).  But I did get a couple of new complaints about RCU
+> being used illegally from an offline CPU.  Splats below.
 
-Yes. this can be done, though be careful about potential endianess
-issues (the ABI must be tested on BE as well).
+Shiny!
 
-So, the test cases, I can imagine of, should include (k - kernel, u - user)=
-:
-- 64k-64u: LE and BE
-- 64k-32u: LE and BE
-- 32k-32u: LE and BE
+> Your patch did rearrange the CPU-online sequence, so let's see if I
+> can piece things together...
+> 
+> RCU considers a CPU to be online at rcu_cpu_starting() time.  This is
+> called from notify_cpu_starting(), which is called from the arch-specific
+> CPU-bringup code.  Any RCU readers before rcu_cpu_starting() will trigger
+> the warning I am seeing.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Right.
+
+> The original location of the stop_machine_unpark() was in
+> bringup_wait_for_ap(), which is called from bringup_cpu(), which is in
+> the CPUHP_BRINGUP_CPU entry of cpuhp_hp_states[].  Which, if I am not
+> too confused, is invoked by some CPU other than the to-be-incoming CPU.
+
+Correct.
+
+> The new location of the stop_machine_unpark() is in cpuhp_online_idle(),
+> which is called from cpu_startup_entry(), which is invoked from
+> the arch-specific bringup code that runs on the incoming CPU.
+
+The new place is the final piece of bringup, it is right before where
+the freshly woken CPU will drop into the idle loop and start scheduling
+(for the first time).
+
+> Which
+> is the same code that invokes notify_cpu_starting(), so we need
+> notify_cpu_starting() to be invoked before cpu_startup_entry().
+
+Right, that is right before we run what used to be the CPU_STARTING
+notifiers. This is in fact (on x86) before the CPU is marked
+cpu_online(). It has to be before cpu_startup_entry(), before this is
+ran with IRQs disabled, while cpu_startup_entry() demands IRQs are
+enabled.
+
+> The order is not immediately obvious on IA64.  But it looks like
+> everything else does it in the required order, so I am a bit confused
+> about this.
+
+That makes two of us, afaict we have RCU up and running when we get to
+the idle loop.
