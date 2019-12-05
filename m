@@ -6,69 +6,68 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A043C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D47BC47409
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E148524249
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 221A924651
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:17:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbfLESMA (ORCPT
+        id S1729690AbfLESRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 13:12:00 -0500
-Received: from mga05.intel.com ([192.55.52.43]:14660 "EHLO mga05.intel.com"
+        Thu, 5 Dec 2019 13:17:30 -0500
+Received: from gentwo.org ([3.19.106.255]:47082 "EHLO gentwo.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfLESL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 13:11:57 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 10:11:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,282,1571727600"; 
-   d="scan'208";a="294611441"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga001.jf.intel.com with ESMTP; 05 Dec 2019 10:11:55 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 2CF0D300B57; Thu,  5 Dec 2019 10:11:55 -0800 (PST)
-Date:   Thu, 5 Dec 2019 10:11:55 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        elena.reshetova@intel.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stephane Eranian <eranian@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 0/3] Introduce CAP_SYS_PERFMON capability for secure
- Perf users groups
-Message-ID: <20191205181155.GB723068@tassilo.jf.intel.com>
-References: <283f09a5-33bd-eac3-bdfd-83d775045bf9@linux.intel.com>
- <1e836f34-eda3-542d-f7ce-9a3e87ac5e2e@schaufler-ca.com>
- <d0c6f000-4757-02d8-b114-a35cbb9566ed@linux.intel.com>
- <a81248c5-971a-9d3f-6df4-e6335384fe7f@schaufler-ca.com>
+        id S1726028AbfLESR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 13:17:29 -0500
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 013E93EA37; Thu,  5 Dec 2019 18:17:28 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id F0A2E3E951;
+        Thu,  5 Dec 2019 18:17:28 +0000 (UTC)
+Date:   Thu, 5 Dec 2019 18:17:28 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Qian Cai <cai@lca.pw>
+cc:     Yang Shi <yang.shi@linux.alibaba.com>, fabecassis@nvidia.com,
+        jhubbard@nvidia.com, mhocko@suse.com, vbabka@suse.cz,
+        mgorman@techsingularity.net, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [v2 PATCH] mm: move_pages: return valid node id in status if
+ the page is already on the target node
+In-Reply-To: <1707CDD0-E05E-411A-A093-35E8E50ACA4B@lca.pw>
+Message-ID: <alpine.DEB.2.21.1912051815100.9722@www.lameter.com>
+References: <a16b53f9-92c9-ff01-06c1-530647ecaff1@linux.alibaba.com> <1707CDD0-E05E-411A-A093-35E8E50ACA4B@lca.pw>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a81248c5-971a-9d3f-6df4-e6335384fe7f@schaufler-ca.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/mixed; boundary="531401748-729306102-1575569848=:9722"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The question isn't whether the tool could use the capability, it's whether
-> the tool would also need CAP_SYS_ADMIN to be useful. Are there existing
-> tools that could stop using CAP_SYS_ADMIN in favor of CAP_SYS_PERFMON?
-> My bet is that any tool that does performance monitoring is going to need
-> CAP_SYS_ADMIN for other reasons.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-At least perf stat won't.
+--531401748-729306102-1575569848=:9722
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
--Andi
+On Thu, 5 Dec 2019, Qian Cai wrote:
+
+> > On Dec 5, 2019, at 12:39 PM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
+> >
+> > There are definitely a few inconsistencies, but I think the manpage is quite clear for this specific case, which says "status is an array of integers that return the status of each page. The array contains valid values only if move_pages() did not return an error." And, it looks kernel just misbehaved since 4.17 due to the fixes commit, so it sounds like a regression too.
+>
+> “Only if”  in strictly logical term does not necessarily mean it must contain valid values if move_pages() succeed.
+
+The intended meaning is that valid values in the status array are provided
+when the syscall succeeds and not otherwise. In the error case there may
+be some valid values but since the operation may have aborted not all
+values may have a value.
+
+
+
+
+
+--531401748-729306102-1575569848=:9722--
