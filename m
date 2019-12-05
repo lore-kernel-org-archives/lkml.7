@@ -2,79 +2,97 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13807C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EFCC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42C621835
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F58724648
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:44:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Q3JXPcJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbfLERoX (ORCPT
+        id S1730224AbfLERo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 12:44:23 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:56561 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729396AbfLERoW (ORCPT
+        Thu, 5 Dec 2019 12:44:27 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46460 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730195AbfLERo0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 12:44:22 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tk3FZYF_1575567848;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk3FZYF_1575567848)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 06 Dec 2019 01:44:16 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     ktkhai@virtuozzo.com, hannes@cmpxchg.org, mhocko@suse.com,
-        shakeelb@google.com, guro@fb.com, akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [v2 PATCH] mm: vmscan: protect shrinker idr replace with CONFIG_MEMCG
-Date:   Fri,  6 Dec 2019 01:44:08 +0800
-Message-Id: <1575567848-54425-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 5 Dec 2019 12:44:26 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5Hi8aW031074;
+        Thu, 5 Dec 2019 11:44:08 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575567848;
+        bh=B2u+1EXUJef+VRu1rBJvXbM0zJ7qX1rNIdIdh6bNero=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Q3JXPcJbFBQEDUSNRLbb6GuGRHBlATmYP9m+KM8YCnDxfRk89cDyTwH0kUsm/oaMM
+         3cyZmE3+XPzybQPniK+QbyGbh0TIzxDjHVemRgYrkA4SMp0BZ2L4jK9IVNkFlJcdMt
+         uIMLjick/RUJkiewxarhUa6zK/uy2so4h3Rs+E6o=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB5Hi870019722
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 5 Dec 2019 11:44:08 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
+ 2019 11:44:08 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 5 Dec 2019 11:44:08 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5Hi74E048911;
+        Thu, 5 Dec 2019 11:44:08 -0600
+Subject: Re: [PATCH] MAINTAINERS: add myself as maintainer of MCAN MMIO device
+ driver
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Sriram Dash <sriram.dash@samsung.com>,
+        <linux-kernel@vger.kernel.org>, <linux-can@vger.kernel.org>,
+        <wg@grandegger.com>
+CC:     <mchehab+samsung@kernel.org>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <robh@kernel.org>,
+        <rcsekar@samsung.com>, <pankaj.dubey@samsung.com>,
+        <pankj.sharma@samsung.com>
+References: <CGME20191203043533epcas5p19bfc21e2b03db7f27c6d84cda6824d27@epcas5p1.samsung.com>
+ <1575347349-32689-1-git-send-email-sriram.dash@samsung.com>
+ <9c9b1f4d-e092-957a-150c-41f2348810e5@pengutronix.de>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <946fbd81-a024-04e4-74d8-90e9f5e9979a@ti.com>
+Date:   Thu, 5 Dec 2019 11:42:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <9c9b1f4d-e092-957a-150c-41f2348810e5@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 0a432dcbeb32edcd211a5d8f7847d0da7642a8b4 ("mm: shrinker:
-make shrinker not depend on memcg kmem"), shrinkers' idr is protected by
-CONFIG_MEMCG instead of CONFIG_MEMCG_KMEM, so it makes no sense to
-protect shrinker idr replace with CONFIG_MEMCG_KMEM.
+Marc
 
-And, in CONFIG_MEMCG && CONFIG_SLOB case, shrinker_idr contains only
-shrinker, and it is deferred_split_shrinker.  But it is never actually
-called, since idr_replace() is never compiled due to the wrong #ifdef.
-The deferred_split_shrinker all the time is staying in half-registered
-state, and it's never called for subordinate mem cgroups.
+On 12/3/19 3:55 AM, Marc Kleine-Budde wrote:
+> On 12/3/19 5:29 AM, Sriram Dash wrote:
+>> Since we are actively working on MMIO MCAN device driver,
+>> as discussed with Marc, I am adding myself as a maintainer.
+>>
+>> Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
+>> ---
+> Added to linux-can.
 
-Fixes: 0a432dcbeb32 ("mm: shrinker: make shrinker not depend on memcg kmem")
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: <stable@vger.kernel.org> 5.4+
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- mm/vmscan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+When I add my maintainership for TCAN I am also going to add the 
+m_can.c, m_can.h as well as the dt doc.
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index ee4eecc..e7f10c4 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -422,7 +422,7 @@ void register_shrinker_prepared(struct shrinker *shrinker)
- {
- 	down_write(&shrinker_rwsem);
- 	list_add_tail(&shrinker->list, &shrinker_list);
--#ifdef CONFIG_MEMCG_KMEM
-+#ifdef CONFIG_MEMCG
- 	if (shrinker->flags & SHRINKER_MEMCG_AWARE)
- 		idr_replace(&shrinker_idr, shrinker, shrinker->id);
- #endif
--- 
-1.8.3.1
+Or if you want me to add my email to the MMIO as well that is fine as we 
+have devices that have the embedded Bosch IP as well
+
+Dan
 
