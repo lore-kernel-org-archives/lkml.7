@@ -2,243 +2,189 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7EDC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78999C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8776124652
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:04:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PAZrJdzh"
+	by mail.kernel.org (Postfix) with ESMTP id 5086E24652
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbfLEKEJ (ORCPT
+        id S1729140AbfLEKFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:04:09 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54290 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfLEKEJ (ORCPT
+        Thu, 5 Dec 2019 05:05:39 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56247 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728735AbfLEKFj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:04:09 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5A3skv115735;
-        Thu, 5 Dec 2019 04:03:54 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575540234;
-        bh=KVdOg686NGTO/lSscHFY4DTCJ8U0Ya2tIRngEQ14Ijs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=PAZrJdzhxj8TcFMU2LbHzqPQTAquU25WJVwbJvjcrp6rS5q5D/6lmMRqEBxNPw57T
-         UxmxubBtKczv0+AQm6pY4B/+5ha9Iv9OeYoalQ5xkmp+2mCt0Ty1Pnjd2oaMXRAJvP
-         KW2CUwf3L8wshbdRIPai6L6w3KYI85I7RdxlrIdk=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB5A3rtd019638
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 5 Dec 2019 04:03:54 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
- 2019 04:03:53 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 5 Dec 2019 04:03:53 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5A3noL030226;
-        Thu, 5 Dec 2019 04:03:49 -0600
-Subject: Re: [PATCH 1/4] PCI: dwc: Add new feature to skip core initialization
-To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>
-CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <20191113090851.26345-2-vidyas@nvidia.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <47c801ab-ddec-d436-1f0d-1dd0c4980869@ti.com>
-Date:   Thu, 5 Dec 2019 15:34:59 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 5 Dec 2019 05:05:39 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ico0u-0006QD-Gj; Thu, 05 Dec 2019 11:05:36 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ico0t-00062i-RE; Thu, 05 Dec 2019 11:05:35 +0100
+Date:   Thu, 5 Dec 2019 11:05:35 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] pwm: Changes for v5.5-rc1
+Message-ID: <20191205100535.y7avzoswkxe43py7@pengutronix.de>
+References: <20191205061044.1006766-1-thierry.reding@gmail.com>
+ <20191205075958.jrz3xuthyh7wv6uu@pengutronix.de>
+ <20191205084102.GA1401169@ulmo>
 MIME-Version: 1.0
-In-Reply-To: <20191113090851.26345-2-vidyas@nvidia.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191205084102.GA1401169@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Thierry,
 
-
-On 13/11/19 2:38 pm, Vidya Sagar wrote:
-> Add a new feature 'skip_core_init' that can be set by platform drivers
-> of devices that do not have their core registers available until reference
-> clock from host is available (Ex:- Tegra194) to indicate DesignWare
-> endpoint mode sub-system to not perform core registers initialization.
-> Existing dw_pcie_ep_init() is refactored and all the code that touches
-> registers is extracted to form a new API dw_pcie_ep_init_complete() that
-> can be called later by platform drivers setting 'skip_core_init' to '1'.
-
-No. pci_epc_features should only use constant values. This is used by 
-function drivers to know the controller capabilities.
-
-Thanks
-Kishon
-
+On Thu, Dec 05, 2019 at 09:41:02AM +0100, Thierry Reding wrote:
+> On Thu, Dec 05, 2019 at 08:59:58AM +0100, Uwe Kleine-König wrote:
+> > On Thu, Dec 05, 2019 at 07:10:44AM +0100, Thierry Reding wrote:
+> > > The following changes since commit 40a6b9a00930fd6b59aa2eb6135abc2efe5440c3:
+> > > 
+> > >   Revert "pwm: Let pwm_get_state() return the last implemented state" (2019-10-21 16:48:52 +0200)
+> > > 
+> > > are available in the Git repository at:
+> > > 
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.5-rc1
+> > > 
+> > > for you to fetch changes up to f5ff2628867b9c7cb4abb6c6a5a7eea079dad4b6:
+> > > 
+> > >   pwm: imx27: Unconditionally write state to hardware (2019-10-21 16:58:09 +0200)
+> > > 
+> > > Thanks,
+> > > Thierry
+> > > 
+> > > ----------------------------------------------------------------
+> > > pwm: Changes for v5.5-rc1
+> > > 
+> > > Various changes and minor fixes across a couple of drivers.
+> > > 
+> > > ----------------------------------------------------------------
+> > > Colin Ian King (1):
+> > >       pwm: sun4i: Drop redundant assignment to variable pval
+> > > 
+> > > Fabrice Gasnier (3):
+> > >       dt-bindings: pwm-stm32: Document pinctrl sleep state
+> > >       pwm: stm32: Split breakinput apply routine to ease PM support
+> > >       pwm: stm32: Add power management support
+> > > 
+> > > Ondrej Jirman (1):
+> > >       pwm: sun4i: Fix incorrect calculation of duty_cycle/period
+> > > 
+> > > Rasmus Villemoes (1):
+> > >       pwm: Update comment on struct pwm_ops::apply
+> > > 
+> > > Thierry Reding (8):
+> > >       dt-bindings: pwm: mediatek: Remove gratuitous compatible string for MT7629
+> > >       pwm: stm32: Validate breakinput data from DT
+> > >       pwm: stm32: Remove clutter from ternary operator
+> > >       pwm: stm32: Pass breakinput instead of its values
+> > >       pwm: Read initial hardware state at request time
+> > >       pwm: cros-ec: Cache duty cycle value
+> > >       pwm: imx27: Cache duty cycle register value
+> > >       pwm: imx27: Unconditionally write state to hardware
+> > 
+> > It's a bit of a surprise for me that you included the three last patches
+> > as last minute changes. I'm not sure if I oppose them, but they were not
+> > in next (as of next-20191205) and I would really like to have some time
+> > for patches (that are not obvious fixes of course) there before they go
+> > into a pull request. And if it's only to get some transparency.
+> > (But in this case I had the impression that the discussion isn't over
+> > yet, your last mail in the thread said: "I'm not sure yet about the
+> > remainder of the series. Depending on what we decide to do about drivers
+> > that can't (or don't want to) write all state through to the hardware,
+> > patches 2-4 may become moot." in October which made me expect there is
+> > still something to come, at least a statement before the fact. Still
+> > more as also several further drivers are affected (according to my
+> > research described in
+> > https://patchwork.ozlabs.org/patch/1178351/#2282269).)
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->   .../pci/controller/dwc/pcie-designware-ep.c   | 72 +++++++++++--------
->   drivers/pci/controller/dwc/pcie-designware.h  |  6 ++
->   include/linux/pci-epc.h                       |  1 +
->   3 files changed, 51 insertions(+), 28 deletions(-)
+> Yes, the last four patches weren't meant to be in this pull request.
+> That's what I get for trying to squeeze this in before coffee.
+
+Ah right, it's four patches, not three. (I thought I saw "pwm: Read
+initial hardware state at request time" in next.)
+
+> Please do ping me if I haven't reviewed or applied patches after a
+> week or so to remind me. Sometimes my inbox fills up so quickly that
+> some patches get lost.
+
+ok.
+
+> >  - The patch "pwm: implement tracing for .get_state() and
+> >    .apply_state()" that got an review by Steven Rostedt.
+> >    (https://patchwork.ozlabs.org/patch/1182679/)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 3dd2e2697294..06f4379be8a3 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -492,19 +492,53 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
->   	return 0;
->   }
->   
-> -int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->   {
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	unsigned int offset;
-> +	unsigned int nbars;
-> +	u8 hdr_type;
-> +	u32 reg;
->   	int i;
-> +
-> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-> +	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
-> +		dev_err(pci->dev,
-> +			"PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
-> +			hdr_type);
-> +		return -EIO;
-> +	}
-> +
-> +	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
-> +
-> +	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
-> +
-> +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
-> +	if (offset) {
-> +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
-> +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
-> +			PCI_REBAR_CTRL_NBAR_SHIFT;
-> +
-> +		dw_pcie_dbi_ro_wr_en(pci);
-> +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
-> +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
-> +		dw_pcie_dbi_ro_wr_dis(pci);
-> +	}
-> +
-> +	dw_pcie_setup(pci);
-> +
-> +	return 0;
-> +}
-> +
-> +int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> +{
->   	int ret;
-> -	u32 reg;
->   	void *addr;
-> -	u8 hdr_type;
-> -	unsigned int nbars;
-> -	unsigned int offset;
->   	struct pci_epc *epc;
->   	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->   	struct device *dev = pci->dev;
->   	struct device_node *np = dev->of_node;
-> +	const struct pci_epc_features *epc_features;
->   
->   	if (!pci->dbi_base || !pci->dbi_base2) {
->   		dev_err(dev, "dbi_base/dbi_base2 is not populated\n");
-> @@ -563,13 +597,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->   	if (ep->ops->ep_init)
->   		ep->ops->ep_init(ep);
->   
-> -	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-> -	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
-> -		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
-> -			hdr_type);
-> -		return -EIO;
-> -	}
-> -
->   	ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
->   	if (ret < 0)
->   		epc->max_functions = 1;
-> @@ -587,23 +614,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->   		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
->   		return -ENOMEM;
->   	}
-> -	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
->   
-> -	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
-> -
-> -	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
-> -	if (offset) {
-> -		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
-> -		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
-> -			PCI_REBAR_CTRL_NBAR_SHIFT;
-> -
-> -		dw_pcie_dbi_ro_wr_en(pci);
-> -		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
-> -			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
-> -		dw_pcie_dbi_ro_wr_dis(pci);
-> +	if (ep->ops->get_features) {
-> +		epc_features = ep->ops->get_features(ep);
-> +		if (epc_features->skip_core_init)
-> +			return 0;
->   	}
->   
-> -	dw_pcie_setup(pci);
-> -
-> -	return 0;
-> +	return dw_pcie_ep_init_complete(ep);
->   }
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 5accdd6bc388..340783e9032e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -399,6 +399,7 @@ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
->   #ifdef CONFIG_PCIE_DW_EP
->   void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
->   int dw_pcie_ep_init(struct dw_pcie_ep *ep);
-> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
->   void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
->   int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
->   int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
-> @@ -416,6 +417,11 @@ static inline int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->   	return 0;
->   }
->   
-> +static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
-> +{
-> +	return 0;
-> +}
-> +
->   static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
->   {
->   }
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 36644ccd32ac..241e6a6f39fb 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -121,6 +121,7 @@ struct pci_epc_features {
->   	u8	bar_fixed_64bit;
->   	u64	bar_fixed_size[PCI_STD_NUM_BARS];
->   	size_t	align;
-> +	bool	skip_core_init;
->   };
->   
->   #define to_pci_epc(device) container_of((device), struct pci_epc, dev)
+> Review for this came in after v5.4-rc7, so I didn't consider it for
+> v5.5. I'll pick it up after v5.5-rc1.
+
+I got Steven's mail on Oct 24 which is the week between -rc4 and -rc5,
+but ok, I won't argue.
 > 
+> >  - The series starting with "pwm: omap-dmtimer: remove pwmchip in
+> >    .remove before making it unfunctional" from November which IMHO is
+> >    simple and contains two fixes
+> >    (https://patchwork.ozlabs.org/project/linux-pwm/list/?series=142030)
+> 
+> Same here.
+
+Does "after v5.5-rc1" mean "for v5.5" or "for v5.6-rc1". I agree that
+the tracing stuff is merge window material (very useful though in my
+eyes) while the omap-dmtimer series (at least the first 3 of 4 patches)
+is about fixes.
+
+> > And I'm still waiting for feedback on
+> > 
+> >  - "Documentation: pwm: rework documentation for the framework" (since
+> >    January)
+> 
+> Please resend this, I can't find it in my inbox.
+
+:-|, given that I sent this already twice, pinged several times
+(https://patchwork.ozlabs.org/patch/1021566/,
+https://patchwork.ozlabs.org/patch/1000709/) and also asked at least
+once before in a mail where I pinged several patches using a list.
+
+> >  - "pwm: add debug knob to help driver authors" (since August)
+> 
+> My recollection is that this flagged a bunch of issues right out of the
+> box, so I'm hesitant to apply it without wider concensus that we want
+> this, or some effort to address the issues that this flags.
+
+I didn't want you to apply it. That it is not ready for that is out of
+the question. I assume the patch doesn't apply anymore and needs work
+for sure. The last mail in the respective thread had a single paragraph:
+
+	do you consider the idea here worthwile? If so I'd update the
+	patch to current mainline and address the feedback I got so far.
+
+This is still interesting, as I don't want to spend my time working on
+an idea that is then turned down in the end for conceptual reasons.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
