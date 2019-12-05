@@ -2,139 +2,288 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FE5C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC5AC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF5742464E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85F42464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:48:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Lt3QshLy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbfLEJqa (ORCPT
+        id S1729054AbfLEJsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:46:30 -0500
-Received: from mail.phunq.net ([66.183.183.73]:48442 "EHLO phunq.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728604AbfLEJqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:46:30 -0500
-Received: from [172.16.1.14]
-        by phunq.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-        (Exim 4.92.3)
-        (envelope-from <daniel@phunq.net>)
-        id 1icniN-0002Yo-Lt; Thu, 05 Dec 2019 01:46:27 -0800
-Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
-To:     Vyacheslav Dubeyko <slava@dubeyko.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
- <20191127142508.GB5143@mit.edu>
- <6b6242d9-f88b-824d-afe9-d42382a93b34@phunq.net>
- <9ed62cfea37bfebfb76e378d482bd521c7403c1f.camel@dubeyko.com>
-From:   Daniel Phillips <daniel@phunq.net>
-Message-ID: <c61706fb-3534-72b9-c4ae-0f0972bc566b@phunq.net>
-Date:   Thu, 5 Dec 2019 01:46:27 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 5 Dec 2019 04:48:53 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37033 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfLEJsw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 04:48:52 -0500
+Received: by mail-io1-f67.google.com with SMTP id k24so2949506ioc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 01:48:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uETehSid0KbgkrMqALuI9xpJZ+8tQuqfj+BUwHEHAkU=;
+        b=Lt3QshLyBDNGtHfxD8XyRrfuTO5PvedlequdU0OKg3+cNK1MbXUhvdxLtH1BWOymU/
+         8p09ygPx3hl6x39mAaM2p2zTkHERx7E+gBOU8q8FkO9aZ9TGhGENt9UvziTKPNvt7hDe
+         x1wh/WquvPJvYiSrgqO11EN5flIVkCyyHmLY6HEsA7Cs/4uiWz39vf21T9nSXedbOjIj
+         oKEK8mqPKPR53mi7dXBocsDm0L6/XCy17RFxZD3HmQ+URVPZis8M7dfBVWb9q6Gh4L2d
+         t1QHBp5OxFWvE+u7qoVTMCTl9v2ZWwJQlr1nmFxzLrspoHm9Nq+LocYo+u2LDRlfHnUT
+         XPCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uETehSid0KbgkrMqALuI9xpJZ+8tQuqfj+BUwHEHAkU=;
+        b=KLmeNOrPcJNQlR/onHt8680IpMt2fLMQ+Z8YhoX6lnUBKfcjfj2+2/bpy6oFnhhFIe
+         JsWJkiFJfHi05ub8cfFy6Mxa+5bj/lKLrcbb266BODic5/W1jddaAEq2/Oi1Kes7hojb
+         e4TRd37b+YJY1/U9/XuKR9Ie7XoTUcimJ/8OcdRIhnU2jaKy5phRl/+v0srm6Ntx4YcT
+         /+nxZRKUl9pE18WQZl3YaJVA5V3DvxoVCoMwmwLoQmueiwlnOt+dbQCTSeFiQxafZihP
+         oyDjsuxGvLPSzLQrc/0bKpceceg64j/PuhzcT0CAnpqDwsJKUgYSD3JzZ6Yo4jL2Jg/2
+         8LSA==
+X-Gm-Message-State: APjAAAXHrL8pzUhTls9faAqCDpoBBF52ndxOj4YVrw9qcNmmYOOaEiHp
+        R4yMZO1umvWnUSQGxdhrD6yhqqhh6q6Hdot0XsyXjA==
+X-Google-Smtp-Source: APXvYqwuSdBxkw7QMwW/k06DWq9pdxGmWL6HmYR6bBcgQjcroGUDE5/pbI9BZQpy7u1azgf7Ugyv1UX3dUn08qxbl5w=
+X-Received: by 2002:a5d:9dd9:: with SMTP id 25mr5741439ioo.287.1575539331814;
+ Thu, 05 Dec 2019 01:48:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <9ed62cfea37bfebfb76e378d482bd521c7403c1f.camel@dubeyko.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191204155941.17814-1-brgl@bgdev.pl> <20191204155941.17814-2-brgl@bgdev.pl>
+ <20191205094408.GA9303@sol>
+In-Reply-To: <20191205094408.GA9303@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 5 Dec 2019 10:48:40 +0100
+Message-ID: <CAMRc=Md8sm0WqN+PjR1yjh+MHPn0YM-3KbDfkOj3VE7qQa42QA@mail.gmail.com>
+Subject: Re: [PATCH v2 11/11] tools: gpio: implement gpio-watch
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-04 7:55 a.m., Vyacheslav Dubeyko wrote:
->> That is it for media format. Very simple, is it not? My next post
->> will explain the Shardmap directory block format, with a focus on
->> deficiencies of the traditional Ext2 format that were addressed.
-> 
-> I've tried to take a look into the source code. And it was not easy
-> try. :)
+czw., 5 gru 2019 o 10:44 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
+:
+>
+> On Wed, Dec 04, 2019 at 04:59:41PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Add a simple program that allows to test the new LINECHANGED_FD ioctl()=
+.
+> >
+>
+> A minor nit - the ioctl has since been changed to LINEINFO_WATCH.
 
-Let's see what we can do about that, starting with removing the duopack
-(media index entry) and tripack (cache index entry) templates. Now that
-the design has settled down we don't need that level of generality so
-much any more. The replacements are mostly C-style now and by the time
-the Tux3 kernel port is done, will be officially C.
+Will fix, thanks.
 
-So far I only described the media format, implemented in define_layout(),
-which I hope is self explanatory. You should be able to tie it back to
-this diagram pretty easily.
+>
+> Do you have anything else to test the ioctls?
+> Either way, I'll try to find some time to add some to my gpiod library.
+>
 
-   https://github.com/danielbot/Shardmap/wiki/Shardmap-media-format
+The time I can spend on this is limited, so I decided to go with the
+kernel API first with a simple user-space test in the kernel source.
+Once we agree upon it, I'll add support for this to libgpiod. The
+user-space part would then probably be merged after v5.6-rc1 is tagged
+and it leaves us 7 weeks to fix any bugs.
 
-> I expected to have the bird-fly understanding from shardmap.h
-> file. My expectation was to find the initial set of structure
-> declarations with the good comments.
+This is what I plan on doing with your series too. I hope to merge it
+next week and then we can fix any potential bugs and do a libgpiod
+release simultaneous with linux v5.5.
 
-Our wiki is slowly getting populated with design documentation. Most of
-what you see in shardmap.h is concerned with the Shardmap cache form,
-where all the action happens. I have not said much about that yet, but
-there is a post on the way. The main structures are struct shard (a
-self contained hash table) and struct keymap (a key value store
-populated with shards). Those are obvious I think, please correct me
-if I am wrong. A more tricky one is struct tier, which implements our
-incremental hash table expansion. You might expect that to be a bit
-subtle, and it is.
+Bart
 
-Before getting into those details, there is an upcoming post about
-the record block format, which is pretty non-abstract and, I think,
-easy enough to understand from the API declaration in shardmap.h and
-the code in recops.c.
-
-There is a diagram here:
-
-   https://github.com/danielbot/Shardmap/wiki/Shardmap-record-block-format
-
-but the post this belongs to is not quite ready to go out yet. That one
-will be an interlude before for the cache form discussion, which is
-where the magic happens, things like rehash and reshard and add_tier,
-and the way the hash code gets chopped up as it runs through the access
-stack.
-
-Here is a diagram of the cache structures, very simple:
-
-   https://github.com/danielbot/Shardmap/wiki/Shardmap-cache-format
-
-And here is a diagram of the Shardmap three level hashing scheme,
-which ties everything together:
-
-   https://github.com/danielbot/Shardmap/wiki/Shardmap-hashing-scheme
-
-This needs explanation. It is something new that you won't find in any
-textbook, this is the big reveal right here.
-
-> But, frankly speaking, it's very
-> complicated path for the concept understanding. Even from C++ point of
-> view, the class declarations look very complicated if there are mixing
-> of fields with methods declarations.
-
-In each class, fields are declared first, then methods. In the kernel
-port of course we will not have classes, and the function names will be
-longer as usual.
-
-> So, I believe it makes sense to declare the necessary set of structures
-> in the file's beginning with the good comments. Even it will be good to
-> split the structure declarations and methods in different files. I
-> believe it will ease the way to understand the concept. Otherwise, it
-> will be tough to review such code.
-
-Declaring structures and functions in the same file is totally normal
-for kernel code, you don't really want these in separate files unless
-they break out naturally that way.
-
-This code is dense, there is a lot going on in not very many lines. So
-we need lots of lines of documentation to make up for that, which has
-not been a priority until now, so please bear with me. And please do
-not hesitate to ask specific questions - the answers may well end up in
-the wiki.
-
-Regards,
-
-Daniel
+> Kent.
+>
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  tools/gpio/.gitignore   |   1 +
+> >  tools/gpio/Build        |   1 +
+> >  tools/gpio/Makefile     |  11 +++-
+> >  tools/gpio/gpio-watch.c | 112 ++++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 124 insertions(+), 1 deletion(-)
+> >  create mode 100644 tools/gpio/gpio-watch.c
+> >
+> > diff --git a/tools/gpio/.gitignore b/tools/gpio/.gitignore
+> > index a94c0e83b209..fffd32969d62 100644
+> > --- a/tools/gpio/.gitignore
+> > +++ b/tools/gpio/.gitignore
+> > @@ -1,4 +1,5 @@
+> >  gpio-event-mon
+> >  gpio-hammer
+> >  lsgpio
+> > +gpio-watch
+> >  include/linux/gpio.h
+> > diff --git a/tools/gpio/Build b/tools/gpio/Build
+> > index 4141f35837db..67c7b7f6a717 100644
+> > --- a/tools/gpio/Build
+> > +++ b/tools/gpio/Build
+> > @@ -2,3 +2,4 @@ gpio-utils-y +=3D gpio-utils.o
+> >  lsgpio-y +=3D lsgpio.o gpio-utils.o
+> >  gpio-hammer-y +=3D gpio-hammer.o gpio-utils.o
+> >  gpio-event-mon-y +=3D gpio-event-mon.o gpio-utils.o
+> > +gpio-watch-y +=3D gpio-watch.o
+> > diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
+> > index 6080de58861f..842287e42c83 100644
+> > --- a/tools/gpio/Makefile
+> > +++ b/tools/gpio/Makefile
+> > @@ -18,7 +18,7 @@ MAKEFLAGS +=3D -r
+> >
+> >  override CFLAGS +=3D -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+> >
+> > -ALL_TARGETS :=3D lsgpio gpio-hammer gpio-event-mon
+> > +ALL_TARGETS :=3D lsgpio gpio-hammer gpio-event-mon gpio-watch
+> >  ALL_PROGRAMS :=3D $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+> >
+> >  all: $(ALL_PROGRAMS)
+> > @@ -66,6 +66,15 @@ $(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-ut=
+ils-in.o
+> >  $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
+> >       $(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+> >
+> > +#
+> > +# gpio-watch
+> > +#
+> > +GPIO_WATCH_IN :=3D $(OUTPUT)gpio-watch-in.o
+> > +$(GPIO_WATCH_IN): prepare FORCE
+> > +     $(Q)$(MAKE) $(build)=3Dgpio-watch
+> > +$(OUTPUT)gpio-watch: $(GPIO_WATCH_IN)
+> > +     $(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+> > +
+> >  clean:
+> >       rm -f $(ALL_PROGRAMS)
+> >       rm -f $(OUTPUT)include/linux/gpio.h
+> > diff --git a/tools/gpio/gpio-watch.c b/tools/gpio/gpio-watch.c
+> > new file mode 100644
+> > index 000000000000..69aee43655ae
+> > --- /dev/null
+> > +++ b/tools/gpio/gpio-watch.c
+> > @@ -0,0 +1,112 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * gpio-watch - monitor unrequested lines for property changes using t=
+he
+> > + *              character device
+> > + *
+> > + * Copyright (C) 2019 BayLibre SAS
+> > + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > + */
+> > +
+> > +#include <ctype.h>
+> > +#include <errno.h>
+> > +#include <fcntl.h>
+> > +#include <linux/gpio.h>
+> > +#include <poll.h>
+> > +#include <stdbool.h>
+> > +#include <stdio.h>
+> > +#include <stdlib.h>
+> > +#include <string.h>
+> > +#include <sys/ioctl.h>
+> > +#include <unistd.h>
+> > +
+> > +static bool isnumber(const char *str)
+> > +{
+> > +     size_t sz =3D strlen(str);
+> > +     int i;
+> > +
+> > +     for (i =3D 0; i < sz; i++) {
+> > +             if (!isdigit(str[i]))
+> > +                     return false;
+> > +     }
+> > +
+> > +     return true;
+> > +}
+> > +
+> > +int main(int argc, char **argv)
+> > +{
+> > +     struct gpioline_info_changed chg;
+> > +     struct gpioline_info req;
+> > +     struct pollfd pfd;
+> > +     int fd, i, j, ret;
+> > +     char *event;
+> > +     ssize_t rd;
+> > +
+> > +     if (argc < 3)
+> > +             goto err_usage;
+> > +
+> > +     fd =3D open(argv[1], O_RDWR | O_CLOEXEC);
+> > +     if (fd < 0) {
+> > +             perror("unable to open gpiochip");
+> > +             return EXIT_FAILURE;
+> > +     }
+> > +
+> > +     for (i =3D 0, j =3D 2; i < argc - 2; i++, j++) {
+> > +             if (!isnumber(argv[j]))
+> > +                     goto err_usage;
+> > +
+> > +             memset(&req, 0, sizeof(req));
+> > +             req.line_offset =3D atoi(argv[j]);
+> > +
+> > +             ret =3D ioctl(fd, GPIO_GET_LINEINFO_WATCH_IOCTL, &req);
+> > +             if (ret) {
+> > +                     perror("unable to set up line watch");
+> > +                     return EXIT_FAILURE;
+> > +             }
+> > +     }
+> > +
+> > +     pfd.fd =3D fd;
+> > +     pfd.events =3D POLLIN | POLLPRI;
+> > +
+> > +     for (;;) {
+> > +             ret =3D poll(&pfd, 1, 5000);
+> > +             if (ret < 0) {
+> > +                     perror("error polling the linechanged fd");
+> > +                     return EXIT_FAILURE;
+> > +             } else if (ret > 0) {
+> > +                     memset(&chg, 0, sizeof(chg));
+> > +                     rd =3D read(pfd.fd, &chg, sizeof(chg));
+> > +                     if (rd < 0 || rd !=3D sizeof(chg)) {
+> > +                             if (rd !=3D sizeof(chg))
+> > +                                     errno =3D EIO;
+> > +
+> > +                             perror("error reading line change event")=
+;
+> > +                             return EXIT_FAILURE;
+> > +                     }
+> > +
+> > +                     switch (chg.event_type) {
+> > +                     case GPIOLINE_CHANGED_REQUESTED:
+> > +                             event =3D "requested";
+> > +                             break;
+> > +                     case GPIOLINE_CHANGED_RELEASED:
+> > +                             event =3D "released";
+> > +                             break;
+> > +                     case GPIOLINE_CHANGED_CONFIG:
+> > +                             event =3D "config changed";
+> > +                             break;
+> > +                     default:
+> > +                             fprintf(stderr,
+> > +                                     "invalid event type received from=
+ the kernel\n");
+> > +                             return EXIT_FAILURE;
+> > +                     }
+> > +
+> > +                     printf("line %u: %s at %llu\n",
+> > +                            chg.info.line_offset, event, chg.timestamp=
+);
+> > +             }
+> > +     }
+> > +
+> > +     return 0;
+> > +
+> > +err_usage:
+> > +     printf("%s: <gpiochip> <line0> <line1> ...\n", argv[0]);
+> > +     return EXIT_FAILURE;
+> > +}
+> > --
+> > 2.23.0
+> >
