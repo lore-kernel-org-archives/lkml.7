@@ -2,106 +2,127 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC84C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928AEC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310F62464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:02:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5+Uiq2f"
+	by mail.kernel.org (Postfix) with ESMTP id 723DE24653
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730052AbfLERCc (ORCPT
+        id S1730039AbfLERFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 12:02:32 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:45980 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLERCc (ORCPT
+        Thu, 5 Dec 2019 12:05:22 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:56397 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729793AbfLERFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 12:02:32 -0500
-Received: by mail-pj1-f66.google.com with SMTP id r11so1519857pjp.12;
-        Thu, 05 Dec 2019 09:02:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RHJUr25kmF0qaYU7XKGZXFCAi/6myqgpNnO6bM9rpxM=;
-        b=L5+Uiq2fJf9wLrh4uFUX4gkocBD981uCeSyNPfIDjEGLN/kecQt+wcVhm2ep+Rko/K
-         tmUMtdeYAnBC0evxnBY1PPe+z0wLKQ1Us9HByNAh+Meoq50XRy60rf2ttT4ETiRGwZa3
-         fjD0KGxjsQe1qWyY7Mo8MJ3IWxhoB4A5gn4Yfa6iAjatYg/r9oAjFHzVIDcGmp4TAFaa
-         e9fxgGokX3nAchueZh0aU/EktPP8ItgZFUKKKbhCr46eI0h5ICQ6a/A/RSqSa2Hoh6BM
-         XLqH2QnwE9XlVM1NADp+zGA7ukChsm6gL3P6l4vZeD9b6zXQ+pQDWd+0nlNnGyQp81Ki
-         +pLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RHJUr25kmF0qaYU7XKGZXFCAi/6myqgpNnO6bM9rpxM=;
-        b=azG+XOWzYEtxEPcYjc/CqaJ31HVQlL3Nlddjx1HGfASlYTWdLtPAYaF+cqhGcrslnM
-         oVB5S1ymZldH1LvVUm0vYBH6yL//qgSTHcNLVhE+a27j46crePRQZDHYEyI+KOhh2uOz
-         /ntX2v6yA9T8OakkT5B8ZvVz7gtRklvq8TNZ88jV2zIdxfSXO450D1EnXbAdLr90/zuj
-         9hEO0IM/+NMooQjjP7z8o9kZx3tWkL2YNwVPcMcAD56iadyKOs+Xfa7OJGgmAZiZ426I
-         Zrm6LpNvE6+99NWddfGwdeFQKH4Cx+S7GAW00zDTY1GRuh+JG2t/Y3NUyXCPxsiqdt0w
-         CAIQ==
-X-Gm-Message-State: APjAAAUpUORyZhK/XEKZ/Jg+2DqmfrTTp0Yj9yibMyAxu9SNJhdDcxcV
-        6wxS81tULfBD9HtcqnslEcVywYw4UAsYO1tp2P4=
-X-Google-Smtp-Source: APXvYqyqsP8cdWdeG0WdYWRvw2EMbPgQ0l70RUvop0SBX/Tfn6fSQWhKNdYN4BdFG5NCz7YeW1Qe256CHYvKJFjqM1g=
-X-Received: by 2002:a17:90a:c68f:: with SMTP id n15mr10539320pjt.20.1575565351311;
- Thu, 05 Dec 2019 09:02:31 -0800 (PST)
+        Thu, 5 Dec 2019 12:05:22 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tk3Ek6d_1575565511;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk3Ek6d_1575565511)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 06 Dec 2019 01:05:15 +0800
+Subject: Re: [PATCH] mm: vmscan: protect shrinker idr replace with
+ CONFIG_MEMCG
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     hannes@cmpxchg.org, shakeelb@google.com, guro@fb.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1575486978-45249-1-git-send-email-yang.shi@linux.alibaba.com>
+ <e320f8af-c164-ce5e-8964-8785b0bf5f2e@virtuozzo.com>
+ <20191205094341.GC28317@dhcp22.suse.cz>
+ <894b9951-449d-6d7e-84aa-a1c510417710@virtuozzo.com>
+ <80918583-da44-71f0-8c94-224a3268577c@virtuozzo.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <fd5f02e0-5d81-7d14-b821-aa39ea05d385@linux.alibaba.com>
+Date:   Thu, 5 Dec 2019 09:05:09 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <20191204155941.17814-1-brgl@bgdev.pl> <CAHp75VdiAtHtdrUP2EmLULh86oO37ha8si10gFKYRavXCEwRRQ@mail.gmail.com>
- <CAMpxmJVXVVVMPA_hRbs3mUsFs=s_VtQK9SvvYK3Xc5X27NPTKw@mail.gmail.com>
- <CAHp75VfXc88Fa6=zs=9iToz27QdXHqRCDPQwBPs2P-rsBF8nHw@mail.gmail.com> <CAMRc=Me4xWsQggmr=BvJrA9-FnPkxFkOYsRTsSXCtyNwFnsHNw@mail.gmail.com>
-In-Reply-To: <CAMRc=Me4xWsQggmr=BvJrA9-FnPkxFkOYsRTsSXCtyNwFnsHNw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Dec 2019 19:02:21 +0200
-Message-ID: <CAHp75VfzP8-0wKmPTTKYe+fc6=r_4sVcJPyOsM8YTuH=i4rxmA@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes
- in line info
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <80918583-da44-71f0-8c94-224a3268577c@virtuozzo.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 3:47 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> czw., 5 gru 2019 o 11:27 Andy Shevchenko <andy.shevchenko@gmail.com> napi=
-sa=C5=82(a):
-> > On Thu, Dec 5, 2019 at 11:42 AM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
-> > > =C5=9Br., 4 gru 2019 o 23:34 Andy Shevchenko <andy.shevchenko@gmail.c=
-om> napisa=C5=82(a):
-> > > > On Wed, Dec 4, 2019 at 6:03 PM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
 
-> > So, the test cases, I can imagine of, should include (k - kernel, u - u=
-ser):
-> > - 64k-64u: LE and BE
-> > - 64k-32u: LE and BE
-> > - 32k-32u: LE and BE
+
+On 12/5/19 2:11 AM, Kirill Tkhai wrote:
+> On 05.12.2019 13:00, Kirill Tkhai wrote:
+>> On 05.12.2019 12:43, Michal Hocko wrote:
+>>> On Thu 05-12-19 11:23:28, Kirill Tkhai wrote:
+>>>> On 04.12.2019 22:16, Yang Shi wrote:
+>>>>> Since commit 0a432dcbeb32edcd211a5d8f7847d0da7642a8b4 ("mm: shrinker:
+>>>>> make shrinker not depend on memcg kmem"), shrinkers' idr is protected by
+>>>>> CONFIG_MEMCG instead of CONFIG_MEMCG_KMEM, so it makes no sense to
+>>>>> protect shrinker idr replace with CONFIG_MEMCG_KMEM.
+>>>>>
+>>>>> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+>>>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>>>>> Cc: Michal Hocko <mhocko@suse.com>
+>>>>> Cc: Shakeel Butt <shakeelb@google.com>
+>>>>> Cc: Roman Gushchin <guro@fb.com>
+>>>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>>>> It looks like that in CONFIG_SLOB case we do not even call some shrinkers
+>>>> for subordinate mem cgroups (i.e., we don't call deferred_split_shrinker),
+>>>> since they never become completely registered.
+>>>>
+>>>> Fixes: 0a432dcbeb32edcd211a5d8f7847d0da7642a8b4 ("mm: shrinker: make shrinker not depend on memcg kmem")
+>>> I am confused. Why the Fixes tag? Nothing should be really broken with
+>>> KMEM config guard right?
+>> idr_replace() is disabled in CONFIG_MEMCG && CONFIG_SLOB case, and this is
+>> wrong.
+>>
+>> 0a432dcbeb32edcd211a5d8f7847d0da7642a8b4 goes in the series, which enables
+>> shrinker_idr infrastructure for huge_memory.c's deferred_split_shrinker
+>> in CONFIG_MEMCG case. Previously, all SHRINKER_MEMCG_AWARE shrinkers were
+>> based on LRUs, and they remain to base of CONFIG_MEMCG_KMEM.
+>> But deferred_split_shrinker is an exception.
+>>
+>> In CONFIG_MEMCG && CONFIG_SLOB case, shrinker_idr contains only shrinker,
+>> and it is deferred_split_shrinker. But it is never actually called, since
+>> idr_replace() is never compiled. deferred_split_shrinker all the time is
+>> staying in half-registered state, and it's never called for subordinate
+>> mem cgroups.
+>>
+>> So, this is a BUG, and this should go to stable.
+> The visible effect is that deferred_split_shrinker is never called
+> from shrink_slab() for subordinate mem cgroups. It's called only
+> for root_mem_cgroup.
+
+Thanks for noticing the SLOB case, I didn't realize it and thought it 
+was just a cleanup too.
+
+Will update the information and cc to stable list for v2.
+
 >
-> I usually use qemu VMs built with yocto for testing but I don't see
-> any way of creating a 32-bit user-space with 64-bit kernel. Any ideas
-> on how to prepare a testing environment?
+>>> This is a mere clean up AFAICS.
+>>>
+>>>> Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+>>>>
+>>>>> ---
+>>>>>   mm/vmscan.c | 2 +-
+>>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>>>>> index ee4eecc..e7f10c4 100644
+>>>>> --- a/mm/vmscan.c
+>>>>> +++ b/mm/vmscan.c
+>>>>> @@ -422,7 +422,7 @@ void register_shrinker_prepared(struct shrinker *shrinker)
+>>>>>   {
+>>>>>   	down_write(&shrinker_rwsem);
+>>>>>   	list_add_tail(&shrinker->list, &shrinker_list);
+>>>>> -#ifdef CONFIG_MEMCG_KMEM
+>>>>> +#ifdef CONFIG_MEMCG
+>>>>>   	if (shrinker->flags & SHRINKER_MEMCG_AWARE)
+>>>>>   		idr_replace(&shrinker_idr, shrinker, shrinker->id);
+>>>>>   #endif
+>>>>>
 
-In my case it's very easy. I do
-- compile kernel as 64-bit separately;
-- compile initramfs of Buildroot distro with external kernel build provided=
-.
-
-That's setup in which I observed the issue.
-
---=20
-With Best Regards,
-Andy Shevchenko
