@@ -2,84 +2,139 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15389C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1CDC2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB7024648
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575547993;
-	bh=Vzy8R53ZVKTDj13WA/tyhafFPACRJeIQkz7cNZmXZWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AY3OGVJl0WgQS7fAxwacGB+AQrnuDgll20boetlIt1i7hCFgPpkkscY7BfSdS9edQ
-	 Kla9tZ9lgf1/xuU9n/Lz6R0vKWRyh28SgRyOVmH3n7xBd0+qVqKd/9Bp5LfAeUusxj
-	 iK2SQOEOfyNPfc9xxGtrfXoog2BvI29NtwiOX4Zo=
+	by mail.kernel.org (Postfix) with ESMTP id 4FC0424249
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbfLEMNN (ORCPT
+        id S1729359AbfLEMPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 07:13:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55992 "EHLO mail.kernel.org"
+        Thu, 5 Dec 2019 07:15:32 -0500
+Received: from foss.arm.com ([217.140.110.172]:60562 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729048AbfLEMNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 07:13:12 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4EF424249;
-        Thu,  5 Dec 2019 12:13:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575547992;
-        bh=Vzy8R53ZVKTDj13WA/tyhafFPACRJeIQkz7cNZmXZWM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GWi89UGTyrmN3gyhSG7SUelx22s3kK+wT3tuZOiN4jfAJ2ZMWA99eqWzKHEyDwuIc
-         rZpe/47XRDO4yRLWnzZEObL9ere1VR566vrbW/9LRASpN49DRMtE3uCCJE2ZSKdcvS
-         jzzubV2C24ZRGOfbBC49/NFbHpX1+2SCycRZvzpc=
-Date:   Thu, 5 Dec 2019 13:13:10 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
+        id S1729048AbfLEMPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 07:15:32 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C64031B;
+        Thu,  5 Dec 2019 04:15:31 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B9E563F68E;
+        Thu,  5 Dec 2019 04:15:30 -0800 (PST)
+Date:   Thu, 5 Dec 2019 12:15:29 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
 To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, huawei.libin@huawei.com
-Subject: Re: [PATCH] tty: omap-serial: remove set but unused variable
-Message-ID: <20191205121310.GA389695@kroah.com>
-References: <1575547476-51996-1-git-send-email-wangxiongfeng2@huawei.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
+        huawei.libin@huawei.com, guohanjun@huawei.com
+Subject: Re: [PATCH] PCI: Add quirk to disable unused BAR for hisilicon NP
+ devices 5896
+Message-ID: <20191205121527.GL18399@e119886-lin.cambridge.arm.com>
+References: <1575546041-50907-1-git-send-email-wangxiongfeng2@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575547476-51996-1-git-send-email-wangxiongfeng2@huawei.com>
+In-Reply-To: <1575546041-50907-1-git-send-email-wangxiongfeng2@huawei.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 08:04:36PM +0800, Xiongfeng Wang wrote:
-> Fix the following warning:
-> drivers/tty/serial/omap-serial.c: In function serial_omap_rlsi:
-> drivers/tty/serial/omap-serial.c:496:16: warning: variable ch set but not used [-Wunused-but-set-variable]
+On Thu, Dec 05, 2019 at 07:40:41PM +0800, Xiongfeng Wang wrote:
+> Add pci quirk for hisilicon PCI Network Processor devices 5896.
+
+Can you capatalise HiSilicon correctly (capital H and S), both here and
+in the subject line?
+
+s/devices 5896/5896 devices/ ?
+
+> The size of the unused BAR3 is set as 265T wrongly. This patch disalbes
+
+s/disalbes/disables/
+
+> this bar.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
 > Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 > ---
->  drivers/tty/serial/omap-serial.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/pci/quirks.c    | 29 +++++++++++++++++++++++++++++
+>  include/linux/pci_ids.h |  1 +
+>  2 files changed, 30 insertions(+)
 > 
-> diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
-> index 6420ae5..54ee3ae 100644
-> --- a/drivers/tty/serial/omap-serial.c
-> +++ b/drivers/tty/serial/omap-serial.c
-> @@ -493,10 +493,9 @@ static unsigned int check_modem_status(struct uart_omap_port *up)
->  static void serial_omap_rlsi(struct uart_omap_port *up, unsigned int lsr)
->  {
->  	unsigned int flag;
-> -	unsigned char ch = 0;
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 4937a08..7dfb272 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5431,3 +5431,32 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+>  			      PCI_CLASS_DISPLAY_VGA, 8,
+>  			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
+> +
+> +static void quirk_hisi_fixup_np_class(struct pci_dev *pdev)
+> +{
+> +	u32 class = pdev->class;
+> +
+> +	pdev->class = PCI_BASE_CLASS_NETWORK << 8;
+> +	pci_info(pdev, "PCI class overriden (%#08x -> %#08x)\n",
+> +		 class, pdev->class);
+
+Why is this in here? This is completely unrelated to the commit message.
+
+> +}
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
+> +			quirk_hisi_fixup_np_class);
+> +
+> +/*
+> + * Hisilicon NP devices 5896 BAR3 size is misreported as 256T. Actually, this
+> + * BAR is unused, so let's disable it.
+
+Does this mean that the existing driver doesn't use this BAR? Is a better fix
+up the BAR to report the correct size?
+
+
+> + */
+> +#define HISI_5896_WRONG_BAR 3
+
+I'd suggest this define is possibly not required.
+
+> +static void quirk_hisi_fixup_np_bar(struct pci_dev *pdev)
+> +{
+> +	struct resource *r = &pdev->resource[HISI_5896_WRONG_BAR];
+> +
+> +	r->start = 0;
+> +	r->end = 0;
+> +	r->flags = 0;
+> +
+> +	pci_info(pdev, "disable BAR %d\n", HISI_5896_WRONG_BAR);
+
+It might be more helpful to describe why, e.g. "Disabling invalid BAR 3"
+or similar.
+
+
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
+> +			 quirk_hisi_fixup_np_bar);
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 2302d133..56e2b91 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2558,6 +2558,7 @@
+>  #define PCI_DEVICE_ID_KORENIX_JETCARDF3	0x17ff
 >  
->  	if (likely(lsr & UART_LSR_DR))
-> -		ch = serial_in(up, UART_RX);
-> +		serial_in(up, UART_RX);
+>  #define PCI_VENDOR_ID_HUAWEI		0x19e5
+> +#define PCI_DEVICE_ID_HISI_5896        0x5896 /* Hisilicon NP devices 5896 */
+>  
+>  #define PCI_VENDOR_ID_NETRONOME		0x19ee
+>  #define PCI_DEVICE_ID_NETRONOME_NFP4000	0x4000
 
-Shouldn't you be doing something with 'ch'?
+Thanks,
 
+Andrew Murray
+
+> -- 
+> 1.7.12.4
+> 
