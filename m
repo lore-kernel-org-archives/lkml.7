@@ -5,495 +5,220 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BB8C2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF9FC2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02CAB24656
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A932464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:59:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SuOnMkXQ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FETg+MhA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbfLEJ6I (ORCPT
+        id S1729202AbfLEJ7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:58:08 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6176 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728955AbfLEJ6H (ORCPT
+        Thu, 5 Dec 2019 04:59:03 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:46457 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728629AbfLEJ7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:58:07 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de8d49d0000>; Thu, 05 Dec 2019 01:57:49 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 05 Dec 2019 01:58:05 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 05 Dec 2019 01:58:05 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec
- 2019 09:58:04 +0000
-Received: from [10.25.73.84] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec 2019
- 09:57:59 +0000
-Subject: Re: [PATCH 2/6] dt-bindings: PCI: tegra: Add DT support for PCIe EP
- nodes in Tegra194
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-References: <20191122104505.8986-1-vidyas@nvidia.com>
- <20191122104505.8986-3-vidyas@nvidia.com> <20191122131931.GB1315704@ulmo>
- <8fbdda8e-84af-576c-e240-61c381c85a8f@nvidia.com>
- <20191125073359.GD1409040@ulmo>
- <DM6PR12MB401074B85B9E9E592648FF65DA4A0@DM6PR12MB4010.namprd12.prod.outlook.com>
- <b9e8e8cc-2d05-cab7-4fd8-34c3c835bf92@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <39619170-117d-2504-4816-ff40c398ec36@nvidia.com>
-Date:   Thu, 5 Dec 2019 15:27:55 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 5 Dec 2019 04:59:02 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191205095900euoutp0160f2d6b948fc42202e79f2db283c0740~dcTphu_On2910329103euoutp01R
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Dec 2019 09:59:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191205095900euoutp0160f2d6b948fc42202e79f2db283c0740~dcTphu_On2910329103euoutp01R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575539940;
+        bh=2iFFLPwuAPzBhKo8EtLPGgHosjwmyad+fXz8EYtiRFw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=FETg+MhA0UJV7uNaVgtXZfdXX7juBwuwYK5WBUwfqTCIeGo6JTJRIIo/ou05LHKwG
+         ZACwmQ65oOLvjLLLkzeQlujdU+S3OYID7asdC/EO9uBAia26e6+1dRtNvbwprtGKzT
+         w+a6La1TYEg7lceqoqJOzvLl3IpzlJGikKx7fOLI=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191205095859eucas1p1ec0fe44dd7acee3855873ce3b264acea~dcTpPMsbB0757607576eucas1p1Q;
+        Thu,  5 Dec 2019 09:58:59 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 70.85.60698.3E4D8ED5; Thu,  5
+        Dec 2019 09:58:59 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191205095859eucas1p1710f118a0b967821ff86b380ec5a12be~dcTo4hh1f1054410544eucas1p11;
+        Thu,  5 Dec 2019 09:58:59 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191205095859eusmtrp14768f9612c43db3667ab13d912dab23f~dcTo324562247522475eusmtrp1L;
+        Thu,  5 Dec 2019 09:58:59 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-5b-5de8d4e35af4
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5D.93.08375.3E4D8ED5; Thu,  5
+        Dec 2019 09:58:59 +0000 (GMT)
+Received: from [106.120.51.18] (unknown [106.120.51.18]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191205095859eusmtip16d26110a97f8836e8541075ad3ef2ac4~dcTob2FTf2609726097eusmtip1H;
+        Thu,  5 Dec 2019 09:58:58 +0000 (GMT)
+Subject: Re: [PATCH v2 1/3] devfreq: change time stats to 64-bit
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+From:   Kamil Konieczny <k.konieczny@samsung.com>
+Message-ID: <b6e26205-7aa0-7502-c936-76a031b3b1d6@samsung.com>
+Date:   Thu, 5 Dec 2019 10:58:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <b9e8e8cc-2d05-cab7-4fd8-34c3c835bf92@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <0fd243ee-001e-a93a-3421-3e3c82947f11@samsung.com>
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575539869; bh=AW82+JLzOUNe9WDEexBN1WZ5qLWqQXJ11zyeLMODOYI=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=SuOnMkXQXv67GD6C7t0Wg9+G6ZfjiB4l/UQPj+SPAb+jNayBW3EqA9uK79yFI8ZpC
-         b2lAxdUZeLdkwI/6DNrOMCJZUQD6smqoxM9IVTVWiayc7lEAxrnSnj865B5iWNTM5A
-         WTK/l9oTTy6FVMWGeGNEr/9dym19N515tbd60Xc7aw5D8mx12WcfXQefqhGR9CX+VC
-         UY3LwD+6uAxKhRg5Cxi3bq61lTMNIB3uLZMymjZtYq/tUb+6wgu3G1mbxcDK5ReZqe
-         /uSWHGnQS76b3l/u5S9dZxQG4X7rGGo620OYwBO3ObUkmuRmQYm5DIMV2ZoP+rGVeH
-         3meBiagqLemqw==
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMKsWRmVeSWpSXmKPExsWy7djP87qPr7yINVg239hi44z1rBbXvzxn
+        tTh/fgO7xdmmN+wWl3fNYbP43HuE0WLtkbvsFrcbV7A5cHhsWtXJ5tG3ZRWjx+dNcgHMUVw2
+        Kak5mWWpRfp2CVwZlxcdYS7YL1Ox+uRBtgbGBeJdjJwcEgImEhf6rrCD2EICKxglnj8CsrmA
+        7C+MEgsONDNDOJ8ZJbqufmWB6fj66hZUYjmjxLLVy6Cct4wSp3oPgM0SFnCQmPT6LTOILSKg
+        ITHz7xVGkCJmgXlMEm+mXWAFSbAJ6EscPHsSbCyvgJ3EmbbvTCA2i4CKxOwjM4FsDg5RgQiJ
+        018TIUoEJU7OfAJWzilgLzFvyT2wXcwC4hK3nsxngrDlJba/ncMMcek6dokbq3NBxkgIuEg0
+        XAuDCAtLvDq+hR3ClpE4PbkH6rFyiacL+8DelxBoYZR40P4RKmEtcfj4RVaQOcwCmhLrd+lD
+        hB0lVl7/zwYxnk/ixltBiAv4JCZtm84MEeaV6GgTgqhWlXh+qocJwpaW6Pq/jnUCo9IsJH/N
+        QvLLLCS/zELYu4CRZRWjeGppcW56arFxXmq5XnFibnFpXrpecn7uJkZg0jn97/jXHYz7/iQd
+        YhTgYFTi4W3Y9DxWiDWxrLgy9xCjBAezkgjvNomnsUK8KYmVValF+fFFpTmpxYcYpTlYlMR5
+        qxkeRAsJpCeWpGanphakFsFkmTg4pRoYpcW3VoVItGj9YV93aNn8iTcOL3t9k2/N4ydNbonz
+        rcoOmnxet/rejbodD/dU9p+o9XpV3uMv1ubzO6uNzSOywdr4xf3MlBqDN+nTruf6erwUdEvU
+        ezjlpL27TVeT1jLhUmuudrZTO8RW9t97f/Htgei+B3ETz9ak3pvI2vaTr/Huz9W2brt3K7EU
+        ZyQaajEXFScCAPQ5NrY2AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsVy+t/xu7qPr7yINZg/Q8Zi44z1rBbXvzxn
+        tTh/fgO7xdmmN+wWl3fNYbP43HuE0WLtkbvsFrcbV7A5cHhsWtXJ5tG3ZRWjx+dNcgHMUXo2
+        RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5mWWpRfp2CXoZlxcdYS7Y
+        L1Ox+uRBtgbGBeJdjJwcEgImEl9f3WLuYuTiEBJYyiix6tFPNoiEtETj6dVMELawxJ9rXWwQ
+        Ra8ZJfYsvcQCkhAWcJCY9PotM4gtIqAhMfPvFUaQImaBBUwS829OZIHo+MYocervB7AqNgF9
+        iYNnT4J18wrYSZxp+w62gkVARWL2kZlgtqhAhMTz7TcYIWoEJU7OfAJWzylgLzFvyT12EJtZ
+        QF3iz7xLzBC2uMStJ/OZIGx5ie1v5zBPYBSahaR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hQ
+        rzgxt7g0L10vOT93EyMw3rYd+7l5B+OljcGHGAU4GJV4eBs2PY8VYk0sK67MPcQowcGsJMK7
+        TeJprBBvSmJlVWpRfnxRaU5q8SFGU6DnJjJLiSbnA1NBXkm8oamhuYWlobmxubGZhZI4b4fA
+        wRghgfTEktTs1NSC1CKYPiYOTqkGxgiry9EdPsf6byQGXrdcdepZfvZmeaEZN+L2f3a8vuWz
+        6Wq5ReXP5QSYL0S/5f6a/H1l1Z6w2E9rzLnbD4q3vKjKWseofetRhL/9Rc7Q0vpz1xQP6G99
+        YWewTHb2nLOucy2vbmkOzzg9/UJbQljrSnHjJRO9bLtzLfpYEnNmTz8zM+YX/3/OtUosxRmJ
+        hlrMRcWJAORAYgjNAgAA
+X-CMS-MailID: 20191205095859eucas1p1710f118a0b967821ff86b380ec5a12be
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191204150033eucas1p1bf11d36a89c89e3eb55c37a1a204e988
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191204150033eucas1p1bf11d36a89c89e3eb55c37a1a204e988
+References: <20191204150018.5234-1-k.konieczny@samsung.com>
+        <CGME20191204150033eucas1p1bf11d36a89c89e3eb55c37a1a204e988@eucas1p1.samsung.com>
+        <20191204150018.5234-2-k.konieczny@samsung.com>
+        <0fd243ee-001e-a93a-3421-3e3c82947f11@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/29/2019 6:56 PM, Vidya Sagar wrote:
+Hi,
 
-Rob, Can you please update your comments on this?
+On 05.12.2019 01:27, Chanwoo Choi wrote:
+> On 12/5/19 12:00 AM, Kamil Konieczny wrote:
+>> Change time stats counting to bigger type by using 64-bit jiffies.
+>> This will make devfreq stats code look similar to cpufreq stats and
+>> prevents overflow (for HZ = 1000 after 49.7 days).
+>>
+>> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+>> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>> Changes in v2:
+>>  added Acked-by, rebased on linux-next
+>>
+>>  drivers/devfreq/devfreq.c | 14 +++++++-------
+>>  include/linux/devfreq.h   |  4 ++--
+>>  2 files changed, 9 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>> index bdeb4189c978..0e2030403e4a 100644
+>> --- a/drivers/devfreq/devfreq.c
+>> +++ b/drivers/devfreq/devfreq.c
+>> @@ -199,10 +199,10 @@ static int set_freq_table(struct devfreq *devfreq)
+>>  int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+>>  {
+>>  	int lev, prev_lev, ret = 0;
+>> -	unsigned long cur_time;
+>> +	unsigned long long cur_time;
+> 
+> It looks better to use 'u64' instead of 'unsigned long long'.
+> Because get_jiffies_u64 has 'u64' return type.
 
-Thanks,
-Vidya Sagar
+You are right, I will change this and send v3.
 
-> On 11/25/2019 5:22 PM, Gustavo Pimentel wrote:
->> On Mon, Nov 25, 2019 at 7:33:59, Thierry Reding
->> <thierry.reding@gmail.com> wrote:
+>>  
+>>  	lockdep_assert_held(&devfreq->lock);
+>> -	cur_time = jiffies;
+>> +	cur_time = get_jiffies_64();
+>>  
+>>  	/* Immediately exit if previous_freq is not initialized yet. */
+>>  	if (!devfreq->previous_freq)
+>> @@ -525,7 +525,7 @@ void devfreq_monitor_resume(struct devfreq *devfreq)
+>>  			msecs_to_jiffies(devfreq->profile->polling_ms));
+>>  
+>>  out_update:
+>> -	devfreq->last_stat_updated = jiffies;
+>> +	devfreq->last_stat_updated = get_jiffies_64();
+>>  	devfreq->stop_polling = false;
+>>  
+>>  	if (devfreq->profile->get_cur_freq &&
+>> @@ -748,7 +748,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+>>  
+>>  	devfreq->time_in_state = devm_kcalloc(&devfreq->dev,
+>>  			devfreq->profile->max_state,
+>> -			sizeof(unsigned long),
+>> +			sizeof(*devfreq->time_in_state),
+>>  			GFP_KERNEL);
+>>  	if (!devfreq->time_in_state) {
+>>  		mutex_unlock(&devfreq->lock);
+>> @@ -756,7 +756,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+>>  		goto err_devfreq;
+>>  	}
+>>  
+>> -	devfreq->last_stat_updated = jiffies;
+>> +	devfreq->last_stat_updated = get_jiffies_64();
+>>  
+>>  	srcu_init_notifier_head(&devfreq->transition_notifier_list);
+>>  
+>> @@ -1470,8 +1470,8 @@ static ssize_t trans_stat_show(struct device *dev,
+>>  		for (j = 0; j < max_state; j++)
+>>  			len += sprintf(buf + len, "%10u",
+>>  				devfreq->trans_table[(i * max_state) + j]);
+>> -		len += sprintf(buf + len, "%10u\n",
+>> -			jiffies_to_msecs(devfreq->time_in_state[i]));
+>> +		len += sprintf(buf + len, "%10llu\n", (u64)
+>> +			jiffies64_to_msecs(devfreq->time_in_state[i]));
+>>  	}
+>>  
+>>  	len += sprintf(buf + len, "Total transition : %u\n",
+>> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+>> index 2bae9ed3c783..b81a86e47fb9 100644
+>> --- a/include/linux/devfreq.h
+>> +++ b/include/linux/devfreq.h
+>> @@ -174,8 +174,8 @@ struct devfreq {
+>>  	/* information for device frequency transition */
+>>  	unsigned int total_trans;
+>>  	unsigned int *trans_table;
+>> -	unsigned long *time_in_state;
+>> -	unsigned long last_stat_updated;
+>> +	u64 *time_in_state;
+>> +	unsigned long long last_stat_updated;
+> 
+> ditto. 'unsigned long long' -> 'u64'.
+
+Yes, will change this too.
+
+>>  	struct srcu_notifier_head transition_notifier_list;
+>>  };
 >>
->>> On Mon, Nov 25, 2019 at 12:53:42PM +0530, Vidya Sagar wrote:
->>>> On 11/22/2019 6:49 PM, Thierry Reding wrote:
->>>>> On Fri, Nov 22, 2019 at 04:15:01PM +0530, Vidya Sagar wrote:
->>>>>> Add support for PCIe controllers that can operate in endpoint mode
->>>>>> in Tegra194.
->>>>>>
->>>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>>>> ---
->>>>>> =C2=A0=C2=A0 .../bindings/pci/nvidia,tegra194-pcie-ep.txt=C2=A0 | 13=
-8 ++++++++++++++++++
->>>>>> =C2=A0=C2=A0 1 file changed, 138 insertions(+)
->>>>>> =C2=A0=C2=A0 create mode 100644 Documentation/devicetree/bindings/pc=
-i/nvidia,tegra194-pcie-ep.txt
->>>>>
->>>>> The vast majority of this is a duplication of the host mode device tr=
-ee
->>>>> bindings. I think it'd be best to combine both and only highlight whe=
-re
->>>>> both modes differ.
->>>>>
->>>>> The designware-pcie.txt binding does something similar.
->>>> Ok. I'll merge this into the host mode bindings file and in that diffe=
-rentiate between
->>>> root mode and endpoint mode.
->>>>
->>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-p=
-cie-ep.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.=
-txt
->>>>>> new file mode 100644
->>>>>> index 000000000000..4676ccf7dfa5
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.=
-txt
->>>>>> @@ -0,0 +1,138 @@
->>>>>> +NVIDIA Tegra PCIe Endpoint mode controller (Synopsys DesignWare Cor=
-e based)
->>>>>> +
->>>>>> +Some of the PCIe controllers which are based on Synopsys DesignWare=
- PCIe IP
->>>>>> +are dual mode i.e. they can work in root port mode or endpoint mode=
- but one
->>>>>> + at a time. Since they are based on DesignWare IP, they inherit all=
- the common
->>>>>> +properties defined in designware-pcie.txt.
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
->>>>>
->>>>> The device tree snippets that you added have "nvidia,tegra194-pcie-ep=
-"
->>>>> for EP mode controllers. So either this is wrong or the DTS files are
->>>>> wrong.
->>>> DTS file are correct. This is a mistake in this file. I'll correct thi=
-s.
->>>>
->>>>>
->>>>> This device tree binding describes the exact same hardware, so I don'=
-t
->>>>> think we necessarily need two different compatible strings. It's fair=
-ly
->>>>> easy to distinguish between which mode to run in by looking at which
->>>>> properties exist. EP mode for example is the only one that uses the
->>>>> "addr_space" reg entry.
->>>>>
->>>>> Rob, do you know why a different compatible string was chosen for the=
- EP
->>>>> mode? Looking at the driver, there are only a handful of differences =
-in
->>>>> the programming, but most of the driver remains identical. An extra D=
-T
->>>>> compatible string seems a bit exaggerated since it suggests that this=
- is
->>>>> actually different hardware, where it clearly isn't.
->>>> Since all other implementations have done it this way, I just followed=
- to be in sync
->>>> with them. Even I would also like to hear from Rob on the rationale be=
-hind this.
-> Rob, Could you please update on this?
->=20
->>>>
->>>>>
->>>>>> +=C2=A0 Tegra194: Only C0, C4 & C5 controllers are dual mode control=
-lers.
->>>>>> +- power-domains: A phandle to the node that controls power to the r=
-espective
->>>>>> +=C2=A0 PCIe controller and a specifier name for the PCIe controller=
-. Following are
->>>>>> +=C2=A0 the specifiers for the different PCIe controllers
->>>>>> +=C2=A0=C2=A0=C2=A0 TEGRA194_POWER_DOMAIN_PCIEX8B: C0
->>>>>> +=C2=A0=C2=A0=C2=A0 TEGRA194_POWER_DOMAIN_PCIEX4A: C4
->>>>>> +=C2=A0=C2=A0=C2=A0 TEGRA194_POWER_DOMAIN_PCIEX8A: C5
->>>>>> +=C2=A0 these specifiers are defined in
->>>>>> +=C2=A0 "include/dt-bindings/power/tegra194-powergate.h" file.
->>>>>> +- reg: A list of physical base address and length pairs for each se=
-t of
->>>>>> +=C2=A0 controller registers. Must contain an entry for each entry i=
-n the reg-names
->>>>>> +=C2=A0 property.
->>>>>> +- reg-names: Must include the following entries:
->>>>>> +=C2=A0 "appl": Controller's application logic registers
->>>>>> +=C2=A0 "atu_dma": iATU and DMA registers. This is where the iATU (i=
-nternal Address
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 Translation Unit) registers of the PCIe core are made available
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 for SW access.
->>>>>> +=C2=A0 "dbi": The aperture where root port's own configuration regi=
-sters are
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 available
->>>>>> +=C2=A0 "addr_space": Used to map remote RC address space
->>>>>> +- interrupts: A list of interrupt outputs of the controller. Must c=
-ontain an
->>>>>> +=C2=A0 entry for each entry in the interrupt-names property.
->>>>>> +- interrupt-names: Must include the following entry:
->>>>>> +=C2=A0 "intr": The Tegra interrupt that is asserted for controller =
-interrupts
->>>>>> +- clocks: Must contain an entry for each entry in clock-names.
->>>>>> +=C2=A0 See ../clocks/clock-bindings.txt for details.
->>>>>> +- clock-names: Must include the following entries:
->>>>>> +=C2=A0 - core
->>>>>> +- resets: Must contain an entry for each entry in reset-names.
->>>>>> +=C2=A0 See ../reset/reset.txt for details.
->>>>>> +- reset-names: Must include the following entries:
->>>>>> +=C2=A0 - apb
->>>>>> +=C2=A0 - core
->>>>>> +- phys: Must contain a phandle to P2U PHY for each entry in phy-nam=
-es.
->>>>>> +- phy-names: Must include an entry for each active lane.
->>>>>> +=C2=A0 "p2u-N": where N ranges from 0 to one less than the total nu=
-mber of lanes
->>>>>> +- nvidia,bpmp: Must contain a pair of phandle to BPMP controller no=
-de followed
->>>>>> +=C2=A0 by controller-id. Following are the controller ids for each =
-controller.
->>>>>> +=C2=A0=C2=A0=C2=A0 0: C0
->>>>>> +=C2=A0=C2=A0=C2=A0 4: C4
->>>>>> +=C2=A0=C2=A0=C2=A0 5: C5
->>>>>> +- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
->>>>>> +- nvidia,pex-rst-gpio: Must contain a phandle to a GPIO controller =
-followed by
->>>>>> +=C2=A0 GPIO that is being used as PERST signal
->>>>>
->>>>> Why is this NVIDIA specific? Do other instantiations of the DW IP not
->>>>> also need a means to define which GPIO is the reset?
->>>> I'm not sure. At least I didn't find anything like this in other imple=
-mentations.
->>>> My understanding is that, controller handles assert/de-assert on the P=
-ERST line
->>>> automatically without SW intervention. I think it is for the same reas=
-on that other
->>>> implementations don't wait for the REFCLK to flow in from host to conf=
-igure the IP.
->>>> I think they just use some internal clock for the configuration and sw=
-itch to
->>>> running the core based on REFCLK as and when it is available
->>>> (i.e. whenever a de-assert is perceived on PERST line by the controlle=
-r)
->>>
->>> That would be somewhat surprising, though. The IP used in Tegra must be
->>> pretty close to the IP used in other SoCs, and the code that we need in
->>> pex_ep_event_pex_rst_{assert,deassert}() is pretty significant. Why the
->>> other instantiations wouldn't need something similar seems unlikely to
->>> me.
->>>
->>> Perhaps Jingoo or Gustavo can shed some light on this.
->>
->> On my current FPGA prototyping solution, I don't need to control the
->> PERST line and it's very likely that I don't even have access to control
->> it. I guess due to some particularity of my solution, the HW team
->> probably has decided to wire it up directly for some unknown reason to
->> me.
->>
->> However, It seems to me that exynos, imx6, keystone, meson, al, histb,
->> kirin, and qcom drivers controls the PERST line in spite of others drive=
-r
->> that doesn't do it like in my prototype solution.
->> In the end I'd says that depends of how the IP solution of design by the
->> HW team.
->>
->> Gustavo
->>
->>>
->>> Thierry
->>>
->>>>
->>>>>
->>>>>> +
->>>>>> +Optional properties:
->>>>>> +- pinctrl-names: A list of pinctrl state names.
->>>>>> +=C2=A0 It is mandatory for C5 controller and optional for other con=
-trollers.
->>>>>> +=C2=A0 - "default": Configures PCIe I/O for proper operation.
->>>>>> +- pinctrl-0: phandle for the 'default' state of pin configuration.
->>>>>> +=C2=A0 It is mandatory for C5 controller and optional for other con=
-trollers.
->>>>>> +- supports-clkreq: Refer to Documentation/devicetree/bindings/pci/p=
-ci.txt
->>>>>> +- nvidia,update-fc-fixup: This is a boolean property and needs to b=
-e present to
->>>>>> +=C2=A0=C2=A0=C2=A0 improve performance when a platform is designed =
-in such a way that it
->>>>>> +=C2=A0=C2=A0=C2=A0 satisfies at least one of the following conditio=
-ns thereby enabling root
->>>>>> +=C2=A0=C2=A0=C2=A0 port to exchange optimum number of FC (Flow Cont=
-rol) credits with
->>>>>> +=C2=A0=C2=A0=C2=A0 downstream devices
->>>>>> +=C2=A0=C2=A0=C2=A0 1. If C0/C4/C5 run at x1/x2 link widths (irrespe=
-ctive of speed and MPS)
->>>>>> +=C2=A0=C2=A0=C2=A0 2. If C0/C4/C5 operate at their respective max l=
-ink widths and
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 a) speed is Gen-2 and MPS is 2=
-56B
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 b) speed is >=3D Gen-3 with an=
-y MPS
->>>>>> +- nvidia,aspm-cmrt-us: Common Mode Restore Time for proper operatio=
-n of ASPM
->>>>>> +=C2=A0=C2=A0 to be specified in microseconds
->>>>>> +- nvidia,aspm-pwr-on-t-us: Power On time for proper operation of AS=
-PM to be
->>>>>> +=C2=A0=C2=A0 specified in microseconds
->>>>>> +- nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to=
- be
->>>>>> +=C2=A0=C2=A0 specified in microseconds
->>>>>> +
->>>>>> +NOTE:- On Tegra194's P2972-0000 platform, only C5 controller can be=
- enabled to
->>>>>> +operate in the endpoint mode because of the way the platform is des=
-igned.
->>>>>> +There is a mux that needs to be programmed to let the REFCLK from t=
-he host to
->>>>>> +flow into C5 controller when it operates in the endpoint mode. This=
- mux is
->>>>>> +controlled by the GPIO (AA, 5) and it needs to be driven 'high'. Fo=
-r this to
->>>>>> +happen, set status of "pex-refclk-sel-high" node under "gpio@c2f000=
-0" node to
->>>>>> +'okay'.
->>>>>> +=C2=A0=C2=A0=C2=A0 When any dual mode controller is made to operate=
- in the endpoint mode,
->>>>>> +please make sure that its respective root port node's status is set=
- to
->>>>>> +'disabled'.
->>>>>
->>>>> This seems very brittle to me. There's no good way how we can detect
->>>>> such misconfigurations. If instead we only have one node describing t=
-he
->>>>> hardware fully, the chances of configuring things wrong (by for examp=
-le
->>>>> enabling both the host and EP mode device tree nodes) can be reduced.
->>>>>
->>>>> So I think instead of duplicating all of the device tree content to h=
-ave
->>>>> both a host and an EP node for each controller, it'd be better to jus=
-t
->>>>> have a single node and let the device tree bindings specify which
->>>>> changes to apply to switch into EP mode.
->>>>>
->>>>> For example, there should be nothing wrong with specifying some of th=
-e
->>>>> EP-only properties (like num-ib-windows and num-ob-windows) all the t=
-ime
->>>>> and only use them when we actually run in EP mode.
->>>>>
->>>>> As I mentioned earlier, there are a couple of easy ways to distinguis=
-h
->>>>> the modes. The presence of the "addr_space" reg entry is one example,
->>>>> but we could also key off the nvidia,pex-rst-gpio property, since tha=
-t
->>>>> (presumably) wouldn't be needed for host mode.
->>>>>
->>>>> That way we can just add default, host mode entries to tegra194.dtsi =
-and
->>>>> whenever somebody wants to enable EP mode, they can just override the
->>>>> node in the board-level DTS file, like so:
->>>>>
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0pcie@141a0000 {
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x00 0x141a0000 0=
-x0 0x00020000=C2=A0=C2=A0 /* appl registers (128K)=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0x00 0x3a040000 0x0 0x00040000=C2=A0=C2=A0 /* iATU_DMA reg =
-space (256K)=C2=A0 */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0x00 0x3a080000 0x0 0x00040000=C2=A0=C2=A0 /* DBI reg space=
- (256K)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg-names =3D "appl", "atu=
-_dma", "dbi", "addr_space";
->>>>>
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nvidia,pex-rst-gpio =3D <&=
-gpio TEGRA194_MAIN_GPIO(GG, 1) GPIO_ACTIVE_LOW>;
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0};
->>>>>
->>>>> Thierry
->>>> I like it and fine with making these modifications also but would like=
- to hear from Rob
->>>> also on this.
->>>>
->>>> - Vidya Sagar
->>>>>
->>>>>> +
->>>>>> +Examples:
->>>>>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>>>> +
->>>>>> +Tegra194:
->>>>>> +--------
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 pcie_ep@141a0000 {
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "nvidia,t=
-egra194-pcie-ep", "snps,dw-pcie-ep";
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power-domains =3D <&bpmp=
- TEGRA194_POWER_DOMAIN_PCIEX8A>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x00 0x141a0000=
- 0x0 0x00020000=C2=A0=C2=A0 /* appl registers (128K)=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 */
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 0x00 0x3a040000 0x0 0x00040000=C2=A0=C2=A0 /* iATU_DMA r=
-eg space (256K)=C2=A0 */
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 0x00 0x3a080000 0x0 0x00040000=C2=A0=C2=A0 /* DBI reg sp=
-ace (256K)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg-names =3D "appl", "a=
-tu_dma", "dbi", "addr_space";
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 num-lanes =3D <8>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 num-ib-windows =3D <2>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 num-ob-windows =3D <8>;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "defau=
-lt";
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&clkreq_c=
-5_bi_dir_state>;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clocks =3D <&bpmp TEGRA1=
-94_CLK_PEX1_CORE_5>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock-names =3D "core";
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 resets =3D <&bpmp TEGRA1=
-94_RESET_PEX1_CORE_5_APB>,
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 <&bpmp TEGRA194_RESET_PEX1_CORE_5>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reset-names =3D "apb", "=
-core";
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupts =3D <GIC_SPI =
-53 IRQ_TYPE_LEVEL_HIGH>;=C2=A0=C2=A0=C2=A0 /* controller interrupt */
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupt-names =3D "int=
-r";
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nvidia,bpmp =3D <&bpmp 5=
->;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nvidia,aspm-cmrt-us =3D =
-<60>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nvidia,aspm-pwr-on-t-us =
-=3D <20>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nvidia,aspm-l0s-entrance=
--latency-us =3D <3>;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vddio-pex-ctl-supply =3D=
- <&vdd_1v8ao>;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nvidia,pex-rst-gpio =3D =
-<&gpio TEGRA194_MAIN_GPIO(GG, 1)
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 GPIO_ACTIVE_LOW>;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 phys =3D <&p2u_nvhs_0>, =
-<&p2u_nvhs_1>, <&p2u_nvhs_2>,
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 <&p2u_nvhs_6>, <&p2u_nvhs_7>;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 phy-names =3D "p2u-0", "=
-p2u-1", "p2u-2", "p2u-3", "p2u-4",
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "p2u-5", "p2u-6", "p2u-7";
->>>>>> +=C2=A0=C2=A0=C2=A0 };
->>>>>> --=20
->>>>>> 2.17.1
->>>>>>
->>>>
->>
->>
->=20
+
+-- 
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
 
