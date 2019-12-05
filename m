@@ -2,91 +2,112 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DBDC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A011EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B63DF20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7229D2464F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:13:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ak2B3Pk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbfLEJJF (ORCPT
+        id S1728962AbfLEJNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:09:05 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:48377 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfLEJJE (ORCPT
+        Thu, 5 Dec 2019 04:13:17 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:40678 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfLEJNQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:09:04 -0500
-Received: from mail-lj1-f173.google.com ([209.85.208.173]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M7rxE-1ihlDI3fAQ-0053U2; Thu, 05 Dec 2019 10:09:02 +0100
-Received: by mail-lj1-f173.google.com with SMTP id z17so2589970ljk.13;
-        Thu, 05 Dec 2019 01:09:02 -0800 (PST)
-X-Gm-Message-State: APjAAAUU85VoQs/sar3CT2JhJxvP0uRgSFCcOtI8W3k8Us1mKpqiVgY6
-        pyE+KqHWE0XCHeyRUVucsjraGlciDtQkwuO3D6M=
-X-Google-Smtp-Source: APXvYqzGtpjRsvYhOdU68NUmIa/e9X8ki0UG0IcpbOcGgiqHGISxjpl72wMrhjllkh458C2mDVVxXqnz0zpKrVD54oA=
-X-Received: by 2002:a2e:9095:: with SMTP id l21mr4627561ljg.175.1575536942283;
- Thu, 05 Dec 2019 01:09:02 -0800 (PST)
+        Thu, 5 Dec 2019 04:13:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9SKkEwleM0Kgl1HXUfSvMknCeedbxkFPyHrx58igVDY=; b=Ak2B3Pk9llVBxc4o4HhKJcqKX
+        wYef7Nnmugzro6QjTQnYauxWqfalj8fK1zWN6rCNC37knhfi8WKM8NXtZZlxxPvZ6IfRSi8szXYbR
+        4HzSIc8QRSCvTIKdWAuKiTymcsvBYmGTYK6UI3bAGf18JMMa5jz09xr0vo8MIV6pm9ZnT3hvtmIYA
+        zBYVxVDwhzOXLkhEb2RtxUftPc8p//eS1P1MnUta0Fq10BT+tGQxcoeONr+olR1qY8AjIJ0RzHuWq
+        TphJUqFBa+GY4YTJ+xo7GDpLKw9NitH9wN7Ke6karckE9LHarfTG/AscHYEBbArBZfJwDHR0thI9M
+        l5Un2m2lg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1icnCD-00029R-9b; Thu, 05 Dec 2019 09:13:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D651C3011E0;
+        Thu,  5 Dec 2019 10:11:54 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 03AD120B8E996; Thu,  5 Dec 2019 10:13:11 +0100 (CET)
+Date:   Thu, 5 Dec 2019 10:13:11 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        richard.weiyang@gmail.com, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.or, tglx@linutronix.de
+Subject: Re: [Patch v2 4/6] x86/mm: Refine debug print string retrieval
+ function
+Message-ID: <20191205091311.GD2810@hirez.programming.kicks-ass.net>
+References: <20191205021403.25606-1-richardw.yang@linux.intel.com>
+ <20191205021403.25606-5-richardw.yang@linux.intel.com>
 MIME-Version: 1.0
-References: <000000000000cacc7e0592c42ce3@google.com> <20190928031510.GD1079@sol.localdomain>
- <20191205052220.GC1158@sol.localdomain>
-In-Reply-To: <20191205052220.GC1158@sol.localdomain>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 5 Dec 2019 10:08:45 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3XLzm+zGmADUR3VYi4NziY-Aox7a8QG6VcGYQcAJiGnQ@mail.gmail.com>
-Message-ID: <CAK8P3a3XLzm+zGmADUR3VYi4NziY-Aox7a8QG6VcGYQcAJiGnQ@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in bpf_prog_create
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        syzbot <syzbot+eb853b51b10f1befa0b7@syzkaller.appspotmail.com>,
-        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-ppp@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:TzSxX4hlV2bd52db674bnSiDd8ctBfgwNLqaetjuvInLKrenlCT
- D4h4hDB4gG2gJVJJ+yy2ml9B2/1nira/9D1eM4/jrjeZ2sdGdDjz6yOY/4uN1K1C+aRlDbf
- vHtdwa1LK46uMDePcxsT637DYwPZTO6sEDsu8n89QOucDlQfk+qQcURAdOSlbq16WGFYn/A
- N0TBS+0Oc/YbHY3dGPosA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MC/cWPxqk0k=:He1YZdt6C57pvAnrGferk4
- mfHZzHZ/KWMebipyXU+AX/0i9bgbUn3ClClHx5mPNdpwy6p1hvmZFklB4nBIX2HLqdHKAPyhR
- LOWXtUNw3lu/BPxnZFdFLLaEAA5kxno+8k/yYj7b4kTZbmXEJ1szaw65ZrQHCpBD8eZQQLMLV
- ER947nzwrYAKQYUdFQjwJMKdtJb/A+uDRdr90eFk4G6QGaTzjK6uJ3Al4jEiXjWSJvDkJtPkK
- KobB4YnLofpExfMrlzAT94gI1GauAG90RpALlbH4swXLE7CfYoHWq4ALPMi6PFPfizkvAI3d8
- 5k3fkHOHPzKpWjnBa2Q0/dADZwc3XL5m0f7K9ONOWpQwWw0n0Xl1k5msPkv3iuTRGLz2ztQpf
- IcgB96lodbBxewG4aBDQv1lW1Ce3V68XNFsTXlwiqsgrkPB85CGvajMnpAo2b/3tAmKlqf9RB
- QaBJSvJW44tp+8Z3Rn615juYGYbCUuxYHOs5tWVITAY1jp3o4Z2VUJmOc+Gb2Wxw2Izu2pVxQ
- LXhMFu2NYPg3byIkSnLpDxOGZM7Z/xBsaeX2DzZGkwO7Vpc9PglCkBnG6pJPlPBtQhGeIwcvH
- 18BqZPBiop73RCTjVDoRYWwfMmA5PrCVQjUYR7aA57p8jzMTpaq0lFaREQ5eRp6nT7v5wJDbS
- sf6V+7ChUZSEaUDardG/mO3xI+eCCl5yAaQh4YAlFYTdiPP7ln7yfedsgru416bMCRXbNRuoA
- Whsug/fVF0jUGrEhTmAjz07wbvPVIPDxvlQefB064noTDUngiy2Wx2sGjDlUvGpaRK369mSSI
- MGVtVNrBVFEEc/hJJHDDJmkcUNbyPIP79ehuppQWSmiNSkMTewb38hnwsQ5GOLcUh67giTrdN
- gBSc336Lhfqg5pytNFtA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191205021403.25606-5-richardw.yang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 6:22 AM Eric Biggers <ebiggers@kernel.org> wrote:
+On Thu, Dec 05, 2019 at 10:14:01AM +0800, Wei Yang wrote:
+> Generally, the mapping page size are:
+> 
+>    4K, 2M, 1G
+> 
+> except in case 32-bit without PAE, the mapping page size are:
+> 
+>    4K, 4M
+> 
+> Based on PG_LEVEL_X definition and mr->page_size_mask, we can calculate
+> the mapping page size from a predefined string array.
+> 
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> ---
+>  arch/x86/mm/init.c | 39 +++++++++++++--------------------------
+>  1 file changed, 13 insertions(+), 26 deletions(-)
+> 
+> diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+> index 0eb5edb63fa2..ded58a31c679 100644
+> --- a/arch/x86/mm/init.c
+> +++ b/arch/x86/mm/init.c
+> @@ -308,29 +308,20 @@ static void __ref adjust_range_page_size_mask(struct map_range *mr,
+>  	}
+>  }
+>  
+> +static void __meminit mr_print(struct map_range *mr, unsigned int maxidx)
+>  {
+> +#if defined(CONFIG_X86_32) && !defined(CONFIG_X86_PAE)
+> +	static const char *sz[2] = { "4K", "4M" };
+> +#else
+> +	static const char *sz[4] = { "4K", "2M", "1G", "" };
+> +#endif
+> +	unsigned int idx, s;
+>  
+> +	for (idx = 0; idx < maxidx; idx++, mr++) {
+> +		s = (mr->page_size_mask >> PG_LEVEL_2M) & (ARRAY_SIZE(sz) - 1);
 
-> >
->
-> Why did you ignore this and merge the buggy commit to mainline anyway?
-> I even told you how to fix it...
+Is it at all possible for !PAE to have 1G here, if you use the sz[4]
+definition unconditionally?
 
-I'm sorry about this, I completely missed the email about it originally.
+> +		pr_debug(" [mem %#010lx-%#010lx] page size %s\n",
+> +			 mr->start, mr->end - 1, sz[s]);
+> +	}
+>  }
 
-      Arnd
