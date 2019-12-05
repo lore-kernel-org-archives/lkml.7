@@ -6,182 +6,91 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA753C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BE5C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4D324249
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D494224F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbfLEMJr (ORCPT
+        id S1729448AbfLEMKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 07:09:47 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49855 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729260AbfLEMJr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 07:09:47 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1icpx2-0002bk-RP; Thu, 05 Dec 2019 13:09:44 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1icpx2-0003wW-58; Thu, 05 Dec 2019 13:09:44 +0100
-Date:   Thu, 5 Dec 2019 13:09:44 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] pwm: Changes for v5.5-rc1
-Message-ID: <20191205120944.jxcculyf46bu2k67@pengutronix.de>
-References: <20191205061044.1006766-1-thierry.reding@gmail.com>
- <20191205075958.jrz3xuthyh7wv6uu@pengutronix.de>
- <20191205084102.GA1401169@ulmo>
- <20191205100535.y7avzoswkxe43py7@pengutronix.de>
- <20191205110425.GA1498132@ulmo>
+        Thu, 5 Dec 2019 07:10:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:60410 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729260AbfLEMKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 07:10:39 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4C7A31B;
+        Thu,  5 Dec 2019 04:10:38 -0800 (PST)
+Received: from [192.168.1.124] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BF4C3F68E;
+        Thu,  5 Dec 2019 04:10:36 -0800 (PST)
+Subject: Re: [PATCH 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek
+ PymParticle EVB
+To:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        James Tai <james.tai@realtek.com>
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-realtek-soc@lists.infradead.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <20191205082555.22633-1-james.tai@realtek.com>
+ <20191205082555.22633-3-james.tai@realtek.com>
+ <4040ffcf-5c54-fb44-b0a8-ce0c8c21b93f@suse.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <c2703787-2d0b-4d78-f4e3-8b77ba636bb4@arm.com>
+Date:   Thu, 5 Dec 2019 12:10:35 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <4040ffcf-5c54-fb44-b0a8-ce0c8c21b93f@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191205110425.GA1498132@ulmo>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Thierry,
-
-On Thu, Dec 05, 2019 at 12:04:25PM +0100, Thierry Reding wrote:
-> On Thu, Dec 05, 2019 at 11:05:35AM +0100, Uwe Kleine-König wrote:
-> > On Thu, Dec 05, 2019 at 09:41:02AM +0100, Thierry Reding wrote:
-> > > Review for this came in after v5.4-rc7, so I didn't consider it for
-> > > v5.5. I'll pick it up after v5.5-rc1.
-> > 
-> > I got Steven's mail on Oct 24 which is the week between -rc4 and -rc5,
-> > but ok, I won't argue.
+On 2019-12-05 10:58 am, Andreas FÃ¤rber wrote:
+[...]
+>> +	arm_pmu: pmu {
+>> +		compatible = "arm,armv8-pmuv3";
+>> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+>> +		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>,
+>> +			<&cpu3>;
+>> +	};
 > 
-> Both my inbox and patchwork say that the email arrived on November 13.
+> @Robin, is this single PPI interrupt better than previous single SPI?
 
-Ah, you're right. Oct 24 was the date I sent the patch. Don't know what
-I saw before. Please forgive my wrong correction.
+Yes, a PPI is ideal (since it allows core to see its own local interrupt).
 
-> > > >  - The series starting with "pwm: omap-dmtimer: remove pwmchip in
-> > > >    .remove before making it unfunctional" from November which IMHO is
-> > > >    simple and contains two fixes
-> > > >    (https://patchwork.ozlabs.org/project/linux-pwm/list/?series=142030)
-> > > 
-> > > Same here.
-> > 
-> > Does "after v5.5-rc1" mean "for v5.5" or "for v5.6-rc1". I agree that
-> > the tracing stuff is merge window material (very useful though in my
-> > eyes) while the omap-dmtimer series (at least the first 3 of 4 patches)
-> > is about fixes.
+> Is "arm,armv8-pmuv3" the correct one to use for Cortex-A55? There's no
+> "arm,cortex-a55-pmu" binding - is that still in the works?
+
+Hmm, I had thought that had been done already, but apparently not. Looks 
+like it's high time for another round of event map updates for the 
+latest Cortex and Neoverse cores, so I guess I'll add that to our 
+backlog internally - although the PMU events should be in the public 
+TRMs so if anyone else *did* fancy ploughing through them to spin 
+patches they're always welcome to :)
+
+In the meantime the generic PMUv3 compatible will at least expose the 
+subset of mandatory architectural events, which is arguably more useful 
+than nothing.
+
+>> +
+>> +	psci {
+>> +		compatible = "arm,psci-1.0";
 > 
-> These all change code that's been like this for more than 4 years and
-> nobody's ever reported a bug.
-
-That nobody uncovered a certain bug before should not stop us fixing it
-quickly.
-
-> The very worst that can happen here is that we leak a device
-> reference, but these are platform devices, so they aren't going to go
-> anywhere anyway.
-
-Unless someone unloads the driver or unbinds it from the device. Even if
-you question that this warrants an urgent fix (which I disagree to),
-then patch 2 fixes an error path and patch 3 an unconditional resouce
-leak (both in .probe).
-
-> > > > And I'm still waiting for feedback on
-> > > > 
-> > > >  - "Documentation: pwm: rework documentation for the framework" (since
-> > > >    January)
-> > > 
-> > > Please resend this, I can't find it in my inbox.
-> > 
-> > :-|, given that I sent this already twice, pinged several times
-> > (https://patchwork.ozlabs.org/patch/1021566/,
-> > https://patchwork.ozlabs.org/patch/1000709/) and also asked at least
-> > once before in a mail where I pinged several patches using a list.
+> @Lorenzo: Same question as left unanswered for RTD1619:
+> Should this be "arm,psci-1.0", "arm-psci-0.2"?
 > 
-> I find patchwork always difficult for reviewing, but that patch is
-> particularly difficult to review. You're basically rewriting all of the
-> documentation in a way that you think is better. It'd be much easier to
-> review if this was done more incrementally.
-> 
-> It looks like your goals could be easily met by just extending the
-> existing documentation, or bringing it up-to-date with the API.
+> The YAML schema allows both, without clearly documenting which one shall
+> be used in new DTs, and there's no psci-1.0 example either.
 
-OK, will try to split it in smaller chunks.
+FWIW the age of the DT shouldn't really be relevant - it's a question of 
+whether the platform's EL3 firmware actually implements the PSCI 1.0 (or 
+later) spec, or is some fossilised binary based on the older version.
 
-> > > >  - "pwm: add debug knob to help driver authors" (since August)
-> > > 
-> > > My recollection is that this flagged a bunch of issues right out of the
-> > > box, so I'm hesitant to apply it without wider concensus that we want
-> > > this, or some effort to address the issues that this flags.
-> > 
-> > I didn't want you to apply it. That it is not ready for that is out of
-> > the question. I assume the patch doesn't apply anymore and needs work
-> > for sure. The last mail in the respective thread had a single paragraph:
-> > 
-> > 	do you consider the idea here worthwile? If so I'd update the
-> > 	patch to current mainline and address the feedback I got so far.
-> > 
-> > This is still interesting, as I don't want to spend my time working on
-> > an idea that is then turned down in the end for conceptual reasons.
-> 
-> There's nothing conceptually wrong about it. The one problem that I see
-> with it is that we can't force people to use it because it's noisy when
-> things go wrong, and they currently do go wrong. On the other hand, if
-> we don't enforce its use, developers are likely to just ignore its
-> existence.
-
-I agree that it doesn't help when a driver author has this disabled. But
-still it helps to catch problems if testers know it or during review
-something is catched and then you only need to point to this Kconfig
-setting instead of referencing the documentation or otherwise explain
-what you want.
-And even if there is only a 0.2 chance that a prospective pwm driver
-author will enable it and so have a better driver in patch submission
-round 1 it's already worth the effort in my eyes.
-
-All in all I think "but some might not profit unless you force them"
-isn't a reason good enough to not do something for those who might
-notice and benefit from your work. And even if it's only me who benefits
-that's good enough, too (assuming there are no downsides for others).
-
-> So I think we need to get drivers into a little better shape so that we
-
-For getting there having this knob configurable (and default off) is
-already helpful.
-
-> eliminate at least all of the issues that currently exist. Then we can
-> merge this and maybe opportunistically enforce this during a release
-> cycle to see if there's any fallout.
-
-And if there is fallout just having to change some Kconfig magic to
-disable the checks would be good. So having PWM_DEBUG seems like a good
-idea to me.
-
-Not sure that defaulting to all these checks is a good idea as at least
-some of them introduce some delays waiting for completed periods. Having
-this configurable seems to work for other subsystems just fine (judging
-from looking at the output of 
-
-	git grep DEBUG drivers/*/Kconfig
-
-).
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Robin.
