@@ -2,70 +2,253 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8EEC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35F9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26ECD21744
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D652073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:10:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="XofSFKkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbfLECI2 (ORCPT
+        id S1728612AbfLECKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 21:08:28 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:35972 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728393AbfLECI1 (ORCPT
+        Wed, 4 Dec 2019 21:10:55 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39802 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728321AbfLECKz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 21:08:27 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1icgZ1-0006BN-7V; Thu, 05 Dec 2019 02:08:20 +0000
-Date:   Thu, 5 Dec 2019 02:08:19 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fix cast of gfp_t to ulong in __def_gfpflag_names
-Message-ID: <20191205020819.GJ4203@ZenIV.linux.org.uk>
-References: <20191204175425.71855-1-luc.vanoostenryck@gmail.com>
+        Wed, 4 Dec 2019 21:10:55 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e10so1620142ljj.6
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 18:10:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=egQHAC9LGSWziTm0H/woVfatmjKm3wVavrNlPWEdRMI=;
+        b=XofSFKkOSllLUoMBe9eaClL6WevokUSySklcr6UDDFNdFPn5jonNcDdLZ6vtZsiaPW
+         MMacI5WDEx180F9oz82z74SLb+ibSjgzPgcPoO+t0LQf+cKocps4TrygC5xCyGSiu7rB
+         UkCUSqdgFVRKxMxRZesJMr8PpWQM2Rk/5Qm0Ngf80t9kPZDdOOto+eqR9tXIe1/kSiTa
+         xOUCGBXNIHubCddzRBRMFSPNptOzMFYRzZnmsJVsuGQCUSr9HsuEUVQcVF1D1BzWzSyc
+         AGQO3wCriSIFvIIFginuO1P4K8c4ArcwQXc+pFUutBSlc0Kb0Gg/gBgwUVog5GkzLCw6
+         JmOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=egQHAC9LGSWziTm0H/woVfatmjKm3wVavrNlPWEdRMI=;
+        b=EoEcWfLcNgQmkPWlvAzUUti6OEzQD7hjFguVOMpf1Fl+qwCVxzubPuT8SJzbvXxXTh
+         MI3ceiEwD0locmgglVwrkVGzO9oUmfyniYqx+Cklml47K2VzJ7WqbPC1pJ1bsdZt1NPH
+         2SAImKS4ncd6bHW1Qi7V8AZUjfx7h/qs6K13sLoPObOiR4EmTWLQLuchDGHwv+w7aCyX
+         3CcxEIOaFBz9p1CgACc4JLVJ0Hh0yAosq4jgSt1ahN3Y6d+1GdJwDq9fhDrpHD+BoaGt
+         /WYJbprwVYrpdD57dxONNX/cH4DelxFNYm2Xk+3GXSW5oxPc7KANyDlgY0/OaURL9cFH
+         4Q/A==
+X-Gm-Message-State: APjAAAWQ88RoKwAXjnLGsRoN7H+llB7N44+gCTMxT5YT4usTZ20MBR2O
+        FHc/q+hx3UvWGULohUDusoQhgw==
+X-Google-Smtp-Source: APXvYqyFCNMBBWVhRhZw0mX9EhZAvAdYRSxxfnI4A/fHOTGj5ylYBNF4aLTfLSS67O71pHuFym0W6Q==
+X-Received: by 2002:a2e:91cb:: with SMTP id u11mr1341708ljg.82.1575511852393;
+        Wed, 04 Dec 2019 18:10:52 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id g5sm4145202lfc.11.2019.12.04.18.10.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 18:10:52 -0800 (PST)
+Date:   Wed, 4 Dec 2019 18:10:28 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Toke =?UTF-8?B?SMO4aWxh?= =?UTF-8?B?bmQtSsO4cmdlbnNlbg==?= 
+        <toke@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
+Message-ID: <20191204181028.6cdb40d4@cakuba.netronome.com>
+In-Reply-To: <20191205010930.izft6kv5xlnejgog@ast-mbp.dhcp.thefacebook.com>
+References: <20191202131847.30837-1-jolsa@kernel.org>
+        <CAEf4BzY_D9JHjuU6K=ciS70NSy2UvSm_uf1NfN_tmFz1445Jiw@mail.gmail.com>
+        <87wobepgy0.fsf@toke.dk>
+        <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
+        <CAEf4BzZ+0XpH_zJ0P78vjzmFAH3kGZ21w3-LcSEG=B=+ZQWJ=w@mail.gmail.com>
+        <20191204135405.3ffb9ad6@cakuba.netronome.com>
+        <20191204233948.opvlopjkxe5o66lr@ast-mbp.dhcp.thefacebook.com>
+        <20191204162348.49be5f1b@cakuba.netronome.com>
+        <20191205010930.izft6kv5xlnejgog@ast-mbp.dhcp.thefacebook.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204175425.71855-1-luc.vanoostenryck@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 06:54:25PM +0100, Luc Van Oostenryck wrote:
-> The macro '__def_gfpflag_names' is used to define arrays of
-> struct trace_print_flags. This structure is defined as being
-> a pair of 'unsigned long' - 'const char *'.
+On Wed, 4 Dec 2019 17:09:32 -0800, Alexei Starovoitov wrote:
+> On Wed, Dec 04, 2019 at 04:23:48PM -0800, Jakub Kicinski wrote:
+> > On Wed, 4 Dec 2019 15:39:49 -0800, Alexei Starovoitov wrote:  
+> > > > Agreed. Having libbpf on GH is definitely useful today, but one can hope
+> > > > a day will come when distroes will get up to speed on packaging libbpf,
+> > > > and perhaps we can retire it? Maybe 2, 3 years from now? Putting
+> > > > bpftool in the same boat is just more baggage.    
+> > > 
+> > > Distros should be packaging libbpf and bpftool from single repo on github.
+> > > Kernel tree is for packaging kernel.  
+> > 
+> > Okay, single repo on GitHub:
+> > 
+> > https://github.com/torvalds/linux  
 > 
-> However, the macro __def_gfpflag_names is used to for GFP flags
-> and thus take entries of type gfp_t (plus their name) which
-> is a bitwise type, non-convertible to usual integers.
-> These entries are casted to 'unsigned long' but this doesn't
-> prevent Sparse to rughtfully complain:
-> 	warning: cast from restricted gfp_t
-> 
-> The correct way to cast a bitwise type to a normal integer
-> (which is OK here) is to use '__force'.
-> 
-> So, fix the cast by adding the '__force' required for such casts.
+> and how will you git submodule only libbpf part of kernel github into bcc
+> and other projects?
 
-Ugh...
-> -	{(unsigned long)GFP_TRANSHUGE,		"GFP_TRANSHUGE"},	\
-<plenty of such>
-> +	{(__force ulong)GFP_TRANSHUGE,		"GFP_TRANSHUGE"},	\
+Why does bcc have to submodule libbpf? Is it in a "special
+relationship" with libbpf as well? 
 
-# operator is there for purpose; as in
-#define FOO(name) {(__force unsigned long)name, #name}
-with those becoming
-#define __def_gfpflag_names \
-	FOO(GFP_TRANSHUGE), \
-	FOO(GFP_TRANSHUGE_LIGHT), \
-etc.
+dnf/apt install libbpf
+
+Or rather:
+
+dnf/apt install bcc
+
+since BCC's user doesn't care about dependencies. The day distroes
+started packaging libbpf and bpftool the game has changed.
+
+> > You also said a few times you don't want to merge fixes into bpf/net.
+> > That divergence from kernel development process is worrying.  
+> 
+> worrying - why? what exactly the concern you see?
+
+First it's still in the tree so it just feels wrong to have the process
+fundamentally different for sections of the tree. 
+
+Secondly it's best to stick to the tried and tested processes unless
+there's a good and stated reason to diverge.
+
+Now we're neither doing standard user library process nor kernel
+process. Both of which must account for stable fixes (Dave explained
+the enterprise distro needs in his reply).
+
+> Tying user space release into kernel release and user space process into
+> kernel process makes little sense to me.
+
+I'm not saying we can't do user space, but we should pick one.
+
+I have slight preference for kernel process, because it's familiar and
+it automatically takes of policy questions, which otherwise consume
+developer's time.
+
+Please accept iproute2 as an example of a user space toolset closely
+related to the kernel. If kernel release model and process made no
+sense in user space, why do iproute2s developers continue to follow it
+for years? 
+
+Let's learn from experience :/
+
+> Packaging is different.
+
+There are mostly disadvantages, but the process should be well known.
+perf has been packaged for years.
+
+iproute2 sometimes lags behind the upstream, more than perf in my
+experience. Also there's rarely a need to update tools closely related
+to the kernel without the kernel..
+
+> Compatibility requirements are different.
+
+True.
+
+> CI is different.
+
+Well, hard to argue about things which don't exist :/
+
+> Integration with other projects is different.
+
+IMHO the submodule use case is fading. dnf/apt install, it's just a
+normal C library, we've done this for decades.
+
+And there is no submodule need for bpftool, which we are discussing.
+
+> libbpf source code is in the kernel tree only because kernel changes plus
+> libbpf changes plus selftests changes come as single patchset. That is really
+> the only reason. Packaging scripts, CI scripts, etc should be kept out of
+> kernel tree. All that stuff belongs at github/libbpf.
+> 
+> > None of this makes very much sense to me. We're diverging from well
+> > established development practices without as much as a justification.  
+> 
+> The kernel development process was never used for libbpf.
+
+What do you mean? I've sure as hell sent patches to net with Fixes tags,
+S-o-B and all that jazz for libbpf and bpftool.
+
+> Even coding style is different.
+
+Is it? You mean the damn underscores people are making fun of? :/
+
+> I'm puzzled why you think user space
+> should be tied to kernel. Everything is so vastly different.
+
+Not what I'm saying, I'm saying either run it as user space project in
+separate repos or kernel project.
+
+You're proposing we do both with some syncs and no clear process.
+
+> Some people say that 8 weeks to bump libbpf version is too long.
+> Other people say that it's too often.
+
+Those are two conflicting requirements, Alexei, how is breaking apart
+from the kernel going to make any difference?
+
+At least kernel gives us this somewhat reasonable 8 week cadence and 
+we don't have to ponder whether it should be shorter or longer until
+someone presents us with a compelling reason.
+
+> libbpf version numbers != kernel version numbers.
+
+Well, libbpf's numbers are arbitrary, and meaningless. They could as
+well be kernel numbers, like they are for bpftool. Or dates.
+
+libbpf doesn't have a roadmap either, it's not really a full-on project
+on its own. What's 0.1.0 gonna be? 
+
+Besides stuff lands in libbpf before it hits a major kernel release.
+So how are you gonna make libbpf releases independently from kernel
+ones? What if a feature gets a last minute revert in the kernel and it's
+in libbpf's ABI?
+
+Eh, you're just convincing me it should just stay in the kernel now.
+
+> There is no definition of LTS for libbpf. One day it will be
+> and the version of libbpf picked for LTS will likely have
+> nothing to do with kernel LTS choices.
+
+Again, libbpf inherits the kernel process so there is LTS process, the
+kernel one, and it's taken care of for us by all the existing stable
+automation.
+
+By merging everything into -next you're loosing that, with all but a
+vague mirage of how there may one day be multiple stable branches..
+
+> libbpf has to run on all kernels. Newer and older. How do you support
+> that if libbpf is tied with the kernel?
+
+Say I have built N kernels UM or for a VM, and we have some test
+suite: I pull libbpf, build it, run its tests. The only difference
+between in tree and out of tree is that "pull libbpf" means pulling
+smaller or larger repo. Doesn't matter that match, it's a low --depth
+local clone.
+
+Sorry for the long response.
