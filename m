@@ -2,159 +2,172 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C3CC2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAC1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7AA124249
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575559293;
-	bh=W+fB0lkYlMsEuvJGi7dBDak3D1u3wyO/Zqd/ae0XBbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qauzklTmp4VuSkJ1zQicQUTgsWDqOq/Pg/6WFgSBY3ZbGcUAVmk7rZV8qUPr+vYTU
-	 dUwM8UxfJ332E4eipsZapLBje8fVYYZJ3SBwGJBYH0p3D3q2hNknDWYA8+hbZITfDC
-	 U89qgvfBA7iIkh7GMFcZmm7J0ewjl6HXjEbpjgkU=
+	by mail.kernel.org (Postfix) with ESMTP id CA95A20707
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:27:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbfLEPVc (ORCPT
+        id S1729763AbfLEP1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:21:32 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33058 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729790AbfLEPVc (ORCPT
+        Thu, 5 Dec 2019 10:27:10 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44650 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfLEP1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 10:21:32 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v140so3097326oie.0;
-        Thu, 05 Dec 2019 07:21:31 -0800 (PST)
+        Thu, 5 Dec 2019 10:27:10 -0500
+Received: by mail-ot1-f68.google.com with SMTP id x3so2876123oto.11;
+        Thu, 05 Dec 2019 07:27:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+WIMxLv19tjffTAX77E2M2L63dzYaMaTLYuDHcPpCEE=;
-        b=dv0aeVhzikvm9N1HMR+UCwYiP2sfuHcZ2vr7MutvOVpuAygjQ6Zc0w/aIIIUMhmjPw
-         ZhTVJeL4kB0W0J+JkJ2UAuuZjkjBfXiY0tmBaMYmuzES9pVNJFVttX5yroxmB+RpB65d
-         RfnpUYJWb7ijrRN1q/WCNHlVPJz20FBqSXGTldNUim8Ad4eWMCfMZTVaOb9LYZUjYyTj
-         XWNHsWMnmfmIBvpitnp3+mCwH1qBwTWa8Uw90qzaw6FKt8y4hjDNdgnHQTcXHKKFnsc8
-         pED/dWaaQ6waoreFoiZ7AEOsUZOP9JlfZPN4EdC65FwYWojP9iAyPGSsVHn4NsVcOMTb
-         89ww==
-X-Gm-Message-State: APjAAAW6f9Re+JGaUPXegCRuaRDoEePSYrAokVlmi+NumrfPU+4XQq6C
-        taAnqK2U6UuV9NVOQMtiGQ==
-X-Google-Smtp-Source: APXvYqxWM2sWW0OmOjxxnjypKw2CsTWhwLb6dpBPypkmM6lnxiLp7y3FhuXuAy+HjZDphQ3sYtuYIw==
-X-Received: by 2002:a05:6808:50:: with SMTP id v16mr7227208oic.11.1575559291069;
-        Thu, 05 Dec 2019 07:21:31 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j23sm3560484oij.56.2019.12.05.07.21.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 07:21:30 -0800 (PST)
-Date:   Thu, 5 Dec 2019 09:21:29 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rodrigo Carvalho <rodrigorsdc@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        alexandru.ardelean@analog.com, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: Re: [PATCH v5 2/2] dt-bindings: iio: accel: add binding
- documentation for ADIS16240
-Message-ID: <20191205152129.GA13911@bogus>
-References: <20191123233510.4890-1-rodrigorsdc@gmail.com>
- <20191123233510.4890-2-rodrigorsdc@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BzeWlAHVU2HltvIFrP0fsFnUxdM4qbyfP8pavgfcc7w=;
+        b=rAQvSKU3K8tKj0s5kNllYLui0AYu7uw0hsEXoaczmhFqiGIWmAwrq1CPWY4nYlUHra
+         3gmOZ4vvkuEOfPmIY0h9LWmUiVnmOvC1/o8vdpiCWOlN9HoRZCkyUht17tPyv7WQKmsZ
+         4W61py++43aGKPrNxL3Mv0W4qsE27R3VFDFrgwqTZPK2d3WShpp9u5JL0XcIdyIkDGWn
+         j2TVOkDY8mBD8zBxhG72oJnYTjVvcZBhcv80Zp8jwLJ1hLV9j1Rp0Mh3owvQw68X4alZ
+         Hlr+IxG9cKUB8AP3kcQAyOryl3kTTDlBGUjHeXi7vGZQk0cCOZmW2CZrdyUhLJBnUXhU
+         T89w==
+X-Gm-Message-State: APjAAAWNm7s1GI1ZMFwRM6mrbg/kofCIE078fRAi2e49zX4GBsDHVZ1j
+        yoEu4TU34WCe25mR3tTwBGjFQh4IF/L4J1ypapQ=
+X-Google-Smtp-Source: APXvYqwHCmPlfMrZYZj+ql/m9hWI+YZzgBndE9T9km42bN1m86N9jZu3XfoBgpqFZvcdKfpjvilVI7g5aPfn4CHsDqQ=
+X-Received: by 2002:a05:6830:91:: with SMTP id a17mr6542243oto.107.1575559629333;
+ Thu, 05 Dec 2019 07:27:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191123233510.4890-2-rodrigorsdc@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190219103148.192029670@infradead.org> <20190219103233.443069009@infradead.org>
+ <CAMuHMdW3nwckjA9Bt-_Dmf50B__sZH+9E5s0_ziK1U_y9onN=g@mail.gmail.com>
+ <20191204104733.GR2844@hirez.programming.kicks-ass.net> <CAMuHMdXs_Fm93t=O9jJPLxcREZy-T53Z_U_RtHcvaWyV+ESdjg@mail.gmail.com>
+ <20191204133454.GW2844@hirez.programming.kicks-ass.net> <CAMuHMdVnhNFBqPQXKYCQbCnoQjZPSXRkuxbsbaguZ7_TcXXmVg@mail.gmail.com>
+ <20191204164143.GB2810@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191204164143.GB2810@hirez.programming.kicks-ass.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 5 Dec 2019 16:26:57 +0100
+Message-ID: <CAMuHMdVQO6vMDuns7rwk8sD+cPhEVQjEU_DiKiTQn0NY2ppzag@mail.gmail.com>
+Subject: Re: [PATCH v6 10/18] sh/tlb: Convert SH to generic mmu_gather
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 08:35:10PM -0300, Rodrigo Carvalho wrote:
-> This patch add device tree binding documentation for ADIS16240.
-> 
-> Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
+Hoi Peter,
 
-checkpatch.pl complains about a mismatch between the author and S-o-b.
+On Wed, Dec 4, 2019 at 5:42 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> On Wed, Dec 04, 2019 at 04:07:53PM +0100, Geert Uytterhoeven wrote:
+> > On Wed, Dec 4, 2019 at 2:35 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > Does this fare better?
+> >
+> > Yes. Migo-R is happy again.
+> > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > > --- a/arch/sh/include/asm/pgalloc.h
+> > > +++ b/arch/sh/include/asm/pgalloc.h
+> > > @@ -36,9 +36,7 @@ do {                                                  \
+> > >  #if CONFIG_PGTABLE_LEVELS > 2
+> > >  #define __pmd_free_tlb(tlb, pmdp, addr)                        \
+> > >  do {                                                   \
+> > > -       struct page *page = virt_to_page(pmdp);         \
+> > > -       pgtable_pmd_page_dtor(page);                    \
+> > > -       tlb_remove_page((tlb), page);                   \
+> > > +       pmd_free((tlb)->mm, (pmdp));                    \
+> > >  } while (0);
+> > >  #endif
+>
+> OK, so I was going to write a Changelog to go with that, but then I
+> realized that while this works and is similar to before the patch, I'm
+> not sure this is in fact correct.
+>
+> With this on (and also before) we're freeing the PMD before we've done
+> the TLB invalidate, that seems wrong!
+>
+> Looking at the size of that pmd_cache, that looks to be 30-(12+12-3)+3
+> == 12, which is exactly 1 page, for PAGE_SIZE_4K, less for the larger
+> pages.
+>
+> I'm thinking perhaps we should do something like the below instead?
 
-> ---
-> V5:
->   - None 
-> 
->  .../bindings/iio/accel/adi,adis16240.yaml     | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> new file mode 100644
-> index 000000000000..8e902f7c49e6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> @@ -0,0 +1,49 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Your advice is better when in close vicinity of an SH cross compiler,
+though ;-)
 
-Dual license new bindings please: (GPL-2.0-only OR BSD-2-Clause)
+> --- a/arch/sh/mm/pgtable.c
+> +++ b/arch/sh/mm/pgtable.c
+> @@ -5,9 +5,6 @@
+>  #define PGALLOC_GFP GFP_KERNEL | __GFP_ZERO
+>
+>  static struct kmem_cache *pgd_cachep;
+> -#if PAGETABLE_LEVELS > 2
+> -static struct kmem_cache *pmd_cachep;
+> -#endif
+>
+>  void pgd_ctor(void *x)
+>  {
+> @@ -23,11 +20,6 @@ void pgtable_cache_init(void)
+>         pgd_cachep = kmem_cache_create("pgd_cache",
+>                                        PTRS_PER_PGD * (1<<PTE_MAGNITUDE),
+>                                        PAGE_SIZE, SLAB_PANIC, pgd_ctor);
+> -#if PAGETABLE_LEVELS > 2
+> -       pmd_cachep = kmem_cache_create("pmd_cache",
+> -                                      PTRS_PER_PMD * (1<<PTE_MAGNITUDE),
+> -                                      PAGE_SIZE, SLAB_PANIC, NULL);
+> -#endif
+>  }
+>
+>  pgd_t *pgd_alloc(struct mm_struct *mm)
+> @@ -48,11 +40,7 @@ void pud_populate(struct mm_struct *mm, pud_t *pud, pmd_t *pmd)
+>
+>  pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address)
+>  {
+> -       return kmem_cache_alloc(pmd_cachep, PGALLOC_GFP);
+> -}
+> -
+> -void pmd_free(struct mm_struct *mm, pmd_t *pmd)
 
-With that,
+mm/memory.o: In function `__pmd_alloc':
+memory.c:(.text+0x1d74): undefined reference to `pmd_free'
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> -{
+> -       kmem_cache_free(pmd_cachep, pmd);
+> +       BUILD_BUG_ON(PTRS_PER_PMD * (1<<PTE_MAGNITUDE) <= PAGE_SIZE);
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ADIS16240 Programmable Impact Sensor and Recorder driver
-> +
-> +maintainers:
-> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> +
-> +description: |
-> +  ADIS16240 Programmable Impact Sensor and Recorder driver that supports
-> +  SPI interface.
-> +    https://www.analog.com/en/products/adis16240.html
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adis16240
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    spi0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        /* Example for a SPI device node */
-> +        accelerometer@0 {
-> +            compatible = "adi,adis16240";
-> +            reg = <0>;
-> +            spi-max-frequency = <2500000>;
-> +            interrupt-parent = <&gpio0>;
-> +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> +        };
-> +    };
-> -- 
-> 2.24.0
-> 
+... > PAGE_SIZE ?
+
+Else it triggers all the time.
+
+> +       return (pmd_t *)__get_free_page(PGALLOC_GFP);
+>  }
+>  #endif /* PAGETABLE_LEVELS > 2 */
+
+BTW, I'm still running Willy's fix that never made it upstream
+to kill an ugly boot warning, which also touches this code:
+https://patchwork.kernel.org/patch/10549883/#22166333
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
