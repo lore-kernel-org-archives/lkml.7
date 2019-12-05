@@ -2,121 +2,90 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BB7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B04C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B969622525
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MPqzdlHw"
+	by mail.kernel.org (Postfix) with ESMTP id 5304F22525
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbfLEXYI (ORCPT
+        id S1726160AbfLEXZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 18:24:08 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4072 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfLEXYH (ORCPT
+        Thu, 5 Dec 2019 18:25:42 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27632 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725988AbfLEXZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 18:24:07 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de991920001>; Thu, 05 Dec 2019 15:24:02 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 05 Dec 2019 15:24:06 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 05 Dec 2019 15:24:06 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec
- 2019 23:24:06 +0000
-Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec 2019
- 23:24:06 +0000
-Subject: Re: [v3 PATCH] mm: move_pages: return valid node id in status if the
- page is already on the target node
-To:     Qian Cai <cai@lca.pw>
-CC:     Yang Shi <yang.shi@linux.alibaba.com>, <fabecassis@nvidia.com>,
-        <mhocko@suse.com>, <cl@linux.com>, <vbabka@suse.cz>,
-        <mgorman@techsingularity.net>, <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <bd3f2ee5-9cbd-ed4f-9863-8859866da810@nvidia.com>
- <4C589824-CA40-41A3-8F2B-C2AA2A924510@lca.pw>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <a7f354b7-d2f9-71c0-7311-97255933b9a2@nvidia.com>
-Date:   Thu, 5 Dec 2019 15:24:05 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <4C589824-CA40-41A3-8F2B-C2AA2A924510@lca.pw>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575588242; bh=Ab8rY4ay+5Y5dcV8urGXOfE2qIJ9aPxsk4hQ7HgMonA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=MPqzdlHwcfwR0Ie02pSlatkIvc5TpipiNn58lbnSWReZxeutyVajGB4ZD+2Ghb+PO
-         nwk96+jLLfwS6r+vdWBXymIq8m+PV+9gid8+g0ia0I3cnyt3Du48FE9P6SJOi1p94o
-         gX/xeOlvFl6VKcBeQAO7rkSyAd7KNM8nW7JlL7jOvWUYgYKRse8LCqg2v96wXRMTkc
-         VlAn8dbvQqyV7xQ1JDc1+UcLkLc9t4mivgRHgHKe1gdiA5fTDO0xcLdFnfvJDD+hQU
-         uGQsbkbpyaV4MkTQZ0YdRJY1pSBDjJCNs4IsyQwqFkQ1YS5t1q7+MIZSflL5h8AZFG
-         ETB+/yoeXgRdA==
+        Thu, 5 Dec 2019 18:25:41 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB5NMgc2030238;
+        Thu, 5 Dec 2019 18:25:13 -0500
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wq2t3bpbv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Dec 2019 18:25:13 -0500
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB5NKCSc009232;
+        Thu, 5 Dec 2019 23:25:11 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma01dal.us.ibm.com with ESMTP id 2wkg27fhpp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Dec 2019 23:25:11 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB5NPAwJ57082256
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Dec 2019 23:25:10 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 387086A04D;
+        Thu,  5 Dec 2019 23:25:10 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 95C5B6A057;
+        Thu,  5 Dec 2019 23:25:09 +0000 (GMT)
+Received: from wrightj-ThinkPad-W520.rchland.ibm.com (unknown [9.10.101.53])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Dec 2019 23:25:09 +0000 (GMT)
+From:   Jim Wright <wrightj@linux.vnet.ibm.com>
+To:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
+        mark.rutland@arm.com, corbet@lwn.net, wrightj@linux.vnet.ibm.com,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] hwmon: Add UCD90320 power sequencer chip
+Date:   Thu,  5 Dec 2019 17:24:09 -0600
+Message-Id: <20191205232411.21492-1-wrightj@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-05_10:2019-12-04,2019-12-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ priorityscore=1501 bulkscore=0 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=621 mlxscore=0 impostorscore=0 clxscore=1015 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912050191
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/5/19 3:16 PM, Qian Cai wrote:
-> 
-> 
->> On Dec 5, 2019, at 5:41 PM, John Hubbard <jhubbard@nvidia.com> wrote:
->>
->> Please recall how this started: it was due to a report from a real end user, who was 
->> seeing a real problem. After a few emails, it was clear that there's not a good
->> work around available for cases like this:
->>
->> * User space calls move_pages(), gets 0 (success) returned, and based on that,
->> proceeds to iterate through the status array.
->>
->> * The status array remains untouched by the move_pages() call, so confusion and
->> wrong behavior ensues.
->>
->> After some further discussion, we decided that the current behavior really is 
->> incorrect, and that it needs fixing in the kernel. Which this patch does.
-> 
-> Well, that test code itself  does not really tell any real world use case.  Also, thanks to the discussion, it brought to me it is more obvious and critical  that the return code is wrong according to the spec. Then, if that part is taking care of, it would kill two-bird with one stone because there is no need to return status array anymore. Make sense?
-> 
+Add support for TI UCD90320 power sequencer chip.
 
-Let's check in the fix that is clearly correct and non-controversial, in one
-patch. Then another patch can be created for the other case. This allows forward
-progress and quick resolution of the user's bug report, while still dealing
-with all the problems.
+Changes since v1:
+- Device tree bindings text file replaced with YAML schema.
+- Device driver files are unchanged.
 
-If you try to fix too many problems in one patch (and remember, sometimes ">1"
-is too many), then things bog down. It's always a judgment call, but what's 
-unfolding here is quite consistent with the usual judgment calls in this area.
+Jim Wright (2):
+  dt-bindings: hwmon/pmbus: Add ti,ucd90320 power sequencer
+  hwmon: Add support for UCD90320 Power Sequencer
 
-I don't think anyone is saying, "don't work on the second problem", it's just
-that it's less urgent, due to no reports from the field. If you are passionate
-about fixing the second problem (and are ready and willing to handle the fallout
-from user space, if it occurs), then I'd encourage you to look into it.
+ .../bindings/hwmon/pmbus/ti,ucd90320.yaml     | 45 +++++++++++++++++++
+ Documentation/hwmon/ucd9000.rst               | 12 ++++-
+ drivers/hwmon/pmbus/Kconfig                   |  6 +--
+ drivers/hwmon/pmbus/ucd9000.c                 | 39 +++++++++++-----
+ 4 files changed, 85 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/ti,ucd90320.yaml
 
-It could turn out to be one of those "cannot change this because user space expectations
-have baked and hardened, and changes would break user space" situations, just to
-warn you in advance, though.
-
-thanks,
 -- 
-John Hubbard
-NVIDIA
+2.17.1
+
