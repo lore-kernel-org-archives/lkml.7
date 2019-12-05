@@ -2,319 +2,135 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AA5C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A65C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 191DB2464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C63022525
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:50:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="hkc1cVsc"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Jd4bTje6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbfLESq3 (ORCPT
+        id S1729806AbfLESuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 13:46:29 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:36957 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729290AbfLESq3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 13:46:29 -0500
-Received: by mail-qv1-f67.google.com with SMTP id t7so1687218qve.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 10:46:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=DBLlVwl81NMlb0aP3FcIvdKEYbuLkV1CdHBSyJ493Pw=;
-        b=hkc1cVscoLuLFyRuJErYLgh2SIH7MyXImjnoQDMRzfucBAKAVnTXQMUWrqGv9VK8wE
-         IncdntU0YY6F5Xi0Lq2zh6FFMhobPj5YBQgisevqR5dBAZcAgH4SVe5vBvhmq9C4EGto
-         Sz75EXzlcJ0Budgg2nGd0HvZNXbzYp9gAjdSUUqiw7/lQNgD8fVcfR5ZgTJZhnqEB57i
-         ATlcn8nS3D6fFiQL7G5rNkmLCOZdUMek2HBVXiOdSA/0+n198gVjRA14a1ntGg9N5O2Q
-         TteljOneIVYmbkJNhVESHKQONSl/hBvrUn2Ed6GNJZYuxHd1ZzHCr1k+ghOLJbDSSGTr
-         wRJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=DBLlVwl81NMlb0aP3FcIvdKEYbuLkV1CdHBSyJ493Pw=;
-        b=LK/ngUoYfve2EP8wRzWoyPgtVm9Kg+A0Z3zZFylaftSo9GGjzxDvptvaNIfpAZvfdz
-         rdUq6XxN/lGars9zcfZugxqYXE6GvugxbIA7MqGYkYAGJRcQs8JVBIK8syTi+oUtAdvU
-         0IRl5v4f09GKU7DJdqRKpQCmE+MK4gVjN9w3rTQSD4nTf8gjUQ0LfP1g+oUoiKjCrMrf
-         hirolAH4+2mkMPw7du0LD4ONnUp6UeJeH3Ki4zhrEUbcWrK7oyNiD6Zkd3T+/1KG76CP
-         9jGodzXiW1HX1UzQL9T+06Qm1Rpu2MsfvsRv1IGHk2v9TZhJHp1dkrFdkdYBhadg9vyK
-         UJrg==
-X-Gm-Message-State: APjAAAWKxn4SLNNkP6BRbzJmmh7DF+5DiSr0bRe5In6crXva78/IXDHz
-        z6vaA8SwiBqO6kEnFk10CHWCLQ==
-X-Google-Smtp-Source: APXvYqwZslsme8mZXtgHQTtywY/xfig2cTceccoRrNNrD7+BocXaGcGC6VS7isSrJm0ks1yPw/t9nQ==
-X-Received: by 2002:a0c:ff01:: with SMTP id w1mr8801425qvt.171.1575571586995;
-        Thu, 05 Dec 2019 10:46:26 -0800 (PST)
-Received: from tpx230-nicolas ([2610:98:8005::650])
-        by smtp.gmail.com with ESMTPSA id p35sm5349897qtd.12.2019.12.05.10.46.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 10:46:26 -0800 (PST)
-Message-ID: <1a570c6e07fcd0d0ddc401a3640dfca07f22304d.camel@ndufresne.ca>
-Subject: Re: [PATCH 0/5] media: meson: vdec: Add VP9 decoding support
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org,
-        hans.verkuil@cisco.com
-Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Date:   Thu, 05 Dec 2019 13:46:24 -0500
-In-Reply-To: <60fa8f55-de40-13fa-b584-ad9f020cde12@baylibre.com>
-References: <20191205092454.26075-1-narmstrong@baylibre.com>
-         <4ee20fdf5182b7bfe338e9ae044424b6125fed15.camel@ndufresne.ca>
-         <60fa8f55-de40-13fa-b584-ad9f020cde12@baylibre.com>
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-5ge5SRuKOXA9YMq6LNHq"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Thu, 5 Dec 2019 13:50:03 -0500
+Received: from mail-eopbgr130079.outbound.protection.outlook.com ([40.107.13.79]:48151
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726589AbfLESuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 13:50:03 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GVDj72VqtyNDHGWlqpFL2BAv12SYw2NTlY6lccOdHIy5cRWEblMMex5xxfyB5PkGQRaUAvsbEnS+U3wTFAJ0mrNegtDFlJ9qmQeeQW3qt3V6tKBzp3Sq87+u/EF3CO2JM/WMOhiCEjgskAOEn+GKxYAfHYXNIS9gzuPGM5jsK6RUrX/eSkiLAPMTLQrq/Q0wDDjVtKlcJ3Ors9dTF2Sl4BICbfBqOvATjBt8xdHckkNg5mCPuVZLw6X9IJST99yS7cnL3Z4JcDdYnOeP/+WHK2sfKz1hp4AlSV68Xlue/VjRHxZc5b3MqrxlOv70gt4Veis8CTs9utBxI8bNrRL7GA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EqpEX+GRcN85lqr7uGDwuxAtDob+08CroYaIAD23nEE=;
+ b=gqhDU/PaFx9LwscmckX+3O5F9KjPNShGxFt35MRbYbBpNstDcF0hUm9kWxSmS9OzfMVEtqHt6p50/l5i8QzP8oMAys09KzXOC2OFEFF34gABOtJTHzaHsEfJNyTCuexU63vfnASjrIu/8joSJ27s2ijlnOdkgFqh7mPvsh1BSpy1ZMTrFzHfrxmc5KtAoQGKDIQ4mVsPvkPc86wTmxUirJoPYEINk0By7gm/A4Ilht5TQYG/E+9LzVLF/jAwJ3cOQXrUeHabaswR6oxIMIfk15WqXR9A0akzEBXbabCXpL58gBEV8/rnAuTVYDmTPK4Ys0dsFMTbKG5ALmfimotbIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EqpEX+GRcN85lqr7uGDwuxAtDob+08CroYaIAD23nEE=;
+ b=Jd4bTje69b75n46bjKpVVhUn5MW8a23mmiR/GzFa5jjJXutQ6rtTP3e7c01cCF61oak2wsi2qoXkgz2gcH12YhI/5pNWAAQHTClLPAzgp8buxq/35VaDN9fggx2waql+Qf8NHIrPj1xcUF8s2THa4BbSaFyl+Ua3oRJyD+kfTsA=
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
+ AM0PR05MB4756.eurprd05.prod.outlook.com (52.133.61.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.14; Thu, 5 Dec 2019 18:49:58 +0000
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::16:9951:5a4b:9ec6]) by AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::16:9951:5a4b:9ec6%7]) with mapi id 15.20.2516.014; Thu, 5 Dec 2019
+ 18:49:58 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+CC:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] RDMA/cma: add missed unregister_pernet_subsys in init
+ failure
+Thread-Topic: [PATCH] RDMA/cma: add missed unregister_pernet_subsys in init
+ failure
+Thread-Index: AQHVq4X+uZCTp3HGm0yAWTgo2WdDwaer4g5w
+Date:   Thu, 5 Dec 2019 18:49:58 +0000
+Message-ID: <AM0PR05MB486638F7997D643FAD64B482D15C0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20191205160632.32132-1-hslester96@gmail.com>
+In-Reply-To: <20191205160632.32132-1-hslester96@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [208.176.44.194]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 70c08c0a-fbb7-49a4-57f4-08d779b3ed95
+x-ms-traffictypediagnostic: AM0PR05MB4756:
+x-microsoft-antispam-prvs: <AM0PR05MB4756336E7C79D24302188A11D15C0@AM0PR05MB4756.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:83;
+x-forefront-prvs: 02426D11FE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(39860400002)(346002)(376002)(189003)(199004)(71190400001)(71200400001)(305945005)(4326008)(11346002)(14454004)(186003)(74316002)(33656002)(102836004)(26005)(478600001)(76116006)(6506007)(66556008)(99286004)(8676002)(66476007)(66446008)(316002)(55016002)(86362001)(66946007)(6916009)(81166006)(5660300002)(8936002)(25786009)(4744005)(81156014)(52536014)(2906002)(229853002)(64756008)(9686003)(76176011)(7696005)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4756;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: c2S6h+9siS6ywIxMFrzlNiqQKHp/iaBcfaf/QLWze0lkWvdhKKvZPq8zsKBKVi1d/ZrTFYwDZvaZr3Y3meJzI/KE6itOcZmuuoZCCtIJfDqTAthM9SMlSESgYzwI7Z7cw4nlA8Z5JxDv7Df5hGeC7R0tsYjqeSxLrHpuFwP+2wtBnscNjShBYD2IjtJGVBPRWO3MgbZB8dZ4IeiYn1OW+j2EieaHoY6KGfFH9+Ml1P2i8OZ6lSeNf8v73/PQSppOpSc/iw7ni4XlUkhRnXb5fOYN1dWsqnXQjELE/vpAk4JLk/KT7whPSbR5xSQWcehVn2gavTOSvrjJN4sNXP/7yleGrh2L9TQbzFrjonLlhEQvR05g3gjyV68WicQBPBF5/Dl4ScBucSvf5Uv/Wkvysmb4+MGywi8RF21njTqjg/ZNv/g9Mqtg0ruqs9lejCXK
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70c08c0a-fbb7-49a4-57f4-08d779b3ed95
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 18:49:58.7469
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZCTPfvtrtJCOD51xShImtjP2qFBRU2AbQ4t1QS3bjMyQWVSf5CU/T+OUkRMSu9eAEs7z/UhfccuvSc8+8n/cbw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4756
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-5ge5SRuKOXA9YMq6LNHq
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Le jeudi 05 d=C3=A9cembre 2019 =C3=A0 16:49 +0100, Neil Armstrong a =C3=A9c=
-rit :
-> On 05/12/2019 16:42, Nicolas Dufresne wrote:
-> > Hi Neil,
-> >=20
-> > Le jeudi 05 d=C3=A9cembre 2019 =C3=A0 10:24 +0100, Neil Armstrong a =C3=
-=A9crit :
-> > > Hello,
-> > >=20
-> > > This patchset aims to bring VP9 decoding support to Amlogic GXL, G12A=
- & SM1
-> > > platforms for the amlogic stateful video decoder driver.
-> > >=20
-> > > With this, it passes v4l2-compliance with streaming on Amlogic G12A a=
-nd
-> > > Amlogic SM1 SoCs successfully using the stream at [1] with a fixed
-> > > pyv4l2compliance script for VP9 at [2].
-> > >=20
-> > > The original script kept the IVF headers in the stream, confusing the
-> > > decoder. The fixed script only extracts the payload from the IVF cont=
-ainer.
-> > >=20
-> > > The decoder has been tested using the Google CTS TestVectorsIttiam VP=
-9 yuv420
-> > > samples, passing 82 resolutions test streams, with 13 fails by pixel
-> > > differences and 3 timeouts.
-> >=20
-> > How do you handle resolution changes on delta frames ? It's a bit of a
-> > challenge since the reference frames are not at the same resolution as
-> > the frames to be decoded. This breaks the assumption for the resolution
-> > changes mechanism as described in the spec.
+> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
+> owner@vger.kernel.org> On Behalf Of Chuhong Yuan
+> Sent: Thursday, December 5, 2019 10:07 AM
+> The driver forgets to call unregister_pernet_subsys() in the error path o=
+f
+> cma_init().
+> Add the missed call to fix it.
 >=20
-> I don't have a lot of experience on the subject, but in the vendor implem=
-entation,
-> they store the resolution along the reference frames and when loading all=
- the
-> reference frames to the HW, the original resolution is also loaded.
-> But we don't handle it.
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  drivers/infiniband/core/cma.c | 1 +
+>  1 file changed, 1 insertion(+)
 >=20
-> > On stateless side, Boris is introducing DESTROY_BUFS, so we can free
-> > the references when they are not used anymore. But the reference are
-> > managed by userspace and are not queued. While on stateful side so far,
-> > it was assumed that references are queued, and the semantic of S_FMT is
-> > that it must apply to the entire set of queued buffer.
->=20
-> yes
->=20
-> > I think most streams will work and won't use this feature, but I'm
-> > worried that writing a compliant VP9 decoder is currently not possible.
->=20
-> Indeed, but I don't have a clear enough view on the subject, and it doesn=
-'t seem
-> I have any test stream with such feature.
+> diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.=
+c
+> index 25f2b70fd8ef..43a6f07e0afe 100644
+> --- a/drivers/infiniband/core/cma.c
+> +++ b/drivers/infiniband/core/cma.c
+> @@ -4763,6 +4763,7 @@ static int __init cma_init(void)
+>  err:
+>  	unregister_netdevice_notifier(&cma_nb);
+>  	ib_sa_unregister_client(&sa_client);
+> +	unregister_pernet_subsys(&cma_pernet_operations);
+>  err_wq:
+>  	destroy_workqueue(cma_wq);
+>  	return ret;
+> --
+> 2.24.0
+Please add to commit log.
 
-https://www.webmproject.org/vp9/levels/
+Fixes: 4be74b42a6d0 ("IB/cma: Separate port allocation to network namespace=
+s ")=20
 
-I believe in the performance suite, the FRM_RESIZE sample is what
-should exercise this.
-
->=20
-> Neil
->=20
-> > > This patchset depends on :
-> > > - G12A enablement at [3]
-> > > - SM1 enablement at [4]
-> > > - H.264 and compliance at [5]
-> > >=20
-> > > [1] https://github.com/superna9999/pyv4l2compliance/raw/tests/output/=
-Jellyfish_1080_10s_5MB.vp9.hdr
-> > > [2] https://github.com/superna9999/pyv4l2compliance
-> > > [3] https://lore.kernel.org/linux-media/20191120111430.29552-1-narmst=
-rong@baylibre.com
-> > > [4] https://lore.kernel.org/linux-media/20191121101429.23831-1-narmst=
-rong@baylibre.com
-> > > [5] https://lore.kernel.org/linux-media/20191126093733.32404-1-narmst=
-rong@baylibre.com
-> > >=20
-> > > The compliance log is:
-> > > # v4l2-compliance --stream-from-hdr Jellyfish_1080_10s_5MB.vp9.hdr -s=
- 200
-> > > v4l2-compliance SHA: 7ead0e1856b89f2e19369af452bb03fd0cd16793, 64 bit=
-s
-> > >=20
-> > > Compliance test for meson-vdec device /dev/video0:
-> > >=20
-> > > Driver Info:
-> > > 	Driver name      : meson-vdec
-> > > 	Card type        : Amlogic Video Decoder
-> > > 	Bus info         : platform:meson-vdec
-> > > 	Driver version   : 5.4.0
-> > > 	Capabilities     : 0x84204000
-> > > 		Video Memory-to-Memory Multiplanar
-> > > 		Streaming
-> > > 		Extended Pix Format
-> > > 		Device Capabilities
-> > > 	Device Caps      : 0x04204000
-> > > 		Video Memory-to-Memory Multiplanar
-> > > 		Streaming
-> > > 		Extended Pix Format
-> > > 	Detected Stateful Decoder
-> > >=20
-> > > Required ioctls:
-> > > 	test VIDIOC_QUERYCAP: OK
-> > >=20
-> > > Allow for multiple opens:
-> > > 	test second /dev/video0 open: OK
-> > > 	test VIDIOC_QUERYCAP: OK
-> > > 	test VIDIOC_G/S_PRIORITY: OK
-> > > 	test for unlimited opens: OK
-> > >=20
-> > > Debug ioctls:
-> > > 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-> > > 	test VIDIOC_LOG_STATUS: OK (Not Supported)
-> > >=20
-> > > Input ioctls:
-> > > 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> > > 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> > > 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> > > 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> > > 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-> > > 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> > > 	Inputs: 0 Audio Inputs: 0 Tuners: 0
-> > >=20
-> > > Output ioctls:
-> > > 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> > > 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> > > 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> > > 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> > > 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> > > 	Outputs: 0 Audio Outputs: 0 Modulators: 0
-> > >=20
-> > > Input/Output configuration ioctls:
-> > > 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> > > 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> > > 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> > > 	test VIDIOC_G/S_EDID: OK (Not Supported)
-> > >=20
-> > > Control ioctls:
-> > > 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-> > > 	test VIDIOC_QUERYCTRL: OK
-> > > 	test VIDIOC_G/S_CTRL: OK
-> > > 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-> > > 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-> > > 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> > > 	Standard Controls: 2 Private Controls: 0
-> > >=20
-> > > Format ioctls:
-> > > 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> > > 	test VIDIOC_G/S_PARM: OK (Not Supported)
-> > > 	test VIDIOC_G_FBUF: OK (Not Supported)
-> > > 	test VIDIOC_G_FMT: OK
-> > > 	test VIDIOC_TRY_FMT: OK
-> > > 	test VIDIOC_S_FMT: OK
-> > > 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> > > 	test Cropping: OK (Not Supported)
-> > > 	test Composing: OK (Not Supported)
-> > > 	test Scaling: OK (Not Supported)
-> > >=20
-> > > Codec ioctls:
-> > > 	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-> > > 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> > > 	test VIDIOC_(TRY_)DECODER_CMD: OK
-> > >=20
-> > > Buffer ioctls:
-> > > 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> > > 	test VIDIOC_EXPBUF: OK
-> > > 	test Requests: OK (Not Supported)
-> > >=20
-> > > Test input 0:
-> > >=20
-> > > Streaming ioctls:
-> > > 	test read/write: OK (Not Supported)
-> > > 	test blocking wait: OK
-> > > 	Video Capture Multiplanar: Captured 200 buffers  =20
-> > > 	test MMAP (select): OK
-> > > 	Video Capture Multiplanar: Captured 200 buffers  =20
-> > > 	test MMAP (epoll): OK
-> > > 	test USERPTR (select): OK (Not Supported)
-> > > 	test DMABUF: Cannot test, specify --expbuf-device
-> > >=20
-> > > Total for meson-vdec device /dev/video0: 49, Succeeded: 49, Failed: 0=
-, Warnings: 0
-> > >=20
-> > > Maxime Jourdan (4):
-> > >   media: meson: vdec: add helpers for lossless framebuffer compressio=
-n
-> > >     buffers
-> > >   media: meson: vdec: add common HEVC decoder support
-> > >   media: meson: vdec: add VP9 input support
-> > >   media: meson: vdec: add VP9 decoder support
-> > >=20
-> > > Neil Armstrong (1):
-> > >   media: meson: vdec: align stride on 32 bytes
-> > >=20
-> > >  drivers/staging/media/meson/vdec/Makefile     |    4 +-
-> > >  .../media/meson/vdec/codec_hevc_common.c      |  285 ++++
-> > >  .../media/meson/vdec/codec_hevc_common.h      |   77 ++
-> > >  drivers/staging/media/meson/vdec/codec_vp9.c  | 1192 +++++++++++++++=
-++
-> > >  drivers/staging/media/meson/vdec/codec_vp9.h  |   13 +
-> > >  drivers/staging/media/meson/vdec/esparser.c   |  142 +-
-> > >  drivers/staging/media/meson/vdec/hevc_regs.h  |  218 +++
-> > >  drivers/staging/media/meson/vdec/vdec.c       |   10 +-
-> > >  .../staging/media/meson/vdec/vdec_helpers.c   |   31 +-
-> > >  .../staging/media/meson/vdec/vdec_helpers.h   |    4 +
-> > >  drivers/staging/media/meson/vdec/vdec_hevc.c  |  231 ++++
-> > >  drivers/staging/media/meson/vdec/vdec_hevc.h  |   13 +
-> > >  .../staging/media/meson/vdec/vdec_platform.c  |   38 +
-> > >  13 files changed, 2245 insertions(+), 13 deletions(-)
-> > >  create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_commo=
-n.c
-> > >  create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_commo=
-n.h
-> > >  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.c
-> > >  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.h
-> > >  create mode 100644 drivers/staging/media/meson/vdec/hevc_regs.h
-> > >  create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.c
-> > >  create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.h
-> > >=20
->=20
->=20
-
---=-5ge5SRuKOXA9YMq6LNHq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXelQgAAKCRBxUwItrAao
-HBE7AKC1P8n2zO5GHM2HzTAgV2d83aMdCQCg1EYqRJk2Y+jJgBaVu5kEZaVYF8U=
-=SRoR
------END PGP SIGNATURE-----
-
---=-5ge5SRuKOXA9YMq6LNHq--
-
+Reviewed-by: Parav Pandit <parav@mellanox.com>
