@@ -2,205 +2,136 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B817C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD67EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD6521823
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:40:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C5421823
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Om+jGb6v"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h2L4BFik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbfLEMkc (ORCPT
+        id S1729404AbfLEMnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 07:40:32 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60754 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729099AbfLEMkb (ORCPT
+        Thu, 5 Dec 2019 07:43:21 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37367 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729117AbfLEMnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 07:40:31 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 133182E5;
-        Thu,  5 Dec 2019 13:40:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575549629;
-        bh=4t62tO3hAEzg4VyyZFBo9HwlULB/1/03jaZKqCnIwcY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Om+jGb6vA2fWUhD45A1KuG3sf+5G0dgeBA4h+qDaDcPaBPD34QAEaB5hB1EwYYrx2
-         y8sgb/qXemVuPeB+leFbQRj3pGH9697LvfY5wLlT5VKsUwXdxg7BaT7HnS2mu7/iIg
-         jY3C79YzOWFQ/FCDIc+8Shy6gJ/YVZZYpIZU/rbQ=
-Date:   Thu, 5 Dec 2019 14:40:22 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH v2 01/28] drm: Introduce drm_bridge_init()
-Message-ID: <20191205124022.GA16034@pendragon.ideasonboard.com>
-References: <20191204114732.28514-1-mihail.atanassov@arm.com>
- <20191204114732.28514-2-mihail.atanassov@arm.com>
+        Thu, 5 Dec 2019 07:43:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575549799;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Q1WWgL8RuF7Fs6ltC0qLeONxSmgpXtqUlxEFsxvFm70=;
+        b=h2L4BFikSImluv5NCO4YEZKZ/j4mlAJiQ0u6WWdISl7FwmVA3rMqBUTDp+Y955wsfhv52g
+        H2s9x7mVvT9DLXe3esxEWjzFdnULQ/TNwMj0Q8pXvxS7bAozh8SQJLtSoxAjbua6YTW0YR
+        QalTzyh/q/5WSZGcixRQ+yYMjlFG3Cg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-17-elPFAFaIMW6WOSTa7c8OAg-1; Thu, 05 Dec 2019 07:43:16 -0500
+Received: by mail-wr1-f70.google.com with SMTP id j13so1470711wrr.20
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 04:43:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Q1WWgL8RuF7Fs6ltC0qLeONxSmgpXtqUlxEFsxvFm70=;
+        b=ZbdzfhxpeqYxsR04Sv1ynI5T1t92lXJKfGf2vHk8zHuIt49C7Zf/ThdGJBCgwjWBwR
+         nOdpcclOrODB5L7At4fDw7KTdObhL5mtPl4FOvwZUPHB9L4vFXMqsc0uZfjAQCq3IJWB
+         2p7DlWR/JH4YgO0TmeFqhhJEZYg2U8SzGg8+2QsqFNTXd4IPAjCVsrga2AipMPX9pnUq
+         PyFD3YL+PqRMZbreZ+fUJLjELREyzGG3hfr0RkSJ+2JodS4YBFO27yhDoLcFcFc4rTIw
+         XGHpVScnWD6ZVAFUOOOvNYipEXk0gtPm35HWPcGNyIJJALMcOUkvX9YiakktOTlGRVK1
+         09vQ==
+X-Gm-Message-State: APjAAAU+g6Np6eLETiv455NPhA+xMn0yd5LaWpFFpDRmH7SEA4GWhgqW
+        NRscStWhisKRzwnaQuDjN8DUvgTY5RBv4lZbCbQgcs/PqnblPfl2WM4bjxGpW0vM1n4W/R42Oh3
+        2La8w832263GbKeCQvp+17QCn
+X-Received: by 2002:a7b:cf16:: with SMTP id l22mr5136174wmg.79.1575549795077;
+        Thu, 05 Dec 2019 04:43:15 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxtlO4z7GX9u/dCNLdQj6viEVF9+IodBKkT+pZtFOZQY3Da/hnmj69WiiFuDi52LhUSCM+UcA==
+X-Received: by 2002:a7b:cf16:: with SMTP id l22mr5136156wmg.79.1575549794833;
+        Thu, 05 Dec 2019 04:43:14 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:541f:a977:4b60:6802? ([2001:b07:6468:f312:541f:a977:4b60:6802])
+        by smtp.gmail.com with ESMTPSA id d10sm11953556wrw.64.2019.12.05.04.43.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2019 04:43:14 -0800 (PST)
+Subject: Re: [PATCH v5 0/6] KVM: X86: Cleanups on dest_mode and headers
+To:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20191204190721.29480-1-peterx@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <9359243b-eaaa-99aa-af75-371587e75eb5@redhat.com>
+Date:   Thu, 5 Dec 2019 13:43:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191204190721.29480-1-peterx@redhat.com>
+Content-Language: en-US
+X-MC-Unique: elPFAFaIMW6WOSTa7c8OAg-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191204114732.28514-2-mihail.atanassov@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mihail,
+I actually prefer 0 to APIC_DEST_NOSHORT, but who am I to complain if
+someone else is actually cleaning things up.
 
-Thank you for the patch.
+Queued, thanks.
 
-On Wed, Dec 04, 2019 at 11:48:02AM +0000, Mihail Atanassov wrote:
-> A simple convenience function to initialize the struct drm_bridge. The
-> goal is to standardize initialization for any bridge registered with
-> drm_bridge_add() so that we can later add device links for consumers of
-> those bridges.
+Paolo
+
+On 04/12/19 20:07, Peter Xu wrote:
+> v5:
+> - rename param of ioapic_to_lapic_dest_mode to dest_mode_logical [Sean]
+> - in patch 5, also do s/short_hand/shorthand/ for kvm_apic_match_dest [Vitaly]
+> - one more r-b picked
 > 
-> v2:
->  - s/WARN_ON(!funcs)/WARN_ON(!funcs || !dev)/ as suggested by Daniel
->  - expand on some kerneldoc comments as suggested by Daniel
->  - update commit message as suggested by Daniel
+> v4:
+> - address all comments from Vitaly, adding r-bs properly
+> - added one more trivial patch:
+>   "KVM: X86: Conert the last users of "shorthand = 0" to use macros"
 > 
-> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
-> ---
->  drivers/gpu/drm/drm_bridge.c | 34 +++++++++++++++++++++++++++++++++-
->  include/drm/drm_bridge.h     | 15 ++++++++++++++-
->  2 files changed, 47 insertions(+), 2 deletions(-)
+> v3:
+> - address all the comments from both Vitaly and Sean
+> - since at it, added patches:
+>   "KVM: X86: Fix kvm_bitmap_or_dest_vcpus() to use irq shorthand"
+>   "KVM: X86: Drop KVM_APIC_SHORT_MASK and KVM_APIC_DEST_MASK"
 > 
-> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> index cba537c99e43..50e1c1b46e20 100644
-> --- a/drivers/gpu/drm/drm_bridge.c
-> +++ b/drivers/gpu/drm/drm_bridge.c
-> @@ -64,7 +64,10 @@ static DEFINE_MUTEX(bridge_lock);
->  static LIST_HEAD(bridge_list);
->  
->  /**
-> - * drm_bridge_add - add the given bridge to the global bridge list
-> + * drm_bridge_add - add the given bridge to the global bridge list.
+> Each patch explains itself.
+> 
+> Please have a look, thanks.
+> 
+> Peter Xu (6):
+>   KVM: X86: Fix kvm_bitmap_or_dest_vcpus() to use irq shorthand
+>   KVM: X86: Move irrelevant declarations out of ioapic.h
+>   KVM: X86: Use APIC_DEST_* macros properly in kvm_lapic_irq.dest_mode
+>   KVM: X86: Drop KVM_APIC_SHORT_MASK and KVM_APIC_DEST_MASK
+>   KVM: X86: Fix callers of kvm_apic_match_dest() to use correct macros
+>   KVM: X86: Conert the last users of "shorthand = 0" to use macros
+> 
+>  arch/x86/include/asm/kvm_host.h |  5 +++++
+>  arch/x86/kvm/hyperv.c           |  1 +
+>  arch/x86/kvm/ioapic.c           | 24 +++++++++++++++---------
+>  arch/x86/kvm/ioapic.h           |  6 ------
+>  arch/x86/kvm/irq.h              |  3 +++
+>  arch/x86/kvm/irq_comm.c         | 12 +++++++-----
+>  arch/x86/kvm/lapic.c            |  9 +++------
+>  arch/x86/kvm/lapic.h            |  9 +++++----
+>  arch/x86/kvm/svm.c              |  4 ++--
+>  arch/x86/kvm/x86.c              |  4 ++--
+>  10 files changed, 43 insertions(+), 34 deletions(-)
+> 
 
-You add a final period here and in the documentation of struct
-drm_bridge, but the new function you're adding doesn't have one :-) I'd
-drop the period here and for drm_bridge to be consistent with the rest
-of the code.
-
-> + *
-> + * Drivers should call drm_bridge_init() prior adding it to the list.
-
-s/should/shall/
-s/prior adding it/prior to adding the bridge/
-
-> + * Drivers should call drm_bridge_remove() to clean up the bridge list.
-
-I'd replace this sentence with "Before deleting a bridge (usually when
-the driver is unbound from the device), drivers shall call
-drm_bridge_remove() to remove it from the global list."
-
->   *
->   * @bridge: bridge control structure
->   */
-> @@ -89,6 +92,35 @@ void drm_bridge_remove(struct drm_bridge *bridge)
->  }
->  EXPORT_SYMBOL(drm_bridge_remove);
->  
-> +/**
-> + * drm_bridge_init - initialise a drm_bridge structure
-
-initialise or initialize ? :-)
-
-> + *
-> + * @bridge: bridge control structure
-> + * @funcs: control functions
-> + * @dev: device associated with this drm_bridge
-
-dev goes before funcs
-
-> + * @timings: timing specification for the bridge; optional (may be NULL)
-> + * @driver_private: pointer to the bridge driver internal context (may be NULL)
-
-I'm not too sure about the last two parameters. Having NULL, NULL in
-most callers is confusing, and having a void * as one of the parameters
-means that the compiler won't catch errors if the two parameters are
-reversed. I think this is quite error prone.
-
-There are very few drivers using driver_private (I count 6 of them, with
-2 additional drivers that set driver_private but never use it). How
-about embedding the bridge structure in those 6 drivers and getting rid
-of the field altogether ? This could be part of a separate series, but
-in any case I'd drop driver_private from drm_bridge_init().
-
-> + */
-> +void drm_bridge_init(struct drm_bridge *bridge, struct device *dev,
-> +		     const struct drm_bridge_funcs *funcs,
-> +		     const struct drm_bridge_timings *timings,
-> +		     void *driver_private)
-> +{
-> +	WARN_ON(!funcs || !dev);
-> +
-> +	bridge->dev = NULL;
-
-NULL ? Shouldn't this be dev ?
-
-> +	bridge->encoder = NULL;
-> +	bridge->next = NULL;
-> +
-> +#ifdef CONFIG_OF
-> +	bridge->of_node = dev->of_node;
-> +#endif
-> +	bridge->timings = timings;
-> +	bridge->funcs = funcs;
-> +	bridge->driver_private = driver_private;
-> +}
-> +EXPORT_SYMBOL(drm_bridge_init);
-> +
->  /**
->   * drm_bridge_attach - attach the bridge to an encoder's chain
->   *
-> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index c0a2286a81e9..949e4f401a53 100644
-> --- a/include/drm/drm_bridge.h
-> +++ b/include/drm/drm_bridge.h
-> @@ -373,7 +373,16 @@ struct drm_bridge_timings {
->  };
->  
->  /**
-> - * struct drm_bridge - central DRM bridge control structure
-> + * struct drm_bridge - central DRM bridge control structure.
-> + *
-> + * Bridge drivers should call drm_bridge_init() to initialize a bridge
-> + * driver, and then register it with drm_bridge_add().
-
-s/bridge driver/bridge structure/ (or drm_bridge structure)
-
-> + *
-> + * Users of bridges link a bridge driver into their overall display output
-> + * pipeline by calling drm_bridge_attach().
-> + *
-> + * Modular drivers in OF systems can query the list of registered bridges
-> + * with of_drm_find_bridge().
->   */
->  struct drm_bridge {
->  	/** @dev: DRM device this bridge belongs to */
-> @@ -402,6 +411,10 @@ struct drm_bridge {
->  
->  void drm_bridge_add(struct drm_bridge *bridge);
->  void drm_bridge_remove(struct drm_bridge *bridge);
-> +void drm_bridge_init(struct drm_bridge *bridge, struct device *dev,
-> +		     const struct drm_bridge_funcs *funcs,
-> +		     const struct drm_bridge_timings *timings,
-> +		     void *driver_private);
->  struct drm_bridge *of_drm_find_bridge(struct device_node *np);
->  int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
->  		      struct drm_bridge *previous);
-
--- 
-Regards,
-
-Laurent Pinchart
