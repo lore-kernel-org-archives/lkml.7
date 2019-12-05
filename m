@@ -2,294 +2,277 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=BITCOIN_SPAM_02,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4428C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502D3C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 898C122525
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18DD421835
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:51:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="ScR7YtW/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMmatIdU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729944AbfLEQtV (ORCPT
+        id S1729987AbfLEQv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:49:21 -0500
-Received: from sonic313-14.consmr.mail.ne1.yahoo.com ([66.163.185.37]:45097
-        "EHLO sonic313-14.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729047AbfLEQtU (ORCPT
+        Thu, 5 Dec 2019 11:51:28 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42885 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbfLEQv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:49:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1575564558; bh=cATTb/3yPpybnLKN0leex6/bZJhyfDu+y2cJCZuZ2/o=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=ScR7YtW/wG/izRm9NhCr9VLELpHyNPYpIZf+06UIJXpXB62QbVhoh4bSNc8lZabNyPCvcmWEpKfN+4p4YcS6YmEIVHVHvXkoOv2jKZU4cft1JE+t2kz5U+V8/F95OXdqOCgSPqJ3FXZgSCszuknUwI7zINz4js0q7XDsNoMkPKIig49+QHTjG3z1Wyg7GzTHjT9L13fIy7KqM2YYmWaeJ3Ooh6tkdN5FmHprATnQ85bgcxv/xJKraIe33JlNRNKiY0kQOrdAjurBaNQ7XckBEc2x1D8Fq61iqp+K8hpEaAy3UAf4v6EiPVEZIknpTRVIlOMGgaI1LUgYNizVKRr1iQ==
-X-YMail-OSG: Xs1eQIcVM1l9M47q0lJ4TGdrIk2iS1XQJtwh4FUwg3R7OeWTdyQpno3Zi9F6l89
- MAOGMlq_xQV70ajJF4ZhoEFRq6NWACrp6ZjvOtG88pbuINaki8.f28EBPF6tCjTwAhvxNAZMsbiS
- yvylRrFhcbLu7WFg9WnnZw9L3R14h4Inwm7_I71RMriUzHvSpKD0LvIPaqXtl9.QSF5EHHi8zBkO
- v0jM0NAC2XAmPXg047pR5s_2rkwaIKt129zkvCFZ_Q6RKEylnNue1vWXnVdSibqod9H83B9DvpcK
- DWaD8KvzELq8E_gkmXRGCo9StxABrrTQ.hfCHPndYxbSmVP25C0lVgclXmPI.HA5lF_j4HD7N6mJ
- Vx4DGcRT.fJYhFBePUj1oyodouYRwXabcCzwOv2W0ROS1zstPd9RAe.YzyNUHjh1pfqWEVUw_vdO
- 3wWQLH5PCsKA4dUiz.5yD.bDeEZnh0.pwFKuyYuzAN0WEefeZ3Nds_pqz8ELzbZrL1SAXhw7.Z8M
- NUMl3HnggybCJmhDAi.BNZ8yerONHR8tCPgXAYlqBol98NhDV69I7xBHDYDLeBavaRUVdWQu3Pdm
- JoEohNslyvgU1oB9OEMG.N0Sw.j_MR6jDvSDA1uGoR9eYAaVfxPwLSUa5dgOS_q1ERZtIUYPIVpE
- hLewi5OHH__aBcrkSgiBFxvgv5kli5iEAJtGuJ2jlHkO.pPjCV_8bKCD9xFbSw8y36N92UKucg_O
- 3TvyZiyvcs7jrYUjUX253FmfH5YFX6vgA4bEafacR9JI2rc_kTnoqaMiZLkt..UWDF26.dmqyWLv
- piM_MyDqR1azgENGvkvbA0U6zb6QOplf0TSO.07OvQL5rJkKawxIG5B5Fp3GEW83rSR76JXmgLTT
- 0YrRix7mRX8RmPfZiY1xSL7bd4vK7tABJw7OP1ydFYQtwW_2O07dGXlugcl3G2g3uwTvv8EU3AtS
- rReAeTnA2sipSjt4H.mELKQla_bd9A5C9qqH.BQd54uQqgD4IElCvyWOtcOs9NpS.uylsleGUAQE
- FwJbjFqbYN5nvPv5CzYekiSANg.LHNN9iBxA88RKzmIx3hEbQmenypXvblN2zgCRqJXcL8kfIgYX
- bm33AE86.qvDP2yBim8BD5vp22FcMCo36oa5DHHcGOHWTZ2o9FYJD1JbfmISHhdPupSaSMsPYP4T
- 5A9UtXL3sgxV2yEkStryydtK_0tNBnGAZPDxLjt96TUJcViGPFOtjfiu7m7x.4wUBj7MfUThlUjR
- FzTfLsUJ5GddPIUB6McuIGwi2GXN2SucQ7TQw1adHChjiDWCByyLuxI_sOye.MSHqEUx7HYH.jcm
- iEDR0i4ZIlyVrF0FYXk1GxFwHLUcpe4oaVAKaLomG54SSIxhOmHBqi4WuuezgWzzx8qgHhgSYdYZ
- .5ze.ia1R3Zab5btvlwcwoiv3J8XOzI9b5Yn15vXV0qe0fqcVYqeaFPFGNQoQOFJTP7XN
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ne1.yahoo.com with HTTP; Thu, 5 Dec 2019 16:49:18 +0000
-Received: by smtp432.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID b8cde399072ed3df1dba498fa2f274e4;
-          Thu, 05 Dec 2019 16:49:15 +0000 (UTC)
-Subject: Re: [PATCH v1 0/3] Introduce CAP_SYS_PERFMON capability for secure
- Perf users groups
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        elena.reshetova@intel.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stephane Eranian <eranian@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <283f09a5-33bd-eac3-bdfd-83d775045bf9@linux.intel.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- mQINBFzV9HABEAC/mmv3jeJyF7lR7QhILYg1+PeBLIMZv7KCzBSc/4ZZipoWdmr77Lel/RxQ
- 1PrNx0UaM5r6Hj9lJmJ9eg4s/TUBSP67mTx+tsZ1RhG78/WFf9aBe8MSXxY5cu7IUwo0J/CG
- vdSqACKyYPV5eoTJmnMxalu8/oVUHyPnKF3eMGgE0mKOFBUMsb2pLS/enE4QyxhcZ26jeeS6
- 3BaqDl1aTXGowM5BHyn7s9LEU38x/y2ffdqBjd3au2YOlvZ+XUkzoclSVfSR29bomZVVyhMB
- h1jTmX4Ac9QjpwsxihT8KNGvOM5CeCjQyWcW/g8LfWTzOVF9lzbx6IfEZDDoDem4+ZiPsAXC
- SWKBKil3npdbgb8MARPes2DpuhVm8yfkJEQQmuLYv8GPiJbwHQVLZGQAPBZSAc7IidD2zbf9
- XAw1/SJGe1poxOMfuSBsfKxv9ba2i8hUR+PH7gWwkMQaQ97B1yXYxVEkpG8Y4MfE5Vd3bjJU
- kvQ/tOBUCw5zwyIRC9+7zr1zYi/3hk+OG8OryZ5kpILBNCo+aePeAJ44znrySarUqS69tuXd
- a3lMPHUJJpUpIwSKQ5UuYYkWlWwENEWSefpakFAIwY4YIBkzoJ/t+XJHE1HTaJnRk6SWpeDf
- CreF3+LouP4njyeLEjVIMzaEpwROsw++BX5i5vTXJB+4UApTAQARAQABtChDYXNleSBTY2hh
- dWZsZXIgPGNhc2V5QHNjaGF1Zmxlci1jYS5jb20+iQJUBBMBCAA+FiEEC+9tH1YyUwIQzUIe
- OKUVfIxDyBEFAlzV9HACGwMFCRLMAwAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQOKUV
- fIxDyBG6ag/6AiRl8yof47YOEVHlrmewbpnlBTaYNfJ5cZflNRKRX6t4bp1B2YV1whlDTpiL
- vNOwFkh+ZE0eI5M4x8Gw2Oiok+4Q5liA9PHTozQYF+Ia+qdL5EehfbLGoEBqklpGvG3h8JsO
- 7SvONJuFDgvab/U/UriDYycJwzwKZuhVtK9EMpnTtUDyP3DY+Q8h7MWsniNBLVXnh4yBIEJg
- SSgDn3COpZoFTPGKE+rIzioo/GJe8CTa2g+ZggJiY/myWTS3quG0FMvwvNYvZ4I2g6uxSl7n
- bZVqAZgqwoTAv1HSXIAn9muwZUJL03qo25PFi2gQmX15BgJKQcV5RL0GHFHRThDS3IyadOgK
- P2j78P8SddTN73EmsG5OoyzwZAxXfck9A512BfVESqapHurRu2qvMoUkQaW/2yCeRQwGTsFj
- /rr0lnOBkyC6wCmPSKXe3dT2mnD5KnCkjn7KxLqexKt4itGjJz4/ynD/qh+gL7IPbifrQtVH
- JI7cr0fI6Tl8V6efurk5RjtELsAlSR6fKV7hClfeDEgLpigHXGyVOsynXLr59uE+g/+InVic
- jKueTq7LzFd0BiduXGO5HbGyRKw4MG5DNQvC//85EWmFUnDlD3WHz7Hicg95D+2IjD2ZVXJy
- x3LTfKWdC8bU8am1fi+d6tVEFAe/KbUfe+stXkgmfB7pxqW5Ag0EXNX0cAEQAPIEYtPebJzT
- wHpKLu1/j4jQcke06Kmu5RNuj1pEje7kX5IKzQSs+CPH0NbSNGvrA4dNGcuDUTNHgb5Be9hF
- zVqRCEvF2j7BFbrGe9jqMBWHuWheQM8RRoa2UMwQ704mRvKr4sNPh01nKT52ASbWpBPYG3/t
- WbYaqfgtRmCxBnqdOx5mBJIBh9Q38i63DjQgdNcsTx2qS7HFuFyNef5LCf3jogcbmZGxG/b7
- yF4OwmGsVc8ufvlKo5A9Wm+tnRjLr/9Mn9vl5Xa/tQDoPxz26+aWz7j1in7UFzAarcvqzsdM
- Em6S7uT+qy5jcqyuipuenDKYF/yNOVSNnsiFyQTFqCPCpFihOnuaWqfmdeUOQHCSo8fD4aRF
- emsuxqcsq0Jp2ODq73DOTsdFxX2ESXYoFt3Oy7QmIxeEgiHBzdKU2bruIB5OVaZ4zWF+jusM
- Uh+jh+44w9DZkDNjxRAA5CxPlmBIn1OOYt1tsphrHg1cH1fDLK/pDjsJZkiH8EIjhckOtGSb
- aoUUMMJ85nVhN1EbU/A3DkWCVFEA//Vu1+BckbSbJKE7Hl6WdW19BXOZ7v3jo1q6lWwcFYth
- esJfk3ZPPJXuBokrFH8kqnEQ9W2QgrjDX3et2WwZFLOoOCItWxT0/1QO4ikcef/E7HXQf/ij
- Dxf9HG2o5hOlMIAkJq/uLNMvABEBAAGJAjwEGAEIACYWIQQL720fVjJTAhDNQh44pRV8jEPI
- EQUCXNX0cAIbDAUJEswDAAAKCRA4pRV8jEPIEWkzEACKFUnpp+wIVHpckMfBqN8BE5dUbWJc
- GyQ7wXWajLtlPdw1nNw0Wrv+ob2RCT7qQlUo6GRLcvj9Fn5tR4hBvR6D3m8aR0AGHbcC62cq
- I7LjaSDP5j/em4oVL2SMgNTrXgE2w33JMGjAx9oBzkxmKUqprhJomPwmfDHMJ0t7y39Da724
- oLPTkQDpJL1kuraM9TC5NyLe1+MyIxqM/8NujoJbWeQUgGjn9uxQAil7o/xSCjrWCP3kZDID
- vd5ZaHpdl8e1mTExQoKr4EWgaMjmD/a3hZ/j3KfTVNpM2cLfD/QwTMaC2fkK8ExMsz+rUl1H
- icmcmpptCwOSgwSpPY1Zfio6HvEJp7gmDwMgozMfwQuT9oxyFTxn1X3rn1IoYQF3P8gsziY5
- qtTxy2RrgqQFm/hr8gM78RhP54UPltIE96VywviFzDZehMvuwzW//fxysIoK97Y/KBZZOQs+
- /T+Bw80Pwk/dqQ8UmIt2ffHEgwCTbkSm711BejapWCfklxkMZDp16mkxSt2qZovboVjXnfuq
- wQ1QL4o4t1hviM7LyoflsCLnQFJh6RSBhBpKQinMJl/z0A6NYDkQi6vEGMDBWX/M2vk9Jvwa
- v0cEBfY3Z5oFgkh7BUORsu1V+Hn0fR/Lqq/Pyq+nTR26WzGDkolLsDr3IH0TiAVH5ZuPxyz6
- abzjfg==
-Message-ID: <1e836f34-eda3-542d-f7ce-9a3e87ac5e2e@schaufler-ca.com>
-Date:   Thu, 5 Dec 2019 08:49:14 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 5 Dec 2019 11:51:27 -0500
+Received: by mail-qt1-f194.google.com with SMTP id j5so4128279qtq.9;
+        Thu, 05 Dec 2019 08:51:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ze+AW9WV7489kQRRdo9Nn0qDTPFmhzU20wg6aaDBPgo=;
+        b=SMmatIdUlrJth3B1LSAHv16u6UYRWHxxr+pUDJr42EJQIxNIM1heozAGCUfcpqjZL1
+         vSCQPC8hbjk9JnO8bjGqHvt1leen+TALuSMvF+IzMnPNWnd0dEsawIJnDu5rruJ12CTz
+         lKW7YQfVPSrDQ/cT0AndvQIs6mj5qe4TqIEtaGQlEKuzsJiyKHb84hN7BxVPMQ2kj4wV
+         bKh+poI8xXXJi9MuNc3XoruMyIsRpOVo9eadkcERuMjZAPdaF34Rzup1AO+c3GDksmiH
+         JRa0nS41bM9HmtEUAWChHFKBG+4ceAjDcGyKYOQwRWoSebdMzfu0VRX48C+gBlsUVoiS
+         QbEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ze+AW9WV7489kQRRdo9Nn0qDTPFmhzU20wg6aaDBPgo=;
+        b=Inl0N5Moo8m2uX5EC2BXd566U0W0q97IAcB7eGFJCO8kR+S1Zt+5XpgjD8+jXw57HE
+         O1Wil/IfmkqRoCnEEktVI26vZyB634I/cvJ8BtGrFJxyUPQdVhjQhMfg68SG2W/7f9w6
+         OhpQJSq8DK7CvgTu627DHjvIt1CEq2C66PxpTYLnLQOgqT1PxiszPchPQx2XdCjGPPh7
+         AlZnFCNkTdBN+sMOiTiVgUCFxr3dd0QV/DYJ9aK7xH21QkqkOnKftQw+FEsrm88FkBu0
+         dSTtl2IWpJv4aO3CI21Ut9vOkJkotwNae7j7RZT4Rk8qzrf5gbuxGP8UVpHRnFCL5AOk
+         G3gQ==
+X-Gm-Message-State: APjAAAVKHXxcYPKHElCpJVzDxcLW4DT1KShFEdO3BKxTU1fcLPLJShtN
+        wncUcUPs4U80HKjPoGbE4AMSjTRah1M=
+X-Google-Smtp-Source: APXvYqz3fM/GNrhm23Z6NG4biyMsl0qqApr+mKV5RVP3YxJW2FLOPYKzu2f7H72oaLoF/xPW5oM5OQ==
+X-Received: by 2002:ac8:1828:: with SMTP id q37mr8720449qtj.13.1575564685830;
+        Thu, 05 Dec 2019 08:51:25 -0800 (PST)
+Received: from dahern-DO-MB.local ([2601:282:800:fd80:454d:f1aa:c8eb:421a])
+        by smtp.googlemail.com with ESMTPSA id z64sm5277816qtc.4.2019.12.05.08.51.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2019 08:51:24 -0800 (PST)
+Subject: Re: selftests: l2tp tests
+To:     Colin Ian King <colin.king@canonical.com>,
+        Shuah Khan <shuah@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Seth Forshee <seth.forshee@canonical.com>
+References: <450f5abb-5fe8-158d-d267-4334e15f8e58@canonical.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <d0937c02-1172-45db-8519-c36bdafad89e@gmail.com>
+Date:   Thu, 5 Dec 2019 09:51:22 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <283f09a5-33bd-eac3-bdfd-83d775045bf9@linux.intel.com>
+In-Reply-To: <450f5abb-5fe8-158d-d267-4334e15f8e58@canonical.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-X-Mailer: WebService/1.1.14728 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/5/2019 8:15 AM, Alexey Budankov wrote:
-> Currently access to perf_events functionality [1] beyond the scope perm=
-itted
-> by perf_event_paranoid [1] kernel setting is allowed to a privileged pr=
-ocess
-> [2] with CAP_SYS_ADMIN capability enabled in the process effective set =
-[3].
->
-> This patch set introduces CAP_SYS_PERFMON capability devoted to secure =
-performance
-> monitoring activity so that CAP_SYS_PERFMON would assist CAP_SYS_ADMIN =
-in its
-> governing role for perf_events based performance monitoring of a system=
-=2E
->
-> CAP_SYS_PERFMON aims to harden system security and integrity when monit=
-oring
-> performance using perf_events subsystem by processes and Perf privilege=
-d users
-> [2], thus decreasing attack surface that is available to CAP_SYS_ADMIN
-> privileged processes [3].
+On 12/5/19 8:28 AM, Colin Ian King wrote:
+> Hi,
+> 
+> While testing linux 5.4 with the l2tp test I discovered two kernel
+> issues when running this test:
+> 
+> 1. About 10+ seconds after completing the test one can observe periodic
+> kernel log messages from  netdev_wait_allrefs (in net/core/dev.c) in the
+> form:
+> 
+> "unregister_netdevice: waiting for eth0 to become free. Usage count = 1"
 
-Are there use cases where you would need CAP_SYS_PERFMON where you
-would not also need CAP_SYS_ADMIN? If you separate a new capability
-from CAP_SYS_ADMIN but always have to use CAP_SYS_ADMIN in conjunction
-with the new capability it is all rather pointless.
+That is a known problem; it existed when I submitted the test script:
+https://lore.kernel.org/netdev/20190801235421.8344-1-dsahern@kernel.org/
 
-The scope you've defined for this CAP_SYS_PERFMON is very small.
-Is there a larger set of privilege checks that might be applicable
-for it?
-=C2=A0
+The ipsec test case gives a reproducer for some one with the time to go
+figure out the leak.
 
->
-> CAP_SYS_PERFMON aims to take over CAP_SYS_ADMIN credentials related to
-> performance monitoring functionality of perf_events and balance amount =
-of
-> CAP_SYS_ADMIN credentials in accordance with the recommendations provid=
-ed in
-> the man page for CAP_SYS_ADMIN [3]: "Note: this capability is overloade=
-d;
-> see Notes to kernel developers, below."
->
-> For backward compatibility reasons performance monitoring functionality=
- of=20
-> perf_events subsystem remains available under CAP_SYS_ADMIN but its usa=
-ge for
-> secure performance monitoring use cases is discouraged with respect to =
-the
-> introduced CAP_SYS_PERFMON capability.
->
-> In the suggested implementation CAP_SYS_PERFMON enables Perf privileged=
- users
-> [2] to conduct secure performance monitoring using perf_events in the s=
-cope
-> of available online CPUs when executing code in kernel and user modes.
->
-> Possible alternative solution to this capabilities balancing, system se=
-curity
-> hardening task could be to use the existing CAP_SYS_PTRACE capability t=
-o govern
-> perf_events' performance monitoring functionality, since process debugg=
-ing is
-> similar to performance monitoring with respect to providing insights in=
-to
-> process memory and execution details. However CAP_SYS_PTRACE still prov=
-ides
-> users with more credentials than are required for secure performance mo=
-nitoring
-> using perf_events subsystem and this excess is avoided by using the ded=
-icated
-> CAP_SYS_PERFMON capability.
->
-> libcap library utilities [4], [5] and Perf tool can be used to apply
-> CAP_SYS_PERFMON capability for secure performance monitoring beyond the=
- scope
-> permitted by system wide perf_event_paranoid kernel setting and below a=
-re the
-> steps to evaluate the advancement suggested by the patch set:
->
->   - patch, build and boot the kernel
->   - patch, build Perf tool e.g. to /home/user/perf
->   ...
->   # git clone git://git.kernel.org/pub/scm/libs/libcap/libcap.git libca=
-p
->   # pushd libcap
->   # patch libcap/include/uapi/linux/capabilities.h with [PATCH 1/3]
->   # make
->   # pushd progs
->   # ./setcap "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=3Dep" /home/use=
-r/perf
->   # ./setcap -v "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=3Dep" /home/=
-user/perf
->   /home/user/perf: OK
->   # ./getcap /home/user/perf
->   /home/user/perf =3D cap_sys_ptrace,cap_syslog,cap_sys_perfmon+ep
->   # echo 2 > /proc/sys/kernel/perf_event_paranoid
->   # cat /proc/sys/kernel/perf_event_paranoid=20
->   2
->   ...
->   $ /home/user/perf top
->     ... works as expected ...
->   $ cat /proc/`pidof perf`/status
->   Name:	perf
->   Umask:	0002
->   State:	S (sleeping)
->   Tgid:	2958
->   Ngid:	0
->   Pid:	2958
->   PPid:	9847
->   TracerPid:	0
->   Uid:	500	500	500	500
->   Gid:	500	500	500	500
->   FDSize:	256
->   ...
->   CapInh:	0000000000000000
->   CapPrm:	0000004400080000
->   CapEff:	0000004400080000 =3D> 01000100 00000000 00001000 00000000 000=
-00000
->                                      cap_sys_perfmon,cap_sys_ptrace,cap=
-_syslog
->   CapBnd:	0000007fffffffff
->   CapAmb:	0000000000000000
->   NoNewPrivs:	0
->   Seccomp:	0
->   Speculation_Store_Bypass:	thread vulnerable
->   Cpus_allowed:	ff
->   Cpus_allowed_list:	0-7
->   ...
->
-> Usage of cap_sys_perfmon effectively avoids unused credentials excess:
-> - with cap_sys_admin:
->   CapEff:	0000007fffffffff =3D> 01111111 11111111 11111111 11111111 111=
-11111
-> - with cap_sys_perfmon:
->   CapEff:	0000004400080000 =3D> 01000100 00000000 00001000 00000000 000=
-00000
->                                     38   34               19
->                            sys_perfmon   syslog           sys_ptrace
->
-> The patch set is for tip perf/core repository:
->   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip perf/core
->   tip sha1: ceb9e77324fa661b1001a0ae66f061b5fcb4e4e6
->
-> [1] http://man7.org/linux/man-pages/man2/perf_event_open.2.html
-> [2] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.ht=
-ml
-> [3] http://man7.org/linux/man-pages/man7/capabilities.7.html
-> [4] http://man7.org/linux/man-pages/man8/setcap.8.html
-> [5] https://git.kernel.org/pub/scm/libs/libcap/libcap.git
-> [6] https://sites.google.com/site/fullycapable/, posix_1003.1e-990310.p=
-df
->
-> ---
-> Alexey Budankov (3):
->   capabilities: introduce CAP_SYS_PERFMON to kernel and user space
->   perf/core: apply CAP_SYS_PERFMON to CPUs and kernel monitoring
->   perf tool: extend Perf tool with CAP_SYS_PERFMON support
->
->  include/linux/perf_event.h          |  6 ++++--
->  include/uapi/linux/capability.h     | 10 +++++++++-
->  security/selinux/include/classmap.h |  4 ++--
->  tools/perf/design.txt               |  3 ++-
->  tools/perf/util/cap.h               |  4 ++++
->  tools/perf/util/evsel.c             | 10 +++++-----
->  tools/perf/util/util.c              | 15 +++++++++++++--
->  7 files changed, 39 insertions(+), 13 deletions(-)
->
+> 
+> 2. Our regression tests that ran stress-ng after this test picked up
+> another issue that causes socket() to hang indefinitely.  I've managed
+> to get this down to a simple reproducer as follows:
+> 
+> sudo modprobe l2tp_core
+> sudo ./linux/tools/testing/selftests/net/l2tp.sh
+> sleep 5
+> ./close
+> 
+> Where ./close is an executable compiled from:
+> 
+> #include <sys/types.h>
+> #include <sys/socket.h>
+> #include <unistd.h>
+> #include <stdio.h>
+> 
+> int main()
+> {
+>         int fd;
+> 
+>         printf("calling socket..\n");
+>         fd = socket(AF_APPLETALK, SOCK_STREAM, 0);
+>         printf("socket returned: %d\n", fd);
+> }
+> 
+> The code will hang on the socket() call and won't ever get to the final
+> print statement.
+> 
+> If one runs the reproducer on earlier kernels we get:
+> 
+> 4.6.7 crash (see dmesg below)
+> 4.7.10 crash in xfrm6_dst_ifdown
+> 4.8.17 crash in xfrm6_dst_ifdown
+> 4.12.14 crash (see dmesg below)
+> 4.13.16 reports "unregister_netdevice: waiting for eth0 to become free.
+> Usage count = 2"
+> 4.14.157 reports "unregister_netdevice: waiting for eth0 to become free.
+> Usage count = 2""
+> 4.15.18 .. 5.4 hangs on socket() call
+> 
+> Note: functionality for the l2tp test is not available for pre-4.6 kernels.
+> 
+> The crashes I get for older kernels are:
+> 
+> 4.6.7:
+> [ 34.457967] BUG: scheduling while atomic: kworker/u8:0/6/0x00000200
+> [ 34.458021] Modules linked in: esp6 xfrm6_mode_transport drbg
+> ansi_cprng seqiv esp4 xfrm4_mode_transport xfrm_user xfrm_algo l2tp_ip6
+> l2tp_eth l2tp_ip l2tp_netlink veth l2tp_core ip6_udp_tunnel udp_tunnel
+> squashfs binfmt_misc dm_multipath scsi_dh_rdac scsi_dh_emc scsi_dh_alua
+> ppdev kvm_intel kvm irqbypass joydev input_leds snd_hda_codec_generic
+> serio_raw snd_hda_intel snd_hda_codec parport_pc 8250_fintek parport
+> snd_hda_core qemu_fw_cfg snd_hwdep snd_pcm snd_timer mac_hid snd
+> soundcore sch_fq_codel virtio_rng ip_tables x_tables autofs4 btrfs
+> raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor
+> async_tx xor hid_generic usbhid hid raid6_pq libcrc32c raid1 raid0
+> multipath linear crct10dif_pclmul crc32_pclmul ghash_clmulni_intel qxl
+> ttm drm_kms_helper syscopyarea sysfillrect aesni_intel sysimgblt
+> [ 34.458086] fb_sys_fops aes_x86_64 lrw gf128mul glue_helper ablk_helper
+> cryptd i2c_piix4 drm psmouse pata_acpi floppy
+> [ 34.458100] CPU: 1 PID: 6 Comm: kworker/u8:0 Not tainted
+> 4.6.7-040607-generic #201608160432
+> [ 34.458103] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+> 1.12.0-1 04/01/2014
+> [ 34.458131] Workqueue: netns cleanup_net
+> [ 34.458135] 0000000000000286 000000002fa171e7 ffff88007c8e7ab8
+> ffffffff813f7594
+> [ 34.458139] ffff88007fc96b80 7fffffffffffffff ffff88007c8e7ac8
+> ffffffff810a8f6b
+> [ 34.458143] ffff88007c8e7b18 ffffffff8184905b 00ff88007c8e7ae8
+> ffffffff8106463e
+> [ 34.458147] Call Trace:
+> [ 34.458161] [<ffffffff813f7594>] dump_stack+0x63/0x8f
+> [ 34.458166] [<ffffffff810a8f6b>] __schedule_bug+0x4b/0x60
+> [ 34.458185] [<ffffffff8184905b>] __schedule+0x5eb/0x7a0
+> [ 34.458191] [<ffffffff8106463e>] ? kvm_sched_clock_read+0x1e/0x30
+> [ 34.458195] [<ffffffff81849245>] schedule+0x35/0x80
+> [ 34.458203] [<ffffffff8184c402>] schedule_timeout+0x1b2/0x270
+> [ 34.458207] [<ffffffff81848d74>] ? __schedule+0x304/0x7a0
+> [ 34.458212] [<ffffffff81849ca3>] wait_for_completion+0xb3/0x140
+> [ 34.458217] [<ffffffff810aeed0>] ? wake_up_q+0x70/0x70
+> [ 34.458226] [<ffffffff810e7f68>] __wait_rcu_gp+0xc8/0xf0
+> [ 34.458231] [<ffffffff810e9fd8>] synchronize_sched.part.58+0x38/0x50
+> [ 34.458235] [<ffffffff810ec570>] ? call_rcu_bh+0x20/0x20
+> [ 34.458239] [<ffffffff810e7e80>] ?
+> trace_raw_output_rcu_utilization+0x60/0x60
+> [ 34.458244] [<ffffffff810ec643>] synchronize_sched+0x33/0x40
+> [ 34.458251] [<ffffffffc0510f71>] __l2tp_session_unhash+0xd1/0xe0
+> [l2tp_core]
+> [ 34.458256] [<ffffffffc051101e>] l2tp_tunnel_closeall+0x9e/0x140
+> [l2tp_core]
+> [ 34.458261] [<ffffffffc0511219>] l2tp_tunnel_delete+0x19/0x70 [l2tp_core]
+> [ 34.458265] [<ffffffffc05112bb>] l2tp_exit_net+0x4b/0x80 [l2tp_core]
+> [ 34.458269] [<ffffffff81732188>] ops_exit_list.isra.4+0x38/0x60
+> [ 34.458273] [<ffffffff817331e4>] cleanup_net+0x1c4/0x2a0
+> [ 34.458281] [<ffffffff8109ccfc>] process_one_work+0x1fc/0x490
+> [ 34.458285] [<ffffffff8109cfdb>] worker_thread+0x4b/0x500
+> [ 34.458290] [<ffffffff8109cf90>] ? process_one_work+0x490/0x490
+> [ 34.458293] [<ffffffff810a37c8>] kthread+0xd8/0xf0
+> [ 34.458298] [<ffffffff8184d522>] ret_from_fork+0x22/0x40
+> [ 34.458302] [<ffffffff810a36f0>] ? kthread_create_on_node+0x1b0/0x1b0
+> [ 34.514067] ------------[ cut here ]------------
+> 
+> 4.12.14:
+> [ 20.760253] ------------[ cut here ]------------
+> [ 20.760256] kernel BUG at
+> /home/kernel/COD/linux/net/ipv6/xfrm6_policy.c:265!
+> [ 20.760299] invalid opcode: 0000 [#1] SMP
+> [ 20.760320] Modules linked in: appletalk psnap llc esp6
+> xfrm6_mode_transport esp4 xfrm4_mode_transport xfrm_user xfrm_algo
+> l2tp_ip6 l2tp_eth l2tp_ip l2tp_netlink veth l2tp_core ip6_udp_tunnel
+> udp_tunnel binfmt_misc dm_multipath scsi_dh_rdac scsi_dh_emc
+> scsi_dh_alua joydev ppdev snd_hda_codec_generic kvm_intel kvm irqbypass
+> snd_hda_intel snd_hda_codec snd_hda_core input_leds snd_hwdep serio_raw
+> snd_pcm snd_timer hid_generic snd soundcore parport_pc parport mac_hid
+> qemu_fw_cfg sch_fq_codel virtio_rng ip_tables x_tables autofs4 usbhid
+> hid btrfs raid10 raid456 async_raid6_recov async_memcpy async_pq
+> async_xor async_tx xor raid6_pq libcrc32c raid1 raid0 multipath linear
+> crct10dif_pclmul crc32_pclmul ghash_clmulni_intel pcbc aesni_intel
+> aes_x86_64 crypto_simd qxl glue_helper ttm cryptd drm_kms_helper psmouse
+> [ 20.760677] syscopyarea sysfillrect virtio_blk sysimgblt fb_sys_fops
+> drm floppy virtio_net i2c_piix4 pata_acpi
+> [ 20.760731] CPU: 3 PID: 49 Comm: kworker/u8:1 Not tainted
+> 4.12.14-041214-generic #201709200843
+> [ 20.760772] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+> 1.12.0-1 04/01/2014
+> [ 20.760814] Workqueue: netns cleanup_net
+> [ 20.760836] task: ffff8aa4bcbbad00 task.stack: ffff9dc5804c0000
+> [ 20.760867] RIP: 0010:xfrm6_dst_ifdown+0xa0/0xb0
+> [ 20.760890] RSP: 0018:ffff9dc5804c3be0 EFLAGS: 00010246
+> [ 20.760916] RAX: ffff8aa4b6e6a000 RBX: ffff8aa4bc1b3500 RCX:
+> 0000000000000000
+> [ 20.760950] RDX: 0000000000000001 RSI: ffff8aa4b6f39000 RDI:
+> ffff8aa4bc1b3500
+> [ 20.760984] RBP: ffff9dc5804c3c08 R08: 0000000000000000 R09:
+> ffffffffb49fd7a0
+> [ 20.761017] R10: ffff9dc5804c3c70 R11: 0000000000000000 R12:
+> ffff8aa4b6f39000
+> [ 20.761050] R13: ffff8aa4b6f39000 R14: ffff8aa4bc1b3500 R15:
+> 0000000000000000
+> [ 20.761085] FS: 0000000000000000(0000) GS:ffff8aa4bfd80000(0000)
+> knlGS:0000000000000000
+> [ 20.761123] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 20.761150] CR2: 00007fa5cd126718 CR3: 000000007c382000 CR4:
+> 00000000001406e0
+> [ 20.761189] Call Trace:
+> [ 20.761207] dst_ifdown+0x26/0x80
+> [ 20.761226] dst_dev_event+0x5c/0x170
+> [ 20.761247] notifier_call_chain+0x4a/0x70
+> [ 20.761269] raw_notifier_call_chain+0x16/0x20
+> [ 20.761293] call_netdevice_notifiers_info+0x35/0x60
+> [ 20.761318] netdev_run_todo+0xcf/0x300
+> [ 20.761340] rtnl_unlock+0xe/0x10
+> [ 20.761359] default_device_exit_batch+0x153/0x180
+> [ 20.761385] ? do_wait_intr_irq+0x90/0x90
+> [ 20.761408] ops_exit_list.isra.6+0x52/0x60
+> [ 20.761430] cleanup_net+0x1ca/0x2b0
+> [ 20.761451] process_one_work+0x1e7/0x410
+> [ 20.761472] worker_thread+0x4a/0x410
+> [ 20.761492] kthread+0x125/0x140
+> [ 20.761511] ? process_one_work+0x410/0x410
+> [ 20.761532] ? kthread_create_on_node+0x70/0x70
+> [ 20.761556] ret_from_fork+0x25/0x30
+> [ 20.761575] Code: f0 00 00 00 75 05 e8 10 6f 00 00 4c 89 bb 58 01 00 00
+> f0 41 ff 04 24 48 8b 5b 10 48 83 7b 48 00 75 d4 f0 41 ff 0c 24 eb 8e f3
+> c3 <0f> 0b 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 55 b9 06 00 00
+> [ 20.761695] RIP: xfrm6_dst_ifdown+0xa0/0xb0 RSP: ffff9dc5804c3be0
+> [ 20.762104] ---[ end trace b22472ed4abae541 ]---
+> 
+> So all in all, the test is great for finding bugs. I thought I should
+> flag these issues up.
+
+These I am not aware of. I do not do much with l2tp. The script evolved
+from discussions for some change and I saved the commands as tests - for
+just reasons like this.
 
