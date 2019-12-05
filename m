@@ -2,213 +2,103 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDB9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3169C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 239A024653
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B68CA24655
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:33:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="A5TjrQ95"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vjvNicES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbfLEKdN (ORCPT
+        id S1729349AbfLEKdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:33:13 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:33214 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfLEKdN (ORCPT
+        Thu, 5 Dec 2019 05:33:38 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:41230 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728794AbfLEKdi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:33:13 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191205103311euoutp0154ba889c6b0091e7394239c85b7840b8~dcxgRmUfq2825628256euoutp01C
-        for <linux-kernel@vger.kernel.org>; Thu,  5 Dec 2019 10:33:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191205103311euoutp0154ba889c6b0091e7394239c85b7840b8~dcxgRmUfq2825628256euoutp01C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1575541991;
-        bh=i705saemL8w3+vhV1T23VKV+cVTTgAz1xjunX2yQW9A=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=A5TjrQ95P+Xh/un+7gBCi9nQG6oy7Xd9fG4D1XVZpURUEddNBZUsMpZ9wguk/CjuO
-         a4sunsOSc3U+jaAD8SxBDPsENzftNcI4qWWNEpR7F9+KxVcIdOdcusm9PLGCYQ59dE
-         3shCs0Yi4cpxMNjnuWPFEY1rQEFSHbFBQ2knW4Aw=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191205103311eucas1p12fc6f5b377ceda3eb5baff9c6c3b69eb~dcxgALpG91574315743eucas1p1s;
-        Thu,  5 Dec 2019 10:33:11 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 6E.C2.60679.7ECD8ED5; Thu,  5
-        Dec 2019 10:33:11 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191205103311eucas1p18c923b70d7e9f69de22614b65e7de944~dcxfhS_Sn2937829378eucas1p1L;
-        Thu,  5 Dec 2019 10:33:11 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191205103311eusmtrp14478bb296fafdf69a420181f8b1ce1ba~dcxfgnf0L1352313523eusmtrp1R;
-        Thu,  5 Dec 2019 10:33:11 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-61-5de8dce7a9d8
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 80.6A.07950.6ECD8ED5; Thu,  5
-        Dec 2019 10:33:10 +0000 (GMT)
-Received: from [106.120.51.18] (unknown [106.120.51.18]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191205103310eusmtip2fe68c8049c093c1cd281b77a7e1ac5bf~dcxfI5XBc1464414644eusmtip2R;
-        Thu,  5 Dec 2019 10:33:10 +0000 (GMT)
-Subject: Re: [PATCH v2 2/3] devfreq: add clearing transitions stats
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-From:   Kamil Konieczny <k.konieczny@samsung.com>
-Message-ID: <2ca32866-e1f6-afcf-2700-89208587c19e@samsung.com>
-Date:   Thu, 5 Dec 2019 11:33:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Thu, 5 Dec 2019 05:33:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GQf+rnNFuRmLYQiBswud5Lup/z9TY9QZpcCJ3hoxq8A=; b=vjvNicESJqr5AY6NlaHJa6rea
+        cnuqKiDYZOs3IGOuIFyjtR+mAkH9jYuoeiDrxZykggmCO6aT+Ud+hR3UxAanfEgYoFrSchej3FDRo
+        s2IDNhjYVpb6obg/o25jt0RLXfptkZKEPg8zTT6qWZBZiKExrtZuJEKBBl9CpT6LZnlYOeJwBj4t8
+        aQPQe2aKgXGWTssi2TfIuYGelIZq5ghE0h+J9Yg5POuYFD6kemx0hq9jg37LUax/1Q4bsffuAU2HG
+        VoSNvd4DE/7uGUvvfMtsfiVpoIHwm6w+f3mAT+oEP3V2d/DOko4MA/4qbOWwd69IKVIjvxVg6VQxL
+        0oWr+4lWw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1icoRv-0003Hz-9v; Thu, 05 Dec 2019 10:33:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 97E1E3011E0;
+        Thu,  5 Dec 2019 11:32:12 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9991B2006F795; Thu,  5 Dec 2019 11:33:29 +0100 (CET)
+Date:   Thu, 5 Dec 2019 11:33:29 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     liu.song11@zte.com.cn
+Cc:     fishland@aliyun.com, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, jiang.xuexin@zte.com.cn
+Subject: Re: [PATCH] psi: Only collect online cpu time in collect_percpu_times
+Message-ID: <20191205103329.GH2810@hirez.programming.kicks-ass.net>
+References: <20191204123500.GT2844@hirez.programming.kicks-ass.net>
+ <201912051005599522735@zte.com.cn>
 MIME-Version: 1.0
-In-Reply-To: <e707f735-49d0-44dc-a7c3-586ee6563cbe@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGKsWRmVeSWpSXmKPExsWy7djPc7rP77yINfi3Q8Fi44z1rBbXvzxn
-        tTh/fgO7xdmmN+wWl3fNYbP43HuE0WLtkbvsFrcbV7A5cHhsWtXJ5tG3ZRWjx+dNcgHMUVw2
-        Kak5mWWpRfp2CVwZC7f/YC9YIFXxc8Nk5gbG7SJdjJwcEgImEo/+f2HsYuTiEBJYwShx8s9p
-        NgjnC6PE9+93mCCcz4wSdzZOYYVpOXb6FwtEYjmjxMMDS6Gct4wSS5ZMYQGpEhZwlpjXMoMZ
-        xBYR0JCY+fcK2BJmgXlMEm+mXQAbxSagL3Hw7EmwBl4BO4mWyRfZQWwWARWJXVu6gJo5OEQF
-        IiROf02EKBGUODnzCVg5p4C9xPop3WA2s4C4xK0n85kgbHmJ7W/nMIPskhBYxy7R/usy1Nku
-        EnNP7oKyhSVeHd/CDmHLSJye3MMCYZdLPF3Yxw7R3MIo8aD9I1TCWuLw8YusIAcxC2hKrN+l
-        DxF2lFj2YQ8TSFhCgE/ixltBiBv4JCZtm84MEeaV6GgTgqhWlXh+qocJwpaW6Pq/jnUCo9Is
-        JJ/NQvLNLCTfzELYu4CRZRWjeGppcW56arFRXmq5XnFibnFpXrpecn7uJkZg6jn97/iXHYy7
-        /iQdYhTgYFTi4W3Y9DxWiDWxrLgy9xCjBAezkgjvNomnsUK8KYmVValF+fFFpTmpxYcYpTlY
-        lMR5qxkeRAsJpCeWpGanphakFsFkmTg4pRoYe03WHc7pbpapbrOxPhJfxHBH0YnP0fRHyDOh
-        uGzWJ8rVXmednJp1itTNXd7lmrvf1+K/48t686KkWfvbkrIN5nl7N2aeONZxYvLJ+SfNVmg5
-        vVji7R7msKuilEXOe++yh1yy7XkWczdvt9yyOJZpi8VfT9b5ZZYbyn0Vvyz0vMc28WtYeooS
-        S3FGoqEWc1FxIgCmFEgfOQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsVy+t/xe7rP7ryINXh/3MZi44z1rBbXvzxn
-        tTh/fgO7xdmmN+wWl3fNYbP43HuE0WLtkbvsFrcbV7A5cHhsWtXJ5tG3ZRWjx+dNcgHMUXo2
-        RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5mWWpRfp2CXoZC7f/YC9Y
-        IFXxc8Nk5gbG7SJdjJwcEgImEsdO/2IBsYUEljJKLDqQCBGXlmg8vZoJwhaW+HOti62LkQuo
-        5jWjxKM398ASwgLOEvNaZjCD2CICGhIz/15hBCliFljAJDH/5kQWiI5vjBL39y9hBaliE9CX
-        OHj2JNg6XgE7iZbJF9lBbBYBFYldW7rAJokKREg8336DEaJGUOLkzCdg9ZwC9hLrp3SD2cwC
-        6hJ/5l1ihrDFJW49mc8EYctLbH87h3kCo9AsJO2zkLTMQtIyC0nLAkaWVYwiqaXFuem5xUZ6
-        xYm5xaV56XrJ+bmbGIHRtu3Yzy07GLveBR9iFOBgVOLhbdj0PFaINbGsuDL3EKMEB7OSCO82
-        iaexQrwpiZVVqUX58UWlOanFhxhNgZ6byCwlmpwPTAR5JfGGpobmFpaG5sbmxmYWSuK8HQIH
-        Y4QE0hNLUrNTUwtSi2D6mDg4pRoYXUIC17MvkFo8ncNDqj4v8Gp47sQJERYCvml2+w7NcxHk
-        9hc8J1E59egljYrySwdvt7fKWix0Z5mw6/L02c2CDKlNyof6JT2EjhmI6Bf+iH3s+vPSzH9p
-        igfKU3jTz0/2vHGE+4jkCqvMz0wbHs07tv+3jdrTO8fYb9dK2ZqwnvFt4kywtKpRYinOSDTU
-        Yi4qTgQAiOiLwcwCAAA=
-X-CMS-MailID: 20191205103311eucas1p18c923b70d7e9f69de22614b65e7de944
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191204150033eucas1p164374e7f15cb9a74b7432ca1a822dc10
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191204150033eucas1p164374e7f15cb9a74b7432ca1a822dc10
-References: <20191204150018.5234-1-k.konieczny@samsung.com>
-        <CGME20191204150033eucas1p164374e7f15cb9a74b7432ca1a822dc10@eucas1p1.samsung.com>
-        <20191204150018.5234-3-k.konieczny@samsung.com>
-        <e707f735-49d0-44dc-a7c3-586ee6563cbe@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201912051005599522735@zte.com.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chanwoo,
-
-On 05.12.2019 01:38, Chanwoo Choi wrote:
-> On 12/5/19 12:00 AM, Kamil Konieczny wrote:
->> Add clearing transition table and time in states devfreq statistics
->> by writing to trans_stat file in devfreq sysfs.
+On Thu, Dec 05, 2019 at 10:05:59AM +0800, liu.song11@zte.com.cn wrote:
+> >On Mon, Dec 02, 2019 at 09:09:28PM +0800, Liu Song wrote:
+> >> From: Liu Song <liu.song11@zte.com.cn> 
+> >>  
+> >> Tasks can only run on the online cpu, so only need to
+> >> collect the time of the online cpu.
+> >>  
+> >> Signed-off-by: Liu Song <liu.song11@zte.com.cn> 
+> >> ---
+> >>  kernel/sched/psi.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>  
+> >> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> >> index 7acc632c3b82..605f02facb7b 100644
+> >> --- a/kernel/sched/psi.c
+> >> +++ b/kernel/sched/psi.c
+> >> @@ -316,7 +316,7 @@ static void collect_percpu_times(struct psi_group *group,
+> >>       * the sampling period. This eliminates artifacts from uneven
+> >>       * loading, or even entirely idle CPUs.
+> >>       */
+> >> -    for_each_possible_cpu(cpu) {
+> >> +    for_each_online_cpu(cpu) {
+> >>          u32 times[NR_PSI_STATES];
+> >>          u32 nonidle;
+> >>          u32 cpu_changed_states;
+> >
+> >And who collects the deltas that remain after offline?
 > 
-> Have to add command example how to reset the trans_stat via sysfs
-> on patch description.
-> 
-> And, have to add how to do it on documentation file as following:
-> On next version, please contain the following modification with this patch.
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-devfreq b/Documentation/ABI/testing/sysfs-class-devfreq
-> index 75897e2fde43..c172ff838643 100644
-> --- a/Documentation/ABI/testing/sysfs-class-devfreq
-> +++ b/Documentation/ABI/testing/sysfs-class-devfreq
-> @@ -60,7 +60,10 @@ Description:
->                 the number of transitions between states.
->                 In order to activate this ABI, the devfreq target device
->                 driver should provide the list of available frequencies
-> -               with its profile.
-> +               with its profile. If need to reset the statistics of devfreq
-> +               behavior on a specific device, enter 0(zero) to 'trans_stat'
-> +               as following:
-> +                       echo 0 > /sys/class/devfreq/.../trans_stat
->  
->  What:          /sys/class/devfreq/.../userspace/set_freq
->  Date:          September 2011
+> Hi,
+> After the cpu goes offline, there is no activity on the cpu and no time will be updated.
 
-Thank you for spotting this and giving patch, I will include it with v3.
+But there might have been activitiy before it went offline.
 
->>
->> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
->> ---
->> Changes in v2:
->>  instead of creating new sysfs file, add new functionality to trans_stat
->>  and clear stats when anything is writen to it
->>
->>  drivers/devfreq/devfreq.c | 22 +++++++++++++++++++++-
->>  1 file changed, 21 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->> index 0e2030403e4a..901af3b66a76 100644
->> --- a/drivers/devfreq/devfreq.c
->> +++ b/drivers/devfreq/devfreq.c
->> @@ -1478,7 +1478,27 @@ static ssize_t trans_stat_show(struct device *dev,
->>  					devfreq->total_trans);
->>  	return len;
->>  }
->> -static DEVICE_ATTR_RO(trans_stat);
->> +
->> +static ssize_t trans_stat_store(struct device *dev,
->> +				struct device_attribute *attr,
->> +				const char *buf, size_t count)
->> +{
->> +	struct devfreq *df = to_devfreq(dev);
->> +	unsigned int cnt = df->profile->max_state;
->> +
- 
-> Why don't you check the input value is whether value is 0(zero) or not?
+> So the value of deltas is 0 and it will not contribute to the total time.
 
-I will follow your suggestion as this will help to avoid misuse
+No, the value will not change, but it need not be 0.
 
-> If user enter the any value to 'trans_stat', devfreq core
-> reset the statistics data. I want to decide the fixed value
-> for the reset as following:
-> 
-> 	echo 0 > /sys/class/devfreq/devfreqX/trans_stat
-> 
-
-Thank you, I will add it to commit description.
-
->> +	if (cnt == 0)
->> +		return count;
->> +
->> +	mutex_lock(&df->lock);
->> +	memset(df->time_in_state, 0, cnt * sizeof(u64));
->> +	memset(df->trans_table, 0, cnt * cnt * sizeof(int));
->> +	df->last_stat_updated = get_jiffies_64();
->> +	df->total_trans = 0;
->> +	mutex_unlock(&df->lock);
->> +
->> +	return count;
->> +}
->> +static DEVICE_ATTR_RW(trans_stat);
->>  
->>  static struct attribute *devfreq_attrs[] = {
->>  	&dev_attr_name.attr,
-
--- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
 
