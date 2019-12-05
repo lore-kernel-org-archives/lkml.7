@@ -2,222 +2,144 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA179C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2724C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CFA20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E077206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 00:24:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AjT1fPN5"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="fNwiQqfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbfLEAVK (ORCPT
+        id S1728500AbfLEAYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 19:21:10 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:33387 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbfLEAVK (ORCPT
+        Wed, 4 Dec 2019 19:24:15 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46013 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728098AbfLEAYO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 19:21:10 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191205002105epoutp03c4d90a2bc1cb4e06d586320ed988d973~dUbEZlebK2319223192epoutp036
-        for <linux-kernel@vger.kernel.org>; Thu,  5 Dec 2019 00:21:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191205002105epoutp03c4d90a2bc1cb4e06d586320ed988d973~dUbEZlebK2319223192epoutp036
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1575505265;
-        bh=aRUuMrHlQQDwAmmmhmUQinAQVsf5nnrqlN834n7/lwo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=AjT1fPN5T6cLCE+hXnWwaZUck9Y/2V0fvfmdhS7YYex56N/6tQEoIDNQdLnaKpQme
-         zmf9AWZDwAQG8lwXIHWnMULOdNcpYPKg+X+KkBS3Sk+6lpWAHI4GKQUiqIVJHUeNkU
-         Zss5ort/At0cghTkVT/40L5z/NMQf1Ms80lr0E6g=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191205002105epcas1p28b1b2ca77cb68647f068e7bbd8e79b7f~dUbD8Gi3B0491804918epcas1p2H;
-        Thu,  5 Dec 2019 00:21:05 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47SxG44GVwzMqYly; Thu,  5 Dec
-        2019 00:21:00 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        15.33.57028.76D48ED5; Thu,  5 Dec 2019 09:20:55 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191205002054epcas1p46063b2d9d385ecbe30d86036a221eaa6~dUa6IO69d3207332073epcas1p4L;
-        Thu,  5 Dec 2019 00:20:54 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191205002054epsmtrp120a94ed51d592e5d4de6c7118f38ccf5~dUa6HLDlP1774817748epsmtrp1G;
-        Thu,  5 Dec 2019 00:20:54 +0000 (GMT)
-X-AuditID: b6c32a35-4f3ff7000001dec4-79-5de84d67c6e5
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0F.58.10238.66D48ED5; Thu,  5 Dec 2019 09:20:54 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191205002054epsmtip1e7a47fc6b1a21978b10bea41149ade4f~dUa56OkBa2276922769epsmtip1B;
-        Thu,  5 Dec 2019 00:20:54 +0000 (GMT)
-Subject: Re: [PATCH v2 1/3] devfreq: change time stats to 64-bit
-To:     Kamil Konieczny <k.konieczny@samsung.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <0fd243ee-001e-a93a-3421-3e3c82947f11@samsung.com>
-Date:   Thu, 5 Dec 2019 09:27:08 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Wed, 4 Dec 2019 19:24:14 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 203so992791lfa.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 16:24:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=WlXLW2RI1tJQOcMNYgc98Qgcf4rYrGp8OIDLgoJCH0c=;
+        b=fNwiQqfGnNsyEJYMPlge43hvB2JRQtOIQ7khRISVYNFdvNINB6iKEx0QoEJON7A4qg
+         omWu6pKQJ8w6HgqGWf/MIO65vwjCsdYIYZYEtD4ySqIzqRvyd8CP/lBjPg1J2ol2FgZj
+         Rs1eI4tDR3rz0hMU1ncrKBRIHY2AAMoHQEfbmMNudMkELJbUTpVZklq88nj/dZVis8EY
+         vYBkyTnAjEkqNk34aamGnLh3muzsO95SpMOL7Or6FmPVzQ8pC2c2KY4yI/reU3XsRvOn
+         lb3ahcDI3+7vyUAVoS7mXj4eE6EF+IQqduJA1uUjhXuEQ5sxhx8d3EDrxT5l2KHwEN2P
+         ZkLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=WlXLW2RI1tJQOcMNYgc98Qgcf4rYrGp8OIDLgoJCH0c=;
+        b=Ln3DzeL4MJzFJEFI24jDaF5tesA/pa6tJXZ6IPHiIwkm2iud4P29GEc4cwwULuks8X
+         BCbG7+Lz9QC9pA8rs0XwTEDVs105ODbElEcqTdSO02zkTVYDwIopIPI+8qiwvri/uEWt
+         Nf9NKy4C5J1ruzX+YTC49B0SDt6MkF90qDDD8DokQI9JgY/prl+1cI+bqb8WvePjfQ1q
+         a3FrHwnYcQ2ZkWAQTcY42RMzs4BAml4iLe7NgkN1OKMierKMonvwVNLtel0Rlk19ew9b
+         XtOU6t6ik4rTEHBM1IYNo5JJH2B87uIAYIluHk7x7nfROvTvWZWTdEv3O3KLWjv9yoTf
+         kFcQ==
+X-Gm-Message-State: APjAAAX3pM0ALHQIigA/AFpLHyoV+30ED09cILDJ8KrnSaJ3+MuVNgfO
+        DRg5I2aaVTxWLxpjSZXizNPe5w==
+X-Google-Smtp-Source: APXvYqy7QeMNXACuTpx2U0w7soJGbGDcz1sK5VXmG2ytucMOOYNINLaDrgync325PZJQuq3Nc0rb3g==
+X-Received: by 2002:a19:c7c5:: with SMTP id x188mr3580128lff.22.1575505452514;
+        Wed, 04 Dec 2019 16:24:12 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id l7sm4054402lfc.80.2019.12.04.16.24.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 16:24:12 -0800 (PST)
+Date:   Wed, 4 Dec 2019 16:23:48 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Toke =?UTF-8?B?SMO4aWxh?= =?UTF-8?B?bmQtSsO4cmdlbnNlbg==?= 
+        <toke@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [PATCHv4 0/6] perf/bpftool: Allow to link libbpf dynamically
+Message-ID: <20191204162348.49be5f1b@cakuba.netronome.com>
+In-Reply-To: <20191204233948.opvlopjkxe5o66lr@ast-mbp.dhcp.thefacebook.com>
+References: <20191202131847.30837-1-jolsa@kernel.org>
+        <CAEf4BzY_D9JHjuU6K=ciS70NSy2UvSm_uf1NfN_tmFz1445Jiw@mail.gmail.com>
+        <87wobepgy0.fsf@toke.dk>
+        <CAADnVQK-arrrNrgtu48_f--WCwR5ki2KGaX=mN2qmW_AcRyb=w@mail.gmail.com>
+        <CAEf4BzZ+0XpH_zJ0P78vjzmFAH3kGZ21w3-LcSEG=B=+ZQWJ=w@mail.gmail.com>
+        <20191204135405.3ffb9ad6@cakuba.netronome.com>
+        <20191204233948.opvlopjkxe5o66lr@ast-mbp.dhcp.thefacebook.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <20191204150018.5234-2-k.konieczny@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmrm6674tYg47zbBYbZ6xntVjwaQar
-        xfnzG9gtzja9Ybe4vGsOm8Xn3iOMFmuP3GW3uN24gs2Bw2PTqk42j74tqxg9Pm+SC2COyrbJ
-        SE1MSS1SSM1Lzk/JzEu3VfIOjneONzUzMNQ1tLQwV1LIS8xNtVVy8QnQdcvMAbpASaEsMacU
-        KBSQWFyspG9nU5RfWpKqkJFfXGKrlFqQklNgWaBXnJhbXJqXrpecn2tlaGBgZApUmJCdsfPg
-        bKaC21IV7z//Z2pgvCPaxcjJISFgInH0eA8LiC0ksINRYt7+wC5GLiD7E6NE464t7BDON0aJ
-        G5MWsMB0TF+4iwUisZdR4sGBqawQ7e8ZJX7uEAaxhQUcJCa9fssMYosI6Eq82bGUGaSBWWAe
-        k8SbaRfAGtgEtCT2v7jBBmLzCyhKXP3xmBHE5hWwk5iz5C6YzSKgIjHj+j2wQaICYRInt7VA
-        1QhKnJz5BOwiTgEbieOP9oHVMAuIS9x6Mp8JwpaX2P52DthiCYHXbBIdV6YwQrzgInHm+1Ko
-        d4QlXh0H+RPElpJ42d8GZVdLrDx5hA2iuYNRYst+iKslBIwl9i+dDLSBA2iDpsT6XfoQYUWJ
-        nb/nMkIs5pN497WHFaREQoBXoqNNCKJEWeLyg7tMELakxOL2TrYJjEqzkLwzC8kLs5C8MAth
-        2QJGllWMYqkFxbnpqcWGBYbIsb2JEZw6tUx3ME4553OIUYCDUYmHt2HT81gh1sSy4srcQ4wS
-        HMxKIrzbJJ7GCvGmJFZWpRblxxeV5qQWH2I0BYb2RGYp0eR8YFrPK4k3NDUyNja2MDE0MzU0
-        VBLn5fhxMVZIID2xJDU7NbUgtQimj4mDU6qBUXx91blJ1na2H1aoMjv3mnprf/SNnnhqRZ3c
-        o8mWM2NPTbjxVa9ILUK87siL6yt+qmtk2LpKv7NN/vvsbNLiDPHLL+xOe6wVLvl6NHhezTq1
-        jfq+Hao7bupE5wapuq6R0vL/f8r+0E+rYrZbcZFRkX8rF9yrr1g9pXqKjNEmpeCazPjj9c4a
-        SizFGYmGWsxFxYkAMizysrMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42LZdlhJTjfN90Wswa9NyhYbZ6xntVjwaQar
-        xfnzG9gtzja9Ybe4vGsOm8Xn3iOMFmuP3GW3uN24gs2Bw2PTqk42j74tqxg9Pm+SC2CO4rJJ
-        Sc3JLEst0rdL4MrYeXA2U8FtqYr3n/8zNTDeEe1i5OSQEDCRmL5wF0sXIxeHkMBuRonX11cz
-        QyQkJaZdPApkcwDZwhKHDxdD1LxllOhc2soIUiMs4CAx6fVbsHoRAV2JNzuWMoMUMQssYJKY
-        f3Mi1NSDjBLrH39nBaliE9CS2P/iBhuIzS+gKHH1x2OwSbwCdhJzltwFs1kEVCRmXL8HNlVU
-        IExi55LHTBA1ghInZz5hAbE5BWwkjj/aB1bDLKAu8WfeJShbXOLWk/lMELa8xPa3c5gnMArP
-        QtI+C0nLLCQts5C0LGBkWcUomVpQnJueW2xYYJiXWq5XnJhbXJqXrpecn7uJERxHWpo7GC8v
-        iT/EKMDBqMTD27DpeawQa2JZcWXuIUYJDmYlEd5tEk9jhXhTEiurUovy44tKc1KLDzFKc7Ao
-        ifM+zTsWKSSQnliSmp2aWpBaBJNl4uCUamBMT/7K8/lFrZDFF2c2tYSPj1cV7W389Z6JvT+e
-        VWNBimD4me25HboSbx3WyS/2MXuisMZaNn/C4R6Bh7z70768YO/+962tn+1Ch1HyxUy1rO2P
-        ZJQs1hsl3Ne7ce1RqE9n1fnH3Yl3r2hul04pWlGfPynb6+J7hsstMwU2H2lj2aNg+e+X9SMl
-        luKMREMt5qLiRAAiDxBbnwIAAA==
-X-CMS-MailID: 20191205002054epcas1p46063b2d9d385ecbe30d86036a221eaa6
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191204150033eucas1p1bf11d36a89c89e3eb55c37a1a204e988
-References: <20191204150018.5234-1-k.konieczny@samsung.com>
-        <CGME20191204150033eucas1p1bf11d36a89c89e3eb55c37a1a204e988@eucas1p1.samsung.com>
-        <20191204150018.5234-2-k.konieczny@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/5/19 12:00 AM, Kamil Konieczny wrote:
-> Change time stats counting to bigger type by using 64-bit jiffies.
-> This will make devfreq stats code look similar to cpufreq stats and
-> prevents overflow (for HZ = 1000 after 49.7 days).
-> 
-> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
-> Changes in v2:
->  added Acked-by, rebased on linux-next
-> 
->  drivers/devfreq/devfreq.c | 14 +++++++-------
->  include/linux/devfreq.h   |  4 ++--
->  2 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index bdeb4189c978..0e2030403e4a 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -199,10 +199,10 @@ static int set_freq_table(struct devfreq *devfreq)
->  int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
->  {
->  	int lev, prev_lev, ret = 0;
-> -	unsigned long cur_time;
-> +	unsigned long long cur_time;
+On Wed, 4 Dec 2019 15:39:49 -0800, Alexei Starovoitov wrote:
+> > Agreed. Having libbpf on GH is definitely useful today, but one can hope
+> > a day will come when distroes will get up to speed on packaging libbpf,
+> > and perhaps we can retire it? Maybe 2, 3 years from now? Putting
+> > bpftool in the same boat is just more baggage. =20
+>=20
+> Distros should be packaging libbpf and bpftool from single repo on github.
+> Kernel tree is for packaging kernel.
 
-It looks better to use 'u64' instead of 'unsigned long long'.
-Because get_jiffies_u64 has 'u64' return type.
+Okay, single repo on GitHub:
 
->  
->  	lockdep_assert_held(&devfreq->lock);
-> -	cur_time = jiffies;
-> +	cur_time = get_jiffies_64();
->  
->  	/* Immediately exit if previous_freq is not initialized yet. */
->  	if (!devfreq->previous_freq)
-> @@ -525,7 +525,7 @@ void devfreq_monitor_resume(struct devfreq *devfreq)
->  			msecs_to_jiffies(devfreq->profile->polling_ms));
->  
->  out_update:
-> -	devfreq->last_stat_updated = jiffies;
-> +	devfreq->last_stat_updated = get_jiffies_64();
->  	devfreq->stop_polling = false;
->  
->  	if (devfreq->profile->get_cur_freq &&
-> @@ -748,7 +748,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
->  
->  	devfreq->time_in_state = devm_kcalloc(&devfreq->dev,
->  			devfreq->profile->max_state,
-> -			sizeof(unsigned long),
-> +			sizeof(*devfreq->time_in_state),
->  			GFP_KERNEL);
->  	if (!devfreq->time_in_state) {
->  		mutex_unlock(&devfreq->lock);
-> @@ -756,7 +756,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
->  		goto err_devfreq;
->  	}
->  
-> -	devfreq->last_stat_updated = jiffies;
-> +	devfreq->last_stat_updated = get_jiffies_64();
->  
->  	srcu_init_notifier_head(&devfreq->transition_notifier_list);
->  
-> @@ -1470,8 +1470,8 @@ static ssize_t trans_stat_show(struct device *dev,
->  		for (j = 0; j < max_state; j++)
->  			len += sprintf(buf + len, "%10u",
->  				devfreq->trans_table[(i * max_state) + j]);
-> -		len += sprintf(buf + len, "%10u\n",
-> -			jiffies_to_msecs(devfreq->time_in_state[i]));
-> +		len += sprintf(buf + len, "%10llu\n", (u64)
-> +			jiffies64_to_msecs(devfreq->time_in_state[i]));
->  	}
->  
->  	len += sprintf(buf + len, "Total transition : %u\n",
-> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
-> index 2bae9ed3c783..b81a86e47fb9 100644
-> --- a/include/linux/devfreq.h
-> +++ b/include/linux/devfreq.h
-> @@ -174,8 +174,8 @@ struct devfreq {
->  	/* information for device frequency transition */
->  	unsigned int total_trans;
->  	unsigned int *trans_table;
-> -	unsigned long *time_in_state;
-> -	unsigned long last_stat_updated;
-> +	u64 *time_in_state;
-> +	unsigned long long last_stat_updated;
+https://github.com/torvalds/linux
 
-ditto. 'unsigned long long' -> 'u64'.
+we are in agreement =F0=9F=98=9D
 
->  
->  	struct srcu_notifier_head transition_notifier_list;
->  };
-> 
+Jokes aside, you may need to provide some reasoning on this one..
+The recommendation for packaging libbpf from GitHub never had any=20
+clear justification either AFAICR.
 
+I honestly don't see why location matters. bpftool started out on GitHub
+but we moved it into the tree for... ease of packaging/distribution(?!)
+Now it's handy to have it in the tree to reuse the uapi headers.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+As much as I don't care if we move it (back) out of the tree - having
+two copies makes no sense to me. As does having it in the libbpf repo.
+The sync effort is not warranted. User confusion is not warranted.
+
+The distroes already package bpftool from the kernel sources, people had
+put in time to get to this stage and there aren't any complaints.
+
+In fact all the BPF projects and test suites we are involved in at
+Netronome are entirely happy the packaged versions of LLVM and libbpf
+in Fedora _today_, IOW the GH libbpf is irrelevant to us already.
+
+As for the problem which sparked this discussion - I disagree that
+bpftool should have "special relationship" with the library. In fact
+bpftool uses the widest range of libbpf's interfaces of all known
+projects so it's invaluable for making sure that those interfaces are
+usable, consistent and complete.
+
+You also said a few times you don't want to merge fixes into bpf/net.
+That divergence from kernel development process is worrying.
+
+None of this makes very much sense to me. We're diverging from well
+established development practices without as much as a justification.
+
+Perhaps I'm not clever enough to follow. But if I'm allowed to make an
+uneducated guess it would be that it's some Facebook internal reason,
+like it's hard to do backports? :/
