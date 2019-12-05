@@ -2,158 +2,85 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F376C2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6B5C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFBB724652
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC7D2464F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575569864;
-	bh=PlAEFLN1jqtWKok/Lf9q+3BJb/5YRASigf4LDeh8jpY=;
+	s=default; t=1575569895;
+	bh=/R5wJaZqNnIuo+1BXsLviZvvpnCUnVbIf0AU9MbVPsg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eowl0Zzju+C8X8i1zsNxoTHZjDL4hIKbPOOIOyNdWJPq6AE/cc0DpHj5Gd7wHkz6z
-	 ilivO9dlvHpdABQRoP2Jpw2o63eX5KjBel5bP66An8jwND31T1NvtmTanzOnyrpzaj
-	 ZpfjC4Ge7lZ/nZtuyMgpP0NPc3FSulZZndmjMO8o=
+	b=pFC+ZKmAnJMMubSOmDQvJT2hWLw1vM36SWZAqcUirWYZyMnvp2aPz/QwWxndm+JT/
+	 nytU1cxGnMoUiSNpA84csSjN/F/pWLURBMN/cyx4ef5gG1b2u+jLcZAJZFHIorItSS
+	 axEQ3l7qc+p58tGkYktm5ditS/h10PekPB2TmGIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729867AbfLESRn (ORCPT
+        id S1729948AbfLESSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 13:17:43 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40528 "EHLO
+        Thu, 5 Dec 2019 13:18:14 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34616 "EHLO
         mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLESRn (ORCPT
+        with ESMTP id S1726028AbfLESSN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 13:17:43 -0500
-Received: by mail-ot1-f68.google.com with SMTP id i15so3436346oto.7;
-        Thu, 05 Dec 2019 10:17:42 -0800 (PST)
+        Thu, 5 Dec 2019 13:18:13 -0500
+Received: by mail-ot1-f68.google.com with SMTP id a15so3478341otf.1;
+        Thu, 05 Dec 2019 10:18:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u4uQDLDAwENfhHeQirg6G+6BYDGXlzNgApNiZIr6QmU=;
-        b=qLZ3J5q4ieJHnb79TSj71oYbPUnAweFrGJlAMbWfisX1mPptZmvH06bHs74MW1/nkz
-         VOQyW5R4s3pkQSRiDfSULTD1OZWjpt+WYEz6lpaQ3DdEoRByXLvqOpC4TmGSJm7/XbRL
-         4A6YiadbG4Cbl9AFyM7nPi28ADYIK9eyTozqel+H6o52C3jYP0EQOlweOmDvIghABOEz
-         q+69Xrz9XuqNrzv2B95YKeqmLqEEXJOxAtfuFDq0Co+Qa3vJgzR7XrB0Vr9jX8uPWdSc
-         BlRe95387JNQHBWyJI/QWQcvi/6CodIharplC6xtk32yYaWyhEVIkfKSCO8qWLXztAGk
-         IYyw==
-X-Gm-Message-State: APjAAAVCU/dh8O6s36zvlj7nnWbpbk425TCNxGCXuRcKHtbKyOyHcI5/
-        Wor1z09o/OParh1jKj2wHA==
-X-Google-Smtp-Source: APXvYqzkq/aJ6tEAXfhu7WCsvfepMGPsY9OOYaC1oKI4g/ywEvKPqxK7dmYkmu+3yLNEvQB6kcw3YQ==
-X-Received: by 2002:a9d:66ca:: with SMTP id t10mr7618291otm.352.1575569861752;
-        Thu, 05 Dec 2019 10:17:41 -0800 (PST)
+        bh=Ctt78cWwZCaPfsbkOwoWRKaRaaHO7Q0cJcGkZb/xygE=;
+        b=PP0xWugIq0GoEYCNfpnzOcmD+zugany1CzZU2uNXlm5AGKhkYb5pdxIJ9WB9HLxolI
+         l9JQMvCFOsA1NOZJvTNfZByu0P3sHnGq2rmSMGyXPyCpQo6gu3z3xC7LCbG1Vqx28XJu
+         +OEvUwfbQ+bszhAnhId8ufjPMYf+jVOyv7xTHR/dJQc3xT2LPXhIyUy/jRAzvMRKNK+q
+         mFVdD4rb9frydus/PlG27zTlmOc+fP86McmDfOsMCGPY+UclV7oQwK9StFD3GXDwg54S
+         aphRCzUfvPk8IoGot8Gw1n8mfN6FTYkUBEdsXgPPz+PaJ/a4aZVrCFYBBdjYggEQwIVW
+         95bQ==
+X-Gm-Message-State: APjAAAWk29KH/r2vfk4ihaKRvGxVk/mu1YEzgUI5GNS9s34zerbSSGtL
+        sVgvtqfuBfPNC8M8Ly+ZAA==
+X-Google-Smtp-Source: APXvYqyfs8OhUj0eeDczAIKIgi1gk0+FRTxh0W2z3IWAj0xjcIUjt8xn3BxVAR2EWbyK3UtPCpCimw==
+X-Received: by 2002:a9d:554f:: with SMTP id h15mr8059510oti.338.1575569892874;
+        Thu, 05 Dec 2019 10:18:12 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p189sm3817243oih.54.2019.12.05.10.17.41
+        by smtp.gmail.com with ESMTPSA id n16sm3596887otk.25.2019.12.05.10.18.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 10:17:41 -0800 (PST)
-Date:   Thu, 5 Dec 2019 12:17:40 -0600
+        Thu, 05 Dec 2019 10:18:12 -0800 (PST)
+Date:   Thu, 5 Dec 2019 12:18:11 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     shubhrajyoti.datta@gmail.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, corbet@lwn.net,
-        gregkh@linuxfoundation.org, arnd@arndb.de,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: Re: [PATCH 1/3] dt-bindings: Add dt bindings for flex noc
- Performance Monitor
-Message-ID: <20191205181740.GA26684@bogus>
-References: <1574679352-2989-1-git-send-email-shubhrajyoti.datta@gmail.com>
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org, dhar@codeaurora.org,
+        jsanka@codeaurora.org, chandanu@codeaurora.org,
+        travitej@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [PATCH 1/4] dt-bindings: msm:disp: add sc7180 DPU variant
+Message-ID: <20191205181811.GA5706@bogus>
+References: <1574683169-19342-1-git-send-email-kalyan_t@codeaurora.org>
+ <1574683169-19342-2-git-send-email-kalyan_t@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1574679352-2989-1-git-send-email-shubhrajyoti.datta@gmail.com>
+In-Reply-To: <1574683169-19342-2-git-send-email-kalyan_t@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 04:25:50PM +0530, shubhrajyoti.datta@gmail.com wrote:
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+On Mon, 25 Nov 2019 17:29:26 +0530, Kalyan Thota wrote:
+> Add a compatible string to support sc7180 dpu version.
 > 
-> Add dt bindings for flexnoc Performance Monitor.
-> The flexnoc counters for read and write response and requests are
-> supported.
-> 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
 > ---
-> changes from RFC:
-> moved to schema / yaml
+>  Documentation/devicetree/bindings/display/msm/dpu.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
->  .../devicetree/bindings/perf/xlnx-flexnoc-pm.yaml  | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/perf/xlnx-flexnoc-pm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/perf/xlnx-flexnoc-pm.yaml b/Documentation/devicetree/bindings/perf/xlnx-flexnoc-pm.yaml
-> new file mode 100644
-> index 0000000..bd0f345
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/perf/xlnx-flexnoc-pm.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
 
-() around the licenses.
-
-Are you good with GPL v10? Make it 'GPL-2.0-only' instead.
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/perf/xlnx-flexnoc-pm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Xilinx flexnoc Performance Monitor device tree bindings
-> +
-> +maintainers:
-> +  - Arnd Bergmann <arnd@arndb.de>
-> +  - Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-This should be someone familar with this h/w (you).
-
-> +
-> +properties:
-> +  compatible:
-> +    # Versal SoC based boards
-> +    items:
-> +      - enum:
-> +          - xlnx,flexnoc-pm-2.7
-> +
-> +  reg:
-> +    items:
-> +      - description: funnel registers
-> +      - description: baselpd registers
-> +      - description: basefpd registers
-> +
-> +  reg-names:
-> +    # The core schema enforces this is a string array
-> +    items:
-> +      - const: funnel
-> +      - const: baselpd
-> +      - const: basefpd
-> +
-> +required:
-> +  - compatible
-> +  - reg
-
-No point having 'reg-names' if not required.
-
-
-Add:
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    performance-monitor@f0920000 {
-> +        compatible = "xlnx,flexnoc-pm-2.7";
-> +        reg-names = "funnel", "baselpd", "basefpd";
-> +        reg = <0x0 0xf0920000 0x0 0x1000>,
-> +              <0x0 0xf0980000 0x0 0x9000>,
-> +              <0x0 0xf0b80000 0x0 0x9000>;
-> +    };
-> -- 
-> 2.1.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
