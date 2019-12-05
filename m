@@ -2,245 +2,314 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=BITCOIN_SPAM_02,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508E0C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBB6C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209302464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0902464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:40:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="SWsbU0RX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbfLEShi (ORCPT
+        id S1729877AbfLESko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 13:37:38 -0500
-Received: from mga05.intel.com ([192.55.52.43]:17076 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfLEShh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 13:37:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 10:37:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,282,1571727600"; 
-   d="scan'208";a="386269950"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 05 Dec 2019 10:37:36 -0800
-Received: from [10.252.11.4] (abudanko-mobl.ccr.corp.intel.com [10.252.11.4])
-        by linux.intel.com (Postfix) with ESMTP id 0CC7F5804A0;
-        Thu,  5 Dec 2019 10:37:31 -0800 (PST)
-Subject: Re: [PATCH v1 0/3] Introduce CAP_SYS_PERFMON capability for secure
- Perf users groups
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        elena.reshetova@intel.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stephane Eranian <eranian@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <283f09a5-33bd-eac3-bdfd-83d775045bf9@linux.intel.com>
- <1e836f34-eda3-542d-f7ce-9a3e87ac5e2e@schaufler-ca.com>
- <d0c6f000-4757-02d8-b114-a35cbb9566ed@linux.intel.com>
- <a81248c5-971a-9d3f-6df4-e6335384fe7f@schaufler-ca.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <b17c013e-9474-5034-3859-3c3e02e10bc7@linux.intel.com>
-Date:   Thu, 5 Dec 2019 21:37:30 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 5 Dec 2019 13:40:44 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46513 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729290AbfLESko (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 13:40:44 -0500
+Received: by mail-qk1-f196.google.com with SMTP id f5so4173409qkm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 10:40:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version;
+        bh=qNywU4SuN1/j02xrDEkCFwu3QGTs/dxNT1LnQRfHtF8=;
+        b=SWsbU0RX9ejp98wgbcUO3NGwdBv2+KoYM3HfmeqAgo8nCEfWewtIInTnZUSYZIek7X
+         M6XLBVGdTI+ewA74G5hKH4aOqZoxm9bhxZaMBgR7hR/Xpfcs1mc2Yb+vAZjjJJTS7JQB
+         QE32m7U20m4tLxwCDz9x056pCb686+kGalOthXrJgEY8Y4iTot3KxsG63fUJtg1GnOvk
+         6IQvCFh2GXQ8yVzWCma9yNbTgJXhTO3YhAblGG3QI6fSau/BCJucFOBrVzUI6k5FOgF6
+         jzb2hIZwKpm4vSTl2GsTvp8lIJNh9p0LOdFTemNptMOly+ho6idb7VVmIR6bVJw9AYjR
+         KjyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=qNywU4SuN1/j02xrDEkCFwu3QGTs/dxNT1LnQRfHtF8=;
+        b=FAwqsYC0iInR4CsmiqwOyl6SSaG96NjwVly08Nl1ZQpj2KiDBE5//TUvIT7joc4TNs
+         8ZoGgQZC5cMROpC1GovKasM7o2HA/EZRlEFwj1LvtixDuxui18ZngHs/68+Vr9n2X4G1
+         0qn7naRAV7fqhSk/thLoYzR9/or3qUWOJK0g7qyyJCn/6o5usOWcLispe66DsZ8ZYt0i
+         dni9+Ig6L5zbxPickB4EWkwQLcL/fo8Nw2U9axVoRiqiFXRtGuugj7qMZEWFWSyq6A9M
+         7q9z9dYl6YqZnAZ635uKR58n9SNwpWZpq/Y0Kn1L2Yu8Kux1DpvKdiVuU0CICrrQ/McP
+         O4mA==
+X-Gm-Message-State: APjAAAUyxxoLB8CW9xdBukdLyFhxfyqCV4uF2KffNknd50yEXQvEF3mZ
+        uDF6+jHGTDqTVOrxhCuNmv5RQg==
+X-Google-Smtp-Source: APXvYqysLcRjcDifiharFt6ZbX+CalXc/vNS0LASHBpDag8561+j3VZG6UcBTwQL3KvSwnUZvv7oEA==
+X-Received: by 2002:a05:620a:1366:: with SMTP id d6mr10102265qkl.86.1575571242801;
+        Thu, 05 Dec 2019 10:40:42 -0800 (PST)
+Received: from tpx230-nicolas ([2610:98:8005::650])
+        by smtp.gmail.com with ESMTPSA id 13sm5118928qke.85.2019.12.05.10.40.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 10:40:41 -0800 (PST)
+Message-ID: <63a630f0760083d735ae02f5797ecd00530c7608.camel@ndufresne.ca>
+Subject: Re: [PATCH 4/5] media: meson: vdec: add VP9 input support
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org,
+        hans.verkuil@cisco.com
+Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
+        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Thu, 05 Dec 2019 13:40:39 -0500
+In-Reply-To: <20191205092639.26330-1-narmstrong@baylibre.com>
+References: <20191205092454.26075-1-narmstrong@baylibre.com>
+         <20191205092639.26330-1-narmstrong@baylibre.com>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-CCHdCL4ad1Oj02aHxg2r"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <a81248c5-971a-9d3f-6df4-e6335384fe7f@schaufler-ca.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.12.2019 20:33, Casey Schaufler wrote:
-> On 12/5/2019 9:05 AM, Alexey Budankov wrote:
->> Hello Casey,
->>  
->> On 05.12.2019 19:49, Casey Schaufler wrote:
->>> On 12/5/2019 8:15 AM, Alexey Budankov wrote:
->>>> Currently access to perf_events functionality [1] beyond the scope permitted
->>>> by perf_event_paranoid [1] kernel setting is allowed to a privileged process
->>>> [2] with CAP_SYS_ADMIN capability enabled in the process effective set [3].
->>>>
->>>> This patch set introduces CAP_SYS_PERFMON capability devoted to secure performance
->>>> monitoring activity so that CAP_SYS_PERFMON would assist CAP_SYS_ADMIN in its
->>>> governing role for perf_events based performance monitoring of a system.
->>>>
->>>> CAP_SYS_PERFMON aims to harden system security and integrity when monitoring
->>>> performance using perf_events subsystem by processes and Perf privileged users
->>>> [2], thus decreasing attack surface that is available to CAP_SYS_ADMIN
->>>> privileged processes [3].
->>> Are there use cases where you would need CAP_SYS_PERFMON where you
->>> would not also need CAP_SYS_ADMIN? If you separate a new capability
->> Actually, there are. Perf tool that has record, stat and top modes could run with
->> CAP_SYS_PERFMON capability as mentioned below and provide system wide performance
->> data. Currently for that to work the tool needs to be granted with CAP_SYS_ADMIN.
-> 
-> The question isn't whether the tool could use the capability, it's whether
-> the tool would also need CAP_SYS_ADMIN to be useful. Are there existing
-> tools that could stop using CAP_SYS_ADMIN in favor of CAP_SYS_PERFMON?
-> My bet is that any tool that does performance monitoring is going to need
-> CAP_SYS_ADMIN for other reasons.
 
-Yes, sorry. The tool is perf tool (part of kernel tree). If its binary is granted 
-CAP_SYS_ADMIN capability then the tool can collect performance data in system wide 
-mode for some group of unprivileged users.
+--=-CCHdCL4ad1Oj02aHxg2r
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch allows replacing CAP_SYS_ADMIN by CAP_SYS_PERFMON e.g. for perf tool and 
-then the tool being granted CAP_SYS_PERFMON could still provide performance data
-in system wide scope for the same group of unprivileged users.
+Le jeudi 05 d=C3=A9cembre 2019 =C3=A0 10:26 +0100, Neil Armstrong a =C3=A9c=
+rit :
+> From: Maxime Jourdan <mjourdan@baylibre.com>
+>=20
+> Amlogic VP9 decoder requires an additional 16-byte payload before every
+> frame header.
 
-Hope it's got clearer. Feel free to ask more.
+When I first saw this patch, I assumed data_offset was to be used (like
+for venus), but I think what I'm reading is that the bitstream is
+bounce into another buffer (ring buffer ?) and for this reason such an
+offset is not needed. Maybe worth referring to how the header is being
+added (e.g. while copying the data) ?=20
 
-Thanks,
-Alexey
+>=20
+> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/staging/media/meson/vdec/esparser.c | 142 +++++++++++++++++++-
+>  1 file changed, 138 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/staging/media/meson/vdec/esparser.c b/drivers/stagin=
+g/media/meson/vdec/esparser.c
+> index adc5c1e81a4c..aeb68f6c732a 100644
+> --- a/drivers/staging/media/meson/vdec/esparser.c
+> +++ b/drivers/staging/media/meson/vdec/esparser.c
+> @@ -52,6 +52,7 @@
+>  #define PARSER_VIDEO_HOLE	0x90
+> =20
+>  #define SEARCH_PATTERN_LEN	512
+> +#define VP9_HEADER_SIZE		16
+> =20
+>  static DECLARE_WAIT_QUEUE_HEAD(wq);
+>  static int search_done;
+> @@ -74,14 +75,121 @@ static irqreturn_t esparser_isr(int irq, void *dev)
+>  	return IRQ_HANDLED;
+>  }
+> =20
+> +/**
+> + * VP9 frame headers need to be appended by a 16-byte long
 
-> 
->>
->>> from CAP_SYS_ADMIN but always have to use CAP_SYS_ADMIN in conjunction
->>> with the new capability it is all rather pointless.
->>>
->>> The scope you've defined for this CAP_SYS_PERFMON is very small.
->>> Is there a larger set of privilege checks that might be applicable
->>> for it?
->> CAP_SYS_PERFMON could be applied broadly, though, this patch set enables record
->> and stat mode use cases for system wide performance monitoring in kernel and
->> user modes.
-> 
-> The granularity of capabilities is something we have to watch
-> very carefully. Sure, CAP_SYS_ADMIN covers a lot of things, but
-> if we broke it up "properly" we'd have hundreds of capabilities.
-> If you want control that finely we have SELinux.
-> 
->>
->> Thanks,
->> Alexey
->>
->>>  
->>>
->>>> CAP_SYS_PERFMON aims to take over CAP_SYS_ADMIN credentials related to
->>>> performance monitoring functionality of perf_events and balance amount of
->>>> CAP_SYS_ADMIN credentials in accordance with the recommendations provided in
->>>> the man page for CAP_SYS_ADMIN [3]: "Note: this capability is overloaded;
->>>> see Notes to kernel developers, below."
->>>>
->>>> For backward compatibility reasons performance monitoring functionality of 
->>>> perf_events subsystem remains available under CAP_SYS_ADMIN but its usage for
->>>> secure performance monitoring use cases is discouraged with respect to the
->>>> introduced CAP_SYS_PERFMON capability.
->>>>
->>>> In the suggested implementation CAP_SYS_PERFMON enables Perf privileged users
->>>> [2] to conduct secure performance monitoring using perf_events in the scope
->>>> of available online CPUs when executing code in kernel and user modes.
->>>>
->>>> Possible alternative solution to this capabilities balancing, system security
->>>> hardening task could be to use the existing CAP_SYS_PTRACE capability to govern
->>>> perf_events' performance monitoring functionality, since process debugging is
->>>> similar to performance monitoring with respect to providing insights into
->>>> process memory and execution details. However CAP_SYS_PTRACE still provides
->>>> users with more credentials than are required for secure performance monitoring
->>>> using perf_events subsystem and this excess is avoided by using the dedicated
->>>> CAP_SYS_PERFMON capability.
->>>>
->>>> libcap library utilities [4], [5] and Perf tool can be used to apply
->>>> CAP_SYS_PERFMON capability for secure performance monitoring beyond the scope
->>>> permitted by system wide perf_event_paranoid kernel setting and below are the
->>>> steps to evaluate the advancement suggested by the patch set:
->>>>
->>>>   - patch, build and boot the kernel
->>>>   - patch, build Perf tool e.g. to /home/user/perf
->>>>   ...
->>>>   # git clone git://git.kernel.org/pub/scm/libs/libcap/libcap.git libcap
->>>>   # pushd libcap
->>>>   # patch libcap/include/uapi/linux/capabilities.h with [PATCH 1/3]
->>>>   # make
->>>>   # pushd progs
->>>>   # ./setcap "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
->>>>   # ./setcap -v "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
->>>>   /home/user/perf: OK
->>>>   # ./getcap /home/user/perf
->>>>   /home/user/perf = cap_sys_ptrace,cap_syslog,cap_sys_perfmon+ep
->>>>   # echo 2 > /proc/sys/kernel/perf_event_paranoid
->>>>   # cat /proc/sys/kernel/perf_event_paranoid 
->>>>   2
->>>>   ...
->>>>   $ /home/user/perf top
->>>>     ... works as expected ...
->>>>   $ cat /proc/`pidof perf`/status
->>>>   Name:	perf
->>>>   Umask:	0002
->>>>   State:	S (sleeping)
->>>>   Tgid:	2958
->>>>   Ngid:	0
->>>>   Pid:	2958
->>>>   PPid:	9847
->>>>   TracerPid:	0
->>>>   Uid:	500	500	500	500
->>>>   Gid:	500	500	500	500
->>>>   FDSize:	256
->>>>   ...
->>>>   CapInh:	0000000000000000
->>>>   CapPrm:	0000004400080000
->>>>   CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
->>>>                                      cap_sys_perfmon,cap_sys_ptrace,cap_syslog
->>>>   CapBnd:	0000007fffffffff
->>>>   CapAmb:	0000000000000000
->>>>   NoNewPrivs:	0
->>>>   Seccomp:	0
->>>>   Speculation_Store_Bypass:	thread vulnerable
->>>>   Cpus_allowed:	ff
->>>>   Cpus_allowed_list:	0-7
->>>>   ...
->>>>
->>>> Usage of cap_sys_perfmon effectively avoids unused credentials excess:
->>>> - with cap_sys_admin:
->>>>   CapEff:	0000007fffffffff => 01111111 11111111 11111111 11111111 11111111
->>>> - with cap_sys_perfmon:
->>>>   CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
->>>>                                     38   34               19
->>>>                            sys_perfmon   syslog           sys_ptrace
->>>>
->>>> The patch set is for tip perf/core repository:
->>>>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip perf/core
->>>>   tip sha1: ceb9e77324fa661b1001a0ae66f061b5fcb4e4e6
->>>>
->>>> [1] http://man7.org/linux/man-pages/man2/perf_event_open.2.html
->>>> [2] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
->>>> [3] http://man7.org/linux/man-pages/man7/capabilities.7.html
->>>> [4] http://man7.org/linux/man-pages/man8/setcap.8.html
->>>> [5] https://git.kernel.org/pub/scm/libs/libcap/libcap.git
->>>> [6] https://sites.google.com/site/fullycapable/, posix_1003.1e-990310.pdf
->>>>
->>>> ---
->>>> Alexey Budankov (3):
->>>>   capabilities: introduce CAP_SYS_PERFMON to kernel and user space
->>>>   perf/core: apply CAP_SYS_PERFMON to CPUs and kernel monitoring
->>>>   perf tool: extend Perf tool with CAP_SYS_PERFMON support
->>>>
->>>>  include/linux/perf_event.h          |  6 ++++--
->>>>  include/uapi/linux/capability.h     | 10 +++++++++-
->>>>  security/selinux/include/classmap.h |  4 ++--
->>>>  tools/perf/design.txt               |  3 ++-
->>>>  tools/perf/util/cap.h               |  4 ++++
->>>>  tools/perf/util/evsel.c             | 10 +++++-----
->>>>  tools/perf/util/util.c              | 15 +++++++++++++--
->>>>  7 files changed, 39 insertions(+), 13 deletions(-)
->>>>
->>>
-> 
-> 
+nit: Maybe the use of "appending" is not appropriate as the header is
+documented in the commit as being "before every frame header" ?
+
+> + * Amlogic custom header
+> + */
+> +static int vp9_update_header(struct amvdec_core *core, struct vb2_buffer=
+ *buf)
+> +{
+> +	u8 *dp;
+> +	u8 marker;
+> +	int dsize;
+> +	int num_frames, cur_frame;
+> +	int cur_mag, mag, mag_ptr;
+> +	int frame_size[8], tot_frame_size[8];
+> +	int total_datasize =3D 0;
+> +	int new_frame_size;
+> +	unsigned char *old_header =3D NULL;
+> +
+> +	dp =3D (uint8_t *)vb2_plane_vaddr(buf, 0);
+> +	dsize =3D vb2_get_plane_payload(buf, 0);
+> +
+> +	if (dsize =3D=3D vb2_plane_size(buf, 0)) {
+> +		dev_warn(core->dev, "%s: unable to update header\n", __func__);
+> +		return 0;
+> +	}
+> +
+> +	marker =3D dp[dsize - 1];
+> +	if ((marker & 0xe0) =3D=3D 0xc0) {
+> +		num_frames =3D (marker & 0x7) + 1;
+> +		mag =3D ((marker >> 3) & 0x3) + 1;
+> +		mag_ptr =3D dsize - mag * num_frames - 2;
+> +		if (dp[mag_ptr] !=3D marker)
+> +			return 0;
+> +
+> +		mag_ptr++;
+> +		for (cur_frame =3D 0; cur_frame < num_frames; cur_frame++) {
+> +			frame_size[cur_frame] =3D 0;
+> +			for (cur_mag =3D 0; cur_mag < mag; cur_mag++) {
+> +				frame_size[cur_frame] |=3D
+> +					(dp[mag_ptr] << (cur_mag * 8));
+> +				mag_ptr++;
+> +			}
+> +			if (cur_frame =3D=3D 0)
+> +				tot_frame_size[cur_frame] =3D
+> +					frame_size[cur_frame];
+> +			else
+> +				tot_frame_size[cur_frame] =3D
+> +					tot_frame_size[cur_frame - 1] +
+> +					frame_size[cur_frame];
+> +			total_datasize +=3D frame_size[cur_frame];
+> +		}
+> +	} else {
+> +		num_frames =3D 1;
+> +		frame_size[0] =3D dsize;
+> +		tot_frame_size[0] =3D dsize;
+> +		total_datasize =3D dsize;
+> +	}
+> +
+> +	new_frame_size =3D total_datasize + num_frames * VP9_HEADER_SIZE;
+> +
+> +	if (new_frame_size >=3D vb2_plane_size(buf, 0)) {
+> +		dev_warn(core->dev, "%s: unable to update header\n", __func__);
+> +		return 0;
+> +	}
+> +
+> +	for (cur_frame =3D num_frames - 1; cur_frame >=3D 0; cur_frame--) {
+> +		int framesize =3D frame_size[cur_frame];
+> +		int framesize_header =3D framesize + 4;
+> +		int oldframeoff =3D tot_frame_size[cur_frame] - framesize;
+> +		int outheaderoff =3D  oldframeoff + cur_frame * VP9_HEADER_SIZE;
+> +		u8 *fdata =3D dp + outheaderoff;
+> +		u8 *old_framedata =3D dp + oldframeoff;
+> +
+> +		memmove(fdata + VP9_HEADER_SIZE, old_framedata, framesize);
+> +
+> +		fdata[0] =3D (framesize_header >> 24) & 0xff;
+> +		fdata[1] =3D (framesize_header >> 16) & 0xff;
+> +		fdata[2] =3D (framesize_header >> 8) & 0xff;
+> +		fdata[3] =3D (framesize_header >> 0) & 0xff;
+> +		fdata[4] =3D ((framesize_header >> 24) & 0xff) ^ 0xff;
+> +		fdata[5] =3D ((framesize_header >> 16) & 0xff) ^ 0xff;
+> +		fdata[6] =3D ((framesize_header >> 8) & 0xff) ^ 0xff;
+> +		fdata[7] =3D ((framesize_header >> 0) & 0xff) ^ 0xff;
+> +		fdata[8] =3D 0;
+> +		fdata[9] =3D 0;
+> +		fdata[10] =3D 0;
+> +		fdata[11] =3D 1;
+> +		fdata[12] =3D 'A';
+> +		fdata[13] =3D 'M';
+> +		fdata[14] =3D 'L';
+> +		fdata[15] =3D 'V';
+> +
+> +		if (!old_header) {
+> +			/* nothing */
+> +		} else if (old_header > fdata + 16 + framesize) {
+> +			dev_dbg(core->dev, "%s: data has gaps, setting to 0\n",
+> +				__func__);
+> +			memset(fdata + 16 + framesize, 0,
+> +			       (old_header - fdata + 16 + framesize));
+> +		} else if (old_header < fdata + 16 + framesize) {
+> +			dev_err(core->dev, "%s: data overwritten\n", __func__);
+> +		}
+> +		old_header =3D fdata;
+> +	}
+> +
+> +	return new_frame_size;
+> +}
+> +
+>  /* Pad the packet to at least 4KiB bytes otherwise the VDEC unit won't t=
+rigger
+>   * ISRs.
+>   * Also append a start code 000001ff at the end to trigger
+>   * the ESPARSER interrupt.
+>   */
+> -static u32 esparser_pad_start_code(struct amvdec_core *core, struct vb2_=
+buffer *vb)
+> +static u32 esparser_pad_start_code(struct amvdec_core *core,
+> +				   struct vb2_buffer *vb,
+> +				   u32 payload_size)
+>  {
+> -	u32 payload_size =3D vb2_get_plane_payload(vb, 0);
+>  	u32 pad_size =3D 0;
+>  	u8 *vaddr =3D vb2_plane_vaddr(vb, 0);
+> =20
+> @@ -186,13 +294,27 @@ esparser_queue(struct amvdec_session *sess, struct =
+vb2_v4l2_buffer *vbuf)
+>  	int ret;
+>  	struct vb2_buffer *vb =3D &vbuf->vb2_buf;
+>  	struct amvdec_core *core =3D sess->core;
+> +	struct amvdec_codec_ops *codec_ops =3D sess->fmt_out->codec_ops;
+>  	u32 payload_size =3D vb2_get_plane_payload(vb, 0);
+>  	dma_addr_t phy =3D vb2_dma_contig_plane_dma_addr(vb, 0);
+> +	u32 num_dst_bufs =3D 0;
+>  	u32 offset;
+>  	u32 pad_size;
+> =20
+> -	if (esparser_vififo_get_free_space(sess) < payload_size)
+> +	if (sess->fmt_out->pixfmt =3D=3D V4L2_PIX_FMT_VP9) {
+> +		if (codec_ops->num_pending_bufs)
+> +			num_dst_bufs =3D codec_ops->num_pending_bufs(sess);
+> +
+> +		num_dst_bufs +=3D v4l2_m2m_num_dst_bufs_ready(sess->m2m_ctx);
+> +		if (sess->fmt_out->pixfmt =3D=3D V4L2_PIX_FMT_VP9)
+> +			num_dst_bufs -=3D 2;
+> +
+> +		if (esparser_vififo_get_free_space(sess) < payload_size ||
+> +		    atomic_read(&sess->esparser_queued_bufs) >=3D num_dst_bufs)
+> +			return -EAGAIN;
+> +	} else if (esparser_vififo_get_free_space(sess) < payload_size) {
+>  		return -EAGAIN;
+> +	}
+> =20
+>  	v4l2_m2m_src_buf_remove_by_buf(sess->m2m_ctx, vbuf);
+> =20
+> @@ -206,7 +328,19 @@ esparser_queue(struct amvdec_session *sess, struct v=
+b2_v4l2_buffer *vbuf)
+>  	vbuf->field =3D V4L2_FIELD_NONE;
+>  	vbuf->sequence =3D sess->sequence_out++;
+> =20
+> -	pad_size =3D esparser_pad_start_code(core, vb);
+> +	if (sess->fmt_out->pixfmt =3D=3D V4L2_PIX_FMT_VP9) {
+> +		payload_size =3D vp9_update_header(core, vb);
+> +
+> +		/* If unable to alter buffer to add headers */
+> +		if (payload_size =3D=3D 0) {
+> +			amvdec_remove_ts(sess, vb->timestamp);
+> +			v4l2_m2m_buf_done(vbuf, VB2_BUF_STATE_ERROR);
+> +
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	pad_size =3D esparser_pad_start_code(core, vb, payload_size);
+>  	ret =3D esparser_write_data(core, phy, payload_size + pad_size);
+> =20
+>  	if (ret <=3D 0) {
+
+--=-CCHdCL4ad1Oj02aHxg2r
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXelPKAAKCRBxUwItrAao
+HC3dAJ9ZJcMZtCud2LJf6EsofUzyD1VMDACgtXrUCNYTbD33BQoqjB8YK0nxcmU=
+=7K0z
+-----END PGP SIGNATURE-----
+
+--=-CCHdCL4ad1Oj02aHxg2r--
+
