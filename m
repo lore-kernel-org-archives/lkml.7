@@ -2,105 +2,144 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7AEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FF5C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 703E524249
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 118C520707
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:15:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="XkSFWnrs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mFtuhQSU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEeRGPdP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbfLEFNp (ORCPT
+        id S1726084AbfLEFPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 00:13:45 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:52337 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725822AbfLEFNp (ORCPT
+        Thu, 5 Dec 2019 00:15:08 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41572 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfLEFPH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 00:13:45 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 171566DFB;
-        Thu,  5 Dec 2019 00:13:44 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Thu, 05 Dec 2019 00:13:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=HmY629d09ljX49+gWihMYnlLvvddw8y
-        blf8rUOR5/wE=; b=XkSFWnrsqIZKGLVdudWqOUsdB5YtNlYfu/WzJNmOnyi7Za9
-        38ORxDINALsurrmH9koTMeFOuAMZbEdt3jb4NKuSHz1kx+lTQ8xaqEa4ARhDGT4D
-        KGfLIlPrgABX0jjuH+qOBWgYSBYhf6XN2TcuNhLmzc4lnObgmWWgUqILS/RSwONj
-        0dok7lVopN++sUQMDj6CcDhMfaGf0RO0rzOcHeFJbECCjlfWyZ7zpQLUflU2t4m3
-        O7cOUNTC2iCsFkjBQw5iJqeVUyG/bvlRsBcI+ziZDSYuCJO8AJnT2xLVipUkEmKk
-        5GsqpC7va97/ZkAtZQnZUb+3UJAwaK2HhNrJftA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=HmY629
-        d09ljX49+gWihMYnlLvvddw8yblf8rUOR5/wE=; b=mFtuhQSUTGXR6RwrC/ZSqy
-        DHtQ5sfJ72Gp+Fl14rqpI8A7opsv9ESRgx9plv2EalC4IRNebJZFDPAbVXGAep4o
-        JgsZPzXUfI67INU1Q5h0MO2IeaIdp6pYZXaSdxxkzCukfnYYRgBMl9Kp3NEkQDy3
-        +yrfq21UcepbK7ueIDsO974jcDYOwBURh8RF6li/Ko2371GVJkEpfgnv1Y5Bpt6U
-        CyfG3o8gCDE3M6qGOD9nLeUR4TIAqzun6+KU/Vaonbonc6Z35lZTYQnrWIFEeK0p
-        ukSchr2VVYPg9URotj309OcD4EQh8jjd10uwGTVxU9jR+ABqlVslmU+WCOHbl8aw
-        ==
-X-ME-Sender: <xms:BpLoXT9uaXVa-DTA9FwW7wiy_GJt_465bqEkFIhziNC9gaP8vGHyUQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudektddgkedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:BpLoXZ_D9ZZbPr1lny9cZzaTeUS9m8tXYUZA2MppI0yZIXZnp_X2Xg>
-    <xmx:BpLoXf_QPUo2GeX0u2WvSXm8b7gNwGJfzBKKQ1G_f6wAJAtDi7mWuw>
-    <xmx:BpLoXXE1ahEGOo08cwQHVS1JRmlO5DhCD36h38YcnnRuHi-6wckWRg>
-    <xmx:CJLoXbQbKnADxn_5wl7Byr_5lJFU-G_lsmG9VHhHT4bPdTbtQ1IPNg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id AE0DEE00A2; Thu,  5 Dec 2019 00:13:42 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-612-g13027cc-fmstable-20191203v1
-Mime-Version: 1.0
-Message-Id: <cd76d709-683b-44c0-b29f-d31c9dddc75e@www.fastmail.com>
-In-Reply-To: <20191203134026.GI18165@minyard.net>
-References: <cover.5630f63168ad5cddf02e9796106f8e086c196907.1575376664.git-series.andrew@aj.id.au>
- <84315a29b453068373c096c03433e3a326731988.1575376664.git-series.andrew@aj.id.au>
- <20191203134026.GI18165@minyard.net>
-Date:   Thu, 05 Dec 2019 15:45:17 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Corey Minyard" <minyard@acm.org>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        "Rob Herring" <robh+dt@kernel.org>, mark.rutland@arm.com,
-        "Joel Stanley" <joel@jms.id.au>, "Arnd Bergmann" <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Haiyue Wang" <haiyue.wang@linux.intel.com>
-Subject: =?UTF-8?Q?Re:_[PATCH_2/3]_ipmi:_kcs:_Finish_configuring_ASPEED_KCS_devic?=
- =?UTF-8?Q?e_before_enable?=
-Content-Type: text/plain
+        Thu, 5 Dec 2019 00:15:07 -0500
+Received: by mail-pl1-f195.google.com with SMTP id bd4so726759plb.8;
+        Wed, 04 Dec 2019 21:15:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pik8NFF0x8ORqK3iKOBC400ObajkGGjl3DNLr2vNq4c=;
+        b=nEeRGPdPW5PapHVRJzENC8q5hvdUffDMRFkxC+R0sElMr2QEd41x1EaPJgwJ/OED6Q
+         nBkoyCAxkq2C4yoY/kazQmVVpOwkWZvd+BUgyGLw14B38/wnBoJnXo/PbHgYsfUtA5eB
+         ClF795YiSjEeuIt4EpQecdzz46VUK+ED063SDp1z157n7fchP5uwUAvm8GizqdlI2J8H
+         o9NmDi3e1FIcfnU33qTmXdfE3dpeDxg+Wu0RxNUECtpA/m4xMUN+v7HOuA3aqqlIKPRA
+         biD5m6py4LRD2KXezk+vrJnAyFjTGn0gbYsz7F26i4oJ7w45FnPebP+C2hRcYTYJtY+I
+         CseQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=pik8NFF0x8ORqK3iKOBC400ObajkGGjl3DNLr2vNq4c=;
+        b=AcNiR0MGLnFdqHvQhMd3QiEAXUoefwrHXL8OwqyGxy0Vd5sE/q0KKfpqupSptfO2kk
+         fmLVS0W6SpWWd74qJh19nSosxD+CHul4ug18VM3YooGrBFu6fBgKo4GlGsSTQQjMa3fH
+         nKaSMQkFBY77mtqeYjglVqYOSdtsHZIqP2PCR5vVZFfe7qEBVcbEGPYB8i9vh3iRv1rg
+         KUUOojxy8Jc5rw0qav2zf+WZpxruzY7WupbsICqA+Wb8lpZ4PwQe4GBnZe8h9/EHzN+t
+         pTL6IrJfRJze2LPXrYx5HdVRuHbVV+CiRYH8fK2GzUZzz5JoeT01eVo+CW2EQswEbBmm
+         dGhw==
+X-Gm-Message-State: APjAAAWThsA+xtw8047d3fBljIaoCmgjum0t5zUT6dRfowJqlQLnwjs0
+        JCpPstSoBQBVXN+/Ai/NeeI=
+X-Google-Smtp-Source: APXvYqz/wUb2Py7PwTNJK/QXkBECBF3gjxYytODhvYvH0JM58UJuv+9AKF5NAaNtXbnZPs8++iNqkw==
+X-Received: by 2002:a17:90b:244:: with SMTP id fz4mr7491746pjb.27.1575522907057;
+        Wed, 04 Dec 2019 21:15:07 -0800 (PST)
+Received: from Slackware ([103.231.91.38])
+        by smtp.gmail.com with ESMTPSA id b190sm10428210pfg.66.2019.12.04.21.15.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 21:15:06 -0800 (PST)
+Date:   Thu, 5 Dec 2019 10:44:54 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] fix the SPDX syntax and bash interprester pointer
+Message-ID: <20191205051454.GB1795@Slackware>
+Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>, yamada.masahiro@socionext.com,
+        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191203095339.615774-1-unixbhaskar@gmail.com>
+ <56303cd3-fcf8-49cd-f66a-4db7e382774c@infradead.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5QAgd0e35j3NYeGe"
+Content-Disposition: inline
+In-Reply-To: <56303cd3-fcf8-49cd-f66a-4db7e382774c@infradead.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--5QAgd0e35j3NYeGe
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 4 Dec 2019, at 00:10, Corey Minyard wrote:
-> On Tue, Dec 03, 2019 at 11:08:24PM +1030, Andrew Jeffery wrote:
-> > The currently interrupts are configured after the channel was enabled.
-> 
-> How about:
-> 
-> The interrupts were configured after the channel was enabled, configure
-> them before so they will work.
+On 19:36 Wed 04 Dec 2019, Randy Dunlap wrote:
+>On 12/3/19 1:53 AM, Bhaskar Chowdhury wrote:
+>> SPDX syntax was complining by checkpatch fixed it,added space before it.
+>> And add bash interpreter to find by the env .
+>>=20
+>> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+>> ---
+>>  scripts/kernel_modules_info.sh | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/scripts/kernel_modules_info.sh b/scripts/kernel_modules_inf=
+o.sh
+>> index f005c47a3aa6..3a9b00988ed3 100755
+>> --- a/scripts/kernel_modules_info.sh
+>> +++ b/scripts/kernel_modules_info.sh
+>> @@ -1,5 +1,5 @@
+>> -#!/bin/bash -=20
+>> -#SPDX-License-Identifier: GPL-2.0
+>> +#!/usr/bin/env bash=20
+>> +# SPDX-License-Identifier: GPL-2.0
+>>  #=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+>>  #
+>>  #          FILE: kernel_modules_info.sh
+>>=20
+>
+>a.  There is no good reason for patch 2/2.  Just merge the 2 patches.
+>
+>b.  The big header comment in patch 1/2 is not needed and is unwanted.
+>Just put some or all of that in the patch description/comment message.
+>
+Sure, will do.
+>
+>--=20
+>~Randy
+>
 
-Hah, yes, that commit message did get a bit mangled. I'll update it.
+--5QAgd0e35j3NYeGe
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
 
-Andrew
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3okkgACgkQsjqdtxFL
+KRXbxQgAhat4587gaoyRNOa21+kvB4Q6ui6yRplOY+G3lUt8lFz1WDylqXgkZJXt
+mqHAwXXgZ7UEcYeHN+UQ3Zv9BeJ3z7kdZ9dDjNJlyP+RLJ26w28FshQLRF5k6LyT
+PRiprV5e80wxct4OJD+ImS7MpRck5wnKaOxQLqJ46mUMOCC7JKBehA305WZvb5DV
+6bZMQ1IErFST+66nuPs/gs6Vqs+MeuaesiCP68+s/iRohYSko6IJedqqK3Smh42J
+ecczqKILoZeulJ0MBcA256eKv3U4Jw6vMpsU3rPawy87LJdwLNZ7rHBqTvSXZiB2
+FAo1g4Gn1dXPNilqkOIipzObG0G+Fg==
+=i601
+-----END PGP SIGNATURE-----
+
+--5QAgd0e35j3NYeGe--
