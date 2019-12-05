@@ -2,94 +2,72 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22C2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B504CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA8AE2245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 865042464E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 12:59:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ISS+iwm4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OQmnRFj/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbfLEM6u (ORCPT
+        id S1729499AbfLEM7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 07:58:50 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:38046 "EHLO vps0.lunn.ch"
+        Thu, 5 Dec 2019 07:59:08 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:38052 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbfLEM6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 07:58:50 -0500
+        id S1729099AbfLEM7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 07:59:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
         s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
         Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=Re18R+zvHW22gTZUWM5G+y1mglFdF33WZZhd8u13ENU=; b=ISS+iwm4GEajcnWmdI+CAx1dLq
-        /pA0TK0twSbpVXEiHZUfMswjcFncqO8a+fpeQuEx9p4FYARYyLozq/Jtwd5/XCSxYyY67Jk/7Sl7I
-        hxY5Z3ZwD+8yUG/F1DJbo/zGql4/FJ/wj0M/YlPTTIBK/g0KfqVbGKLSUWXZF7RifIJE=;
+        bh=/0aTrAYFDCdx3wtof9edhAMQ2FL2u0uO/LRSKah6g6c=; b=OQmnRFj/HL0ufNSTVpFIwkQTn5
+        eHCSUAzOxu/tzYVrw0M3m2yw8wfi3m3/cNrUnAGMDjZQP8zx3/ebo8dMj6YLDIV7k1wOEWgXStnnW
+        kE31rgT1+SdAUFe35ZryhR3Y2MLRKiprxeNWyaU+pacjxrZR6d4FwCsIIR+uDikppE3Y=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
         (envelope-from <andrew@lunn.ch>)
-        id 1icqiB-0007OM-Fl; Thu, 05 Dec 2019 13:58:27 +0100
-Date:   Thu, 5 Dec 2019 13:58:27 +0100
+        id 1icqim-0007PD-Pq; Thu, 05 Dec 2019 13:59:04 +0100
+Date:   Thu, 5 Dec 2019 13:59:04 +0100
 From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexander Lobakin <alobakin@dlink.ru>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Muciri Gatimu <muciri@openmesh.com>,
-        Shashidhar Lakkavalli <shashidhar.lakkavalli@openmesh.com>,
-        John Crispin <john@phrozen.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Matteo Croce <mcroce@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: dsa: fix flow dissection on Tx path
-Message-ID: <20191205125827.GA28269@lunn.ch>
-References: <20191205100235.14195-1-alobakin@dlink.ru>
+To:     Mian Yousaf Kaukab <ykaukab@suse.de>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tharvey@gateworks.com,
+        davem@davemloft.net, rric@kernel.org, sgoutham@cavium.com,
+        sergei.shtylyov@cogentembedded.com
+Subject: Re: [PATCH net v2] net: thunderx: start phy before starting
+ autonegotiation
+Message-ID: <20191205125904.GB28269@lunn.ch>
+References: <20191205094116.4904-1-ykaukab@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191205100235.14195-1-alobakin@dlink.ru>
+In-Reply-To: <20191205094116.4904-1-ykaukab@suse.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 01:02:35PM +0300, Alexander Lobakin wrote:
-> Commit 43e665287f93 ("net-next: dsa: fix flow dissection") added an
-> ability to override protocol and network offset during flow dissection
-> for DSA-enabled devices (i.e. controllers shipped as switch CPU ports)
-> in order to fix skb hashing for RPS on Rx path.
+On Thu, Dec 05, 2019 at 10:41:16AM +0100, Mian Yousaf Kaukab wrote:
+> Since commit 2b3e88ea6528 ("net: phy: improve phy state checking")
+> phy_start_aneg() expects phy state to be >= PHY_UP. Call phy_start()
+> before calling phy_start_aneg() during probe so that autonegotiation
+> is initiated.
 > 
-> However, skb_hash() and added part of code can be invoked not only on
-> Rx, but also on Tx path if we have a multi-queued device and:
->  - kernel is running on UP system or
->  - XPS is not configured.
+> As phy_start() takes care of calling phy_start_aneg(), drop the explicit
+> call to phy_start_aneg().
 > 
-> The call stack in this two cases will be like: dev_queue_xmit() ->
-> __dev_queue_xmit() -> netdev_core_pick_tx() -> netdev_pick_tx() ->
-> skb_tx_hash() -> skb_get_hash().
+> Network fails without this patch on Octeon TX.
 > 
-> The problem is that skbs queued for Tx have both network offset and
-> correct protocol already set up even after inserting a CPU tag by DSA
-> tagger, so calling tag_ops->flow_dissect() on this path actually only
-> breaks flow dissection and hashing.
+> Fixes: 2b3e88ea6528 ("net: phy: improve phy state checking")
+> Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
 
-Hi Alexander
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-What i'm missing here is an explanation why the flow dissector is
-called here if the protocol is already set? It suggests there is a
-case when the protocol is not correctly set, and we do need to look
-into the frame?
-
-     Andrew
+    Andrew
