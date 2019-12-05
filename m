@@ -2,112 +2,210 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BITCOIN_SPAM_02,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87C4C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E562C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7E322464E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDB820801
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 17:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbfLERQV (ORCPT
+        id S1730084AbfLERS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 12:16:21 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53578 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729598AbfLERPf (ORCPT
+        Thu, 5 Dec 2019 12:18:26 -0500
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:60955 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729931AbfLERSZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 12:15:35 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB5H7oaQ064478;
-        Thu, 5 Dec 2019 12:15:19 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wq14kr5gh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Dec 2019 12:15:18 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB5HFG6f007200;
-        Thu, 5 Dec 2019 17:15:18 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma03dal.us.ibm.com with ESMTP id 2wkg27mkuc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Dec 2019 17:15:17 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB5HFGTl51839364
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Dec 2019 17:15:16 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87BF96E050;
-        Thu,  5 Dec 2019 17:15:16 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC3606E059;
-        Thu,  5 Dec 2019 17:15:15 +0000 (GMT)
-Received: from talon7.ibm.com (unknown [9.41.103.158])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Dec 2019 17:15:15 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, jason@lakedaemon.net,
-        linux-aspeed@lists.ozlabs.org, maz@kernel.org, robh+dt@kernel.org,
-        tglx@linutronix.de, mark.rutland@arm.com, joel@jms.id.au,
-        andrew@aj.id.au
-Subject: [PATCH v2 03/12] ARM: dts: aspeed: ast2500: Add SCU interrupt controller
-Date:   Thu,  5 Dec 2019 11:15:03 -0600
-Message-Id: <1575566112-11658-4-git-send-email-eajames@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1575566112-11658-1-git-send-email-eajames@linux.ibm.com>
-References: <1575566112-11658-1-git-send-email-eajames@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-05_05:2019-12-04,2019-12-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- phishscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0
- clxscore=1015 suspectscore=1 adultscore=0 mlxlogscore=693 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912050144
+        Thu, 5 Dec 2019 12:18:25 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tk3CtW._1575566294;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk3CtW._1575566294)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 06 Dec 2019 01:18:17 +0800
+Subject: Re: [v2 PATCH] mm: move_pages: return valid node id in status if the
+ page is already on the target node
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     fabecassis@nvidia.com, jhubbard@nvidia.com, cl@linux.com,
+        vbabka@suse.cz, mgorman@techsingularity.net,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <1575519678-86510-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20191205113156.GE28317@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <6d55f0c8-042d-b6f6-a194-2047a94bd12c@linux.alibaba.com>
+Date:   Thu, 5 Dec 2019 09:18:12 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <20191205113156.GE28317@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a node for the interrupt controller provided by the SCU.
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- arch/arm/boot/dts/aspeed-g5.dtsi | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index a259c63..df44022 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -216,8 +216,9 @@
- 			syscon: syscon@1e6e2000 {
- 				compatible = "aspeed,ast2500-scu", "syscon", "simple-mfd";
- 				reg = <0x1e6e2000 0x1a8>;
-+				ranges = <0 0x1e6e2000 0x1a8>;
- 				#address-cells = <1>;
--				#size-cells = <0>;
-+				#size-cells = <1>;
- 				#clock-cells = <1>;
- 				#reset-cells = <1>;
- 
-@@ -231,6 +232,13 @@
- 					compatible = "aspeed,ast2500-p2a-ctrl";
- 					status = "disabled";
- 				};
-+
-+				scu_ic: interrupt-controller@18 {
-+					#interrupt-cells = <1>;
-+					compatible = "aspeed,ast2500-scu-ic";
-+					interrupts = <21>;
-+					interrupt-controller;
-+				};
- 			};
- 
- 			rng: hwrng@1e6e2078 {
--- 
-1.8.3.1
+On 12/5/19 3:31 AM, Michal Hocko wrote:
+> On Thu 05-12-19 12:21:18, Yang Shi wrote:
+>> Felix Abecassis reports move_pages() would return random status if the
+>> pages are already on the target node by the below test program:
+>>
+>> ---8<---
+>>
+>> int main(void)
+>> {
+>> 	const long node_id = 1;
+>> 	const long page_size = sysconf(_SC_PAGESIZE);
+>> 	const int64_t num_pages = 8;
+>>
+>> 	unsigned long nodemask =  1 << node_id;
+>> 	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
+>> 	if (ret < 0)
+>> 		return (EXIT_FAILURE);
+>>
+>> 	void **pages = malloc(sizeof(void*) * num_pages);
+>> 	for (int i = 0; i < num_pages; ++i) {
+>> 		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
+>> 				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
+>> 				-1, 0);
+>> 		if (pages[i] == MAP_FAILED)
+>> 			return (EXIT_FAILURE);
+>> 	}
+>>
+>> 	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
+>> 	if (ret < 0)
+>> 		return (EXIT_FAILURE);
+>>
+>> 	int *nodes = malloc(sizeof(int) * num_pages);
+>> 	int *status = malloc(sizeof(int) * num_pages);
+>> 	for (int i = 0; i < num_pages; ++i) {
+>> 		nodes[i] = node_id;
+>> 		status[i] = 0xd0; /* simulate garbage values */
+>> 	}
+>>
+>> 	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
+>> 	printf("move_pages: %ld\n", ret);
+>> 	for (int i = 0; i < num_pages; ++i)
+>> 		printf("status[%d] = %d\n", i, status[i]);
+>> }
+>> ---8<---
+>>
+>> Then running the program would return nonsense status values:
+>> $ ./move_pages_bug
+>> move_pages: 0
+>> status[0] = 208
+>> status[1] = 208
+>> status[2] = 208
+>> status[3] = 208
+>> status[4] = 208
+>> status[5] = 208
+>> status[6] = 208
+>> status[7] = 208
+>>
+>> This is because the status is not set if the page is already on the
+>> target node, but move_pages() should return valid status as long as it
+>> succeeds.  The valid status may be errno or node id.
+>>
+>> We can't simply initialize status array to zero since the pages may be
+>> not on node 0.  Fix it by updating status with node id which the page is
+>> already on.  And, it looks we have to update the status inside
+>> add_page_for_migration() since the page struct is not available outside
+>> it.
+> The code is indeed more complex than I wanted but I couldn't figure an
+> easier way back then. I wanted to keep store_status at a single place
+> because the failure handling is quite complex already.
+>
+>> Make add_page_for_migration() return 1 if store_status() is failed in
+>> order to not mix up the status value since -EFAULT is also a valid
+>> status.
+> Can we simply return 1 when there is something to migrate instead?
+> Something like
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 4fe45d1428c8..f3730804b8d4 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1516,9 +1516,9 @@ static int do_move_pages_to_node(struct mm_struct *mm,
+>   /*
+>    * Resolves the given address to a struct page, isolates it from the LRU and
+>    * puts it to the given pagelist.
+> - * Returns -errno if the page cannot be found/isolated or 0 when it has been
+> - * queued or the page doesn't need to be migrated because it is already on
+> - * the target node
+> + * Returns -errno if the page cannot be found/isolated or 0 when it doesn't have
+> + * to be migrate or 1 dwhen it has been queued or the page doesn't need to be
+> + * migrated because it is already on the target node
+>    */
+>   static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>   		int node, struct list_head *pagelist, bool migrate_all)
+> @@ -1557,7 +1557,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>   	if (PageHuge(page)) {
+>   		if (PageHead(page)) {
+>   			isolate_huge_page(page, pagelist);
+> -			err = 0;
+> +			err = 1;
+>   		}
+>   	} else {
+>   		struct page *head;
+> @@ -1567,7 +1567,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>   		if (err)
+>   			goto out_putpage;
+>   
+> -		err = 0;
+> +		err = 1;
+>   		list_add_tail(&head->lru, pagelist);
+>   		mod_node_page_state(page_pgdat(head),
+>   			NR_ISOLATED_ANON + page_is_file_cache(head),
+> @@ -1644,8 +1644,14 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>   		 */
+>   		err = add_page_for_migration(mm, addr, current_node,
+>   				&pagelist, flags & MPOL_MF_MOVE_ALL);
+> -		if (!err)
+> +		if (!err) {
+> +			err = store_status(status, i, current_node, 1);
+> +			if (err)
+> +				goto out_flush;
+> +			continue;
+> +		} else if (err > 0) {
+>   			continue;
+> +		}
+>   
+>   		err = store_status(status, i, err, 1);
+>   		if (err)
+>
+> this would still keep store_status ugliness at a single place.
+
+Thanks for the suggestion, it looks neater, will do in v2.
+
+>
+>> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+>> Reported-by: Felix Abecassis <fabecassis@nvidia.com>
+>> Tested-by: Felix Abecassis <fabecassis@nvidia.com>
+>> Cc: John Hubbard <jhubbard@nvidia.com>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Christoph Lameter <cl@linux.com>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>> Cc: <stable@vger.kernel.org> 4.17+
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>> v2: *Correted the return value when add_page_for_migration() returns 1.
+>>
+>> John noticed another return value inconsistency between the implementation and
+>> the manpage.  The manpage says it should return -ENOENT if the page is already
+>> on the target node, but it doesn't.  It looks the original code didn't return
+>> -ENOENT either, I'm not sure if this is a document issue or not.  Anyway this
+>> is another issue, once we confirm it we can fix it later.
+> I do not remember all the details but my recollection is that there were
+> several inconsistencies present before I touched the code and I've
+> decided to not touch them without a clear usecase.
+
+I agree. It looks nobody complained those inconsistency, and I didn't 
+see LTP covers those.
+
 
