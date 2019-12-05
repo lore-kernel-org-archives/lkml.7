@@ -2,162 +2,224 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AA2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB23C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 617AA20640
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:14:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="vtCXI6ey"
+	by mail.kernel.org (Postfix) with ESMTP id 3E0A02073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbfLEEOu (ORCPT
+        id S1728746AbfLEESe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 23:14:50 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:44972 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728132AbfLEEOu (ORCPT
+        Wed, 4 Dec 2019 23:18:34 -0500
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:46767 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728321AbfLEESe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 23:14:50 -0500
-Received: by mail-vs1-f68.google.com with SMTP id p6so1406562vsj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 20:14:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YqFPHdq2JLprnKO5VwIvwEO3N5V/VX0CxYcPwY52gV4=;
-        b=vtCXI6eyS+2xdwHXSvFzMOB8Chgw85vfzPkdgVzTNU6F8HGvjWTq32MwsgZhxECGj0
-         3LfOWDNTWmx+TVkopEKRGby1mg9dlygeoCzquDCpKnj6fe4PwPuPKiqkuaJFvG/RjWEM
-         YU0GKlXnektfcf8dq11uUiPlZo9dwThQCahskH5M3cZq1VZ6i/saNFdkitvoHY9aAP/i
-         aZJJyeAMHPwe6vgt/3W+FpNXpj0jrR9Ha+DHDBO+rHil+UQWZ74lq0IMEFOo/YoDctA/
-         R8lX2rMbeQeKm75uiinD7K99xONw8jrZLCtgc8uxGd9RXgHrDTpm8zgYIfXr1EZXPYUm
-         ++7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YqFPHdq2JLprnKO5VwIvwEO3N5V/VX0CxYcPwY52gV4=;
-        b=sOuA7oNxZ7JtU6MdqZx+bqsPHGMOd8Ts24ysRQOa9sgxm0VjjSOsfQKMhjYxobIHVi
-         G5S7p062gtXUVVj6rBwrrUcJ7jjH6aOVirgh0D8R+HthDihHtPozD7o4ta4aX3Q18cQA
-         FFz3lrn5rkIysP9VkIW3qJWbpxoyHIiG/QYtVUIpkWFO8xDX+2T6Q0PnXy9A2PphT/RE
-         gb4bb9BqNvMrFT97pnA/+erqgk8VFhULBZ+rirV6MGxEOCONes1+YbP4TW1M+xSjALDI
-         lbVrYcZyHOiPisiRhLX+4Pd7DPT3tFGkZOU95QUD7jj6drWi0WtO9CP6bOd8hKiDSdW3
-         k4iw==
-X-Gm-Message-State: APjAAAVttMUQJyW7UAoHHrKkvS0UvEuDuakzZ8HsMdvCc9vRmYD0tz6R
-        ELA4u74sy00pSYLONR6LlYdjirtIePgD5TtOgZURvA==
-X-Google-Smtp-Source: APXvYqxBdkwA3F7mInycga4o2n4t9e4RP0Hx+NDWf62MpAtgLQ71+O7tfZuLZUdPCDHljQPLDy99hXq9njxeRo82N2I=
-X-Received: by 2002:a05:6102:1261:: with SMTP id q1mr4250512vsg.182.1575519288928;
- Wed, 04 Dec 2019 20:14:48 -0800 (PST)
+        Wed, 4 Dec 2019 23:18:34 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tk0Ukup_1575519497;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk0Ukup_1575519497)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 05 Dec 2019 12:18:26 +0800
+Subject: Re: [PATCH] mm: move_pages: return valid node id in status if the
+ page is already on the target node
+To:     fabecassis@nvidia.com, jhubbard@nvidia.com, mhocko@suse.com,
+        cl@linux.com, vbabka@suse.cz, mgorman@techsingularity.net,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <1575518425-58788-1-git-send-email-yang.shi@linux.alibaba.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <caea0a50-a206-b4ec-4a3c-36163ac2df0d@linux.alibaba.com>
+Date:   Wed, 4 Dec 2019 20:18:16 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <CAHLCerOD2wOJq7QNGBOcLvkMz4wvc1+6Hk2+ZD__NFged3tLcw@mail.gmail.com>
- <20191204215618.125826-1-wvw@google.com> <20191204215618.125826-3-wvw@google.com>
-In-Reply-To: <20191204215618.125826-3-wvw@google.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Thu, 5 Dec 2019 09:44:38 +0530
-Message-ID: <CAHLCerNGYy55vFVJs5u_YZ=xLu2jWwtugLkvBVjEwgP+_B0Y3g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] thermal: create softlink by name for thermal_zone
- and cooling_device
-To:     Wei Wang <wvw@google.com>
-Cc:     Wei Wang <wei.vince.wang@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1575518425-58788-1-git-send-email-yang.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 3:26 AM Wei Wang <wvw@google.com> wrote:
->
-> The paths thermal_zone%d and cooling_device%d are not intuitive and the
-> numbers are subject to change due to device tree change. This usually
-> leads to tree traversal in userspace code.
-> The patch creates `tz-by-name' and `cdev-by-name' for thermal zone and
-> cooling_device respectively.
->
-> Signed-off-by: Wei Wang <wvw@google.com>
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
+On 12/4/19 8:00 PM, Yang Shi wrote:
+> Felix Abecassis reports move_pages() would return random status if the
+> pages are already on the target node by the below test program:
+>
+> ---8<---
+>
+> int main(void)
+> {
+> 	const long node_id = 1;
+> 	const long page_size = sysconf(_SC_PAGESIZE);
+> 	const int64_t num_pages = 8;
+>
+> 	unsigned long nodemask =  1 << node_id;
+> 	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
+> 	if (ret < 0)
+> 		return (EXIT_FAILURE);
+>
+> 	void **pages = malloc(sizeof(void*) * num_pages);
+> 	for (int i = 0; i < num_pages; ++i) {
+> 		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
+> 				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
+> 				-1, 0);
+> 		if (pages[i] == MAP_FAILED)
+> 			return (EXIT_FAILURE);
+> 	}
+>
+> 	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
+> 	if (ret < 0)
+> 		return (EXIT_FAILURE);
+>
+> 	int *nodes = malloc(sizeof(int) * num_pages);
+> 	int *status = malloc(sizeof(int) * num_pages);
+> 	for (int i = 0; i < num_pages; ++i) {
+> 		nodes[i] = node_id;
+> 		status[i] = 0xd0; /* simulate garbage values */
+> 	}
+>
+> 	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
+> 	printf("move_pages: %ld\n", ret);
+> 	for (int i = 0; i < num_pages; ++i)
+> 		printf("status[%d] = %d\n", i, status[i]);
+> }
+> ---8<---
+>
+> Then running the program would return nonsense status values:
+> $ ./move_pages_bug
+> move_pages: 0
+> status[0] = 208
+> status[1] = 208
+> status[2] = 208
+> status[3] = 208
+> status[4] = 208
+> status[5] = 208
+> status[6] = 208
+> status[7] = 208
+>
+> This is because the status is not set if the page is already on the
+> target node, but move_pages() should return valid status as long as it
+> succeeds.  The valid status may be errno or node id.
+>
+> We can't simply initialize status array to zero since the pages may be
+> not on node 0.  Fix it by updating status with node id which the page is
+> already on.  And, it looks we have to update the status inside
+> add_page_for_migration() since the page struct is not available outside
+> it.
+>
+> Make add_page_for_migration() return 1 if store_status() is failed in
+> order to not mix up the status value since -EFAULT is also a valid
+> status.
+>
+> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+> Reported-by: Felix Abecassis <fabecassis@nvidia.com>
+> Tested-by: Felix Abecassis <fabecassis@nvidia.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: <stable@vger.kernel.org> 4.17+
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 > ---
->  drivers/thermal/thermal_core.c | 21 ++++++++++++++++++++-
->  1 file changed, 20 insertions(+), 1 deletion(-)
+> John found another return value inconsistency between the implementation and
+> the manpage.  The manpage says it should return -ENOENT if the page is already
+> on the target node, but it doesn't.  It looks the original code didn't return
+> -ENOENT either, I'm not sure if this is a document issue or not.  Anyway this
+> is another issue, once we confirm it we can fix it later.
+>    
+>   mm/migrate.c | 34 ++++++++++++++++++++++++++++------
+>   1 file changed, 28 insertions(+), 6 deletions(-)
 >
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index 64fbb59c2f44..4f55e3f16265 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -22,6 +22,7 @@
->  #include <net/netlink.h>
->  #include <net/genetlink.h>
->  #include <linux/suspend.h>
-> +#include <linux/kobject.h>
->
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/thermal.h>
-> @@ -46,6 +47,8 @@ static DEFINE_MUTEX(poweroff_lock);
->
->  static atomic_t in_suspend;
->  static bool power_off_triggered;
-> +static struct kobject *cdev_link_kobj;
-> +static struct kobject *tz_link_kobj;
->
->  static struct thermal_governor *def_governor;
->
-> @@ -997,9 +1000,15 @@ __thermal_cooling_device_register(struct device_node *np,
->                 return ERR_PTR(result);
->         }
->
-> -       /* Add 'this' new cdev to the global cdev list */
-> +       /* Add 'this' new cdev to the global cdev list and create link*/
->         mutex_lock(&thermal_list_lock);
->         list_add(&cdev->node, &thermal_cdev_list);
-> +       if (!cdev_link_kobj)
-> +               cdev_link_kobj = kobject_create_and_add("cdev-by-name",
-> +                                               cdev->device.kobj.parent);
-> +       if (!cdev_link_kobj || sysfs_create_link(cdev_link_kobj,
-> +                                               &cdev->device.kobj, cdev->type))
-> +               dev_err(&cdev->device, "Failed to create cdev-by-name link\n");
->         mutex_unlock(&thermal_list_lock);
->
->         /* Update binding information for 'this' new cdev */
-> @@ -1165,6 +1174,8 @@ void thermal_cooling_device_unregister(struct thermal_cooling_device *cdev)
->                         }
->                 }
->         }
-> +       if (cdev_link_kobj)
-> +               sysfs_remove_link(cdev_link_kobj, cdev->type);
->
->         mutex_unlock(&thermal_list_lock);
->
-> @@ -1348,6 +1359,12 @@ thermal_zone_device_register(const char *type, int trips, int mask,
->
->         mutex_lock(&thermal_list_lock);
->         list_add_tail(&tz->node, &thermal_tz_list);
-> +       if (!tz_link_kobj)
-> +               tz_link_kobj = kobject_create_and_add("tz-by-name",
-> +                                               tz->device.kobj.parent);
-> +       if (!tz_link_kobj || sysfs_create_link(tz_link_kobj,
-> +                                               &tz->device.kobj, tz->type))
-> +               dev_err(&tz->device, "Failed to create tz-by-name link\n");
->         mutex_unlock(&thermal_list_lock);
->
->         /* Bind cooling devices for this zone */
-> @@ -1419,6 +1436,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
->                         }
->                 }
->         }
-> +       if (tz_link_kobj)
-> +               sysfs_remove_link(tz_link_kobj, tz->type);
->
->         mutex_unlock(&thermal_list_lock);
->
-> --
-> 2.24.0.393.g34dc348eaf-goog
->
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index a8f87cb..c427bb2 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1512,17 +1512,21 @@ static int do_move_pages_to_node(struct mm_struct *mm,
+>   /*
+>    * Resolves the given address to a struct page, isolates it from the LRU and
+>    * puts it to the given pagelist.
+> - * Returns -errno if the page cannot be found/isolated or 0 when it has been
+> - * queued or the page doesn't need to be migrated because it is already on
+> - * the target node
+> + * Returns:
+> + *     errno - if the page cannot be found/isolated
+> + *     0 - when it has been queued or the page doesn't need to be migrated
+> + *         because it is already on the target node
+> + *     1 - if store_status() is failed
+>    */
+>   static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+> -		int node, struct list_head *pagelist, bool migrate_all)
+> +		int node, struct list_head *pagelist, bool migrate_all,
+> +		int __user *status, int start)
+>   {
+>   	struct vm_area_struct *vma;
+>   	struct page *page;
+>   	unsigned int follflags;
+>   	int err;
+> +	bool same_node = false;
+>   
+>   	down_read(&mm->mmap_sem);
+>   	err = -EFAULT;
+> @@ -1543,8 +1547,10 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>   		goto out;
+>   
+>   	err = 0;
+> -	if (page_to_nid(page) == node)
+> +	if (page_to_nid(page) == node) {
+> +		same_node = true;
+>   		goto out_putpage;
+> +	}
+>   
+>   	err = -EACCES;
+>   	if (page_mapcount(page) > 1 && !migrate_all)
+> @@ -1578,6 +1584,16 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>   	put_page(page);
+>   out:
+>   	up_read(&mm->mmap_sem);
+> +
+> +	/*
+> +	 * Must call store_status() after releasing mmap_sem since put_user
+> +	 * need acquire mmap_sem too, otherwise potential deadlock may exist.
+> +	 */
+> +	if (same_node) {
+> +		if (store_status(status, start, node, 1))
+> +			err = 1;
+> +	}
+> +
+>   	return err;
+>   }
+>   
+> @@ -1639,10 +1655,16 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>   		 * report them via status
+>   		 */
+>   		err = add_page_for_migration(mm, addr, current_node,
+> -				&pagelist, flags & MPOL_MF_MOVE_ALL);
+> +				&pagelist, flags & MPOL_MF_MOVE_ALL, status,
+> +				i);
+> +
+>   		if (!err)
+>   			continue;
+>   
+> +		/* store_status() failed in add_page_for_migration() */
+> +		if (err > 0)
+
+Just spotted a problem here. This code may result in returning 1 for 
+this syscall, which is not a valid return value according to the 
+manpage. V2 is on its way, sorry for the inconvenience.
+
+> +			goto out_flush;
+> +
+>   		err = store_status(status, i, err, 1);
+>   		if (err)
+>   			goto out_flush;
+
