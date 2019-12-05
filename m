@@ -7,61 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBC7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934D5C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41EA2464E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C42122525
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:04:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="Asq26IOS"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="HyowXUY/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729565AbfLEOEO (ORCPT
+        id S1729608AbfLEOET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 09:04:14 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:45830 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729099AbfLEOEO (ORCPT
+        Thu, 5 Dec 2019 09:04:19 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39317 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729099AbfLEOET (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 09:04:14 -0500
-Received: by mail-pj1-f68.google.com with SMTP id r11so1331539pjp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 06:04:14 -0800 (PST)
+        Thu, 5 Dec 2019 09:04:19 -0500
+Received: by mail-pl1-f193.google.com with SMTP id o9so1298591plk.6
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 06:04:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=axtens.net; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t4U/eRKLWH+P5sMJLg1gBzVLKge0A2yZRS0R5HxW/2Q=;
-        b=Asq26IOS4TK4UH/qiyh65Rf6Gr9j+ebjMp/2ndN/f+KYSq7JoZhW7CZZ9l0NUtx7F/
-         D971GvtNwZ9/Qe+xfSy1AxrMHUomDx1ah/2ishZe6/U0/f+D78ScE6nZr2haNxoGneyD
-         1zGIhbom3N20ZR2ykUs4QpDlxZcovOxbWDBv0=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rrl6fsIQIcheAl6pCi+n0PQV4bZosMoozWNraf35XNA=;
+        b=HyowXUY/2pXTcknCfKms4yOpx0iCfvrspxJVzVRocIfYTBjLCnFCphoYiXoWPX6yvF
+         jQ67TkGT/xU3cdj4zz0GVl92Of4SAIAEy0/cKsKO25T5h7btdVXy1OC/tMhciawvwBa1
+         Fwq6o2VQhWPR+gOHSJyR/SmxXvbiY7yGBDRDw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t4U/eRKLWH+P5sMJLg1gBzVLKge0A2yZRS0R5HxW/2Q=;
-        b=RTFHSpAQnSWFelpr5iYeFLQFa/6w3Mq5TzEsqtPYbHKKd2XGudrLI+vYlaczZ5nniw
-         dEtCGW8gKDeYAdd0bz8TnxktHgufuAXMnbGZG7a6C7yIa3DGvfDf7DxK5WKpz83+a+7X
-         iCVGl53vPhwpje57leXJbN6535nR3LyWq4Kf8ylU6/TaQBVE9sv9p9swuvXYtchqSt6Z
-         IocvNuOAVd2qqRQlAagHBW/GYPfsuowYWH6ohALmy9fVBX2f//ppNvCmv7nAcgGyWCDz
-         4V9YZzt8I75UA19moyjKERr5n12AT5td4CzrTHboyhvc3XWuo+Sjg+dZVpLtKhnEm9Qc
-         qUOQ==
-X-Gm-Message-State: APjAAAVdIwBcsz1KOcxjXPmUBQKymj3a+zwOPY/1MvkvppQcGRlIFEEo
-        ouuCYItuf7IoVQnkpdiIMtVMdg==
-X-Google-Smtp-Source: APXvYqxGnHj16INKJIl3VHlcRQsBG6NIPPJh7U8CsqZ9o1m2ipnW1nsPbtHWYsdeFTLs3zRnM8rE8w==
-X-Received: by 2002:a17:902:54f:: with SMTP id 73mr9434121plf.213.1575554653485;
-        Thu, 05 Dec 2019 06:04:13 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rrl6fsIQIcheAl6pCi+n0PQV4bZosMoozWNraf35XNA=;
+        b=cZe6zGyd5WckzH6S/1kXsAcI11AMYx5EB+hF4GhDIi4is76C3V34FdLGwVoJ9aLQOt
+         ijpZWSG1+sBV8tTR+ayOnrA0R7CbJttMn7h9jHMTx8B6ckV7j/mVdW9GSc6P+fe41kzl
+         NO/AGwwzqCcG18DaJ+dbCYP1Uxe+clafAekjOVAtAUj7sSL4sKSLqw55YptApWxtGVNy
+         XhHqe0VihxC0nhNcEOrGjbacSNaJZfvpKD9M2pgUctPAF3v8KybPX1auSaxwyAZqQwdM
+         fadICoRh9BLfOc5FjBa3P0Es/2nSbxTr2ZxNz3MVJZiGW4FIJwssfX/+g5qfSGvvRIht
+         rlLw==
+X-Gm-Message-State: APjAAAXtHzHp+4Umx7ohdchVOCNuN7vIqvjMLrmsPxxNJ10OeKt0ArBK
+        Ui7gZfEuz5v4Ol822DAu71HYMQ==
+X-Google-Smtp-Source: APXvYqy1JVUw91MEUMOG+zxi2L3sQWgyNeoYhYioWFiY802l6CyXb7i+PsveBap/gGjV3yI85fV1cQ==
+X-Received: by 2002:a17:90a:a881:: with SMTP id h1mr9398250pjq.50.1575554657418;
+        Thu, 05 Dec 2019 06:04:17 -0800 (PST)
 Received: from localhost (2001-44b8-111e-5c00-61b9-031c-bed1-3502.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:61b9:31c:bed1:3502])
-        by smtp.gmail.com with ESMTPSA id q185sm12628423pfq.110.2019.12.05.06.04.11
+        by smtp.gmail.com with ESMTPSA id c9sm12165045pfn.65.2019.12.05.06.04.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 06:04:12 -0800 (PST)
+        Thu, 05 Dec 2019 06:04:16 -0800 (PST)
 From:   Daniel Axtens <dja@axtens.net>
 To:     kasan-dev@googlegroups.com, linux-mm@kvack.org,
         aryabinin@virtuozzo.com, glider@google.com,
         linux-kernel@vger.kernel.org, dvyukov@google.com
 Cc:     daniel@iogearbox.net, cai@lca.pw, Daniel Axtens <dja@axtens.net>
-Subject: [PATCH 1/3] mm: add apply_to_existing_pages helper
-Date:   Fri,  6 Dec 2019 01:04:05 +1100
-Message-Id: <20191205140407.1874-1-dja@axtens.net>
+Subject: [PATCH 2/3] kasan: use apply_to_existing_pages for releasing vmalloc shadow
+Date:   Fri,  6 Dec 2019 01:04:06 +1100
+Message-Id: <20191205140407.1874-2-dja@axtens.net>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191205140407.1874-1-dja@axtens.net>
+References: <20191205140407.1874-1-dja@axtens.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,244 +71,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-apply_to_page_range takes an address range, and if any parts of it
-are not covered by the existing page table hierarchy, it allocates
-memory to fill them in.
+kasan_release_vmalloc uses apply_to_page_range to release vmalloc
+shadow. Unfortunately, apply_to_page_range can allocate memory to
+fill in page table entries, which is not what we want.
 
-In some use cases, this is not what we want - we want to be able to
-operate exclusively on PTEs that are already in the tables.
+Also, kasan_release_vmalloc is called under free_vmap_area_lock,
+so if apply_to_page_range does allocate memory, we get a sleep in
+atomic bug:
 
-Add apply_to_existing_pages for this. Adjust the walker functions
-for apply_to_page_range to take 'create', which switches them between
-the old and new modes.
+	BUG: sleeping function called from invalid context at mm/page_alloc.c:4681
+	in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 15087, name:
 
-This will be used in KASAN vmalloc.
+	Call Trace:
+	 __dump_stack lib/dump_stack.c:77 [inline]
+	 dump_stack+0x199/0x216 lib/dump_stack.c:118
+	 ___might_sleep.cold.97+0x1f5/0x238 kernel/sched/core.c:6800
+	 __might_sleep+0x95/0x190 kernel/sched/core.c:6753
+	 prepare_alloc_pages mm/page_alloc.c:4681 [inline]
+	 __alloc_pages_nodemask+0x3cd/0x890 mm/page_alloc.c:4730
+	 alloc_pages_current+0x10c/0x210 mm/mempolicy.c:2211
+	 alloc_pages include/linux/gfp.h:532 [inline]
+	 __get_free_pages+0xc/0x40 mm/page_alloc.c:4786
+	 __pte_alloc_one_kernel include/asm-generic/pgalloc.h:21 [inline]
+	 pte_alloc_one_kernel include/asm-generic/pgalloc.h:33 [inline]
+	 __pte_alloc_kernel+0x1d/0x200 mm/memory.c:459
+	 apply_to_pte_range mm/memory.c:2031 [inline]
+	 apply_to_pmd_range mm/memory.c:2068 [inline]
+	 apply_to_pud_range mm/memory.c:2088 [inline]
+	 apply_to_p4d_range mm/memory.c:2108 [inline]
+	 apply_to_page_range+0x77d/0xa00 mm/memory.c:2133
+	 kasan_release_vmalloc+0xa7/0xc0 mm/kasan/common.c:970
+	 __purge_vmap_area_lazy+0xcbb/0x1f30 mm/vmalloc.c:1313
+	 try_purge_vmap_area_lazy mm/vmalloc.c:1332 [inline]
+	 free_vmap_area_noflush+0x2ca/0x390 mm/vmalloc.c:1368
+	 free_unmap_vmap_area mm/vmalloc.c:1381 [inline]
+	 remove_vm_area+0x1cc/0x230 mm/vmalloc.c:2209
+	 vm_remove_mappings mm/vmalloc.c:2236 [inline]
+	 __vunmap+0x223/0xa20 mm/vmalloc.c:2299
+	 __vfree+0x3f/0xd0 mm/vmalloc.c:2356
+	 __vmalloc_area_node mm/vmalloc.c:2507 [inline]
+	 __vmalloc_node_range+0x5d5/0x810 mm/vmalloc.c:2547
+	 __vmalloc_node mm/vmalloc.c:2607 [inline]
+	 __vmalloc_node_flags mm/vmalloc.c:2621 [inline]
+	 vzalloc+0x6f/0x80 mm/vmalloc.c:2666
+	 alloc_one_pg_vec_page net/packet/af_packet.c:4233 [inline]
+	 alloc_pg_vec net/packet/af_packet.c:4258 [inline]
+	 packet_set_ring+0xbc0/0x1b50 net/packet/af_packet.c:4342
+	 packet_setsockopt+0xed7/0x2d90 net/packet/af_packet.c:3695
+	 __sys_setsockopt+0x29b/0x4d0 net/socket.c:2117
+	 __do_sys_setsockopt net/socket.c:2133 [inline]
+	 __se_sys_setsockopt net/socket.c:2130 [inline]
+	 __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2130
+	 do_syscall_64+0xfa/0x780 arch/x86/entry/common.c:294
+	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
+Switch to using the apply_to_existing_pages helper instead, which
+won't allocate memory.
+
+Fixes: 3c5c3cfb9ef4 ("kasan: support backing vmalloc space with real shadow memory")
+Reported-by: Dmitry Vyukov <dvyukov@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
 Signed-off-by: Daniel Axtens <dja@axtens.net>
----
- include/linux/mm.h |   3 ++
- mm/memory.c        | 131 +++++++++++++++++++++++++++++++++------------
- 2 files changed, 99 insertions(+), 35 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index c97ea3b694e6..f4dba827d76e 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2621,6 +2621,9 @@ static inline int vm_fault_to_errno(vm_fault_t vm_fault, int foll_flags)
- typedef int (*pte_fn_t)(pte_t *pte, unsigned long addr, void *data);
- extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
- 			       unsigned long size, pte_fn_t fn, void *data);
-+extern int apply_to_existing_pages(struct mm_struct *mm, unsigned long address,
-+				   unsigned long size, pte_fn_t fn,
-+				   void *data);
- 
- #ifdef CONFIG_PAGE_POISONING
- extern bool page_poisoning_enabled(void);
-diff --git a/mm/memory.c b/mm/memory.c
-index 606da187d1de..e508ba7e0a19 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2021,26 +2021,34 @@ EXPORT_SYMBOL(vm_iomap_memory);
- 
- static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
- 				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data)
-+				     pte_fn_t fn, void *data, bool create)
+---
+
+Andrew, if you want to take this, it replaces
+"kasan: Don't allocate page tables in kasan_release_vmalloc()"
+---
+ mm/kasan/common.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+index e04e73603dfc..26fd0c13dd28 100644
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -957,6 +957,7 @@ void kasan_release_vmalloc(unsigned long start, unsigned long end,
  {
- 	pte_t *pte;
--	int err;
-+	int err = 0;
- 	spinlock_t *uninitialized_var(ptl);
+ 	void *shadow_start, *shadow_end;
+ 	unsigned long region_start, region_end;
++	unsigned long size;
  
--	pte = (mm == &init_mm) ?
--		pte_alloc_kernel(pmd, addr) :
--		pte_alloc_map_lock(mm, pmd, addr, &ptl);
--	if (!pte)
--		return -ENOMEM;
-+	if (create) {
-+		pte = (mm == &init_mm) ?
-+			pte_alloc_kernel(pmd, addr) :
-+			pte_alloc_map_lock(mm, pmd, addr, &ptl);
-+		if (!pte)
-+			return -ENOMEM;
-+	} else {
-+		pte = (mm == &init_mm) ?
-+			pte_offset_kernel(pmd, addr) :
-+			pte_offset_map_lock(mm, pmd, addr, &ptl);
-+	}
+ 	region_start = ALIGN(start, PAGE_SIZE * KASAN_SHADOW_SCALE_SIZE);
+ 	region_end = ALIGN_DOWN(end, PAGE_SIZE * KASAN_SHADOW_SCALE_SIZE);
+@@ -979,9 +980,10 @@ void kasan_release_vmalloc(unsigned long start, unsigned long end,
+ 	shadow_end = kasan_mem_to_shadow((void *)region_end);
  
- 	BUG_ON(pmd_huge(*pmd));
- 
- 	arch_enter_lazy_mmu_mode();
- 
- 	do {
--		err = fn(pte++, addr, data);
--		if (err)
--			break;
-+		if (create || !pte_none(*pte)) {
-+			err = fn(pte++, addr, data);
-+			if (err)
-+				break;
-+		}
- 	} while (addr += PAGE_SIZE, addr != end);
- 
- 	arch_leave_lazy_mmu_mode();
-@@ -2052,62 +2060,83 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
- 
- static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
- 				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data)
-+				     pte_fn_t fn, void *data, bool create)
- {
- 	pmd_t *pmd;
- 	unsigned long next;
--	int err;
-+	int err = 0;
- 
- 	BUG_ON(pud_huge(*pud));
- 
--	pmd = pmd_alloc(mm, pud, addr);
--	if (!pmd)
--		return -ENOMEM;
-+	if (create) {
-+		pmd = pmd_alloc(mm, pud, addr);
-+		if (!pmd)
-+			return -ENOMEM;
-+	} else {
-+		pmd = pmd_offset(pud, addr);
-+	}
- 	do {
- 		next = pmd_addr_end(addr, end);
--		err = apply_to_pte_range(mm, pmd, addr, next, fn, data);
--		if (err)
--			break;
-+		if (create || !pmd_none_or_clear_bad(pmd)) {
-+			err = apply_to_pte_range(mm, pmd, addr, next, fn, data,
-+						 create);
-+			if (err)
-+				break;
-+		}
- 	} while (pmd++, addr = next, addr != end);
- 	return err;
- }
- 
- static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
- 				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data)
-+				     pte_fn_t fn, void *data, bool create)
- {
- 	pud_t *pud;
- 	unsigned long next;
--	int err;
-+	int err = 0;
- 
--	pud = pud_alloc(mm, p4d, addr);
--	if (!pud)
--		return -ENOMEM;
-+	if (create) {
-+		pud = pud_alloc(mm, p4d, addr);
-+		if (!pud)
-+			return -ENOMEM;
-+	} else {
-+		pud = pud_offset(p4d, addr);
-+	}
- 	do {
- 		next = pud_addr_end(addr, end);
--		err = apply_to_pmd_range(mm, pud, addr, next, fn, data);
--		if (err)
--			break;
-+		if (create || !pud_none_or_clear_bad(pud)) {
-+			err = apply_to_pmd_range(mm, pud, addr, next, fn, data,
-+						 create);
-+			if (err)
-+				break;
-+		}
- 	} while (pud++, addr = next, addr != end);
- 	return err;
- }
- 
- static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
- 				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data)
-+				     pte_fn_t fn, void *data, bool create)
- {
- 	p4d_t *p4d;
- 	unsigned long next;
--	int err;
-+	int err = 0;
- 
--	p4d = p4d_alloc(mm, pgd, addr);
--	if (!p4d)
--		return -ENOMEM;
-+	if (create) {
-+		p4d = p4d_alloc(mm, pgd, addr);
-+		if (!p4d)
-+			return -ENOMEM;
-+	} else {
-+		p4d = p4d_offset(pgd, addr);
-+	}
- 	do {
- 		next = p4d_addr_end(addr, end);
--		err = apply_to_pud_range(mm, p4d, addr, next, fn, data);
--		if (err)
--			break;
-+		if (create || !p4d_none_or_clear_bad(p4d)) {
-+			err = apply_to_pud_range(mm, p4d, addr, next, fn, data,
-+						 create);
-+			if (err)
-+				break;
-+		}
- 	} while (p4d++, addr = next, addr != end);
- 	return err;
- }
-@@ -2130,7 +2159,7 @@ int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
- 	pgd = pgd_offset(mm, addr);
- 	do {
- 		next = pgd_addr_end(addr, end);
--		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data);
-+		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data, true);
- 		if (err)
- 			break;
- 	} while (pgd++, addr = next, addr != end);
-@@ -2139,6 +2168,38 @@ int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
- }
- EXPORT_SYMBOL_GPL(apply_to_page_range);
- 
-+/*
-+ * Scan a region of virtual memory, calling a provided function on
-+ * each leaf page table where it exists.
-+ *
-+ * Unlike apply_to_page_range, this does _not_ fill in page tables
-+ * where they are absent.
-+ */
-+int apply_to_existing_pages(struct mm_struct *mm, unsigned long addr,
-+			    unsigned long size, pte_fn_t fn, void *data)
-+{
-+	pgd_t *pgd;
-+	unsigned long next;
-+	unsigned long end = addr + size;
-+	int err = 0;
-+
-+	if (WARN_ON(addr >= end))
-+		return -EINVAL;
-+
-+	pgd = pgd_offset(mm, addr);
-+	do {
-+		next = pgd_addr_end(addr, end);
-+		if (pgd_none_or_clear_bad(pgd))
-+			continue;
-+		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data, false);
-+		if (err)
-+			break;
-+	} while (pgd++, addr = next, addr != end);
-+
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(apply_to_existing_pages);
-+
- /*
-  * handle_pte_fault chooses page fault handler according to an entry which was
-  * read non-atomically.  Before making any commitment, on those architectures
+ 	if (shadow_end > shadow_start) {
+-		apply_to_page_range(&init_mm, (unsigned long)shadow_start,
+-				    (unsigned long)(shadow_end - shadow_start),
+-				    kasan_depopulate_vmalloc_pte, NULL);
++		size = shadow_end - shadow_start;
++		apply_to_existing_pages(&init_mm, (unsigned long)shadow_start,
++					size, kasan_depopulate_vmalloc_pte,
++					NULL);
+ 		flush_tlb_kernel_range((unsigned long)shadow_start,
+ 				       (unsigned long)shadow_end);
+ 	}
 -- 
 2.20.1
 
