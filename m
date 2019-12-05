@@ -2,183 +2,124 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.9 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC926C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE75FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F032077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:45:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="A2/T+2gQ"
+	by mail.kernel.org (Postfix) with ESMTP id CE9F02077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbfLEFpG (ORCPT
+        id S1726157AbfLEFpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 00:45:06 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:57582 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725822AbfLEFpG (ORCPT
+        Thu, 5 Dec 2019 00:45:10 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:43461 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfLEFpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 00:45:06 -0500
-X-UUID: 0fb2c8d23659430bb5009b28d2f0e1e4-20191205
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=DMukBWFVgZU4DzzXUc2ShgiywIROlscb4YOByu87/p4=;
-        b=A2/T+2gQ9t2mkR4JREyWfUNk7Pba/h+gDoz5DgGGID9QWt7BZ9fMSi+kPhsZr2WyYzU1shFYhFrMrQ9HTbSA8SWfAoyeeaaO54B5HBxmcoZ4syiADXyDM54X0p85gKj05ZZEbUdeSrVn+Mcyth/L15qF9QCQlvBa9oR9g4Zq4/Q=;
-X-UUID: 0fb2c8d23659430bb5009b28d2f0e1e4-20191205
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1063602775; Thu, 05 Dec 2019 13:44:59 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 5 Dec 2019 13:44:41 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 5 Dec 2019 13:44:27 +0800
-Message-ID: <1575524697.24783.20.camel@mtksdaap41>
-Subject: Re: [PATCH v3 6/6] drm/mediatek: apply CMDQ control flow
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>
-Date:   Thu, 5 Dec 2019 13:44:57 +0800
-In-Reply-To: <20191204094441.5116-7-bibby.hsieh@mediatek.com>
-References: <20191204094441.5116-1-bibby.hsieh@mediatek.com>
-         <20191204094441.5116-7-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 5 Dec 2019 00:45:08 -0500
+Received: by mail-il1-f197.google.com with SMTP id j17so1653334ilc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 21:45:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=hbk8dpEVaqWWM6KdvtUeNGp8UKgFEwT9m36xDP3TGQA=;
+        b=l3OAJniGyhrd3cdjgP8pBEbLW1CKcnZ/IPYSq3AJuSS0yCi0EGHEyHHFC5BNKXI8/i
+         FM6z/YicmvaRlHIpnEivIDqjCTN3MWc8HWXI4bf8jAVrjrvyc3Sl1Pu8c1t3CzFqeQd7
+         p7f8KwSFO25xn+Z7gfasKEyWGRcoElY9nF/9cWMiK8un0h4IxpojRxbdhivgV33j1tpx
+         s2FygWOasT13d7wVnR3C5GTPcfUtFm1gfWPSWbTr+GEyeMxKFYAeTqREKHzakXsZYBoW
+         Kg1xr7IMgpGNF/KIx5pT2Dnyp7OFgzzpQLE7a4l2df9h5TuRhuN1EwCq/+zpnJ5ztrko
+         0adw==
+X-Gm-Message-State: APjAAAUtT7OnxmFvU3O4mFkRUJr2c+C1e4Vg5Z5OoJqmT1LdtGbNsNS9
+        BPfpoY8I2Jic3uc35mvt+4OIDWDinVF6+n+PLUJAXuTxLVN0
+X-Google-Smtp-Source: APXvYqxp6JgOevX+srs+s+AdEBdfEoYzH4Gg1/DnrUSa+a/pBQVGvsUt92hQfgW1QyQclDsAhqZtEwNWTOvJG2eWVBgLImOt6d9R
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-Received: by 2002:a6b:7846:: with SMTP id h6mr4866164iop.33.1575524707888;
+ Wed, 04 Dec 2019 21:45:07 -0800 (PST)
+Date:   Wed, 04 Dec 2019 21:45:07 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008c72510598ee6ee7@google.com>
+Subject: kmsan boot error: KMSAN: uninit-value in proc_task_name
+From:   syzbot <syzbot+c0d17fd100b00692b701@syzkaller.appspotmail.com>
+To:     adobriyan@gmail.com, akpm@linux-foundation.org,
+        bigeasy@linutronix.de, glider@google.com,
+        john.ogness@linutronix.de, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com, mingo@kernel.org,
+        syzkaller-bugs@googlegroups.com, vbabka@suse.cz
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEJpYmJ5Og0KDQpPbiBXZWQsIDIwMTktMTItMDQgYXQgMTc6NDQgKzA4MDAsIEJpYmJ5IEhz
-aWVoIHdyb3RlOg0KPiBVbmxpa2Ugb3RoZXIgU29DcywgTVQ4MTgzIGRvZXMgbm90IGhhdmUgInNo
-YWRvdyINCj4gcmVnaXN0ZXJzIGZvciBwZXJmb3JtYWluZyBhbiBhdG9taWMgdmlkZW8gbW9kZQ0K
-PiBzZXQgb3IgcGFnZSBmbGlwIGF0IHZibGFuay92c3luYy4NCj4gDQo+IFRoZSBDTURRIChDb21t
-ZW5kIFF1ZXVlKSBpbiBNVDgxODMgaXMgdXNlZCB0byBoZWxwDQo+IHVwZGF0ZSBhbGwgcmVsZXZh
-bnQgZGlzcGxheSBjb250cm9sbGVyIHJlZ2lzdGVycw0KPiB3aXRoIGNyaXRpY2FsIHRpbWUgbGlt
-YXRpb24uDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBZVCBTaGVuIDx5dC5zaGVuQG1lZGlhdGVrLmNv
-bT4NCj4gU2lnbmVkLW9mZi1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4NCj4gU2lnbmVk
-LW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4NCj4gU2lnbmVk
-LW9mZi1ieTogQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gU2lnbmVk
-LW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQo+IC0t
-LQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIHwgODAgKysrKysr
-KysrKysrKysrKysrKysrKysrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDc3IGluc2VydGlvbnMoKyks
-IDMgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0
-Yy5jDQo+IGluZGV4IDlmMWZmMmYzZjEwNC4uOTM0MDM0NmUyNzI3IDEwMDY0NA0KPiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gKysrIGIvZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+IEBAIC0xMiw2ICsxMiw4IEBADQo+ICAj
-aW5jbHVkZSA8ZHJtL2RybV9wbGFuZV9oZWxwZXIuaD4NCj4gICNpbmNsdWRlIDxkcm0vZHJtX3By
-b2JlX2hlbHBlci5oPg0KPiAgI2luY2x1ZGUgPGRybS9kcm1fdmJsYW5rLmg+DQo+ICsjaW5jbHVk
-ZSA8bGludXgvb2ZfYWRkcmVzcy5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L3NvYy9tZWRpYXRlay9t
-dGstY21kcS5oPg0KPiAgDQo+ICAjaW5jbHVkZSAibXRrX2RybV9kcnYuaCINCj4gICNpbmNsdWRl
-ICJtdGtfZHJtX2NydGMuaCINCj4gQEAgLTQyLDYgKzQ0LDkgQEAgc3RydWN0IG10a19kcm1fY3J0
-YyB7DQo+ICAJdW5zaWduZWQgaW50CQkJbGF5ZXJfbnI7DQo+ICAJYm9vbAkJCQlwZW5kaW5nX3Bs
-YW5lczsNCj4gIA0KPiArCXN0cnVjdCBjbWRxX2NsaWVudAkJKmNtZHFfY2xpZW50Ow0KPiArCXUz
-MgkJCQljbWRxX2V2ZW50Ow0KPiArDQo+ICAJdm9pZCBfX2lvbWVtCQkJKmNvbmZpZ19yZWdzOw0K
-PiAgCWNvbnN0IHN0cnVjdCBtdGtfbW1zeXNfcmVnX2RhdGEgKm1tc3lzX3JlZ19kYXRhOw0KPiAg
-CXN0cnVjdCBtdGtfZGlzcF9tdXRleAkJKm11dGV4Ow0KPiBAQCAtNTksNiArNjQsMTEgQEAgc3Ry
-dWN0IG10a19jcnRjX3N0YXRlIHsNCj4gIAl1bnNpZ25lZCBpbnQJCQlwZW5kaW5nX3dpZHRoOw0K
-PiAgCXVuc2lnbmVkIGludAkJCXBlbmRpbmdfaGVpZ2h0Ow0KPiAgCXVuc2lnbmVkIGludAkJCXBl
-bmRpbmdfdnJlZnJlc2g7DQo+ICsJc3RydWN0IGNtZHFfcGt0CQkJKmNtZHFfaGFuZGxlOw0KDQpU
-aGUgaGFuZGxlIGlzIGp1c3QgdXNlZCBpbiBtdGtfZHJtX2NydGNfaHdfY29uZmlnKCksIHNvIEkg
-dGhpbmsgeW91IG5lZWQNCm5vdCB0byBzdG9yZSBpdCBpbiBtdGtfY3J0Y19zdGF0ZS4gTWFrZSBp
-dCBhIGxvY2FsIHZhcmlhYmxlIGluDQptdGtfZHJtX2NydGNfaHdfY29uZmlnKCkgaXMgZW5vdWdo
-Lg0KDQo+ICt9Ow0KPiArDQo+ICtzdHJ1Y3QgbXRrX2NtZHFfY2JfZGF0YSB7DQo+ICsJc3RydWN0
-IGNtZHFfcGt0CQkJKmNtZHFfaGFuZGxlOw0KPiAgfTsNCj4gIA0KPiAgc3RhdGljIGlubGluZSBz
-dHJ1Y3QgbXRrX2RybV9jcnRjICp0b19tdGtfY3J0YyhzdHJ1Y3QgZHJtX2NydGMgKmMpDQo+IEBA
-IC0yMzMsNiArMjQzLDQ3IEBAIHN0cnVjdCBtdGtfZGRwX2NvbXAgKm10a19kcm1fZGRwX2NvbXBf
-Zm9yX3BsYW5lKHN0cnVjdCBkcm1fY3J0YyAqY3J0YywNCj4gIAlyZXR1cm4gTlVMTDsNCj4gIH0N
-Cj4gIA0KPiArI2lmZGVmIENPTkZJR19NVEtfQ01EUQ0KPiArc3RhdGljIHZvaWQgZGRwX2NtZHFf
-Y2Ioc3RydWN0IGNtZHFfY2JfZGF0YSBkYXRhKQ0KPiArew0KPiArCXN0cnVjdCBtdGtfY21kcV9j
-Yl9kYXRhICpjYl9kYXRhID0gZGF0YS5kYXRhOw0KPiArDQo+ICsJY21kcV9wa3RfZGVzdHJveShj
-Yl9kYXRhLT5jbWRxX2hhbmRsZSk7DQo+ICsJa2ZyZWUoY2JfZGF0YSk7DQo+ICt9DQo+ICsNCj4g
-K3N0YXRpYyB2b2lkIG10a19jbWRxX2FjcXVpcmUoc3RydWN0IGRybV9jcnRjICpjcnRjKQ0KPiAr
-ew0KPiArCXN0cnVjdCBtdGtfY3J0Y19zdGF0ZSAqbXRrX2NydGNfc3RhdGUgPQ0KPiArCQkJdG9f
-bXRrX2NydGNfc3RhdGUoY3J0Yy0+c3RhdGUpOw0KPiArCXN0cnVjdCBtdGtfZHJtX2NydGMgKm10
-a19jcnRjID0gdG9fbXRrX2NydGMoY3J0Yyk7DQo+ICsNCj4gKwltdGtfY3J0Y19zdGF0ZS0+Y21k
-cV9oYW5kbGUgPQ0KPiArCQkJY21kcV9wa3RfY3JlYXRlKG10a19jcnRjLT5jbWRxX2NsaWVudCwN
-Cj4gKwkJCQkJUEFHRV9TSVpFKTsNCj4gKwljbWRxX3BrdF9jbGVhcl9ldmVudChtdGtfY3J0Y19z
-dGF0ZS0+Y21kcV9oYW5kbGUsDQo+ICsJCQkgICAgIG10a19jcnRjLT5jbWRxX2V2ZW50KTsNCj4g
-KwljbWRxX3BrdF93ZmUobXRrX2NydGNfc3RhdGUtPmNtZHFfaGFuZGxlLCBtdGtfY3J0Yy0+Y21k
-cV9ldmVudCk7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyB2b2lkIG10a19jbWRxX3JlbGVhc2Uoc3Ry
-dWN0IGRybV9jcnRjICpjcnRjKQ0KPiArew0KPiArCXN0cnVjdCBtdGtfY3J0Y19zdGF0ZSAqbXRr
-X2NydGNfc3RhdGUgPQ0KPiArCQkJdG9fbXRrX2NydGNfc3RhdGUoY3J0Yy0+c3RhdGUpOw0KPiAr
-CXN0cnVjdCBtdGtfY21kcV9jYl9kYXRhICpjYl9kYXRhOw0KPiArDQo+ICsJY2JfZGF0YSA9IGtt
-YWxsb2Moc2l6ZW9mKCpjYl9kYXRhKSwgR0ZQX0tFUk5FTCk7DQo+ICsJaWYgKCFjYl9kYXRhKSB7
-DQo+ICsJCURSTV9ERVZfRVJST1IoY3J0Yy0+ZGV2LT5kZXYsICJGYWlsZWQgdG8gYWxsb2MgY2Jf
-ZGF0YVxuIik7DQo+ICsJCXJldHVybjsNCj4gKwl9DQo+ICsNCj4gKwljYl9kYXRhLT5jbWRxX2hh
-bmRsZSA9IG10a19jcnRjX3N0YXRlLT5jbWRxX2hhbmRsZTsNCj4gKwljbWRxX3BrdF9mbHVzaF9h
-c3luYyhtdGtfY3J0Y19zdGF0ZS0+Y21kcV9oYW5kbGUsDQo+ICsJCQkgICAgIGRkcF9jbWRxX2Ni
-LCBjYl9kYXRhKTsNCg0KV2h5IGRvIHlvdSBjcmVhdGUgbXRrX2NtZHFfY2JfZGF0YXt9PyBZb3Ug
-Y291bGQgZGlyZWN0bHkgcHV0IGhhbmRsZSBpbg0KY2JfZGF0ZSBwYXJhbWV0ZXIuDQoNCj4gK30N
-Cj4gKyNlbmRpZg0KPiArDQo+ICBzdGF0aWMgaW50IG10a19jcnRjX2RkcF9od19pbml0KHN0cnVj
-dCBtdGtfZHJtX2NydGMgKm10a19jcnRjKQ0KPiAgew0KPiAgCXN0cnVjdCBkcm1fY3J0YyAqY3J0
-YyA9ICZtdGtfY3J0Yy0+YmFzZTsNCj4gQEAgLTM5Myw3ICs0NDQsOCBAQCBzdGF0aWMgdm9pZCBt
-dGtfY3J0Y19kZHBfY29uZmlnKHN0cnVjdCBkcm1fY3J0YyAqY3J0YykNCj4gIAlpZiAoc3RhdGUt
-PnBlbmRpbmdfY29uZmlnKSB7DQo+ICAJCW10a19kZHBfY29tcF9jb25maWcoY29tcCwgc3RhdGUt
-PnBlbmRpbmdfd2lkdGgsDQo+ICAJCQkJICAgIHN0YXRlLT5wZW5kaW5nX2hlaWdodCwNCj4gLQkJ
-CQkgICAgc3RhdGUtPnBlbmRpbmdfdnJlZnJlc2gsIDAsIE5VTEwpOw0KPiArCQkJCSAgICBzdGF0
-ZS0+cGVuZGluZ192cmVmcmVzaCwgMCwNCj4gKwkJCQkgICAgc3RhdGUtPmNtZHFfaGFuZGxlKTsN
-Cj4gIA0KPiAgCQlzdGF0ZS0+cGVuZGluZ19jb25maWcgPSBmYWxzZTsNCj4gIAl9DQo+IEBAIC00
-MTMsNyArNDY1LDggQEAgc3RhdGljIHZvaWQgbXRrX2NydGNfZGRwX2NvbmZpZyhzdHJ1Y3QgZHJt
-X2NydGMgKmNydGMpDQo+ICANCj4gIAkJCWlmIChjb21wKQ0KPiAgCQkJCW10a19kZHBfY29tcF9s
-YXllcl9jb25maWcoY29tcCwgbG9jYWxfbGF5ZXIsDQo+IC0JCQkJCQkJICBwbGFuZV9zdGF0ZSwg
-TlVMTCk7DQo+ICsJCQkJCQkJICBwbGFuZV9zdGF0ZSwNCj4gKwkJCQkJCQkgIHN0YXRlLT5jbWRx
-X2hhbmRsZSk7DQo+ICAJCQlwbGFuZV9zdGF0ZS0+cGVuZGluZy5jb25maWcgPSBmYWxzZTsNCj4g
-IAkJfQ0KPiAgCQltdGtfY3J0Yy0+cGVuZGluZ19wbGFuZXMgPSBmYWxzZTsNCj4gQEAgLTQ1Miw2
-ICs1MDUsMTMgQEAgc3RhdGljIHZvaWQgbXRrX2RybV9jcnRjX2h3X2NvbmZpZyhzdHJ1Y3QgbXRr
-X2RybV9jcnRjICptdGtfY3J0YykNCj4gIAkJbXRrX2NydGNfZGRwX2NvbmZpZyhjcnRjKTsNCj4g
-IAkJbXRrX2Rpc3BfbXV0ZXhfcmVsZWFzZShtdGtfY3J0Yy0+bXV0ZXgpOw0KPiAgCX0NCj4gKyNp
-ZmRlZiBDT05GSUdfTVRLX0NNRFENCj4gKwlpZiAobXRrX2NydGMtPmNtZHFfY2xpZW50KSB7DQo+
-ICsJCW10a19jbWRxX2FjcXVpcmUoY3J0Yyk7DQo+ICsJCW10a19jcnRjX2RkcF9jb25maWcoY3J0
-Yyk7DQo+ICsJCW10a19jbWRxX3JlbGVhc2UoY3J0Yyk7DQo+ICsJfQ0KPiArI2VuZGlmDQo+ICAJ
-bXV0ZXhfdW5sb2NrKCZtdGtfY3J0Yy0+aHdfbG9jayk7DQo+ICB9DQo+ICANCj4gQEAgLTUyOCw2
-ICs1ODgsNyBAQCBzdGF0aWMgdm9pZCBtdGtfZHJtX2NydGNfYXRvbWljX2Rpc2FibGUoc3RydWN0
-IGRybV9jcnRjICpjcnRjLA0KPiAgCW10a19jcnRjLT5wZW5kaW5nX3BsYW5lcyA9IHRydWU7DQo+
-ICANCj4gIAkvKiBXYWl0IGZvciBwbGFuZXMgdG8gYmUgZGlzYWJsZWQgKi8NCj4gKwltdGtfZHJt
-X2NydGNfaHdfY29uZmlnKG10a19jcnRjKTsNCg0KSSB0aGluayBzaGFkb3cgcmVnaXN0ZXIgaGFz
-IHRoZSBzYW1lIHByb2JsZW0sIHNvIEkgd291bGQgbGlrZSB0byBtb3ZlDQp0aGlzIHBhcnQgdG8g
-YW4gaW5kZXBlbmRlbnQgcGF0Y2ggd2hpY2ggZml4IHNoYWRvdyByZWdpc3RlciBwcm9ibGVtLiBB
-bmQNCkkgdGhpbmsgdGhpcyBzdGF0ZW1lbnQgc2hvdWxkIGJlIG1vdmVkIGJlZm9yZSB0aGUgY29t
-bWVudCBiZWNhdXNlIHRoaXMNCnN0YXRlbWVudCBkb2VzIG5vdCBkb2luZyB3YWl0Lg0KDQo+ICAJ
-ZHJtX2NydGNfd2FpdF9vbmVfdmJsYW5rKGNydGMpOw0KPiAgDQo+ICAJZHJtX2NydGNfdmJsYW5r
-X29mZihjcnRjKTsNCj4gQEAgLTYxOSw3ICs2ODAsNyBAQCB2b2lkIG10a19jcnRjX2RkcF9pcnEo
-c3RydWN0IGRybV9jcnRjICpjcnRjLCBzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wKQ0KPiAgCXN0
-cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjID0gdG9fbXRrX2NydGMoY3J0Yyk7DQo+ICAJc3Ry
-dWN0IG10a19kcm1fcHJpdmF0ZSAqcHJpdiA9IGNydGMtPmRldi0+ZGV2X3ByaXZhdGU7DQo+ICAN
-Cj4gLQlpZiAoIXByaXYtPmRhdGEtPnNoYWRvd19yZWdpc3RlcikNCj4gKwlpZiAoIXByaXYtPmRh
-dGEtPnNoYWRvd19yZWdpc3RlciAmJiAhbXRrX2NydGMtPmNtZHFfY2xpZW50KQ0KPiAgCQltdGtf
-Y3J0Y19kZHBfY29uZmlnKGNydGMpOw0KPiAgDQo+ICAJbXRrX2RybV9maW5pc2hfcGFnZV9mbGlw
-KG10a19jcnRjKTsNCj4gQEAgLTc2Myw1ICs4MjQsMTggQEAgaW50IG10a19kcm1fY3J0Y19jcmVh
-dGUoc3RydWN0IGRybV9kZXZpY2UgKmRybV9kZXYsDQo+ICAJcHJpdi0+bnVtX3BpcGVzKys7DQo+
-ICAJbXV0ZXhfaW5pdCgmbXRrX2NydGMtPmh3X2xvY2spOw0KPiAgDQo+ICsjaWZkZWYgQ09ORklH
-X01US19DTURRDQo+ICsJbXRrX2NydGMtPmNtZHFfY2xpZW50ID0NCj4gKwkJCWNtZHFfbWJveF9j
-cmVhdGUoZGV2LCBkcm1fY3J0Y19pbmRleCgmbXRrX2NydGMtPmJhc2UpLA0KPiArCQkJCQkgMjAw
-MCk7DQo+ICsJb2ZfcHJvcGVydHlfcmVhZF91MzJfaW5kZXgoZGV2LT5vZl9ub2RlLCAibWVkaWF0
-ZWssZ2NlLWV2ZW50cyIsDQo+ICsJCQkJICAgZHJtX2NydGNfaW5kZXgoJm10a19jcnRjLT5iYXNl
-KSwNCj4gKwkJCQkgICAmbXRrX2NydGMtPmNtZHFfZXZlbnQpOw0KDQpDaGVjayB0aGUgcmV0dXJu
-IHZhbHVlLg0KDQpSZWdhcmRzLA0KQ0sNCg0KPiArCWlmIChJU19FUlIobXRrX2NydGMtPmNtZHFf
-Y2xpZW50KSkgew0KPiArCQlkZXZfZGJnKGRldiwgIm10a19jcnRjICVkIGZhaWxlZCB0byBjcmVh
-dGUgbWFpbGJveCBjbGllbnQsIHdyaXRpbmcgcmVnaXN0ZXIgYnkgQ1BVIG5vd1xuIiwNCj4gKwkJ
-CWRybV9jcnRjX2luZGV4KCZtdGtfY3J0Yy0+YmFzZSkpOw0KPiArCQltdGtfY3J0Yy0+Y21kcV9j
-bGllbnQgPSBOVUxMOw0KPiArCX0NCj4gKyNlbmRpZg0KPiAgCXJldHVybiAwOw0KPiAgfQ0KDQo=
+Hello,
 
+syzbot found the following crash on:
+
+HEAD commit:    818fcf71 Revert "kmsan: disable strscpy() optimization und..
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=11b8bb7ae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fde150fb1e865232
+dashboard link: https://syzkaller.appspot.com/bug?extid=c0d17fd100b00692b701
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c0d17fd100b00692b701@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in seq_commit include/linux/seq_file.h:89 [inline]
+BUG: KMSAN: uninit-value in proc_task_name+0x574/0x590 fs/proc/array.c:121
+CPU: 1 PID: 5202 Comm: ps Not tainted 5.4.0-rc8-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+  kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
+  __msan_warning+0x57/0xa0 mm/kmsan/kmsan_instr.c:245
+  seq_commit include/linux/seq_file.h:89 [inline]
+  proc_task_name+0x574/0x590 fs/proc/array.c:121
+  do_task_stat+0x1a7b/0x3090 fs/proc/array.c:540
+  proc_tgid_stat+0xbe/0xf0 fs/proc/array.c:632
+  proc_single_show+0x1a8/0x2b0 fs/proc/base.c:756
+  seq_read+0xac6/0x1d90 fs/seq_file.c:229
+  __vfs_read+0x1a9/0xc90 fs/read_write.c:425
+  vfs_read+0x359/0x6f0 fs/read_write.c:461
+  ksys_read+0x265/0x430 fs/read_write.c:587
+  __do_sys_read fs/read_write.c:597 [inline]
+  __se_sys_read+0x92/0xb0 fs/read_write.c:595
+  __x64_sys_read+0x4a/0x70 fs/read_write.c:595
+  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fd34fa40310
+Code: 73 01 c3 48 8b 0d 28 4b 2b 00 31 d2 48 29 c2 64 89 11 48 83 c8 ff eb  
+ea 90 90 83 3d e5 a2 2b 00 00 75 10 b8 00 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 73 31 c3 48 83 ec 08 e8 6e 8a 01 00 48 89 04 24
+RSP: 002b:00007ffc157facf8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 00007fd34fa40310
+RDX: 0000000000000fff RSI: 00007fd34ff0dd00 RDI: 0000000000000006
+RBP: 0000000000000fff R08: 0000000000000000 R09: 00007fd34fd08a10
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fd34ff0dd00
+R13: 0000000001a59150 R14: 0000000000000005 R15: 0000000000000000
+
+Local variable description: ----tcomm@proc_task_name
+Variable was created at:
+  proc_task_name+0x8d/0x590 fs/proc/array.c:103
+  proc_task_name+0x8d/0x590 fs/proc/array.c:103
+=====================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
