@@ -2,402 +2,218 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84A4C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F633C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C65224F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766D9224F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfLEH1l (ORCPT
+        id S1728449AbfLEH1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 02:27:41 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:46896 "EHLO inva020.nxp.com"
+        Thu, 5 Dec 2019 02:27:48 -0500
+Received: from mga17.intel.com ([192.55.52.151]:18797 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbfLEH1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 02:27:39 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A65361A0008;
-        Thu,  5 Dec 2019 08:27:36 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EE5381A1734;
-        Thu,  5 Dec 2019 08:27:31 +0100 (CET)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 20C3A40296;
-        Thu,  5 Dec 2019 15:27:26 +0800 (SGT)
-From:   Wen He <wen.he_1@nxp.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Walle <michael@walle.cc>, Li Yang <leoyang.li@nxp.com>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Wen He <wen.he_1@nxp.com>
-Subject: [v11 2/2] clk: ls1028a: Add clock driver for Display output interface
-Date:   Thu,  5 Dec 2019 15:26:53 +0800
-Message-Id: <20191205072653.34701-2-wen.he_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191205072653.34701-1-wen.he_1@nxp.com>
-References: <20191205072653.34701-1-wen.he_1@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725926AbfLEH1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 02:27:48 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 23:27:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,280,1571727600"; 
+   d="scan'208";a="243148474"
+Received: from yuanwan1-mobl.ccr.corp.intel.com ([10.249.174.225])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Dec 2019 23:27:46 -0800
+Message-ID: <e04fa1e5eb6b81dd99097d1fb41fd04daf44c235.camel@intel.com>
+Subject: Re: [GIT PULL] Thermal management updates for v5.5-rc1
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Date:   Thu, 05 Dec 2019 15:27:45 +0800
+In-Reply-To: <7f4da1c663268f53f2123424c1b8abdbe8316556.camel@intel.com>
+References: <7f4da1c663268f53f2123424c1b8abdbe8316556.camel@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clock driver for QorIQ LS1028A Display output interfaces(LCD, DPHY),
-as implemented in TSMC CLN28HPM PLL, this PLL supports the programmable
-integer division and range of the display output pixel clock's 27-594MHz.
+On Wed, 2019-12-04 at 14:16 +0800, Zhang Rui wrote:
+> Hi, Linus,
+> 
+> Please pull from
+>   git://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
+> thermal/next
+> 
+> to receive the latest Thermal Management updates for v5.5-rc1 with
+> top-most commit 163b00cde7cf2206e248789d2780121ad5e6a70b:
+> 
+>   thermal: Fix deadlock in thermal thermal_zone_device_check (2019-
+> 11-
+> 14 22:41:09 +0800)
+> 
+> on top of commit a99d8080aaf358d5d23581244e5da23b35e340b9:
+> 
+>   Linux 5.4-rc6 (2019-11-03 14:07:26 -0800)
+> 
+I still have some patches pending, which includes
+changes of MAINTAINER file to remove Eduardo Valentin <
+edubezval@gmail.com> from the co-maintainer of thermal subsystem
+because his email is bouncing, and to add Daniel Lezcano <
+daniel.lezcano@linaro.org> as the co-maintainer.
+And also another Kconfig warning fix. So there should be a second PR
+once this is merged.
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/clk/Kconfig      |  10 ++
- drivers/clk/Makefile     |   1 +
- drivers/clk/clk-plldig.c | 297 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 308 insertions(+)
- create mode 100644 drivers/clk/clk-plldig.c
+thanks,
+rui
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 0530bebfc25a..9f6b0196c604 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -218,6 +218,16 @@ config CLK_QORIQ
- 	  This adds the clock driver support for Freescale QorIQ platforms
- 	  using common clock framework.
- 
-+config CLK_LS1028A_PLLDIG
-+        tristate "Clock driver for LS1028A Display output"
-+        depends on ARCH_LAYERSCAPE || COMPILE_TEST
-+        default ARCH_LAYERSCAPE
-+        help
-+          This driver support the Display output interfaces(LCD, DPHY) pixel clocks
-+          of the QorIQ Layerscape LS1028A, as implemented TSMC CLN28HPM PLL. Not all
-+          features of the PLL are currently supported by the driver. By default,
-+          configured bypass mode with this PLL.
-+
- config COMMON_CLK_XGENE
- 	bool "Clock driver for APM XGene SoC"
- 	default ARCH_XGENE
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 0138fb14e6f8..97d1e5bc6de5 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -43,6 +43,7 @@ obj-$(CONFIG_ARCH_NPCM7XX)	    	+= clk-npcm7xx.o
- obj-$(CONFIG_ARCH_NSPIRE)		+= clk-nspire.o
- obj-$(CONFIG_COMMON_CLK_OXNAS)		+= clk-oxnas.o
- obj-$(CONFIG_COMMON_CLK_PALMAS)		+= clk-palmas.o
-+obj-$(CONFIG_CLK_LS1028A_PLLDIG)	+= clk-plldig.o
- obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
- obj-$(CONFIG_CLK_QORIQ)			+= clk-qoriq.o
- obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
-diff --git a/drivers/clk/clk-plldig.c b/drivers/clk/clk-plldig.c
-new file mode 100644
-index 000000000000..1942686f0254
---- /dev/null
-+++ b/drivers/clk/clk-plldig.c
-@@ -0,0 +1,297 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP
-+ *
-+ * Clock driver for LS1028A Display output interfaces(LCD, DPHY).
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/bitfield.h>
-+
-+/* PLLDIG register offsets and bit masks */
-+#define PLLDIG_REG_PLLSR            0x24
-+#define PLLDIG_LOCK_MASK            BIT(2)
-+#define PLLDIG_REG_PLLDV            0x28
-+#define PLLDIG_MFD_MASK             GENMASK(7, 0)
-+#define PLLDIG_RFDPHI1_MASK         GENMASK(30, 25)
-+#define PLLDIG_REG_PLLFM            0x2c
-+#define PLLDIG_SSCGBYP_ENABLE       BIT(30)
-+#define PLLDIG_REG_PLLFD            0x30
-+#define PLLDIG_FDEN                 BIT(30)
-+#define PLLDIG_FRAC_MASK            GENMASK(15, 0)
-+#define PLLDIG_REG_PLLCAL1          0x38
-+#define PLLDIG_REG_PLLCAL2          0x3c
-+
-+/* Range of the VCO frequencies, in Hz */
-+#define PLLDIG_MIN_VCO_FREQ         650000000
-+#define PLLDIG_MAX_VCO_FREQ         1300000000
-+
-+/* Range of the output frequencies, in Hz */
-+#define PHI1_MIN_FREQ               27000000
-+#define PHI1_MAX_FREQ               600000000
-+
-+/* Maximum value of the reduced frequency divider */
-+#define MAX_RFDPHI1          63UL
-+
-+/* Best value of multiplication factor divider */
-+#define PLLDIG_DEFAULT_MFD   44
-+
-+/*
-+ * Denominator part of the fractional part of the
-+ * loop multiplication factor.
-+ */
-+#define MFDEN          20480
-+
-+static const struct clk_parent_data parent_data[] = {
-+	{.index = 0},
-+};
-+
-+struct clk_plldig {
-+	struct clk_hw hw;
-+	void __iomem *regs;
-+	unsigned int vco_freq;
-+};
-+
-+#define to_clk_plldig(_hw)	container_of(_hw, struct clk_plldig, hw)
-+
-+static int plldig_enable(struct clk_hw *hw)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	u32 val;
-+
-+	val = readl(data->regs + PLLDIG_REG_PLLFM);
-+	/*
-+	 * Use Bypass mode with PLL off by default, the frequency overshoot
-+	 * detector output was disable. SSCG Bypass mode should be enable.
-+	 */
-+	val |= PLLDIG_SSCGBYP_ENABLE;
-+	writel(val, data->regs + PLLDIG_REG_PLLFM);
-+
-+	return 0;
-+}
-+
-+static void plldig_disable(struct clk_hw *hw)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	u32 val;
-+
-+	val = readl(data->regs + PLLDIG_REG_PLLFM);
-+
-+	val &= ~PLLDIG_SSCGBYP_ENABLE;
-+	val |= FIELD_PREP(PLLDIG_SSCGBYP_ENABLE, 0x0);
-+
-+	writel(val, data->regs + PLLDIG_REG_PLLFM);
-+}
-+
-+static int plldig_is_enabled(struct clk_hw *hw)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+
-+	return (readl(data->regs + PLLDIG_REG_PLLFM) &
-+			      PLLDIG_SSCGBYP_ENABLE);
-+}
-+
-+static unsigned long plldig_recalc_rate(struct clk_hw *hw,
-+					unsigned long parent_rate)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	u32 val, rfdphi1;
-+
-+	val = readl(data->regs + PLLDIG_REG_PLLDV);
-+
-+	/* Check if PLL is bypassed */
-+	if (val & PLLDIG_SSCGBYP_ENABLE)
-+		return parent_rate;
-+
-+	rfdphi1 = FIELD_GET(PLLDIG_RFDPHI1_MASK, val);
-+
-+	/*
-+	 * If RFDPHI1 has a value of 1 the VCO frequency is also divided by
-+	 * one.
-+	 */
-+	if (!rfdphi1)
-+		rfdphi1 = 1;
-+
-+	return DIV_ROUND_UP(data->vco_freq, rfdphi1);
-+}
-+
-+static unsigned long plldig_calc_target_div(unsigned long vco_freq,
-+					    unsigned long target_rate)
-+{
-+	unsigned long div;
-+
-+	div = DIV_ROUND_CLOSEST(vco_freq, target_rate);
-+	div = max(1UL, div);
-+	div = min(div, MAX_RFDPHI1);
-+
-+	return div;
-+}
-+
-+static int plldig_determine_rate(struct clk_hw *hw,
-+				 struct clk_rate_request *req)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	unsigned int div;
-+
-+	if (req->rate < PHI1_MIN_FREQ)
-+		req->rate = PHI1_MIN_FREQ;
-+	if (req->rate > PHI1_MAX_FREQ)
-+		req->rate = PHI1_MAX_FREQ;
-+
-+	div = plldig_calc_target_div(data->vco_freq, req->rate);
-+	req->rate = DIV_ROUND_UP(data->vco_freq, div);
-+
-+	return 0;
-+}
-+
-+static int plldig_set_rate(struct clk_hw *hw, unsigned long rate,
-+		unsigned long parent_rate)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	unsigned int val, cond;
-+	unsigned int rfdphi1;
-+
-+	if (rate < PHI1_MIN_FREQ)
-+		rate = PHI1_MIN_FREQ;
-+	if (rate > PHI1_MAX_FREQ)
-+		rate = PHI1_MAX_FREQ;
-+
-+	rfdphi1 = plldig_calc_target_div(data->vco_freq, rate);
-+
-+	/* update the divider value */
-+	val = readl(data->regs + PLLDIG_REG_PLLDV);
-+	val &= ~PLLDIG_RFDPHI1_MASK;
-+	val |= FIELD_PREP(PLLDIG_RFDPHI1_MASK, rfdphi1);
-+	writel(val, data->regs + PLLDIG_REG_PLLDV);
-+
-+	/* delay 200us make sure that old lock state is cleared */
-+	udelay(200);
-+
-+	/* Wait until PLL is locked or timeout (maximum 1000 usecs) */
-+	return readl_poll_timeout_atomic(data->regs + PLLDIG_REG_PLLSR, cond,
-+					 cond & PLLDIG_LOCK_MASK, 0,
-+					 USEC_PER_MSEC);
-+}
-+
-+static const struct clk_ops plldig_clk_ops = {
-+	.enable = plldig_enable,
-+	.disable = plldig_disable,
-+	.is_enabled = plldig_is_enabled,
-+	.recalc_rate = plldig_recalc_rate,
-+	.determine_rate = plldig_determine_rate,
-+	.set_rate = plldig_set_rate,
-+};
-+
-+static int plldig_init(struct clk_hw *hw)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	struct clk_hw *parent = clk_hw_get_parent(hw);
-+	unsigned long parent_rate = clk_hw_get_rate(parent);
-+	unsigned long val;
-+	unsigned long long lltmp;
-+	unsigned int mfd, fracdiv = 0;
-+
-+	if (!parent)
-+		return -EINVAL;
-+
-+	if (data->vco_freq) {
-+		mfd = data->vco_freq / parent_rate;
-+		lltmp = data->vco_freq % parent_rate;
-+		lltmp *= MFDEN;
-+		do_div(lltmp, parent_rate);
-+		fracdiv = lltmp;
-+	} else {
-+		mfd = PLLDIG_DEFAULT_MFD;
-+		data->vco_freq = parent_rate * mfd;
-+	}
-+
-+	val = FIELD_PREP(PLLDIG_MFD_MASK, mfd);
-+	writel(val, data->regs + PLLDIG_REG_PLLDV);
-+
-+	if (fracdiv) {
-+		val = FIELD_PREP(PLLDIG_FRAC_MASK, fracdiv);
-+		/* Enable fractional divider */
-+		val |= PLLDIG_FDEN;
-+		writel(val, data->regs + PLLDIG_REG_PLLFD);
-+	}
-+
-+	return 0;
-+}
-+
-+static int plldig_clk_probe(struct platform_device *pdev)
-+{
-+	struct clk_plldig *data;
-+	struct resource *mem;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	data->regs = devm_ioremap_resource(dev, mem);
-+	if (IS_ERR(data->regs))
-+		return PTR_ERR(data->regs);
-+
-+	data->hw.init = CLK_HW_INIT_PARENTS_DATA("dpclk",
-+						 parent_data,
-+						 &plldig_clk_ops,
-+						 0);
-+
-+	ret = devm_clk_hw_register(dev, &data->hw);
-+	if (ret) {
-+		dev_err(dev, "failed to register %s clock\n",
-+						dev->of_node->name);
-+		return ret;
-+	}
-+
-+	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
-+					  &data->hw);
-+	if (ret) {
-+		dev_err(dev, "unable to add clk provider\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * The frequency of the VCO cannot be changed during runtime.
-+	 * Therefore, let the user specify a desired frequency.
-+	 */
-+	if (!of_property_read_u32(dev->of_node, "fsl,vco-hz",
-+				  &data->vco_freq)) {
-+		if (data->vco_freq < PLLDIG_MIN_VCO_FREQ ||
-+		    data->vco_freq > PLLDIG_MAX_VCO_FREQ)
-+			return -EINVAL;
-+	}
-+
-+	return plldig_init(&data->hw);
-+}
-+
-+static const struct of_device_id plldig_clk_id[] = {
-+	{ .compatible = "fsl,ls1028a-plldig"},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, plldig_clk_id);
-+
-+static struct platform_driver plldig_clk_driver = {
-+	.driver = {
-+		.name = "plldig-clock",
-+		.of_match_table = plldig_clk_id,
-+	},
-+	.probe = plldig_clk_probe,
-+};
-+module_platform_driver(plldig_clk_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Wen He <wen.he_1@nxp.com>");
-+MODULE_DESCRIPTION("LS1028A Display output interface pixel clock driver");
--- 
-2.17.1
+> Specifics:
+> 
+> - Fix a deadlock regression in thermal core framework, which is
+> introduced in 5.3. (Wei Wang)
+> 
+> - Initialize thermal control framework earlier to enable thermal
+> mitigation during boot. (Amit Kucheria)
+> 
+> - Convert the Intelligent Power Allocator (IPA) thermal governor to
+> follow the generic PM_EM instead of its own Energy Model. (Quentin
+> Perret)
+> 
+> - Introduce a new Amlogic soc thermal driver. (Guillaume La Roque)
+> 
+> - Add interrupt support for tsens thermal driver. (Amit Kucheria)
+> 
+> - Add support for MSM8956/8976 in tsens thermal driver.
+> (AngeloGioacchino Del Regno)
+> 
+> - Add support for r8a774b1 in rcar thermal driver. (Biju Das)
+> 
+> - Add support for Thermal Monitor Unit v2 in qoriq thermal driver.
+> (Yuantian Tang)
+> 
+> - Some other fixes/cleanups on thermal core framework and soc thermal
+> drivers. (Colin Ian King, Daniel Lezcano, Hsin-Yi Wang, Tian Tao)
+> 
+> thanks,
+> rui
+> 
+> ----------------------------------------------------------------
+> Amit Kucheria (13):
+>       drivers: thermal: tsens: Get rid of id field in tsens_sensor
+>       drivers: thermal: tsens: Simplify code flow in tsens_probe
+>       drivers: thermal: tsens: Add __func__ identifier to debug
+> statements
+>       drivers: thermal: tsens: Add debugfs support
+>       dt-bindings: thermal: tsens: Convert over to a yaml schema
+>       drivers: thermal: tsens: Create function to return sign-
+> extended
+> temperature
+>       drivers: thermal: tsens: Add interrupt support
+>       thermal: Remove netlink support
+>       thermal: Initialize thermal subsystem earlier
+>       cpufreq: Initialize the governors in core_initcall
+>       cpufreq: Initialize cpufreq-dt driver earlier
+>       clk: qcom: Initialize clock drivers earlier
+>       cpufreq: qcom-hw: Move driver initialization earlier
+> 
+> AngeloGioacchino Del Regno (2):
+>       thermal: qcom: tsens-v1: Add support for MSM8956 and MSM8976
+>       dt: thermal: tsens: Document compatible for MSM8976/56
+> 
+> Biju Das (2):
+>       thermal: rcar_gen3_thermal: Add r8a774b1 support
+>       dt-bindings: thermal: rcar-gen3-thermal: Add r8a774b1 support
+> 
+> Colin Ian King (2):
+>       thermal: qcom: tsens-v1: Fix kfree of a non-pointer value
+>       drivers: thermal: tsens: fix potential integer overflow on
+> multiply
+> 
+> Daniel Lezcano (2):
+>       thermal: cpu_cooling: Remove pointless dependency on CONFIG_OF
+>       thermal: cpu_cooling: Reorder the header file
+> 
+> Guillaume La Roque (3):
+>       dt-bindings: thermal: Add DT bindings documentation for Amlogic
+> Thermal
+>       thermal: amlogic: Add thermal driver to support G12 SoCs
+>       MAINTAINERS: add entry for Amlogic Thermal driver
+> 
+> Hsin-Yi Wang (1):
+>       thermal-generic-adc: Silent error message for EPROBE_DEFER
+> 
+> Quentin Perret (4):
+>       arm64: defconfig: Enable CONFIG_ENERGY_MODEL
+>       PM / EM: Declare EM data types unconditionally
+>       thermal: cpu_cooling: Make the power-related code depend on IPA
+>       thermal: cpu_cooling: Migrate to using the EM framework
+> 
+> Tian Tao (1):
+>       thermal: no need to set .owner when using
+> module_platform_driver
+> 
+> Wei Wang (1):
+>       thermal: Fix deadlock in thermal thermal_zone_device_check
+> 
+> Yuantian Tang (1):
+>       thermal: qoriq: add thermal monitor unit version 2 support
+> 
+>  .../bindings/thermal/amlogic,thermal.yaml          |  54 +++
+>  .../devicetree/bindings/thermal/qcom-tsens.txt     |  55 ---
+>  .../devicetree/bindings/thermal/qcom-tsens.yaml    | 170 +++++++
+>  .../bindings/thermal/rcar-gen3-thermal.txt         |   1 +
+>  Documentation/driver-api/thermal/sysfs-api.rst     |  26 +-
+>  MAINTAINERS                                        |  10 +
+>  arch/arm64/configs/defconfig                       |   1 +
+>  drivers/clk/qcom/clk-rpmh.c                        |   2 +-
+>  drivers/clk/qcom/gcc-qcs404.c                      |   2 +-
+>  drivers/clk/qcom/gcc-sdm845.c                      |   2 +-
+>  drivers/cpufreq/cpufreq-dt-platdev.c               |   2 +-
+>  drivers/cpufreq/cpufreq_conservative.c             |   2 +-
+>  drivers/cpufreq/cpufreq_ondemand.c                 |   2 +-
+>  drivers/cpufreq/cpufreq_performance.c              |   2 +-
+>  drivers/cpufreq/cpufreq_powersave.c                |   2 +-
+>  drivers/cpufreq/cpufreq_userspace.c                |   2 +-
+>  drivers/cpufreq/qcom-cpufreq-hw.c                  |   2 +-
+>  drivers/thermal/Kconfig                            |  12 +
+>  drivers/thermal/Makefile                           |   1 +
+>  drivers/thermal/amlogic_thermal.c                  | 333
+> +++++++++++++
+>  drivers/thermal/cpu_cooling.c                      | 404 +++++++----
+> -----
+>  drivers/thermal/qcom/tsens-8960.c                  |   4 +-
+>  drivers/thermal/qcom/tsens-common.c                | 529
+> +++++++++++++++++++--
+>  drivers/thermal/qcom/tsens-v0_1.c                  |  11 +
+>  drivers/thermal/qcom/tsens-v1.c                    | 198 +++++++-
+>  drivers/thermal/qcom/tsens-v2.c                    |  13 +
+>  drivers/thermal/qcom/tsens.c                       |  62 ++-
+>  drivers/thermal/qcom/tsens.h                       | 288 +++++++++--
+>  drivers/thermal/qoriq_thermal.c                    | 120 ++++-
+>  drivers/thermal/rcar_gen3_thermal.c                |   4 +
+>  drivers/thermal/thermal-generic-adc.c              |   9 +-
+>  drivers/thermal/thermal_core.c                     | 107 +----
+>  drivers/thermal/thermal_mmio.c                     |   1 -
+>  include/linux/cpu_cooling.h                        |  18 +-
+>  include/linux/energy_model.h                       |   3 +-
+>  include/linux/thermal.h                            |  11 -
+>  kernel/sched/cpufreq_schedutil.c                   |   2 +-
+>  37 files changed, 1878 insertions(+), 589 deletions(-)
+>  create mode 100644
+> Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/qcom-
+> tsens.txt
+>  create mode 100644 Documentation/devicetree/bindings/thermal/qcom-
+> tsens.yaml
+>  create mode 100644 drivers/thermal/amlogic_thermal.c
+> 
 
