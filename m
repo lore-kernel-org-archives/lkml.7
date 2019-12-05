@@ -2,351 +2,203 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88341C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B63C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F48206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2602245C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 04:35:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="HTnzmMsS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbfLEEfJ (ORCPT
+        id S1728972AbfLEEf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 23:35:09 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:43788 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728374AbfLEEfJ (ORCPT
+        Wed, 4 Dec 2019 23:35:26 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:45506 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728132AbfLEEf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 23:35:09 -0500
-Received: by mail-io1-f69.google.com with SMTP id b17so1546919ioh.10
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 20:35:08 -0800 (PST)
+        Wed, 4 Dec 2019 23:35:26 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r11so735126pjp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 20:35:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=s6emKmGGeuSq3wtIVxjBKVR6ZpCN8AX3rs92e/sQ08s=;
+        b=HTnzmMsSBoONgPFSO6kOgPwH5zOZehEChmShYIuAo0k4JTBQNF3A5wgx2GKkGvWf0/
+         S8wIIqluaiR7t7sEd8vDlFYt+v+8pBRbWU2LvgNKERIMYCO/15zH23xUkm5+HaCbsXdi
+         KrdfsJfxfqTl+g3UG1SnUBAB4DY29MLiQVxfc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=yCrVhNqddFElrQxeNGjr6y5Otz+iXxG1Ybo4Faqxup4=;
-        b=tQPJdzAF1mtz6mkxcUDNG600cWQZwKnVe4kXvRuvRguqjywoviiu4ydV6HFHxcd0Rz
-         IFlXqIX5o2yPCTZ2eMXsXhefn/18tral+NR/64YED5awHUDBckf6qBkYXcKSOz+GvgRj
-         4g9g6+JMN1+f5eoT9z6fe54iHEJp4VEyTy42CThQ+HNpHATp4MyTz9syA8U9J5RJvuvt
-         L5O9MU260B+ryXKtQ6xmV2AWRJ7LjvfwlOjq5tjlPXMVDGVTj9aau32+gUBoKhsseF9k
-         kZietDjRqFNgXDmoD+oUENneIQjjhkdZQMcIvsNLXf8xAHDUIybW4MItUuX09q2mFPP2
-         aL7g==
-X-Gm-Message-State: APjAAAXLK2arjx3pLvwSVPAdmfzfDbzhLC2lolYr0m+KVQJjSZdxrrCY
-        mZT+F00tyih2h1NIdb+EZqXnNMq81bdqdziF20DsMJA4Syh1
-X-Google-Smtp-Source: APXvYqy2Fl0OePeXcAaB2Mbmyncmu5yVT0lCz4DaeeCrF7SXRxBMApN2OiBrERxrDUPQdzO3j2QOgcJ+/0VPqX3TxonjGjArRbIy
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=s6emKmGGeuSq3wtIVxjBKVR6ZpCN8AX3rs92e/sQ08s=;
+        b=d6HiMkrH1Lk8cxsWJtIX8p6UJokztnEMTdHGpGducn0Yfhbe1eWRkxRaipbMtcvLtY
+         y8sEuYhnqf3dHH6wfY2Jf4pcMtyEot8zKcwa1NURmRnvVkmp5MXNDBql1Ztu/CzO8JXk
+         s9Nbjq4jCnbkHU5pZXD0tckMXv+tPNLKl8Lc7Fjng0bdKOJx3fBNsp8dX/aSER/FRFw3
+         mCZHRkejDoPQn/pItiXaGhFh7qX4hN5ikcT9DJHzx8GLCtBT0A+YV6F9yCWjfHysnj0W
+         PeQpoczS1yEfM2WSsC4NiEavaSTDDMk/TrBEz+mcjXzBI5C84IjpHa5twidllt3iYY8K
+         a3lQ==
+X-Gm-Message-State: APjAAAWFZE6PaobiVqVENmYSeh5mR34GeBAkn/UdYnlcbHFfizWqHMHE
+        zJtHCQtsWoxfHfmg76YWIsnaqw==
+X-Google-Smtp-Source: APXvYqxCZmeC4c8H+1S3gozzuwiEdfr5IAET6UGkXj4FIbbXUkTX+Q/yZHHnB0KOldDQ9QcNbSYcCw==
+X-Received: by 2002:a17:90a:bb0b:: with SMTP id u11mr7305972pjr.12.1575520525179;
+        Wed, 04 Dec 2019 20:35:25 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-7daa-d2ea-7edb-cfe8.static.ipv6.internode.on.net. [2001:44b8:1113:6700:7daa:d2ea:7edb:cfe8])
+        by smtp.gmail.com with ESMTPSA id c184sm10147599pfa.39.2019.12.04.20.35.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 20:35:24 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+82e323920b78d54aaed5@syzkaller.appspotmail.com>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Yonghong Song <yhs@fb.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: Re: BUG: unable to handle kernel paging request in pcpu_alloc
+In-Reply-To: <CACT4Y+ZTXKP0MAT3ivr5HO-skZOjSVdz7RbDoyc522_Nbk8nKQ@mail.gmail.com>
+References: <000000000000314c120598dc69bd@google.com> <CACT4Y+ZTXKP0MAT3ivr5HO-skZOjSVdz7RbDoyc522_Nbk8nKQ@mail.gmail.com>
+Date:   Thu, 05 Dec 2019 15:35:21 +1100
+Message-ID: <877e3be6eu.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-X-Received: by 2002:a92:3d49:: with SMTP id k70mr6714152ila.246.1575520508462;
- Wed, 04 Dec 2019 20:35:08 -0800 (PST)
-Date:   Wed, 04 Dec 2019 20:35:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003e5aa90598ed7415@google.com>
-Subject: BUG: sleeping function called from invalid context in lock_sock_nested
-From:   syzbot <syzbot+c2f1558d49e25cc36e5e@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+>> HEAD commit:    1ab75b2e Add linux-next specific files for 20191203
+>> git tree:       linux-next
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=10edf2eae00000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=de1505c727f0ec20
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=82e323920b78d54aaed5
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=156ef061e00000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11641edae00000
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+82e323920b78d54aaed5@syzkaller.appspotmail.com
+>
+> +Daniel, is it the same as:
+> https://syzkaller.appspot.com/bug?id=f6450554481c55c131cc23d581fbd8ea42e63e18
+> If so, is it possible to make KASAN detect this consistently with the
+> same crash type so that syzbot does not report duplicates?
 
-syzbot found the following crash on:
+It looks like both of these occur immediately after failure injection. I
+think my assumption that I could ignore the chance of failures in the
+per-cpu allocation path will have to be revisited. That's annoying.
 
-HEAD commit:    63de3747 Merge tag 'tag-chrome-platform-for-v5.5' of git:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1727d59ce00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1d189d07c6717979
-dashboard link: https://syzkaller.appspot.com/bug?extid=c2f1558d49e25cc36e5e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16fcf97ee00000
+I'll try to spin something today but Andrey feel free to pip me at the
+post again :)
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c2f1558d49e25cc36e5e@syzkaller.appspotmail.com
+I'm not 100% confident to call them dups just yet, but I'm about 80%
+confident that they are.
 
-BUG: sleeping function called from invalid context at net/core/sock.c:2935
-in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 9008, name: udevd
-4 locks held by udevd/9008:
-  #0: ffff888098598428 (sb_writers#5){.+.+}, at: sb_start_write  
-include/linux/fs.h:1650 [inline]
-  #0: ffff888098598428 (sb_writers#5){.+.+}, at: mnt_want_write+0x3f/0xc0  
-fs/namespace.c:354
-  #1: ffff8880a02bb248 (&type->i_mutex_dir_key#4/1){+.+.}, at:  
-inode_lock_nested include/linux/fs.h:826 [inline]
-  #1: ffff8880a02bb248 (&type->i_mutex_dir_key#4/1){+.+.}, at:  
-filename_create+0x17c/0x4f0 fs/namei.c:3630
-  #2: ffffffff89bb27a8 (tomoyo_ss){....}, at: tomoyo_path_perm+0x1cb/0x430  
-security/tomoyo/file.c:847
-  #3: ffffffff897a3fc0 (rcu_callback){....}, at: __rcu_reclaim  
-kernel/rcu/rcu.h:210 [inline]
-  #3: ffffffff897a3fc0 (rcu_callback){....}, at: rcu_do_batch  
-kernel/rcu/tree.c:2183 [inline]
-  #3: ffffffff897a3fc0 (rcu_callback){....}, at: rcu_core+0x5f8/0x1540  
-kernel/rcu/tree.c:2408
-Preemption disabled at:
-[<ffffffff880000f3>] __do_softirq+0xf3/0x98c kernel/softirq.c:269
-CPU: 1 PID: 9008 Comm: udevd Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  ___might_sleep.cold+0x1fb/0x23e kernel/sched/core.c:6800
-  __might_sleep+0x95/0x190 kernel/sched/core.c:6753
-  lock_sock_nested+0x39/0x120 net/core/sock.c:2935
-  lock_sock include/net/sock.h:1526 [inline]
-  af_alg_release_parent+0x1a6/0x290 crypto/af_alg.c:137
-  hash_sock_destruct+0x164/0x1c0 crypto/algif_hash.c:423
-  __sk_destruct+0x53/0x7f0 net/core/sock.c:1695
-  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2183 [inline]
-  rcu_core+0x570/0x1540 kernel/rcu/tree.c:2408
-  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2417
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-  </IRQ>
-RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-RIP: 0010:check_kcov_mode kernel/kcov.c:70 [inline]
-RIP: 0010:__sanitizer_cov_trace_pc+0x20/0x50 kernel/kcov.c:102
-Code: ff cc cc cc cc cc cc cc cc cc 55 48 89 e5 65 48 8b 04 25 c0 1e 02 00  
-65 8b 15 34 23 8d 7e 81 e2 00 01 1f 00 48 8b 75 08 75 2b <8b> 90 80 13 00  
-00 83 fa 02 75 20 48 8b 88 88 13 00 00 8b 80 84 13
-RSP: 0018:ffffc90001d67a58 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: ffff88809ac86680 RBX: 0000000000000011 RCX: ffffffff835559d0
-RDX: 0000000000000000 RSI: ffffffff8355597e RDI: 0000000000000003
-RBP: ffffc90001d67a58 R08: ffff88809ac86680 R09: ffffed1014154557
-R10: ffffed1014154556 R11: ffff8880a0aa2ab7 R12: dffffc0000000000
-R13: ffff8880a0aa2ab0 R14: ffffc90001d67ba0 R15: 0000000000000011
-  tomoyo_check_acl+0x28e/0x3e0 security/tomoyo/domain.c:181
-  tomoyo_path_permission security/tomoyo/file.c:586 [inline]
-  tomoyo_path_permission+0x1fb/0x360 security/tomoyo/file.c:573
-  tomoyo_path_perm+0x374/0x430 security/tomoyo/file.c:838
-  tomoyo_path_symlink+0xaa/0xf0 security/tomoyo/tomoyo.c:206
-  security_path_symlink+0x10a/0x170 security/security.c:1053
-  do_symlinkat+0x137/0x290 fs/namei.c:4148
-  __do_sys_symlink fs/namei.c:4169 [inline]
-  __se_sys_symlink fs/namei.c:4167 [inline]
-  __x64_sys_symlink+0x59/0x80 fs/namei.c:4167
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f68d8603517
-Code: 09 01 00 00 0f 05 48 3d 00 f0 ff ff 77 02 f3 c3 48 8b 15 14 39 2b 00  
-f7 d8 64 89 02 83 c8 ff c3 90 90 90 b8 58 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 73 01 c3 48 8b 0d f1 38 2b 00 31 d2 48 29 c2 64
-RSP: 002b:00007ffc322deae8 EFLAGS: 00000206 ORIG_RAX: 0000000000000058
-RAX: ffffffffffffffda RBX: 00000000025b6250 RCX: 00007f68d8603517
-RDX: 0000000000000002 RSI: 00007ffc322deb10 RDI: 00000000025cf730
-RBP: 00000000025b62d0 R08: 00007ffc322de6c0 R09: 00007f68d8657de0
-R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000032
-R13: 00000000025c7970 R14: 00000000025b6250 R15: 000000000000000b
-
-================================
-WARNING: inconsistent lock state
-5.4.0-syzkaller #0 Tainted: G        W
---------------------------------
-inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
-udevd/9008 [HC0[0]:SC1[3]:HE1:SE0] takes:
-ffff88809f5a9110 (sk_lock-AF_ALG){+.?.}, at: lock_sock  
-include/net/sock.h:1526 [inline]
-ffff88809f5a9110 (sk_lock-AF_ALG){+.?.}, at:  
-af_alg_release_parent+0x1a6/0x290 crypto/af_alg.c:137
-{SOFTIRQ-ON-W} state was registered at:
-   __trace_hardirqs_on_caller kernel/locking/lockdep.c:3389 [inline]
-   lockdep_hardirqs_on+0x421/0x5e0 kernel/locking/lockdep.c:3434
-   trace_hardirqs_on+0x67/0x240 kernel/trace/trace_preemptirq.c:31
-   __local_bh_enable_ip+0x15a/0x270 kernel/softirq.c:194
-   local_bh_enable include/linux/bottom_half.h:32 [inline]
-   lock_sock_nested+0xe2/0x120 net/core/sock.c:2945
-   lock_sock include/net/sock.h:1526 [inline]
-   alg_bind+0x288/0x570 crypto/af_alg.c:187
-   __sys_bind+0x239/0x290 net/socket.c:1649
-   __do_sys_bind net/socket.c:1660 [inline]
-   __se_sys_bind net/socket.c:1658 [inline]
-   __x64_sys_bind+0x73/0xb0 net/socket.c:1658
-   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-irq event stamp: 55316
-hardirqs last  enabled at (55316): [<ffffffff81006743>]  
-trace_hardirqs_on_thunk+0x1a/0x1c arch/x86/entry/thunk_64.S:41
-hardirqs last disabled at (55315): [<ffffffff8100675f>]  
-trace_hardirqs_off_thunk+0x1a/0x1c arch/x86/entry/thunk_64.S:42
-softirqs last  enabled at (53682): [<ffffffff812aa92e>] memcpy  
-include/linux/string.h:380 [inline]
-softirqs last  enabled at (53682): [<ffffffff812aa92e>]  
-fpu__copy+0x17e/0x8c0 arch/x86/kernel/fpu/core.c:195
-softirqs last disabled at (55075): [<ffffffff81475c8b>] invoke_softirq  
-kernel/softirq.c:373 [inline]
-softirqs last disabled at (55075): [<ffffffff81475c8b>]  
-irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-
-other info that might help us debug this:
-  Possible unsafe locking scenario:
-
-        CPU0
-        ----
-   lock(sk_lock-AF_ALG);
-   <Interrupt>
-     lock(sk_lock-AF_ALG);
-
-  *** DEADLOCK ***
-
-4 locks held by udevd/9008:
-  #0: ffff888098598428 (sb_writers#5){.+.+}, at: sb_start_write  
-include/linux/fs.h:1650 [inline]
-  #0: ffff888098598428 (sb_writers#5){.+.+}, at: mnt_want_write+0x3f/0xc0  
-fs/namespace.c:354
-  #1: ffff8880a02bb248 (&type->i_mutex_dir_key#4/1){+.+.}, at:  
-inode_lock_nested include/linux/fs.h:826 [inline]
-  #1: ffff8880a02bb248 (&type->i_mutex_dir_key#4/1){+.+.}, at:  
-filename_create+0x17c/0x4f0 fs/namei.c:3630
-  #2: ffffffff89bb27a8 (tomoyo_ss){....}, at: tomoyo_path_perm+0x1cb/0x430  
-security/tomoyo/file.c:847
-  #3: ffffffff897a3fc0 (rcu_callback){....}, at: __rcu_reclaim  
-kernel/rcu/rcu.h:210 [inline]
-  #3: ffffffff897a3fc0 (rcu_callback){....}, at: rcu_do_batch  
-kernel/rcu/tree.c:2183 [inline]
-  #3: ffffffff897a3fc0 (rcu_callback){....}, at: rcu_core+0x5f8/0x1540  
-kernel/rcu/tree.c:2408
-
-stack backtrace:
-CPU: 1 PID: 9008 Comm: udevd Tainted: G        W         5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_usage_bug.cold+0x327/0x378 kernel/locking/lockdep.c:3101
-  valid_state kernel/locking/lockdep.c:3112 [inline]
-  mark_lock_irq kernel/locking/lockdep.c:3309 [inline]
-  mark_lock+0xbb4/0x1220 kernel/locking/lockdep.c:3666
-  mark_usage kernel/locking/lockdep.c:3566 [inline]
-  __lock_acquire+0x1e8e/0x4a00 kernel/locking/lockdep.c:3909
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-  lock_sock_nested+0xcb/0x120 net/core/sock.c:2944
-  lock_sock include/net/sock.h:1526 [inline]
-  af_alg_release_parent+0x1a6/0x290 crypto/af_alg.c:137
-  hash_sock_destruct+0x164/0x1c0 crypto/algif_hash.c:423
-  __sk_destruct+0x53/0x7f0 net/core/sock.c:1695
-  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2183 [inline]
-  rcu_core+0x570/0x1540 kernel/rcu/tree.c:2408
-  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2417
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-  </IRQ>
-RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-RIP: 0010:check_kcov_mode kernel/kcov.c:70 [inline]
-RIP: 0010:__sanitizer_cov_trace_pc+0x20/0x50 kernel/kcov.c:102
-Code: ff cc cc cc cc cc cc cc cc cc 55 48 89 e5 65 48 8b 04 25 c0 1e 02 00  
-65 8b 15 34 23 8d 7e 81 e2 00 01 1f 00 48 8b 75 08 75 2b <8b> 90 80 13 00  
-00 83 fa 02 75 20 48 8b 88 88 13 00 00 8b 80 84 13
-RSP: 0018:ffffc90001d67a58 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: ffff88809ac86680 RBX: 0000000000000011 RCX: ffffffff835559d0
-RDX: 0000000000000000 RSI: ffffffff8355597e RDI: 0000000000000003
-RBP: ffffc90001d67a58 R08: ffff88809ac86680 R09: ffffed1014154557
-R10: ffffed1014154556 R11: ffff8880a0aa2ab7 R12: dffffc0000000000
-R13: ffff8880a0aa2ab0 R14: ffffc90001d67ba0 R15: 0000000000000011
-  tomoyo_check_acl+0x28e/0x3e0 security/tomoyo/domain.c:181
-  tomoyo_path_permission security/tomoyo/file.c:586 [inline]
-  tomoyo_path_permission+0x1fb/0x360 security/tomoyo/file.c:573
-  tomoyo_path_perm+0x374/0x430 security/tomoyo/file.c:838
-  tomoyo_path_symlink+0xaa/0xf0 security/tomoyo/tomoyo.c:206
-  security_path_symlink+0x10a/0x170 security/security.c:1053
-  do_symlinkat+0x137/0x290 fs/namei.c:4148
-  __do_sys_symlink fs/namei.c:4169 [inline]
-  __se_sys_symlink fs/namei.c:4167 [inline]
-  __x64_sys_symlink+0x59/0x80 fs/namei.c:4167
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f68d8603517
-Code: 09 01 00 00 0f 05 48 3d 00 f0 ff ff 77 02 f3 c3 48 8b 15 14 39 2b 00  
-f7 d8 64 89 02 83 c8 ff c3 90 90 90 b8 58 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 73 01 c3 48 8b 0d f1 38 2b 00 31 d2 48 29 c2 64
-RSP: 002b:00007ffc322deae8 EFLAGS: 00000206 ORIG_RAX: 0000000000000058
-RAX: ffffffffffffffda RBX: 00000000025b6250 RCX: 00007f68d8603517
-RDX: 0000000000000002 RSI: 00007ffc322deb10 RDI: 00000000025cf730
-RBP: 00000000025b62d0 R08: 00007ffc322de6c0 R09: 00007f68d8657de0
-R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000032
-R13: 00000000025c7970 R14: 00000000025b6250 R15: 000000000000000b
-BUG: sleeping function called from invalid context at net/core/sock.c:2935
-in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 16, name: ksoftirqd/1
-INFO: lockdep is turned off.
-Preemption disabled at:
-[<ffffffff880000f3>] __do_softirq+0xf3/0x98c kernel/softirq.c:269
-CPU: 1 PID: 16 Comm: ksoftirqd/1 Tainted: G        W          
-5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  ___might_sleep.cold+0x1fb/0x23e kernel/sched/core.c:6800
-  __might_sleep+0x95/0x190 kernel/sched/core.c:6753
-  lock_sock_nested+0x39/0x120 net/core/sock.c:2935
-  lock_sock include/net/sock.h:1526 [inline]
-  af_alg_release_parent+0x1a6/0x290 crypto/af_alg.c:137
-  hash_sock_destruct+0x164/0x1c0 crypto/algif_hash.c:423
-  __sk_destruct+0x53/0x7f0 net/core/sock.c:1695
-  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2183 [inline]
-  rcu_core+0x570/0x1540 kernel/rcu/tree.c:2408
-  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2417
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  run_ksoftirqd kernel/softirq.c:603 [inline]
-  run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
-  smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-BUG: sleeping function called from invalid context at net/core/sock.c:2935
-in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 16, name: ksoftirqd/1
-INFO: lockdep is turned off.
-Preemption disabled at:
-[<ffffffff880000f3>] __do_softirq+0xf3/0x98c kernel/softirq.c:269
-CPU: 1 PID: 16 Comm: ksoftirqd/1 Tainted: G        W          
-5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  ___might_sleep.cold+0x1fb/0x23e kernel/sched/core.c:6800
-  __might_sleep+0x95/0x190 kernel/sched/core.c:6753
-  lock_sock_nested+0x39/0x120 net/core/sock.c:2935
-  lock_sock include/net/sock.h:1526 [inline]
-  af_alg_release_parent+0x1a6/0x290 crypto/af_alg.c:137
-  hash_sock_destruct+0x164/0x1c0 crypto/algif_hash.c:423
-  __sk_destruct+0x53/0x7f0 net/core/sock.c:1695
-  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2183 [inline]
-  rcu_core+0x570/0x1540 kernel/rcu/tree.c:2408
-  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2417
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  run_ksoftirqd kernel/softirq.c:603 [inline]
-  run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
-  smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Regards,
+Daniel
+>
+>> RDX: 000000000000003c RSI: 0000000020000080 RDI: 0c00000000000000
+>> RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000000000
+>> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000018
+>> R13: 0000000000000004 R14: 0000000000000005 R15: 0000000000000000
+>> BUG: unable to handle page fault for address: fffff91ffff00000
+>> #PF: supervisor read access in kernel mode
+>> #PF: error_code(0x0000) - not-present page
+>> PGD 21ffe6067 P4D 21ffe6067 PUD aa56c067 PMD aa56d067 PTE 0
+>> Oops: 0000 [#1] PREEMPT SMP KASAN
+>> CPU: 1 PID: 8999 Comm: syz-executor865 Not tainted
+>> 5.4.0-next-20191203-syzkaller #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+>> Google 01/01/2011
+>> RIP: 0010:memory_is_nonzero mm/kasan/generic.c:121 [inline]
+>> RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:135 [inline]
+>> RIP: 0010:memory_is_poisoned mm/kasan/generic.c:166 [inline]
+>> RIP: 0010:check_memory_region_inline mm/kasan/generic.c:182 [inline]
+>> RIP: 0010:check_memory_region+0x9c/0x1a0 mm/kasan/generic.c:192
+>> Code: c9 4d 0f 49 c1 49 c1 f8 03 45 85 c0 0f 84 10 01 00 00 41 83 e8 01 4e
+>> 8d 44 c0 08 eb 0d 48 83 c0 08 4c 39 c0 0f 84 a7 00 00 00 <48> 83 38 00 74
+>> ed 4c 8d 40 08 eb 09 48 83 c0 01 49 39 c0 74 53 80
+>> RSP: 0018:ffffc90001f67a80 EFLAGS: 00010216
+>> RAX: fffff91ffff00000 RBX: fffff91ffff01000 RCX: ffffffff819e1589
+>> RDX: 0000000000000001 RSI: 0000000000008000 RDI: ffffe8ffff800000
+>> RBP: ffffc90001f67a98 R08: fffff91ffff01000 R09: 0000000000001000
+>> R10: fffff91ffff00fff R11: ffffe8ffff807fff R12: fffff91ffff00000
+>> R13: 0000000000008000 R14: 0000000000000000 R15: ffff88821fffd100
+>> FS:  00000000011a7880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: fffff91ffff00000 CR3: 00000000a94ad000 CR4: 00000000001406e0
+>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> Call Trace:
+>>   memset+0x24/0x40 mm/kasan/common.c:107
+>>   memset include/linux/string.h:410 [inline]
+>>   pcpu_alloc+0x589/0x1380 mm/percpu.c:1734
+>>   __alloc_percpu_gfp+0x28/0x30 mm/percpu.c:1783
+>>   bpf_array_alloc_percpu kernel/bpf/arraymap.c:35 [inline]
+>>   array_map_alloc+0x698/0x7d0 kernel/bpf/arraymap.c:159
+>>   find_and_alloc_map kernel/bpf/syscall.c:123 [inline]
+>>   map_create kernel/bpf/syscall.c:654 [inline]
+>>   __do_sys_bpf+0x478/0x3810 kernel/bpf/syscall.c:3012
+>>   __se_sys_bpf kernel/bpf/syscall.c:2989 [inline]
+>>   __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:2989
+>>   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+>>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>> RIP: 0033:0x442f99
+>> Code: e8 ec 09 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
+>> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+>> ff 0f 83 cb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+>> RSP: 002b:00007ffc8aa156d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+>> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000442f99
+>> RDX: 000000000000003c RSI: 0000000020000080 RDI: 0c00000000000000
+>> RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000000000
+>> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000018
+>> R13: 0000000000000004 R14: 0000000000000005 R15: 0000000000000000
+>> Modules linked in:
+>> CR2: fffff91ffff00000
+>> ---[ end trace 449f8b43dad6ffb8 ]---
+>> RIP: 0010:memory_is_nonzero mm/kasan/generic.c:121 [inline]
+>> RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:135 [inline]
+>> RIP: 0010:memory_is_poisoned mm/kasan/generic.c:166 [inline]
+>> RIP: 0010:check_memory_region_inline mm/kasan/generic.c:182 [inline]
+>> RIP: 0010:check_memory_region+0x9c/0x1a0 mm/kasan/generic.c:192
+>> Code: c9 4d 0f 49 c1 49 c1 f8 03 45 85 c0 0f 84 10 01 00 00 41 83 e8 01 4e
+>> 8d 44 c0 08 eb 0d 48 83 c0 08 4c 39 c0 0f 84 a7 00 00 00 <48> 83 38 00 74
+>> ed 4c 8d 40 08 eb 09 48 83 c0 01 49 39 c0 74 53 80
+>> RSP: 0018:ffffc90001f67a80 EFLAGS: 00010216
+>> RAX: fffff91ffff00000 RBX: fffff91ffff01000 RCX: ffffffff819e1589
+>> RDX: 0000000000000001 RSI: 0000000000008000 RDI: ffffe8ffff800000
+>> RBP: ffffc90001f67a98 R08: fffff91ffff01000 R09: 0000000000001000
+>> R10: fffff91ffff00fff R11: ffffe8ffff807fff R12: fffff91ffff00000
+>> R13: 0000000000008000 R14: 0000000000000000 R15: ffff88821fffd100
+>> FS:  00000000011a7880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: fffff91ffff00000 CR3: 00000000a94ad000 CR4: 00000000001406e0
+>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>>
+>>
+>> ---
+>> This bug is generated by a bot. It may contain errors.
+>> See https://goo.gl/tpsmEJ for more information about syzbot.
+>> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>>
+>> syzbot will keep track of this bug report. See:
+>> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>> syzbot can test patches for this bug, for details see:
+>> https://goo.gl/tpsmEJ#testing-patches
+>>
+>> --
+>> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+>> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+>> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000314c120598dc69bd%40google.com.
