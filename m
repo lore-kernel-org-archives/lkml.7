@@ -2,128 +2,91 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B2FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291BDC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC182206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:33:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575531216;
-	bh=SBlr5dGydninkCDGtDUbXFFCG6ezPnNxiEjeRYEwuos=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pOSswcqnQ1BQAudZV37WdYKn1Uiq9OUoLqkioYK7fzYT588/ZYwe36oSheqrOyYvW
-	 UNJ6RMC39VMPjjcn5vUWvsXqKFIWI50U0tgNu0yJD2SpTXz6Q9zrJ+MBKrkuqjlN5G
-	 i0L+sQmJE83QSySudlbqZJL+i9H2+JdjKUk97UHE=
+	by mail.kernel.org (Postfix) with ESMTP id EAA4D24249
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 07:36:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="f9e7HwqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbfLEHdf (ORCPT
+        id S1726266AbfLEHga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 02:33:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34892 "EHLO mail.kernel.org"
+        Thu, 5 Dec 2019 02:36:30 -0500
+Received: from first.geanix.com ([116.203.34.67]:53928 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbfLEHdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 02:33:35 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C71A5206DB;
-        Thu,  5 Dec 2019 07:33:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575531214;
-        bh=SBlr5dGydninkCDGtDUbXFFCG6ezPnNxiEjeRYEwuos=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Va/Ukuz+0YrrEfObgoolC1QzPARgKjmUxfrq65d5byh56/HUuqj4+PW4oqeBWBaGx
-         Z8+kXmkCRVhj9HV1JAVnRF9Ttr9Xa3RJ3w53ZP8w01fbyunTPE7OE/2TqwOE+ZZrlR
-         QmNvrFvRGQX/6FDuzVmkDkRuSRKp3zRq+9Q7nKE8=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     Micah Morton <mortonm@chromium.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jaswinder.singh@linaro.org
-Subject: [BUGFIX PATCH 2/2] selftests: safesetid: Check the return value of setuid/setgid
-Date:   Thu,  5 Dec 2019 16:33:30 +0900
-Message-Id: <157553121008.17524.16085800798083225143.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <157553119188.17524.1379079312058580155.stgit@devnote2>
-References: <157553119188.17524.1379079312058580155.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        id S1725963AbfLEHga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 02:36:30 -0500
+Received: from [192.168.100.11] (unknown [95.138.208.137])
+        by first.geanix.com (Postfix) with ESMTPSA id 3C0B794C87;
+        Thu,  5 Dec 2019 07:32:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1575531129; bh=pjRejVCBSXyWKSVlDgJqVcDW2GIzM7pbOOQEU1x8JCQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=f9e7HwqUnpdm35/Pjkhuu1mHyyqKgTh+OAV4IhPJP2FmOq9etwFZ5Kz3UmyMNMQ97
+         aLb6lF9MRtsMcNkA7VoIRVz99nuhrhOu3GEozgKUfyeGB2NkDyBEpNz8PbqLb9CWho
+         uW95ixQYFwuyKSeMNGLtdraOF1z23+97jKCEWa+F3GdNaIrmZH1IjskBdV7gtqLlUd
+         niHGOweF6pUp7euTMXf5j70xTXoQID7+462yy7pAc6qLX4buGEP++MzS9Oanci2wpO
+         LCV5/5zcPOhdCydFEMEgnPXPm2jth+GsSErpnx1Wm1yoCw2W80lkZEx9gFdJYqRZvG
+         slTNDuOEc+n4A==
+Subject: Re: [PATCH 1/2] dt-bindings: tcan4x5x: Make wake-gpio an optional
+ gpio
+To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de
+Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+References: <20191204175112.7308-1-dmurphy@ti.com>
+From:   Sean Nyekjaer <sean@geanix.com>
+Message-ID: <d34673db-cc43-6e1d-6f4a-07b25c2c8f7b@geanix.com>
+Date:   Thu, 5 Dec 2019 08:36:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191204175112.7308-1-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check the return value of setuid() and setgid().
-This fixes the following warnings and improves test result.
 
-safesetid-test.c: In function ‘main’:
-safesetid-test.c:294:2: warning: ignoring return value of ‘setuid’, declared with attribute warn_unused_result [-Wunused-result]
-  setuid(NO_POLICY_USER);
-  ^~~~~~~~~~~~~~~~~~~~~~
-safesetid-test.c:295:2: warning: ignoring return value of ‘setgid’, declared with attribute warn_unused_result [-Wunused-result]
-  setgid(NO_POLICY_USER);
-  ^~~~~~~~~~~~~~~~~~~~~~
-safesetid-test.c:309:2: warning: ignoring return value of ‘setuid’, declared with attribute warn_unused_result [-Wunused-result]
-  setuid(RESTRICTED_PARENT);
-  ^~~~~~~~~~~~~~~~~~~~~~~~~
-safesetid-test.c:310:2: warning: ignoring return value of ‘setgid’, declared with attribute warn_unused_result [-Wunused-result]
-  setgid(RESTRICTED_PARENT);
-  ^~~~~~~~~~~~~~~~~~~~~~~~~
-safesetid-test.c: In function ‘test_setuid’:
-safesetid-test.c:216:3: warning: ignoring return value of ‘setuid’, declared with attribute warn_unused_result [-Wunused-result]
-   setuid(child_uid);
-   ^~~~~~~~~~~~~~~~~
 
-Fixes: c67e8ec03f3f ("LSM: SafeSetID: add selftest")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- tools/testing/selftests/safesetid/safesetid-test.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/tools/testing/selftests/safesetid/safesetid-test.c b/tools/testing/selftests/safesetid/safesetid-test.c
-index 8f40c6ecdad1..0c4d50644c13 100644
---- a/tools/testing/selftests/safesetid/safesetid-test.c
-+++ b/tools/testing/selftests/safesetid/safesetid-test.c
-@@ -213,7 +213,8 @@ static void test_setuid(uid_t child_uid, bool expect_success)
- 	}
- 
- 	if (cpid == 0) {	    /* Code executed by child */
--		setuid(child_uid);
-+		if (setuid(child_uid) < 0)
-+			exit(EXIT_FAILURE);
- 		if (getuid() == child_uid)
- 			exit(EXIT_SUCCESS);
- 		else
-@@ -291,8 +292,10 @@ int main(int argc, char **argv)
- 
- 	// First test to make sure we can write userns mappings from a user
- 	// that doesn't have any restrictions (as long as it has CAP_SETUID);
--	setuid(NO_POLICY_USER);
--	setgid(NO_POLICY_USER);
-+	if (setuid(NO_POLICY_USER) < 0)
-+		die("Error with set uid(%d)\n", NO_POLICY_USER);
-+	if (setgid(NO_POLICY_USER) < 0)
-+		die("Error with set gid(%d)\n", NO_POLICY_USER);
- 
- 	// Take away all but setid caps
- 	drop_caps(true);
-@@ -306,8 +309,10 @@ int main(int argc, char **argv)
- 		die("test_userns failed when it should work\n");
- 	}
- 
--	setuid(RESTRICTED_PARENT);
--	setgid(RESTRICTED_PARENT);
-+	if (setuid(RESTRICTED_PARENT) < 0)
-+		die("Error with set uid(%d)\n", RESTRICTED_PARENT);
-+	if (setgid(RESTRICTED_PARENT) < 0)
-+		die("Error with set gid(%d)\n", RESTRICTED_PARENT);
- 
- 	test_setuid(ROOT_USER, false);
- 	test_setuid(ALLOWED_CHILD1, true);
-
+On 04/12/2019 18.51, Dan Murphy wrote:
+> The wake-up of the device can be configured as an optional
+> feature of the device.  Move the wake-up gpio from a requried
+> property to an optional property.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> CC: Rob Herring <robh@kernel.org>
+Reviewed-by: Sean Nyekjaer <sean@geanix.com>
+> ---
+>   Documentation/devicetree/bindings/net/can/tcan4x5x.txt | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+> index 27e1b4cebfbd..7cf5ef7acba4 100644
+> --- a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+> +++ b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+> @@ -10,7 +10,6 @@ Required properties:
+>   	- #size-cells: 0
+>   	- spi-max-frequency: Maximum frequency of the SPI bus the chip can
+>   			     operate at should be less than or equal to 18 MHz.
+> -	- device-wake-gpios: Wake up GPIO to wake up the TCAN device.
+>   	- interrupt-parent: the phandle to the interrupt controller which provides
+>                       the interrupt.
+>   	- interrupts: interrupt specification for data-ready.
+> @@ -23,6 +22,7 @@ Optional properties:
+>   		       reset.
+>   	- device-state-gpios: Input GPIO that indicates if the device is in
+>   			      a sleep state or if the device is active.
+> +	- device-wake-gpios: Wake up GPIO to wake up the TCAN device.
+>   
+>   Example:
+>   tcan4x5x: tcan4x5x@0 {
+> 
