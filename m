@@ -2,170 +2,94 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E0AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAD6C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23E22464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:02:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="RVgbpOdg"
+	by mail.kernel.org (Postfix) with ESMTP id 6D82921823
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbfLEOCB (ORCPT
+        id S1729478AbfLEOEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 09:02:01 -0500
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:22558 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbfLEOCA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 09:02:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575554519; x=1607090519;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1WJZpOjGUIHVRhgcjBz3yJxjB5haQQg6kXg1z4d6ets=;
-  b=RVgbpOdgiK+xSOiR47dMVbre1KMRaE2eEKkTFpLw1YeGKnqHpq2ccnmG
-   4RUJvkwiv6mB5cKWf+VFQiGZRYTleuH0w2s55RIBZbnxtyQclCl0rFbAD
-   X6nj8G9gKjxrKmoAdxYNlgy4Mn9dx6VWm3x/8W8Fo7ecsYugILbM94qin
-   E=;
-IronPort-SDR: loNKSiQNwG75LMDfydCOTefyzN9ieNk12e8ueIaZsuDiGfR+2DLVXIwfiA2ChyEQXKkm9x/Dym
- IWYCNYTcFGTg==
-X-IronPort-AV: E=Sophos;i="5.69,281,1571702400"; 
-   d="scan'208";a="6345518"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 05 Dec 2019 14:01:58 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 04AB0A2A13;
-        Thu,  5 Dec 2019 14:01:55 +0000 (UTC)
-Received: from EX13D32EUC001.ant.amazon.com (10.43.164.159) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 5 Dec 2019 14:01:46 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D32EUC001.ant.amazon.com (10.43.164.159) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 5 Dec 2019 14:01:43 +0000
-Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
- mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Thu, 5 Dec 2019 14:01:40 +0000
-From:   Paul Durrant <pdurrant@amazon.com>
-To:     <linux-kernel@vger.kernel.org>, <xen-devel@lists.xenproject.org>
-CC:     Paul Durrant <pdurrant@amazon.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>
-Subject: [PATCH 4/4] xen-blkback: support dynamic unbind/bind
-Date:   Thu, 5 Dec 2019 14:01:23 +0000
-Message-ID: <20191205140123.3817-5-pdurrant@amazon.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191205140123.3817-1-pdurrant@amazon.com>
-References: <20191205140123.3817-1-pdurrant@amazon.com>
+        Thu, 5 Dec 2019 09:04:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:35414 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729099AbfLEOEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 09:04:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42AE5328;
+        Thu,  5 Dec 2019 06:04:03 -0800 (PST)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BEE03F68E;
+        Thu,  5 Dec 2019 06:04:00 -0800 (PST)
+Subject: Re: [RFC 0/3] Introduce per-task latency_tolerance for scheduler
+ hints
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        Parth Shah <parth@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        patrick.bellasi@matbug.net, qais.yousef@arm.com, pavel@ucw.cz,
+        dhaval.giani@oracle.com, qperret@qperret.net,
+        David.Laight@ACULAB.COM, morten.rasmussen@arm.com, pjt@google.com,
+        tj@kernel.org, viresh.kumar@linaro.org, rafael.j.wysocki@intel.com,
+        daniel.lezcano@linaro.org
+References: <20191125094618.30298-1-parth@linux.ibm.com>
+ <450fc7e2-49d5-d809-281f-7d9a99d3e530@arm.com>
+ <c26f7909-0e4e-a897-bf84-0aa9e5389a0d@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <838f233e-fa4c-d5a3-9b50-69e2e121edda@arm.com>
+Date:   Thu, 5 Dec 2019 15:03:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <c26f7909-0e4e-a897-bf84-0aa9e5389a0d@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By simply re-attaching to shared rings during connect_ring() rather than
-assuming they are freshly allocated (i.e assuming the counters are zero)
-it is possible for vbd instances to be unbound and re-bound from and to
-(respectively) a running guest.
+On 05/12/2019 11:49, Valentin Schneider wrote:
+>  
+> On 05/12/2019 09:24, Dietmar Eggemann wrote:
+>> On 25/11/2019 10:46, Parth Shah wrote:
+>>> This patch series is based on the discussion started as the "Usecases for
+>>> the per-task latency-nice attribute"[1]
+>>>
+>>> This patch series introduces a new per-task attribute latency_tolerance to
+>>> provide the scheduler hints about the latency requirements of the task.
+>>
+>> I forgot but is there a chance to have this as a per-taskgroup attribute
+>> as well?
+>>
+> 
+> Peter argued we should go for task attributes first, and then
+> cgroup/taskgroups later on:
+> 
+> https://lore.kernel.org/lkml/20190905083127.GA2332@hirez.programming.kicks-ass.net/
 
-This has been tested by running:
+OK, I went through this thread again. So Google or we have to provide
+the missing per-taskgroup API via cpu controller's attributes (like for
+uclamp) for the EAS usecase.
 
-while true; do dd if=/dev/urandom of=test.img bs=1M count=1024; done
+After reading:
 
-in a PV guest whilst running:
+https://lore.kernel.org/r/20190905114030.GL2349@hirez.programming.kicks-ass.net
 
-while true;
-  do echo vbd-$DOMID-$VBD >unbind;
-  echo unbound;
-  sleep 5;
-  echo vbd-$DOMID-$VBD >bind;
-  echo bound;
-  sleep 3;
-  done
+IMHO the following mapping of the existing Android (binary)
+latency_sensitive per-taskgroup flag makes sense:
 
-in dom0 from /sys/bus/xen-backend/drivers/vbd to continuously unbind and
-re-bind its system disk image.
+latency_sensitive=1 -> latency_tolerance*[-20 .. -1] (less tolerant,
+more sensitive)
 
-This is a highly useful feature for a backend module as it allows it to be
-unloaded and re-loaded (i.e. updated) without requiring domUs to be halted.
-This was also tested by running:
+latency_sensitive=0 -> latency_tolerance[0 .. 19] (more tolerant, less
+sensitive)
 
-while true;
-  do echo vbd-$DOMID-$VBD >unbind;
-  echo unbound;
-  sleep 5;
-  rmmod xen-blkback;
-  echo unloaded;
-  sleep 1;
-  modprobe xen-blkback;
-  echo bound;
-  cd $(pwd);
-  sleep 3;
-  done
+Default value is 0 so not latency_sensitive.
 
-in dom0 whilst running the same loop as above in the (single) PV guest.
-
-Some (less stressful) testing has also been done using a Windows HVM guest
-with the latest 9.0 PV drivers installed.
-
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
----
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: "Roger Pau Monné" <roger.pau@citrix.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
----
- drivers/block/xen-blkback/xenbus.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index e8c5c54e1d26..0b82740c4a9d 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -196,24 +196,24 @@ static int xen_blkif_map(struct xen_blkif_ring *ring, grant_ref_t *gref,
- 	{
- 		struct blkif_sring *sring;
- 		sring = (struct blkif_sring *)ring->blk_ring;
--		BACK_RING_INIT(&ring->blk_rings.native, sring,
--			       XEN_PAGE_SIZE * nr_grefs);
-+		BACK_RING_ATTACH(&ring->blk_rings.native, sring,
-+				 XEN_PAGE_SIZE * nr_grefs);
- 		break;
- 	}
- 	case BLKIF_PROTOCOL_X86_32:
- 	{
- 		struct blkif_x86_32_sring *sring_x86_32;
- 		sring_x86_32 = (struct blkif_x86_32_sring *)ring->blk_ring;
--		BACK_RING_INIT(&ring->blk_rings.x86_32, sring_x86_32,
--			       XEN_PAGE_SIZE * nr_grefs);
-+		BACK_RING_ATTACH(&ring->blk_rings.x86_32, sring_x86_32,
-+				 XEN_PAGE_SIZE * nr_grefs);
- 		break;
- 	}
- 	case BLKIF_PROTOCOL_X86_64:
- 	{
- 		struct blkif_x86_64_sring *sring_x86_64;
- 		sring_x86_64 = (struct blkif_x86_64_sring *)ring->blk_ring;
--		BACK_RING_INIT(&ring->blk_rings.x86_64, sring_x86_64,
--			       XEN_PAGE_SIZE * nr_grefs);
-+		BACK_RING_ATTACH(&ring->blk_rings.x86_64, sring_x86_64,
-+				 XEN_PAGE_SIZE * nr_grefs);
- 		break;
- 	}
- 	default:
--- 
-2.20.1
-
+* Since we use [-20 .. 19] as values for latency_tolerance we could name
+it latency_nice. It's shorter ... ?
