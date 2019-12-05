@@ -2,131 +2,115 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D97D0C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35705C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FAB2073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05BA02073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:28:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXTMhGFg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JLYiG2yM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbfLEDZU (ORCPT
+        id S1728831AbfLED2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 22:25:20 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39576 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728321AbfLEDZU (ORCPT
+        Wed, 4 Dec 2019 22:28:23 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:40766 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728132AbfLED2V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 22:25:20 -0500
-Received: by mail-pl1-f195.google.com with SMTP id o9so619781plk.6;
-        Wed, 04 Dec 2019 19:25:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7zAIt0+ebLHyVVxag6H3172nMR4IPY6g59wkTHZTPjs=;
-        b=DXTMhGFgvbI8d4eB0ZL5yNlE4HFdkQ5Bbj5CD73XBYmUmzpxfnMNRN8prt3hPvTRpp
-         zUZ9/tj9WLvtemB1X3RQOVY7Zt3CWUdS6sjaTXgsI7ewE9ByRvFA64AMGLjhQ/HYcaEK
-         ehhH/+x6oNqhogXvgwkLUx/D0WjZCQy1jqlTlW6ShEs0BpFzNekybemELCm87slLzuKa
-         cCxON/yL2K1oq1mfGMh7HLL7MgBWgTWB7vUufNgzkZC0GlmjT2Ibevga7oPGKRw9kbme
-         1fqacyZlj/8LkdkdXc3Cbpjq6VytGNm0A39FVUboyUF9s+IzEBqM8gzQvH3vnMZWHaJb
-         PiPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7zAIt0+ebLHyVVxag6H3172nMR4IPY6g59wkTHZTPjs=;
-        b=iaDM3I9s1v4QU/ugsgnw/zeTxskjvOy2owRwZJaoW8kkvLRZsjbeL4dAq4N0NeugN/
-         OqD1RGKfoq4HNplfLRTTLjYmBRUU7dtLqEApwCDDbaSj22Xg03HAHDJdFsMdYR6WNt4o
-         iTJ1pe0d/aaVhtz9/nVt+Umx/0XE0zNa6rDvQDtz0tcUoxyFnnr2lvXJRyXOSGfAoS3k
-         2LrJPlcSonEgp9C65zO7ELZMtD5mmsvfcquu7b2QEUatRUB7WtC5d7DJbDWmqzdWWCbO
-         YH3ooHbtYGe7P/ySdH3dixp2gHsvlfFoMT1rOufby2x5J+IhSTK2XG3BGbJqQT2a+aEa
-         qHCQ==
-X-Gm-Message-State: APjAAAUxD9yA1BXVqxT3xtec5ETGTD1hx1AtcQnnElr3C4PJ747++8zD
-        Q/jUhYe1vC6f2U6mD8+fbpw=
-X-Google-Smtp-Source: APXvYqyv94FQzl6F84pzaKxzO6wzKQPukwZH+ug6S8/V8KDseJ/bDFnL7CTQmGQLl2VLBIrEAkAo+Q==
-X-Received: by 2002:a17:90a:970b:: with SMTP id x11mr6751934pjo.35.1575516319399;
-        Wed, 04 Dec 2019 19:25:19 -0800 (PST)
-Received: from debian ([103.231.91.70])
-        by smtp.gmail.com with ESMTPSA id i9sm9987452pfk.24.2019.12.04.19.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 19:25:18 -0800 (PST)
-Date:   Thu, 5 Dec 2019 08:55:07 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     dsterba@suse.cz, Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] Enlist running kernel modules information
-Message-ID: <20191205032503.GA3981@debian>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        dsterba@suse.cz, Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191203094845.610692-1-unixbhaskar@gmail.com>
- <CAK7LNASyrYv+pufwe4CfiNvd7NtriLw=FRdLOtu7CrbmZDSVHg@mail.gmail.com>
- <20191204150728.GD2734@twin.jikos.cz>
+        Wed, 4 Dec 2019 22:28:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=oqL8/LJldF/xpJ5wL2bY4bLF5cbG/PM1/R70EhClXc4=; b=JLYiG2yMhnrivWqbU3SHw0vvG
+        7xZICEJjsts5O8dqqPS/Bh3l80ti1SZgJZoupGmzpUwk0hrBi5QhU1BnQJP8nt2nVXEbU406tYe27
+        +UWIwNwZ7s1NL8xOi27nzuhe5QPVBSVqM09uyKFPzp4I7P0J0zXnoqaS3Lbvsa9LgIWLUyTpHaQZi
+        7S1yV+QIVBzHDv/zhJsn7W+7dQyxl6BIlkIC568vo0XjAvMTg5Ta09+lgEGdFYOcOM0GgHtFDyM9M
+        WUML86WAkP/MogHmcib/qPoAGiN7POl2aH6jIHA249WpabKfW6iPIQQg8lsJoa/xvIFKkTqvv8sSq
+        bWLuBogHw==;
+Received: from [2601:1c0:6280:3f0::3deb]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ichoO-0001jz-Pc; Thu, 05 Dec 2019 03:28:16 +0000
+Subject: Re: [PATCH v4 1/2] sched/numa: introduce per-cgroup NUMA locality
+ info
+To:     =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+ <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
+ <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
+ <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
+ <89416266-0a06-ce1c-1d78-11171f0c80b8@linux.alibaba.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <fde5d43b-447d-1b54-1bad-3a5d67e6c1f2@infradead.org>
+Date:   Wed, 4 Dec 2019 19:28:15 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
-Content-Disposition: inline
-In-Reply-To: <20191204150728.GD2734@twin.jikos.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <89416266-0a06-ce1c-1d78-11171f0c80b8@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---Qxx1br4bt0+wmkIi
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It seems that you missed my previous comments...
 
-On 16:07 Wed 04 Dec 2019, David Sterba wrote:
->On Wed, Dec 04, 2019 at 12:10:25PM +0900, Masahiro Yamada wrote:
->> On Tue, Dec 3, 2019 at 6:49 PM Bhaskar Chowdhury <unixbhaskar@gmail.com>=
- wrote:
->> > +awk '{print $1}' "/proc/modules" | xargs modinfo | awk '/^(filename|d=
-esc|depends)/'
->>=20
->> I want to see a good reason (e.g. useful for other developers) for upstr=
-eaming.
->> This script looks like your custom script, which you can maintain locall=
-y.
->
->I think the verbosity should be added to either lsmod or modinfo, not
->some script in kernel git.
 
-lsmod and modinfo already are pretty verbose and the one liner is using
-one of them to cut thing out of it....can you give it another look???
+On 12/3/19 11:59 PM, 王贇 wrote:
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 4d8d145c41d2..fb7182a0d017 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -817,6 +817,15 @@ config NUMA_BALANCING_DEFAULT_ENABLED
+>  	  If set, automatic NUMA balancing will be enabled if running on a NUMA
+>  	  machine.
+> 
+> +config CGROUP_NUMA_LOCALITY
+> +	bool "The per-cgroup NUMA Locality"
 
-Moreover,this is sort and precise and can be parsed by other scripts.
+Drop "The"
 
-The whole point behind this is to give the developers a convenient point
-without going through all the rigorous details.
+> +	default n
+> +	depends on CGROUP_SCHED && NUMA_BALANCING
+> +	help
+> +	  This option enable the collection of per-cgroup NUMA locality info,
 
---Qxx1br4bt0+wmkIi
-Content-Type: application/pgp-signature; name="signature.asc"
+	              enables
 
------BEGIN PGP SIGNATURE-----
+> +	  to tell whether NUMA Balancing is working well for a particular
+> +	  workload, also imply the NUMA efficiency.
+> +
+>  menuconfig CGROUPS
+>  	bool "Control Group support"
+>  	select KERNFS
 
-iQEzBAABCgAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3oeIsACgkQsjqdtxFL
-KRX3RQf9Ebo/O6Fv1Psf3ytEbvXQWfRvqqK6lVruZnNzgdDAW4mkeGWevG+9viHd
-4Vdx94bKDHNGDRPSJs1lsm1aZH7k+Jwr6tHMUWDAFzcXHOQz3bnwM57r2gmsd0nb
-YAlNscQGYEO5g6Q2TWgm+7gZVcCSupoyNrx8z8GWERhF+gsR9aUrqNyV26qGeI2T
-PpkBqMhuXigTF0qkS7V5IPWNX7B2TT/caB3jrEIYHwTAVk2ozuENsQxqD27QvUPu
-pdGyf+0XYAnhkJy0nvxPmurQrTcpyd5dMUW9gUymJdogQGxImZ0Hyg83f6nv8yqU
-Wkwkpahx3O/d7p68WismcO9e+ssO2A==
-=QvmI
------END PGP SIGNATURE-----
 
---Qxx1br4bt0+wmkIi--
+thanks.
+-- 
+~Randy
+
