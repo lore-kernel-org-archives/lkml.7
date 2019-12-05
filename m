@@ -2,269 +2,165 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56BDC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AB8C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A1A2464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7026A2464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:44:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwfMIb35"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GWaaIsrg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbfLEJoP (ORCPT
+        id S1729269AbfLEJom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:44:15 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43354 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728629AbfLEJoP (ORCPT
+        Thu, 5 Dec 2019 04:44:42 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:39985 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728629AbfLEJol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:44:15 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b1so1343724pgq.10;
-        Thu, 05 Dec 2019 01:44:14 -0800 (PST)
+        Thu, 5 Dec 2019 04:44:41 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9OXPTK5is5MAu6gqHzjsjbFJrCMmWMBynlP4DOHl6vU=;
-        b=iwfMIb35uILdAWSDOlh+FyQ9tnSvu7txLKyPWF9MdnATNPN8rEwnCJUWZHkNhf/8PG
-         ih66Da9I2SGXDBs0IOYTNMPCtv8e8BWC+b0VnrjgpbgMUScodXCFbCUF9FBzyGSiBXJe
-         uLZMYhWqavqWhMwnvqlypgUhy50EoSpamOfM+54nCmRezAfehKH+RTnhwtNVskdSFwMl
-         2OPjNnIwpZTOBKj6G24T7OvUz4SGRD8UFWkUXIMbtmHnQw2qSCQObnqvXufjQhZ5mSg6
-         iGg7icyR9WjcSdEWOQPhc0GLcoJM8G2+i/SNYQFKIw5JZmCH9WdGSkUnkI533NW9RS6o
-         URhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9OXPTK5is5MAu6gqHzjsjbFJrCMmWMBynlP4DOHl6vU=;
-        b=X3TlfvwF5TtGHSLYemPmm7hBtd9LD+cgHR3mvP5Bq+pZg8vKoMgHx6rL/VnZow3rce
-         BnJLcg3JD8NeR7HgtJsHbw/Y5SaD0osdHs9Ef/JknMsYmVt7mNnHGseU9CPTleJV8jTc
-         edFIXaRyAZCMQ+B7aTuWG7v/UnjZcv2bOD64TpL5gPq4/8yCfxSNkl0fm12v04hMbfHV
-         X25Ipfz884y/U+R73Xdxh3MWnihOHN7Hj8BsxqAJaPWkHpAHmMJdcKR6JaVLdEZxLZIT
-         1vf93OSLCm+7KVQhquMBeXF8ko+a+PI+PD8EN6mMJ+Wc7S6v1sJXzx8QCceT8mA9EOTi
-         TLXg==
-X-Gm-Message-State: APjAAAVGt9FOrr/oKxyu6yKG/1j8NNBOifC22MGEHGrVRx2a/1fX7wfE
-        nBemjx8Lkn5nCI5i/6ju/HA=
-X-Google-Smtp-Source: APXvYqzW7QgkFu2dJ/HZnxmXq8ngSZ8SFnw+a5mHto3yCNJac/Nj7oOBjZreuETJwpzpM5r9yVK2Pg==
-X-Received: by 2002:a63:a511:: with SMTP id n17mr8243308pgf.338.1575539053999;
-        Thu, 05 Dec 2019 01:44:13 -0800 (PST)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id k23sm7004278pgg.7.2019.12.05.01.44.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 05 Dec 2019 01:44:13 -0800 (PST)
-Date:   Thu, 5 Dec 2019 17:44:08 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 11/11] tools: gpio: implement gpio-watch
-Message-ID: <20191205094408.GA9303@sol>
-References: <20191204155941.17814-1-brgl@bgdev.pl>
- <20191204155941.17814-2-brgl@bgdev.pl>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1575539080; x=1607075080;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=XA3oZWOd5asy5rioRAKyGk2s02rOKwV9Udl1+L/1v4E=;
+  b=GWaaIsrga2Wf7razKIk59blu9cEsQGKQNnXACz7FAGJBOwqKzXknve+N
+   /rz2OBVx2bnMomjpn3m+/l4QSGtpbSPjrbwUnHqyM80rW+z8AMzsLozJ7
+   SuLVducC5dB/cuMAKV105qlfruw8lPSm8xO0KBCCP7pqTIUysQtL5EDdb
+   s=;
+IronPort-SDR: oN9E6e02wCm8LbHFJfX4TowVWG/UGsHK2KJGpM9LCOW/lsg4WGpaDkCS0sw0RtFBGy5/0lIxHY
+ axKXhaQXUPTw==
+X-IronPort-AV: E=Sophos;i="5.69,280,1571702400"; 
+   d="scan'208";a="7245714"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-c5104f52.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 05 Dec 2019 09:44:38 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-c5104f52.us-west-2.amazon.com (Postfix) with ESMTPS id 9CB0CA1F5E;
+        Thu,  5 Dec 2019 09:44:37 +0000 (UTC)
+Received: from EX13D22UEA003.ant.amazon.com (10.43.61.147) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 5 Dec 2019 09:44:37 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D22UEA003.ant.amazon.com (10.43.61.147) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 5 Dec 2019 09:44:37 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.28.85.76) by
+ mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 5 Dec 2019 09:44:35 +0000
+Subject: Re: [PATCH v3 0/5] Fix nits in the kunit
+To:     SeongJae Park <sj38.park@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+CC:     Jonathan Corbet <corbet@lwn.net>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, shuah <shuah@kernel.org>,
+        SeongJae Park <sjpark@amazon.de>
+References: <1575396508-21480-1-git-send-email-sj38.park@gmail.com>
+ <CAFd5g46X9WK-xKJFF5AVYXXmM4a2dYD3fy=oi1CGJM1gc9RzuA@mail.gmail.com>
+ <20191204192141.GA247851@google.com>
+ <CAEjAshrXG3GmNMAS6Upu0=cCe9KJxchQWeiqLg0b8kif9ivNTg@mail.gmail.com>
+ <CAEjAshpQNVdLgtLyTu5WjxygRptZ4qomKCQaxw1YaX5ppvBcNQ@mail.gmail.com>
+From:   <sjpark@amazon.com>
+Message-ID: <68b23584-c82f-68b7-f428-5b6a0738e072@amazon.com>
+Date:   Thu, 5 Dec 2019 10:44:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204155941.17814-2-brgl@bgdev.pl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAEjAshpQNVdLgtLyTu5WjxygRptZ4qomKCQaxw1YaX5ppvBcNQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 04:59:41PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Add a simple program that allows to test the new LINECHANGED_FD ioctl().
-> 
+On 04.12.19 21:28, SeongJae Park wrote:
+> On Wed, Dec 4, 2019 at 9:25 PM SeongJae Park <sj38.park@gmail.com> wrote:
+>> On Wed, Dec 4, 2019 at 8:21 PM Brendan Higgins
+>> <brendanhiggins@google.com> wrote:
+>>> On Tue, Dec 03, 2019 at 02:41:26PM -0800, Brendan Higgins wrote:
+>>>> On Tue, Dec 3, 2019 at 10:08 AM SeongJae Park <sj38.park@gmail.com> wrote:
+>>>>> This patchset contains trivial fixes for the kunit documentations and the
+>>>>> wrapper python scripts.
+>>>>>
+>>>>> Changes from v2 (https://lore.kernel.org/linux-kselftest/1575361141-6806-1-git-send-email-sj38.park@gmail.com/T/#t):
+>>>>>  - Make 'build_dir' if not exists (missed from v3 by mistake)
+>>>>>
+>>>>> SeongJae Park (5):
+>>>>>   docs/kunit/start: Use in-tree 'kunit_defconfig'
+>>>>>   kunit: Remove duplicated defconfig creation
+>>>>>   kunit: Create default config in '--build_dir'
+>>>>>   kunit: Place 'test.log' under the 'build_dir'
+>>>>>   kunit: Rename 'kunitconfig' to '.kunitconfig'
+>>>>>
+>>>>>  Documentation/dev-tools/kunit/start.rst | 13 +++++--------
+>>>>>  tools/testing/kunit/kunit.py            | 16 ++++++++++------
+>>>>>  tools/testing/kunit/kunit_kernel.py     |  8 ++++----
+>>>>>  3 files changed, 19 insertions(+), 18 deletions(-)
+>>>> Tested-by: Brendan Higgins <brendanhiggins@google.com>
+>>> I just realized that I forgot to test for something...
+>>>
+>>> The following command fails:
+>>>
+>>> ./tools/testing/kunit/kunit.py run --timeout=60 --jobs=12 --defconfig
+>>>
+>>> [11:17:13] Building KUnit Kernel ...
+>>> [11:17:16] Starting KUnit Kernel ...
+>>> Traceback (most recent call last):
+>>>   File "tools/testing/kunit/kunit.py", line 142, in <module>
+>>>     main(sys.argv[1:])
+>>>   File "tools/testing/kunit/kunit.py", line 135, in main
+>>>     result = run_tests(linux, request)
+>>>   File "tools/testing/kunit/kunit.py", line 67, in run_tests
+>>>     test_result = kunit_parser.parse_run_tests(kunit_output)
+>>>   File "/usr/local/google/home/brendanhiggins/gbmc-linux/tools/testing/kunit/kunit_parser.py", line 283, in parse_run_tests
+>>>     test_result = parse_test_result(list(isolate_kunit_output(kernel_output)))
+>>>   File "/usr/local/google/home/brendanhiggins/gbmc-linux/tools/testing/kunit/kunit_parser.py", line 54, in isolate_kunit_output
+>>>     for line in kernel_output:
+>>>   File "/usr/local/google/home/brendanhiggins/gbmc-linux/tools/testing/kunit/kunit_kernel.py", line 146, in run_kernel
+>>>     with open(os.path.join(build_dir, 'test.log'), 'w') as f:
+>>>   File "/usr/lib/python3.7/posixpath.py", line 80, in join
+>>>     a = os.fspath(a)
+>>> TypeError: expected str, bytes or os.PathLike object, not NoneType
+>>>
+>>> It seems as though you assume that build_dir is always populated by the flag.
+>> Sorry for not checking the case.  The 4th patch, "kunit: Place 'test.log' under
+>> the 'build_dir'" made the bug.  I fixed the 4th patch and tested with below
+>> commands:
+>>
+>>     ./tools/testing/kunit/kunit.py run --timeout=60 --jobs=12
+>> --defconfig --build_dir .kunit
+>>     ./tools/testing/kunit/kunit.py run --timeout=60 --jobs=12 --defconfig
+>>
+>> Just sent the 4th version patchset including the fix:
+>>     http://lkml.kernel.org/r/1575490683-13015-1-git-send-email-sj38.park@gmail.com
+> Also, removed the 'Reviewed-by' from the 4th patch and didn't add 'Tested-by'
+> to the patchset.
+>
+>
+> Thanks,
+> SeongJae Park
+>
+>> I will consider adding some tests that can check such cases in the
+>> 'kunit_tools_test.py' later.
 
-A minor nit - the ioctl has since been changed to LINEINFO_WATCH.
+I just sent 5th version which includes this change and a fix:
+https://lore.kernel.org/linux-kselftest/20191205093440.21824-1-sjpark@amazon.com
 
-Do you have anything else to test the ioctls?
-Either way, I'll try to find some time to add some to my gpiod library.
 
-Kent.
+Thanks,
+SeongJae Park
 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  tools/gpio/.gitignore   |   1 +
->  tools/gpio/Build        |   1 +
->  tools/gpio/Makefile     |  11 +++-
->  tools/gpio/gpio-watch.c | 112 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 124 insertions(+), 1 deletion(-)
->  create mode 100644 tools/gpio/gpio-watch.c
-> 
-> diff --git a/tools/gpio/.gitignore b/tools/gpio/.gitignore
-> index a94c0e83b209..fffd32969d62 100644
-> --- a/tools/gpio/.gitignore
-> +++ b/tools/gpio/.gitignore
-> @@ -1,4 +1,5 @@
->  gpio-event-mon
->  gpio-hammer
->  lsgpio
-> +gpio-watch
->  include/linux/gpio.h
-> diff --git a/tools/gpio/Build b/tools/gpio/Build
-> index 4141f35837db..67c7b7f6a717 100644
-> --- a/tools/gpio/Build
-> +++ b/tools/gpio/Build
-> @@ -2,3 +2,4 @@ gpio-utils-y += gpio-utils.o
->  lsgpio-y += lsgpio.o gpio-utils.o
->  gpio-hammer-y += gpio-hammer.o gpio-utils.o
->  gpio-event-mon-y += gpio-event-mon.o gpio-utils.o
-> +gpio-watch-y += gpio-watch.o
-> diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-> index 6080de58861f..842287e42c83 100644
-> --- a/tools/gpio/Makefile
-> +++ b/tools/gpio/Makefile
-> @@ -18,7 +18,7 @@ MAKEFLAGS += -r
->  
->  override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
->  
-> -ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon
-> +ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon gpio-watch
->  ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
->  
->  all: $(ALL_PROGRAMS)
-> @@ -66,6 +66,15 @@ $(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
->  $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
->  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
->  
-> +#
-> +# gpio-watch
-> +#
-> +GPIO_WATCH_IN := $(OUTPUT)gpio-watch-in.o
-> +$(GPIO_WATCH_IN): prepare FORCE
-> +	$(Q)$(MAKE) $(build)=gpio-watch
-> +$(OUTPUT)gpio-watch: $(GPIO_WATCH_IN)
-> +	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-> +
->  clean:
->  	rm -f $(ALL_PROGRAMS)
->  	rm -f $(OUTPUT)include/linux/gpio.h
-> diff --git a/tools/gpio/gpio-watch.c b/tools/gpio/gpio-watch.c
-> new file mode 100644
-> index 000000000000..69aee43655ae
-> --- /dev/null
-> +++ b/tools/gpio/gpio-watch.c
-> @@ -0,0 +1,112 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * gpio-watch - monitor unrequested lines for property changes using the
-> + *              character device
-> + *
-> + * Copyright (C) 2019 BayLibre SAS
-> + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> + */
-> +
-> +#include <ctype.h>
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <linux/gpio.h>
-> +#include <poll.h>
-> +#include <stdbool.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <sys/ioctl.h>
-> +#include <unistd.h>
-> +
-> +static bool isnumber(const char *str)
-> +{
-> +	size_t sz = strlen(str);
-> +	int i;
-> +
-> +	for (i = 0; i < sz; i++) {
-> +		if (!isdigit(str[i]))
-> +			return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +int main(int argc, char **argv)
-> +{
-> +	struct gpioline_info_changed chg;
-> +	struct gpioline_info req;
-> +	struct pollfd pfd;
-> +	int fd, i, j, ret;
-> +	char *event;
-> +	ssize_t rd;
-> +
-> +	if (argc < 3)
-> +		goto err_usage;
-> +
-> +	fd = open(argv[1], O_RDWR | O_CLOEXEC);
-> +	if (fd < 0) {
-> +		perror("unable to open gpiochip");
-> +		return EXIT_FAILURE;
-> +	}
-> +
-> +	for (i = 0, j = 2; i < argc - 2; i++, j++) {
-> +		if (!isnumber(argv[j]))
-> +			goto err_usage;
-> +
-> +		memset(&req, 0, sizeof(req));
-> +		req.line_offset = atoi(argv[j]);
-> +
-> +		ret = ioctl(fd, GPIO_GET_LINEINFO_WATCH_IOCTL, &req);
-> +		if (ret) {
-> +			perror("unable to set up line watch");
-> +			return EXIT_FAILURE;
-> +		}
-> +	}
-> +
-> +	pfd.fd = fd;
-> +	pfd.events = POLLIN | POLLPRI;
-> +
-> +	for (;;) {
-> +		ret = poll(&pfd, 1, 5000);
-> +		if (ret < 0) {
-> +			perror("error polling the linechanged fd");
-> +			return EXIT_FAILURE;
-> +		} else if (ret > 0) {
-> +			memset(&chg, 0, sizeof(chg));
-> +			rd = read(pfd.fd, &chg, sizeof(chg));
-> +			if (rd < 0 || rd != sizeof(chg)) {
-> +				if (rd != sizeof(chg))
-> +					errno = EIO;
-> +
-> +				perror("error reading line change event");
-> +				return EXIT_FAILURE;
-> +			}
-> +
-> +			switch (chg.event_type) {
-> +			case GPIOLINE_CHANGED_REQUESTED:
-> +				event = "requested";
-> +				break;
-> +			case GPIOLINE_CHANGED_RELEASED:
-> +				event = "released";
-> +				break;
-> +			case GPIOLINE_CHANGED_CONFIG:
-> +				event = "config changed";
-> +				break;
-> +			default:
-> +				fprintf(stderr,
-> +					"invalid event type received from the kernel\n");
-> +				return EXIT_FAILURE;
-> +			}
-> +
-> +			printf("line %u: %s at %llu\n",
-> +			       chg.info.line_offset, event, chg.timestamp);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +err_usage:
-> +	printf("%s: <gpiochip> <line0> <line1> ...\n", argv[0]);
-> +	return EXIT_FAILURE;
-> +}
-> -- 
-> 2.23.0
-> 
+>>
+>>
+>> Thanks,
+>> SeongJae Park
+
+
