@@ -2,292 +2,245 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-1.8 required=3.0 tests=BITCOIN_SPAM_02,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6846C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508E0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBD122525
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:35:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="Lmfk7iEQ"
+	by mail.kernel.org (Postfix) with ESMTP id 209302464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbfLESfE (ORCPT
+        id S1729855AbfLEShi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 13:35:04 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:41840 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLESfE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 13:35:04 -0500
-Received: by mail-yw1-f65.google.com with SMTP id l22so1597212ywc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 10:35:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=U7/zqkwPp4/kb0lDX/st3TafpUDfopxAQyd3Cq+KNi0=;
-        b=Lmfk7iEQHcRdRsbpwgUiR5wBC7hJHERkxSS/MDcwQN1jp7R7DTztUasVTkcLNo3F6P
-         yrxVVlHxCukya3tkQKdScL4Y59i/uK2kHoPe1rWEOChVavbZ7b9nZUaxUtW9dKAJzyqu
-         juc96foZG0hFEDE+TOuoTcPFhC7vtkn6tJeLch2SOjwdeO94/lqSqydtBWrxIaguAThG
-         sqhOO3lnsXkFzM9j9hsxaUA5/AkTpun7MlRxPl8SodiMDitZEAnw7Nb/p6fM7ZhIAWQ8
-         VZd4WI1oDsqddZQa3SLCss2ISqOzUYgJzN8yxVwyOPPnwO38ECBUg9BHFE9kGTgE13Mk
-         ITDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U7/zqkwPp4/kb0lDX/st3TafpUDfopxAQyd3Cq+KNi0=;
-        b=RtR0F2MkX8/N9ifyYtdwL7L2yLl3Pq4O2JzPqF0VSOPzIrMkKpzNnqE64cYLAxtgBZ
-         NIFUyM85Uq8T6hW6/f7M7vol9IpZjsjFowTnf5Gk7XnE0qcuXmG+SkRS8vYkSgASClzV
-         CBKXNotZgAgAeK7yjDj/GX+dcYzmuQlBQFiiaiY9cHCMC7BGDVsy/ma2yUuUIYDFn96Q
-         tMYqbJ/GSI0AwKLcjBw7sdDE3tBPMxtBARLuyMVzLOXW8vXCTf+goulyEVU0gecep82R
-         +UxIHb1i1TLOPdLwrXmnZrZdVA22A2dQpQicwuiRFA6BCn9IChV4m7E9AWvI1gJtHM4t
-         0bHA==
-X-Gm-Message-State: APjAAAU22IlYmKpmX1uoY/CaRdxqEPBmsUfZe0NI7J1OM7PCQPEqQlmm
-        d4xQ5yosnWhwVr0XfEECSeXX2Q==
-X-Google-Smtp-Source: APXvYqz0zowUF+U9owtkFe4CSk6Cl4vJyuPo+ZGOeTyGT3gxLTM8vgc54q6yLVvI0wmoKyUlnOvwXw==
-X-Received: by 2002:a81:5d5:: with SMTP id 204mr6332770ywf.46.1575570903104;
-        Thu, 05 Dec 2019 10:35:03 -0800 (PST)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id e63sm4959856ywd.64.2019.12.05.10.35.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 10:35:02 -0800 (PST)
-Date:   Thu, 5 Dec 2019 13:35:01 -0500
-From:   Sean Paul <sean@poorly.run>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, Sean Paul <sean@poorly.run>,
-        Sean Paul <seanpaul@chromium.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] drm/dp_mst: Clear all payload id tables downstream
- when initializing
-Message-ID: <20191205183501.GC162979@art_vandelay>
-References: <20190829000944.20722-1-lyude@redhat.com>
+        Thu, 5 Dec 2019 13:37:38 -0500
+Received: from mga05.intel.com ([192.55.52.43]:17076 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfLEShh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 13:37:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 10:37:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,282,1571727600"; 
+   d="scan'208";a="386269950"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 05 Dec 2019 10:37:36 -0800
+Received: from [10.252.11.4] (abudanko-mobl.ccr.corp.intel.com [10.252.11.4])
+        by linux.intel.com (Postfix) with ESMTP id 0CC7F5804A0;
+        Thu,  5 Dec 2019 10:37:31 -0800 (PST)
+Subject: Re: [PATCH v1 0/3] Introduce CAP_SYS_PERFMON capability for secure
+ Perf users groups
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        elena.reshetova@intel.com,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Stephane Eranian <eranian@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <283f09a5-33bd-eac3-bdfd-83d775045bf9@linux.intel.com>
+ <1e836f34-eda3-542d-f7ce-9a3e87ac5e2e@schaufler-ca.com>
+ <d0c6f000-4757-02d8-b114-a35cbb9566ed@linux.intel.com>
+ <a81248c5-971a-9d3f-6df4-e6335384fe7f@schaufler-ca.com>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <b17c013e-9474-5034-3859-3c3e02e10bc7@linux.intel.com>
+Date:   Thu, 5 Dec 2019 21:37:30 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829000944.20722-1-lyude@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a81248c5-971a-9d3f-6df4-e6335384fe7f@schaufler-ca.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 08:09:44PM -0400, Lyude Paul wrote:
-> From: Sean Paul <seanpaul@chromium.org>
+On 05.12.2019 20:33, Casey Schaufler wrote:
+> On 12/5/2019 9:05 AM, Alexey Budankov wrote:
+>> Hello Casey,
+>>  
+>> On 05.12.2019 19:49, Casey Schaufler wrote:
+>>> On 12/5/2019 8:15 AM, Alexey Budankov wrote:
+>>>> Currently access to perf_events functionality [1] beyond the scope permitted
+>>>> by perf_event_paranoid [1] kernel setting is allowed to a privileged process
+>>>> [2] with CAP_SYS_ADMIN capability enabled in the process effective set [3].
+>>>>
+>>>> This patch set introduces CAP_SYS_PERFMON capability devoted to secure performance
+>>>> monitoring activity so that CAP_SYS_PERFMON would assist CAP_SYS_ADMIN in its
+>>>> governing role for perf_events based performance monitoring of a system.
+>>>>
+>>>> CAP_SYS_PERFMON aims to harden system security and integrity when monitoring
+>>>> performance using perf_events subsystem by processes and Perf privileged users
+>>>> [2], thus decreasing attack surface that is available to CAP_SYS_ADMIN
+>>>> privileged processes [3].
+>>> Are there use cases where you would need CAP_SYS_PERFMON where you
+>>> would not also need CAP_SYS_ADMIN? If you separate a new capability
+>> Actually, there are. Perf tool that has record, stat and top modes could run with
+>> CAP_SYS_PERFMON capability as mentioned below and provide system wide performance
+>> data. Currently for that to work the tool needs to be granted with CAP_SYS_ADMIN.
 > 
-> It seems that on certain MST hubs, namely the CableMatters USB-C 2x DP
-> hub, using the DP_PAYLOAD_ALLOCATE_SET and DP_PAYLOAD_TABLE_UPDATE_STATUS
-> register ranges to clear any pre-existing payload allocations on the hub isn't
-> always enough to reset things if the source device has been reset unexpectedly.
-> 
-> Or at least, that's the current running theory. The precise behavior appears to
-> be that when the source device gets reset unexpectedly, the hub begins reporting
-> an available_pbn value of 0 for all of its ports. This is a bit inconsistent
-> with the our theory, since this seems to happen even if previously set PBN
-> allocations should have resulted in a non-zero available_pbn value. So, it's
-> possible that something else may be going on here.
-> 
-> Strangely though, sending a CLEAR_PAYLOAD_ID_TABLE broadcast request when
-> initializing the MST topology seems to bring things into working order and make
-> available_pbn work again. Since this is a pretty safe solution, let's go ahead
-> and implement it.
-> 
-> Changes since v1:
-> * Change indenting on drm_dp_send_clear_payload_id_table() prototype
-> * Remove some braces in drm_dp_send_clear_payload_id_table()
-> * Reorganize some variable declarations in drm_dp_send_clear_payload_id_table()
-> * Don't forget to handle DP_CLEAR_PAYLOAD_ID_TABLE in
->   drm_dp_sideband_parse_reply()
-> * Move drm_dp_send_clear_payload_id_table() call into
->   drm_dp_mst_link_probe_work(), since we can't send sideband messages
->   while under lock in drm_dp_mst_topology_mgr_set_mst()
-> * Change commit message
-> 
-> Change-Id: I2c763e8dae3844eca76033a41f264080052fbbfc
-> Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> The question isn't whether the tool could use the capability, it's whether
+> the tool would also need CAP_SYS_ADMIN to be useful. Are there existing
+> tools that could stop using CAP_SYS_ADMIN in favor of CAP_SYS_PERFMON?
+> My bet is that any tool that does performance monitoring is going to need
+> CAP_SYS_ADMIN for other reasons.
 
-Pushed to drm-misc-next without that nasty Change-Id and with danvet's IRC
-Acked-by to appease almighty dim.
+Yes, sorry. The tool is perf tool (part of kernel tree). If its binary is granted 
+CAP_SYS_ADMIN capability then the tool can collect performance data in system wide 
+mode for some group of unprivileged users.
 
-Thanks, Lyude, for polishing this up :-)
+This patch allows replacing CAP_SYS_ADMIN by CAP_SYS_PERFMON e.g. for perf tool and 
+then the tool being granted CAP_SYS_PERFMON could still provide performance data
+in system wide scope for the same group of unprivileged users.
 
-Sean
+Hope it's got clearer. Feel free to ask more.
 
-> ---
-> 
-> A heads up to anyone looking at this patch: it's quite possible this
-> won't be the final solution that we go with. Me and Sean would like to
-> do a bit more investigation to try to figure out what exactly is
-> happening here before we go ahead and push it, and hopefully figure out
-> why available_pbn is being set to 0 instead of some other leftover
-> non-zero allocation.
-> 
->  drivers/gpu/drm/drm_dp_mst_topology.c | 63 +++++++++++++++++++++++++--
->  include/drm/drm_dp_mst_helper.h       | 16 +++++--
->  2 files changed, 72 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 82add736e17d..969e43b7eb4c 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -64,6 +64,11 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
->  
->  static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
->  				     struct drm_dp_mst_branch *mstb);
-> +
-> +static void
-> +drm_dp_send_clear_payload_id_table(struct drm_dp_mst_topology_mgr *mgr,
-> +				   struct drm_dp_mst_branch *mstb);
-> +
->  static int drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
->  					   struct drm_dp_mst_branch *mstb,
->  					   struct drm_dp_mst_port *port);
-> @@ -657,6 +662,8 @@ static bool drm_dp_sideband_parse_reply(struct drm_dp_sideband_msg_rx *raw,
->  	case DP_POWER_DOWN_PHY:
->  	case DP_POWER_UP_PHY:
->  		return drm_dp_sideband_parse_power_updown_phy_ack(raw, msg);
-> +	case DP_CLEAR_PAYLOAD_ID_TABLE:
-> +		return true; /* since there's nothing to parse */
->  	default:
->  		DRM_ERROR("Got unknown reply 0x%02x (%s)\n", msg->req_type,
->  			  drm_dp_mst_req_type_str(msg->req_type));
-> @@ -755,6 +762,15 @@ static int build_link_address(struct drm_dp_sideband_msg_tx *msg)
->  	return 0;
->  }
->  
-> +static int build_clear_payload_id_table(struct drm_dp_sideband_msg_tx *msg)
-> +{
-> +	struct drm_dp_sideband_msg_req_body req;
-> +
-> +	req.req_type = DP_CLEAR_PAYLOAD_ID_TABLE;
-> +	drm_dp_encode_sideband_req(&req, msg);
-> +	return 0;
-> +}
-> +
->  static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *msg, int port_num)
->  {
->  	struct drm_dp_sideband_msg_req_body req;
-> @@ -1877,8 +1893,12 @@ static void drm_dp_mst_link_probe_work(struct work_struct *work)
->  	struct drm_dp_mst_topology_mgr *mgr = container_of(work, struct drm_dp_mst_topology_mgr, work);
->  	struct drm_dp_mst_branch *mstb;
->  	int ret;
-> +	bool clear_payload_id_table;
->  
->  	mutex_lock(&mgr->lock);
-> +	clear_payload_id_table = !mgr->payload_id_table_cleared;
-> +	mgr->payload_id_table_cleared = true;
-> +
->  	mstb = mgr->mst_primary;
->  	if (mstb) {
->  		ret = drm_dp_mst_topology_try_get_mstb(mstb);
-> @@ -1886,10 +1906,24 @@ static void drm_dp_mst_link_probe_work(struct work_struct *work)
->  			mstb = NULL;
->  	}
->  	mutex_unlock(&mgr->lock);
-> -	if (mstb) {
-> -		drm_dp_check_and_send_link_address(mgr, mstb);
-> -		drm_dp_mst_topology_put_mstb(mstb);
-> +	if (!mstb)
-> +		return;
-> +
-> +	/*
-> +	 * Certain branch devices seem to incorrectly report an available_pbn
-> +	 * of 0 on downstream sinks, even after clearing the
-> +	 * DP_PAYLOAD_ALLOCATE_* registers in
-> +	 * drm_dp_mst_topology_mgr_set_mst(). Namely, the CableMatters USB-C
-> +	 * 2x DP hub. Sending a CLEAR_PAYLOAD_ID_TABLE message seems to make
-> +	 * things work again.
-> +	 */
-> +	if (clear_payload_id_table) {
-> +		DRM_DEBUG_KMS("Clearing payload ID table\n");
-> +		drm_dp_send_clear_payload_id_table(mgr, mstb);
->  	}
-> +
-> +	drm_dp_check_and_send_link_address(mgr, mstb);
-> +	drm_dp_mst_topology_put_mstb(mstb);
->  }
->  
->  static bool drm_dp_validate_guid(struct drm_dp_mst_topology_mgr *mgr,
-> @@ -2156,6 +2190,28 @@ static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
->  	kfree(txmsg);
->  }
->  
-> +void drm_dp_send_clear_payload_id_table(struct drm_dp_mst_topology_mgr *mgr,
-> +					struct drm_dp_mst_branch *mstb)
-> +{
-> +	struct drm_dp_sideband_msg_tx *txmsg;
-> +	int len, ret;
-> +
-> +	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
-> +	if (!txmsg)
-> +		return;
-> +
-> +	txmsg->dst = mstb;
-> +	len = build_clear_payload_id_table(txmsg);
-> +
-> +	drm_dp_queue_down_tx(mgr, txmsg);
-> +
-> +	ret = drm_dp_mst_wait_tx_reply(mstb, txmsg);
-> +	if (ret > 0 && txmsg->reply.reply_type == DP_SIDEBAND_REPLY_NAK)
-> +		DRM_DEBUG_KMS("clear payload table id nak received\n");
-> +
-> +	kfree(txmsg);
-> +}
-> +
->  static int drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
->  					   struct drm_dp_mst_branch *mstb,
->  					   struct drm_dp_mst_port *port)
-> @@ -2756,6 +2812,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
->  		mgr->payload_mask = 0;
->  		set_bit(0, &mgr->payload_mask);
->  		mgr->vcpi_mask = 0;
-> +		mgr->payload_id_table_cleared = false;
->  	}
->  
->  out_unlock:
-> diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
-> index 2ba6253ea6d3..ee4093c1bba3 100644
-> --- a/include/drm/drm_dp_mst_helper.h
-> +++ b/include/drm/drm_dp_mst_helper.h
-> @@ -494,15 +494,23 @@ struct drm_dp_mst_topology_mgr {
->  	struct drm_dp_sideband_msg_rx up_req_recv;
->  
->  	/**
-> -	 * @lock: protects mst state, primary, dpcd.
-> +	 * @lock: protects @mst_state, @mst_primary, @dpcd, and
-> +	 * @payload_id_table_cleared.
->  	 */
->  	struct mutex lock;
->  
->  	/**
-> -	 * @mst_state: If this manager is enabled for an MST capable port. False
-> -	 * if no MST sink/branch devices is connected.
-> +	 * @mst_state: If this manager is enabled for an MST capable port.
-> +	 * False if no MST sink/branch devices is connected.
->  	 */
-> -	bool mst_state;
-> +	bool mst_state : 1;
-> +
-> +	/**
-> +	 * @payload_id_table_cleared: Whether or not we've cleared the payload
-> +	 * ID table for @mst_primary. Protected by @lock.
-> +	 */
-> +	bool payload_id_table_cleared : 1;
-> +
->  	/**
->  	 * @mst_primary: Pointer to the primary/first branch device.
->  	 */
-> -- 
-> 2.21.0
-> 
+Thanks,
+Alexey
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+> 
+>>
+>>> from CAP_SYS_ADMIN but always have to use CAP_SYS_ADMIN in conjunction
+>>> with the new capability it is all rather pointless.
+>>>
+>>> The scope you've defined for this CAP_SYS_PERFMON is very small.
+>>> Is there a larger set of privilege checks that might be applicable
+>>> for it?
+>> CAP_SYS_PERFMON could be applied broadly, though, this patch set enables record
+>> and stat mode use cases for system wide performance monitoring in kernel and
+>> user modes.
+> 
+> The granularity of capabilities is something we have to watch
+> very carefully. Sure, CAP_SYS_ADMIN covers a lot of things, but
+> if we broke it up "properly" we'd have hundreds of capabilities.
+> If you want control that finely we have SELinux.
+> 
+>>
+>> Thanks,
+>> Alexey
+>>
+>>>  
+>>>
+>>>> CAP_SYS_PERFMON aims to take over CAP_SYS_ADMIN credentials related to
+>>>> performance monitoring functionality of perf_events and balance amount of
+>>>> CAP_SYS_ADMIN credentials in accordance with the recommendations provided in
+>>>> the man page for CAP_SYS_ADMIN [3]: "Note: this capability is overloaded;
+>>>> see Notes to kernel developers, below."
+>>>>
+>>>> For backward compatibility reasons performance monitoring functionality of 
+>>>> perf_events subsystem remains available under CAP_SYS_ADMIN but its usage for
+>>>> secure performance monitoring use cases is discouraged with respect to the
+>>>> introduced CAP_SYS_PERFMON capability.
+>>>>
+>>>> In the suggested implementation CAP_SYS_PERFMON enables Perf privileged users
+>>>> [2] to conduct secure performance monitoring using perf_events in the scope
+>>>> of available online CPUs when executing code in kernel and user modes.
+>>>>
+>>>> Possible alternative solution to this capabilities balancing, system security
+>>>> hardening task could be to use the existing CAP_SYS_PTRACE capability to govern
+>>>> perf_events' performance monitoring functionality, since process debugging is
+>>>> similar to performance monitoring with respect to providing insights into
+>>>> process memory and execution details. However CAP_SYS_PTRACE still provides
+>>>> users with more credentials than are required for secure performance monitoring
+>>>> using perf_events subsystem and this excess is avoided by using the dedicated
+>>>> CAP_SYS_PERFMON capability.
+>>>>
+>>>> libcap library utilities [4], [5] and Perf tool can be used to apply
+>>>> CAP_SYS_PERFMON capability for secure performance monitoring beyond the scope
+>>>> permitted by system wide perf_event_paranoid kernel setting and below are the
+>>>> steps to evaluate the advancement suggested by the patch set:
+>>>>
+>>>>   - patch, build and boot the kernel
+>>>>   - patch, build Perf tool e.g. to /home/user/perf
+>>>>   ...
+>>>>   # git clone git://git.kernel.org/pub/scm/libs/libcap/libcap.git libcap
+>>>>   # pushd libcap
+>>>>   # patch libcap/include/uapi/linux/capabilities.h with [PATCH 1/3]
+>>>>   # make
+>>>>   # pushd progs
+>>>>   # ./setcap "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
+>>>>   # ./setcap -v "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
+>>>>   /home/user/perf: OK
+>>>>   # ./getcap /home/user/perf
+>>>>   /home/user/perf = cap_sys_ptrace,cap_syslog,cap_sys_perfmon+ep
+>>>>   # echo 2 > /proc/sys/kernel/perf_event_paranoid
+>>>>   # cat /proc/sys/kernel/perf_event_paranoid 
+>>>>   2
+>>>>   ...
+>>>>   $ /home/user/perf top
+>>>>     ... works as expected ...
+>>>>   $ cat /proc/`pidof perf`/status
+>>>>   Name:	perf
+>>>>   Umask:	0002
+>>>>   State:	S (sleeping)
+>>>>   Tgid:	2958
+>>>>   Ngid:	0
+>>>>   Pid:	2958
+>>>>   PPid:	9847
+>>>>   TracerPid:	0
+>>>>   Uid:	500	500	500	500
+>>>>   Gid:	500	500	500	500
+>>>>   FDSize:	256
+>>>>   ...
+>>>>   CapInh:	0000000000000000
+>>>>   CapPrm:	0000004400080000
+>>>>   CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
+>>>>                                      cap_sys_perfmon,cap_sys_ptrace,cap_syslog
+>>>>   CapBnd:	0000007fffffffff
+>>>>   CapAmb:	0000000000000000
+>>>>   NoNewPrivs:	0
+>>>>   Seccomp:	0
+>>>>   Speculation_Store_Bypass:	thread vulnerable
+>>>>   Cpus_allowed:	ff
+>>>>   Cpus_allowed_list:	0-7
+>>>>   ...
+>>>>
+>>>> Usage of cap_sys_perfmon effectively avoids unused credentials excess:
+>>>> - with cap_sys_admin:
+>>>>   CapEff:	0000007fffffffff => 01111111 11111111 11111111 11111111 11111111
+>>>> - with cap_sys_perfmon:
+>>>>   CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
+>>>>                                     38   34               19
+>>>>                            sys_perfmon   syslog           sys_ptrace
+>>>>
+>>>> The patch set is for tip perf/core repository:
+>>>>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip perf/core
+>>>>   tip sha1: ceb9e77324fa661b1001a0ae66f061b5fcb4e4e6
+>>>>
+>>>> [1] http://man7.org/linux/man-pages/man2/perf_event_open.2.html
+>>>> [2] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+>>>> [3] http://man7.org/linux/man-pages/man7/capabilities.7.html
+>>>> [4] http://man7.org/linux/man-pages/man8/setcap.8.html
+>>>> [5] https://git.kernel.org/pub/scm/libs/libcap/libcap.git
+>>>> [6] https://sites.google.com/site/fullycapable/, posix_1003.1e-990310.pdf
+>>>>
+>>>> ---
+>>>> Alexey Budankov (3):
+>>>>   capabilities: introduce CAP_SYS_PERFMON to kernel and user space
+>>>>   perf/core: apply CAP_SYS_PERFMON to CPUs and kernel monitoring
+>>>>   perf tool: extend Perf tool with CAP_SYS_PERFMON support
+>>>>
+>>>>  include/linux/perf_event.h          |  6 ++++--
+>>>>  include/uapi/linux/capability.h     | 10 +++++++++-
+>>>>  security/selinux/include/classmap.h |  4 ++--
+>>>>  tools/perf/design.txt               |  3 ++-
+>>>>  tools/perf/util/cap.h               |  4 ++++
+>>>>  tools/perf/util/evsel.c             | 10 +++++-----
+>>>>  tools/perf/util/util.c              | 15 +++++++++++++--
+>>>>  7 files changed, 39 insertions(+), 13 deletions(-)
+>>>>
+>>>
+> 
+> 
