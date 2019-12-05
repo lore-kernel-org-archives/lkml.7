@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78996C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B10BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50E0524655
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6381F206D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575574361;
-	bh=weL3bUV0PDOHU1hQmGLuBVvurK0V+4GUMjjNTj/JUso=;
+	s=default; t=1575574364;
+	bh=8cd4bvbz9sQNlYIOKnGt9W2gIx0OgdJAbY687uV3Ffs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U1OwHgGCNTpU+a6I/xUQntEL2hDD4P/NUcTeCUjrPlCZh0WhHZ2U0DaIOPNFJ9iDM
-	 w6mCx6T962qgOC97soV6FLpqLbjQ5VVRzwwk3kQjWkR0Y9zZu2XK47l0k6EaNjvuEJ
-	 1awD2LabhuFHRdCbz+ewcuEGB4dIky1loQahdk5w=
+	b=BfEOZsq7VNkUZxYLp+5jMkv4v8+wMTKelWlRnhYvxR7z9x1YYEShdODVwJdZSDFvH
+	 jYvD1ZL3WBK106IvmU3EjczJfMtwy1e0RE92iXKs+cXj5+2hzjiKqO9jKbyjJ0L3ip
+	 fH9Xltwr90uZL9RYInVxeg/oX9/V+3HMoi+Jn13A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbfLETck (ORCPT
+        id S1729910AbfLETcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 14:32:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55148 "EHLO mail.kernel.org"
+        Thu, 5 Dec 2019 14:32:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726257AbfLETci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 14:32:38 -0500
+        id S1726257AbfLETcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 14:32:41 -0500
 Received: from quaco.ghostprotocols.net (179-240-141-74.3g.claro.net.br [179.240.141.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B28D8206D9;
-        Thu,  5 Dec 2019 19:32:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 954612464D;
+        Thu,  5 Dec 2019 19:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575574357;
-        bh=weL3bUV0PDOHU1hQmGLuBVvurK0V+4GUMjjNTj/JUso=;
+        s=default; t=1575574361;
+        bh=8cd4bvbz9sQNlYIOKnGt9W2gIx0OgdJAbY687uV3Ffs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZPo6nR3JEwhgFR4hXCeurHSjRxDVri/Ew54csKqfjYIWa9fpXhzW0J/yVs8Ahy0Bw
-         3xC0k3Mp/0bXk71NWCMYs63jTsR6yFThAila3biOB9m6ZqzjFEbAo7VTF7somO/2ej
-         LTT0nnbuDmIqfCwtVuJIAcTgWkijtmNxzXkvp0lQ=
+        b=dwBhfAI3Rhx3lPy/fxyU6HjWHQHbz1bn56ImdjohEKtYtyQWIfV9nsDW+Lq05VfxH
+         vyBMuchSfFtTA4MojYHfeNuNDc0bqxK/68yPfiGLCvY2EddH62MDfbPcQR5sLE3/jR
+         /sK49wVF7V0yNfoWcaK8RLN35sbU1E4QxHxYisdk=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,20 +46,20 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
         Jin Yao <yao.jin@linux.intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 1/6] perf report/top TUI: Replace pr_err() with ui__error()
-Date:   Thu,  5 Dec 2019 16:32:19 -0300
-Message-Id: <20191205193224.24629-2-acme@kernel.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 2/6] perf report: Make -F more strict like -s
+Date:   Thu,  5 Dec 2019 16:32:20 -0300
+Message-Id: <20191205193224.24629-3-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191205193224.24629-1-acme@kernel.org>
 References: <20191205193224.24629-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -68,77 +68,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-pr_err() in TUI mode does not print anyting on the screen and just
-quits.
+Currently -F allows branch-mode / mem-mode fields with -F even
+when perf report is not running in that mode. Don't allow that.
 
-Replace such pr_err() with ui__error().
-
-Before:
-
-  $ perf report -s +
-  $
-
-After:
-
-  $ perf report -s +
-
-    ┌─Error:────────────────┐
-    │Invalid --sort key: `+'│
-    │                       │
-    │Press any key...       │
-    └───────────────────────┘
-
+Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/20191114132213.5419-2-ravi.bangoria@linux.ibm.com
+Link: http://lore.kernel.org/lkml/20191114132213.5419-3-ravi.bangoria@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/sort.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/util/sort.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 345b5ccc90f6..106d795574ba 100644
+index 106d795574ba..9fcba2872130 100644
 --- a/tools/perf/util/sort.c
 +++ b/tools/perf/util/sort.c
-@@ -2681,12 +2681,12 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
- 			ret = sort_dimension__add(list, tok, evlist, level);
- 			if (ret == -EINVAL) {
- 				if (!cacheline_size() && !strncasecmp(tok, "dcacheline", strlen(tok)))
--					pr_err("The \"dcacheline\" --sort key needs to know the cacheline size and it couldn't be determined on this system");
-+					ui__error("The \"dcacheline\" --sort key needs to know the cacheline size and it couldn't be determined on this system");
- 				else
--					pr_err("Invalid --sort key: `%s'", tok);
-+					ui__error("Invalid --sort key: `%s'", tok);
- 				break;
- 			} else if (ret == -ESRCH) {
--				pr_err("Unknown --sort key: `%s'", tok);
-+				ui__error("Unknown --sort key: `%s'", tok);
- 				break;
- 			}
- 		}
-@@ -2743,7 +2743,7 @@ static int setup_sort_order(struct evlist *evlist)
- 		return 0;
+@@ -2959,6 +2959,9 @@ int output_field_add(struct perf_hpp_list *list, char *tok)
+ 		if (strncasecmp(tok, sd->name, strlen(tok)))
+ 			continue;
  
- 	if (sort_order[1] == '\0') {
--		pr_err("Invalid --sort key: `+'");
-+		ui__error("Invalid --sort key: `+'");
- 		return -EINVAL;
++		if (sort__mode != SORT_MODE__MEMORY)
++			return -EINVAL;
++
+ 		return __sort_dimension__add_output(list, sd);
  	}
  
-@@ -3034,7 +3034,7 @@ static int __setup_output_field(void)
- 		strp++;
+@@ -2968,6 +2971,9 @@ int output_field_add(struct perf_hpp_list *list, char *tok)
+ 		if (strncasecmp(tok, sd->name, strlen(tok)))
+ 			continue;
  
- 	if (!strlen(strp)) {
--		pr_err("Invalid --fields key: `+'");
-+		ui__error("Invalid --fields key: `+'");
- 		goto out;
++		if (sort__mode != SORT_MODE__BRANCH)
++			return -EINVAL;
++
+ 		return __sort_dimension__add_output(list, sd);
  	}
  
 -- 
