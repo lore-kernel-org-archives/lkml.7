@@ -2,295 +2,157 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4238C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCDFC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE8DD2077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFAA32077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 05:47:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sPG3P7lQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GjkJAE3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbfLEFrP (ORCPT
+        id S1726171AbfLEFrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 00:47:15 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:6079 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbfLEFrO (ORCPT
+        Thu, 5 Dec 2019 00:47:47 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52748 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfLEFrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 00:47:14 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de899e40000>; Wed, 04 Dec 2019 21:47:16 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 04 Dec 2019 21:47:12 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 04 Dec 2019 21:47:12 -0800
-Received: from [10.2.163.157] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec
- 2019 05:47:11 +0000
-Subject: Re: [v2 PATCH] mm: move_pages: return valid node id in status if the
- page is already on the target node
-To:     Yang Shi <yang.shi@linux.alibaba.com>, <fabecassis@nvidia.com>,
-        <mhocko@suse.com>, <cl@linux.com>, <vbabka@suse.cz>,
-        <mgorman@techsingularity.net>, <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <1575519678-86510-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <d4935b9f-39ef-fb91-1786-be84784dccd0@nvidia.com>
-Date:   Wed, 4 Dec 2019 21:44:22 -0800
+        Thu, 5 Dec 2019 00:47:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=x96gOpqCUg5wPLxbwWs7dfewlG/0CiMSE5+nMnsPO9A=; b=GjkJAE3VENnG6oHJGRTemG4Ui
+        01wxy6qCxqveivonwruo9aqvEKwfkYr8KN6BgwuIWWWDtbMbqO1i9vw0nxY/9+Pjz8Itu/MOIDXa8
+        sm8UAqHa9D60pnCE64OnLmAAykqKdiGfYzYE69/w1RFopeoLyAr6m7Iv0AbT1I52JwWJ9TxI2FFeg
+        3Adm50uENj7cesdKxQD2t2wWvvwINuBUuRbjdnnDDgtw8BC9jAkSaGG3zmThyh9FbLFRFfK7nIxUS
+        YoqhAjygauF6C2q8sPOrEG7rsJx8Jz44Rfr/F+O8t9kFpiRHV5Y/7BIs+ZJFVhleAdf+PgTa36xJc
+        Zdzp6sLHQ==;
+Received: from [2601:1c0:6280:3f0::3deb]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1icjzL-0004qz-Cd; Thu, 05 Dec 2019 05:47:43 +0000
+Subject: Re: linux-next: Tree for Nov 15 (thermal:
+ THERMAL_GOV_POWER_ALLOCATOR)
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>, qperret@google.com
+References: <20191115190525.77efdf6c@canb.auug.org.au>
+ <247cd41e-a07b-adf0-4ec2-6467f0257837@infradead.org>
+ <9436e207-8a65-f01b-c348-32a8a00f03d4@infradead.org>
+ <6d43c93a748872293df489d397f894b77b221bc9.camel@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8895dbb7-dd48-1076-cef2-64d53a59c081@infradead.org>
+Date:   Wed, 4 Dec 2019 21:47:42 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <1575519678-86510-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <6d43c93a748872293df489d397f894b77b221bc9.camel@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575524836; bh=3BzUfhn2L2EFnKI0pmf+h4twdu2lT7xDJGJSbSIlTSk=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=sPG3P7lQrHMdzhkufix7Ov4qDOGYBHDxCVVz7lyYgqHXbXyHQHY/o9tY1myCgUyK1
-         KUL1R27VMJxzT0f7Qzy60Cnt9d5FMt5xlnJ2zeNT7iuWn8YrlQ4cLLVT/+hot5iHfS
-         mnlbO887v7yrEDobZZkkwISpx6Xt0IXJGzBrquVjMN3dLnef9HJ0HMFqeQKxmGkbrm
-         sevaJ4HMeymYkcEZx3TJTAeZ/uHJHR2aO2LpY8Mr+x2wfzY30JnaVK/mI2QnatNVpV
-         8gRnd2r/uYnshCL6Ro/KeBvD8tgei1cRR2nwVizmSLoex/+ZzRmvFRmoWokjl1WZIb
-         vyYsWwtNRRGwQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/4/19 8:21 PM, Yang Shi wrote:
-> Felix Abecassis reports move_pages() would return random status if the
-> pages are already on the target node by the below test program:
+On 12/4/19 8:27 PM, Zhang Rui wrote:
+> On Wed, 2019-12-04 at 08:25 -0800, Randy Dunlap wrote:
+>> On 11/15/19 3:44 PM, Randy Dunlap wrote:
+>>> On 11/15/19 12:05 AM, Stephen Rothwell wrote:
+>>>> Hi all,
+>>>>
+>>>> Changes since 20191114:
+>>>>
+>>>
+>>> on i386:
+>>>
+>>> WARNING: unmet direct dependencies detected for
+>>> THERMAL_GOV_POWER_ALLOCATOR
+>>>   Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
+>>>   Selected by [y]:
+>>>   - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
+>>>
+>>>
+>>> THERMAL_GOV_POWER_ALLOCATOR is selected by
+>>> THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
+>>> even though ENERGY_MODEL is not set/enabled.
+>>>
+>>>
+>>
+>> This Kconfig warning is still happening in linux-next of 20191204.
+>>
+> I overlooked the original report probably because I was not CCed.
 > 
-> ---8<---
+> This is introduced by commit a4e893e802e6("thermal: cpu_cooling:
+> Migrate to using the EM framework") which adds the dependency of
+> ENERGY_MODEL for THERMAL_GOV_POWER_ALLOCATOR.
+> 
+> To fix this, it's better to make THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
+> depends on THERMAL_GOV_POWER_ALLOCATOR instead.
+> 
+> Please confirm the problem is fixed by below patch.
+> 
+> thanks,
+> rui
+> 
+> From c9429f6e28ea2219686a4294d39f015ba373774b Mon Sep 17 00:00:00 2001
+> From: Zhang Rui <rui.zhang@intel.com>
+> Date: Thu, 5 Dec 2019 12:17:07 +0800
+> Subject: [PATCH] thermal: fix a Kconfig warning
+> 
+> Currently, THERMAL_GOV_POWER_ALLOCATOR is selected by
+> THERMAL_DEFAULT_GOV_POWER_ALLOCATOR even if it has some unmet
+> dependencies.
+> 
+> This causes the Kconfig warning
+>    WARNING: unmet direct dependencies detected for
+>       THERMAL_GOV_POWER_ALLOCATOR
+>       Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
+>       Selected by [y]:
+>       - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
+> 
+> Fix the problem by making THERMAL_DEFAULT_GOV_POWER_ALLOCATOR depends on
+> THERMAL_GOV_POWER_ALLOCATOR instead.
+> 
+> Fixes: a4e893e802e6("thermal: cpu_cooling: Migrate to using the EM framework")
+> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 
-This is correct correct code, so:
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Thanks.
 
-...with a few nitpicky notes about comments, below, that might help:
-
-> 
-> int main(void)
-> {
-> 	const long node_id = 1;
-> 	const long page_size = sysconf(_SC_PAGESIZE);
-> 	const int64_t num_pages = 8;
-> 
-> 	unsigned long nodemask =  1 << node_id;
-> 	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
-> 	if (ret < 0)
-> 		return (EXIT_FAILURE);
-> 
-> 	void **pages = malloc(sizeof(void*) * num_pages);
-> 	for (int i = 0; i < num_pages; ++i) {
-> 		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
-> 				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
-> 				-1, 0);
-> 		if (pages[i] == MAP_FAILED)
-> 			return (EXIT_FAILURE);
-> 	}
-> 
-> 	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
-> 	if (ret < 0)
-> 		return (EXIT_FAILURE);
-> 
-> 	int *nodes = malloc(sizeof(int) * num_pages);
-> 	int *status = malloc(sizeof(int) * num_pages);
-> 	for (int i = 0; i < num_pages; ++i) {
-> 		nodes[i] = node_id;
-> 		status[i] = 0xd0; /* simulate garbage values */
-> 	}
-> 
-> 	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
-> 	printf("move_pages: %ld\n", ret);
-> 	for (int i = 0; i < num_pages; ++i)
-> 		printf("status[%d] = %d\n", i, status[i]);
-> }
-> ---8<---
-> 
-> Then running the program would return nonsense status values:
-> $ ./move_pages_bug
-> move_pages: 0
-> status[0] = 208
-> status[1] = 208
-> status[2] = 208
-> status[3] = 208
-> status[4] = 208
-> status[5] = 208
-> status[6] = 208
-> status[7] = 208
-> 
-> This is because the status is not set if the page is already on the
-> target node, but move_pages() should return valid status as long as it
-> succeeds.  The valid status may be errno or node id.
-> 
-> We can't simply initialize status array to zero since the pages may be
-> not on node 0.  Fix it by updating status with node id which the page is
-> already on.  And, it looks we have to update the status inside
-> add_page_for_migration() since the page struct is not available outside
-> it.
-> 
-> Make add_page_for_migration() return 1 if store_status() is failed in
-> order to not mix up the status value since -EFAULT is also a valid
-> status.
-> 
-> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
-> Reported-by: Felix Abecassis <fabecassis@nvidia.com>
-> Tested-by: Felix Abecassis <fabecassis@nvidia.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: <stable@vger.kernel.org> 4.17+
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 > ---
-> v2: *Correted the return value when add_page_for_migration() returns 1.
+>  drivers/thermal/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> John noticed another return value inconsistency between the implementation and
-> the manpage.  The manpage says it should return -ENOENT if the page is already
-> on the target node, but it doesn't.  It looks the original code didn't return
-> -ENOENT either, I'm not sure if this is a document issue or not.  Anyway this
-> is another issue, once we confirm it we can fix it later.
-> 
->   mm/migrate.c | 36 ++++++++++++++++++++++++++++++------
->   1 file changed, 30 insertions(+), 6 deletions(-)
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index a8f87cb..f1090a0 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1512,17 +1512,21 @@ static int do_move_pages_to_node(struct mm_struct *mm,
->   /*
->    * Resolves the given address to a struct page, isolates it from the LRU and
->    * puts it to the given pagelist.
-> - * Returns -errno if the page cannot be found/isolated or 0 when it has been
-> - * queued or the page doesn't need to be migrated because it is already on
-> - * the target node
-> + * Returns:
-> + *     errno - if the page cannot be found/isolated
-> + *     0 - when it has been queued or the page doesn't need to be migrated
-> + *         because it is already on the target node
-> + *     1 - if store_status() is failed
-
-
-I recommend this wording instead:
-
-  * Returns:
-  *     errno - if the page cannot be found/isolated
-  *     0 - when it has been queued or the page doesn't need to be migrated
-  *         because it is already on the target node
-  *     1 - The page doesn't need to be migrated because it is already on the
-  *         target node. However, attempting to store the node ID in the status
-  *         array failed. Unlike other failures in this function, this case
-  *         needs to turn into a fatal failure in the calling function.
-
-
->    */
->   static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
-> -		int node, struct list_head *pagelist, bool migrate_all)
-> +		int node, struct list_head *pagelist, bool migrate_all,
-> +		int __user *status, int start)
->   {
->   	struct vm_area_struct *vma;
->   	struct page *page;
->   	unsigned int follflags;
->   	int err;
-> +	bool same_node = false;
->   
->   	down_read(&mm->mmap_sem);
->   	err = -EFAULT;
-> @@ -1543,8 +1547,10 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
->   		goto out;
->   
->   	err = 0;
-> -	if (page_to_nid(page) == node)
-> +	if (page_to_nid(page) == node) {
-> +		same_node = true;
->   		goto out_putpage;
-> +	}
->   
->   	err = -EACCES;
->   	if (page_mapcount(page) > 1 && !migrate_all)
-> @@ -1578,6 +1584,16 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
->   	put_page(page);
->   out:
->   	up_read(&mm->mmap_sem);
-> +
-> +	/*
-> +	 * Must call store_status() after releasing mmap_sem since put_user
-> +	 * need acquire mmap_sem too, otherwise potential deadlock may exist.
-> +	 */
-> +	if (same_node) {
-> +		if (store_status(status, start, node, 1))
-> +			err = 1;
-> +	}
-> +
->   	return err;
->   }
->   
-> @@ -1639,10 +1655,18 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->   		 * report them via status
->   		 */
-
-Let's change the comment above add_page_for_migration(), to read:
-
-		/*
-		 * Most errors in the page lookup or isolation are not fatal
-		 * and we simply report them via the status array. However,
-		 * positive error values are fatal.
-		 */
-
-
->   		err = add_page_for_migration(mm, addr, current_node,
-> -				&pagelist, flags & MPOL_MF_MOVE_ALL);
-> +				&pagelist, flags & MPOL_MF_MOVE_ALL, status,
-> +				i);
-> +
->   		if (!err)
->   			continue;
->   
-> +		/* store_status() failed in add_page_for_migration() */
-
-...and let's replace the above line, with the following:
-
-		/*
-		 * Most errors in the page lookup or isolation are not fatal
-		 * and we simply report them via the status array. However,
-		 * positive error values are fatal.
-		 */
-
-
-> +		if (err > 0) {
-> +			err = -EFAULT;
-> +			goto out_flush;
-> +		}
-> +
->   		err = store_status(status, i, err, 1);
->   		if (err)
->   			goto out_flush;
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 59b79fc48266..79b27865c6f4 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -108,7 +108,7 @@ config THERMAL_DEFAULT_GOV_USER_SPACE
+>  
+>  config THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
+>  	bool "power_allocator"
+> -	select THERMAL_GOV_POWER_ALLOCATOR
+> +	depends on THERMAL_GOV_POWER_ALLOCATOR
+>  	help
+>  	  Select this if you want to control temperature based on
+>  	  system and device power allocation. This governor can only
 > 
 
-And with that, I think the comments help a little bit more, in reading
-through the code.
 
-
-thanks,
 -- 
-John Hubbard
-NVIDIA
+~Randy
+
