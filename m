@@ -2,228 +2,112 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4989C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E965DC2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9A420707
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:32:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575545522;
-	bh=HoU7fEoop+BSuYEssjdRG/8skU6jRxjg/oYsoPYwaC8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cwBzMMW3r6X7FpIzsPLMq4GVaIegPePk/MxeIG3+Jd8fGoQbs+MEcxuwC3O9EKkdJ
-	 BCAKluL+LEL6VrOCk4Jr/7kPC3tx1lUL5dLZR/iM+CzEbq9ILAU4yM0YXk/hOOhIPd
-	 dut0TsnvfBL0FoqSemCAQSzbHKUCYfGaLsekh8OA=
+	by mail.kernel.org (Postfix) with ESMTP id BED252464E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:35:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VLVyGXFm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbfLELcB (ORCPT
+        id S1729325AbfLELfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 06:32:01 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53188 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfLELcB (ORCPT
+        Thu, 5 Dec 2019 06:35:31 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37767 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729048AbfLELfb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 06:32:01 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p9so3291393wmc.2;
-        Thu, 05 Dec 2019 03:31:59 -0800 (PST)
+        Thu, 5 Dec 2019 06:35:31 -0500
+Received: by mail-qt1-f193.google.com with SMTP id w47so3224842qtk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 03:35:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XFj7/o8CY27u2EP/Ii6IWyV6V/qKCHo8NGPo9OoyP2o=;
+        b=VLVyGXFmunojbceinV2tb/wrcOELq58HBQBO3PG1yIVJE9cJvQrEbuqEZfs1I80KNB
+         NpsR6uAqwQ1je6sENpKTPDm/ZPRPYiyWVyhKhz0Gkvv7qxp0qEVtFkBBxA6A80T2TXsl
+         X7m1sn9D0K3nhXLdO1yN+hrVDQu5/hiurh8lYBgW2BPj5Yycs6wAmQwzKT1tL8kEMsPy
+         K0NR8MTeoPaHhZSlq8XJVOGWI8DaOELPIF19c03IuvUui/HejI8FD0EVyWCqT64GrbmK
+         +X5RQyE6wCiiWL0oRAogajCglCRovqnXNNoySkGhPdL0ztR8wC2vD0Gl8PA4lCPMJHcV
+         sd3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JjJxU4HP6eaRRyFxsdouinTrpCEow/Z7i31krH2kwCs=;
-        b=kZv7nmk+Oo+yT7euE/vMskqQ3z7iw/omRSYYBtuRQPWvgye2SGBAhdOs+c3V9qmnOX
-         RcHXHX9narKM7amnmA6NvaE225rRWQJJyryXU5XtxhQujOqoyfnONznedvC0On+0P2Ub
-         1GnCS0jPziFJ0mLPlPdEv8/bzRmKR6+B9uUF92/IXFiycm4JFFxnm3okv+2A5wuKwutJ
-         YgqU5CeMWQ170EBVwUeilrfZu+13cVfjW9219ZG5CHlhXwtdSsHZdP++8TbhsAa5PevI
-         okr2MALjPwOMZKcpQjVN6FmS4vTAnwqtla0Tyl00yZ2hNV3qiH767ltafdbecOnC4r7t
-         FLAw==
-X-Gm-Message-State: APjAAAW6gZ3AwjJQsaRsgz5SHzFsoXSrvAZgbKa7YSQejHFUfbbbsfq8
-        vsalwUULJQ/gLAL8fGFkbKQ=
-X-Google-Smtp-Source: APXvYqzpDPHksDnygy5Fg+9DCfEclhSTLYJunPk0DVHsHi1gH3jci6q0s1hvYgMua9JGOYKPgXNpXQ==
-X-Received: by 2002:a1c:61d7:: with SMTP id v206mr4592095wmb.13.1575545518284;
-        Thu, 05 Dec 2019 03:31:58 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id z11sm11966035wrt.82.2019.12.05.03.31.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 03:31:57 -0800 (PST)
-Date:   Thu, 5 Dec 2019 12:31:56 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     fabecassis@nvidia.com, jhubbard@nvidia.com, cl@linux.com,
-        vbabka@suse.cz, mgorman@techsingularity.net,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [v2 PATCH] mm: move_pages: return valid node id in status if the
- page is already on the target node
-Message-ID: <20191205113156.GE28317@dhcp22.suse.cz>
-References: <1575519678-86510-1-git-send-email-yang.shi@linux.alibaba.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XFj7/o8CY27u2EP/Ii6IWyV6V/qKCHo8NGPo9OoyP2o=;
+        b=U2kdQkhvF+nsAE3zPL30nKXrRRzChiEFocJNvvA71rzY3HOZ5FVhYf7cUF0CKs74pv
+         tl96c9GA0uIjuxKOfYFyppOw4xiJI0uFyNxi22TatqWXUPTv80MoAD33VnL8vuQWGSdz
+         q+AuY7xv9jYQrztOwxOEvCO0N/KXJARdRTc5kcl+fbLG6KVchzKEUcQEkKaKGEQdbccD
+         1Hl1sl5RupKwKc3XyXF77P6/hmFEj36fTQPHLCUYt5WlW2wpgwvBOM6nx6EDkKHg1TjA
+         hOWOu9OTkWwPtKBPVlv+9YE4IlTb2fg8s77CELoiOCg8rGXdWU5D+kCE64ON27ih1tu6
+         hIAw==
+X-Gm-Message-State: APjAAAXKWUVX7OiEDERRwVdiCWHV8Rb54XEPk+ZtJ51NoXEvFAuNPNrI
+        RodZzZ0mNXQH7SYtU190ArdAECVVIQacIRJenPctzg==
+X-Google-Smtp-Source: APXvYqywdNT7YtUlcyhBayK1c5G6KgoYnokHv4gbK83yKRI9KmJz2M3nmPsIV9emnEuu9bBpOrULeU5+4XFCmFaRuPs=
+X-Received: by 2002:ac8:2489:: with SMTP id s9mr7043538qts.257.1575545729972;
+ Thu, 05 Dec 2019 03:35:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575519678-86510-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <0000000000003e640e0598e7abc3@google.com> <41c082f5-5d22-d398-3bdd-3f4bf69d7ea3@redhat.com>
+ <CACT4Y+bCHOCLYF+TW062n8+tqfK9vizaRvyjUXNPdneciq0Ahg@mail.gmail.com>
+ <f4db22f2-53a3-68ed-0f85-9f4541530f5d@redhat.com> <397ad276-ee2b-3883-9ed4-b5b1a2f8cf67@i-love.sakura.ne.jp>
+In-Reply-To: <397ad276-ee2b-3883-9ed4-b5b1a2f8cf67@i-love.sakura.ne.jp>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 5 Dec 2019 12:35:18 +0100
+Message-ID: <CACT4Y+YqNtRdUo4pDX8HeNubOJYWNfsqcQs_XueRNLPozw=g-Q@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in fbcon_get_font
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        syzbot <syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI <dri-devel@lists.freedesktop.org>, ghalat@redhat.com,
+        Gleb Natapov <gleb@kernel.org>, gwshan@linux.vnet.ibm.com,
+        "H. Peter Anvin" <hpa@zytor.com>, James Morris <jmorris@namei.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        KVM list <kvm@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, stewart@linux.vnet.ibm.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 05-12-19 12:21:18, Yang Shi wrote:
-> Felix Abecassis reports move_pages() would return random status if the
-> pages are already on the target node by the below test program:
-> 
-> ---8<---
-> 
-> int main(void)
-> {
-> 	const long node_id = 1;
-> 	const long page_size = sysconf(_SC_PAGESIZE);
-> 	const int64_t num_pages = 8;
-> 
-> 	unsigned long nodemask =  1 << node_id;
-> 	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
-> 	if (ret < 0)
-> 		return (EXIT_FAILURE);
-> 
-> 	void **pages = malloc(sizeof(void*) * num_pages);
-> 	for (int i = 0; i < num_pages; ++i) {
-> 		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
-> 				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
-> 				-1, 0);
-> 		if (pages[i] == MAP_FAILED)
-> 			return (EXIT_FAILURE);
-> 	}
-> 
-> 	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
-> 	if (ret < 0)
-> 		return (EXIT_FAILURE);
-> 
-> 	int *nodes = malloc(sizeof(int) * num_pages);
-> 	int *status = malloc(sizeof(int) * num_pages);
-> 	for (int i = 0; i < num_pages; ++i) {
-> 		nodes[i] = node_id;
-> 		status[i] = 0xd0; /* simulate garbage values */
-> 	}
-> 
-> 	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
-> 	printf("move_pages: %ld\n", ret);
-> 	for (int i = 0; i < num_pages; ++i)
-> 		printf("status[%d] = %d\n", i, status[i]);
-> }
-> ---8<---
-> 
-> Then running the program would return nonsense status values:
-> $ ./move_pages_bug
-> move_pages: 0
-> status[0] = 208
-> status[1] = 208
-> status[2] = 208
-> status[3] = 208
-> status[4] = 208
-> status[5] = 208
-> status[6] = 208
-> status[7] = 208
-> 
-> This is because the status is not set if the page is already on the
-> target node, but move_pages() should return valid status as long as it
-> succeeds.  The valid status may be errno or node id.
-> 
-> We can't simply initialize status array to zero since the pages may be
-> not on node 0.  Fix it by updating status with node id which the page is
-> already on.  And, it looks we have to update the status inside
-> add_page_for_migration() since the page struct is not available outside
-> it.
-
-The code is indeed more complex than I wanted but I couldn't figure an
-easier way back then. I wanted to keep store_status at a single place
-because the failure handling is quite complex already.
-
-> Make add_page_for_migration() return 1 if store_status() is failed in
-> order to not mix up the status value since -EFAULT is also a valid
-> status.
-
-Can we simply return 1 when there is something to migrate instead?
-Something like
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 4fe45d1428c8..f3730804b8d4 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1516,9 +1516,9 @@ static int do_move_pages_to_node(struct mm_struct *mm,
- /*
-  * Resolves the given address to a struct page, isolates it from the LRU and
-  * puts it to the given pagelist.
-- * Returns -errno if the page cannot be found/isolated or 0 when it has been
-- * queued or the page doesn't need to be migrated because it is already on
-- * the target node
-+ * Returns -errno if the page cannot be found/isolated or 0 when it doesn't have
-+ * to be migrate or 1 dwhen it has been queued or the page doesn't need to be
-+ * migrated because it is already on the target node
-  */
- static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
- 		int node, struct list_head *pagelist, bool migrate_all)
-@@ -1557,7 +1557,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
- 	if (PageHuge(page)) {
- 		if (PageHead(page)) {
- 			isolate_huge_page(page, pagelist);
--			err = 0;
-+			err = 1;
- 		}
- 	} else {
- 		struct page *head;
-@@ -1567,7 +1567,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
- 		if (err)
- 			goto out_putpage;
- 
--		err = 0;
-+		err = 1;
- 		list_add_tail(&head->lru, pagelist);
- 		mod_node_page_state(page_pgdat(head),
- 			NR_ISOLATED_ANON + page_is_file_cache(head),
-@@ -1644,8 +1644,14 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
- 		 */
- 		err = add_page_for_migration(mm, addr, current_node,
- 				&pagelist, flags & MPOL_MF_MOVE_ALL);
--		if (!err)
-+		if (!err) {
-+			err = store_status(status, i, current_node, 1);
-+			if (err)
-+				goto out_flush;
-+			continue;
-+		} else if (err > 0) {
- 			continue;
-+		}
- 
- 		err = store_status(status, i, err, 1);
- 		if (err)
-
-this would still keep store_status ugliness at a single place.
-
+On Thu, Dec 5, 2019 at 11:41 AM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
 >
-> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
-> Reported-by: Felix Abecassis <fabecassis@nvidia.com>
-> Tested-by: Felix Abecassis <fabecassis@nvidia.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: <stable@vger.kernel.org> 4.17+
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
-> v2: *Correted the return value when add_page_for_migration() returns 1.
-> 
-> John noticed another return value inconsistency between the implementation and
-> the manpage.  The manpage says it should return -ENOENT if the page is already
-> on the target node, but it doesn't.  It looks the original code didn't return
-> -ENOENT either, I'm not sure if this is a document issue or not.  Anyway this
-> is another issue, once we confirm it we can fix it later.
+> On 2019/12/05 19:22, Paolo Bonzini wrote:
+> > Ah, and because the machine is a KVM guest, kvm_wait appears in a lot of
+> > backtrace and I get to share syzkaller's joy every time. :)
+> >
+> > This bisect result is bogus, though Tetsuo found the bug anyway.
+> > Perhaps you can exclude commits that only touch architectures other than
+> > x86?
+> >
+>
+> It would be nice if coverage functionality can extract filenames in the source
+> code and supply the list of filenames as arguments for bisect operation.
 
-I do not remember all the details but my recollection is that there were
-several inconsistencies present before I touched the code and I've
-decided to not touch them without a clear usecase.
--- 
-Michal Hocko
-SUSE Labs
+What is the criteria for file name extraction? What will bisect
+operation do with the set of files?
+If you have a feature/improvement request, please file it at:
+https://github.com/google/syzkaller/issues/new
