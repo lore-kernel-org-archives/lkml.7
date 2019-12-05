@@ -2,180 +2,242 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0664C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE2DC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D9824672
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6910324672
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUz/4ExN"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BjYSV+TF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbfLEV04 (ORCPT
+        id S1730241AbfLEV1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 16:26:56 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:39874 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729187AbfLEV0z (ORCPT
+        Thu, 5 Dec 2019 16:27:39 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16001 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729587AbfLEV1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 16:26:55 -0500
-Received: by mail-yb1-f193.google.com with SMTP id o22so2103352ybg.6
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 13:26:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gT1ClJrzlicYHNnv+GE3TcH0cs8/Jr/m+AGF+oufN9g=;
-        b=SUz/4ExNWxtOEv7we2Vo0pS6UW+Sb9Enu/Wvb3u5aLbJUm/zSQMNcjZK3Tb1mt3BMU
-         HkCXtN9ZIcSVfyvPe/61CyGcsurAKs92zacPWZ/BOxlM2tz2zn6/6qToOCtUeGbzV7Ex
-         MCi6ebiMfr/UWN++SqkSKYDPeiNkE0ww0hJsLO4dBdxrqqkjpEoa2Sj3T8CcsJgETYp4
-         oR5moE+naiQ+KaFj96+WoDDZWv/a9aXcmGuBy5MtsZYKWA0+N+xW1Z7C8Zz0aUdOzXAq
-         r2MiFcJkaax1UFkybfI6qhVGKtnurdH+SSqwf9Z16QQL9R2prxUCfh9aPd9z4iOnobt2
-         fjIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gT1ClJrzlicYHNnv+GE3TcH0cs8/Jr/m+AGF+oufN9g=;
-        b=MblcF/6jV9V1dVVcoiHGyHQA6oesIzWU7NQejGjO3eeDqChfwQAVgRvOqdBo93ON9V
-         ti2v4wvjLR5CbhBb4z4nKV5ipzgSDLcPyFlWBLIS17xvf/XV5RqcN4iA4rKPyOwep8XR
-         0TxO9dn9o2u1N6Wi71Cbs658nQI32++Us0ksMVeo3EaKJUYb7ONu588AD+UXdxqlF8at
-         VAt6qdqutxEcvVY146sf2uFxCN2F0v+5zn58ZmvAOOI+XE9dIRFxkSmgxZOBP+AQuZc7
-         Ij0yxcDCBRsoD1DWC0J0Fbpb7mYfJB9LTi7LZ/BIb6pR03gvO6coPxGFxDcO90dxBFHP
-         0TVg==
-X-Gm-Message-State: APjAAAWy7BU5zRPY3bxjYqaC4zpAR4dfTlggN1awdQZMrXbuqMAVvxQ+
-        RXst+k83uia6Vq2TdJzfezxknrUq
-X-Google-Smtp-Source: APXvYqx1WP7grUxpkwa55jO37UnlxAQ/Rk51yssvA/KOUu2eSoUnfB7c7pOr41hQt5y8dIyX02tKjA==
-X-Received: by 2002:a25:578a:: with SMTP id l132mr7777675ybb.479.1575581212799;
-        Thu, 05 Dec 2019 13:26:52 -0800 (PST)
-Received: from mail-yw1-f45.google.com (mail-yw1-f45.google.com. [209.85.161.45])
-        by smtp.gmail.com with ESMTPSA id i84sm5124530ywc.43.2019.12.05.13.26.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 13:26:51 -0800 (PST)
-Received: by mail-yw1-f45.google.com with SMTP id w11so1821594ywj.9
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 13:26:51 -0800 (PST)
-X-Received: by 2002:a0d:e886:: with SMTP id r128mr7567719ywe.357.1575581210643;
- Thu, 05 Dec 2019 13:26:50 -0800 (PST)
+        Thu, 5 Dec 2019 16:27:39 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de976450000>; Thu, 05 Dec 2019 13:27:33 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 05 Dec 2019 13:27:37 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 05 Dec 2019 13:27:37 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec
+ 2019 21:27:37 +0000
+Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec 2019
+ 21:27:37 +0000
+Subject: Re: [v3 PATCH] mm: move_pages: return valid node id in status if the
+ page is already on the target node
+To:     Yang Shi <yang.shi@linux.alibaba.com>, <fabecassis@nvidia.com>,
+        <mhocko@suse.com>, <cl@linux.com>, <vbabka@suse.cz>,
+        <mgorman@techsingularity.net>, <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <1575572053-128363-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <d09644da-8a8c-bb89-c01b-75a4dbdfa719@nvidia.com>
+Date:   Thu, 5 Dec 2019 13:27:36 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191204.165528.1483577978366613524.davem@davemloft.net>
- <20191205064118.8299-1-vvidic@valentin-vidic.from.hr> <20191205113411.5e672807@cakuba.netronome.com>
- <CA+FuTSe=GSP41GG+QYKEmQ0eDUEoFeQ+oGAsgGJEZTe=hJq4Tw@mail.gmail.com> <20191205204343.GA20116@valentin-vidic.from.hr>
-In-Reply-To: <20191205204343.GA20116@valentin-vidic.from.hr>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Thu, 5 Dec 2019 16:26:14 -0500
-X-Gmail-Original-Message-ID: <CA+FuTSeu-ouuT37d9r40o62=_PcGBUmE_HaOAr9EsNPzpTw=ag@mail.gmail.com>
-Message-ID: <CA+FuTSeu-ouuT37d9r40o62=_PcGBUmE_HaOAr9EsNPzpTw=ag@mail.gmail.com>
-Subject: Re: [PATCH v3] net/tls: Fix return values to avoid ENOTSUPP
-To:     =?UTF-8?Q?Valentin_Vidi=C4=87?= <vvidic@valentin-vidic.from.hr>
-Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Aviad Yehezkel <aviadye@mellanox.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1575572053-128363-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575581253; bh=xgBdbV+OEy9Ehl8QZe0kT/WnGrgj8wI1+wLBPxiYQZY=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=BjYSV+TFuqmuxw14fEEV+DBTWtMMMlTcGmgWy68Y70m7xHdC72/OmeqK/DJQiq27a
+         IySWBGo9mFllNbFLpJI+opE1cs9NSOvmDtconR6siuBl1qx9/Ol4nOGUeZTw5wqgHI
+         JNIgJ3C0/tqkS/1EUTjl7u8KagsEcWfs8w+FeUECo/3vtUkXe0h3LEjUdSPOAhdLTi
+         NtaBE0t4mrU012wKH0UIdOHsYBsl4Y+CHZx0ccsC9yD3T7agTBaANbbp2Aa4KzTQfw
+         DuSGEz23X9noR5g5hLkSHuPlelGbNc1+TnZMuwrdxKlnz0/sapvwu2Vf3adt1cZ08B
+         5yFpRHR5q5K2g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 3:44 PM Valentin Vidi=C4=87
-<vvidic@valentin-vidic.from.hr> wrote:
->
-> On Thu, Dec 05, 2019 at 03:06:55PM -0500, Willem de Bruijn wrote:
-> > On Thu, Dec 5, 2019 at 2:34 PM Jakub Kicinski
-> > <jakub.kicinski@netronome.com> wrote:
-> > >
-> > > On Thu,  5 Dec 2019 07:41:18 +0100, Valentin Vidic wrote:
-> > > > ENOTSUPP is not available in userspace, for example:
-> > > >
-> > > >   setsockopt failed, 524, Unknown error 524
-> > > >
-> > > > Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
-> > >
-> > > > diff --git a/net/tls/tls_device.c b/net/tls/tls_device.c
-> > > > index 0683788bbef0..cd91ad812291 100644
-> > > > --- a/net/tls/tls_device.c
-> > > > +++ b/net/tls/tls_device.c
-> > > > @@ -429,7 +429,7 @@ static int tls_push_data(struct sock *sk,
-> > > >
-> > > >       if (flags &
-> > > >           ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL | MSG_SENDPAGE_N=
-OTLAST))
-> > > > -             return -ENOTSUPP;
-> > > > +             return -EOPNOTSUPP;
-> > > >
-> > > >       if (unlikely(sk->sk_err))
-> > > >               return -sk->sk_err;
-> > > > @@ -571,7 +571,7 @@ int tls_device_sendpage(struct sock *sk, struct=
- page *page,
-> > > >       lock_sock(sk);
-> > > >
-> > > >       if (flags & MSG_OOB) {
-> > > > -             rc =3D -ENOTSUPP;
-> > > > +             rc =3D -EOPNOTSUPP;
-> > >
-> > > Perhaps the flag checks should return EINVAL? Willem any opinions?
-> >
-> > No strong opinion. Judging from do_tcp_sendpages MSG_OOB is a
-> > supported flag in general for sendpage, so signaling that the TLS
-> > variant cannot support that otherwise valid request sounds fine to me.
->
-> I based these on the description from the sendmsg manpage, but you decide=
-:
->
-> EOPNOTSUPP
->     Some bit in the flags argument is inappropriate for the socket type.
+On 12/5/19 10:54 AM, Yang Shi wrote:
+> Felix Abecassis reports move_pages() would return random status if the
+> pages are already on the target node by the below test program:
+> 
+> ---8<---
+> 
+> int main(void)
+> {
+> 	const long node_id = 1;
+> 	const long page_size = sysconf(_SC_PAGESIZE);
+> 	const int64_t num_pages = 8;
+> 
+> 	unsigned long nodemask =  1 << node_id;
+> 	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
+> 	if (ret < 0)
+> 		return (EXIT_FAILURE);
+> 
+> 	void **pages = malloc(sizeof(void*) * num_pages);
+> 	for (int i = 0; i < num_pages; ++i) {
+> 		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
+> 				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
+> 				-1, 0);
+> 		if (pages[i] == MAP_FAILED)
+> 			return (EXIT_FAILURE);
+> 	}
+> 
+> 	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
+> 	if (ret < 0)
+> 		return (EXIT_FAILURE);
+> 
+> 	int *nodes = malloc(sizeof(int) * num_pages);
+> 	int *status = malloc(sizeof(int) * num_pages);
+> 	for (int i = 0; i < num_pages; ++i) {
+> 		nodes[i] = node_id;
+> 		status[i] = 0xd0; /* simulate garbage values */
+> 	}
+> 
+> 	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
+> 	printf("move_pages: %ld\n", ret);
+> 	for (int i = 0; i < num_pages; ++i)
+> 		printf("status[%d] = %d\n", i, status[i]);
+> }
+> ---8<---
+> 
+> Then running the program would return nonsense status values:
+> $ ./move_pages_bug
+> move_pages: 0
+> status[0] = 208
+> status[1] = 208
+> status[2] = 208
+> status[3] = 208
+> status[4] = 208
+> status[5] = 208
+> status[6] = 208
+> status[7] = 208
+> 
+> This is because the status is not set if the page is already on the
+> target node, but move_pages() should return valid status as long as it
+> succeeds.  The valid status may be errno or node id.
+> 
+> We can't simply initialize status array to zero since the pages may be
+> not on node 0.  Fix it by updating status with node id which the page is
+> already on.
+> 
+> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+> Reported-by: Felix Abecassis <fabecassis@nvidia.com>
+> Tested-by: Felix Abecassis <fabecassis@nvidia.com>
+> Suggested-by: Michal Hocko <mhocko@suse.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: <stable@vger.kernel.org> 4.17+
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+> v3: * Adopted the suggestion from Michal.
+> v2: * Correted the return value when add_page_for_migration() returns 1.
+> 
+>  mm/migrate.c | 24 ++++++++++++++++++------
+>  1 file changed, 18 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index a8f87cb..9c172f4 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1512,9 +1512,11 @@ static int do_move_pages_to_node(struct mm_struct *mm,
+>  /*
+>   * Resolves the given address to a struct page, isolates it from the LRU and
+>   * puts it to the given pagelist.
+> - * Returns -errno if the page cannot be found/isolated or 0 when it has been
+> - * queued or the page doesn't need to be migrated because it is already on
+> - * the target node
+> + * Returns:
+> + *     errno - if the page cannot be found/isolated
+> + *     0 - when it doesn't have to be migrated because it is already on the
+> + *         target node
+> + *     1 - when it has been queued
+>   */
+>  static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>  		int node, struct list_head *pagelist, bool migrate_all)
+> @@ -1553,7 +1555,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>  	if (PageHuge(page)) {
+>  		if (PageHead(page)) {
+>  			isolate_huge_page(page, pagelist);
+> -			err = 0;
+> +			err = 1;
+>  		}
+>  	} else {
+>  		struct page *head;
+> @@ -1563,7 +1565,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>  		if (err)
+>  			goto out_putpage;
+>  
+> -		err = 0;
+> +		err = 1;
+>  		list_add_tail(&head->lru, pagelist);
+>  		mod_node_page_state(page_pgdat(head),
+>  			NR_ISOLATED_ANON + page_is_file_cache(head),
+> @@ -1578,6 +1580,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>  	put_page(page);
+>  out:
+>  	up_read(&mm->mmap_sem);
+> +
+>  	return err;
+>  }
+>  
+> @@ -1640,8 +1643,17 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>  		 */
+>  		err = add_page_for_migration(mm, addr, current_node,
+>  				&pagelist, flags & MPOL_MF_MOVE_ALL);
+> -		if (!err)
+> +
+> +		/* The page is already on the target node */
+> +		if (!err) {
+> +			err = store_status(status, i, current_node, 1);
+> +			if (err)
+> +				goto out_flush;
+>  			continue;
+> +		/* The page is successfully queued */
 
-Interesting. That is a narrower interpretation than asm-generic/errno.h
+Nit: could you move this comment down one line, so that it's clear that it
+applies to the "else" branch? Like this:
 
-  #define EOPNOTSUPP      95      /* Operation not supported on
-transport endpoint */
+		} else if (err > 0) {
+			/* The page is successfully queued for migration */
+			continue;
+		}
 
-which is also the string that strerror() generates.
 
->
-> > > > diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-> > > > index bdca31ffe6da..5830b8e02a36 100644
-> > > > --- a/net/tls/tls_main.c
-> > > > +++ b/net/tls/tls_main.c
-> > > > @@ -496,7 +496,7 @@ static int do_tls_setsockopt_conf(struct sock *=
-sk, char __user *optval,
-> > > >       /* check version */
-> > > >       if (crypto_info->version !=3D TLS_1_2_VERSION &&
-> > > >           crypto_info->version !=3D TLS_1_3_VERSION) {
-> > > > -             rc =3D -ENOTSUPP;
-> > > > +             rc =3D -EINVAL;
-> > >
-> > > This one I think Willem asked to be EOPNOTSUPP OTOH.
-> >
-> > Indeed (assuming no one disagrees). Based on the same rationale: the
-> > request may be valid, it just cannot be accommodated (yet).
->
-> In this case other checks in the same function like crypto_info->cipher_t=
-ype
-> return EINVAL, so I used the same here.
+> +		} else if (err > 0) {
+> +			continue;
+> +		}
+>  
+>  		err = store_status(status, i, err, 1);
+>  		if (err)
+> 
 
-That makes sense.
+Also agree with Christopher's requests, but all of these don't affect the
+correct operation of the patch, so you can add:
 
-I think there is a fundamental difference between, say, passing an
-argument of incorrect length (optlen < sizeof(..)) and asking for a
-possibly unsupported cipher mode. But consistency trumps that.
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
 
-I don't mean to drag this out by bike-shedding.
-
-Happy to defer to maintainers on whether the errno on published code
-can and should be changed, which is the more fundamental issue than
-the exact errno.
-
-FWIW, I also did not see existing openssl and gnutls callers test the
-specific errno. The calls just fail on any setsockopt return value -1.
+thanks,
+-- 
+John Hubbard
+NVIDIA
