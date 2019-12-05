@@ -2,249 +2,251 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171ABC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F0FC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D0424651
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D76224F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:54:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Z9NRP718"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hac7YA/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbfLEJyq (ORCPT
+        id S1729560AbfLEJyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:54:46 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:44627 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729402AbfLEJyG (ORCPT
+        Thu, 5 Dec 2019 04:54:54 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50434 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729402AbfLEJyx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:54:06 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: DgjmBG2l3vtdj+xs72GVL7OCfKVl95bvU5/p7Mn1mpanTCej+oMoH0mgN6x9ctoxdSfq3f/0OK
- geUJ80MRY21i86xcnaF2iFRiM9DOSUxhnwWe1eH5JMdjIp1mm39+PrUGgrkm9iM8ihBOPddloY
- IHuC4xIAC2ySeKNR1eUppyRQhm/23+4+fOSHGC5oyWbYaZTKOnkR3Kl6bwZpH9F6PVikJfDvf8
- bJY6pXCZiloNEjTK/S0XZGfS25sRCYym+7xd7tbHNZ6lYtTxblktREhH8E9zMxgBN7cZc4q8vi
- SsE=
-X-IronPort-AV: E=Sophos;i="5.69,281,1571727600"; 
-   d="scan'208";a="59347330"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Dec 2019 02:54:04 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 5 Dec 2019 02:54:06 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 5 Dec 2019 02:54:04 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iiZqPh0Mtnfn5K3IKItNl8wYhLPuJg/wNcuMQIPcISmEYoFRW2CgMs/8F47vDBhaRyXkfGBSxUyob2GovbYpJQ0Aj7kXnM3AcTaxMMqL2rbhL0rFWnFVFur2zhcdpBDiefn72ZE9iIrvfNae1BURO76XYOaKzSGKKdkLAv4VtlF9qHYBcLxIpNGnRZuHY5xQcrrKS7XLtEQLPTkAxs6G+oOk2krbCYmizy3XZpLjUjfFqAEHNnrV/g2LUyVr8Kr1ycRfD1XmDYXcz76TBLhzrqU0+GfHbq4ekdR8FJaRgRWwPrbl1s+oQMhaB6HTYJfrcDVAA+jf42OrlIhYzk/IVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yeLwb2XawRQuHknJR4sP/1YbNCjQLINB9ZRF9097Roo=;
- b=RhXCAwTIKpNFIku4+TGbE93ucoYBNg1HA8wEE0MxvbXrfoVqdKZdQ1jx5+cdbT5ExyTZVtySeYtc25n5ysDFyu9jVMOb0Sr/7pN6aKpHVg87XNKtRii33F7JVDHmcQxFKgB+GkBk8pqlRC+hCNrzhsFfMxcf07LnU2TAVSQQOMT4Qe5SyG9yPuZx55vSgIhvYwyEzhdMU+crfPdwt4GxMLFmjaD26Fm2yWF6IFRo3lCj7XGLzsL++g3Q1WWH8uFaN1grmPhW1KMlXlkBlWaJ32RLJfQj8NqF/iWQkfPBCowZVGk0LPoNohEbdyRyK8XzZFdn6OebUMey3Jaz5YQVCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Thu, 5 Dec 2019 04:54:53 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so2940735wmg.0;
+        Thu, 05 Dec 2019 01:54:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yeLwb2XawRQuHknJR4sP/1YbNCjQLINB9ZRF9097Roo=;
- b=Z9NRP71896aU3GWqIH1R6zoQ6tFoivT+ptv3oV2uMMb/GBJ04VAD0bMCf7kq6GFerMHg81maS7TWEEcXb22zcHiZ46aa38hVN8xx7PThMhwHOse7UuOcdHPpr8KUYGdEjiTmW1TkIZph0cXNo6f6K5CGcbhbNRzBNgKITMsHd+8=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB3677.namprd11.prod.outlook.com (20.178.253.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.13; Thu, 5 Dec 2019 09:54:03 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::84c:6e75:22df:cbc9]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::84c:6e75:22df:cbc9%5]) with mapi id 15.20.2495.026; Thu, 5 Dec 2019
- 09:54:03 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <herbert@gondor.apana.org.au>
-CC:     <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>, <linux-crypto@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 12/16] crypto: atmel-aes - Fix saving of IV for CTR mode
-Thread-Topic: [PATCH 12/16] crypto: atmel-aes - Fix saving of IV for CTR mode
-Thread-Index: AQHVq1Hswvi5MUOxfE+TUslwNbNKZA==
-Date:   Thu, 5 Dec 2019 09:54:03 +0000
-Message-ID: <20191205095326.5094-13-tudor.ambarus@microchip.com>
-References: <20191205095326.5094-1-tudor.ambarus@microchip.com>
-In-Reply-To: <20191205095326.5094-1-tudor.ambarus@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: FR2P281CA0018.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a::28) To MN2PR11MB4448.namprd11.prod.outlook.com
- (2603:10b6:208:193::29)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.14.5
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fb6c0613-5faa-4099-fee8-08d779690f4d
-x-ms-traffictypediagnostic: MN2PR11MB3677:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB3677B53683A0B83C465F4CFFF05C0@MN2PR11MB3677.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2043;
-x-forefront-prvs: 02426D11FE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(39860400002)(376002)(346002)(396003)(189003)(199004)(2616005)(66556008)(305945005)(66476007)(66446008)(102836004)(64756008)(11346002)(5660300002)(52116002)(76176011)(99286004)(36756003)(66946007)(2906002)(54906003)(26005)(6916009)(6506007)(1076003)(8676002)(6486002)(4326008)(50226002)(1730700003)(8936002)(14454004)(81156014)(186003)(86362001)(81166006)(5640700003)(478600001)(6512007)(71200400001)(25786009)(316002)(71190400001)(14444005)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3677;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VAnEREDJbbtF9P1+QNNjjMsHKtPy5dK53zQlxbhwroFmeInPcEpWhNofzKyTNCZ60vRbSOxjLpIAL9Iq0yXW1IQPXCz2d+csTMd5fKKUePKLuKqZH7q/6WxfAYozDR3SpqIu7euxcGi39vQdZvB9ulJIa40p9f2dHb6N3w19ZdfEKuPk9v4faVArYuzvYGIkdeRhE1wNJUfN7AYICsyQ8IsLimpS1LOPdkUuV9AWaV87VSMBI6+FQZim/F5oQ+e8VXSWyoyxz+JgzT//mcmewZGMkOz87U2hn+4Aaiua9wHknGMjxZmq3kDKdDDb8gs6IWh/vhOON/t903vWc4nrWWNkAiHdNySad/VQS/3uYm+J1PW73Jks965xsD5BkmKGRMbLcagByYOsVoENwbT/KYbFZUXez+cHftbKQlHfylidYcMqJO0JeV+99hXYg32L
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DQAhGy9NIgRWmctc8n8PEHCVr8wavboJn+39LOkMnnE=;
+        b=hac7YA/61scaeO1ZPDjnWRMzcy75dsYruAt43uzR4MuSNEz5hLw5EdT0z6Pk1oKaf2
+         fTx/UHnJFbfc4yz5OxSDaux8zk2LpeT53fJ2LG+/5yqQgpjOTz3h53GTnIdVAcTKJu7t
+         xG/FEOdrDW23jBF3o46Cmb8RLZ0MeIO1x8zWgY8AzwOkcpJXe8WvLpubqc2McKiHLLNr
+         eXSDqObg1oCx4MHRo8Iua/WzAIC2j2e4ETJSFvHsUBnEfO5ALS1gU+pCdLNKtcDPo9fg
+         ea2NuzaE3VVvgcbVAosn8fyIucElmMVU0IXGeAX739GIzKDJD5KlcSees5Ss3hDd40c5
+         9IwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DQAhGy9NIgRWmctc8n8PEHCVr8wavboJn+39LOkMnnE=;
+        b=hF73vov5gw6rh9rLXvUqvE2eengLL8UZdDKPKSNZIjb8anHpRibYxP+NQPai7ddkoU
+         0y/n0M8lHMqOlyuQ3yjqxdR6RoRksjIL+/qAUUTiAcBLlTRzYUfUPf/aLucOVjjUoupV
+         crzEDFJ9Spp3cqWynF57/Cj+ITn1JLidFjSDH4D+v2walAToRDkD3rUnLwIRrRYbc0Kc
+         FoMJN6OzvGTWySCdo0egpWRHT9hs6buvv0Hst0kYTRkh2K+RC8bTenqJK8qVqmy0M/ZB
+         3dkY2jF+HdTdVbBimHIzDHuArW+MkW4jlyFUPsZM76nqiakTMGRo2CIHLNRsR5e4pkpS
+         4Urg==
+X-Gm-Message-State: APjAAAXCoAznZsNjRacC2bEQ3E4kZuJ7YDEZCYJH8U8vk0uNuwfWUaoz
+        p+mDtOpcuAeGsZJdqSiFEgE=
+X-Google-Smtp-Source: APXvYqx3wMGWvFWz+VWzb3/gBJ7AfPMRQqK+25vc1Q2imL/LDYGpX95tPaj1m7INL2O5Ql2/5WubRg==
+X-Received: by 2002:a05:600c:282:: with SMTP id 2mr3954319wmk.73.1575539690435;
+        Thu, 05 Dec 2019 01:54:50 -0800 (PST)
+Received: from [192.168.1.35] (182.red-88-21-103.staticip.rima-tde.net. [88.21.103.182])
+        by smtp.gmail.com with ESMTPSA id u26sm9723665wmj.9.2019.12.05.01.54.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2019 01:54:49 -0800 (PST)
+Subject: Re: [PATCH v3 08/15] KVM: Move setting of memslot into helper routine
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>
+References: <20191024230744.14543-1-sean.j.christopherson@intel.com>
+ <20191024230744.14543-9-sean.j.christopherson@intel.com>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
+Message-ID: <a606c931-ffeb-95e9-79eb-df68fed7af65@amsat.org>
+Date:   Thu, 5 Dec 2019 10:54:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb6c0613-5faa-4099-fee8-08d779690f4d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 09:54:03.3040
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mvGCXLsTO1T6T6f8+pZ9053VaC2xV6x6hZy40hE4UHl7TxvY0DY1tFbKKwu4wn+7k5hYR/J9xTCNf7MmvIVnx039FFHxABKNBNZY2P8vbVc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3677
+In-Reply-To: <20191024230744.14543-9-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+On 10/25/19 1:07 AM, Sean Christopherson wrote:
+> Split out the core functionality of setting a memslot into a separate
+> helper in preparation for moving memslot deletion into its own routine.
+> 
+> Tested-by: Christoffer Dall <christoffer.dall@arm.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>   virt/kvm/kvm_main.c | 106 ++++++++++++++++++++++++++------------------
+>   1 file changed, 63 insertions(+), 43 deletions(-)
+> 
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index e2f47d60f696..860de4fadce6 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -920,6 +920,66 @@ static struct kvm_memslots *install_new_memslots(struct kvm *kvm,
+>   	return old_memslots;
+>   }
+>   
+> +static int kvm_set_memslot(struct kvm *kvm,
+> +			   const struct kvm_userspace_memory_region *mem,
+> +			   const struct kvm_memory_slot *old,
+> +			   struct kvm_memory_slot *new, int as_id,
+> +			   enum kvm_mr_change change)
+> +{
+> +	struct kvm_memory_slot *slot;
+> +	struct kvm_memslots *slots;
+> +	int r;
+> +
+> +	slots = kvzalloc(sizeof(struct kvm_memslots), GFP_KERNEL_ACCOUNT);
+> +	if (!slots)
+> +		return -ENOMEM;
+> +	memcpy(slots, __kvm_memslots(kvm, as_id), sizeof(struct kvm_memslots));
+> +
+> +	if (change == KVM_MR_DELETE || change == KVM_MR_MOVE) {
+> +		/*
+> +		 * Note, the INVALID flag needs to be in the appropriate entry
+> +		 * in the freshly allocated memslots, not in @old or @new.
+> +		 */
+> +		slot = id_to_memslot(slots, old->id);
+> +		slot->flags |= KVM_MEMSLOT_INVALID;
+> +
+> +		/*
+> +		 * We can re-use the old memslots, the only difference from the
+> +		 * newly installed memslots is the invalid flag, which will get
+> +		 * dropped by update_memslots anyway.  We'll also revert to the
+> +		 * old memslots if preparing the new memory region fails.
+> +		 */
+> +		slots = install_new_memslots(kvm, as_id, slots);
+> +
+> +		/* From this point no new shadow pages pointing to a deleted,
+> +		 * or moved, memslot will be created.
+> +		 *
+> +		 * validation of sp->gfn happens in:
+> +		 *	- gfn_to_hva (kvm_read_guest, gfn_to_pfn)
+> +		 *	- kvm_is_visible_gfn (mmu_check_roots)
+> +		 */
+> +		kvm_arch_flush_shadow_memslot(kvm, slot);
+> +	}
+> +
+> +	r = kvm_arch_prepare_memory_region(kvm, new, mem, change);
+> +	if (r)
+> +		goto out_slots;
+> +
+> +	update_memslots(slots, new, change);
+> +	slots = install_new_memslots(kvm, as_id, slots);
+> +
+> +	kvm_arch_commit_memory_region(kvm, mem, old, new, change);
+> +
+> +	kvfree(slots);
+> +	return 0;
+> +
+> +out_slots:
+> +	if (change == KVM_MR_DELETE || change == KVM_MR_MOVE)
+> +		slots = install_new_memslots(kvm, as_id, slots);
+> +	kvfree(slots);
+> +	return r;
+> +}
+> +
+>   /*
+>    * Allocate some memory and give it an address in the guest physical address
+>    * space.
+> @@ -936,7 +996,6 @@ int __kvm_set_memory_region(struct kvm *kvm,
+>   	unsigned long npages;
+>   	struct kvm_memory_slot *slot;
+>   	struct kvm_memory_slot old, new;
+> -	struct kvm_memslots *slots;
+>   	int as_id, id;
+>   	enum kvm_mr_change change;
+>   
+> @@ -1023,58 +1082,19 @@ int __kvm_set_memory_region(struct kvm *kvm,
+>   			return r;
+>   	}
+>   
+> -	slots = kvzalloc(sizeof(struct kvm_memslots), GFP_KERNEL_ACCOUNT);
+> -	if (!slots) {
+> -		r = -ENOMEM;
+> -		goto out_bitmap;
+> -	}
+> -	memcpy(slots, __kvm_memslots(kvm, as_id), sizeof(struct kvm_memslots));
+> -
+> -	if ((change == KVM_MR_DELETE) || (change == KVM_MR_MOVE)) {
+> -		slot = id_to_memslot(slots, id);
+> -		slot->flags |= KVM_MEMSLOT_INVALID;
+> -
+> -		/*
+> -		 * We can re-use the old memslots, the only difference from the
+> -		 * newly installed memslots is the invalid flag, which will get
+> -		 * dropped by update_memslots anyway.  We'll also revert to the
+> -		 * old memslots if preparing the new memory region fails.
+> -		 */
+> -		slots = install_new_memslots(kvm, as_id, slots);
+> -
+> -		/* From this point no new shadow pages pointing to a deleted,
+> -		 * or moved, memslot will be created.
+> -		 *
+> -		 * validation of sp->gfn happens in:
+> -		 *	- gfn_to_hva (kvm_read_guest, gfn_to_pfn)
+> -		 *	- kvm_is_visible_gfn (mmu_check_roots)
+> -		 */
+> -		kvm_arch_flush_shadow_memslot(kvm, slot);
+> -	}
+> -
+> -	r = kvm_arch_prepare_memory_region(kvm, &new, mem, change);
+> -	if (r)
+> -		goto out_slots;
+> -
+>   	/* actual memory is freed via old in kvm_free_memslot below */
+>   	if (change == KVM_MR_DELETE) {
+>   		new.dirty_bitmap = NULL;
+>   		memset(&new.arch, 0, sizeof(new.arch));
+>   	}
+>   
+> -	update_memslots(slots, &new, change);
+> -	slots = install_new_memslots(kvm, as_id, slots);
+> -
+> -	kvm_arch_commit_memory_region(kvm, mem, &old, &new, change);
+> +	r = kvm_set_memslot(kvm, mem, &old, &new, as_id, change);
+> +	if (r)
+> +		goto out_bitmap;
+>   
+>   	kvm_free_memslot(kvm, &old, &new);
+> -	kvfree(slots);
+>   	return 0;
+>   
+> -out_slots:
+> -	if (change == KVM_MR_DELETE || change == KVM_MR_MOVE)
+> -		slots = install_new_memslots(kvm, as_id, slots);
+> -	kvfree(slots);
+>   out_bitmap:
+>   	if (new.dirty_bitmap && !old.dirty_bitmap)
+>   		kvm_destroy_dirty_bitmap(&new);
+> 
 
-The req->iv of the skcipher_request is expected to contain the
-last used IV. Update the req->iv for CTR mode.
-
-Fixes: bd3c7b5c2aba ("crypto: atmel - add Atmel AES driver")
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
----
- drivers/crypto/atmel-aes.c | 43 +++++++++++++++++++++++++++++++-----------=
--
- 1 file changed, 31 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/crypto/atmel-aes.c b/drivers/crypto/atmel-aes.c
-index cbfe6ccd2a0d..60f54580d646 100644
---- a/drivers/crypto/atmel-aes.c
-+++ b/drivers/crypto/atmel-aes.c
-@@ -121,6 +121,7 @@ struct atmel_aes_ctr_ctx {
- 	size_t			offset;
- 	struct scatterlist	src[2];
- 	struct scatterlist	dst[2];
-+	u16			blocks;
- };
-=20
- struct atmel_aes_gcm_ctx {
-@@ -513,6 +514,26 @@ static void atmel_aes_set_iv_as_last_ciphertext_block(=
-struct atmel_aes_dev *dd)
- 	}
- }
-=20
-+static inline struct atmel_aes_ctr_ctx *
-+atmel_aes_ctr_ctx_cast(struct atmel_aes_base_ctx *ctx)
-+{
-+	return container_of(ctx, struct atmel_aes_ctr_ctx, base);
-+}
-+
-+static void atmel_aes_ctr_update_req_iv(struct atmel_aes_dev *dd)
-+{
-+	struct atmel_aes_ctr_ctx *ctx =3D atmel_aes_ctr_ctx_cast(dd->ctx);
-+	struct skcipher_request *req =3D skcipher_request_cast(dd->areq);
-+	struct crypto_skcipher *skcipher =3D crypto_skcipher_reqtfm(req);
-+	unsigned int ivsize =3D crypto_skcipher_ivsize(skcipher);
-+	int i;
-+
-+	for (i =3D 0; i < ctx->blocks; i++)
-+		crypto_inc((u8 *)ctx->iv, AES_BLOCK_SIZE);
-+
-+	memcpy(req->iv, ctx->iv, ivsize);
-+}
-+
- static inline int atmel_aes_complete(struct atmel_aes_dev *dd, int err)
- {
- 	struct skcipher_request *req =3D skcipher_request_cast(dd->areq);
-@@ -527,8 +548,12 @@ static inline int atmel_aes_complete(struct atmel_aes_=
-dev *dd, int err)
- 	dd->flags &=3D ~AES_FLAGS_BUSY;
-=20
- 	if (!dd->ctx->is_aead &&
--	    (rctx->mode & AES_FLAGS_OPMODE_MASK) !=3D AES_FLAGS_ECB)
--		atmel_aes_set_iv_as_last_ciphertext_block(dd);
-+	    (rctx->mode & AES_FLAGS_OPMODE_MASK) !=3D AES_FLAGS_ECB) {
-+		if ((rctx->mode & AES_FLAGS_OPMODE_MASK) !=3D AES_FLAGS_CTR)
-+			atmel_aes_set_iv_as_last_ciphertext_block(dd);
-+		else
-+			atmel_aes_ctr_update_req_iv(dd);
-+	}
-=20
- 	if (dd->is_async)
- 		dd->areq->complete(dd->areq, err);
-@@ -1007,12 +1032,6 @@ static int atmel_aes_start(struct atmel_aes_dev *dd)
- 				   atmel_aes_transfer_complete);
- }
-=20
--static inline struct atmel_aes_ctr_ctx *
--atmel_aes_ctr_ctx_cast(struct atmel_aes_base_ctx *ctx)
--{
--	return container_of(ctx, struct atmel_aes_ctr_ctx, base);
--}
--
- static int atmel_aes_ctr_transfer(struct atmel_aes_dev *dd)
- {
- 	struct atmel_aes_ctr_ctx *ctx =3D atmel_aes_ctr_ctx_cast(dd->ctx);
-@@ -1020,7 +1039,7 @@ static int atmel_aes_ctr_transfer(struct atmel_aes_de=
-v *dd)
- 	struct scatterlist *src, *dst;
- 	size_t datalen;
- 	u32 ctr;
--	u16 blocks, start, end;
-+	u16 start, end;
- 	bool use_dma, fragmented =3D false;
-=20
- 	/* Check for transfer completion. */
-@@ -1030,14 +1049,14 @@ static int atmel_aes_ctr_transfer(struct atmel_aes_=
-dev *dd)
-=20
- 	/* Compute data length. */
- 	datalen =3D req->cryptlen - ctx->offset;
--	blocks =3D DIV_ROUND_UP(datalen, AES_BLOCK_SIZE);
-+	ctx->blocks =3D DIV_ROUND_UP(datalen, AES_BLOCK_SIZE);
- 	ctr =3D be32_to_cpu(ctx->iv[3]);
-=20
- 	/* Check 16bit counter overflow. */
- 	start =3D ctr & 0xffff;
--	end =3D start + blocks - 1;
-+	end =3D start + ctx->blocks - 1;
-=20
--	if (blocks >> 16 || end < start) {
-+	if (ctx->blocks >> 16 || end < start) {
- 		ctr |=3D 0xffff;
- 		datalen =3D AES_BLOCK_SIZE * (0x10000 - start);
- 		fragmented =3D true;
---=20
-2.14.5
-
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
