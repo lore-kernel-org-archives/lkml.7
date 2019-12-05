@@ -2,491 +2,197 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3188DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1627C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06372464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575560054;
-	bh=4YGKZOcuDObRc45svNyo/31sR/2ry3qXGOa836Pg/SQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NZQ3VSBrdzCQaHzWY+x5FdTiwFBpFg43U/31pO7gomowsuUyJ6XIw+B3d3d9XAEM8
-	 jVQEr0oZDDvVVgcXBI/B9hbLdM2pspOngt74+JPMMzue+wyb4PitiCbPPIuKzaU5m5
-	 egcas96+bhBuRnyhS3vPM09fmtFPGeiCBqRRPBlE=
+	by mail.kernel.org (Postfix) with ESMTP id 7CC5724249
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 15:34:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RgVylUW7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbfLEPeN (ORCPT
+        id S1729740AbfLEPeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:34:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfLEPeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 10:34:12 -0500
-Received: from rapoport-lnx (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E915B21823;
-        Thu,  5 Dec 2019 15:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575560051;
-        bh=4YGKZOcuDObRc45svNyo/31sR/2ry3qXGOa836Pg/SQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PXIxXcuHqyeWxcmzT84/OQfHg6J7fNjIS+eOCFw9BM4jt+mGJN/5q7OUNO/mPxKjv
-         cbh7ZUsX3pniXKSPcgy5U0gUQfJ/SPwsWH4m+wl7bwE6+el1ZCQw/GYX4BAzmFuJnE
-         dM36b9KCicFJhWs3hZ52XUhCWbsgF0sEIw1TgihY=
-Date:   Thu, 5 Dec 2019 17:34:01 +0200
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, X86 ML <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Alan Cox <alan@linux.intel.com>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Christopher Lameter <cl@linux.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Message-ID: <20191205153400.GA25575@rapoport-lnx>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <CA5C22D9-BC3E-4B69-8DD9-4D3B75E40BD5@amacapital.net>
- <20191029093254.GE18773@rapoport-lnx>
- <CALCETrUuuc4DS0cdMBtS550Wkp0x9ND3M3SgtaMgyRROnDR5Kg@mail.gmail.com>
- <20191030084005.GC20624@rapoport-lnx>
- <CALCETrXajrY+0SmzkL7t++ndYwRoYLLE9VPKwSGSyW8HZx-TeA@mail.gmail.com>
+        Thu, 5 Dec 2019 10:34:16 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33993 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLEPeO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 10:34:14 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t2so4183143wrr.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 07:34:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GIebstkH20puIVZWgC2hGKzku3yRSI4A3CVg92MDVQs=;
+        b=RgVylUW7KveDxJ3ohhKWc4l3cCuIRuSxVDGHkWxQkyJAq73UqLAdPV5ykqeEWOigV6
+         kPpYyUfLkJwt8IUI7hhNJv/97o+h4NHtlJazgz6EhwrKqxF9drvekDzXRe5tjwM29eUR
+         ou0SaXgUYQl6RGpaa/vdtqqHjcM41TwNDT/A4IYz3ZVnjEBr86CwYX+iwkPTmAamoCFN
+         h9xXbU3THxhkfLDA6APB86DdG30Tcpup3M1NbJY9FVtUa0dQimhFEg+OSFlfEKDW1EPp
+         Xwej+fYV2ZOfw5abJAN/P9svXvtmQEdIUi8mQfIb18Eynf5CuyQAcOdy13tj9b1xXNN4
+         uZUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GIebstkH20puIVZWgC2hGKzku3yRSI4A3CVg92MDVQs=;
+        b=lwAAXL0W8zrawonnbfiLW1tbpA2cPtYYTAp5KlrwDXbz4IN3GP7Jbrb+Cfmx760RTG
+         osdxqQRf93/nTGrANgPtdBEi6komLBXl4E8ujYyUGd9qK/h1d8j9Sz1jVgZgJvTCMV0V
+         Zr0xK67Mhq3Yzl44Jo5qVaPFyyyOezFbARPVLHuj/aRrMqcrdQ1P3LPgMeBSATAHPmJr
+         bnBD3CrhM2JlWWbMMpOxTS/BbSz80lJj2Xni3X5ASEmQe+Uy2Oe7gPqw6ARz0lYHhlb4
+         XKbG9HpNUVheNBdMwhP8rU85tIPFPS3x+YUQuCiM7DR92ptEbwnU2M9suXi3SYbLtxu5
+         HQYw==
+X-Gm-Message-State: APjAAAWZWMjHqNbxCGgiPc7gd0WHUZybYyhnEc068VVk3+jzcvMQL/+3
+        aS5miMll742Zpb7Waa1iJZ1iOGJQ7VEXQQ==
+X-Google-Smtp-Source: APXvYqzISVFwgl00Y4cT7qU6re/o5QIa1Ua3iwxFaohFbaqWWtF4alAmwbSyhxysbWxjiZGXBlFlxA==
+X-Received: by 2002:adf:cd0a:: with SMTP id w10mr10564920wrm.107.1575560052661;
+        Thu, 05 Dec 2019 07:34:12 -0800 (PST)
+Received: from bender.baylibre.local (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id u26sm191894wmj.9.2019.12.05.07.34.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 07:34:11 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     mjourdan@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] media: meson: vdec: add g12a platform
+Date:   Thu,  5 Dec 2019 16:34:04 +0100
+Message-Id: <20191205153408.26500-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrXajrY+0SmzkL7t++ndYwRoYLLE9VPKwSGSyW8HZx-TeA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 02:28:21PM -0700, Andy Lutomirski wrote:
-> 
-> IMO a major benefit of a chardev approach is that you don't need a new
-> VM_ flag and you don't need to worry about wiring it up everywhere in
-> the core mm code.
+This patchset adds support for the current Amlogic Video Decoder
+driver for the Amlogic G12A & compatible SoCs.
 
-I've done a couple of experiments with secret/exclusive/whatever
-memory backed by a file-descriptor using a chardev and memfd_create
-syscall. There is indeed no need for VM_ flag, but there are still places
-that would require special care, e.g vm_normal_page(), madvise(DO_FORK), so
-it won't be completely free of core mm modifications.
+The bindings are converted to YAML and dt-schemes to ease validation
+of the bindings and the Amlogic DT.
 
-Below is a POC that implements extension to memfd_create() that allows
-mapping of a "secret" memory. The "secrecy" mode should be explicitly set
-using ioctl(), for now I've implemented exclusive and uncached mappings.
+Then support is added for the currently supported MPEG1 & MPEG2 decoders
+and additional clock for upcoming HEVC/VP9 decoder support.
 
-The POC primarily indented to illustrate a possible userspace API for
-fd-based secret memory. The idea is that user will create a file
-descriptor using a system call. The user than has to use ioctl() to define
-the desired mode of operation and only when the mode is set it is possible
-to mmap() the memory. I.e something like
+M2M Decoder compliance is handled in a separate patchset at [1].
 
-	fd = memfd_create("secret", MFD_SECRET);
-	ioctl(fd, MFD_SECRET_UNCACHED);
-	ptr = mmap(NULL, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED,
-		   fd, 0);
+# v4l2-compliance
+v4l2-compliance SHA: 7ead0e1856b89f2e19369af452bb03fd0cd16793, 64 bits
 
+Compliance test for meson-vdec device /dev/video0:
 
-The ioctl() allows a lot of flexibility in how the secrecy should be
-defined. It could be either a request for a particular protection (e.g.
-exclusive, uncached) or something like "secrecy level" from "a bit more
-secret than normally" to "do your best even at the expense of performance".
-The POC implements the first option and the modes are mutually exclusive
-for now, but there is no fundamental reason they cannot be mixed.
+Driver Info:
+	Driver name      : meson-vdec
+	Card type        : Amlogic Video Decoder
+	Bus info         : platform:meson-vdec
+	Driver version   : 5.4.0
+	Capabilities     : 0x84204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+	Detected Stateful Decoder
 
-I've chosen memfd over a chardev as it seem to play more neatly with
-anon_inodes and would allow simple (ab)use of the page cache for tracking
-pages allocated for the "secret" mappings as well as using
-address_space_operations for e.g. page migration callbacks.
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
 
-The POC implementation uses set_memory/pageattr APIs to manipulate the
-direct map and does not address the direct map fragmentation issue.
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
 
-Of course this is something that must be addresses, as well as
-modifications to core mm to required keep the secret memory secret, but I'd
-really like to focus on the userspace ABI first.
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
 
-From 0e1bd1b63f38685ffc5aab8c89b31086bde3da7b Mon Sep 17 00:00:00 2001
-From: Mike Rapoport <rppt@linux.ibm.com>
-Date: Mon, 18 Nov 2019 09:32:22 +0200
-Subject: [PATCH] mm: extend memfd with ability to create secret memory
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- include/linux/memfd.h      |   9 ++
- include/uapi/linux/magic.h |   1 +
- include/uapi/linux/memfd.h |   6 +
- mm/Kconfig                 |   3 +
- mm/Makefile                |   1 +
- mm/memfd.c                 |  10 +-
- mm/secretmem.c             | 233 +++++++++++++++++++++++++++++++++++++
- 7 files changed, 261 insertions(+), 2 deletions(-)
- create mode 100644 mm/secretmem.c
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
 
-diff --git a/include/linux/memfd.h b/include/linux/memfd.h
-index 4f1600413f91..d3ca7285f51a 100644
---- a/include/linux/memfd.h
-+++ b/include/linux/memfd.h
-@@ -13,4 +13,13 @@ static inline long memfd_fcntl(struct file *f, unsigned int c, unsigned long a)
- }
- #endif
- 
-+#ifdef CONFIG_MEMFD_SECRETMEM
-+extern struct file *secretmem_file_create(const char *name, unsigned int flags);
-+#else
-+static inline struct file *secretmem_file_create(const char *name, unsigned int flags)
-+{
-+	return ERR_PTR(-EINVAL);
-+}
-+#endif
-+
- #endif /* __LINUX_MEMFD_H */
-diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
-index 903cc2d2750b..3dad6208c8de 100644
---- a/include/uapi/linux/magic.h
-+++ b/include/uapi/linux/magic.h
-@@ -94,5 +94,6 @@
- #define ZSMALLOC_MAGIC		0x58295829
- #define DMA_BUF_MAGIC		0x444d4142	/* "DMAB" */
- #define Z3FOLD_MAGIC		0x33
-+#define SECRETMEM_MAGIC		0x5345434d	/* "SECM" */
- 
- #endif /* __LINUX_MAGIC_H__ */
-diff --git a/include/uapi/linux/memfd.h b/include/uapi/linux/memfd.h
-index 7a8a26751c23..3320a79b638d 100644
---- a/include/uapi/linux/memfd.h
-+++ b/include/uapi/linux/memfd.h
-@@ -8,6 +8,12 @@
- #define MFD_CLOEXEC		0x0001U
- #define MFD_ALLOW_SEALING	0x0002U
- #define MFD_HUGETLB		0x0004U
-+#define MFD_SECRET		0x0008U
-+
-+/* ioctls for secret memory */
-+#define MFD_SECRET_IOCTL '-'
-+#define MFD_SECRET_EXCLUSIVE	_IOW(MFD_SECRET_IOCTL, 0x13, unsigned long)
-+#define MFD_SECRET_UNCACHED	_IOW(MFD_SECRET_IOCTL, 0x14, unsigned long)
- 
- /*
-  * Huge page size encoding when MFD_HUGETLB is specified, and a huge page
-diff --git a/mm/Kconfig b/mm/Kconfig
-index a5dae9a7eb51..aa828f240287 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -736,4 +736,7 @@ config ARCH_HAS_PTE_SPECIAL
- config ARCH_HAS_HUGEPD
- 	bool
- 
-+config MEMFD_SECRETMEM
-+        def_bool MEMFD_CREATE && ARCH_HAS_SET_DIRECT_MAP
-+
- endmenu
-diff --git a/mm/Makefile b/mm/Makefile
-index d996846697ef..54cb8a60d698 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -107,3 +107,4 @@ obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
- obj-$(CONFIG_ZONE_DEVICE) += memremap.o
- obj-$(CONFIG_HMM_MIRROR) += hmm.o
- obj-$(CONFIG_MEMFD_CREATE) += memfd.o
-+obj-$(CONFIG_MEMFD_SECRETMEM) += secretmem.o
-diff --git a/mm/memfd.c b/mm/memfd.c
-index 2647c898990c..3e1cc37e0389 100644
---- a/mm/memfd.c
-+++ b/mm/memfd.c
-@@ -245,7 +245,8 @@ long memfd_fcntl(struct file *file, unsigned int cmd, unsigned long arg)
- #define MFD_NAME_PREFIX_LEN (sizeof(MFD_NAME_PREFIX) - 1)
- #define MFD_NAME_MAX_LEN (NAME_MAX - MFD_NAME_PREFIX_LEN)
- 
--#define MFD_ALL_FLAGS (MFD_CLOEXEC | MFD_ALLOW_SEALING | MFD_HUGETLB)
-+#define MFD_SECRET_MASK (MFD_CLOEXEC | MFD_SECRET)
-+#define MFD_ALL_FLAGS (MFD_CLOEXEC | MFD_ALLOW_SEALING | MFD_HUGETLB | MFD_SECRET)
- 
- SYSCALL_DEFINE2(memfd_create,
- 		const char __user *, uname,
-@@ -257,6 +258,9 @@ SYSCALL_DEFINE2(memfd_create,
- 	char *name;
- 	long len;
- 
-+	if (flags & ~(unsigned int)MFD_SECRET_MASK)
-+		return -EINVAL;
-+
- 	if (!(flags & MFD_HUGETLB)) {
- 		if (flags & ~(unsigned int)MFD_ALL_FLAGS)
- 			return -EINVAL;
-@@ -296,7 +300,9 @@ SYSCALL_DEFINE2(memfd_create,
- 		goto err_name;
- 	}
- 
--	if (flags & MFD_HUGETLB) {
-+	if (flags & MFD_SECRET) {
-+		file = secretmem_file_create(name, flags);
-+	} else if (flags & MFD_HUGETLB) {
- 		struct user_struct *user = NULL;
- 
- 		file = hugetlb_file_setup(name, 0, VM_NORESERVE, &user,
-diff --git a/mm/secretmem.c b/mm/secretmem.c
-new file mode 100644
-index 000000000000..e787b8dc925b
---- /dev/null
-+++ b/mm/secretmem.c
-@@ -0,0 +1,233 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/mm.h>
-+#include <linux/fs.h>
-+#include <linux/printk.h>
-+#include <linux/fs.h>
-+#include <linux/mount.h>
-+#include <linux/memfd.h>
-+#include <linux/pseudo_fs.h>
-+#include <linux/set_memory.h>
-+#include <uapi/linux/memfd.h>
-+#include <uapi/linux/magic.h>
-+
-+#include <asm/tlb.h>
-+
-+#define SECRETMEM_EXCLUSIVE	0x1
-+#define SECRETMEM_UNCACHED	0x2
-+
-+struct secretmem_state {
-+	unsigned int mode;
-+};
-+
-+static vm_fault_t secretmem_fault(struct vm_fault *vmf)
-+{
-+	struct secretmem_state *state = vmf->vma->vm_file->private_data;
-+	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
-+	pgoff_t offset = vmf->pgoff;
-+	unsigned long addr;
-+	struct page *page;
-+	int err;
-+
-+	page = find_get_page(mapping, offset);
-+	if (!page) {
-+		page = pagecache_get_page(mapping, offset,
-+					  FGP_CREAT|FGP_FOR_MMAP,
-+					  vmf->gfp_mask);
-+		if (!page)
-+			return vmf_error(-ENOMEM);
-+
-+		__SetPageUptodate(page);
-+	}
-+
-+	if (state->mode == SECRETMEM_EXCLUSIVE)
-+		err = set_direct_map_invalid_noflush(page);
-+	else if (state->mode == SECRETMEM_UNCACHED)
-+		err = set_pages_array_uc(&page, 1);
-+	else
-+		BUG();
-+
-+	if (err) {
-+		delete_from_page_cache(page);
-+		return vmf_error(err);
-+	}
-+
-+	addr = (unsigned long)page_address(page);
-+	flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
-+
-+	vmf->page = page;
-+	return  0;
-+}
-+
-+static void secretmem_close(struct vm_area_struct *vma)
-+{
-+	struct secretmem_state *state = vma->vm_file->private_data;
-+	struct address_space *mapping = vma->vm_file->f_mapping;
-+	struct page *page;
-+	pgoff_t index;
-+
-+	xa_for_each(&mapping->i_pages, index, page) {
-+		get_page(page);
-+		lock_page(page);
-+
-+		if (state->mode == SECRETMEM_EXCLUSIVE)
-+			set_direct_map_default_noflush(page);
-+		else if (state->mode == SECRETMEM_UNCACHED)
-+			set_pages_array_wb(&page, 1);
-+		else
-+			BUG();
-+
-+		__ClearPageDirty(page);
-+		delete_from_page_cache(page);
-+
-+		unlock_page(page);
-+		put_page(page);
-+	}
-+}
-+
-+static const struct vm_operations_struct secretmem_vm_ops = {
-+	.fault = secretmem_fault,
-+	.close = secretmem_close,
-+};
-+
-+static int secretmem_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	struct secretmem_state *state = file->private_data;
-+	unsigned long mode = state->mode;
-+
-+	if (!mode)
-+		return -EINVAL;
-+
-+	switch (mode) {
-+	case SECRETMEM_UNCACHED:
-+		vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-+		/* fallthrough */
-+	case SECRETMEM_EXCLUSIVE:
-+		vma->vm_ops = &secretmem_vm_ops;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static long secretmem_ioctl(struct file *file, unsigned cmd, unsigned long arg)
-+{
-+	struct secretmem_state *state = file->private_data;
-+	unsigned long mode = state->mode;
-+
-+	if (mode)
-+		return -EINVAL;
-+
-+	switch (cmd) {
-+	case MFD_SECRET_EXCLUSIVE:
-+		mode = SECRETMEM_EXCLUSIVE;
-+		break;
-+	case MFD_SECRET_UNCACHED:
-+		mode = SECRETMEM_UNCACHED;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	state->mode = mode;
-+
-+	return 0;
-+}
-+
-+static int secretmem_release(struct inode *inode, struct file *file)
-+{
-+	struct secretmem_state *state = file->private_data;
-+
-+	kfree(state);
-+
-+	return 0;
-+}
-+
-+const struct file_operations secretmem_fops = {
-+	.release	= secretmem_release,
-+	.mmap		= secretmem_mmap,
-+	.unlocked_ioctl = secretmem_ioctl,
-+	.compat_ioctl	= secretmem_ioctl,
-+};
-+
-+static bool secretmem_isolate_page(struct page *page, isolate_mode_t mode)
-+{
-+	return false;
-+}
-+
-+static int secretmem_migratepage(struct address_space *mapping,
-+				 struct page *newpage, struct page *page,
-+				 enum migrate_mode mode)
-+{
-+	return -EBUSY;
-+}
-+
-+static void secretmem_putback_page(struct page *page)
-+{
-+}
-+
-+static const struct address_space_operations secretmem_aops = {
-+	.migratepage	= secretmem_migratepage,
-+	.isolate_page	= secretmem_isolate_page,
-+	.putback_page	= secretmem_putback_page,
-+};
-+
-+static struct vfsmount *secretmem_mnt;
-+
-+struct file *secretmem_file_create(const char *name, unsigned int flags)
-+{
-+	struct inode *inode = alloc_anon_inode(secretmem_mnt->mnt_sb);
-+	struct file *file = ERR_PTR(-ENOMEM);
-+	struct secretmem_state *state;
-+
-+	if (IS_ERR(inode))
-+		return ERR_CAST(inode);
-+
-+	state = kzalloc(sizeof(*state), GFP_KERNEL);
-+	if (!state)
-+		goto err_free_inode;
-+
-+	file = alloc_file_pseudo(inode, secretmem_mnt, "secretmem",
-+				 O_RDWR, &secretmem_fops);
-+	if (IS_ERR(file))
-+		goto err_free_state;
-+
-+	mapping_set_unevictable(inode->i_mapping);
-+
-+	inode->i_mapping->private_data = state;
-+	inode->i_mapping->a_ops = &secretmem_aops;
-+
-+	file->private_data = state;
-+
-+	return file;
-+
-+err_free_state:
-+	kfree(state);
-+err_free_inode:
-+	iput(inode);
-+	return file;
-+}
-+
-+static int secretmem_init_fs_context(struct fs_context *fc)
-+{
-+	return init_pseudo(fc, SECRETMEM_MAGIC) ? 0 : -ENOMEM;
-+}
-+
-+static struct file_system_type secretmem_fs = {
-+	.name		= "secretmem",
-+	.init_fs_context = secretmem_init_fs_context,
-+	.kill_sb	= kill_anon_super,
-+};
-+
-+static int secretmem_init(void)
-+{
-+	int ret = 0;
-+
-+	secretmem_mnt = kern_mount(&secretmem_fs);
-+	if (IS_ERR(secretmem_mnt))
-+		ret = PTR_ERR(secretmem_mnt);
-+
-+	return ret;
-+}
-+fs_initcall(secretmem_init);
--- 
-2.24.0
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 2 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK
+
+Buffer ioctls:
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK (Not Supported)
+
+Total for meson-vdec device /dev/video0: 44, Succeeded: 44, Failed: 0, Warnings: 0
+
+[1] https://lore.kernel.org/linux-media/20191126093733.32404-1-narmstrong@baylibre.com
+
+Maxime Jourdan (2):
+  media: meson: vdec: add g12a platform
+  arm64: dts: meson-g12-common: add video decoder node
+
+Neil Armstrong (2):
+  dt-bindings: media: amlogic,vdec: convert to yaml
+  dt-bindings: media: amlogic,gx-vdec: add bindings for G12A family
+
+ .../bindings/media/amlogic,gx-vdec.yaml       | 139 ++++++++++++++++++
+ .../bindings/media/amlogic,vdec.txt           |  72 ---------
+ .../boot/dts/amlogic/meson-g12-common.dtsi    |  23 +++
+ drivers/staging/media/meson/vdec/vdec.c       |  13 +-
+ drivers/staging/media/meson/vdec/vdec.h       |   1 +
+ .../staging/media/meson/vdec/vdec_platform.c  |  30 ++++
+ .../staging/media/meson/vdec/vdec_platform.h  |   2 +
+ 7 files changed, 206 insertions(+), 74 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
+ delete mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
 
 -- 
-Sincerely yours,
-Mike.
+2.22.0
+
