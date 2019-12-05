@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CA4C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F41C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2082D214B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9239D21744
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqzcRmtu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1C+dYyw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbfLECTv (ORCPT
+        id S1728930AbfLECT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 21:19:51 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:40963 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbfLECTs (ORCPT
+        Wed, 4 Dec 2019 21:19:56 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:37023 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728852AbfLECTw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 21:19:48 -0500
-Received: by mail-yw1-f65.google.com with SMTP id l22so612275ywc.8;
-        Wed, 04 Dec 2019 18:19:47 -0800 (PST)
+        Wed, 4 Dec 2019 21:19:52 -0500
+Received: by mail-yb1-f196.google.com with SMTP id x139so881203ybe.4;
+        Wed, 04 Dec 2019 18:19:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=621Cm7dZoaPTmqRDbrz7D11MnF6YUOXkh/EGWPUzymQ=;
-        b=OqzcRmtuqTW5DEpxYJ32kr7tOzbTpmAqLhj/7BfbD9zxBW5SIIrLA7VN1+79dlTCNI
-         o5R3dMuHzcz3b/qiMxZy4eB5VlNLkWtIOCnnLxI6V6INbGlGjdrKRpK0yLrOjhdl7/y3
-         g2Glx999iiwbqnY5vfoHu0Ww4pv9QpCuDnLNWURlX9ZLagyTSVc1hAVAzmR6yBhI5fAx
-         EO7VSV6H9xessVubW3v+qkSJP9MiwYX/ROp9HeSZIVvDzTlKjsjOCkyNpMmyscDYkojG
-         /v8J+WN+t/1HIVBUoo6vzbGL5jQVTyhpY9tPWl29j39Bp0KfzZ111/stJpm5to0J1zUR
-         dscQ==
+        bh=o8rdL81CA1/QSUatk5QZuPPaOIlwBprO0GQX2EhaRjM=;
+        b=W1C+dYywW8EEg+KrCR9sD3uflofMaz0LkxIaYVdl/6TGvx8BVp2HSq7vgphATgN2BI
+         6XVVI9gBWLX8BXhgqJpIOEOnWlbOzToicgYJaS/tBb+dIxQ1BjfPhhjR5gxnTz7Uat/o
+         olvMTEB5EwL45/extiYTkrbyuMactGPuACcJrxIWL4klqMk8XGZCnS192UxkZBdXT3Y0
+         H7PaFjvvmjAs3+JJEbpefhzNYgO7SI7WRWgJa/jFqa9t7praVOIsTiPhgAQzyQGxX/im
+         3p2rBbJFcte9jSQblW7252rhLust313ljInBl79Yz6S+TBhx6Z6itNRymzOs0EbLzHvI
+         OXcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=621Cm7dZoaPTmqRDbrz7D11MnF6YUOXkh/EGWPUzymQ=;
-        b=cq6IUSosPnzrDO3Ox4vN1GifIBtwJnTAxGVgf4MS0dR1i0uOvwdUFq4pKCrzzVqFfZ
-         vKkw3EDRyc4yKezv092i5CdKG6dcl6I0qEndmYvqqth0n7UJWYPnTdjpCwzZiHeeD67a
-         PEN8hm07F9kZRycwL35YsLyILskunLyAj26HBnR1IODztPNKu/RJGZpbBpLZu4AgaVMv
-         CytpHJGGU5zVO13HpRANqB4jiYAgtvWxu771TxczA3h68dg4g/9T4YIvpyhRjmqfhWEQ
-         C/tJg2QF35NoD8YEVKIEkGepgwinsUgg/lX+TioiISYQCqDCWPaAkNYy3A/wsHZe3+wZ
-         5Glw==
-X-Gm-Message-State: APjAAAWbOnIO0iG5YxJ1E6iU96JaXJxsUqpE3Yb5kiQngSTVSVD51MGB
-        Z4XduVQmtXNo1p59fhwrZZ8=
-X-Google-Smtp-Source: APXvYqxb5JgWmenHFyBQgj4zZQaeIydNE8xKMGtxGuoQRII2pBRRqqfBR4c/j9X5nUWoXQ9p8ZiHYA==
-X-Received: by 2002:a81:3d0e:: with SMTP id k14mr2685477ywa.35.1575512386803;
-        Wed, 04 Dec 2019 18:19:46 -0800 (PST)
+        bh=o8rdL81CA1/QSUatk5QZuPPaOIlwBprO0GQX2EhaRjM=;
+        b=JFipOzyFQelxvW3Nks6wpp6Zc0LR+ePibSiDPSwXXUFqsr8QJiMBIU5otRk4I3Z3xN
+         nJcvpjsRbXdORFJpF7xaBDDNnx8jOlGumRPNO7OmVakV9M7lYqxArvNz/JWGg7l76VXH
+         ye1Pte0hssgdMsgCsAbkgFxNuLu+u+q0M76jAhWdZ/GVqUkCp7mKh6QqfCXl0bczvzV1
+         Pw0r6FNQf5IeJHO28iCnJMZ2aotjQaCOfdlCjbK/eFsHb4/SKVqzWw0QD7JqDv3PPkEt
+         GQs6vUwe7dSuPU4qoL1IhZcCiECg3QbQ9n1npcmc2azNaW4KZA7IxOkDx8VdRUZ+qzfk
+         cUBA==
+X-Gm-Message-State: APjAAAXnxOr5EQczaLTXQak9Yapdln8UozytScX8owjnZECL1cOvEOO7
+        N5QAxT/XJ39TFsYpzQhoBYc=
+X-Google-Smtp-Source: APXvYqwAD9YGInc+qgp3awEl6WpVlrReB1uKRLWOTxVKUwY1TL0YVhztXM3OkuWK1013hQExDq0WRQ==
+X-Received: by 2002:a25:d5:: with SMTP id 204mr4502582yba.165.1575512390970;
+        Wed, 04 Dec 2019 18:19:50 -0800 (PST)
 Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id l6sm4188449ywa.39.2019.12.04.18.19.45
+        by smtp.gmail.com with ESMTPSA id l6sm4188449ywa.39.2019.12.04.18.19.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 18:19:46 -0800 (PST)
+        Wed, 04 Dec 2019 18:19:50 -0800 (PST)
 From:   Adam Ford <aford173@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/7] soc: imx: gpcv2: add support for i.MX8M Mini SoC
-Date:   Wed,  4 Dec 2019 20:19:19 -0600
-Message-Id: <20191205021924.25188-4-aford173@gmail.com>
+Subject: [PATCH 5/7] arm64: dts: imx8mm: add GPC power domains
+Date:   Wed,  4 Dec 2019 20:19:21 -0600
+Message-Id: <20191205021924.25188-6-aford173@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191205021924.25188-1-aford173@gmail.com>
 References: <20191205021924.25188-1-aford173@gmail.com>
@@ -80,315 +80,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GPCv2 on the Freescale i.MX8M Mini SoC works in the same way as the
-GPCv2 on the i.MX8MQ, but with slightly different power domains and
-mapping.
+There is a power domain controller on the i.XM8M Mini used for
+handling interrupts and controlling certain peripherals like
+USB OTG and PCIe, which are currently unavailable.
 
-This patch adds the necessary tables so the GPC can operate on the
-i.MX8M Mini.
+This patch enables support the controller itself to the help
+facilitate enabling additional peripherals.
 
 Signed-off-by: Adam Ford <aford173@gmail.com>
 ---
- drivers/soc/imx/gpcv2.c | 244 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 244 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 82 ++++++++++++++++++++++-
+ 1 file changed, 81 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
-index 250f740d2314..52668e985e8e 100644
---- a/drivers/soc/imx/gpcv2.c
-+++ b/drivers/soc/imx/gpcv2.c
-@@ -41,6 +41,20 @@
- #define IMX8M_PCIE1_A53_DOMAIN			BIT(3)
- #define IMX8M_MIPI_A53_DOMAIN			BIT(2)
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 23c8fad7932b..d05c5b617a4d 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -4,6 +4,7 @@
+  */
  
-+#define IMX8MM_VPU_H1_A53_DOMAIN		BIT(15)
-+#define IMX8MM_VPU_G2_A53_DOMAIN		BIT(14)
-+#define IMX8MM_VPU_G1_A53_DOMAIN		BIT(13)
-+#define IMX8MM_DISP_MIX_A53_DOMAIN		BIT(12)
-+#define IMX8MM_GPU_3D_A53_DOMAIN		BIT(11)
-+#define IMX8MM_VPUMIX_A53_DOMAIN		BIT(10)
-+#define IMX8MM_GPUMIX_A53_DOMAIN		BIT(9)
-+#define IMX8MM_GPU_2D_A53_DOMAIN		BIT(8)
-+#define IMX8MM_DDR1_A53_DOMAIN			BIT(7)
-+#define IMX8MM_OTG2_A53_DOMAIN			BIT(5)
-+#define IMX8MM_OTG1_A53_DOMAIN			BIT(4)
-+#define IMX8MM_PCIE_A53_DOMAIN			BIT(3)
-+#define IMX8MM_MIPI_A53_DOMAIN			BIT(2)
-+
- #define GPC_PU_PGC_SW_PUP_REQ		0x0f8
- #define GPC_PU_PGC_SW_PDN_REQ		0x104
+ #include <dt-bindings/clock/imx8mm-clock.h>
++#include <dt-bindings/power/imx8m-power.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+@@ -13,7 +14,7 @@
  
-@@ -64,6 +78,20 @@
- #define IMX8M_PCIE1_SW_Pxx_REQ			BIT(1)
- #define IMX8M_MIPI_SW_Pxx_REQ			BIT(0)
+ / {
+ 	compatible = "fsl,imx8mm";
+-	interrupt-parent = <&gic>;
++	interrupt-parent = <&gpc>;
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
  
-+#define IMX8MM_VPU_H1_SW_Pxx_REQ		BIT(13)
-+#define IMX8MM_VPU_G2_SW_Pxx_REQ		BIT(12)
-+#define IMX8MM_VPU_G1_SW_Pxx_REQ		BIT(11)
-+#define IMX8MM_DISP_SW_Pxx_REQ			BIT(10)
-+#define IMX8MM_GPU_3D_SW_Pxx_REQ		BIT(9)
-+#define IMX8MM_VPU_SW_Pxx_REQ			BIT(8)
-+#define IMX8MM_GPU_SW_Pxx_REQ			BIT(7)
-+#define IMX8MM_GPU_2D_SW_PXX_REQ		BIT(6)
-+#define IMX8MM_DDR1_SW_Pxx_REQ			BIT(5)
-+#define IMX8MM_OTG2_SW_Pxx_REQ			BIT(3)
-+#define IMX8MM_OTG1_SW_Pxx_REQ			BIT(2)
-+#define IMX8MM_PCIE_SW_Pxx_REQ			BIT(1)
-+#define IMX8MM_MIPI_SW_Pxx_REQ			BIT(0)
+@@ -495,6 +496,85 @@
+ 				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+ 				#reset-cells = <1>;
+ 			};
 +
- #define GPC_M4_PU_PDN_FLG		0x1bc
++			gpc: gpc@303a0000 {
++				compatible = "fsl,imx8mm-gpc";
++				reg = <0x303a0000 0x10000>;
++				interrupt-parent = <&gic>;
++				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells = <3>;
++
++				pgc {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					pgc_mipi: power-domain@0 {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_DOMAIN_MIPI>;
++					};
++
++					pgc_pcie: power-domain@1 {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_DOMAIN_PCIE>;
++					};
++
++					pgc_otg1: power-domain@2 {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_DOMAIN_USB_OTG1>;
++					};
++
++					pgc_otg2: power-domain@3 {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_DOMAIN_USB_OTG2>;
++					};
++
++					pgc_ddr1: power-domain@4 {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_DOMAIN_DDR1>;
++					};
++
++					pgc_gpu2d: power-domain@5 {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_DOMAIN_GPU2D>;
++					};
++
++					pgc_gpu: power-domain@6 {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_DOMAIN_GPU>;
++					};
++
++					pgc_vpu: power-domain@7 {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_DOMAIN_VPU>;
++					};
++
++					pgc_gpu3d: power-domain@8 {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_DOMAIN_GPU3D>;
++					};
++
++					pgc_disp: power-domain@9 {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_DOMAIN_DISP>;
++					};
++
++					pgc_vpu_g1: power-domain@a {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_VPU_G1>;
++					};
++
++					pgc_vpu_g2: power-domain@b {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_VPU_G2>;
++					};
++
++					pgc_vpu_h1: power-domain@c {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_VPU_H1>;
++					};
++				};
++			};
+ 		};
  
- #define GPC_PU_PWRHSK			0x1fc
-@@ -72,6 +100,10 @@
- #define IMX8M_VPU_HSK_PWRDNREQN			BIT(5)
- #define IMX8M_DISP_HSK_PWRDNREQN		BIT(4)
- 
-+#define IMX8MM_GPU_HSK_PWRDNREQN		BIT(9)
-+#define IMX8MM_VPU_HSK_PWRDNREQN		BIT(8)
-+#define IMX8MM_DISP_HSK_PWRDNREQN		BIT(7)
-+
- /*
-  * The PGC offset values in Reference Manual
-  * (Rev. 1, 01/2018 and the older ones) GPC chapter's
-@@ -94,6 +126,24 @@
- #define IMX8M_PGC_MIPI_CSI2		28
- #define IMX8M_PGC_PCIE2			29
- 
-+/*
-+ * Taken from i.MX8M Mini values from Reference
-+ * Manual, Rev. 2, 08/2019
-+ */
-+#define IMX8MM_PGC_MIPI			16
-+#define IMX8MM_PGC_PCIE			17
-+#define IMX8MM_PGC_OTG1			18
-+#define IMX8MM_PGC_OTG2			19
-+#define IMX8MM_PGC_DDR1			21
-+#define IMX8MM_PGC_GPU2D		22
-+#define IMX8MM_PGC_GPU			23
-+#define IMX8MM_PGC_VPU			24
-+#define IMX8MM_PGC_GPU3D		25
-+#define IMX8MM_PGC_DISP			26
-+#define IMX8MM_PGC_VPU_G1		27
-+#define IMX8MM_PGC_VPU_G2		28
-+#define IMX8MM_PGC_VPU_H1		29
-+
- #define GPC_PGC_CTRL(n)			(0x800 + (n) * 0x40)
- #define GPC_PGC_SR(n)			(GPC_PGC_CTRL(n) + 0xc)
- 
-@@ -278,6 +328,7 @@ static const struct imx_pgc_domain_data imx7_pgc_domain_data = {
- 	.reg_access_table = &imx7_access_table,
- };
- 
-+/* i.MX8M dual/QuadLite/Quad */
- static const struct imx_pgc_domain imx8m_pgc_domains[] = {
- 	[IMX8M_POWER_DOMAIN_MIPI] = {
- 		.genpd = {
-@@ -442,6 +493,198 @@ static const struct imx_pgc_domain_data imx8m_pgc_domain_data = {
- 	.reg_access_table = &imx8m_access_table,
- };
- 
-+/* i.MX8M Mini */
-+static const struct imx_pgc_domain imx8mm_pgc_domains[] = {
-+	[IMX8MM_POWER_DOMAIN_MIPI] = {
-+		.genpd = {
-+			.name      = "mipi",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_MIPI_SW_Pxx_REQ,
-+			.map = IMX8MM_MIPI_A53_DOMAIN,
-+		},
-+		.pgc	   = IMX8M_PGC_MIPI,
-+	},
-+
-+	[IMX8MM_POWER_DOMAIN_PCIE] = {
-+		.genpd = {
-+			.name = "pcie1",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_PCIE_SW_Pxx_REQ,
-+			.map = IMX8MM_PCIE_A53_DOMAIN,
-+		},
-+		.pgc   = IMX8MM_PGC_PCIE,
-+	},
-+
-+	[IMX8MM_POWER_DOMAIN_USB_OTG1] = {
-+		.genpd = {
-+			.name = "usb-otg1",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_OTG1_SW_Pxx_REQ,
-+			.map = IMX8MM_OTG1_A53_DOMAIN,
-+		},
-+		.pgc   = IMX8M_PGC_OTG1,
-+	},
-+
-+	[IMX8MM_POWER_DOMAIN_USB_OTG2] = {
-+		.genpd = {
-+			.name = "usb-otg2",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_OTG2_SW_Pxx_REQ,
-+			.map = IMX8MM_OTG2_A53_DOMAIN,
-+		},
-+		.pgc   = IMX8M_PGC_OTG2,
-+	},
-+
-+	[IMX8MM_POWER_DOMAIN_DDR1] = {
-+		.genpd = {
-+			.name = "ddr1",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_DDR1_SW_Pxx_REQ,
-+			.map = IMX8MM_DDR1_A53_DOMAIN,
-+		},
-+		.pgc   = IMX8M_PGC_DDR1,
-+	},
-+
-+	[IMX8MM_POWER_DOMAIN_GPU2D] = {
-+		.genpd = {
-+			.name = "gpu2d",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_GPU_2D_SW_PXX_REQ,
-+			.map = IMX8MM_GPU_2D_A53_DOMAIN,
-+			.hsk = IMX8MM_GPU_HSK_PWRDNREQN,
-+		},
-+		.pgc   = IMX8MM_PGC_GPU2D,
-+	},
-+
-+
-+	[IMX8MM_POWER_DOMAIN_GPU] = {
-+		.genpd = {
-+			.name = "gpu",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_GPU_SW_Pxx_REQ,
-+			.map = IMX8MM_GPUMIX_A53_DOMAIN,
-+			.hsk = IMX8MM_GPU_HSK_PWRDNREQN,
-+		},
-+		.pgc   = IMX8M_PGC_GPU,
-+	},
-+
-+	[IMX8MM_POWER_DOMAIN_VPU] = {
-+		.genpd = {
-+			.name = "vpu",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_VPU_SW_Pxx_REQ,
-+			.map = IMX8MM_VPUMIX_A53_DOMAIN,
-+			.hsk = IMX8MM_VPU_HSK_PWRDNREQN,
-+		},
-+		.pgc   = IMX8M_PGC_VPU,
-+	},
-+
-+	[IMX8MM_POWER_DOMAIN_GPU3D] = {
-+		.genpd = {
-+			.name = "gpu3d",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_GPU_3D_SW_Pxx_REQ,
-+			.map = IMX8MM_GPU_3D_A53_DOMAIN,
-+			.hsk = IMX8MM_GPU_HSK_PWRDNREQN,
-+		},
-+		.pgc   = IMX8MM_PGC_GPU2D,
-+	},
-+
-+	[IMX8MM_POWER_DOMAIN_DISP] = {
-+		.genpd = {
-+			.name = "disp",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_DISP_SW_Pxx_REQ,
-+			.map = IMX8MM_DISP_MIX_A53_DOMAIN,
-+			.hsk = IMX8MM_DISP_HSK_PWRDNREQN,
-+		},
-+		.pgc   = IMX8M_PGC_DISP,
-+	},
-+
-+	[IMX8MM_POWER_VPU_G1] = {
-+		.genpd = {
-+			.name = "vpu_g1",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_VPU_G1_SW_Pxx_REQ,
-+			.map = IMX8MM_VPU_G1_A53_DOMAIN,
-+		},
-+		.pgc   = IMX8M_PGC_MIPI_CSI1,
-+	},
-+
-+	[IMX8MM_POWER_VPU_G2] = {
-+		.genpd = {
-+			.name = "vpu_g2",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_VPU_G2_SW_Pxx_REQ,
-+			.map = IMX8MM_VPU_G2_A53_DOMAIN,
-+		},
-+		.pgc   = IMX8M_PGC_MIPI_CSI2,
-+	},
-+
-+	[IMX8MM_POWER_VPU_H1] = {
-+		.genpd = {
-+			.name = "vpu_h1",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_VPU_H1_SW_Pxx_REQ,
-+			.map = IMX8MM_VPU_H1_A53_DOMAIN,
-+		},
-+		.pgc   = IMX8M_PGC_PCIE2,
-+	},
-+};
-+
-+static const struct regmap_range imx8mm_yes_ranges[] = {
-+		regmap_reg_range(GPC_LPCR_A_CORE_BSC,
-+				 GPC_PU_PWRHSK),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_MIPI),
-+				 GPC_PGC_SR(IMX8MM_PGC_MIPI)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_PCIE),
-+				 GPC_PGC_SR(IMX8MM_PGC_PCIE)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_OTG1),
-+				 GPC_PGC_SR(IMX8MM_PGC_OTG1)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_OTG2),
-+				 GPC_PGC_SR(IMX8MM_PGC_OTG2)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_DDR1),
-+				 GPC_PGC_SR(IMX8MM_PGC_DDR1)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_GPU2D),
-+				 GPC_PGC_SR(IMX8MM_PGC_GPU2D)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_GPU),
-+				 GPC_PGC_SR(IMX8MM_PGC_GPU)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_VPU),
-+				 GPC_PGC_SR(IMX8MM_PGC_VPU)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_DISP),
-+				 GPC_PGC_SR(IMX8MM_PGC_DISP)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_VPU_G1),
-+				 GPC_PGC_SR(IMX8MM_PGC_VPU_G1)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_VPU_G2),
-+				 GPC_PGC_SR(IMX8MM_PGC_VPU_G2)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_VPU_H1),
-+				 GPC_PGC_SR(IMX8MM_PGC_VPU_H1)),
-+};
-+
-+static const struct regmap_access_table imx8mm_access_table = {
-+	.yes_ranges	= imx8mm_yes_ranges,
-+	.n_yes_ranges	= ARRAY_SIZE(imx8mm_yes_ranges),
-+};
-+
-+static const struct imx_pgc_domain_data imx8mm_pgc_domain_data = {
-+	.domains = imx8mm_pgc_domains,
-+	.domains_num = ARRAY_SIZE(imx8mm_pgc_domains),
-+	.reg_access_table = &imx8mm_access_table,
-+};
-+
- static int imx_pgc_get_clocks(struct imx_pgc_domain *domain)
- {
- 	int i, ret;
-@@ -641,6 +884,7 @@ static int imx_gpcv2_probe(struct platform_device *pdev)
- static const struct of_device_id imx_gpcv2_dt_ids[] = {
- 	{ .compatible = "fsl,imx7d-gpc", .data = &imx7_pgc_domain_data, },
- 	{ .compatible = "fsl,imx8mq-gpc", .data = &imx8m_pgc_domain_data, },
-+	{ .compatible = "fsl,imx8mm-gpc", .data = &imx8mm_pgc_domain_data, },
- 	{ }
- };
- 
+ 		aips2: bus@30400000 {
 -- 
 2.20.1
 
