@@ -2,157 +2,212 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B46C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F00C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7462073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:30:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QW45i/Iq"
+	by mail.kernel.org (Postfix) with ESMTP id 1320F2073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 03:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbfLEDaw (ORCPT
+        id S1728882AbfLEDcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 22:30:52 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:33281 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728132AbfLEDaw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 22:30:52 -0500
-Received: by mail-pj1-f68.google.com with SMTP id r67so697997pjb.0;
-        Wed, 04 Dec 2019 19:30:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BXdzCUHz/0CUvTusmPE8UcGK3GWtUgd8km1icsllXOg=;
-        b=QW45i/IqmcQvZkporhXT8EO5ToLaAbCGL/b1RoAOfSm5lzJyavLqTH2OcxF6RiD47j
-         WLgMc3V570O5zbd5JT8GHU932RpsaOWp4CAXLRwztcf2aQ5EYWfe0yCgM+9kYfrEg+VJ
-         D6AeXBf9kmHAriB/pzzOqiZ3pn9UB8sDra2IzyZ5cpeOWNpPPsxb4ld0+YhilGnXF3CD
-         Vc8kXbcjaCLE14n8JK7l8pRNHs+ezihQauWQpaAaoVwGaatOjkzqYn7ovKds06pOG9kO
-         8xO3Yl4e5Dh7ya1K/ujgasBHxzDBbsFDYWOxdPIDeBZT1+kN2dHmgzxLyfBLYT5Vekbk
-         OUZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=BXdzCUHz/0CUvTusmPE8UcGK3GWtUgd8km1icsllXOg=;
-        b=lJgDI2tA5yQFq+g56NNEklcEy6O/FuRzNKerIdVLZUye/g43FrmpFmrmZlQhvv1QkU
-         CgH7+YRJhiYl4HKKsD3/wkmvMiTVinRjZUx6tBqs0VEQpY6SyXZYQrxVfpiNzTPnwfZx
-         2ky2DYAYnZqVmoviUMPO336X4BHfQhvvyot1tWaQY+5XnohGUxdTc8T9bXhCvf9VyIMk
-         4uBl9QON6koF5HHF/l1qzE1NHKwvmonWMeFabhrcCvqHDRwTrKeBvqUOxo1m24TD6LkY
-         vZ8S0Uxl0MRIAlCEgQO4cLlO2e736WLEEIIsv5eQXFF+0zsnDhs/IgNwKePQxkugcTNE
-         DkYg==
-X-Gm-Message-State: APjAAAWHb/3OoHfdRNG/Svl1zNPE5meyAYu1p7xbyx0mrN5UdfiUqc3L
-        NrbfOvaWWip1FeERJWVO5o0=
-X-Google-Smtp-Source: APXvYqwK/1WZRj1uu7EMum6yvtMmypv7Sf3DOWIbAHoH49lkvzJUyxZnzdpeEW6KiyGbfC1o1VmCOg==
-X-Received: by 2002:a17:90b:110d:: with SMTP id gi13mr7054526pjb.113.1575516651238;
-        Wed, 04 Dec 2019 19:30:51 -0800 (PST)
-Received: from debian ([103.231.91.70])
-        by smtp.gmail.com with ESMTPSA id 136sm8854121pgg.74.2019.12.04.19.30.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 19:30:50 -0800 (PST)
-Date:   Thu, 5 Dec 2019 09:00:38 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] Enlist running kernel modules information
-Message-ID: <20191205033035.GB3981@debian>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191203094845.610692-1-unixbhaskar@gmail.com>
- <CAK7LNASyrYv+pufwe4CfiNvd7NtriLw=FRdLOtu7CrbmZDSVHg@mail.gmail.com>
- <20191204041543.GA1086470@ArchLinux>
- <6ff74f67-11d3-d16f-8aeb-828c01455961@metux.net>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GRPZ8SYKNexpdSJ7"
-Content-Disposition: inline
-In-Reply-To: <6ff74f67-11d3-d16f-8aeb-828c01455961@metux.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 4 Dec 2019 22:32:50 -0500
+Received: from mga04.intel.com ([192.55.52.120]:20226 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728098AbfLEDct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 22:32:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 19:32:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,279,1571727600"; 
+   d="scan'208";a="205628942"
+Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.9])
+  by orsmga008.jf.intel.com with ESMTP; 04 Dec 2019 19:32:45 -0800
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     alex.williamson@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        libvir-list@redhat.com, qemu-devel@nongnu.org, cohuck@redhat.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        kevin.tian@intel.com, shaopeng.he@intel.com,
+        Yan Zhao <yan.y.zhao@intel.com>
+Subject: [RFC PATCH 0/9] Introduce mediate ops in vfio-pci
+Date:   Wed,  4 Dec 2019 22:24:19 -0500
+Message-Id: <20191205032419.29606-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For SRIOV devices, VFs are passthroughed into guest directly without host
+driver mediation. However, when VMs migrating with passthroughed VFs,
+dynamic host mediation is required to  (1) get device states, (2) get
+dirty pages. Since device states as well as other critical information
+required for dirty page tracking for VFs are usually retrieved from PFs,
+it is handy to provide an extension in PF driver to centralizingly control
+VFs' migration.
 
---GRPZ8SYKNexpdSJ7
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Therefore, in order to realize (1) passthrough VFs at normal time, (2)
+dynamically trap VFs' bars for dirty page tracking and (3) centralizing
+VF critical states retrieving and VF controls into one driver, we propose
+to introduce mediate ops on top of current vfio-pci device driver.
 
-On 14:48 Wed 04 Dec 2019, Enrico Weigelt, metux IT consult wrote:
->On 04.12.19 05:22, Bhaskar Chowdhury wrote:
->
->Hi,
->
->> I think the usefulness comes from developers wants to see what are the
->> modules are using by the running kernel in formatted way.
->> This is very simple way to enlist all the modules with descriptions of
->> it.So , they can easily parse it with other scripts.
->
->IMHO, this is a good thing to have. I can even imagine it shipped by
->distros, for better bug reports.
->
->OTOH, if it's about the currently running kernel and loaded modules, why
->not putting this into /proc or /sys ?
 
-The reason being not putting in the /proc or /sys is, it is not
-dynamically generated stuff. This is small script which do a specific
-task ,out of the information available  in /proc or /sys.
+                                   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+                                  
+ __________   register mediate ops|  ___________     ___________    |
+|          |<-----------------------|     VF    |   |           |   
+| vfio-pci |                      | |  mediate  |   | PF driver |   |
+|__________|----------------------->|   driver  |   |___________|   
+     |            open(pdev)      |  -----------          |         |
+     |                                                    |         
+     |                            |_ _ _ _ _ _ _ _ _ _ _ _|_ _ _ _ _|
+    \|/                                                  \|/
+-----------                                         ------------
+|    VF   |                                         |    PF    |
+-----------                                         ------------
 
-And essentially resides in the scripts directory for easy finding and
-using. =20
 
-:)
+VF mediate driver could be a standalone driver that does not bind to
+any devices (as in demo code in patches 5-6) or it could be a built-in
+extension of PF driver (as in patches 7-9) .
 
-~Bhaskar
->
->
->--mtx
->
->--=20
->Dringender Hinweis: aufgrund existenzieller Bedrohung durch "Emotet"
->sollten Sie *niemals* MS-Office-Dokumente via E-Mail annehmen/=F6ffenen,
->selbst wenn diese von vermeintlich vertrauensw=FCrdigen Absendern zu
->stammen scheinen. Andernfalls droht Totalschaden.
->---
->Hinweis: unverschl=FCsselte E-Mails k=F6nnen leicht abgeh=F6rt und manipul=
-iert
->werden ! F=FCr eine vertrauliche Kommunikation senden Sie bitte ihren
->GPG/PGP-Schl=FCssel zu.
->---
->Enrico Weigelt, metux IT consult
->Free software and Linux embedded engineering
->info@metux.net -- +49-151-27565287
+Rather than directly bind to VF, VF mediate driver register a mediate
+ops into vfio-pci in driver init. vfio-pci maintains a list of such
+mediate ops.
+(Note that: VF mediate driver can register mediate ops into vfio-pci
+before vfio-pci binding to any devices. And VF mediate driver can
+support mediating multiple devices.)
 
---GRPZ8SYKNexpdSJ7
-Content-Type: application/pgp-signature; name="signature.asc"
+When opening a device (e.g. a VF), vfio-pci goes through the mediate ops
+list and calls each vfio_pci_mediate_ops->open() with pdev of the opening
+device as a parameter.
+VF mediate driver should return success or failure depending on it
+supports the pdev or not.
+E.g. VF mediate driver would compare its supported VF devfn with the
+devfn of the passed-in pdev.
+Once vfio-pci finds a successful vfio_pci_mediate_ops->open(), it will
+stop querying other mediate ops and bind the opening device with this
+mediate ops using the returned mediate handle.
 
------BEGIN PGP SIGNATURE-----
+Further vfio-pci ops (VFIO_DEVICE_GET_REGION_INFO ioctl, rw, mmap) on the
+VF will be intercepted into VF mediate driver as
+vfio_pci_mediate_ops->get_region_info(),
+vfio_pci_mediate_ops->rw,
+vfio_pci_mediate_ops->mmap, and get customized.
+For vfio_pci_mediate_ops->rw and vfio_pci_mediate_ops->mmap, they will
+further return 'pt' to indicate whether vfio-pci should further
+passthrough data to hw.
 
-iQEzBAABCgAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3oedgACgkQsjqdtxFL
-KRX1EQf/bM+T/selwfgcqWcb3hw5h1W4xeF8v3MgFwzyiBKWHIbSHd8+ly1G4iO+
-YMzDeOSceRGjE3p/GnsR9D2Z2Oz/2Bb9U7LH6QO72TQMsP9yfZCXu2jOgxFWdkns
-KKybGCo4udo/Ui8RiLZm+0agD3mJClJoRxPAXEgMZ0euRh/oja4r2FF4qfclfKnW
-dCuDmLV8eiFElFez+qR1KK4JzmJLcI+RX+0KgATUBNIwbwv+inu/xLKt+nPg2pPu
-L0ui74Slc/RKz0CzEs5HA8jsKF1ErqlKNzweK6GoeHGGGx14vRDwyRmjyU08OIcy
-Yx69fTPorBKBHJxyJbWdzPRhhL+UMw==
-=Tgd4
------END PGP SIGNATURE-----
+when vfio-pci closes the VF, it calls its vfio_pci_mediate_ops->release()
+with a mediate handle as parameter.
 
---GRPZ8SYKNexpdSJ7--
+The mediate handle returned from vfio_pci_mediate_ops->open() lets VF
+mediate driver be able to differentiate two opening VFs of the same device
+id and vendor id.
+
+When VF mediate driver exits, it unregisters its mediate ops from
+vfio-pci.
+
+
+In this patchset, we enable vfio-pci to provide 3 things:
+(1) calling mediate ops to allow vendor driver customizing default
+region info/rw/mmap of a region.
+(2) provide a migration region to support migration
+(3) provide a dynamic trap bar info region to allow vendor driver
+control trap/untrap of device pci bars
+
+This vfio-pci + mediate ops way differs from mdev way in that
+(1) medv way needs to create a 1:1 mdev device on top of one VF, device
+specific mdev parent driver is bound to VF directly.
+(2) vfio-pci + mediate ops way does not create mdev devices and VF
+mediate driver does not bind to VFs. Instead, vfio-pci binds to VFs.
+
+The reason why we don't choose the way of writing mdev parent driver is
+that
+(1) VFs are almost all the time directly passthroughed. Directly binding
+to vfio-pci can make most of the code shared/reused. If we write a
+vendor specific mdev parent driver, most of the code (like passthrough
+style of rw/mmap) still needs to be copied from vfio-pci driver, which is
+actually a duplicated and tedious work.
+(2) For features like dynamically trap/untrap pci bars, if they are in
+vfio-pci, they can be available to most people without repeated code
+copying and re-testing.
+(3) with a 1:1 mdev driver which passthrough VFs most of the time, people
+have to decide whether to bind VFs to vfio-pci or mdev parent driver before
+it runs into a real migration need. However, if vfio-pci is bound
+initially, they have no chance to do live migration when there's a need
+later. 
+
+In this patchset,
+- patches 1-4 enable vfio-pci to call mediate ops registered by vendor
+  driver to mediate/customize region info/rw/mmap.
+
+- patches 5-6 provide a standalone sample driver to register a mediate ops
+  for Intel Graphics Devices. It does not bind to IGDs directly but decides
+  what devices it supports via its pciidlist. It also demonstrates how to
+  dynamic trap a device's PCI bars. (by adding more pciids in its
+  pciidlist, this sample driver actually is not necessarily limited to
+  support IGDs)
+
+- patch 7-9 provide a sample on i40e driver that supports Intel(R)
+  Ethernet Controller XL710 Family of devices. It supports VF precopy live
+  migration on Intel's 710 SRIOV. (but we commented out the real
+  implementation of dirty page tracking and device state retrieving part
+  to focus on demonstrating framework part. Will send out them in future
+  versions)
+ 
+  patch 7 registers/unregisters VF mediate ops when PF driver
+  probes/removes. It specifies its supporting VFs via
+  vfio_pci_mediate_ops->open(pdev)
+
+  patch 8 reports device cap of VFIO_PCI_DEVICE_CAP_MIGRATION and
+  provides a sample implementation of migration region.
+  The QEMU part of vfio migration is based on v8
+  https://lists.gnu.org/archive/html/qemu-devel/2019-08/msg05542.html.
+  We do not based on recent v9 because we think there are still opens in
+  dirty page track part in that series.
+
+  patch 9 reports device cap of VFIO_PCI_DEVICE_CAP_DYNAMIC_TRAP_BAR and
+  provides an example on how to trap part of bar0 when migration starts
+  and passthrough this part of bar0 again when migration fails.
+
+Yan Zhao (9):
+  vfio/pci: introduce mediate ops to intercept vfio-pci ops
+  vfio/pci: test existence before calling region->ops
+  vfio/pci: register a default migration region
+  vfio-pci: register default dynamic-trap-bar-info region
+  samples/vfio-pci/igd_dt: sample driver to mediate a passthrough IGD
+  sample/vfio-pci/igd_dt: dynamically trap/untrap subregion of IGD bar0
+  i40e/vf_migration: register mediate_ops to vfio-pci
+  i40e/vf_migration: mediate migration region
+  i40e/vf_migration: support dynamic trap of bar0
+
+ drivers/net/ethernet/intel/Kconfig            |   2 +-
+ drivers/net/ethernet/intel/i40e/Makefile      |   3 +-
+ drivers/net/ethernet/intel/i40e/i40e.h        |   2 +
+ drivers/net/ethernet/intel/i40e/i40e_main.c   |   3 +
+ .../ethernet/intel/i40e/i40e_vf_migration.c   | 626 ++++++++++++++++++
+ .../ethernet/intel/i40e/i40e_vf_migration.h   |  78 +++
+ drivers/vfio/pci/vfio_pci.c                   | 189 +++++-
+ drivers/vfio/pci/vfio_pci_private.h           |   2 +
+ include/linux/vfio.h                          |  18 +
+ include/uapi/linux/vfio.h                     | 160 +++++
+ samples/Kconfig                               |   6 +
+ samples/Makefile                              |   1 +
+ samples/vfio-pci/Makefile                     |   2 +
+ samples/vfio-pci/igd_dt.c                     | 367 ++++++++++
+ 14 files changed, 1455 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.c
+ create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
+ create mode 100644 samples/vfio-pci/Makefile
+ create mode 100644 samples/vfio-pci/igd_dt.c
+
+-- 
+2.17.1
+
