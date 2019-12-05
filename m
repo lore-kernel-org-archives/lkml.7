@@ -2,109 +2,121 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EB8C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9F0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F23206DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CC8206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:08:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Spso+1VB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="KFPZkvkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730018AbfLEQHV (ORCPT
+        id S1730032AbfLEQII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:07:21 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39173 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLEQHV (ORCPT
+        Thu, 5 Dec 2019 11:08:08 -0500
+Received: from gateway30.websitewelcome.com ([50.116.127.1]:49007 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729954AbfLEQII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:07:21 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 2so1820181pfx.6;
-        Thu, 05 Dec 2019 08:07:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Nk1cXD8ocqFBtC4Ixaba4spST22wd8UaYJyDzazVJTU=;
-        b=Spso+1VBGEYjX599HKgBZ7LMPvTnErQh8OrWYDokzKb3zBSSaEgZ4u+I7C5EwKrVeR
-         lUG3UW/5r65Fp75N8CBIUjv0os9y+d8jDXNVYICft9E6k/2uxzV9eTJm5v5FvsNpZo9o
-         vf8MzxGjzeWRfcVXaeWb2sQNaDqMSv+/hIJ+IRH3BPxs3B1ykEPlsdshzdpXT6Xuwzcj
-         EgGzERz2cVpnYAaW3kqMFAtCJQswy/cTqOwhu4EHNjgqlzgRKhF2SSB4NFAcFCCyDxfn
-         UbFZIr3T0i9xpQA3xoaqCda2BYeVA5gwQcFMZGSDjcbHaEj8cfWg1pu9yAIv4xdZTwIg
-         k00A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Nk1cXD8ocqFBtC4Ixaba4spST22wd8UaYJyDzazVJTU=;
-        b=l8cWx2IplVPxHPDd91ucWHxdeqOTRmdRRmxSgsk64tGXHRy5fDnSXwy1xUFJAmQghB
-         Mmqeh3LBy4yhXpRf9YqKcouhmvvJBTl0UL/sAVWoN3ydXpf3mqKtxP/3NBugfNNCZRus
-         jYykpdUHURazb3bzw/K98qX7iyYF6yuvClvt/P7158WDeqguChvGrZqdHbjlPGArI9Kw
-         UTl236B7QsawiIGg8GFxLdvLnRXR9MQ2GTf9e98ApIusXmlX0mo/BoNDdn5geJa9+tl8
-         BDDYrMYDnXN1V5JtgN7uJUK9ueJYTdxP9kkudCbyQEs8GR8RjRKVWgyhpVbnlmYT0BD5
-         UANg==
-X-Gm-Message-State: APjAAAUukiG4hJqOZiRM05pU+vkQQrYEIA+Z1aNGNekin0GWI/lEFzqW
-        Wk5gafjSRAZRkGfyLziPvIk=
-X-Google-Smtp-Source: APXvYqy9oKB9Ozl8hrB3SUfpSveBM41X9hsvRCH6URNhs4FJAED+cuPGdd9arO5yZ4Zj26NEgNPDFQ==
-X-Received: by 2002:a63:3104:: with SMTP id x4mr9948531pgx.369.1575562040738;
-        Thu, 05 Dec 2019 08:07:20 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id m15sm11956980pgi.91.2019.12.05.08.07.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 08:07:20 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] video: fbdev: vesafb: add missed release_region
-Date:   Fri,  6 Dec 2019 00:07:12 +0800
-Message-Id: <20191205160712.32245-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 5 Dec 2019 11:08:08 -0500
+X-Greylist: delayed 1414 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Dec 2019 11:08:07 EST
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 158F36D18
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Dec 2019 09:44:32 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id ctIuiIKSz3Qi0ctIuiXJs0; Thu, 05 Dec 2019 09:44:32 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Kono/osY8LIAISwNgMpURkYC4W/4gFk0QH7aAaQbSh4=; b=KFPZkvkv3OWyCyMPD6wcT7unhC
+        6aEdRcRYif0kIHhl0yXyKrMY0hNpFsLqZU+CGUJ72XPDGmA/z0S68k4QpNmw3eFyojrDCpCm4KDg9
+        RE3dD8aremRzo2tpfiHf/SQdqpw8UnxUTxoScV0BVsbOvOMQS+EZsyqjv81tRdnJa7jF0J4+GI51G
+        WQHoL6FVUyhm1jhXfydD+1KYUiXeakCrC5eCWoAMYVnRD28432aYw2Ol0jOTWQTci4PEb2ENaRyCR
+        fBxa7ucU20kx9IIWzJ1J2T21gWbVVlG/O8Rv/zXCxmm44uZZC8CO1cxdLdQQx5vqPj1AwSfuYSmX9
+        cPiukfrA==;
+Received: from [191.31.196.215] (port=35544 helo=castello.bz.toradex.local)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1ictIs-001jEH-US; Thu, 05 Dec 2019 12:44:31 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v8 0/5] power: supply: MAX17040: Add IRQ for low level and alert SOC changes
+Date:   Thu,  5 Dec 2019 12:44:05 -0300
+Message-Id: <20191205154410.29462-1-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.24.0.rc2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.196.215
+X-Source-L: No
+X-Exim-ID: 1ictIs-001jEH-US
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.bz.toradex.local) [191.31.196.215]:35544
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 1
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to free the requested irq in remove and probe
-failure.
-Add the missed calls to fix it.
+This series add IRQ handler for low level SOC alert, define a devicetree
+binding attribute to configure the alert level threshold and check for
+changes in SOC and power supply status for send uevents.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Modify commit message.
+Max17043/17044 have a pin for alert host about low level state of charge and
+this alert can be configured in a threshold from 1% up to 32% of SOC.
 
- drivers/video/fbdev/vesafb.c | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks Krzysztof Kozlowski, Lee Jones, Rob Herring and Sebastian Reichel for
+your time reviewing it.
 
-diff --git a/drivers/video/fbdev/vesafb.c b/drivers/video/fbdev/vesafb.c
-index d9c08f6c2155..fbb196a8bbf6 100644
---- a/drivers/video/fbdev/vesafb.c
-+++ b/drivers/video/fbdev/vesafb.c
-@@ -468,6 +468,7 @@ static int vesafb_probe(struct platform_device *dev)
- 	fb_info(info, "%s frame buffer device\n", info->fix.id);
- 	return 0;
- err:
-+	release_region(0x3c0, 32);
- 	arch_phys_wc_del(par->wc_cookie);
- 	if (info->screen_base)
- 		iounmap(info->screen_base);
-@@ -480,6 +481,7 @@ static int vesafb_remove(struct platform_device *pdev)
- {
- 	struct fb_info *info = platform_get_drvdata(pdev);
- 
-+	release_region(0x3c0, 32);
- 	unregister_framebuffer(info);
- 	framebuffer_release(info);
- 
--- 
-2.24.0
+Changes since v7:
+(Suggested by Sebastian Reichel)
+- Fix unrelated change
+- Use device_property_read_u32() and simplify the code
+- Check the irq and of_device_is_compatible in the first patch
+
+Changes since v6:
+(Suggested by Lee Jones)
+- Use relative paths in documentation
+
+Matheus Castello (5):
+  power: supply: max17040: Add IRQ handler for low SOC alert
+  dt-bindings: power: supply: Max17040: Add DT bindings for max17040
+    fuel gauge
+  devicetree: mfd: max14577: Add reference to max14040_battery.txt
+    descriptions
+  power: supply: max17040: Config alert SOC low level threshold from FDT
+  power: supply: max17040: Send uevent in SOC and status change
+
+ .../devicetree/bindings/mfd/max14577.txt      |   2 +
+ .../power/supply/max17040_battery.txt         |  33 +++++
+ drivers/power/supply/max17040_battery.c       | 130 +++++++++++++++++-
+ 3 files changed, 161 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+
+--
+2.24.0.rc2
 
