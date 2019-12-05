@@ -2,138 +2,228 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B73C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4989C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5B320707
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:29:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Su291t1e"
+	by mail.kernel.org (Postfix) with ESMTP id 7F9A420707
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:32:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575545522;
+	bh=HoU7fEoop+BSuYEssjdRG/8skU6jRxjg/oYsoPYwaC8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cwBzMMW3r6X7FpIzsPLMq4GVaIegPePk/MxeIG3+Jd8fGoQbs+MEcxuwC3O9EKkdJ
+	 BCAKluL+LEL6VrOCk4Jr/7kPC3tx1lUL5dLZR/iM+CzEbq9ILAU4yM0YXk/hOOhIPd
+	 dut0TsnvfBL0FoqSemCAQSzbHKUCYfGaLsekh8OA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbfLEL3a (ORCPT
+        id S1729167AbfLELcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 06:29:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20566 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729260AbfLEL32 (ORCPT
+        Thu, 5 Dec 2019 06:32:01 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53188 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728735AbfLELcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 06:29:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575545367;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lbaSGfutZwhZA116gvr95IAUlIVoaJxPvvW+eFCW8zI=;
-        b=Su291t1eGFT3SH7xXcP17RW8wQuyFCu4TV9qt0BLkuATFaEkUK5NsqLXAalYNDNodetJ/N
-        PCq3U3g8ojkuFduB+z+iQQBX/xkJ44jerbjNnfJ6zMWm4xRTWZ97j117R8Eu9BNori8ELF
-        2xdEwKvQOywMDyuLc/XkD6LZgelWyxg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-277-AOQQ6ZUNOFajVLI066qgGw-1; Thu, 05 Dec 2019 06:29:24 -0500
-Received: by mail-wr1-f70.google.com with SMTP id j13so1389727wrr.20
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 03:29:24 -0800 (PST)
+        Thu, 5 Dec 2019 06:32:01 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so3291393wmc.2;
+        Thu, 05 Dec 2019 03:31:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lbaSGfutZwhZA116gvr95IAUlIVoaJxPvvW+eFCW8zI=;
-        b=unWAFwfEoX/2zwvh0ortyAvHs+zVRvDoTQm1hOppSaoWABY5a7oRKM8l40OKFEdFAe
-         /vX7OYTGNZY79DS6S6M6E0iQDbjOB6DaLynEEuQ/G2vJhGBiBeqq8anOMhIcwGA8p/1F
-         bRxR1l5pXjyRGrwRt0rBGzZ1z66filynVtyoMjYhWpsvJUKQLM4EgE98xD2ij0+9pj4A
-         b7xBkN3NbAePJRKxwGzkcwddnREGBk8hYiHjXkTMhQBLJNM/119a37UeQFtv6fErNw2x
-         l/o1KacjefI1aRADcuQ2J+AdH49thEE1E5sKyB+0aFlTq5RxvgBKlIGtf0vIAfxHDL8P
-         +NUQ==
-X-Gm-Message-State: APjAAAXWZO4xQMDpcspHZFf4jcABXWWWsusN69w0RVkvH9PQOCkBs1D7
-        vzGc5OuwhljJg/J2ss6GiuX0RaOwn9qHwJVXaHhSVkbLQWXWfokgSmnM20SbDj/BL60F07p/Vnw
-        SerNAGB0uIaJbTPGZDHyGsQ+l
-X-Received: by 2002:a1c:1dc4:: with SMTP id d187mr4900398wmd.46.1575545363049;
-        Thu, 05 Dec 2019 03:29:23 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx9Xt8ZW3hE0/KfrEcZYT8qrPPraxHN0nr72IWYS5MoUhQN15mYYzXu7Q6Ai0EaHlN2GKcQ5w==
-X-Received: by 2002:a1c:1dc4:: with SMTP id d187mr4900356wmd.46.1575545362806;
-        Thu, 05 Dec 2019 03:29:22 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:541f:a977:4b60:6802? ([2001:b07:6468:f312:541f:a977:4b60:6802])
-        by smtp.gmail.com with ESMTPSA id e18sm11632611wrr.95.2019.12.05.03.29.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 03:29:22 -0800 (PST)
-Subject: Re: KASAN: slab-out-of-bounds Read in fbcon_get_font
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI <dri-devel@lists.freedesktop.org>, ghalat@redhat.com,
-        Gleb Natapov <gleb@kernel.org>, gwshan@linux.vnet.ibm.com,
-        "H. Peter Anvin" <hpa@zytor.com>, James Morris <jmorris@namei.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        KVM list <kvm@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, stewart@linux.vnet.ibm.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>
-References: <0000000000003e640e0598e7abc3@google.com>
- <41c082f5-5d22-d398-3bdd-3f4bf69d7ea3@redhat.com>
- <CACT4Y+bCHOCLYF+TW062n8+tqfK9vizaRvyjUXNPdneciq0Ahg@mail.gmail.com>
- <f4db22f2-53a3-68ed-0f85-9f4541530f5d@redhat.com>
- <CACT4Y+ZHCmTu4tdfP+iCswU3r6+_NBM9M-pAZEypVSZ9DEq3TQ@mail.gmail.com>
- <e03140c6-8ff5-9abb-1af6-17a5f68d1829@redhat.com>
- <CACT4Y+YopHoCFDRHCE6brnWfHb5YUsTJS1Mc+58GgO8CDEcgHQ@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <bf93410c-7e59-a679-c00d-5333a9879128@redhat.com>
-Date:   Thu, 5 Dec 2019 12:29:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JjJxU4HP6eaRRyFxsdouinTrpCEow/Z7i31krH2kwCs=;
+        b=kZv7nmk+Oo+yT7euE/vMskqQ3z7iw/omRSYYBtuRQPWvgye2SGBAhdOs+c3V9qmnOX
+         RcHXHX9narKM7amnmA6NvaE225rRWQJJyryXU5XtxhQujOqoyfnONznedvC0On+0P2Ub
+         1GnCS0jPziFJ0mLPlPdEv8/bzRmKR6+B9uUF92/IXFiycm4JFFxnm3okv+2A5wuKwutJ
+         YgqU5CeMWQ170EBVwUeilrfZu+13cVfjW9219ZG5CHlhXwtdSsHZdP++8TbhsAa5PevI
+         okr2MALjPwOMZKcpQjVN6FmS4vTAnwqtla0Tyl00yZ2hNV3qiH767ltafdbecOnC4r7t
+         FLAw==
+X-Gm-Message-State: APjAAAW6gZ3AwjJQsaRsgz5SHzFsoXSrvAZgbKa7YSQejHFUfbbbsfq8
+        vsalwUULJQ/gLAL8fGFkbKQ=
+X-Google-Smtp-Source: APXvYqzpDPHksDnygy5Fg+9DCfEclhSTLYJunPk0DVHsHi1gH3jci6q0s1hvYgMua9JGOYKPgXNpXQ==
+X-Received: by 2002:a1c:61d7:: with SMTP id v206mr4592095wmb.13.1575545518284;
+        Thu, 05 Dec 2019 03:31:58 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id z11sm11966035wrt.82.2019.12.05.03.31.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 03:31:57 -0800 (PST)
+Date:   Thu, 5 Dec 2019 12:31:56 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     fabecassis@nvidia.com, jhubbard@nvidia.com, cl@linux.com,
+        vbabka@suse.cz, mgorman@techsingularity.net,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [v2 PATCH] mm: move_pages: return valid node id in status if the
+ page is already on the target node
+Message-ID: <20191205113156.GE28317@dhcp22.suse.cz>
+References: <1575519678-86510-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+YopHoCFDRHCE6brnWfHb5YUsTJS1Mc+58GgO8CDEcgHQ@mail.gmail.com>
-Content-Language: en-US
-X-MC-Unique: AOQQ6ZUNOFajVLI066qgGw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575519678-86510-1-git-send-email-yang.shi@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/12/19 12:27, Dmitry Vyukov wrote:
-> Oh, you mean the final bisection crash. Indeed it contains a kvm frame
-> and it turns out to be a bug in syzkaller code that indeed
-> misattributed it to kvm instead of netfilter.
-> Should be fixed now, you may read the commit message for details:
-> https://github.com/google/syzkaller/commit/4fb74474cf0af2126be3a8989d770c3947ae9478
+On Thu 05-12-19 12:21:18, Yang Shi wrote:
+> Felix Abecassis reports move_pages() would return random status if the
+> pages are already on the target node by the below test program:
 > 
-> Overall this "making sense out of kernel output" task is the ultimate
-> insanity, you may skim through this file to get a taste of amount of
-> hardcoding and special corner cases that need to be handled:
-> https://github.com/google/syzkaller/blob/master/pkg/report/linux.go
-> And this is never done, such "exception from exception corner case"
-> things pop up every week. There is always something to shuffle and
-> tune. It only keeps functioning due to 500+ test cases for all
-> possible insane kernel outputs:
-> https://github.com/google/syzkaller/tree/master/pkg/report/testdata/linux/report
-> https://github.com/google/syzkaller/tree/master/pkg/report/testdata/linux/guilty
+> ---8<---
 > 
-> So thanks for persisting and questioning! We are getting better with
-> each new test.
+> int main(void)
+> {
+> 	const long node_id = 1;
+> 	const long page_size = sysconf(_SC_PAGESIZE);
+> 	const int64_t num_pages = 8;
+> 
+> 	unsigned long nodemask =  1 << node_id;
+> 	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
+> 	if (ret < 0)
+> 		return (EXIT_FAILURE);
+> 
+> 	void **pages = malloc(sizeof(void*) * num_pages);
+> 	for (int i = 0; i < num_pages; ++i) {
+> 		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
+> 				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
+> 				-1, 0);
+> 		if (pages[i] == MAP_FAILED)
+> 			return (EXIT_FAILURE);
+> 	}
+> 
+> 	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
+> 	if (ret < 0)
+> 		return (EXIT_FAILURE);
+> 
+> 	int *nodes = malloc(sizeof(int) * num_pages);
+> 	int *status = malloc(sizeof(int) * num_pages);
+> 	for (int i = 0; i < num_pages; ++i) {
+> 		nodes[i] = node_id;
+> 		status[i] = 0xd0; /* simulate garbage values */
+> 	}
+> 
+> 	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
+> 	printf("move_pages: %ld\n", ret);
+> 	for (int i = 0; i < num_pages; ++i)
+> 		printf("status[%d] = %d\n", i, status[i]);
+> }
+> ---8<---
+> 
+> Then running the program would return nonsense status values:
+> $ ./move_pages_bug
+> move_pages: 0
+> status[0] = 208
+> status[1] = 208
+> status[2] = 208
+> status[3] = 208
+> status[4] = 208
+> status[5] = 208
+> status[6] = 208
+> status[7] = 208
+> 
+> This is because the status is not set if the page is already on the
+> target node, but move_pages() should return valid status as long as it
+> succeeds.  The valid status may be errno or node id.
+> 
+> We can't simply initialize status array to zero since the pages may be
+> not on node 0.  Fix it by updating status with node id which the page is
+> already on.  And, it looks we have to update the status inside
+> add_page_for_migration() since the page struct is not available outside
+> it.
 
-Thanks to you!  I "complain" because I know you're so responsive. :)
+The code is indeed more complex than I wanted but I couldn't figure an
+easier way back then. I wanted to keep store_status at a single place
+because the failure handling is quite complex already.
 
-Paolo
+> Make add_page_for_migration() return 1 if store_status() is failed in
+> order to not mix up the status value since -EFAULT is also a valid
+> status.
 
+Can we simply return 1 when there is something to migrate instead?
+Something like
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 4fe45d1428c8..f3730804b8d4 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1516,9 +1516,9 @@ static int do_move_pages_to_node(struct mm_struct *mm,
+ /*
+  * Resolves the given address to a struct page, isolates it from the LRU and
+  * puts it to the given pagelist.
+- * Returns -errno if the page cannot be found/isolated or 0 when it has been
+- * queued or the page doesn't need to be migrated because it is already on
+- * the target node
++ * Returns -errno if the page cannot be found/isolated or 0 when it doesn't have
++ * to be migrate or 1 dwhen it has been queued or the page doesn't need to be
++ * migrated because it is already on the target node
+  */
+ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+ 		int node, struct list_head *pagelist, bool migrate_all)
+@@ -1557,7 +1557,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+ 	if (PageHuge(page)) {
+ 		if (PageHead(page)) {
+ 			isolate_huge_page(page, pagelist);
+-			err = 0;
++			err = 1;
+ 		}
+ 	} else {
+ 		struct page *head;
+@@ -1567,7 +1567,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+ 		if (err)
+ 			goto out_putpage;
+ 
+-		err = 0;
++		err = 1;
+ 		list_add_tail(&head->lru, pagelist);
+ 		mod_node_page_state(page_pgdat(head),
+ 			NR_ISOLATED_ANON + page_is_file_cache(head),
+@@ -1644,8 +1644,14 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+ 		 */
+ 		err = add_page_for_migration(mm, addr, current_node,
+ 				&pagelist, flags & MPOL_MF_MOVE_ALL);
+-		if (!err)
++		if (!err) {
++			err = store_status(status, i, current_node, 1);
++			if (err)
++				goto out_flush;
++			continue;
++		} else if (err > 0) {
+ 			continue;
++		}
+ 
+ 		err = store_status(status, i, err, 1);
+ 		if (err)
+
+this would still keep store_status ugliness at a single place.
+
+>
+> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+> Reported-by: Felix Abecassis <fabecassis@nvidia.com>
+> Tested-by: Felix Abecassis <fabecassis@nvidia.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: <stable@vger.kernel.org> 4.17+
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+> v2: *Correted the return value when add_page_for_migration() returns 1.
+> 
+> John noticed another return value inconsistency between the implementation and
+> the manpage.  The manpage says it should return -ENOENT if the page is already
+> on the target node, but it doesn't.  It looks the original code didn't return
+> -ENOENT either, I'm not sure if this is a document issue or not.  Anyway this
+> is another issue, once we confirm it we can fix it later.
+
+I do not remember all the details but my recollection is that there were
+several inconsistencies present before I touched the code and I've
+decided to not touch them without a clear usecase.
+-- 
+Michal Hocko
+SUSE Labs
