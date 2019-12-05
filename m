@@ -2,149 +2,102 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADECC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EC4C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4F022466E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:19:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GhbbMiXN"
+	by mail.kernel.org (Postfix) with ESMTP id 35FE42466E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 21:19:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575580776;
+	bh=ybVy/qUxpK+1w9Qrdq15VRtmT3LYSmfY97dTw3Z8zHM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aZPKM18i8eUuLmJnwCI7X2AJ1U0WRaVp18JItJhRNxHPcxlcRjm1XMlE3VPF3GhBu
+	 8MCbM6puelXFqatUeGNMZ4LWSJzVAV+Nz9d+tPfbCiqui6Zr4FbVr8d8vIpIfNWYde
+	 k65fjVlFcsOHT0sf5WKYmQgQH9etRYDo7K91kQuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbfLEVTE (ORCPT
+        id S1730064AbfLEVTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 16:19:04 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:39139 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729187AbfLEVTE (ORCPT
+        Thu, 5 Dec 2019 16:19:35 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42780 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729598AbfLEVTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 16:19:04 -0500
-Received: by mail-vs1-f68.google.com with SMTP id p21so3506678vsq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 13:19:04 -0800 (PST)
+        Thu, 5 Dec 2019 16:19:34 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y19so3577876lfl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 13:19:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=WUgUU6EFepvf+3kAqmDr43zIZXXpWpmN9fMRSnPoU50=;
-        b=GhbbMiXNO+52x6ilNuXdv3jbg9SDpfn/SNVQYAL81EU/BAzAVfXVlBGPhnB3h0RKrm
-         URB6nPgLTfCNL0afqXoH7hiIThk8paeWprPaXK0bWHzlm45/bIbr6ffbdCfPtXm57yXQ
-         2nepNfcdthxQWhGpm+S4+a+ar89B9dVEQ6uiQiyE+xbS/0a/ff9oAX8k9GydkBJwGg72
-         OPW4XCi8YgmxtV/kIhNI3IW0TxrZKeQyAgnGxQpQEn5Feop46znp9NccTIIiFiCfm/WR
-         Z+Y3QNwoTUREMADLe+jMPK4PTLVVcFWwlSbxqo4p6NLTfTgfuWsdSbFwFQs2jamY0/xM
-         dIYQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p/5DUiJNUvTvn0ngWEENA6E5/rRQQAGsoL0gXtjWTaE=;
+        b=RBRuYauI47ubpHmTcCCApQyzGgJHEh2S0LTdKqjeDtcwDoQ3f42FSm0NGn3QOkrjmx
+         BTAMzCY4AzuZtb+azMbdOGZfG5SbecMEbid/TrFo6CC2Gwj6JBLKgZAeHLtdmva91Zw5
+         +9JbkxvgQKwJjpu/8vep7+gvTbeGBnohVAe+s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=WUgUU6EFepvf+3kAqmDr43zIZXXpWpmN9fMRSnPoU50=;
-        b=AGzW9iuZ1ZJ8Tr34yj9aYqf4xuseW10NLgAli96Kw9WdDjpZli8YX9HDqKjjXQ2J3j
-         ax5uEmKUfB/vwZQea0Ebu+Wlzc1qrHzIJK3ry3g8VJUhZ9lPHQLBttfV//OWP+usbnC2
-         qql5Uz7sw2nMXc5Uo/PDshdyUxug5c1ChifWYJW/ng1LEO5wpSPpn3hSde7UVv7ayXEW
-         SAxX9AkqBU00yuAgb1RuReeehCocKiMa6zoM52HW4qF62PZRXpQnC2AJnuwAPxM2cEsL
-         An+H125H8vFiKy0N+vW8kPe/yYa6FpxN7Qe5NDuPbgAxkwL9THjNYbWZQZJWBEskn5d/
-         P/kA==
-X-Gm-Message-State: APjAAAWe9pgSxtBnXmGKcX/vxlGRPclqwDt3tBbFHvR9/wPilgAWPdTg
-        kFdAe0jrr6qquFro1fShwaCWJmJSLQcPbZ8QLb0Qu1srl16Wnw==
-X-Google-Smtp-Source: APXvYqw+JfxGYjWJsiq/H7mWHop2og5CHsBAEcSLNsIEIlOdqLpDfatp9QmBgqbR0KgsZdBuDBdtJvU6MGbnVApAc2g=
-X-Received: by 2002:a67:dc90:: with SMTP id g16mr7083274vsk.110.1575580742997;
- Thu, 05 Dec 2019 13:19:02 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p/5DUiJNUvTvn0ngWEENA6E5/rRQQAGsoL0gXtjWTaE=;
+        b=IWCiHILt/RamPciOkId36kedt+yCPzbtcWAji3lx/U3/isjYt0iaxKbs2ggyPW8iNx
+         9PjQDBt8XS2w+uqz7dhQMcHB/UM4erKTnUZrCIZ1ab/OuJBlBjkYH+/Eoh62/TdGRKkG
+         7DgAmWg3mjGR6RIUldGJnvrB52y4CpM3CzrSnDbpWWKq+qkBSi713AmvjB4P2WNXZ56b
+         2P7/fMYl+pLigO+sGVw35l7wO/yB1cUDGOD0QZb7spZ/Hjapd6CfKi9yFZgSXz2pbiF5
+         YP01T/HhD3WWkF0tCOXHMrM3SGqSAfLGQJoIGeH2wn+nC8Lm/0fF4drpY/7bfrLih7nl
+         YlMA==
+X-Gm-Message-State: APjAAAVNWecIJrcBZqvaBTT+whJCfeqAbZCd1kjXwM0RbizKcSHG3s/5
+        9l+7eNc6QHVbm/Ax9oDN4/GOt48ihTo=
+X-Google-Smtp-Source: APXvYqzSj3hOSli6pqmKW4zoICt9aq4vlgk4ogUDIQMz1D0e2HUmGVM1Y7SMiDqylSO3a5pl+17Q9A==
+X-Received: by 2002:a05:6512:209:: with SMTP id a9mr6382362lfo.157.1575580772435;
+        Thu, 05 Dec 2019 13:19:32 -0800 (PST)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id o69sm5514667lff.14.2019.12.05.13.19.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2019 13:19:31 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id l18so3629568lfc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 13:19:30 -0800 (PST)
+X-Received: by 2002:a05:6512:1dd:: with SMTP id f29mr2419467lfp.106.1575580770512;
+ Thu, 05 Dec 2019 13:19:30 -0800 (PST)
 MIME-Version: 1.0
-From:   Anatol Pomozov <anatol.pomozov@gmail.com>
-Date:   Thu, 5 Dec 2019 13:18:52 -0800
-Message-ID: <CAOMFOmXU8RoeAOEjP=gkkiZdPS8Ok_wzXcgUZxL11u1zMSEtMQ@mail.gmail.com>
-Subject: dmesg spammed with "caller memremap+0x64/0x160 mapping multiple BARs"
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     avid@redhat.com, hch@lst.de, namit@vmware.com, tglx@linutronix.de,
-        delvare@suse.de, rrichter@marvell.com, rppt@linux.vnet.ibm.com
+References: <20191204200307.21047-1-idryomov@gmail.com>
+In-Reply-To: <20191204200307.21047-1-idryomov@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 5 Dec 2019 13:19:14 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjm+9rJvh=aRahfoN7z6waV87Eqr=-i_Cb7zOwHrugf5A@mail.gmail.com>
+Message-ID: <CAHk-=wjm+9rJvh=aRahfoN7z6waV87Eqr=-i_Cb7zOwHrugf5A@mail.gmail.com>
+Subject: Re: [GIT PULL] Ceph updates for 5.5-rc1
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     ceph-devel@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks
+On Wed, Dec 4, 2019 at 12:02 PM Ilya Dryomov <idryomov@gmail.com> wrote:
+>
+> Colin Ian King (1):
+>       rbd: fix spelling mistake "requeueing" -> "requeuing"
 
-We have several servers that run on kernel 4.14.12 and their logs
-spammed with following messages:
+Hmm. Why? That's not a spelling mistake, it's the same word.
 
- [20633911.311910] caller memremap+0x64/0x160 mapping multiple BARs
- [20633911.318577] resource sanity check: requesting [mem
-0x000eb570-0x000edc34], which spans more than PCI Bus 0000:00 [mem
-0x000e8000-0x000ebfff window]
- [20633911.333650] caller memremap+0x64/0x160 mapping multiple BARs
- [20633911.340412] resource sanity check: requesting [mem
-0x000eb570-0x000edc34], which spans more than PCI Bus 0000:00 [mem
-0x000e8000-0x000ebfff window]
- [20633911.355481] caller memremap+0x64/0x160 mapping multiple BARs
+Arguably "requeue" isn't much of a real word to begin with, and is
+more of a made-up tech language. And then on wiktionary apparently the
+only "ing" form you find is the one without the final "e", but
+honestly, that's reaching. The word doesn't exist in _real_
+dictionaries at all.
 
-After some debugging I've found that the warning is printed when I open the file
-/sys/firmware/dmi/entries/*/raw The stacktrace is
+I suspect "re-queueing" with the explicit hyphen would be the more
+legible spelling (with or without the "e" - both forms are as
+correct), but whatever.
 
-[   14.839284] Call Trace:
-[   14.839289]  dump_stack+0x46/0x59
-[   14.839293]  iomem_map_sanity_check+0xb8/0xc0
-[   14.839296]  __ioremap_caller+0x225/0x2f0
-[   14.839302]  memremap+0x113/0x170
-[   14.856703]  ? dmi_name_in_serial+0x30/0x30
-[   14.856705]  dmi_walk+0x30/0x70
-[   14.856706]  find_dmi_entry+0x46/0x80
-[   14.856708]  ? dmi_entry_free+0x10/0x10
-[   14.856710]  dmi_entry_raw_read+0x3a/0x60
-[   14.856712]  kernfs_fop_read+0xa1/0x170
-[   14.856714]  __vfs_read+0x36/0x170
-[   14.856717]  vfs_read+0x89/0x130
-[   14.856719]  SyS_read+0x52/0xc0
-[   14.856721]  do_syscall_64+0x60/0x110
-[   14.856723]  entry_SYSCALL_64_after_hwframe+0x3d/0xa2
-[   14.856725] RIP: 0033:0x7f60aceedf70
+I've pulled it, but I really don't think it was misspelled to begin
+with, and somebody who actually cares about language probably wouldn't
+like either form.
 
-As it turned out the root of the problem is BIOS region mapping. Here
-are ACPI mappings:
-
-000e0000-000fffff : Reserved
-  000e0000-000e3fff : PCI Bus 0000:00
-  000e4000-000e7fff : PCI Bus 0000:00
-  000e8000-000ebfff : PCI Bus 0000:00
-  000ec000-000effff : PCI Bus 0000:00
-  000f0000-000fffff : PCI Bus 0000:00
-
-Or the same mapping from IASL tool:
-
-DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed,
-Cacheable, ReadWrite,
-    0x00000000,         // Granularity
-    0x000E8000,         // Range Minimum
-    0x000EBFFF,         // Range Maximum
-    0x00000000,         // Translation Offset
-    0x00004000,         // Length
-    ,, , AddressRangeMemory, TypeStatic)
-DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed,
-Cacheable, ReadWrite,
-    0x00000000,         // Granularity
-    0x000EC000,         // Range Minimum
-    0x000EFFFF,         // Range Maximum
-    0x00000000,         // Translation Offset
-    0x00004000,         // Length
-    ,, , AddressRangeMemory, TypeStatic)
-
-
-SMBIOS table is located at 0x000eb570-0x000edc34 address range. When
-find_dmi_entry() tries to map SMBIOS to kernel address space the
-warning above is printed.
-
-
-
-So I have a few questions here:
- - What exactly kernel tries to tell us here? Why mapping SMBIOS over
-multiple PCI mappings is bad. Sorry I am not familiar with this
-codepath and I am trying to understand the issue.
- - Is the warning really bad? The code works just fine despite the
-warnings. Can the warning be turned into info/debug()?
- - Is the mapping need to be fixed in BIOS? What other possible
-problems can happen due to such BIOS mapping misconfiguration?
- - Why SMBIOS table mapped for every sysfs file read? Would it make
-sense to map SMBIOS only once at the kernel boot?
- - Does it make sense to ratelimit the warning? I will be glad to send
-the path for it.
+              Linus
