@@ -2,104 +2,129 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B11C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1B9C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 007472464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39AAC24652
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:37:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FjAqSfZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729344AbfLELgQ (ORCPT
+        id S1729380AbfLELhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 06:36:16 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:25486 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbfLELgQ (ORCPT
+        Thu, 5 Dec 2019 06:37:10 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41145 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729187AbfLELhJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 06:36:16 -0500
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: MX4SMX03Epe5zSiLe4Ykvi67hrT1G9Jp/hSeat+cxxnTd1cxhkqKihGRhgbBu0dh8X1o87NiLf
- i/3NiawRzE+8QN/BFl5QN75vmNpuMGruvOh2U5QvEn5wgnATjwyT0OopfSgpPZElOv3Fv9eL7K
- UtwxGgUBPE3T/phTvMxTPjW8mmCqSQTCtmh9aE/wUiovSNFO1P27aOLyBtE5cAcjWM1+cvFQgf
- gfW9ZJcZjXo1qBy769UB/DP0YEdu63F1Q4+YXbY5lqBC5XVDhl/MZIZSjlR2yTtni9gjZQjEpl
- edA=
-X-IronPort-AV: E=Sophos;i="5.69,281,1571727600"; 
-   d="scan'208";a="57915304"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Dec 2019 04:36:17 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 5 Dec 2019 04:36:17 -0700
-Received: from tenerife.corp.atmel.com (10.10.85.251) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 5 Dec 2019 04:36:17 -0700
-From:   Nicolas Ferre <nicolas.ferre@microchip.com>
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH] ARM: dts: at91: sama5d27_som1_ek: add the microchip,sdcal-inverted on sdmmc0
-Date:   Thu, 5 Dec 2019 12:36:04 +0100
-Message-ID: <20191205113604.9000-1-nicolas.ferre@microchip.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 5 Dec 2019 06:37:09 -0500
+Received: by mail-qt1-f195.google.com with SMTP id v2so3187137qtv.8
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 03:37:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TfYIZA1x1hWCQA6g7oQ19DH7tEX6ualy3pbm/P3Lk+A=;
+        b=FjAqSfZWtL5kJIRnjAfh3psbkl8pAdn9kqdwrkrc6B4f8S1BQX57V7yNhGnG0BgwL4
+         z15JyoonOBeE0tT3TytWPHa3CYQzBD9Tx1POq43C8+CKKbYgMmPV0L4s8BZLCisZW0Pm
+         f5LkYEtNxM7sPloRggdzD8iVN6W49sZsR+I/jfJbS6KjWa+Z1FJ1NvmgxtfYC2CLp305
+         w4/Zdw6lu3ne6ZYwhPkYooh4vLuzcrPNHP7Rj3jkgz7jaVzaahUIH1/iG1bVjXkBegYp
+         /DU83BC87lTZAbNf8X47Bpt+FqvVbEZvFIVSsSmXIuUebjxYpvSkwl+OHCAaL0gmPODj
+         tlXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TfYIZA1x1hWCQA6g7oQ19DH7tEX6ualy3pbm/P3Lk+A=;
+        b=XsEnJpeqq11/IWq+Z9U47QPcWI8lKybOnPg90jirzshAoK02+X5ioZ2shI1BqtSbk/
+         puNzFFclxHhXKQ68bAo21iKSgif1vwTxVGYMpdrMU9EKxNYzkErKynx8KnYIIaQu/9F4
+         GPhggCPwau6tsV0nNAanHQACTTslujR13y+8waX5iwHsDAC5hns470wSU+uwu1Bb6aCd
+         lf8Qw/7v9QYzbz/+S5Bo3soegN78gY4UFNftqxPrX7kpevY8VvIR7mmnF753inQqDEbh
+         CxYG/1G5WhXAKVaF4KlcHzkN1qK08oQIpGl2mIaVegv3/19RjkRi/R/VHOdwtA6Gasve
+         NJBw==
+X-Gm-Message-State: APjAAAXQk+mzIgsBDZ+bk6E1lg3q+R/GZxounyLla7/0Rpnxj33tz23n
+        xK0buEpDVpBvmDG/DAoQfJvZ4OUkVkXb6QY2LrgORg==
+X-Google-Smtp-Source: APXvYqzfgZJ9l6UJOOMZ2Qo7SFoVkzP/jw5YHvEyX7L/cw3KsXRUm/icBbPq7v443TCg8aD8BOA0xHa3BtNpRac5BEo=
+X-Received: by 2002:ac8:ccf:: with SMTP id o15mr7086616qti.380.1575545828141;
+ Thu, 05 Dec 2019 03:37:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <0000000000003e640e0598e7abc3@google.com> <41c082f5-5d22-d398-3bdd-3f4bf69d7ea3@redhat.com>
+ <CACT4Y+bCHOCLYF+TW062n8+tqfK9vizaRvyjUXNPdneciq0Ahg@mail.gmail.com>
+ <f4db22f2-53a3-68ed-0f85-9f4541530f5d@redhat.com> <397ad276-ee2b-3883-9ed4-b5b1a2f8cf67@i-love.sakura.ne.jp>
+In-Reply-To: <397ad276-ee2b-3883-9ed4-b5b1a2f8cf67@i-love.sakura.ne.jp>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 5 Dec 2019 12:36:56 +0100
+Message-ID: <CACT4Y+bUkzJAezH9Pk=c1amtzO0-r1Hcn3WmDuS+Drn-R3GAQA@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in fbcon_get_font
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        syzbot <syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI <dri-devel@lists.freedesktop.org>, ghalat@redhat.com,
+        Gleb Natapov <gleb@kernel.org>, gwshan@linux.vnet.ibm.com,
+        "H. Peter Anvin" <hpa@zytor.com>, James Morris <jmorris@namei.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        KVM list <kvm@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, stewart@linux.vnet.ibm.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Specify the SoC SDCAL pin connection that is used in the
-sama5d27c 128MiB SiP on the SAMA5D27 SOM1.
-This will put in place a software workaround that would reduce power
-consumption on all boards using this SoM, including the SAMA5D27 SOM1 EK.
+On Thu, Dec 5, 2019 at 11:41 AM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> On 2019/12/05 19:22, Paolo Bonzini wrote:
+> > Ah, and because the machine is a KVM guest, kvm_wait appears in a lot of
+> > backtrace and I get to share syzkaller's joy every time. :)
+> >
+> > This bisect result is bogus, though Tetsuo found the bug anyway.
+> > Perhaps you can exclude commits that only touch architectures other than
+> > x86?
+> >
+>
+> It would be nice if coverage functionality can extract filenames in the source
+> code and supply the list of filenames as arguments for bisect operation.
+>
+> Also, (unrelated but) it would be nice if we can have "make yes2modconfig"
+> target which converts CONFIG_FOO=y to CONFIG_FOO=m if FOO is tristate.
+> syzbot is testing kernel configs close to "make allyesconfig" but I want to
+> save kernel rebuild time by disabling unrelated functionality when manually
+> "debug printk()ing" kernels.
 
-Uses property introduced in 5cd41fe89704 ("dt-bindings: sdhci-of-at91:
-add the microchip,sdcal-inverted property")
+I thought that maybe sed "s#=y#=m#g" && make olddefconfig will do, but
+unfortunately, it turns off non-tristate configs...
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
- arch/arm/boot/dts/at91-sama5d27_som1.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
-index 7788d5db65c2..6281590150c8 100644
---- a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
-+++ b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
-@@ -24,6 +24,10 @@
- 	};
- 
- 	ahb {
-+		sdmmc0: sdio-host@a0000000 {
-+			microchip,sdcal-inverted;
-+		};
-+
- 		apb {
- 			qspi1: spi@f0024000 {
- 				pinctrl-names = "default";
--- 
-2.17.1
-
+$ egrep "CONFIG_MEMORY_HOTPLUG|CONFIG_TCP_CONG_DCTCP" .config
+CONFIG_MEMORY_HOTPLUG=y
+CONFIG_TCP_CONG_DCTCP=y
+# sed -i "s/CONFIG_MEMORY_HOTPLUG=y/CONFIG_MEMORY_HOTPLUG=m/g" .config
+# sed -i "s/CONFIG_TCP_CONG_DCTCP=y/CONFIG_TCP_CONG_DCTCP=m/g" .config
+# egrep "CONFIG_MEMORY_HOTPLUG|CONFIG_TCP_CONG_DCTCP" .config
+CONFIG_MEMORY_HOTPLUG=m
+CONFIG_TCP_CONG_DCTCP=m
+# make olddefconfig
+# egrep "CONFIG_MEMORY_HOTPLUG|CONFIG_TCP_CONG_DCTCP" .config
+# CONFIG_MEMORY_HOTPLUG is not set
+CONFIG_TCP_CONG_DCTCP=m
