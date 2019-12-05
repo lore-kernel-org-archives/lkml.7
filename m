@@ -2,276 +2,242 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A46C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF74AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D79882464E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 833572245C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:11:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dySRrdpq"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="s7/AAMCw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbfLELEc (ORCPT
+        id S1729136AbfLELLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 06:04:32 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39550 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729044AbfLELEc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 06:04:32 -0500
-Received: by mail-wm1-f66.google.com with SMTP id s14so3153917wmh.4;
-        Thu, 05 Dec 2019 03:04:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pTH/YG3diRsUF2efRnDtD2uj5CEkI49OM65Owz3UsS4=;
-        b=dySRrdpqmHuhku5TelbheYisxa07m7oWvbs4DHuwpaJ6vvOaeX6EO/fEPP0Z6yuVaM
-         iK4fNJ8bvb5ATeh7Dl2CwiT1MtubNiRxav0B/cN/GI5YA6L6XzSZwvmy74K71ZE7P3Ss
-         cxD457RrftpOqOUY6/tYsp0B72NTO84NOB9HOH014eqVaOmwGT20Sn2j6fiEnBqnM0Gm
-         kdxuW6YI5hEOcy+D5VSfa/xrszfZKtjFRYRRtuWZ9kQmbTf0ppTldwBv0EcQPcfiVSA+
-         qOGRNkdw2bEwzkX9+pH2lQo4RLnfhyhDBuqzzmQjjhCGo2QOjR/7JLIF5mUhf8yY3MqP
-         TMnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pTH/YG3diRsUF2efRnDtD2uj5CEkI49OM65Owz3UsS4=;
-        b=az1bDNqY4A3Lqoz5pXhKqqpd0gz8lWFBJrJz3k8SJyDGlsmDv2cI2nnGXnk5iKpP74
-         aLZLxi15SE13uOnbPmgzoGGE8M/dSw25Vi97EWRoNHGV7al2KW7zZqrC6Bphvzfi3vyf
-         WXVQCZ0bdHicWv5q9nsM/fY4tWBr8ijskjg0Os1kzCaErgHtbhmXsYczy3ZhlUaqA+8B
-         bjx7oC4U6ldmobiM8kH8Ymdj9Q7dRE1R2ZV0EfkvWtR4Mgd5xJB0Cqu7I0jbVo5pynku
-         xPNWmavEVYQp0ErdNB1gMnIUH9rFe5gwYBtzFLXJ1BQbtdGy1wXC+7IJHThWeh6FeAZs
-         CzYQ==
-X-Gm-Message-State: APjAAAWSfrOa+MqgESWS0nY+cK/mn8NyH+ULTLLWZaOZfU8DxrkaJ2xh
-        9WnTavrzb3yrfNH/kSyZQnYmz+z2kPc=
-X-Google-Smtp-Source: APXvYqyxDFj8wUFZhUIzxwO7+ps9GHpLb5c8ymLEZeaCHntp1DBGZ5jtOW+mWRA69FIDE90JF4hxvw==
-X-Received: by 2002:a1c:40c1:: with SMTP id n184mr4865711wma.116.1575543868688;
-        Thu, 05 Dec 2019 03:04:28 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id f67sm10074849wme.16.2019.12.05.03.04.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 03:04:26 -0800 (PST)
-Date:   Thu, 5 Dec 2019 12:04:25 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] pwm: Changes for v5.5-rc1
-Message-ID: <20191205110425.GA1498132@ulmo>
-References: <20191205061044.1006766-1-thierry.reding@gmail.com>
- <20191205075958.jrz3xuthyh7wv6uu@pengutronix.de>
- <20191205084102.GA1401169@ulmo>
- <20191205100535.y7avzoswkxe43py7@pengutronix.de>
+        Thu, 5 Dec 2019 06:11:18 -0500
+Received: from mail-eopbgr00071.outbound.protection.outlook.com ([40.107.0.71]:62631
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728735AbfLELLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 06:11:18 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mp75BZ5mfUdXxpagSchxmnkcvHrIHv6euM10/NL4rWmLjNtIpwNWI+RWC3GQpisKmHNzc1IbfR7wGKmo1+eMqaSeHrOdcSIX9PgzhrDP9VqgUc1yXgvHsFRGhrcTbsxEUzeWZNcMS0gxaHy7pSKDnzhNECS7oCEl/Vg5JYvUVOQifY10Yie/FUXHdTCPPJyIY7vW1M2faVZsZn9x+3xu59QhjlqUYbdR2GCbuQLLsoJQiC/crSnxH3Dl1B2BRVAYtUGk1V+/VT4kHf7phBH/QQd1Zj26e/Keq17lRvg8UFoeqFO0khEcFcSBENB43OZif51ZagBrcW/prOGioOGZWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZtAW2COMnfQW8Z9XCHCLRXFK1LDUjQCVknFr/ywWDR8=;
+ b=iOC44E2BNZU7QKrHD5Y/u7g4ejS+++fXwSpxCP/s6E1XZDoTYtMfeyctn03MyrdiNk0Kikhssomg+NVSq0AnzVJnzBkxgNrXxJ3X7qTZM1wIWOX9/7kIrz9LUyPZ4fguuSUzbl7Lb+urM30jNmJgRR6seADHRAvU3V8ggOYUFn5o2SjC3IWaKOjtM3TDbE4eAK2nfhkNjd3cJXzxFDYPUPf7xhVo8I3bDtMiaREvI4EjPTuhhfo9GvmzHJvhjF5EPawMBNpp8MG4jfRwT84lXvaSg9YvFXC47w+2kakOzhbsMkM1qTRqWcw9Imam8a3LpSzUjVxX6BXNE+gZFSz1RQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZtAW2COMnfQW8Z9XCHCLRXFK1LDUjQCVknFr/ywWDR8=;
+ b=s7/AAMCwb4l5BVnEKJVKliemNzsaP3TdM6XhUk7xl5f6l4up2nRMVprysRgrbh1U6HoFABR4cFmiB/5Z+sof47biDetXo3s3efJfT+UZADg7FxIvrG2aSGqCTnE+bwSrGKMnW+WK9GBBHguD4/7XDvg1ZhytMoSXTqu6m1ZFl6c=
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.51.208) by
+ VI1PR04MB5806.eurprd04.prod.outlook.com (20.178.204.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Thu, 5 Dec 2019 11:11:09 +0000
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::71d2:55b3:810d:c75b]) by VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::71d2:55b3:810d:c75b%7]) with mapi id 15.20.2495.026; Thu, 5 Dec 2019
+ 11:11:09 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+CC:     Roy Zang <roy.zang@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "frowand.list@gmail.com" <frowand.list@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>
+Subject: RE: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+Thread-Topic: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+Thread-Index: AQHVqP2u5HKRks3QXEmyFTQz0j+ob6emy2EAgADYg4CAAKoFgIAAOn2AgADd3QCAAfrtgA==
+Date:   Thu, 5 Dec 2019 11:11:09 +0000
+Message-ID: <VI1PR04MB5134A689AEA8C49BFC7F8356EC5C0@VI1PR04MB5134.eurprd04.prod.outlook.com>
+References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
+ <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
+ <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
+ <8f56c2d9-ab01-a91e-902f-a61def0e8ce8@arm.com>
+ <AM5PR04MB3299BFC34A4666B7A9C12B13F55D0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+In-Reply-To: <AM5PR04MB3299BFC34A4666B7A9C12B13F55D0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 289ff90c-26b6-4907-47e4-08d77973d4db
+x-ms-traffictypediagnostic: VI1PR04MB5806:|VI1PR04MB5806:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB58069B4F74567FF8E16FFA75EC5C0@VI1PR04MB5806.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02426D11FE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(396003)(366004)(376002)(13464003)(189003)(199004)(66556008)(66446008)(66476007)(52536014)(64756008)(14454004)(229853002)(11346002)(966005)(110136005)(478600001)(7416002)(76116006)(81166006)(81156014)(71200400001)(8936002)(8676002)(54906003)(26005)(44832011)(66946007)(2906002)(5660300002)(53546011)(74316002)(4326008)(7696005)(6506007)(99286004)(33656002)(25786009)(14444005)(186003)(55016002)(316002)(102836004)(86362001)(9686003)(71190400001)(305945005)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5806;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2w1z2JaElDyLFCI6Jgv35lnaZIkBzWGMoDciwSL7KlwGp0r5aaerTb848GfJAJDK4CN1pUksffbjmr2ZT16xLxtFqADayDsQDJIjywxENwcAQTCYn+/0FUtfwVOF7PvGITpQE91qqWZmvzzb+bTG0+6MTOOcwaCcHKG88zvOEWp9VtfXN5NGIl6hL9ZYIsyQPva78PrJ2C2gGBDzJPIkUCcXSNEM1/rKwKEWUWvz9aRADXd5Hg+rwykfH1/unYbvVBgf4QbR3WBdAmx/197PfI4z9DMQ6S7W+TTeDgQZqDUxPwynS0gu7zNgXb7fxJdpvCdLhYtX9DX4osew7+R6OY2MkH7Rbg80nwIHTfRHRg5oROj2mn+odPHOigMULLxg76iPhkxIo8R0WYrBKK4VXW6aBAvPKbn6brDoXs5PEt5N1D/urY8E/IoomZlqg5cs4fLNVm3e5ZPaFJGEqm8Cd/YLnV10iGbDqcKo1yQICL8PEzoJcNz188a+xhgPsEm+k3JWFnePAOcTqFglzKXIAo2V/6sSIXsbpdmCCyPHjn8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
-Content-Disposition: inline
-In-Reply-To: <20191205100535.y7avzoswkxe43py7@pengutronix.de>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 289ff90c-26b6-4907-47e4-08d77973d4db
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 11:11:09.3906
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wtzKoychbfMkV6hhvDryh8xqY8mrdiIcqfmY6SSsZe8F+HutRfZgnfY6KYsQN6sYTTHWjovdm5iKbzFJ+IsSkw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5806
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Dec 05, 2019 at 11:05:35AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Thierry,
->=20
-> On Thu, Dec 05, 2019 at 09:41:02AM +0100, Thierry Reding wrote:
-> > On Thu, Dec 05, 2019 at 08:59:58AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > On Thu, Dec 05, 2019 at 07:10:44AM +0100, Thierry Reding wrote:
-> > > > The following changes since commit 40a6b9a00930fd6b59aa2eb6135abc2e=
-fe5440c3:
-> > > >=20
-> > > >   Revert "pwm: Let pwm_get_state() return the last implemented stat=
-e" (2019-10-21 16:48:52 +0200)
-> > > >=20
-> > > > are available in the Git repository at:
-> > > >=20
-> > > >   git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linu=
-x-pwm.git tags/pwm/for-5.5-rc1
-> > > >=20
-> > > > for you to fetch changes up to f5ff2628867b9c7cb4abb6c6a5a7eea079da=
-d4b6:
-> > > >=20
-> > > >   pwm: imx27: Unconditionally write state to hardware (2019-10-21 1=
-6:58:09 +0200)
-> > > >=20
-> > > > Thanks,
-> > > > Thierry
-> > > >=20
-> > > > ----------------------------------------------------------------
-> > > > pwm: Changes for v5.5-rc1
-> > > >=20
-> > > > Various changes and minor fixes across a couple of drivers.
-> > > >=20
-> > > > ----------------------------------------------------------------
-> > > > Colin Ian King (1):
-> > > >       pwm: sun4i: Drop redundant assignment to variable pval
-> > > >=20
-> > > > Fabrice Gasnier (3):
-> > > >       dt-bindings: pwm-stm32: Document pinctrl sleep state
-> > > >       pwm: stm32: Split breakinput apply routine to ease PM support
-> > > >       pwm: stm32: Add power management support
-> > > >=20
-> > > > Ondrej Jirman (1):
-> > > >       pwm: sun4i: Fix incorrect calculation of duty_cycle/period
-> > > >=20
-> > > > Rasmus Villemoes (1):
-> > > >       pwm: Update comment on struct pwm_ops::apply
-> > > >=20
-> > > > Thierry Reding (8):
-> > > >       dt-bindings: pwm: mediatek: Remove gratuitous compatible stri=
-ng for MT7629
-> > > >       pwm: stm32: Validate breakinput data from DT
-> > > >       pwm: stm32: Remove clutter from ternary operator
-> > > >       pwm: stm32: Pass breakinput instead of its values
-> > > >       pwm: Read initial hardware state at request time
-> > > >       pwm: cros-ec: Cache duty cycle value
-> > > >       pwm: imx27: Cache duty cycle register value
-> > > >       pwm: imx27: Unconditionally write state to hardware
-> > >=20
-> > > It's a bit of a surprise for me that you included the three last patc=
-hes
-> > > as last minute changes. I'm not sure if I oppose them, but they were =
-not
-> > > in next (as of next-20191205) and I would really like to have some ti=
-me
-> > > for patches (that are not obvious fixes of course) there before they =
-go
-> > > into a pull request. And if it's only to get some transparency.
-> > > (But in this case I had the impression that the discussion isn't over
-> > > yet, your last mail in the thread said: "I'm not sure yet about the
-> > > remainder of the series. Depending on what we decide to do about driv=
-ers
-> > > that can't (or don't want to) write all state through to the hardware,
-> > > patches 2-4 may become moot." in October which made me expect there is
-> > > still something to come, at least a statement before the fact. Still
-> > > more as also several further drivers are affected (according to my
-> > > research described in
-> > > https://patchwork.ozlabs.org/patch/1178351/#2282269).)
-> >=20
-> > Yes, the last four patches weren't meant to be in this pull request.
-> > That's what I get for trying to squeeze this in before coffee.
->=20
-> Ah right, it's four patches, not three. (I thought I saw "pwm: Read
-> initial hardware state at request time" in next.)
->=20
-> > Please do ping me if I haven't reviewed or applied patches after a
-> > week or so to remind me. Sometimes my inbox fills up so quickly that
-> > some patches get lost.
->=20
-> ok.
->=20
-> > >  - The patch "pwm: implement tracing for .get_state() and
-> > >    .apply_state()" that got an review by Steven Rostedt.
-> > >    (https://patchwork.ozlabs.org/patch/1182679/)
-> >=20
-> > Review for this came in after v5.4-rc7, so I didn't consider it for
-> > v5.5. I'll pick it up after v5.5-rc1.
->=20
-> I got Steven's mail on Oct 24 which is the week between -rc4 and -rc5,
-> but ok, I won't argue.
-
-Both my inbox and patchwork say that the email arrived on November 13.
-
-> >=20
-> > >  - The series starting with "pwm: omap-dmtimer: remove pwmchip in
-> > >    .remove before making it unfunctional" from November which IMHO is
-> > >    simple and contains two fixes
-> > >    (https://patchwork.ozlabs.org/project/linux-pwm/list/?series=3D142=
-030)
-> >=20
-> > Same here.
->=20
-> Does "after v5.5-rc1" mean "for v5.5" or "for v5.6-rc1". I agree that
-> the tracing stuff is merge window material (very useful though in my
-> eyes) while the omap-dmtimer series (at least the first 3 of 4 patches)
-> is about fixes.
-
-These all change code that's been like this for more than 4 years and
-nobody's ever reported a bug. The very worst that can happen here is
-that we leak a device reference, but these are platform devices, so
-they aren't going to go anywhere anyway.
-
-> > > And I'm still waiting for feedback on
-> > >=20
-> > >  - "Documentation: pwm: rework documentation for the framework" (since
-> > >    January)
-> >=20
-> > Please resend this, I can't find it in my inbox.
->=20
-> :-|, given that I sent this already twice, pinged several times
-> (https://patchwork.ozlabs.org/patch/1021566/,
-> https://patchwork.ozlabs.org/patch/1000709/) and also asked at least
-> once before in a mail where I pinged several patches using a list.
-
-I find patchwork always difficult for reviewing, but that patch is
-particularly difficult to review. You're basically rewriting all of the
-documentation in a way that you think is better. It'd be much easier to
-review if this was done more incrementally.
-
-It looks like your goals could be easily met by just extending the
-existing documentation, or bringing it up-to-date with the API.
-
-> > >  - "pwm: add debug knob to help driver authors" (since August)
-> >=20
-> > My recollection is that this flagged a bunch of issues right out of the
-> > box, so I'm hesitant to apply it without wider concensus that we want
-> > this, or some effort to address the issues that this flags.
->=20
-> I didn't want you to apply it. That it is not ready for that is out of
-> the question. I assume the patch doesn't apply anymore and needs work
-> for sure. The last mail in the respective thread had a single paragraph:
->=20
-> 	do you consider the idea here worthwile? If so I'd update the
-> 	patch to current mainline and address the feedback I got so far.
->=20
-> This is still interesting, as I don't want to spend my time working on
-> an idea that is then turned down in the end for conceptual reasons.
-
-There's nothing conceptually wrong about it. The one problem that I see
-with it is that we can't force people to use it because it's noisy when
-things go wrong, and they currently do go wrong. On the other hand, if
-we don't enforce its use, developers are likely to just ignore its
-existence.
-
-So I think we need to get drivers into a little better shape so that we
-eliminate at least all of the issues that currently exist. Then we can
-merge this and maybe opportunistically enforce this during a release
-cycle to see if there's any fallout.
-
-Thierry
-
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3o5DYACgkQ3SOs138+
-s6FczhAAvO5Q8Nkaj6jTFyynuVmYj5ysvPFgapc0avecSZTKSYBsPIj5jdp9mx0M
-dWhwej8W7QkxE4Vg2wfqifOUVBDdmxgukf0WS98o8LShA8iDkZY2xSYngzmug6An
-TGyN0IPLApJQpN+dD9wmFi5N++YJ8SrX3ifOVe/lRc9e8EGHh0rlDkCyRKXqAOtN
-FAD/XsmuNQa1qdyS6GoY2m1RSVmDPktZI+VFisA1Ne4Q74roil6Pn2OO+Wunizyp
-m8jEj9k8IbJiUqTPI4ZHxiBqN6AY7zsHEr3T8k2NxAgLQ/dCSN+m9IijJjirH8Ml
-DGbRdjwhxKvDgfCiRC386vfUcjH7mhHFNGcsBSgbEZmWvSA2/mgDt5wcZ6I4Gura
-KK6VSAwuFwSrAjmDHW3mtqWCF0Nfsu5IWzgeAQq0HYLJ8F+RqquHAxDxJMCgBR3f
-GTOTSuUN24bJuhcgZ5cpzbDbbj1De6UlzoK6UalJ9I631Ex2wlflNfFFtNEIvfrg
-WEWLejhaAgEdaJN1ej0cXUkVzqC3ZQMjGLfvrWxj+myrVomhgmwOuReMraegKnyp
-RzABtKiEeMiLYG+gJAPonjfnqv5y+mtCxjnIAXqK465NTqAc72nOEYkIHl3qFdgN
-NWk3OjvUES/Ya7afU7QbuC1jbQzLYNeYsM6h8jN4AoAe1LUU8xc=
-=46nO
------END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
+SGkgWGlhb3dlaSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51
+eC1hcm0ta2VybmVsIDxsaW51eC1hcm0ta2VybmVsLWJvdW5jZXNAbGlzdHMuaW5mcmFkZWFkLm9y
+Zz4gT24NCj4gQmVoYWxmIE9mIFhpYW93ZWkgQmFvDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQo+ID4gRnJvbTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4N
+Cj4gPiBTZW50OiAyMDE55bm0MTLmnIgz5pelIDIzOjIwDQo+ID4gVG86IE1hcmMgWnluZ2llciA8
+bWF6QGtlcm5lbC5vcmc+OyBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiBD
+YzogUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29t
+Ow0KPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwu
+b3JnOyBaLnEuIEhvdQ0KPiA+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc7IE0uaC4gTGlhbg0KPiA+IDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBy
+b2JoK2R0QGtlcm5lbC5vcmc7DQo+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOw0KPiA+IGFuZHJldy5tdXJyYXlAYXJtLmNvbTsgZnJv
+d2FuZC5saXN0QGdtYWlsLmNvbTsgTWluZ2thaSBIdQ0KPiA+IDxtaW5na2FpLmh1QG54cC5jb20+
+DQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gUENJOiBsYXllcnNjYXBlOiBBZGQgdGhlIFNSSU9W
+IHN1cHBvcnQgaW4gaG9zdCBzaWRlDQo+ID4NCj4gPiBPbiAwMy8xMi8yMDE5IDExOjUxIGFtLCBN
+YXJjIFp5bmdpZXIgd3JvdGU6DQo+ID4gPiBPbiAyMDE5LTEyLTAzIDAxOjQyLCBYaWFvd2VpIEJh
+byB3cm90ZToNCj4gPiA+Pj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+Pj4gRnJv
+bTogTWFyYyBaeW5naWVyIDxtYXpAbWlzdGVyam9uZXMub3JnPg0KPiA+ID4+PiBTZW50OiAyMDE5
+5bm0MTLmnIgy5pelIDIwOjQ4DQo+ID4gPj4+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9A
+bnhwLmNvbT4NCj4gPiA+Pj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgZnJvd2FuZC5saXN0QGdt
+YWlsLmNvbTsgTS5oLiBMaWFuDQo+ID4gPj4+IDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5n
+a2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kNCj4gPiBaYW5nDQo+ID4gPj4+IDxyb3ku
+emFuZ0BueHAuY29tPjsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsNCj4gPiA+Pj4gYW5kcmV3
+Lm11cnJheUBhcm0uY29tOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOw0KPiA+ID4+PiBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+Pj4g
+bGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnOw0KPiA+ID4+PiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+ID4gPj4+
+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFBDSTogbGF5ZXJzY2FwZTogQWRkIHRoZSBTUklPViBzdXBw
+b3J0IGluIGhvc3QNCj4gPiA+Pj4gc2lkZQ0KPiA+ID4+Pg0KPiA+ID4+PiBPbiAyMDE5LTEyLTAy
+IDEwOjQ1LCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiA+Pj4gPiBHSUMgZ2V0IHRoZSBtYXAgcmVs
+YXRpb25zIG9mIGRldmlkIGFuZCBzdHJlYW0gaWQgZnJvbSB0aGUgbXNpLW1hcA0KPiA+ID4+PiA+
+IHByb3BlcnR5IG9mIERUUywgb3VyIHBsYXRmb3JtIGFkZCB0aGlzIHByb3BlcnR5IGluIHUtYm9v
+dCBiYXNlIG9uDQo+ID4gPj4+ID4gdGhlIFBDSWUgZGV2aWNlIGluIHRoZSBidXMsIGJ1dCBpZiBl
+bmFibGUgdGhlIHZmIGRldmljZSBpbiBrZXJuZWwsDQo+ID4gPj4+ID4gdGhlIHZmIGRldmljZSBt
+c2ktbWFwIHdpbGwgbm90IHNldCwgc28gdGhlIHZmIGRldmljZSBjYW4ndCB3b3JrLA0KPiA+ID4+
+PiA+IHRoaXMgcGF0Y2ggcHVycG9zZSBpcyB0aGF0IG1hbmFnZSB0aGUgc3RyZWFtIGlkIGFuZCBk
+ZXZpY2UgaWQgbWFwDQo+ID4gPj4+ID4gcmVsYXRpb25zIGR5bmFtaWNhbGx5IGluIGtlcm5lbCwg
+YW5kIG1ha2UgdGhlIG5ldyBQQ0llIGRldmljZSB3b3JrDQo+IGluDQo+ID4ga2VybmVsLg0KPiA+
+ID4+PiA+DQo+ID4gPj4+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFv
+QG54cC5jb20+DQo+ID4gPj4+ID4gLS0tDQo+ID4gPj4+ID7CoCBkcml2ZXJzL29mL2lycS5jwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCA5
+ICsrKw0KPiA+ID4+PiA+wqAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2Nh
+cGUuYyB8IDk0DQo+ID4gPj4+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+
+Pj4gPsKgIGRyaXZlcnMvcGNpL3Byb2JlLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgfMKgIDYgKysNCj4gPiA+Pj4gPsKgIGRyaXZlcnMvcGNpL3JlbW92
+ZS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgNiAr
+Kw0KPiA+ID4+PiA+wqAgNCBmaWxlcyBjaGFuZ2VkLCAxMTUgaW5zZXJ0aW9ucygrKQ0KPiA+ID4+
+PiA+DQo+ID4gPj4+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvaXJxLmMgYi9kcml2ZXJzL29m
+L2lycS5jIGluZGV4DQo+ID4gPj4+ID4gYTI5NmVhZi4uNzkxZTYwOSAxMDA2NDQNCj4gPiA+Pj4g
+PiAtLS0gYS9kcml2ZXJzL29mL2lycS5jDQo+ID4gPj4+ID4gKysrIGIvZHJpdmVycy9vZi9pcnEu
+Yw0KPiA+ID4+PiA+IEBAIC01NzYsNiArNTc2LDExIEBAIHZvaWQgX19pbml0IG9mX2lycV9pbml0
+KGNvbnN0IHN0cnVjdA0KPiA+ID4+PiA+b2ZfZGV2aWNlX2lkDQo+ID4gPj4+ID4gKm1hdGNoZXMp
+DQo+ID4gPj4+ID7CoMKgwqDCoMKgIH0NCj4gPiA+Pj4gPsKgIH0NCj4gPiA+Pj4gPg0KPiA+ID4+
+PiA+ICt1MzIgX193ZWFrIGxzX3BjaWVfc3RyZWFtaWRfZml4KHN0cnVjdCBkZXZpY2UgKmRldiwg
+dTMyIHJpZCkgew0KPiA+ID4+PiA+ICvCoMKgwqAgcmV0dXJuIHJpZDsNCj4gPiA+Pj4gPiArfQ0K
+PiA+ID4+PiA+ICsNCj4gPiA+Pj4gPsKgIHN0YXRpYyB1MzIgX19vZl9tc2lfbWFwX3JpZChzdHJ1
+Y3QgZGV2aWNlICpkZXYsIHN0cnVjdA0KPiA+ID4+PiA+ZGV2aWNlX25vZGUgICoqbnAsDQo+ID4g
+Pj4+ID7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHUzMiByaWRfaW4pDQo+ID4g
+Pj4+ID7CoCB7DQo+ID4gPj4+ID4gQEAgLTU5MCw2ICs1OTUsMTAgQEAgc3RhdGljIHUzMiBfX29m
+X21zaV9tYXBfcmlkKHN0cnVjdCBkZXZpY2UNCj4gPiA+Pj4gPipkZXYsICBzdHJ1Y3QgZGV2aWNl
+X25vZGUgKipucCwNCj4gPiA+Pj4gPsKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoIW9mX21hcF9yaWQo
+cGFyZW50X2Rldi0+b2Zfbm9kZSwgcmlkX2luLCAibXNpLW1hcCIsDQo+ID4gPj4+ID7CoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJtc2ktbWFwLW1hc2siLCBucCwgJnJpZF9vdXQp
+KQ0KPiA+ID4+PiA+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYnJlYWs7DQo+ID4gPj4+ID4g
+Kw0KPiA+ID4+PiA+ICvCoMKgwqAgaWYgKHJpZF9vdXQgPT0gcmlkX2luKQ0KPiA+ID4+PiA+ICvC
+oMKgwqDCoMKgwqDCoCByaWRfb3V0ID0gbHNfcGNpZV9zdHJlYW1pZF9maXgocGFyZW50X2Rldiwg
+cmlkX2luKTsNCj4gPiA+Pj4NCj4gPiA+Pj4gT3ZlciBteSBkZWFkIGJvZHkuIEdldCB5b3VyIGZp
+cm13YXJlIHRvIHByb3Blcmx5IHByb2dyYW0gdGhlIExVVCBzbw0KPiA+ID4+PiB0aGF0IGl0IHBy
+ZXNlbnRzIHRoZSBJVFMgd2l0aCBhIHJlYXNvbmFibGUgdG9wb2xvZ3kuIFRoZXJlIGlzDQo+ID4g
+Pj4+IGFic29sdXRlbHkgbm8gd2F5IHRoaXMga2luZCBvZiBjaGFuZ2UgbWFrZXMgaXQgaW50byB0
+aGUga2VybmVsLg0KPiA+ID4+DQo+ID4gPj4gU29ycnkgZm9yIHRoaXMsIEkga25vdyBpdCBpcyBu
+b3QgcmVhc29uYWJsZSwgYnV0IEkgaGF2ZSBubyBvdGhlciB3YXksDQo+ID4gPj4gYXMgSSBrbm93
+LCBBUk0gZ2V0IHRoZSBtYXBwaW5nIG9mIHN0cmVhbSBJRCB0byByZXF1ZXN0IElEIGZyb20gdGhl
+DQo+ID4gPj4gbXNpLW1hcCBwcm9wZXJ0eSBvZiBEVFMsIGlmIGFkZCBhIG5ldyBkZXZpY2Ugd2hp
+Y2ggbmVlZCB0aGUgc3RyZWFtIElEDQo+ID4gPj4gYW5kIHRyeSB0byBnZXQgaXQgZnJvbSB0aGUg
+bXNpLW1hcCBvZiBEVFMsIGl0IHdpbGwgZmFpbGVkIGFuZCBub3QNCj4gPiA+PiB3b3JrLCB5ZXM/
+IFNvIGNvdWxkIHlvdSBnaXZlIG1lIGEgYmV0dGVyIGFkdmljZSB0byBmaXggdGhpcyBpc3N1ZSwg
+SQ0KPiA+ID4+IHdvdWxkIHJlYWxseSBhcHByZWNpYXRlIGFueSBjb21tZW50cyBvciBzdWdnZXN0
+aW9ucywgdGhhbmtzIGEgbG90Lg0KPiA+ID4NCj4gPiA+IFdoeSBjYW4ndCBmaXJtd2FyZSBleHBv
+c2UgYW4gbXNpLW1hcC9tc2ktbWFwLW1hc2sgdGhhdCBoYXMgYSBsYXJnZQ0KPiA+ID4gZW5vdWdo
+IHJhbmdlIHRvIGVuc3VyZSBtYXBwaW5nIG9mIFZGcz8gV2hhdCBhcmUgdGhlIGxpbWl0YXRpb25z
+IG9mIHRoZQ0KPiA+ID4gTFVUIHRoYXQgd291bGQgcHJldmVudCB0aGlzIGZyb20gYmVpbmcgY29u
+ZmlndXJlZCBiZWZvcmUgdGhlIGtlcm5lbA0KPiA+ID4gYm9vdHM/DQo+IA0KPiBUaGFua3MgZm9y
+IHlvdXIgY29tbWVudHMsIHllcywgdGhpcyBpcyB0aGUgcm9vdCBjYXVzZSwgd2Ugb25seSBoYXZl
+IDE2DQo+IHN0cmVhbQ0KPiBJRHMgZm9yIFBDSWUgZG9tYWluLCB0aGlzIGlzIHRoZSBoYXJkd2Fy
+ZSBsaW1pdGF0aW9uLCBpZiB0aGVyZSBoYXZlIGVub3VnaA0KPiBzdHJlYW0NCj4gSURzLCB3ZSBj
+YW4gZXhwb3NlIGFuIG1zaS1tYXAvbXNpLW1hcC1tYXNrIGZvciBhbGwgUENJZSBkZXZpY2VzIGlu
+IHN5c3RlbSwNCj4gdW5mb3J0dW5hdGVseSwgdGhlIHN0cmVhbSBJRHMgaXMgbm90IGVub3VnaCwg
+SSB0aGluayBvdGhlciBBUk0gdmVuZG9yIGhhdmUNCj4gc2FtZQ0KPiBpc3N1ZSB0aGF0IHRoZXkg
+ZG9uJ3QgaGF2ZSBlbm91Z2ggc3RyZWFtIElEcy4NCj4gDQo+IFRoYW5rcw0KPiBYaWFvd2VpDQo+
+IA0KPiA+DQo+ID4gRnVydGhlcm1vcmUsIG5vdGUgdGhhdCB0aGlzIGF0dGVtcHQgaXNuJ3QgZG9p
+bmcgYW55dGhpbmcgZm9yIHRoZSBTTU1VDQo+ID4gU3RyZWFtIElEcywgc28gdGhlIG1vbWVudCBh
+bnlvbmUgdHJpZXMgdG8gYXNzaWduIHRob3NlIFZGcyB0aGV5J3JlIHN0aWxsDQo+IGdvaW5nDQo+
+ID4gdG8gZ28gYmFuZyBhbnl3YXkuIEFueSBmaXJtd2FyZS1iYXNlZCBmaXh1cCBmb3IgSUQgbWFw
+cGluZ3MsIGNvbmZpZw0KPiBzcGFjZQ0KPiA+IGFkZHJlc3NlcywgZXRjLiBuZWVkcyB0byBiZSBT
+Ui1JT1YtYXdhcmUgYW5kIGFjY291bnQgZm9yIGFsbCAqcG9zc2libGUqDQo+ID4gQkRGcy4NCj4g
+Pg0KPiA+IE9uIExTMjA4NSBhdCBsZWFzdCwgSUlSQyB5b3UgY2FuIGNvbmZpZ3VyZSBhIHNpbmds
+ZSBMVVQgZW50cnkgdG8ganVzdA0KPiB0cmFuc2xhdGUNCj4gPiB0aGUgQnVzOkRldmljZSBpZGVu
+dGlmaWVyIGFuZCBwYXNzIHNvbWUgb3IgYWxsIG9mIHRoZSBGdW5jdGlvbiBiaXRzDQo+IHN0cmFp
+Z2h0DQo+ID4gdGhyb3VnaCBhcyB0aGUgTFNCcyBvZiB0aGUgU3RyZWFtIElELCBzbyBJIGRvbid0
+IGJlbGlldmUgdGhlIHJlbGF0aXZlbHkNCj4gbGltaXRlZA0KPiA+IG51bWJlciBvZiBMVVQgcmVn
+aXN0ZXJzIHNob3VsZCBiZSB0b28gbXVjaCBvZiBhbiBpc3N1ZS4gRm9yIGV4YW1wbGUsDQo+IGxh
+c3QNCj4gPiB0aW1lIEkgaGFja2VkIG9uIHRoYXQgSSBhcHBhcmVudGx5IGhhZCBpdCBzZXQgdXAg
+c3RhdGljYWxseSBsaWtlIHRoaXM6DQo+ID4NCj4gPiAmcGNpZTMgew0KPiA+IAkvKiBTcXVhc2gg
+ODo1OjMgQkRGIGRvd24gdG8gMjoyOjMgKi8NCj4gPiAJbXNpLW1hcC1tYXNrID0gPDB4MDMxZj47
+DQo+ID4gCW1zaS1tYXAgPSA8MHgwMDAgJml0cyAweDAwIDB4MjA+LA0KPiA+IAkJICA8MHgxMDAg
+Jml0cyAweDIwIDB4MjA+LA0KPiA+IAkJICA8MHgyMDAgJml0cyAweDQwIDB4MjA+LA0KPiA+IAkJ
+ICA8MHgzMDAgJml0cyAweDYwIDB4MjA+Ow0KPiA+IH07DQo+IA0KPiBUaGFua3MgUm9iaW4sIHRo
+aXMgaXMgYSBlZmZlY3RpdmUgd2F5LCBidXQgd2Ugb25seSBoYXZlIHRvdGFsIDE2IHN0cmVhbQ0K
+PiBJRHMgZm9yIFBDSWUgZG9tYWluLA0KPiBhbmQgb25seSBhc3NpZ24gNCBzdHJlYW0gSURzIGZv
+ciBlYWNoIFBDSWUgY29udHJvbGxlciBpZiB0aGUgYm9hcmQgaGF2ZSA0DQo+IFBDSWUgY29udHJv
+bGxlcnMsDQo+IHRoaXMgaXMgdGhlIHJvb3QgY2F1c2UsIEkgc3VibWl0dGVkIHRoaXMgcGF0Y2gg
+dG8gZHluYW1pY2FsbHkgbWFuYWdlIHRoZXNlDQo+IHN0cmVhbSBJRHMsDQo+IHNvIHRoYXQgaXQg
+bG9va3MgbGlrZSBlYWNoIFBDSWUgY29udHJvbGxlciBoYXMgMTYgc3RyZWFtIElEcy4gSSBjYW4N
+Cj4gZHluYW1pY2FsbHkgYWxsb2NhdGUgYW5kDQo+IHJlbGVhc2UgdGhlc2Ugc3RyZWFtIElEcyBi
+YXNlZCBvbiB0aGUgUENJZSBkZXZpY2VzIGluIHRoZSBjdXJyZW50IHN5c3RlbS4NCj4gSWYgdXNl
+IHlvdXIgbWV0aG9kLA0KPiB3ZSBzdXBwb3J0IHVwIHRvIDQgUENJZSBkZXZpY2VzKDIgUEZzIGFu
+ZCAyIFZGcyksIGl0IHdpbGwgbm90IGFjaGlldmUgb3VyDQo+IHB1cnBvc2UuDQo+IA0KDQpXZSBh
+bGxvY2F0ZSB0aGUgU3RyZWFtX0lEcyBpbiBhIHN0YXRpYyBmYXNoaW9uIGluIHUtYm9vdCwgc2Vl
+IFsxXSwgc28gaWYgYSB1c2VyIHdvdWxkIG5lZWQgYSBsYXJnZXIgcmFuZ2UgZm9yIFBDSSB7c31o
+ZSBjb3VsZCBhZGp1c3QgdGhhdCBpbiB0aGVyZS4gT24gbW9zdCBvZiBvdXIgTGF5ZXJzY2FwZSBj
+aGlwcyB0aGUgU01NVSBpcyBjb25maWd1cmVkIHRvIDUgYml0cyBmb3IgVEJVX0lEIHBsdXMgMTAg
+Yml0cyBmb3IgU3RyZWFtSUQuIE91dCBvZiB0aGVzZSAxMCBjb250cm9sbGFibGUgYml0cyB3ZSBj
+YW4gZWZmZWN0aXZlbHkgdXNlIDcgYml0cyBnaXZpbmcgdXMgYSBtYXggcmFuZ2Ugb2YgMTI3IFN0
+cmVhbV9JRHMuDQoNClsxXSBodHRwczovL2dpdGxhYi5kZW54LmRlL3UtYm9vdC91LWJvb3QvYmxv
+Yi9tYXN0ZXIvYXJjaC9hcm0vaW5jbHVkZS9hc20vYXJjaC1mc2wtbGF5ZXJzY2FwZS9zdHJlYW1f
+aWRfbHNjaDMuaA0KDQotLS0NCkJlc3QgUmVnYXJkcywgTGF1cmVudGl1DQo=
