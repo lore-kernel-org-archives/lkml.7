@@ -2,133 +2,108 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDB4C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2C5C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6822464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900AA2464F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 10:27:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GuUc0Wc5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729263AbfLEKYh (ORCPT
+        id S1729215AbfLEK1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:24:37 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56154 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726384AbfLEKYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:24:36 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3F1DEAE88;
-        Thu,  5 Dec 2019 10:24:34 +0000 (UTC)
-Date:   Thu, 5 Dec 2019 10:24:33 +0000
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Yanhu Cao <gmayyyha@gmail.com>
-Cc:     jlayton@kernel.org, sage@redhat.com, idryomov@gmail.com,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ceph: check set quota operation support before syncing
- setxattr.
-Message-ID: <20191205102433.GA5758@hermes.olymp>
-References: <20191204031005.2638-1-gmayyyha@gmail.com>
- <20191204103629.GA22244@hermes.olymp>
- <CAB9OAC2vzPy=ELYzDRjBvA6m8T8AvwdJugS2NoCczwD1+Xb36Q@mail.gmail.com>
+        Thu, 5 Dec 2019 05:27:19 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36423 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728735AbfLEK1T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 05:27:19 -0500
+Received: by mail-pf1-f193.google.com with SMTP id b19so1417579pfd.3;
+        Thu, 05 Dec 2019 02:27:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9Ef/ULU1Kge+LKFh8Fh5zno0Gs8s7Fac2gwZZitwvws=;
+        b=GuUc0Wc5oPylsUhp/ivxIYWhGZFVRu3CxWq0tIaLEh3KLexjIu0YF3inaKgRxemq/o
+         smcUmURO+bnsWrG37RAr2SMr34mupk/9PlGAex674fldyEUUirLHIco1DfPPIyvB8IS7
+         Lgaq2w4woRVywywkz43F0vt9jCVNtoYs6Jx/Uxp4ksGW5qYtpFGlSa1fq6lL0OiM9VMR
+         ZBYkACskHxGYQlqRwDTBjqTKwXuWMNttuIXCVCpV42BVsC/0q+mo5y6DSvz1ybhWQBku
+         C2zQRCx5AFpWBjbMHX+yode12nEUapPRrCTAsM0PNaGWFPXTSmvvJQDGVzS5tIq4EBnd
+         dZjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9Ef/ULU1Kge+LKFh8Fh5zno0Gs8s7Fac2gwZZitwvws=;
+        b=lCp4jGbHVYu6XSx3WJZfVcJA/TvKDFmTW9GDWTNZ6PLgZNaGg4Eth9FPYxUxxemUpi
+         Lqsl1woQlQ0n4+ezW3a8RTkRghvonPQAwKxS9c3dtTaj/sSLB0GhPEgd74ytVcsF5Bd4
+         IR7SyzVz/NQreVzI5WHGadPf2QzI/NHYYYMTQjn7Bc/D59YzgfT/LQkW7JT6GXl26XFt
+         A6QMTM+ypvv2PW0raziL0y0Y840mxtZcouEN69jSFuetTxy9/Q4g6jQDRaODYyBhyeUN
+         2k+s4EV1qu2xFMXXqzxBhvImICNGuNcs9oES09vLiZFGz4lyMKYM2fHjP9gvb6i4+9WW
+         aDpQ==
+X-Gm-Message-State: APjAAAWdhdxQdKGQBoVoGlZ4J/4RjbzbcuBg7qHMyxQtmipe2rQEG9sv
+        vAMRi2GqKOBUWJethJPlOHJjEpuyRsznGdIB3RHeyNh6
+X-Google-Smtp-Source: APXvYqxvHJo0ElWDiYwwFrbf1lm4Gp70OeitmtEpDaFZAsEn8ACG2g/DsguKfDXwFnPH/5HOLgQXM+FyqErLXso4fZc=
+X-Received: by 2002:a63:e14a:: with SMTP id h10mr8394575pgk.74.1575541638530;
+ Thu, 05 Dec 2019 02:27:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAB9OAC2vzPy=ELYzDRjBvA6m8T8AvwdJugS2NoCczwD1+Xb36Q@mail.gmail.com>
+References: <20191204155941.17814-1-brgl@bgdev.pl> <CAHp75VdiAtHtdrUP2EmLULh86oO37ha8si10gFKYRavXCEwRRQ@mail.gmail.com>
+ <CAMpxmJVXVVVMPA_hRbs3mUsFs=s_VtQK9SvvYK3Xc5X27NPTKw@mail.gmail.com>
+In-Reply-To: <CAMpxmJVXVVVMPA_hRbs3mUsFs=s_VtQK9SvvYK3Xc5X27NPTKw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 5 Dec 2019 12:27:08 +0200
+Message-ID: <CAHp75VfXc88Fa6=zs=9iToz27QdXHqRCDPQwBPs2P-rsBF8nHw@mail.gmail.com>
+Subject: Re: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes
+ in line info
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 10:42:46AM +0800, Yanhu Cao wrote:
-> On Wed, Dec 4, 2019 at 6:36 PM Luis Henriques <lhenriques@suse.com> wrote:
-> >
-> > On Wed, Dec 04, 2019 at 11:10:05AM +0800, Yanhu Cao wrote:
-> > > Environment
-> > > -----------
-> > > ceph version: 12.2.*
-> > > kernel version: 4.19+
-> > >
-> > > setfattr quota operation actually sends op to MDS, and settings
-> > > effective. but kclient outputs 'Operation not supported'. This may confuse
-> > > users' understandings.
-> >
-> > What exactly do you mean by "settings effective"?  There have been
-> > changes in the way CephFS quotas work in mimic and, if you're using a
-> > Luminous cluster (12.2.*) the kernel client effectively does *not*
-> > support quotas -- you'll be able to exceed the quotas you've tried to
-> > set because the client won't be checking the limits.  Thus, -EOPNOTSUPP
-> > seems appropriate for this scenario.
-> >
-> > I guess that the confusing part is that the xattr is actually set in
-> > that case, but the kernel client won't be able to use it to validate
-> > quotas in the filesystem tree because realms won't be created.
-> >
-> Yes. we use kcephfs+nfs for CentOS6.*, it does not support ceph-fuse(12.2.*).
-> The operating system of other applications is CentOS7.*, which uses
-> ceph-fuse and can get quota settings set by kclient.
+On Thu, Dec 5, 2019 at 11:42 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> =C5=9Br., 4 gru 2019 o 23:34 Andy Shevchenko <andy.shevchenko@gmail.com> =
+napisa=C5=82(a):
+> > On Wed, Dec 4, 2019 at 6:03 PM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
+e:
 
-Ok, so if I understand correctly, you're setting quotas with the kernel
-client but actually using ceph-fuse on CentOS7 (I'm assuming a Luminous
-cluster).  This should work fine for the fuse-client, but please note
-that the kernel client will not respect quotas.
+> > > +struct gpioline_info_changed {
+> > > +       __u64 timestamp;
+> > > +       __u32 event_type;
+> > > +       struct gpioline_info info;
+> > > +       __u32 padding[4]; /* for future use */
+> > > +};
+> >
+> > Has this been tested against 64-bit kernel / 32-bit userspace case?
+> >
+>
+> No. Since this is a new thing - do you think it's possible to simply
+> arrange the fields or add padding such that the problem doesn't even
+> appear in the first place?
 
-Anyway, the ideal solution for this would be for the kernel to not set
-the xattr if the cluster doesn't support the new quotas format
-introduced in Mimic.  Unfortunately, the only way we have to find that
-out is to set the xattr and see if we get a snap_realm. 
+Yes. this can be done, though be careful about potential endianess
+issues (the ABI must be tested on BE as well).
 
-Cheers,
---
-Luís
+So, the test cases, I can imagine of, should include (k - kernel, u - user)=
+:
+- 64k-64u: LE and BE
+- 64k-32u: LE and BE
+- 32k-32u: LE and BE
 
-> 
-> Thanks.
-> BRs
-> 
-> > Cheers,
-> > --
-> > Luís
-> > >
-> > > If the kernel version and ceph version are not compatible, should check
-> > > quota operations are supported first, then do sync_setxattr.
-> > >
-> > > reference: https://docs.ceph.com/docs/master/cephfs/quota/
-> > >
-> > > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> > > ---
-> > >  fs/ceph/xattr.c | 6 ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-> > > index cb18ee637cb7..189aace75186 100644
-> > > --- a/fs/ceph/xattr.c
-> > > +++ b/fs/ceph/xattr.c
-> > > @@ -1132,8 +1132,8 @@ int __ceph_setxattr(struct inode *inode, const char *name,
-> > >                                   "during filling trace\n", inode);
-> > >               err = -EBUSY;
-> > >       } else {
-> > > -             err = ceph_sync_setxattr(inode, name, value, size, flags);
-> > > -             if (err >= 0 && check_realm) {
-> > > +             err = 0;
-> > > +             if (check_realm) {
-> > >                       /* check if snaprealm was created for quota inode */
-> > >                       spin_lock(&ci->i_ceph_lock);
-> > >                       if ((ci->i_max_files || ci->i_max_bytes) &&
-> > > @@ -1142,6 +1142,8 @@ int __ceph_setxattr(struct inode *inode, const char *name,
-> > >                               err = -EOPNOTSUPP;
-> > >                       spin_unlock(&ci->i_ceph_lock);
-> > >               }
-> > > +             if (err == 0)
-> > > +                     err = ceph_sync_setxattr(inode, name, value, size, flags);
-> > >       }
-> > >  out:
-> > >       ceph_free_cap_flush(prealloc_cf);
-> > > --
-> > > 2.21.0 (Apple Git-122.2)
-> > >
+--=20
+With Best Regards,
+Andy Shevchenko
