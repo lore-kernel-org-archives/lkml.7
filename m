@@ -2,679 +2,277 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC00C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E428C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E21120707
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3096424653
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="abjl8yzb"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IGK0NmSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbfLELXB (ORCPT
+        id S1729345AbfLELX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 06:23:01 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59334 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfLELXA (ORCPT
+        Thu, 5 Dec 2019 06:23:27 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:53753 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729117AbfLELX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 06:23:00 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5BMrKQ053740;
-        Thu, 5 Dec 2019 05:22:53 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575544973;
-        bh=3tVpuY2xuEGxVRJ+a9CQUdis1aK6W2KNOKi7xSgqDdc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=abjl8yzb5LqIPVNDpTbRX3lozxyJwu2kOPjF7QaJ91AH0NL1Cp8i2NNK+L1L80rE0
-         5W6XlFaUse0N5i9+8gw5kukbV3alC/4s86GnQ+85eTRWKMRGZpF3tX82WhvRWAh4pV
-         HU2L3yMUI5C0tfVKP7jGgJK1xN+dYhAEonBFswvU=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB5BMruZ044010
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 5 Dec 2019 05:22:53 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
- 2019 05:22:53 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 5 Dec 2019 05:22:52 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5BMoFl032458;
-        Thu, 5 Dec 2019 05:22:51 -0600
-Subject: Re: [PATCH v3 1/2] PCI: cadence: Refactor driver to use as a core
- library
-To:     Tom Joseph <tjoseph@cadence.com>, <linux-pci@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-kernel@vger.kernel.org>
-References: <1572349512-7776-1-git-send-email-tjoseph@cadence.com>
- <1572349512-7776-2-git-send-email-tjoseph@cadence.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <d86efb5d-6524-216e-fb61-701cc5211137@ti.com>
-Date:   Thu, 5 Dec 2019 16:54:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 5 Dec 2019 06:23:26 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191205112325euoutp01ec785317b00281894c6d2a377cced009~dddWhkk310561505615euoutp01T
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Dec 2019 11:23:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191205112325euoutp01ec785317b00281894c6d2a377cced009~dddWhkk310561505615euoutp01T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575545005;
+        bh=4cZz6jB9XqYzT/+qcSSKXwM6MSppAW1MvQ8WfWj920M=;
+        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
+        b=IGK0NmSQwxVg2PkeYxtFFkcLqnL3hUi01p7d4jxcAOWVkz+4D1x3IVTCysVj8BYcg
+         XWNaf15HUonk654wu3R75iqbKVRwCVolOzE3J5xvyVHaS4dj+a9dOxKfKPeiO+ofTf
+         4aq/pT+B8o1MifLsTwUK80xZ3UtuSttyh5+QbUls=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191205112324eucas1p1655be95b30dc529a1be583b878b6cc56~dddV5P-AS1131911319eucas1p1E;
+        Thu,  5 Dec 2019 11:23:24 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 62.63.61286.CA8E8ED5; Thu,  5
+        Dec 2019 11:23:24 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191205112324eucas1p2f8a449e76cd80ecbe8eeee6fdb5ee85f~dddVlTDf42069020690eucas1p2r;
+        Thu,  5 Dec 2019 11:23:24 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191205112324eusmtrp186f6072b724ed9277abbc3a249002fa8~dddVkjH-f1370513705eusmtrp1E;
+        Thu,  5 Dec 2019 11:23:24 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-60-5de8e8ac70bd
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id EE.F1.07950.BA8E8ED5; Thu,  5
+        Dec 2019 11:23:23 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191205112323eusmtip1f0505dc253968033d941192647daf571~dddU7LGZh1180011800eusmtip1H;
+        Thu,  5 Dec 2019 11:23:23 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH] devfreq: exynos-bus: workaround dev_pm_opp_set_rate()
+ errors on Exynos5422/5800 SoCs
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Kamil Konieczny <k.konieczny@samsung.com>,
+        k.konieczny@samsung.com
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-ID: <de72b641-c150-0368-b0bd-f46c87a8c2d0@samsung.com>
+Date:   Thu, 5 Dec 2019 12:23:23 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <1572349512-7776-2-git-send-email-tjoseph@cadence.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <635904ed-93e1-944b-9317-8c9a19844223@samsung.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKKsWRmVeSWpSXmKPExsWy7djP87prXryINZh4XMhi44z1rBbXvzxn
+        tVjwaQarRf/j18wW589vYLc42/SG3WLT42usFpd3zWGz+Nx7hNFixvl9TBa3G1ewOXB7bFrV
+        yeaxeUm9R9+WVYwenzfJBbBEcdmkpOZklqUW6dslcGWc2LGKteCURcW0EyeZGhgX6HYxcnJI
+        CJhIbN/4khHEFhJYwSjRulO0i5ELyP7CKDH9VgsbROIzo8SfTheYhhOrJ7NCxJczSjS9KoBo
+        eMsoseHdB3aQBJuAoUTX2y6wZmGBbIlvp5cxg9giAnkSHXevsoM0MAvcZpLo/fSLpYuRg4NX
+        wE7ixklVkBoWARWJLad3gYVFBWIlOpZngIR5BQQlTs58AhbmFLCX6D9UBRJmFhCXuPVkPhOE
+        LS/RvHU2M8h0CYFz7BLty++zQ9zsInFxbSszhC0s8er4Fqi4jMTpyT0sEA3NjBIPz61lh3B6
+        GCUuN81ghKiyljh8/CIryGZmAU2J9bv0IcKOEm/vX2YECUsI8EnceCsIcQSfxKRt05khwrwS
+        HW1CENVqErOOr4Nbe/DCJeYJjEqzkHw2C8k7s5C8Mwth7wJGllWM4qmlxbnpqcWGeanlesWJ
+        ucWleel6yfm5mxiBien0v+OfdjB+vZR0iFGAg1GJh7dh0/NYIdbEsuLK3EOMEhzMSiK82ySe
+        xgrxpiRWVqUW5ccXleakFh9ilOZgURLnrWZ4EC0kkJ5YkpqdmlqQWgSTZeLglGpg3PbOoFSZ
+        i4VFZ+9TuY/vNid48b65tlrvkoqU7bE5B3/w9El6SllmP+acsyc4xY3pwXMx7c0Ld/GYhl27
+        HK6z5fyDBVPb1p2KqbZwYrjerMM9f+Gk1c7fWKZMvfVyluGrXoUpBXdsjv/UibrS7vqk7ZFh
+        vMipt0WtNzXSZt/8lBB4TOV3rHv+QSWW4oxEQy3mouJEADClLldIAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsVy+t/xu7qrX7yINTi429Ji44z1rBbXvzxn
+        tVjwaQarRf/j18wW589vYLc42/SG3WLT42usFpd3zWGz+Nx7hNFixvl9TBa3G1ewOXB7bFrV
+        yeaxeUm9R9+WVYwenzfJBbBE6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp
+        29mkpOZklqUW6dsl6GWc2LGKteCURcW0EyeZGhgX6HYxcnJICJhInFg9mbWLkYtDSGApo8TK
+        eR/YIRIyEienNbBC2MISf651sUEUvWaUmPptF1iCTcBQoustSIKTQ1ggW+Lb6WXMILaIQJ7E
+        vp7JLCANzAJ3mSTWffvABNF9jVli/pxFQCs4OHgF7CRunFQFaWARUJHYcnoXC4gtKhAr8X3l
+        J0YQm1dAUOLkzCcsIOWcAvYS/YeqQMLMAmYS8zY/ZIawxSVuPZnPBGHLSzRvnc08gVFoFpLu
+        WUhaZiFpmYWkZQEjyypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzAiNx27OeWHYxd74IPMQpw
+        MCrx8DZseh4rxJpYVlyZe4hRgoNZSYR3m8TTWCHelMTKqtSi/Pii0pzU4kOMpkC/TWSWEk3O
+        ByaLvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjBqyZ6tF2fZN
+        DPyaJuHKGVz5vWLuSm6OM1yqfq/iy9b8OOPdGH60dJGcj5DFlCxfwX1GM97evXl1otRZS4mM
+        vKRK2xPOyWoXzlgq6O2U/HRUJmrLjdVPtKwnTp2uMuFlgCWvZPiqWdcCxZ7YiUVtEeSwmXys
+        NE/pcxFD/5mNIfyT5WN5dkxepsRSnJFoqMVcVJwIAPxb/mHeAgAA
+X-CMS-MailID: 20191205112324eucas1p2f8a449e76cd80ecbe8eeee6fdb5ee85f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191008134950eucas1p15cfef5800efc10d5b18ec5eb37dde60b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191008134950eucas1p15cfef5800efc10d5b18ec5eb37dde60b
+References: <CGME20191008134950eucas1p15cfef5800efc10d5b18ec5eb37dde60b@eucas1p1.samsung.com>
+        <20191008134923.30123-1-k.konieczny@partner.samsung.com>
+        <4f14d3af-e455-d05b-fc03-cba58e001f41@samsung.com>
+        <0ce56e65-d989-18f8-af84-2fbd74ba20aa@samsung.com>
+        <d742e7be-ca79-ae9e-6cc2-dc1fae08d252@samsung.com>
+        <dd5bc937-e776-f717-1cf3-ee0e17621304@samsung.com>
+        <9e0a4aa6-46a6-3ca6-42db-11ed55b468dd@samsung.com>
+        <635904ed-93e1-944b-9317-8c9a19844223@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
+Hi
 
-On 29/10/19 5:15 pm, Tom Joseph wrote:
-> Cadence PCIe host and endpoint IP may be embedded into a variety of
-> SoCs/platforms. Let's extract the platform related APIs/Structures in the
-> current driver to a separate file (pcie-cadence-plat.c), such that the
-> common functionality can be used by future platforms.
-> 
-> Signed-off-by: Tom Joseph <tjoseph@cadence.com>
-> ---
->   drivers/pci/controller/Kconfig             |  31 +++--
->   drivers/pci/controller/Makefile            |   1 +
->   drivers/pci/controller/pcie-cadence-ep.c   |  96 +---------------
->   drivers/pci/controller/pcie-cadence-host.c |  95 ++--------------
->   drivers/pci/controller/pcie-cadence-plat.c | 174 +++++++++++++++++++++++++++++
->   drivers/pci/controller/pcie-cadence.h      |  77 +++++++++++++
->   6 files changed, 287 insertions(+), 187 deletions(-)
->   create mode 100644 drivers/pci/controller/pcie-cadence-plat.c
+On 14.11.2019 08:38, Chanwoo Choi wrote:
+> On 11/14/19 3:07 PM, Chanwoo Choi wrote:
+>> On 11/14/19 12:12 AM, Kamil Konieczny wrote:
+>>> On 14.10.2019 08:46, Chanwoo Choi wrote:
+>>>> On 19. 10. 11. 오후 8:33, Marek Szyprowski wrote:
+>>>>> On 10.10.2019 04:50, Chanwoo Choi wrote:
+>>>>>> On 2019년 10월 08일 22:49, k.konieczny@partner.samsung.com wrote:
+>>>>>>> Commit 4294a779bd8d ("PM / devfreq: exynos-bus: Convert to use
+>>>>>>> dev_pm_opp_set_rate()") introduced errors:
+>>>>>>> exynos-bus: new bus device registered: soc:bus_wcore ( 84000 KHz ~ 400000 KHz)
+>>>>>>> exynos-bus: new bus device registered: soc:bus_noc ( 67000 KHz ~ 100000 KHz)
+>>>>>>> exynos-bus: new bus device registered: soc:bus_fsys_apb (100000 KHz ~ 200000 KHz)
+>>>>>>> ...
+>>>>>>> exynos-bus soc:bus_wcore: dev_pm_opp_set_rate: failed to find current OPP for freq 532000000 (-34)
+>>>>>>> exynos-bus soc:bus_noc: dev_pm_opp_set_rate: failed to find current OPP for freq 111000000 (-34)
+>>>>>>> exynos-bus soc:bus_fsys_apb: dev_pm_opp_set_rate: failed to find current OPP for freq 222000000 (-34)
+>>>>>>>
+>>>>>>> They are caused by incorrect PLL assigned to clock source, which results
+>>>>>>> in clock rate outside of OPP range. Add workaround for this in
+>>>>>>> exynos_bus_parse_of() by adjusting clock rate to those present in OPP.
+>>>>>> If the clock caused this issue, you can set the initial clock on DeviceTree
+>>>>>> with assigned-clock-* properties. Because the probe time of clock driver
+>>>>>> is early than the any device drivers.
+>>>>>>
+>>>>>> It is not proper to fix the clock issue on other device driver.
+>>>>>> I think you can fix it by using the supported clock properties.
+>>>>> This issue is about something completely different. The OPPs defined in
+>>>>> DT cannot be applied, because it is not possible to derive the needed
+>>>>> clock rate from the bootloader-configured clock topology (mainly due to
+>>>>> lack of common divisor values for some of the parent clocks). Some time
+>>>>> ago Lukasz tried initially to redefine this clock topology using
+>>>>> assigned-clock-rates/parents properties (see
+>>>>> https://protect2.fireeye.com/url?k=4b80c0304459bc8e.4b814b7f-f87f1e1aee1a85c0&u=https://lkml.org/lkml/2019/7/15/276), but it has limitations and some
+>>>>> such changes has to be done in bootloader. Until this is resolved,
+>>>>> devfreq simply cannot set some of the defined OPPs.
+>>>> As you mentioned, the wrong setting in bootloader cause the this issue.
+>>>> So, this patch change the rate on exynos-bus.c in order to fix
+>>>> the issue with workaround style.
+>>>>
+>>>> But, also, it can be fixed by initializing the clock rate on DT
+>>>> although it is not fundamental solution as you mentioned.
+>>>>
+>>>> If above two method are workaround way, I think that set the clock
+>>>> rate in DT is proper. The role of 'assigned-clock-*' properties
+>>>> is for this case in order to set the initial frequency on probe time.
+>>> I can add 'assigned-clock-*' to DT, but the issue is caused in opp points,
+>>> so the warning from exynos-bus will still be there.
+>>>
+>>> Before this fix, devfreq will issue warning and then change clock to max
+>>> frequency within opp range. This fix mask warning, and as Marek and
+>>> Lukasz Luba wrotes, the proper fix will be to make changes in u-boot
+>>> (and connect proper PLLs to IPs).
+>> PLL could be changed by clock device driver in the linux kernel.
+>> If you don't add the supported frequency into PLL frequency table
+>> of clock device driver, will fail to change the wanted frequency
+>> on the linux kernel. It means that it is not fixed by only touching
+>> the bootloader.
+>>
+>> As you commented, the wrong opp points which are specified on dt
+>> cause this issue. Usually, have to initialize the clock rate on dt
+>> by using 'assigned-clocks-*' property and then use the clock
+>> with the preferable clock rate. I think that we have to fix
+>> the fundamental problem.
+>>
+>> Without bootloader problem, you can fix it by initializing
+>> the clock on dt with 'assigned-clocks-*' property.
+>>
+>> As I knew that it is correct way and I always tried to do this method
+>> for resolving the similar clock issue.
+>>
+>> Lastly, I think that my opinion is more simple and correct.
+>> It could give the more correct information to linux kernel user
+>> which refer to the device tree file.
+>>
+>> 1. Your suggestion
+>> 	a. Add opp-table with unsupported frequency on dt
+>> 	b. Try to change the clock rate on exynos-bus.c by using unsupported frequency from opp-table
+>> 	c. If failed, retry to change the clock rate on exynos-bus.c
+>>
+>> 2. My opinion
+>> 	a. Initialize the PLL or any clock by using assigned-clock-* property on dt
+>> 	   and add opp-table with supported frequency on dt
+>> 	b. Try to change the clock rate on exynos-bus.c by using supported frequency from opp-table
+>>
+> Just I tried to add 'assigned-clock-rates' property to initialize
+> the clock rate of some bus node as following on odroid-xu3 board:
 >
-.
-.
-<snip>
-.
-.> diff --git a/drivers/pci/controller/pcie-cadence-ep.c 
-b/drivers/pci/controller/pcie-cadence-ep.c
-> index def7820..1c173da 100644
-> --- a/drivers/pci/controller/pcie-cadence-ep.c
-> +++ b/drivers/pci/controller/pcie-cadence-ep.c
-> @@ -17,35 +17,6 @@
->   #define CDNS_PCIE_EP_IRQ_PCI_ADDR_NONE		0x1
->   #define CDNS_PCIE_EP_IRQ_PCI_ADDR_LEGACY	0x3
->   
-> -/**
-> - * struct cdns_pcie_ep - private data for this PCIe endpoint controller driver
-> - * @pcie: Cadence PCIe controller
-> - * @max_regions: maximum number of regions supported by hardware
-> - * @ob_region_map: bitmask of mapped outbound regions
-> - * @ob_addr: base addresses in the AXI bus where the outbound regions start
-> - * @irq_phys_addr: base address on the AXI bus where the MSI/legacy IRQ
-> - *		   dedicated outbound regions is mapped.
-> - * @irq_cpu_addr: base address in the CPU space where a write access triggers
-> - *		  the sending of a memory write (MSI) / normal message (legacy
-> - *		  IRQ) TLP through the PCIe bus.
-> - * @irq_pci_addr: used to save the current mapping of the MSI/legacy IRQ
-> - *		  dedicated outbound region.
-> - * @irq_pci_fn: the latest PCI function that has updated the mapping of
-> - *		the MSI/legacy IRQ dedicated outbound region.
-> - * @irq_pending: bitmask of asserted legacy IRQs.
-> - */
-> -struct cdns_pcie_ep {
-> -	struct cdns_pcie		pcie;
-> -	u32				max_regions;
-> -	unsigned long			ob_region_map;
-> -	phys_addr_t			*ob_addr;
-> -	phys_addr_t			irq_phys_addr;
-> -	void __iomem			*irq_cpu_addr;
-> -	u64				irq_pci_addr;
-> -	u8				irq_pci_fn;
-> -	u8				irq_pending;
-> -};
-> -
->   static int cdns_pcie_ep_write_header(struct pci_epc *epc, u8 fn,
->   				     struct pci_epf_header *hdr)
->   {
-> @@ -424,28 +395,17 @@ static const struct pci_epc_ops cdns_pcie_epc_ops = {
->   	.get_features	= cdns_pcie_ep_get_features,
+> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> index 829147e320e0..9a237af5436a 100644
+> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> @@ -42,6 +42,8 @@
 >   };
 >   
-> -static const struct of_device_id cdns_pcie_ep_of_match[] = {
-> -	{ .compatible = "cdns,cdns-pcie-ep" },
-> -
-> -	{ },
-> -};
->   
-> -static int cdns_pcie_ep_probe(struct platform_device *pdev)
-> +int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
->   {
-> -	struct device *dev = &pdev->dev;
-> +	struct device *dev = ep->pcie.dev;
-> +	struct platform_device *pdev = to_platform_device(dev);
->   	struct device_node *np = dev->of_node;
-> -	struct cdns_pcie_ep *ep;
-> -	struct cdns_pcie *pcie;
-> -	struct pci_epc *epc;
-> +	struct cdns_pcie *pcie = &ep->pcie;
->   	struct resource *res;
-> +	struct pci_epc *epc;
->   	int ret;
-> -	int phy_count;
-> -
-> -	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
-> -	if (!ep)
-> -		return -ENOMEM;
->   
-> -	pcie = &ep->pcie;
->   	pcie->is_rc = false;
->   
->   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
-> @@ -474,19 +434,6 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
->   	if (!ep->ob_addr)
->   		return -ENOMEM;
->   
-> -	ret = cdns_pcie_init_phy(dev, pcie);
-> -	if (ret) {
-> -		dev_err(dev, "failed to init phy\n");
-> -		return ret;
-> -	}
-> -	platform_set_drvdata(pdev, pcie);
-> -	pm_runtime_enable(dev);
-> -	ret = pm_runtime_get_sync(dev);
-> -	if (ret < 0) {
-> -		dev_err(dev, "pm_runtime_get_sync() failed\n");
-> -		goto err_get_sync;
-> -	}
-> -
->   	/* Disable all but function 0 (anyway BIT(0) is hardwired to 1). */
->   	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, BIT(0));
->   
-> @@ -528,38 +475,5 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
->    err_init:
->   	pm_runtime_put_sync(dev);
-
-put_sync shouldn't be there. Please fix the error handling.
->   
-> - err_get_sync:
-> -	pm_runtime_disable(dev);
-> -	cdns_pcie_disable_phy(pcie);
-> -	phy_count = pcie->phy_count;
-> -	while (phy_count--)
-> -		device_link_del(pcie->link[phy_count]);
-> -
->   	return ret;
->   }
-> -
-> -static void cdns_pcie_ep_shutdown(struct platform_device *pdev)
-> -{
-> -	struct device *dev = &pdev->dev;
-> -	struct cdns_pcie *pcie = dev_get_drvdata(dev);
-> -	int ret;
-> -
-> -	ret = pm_runtime_put_sync(dev);
-> -	if (ret < 0)
-> -		dev_dbg(dev, "pm_runtime_put_sync failed\n");
-> -
-> -	pm_runtime_disable(dev);
-> -
-> -	cdns_pcie_disable_phy(pcie);
-> -}
-> -
-> -static struct platform_driver cdns_pcie_ep_driver = {
-> -	.driver = {
-> -		.name = "cdns-pcie-ep",
-> -		.of_match_table = cdns_pcie_ep_of_match,
-> -		.pm	= &cdns_pcie_pm_ops,
-> -	},
-> -	.probe = cdns_pcie_ep_probe,
-> -	.shutdown = cdns_pcie_ep_shutdown,
-> -};
-> -builtin_platform_driver(cdns_pcie_ep_driver);
-> diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
-> index 97e2510..8a42afd 100644
-> --- a/drivers/pci/controller/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/pcie-cadence-host.c
-> @@ -11,33 +11,6 @@
->   
->   #include "pcie-cadence.h"
->   
-> -/**
-> - * struct cdns_pcie_rc - private data for this PCIe Root Complex driver
-> - * @pcie: Cadence PCIe controller
-> - * @dev: pointer to PCIe device
-> - * @cfg_res: start/end offsets in the physical system memory to map PCI
-> - *           configuration space accesses
-> - * @bus_range: first/last buses behind the PCIe host controller
-> - * @cfg_base: IO mapped window to access the PCI configuration space of a
-> - *            single function at a time
-> - * @max_regions: maximum number of regions supported by the hardware
-> - * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
-> - *                translation (nbits sets into the "no BAR match" register)
-> - * @vendor_id: PCI vendor ID
-> - * @device_id: PCI device ID
-> - */
-> -struct cdns_pcie_rc {
-> -	struct cdns_pcie	pcie;
-> -	struct device		*dev;
-> -	struct resource		*cfg_res;
-> -	struct resource		*bus_range;
-> -	void __iomem		*cfg_base;
-> -	u32			max_regions;
-> -	u32			no_bar_nbits;
-> -	u16			vendor_id;
-> -	u16			device_id;
-> -};
-> -
->   static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
->   				      int where)
->   {
-> @@ -92,11 +65,6 @@ static struct pci_ops cdns_pcie_host_ops = {
->   	.write		= pci_generic_config_write,
+>   &bus_wcore {
+> +       assigned-clocks = <&clock CLK_DOUT_ACLK400_WCORE>;
+> +       assigned-clock-rates = <400000000>;
+>          devfreq-events = <&nocp_mem0_0>, <&nocp_mem0_1>,
+>                          <&nocp_mem1_0>, <&nocp_mem1_1>;
+>          vdd-supply = <&buck3_reg>;
+> @@ -50,11 +52,15 @@
 >   };
 >   
-> -static const struct of_device_id cdns_pcie_host_of_match[] = {
-> -	{ .compatible = "cdns,cdns-pcie-host" },
-> -
-> -	{ },
-> -};
->   
->   static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->   {
-> @@ -136,10 +104,10 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->   static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
->   {
->   	struct cdns_pcie *pcie = &rc->pcie;
-> -	struct resource *cfg_res = rc->cfg_res;
->   	struct resource *mem_res = pcie->mem_res;
->   	struct resource *bus_range = rc->bus_range;
-> -	struct device *dev = rc->dev;
-> +	struct resource *cfg_res = rc->cfg_res;
-> +	struct device *dev = pcie->dev;
->   	struct device_node *np = dev->of_node;
->   	struct of_pci_range_parser parser;
->   	struct of_pci_range range;
-> @@ -233,25 +201,21 @@ static int cdns_pcie_host_init(struct device *dev,
->   	return err;
->   }
->   
-> -static int cdns_pcie_host_probe(struct platform_device *pdev)
-> +int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->   {
-> -	struct device *dev = &pdev->dev;
-> +	struct device *dev = rc->pcie.dev;
-> +	struct platform_device *pdev = to_platform_device(dev);
->   	struct device_node *np = dev->of_node;
->   	struct pci_host_bridge *bridge;
->   	struct list_head resources;
-> -	struct cdns_pcie_rc *rc;
->   	struct cdns_pcie *pcie;
->   	struct resource *res;
->   	int ret;
-> -	int phy_count;
->   
-> -	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
-> +	bridge = pci_host_bridge_from_priv(rc);
->   	if (!bridge)
->   		return -ENOMEM;
->   
-> -	rc = pci_host_bridge_priv(bridge);
-> -	rc->dev = dev;
-> -
->   	pcie = &rc->pcie;
->   	pcie->is_rc = true;
->   
-> @@ -287,21 +251,8 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
->   		dev_err(dev, "missing \"mem\"\n");
->   		return -EINVAL;
->   	}
-> -	pcie->mem_res = res;
->   
-> -	ret = cdns_pcie_init_phy(dev, pcie);
-> -	if (ret) {
-> -		dev_err(dev, "failed to init phy\n");
-> -		return ret;
-> -	}
-> -	platform_set_drvdata(pdev, pcie);
-> -
-> -	pm_runtime_enable(dev);
-> -	ret = pm_runtime_get_sync(dev);
-> -	if (ret < 0) {
-> -		dev_err(dev, "pm_runtime_get_sync() failed\n");
-> -		goto err_get_sync;
-> -	}
-> +	pcie->mem_res = res;
->   
->   	ret = cdns_pcie_host_init(dev, &resources, rc);
->   	if (ret)
-> @@ -326,37 +277,5 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
->    err_init:
->   	pm_runtime_put_sync(dev);
->   
-> - err_get_sync:
-> -	pm_runtime_disable(dev);
-> -	cdns_pcie_disable_phy(pcie);
-> -	phy_count = pcie->phy_count;
-> -	while (phy_count--)
-> -		device_link_del(pcie->link[phy_count]);
-> -
->   	return ret;
->   }
-> -
-> -static void cdns_pcie_shutdown(struct platform_device *pdev)
-> -{
-> -	struct device *dev = &pdev->dev;
-> -	struct cdns_pcie *pcie = dev_get_drvdata(dev);
-> -	int ret;
-> -
-> -	ret = pm_runtime_put_sync(dev);
-> -	if (ret < 0)
-> -		dev_dbg(dev, "pm_runtime_put_sync failed\n");
-> -
-> -	pm_runtime_disable(dev);
-> -	cdns_pcie_disable_phy(pcie);
-> -}
-> -
-> -static struct platform_driver cdns_pcie_host_driver = {
-> -	.driver = {
-> -		.name = "cdns-pcie-host",
-> -		.of_match_table = cdns_pcie_host_of_match,
-> -		.pm	= &cdns_pcie_pm_ops,
-> -	},
-> -	.probe = cdns_pcie_host_probe,
-> -	.shutdown = cdns_pcie_shutdown,
-> -};
-> -builtin_platform_driver(cdns_pcie_host_driver);
-> diff --git a/drivers/pci/controller/pcie-cadence-plat.c b/drivers/pci/controller/pcie-cadence-plat.c
-> new file mode 100644
-> index 0000000..f5c6bf6
-> --- /dev/null
-> +++ b/drivers/pci/controller/pcie-cadence-plat.c
-> @@ -0,0 +1,174 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Cadence PCIe platform  driver.
-> + *
-> + * Copyright (c) 2019, Cadence Design Systems
-> + * Author: Tom Joseph <tjoseph@cadence.com>
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/of_device.h>
-> +#include "pcie-cadence.h"
-> +
-> +/**
-> + * struct cdns_plat_pcie - private data for this PCIe platform driver
-> + * @pcie: Cadence PCIe controller
-> + * @is_rc: Set to 1 indicates the PCIe controller mode is Root Complex,
-> + *         if 0 it is in Endpoint mode.
-> + */
-> +struct cdns_plat_pcie {
-> +	struct cdns_pcie        *pcie;
-> +	bool is_rc;
-> +};
-> +
-> +struct cdns_plat_pcie_of_data {
-> +	bool is_rc;
-> +};
-> +
-> +static const struct of_device_id cdns_plat_pcie_of_match[];
-> +
-> +static int cdns_plat_pcie_probe(struct platform_device *pdev)
-> +{
-> +	const struct cdns_plat_pcie_of_data *data;
-> +	struct cdns_plat_pcie *cdns_plat_pcie;
-> +	const struct of_device_id *match;
-> +	struct device *dev = &pdev->dev;
-> +	struct pci_host_bridge *bridge;
-> +	struct cdns_pcie_ep *ep;
-> +	struct cdns_pcie_rc *rc;
-> +	int phy_count;
-> +	bool is_rc;
-> +	int ret;
-> +
-> +	match = of_match_device(cdns_plat_pcie_of_match, dev);
-> +	if (!match)
-> +		return -EINVAL;
-> +
-> +	data = (struct cdns_plat_pcie_of_data *)match->data;
-> +	is_rc = data->is_rc;
-> +
-> +	pr_debug(" Started %s with is_rc: %d\n", __func__, is_rc);
-> +	cdns_plat_pcie = devm_kzalloc(dev, sizeof(*cdns_plat_pcie), GFP_KERNEL);
-> +	if (!cdns_plat_pcie)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, cdns_plat_pcie);
-> +	if (is_rc) {
-> +		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_PLAT_HOST))
-> +			return -ENODEV;
-> +
-> +		bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
-> +		if (!bridge)
-> +			return -ENOMEM;
-> +
-> +		rc = pci_host_bridge_priv(bridge);
-> +		rc->pcie.dev = dev;
-> +		cdns_plat_pcie->pcie = &rc->pcie;
-> +		cdns_plat_pcie->is_rc = is_rc;
-> +
-> +		ret = cdns_pcie_init_phy(dev, cdns_plat_pcie->pcie);
-> +		if (ret) {
-> +			dev_err(dev, "failed to init phy\n");
-> +			return ret;
-> +		}
-> +		pm_runtime_enable(dev);
-> +		ret = pm_runtime_get_sync(dev);
-> +		if (ret < 0) {
-> +			dev_err(dev, "pm_runtime_get_sync() failed\n");
-> +			goto err_get_sync;
-> +		}
-> +
-> +		ret = cdns_pcie_host_setup(rc);
-> +		if (ret)
-> +			goto err_init;
-> +	} else {
-> +		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_PLAT_EP))
-> +			return -ENODEV;
-> +
-> +		ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
-> +		if (!ep)
-> +			return -ENOMEM;
-> +
-> +		ep->pcie.dev = dev;
-> +		cdns_plat_pcie->pcie = &ep->pcie;
-> +		cdns_plat_pcie->is_rc = is_rc;
-> +
-> +		ret = cdns_pcie_init_phy(dev, cdns_plat_pcie->pcie);
-> +		if (ret) {
-> +			dev_err(dev, "failed to init phy\n");
-> +			return ret;
-> +		}
-> +
-> +		pm_runtime_enable(dev);
-> +		ret = pm_runtime_get_sync(dev);
-> +		if (ret < 0) {
-> +			dev_err(dev, "pm_runtime_get_sync() failed\n");
-> +			goto err_get_sync;
-> +		}
-> +
-> +		ret = cdns_pcie_ep_setup(ep);
-> +		if (ret)
-> +			goto err_init;
-> +	}
-> +
-> + err_init:
-> +	pm_runtime_put_sync(dev);
-> +
-> + err_get_sync:
-> +	pm_runtime_disable(dev);
-> +	cdns_pcie_disable_phy(cdns_plat_pcie->pcie);
-> +	phy_count = cdns_plat_pcie->pcie->phy_count;
-> +	while (phy_count--)
-> +		device_link_del(cdns_plat_pcie->pcie->link[phy_count]);
-> +
-> +	return 0;
-> +}
-> +
-> +static void cdns_plat_pcie_shutdown(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct cdns_pcie *pcie = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = pm_runtime_put_sync(dev);
-> +	if (ret < 0)
-> +		dev_dbg(dev, "pm_runtime_put_sync failed\n");
-> +
-> +	pm_runtime_disable(dev);
-> +
-> +	cdns_pcie_disable_phy(pcie);
-> +}
-> +
-> +static const struct cdns_plat_pcie_of_data cdns_plat_pcie_host_of_data = {
-> +	.is_rc = true,
-> +};
-> +
-> +static const struct cdns_plat_pcie_of_data cdns_plat_pcie_ep_of_data = {
-> +	.is_rc = false,
-> +};
-> +
-> +static const struct of_device_id cdns_plat_pcie_of_match[] = {
-> +	{
-> +		.compatible = "cdns,cdns-pcie-host",
-> +		.data = &cdns_plat_pcie_host_of_data,
-> +	},
-> +	{
-> +		.compatible = "cdns,cdns-pcie-ep",
-> +		.data = &cdns_plat_pcie_ep_of_data,
-> +	},
-> +	{},
-> +};
-> +
-> +static struct platform_driver cdns_plat_pcie_driver = {
-> +	.driver = {
-> +		.name = "cdns-pcie",
-> +		.of_match_table = cdns_plat_pcie_of_match,
-> +		.pm	= &cdns_pcie_pm_ops,
-> +	},
-> +	.probe = cdns_plat_pcie_probe,
-> +	.shutdown = cdns_plat_pcie_shutdown,
-> +};
-> +builtin_platform_driver(cdns_plat_pcie_driver);
-> diff --git a/drivers/pci/controller/pcie-cadence.h b/drivers/pci/controller/pcie-cadence.h
-> index ae6bf2a..c98e858 100644
-> --- a/drivers/pci/controller/pcie-cadence.h
-> +++ b/drivers/pci/controller/pcie-cadence.h
-> @@ -190,6 +190,8 @@ enum cdns_pcie_rp_bar {
->   	(((code) << 8) & CDNS_PCIE_NORMAL_MSG_CODE_MASK)
->   #define CDNS_PCIE_MSG_NO_DATA			BIT(16)
->   
-> +struct cdns_pcie;
-> +
->   enum cdns_pcie_msg_code {
->   	MSG_CODE_ASSERT_INTA	= 0x20,
->   	MSG_CODE_ASSERT_INTB	= 0x21,
-> @@ -231,13 +233,71 @@ enum cdns_pcie_msg_routing {
->   struct cdns_pcie {
->   	void __iomem		*reg_base;
->   	struct resource		*mem_res;
-> +	struct device		*dev;
->   	bool			is_rc;
->   	u8			bus;
->   	int			phy_count;
->   	struct phy		**phy;
->   	struct device_link	**link;
-> +	const struct cdns_pcie_common_ops *ops;
-
-Where is cdns_pcie_common_ops defined?
-
-> +};
-> +
-> +/**
-> + * struct cdns_pcie_rc - private data for this PCIe Root Complex driver
-> + * @pcie: Cadence PCIe controller
-> + * @dev: pointer to PCIe device
-> + * @cfg_res: start/end offsets in the physical system memory to map PCI
-> + *           configuration space accesses
-> + * @bus_range: first/last buses behind the PCIe host controller
-> + * @cfg_base: IO mapped window to access the PCI configuration space of a
-> + *            single function at a time
-> + * @max_regions: maximum number of regions supported by the hardware
-> + * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
-> + *                translation (nbits sets into the "no BAR match" register)
-> + * @vendor_id: PCI vendor ID
-> + * @device_id: PCI device ID
-> + */
-> +struct cdns_pcie_rc {
-> +	struct cdns_pcie	pcie;
-> +	struct resource		*cfg_res;
-> +	struct resource		*bus_range;
-> +	void __iomem		*cfg_base;
-> +	u32			max_regions;
-> +	u32			no_bar_nbits;
-> +	u16			vendor_id;
-> +	u16			device_id;
+>   &bus_noc {
+> +       assigned-clocks = <&clock CLK_DOUT_ACLK100_NOC>;
+> +       assigned-clock-rates = <100000000>;
+>          devfreq = <&bus_wcore>;
+>          status = "okay";
 >   };
 >   
-> +/**
-> + * struct cdns_pcie_ep - private data for this PCIe endpoint controller driver
-> + * @pcie: Cadence PCIe controller
-> + * @max_regions: maximum number of regions supported by hardware
-> + * @ob_region_map: bitmask of mapped outbound regions
-> + * @ob_addr: base addresses in the AXI bus where the outbound regions start
-> + * @irq_phys_addr: base address on the AXI bus where the MSI/legacy IRQ
-> + *		   dedicated outbound regions is mapped.
-> + * @irq_cpu_addr: base address in the CPU space where a write access triggers
-> + *		  the sending of a memory write (MSI) / normal message (legacy
-> + *		  IRQ) TLP through the PCIe bus.
-> + * @irq_pci_addr: used to save the current mapping of the MSI/legacy IRQ
-> + *		  dedicated outbound region.
-> + * @irq_pci_fn: the latest PCI function that has updated the mapping of
-> + *		the MSI/legacy IRQ dedicated outbound region.
-> + * @irq_pending: bitmask of asserted legacy IRQs.
-> + */
-> +struct cdns_pcie_ep {
-> +	struct cdns_pcie	pcie;
-> +	u32			max_regions;
-> +	unsigned long		ob_region_map;
-> +	phys_addr_t		*ob_addr;
-> +	phys_addr_t		irq_phys_addr;
-> +	void __iomem		*irq_cpu_addr;
-> +	u64			irq_pci_addr;
-> +	u8			irq_pci_fn;
-> +	u8			irq_pending;
-> +};
-> +
-> +
->   /* Register access */
->   static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
->   {
-> @@ -306,6 +366,23 @@ static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
->   	return readl(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
->   }
+>   &bus_fsys_apb {
+> +       assigned-clocks = <&clock CLK_DOUT_PCLK200_FSYS>;
+> +       assigned-clock-rates = <200000000>;
+>          devfreq = <&bus_wcore>;
+>          status = "okay";
+>   };
+> @@ -120,6 +126,8 @@
+>   };
 >   
-> +#ifdef CONFIG_PCIE_CADENCE_HOST
-> +int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
-> +#else
-> +static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
-> +#ifdef CONFIG_PCIE_CADENCE_EP
-> +int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep);
-> +#else
-> +static inline int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
-> +{
-> +	return 0;
-> +}
-> +#endif
->   void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
->   				   u32 r, bool is_io,
->   				   u64 cpu_addr, u64 pci_addr, size_t size);
-> 
+>   &bus_mscl {
+> +       assigned-clocks = <&clock CLK_DOUT_ACLK400_MSCL>;
+> +       assigned-clock-rates = <400000000>;
+>          devfreq = <&bus_wcore>;
+>          status = "okay";
+>   };
+
+
+Well, this is a poor workaround. There is indeed no warning, but the 
+clock rates are far from the specified in the device tree. For WCORE 
+assigned-clock-rates = <400000000> on Odroid XU3/XU4 kernel will set 
+dout_aclk400_wcore clock to 266MHz, because it is not possible to derive 
+400MHz from 532MHz MPLL...
+
+I plan to measure the impact of different rates on the performance of 
+the various components and overall power consumption. Only then IMHO it 
+makes sense to decide if we really should adjust OPPs to the current 
+PLLs configuration (-> basically define following OPPs for WCORE: 
+532MHz, 266MHz, 133MHZ and 77MHz) or change PLL configuration and 
+re-parent WCORE to 1200MHz to properly drive: 400MHz, 300MHz, 200MHz and 
+100MHz.
+
+Other devfreq buses should IMHO use the values similar to the selected 
+for WCORE.
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
