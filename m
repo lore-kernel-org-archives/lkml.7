@@ -5,70 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8292CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EB8C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B82B20801
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F23206DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 16:07:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MwasEGI7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Spso+1VB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730001AbfLEQHH (ORCPT
+        id S1730018AbfLEQHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:07:07 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:42562 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLEQHG (ORCPT
+        Thu, 5 Dec 2019 11:07:21 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39173 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLEQHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:07:06 -0500
-Received: by mail-pj1-f68.google.com with SMTP id o11so1463721pjp.9;
-        Thu, 05 Dec 2019 08:07:06 -0800 (PST)
+        Thu, 5 Dec 2019 11:07:21 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 2so1820181pfx.6;
+        Thu, 05 Dec 2019 08:07:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=0EteF4iAsRPHclRrUrgDLpQZXRR6Kg6d9lRSQjCvFTM=;
-        b=MwasEGI7lm+mGeCpcG6eU/GbXC7zNqrFuCiJB87Bv7lJ6q2aJsS0HYDmpRLMlUSnqr
-         bUH7uorWtXJHy2FK4Zsht6aeU4IUKqqwnZqXstHWd3GAuGh+2N3gtLqJwHkC/4cMwELe
-         TGBTIYm8HyoAcyb5tC2dN1UQVgxQuiHpHniL2G1fqOZ/R6OVf+4+qGsuMYxKegG66IJ2
-         YXBVIsZfNABYv3Sz4wFzY0T7O3TSMvsnzhbjAXUcVF9SdWMXZEDFPTsPS0jcIVerLj22
-         wzKbLoCckcPxFqGApIK4ifdjwT7ETBkDktx5+KbEIahJMKhckepyBFeQaknkWrs1ja12
-         So1A==
+        bh=Nk1cXD8ocqFBtC4Ixaba4spST22wd8UaYJyDzazVJTU=;
+        b=Spso+1VBGEYjX599HKgBZ7LMPvTnErQh8OrWYDokzKb3zBSSaEgZ4u+I7C5EwKrVeR
+         lUG3UW/5r65Fp75N8CBIUjv0os9y+d8jDXNVYICft9E6k/2uxzV9eTJm5v5FvsNpZo9o
+         vf8MzxGjzeWRfcVXaeWb2sQNaDqMSv+/hIJ+IRH3BPxs3B1ykEPlsdshzdpXT6Xuwzcj
+         EgGzERz2cVpnYAaW3kqMFAtCJQswy/cTqOwhu4EHNjgqlzgRKhF2SSB4NFAcFCCyDxfn
+         UbFZIr3T0i9xpQA3xoaqCda2BYeVA5gwQcFMZGSDjcbHaEj8cfWg1pu9yAIv4xdZTwIg
+         k00A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=0EteF4iAsRPHclRrUrgDLpQZXRR6Kg6d9lRSQjCvFTM=;
-        b=Zdvbzf1nN+YR+ROLMej5FwlsNYVSlyTLnH6NuTstmjk904hFb9THuv0MbABfcXlusq
-         m09F36s6O0FNRNyJTHs0WPnu+5kOlXyqzsrbk2m4Uz4o+Xpk64xMrdsoKv6ftsfwPgNh
-         jNU1LQyGJVkEZ+rA+qL//3P3sxU5MZleHESwBrT6NXgM7y+VafKC90HVVWvYYqfMyhGM
-         z09FCw/jrH+siVX586UQWm/hWzqUHEbFDDCbHCmx0OSHwjErm3dfyNpiTguoC9GUCgni
-         8G1KLrxR7PEMFW9azgZz9qV+3ZzzBiuGmZ6FUHa76Z3gSKz1fdPOwfFs9tY2tM1DS1u6
-         o23g==
-X-Gm-Message-State: APjAAAXcK/w7NdOOTFZtI47T0M0f5LPDz4SutaLcSKTGH4DaDLD0LhAi
-        EGrnwBHCK/gqHjQbkMwl+bg=
-X-Google-Smtp-Source: APXvYqywhPRYNArYzVQFWv+PuF/L2d6dUUNgv5VAlL+Ittq3144uB72j/wDmK/qj00I0S7d386YuRA==
-X-Received: by 2002:a17:902:7c0a:: with SMTP id x10mr9926650pll.168.1575562026013;
-        Thu, 05 Dec 2019 08:07:06 -0800 (PST)
+        bh=Nk1cXD8ocqFBtC4Ixaba4spST22wd8UaYJyDzazVJTU=;
+        b=l8cWx2IplVPxHPDd91ucWHxdeqOTRmdRRmxSgsk64tGXHRy5fDnSXwy1xUFJAmQghB
+         Mmqeh3LBy4yhXpRf9YqKcouhmvvJBTl0UL/sAVWoN3ydXpf3mqKtxP/3NBugfNNCZRus
+         jYykpdUHURazb3bzw/K98qX7iyYF6yuvClvt/P7158WDeqguChvGrZqdHbjlPGArI9Kw
+         UTl236B7QsawiIGg8GFxLdvLnRXR9MQ2GTf9e98ApIusXmlX0mo/BoNDdn5geJa9+tl8
+         BDDYrMYDnXN1V5JtgN7uJUK9ueJYTdxP9kkudCbyQEs8GR8RjRKVWgyhpVbnlmYT0BD5
+         UANg==
+X-Gm-Message-State: APjAAAUukiG4hJqOZiRM05pU+vkQQrYEIA+Z1aNGNekin0GWI/lEFzqW
+        Wk5gafjSRAZRkGfyLziPvIk=
+X-Google-Smtp-Source: APXvYqy9oKB9Ozl8hrB3SUfpSveBM41X9hsvRCH6URNhs4FJAED+cuPGdd9arO5yZ4Zj26NEgNPDFQ==
+X-Received: by 2002:a63:3104:: with SMTP id x4mr9948531pgx.369.1575562040738;
+        Thu, 05 Dec 2019 08:07:20 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id h5sm13877752pfk.30.2019.12.05.08.07.00
+        by smtp.gmail.com with ESMTPSA id m15sm11956980pgi.91.2019.12.05.08.07.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 08:07:05 -0800 (PST)
+        Thu, 05 Dec 2019 08:07:20 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-rtc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] rtc: stm32: add missed clk_disable_unprepare in error path of resume
-Date:   Fri,  6 Dec 2019 00:06:55 +0800
-Message-Id: <20191205160655.32188-1-hslester96@gmail.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] video: fbdev: vesafb: add missed release_region
+Date:   Fri,  6 Dec 2019 00:07:12 +0800
+Message-Id: <20191205160712.32245-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -78,31 +73,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The resume() forgets to call clk_disable_unprepare() when failed.
-Add the missed call to fix it.
+The driver forgets to free the requested irq in remove and probe
+failure.
+Add the missed calls to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/rtc/rtc-stm32.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Changes in v2:
+  - Modify commit message.
 
-diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
-index 781cabb2afca..d774aa18f57a 100644
---- a/drivers/rtc/rtc-stm32.c
-+++ b/drivers/rtc/rtc-stm32.c
-@@ -897,8 +897,11 @@ static int stm32_rtc_resume(struct device *dev)
- 	}
+ drivers/video/fbdev/vesafb.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/video/fbdev/vesafb.c b/drivers/video/fbdev/vesafb.c
+index d9c08f6c2155..fbb196a8bbf6 100644
+--- a/drivers/video/fbdev/vesafb.c
++++ b/drivers/video/fbdev/vesafb.c
+@@ -468,6 +468,7 @@ static int vesafb_probe(struct platform_device *dev)
+ 	fb_info(info, "%s frame buffer device\n", info->fix.id);
+ 	return 0;
+ err:
++	release_region(0x3c0, 32);
+ 	arch_phys_wc_del(par->wc_cookie);
+ 	if (info->screen_base)
+ 		iounmap(info->screen_base);
+@@ -480,6 +481,7 @@ static int vesafb_remove(struct platform_device *pdev)
+ {
+ 	struct fb_info *info = platform_get_drvdata(pdev);
  
- 	ret = stm32_rtc_wait_sync(rtc);
--	if (ret < 0)
-+	if (ret < 0) {
-+		if (rtc->data->has_pclk)
-+			clk_disable_unprepare(rtc->pclk);
- 		return ret;
-+	}
++	release_region(0x3c0, 32);
+ 	unregister_framebuffer(info);
+ 	framebuffer_release(info);
  
- 	if (device_may_wakeup(dev))
- 		return disable_irq_wake(rtc->irq_alarm);
 -- 
 2.24.0
 
