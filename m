@@ -2,148 +2,138 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D776BC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F090C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F9621835
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705B12245C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575557288;
+	bh=2v3R2r3WGK80Qxoxn6zdzaPTA5QkronQaXxmH6Y6GE0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=yvFUqqPD4kUV0aAwYjkWK4y9OWRO3Dz2Kcb/+Nwzn9Mkxg9h0mVlR4dGkBKQOlnEf
+	 GE+0tvjugrCB+G4Fmgz8jPnrPRLtjKaDcjlVWUaWFjjVJFdo9aEKOzQar4gWeZ97Rh
+	 3Wx2FE5r7qfBhoMUcoGXXo9AXdy3GXjK0MrhXMo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbfLEOqd (ORCPT
+        id S1729611AbfLEOsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 09:46:33 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45781 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729187AbfLEOqd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 09:46:33 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1icsOj-0001W5-2x; Thu, 05 Dec 2019 15:46:29 +0100
-Message-ID: <2d2524129c6287c13e9d83d1d885046483e75117.camel@pengutronix.de>
-Subject: Re: [PATCH v3 2/3] media: hantro: Support color conversion via
- post-processing
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     kernel@collabora.com, Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
-Date:   Thu, 05 Dec 2019 15:46:26 +0100
-In-Reply-To: <88a48cb78843458b55896eeb3af2f46488d42744.camel@collabora.com>
-References: <20191113175603.24742-1-ezequiel@collabora.com>
-         <20191113175603.24742-3-ezequiel@collabora.com>
-         <1e1c7a0e3d25187723ccac1a8360b5aae9aed8cd.camel@pengutronix.de>
-         <dc637b43a4ef4609f9200f3fc91ee76fef75f64a.camel@collabora.com>
-         <88a48cb78843458b55896eeb3af2f46488d42744.camel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 5 Dec 2019 09:48:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729187AbfLEOsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 09:48:07 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B15C21835;
+        Thu,  5 Dec 2019 14:48:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575557285;
+        bh=2v3R2r3WGK80Qxoxn6zdzaPTA5QkronQaXxmH6Y6GE0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=y5RbRcBwA5K6Fy+zLTpyhQivC7rtJQydoY/RJd8cfSLBLdXOTUE3XZw+Dr6VQeejz
+         5b/iUayYR9U7B3++QBhH7q+AyDUONa/xSDDbgjsIwmwWOeMOohniorfQ6K7hVcpWfy
+         f8M7wvo5gfzSOjrMHIzlrybGJ1/EOhLzHV0ME8w0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 66D6635202C9; Thu,  5 Dec 2019 06:48:05 -0800 (PST)
+Date:   Thu, 5 Dec 2019 06:48:05 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Tejun Heo <tj@kernel.org>, jiangshanlai@gmail.com,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: Workqueues splat due to ending up on wrong CPU
+Message-ID: <20191205144805.GR2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191126220533.GU2889@paulmck-ThinkPad-P72>
+ <20191127155027.GA15170@paulmck-ThinkPad-P72>
+ <20191128161823.GA24667@paulmck-ThinkPad-P72>
+ <20191129155850.GA17002@paulmck-ThinkPad-P72>
+ <20191202015548.GA13391@paulmck-ThinkPad-P72>
+ <20191202201338.GH16681@devbig004.ftw2.facebook.com>
+ <20191203095521.GH2827@hirez.programming.kicks-ass.net>
+ <20191204201150.GA14040@paulmck-ThinkPad-P72>
+ <20191205102928.GG2810@hirez.programming.kicks-ass.net>
+ <20191205103213.GB2871@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191205103213.GB2871@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-12-05 at 11:33 -0300, Ezequiel Garcia wrote:
-> Hello Philipp,
-> 
-> On Fri, 2019-11-15 at 12:44 -0300, Ezequiel Garcia wrote:
-> > Hello Philipp,
+On Thu, Dec 05, 2019 at 11:32:13AM +0100, Peter Zijlstra wrote:
+> On Thu, Dec 05, 2019 at 11:29:28AM +0100, Peter Zijlstra wrote:
+> > On Wed, Dec 04, 2019 at 12:11:50PM -0800, Paul E. McKenney wrote:
 > > 
-> > Thanks for reviewing.
+> > > And the good news is that I didn't see the workqueue splat, though my
+> > > best guess is that I had about a 13% chance of not seeing it due to
+> > > random chance (and I am currently trying an idea that I hope will make
+> > > it more probable).  But I did get a couple of new complaints about RCU
+> > > being used illegally from an offline CPU.  Splats below.
 > > 
-> > On Thu, 2019-11-14 at 10:48 +0100, Philipp Zabel wrote:
-> > > Hi Ezequiel,
+> > Shiny!
+
+And my attempt to speed things up did succeed, but the success was limited
+to finding more places where rcutorture chokes on CPUs being slow to boot.
+Fixing those and trying again...
+
+> > > Your patch did rearrange the CPU-online sequence, so let's see if I
+> > > can piece things together...
 > > > 
-> > > On Wed, 2019-11-13 at 14:56 -0300, Ezequiel Garcia wrote:
-> > > > The Hantro G1 decoder is able to enable a post-processor
-> > > > on the decoding pipeline, which can be used to perform
-> > > > scaling and color conversion.
-> > > > 
-> > > > The post-processor is integrated to the decoder, and it's
-> > > > possible to use it in a way that is completely transparent
-> > > > to the user.
-> > > > 
-> > > > This commit enables color conversion via post-processing,
-> > > > which means the driver now exposes YUV packed, in addition to NV12.
-> > > > 
-> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > > ---
-> > > >  drivers/staging/media/hantro/Makefile         |   1 +
-> > > >  drivers/staging/media/hantro/hantro.h         |  64 +++++++-
-> > > >  drivers/staging/media/hantro/hantro_drv.c     |   8 +-
-> > > >  .../staging/media/hantro/hantro_g1_h264_dec.c |   2 +-
-> > > >  .../media/hantro/hantro_g1_mpeg2_dec.c        |   2 +-
-> > > >  drivers/staging/media/hantro/hantro_g1_regs.h |  53 +++++++
-> > > >  .../staging/media/hantro/hantro_g1_vp8_dec.c  |   2 +-
-> > > >  drivers/staging/media/hantro/hantro_h264.c    |   6 +-
-> > > >  drivers/staging/media/hantro/hantro_hw.h      |  13 ++
-> > > >  .../staging/media/hantro/hantro_postproc.c    | 141 ++++++++++++++++++
-> > > >  drivers/staging/media/hantro/hantro_v4l2.c    |  52 ++++++-
-> > > >  drivers/staging/media/hantro/rk3288_vpu_hw.c  |  10 ++
-> > > >  12 files changed, 343 insertions(+), 11 deletions(-)
-> > > >  create mode 100644 drivers/staging/media/hantro/hantro_postproc.c
-> > > > 
-> > > > 
-> [..]
-> > > >  			pix_mp->plane_fmt[0].sizeimage +=
-> > > >  				128 * DIV_ROUND_UP(pix_mp->width, 16) *
-> > > >  				      DIV_ROUND_UP(pix_mp->height, 16);
-> > > > @@ -611,10 +643,23 @@ static int hantro_start_streaming(struct vb2_queue *q, unsigned int count)
-> > > >  
-> > > >  		vpu_debug(4, "Codec mode = %d\n", codec_mode);
-> > > >  		ctx->codec_ops = &ctx->dev->variant->codec_ops[codec_mode];
-> > > > -		if (ctx->codec_ops->init)
-> > > > +		if (ctx->codec_ops->init) {
-> > > >  			ret = ctx->codec_ops->init(ctx);
-> > > > +			if (ret)
-> > > > +				return ret;
-> > > > +		}
-> > > > +
-> > > > +		if (hantro_needs_postproc(ctx)) {
-> > > > +			ret = hantro_postproc_alloc(ctx);
-> > > 
-> > > Why is this done in start_streaming? Wouldn't capture side REQBUFS be a
-> > > better place for this?
-> > > 
+> > > RCU considers a CPU to be online at rcu_cpu_starting() time.  This is
+> > > called from notify_cpu_starting(), which is called from the arch-specific
+> > > CPU-bringup code.  Any RCU readers before rcu_cpu_starting() will trigger
+> > > the warning I am seeing.
 > > 
-> > Yes, makes sense as well.
+> > Right.
 > > 
+> > > The original location of the stop_machine_unpark() was in
+> > > bringup_wait_for_ap(), which is called from bringup_cpu(), which is in
+> > > the CPUHP_BRINGUP_CPU entry of cpuhp_hp_states[].  Which, if I am not
+> > > too confused, is invoked by some CPU other than the to-be-incoming CPU.
+> > 
+> > Correct.
+> > 
+> > > The new location of the stop_machine_unpark() is in cpuhp_online_idle(),
+> > > which is called from cpu_startup_entry(), which is invoked from
+> > > the arch-specific bringup code that runs on the incoming CPU.
+> > 
+> > The new place is the final piece of bringup, it is right before where
+> > the freshly woken CPU will drop into the idle loop and start scheduling
+> > (for the first time).
+> > 
+> > > Which
+> > > is the same code that invokes notify_cpu_starting(), so we need
+> > > notify_cpu_starting() to be invoked before cpu_startup_entry().
+> > 
+> > Right, that is right before we run what used to be the CPU_STARTING
+> > notifiers. This is in fact (on x86) before the CPU is marked
+> > cpu_online(). It has to be before cpu_startup_entry(), before this is
+> > ran with IRQs disabled, while cpu_startup_entry() demands IRQs are
+> > enabled.
+> > 
+> > > The order is not immediately obvious on IA64.  But it looks like
+> > > everything else does it in the required order, so I am a bit confused
+> > > about this.
+> > 
+> > That makes two of us, afaict we have RCU up and running when we get to
+> > the idle loop.
 > 
-> This didn't work so well, so I have decided to leave it as-is in the
-> just submitted v4 series.
-> 
-> The vb2 framework provides two mechanism for drivers to allocate
-> buffers, REQBUFS and CREATEBUFS, so the bounce buffer allocation
-> has to be hooked on both of them.
+> Or did we need rcutree_online_cpu() to have ran? Because that is ran
+> much later than this...
 
-That is a good point, now that we don't allocate VB2_MAX_FRAME bounce
-buffers at start_streaming time anymore, what happens if additional
-capture buffers are created with CREATEBUFS while streaming?
+No, rcu_cpu_starting() does the trick.  So I remain confused.
 
-> Also, REQBUFS and CREATEBUFS can be called multiple times
-> to grow/shrink the vb2_queue, so the driver has to check
-> if the bounce buffers were already created or not.
-> 
-> Not a big deal, but I felt the implementation ended up being
-> too nasty for my taste.
-> 
-> If fragmentation turns out to be an issue and we want to avoid
-> allocating and destroying in start and stop (STREAMOFF, STREAMON),
-> we can revisit this.
+My thought is to add some printk()s or tracing to rcu_cpu_starting()
+and its counterpart, rcu_report_dead().  But is there a better way?
 
-regards
-Philipp
-
+							Thanx, Paul
