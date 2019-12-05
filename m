@@ -2,242 +2,289 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF74AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BE4C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 833572245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA9124651
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:15:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="s7/AAMCw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EG8BAkz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbfLELLS (ORCPT
+        id S1729134AbfLELPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 06:11:18 -0500
-Received: from mail-eopbgr00071.outbound.protection.outlook.com ([40.107.0.71]:62631
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728735AbfLELLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 06:11:18 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mp75BZ5mfUdXxpagSchxmnkcvHrIHv6euM10/NL4rWmLjNtIpwNWI+RWC3GQpisKmHNzc1IbfR7wGKmo1+eMqaSeHrOdcSIX9PgzhrDP9VqgUc1yXgvHsFRGhrcTbsxEUzeWZNcMS0gxaHy7pSKDnzhNECS7oCEl/Vg5JYvUVOQifY10Yie/FUXHdTCPPJyIY7vW1M2faVZsZn9x+3xu59QhjlqUYbdR2GCbuQLLsoJQiC/crSnxH3Dl1B2BRVAYtUGk1V+/VT4kHf7phBH/QQd1Zj26e/Keq17lRvg8UFoeqFO0khEcFcSBENB43OZif51ZagBrcW/prOGioOGZWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZtAW2COMnfQW8Z9XCHCLRXFK1LDUjQCVknFr/ywWDR8=;
- b=iOC44E2BNZU7QKrHD5Y/u7g4ejS+++fXwSpxCP/s6E1XZDoTYtMfeyctn03MyrdiNk0Kikhssomg+NVSq0AnzVJnzBkxgNrXxJ3X7qTZM1wIWOX9/7kIrz9LUyPZ4fguuSUzbl7Lb+urM30jNmJgRR6seADHRAvU3V8ggOYUFn5o2SjC3IWaKOjtM3TDbE4eAK2nfhkNjd3cJXzxFDYPUPf7xhVo8I3bDtMiaREvI4EjPTuhhfo9GvmzHJvhjF5EPawMBNpp8MG4jfRwT84lXvaSg9YvFXC47w+2kakOzhbsMkM1qTRqWcw9Imam8a3LpSzUjVxX6BXNE+gZFSz1RQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZtAW2COMnfQW8Z9XCHCLRXFK1LDUjQCVknFr/ywWDR8=;
- b=s7/AAMCwb4l5BVnEKJVKliemNzsaP3TdM6XhUk7xl5f6l4up2nRMVprysRgrbh1U6HoFABR4cFmiB/5Z+sof47biDetXo3s3efJfT+UZADg7FxIvrG2aSGqCTnE+bwSrGKMnW+WK9GBBHguD4/7XDvg1ZhytMoSXTqu6m1ZFl6c=
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.51.208) by
- VI1PR04MB5806.eurprd04.prod.outlook.com (20.178.204.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.12; Thu, 5 Dec 2019 11:11:09 +0000
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::71d2:55b3:810d:c75b]) by VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::71d2:55b3:810d:c75b%7]) with mapi id 15.20.2495.026; Thu, 5 Dec 2019
- 11:11:09 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-CC:     Roy Zang <roy.zang@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "frowand.list@gmail.com" <frowand.list@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>
-Subject: RE: [PATCH] PCI: layerscape: Add the SRIOV support in host side
-Thread-Topic: [PATCH] PCI: layerscape: Add the SRIOV support in host side
-Thread-Index: AQHVqP2u5HKRks3QXEmyFTQz0j+ob6emy2EAgADYg4CAAKoFgIAAOn2AgADd3QCAAfrtgA==
-Date:   Thu, 5 Dec 2019 11:11:09 +0000
-Message-ID: <VI1PR04MB5134A689AEA8C49BFC7F8356EC5C0@VI1PR04MB5134.eurprd04.prod.outlook.com>
-References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
- <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
- <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
- <8f56c2d9-ab01-a91e-902f-a61def0e8ce8@arm.com>
- <AM5PR04MB3299BFC34A4666B7A9C12B13F55D0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-In-Reply-To: <AM5PR04MB3299BFC34A4666B7A9C12B13F55D0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 289ff90c-26b6-4907-47e4-08d77973d4db
-x-ms-traffictypediagnostic: VI1PR04MB5806:|VI1PR04MB5806:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB58069B4F74567FF8E16FFA75EC5C0@VI1PR04MB5806.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02426D11FE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(396003)(366004)(376002)(13464003)(189003)(199004)(66556008)(66446008)(66476007)(52536014)(64756008)(14454004)(229853002)(11346002)(966005)(110136005)(478600001)(7416002)(76116006)(81166006)(81156014)(71200400001)(8936002)(8676002)(54906003)(26005)(44832011)(66946007)(2906002)(5660300002)(53546011)(74316002)(4326008)(7696005)(6506007)(99286004)(33656002)(25786009)(14444005)(186003)(55016002)(316002)(102836004)(86362001)(9686003)(71190400001)(305945005)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5806;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2w1z2JaElDyLFCI6Jgv35lnaZIkBzWGMoDciwSL7KlwGp0r5aaerTb848GfJAJDK4CN1pUksffbjmr2ZT16xLxtFqADayDsQDJIjywxENwcAQTCYn+/0FUtfwVOF7PvGITpQE91qqWZmvzzb+bTG0+6MTOOcwaCcHKG88zvOEWp9VtfXN5NGIl6hL9ZYIsyQPva78PrJ2C2gGBDzJPIkUCcXSNEM1/rKwKEWUWvz9aRADXd5Hg+rwykfH1/unYbvVBgf4QbR3WBdAmx/197PfI4z9DMQ6S7W+TTeDgQZqDUxPwynS0gu7zNgXb7fxJdpvCdLhYtX9DX4osew7+R6OY2MkH7Rbg80nwIHTfRHRg5oROj2mn+odPHOigMULLxg76iPhkxIo8R0WYrBKK4VXW6aBAvPKbn6brDoXs5PEt5N1D/urY8E/IoomZlqg5cs4fLNVm3e5ZPaFJGEqm8Cd/YLnV10iGbDqcKo1yQICL8PEzoJcNz188a+xhgPsEm+k3JWFnePAOcTqFglzKXIAo2V/6sSIXsbpdmCCyPHjn8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 5 Dec 2019 06:15:12 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38634 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728735AbfLELPL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 06:15:11 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so3032585wrh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 03:15:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rR3YUGi0wDL6AhOJ1Do0ulSAa4rvkWEvSmErI9Ci+ss=;
+        b=EG8BAkz6SAXiXTZCRQNb/d1L2jqAAD7nJduZk1/Q1RWkOfipykgBORIgpNj29I+k+c
+         wX7fKGCW5rdWxJvBt4HeDr41BL25PGbXCVjAKR0E2Lb/qe5tGsiosx3yqD05dLsRhmeA
+         qtU2q02S4vh9SqD+HTfrMYtzvT+MATv+TKpgoa8Qi8xb9gOPJZF6vyJA1ubzTPD5LWcx
+         MG6JlNy6nlLVjUSzbTSLeoDHL37b9DU8YxAYGYuAmcGocbu8tKspld1TQWPKSziKo/eW
+         WvSbYNdNFT3dBCAhMfKcqeIJYO7gZG4qlXmkVRMJGRph7yVSQX3m8ABD7mZ+Fhcws/yu
+         yP9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=rR3YUGi0wDL6AhOJ1Do0ulSAa4rvkWEvSmErI9Ci+ss=;
+        b=trdlYX7XvDOteYepjdWsaWUj0OoRbq79n6UaUw8Q2DjZVhErvqOdwG2/oi2004eTIs
+         m26pypwx8lNKdU7+xxkjHOpozVXdxcfjx8jTIJh3szJ1BuhJGQ7DsCm89QsaVdhn9oBZ
+         /6Imc0co8B1G2Q35lRbMKPmML8LQwM4wOFgdMlvTxOU+HQ5OTiI92f+CH73PhmvI5thm
+         7RXakhw44j3o8AEcmKDvYnCigR906lvYOh3jEc3k87qWUT+V6iZ9KBqkXWKMmK2QX3gL
+         QKHyP+Rc9VQIiEUnI+7v5CyFsvpPy1fjkUy7ZzKHgBo5RSatJ0ORdT2gRCDF+sSLSLE0
+         ygXA==
+X-Gm-Message-State: APjAAAUTrZ/DrLZJ+cvPy6LprUuajaKy0LUvuAEooAbqEpgyT5EThgEh
+        WIATYf3tKMOK3V/6PPMWIrbd5g==
+X-Google-Smtp-Source: APXvYqzYUT0deS/7+jHX6nL1YKcyXxjTJNOuKFyOQaCJIjzprrtM6tcvbUZr1lNmz7yQhp8kLS8Omw==
+X-Received: by 2002:a05:6000:12c9:: with SMTP id l9mr10003791wrx.304.1575544507038;
+        Thu, 05 Dec 2019 03:15:07 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:24c3:ebb3:9dd5:81c6? ([2a01:e34:ed2f:f020:24c3:ebb3:9dd5:81c6])
+        by smtp.googlemail.com with ESMTPSA id u10sm9917137wmd.1.2019.12.05.03.15.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2019 03:15:06 -0800 (PST)
+Subject: Re: [PATCH 1/2] cpuidle: Drop disabled field from struct
+ cpuidle_state
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <len.brown@intel.com>, Len Brown <lenb@kernel.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
+References: <5961586.ml7s97geqL@kreacher> <3690440.Wzkxfdnirm@kreacher>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
+ sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
+ 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
+ 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
+ 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
+ xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
+ P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
+ 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
+ wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
+ eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABzSpEYW5pZWwgTGV6
+ Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz7Cwa4EEwEIAEECGwEFCwkIBwIGFQoJ
+ CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAh
+ CRCP9LjScWdVJxYhBCTWJvJTvp6H5s5b9I/0uNJxZ1Un69gQAJK0ODuKzYl0TvHPU8W7uOeu
+ U7OghN/DTkG6uAkyqW+iIVi320R5QyXN1Tb6vRx6+yZ6mpJRW5S9fO03wcD8Sna9xyZacJfO
+ UTnpfUArs9FF1pB3VIr95WwlVoptBOuKLTCNuzoBTW6jQt0sg0uPDAi2dDzf+21t/UuF7I3z
+ KSeVyHuOfofonYD85FkQJN8lsbh5xWvsASbgD8bmfI87gEbt0wq2ND5yuX+lJK7FX4lMO6gR
+ ZQ75g4KWDprOO/w6ebRxDjrH0lG1qHBiZd0hcPo2wkeYwb1sqZUjQjujlDhcvnZfpDGR4yLz
+ 5WG+pdciQhl6LNl7lctNhS8Uct17HNdfN7QvAumYw5sUuJ+POIlCws/aVbA5+DpmIfzPx5Ak
+ UHxthNIyqZ9O6UHrVg7SaF3rvqrXtjtnu7eZ3cIsfuuHrXBTWDsVwub2nm1ddZZoC530BraS
+ d7Y7eyKs7T4mGwpsi3Pd33Je5aC/rDeF44gXRv3UnKtjq2PPjaG/KPG0fLBGvhx0ARBrZLsd
+ 5CTDjwFA4bo+pD13cVhTfim3dYUnX1UDmqoCISOpzg3S4+QLv1bfbIsZ3KDQQR7y/RSGzcLE
+ z164aDfuSvl+6Myb5qQy1HUQ0hOj5Qh+CzF3CMEPmU1v9Qah1ThC8+KkH/HHjPPulLn7aMaK
+ Z8t6h7uaAYnGzjMEXZLIEhYJKwYBBAHaRw8BAQdAGdRDglTydmxI03SYiVg95SoLOKT5zZW1
+ 7Kpt/5zcvt3CwhsEGAEIACAWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXZLIEgIbAgCvCRCP
+ 9LjScWdVJ40gBBkWCAAdFiEEbinX+DPdhovb6oob3uarTi9/eqYFAl2SyBIAIQkQ3uarTi9/
+ eqYWIQRuKdf4M92Gi9vqihve5qtOL396pnZGAP0c3VRaj3RBEOUGKxHzcu17ZUnIoJLjpHdk
+ NfBnWU9+UgD/bwTxE56Wd8kQZ2e2UTy4BM8907FsJgAQLL4tD2YZggwWIQQk1ibyU76eh+bO
+ W/SP9LjScWdVJ5CaD/0YQyfUzjpR1GnCSkbaLYTEUsyaHuWPI/uSpKTtcbttpYv+QmYsIwD9
+ 8CeH3zwY0Xl/1fE9Hy59z6Vxv9YVapLx0nPDOA1zDVNq2MnutxHb8t+Imjz4ERCxysqtfYrv
+ gao3E/h0c8SEeh+bh5MkjwmU8CwZ3doWyiVdULKESe7/Gs5OuhFzaDVPCpWdsKdCAGyUuP/+
+ qRWwKGVpWP0Rrt6MTK24Ibeu3xEZO8c3XOEXH5d9nf6YRqBEIizAecoCr00E9c+6BlRS0AqR
+ OQC3/Mm7rWtco3+WOridqVXkko9AcZ8AiM5nu0F8AqYGKg0y7vkL2LOP8us85L0p57MqIR1u
+ gDnITlTY0x4RYRWJ9+k7led5WsnWlyv84KNzbDqQExTm8itzeZYW9RvbTS63r/+FlcTa9Cz1
+ 5fW3Qm0BsyECvpAD3IPLvX9jDIR0IkF/BQI4T98LQAkYX1M/UWkMpMYsL8tLObiNOWUl4ahb
+ PYi5Yd8zVNYuidXHcwPAUXqGt3Cs+FIhihH30/Oe4jL0/2ZoEnWGOexIFVFpue0jdqJNiIvA
+ F5Wpx+UiT5G8CWYYge5DtHI3m5qAP9UgPuck3N8xCihbsXKX4l8bdHfziaJuowief7igeQs/
+ WyY9FnZb0tl29dSa7PdDKFWu+B+ZnuIzsO5vWMoN6hMThTl1DxS+jc7ATQRb/8z6AQgAvSkg
+ 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
+ +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
+ dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
+ XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
+ bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABwsGNBBgBCAAgFiEE
+ JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwAIQkQj/S40nFnVScWIQQk1ibyU76eh+bO
+ W/SP9LjScWdVJ/g6EACFYk+OBS7pV9KZXncBQYjKqk7Kc+9JoygYnOE2wN41QN9Xl0Rk3wri
+ qO7PYJM28YjK3gMT8glu1qy+Ll1bjBYWXzlsXrF4szSqkJpm1cCxTmDOne5Pu6376dM9hb4K
+ l9giUinI4jNUCbDutlt+Cwh3YuPuDXBAKO8YfDX2arzn/CISJlk0d4lDca4Cv+4yiJpEGd/r
+ BVx2lRMUxeWQTz+1gc9ZtbRgpwoXAne4iw3FlR7pyg3NicvR30YrZ+QOiop8psWM2Fb1PKB9
+ 4vZCGT3j2MwZC50VLfOXC833DBVoLSIoL8PfTcOJOcHRYU9PwKW0wBlJtDVYRZ/CrGFjbp2L
+ eT2mP5fcF86YMv0YGWdFNKDCOqOrOkZVmxai65N9d31k8/O9h1QGuVMqCiOTULy/h+FKpv5q
+ t35tlzA2nxPOX8Qj3KDDqVgQBMYJRghZyj5+N6EKAbUVa9Zq8xT6Ms2zz/y7CPW74G1GlYWP
+ i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
+ X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
+ fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
+Message-ID: <6c7863ab-8efc-ab2c-cab0-3cd68e415a57@linaro.org>
+Date:   Thu, 5 Dec 2019 12:15:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 289ff90c-26b6-4907-47e4-08d77973d4db
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 11:11:09.3906
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wtzKoychbfMkV6hhvDryh8xqY8mrdiIcqfmY6SSsZe8F+HutRfZgnfY6KYsQN6sYTTHWjovdm5iKbzFJ+IsSkw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5806
+In-Reply-To: <3690440.Wzkxfdnirm@kreacher>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgWGlhb3dlaSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51
-eC1hcm0ta2VybmVsIDxsaW51eC1hcm0ta2VybmVsLWJvdW5jZXNAbGlzdHMuaW5mcmFkZWFkLm9y
-Zz4gT24NCj4gQmVoYWxmIE9mIFhpYW93ZWkgQmFvDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQo+ID4gRnJvbTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4N
-Cj4gPiBTZW50OiAyMDE55bm0MTLmnIgz5pelIDIzOjIwDQo+ID4gVG86IE1hcmMgWnluZ2llciA8
-bWF6QGtlcm5lbC5vcmc+OyBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiBD
-YzogUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29t
-Ow0KPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwu
-b3JnOyBaLnEuIEhvdQ0KPiA+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc7IE0uaC4gTGlhbg0KPiA+IDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBy
-b2JoK2R0QGtlcm5lbC5vcmc7DQo+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOw0KPiA+IGFuZHJldy5tdXJyYXlAYXJtLmNvbTsgZnJv
-d2FuZC5saXN0QGdtYWlsLmNvbTsgTWluZ2thaSBIdQ0KPiA+IDxtaW5na2FpLmh1QG54cC5jb20+
-DQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gUENJOiBsYXllcnNjYXBlOiBBZGQgdGhlIFNSSU9W
-IHN1cHBvcnQgaW4gaG9zdCBzaWRlDQo+ID4NCj4gPiBPbiAwMy8xMi8yMDE5IDExOjUxIGFtLCBN
-YXJjIFp5bmdpZXIgd3JvdGU6DQo+ID4gPiBPbiAyMDE5LTEyLTAzIDAxOjQyLCBYaWFvd2VpIEJh
-byB3cm90ZToNCj4gPiA+Pj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+Pj4gRnJv
-bTogTWFyYyBaeW5naWVyIDxtYXpAbWlzdGVyam9uZXMub3JnPg0KPiA+ID4+PiBTZW50OiAyMDE5
-5bm0MTLmnIgy5pelIDIwOjQ4DQo+ID4gPj4+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9A
-bnhwLmNvbT4NCj4gPiA+Pj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgZnJvd2FuZC5saXN0QGdt
-YWlsLmNvbTsgTS5oLiBMaWFuDQo+ID4gPj4+IDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5n
-a2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kNCj4gPiBaYW5nDQo+ID4gPj4+IDxyb3ku
-emFuZ0BueHAuY29tPjsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsNCj4gPiA+Pj4gYW5kcmV3
-Lm11cnJheUBhcm0uY29tOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOw0KPiA+ID4+PiBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+Pj4g
-bGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnOw0KPiA+ID4+PiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+ID4gPj4+
-IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFBDSTogbGF5ZXJzY2FwZTogQWRkIHRoZSBTUklPViBzdXBw
-b3J0IGluIGhvc3QNCj4gPiA+Pj4gc2lkZQ0KPiA+ID4+Pg0KPiA+ID4+PiBPbiAyMDE5LTEyLTAy
-IDEwOjQ1LCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiA+Pj4gPiBHSUMgZ2V0IHRoZSBtYXAgcmVs
-YXRpb25zIG9mIGRldmlkIGFuZCBzdHJlYW0gaWQgZnJvbSB0aGUgbXNpLW1hcA0KPiA+ID4+PiA+
-IHByb3BlcnR5IG9mIERUUywgb3VyIHBsYXRmb3JtIGFkZCB0aGlzIHByb3BlcnR5IGluIHUtYm9v
-dCBiYXNlIG9uDQo+ID4gPj4+ID4gdGhlIFBDSWUgZGV2aWNlIGluIHRoZSBidXMsIGJ1dCBpZiBl
-bmFibGUgdGhlIHZmIGRldmljZSBpbiBrZXJuZWwsDQo+ID4gPj4+ID4gdGhlIHZmIGRldmljZSBt
-c2ktbWFwIHdpbGwgbm90IHNldCwgc28gdGhlIHZmIGRldmljZSBjYW4ndCB3b3JrLA0KPiA+ID4+
-PiA+IHRoaXMgcGF0Y2ggcHVycG9zZSBpcyB0aGF0IG1hbmFnZSB0aGUgc3RyZWFtIGlkIGFuZCBk
-ZXZpY2UgaWQgbWFwDQo+ID4gPj4+ID4gcmVsYXRpb25zIGR5bmFtaWNhbGx5IGluIGtlcm5lbCwg
-YW5kIG1ha2UgdGhlIG5ldyBQQ0llIGRldmljZSB3b3JrDQo+IGluDQo+ID4ga2VybmVsLg0KPiA+
-ID4+PiA+DQo+ID4gPj4+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFv
-QG54cC5jb20+DQo+ID4gPj4+ID4gLS0tDQo+ID4gPj4+ID7CoCBkcml2ZXJzL29mL2lycS5jwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCA5
-ICsrKw0KPiA+ID4+PiA+wqAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2Nh
-cGUuYyB8IDk0DQo+ID4gPj4+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+
-Pj4gPsKgIGRyaXZlcnMvcGNpL3Byb2JlLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgfMKgIDYgKysNCj4gPiA+Pj4gPsKgIGRyaXZlcnMvcGNpL3JlbW92
-ZS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgNiAr
-Kw0KPiA+ID4+PiA+wqAgNCBmaWxlcyBjaGFuZ2VkLCAxMTUgaW5zZXJ0aW9ucygrKQ0KPiA+ID4+
-PiA+DQo+ID4gPj4+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvaXJxLmMgYi9kcml2ZXJzL29m
-L2lycS5jIGluZGV4DQo+ID4gPj4+ID4gYTI5NmVhZi4uNzkxZTYwOSAxMDA2NDQNCj4gPiA+Pj4g
-PiAtLS0gYS9kcml2ZXJzL29mL2lycS5jDQo+ID4gPj4+ID4gKysrIGIvZHJpdmVycy9vZi9pcnEu
-Yw0KPiA+ID4+PiA+IEBAIC01NzYsNiArNTc2LDExIEBAIHZvaWQgX19pbml0IG9mX2lycV9pbml0
-KGNvbnN0IHN0cnVjdA0KPiA+ID4+PiA+b2ZfZGV2aWNlX2lkDQo+ID4gPj4+ID4gKm1hdGNoZXMp
-DQo+ID4gPj4+ID7CoMKgwqDCoMKgIH0NCj4gPiA+Pj4gPsKgIH0NCj4gPiA+Pj4gPg0KPiA+ID4+
-PiA+ICt1MzIgX193ZWFrIGxzX3BjaWVfc3RyZWFtaWRfZml4KHN0cnVjdCBkZXZpY2UgKmRldiwg
-dTMyIHJpZCkgew0KPiA+ID4+PiA+ICvCoMKgwqAgcmV0dXJuIHJpZDsNCj4gPiA+Pj4gPiArfQ0K
-PiA+ID4+PiA+ICsNCj4gPiA+Pj4gPsKgIHN0YXRpYyB1MzIgX19vZl9tc2lfbWFwX3JpZChzdHJ1
-Y3QgZGV2aWNlICpkZXYsIHN0cnVjdA0KPiA+ID4+PiA+ZGV2aWNlX25vZGUgICoqbnAsDQo+ID4g
-Pj4+ID7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHUzMiByaWRfaW4pDQo+ID4g
-Pj4+ID7CoCB7DQo+ID4gPj4+ID4gQEAgLTU5MCw2ICs1OTUsMTAgQEAgc3RhdGljIHUzMiBfX29m
-X21zaV9tYXBfcmlkKHN0cnVjdCBkZXZpY2UNCj4gPiA+Pj4gPipkZXYsICBzdHJ1Y3QgZGV2aWNl
-X25vZGUgKipucCwNCj4gPiA+Pj4gPsKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoIW9mX21hcF9yaWQo
-cGFyZW50X2Rldi0+b2Zfbm9kZSwgcmlkX2luLCAibXNpLW1hcCIsDQo+ID4gPj4+ID7CoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJtc2ktbWFwLW1hc2siLCBucCwgJnJpZF9vdXQp
-KQ0KPiA+ID4+PiA+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYnJlYWs7DQo+ID4gPj4+ID4g
-Kw0KPiA+ID4+PiA+ICvCoMKgwqAgaWYgKHJpZF9vdXQgPT0gcmlkX2luKQ0KPiA+ID4+PiA+ICvC
-oMKgwqDCoMKgwqDCoCByaWRfb3V0ID0gbHNfcGNpZV9zdHJlYW1pZF9maXgocGFyZW50X2Rldiwg
-cmlkX2luKTsNCj4gPiA+Pj4NCj4gPiA+Pj4gT3ZlciBteSBkZWFkIGJvZHkuIEdldCB5b3VyIGZp
-cm13YXJlIHRvIHByb3Blcmx5IHByb2dyYW0gdGhlIExVVCBzbw0KPiA+ID4+PiB0aGF0IGl0IHBy
-ZXNlbnRzIHRoZSBJVFMgd2l0aCBhIHJlYXNvbmFibGUgdG9wb2xvZ3kuIFRoZXJlIGlzDQo+ID4g
-Pj4+IGFic29sdXRlbHkgbm8gd2F5IHRoaXMga2luZCBvZiBjaGFuZ2UgbWFrZXMgaXQgaW50byB0
-aGUga2VybmVsLg0KPiA+ID4+DQo+ID4gPj4gU29ycnkgZm9yIHRoaXMsIEkga25vdyBpdCBpcyBu
-b3QgcmVhc29uYWJsZSwgYnV0IEkgaGF2ZSBubyBvdGhlciB3YXksDQo+ID4gPj4gYXMgSSBrbm93
-LCBBUk0gZ2V0IHRoZSBtYXBwaW5nIG9mIHN0cmVhbSBJRCB0byByZXF1ZXN0IElEIGZyb20gdGhl
-DQo+ID4gPj4gbXNpLW1hcCBwcm9wZXJ0eSBvZiBEVFMsIGlmIGFkZCBhIG5ldyBkZXZpY2Ugd2hp
-Y2ggbmVlZCB0aGUgc3RyZWFtIElEDQo+ID4gPj4gYW5kIHRyeSB0byBnZXQgaXQgZnJvbSB0aGUg
-bXNpLW1hcCBvZiBEVFMsIGl0IHdpbGwgZmFpbGVkIGFuZCBub3QNCj4gPiA+PiB3b3JrLCB5ZXM/
-IFNvIGNvdWxkIHlvdSBnaXZlIG1lIGEgYmV0dGVyIGFkdmljZSB0byBmaXggdGhpcyBpc3N1ZSwg
-SQ0KPiA+ID4+IHdvdWxkIHJlYWxseSBhcHByZWNpYXRlIGFueSBjb21tZW50cyBvciBzdWdnZXN0
-aW9ucywgdGhhbmtzIGEgbG90Lg0KPiA+ID4NCj4gPiA+IFdoeSBjYW4ndCBmaXJtd2FyZSBleHBv
-c2UgYW4gbXNpLW1hcC9tc2ktbWFwLW1hc2sgdGhhdCBoYXMgYSBsYXJnZQ0KPiA+ID4gZW5vdWdo
-IHJhbmdlIHRvIGVuc3VyZSBtYXBwaW5nIG9mIFZGcz8gV2hhdCBhcmUgdGhlIGxpbWl0YXRpb25z
-IG9mIHRoZQ0KPiA+ID4gTFVUIHRoYXQgd291bGQgcHJldmVudCB0aGlzIGZyb20gYmVpbmcgY29u
-ZmlndXJlZCBiZWZvcmUgdGhlIGtlcm5lbA0KPiA+ID4gYm9vdHM/DQo+IA0KPiBUaGFua3MgZm9y
-IHlvdXIgY29tbWVudHMsIHllcywgdGhpcyBpcyB0aGUgcm9vdCBjYXVzZSwgd2Ugb25seSBoYXZl
-IDE2DQo+IHN0cmVhbQ0KPiBJRHMgZm9yIFBDSWUgZG9tYWluLCB0aGlzIGlzIHRoZSBoYXJkd2Fy
-ZSBsaW1pdGF0aW9uLCBpZiB0aGVyZSBoYXZlIGVub3VnaA0KPiBzdHJlYW0NCj4gSURzLCB3ZSBj
-YW4gZXhwb3NlIGFuIG1zaS1tYXAvbXNpLW1hcC1tYXNrIGZvciBhbGwgUENJZSBkZXZpY2VzIGlu
-IHN5c3RlbSwNCj4gdW5mb3J0dW5hdGVseSwgdGhlIHN0cmVhbSBJRHMgaXMgbm90IGVub3VnaCwg
-SSB0aGluayBvdGhlciBBUk0gdmVuZG9yIGhhdmUNCj4gc2FtZQ0KPiBpc3N1ZSB0aGF0IHRoZXkg
-ZG9uJ3QgaGF2ZSBlbm91Z2ggc3RyZWFtIElEcy4NCj4gDQo+IFRoYW5rcw0KPiBYaWFvd2VpDQo+
-IA0KPiA+DQo+ID4gRnVydGhlcm1vcmUsIG5vdGUgdGhhdCB0aGlzIGF0dGVtcHQgaXNuJ3QgZG9p
-bmcgYW55dGhpbmcgZm9yIHRoZSBTTU1VDQo+ID4gU3RyZWFtIElEcywgc28gdGhlIG1vbWVudCBh
-bnlvbmUgdHJpZXMgdG8gYXNzaWduIHRob3NlIFZGcyB0aGV5J3JlIHN0aWxsDQo+IGdvaW5nDQo+
-ID4gdG8gZ28gYmFuZyBhbnl3YXkuIEFueSBmaXJtd2FyZS1iYXNlZCBmaXh1cCBmb3IgSUQgbWFw
-cGluZ3MsIGNvbmZpZw0KPiBzcGFjZQ0KPiA+IGFkZHJlc3NlcywgZXRjLiBuZWVkcyB0byBiZSBT
-Ui1JT1YtYXdhcmUgYW5kIGFjY291bnQgZm9yIGFsbCAqcG9zc2libGUqDQo+ID4gQkRGcy4NCj4g
-Pg0KPiA+IE9uIExTMjA4NSBhdCBsZWFzdCwgSUlSQyB5b3UgY2FuIGNvbmZpZ3VyZSBhIHNpbmds
-ZSBMVVQgZW50cnkgdG8ganVzdA0KPiB0cmFuc2xhdGUNCj4gPiB0aGUgQnVzOkRldmljZSBpZGVu
-dGlmaWVyIGFuZCBwYXNzIHNvbWUgb3IgYWxsIG9mIHRoZSBGdW5jdGlvbiBiaXRzDQo+IHN0cmFp
-Z2h0DQo+ID4gdGhyb3VnaCBhcyB0aGUgTFNCcyBvZiB0aGUgU3RyZWFtIElELCBzbyBJIGRvbid0
-IGJlbGlldmUgdGhlIHJlbGF0aXZlbHkNCj4gbGltaXRlZA0KPiA+IG51bWJlciBvZiBMVVQgcmVn
-aXN0ZXJzIHNob3VsZCBiZSB0b28gbXVjaCBvZiBhbiBpc3N1ZS4gRm9yIGV4YW1wbGUsDQo+IGxh
-c3QNCj4gPiB0aW1lIEkgaGFja2VkIG9uIHRoYXQgSSBhcHBhcmVudGx5IGhhZCBpdCBzZXQgdXAg
-c3RhdGljYWxseSBsaWtlIHRoaXM6DQo+ID4NCj4gPiAmcGNpZTMgew0KPiA+IAkvKiBTcXVhc2gg
-ODo1OjMgQkRGIGRvd24gdG8gMjoyOjMgKi8NCj4gPiAJbXNpLW1hcC1tYXNrID0gPDB4MDMxZj47
-DQo+ID4gCW1zaS1tYXAgPSA8MHgwMDAgJml0cyAweDAwIDB4MjA+LA0KPiA+IAkJICA8MHgxMDAg
-Jml0cyAweDIwIDB4MjA+LA0KPiA+IAkJICA8MHgyMDAgJml0cyAweDQwIDB4MjA+LA0KPiA+IAkJ
-ICA8MHgzMDAgJml0cyAweDYwIDB4MjA+Ow0KPiA+IH07DQo+IA0KPiBUaGFua3MgUm9iaW4sIHRo
-aXMgaXMgYSBlZmZlY3RpdmUgd2F5LCBidXQgd2Ugb25seSBoYXZlIHRvdGFsIDE2IHN0cmVhbQ0K
-PiBJRHMgZm9yIFBDSWUgZG9tYWluLA0KPiBhbmQgb25seSBhc3NpZ24gNCBzdHJlYW0gSURzIGZv
-ciBlYWNoIFBDSWUgY29udHJvbGxlciBpZiB0aGUgYm9hcmQgaGF2ZSA0DQo+IFBDSWUgY29udHJv
-bGxlcnMsDQo+IHRoaXMgaXMgdGhlIHJvb3QgY2F1c2UsIEkgc3VibWl0dGVkIHRoaXMgcGF0Y2gg
-dG8gZHluYW1pY2FsbHkgbWFuYWdlIHRoZXNlDQo+IHN0cmVhbSBJRHMsDQo+IHNvIHRoYXQgaXQg
-bG9va3MgbGlrZSBlYWNoIFBDSWUgY29udHJvbGxlciBoYXMgMTYgc3RyZWFtIElEcy4gSSBjYW4N
-Cj4gZHluYW1pY2FsbHkgYWxsb2NhdGUgYW5kDQo+IHJlbGVhc2UgdGhlc2Ugc3RyZWFtIElEcyBi
-YXNlZCBvbiB0aGUgUENJZSBkZXZpY2VzIGluIHRoZSBjdXJyZW50IHN5c3RlbS4NCj4gSWYgdXNl
-IHlvdXIgbWV0aG9kLA0KPiB3ZSBzdXBwb3J0IHVwIHRvIDQgUENJZSBkZXZpY2VzKDIgUEZzIGFu
-ZCAyIFZGcyksIGl0IHdpbGwgbm90IGFjaGlldmUgb3VyDQo+IHB1cnBvc2UuDQo+IA0KDQpXZSBh
-bGxvY2F0ZSB0aGUgU3RyZWFtX0lEcyBpbiBhIHN0YXRpYyBmYXNoaW9uIGluIHUtYm9vdCwgc2Vl
-IFsxXSwgc28gaWYgYSB1c2VyIHdvdWxkIG5lZWQgYSBsYXJnZXIgcmFuZ2UgZm9yIFBDSSB7c31o
-ZSBjb3VsZCBhZGp1c3QgdGhhdCBpbiB0aGVyZS4gT24gbW9zdCBvZiBvdXIgTGF5ZXJzY2FwZSBj
-aGlwcyB0aGUgU01NVSBpcyBjb25maWd1cmVkIHRvIDUgYml0cyBmb3IgVEJVX0lEIHBsdXMgMTAg
-Yml0cyBmb3IgU3RyZWFtSUQuIE91dCBvZiB0aGVzZSAxMCBjb250cm9sbGFibGUgYml0cyB3ZSBj
-YW4gZWZmZWN0aXZlbHkgdXNlIDcgYml0cyBnaXZpbmcgdXMgYSBtYXggcmFuZ2Ugb2YgMTI3IFN0
-cmVhbV9JRHMuDQoNClsxXSBodHRwczovL2dpdGxhYi5kZW54LmRlL3UtYm9vdC91LWJvb3QvYmxv
-Yi9tYXN0ZXIvYXJjaC9hcm0vaW5jbHVkZS9hc20vYXJjaC1mc2wtbGF5ZXJzY2FwZS9zdHJlYW1f
-aWRfbHNjaDMuaA0KDQotLS0NCkJlc3QgUmVnYXJkcywgTGF1cmVudGl1DQo=
+On 21/11/2019 19:41, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> After recent cpuidle updates the "disabled" field in struct
+> cpuidle_state is only used by two drivers (intel_idle and shmobile
+> cpuidle) for marking unusable idle states, but that may as well be
+> achieved with the help of a state flag, so define an "unusable" idle
+> state flag, CPUIDLE_FLAG_UNUSABLE, make the drivers in question use
+> it instead of the "disabled" field and make the core set
+> CPUIDLE_STATE_DISABLED_BY_DRIVER for the idle states with that flag
+> set.
+> 
+> After the above changes, the "disabled" field in struct cpuidle_state
+> is not used any more, so drop it.
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> Changes from RFC:
+> 
+>  - Do not add extra braces (unrelated to the rest of the patch).
+> 
+> ---
+>  arch/sh/kernel/cpu/shmobile/cpuidle.c |    8 ++++----
+>  drivers/cpuidle/cpuidle.c             |    2 +-
+>  drivers/cpuidle/poll_state.c          |    1 -
+>  drivers/idle/intel_idle.c             |    6 +++---
+>  include/linux/cpuidle.h               |    2 +-
+>  5 files changed, 9 insertions(+), 10 deletions(-)
+> 
+> Index: linux-pm/drivers/idle/intel_idle.c
+> ===================================================================
+> --- linux-pm.orig/drivers/idle/intel_idle.c
+> +++ linux-pm/drivers/idle/intel_idle.c
+> @@ -1291,8 +1291,8 @@ static void sklh_idle_state_table_update
+>  			return;
+>  	}
+>  
+> -	skl_cstates[5].disabled = 1;	/* C8-SKL */
+> -	skl_cstates[6].disabled = 1;	/* C9-SKL */
+> +	skl_cstates[5].flags |= CPUIDLE_FLAG_UNUSABLE;	/* C8-SKL */
+> +	skl_cstates[6].flags |= CPUIDLE_FLAG_UNUSABLE;	/* C9-SKL */
+>  }
+>  /*
+>   * intel_idle_state_table_update()
+> @@ -1355,7 +1355,7 @@ static void __init intel_idle_cpuidle_dr
+>  			continue;
+>  
+>  		/* if state marked as disabled, skip it */
+> -		if (cpuidle_state_table[cstate].disabled != 0) {
+> +		if (cpuidle_state_table[cstate].flags & CPUIDLE_FLAG_UNUSABLE) {
+>  			pr_debug("state %s is disabled\n",
+>  				 cpuidle_state_table[cstate].name);
+>  			continue;
+> Index: linux-pm/include/linux/cpuidle.h
+> ===================================================================
+> --- linux-pm.orig/include/linux/cpuidle.h
+> +++ linux-pm/include/linux/cpuidle.h
+> @@ -54,7 +54,6 @@ struct cpuidle_state {
+>  	unsigned int	exit_latency; /* in US */
+>  	int		power_usage; /* in mW */
+>  	unsigned int	target_residency; /* in US */
+> -	bool		disabled; /* disabled on all CPUs */
+>  
+>  	int (*enter)	(struct cpuidle_device *dev,
+>  			struct cpuidle_driver *drv,
+> @@ -77,6 +76,7 @@ struct cpuidle_state {
+>  #define CPUIDLE_FLAG_POLLING	BIT(0) /* polling state */
+>  #define CPUIDLE_FLAG_COUPLED	BIT(1) /* state applies to multiple cpus */
+>  #define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
+> +#define CPUIDLE_FLAG_UNUSABLE	BIT(3) /* avoid using this state */
+>  
+>  struct cpuidle_device_kobj;
+>  struct cpuidle_state_kobj;
+> Index: linux-pm/arch/sh/kernel/cpu/shmobile/cpuidle.c
+> ===================================================================
+> --- linux-pm.orig/arch/sh/kernel/cpu/shmobile/cpuidle.c
+> +++ linux-pm/arch/sh/kernel/cpu/shmobile/cpuidle.c
+> @@ -67,7 +67,7 @@ static struct cpuidle_driver cpuidle_dri
+>  			.enter = cpuidle_sleep_enter,
+>  			.name = "C2",
+>  			.desc = "SuperH Sleep Mode [SF]",
+> -			.disabled = true,
+> +			.flags = CPUIDLE_FLAG_UNUSABLE,
+>  		},
+>  		{
+>  			.exit_latency = 2300,
+> @@ -76,7 +76,7 @@ static struct cpuidle_driver cpuidle_dri
+>  			.enter = cpuidle_sleep_enter,
+>  			.name = "C3",
+>  			.desc = "SuperH Mobile Standby Mode [SF]",
+> -			.disabled = true,
+> +			.flags = CPUIDLE_FLAG_UNUSABLE,
+>  		},
+>  	},
+>  	.safe_state_index = 0,
+> @@ -86,10 +86,10 @@ static struct cpuidle_driver cpuidle_dri
+>  int __init sh_mobile_setup_cpuidle(void)
+>  {
+>  	if (sh_mobile_sleep_supported & SUSP_SH_SF)
+> -		cpuidle_driver.states[1].disabled = false;
+> +		cpuidle_driver.states[1].flags = CPUIDLE_FLAG_NONE;
+
+That will overwrite other flags value, bit operation should be used here
+to remove CPUIDLE_FLAG_UNUSABLE.
+
+>  	if (sh_mobile_sleep_supported & SUSP_SH_STANDBY)
+> -		cpuidle_driver.states[2].disabled = false;
+> +		cpuidle_driver.states[2].flags = CPUIDLE_FLAG_NONE;
+>  
+>  	return cpuidle_register(&cpuidle_driver, NULL);
+>  }
+> Index: linux-pm/drivers/cpuidle/cpuidle.c
+> ===================================================================
+> --- linux-pm.orig/drivers/cpuidle/cpuidle.c
+> +++ linux-pm/drivers/cpuidle/cpuidle.c
+> @@ -570,7 +570,7 @@ static int __cpuidle_register_device(str
+>  		return -EINVAL;
+>  
+>  	for (i = 0; i < drv->state_count; i++)
+> -		if (drv->states[i].disabled)
+> +		if (drv->states[i].flags & CPUIDLE_FLAG_UNUSABLE)
+>  			dev->states_usage[i].disable |= CPUIDLE_STATE_DISABLED_BY_DRIVER;
+>  
+>  	per_cpu(cpuidle_devices, dev->cpu) = dev;
+> Index: linux-pm/drivers/cpuidle/poll_state.c
+> ===================================================================
+> --- linux-pm.orig/drivers/cpuidle/poll_state.c
+> +++ linux-pm/drivers/cpuidle/poll_state.c
+> @@ -53,7 +53,6 @@ void cpuidle_poll_state_init(struct cpui
+>  	state->target_residency_ns = 0;
+>  	state->power_usage = -1;
+>  	state->enter = poll_idle;
+> -	state->disabled = false;
+>  	state->flags = CPUIDLE_FLAG_POLLING;
+>  }
+>  EXPORT_SYMBOL_GPL(cpuidle_poll_state_init);
+> 
+> 
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
