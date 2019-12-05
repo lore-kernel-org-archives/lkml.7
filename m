@@ -2,270 +2,276 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4273FC2BD09
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A46C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06BD12464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79882464E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 11:04:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VXqEvpic"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dySRrdpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbfLELDQ (ORCPT
+        id S1729267AbfLELEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 06:03:16 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36417 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729072AbfLELDQ (ORCPT
+        Thu, 5 Dec 2019 06:04:32 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39550 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729044AbfLELEc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 06:03:16 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so3169643wma.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 03:03:13 -0800 (PST)
+        Thu, 5 Dec 2019 06:04:32 -0500
+Received: by mail-wm1-f66.google.com with SMTP id s14so3153917wmh.4;
+        Thu, 05 Dec 2019 03:04:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ll+ZtZqLRijkfOMt87UUlKzqpetlzgFXOkJtkxIK6vI=;
-        b=VXqEvpic35wnyYpK3MKRzoGflEHuC/+9gT2bCRjdLD0RAeKRbWCkzUiB7t5/40X1hX
-         TPfxZxXUKLUrX9ZP4bNf8UpSwVFiZBbBK5dRNVk78i9qd39lPHYWSZ4KpFjJ42H3e9gS
-         z+P08eLk3qv6yqNQyvVY7G3nzDYjLfa2fSrxmgtCmWTx7qx16woFqBwOobX0AiXK0cXx
-         0Xvs/hQ7ooij8f4m+fsFMAjZqq8KNGYqO0wmaYS4QLp41Rz8v/iKfOrUO9Wo+16ZqcDr
-         8SK5+XBRJ7C+l3RbYEm34LpcAxoMtv0FvqI6KVXvQa1FbdHncGBH+pICgzzvstwy3r/G
-         LWjA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pTH/YG3diRsUF2efRnDtD2uj5CEkI49OM65Owz3UsS4=;
+        b=dySRrdpqmHuhku5TelbheYisxa07m7oWvbs4DHuwpaJ6vvOaeX6EO/fEPP0Z6yuVaM
+         iK4fNJ8bvb5ATeh7Dl2CwiT1MtubNiRxav0B/cN/GI5YA6L6XzSZwvmy74K71ZE7P3Ss
+         cxD457RrftpOqOUY6/tYsp0B72NTO84NOB9HOH014eqVaOmwGT20Sn2j6fiEnBqnM0Gm
+         kdxuW6YI5hEOcy+D5VSfa/xrszfZKtjFRYRRtuWZ9kQmbTf0ppTldwBv0EcQPcfiVSA+
+         qOGRNkdw2bEwzkX9+pH2lQo4RLnfhyhDBuqzzmQjjhCGo2QOjR/7JLIF5mUhf8yY3MqP
+         TMnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ll+ZtZqLRijkfOMt87UUlKzqpetlzgFXOkJtkxIK6vI=;
-        b=kIkxM7eSIywWJN+V0xwLkQVDNArKgrP/PvUEMLsHt+RnjPF+ApMcqwcK/Y6bycdUZj
-         BoFO/Ok1zTBcMrZ0/9Abp8lctb/tdh5ZrzRhIOfl7pRVb1zhi5RRm3RiUCf16tIZeiRG
-         KvfXYcDgUpQ8mt30JUHq8EFYTa3tQ9XaM2hHmOgOPWW/qyJGvpkTdizYKKePuKpac6CB
-         8GdpSu1QvpwHUlNStGCBcUQRTQyARc6rLOgrO/yP5eHOXURBd4CHRV0VaVeOiNml52V7
-         /ZdL8/OCjv2sGLqQSJAnaaUpIFDajr3yt/GVeoy9H8cqhkkOPL8ByPXtAj+lAgwVu3J0
-         Da5Q==
-X-Gm-Message-State: APjAAAVhhzm+ijcd6+4IkvbN7clETynXqrt6zW/h1Gpic5GEd8jeKc+x
-        HCLVfF5h8nFo1J7C0IJ3+kdIvPYJd3c=
-X-Google-Smtp-Source: APXvYqyIRwj1nXM2zCeMTzAQ4xNTqJSTZ7e3VmBNn2JjMioUXR04pAYD0HF8HBsaHFNFCfs4+VsX5Q==
-X-Received: by 2002:a1c:c90e:: with SMTP id f14mr4507943wmb.47.1575543792686;
-        Thu, 05 Dec 2019 03:03:12 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:24c3:ebb3:9dd5:81c6? ([2a01:e34:ed2f:f020:24c3:ebb3:9dd5:81c6])
-        by smtp.googlemail.com with ESMTPSA id n1sm11710937wrw.52.2019.12.05.03.03.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 03:03:12 -0800 (PST)
-Subject: Re: [PATCH v2 4/5] thermal: stm32: improve temperature resolution
-To:     Pascal Paillet <p.paillet@st.com>, rui.zhang@intel.com,
-        edubezval@gmail.com, amit.kucheria@verdurent.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        david.hernandezsanchez@st.com, horms+renesas@verge.net.au,
-        wsa+renesas@sang-engineering.com, linux-pm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191104133020.8820-1-p.paillet@st.com>
- <20191104133020.8820-5-p.paillet@st.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <25652640-90ed-2b62-c06a-728bfc771c46@linaro.org>
-Date:   Thu, 5 Dec 2019 12:03:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pTH/YG3diRsUF2efRnDtD2uj5CEkI49OM65Owz3UsS4=;
+        b=az1bDNqY4A3Lqoz5pXhKqqpd0gz8lWFBJrJz3k8SJyDGlsmDv2cI2nnGXnk5iKpP74
+         aLZLxi15SE13uOnbPmgzoGGE8M/dSw25Vi97EWRoNHGV7al2KW7zZqrC6Bphvzfi3vyf
+         WXVQCZ0bdHicWv5q9nsM/fY4tWBr8ijskjg0Os1kzCaErgHtbhmXsYczy3ZhlUaqA+8B
+         bjx7oC4U6ldmobiM8kH8Ymdj9Q7dRE1R2ZV0EfkvWtR4Mgd5xJB0Cqu7I0jbVo5pynku
+         xPNWmavEVYQp0ErdNB1gMnIUH9rFe5gwYBtzFLXJ1BQbtdGy1wXC+7IJHThWeh6FeAZs
+         CzYQ==
+X-Gm-Message-State: APjAAAWSfrOa+MqgESWS0nY+cK/mn8NyH+ULTLLWZaOZfU8DxrkaJ2xh
+        9WnTavrzb3yrfNH/kSyZQnYmz+z2kPc=
+X-Google-Smtp-Source: APXvYqyxDFj8wUFZhUIzxwO7+ps9GHpLb5c8ymLEZeaCHntp1DBGZ5jtOW+mWRA69FIDE90JF4hxvw==
+X-Received: by 2002:a1c:40c1:: with SMTP id n184mr4865711wma.116.1575543868688;
+        Thu, 05 Dec 2019 03:04:28 -0800 (PST)
+Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
+        by smtp.gmail.com with ESMTPSA id f67sm10074849wme.16.2019.12.05.03.04.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 03:04:26 -0800 (PST)
+Date:   Thu, 5 Dec 2019 12:04:25 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] pwm: Changes for v5.5-rc1
+Message-ID: <20191205110425.GA1498132@ulmo>
+References: <20191205061044.1006766-1-thierry.reding@gmail.com>
+ <20191205075958.jrz3xuthyh7wv6uu@pengutronix.de>
+ <20191205084102.GA1401169@ulmo>
+ <20191205100535.y7avzoswkxe43py7@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191104133020.8820-5-p.paillet@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
+Content-Disposition: inline
+In-Reply-To: <20191205100535.y7avzoswkxe43py7@pengutronix.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/11/2019 14:30, Pascal Paillet wrote:
-> Currently, the temperature is rounded by 1 or 2 degrees.
-> Change the way of computing to avoid rounds.
-> Also simplify the sampling time management.
 
-Give more details about the changes in order to let us understand them.
+--ZPt4rx8FFjLCG7dd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Signed-off-by: Pascal Paillet <p.paillet@st.com>
-> ---
->  drivers/thermal/st/stm_thermal.c | 58 ++++++++------------------------
->  1 file changed, 14 insertions(+), 44 deletions(-)
-> 
-> diff --git a/drivers/thermal/st/stm_thermal.c b/drivers/thermal/st/stm_thermal.c
-> index cb72252f2800..9986716b17c1 100644
-> --- a/drivers/thermal/st/stm_thermal.c
-> +++ b/drivers/thermal/st/stm_thermal.c
-> @@ -59,7 +59,6 @@
->  
->  /* Less significant bit position definitions */
->  #define TS1_T0_POS		16
-> -#define TS1_SMP_TIME_POS	16
->  #define TS1_HITTHD_POS		16
->  #define TS1_LITTHD_POS		0
->  #define HSREF_CLK_DIV_POS	24
-> @@ -83,15 +82,10 @@
->  #define ONE_MHZ			1000000
->  #define POLL_TIMEOUT		5000
->  #define STARTUP_TIME		40
-> -#define TS1_T0_VAL0		30
-> -#define TS1_T0_VAL1		130
-> +#define TS1_T0_VAL0		30000  /* 30 celsius */
-> +#define TS1_T0_VAL1		130000 /* 130 celsius */
->  #define NO_HW_TRIG		0
-> -
-> -/* The Thermal Framework expects millidegrees */
-> -#define mcelsius(temp)		((temp) * 1000)
-> -
-> -/* The Sensor expects oC degrees */
-> -#define celsius(temp)		((temp) / 1000)
-> +#define SAMPLING_TIME		15
->  
->  struct stm_thermal_sensor {
->  	struct device *dev;
-> @@ -259,27 +253,17 @@ static int stm_thermal_calculate_threshold(struct stm_thermal_sensor *sensor,
->  					   int temp, u32 *th)
->  {
->  	int freqM;
-> -	u32 sampling_time;
-> -
-> -	/* Retrieve the number of periods to sample */
-> -	sampling_time = (readl_relaxed(sensor->base + DTS_CFGR1_OFFSET) &
-> -			TS1_SMP_TIME_MASK) >> TS1_SMP_TIME_POS;
->  
->  	/* Figure out the CLK_PTAT frequency for a given temperature */
-> -	freqM = ((temp - sensor->t0) * sensor->ramp_coeff)
-> -		 + sensor->fmt0;
-> -
-> -	dev_dbg(sensor->dev, "%s: freqM for threshold = %d Hz",
-> -		__func__, freqM);
-> +	freqM = ((temp - sensor->t0) * sensor->ramp_coeff) / 1000 +
-> +		sensor->fmt0;
->  
->  	/* Figure out the threshold sample number */
-> -	*th = clk_get_rate(sensor->clk);
-> +	*th = clk_get_rate(sensor->clk) * SAMPLING_TIME / freqM;
->  	if (!*th)
->  		return -EINVAL;
->  
-> -	*th = *th / freqM;
-> -
-> -	*th *= sampling_time;
-> +	dev_dbg(sensor->dev, "freqM=%d Hz, threshold=0x%x", freqM, *th);
->  
->  	return 0;
->  }
-> @@ -371,40 +355,26 @@ static int stm_thermal_set_trips(void *data, int low, int high)
->  static int stm_thermal_get_temp(void *data, int *temp)
->  {
->  	struct stm_thermal_sensor *sensor = data;
-> -	u32 sampling_time;
-> +	u32 periods;
->  	int freqM, ret;
->  
->  	if (sensor->mode != THERMAL_DEVICE_ENABLED)
->  		return -EAGAIN;
->  
-> -	/* Retrieve the number of samples */
-> -	ret = readl_poll_timeout(sensor->base + DTS_DR_OFFSET, freqM,
-> -				 (freqM & TS1_MFREQ_MASK), STARTUP_TIME,
-> -				 POLL_TIMEOUT);
-> -
-> +	/* Retrieve the number of periods sampled */
-> +	ret = readl_relaxed_poll_timeout(sensor->base + DTS_DR_OFFSET, periods,
-> +					 (periods & TS1_MFREQ_MASK),
-> +					 STARTUP_TIME, POLL_TIMEOUT);
->  	if (ret)
->  		return ret;
->  
-> -	if (!freqM)
-> -		return -ENODATA;
-> -
-> -	/* Retrieve the number of periods sampled */
-> -	sampling_time = (readl_relaxed(sensor->base + DTS_CFGR1_OFFSET) &
-> -			TS1_SMP_TIME_MASK) >> TS1_SMP_TIME_POS;
-> -
-> -	/* Figure out the number of samples per period */
-> -	freqM /= sampling_time;
-> -
->  	/* Figure out the CLK_PTAT frequency */
-> -	freqM = clk_get_rate(sensor->clk) / freqM;
-> +	freqM = (clk_get_rate(sensor->clk) * SAMPLING_TIME) / periods;
->  	if (!freqM)
->  		return -EINVAL;
->  
-> -	dev_dbg(sensor->dev, "%s: freqM=%d\n", __func__, freqM);
-> -
->  	/* Figure out the temperature in mili celsius */
-> -	*temp = mcelsius(sensor->t0 + ((freqM - sensor->fmt0) /
-> -			 sensor->ramp_coeff));
-> +	*temp = (freqM - sensor->fmt0) * 1000 / sensor->ramp_coeff + sensor->t0;
->  
->  	return 0;
->  }
-> 
+On Thu, Dec 05, 2019 at 11:05:35AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Thierry,
+>=20
+> On Thu, Dec 05, 2019 at 09:41:02AM +0100, Thierry Reding wrote:
+> > On Thu, Dec 05, 2019 at 08:59:58AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Thu, Dec 05, 2019 at 07:10:44AM +0100, Thierry Reding wrote:
+> > > > The following changes since commit 40a6b9a00930fd6b59aa2eb6135abc2e=
+fe5440c3:
+> > > >=20
+> > > >   Revert "pwm: Let pwm_get_state() return the last implemented stat=
+e" (2019-10-21 16:48:52 +0200)
+> > > >=20
+> > > > are available in the Git repository at:
+> > > >=20
+> > > >   git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linu=
+x-pwm.git tags/pwm/for-5.5-rc1
+> > > >=20
+> > > > for you to fetch changes up to f5ff2628867b9c7cb4abb6c6a5a7eea079da=
+d4b6:
+> > > >=20
+> > > >   pwm: imx27: Unconditionally write state to hardware (2019-10-21 1=
+6:58:09 +0200)
+> > > >=20
+> > > > Thanks,
+> > > > Thierry
+> > > >=20
+> > > > ----------------------------------------------------------------
+> > > > pwm: Changes for v5.5-rc1
+> > > >=20
+> > > > Various changes and minor fixes across a couple of drivers.
+> > > >=20
+> > > > ----------------------------------------------------------------
+> > > > Colin Ian King (1):
+> > > >       pwm: sun4i: Drop redundant assignment to variable pval
+> > > >=20
+> > > > Fabrice Gasnier (3):
+> > > >       dt-bindings: pwm-stm32: Document pinctrl sleep state
+> > > >       pwm: stm32: Split breakinput apply routine to ease PM support
+> > > >       pwm: stm32: Add power management support
+> > > >=20
+> > > > Ondrej Jirman (1):
+> > > >       pwm: sun4i: Fix incorrect calculation of duty_cycle/period
+> > > >=20
+> > > > Rasmus Villemoes (1):
+> > > >       pwm: Update comment on struct pwm_ops::apply
+> > > >=20
+> > > > Thierry Reding (8):
+> > > >       dt-bindings: pwm: mediatek: Remove gratuitous compatible stri=
+ng for MT7629
+> > > >       pwm: stm32: Validate breakinput data from DT
+> > > >       pwm: stm32: Remove clutter from ternary operator
+> > > >       pwm: stm32: Pass breakinput instead of its values
+> > > >       pwm: Read initial hardware state at request time
+> > > >       pwm: cros-ec: Cache duty cycle value
+> > > >       pwm: imx27: Cache duty cycle register value
+> > > >       pwm: imx27: Unconditionally write state to hardware
+> > >=20
+> > > It's a bit of a surprise for me that you included the three last patc=
+hes
+> > > as last minute changes. I'm not sure if I oppose them, but they were =
+not
+> > > in next (as of next-20191205) and I would really like to have some ti=
+me
+> > > for patches (that are not obvious fixes of course) there before they =
+go
+> > > into a pull request. And if it's only to get some transparency.
+> > > (But in this case I had the impression that the discussion isn't over
+> > > yet, your last mail in the thread said: "I'm not sure yet about the
+> > > remainder of the series. Depending on what we decide to do about driv=
+ers
+> > > that can't (or don't want to) write all state through to the hardware,
+> > > patches 2-4 may become moot." in October which made me expect there is
+> > > still something to come, at least a statement before the fact. Still
+> > > more as also several further drivers are affected (according to my
+> > > research described in
+> > > https://patchwork.ozlabs.org/patch/1178351/#2282269).)
+> >=20
+> > Yes, the last four patches weren't meant to be in this pull request.
+> > That's what I get for trying to squeeze this in before coffee.
+>=20
+> Ah right, it's four patches, not three. (I thought I saw "pwm: Read
+> initial hardware state at request time" in next.)
+>=20
+> > Please do ping me if I haven't reviewed or applied patches after a
+> > week or so to remind me. Sometimes my inbox fills up so quickly that
+> > some patches get lost.
+>=20
+> ok.
+>=20
+> > >  - The patch "pwm: implement tracing for .get_state() and
+> > >    .apply_state()" that got an review by Steven Rostedt.
+> > >    (https://patchwork.ozlabs.org/patch/1182679/)
+> >=20
+> > Review for this came in after v5.4-rc7, so I didn't consider it for
+> > v5.5. I'll pick it up after v5.5-rc1.
+>=20
+> I got Steven's mail on Oct 24 which is the week between -rc4 and -rc5,
+> but ok, I won't argue.
 
+Both my inbox and patchwork say that the email arrived on November 13.
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> >=20
+> > >  - The series starting with "pwm: omap-dmtimer: remove pwmchip in
+> > >    .remove before making it unfunctional" from November which IMHO is
+> > >    simple and contains two fixes
+> > >    (https://patchwork.ozlabs.org/project/linux-pwm/list/?series=3D142=
+030)
+> >=20
+> > Same here.
+>=20
+> Does "after v5.5-rc1" mean "for v5.5" or "for v5.6-rc1". I agree that
+> the tracing stuff is merge window material (very useful though in my
+> eyes) while the omap-dmtimer series (at least the first 3 of 4 patches)
+> is about fixes.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+These all change code that's been like this for more than 4 years and
+nobody's ever reported a bug. The very worst that can happen here is
+that we leak a device reference, but these are platform devices, so
+they aren't going to go anywhere anyway.
 
+> > > And I'm still waiting for feedback on
+> > >=20
+> > >  - "Documentation: pwm: rework documentation for the framework" (since
+> > >    January)
+> >=20
+> > Please resend this, I can't find it in my inbox.
+>=20
+> :-|, given that I sent this already twice, pinged several times
+> (https://patchwork.ozlabs.org/patch/1021566/,
+> https://patchwork.ozlabs.org/patch/1000709/) and also asked at least
+> once before in a mail where I pinged several patches using a list.
+
+I find patchwork always difficult for reviewing, but that patch is
+particularly difficult to review. You're basically rewriting all of the
+documentation in a way that you think is better. It'd be much easier to
+review if this was done more incrementally.
+
+It looks like your goals could be easily met by just extending the
+existing documentation, or bringing it up-to-date with the API.
+
+> > >  - "pwm: add debug knob to help driver authors" (since August)
+> >=20
+> > My recollection is that this flagged a bunch of issues right out of the
+> > box, so I'm hesitant to apply it without wider concensus that we want
+> > this, or some effort to address the issues that this flags.
+>=20
+> I didn't want you to apply it. That it is not ready for that is out of
+> the question. I assume the patch doesn't apply anymore and needs work
+> for sure. The last mail in the respective thread had a single paragraph:
+>=20
+> 	do you consider the idea here worthwile? If so I'd update the
+> 	patch to current mainline and address the feedback I got so far.
+>=20
+> This is still interesting, as I don't want to spend my time working on
+> an idea that is then turned down in the end for conceptual reasons.
+
+There's nothing conceptually wrong about it. The one problem that I see
+with it is that we can't force people to use it because it's noisy when
+things go wrong, and they currently do go wrong. On the other hand, if
+we don't enforce its use, developers are likely to just ignore its
+existence.
+
+So I think we need to get drivers into a little better shape so that we
+eliminate at least all of the issues that currently exist. Then we can
+merge this and maybe opportunistically enforce this during a release
+cycle to see if there's any fallout.
+
+Thierry
+
+--ZPt4rx8FFjLCG7dd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3o5DYACgkQ3SOs138+
+s6FczhAAvO5Q8Nkaj6jTFyynuVmYj5ysvPFgapc0avecSZTKSYBsPIj5jdp9mx0M
+dWhwej8W7QkxE4Vg2wfqifOUVBDdmxgukf0WS98o8LShA8iDkZY2xSYngzmug6An
+TGyN0IPLApJQpN+dD9wmFi5N++YJ8SrX3ifOVe/lRc9e8EGHh0rlDkCyRKXqAOtN
+FAD/XsmuNQa1qdyS6GoY2m1RSVmDPktZI+VFisA1Ne4Q74roil6Pn2OO+Wunizyp
+m8jEj9k8IbJiUqTPI4ZHxiBqN6AY7zsHEr3T8k2NxAgLQ/dCSN+m9IijJjirH8Ml
+DGbRdjwhxKvDgfCiRC386vfUcjH7mhHFNGcsBSgbEZmWvSA2/mgDt5wcZ6I4Gura
+KK6VSAwuFwSrAjmDHW3mtqWCF0Nfsu5IWzgeAQq0HYLJ8F+RqquHAxDxJMCgBR3f
+GTOTSuUN24bJuhcgZ5cpzbDbbj1De6UlzoK6UalJ9I631Ex2wlflNfFFtNEIvfrg
+WEWLejhaAgEdaJN1ej0cXUkVzqC3ZQMjGLfvrWxj+myrVomhgmwOuReMraegKnyp
+RzABtKiEeMiLYG+gJAPonjfnqv5y+mtCxjnIAXqK465NTqAc72nOEYkIHl3qFdgN
+NWk3OjvUES/Ya7afU7QbuC1jbQzLYNeYsM6h8jN4AoAe1LUU8xc=
+=46nO
+-----END PGP SIGNATURE-----
+
+--ZPt4rx8FFjLCG7dd--
