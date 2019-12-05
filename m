@@ -2,92 +2,85 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13253C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85EBC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D763C206D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D1F206D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 19:27:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbfLETZm (ORCPT
+        id S1729717AbfLET1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 14:25:42 -0500
-Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:51470 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLETZl (ORCPT
+        Thu, 5 Dec 2019 14:27:43 -0500
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:42511 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726028AbfLET1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 14:25:41 -0500
-Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
-        id 1icwiY-0004sv-00; Thu, 05 Dec 2019 19:23:14 +0000
-Date:   Thu, 5 Dec 2019 14:23:14 -0500
-From:   Rich Felker <dalias@libc.org>
-To:     Rob Landley <rob@landley.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Will Deacon <will.deacon@arm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v6 10/18] sh/tlb: Convert SH to generic mmu_gather
-Message-ID: <20191205192314.GC16318@brightrain.aerifal.cx>
-References: <20190219103148.192029670@infradead.org>
- <20190219103233.443069009@infradead.org>
- <CAMuHMdW3nwckjA9Bt-_Dmf50B__sZH+9E5s0_ziK1U_y9onN=g@mail.gmail.com>
- <20191204104733.GR2844@hirez.programming.kicks-ass.net>
- <e2cf6780-ba7e-d6f6-9d15-92e182f98e84@landley.net>
+        Thu, 5 Dec 2019 14:27:42 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Tk3hI4V_1575574049;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk3hI4V_1575574049)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 06 Dec 2019 03:27:33 +0800
+Subject: Re: [v3 PATCH] mm: move_pages: return valid node id in status if the
+ page is already on the target node
+To:     Qian Cai <cai@lca.pw>
+Cc:     fabecassis@nvidia.com, jhubbard@nvidia.com, mhocko@suse.com,
+        cl@linux.com, vbabka@suse.cz, mgorman@techsingularity.net,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <1575572053-128363-1-git-send-email-yang.shi@linux.alibaba.com>
+ <0E1D1C04-5892-438F-9191-F23CBE1A6DC5@lca.pw>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <d96e3849-5fd4-26c0-31cf-02523085ed37@linux.alibaba.com>
+Date:   Thu, 5 Dec 2019 11:27:27 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e2cf6780-ba7e-d6f6-9d15-92e182f98e84@landley.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <0E1D1C04-5892-438F-9191-F23CBE1A6DC5@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 01:24:02PM -0600, Rob Landley wrote:
-> On 12/4/19 4:47 AM, Peter Zijlstra wrote:
-> > On Tue, Dec 03, 2019 at 12:19:00PM +0100, Geert Uytterhoeven wrote:
-> >> Hoi Peter,
-> >>
-> >> On Tue, Feb 19, 2019 at 11:35 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >>> Generic mmu_gather provides everything SH needs (range tracking and
-> >>> cache coherency).
-> >>>
-> >>> Cc: Will Deacon <will.deacon@arm.com>
-> >>> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
-> >>> Cc: Andrew Morton <akpm@linux-foundation.org>
-> >>> Cc: Nick Piggin <npiggin@gmail.com>
-> >>> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> >>> Cc: Rich Felker <dalias@libc.org>
-> >>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> >>
-> >> I got remote access to an SH7722-based Migo-R again, which spews a long
-> >> sequence of BUGs during userspace startup.  I've bisected this to commit
-> >> c5b27a889da92f4a ("sh/tlb: Convert SH to generic mmu_gather").
-> > 
-> > Whoopsy.. also, is this really the first time anybody booted an SH
-> > kernel in over a year ?!?
-> 
-> No, but most people running this kind of hardware tend not to upgrade to current
-> kernels on a regular basis.
-> 
-> The j-core guys tested the 5.3 release. I can't find an email about 5.4 so I
-> dunno if that's been tested yet?
 
-Being that this code is about mmu, does it affect nommu machines?
-That's what we've got at present on the J-core side.
 
-Rich
+On 12/5/19 11:19 AM, Qian Cai wrote:
+>
+>> On Dec 5, 2019, at 1:54 PM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>>
+>> This is because the status is not set if the page is already on the
+>> target node, but move_pages() should return valid status as long as it
+>> succeeds.  The valid status may be errno or node id.
+>>
+>> We can't simply initialize status array to zero since the pages may be
+>> not on node 0.  Fix it by updating status with node id which the page is
+>> already on.
+> This does not look correct either.
+>
+> “ENOENT
+> No pages were found that require moving. All pages are either already on the target node, not present, had an invalid address or could not be moved because they were mapped by multiple processes.”
+>
+> move_pages() should return -ENOENT instead.
+
+Yes, we noticed this too. I had a note in v1 and v2 patch, but I forgot 
+paste in v3, says:
+
+John noticed another return value inconsistency between the 
+implementation and the manpage. The manpage says it should return 
+-ENOENT if the page is already on the target node, but it doesn't. It 
+looks the original code didn't return -ENOENT either, I'm not sure if 
+this is a document issue or not. Anyway this is another issue, once we 
+confirm it we can fix it later.
+
+And, Michal also commented to the note:
+
+I do not remember all the details but my recollection is that there were 
+several inconsistencies present before I touched the code and I've 
+decided to not touch them without a clear usecase.
+
