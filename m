@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F41C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7EDC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9239D21744
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1EA821744
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1C+dYyw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGgUmBF7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbfLECT4 (ORCPT
+        id S1728964AbfLECT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 21:19:56 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:37023 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728852AbfLECTw (ORCPT
+        Wed, 4 Dec 2019 21:19:59 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:45542 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728829AbfLECT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 21:19:52 -0500
-Received: by mail-yb1-f196.google.com with SMTP id x139so881203ybe.4;
-        Wed, 04 Dec 2019 18:19:51 -0800 (PST)
+        Wed, 4 Dec 2019 21:19:56 -0500
+Received: by mail-yw1-f66.google.com with SMTP id d12so598803ywl.12;
+        Wed, 04 Dec 2019 18:19:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=o8rdL81CA1/QSUatk5QZuPPaOIlwBprO0GQX2EhaRjM=;
-        b=W1C+dYywW8EEg+KrCR9sD3uflofMaz0LkxIaYVdl/6TGvx8BVp2HSq7vgphATgN2BI
-         6XVVI9gBWLX8BXhgqJpIOEOnWlbOzToicgYJaS/tBb+dIxQ1BjfPhhjR5gxnTz7Uat/o
-         olvMTEB5EwL45/extiYTkrbyuMactGPuACcJrxIWL4klqMk8XGZCnS192UxkZBdXT3Y0
-         H7PaFjvvmjAs3+JJEbpefhzNYgO7SI7WRWgJa/jFqa9t7praVOIsTiPhgAQzyQGxX/im
-         3p2rBbJFcte9jSQblW7252rhLust313ljInBl79Yz6S+TBhx6Z6itNRymzOs0EbLzHvI
-         OXcA==
+        bh=zrsetGriwFN7O5PokupRSAWoGTBVUJcT37C7y0ZMNmw=;
+        b=NGgUmBF79hKaA6rfHlyxqgOEoGaktYvly2OXQKwO26azgRrBz+Kg6wWarzxKrBq0ra
+         t12HAvhbHelpoN/lvn8Kd9NAnRtEIxa0c+Xl7+zyQy/O/De1xKlMO81J/jWbGA0GLcjv
+         82KvKhAIVYtzQIhF64Bicyj7UdpV+YFwVl+lz4QG/tVLjRfth1yjB5YZUEZSjVH4D3Gt
+         KfxHyXbBGdSWfmg/87FrbBb2nmEFWV2G6O9cSfQPXu7p8pNyLq0cBfgphV8iNhqf3hbH
+         o/hv6dlaZtnqx/isgXXPCZu5IGLWlYMsRrE8ZC3tAaN5WUio/rykeziwLK16Fd1ur1NI
+         C6xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=o8rdL81CA1/QSUatk5QZuPPaOIlwBprO0GQX2EhaRjM=;
-        b=JFipOzyFQelxvW3Nks6wpp6Zc0LR+ePibSiDPSwXXUFqsr8QJiMBIU5otRk4I3Z3xN
-         nJcvpjsRbXdORFJpF7xaBDDNnx8jOlGumRPNO7OmVakV9M7lYqxArvNz/JWGg7l76VXH
-         ye1Pte0hssgdMsgCsAbkgFxNuLu+u+q0M76jAhWdZ/GVqUkCp7mKh6QqfCXl0bczvzV1
-         Pw0r6FNQf5IeJHO28iCnJMZ2aotjQaCOfdlCjbK/eFsHb4/SKVqzWw0QD7JqDv3PPkEt
-         GQs6vUwe7dSuPU4qoL1IhZcCiECg3QbQ9n1npcmc2azNaW4KZA7IxOkDx8VdRUZ+qzfk
-         cUBA==
-X-Gm-Message-State: APjAAAXnxOr5EQczaLTXQak9Yapdln8UozytScX8owjnZECL1cOvEOO7
-        N5QAxT/XJ39TFsYpzQhoBYc=
-X-Google-Smtp-Source: APXvYqwAD9YGInc+qgp3awEl6WpVlrReB1uKRLWOTxVKUwY1TL0YVhztXM3OkuWK1013hQExDq0WRQ==
-X-Received: by 2002:a25:d5:: with SMTP id 204mr4502582yba.165.1575512390970;
-        Wed, 04 Dec 2019 18:19:50 -0800 (PST)
+        bh=zrsetGriwFN7O5PokupRSAWoGTBVUJcT37C7y0ZMNmw=;
+        b=COF8UWfNsoF63V55DvjemMq9iqge8qd6tRi4q4L2x/d9ALkLJ6xMd9rF49mn4g24BH
+         No9RZ2ifBaQJlEuBDVfzRLPzDUElylKQXUwPBjWMVj+kF8shkyVOMaLK9AONy0i7FfLA
+         lBM71wHronKcXvDcmweFwRQ4amJLuUZXMmlksKqFb4d69ApRFG9btHawK8ZJMX+fSsPv
+         KSfe2LCdqmjhu1GI5xq5HhT8oFLPIQP4hgO5+iUxIwxBbIrNepfQypqLTrHPZQDKgMag
+         jdlUhLnfrNaSaxnBvjufP/1cQSLkBYQdhHQ1kdUavO6vXn4oqMBth09Kpd7OBT95OKZl
+         BXew==
+X-Gm-Message-State: APjAAAU2pk7nnc7yPHCyZxl8HYWm8s1vuOgNNsd4gF2zIWvFc+8q+8U1
+        BNu4odLO+vU3bpSR+stIkKs=
+X-Google-Smtp-Source: APXvYqzCCriI9i8RMQSO8C5ehwieJ+buobW2fxeTKupTKau3EoE8HIWwRb+cK78pEhE54ySr7gqOEw==
+X-Received: by 2002:a81:7a0d:: with SMTP id v13mr4506519ywc.175.1575512395086;
+        Wed, 04 Dec 2019 18:19:55 -0800 (PST)
 Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id l6sm4188449ywa.39.2019.12.04.18.19.49
+        by smtp.gmail.com with ESMTPSA id l6sm4188449ywa.39.2019.12.04.18.19.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 18:19:50 -0800 (PST)
+        Wed, 04 Dec 2019 18:19:54 -0800 (PST)
 From:   Adam Ford <aford173@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/7] arm64: dts: imx8mm: add GPC power domains
-Date:   Wed,  4 Dec 2019 20:19:21 -0600
-Message-Id: <20191205021924.25188-6-aford173@gmail.com>
+Subject: [PATCH 7/7] arm64: dts: imx8mm: Add PCIe support
+Date:   Wed,  4 Dec 2019 20:19:23 -0600
+Message-Id: <20191205021924.25188-8-aford173@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191205021924.25188-1-aford173@gmail.com>
 References: <20191205021924.25188-1-aford173@gmail.com>
@@ -80,125 +80,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a power domain controller on the i.XM8M Mini used for
-handling interrupts and controlling certain peripherals like
-USB OTG and PCIe, which are currently unavailable.
+The PCIE controller on the i.MX8M Mini appears to be the same
+as the i.MX8MQ but it is absent.
 
-This patch enables support the controller itself to the help
-facilitate enabling additional peripherals.
+This patch uses the bindings from the i.MX8MQ and the clock
+information from the NXP Linux release and marks it as disabled
+so it can be configured and enabled on boards where needed.
 
 Signed-off-by: Adam Ford <aford173@gmail.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 82 ++++++++++++++++++++++-
- 1 file changed, 81 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 35 +++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 23c8fad7932b..d05c5b617a4d 100644
+index 5036d713558f..f384934ddbb4 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -4,6 +4,7 @@
-  */
+@@ -5,6 +5,7 @@
  
  #include <dt-bindings/clock/imx8mm-clock.h>
-+#include <dt-bindings/power/imx8m-power.h>
+ #include <dt-bindings/power/imx8m-power.h>
++#include <dt-bindings/reset/imx8mq-reset.h>
  #include <dt-bindings/gpio/gpio.h>
  #include <dt-bindings/input/input.h>
  #include <dt-bindings/interrupt-controller/arm-gic.h>
-@@ -13,7 +14,7 @@
- 
- / {
- 	compatible = "fsl,imx8mm";
--	interrupt-parent = <&gic>;
-+	interrupt-parent = <&gpc>;
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
-@@ -495,6 +496,85 @@
- 				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
- 				#reset-cells = <1>;
- 			};
-+
-+			gpc: gpc@303a0000 {
-+				compatible = "fsl,imx8mm-gpc";
-+				reg = <0x303a0000 0x10000>;
-+				interrupt-parent = <&gic>;
-+				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <3>;
-+
-+				pgc {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					pgc_mipi: power-domain@0 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8MM_POWER_DOMAIN_MIPI>;
-+					};
-+
-+					pgc_pcie: power-domain@1 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8MM_POWER_DOMAIN_PCIE>;
-+					};
-+
-+					pgc_otg1: power-domain@2 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8MM_POWER_DOMAIN_USB_OTG1>;
-+					};
-+
-+					pgc_otg2: power-domain@3 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8MM_POWER_DOMAIN_USB_OTG2>;
-+					};
-+
-+					pgc_ddr1: power-domain@4 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8MM_POWER_DOMAIN_DDR1>;
-+					};
-+
-+					pgc_gpu2d: power-domain@5 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8MM_POWER_DOMAIN_GPU2D>;
-+					};
-+
-+					pgc_gpu: power-domain@6 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8MM_POWER_DOMAIN_GPU>;
-+					};
-+
-+					pgc_vpu: power-domain@7 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8MM_POWER_DOMAIN_VPU>;
-+					};
-+
-+					pgc_gpu3d: power-domain@8 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8MM_POWER_DOMAIN_GPU3D>;
-+					};
-+
-+					pgc_disp: power-domain@9 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8MM_POWER_DOMAIN_DISP>;
-+					};
-+
-+					pgc_vpu_g1: power-domain@a {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8MM_POWER_VPU_G1>;
-+					};
-+
-+					pgc_vpu_g2: power-domain@b {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8MM_POWER_VPU_G2>;
-+					};
-+
-+					pgc_vpu_h1: power-domain@c {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8MM_POWER_VPU_H1>;
-+					};
-+				};
-+			};
+@@ -936,6 +937,40 @@
+ 			status = "disabled";
  		};
  
- 		aips2: bus@30400000 {
++		pcie0: pcie@33800000 {
++			compatible = "fsl,imx8mq-pcie";
++			reg = <0x33800000 0x400000>,
++			      <0x1ff00000 0x80000>;
++			reg-names = "dbi", "config";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			device_type = "pci";
++			bus-range = <0x00 0xff>;
++			ranges = <0x81000000 0 0x00000000 0x1ff80000 0 0x00010000 /* downstream I/O 64KB */
++				  0x82000000 0 0x18000000 0x18000000 0 0x07f00000>; /* non-prefetchable memory */
++			num-lanes = <1>;
++			num-viewport = <4>;
++			interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &gic GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 2 &gic GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 3 &gic GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 4 &gic GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++			fsl,max-link-speed = <2>;
++			power-domains = <&pgc_pcie>;
++			resets = <&src IMX8MQ_RESET_PCIEPHY>,
++				 <&src IMX8MQ_RESET_PCIE_CTRL_APPS_EN>,
++				 <&src IMX8MQ_RESET_PCIE_CTRL_APPS_TURNOFF>;
++			reset-names = "pciephy", "apps", "turnoff";
++			clocks = <&clk IMX8MM_CLK_PCIE1_ROOT>,
++				 <&clk IMX8MM_CLK_PCIE1_AUX>,
++				 <&clk IMX8MM_CLK_PCIE1_PHY>;
++			clock-names = "pcie", "pcie_bus", "pcie_phy";
++			status = "disabled";
++		};
++
+ 		gic: interrupt-controller@38800000 {
+ 			compatible = "arm,gic-v3";
+ 			reg = <0x38800000 0x10000>, /* GIC Dist */
 -- 
 2.20.1
 
