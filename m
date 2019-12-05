@@ -2,229 +2,353 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E78C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 066A6C2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 885BB2464F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B75DA224F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 09:51:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUFpBprd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nUHUaUQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbfLEJt4 (ORCPT
+        id S1729070AbfLEJvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:49:56 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45324 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfLEJt4 (ORCPT
+        Thu, 5 Dec 2019 04:51:33 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44819 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfLEJvd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 04:49:56 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j42so2629126wrj.12;
-        Thu, 05 Dec 2019 01:49:53 -0800 (PST)
+        Thu, 5 Dec 2019 04:51:33 -0500
+Received: by mail-lf1-f66.google.com with SMTP id v201so1960060lfa.11;
+        Thu, 05 Dec 2019 01:51:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VDCRarATB8BrPGGFa2oJ0ZXIsVlkqssojKkWxJIt7Sw=;
-        b=IUFpBprd5cUy49LefBNJcPOz24gxeLYCdnSeVp1swiaikpzNAnnAlqYiGzP2niYWe1
-         UvdkMutU0vvWqvDe5BEGqWYvlx9yhm3cpLv7F5nFIBe47KnZpscevQ5mDt8wa25lMhfe
-         OnnNqqFGtiXDZ6ApeG7JZWxVHK7UdgDoHf/HFRbFRwa7A81/W5jojgvuKTj1Auy2wECl
-         4MMqj9BXx1Ejr3J6Qjk2ENvFaFaLhp8IbqYv51GqaO3KSvVxPFoGi6+bvxgWyiFHdgmU
-         Zrh76yVlrfzDW+Ku65z/PfC4NnPmC69s+TonPU3vk+mwQfNOcN3DGhmpFhEMmaaVHTqP
-         KD2Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=yHjUgDXk7BzsRuratWNN1Se97NYh4vX6Ykx+O5w9BpQ=;
+        b=nUHUaUQkXRL2lOSNLHYOdLoa1AgE8eX7NDtk5D0M1BihBAUyouKI3hkZYchj5svDdh
+         Muxl8Yr86rVhPfMKW6gH5VaPDd0g2dWRN8/ttPOBLletxrOX8spQ/2fMrb1nPgjgLvi+
+         vv7dYCysXhbcgdLP361d0fdsZFbPRN+vIuq3PP2kHdv9W4p1HagdqRmDu/tJrrX+cjmZ
+         JJVh/PRRbDIXWnEH/iCbtXDpxJuaqujvMlimtYa5LigjuIu+QIrzQObH1V92rbKC2QnX
+         OueCIzxiyfCR/m1tbQG4WMYD/FzV0Fgo0HXjmdOr8sI3ADhW64tAPobs+8HCvyc6jfiR
+         VtfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VDCRarATB8BrPGGFa2oJ0ZXIsVlkqssojKkWxJIt7Sw=;
-        b=Vi+iH/u9yqWDx8X+gcaQ2OrvWw4/YvLvaMHM1h38IHHFWd4GK4lRSihqOZ1d7GIW+C
-         p0F6RUlayRp/l9DB89++Xgk3FAViUaYmo1N+k0ne8U/tFxe8uw9zwEK1xVuJUSM7+uVe
-         ZwCuJzu+yEJMD5m53B47XCz3rOUsfUqFDKGGl+5KsO7ebi/NeOYD3foqFjDqsSStf71e
-         lo5OSCbaZWo0vLTjAVawuEJhjwGJk+K0CJIlE1aZ3j13MdpYbb+GGWcIaVB1CgURQaLx
-         hBsN0ppflUtGhp5j18rzWKeKJvlTAc/xohZzO/Q9nnv2NKrZVEp2CzTYaMijHOiaOKvN
-         9Axg==
-X-Gm-Message-State: APjAAAW0cU2rB9a43M4mZg/SIAFU+PbkuNocqJb5BxLpnP5EVLnP/y9/
-        ius1XdlOocaLuEtAWPrM0b6hEdUO
-X-Google-Smtp-Source: APXvYqxBtpkgOdAW7CRYJrvAlE0K8uKX4b6YMw5evwxxJGel49FacekG2njBKu1+ODO53PFLBi35DQ==
-X-Received: by 2002:adf:eb46:: with SMTP id u6mr9246213wrn.239.1575539393159;
-        Thu, 05 Dec 2019 01:49:53 -0800 (PST)
-Received: from [192.168.1.35] (182.red-88-21-103.staticip.rima-tde.net. [88.21.103.182])
-        by smtp.gmail.com with ESMTPSA id u18sm11562183wrt.26.2019.12.05.01.49.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 01:49:52 -0800 (PST)
-Subject: Re: [PATCH v3 07/15] KVM: Refactor error handling for setting memory
- region
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>
-References: <20191024230744.14543-1-sean.j.christopherson@intel.com>
- <20191024230744.14543-8-sean.j.christopherson@intel.com>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-Message-ID: <3b6cd050-2551-d262-aded-051e25044519@amsat.org>
-Date:   Thu, 5 Dec 2019 10:49:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=yHjUgDXk7BzsRuratWNN1Se97NYh4vX6Ykx+O5w9BpQ=;
+        b=dsB0t9W0a4Oa/ZPD2KUrhYrFESBB9cvBZWUvNO/W6CJtMxlQaOeGyA3K2AKJ/asc+w
+         kuKMVbA+wIjFlSPVqbVuOr3M8wCkyRO5RgNh8Yw04HXm+m8Ih6pRk89vFtQzbsdB05YH
+         QPvJbuMJttLWB7wMYdUxvKQufucu8a4lFjKfsd7Wj3iF/MPsKRlAz226HyE9Zw5C2Ewy
+         OWOYgakXkMfDG6T2GvGZDKNQ4p8KCDjbOUR80LP8rf5W8R5yDt+ynPp2YwL1pCkjSVti
+         b+UGlM4U79fKvzDdd+gHachpGLyw7NU3eZz3JdZU6vYw4kbPyGZDGunrUB34n7mkCdNX
+         b2CA==
+X-Gm-Message-State: APjAAAURvlkNNpCvyGIIPAXwd1JgU5DL6r9pzuSF2qRPdF6HQnXFpLjY
+        YnNpDTchpFkxigqFx/ohlM6ZLGUCRw3+KTap8TRNX/6+
+X-Google-Smtp-Source: APXvYqxK+xhUvdpYi67ZeF0UiqdxHk844MOcORnmbFmLd/batLjFZkzQWGnjkGDjU/QKuDRz82f6QAnjW+voNIOiLkU=
+X-Received: by 2002:ac2:4194:: with SMTP id z20mr4810871lfh.20.1575539489758;
+ Thu, 05 Dec 2019 01:51:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191024230744.14543-8-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191127203114.766709977@linuxfoundation.org> <20191127203119.676489279@linuxfoundation.org>
+ <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com> <20191204175033.smve4dleem2ht7st@xps.therub.org>
+In-Reply-To: <20191204175033.smve4dleem2ht7st@xps.therub.org>
+From:   Jack Wang <jack.wang.usish@gmail.com>
+Date:   Thu, 5 Dec 2019 10:51:18 +0100
+Message-ID: <CA+res+SW7o4YpUtv4-UYXP4WSPm417tgow68YM7YjOEcZ5xO3w@mail.gmail.com>
+Subject: Re: [PATCH 4.19 067/306] KVM: nVMX: move check_vmentry_postreqs()
+ call to nested_vmx_enter_non_root_mode()
+To:     Jack Wang <jack.wang.usish@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 1:07 AM, Sean Christopherson wrote:
-> Replace a big pile o' gotos with returns to make it more obvious what
-> error code is being returned, and to prepare for refactoring the
-> functional, i.e. post-checks, portion of __kvm_set_memory_region().
-> 
-> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->   virt/kvm/kvm_main.c | 40 ++++++++++++++++++----------------------
->   1 file changed, 18 insertions(+), 22 deletions(-)
-> 
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index a43902d9036d..e2f47d60f696 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -942,34 +942,33 @@ int __kvm_set_memory_region(struct kvm *kvm,
->   
->   	r = check_memory_region_flags(mem);
->   	if (r)
-> -		goto out;
-> +		return r;
->   
-> -	r = -EINVAL;
->   	as_id = mem->slot >> 16;
->   	id = (u16)mem->slot;
->   
->   	/* General sanity checks */
->   	if (mem->memory_size & (PAGE_SIZE - 1))
-> -		goto out;
-> +		return -EINVAL;
->   	if (mem->guest_phys_addr & (PAGE_SIZE - 1))
-> -		goto out;
-> +		return -EINVAL;
->   	/* We can read the guest memory with __xxx_user() later on. */
->   	if ((id < KVM_USER_MEM_SLOTS) &&
->   	    ((mem->userspace_addr & (PAGE_SIZE - 1)) ||
->   	     !access_ok((void __user *)(unsigned long)mem->userspace_addr,
->   			mem->memory_size)))
-> -		goto out;
-> +		return -EINVAL;
->   	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_MEM_SLOTS_NUM)
-> -		goto out;
-> +		return -EINVAL;
->   	if (mem->guest_phys_addr + mem->memory_size < mem->guest_phys_addr)
-> -		goto out;
-> +		return -EINVAL;
->   
->   	slot = id_to_memslot(__kvm_memslots(kvm, as_id), id);
->   	base_gfn = mem->guest_phys_addr >> PAGE_SHIFT;
->   	npages = mem->memory_size >> PAGE_SHIFT;
->   
->   	if (npages > KVM_MEM_MAX_NR_PAGES)
-> -		goto out;
-> +		return -EINVAL;
->   
->   	new = old = *slot;
->   
-> @@ -986,20 +985,18 @@ int __kvm_set_memory_region(struct kvm *kvm,
->   			if ((new.userspace_addr != old.userspace_addr) ||
->   			    (npages != old.npages) ||
->   			    ((new.flags ^ old.flags) & KVM_MEM_READONLY))
-> -				goto out;
-> +				return -EINVAL;
->   
->   			if (base_gfn != old.base_gfn)
->   				change = KVM_MR_MOVE;
->   			else if (new.flags != old.flags)
->   				change = KVM_MR_FLAGS_ONLY;
-> -			else { /* Nothing to change. */
-> -				r = 0;
-> -				goto out;
-> -			}
-> +			else /* Nothing to change. */
-> +				return 0;
->   		}
->   	} else {
->   		if (!old.npages)
-> -			goto out;
-> +			return -EINVAL;
->   
->   		change = KVM_MR_DELETE;
->   		new.base_gfn = 0;
-> @@ -1008,29 +1005,29 @@ int __kvm_set_memory_region(struct kvm *kvm,
->   
->   	if ((change == KVM_MR_CREATE) || (change == KVM_MR_MOVE)) {
->   		/* Check for overlaps */
-> -		r = -EEXIST;
->   		kvm_for_each_memslot(slot, __kvm_memslots(kvm, as_id)) {
->   			if (slot->id == id)
->   				continue;
->   			if (!((base_gfn + npages <= slot->base_gfn) ||
->   			      (base_gfn >= slot->base_gfn + slot->npages)))
-> -				goto out;
-> +				return -EEXIST;
->   		}
->   	}
->   
-> -	r = -ENOMEM;
-> -
->   	/* Allocate/free page dirty bitmap as needed */
->   	if (!(new.flags & KVM_MEM_LOG_DIRTY_PAGES))
->   		new.dirty_bitmap = NULL;
->   	else if (!new.dirty_bitmap) {
-> -		if (kvm_create_dirty_bitmap(&new) < 0)
-> -			goto out;
-> +		r = kvm_create_dirty_bitmap(&new);
-> +		if (r)
-> +			return r;
+Dan Rue <dan.rue@linaro.org> =E4=BA=8E2019=E5=B9=B412=E6=9C=884=E6=97=A5=E5=
+=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=886:50=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Mon, Dec 02, 2019 at 03:40:04PM +0100, Jack Wang wrote:
+> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> =E4=BA=8E2019=E5=B9=B41=
+1=E6=9C=8827=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=8810:30=E5=86=99=E9=
+=81=93=EF=BC=9A
+> > >
+> > > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> > >
+> > > [ Upstream commit 7671ce21b13b9596163a29f4712cb2451a9b97dc ]
+> > >
+> > > In preparation of supporting checkpoint/restore for nested state,
+> > > commit ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_ru=
+n()")
+> > > modified check_vmentry_postreqs() to only perform the guest EFER
+> > > consistency checks when nested_run_pending is true.  But, in the
+> > > normal nested VMEntry flow, nested_run_pending is only set after
+> > > check_vmentry_postreqs(), i.e. the consistency check is being skipped=
+.
+> > >
+> > > Alternatively, nested_run_pending could be set prior to calling
+> > > check_vmentry_postreqs() in nested_vmx_run(), but placing the
+> > > consistency checks in nested_vmx_enter_non_root_mode() allows us
+> > > to split prepare_vmcs02() and interleave the preparation with
+> > > the consistency checks without having to change the call sites
+> > > of nested_vmx_enter_non_root_mode().  In other words, the rest
+> > > of the consistency check code in nested_vmx_run() will be joining
+> > > the postreqs checks in future patches.
+> > >
+> > > Fixes: ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_ru=
+n()")
+> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > Cc: Jim Mattson <jmattson@google.com>
+> > > Reviewed-by: Jim Mattson <jmattson@google.com>
+> > > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > > ---
+> > >  arch/x86/kvm/vmx.c | 10 +++-------
+> > >  1 file changed, 3 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> > > index fe7fdd666f091..bdf019f322117 100644
+> > > --- a/arch/x86/kvm/vmx.c
+> > > +++ b/arch/x86/kvm/vmx.c
+> > > @@ -12694,6 +12694,9 @@ static int enter_vmx_non_root_mode(struct kvm=
+_vcpu *vcpu, u32 *exit_qual)
+> > >         if (likely(!evaluate_pending_interrupts) && kvm_vcpu_apicv_ac=
+tive(vcpu))
+> > >                 evaluate_pending_interrupts |=3D vmx_has_apicv_interr=
+upt(vcpu);
+> > >
+> > > +       if (from_vmentry && check_vmentry_postreqs(vcpu, vmcs12, exit=
+_qual))
+> > > +               return EXIT_REASON_INVALID_STATE;
+> > > +
+> > >         enter_guest_mode(vcpu);
+> > >
+> > >         if (!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROL=
+S))
+> > > @@ -12836,13 +12839,6 @@ static int nested_vmx_run(struct kvm_vcpu *v=
+cpu, bool launch)
+> > >          */
+> > >         skip_emulated_instruction(vcpu);
+> > >
+> > > -       ret =3D check_vmentry_postreqs(vcpu, vmcs12, &exit_qual);
+> > > -       if (ret) {
+> > > -               nested_vmx_entry_failure(vcpu, vmcs12,
+> > > -                                        EXIT_REASON_INVALID_STATE, e=
+xit_qual);
+> > > -               return 1;
+> > > -       }
+> > > -
+> > >         /*
+> > >          * We're finally done with prerequisite checking, and can sta=
+rt with
+> > >          * the nested entry.
+> > > --
+> > > 2.20.1
+> > >
+> > >
+> > >
+> > Hi all,
+> >
+> > This commit caused many kvm-unit-tests regression, cherry-pick
+> > following commits from 4.20 fix the regression:
+>
+> Hi Jack - can you be more specific about the failing tests? What type of
+> environment and which tests failed, which version of kvm-unit-tests? Do
+> you have any logs available? I ask because we do run kvm-unit-tests on
+> x86 and arm64 but we did not see these regressions.
+>
+> Thanks,
+> Dan
+>
+Hi Dan,
 
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+I'm running at kvm-unit-tests commit b1414c5f0142 ("x86: vmx: fix
+required alignment for posted interrupt descriptor")
 
->   	}
->   
->   	slots = kvzalloc(sizeof(struct kvm_memslots), GFP_KERNEL_ACCOUNT);
-> -	if (!slots)
-> +	if (!slots) {
-> +		r = -ENOMEM;
->   		goto out_bitmap;
-> +	}
->   	memcpy(slots, __kvm_memslots(kvm, as_id), sizeof(struct kvm_memslots));
->   
->   	if ((change == KVM_MR_DELETE) || (change == KVM_MR_MOVE)) {
-> @@ -1081,7 +1078,6 @@ int __kvm_set_memory_region(struct kvm *kvm,
->   out_bitmap:
->   	if (new.dirty_bitmap && !old.dirty_bitmap)
->   		kvm_destroy_dirty_bitmap(&new);
-> -out:
->   	return r;
->   }
->   EXPORT_SYMBOL_GPL(__kvm_set_memory_region);
-> 
+using "run_tests.sh -a -t -j8" with qemu-2.7.1
+
+Left side has only 78 tests ok, and right side has 112 tests ok.
+root@ib1:/home/gkim/pb-ltp/install/results# diff
+kvm-unit-test--2019_12_02-13h_13m_50s.log
+kvm-unit-test--2019_12_02-02h_12m_26s.log
+2d1
+< ok smptest
+6c5
+< ok vmexit_vmcall
+---
+> ok smptest
+7a7
+> ok vmexit_vmcall
+10d9
+< ok vmexit_ipi
+11a11,12
+> ok vmexit_ipi
+> ok vmexit_tscdeadline
+14d14
+< ok vmexit_tscdeadline
+16,18c16
+< ok vmexit_tscdeadline_immed
+< ok pku # SKIP
+< ok emulator
+---
+> ok hypercall
+19a18,19
+> ok emulator
+> ok pku # SKIP
+21c21
+< ok hypercall
+---
+> ok vmexit_tscdeadline_immed
+27a28
+> ok apic
+29d29
+< ok apic-split
+31c31
+< ok s3
+---
+> ok xsave
+34d33
+< ok xsave
+35a35
+> ok apic-split
+37d36
+< ok apic
+38a38
+> ok s3
+40c40
+< not ok vmx_null
+---
+> ok vmx_null
+42d41
+< not ok vmx
+44d42
+< ok vmx_test_vmptrld
+45a44
+> ok vmx_test_vmptrld
+48d46
+< ok access
+50c48
+< ok vmx_test_vmcs_lifecycle
+---
+> ok access
+52c50,51
+< not ok vmx_vmenter
+---
+> ok vmx_test_vmcs_lifecycle
+> ok vmx_vmenter
+54,72c53,72
+< not ok vmx_preemption_timer
+< not ok vmx_control_field_PAT
+< not ok vmx_control_field_EFER
+< not ok vmx_CR_shadowing
+< not ok vmx_IO_bitmap
+< not ok vmx_instruction_intercept
+< not ok vmx_EPT_AD_disabled
+< not ok vmx_EPT_AD_enabled
+< not ok vmx_PML
+< not ok vmx_VPID
+< not ok vmx_interrupt
+< not ok vmx_debug_controls
+< not ok vmx_vmmcall
+< not ok vmx_MSR_switch
+< not ok vmx_disable_RDTSCP
+< not ok vmx_int3
+< not ok vmx_into
+< not ok vmx_exit_monitor_from_l2_test
+< not ok vmx_v2
+---
+> ok vmx_control_field_PAT
+> ok vmx_control_field_EFER
+> ok vmx_CR_shadowing
+> ok vmx_preemption_timer
+> ok vmx_IO_bitmap
+> ok vmx_instruction_intercept
+> ok kvmclock_test
+> ok vmx_EPT_AD_disabled
+> ok vmx_PML
+> ok vmx_EPT_AD_enabled
+> ok vmx_VPID
+> ok vmx_interrupt
+> ok vmx_debug_controls
+> ok vmx_MSR_switch
+> ok vmx_disable_RDTSCP
+> ok vmx_vmmcall
+> ok vmx_int3
+> ok vmx_into
+> ok vmx_v2
+> ok vmx_exit_monitor_from_l2_test
+80d79
+< ok vmx_ept_access_test_reserved_bits # SKIP
+82c81
+< ok vmx_ept_access_test_paddr_not_present_ad_disabled # SKIP
+---
+> ok vmx_ept_access_test_reserved_bits # SKIP
+85c84
+< ok kvmclock_test
+---
+> ok vmx_ept_access_test_paddr_not_present_ad_disabled # SKIP
+87d85
+< ok vmx_ept_access_test_paddr_read_write # SKIP
+88a87,88
+> ok vmx_ept_access_test_paddr_read_write # SKIP
+> ok vmx_ept_access_test_paddr_read_execute_ad_enabled # SKIP
+91,92d90
+< ok vmx_ept_access_test_paddr_read_execute_ad_enabled # SKIP
+< ok vmx_ept_access_test_paddr_not_present_page_fault # SKIP
+94,95c92,95
+< not ok vmx_vmentry_movss_shadow_test
+< not ok vmx_cr_load_test
+---
+> ok vmx_ept_access_test_paddr_not_present_page_fault # SKIP
+> ok vmx_vmentry_movss_shadow_test
+> ok vmx_cr_load_test
+> ok vmx_nm_test
+97,104c97,102
+< not ok vmx_nm_test
+< not ok vmx_pending_event_test
+< not ok vmx_pending_event_hlt_test
+< not ok vmx_store_tsc_test
+< not ok vmx_store_tsc_test
+< not ok vmx_db_test
+< not ok vmx_nmi_window_test
+< not ok vmx_intr_window_test
+---
+> ok vmx_pending_event_test
+> ok vmx_pending_event_hlt_test
+> ok vmx_store_tsc_test
+> ok vmx_store_tsc_test
+> ok vmx_db_test
+> ok vmx_nmi_window_test
+107,109c105,108
+< not ok vmx_apic_passthrough
+< not ok vmx_vmcs_shadow_test
+< not ok vmx_apic_passthrough_thread
+---
+> ok vmx_intr_window_test
+> ok vmx_apic_passthrough
+> ok vmx_apic_passthrough_thread
+> not ok vmx_controls
+111d109
+< not ok intel_iommu
+113c111
+< not ok vmx_controls
+---
+> not ok intel_iommu
+117a116,117
+> not ok vmx
+> ok vmx_vmcs_shadow_test
+
+Hope it helps.
+
+Thanks,
+Jack
