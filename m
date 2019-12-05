@@ -2,94 +2,119 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987B9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC53C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1D0214B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575511431;
-	bh=UoJEDq5c8Ix/swM73GaX0xjhzayPHneSxnn8zjlfXrE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rXKjNVuXJIjP7agpL2+pXUw8k2is2vl5oPnjpc5i/KHweMjjaXj8TZohkzdqNn1nn
-	 /JZZybuMVxW3Ql6U8CL4srgKM0l3EqEEV22xWDcy4d8yuVOK33ORrsuBDFBqwmiNbL
-	 7gyeNkdBH6e+VtRHlQYqsAzZQf5qnuE6U1ixCIGQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1943D2077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 02:03:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfLECDu (ORCPT
+        id S1728690AbfLECDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Dec 2019 21:03:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728121AbfLECDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Dec 2019 21:03:50 -0500
-Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C1EF2077B;
-        Thu,  5 Dec 2019 02:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575511429;
-        bh=UoJEDq5c8Ix/swM73GaX0xjhzayPHneSxnn8zjlfXrE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=a/GQx7rjM/oQEU+Tqg2A/0stoPasy9COR5Qb+/q7TXXCtsDxqPH+wLB3/qokD5rgH
-         e4m1RdhnzwJ70fYKCiXZ7mKg7SdfJ1RtBBSGE6tboDoeinRlDHMXHNAtroxsFfK5yj
-         /5tUbGsq7F1IiXts1fBWkMohO8psZVwwBgpoWi+Y=
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Flavio Leitner <fbl@sysclose.org>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH 1/1] proc/stat: Fix wrong guest nice cpustat value
-Date:   Thu,  5 Dec 2019 03:03:44 +0100
-Message-Id: <20191205020344.14940-1-frederic@kernel.org>
-X-Mailer: git-send-email 2.23.0
+        Wed, 4 Dec 2019 21:03:54 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:60062 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbfLECDy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Dec 2019 21:03:54 -0500
+Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xB51xvft020982;
+        Thu, 5 Dec 2019 10:59:57 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp);
+ Thu, 05 Dec 2019 10:59:57 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xB51xvmN020973;
+        Thu, 5 Dec 2019 10:59:57 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: (from i-love@localhost)
+        by www262.sakura.ne.jp (8.15.2/8.15.2/Submit) id xB51xuco020972;
+        Thu, 5 Dec 2019 10:59:56 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Message-Id: <201912050159.xB51xuco020972@www262.sakura.ne.jp>
+X-Authentication-Warning: www262.sakura.ne.jp: i-love set sender to penguin-kernel@i-love.sakura.ne.jp using -f
+Subject: Re: KASAN: slab-out-of-bounds Read in =?ISO-2022-JP?B?ZmJjb25fZ2V0X2Zv?=
+ =?ISO-2022-JP?B?bnQ=?=
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Grzegorz Halat <ghalat@redhat.com>
+Cc:     syzbot <syzbot+4455ca3b3291de891abc@syzkaller.appspotmail.com>,
+        aryabinin@virtuozzo.com, daniel.thompson@linaro.org,
+        dri-devel@lists.freedesktop.org, dvyukov@google.com,
+        gleb@kernel.org, gwshan@linux.vnet.ibm.com, hpa@zytor.com,
+        jmorris@namei.org, kasan-dev@googlegroups.com, kvm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, mingo@redhat.com,
+        mpe@ellerman.id.au, pbonzini@redhat.com, ruscur@russell.cc,
+        serge@hallyn.com, stewart@linux.vnet.ibm.com,
+        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp,
+        tglx@linutronix.de, x86@kernel.org
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date:   Thu, 05 Dec 2019 10:59:56 +0900
+References: <0000000000002cfc3a0598d42b70@google.com> <0000000000003e640e0598e7abc3@google.com>
+In-Reply-To: <0000000000003e640e0598e7abc3@google.com>
+Content-Type: text/plain; charset="ISO-2022-JP"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Flavio Leitner <fbl@sysclose.org>
+Hello.
 
-The value being used for guest_nice should be CPUTIME_GUEST_NICE
-and not CPUTIME_USER.
+syzbot is reporting that memory allocation size at fbcon_set_font() is too small
+because font's height is rounded up from 10 to 16 after memory allocation.
 
-Fixes: 26dae145a76c ("procfs: Use all-in-one vtime aware kcpustat accessor")
-Signed-off-by: Flavio Leitner <fbl@sysclose.org>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
----
- fs/proc/stat.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/proc/stat.c b/fs/proc/stat.c
-index 37bdbec5b402..fd931d3e77be 100644
---- a/fs/proc/stat.c
-+++ b/fs/proc/stat.c
-@@ -134,7 +134,7 @@ static int show_stat(struct seq_file *p, void *v)
- 		softirq		+= cpustat[CPUTIME_SOFTIRQ];
- 		steal		+= cpustat[CPUTIME_STEAL];
- 		guest		+= cpustat[CPUTIME_GUEST];
--		guest_nice	+= cpustat[CPUTIME_USER];
-+		guest_nice	+= cpustat[CPUTIME_GUEST_NICE];
- 		sum		+= kstat_cpu_irqs_sum(i);
- 		sum		+= arch_irq_stat_cpu(i);
+----------
+diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+index c9235a2f42f8..68fe66e435d3 100644
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -2461,6 +2461,7 @@ static int fbcon_get_font(struct vc_data *vc, struct console_font *font)
  
-@@ -175,7 +175,7 @@ static int show_stat(struct seq_file *p, void *v)
- 		softirq		= cpustat[CPUTIME_SOFTIRQ];
- 		steal		= cpustat[CPUTIME_STEAL];
- 		guest		= cpustat[CPUTIME_GUEST];
--		guest_nice	= cpustat[CPUTIME_USER];
-+		guest_nice	= cpustat[CPUTIME_GUEST_NICE];
- 		seq_printf(p, "cpu%d", i);
- 		seq_put_decimal_ull(p, " ", nsec_to_clock_t(user));
- 		seq_put_decimal_ull(p, " ", nsec_to_clock_t(nice));
--- 
-2.23.0
+ 	if (font->width <= 8) {
+ 		j = vc->vc_font.height;
++		printk("ksize(fontdata)=%lu font->charcount=%d vc->vc_font.height=%d font->width=%u\n", ksize(fontdata), font->charcount, j, font->width);
+ 		for (i = 0; i < font->charcount; i++) {
+ 			memcpy(data, fontdata, j);
+ 			memset(data + j, 0, 32 - j);
+@@ -2661,6 +2662,8 @@ static int fbcon_set_font(struct vc_data *vc, struct console_font *font,
+ 	size = h * pitch * charcount;
+ 
+ 	new_data = kmalloc(FONT_EXTRA_WORDS * sizeof(int) + size, GFP_USER);
++	if (new_data)
++		printk("ksize(new_data)=%lu h=%u pitch=%u charcount=%u font->width=%u\n", ksize(new_data), h, pitch, charcount, font->width);
+ 
+ 	if (!new_data)
+ 		return -ENOMEM;
+----------
 
+Normal usage:
+
+[   27.305293] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+[   27.328527] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+[   27.362551] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+[   27.385084] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+[   27.387653] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+[   27.417562] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+[   27.437808] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+[   27.440738] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+[   27.461157] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+[   27.495346] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+[   27.607372] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+[   27.655674] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+[   27.675310] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+[   27.702193] ksize(new_data)=8192 h=16 pitch=1 charcount=256 font->width=8
+
+syzbot's testcase:
+
+[  115.784893] ksize(new_data)=4096 h=10 pitch=1 charcount=256 font->width=8
+[  115.790269] ksize(fontdata)=4096 font->charcount=256 vc->vc_font.height=16 font->width=8
