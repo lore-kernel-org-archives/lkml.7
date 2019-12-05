@@ -2,158 +2,138 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976C9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DA1C43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E952245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:26:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="ITISbBJ6"
+	by mail.kernel.org (Postfix) with ESMTP id 00E4920707
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 06:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbfLEG0q (ORCPT
+        id S1726233AbfLEGcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 01:26:46 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:37894 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfLEG0q (ORCPT
+        Thu, 5 Dec 2019 01:32:09 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:43799 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfLEGcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 01:26:46 -0500
-Received: by mail-vs1-f68.google.com with SMTP id y195so1593999vsy.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 22:26:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nbsCBqwsoBQXn99gJ7FljzhWrqwsgKc0+d7eAwdfQaY=;
-        b=ITISbBJ610JApEniCUhf+PkDIWuBE7EiRPGPHRI/MTRnhIc75kBMw3m1t5rrxjxziF
-         8mw4DTCvU0tJdqBFD5PV4ZOoTcPVg9OOgUu02BoQsZb78CSF8zUxqKRN7JlcSiyxJgzS
-         LVA47BKUFiwdm1bbmlDRPrd34zR978vDhmIQJT5ubb27U6VWsy8sFFSlL+jjb+76Ydbs
-         mCBmh27e0L7OGEi53LLMHyYZaOr9NRXEgWSrAqX1ZykcvALC70chpghNRYOEMZB75mS3
-         nWEEjrM/m8jSjKpd/23qvsWY95zJnSKDyIQEIxbaN+ggnryy31aDmba4hnnLK4XOFmp7
-         mVaQ==
+        Thu, 5 Dec 2019 01:32:08 -0500
+Received: by mail-io1-f72.google.com with SMTP id b17so1714985ioh.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Dec 2019 22:32:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nbsCBqwsoBQXn99gJ7FljzhWrqwsgKc0+d7eAwdfQaY=;
-        b=WI520vEKg+oi14ogHU7O+D6ShbYG9ltdeA8fc8qgPWRGITsNY/xlPKTWWrVWmwvKLt
-         XHVg1rzlAal2SXUZNiEGnZM4c5rG/4XdrXcu5FBg38nOtSEQowKPyqnUqvzXGpTCopzl
-         nZ2sO67BXqxh/HzeGCov/ngSTb4VSm9sTLYpLKU7yLHjEGbvp+aXzJCYVdQnXxsUadFY
-         wCNCGDk+0uyZocE1SagaDMzmdySE4jMVtRnCp8yx/K+rlyZn3la3grVHYGLEk8d3zdIz
-         wQS/z1FaG5YZC3uUquJfdHvBmWiUPGtsfw46D93jnbWgmwVKpTQPdzbszqN7jkSj3JQK
-         cppw==
-X-Gm-Message-State: APjAAAWEzzrmvuzkC9wBwQECgOLMo/6075bVeNH5Y5tBmBLqOijkPUUm
-        PMZpDqfPbpe2b6YeZ1yWIN1TsuhRwZVnj8MWzQVzfA==
-X-Google-Smtp-Source: APXvYqyXHr50QT0eU4yDVmAv5OzLz5SDyDjNk45ZhtYF8ue+AOqm36+XKwU2LGd5x6NGtH2m14Vl6om+BywczCIyMeg=
-X-Received: by 2002:a67:f8cf:: with SMTP id c15mr4520755vsp.27.1575527204383;
- Wed, 04 Dec 2019 22:26:44 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=gFm1gwUBe3aCgV86v6LWZ9hjXuYSquYhbKNTONEAZTg=;
+        b=NTPiBACMwecK1ualrfg6u25icux7fzoqpIKc0ZjXZtpeBRDTNcKR/wCAbrUGCil7tn
+         E42ENxbxOe4aTROs3vbnXQ6kEBjnoXySbGpd2G7nZ5P/WaX1oeF5Zo6ie9xA/n1FvLJH
+         G8G3nv1GLYNTtH7mt0EtyO/hkAuDV1mFWuxLAVf+fHYXDgsXjtRbunxv5pECx0EJ1qWk
+         0XT3GIzWtW0cTplntLagH9vyalyaefEDu6dJ8VTGeoazLF1jqTtk1FvSgMIVb4j6QeBq
+         P+zjhlQoa6Ntpwe0Po28C+KKuac4Lla/8XsjZsHaKCszy/pd6PwAnRglY+EFC97FJ+LJ
+         4QfA==
+X-Gm-Message-State: APjAAAU4ADfiaZ86WrgsxwuklJdaDJ4MN4hzWYax/yG9Euve5mghSOOs
+        waevNyXZdyUg09PnJC0qEzWRsSZDMOT2ILV7PC/SffLjN+Po
+X-Google-Smtp-Source: APXvYqxQQwL/9K+MlUOghBiyJ/HODZZ+EZ24A0kMBBi2MlWWUzTliZxJ8mnm6quXBgQishvvvlTIOO/1XfndCqccGX1zpuvagG+2
 MIME-Version: 1.0
-References: <CAHLCerOD2wOJq7QNGBOcLvkMz4wvc1+6Hk2+ZD__NFged3tLcw@mail.gmail.com>
- <20191204215618.125826-1-wvw@google.com> <20191204215618.125826-2-wvw@google.com>
- <CAHLCerMQ_734AFe=QCg+qi3TOvYPMB95NPP_EEHNbuODBSEfog@mail.gmail.com> <CAGXk5yr=jfXq+n7oB0sc=6LT0raURmQ9rgFWqrg0hxMDKYFDig@mail.gmail.com>
-In-Reply-To: <CAGXk5yr=jfXq+n7oB0sc=6LT0raURmQ9rgFWqrg0hxMDKYFDig@mail.gmail.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Thu, 5 Dec 2019 11:56:33 +0530
-Message-ID: <CAHLCerOpv3Dqd7AB6=EEUUMpTWujNeLok3=ZpLntCdvHewGyww@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] thermal: fix and clean up tz and cdev registration
-To:     Wei Wang <wvw@google.com>
-Cc:     Wei Wang <wei.vince.wang@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a92:ca8b:: with SMTP id t11mr7760516ilo.227.1575527528013;
+ Wed, 04 Dec 2019 22:32:08 -0800 (PST)
+Date:   Wed, 04 Dec 2019 22:32:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a4293f0598ef165e@google.com>
+Subject: KASAN: vmalloc-out-of-bounds Write in bitfill_aligned
+From:   syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 11:44 AM Wei Wang <wvw@google.com> wrote:
->
-> On Wed, Dec 4, 2019 at 8:13 PM Amit Kucheria
-> <amit.kucheria@verdurent.com> wrote:
-> >
-> > Hi Wei,
-> >
-> > On Thu, Dec 5, 2019 at 3:26 AM Wei Wang <wvw@google.com> wrote:
-> > >
-> > > Make cooling device registration behavior consistent with
-> >
-> > Consistent how? Please add details.
-> >
-> Consistent with
-> https://lore.kernel.org/linux-pm/1478581767-7009-2-git-send-email-edubezval@gmail.com/
->
-> will include aboce in next version.
+Hello,
 
-Thanks.
+syzbot found the following crash on:
 
->
-> > > thermal zone. This patch also cleans up a unnecessary
-> > > nullptr check.
-> > >
-> > > Signed-off-by: Wei Wang <wvw@google.com>
-> > > ---
-> > >  drivers/thermal/thermal_core.c | 16 ++++++++++++----
-> > >  1 file changed, 12 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> > > index d4481cc8958f..64fbb59c2f44 100644
-> > > --- a/drivers/thermal/thermal_core.c
-> > > +++ b/drivers/thermal/thermal_core.c
-> > > @@ -954,8 +954,16 @@ __thermal_cooling_device_register(struct device_node *np,
-> > >         struct thermal_zone_device *pos = NULL;
-> > >         int result;
-> > >
-> > > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH)
-> > > -               return ERR_PTR(-EINVAL);
-> > > +       if (!type || !type[0]) {
-> > > +           pr_err("Error: No cooling device type defined\n");
-> > > +           return ERR_PTR(-EINVAL);
-> > > +       }
-> > > +
-> > > +       if (strlen(type) >= THERMAL_NAME_LENGTH) {
-> > > +           pr_err("Error: Cooling device name (%s) too long, "
-> > > +                  "should be under %d chars\n", type, THERMAL_NAME_LENGTH);
-> >
-> > Consider fitting into a single greppable string as "Error: Cooling
-> > device name over %d chars: %s\n"
-> >
-> Was intentionally keep it the same as this
-> https://lore.kernel.org/linux-pm/31a29628894a14e716fff113fd9ce945fe649c05.1562876950.git.amit.kucheria@linaro.org/
-> Will make it shorter in both places next verion
+HEAD commit:    63de3747 Merge tag 'tag-chrome-platform-for-v5.5' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1040fc41e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1d189d07c6717979
+dashboard link: https://syzkaller.appspot.com/bug?extid=e5fd3e65515b48c02a30
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Yes please, make it a separate patch. We didn't catch it during review.
+Unfortunately, I don't have any reproducer for this crash yet.
 
->
-> > > +           return ERR_PTR(-EINVAL);
-> > > +       }
-> > >
-> > >         if (!ops || !ops->get_max_state || !ops->get_cur_state ||
-> > >             !ops->set_cur_state)
-> > > @@ -972,7 +980,7 @@ __thermal_cooling_device_register(struct device_node *np,
-> > >         }
-> > >
-> > >         cdev->id = result;
-> > > -       strlcpy(cdev->type, type ? : "", sizeof(cdev->type));
-> > > +       strlcpy(cdev->type, type, sizeof(cdev->type));
-> > >         mutex_init(&cdev->lock);
-> > >         INIT_LIST_HEAD(&cdev->thermal_instances);
-> > >         cdev->np = np;
-> > > @@ -1250,7 +1258,7 @@ thermal_zone_device_register(const char *type, int trips, int mask,
-> > >                 return ERR_PTR(-EINVAL);
-> > >         }
-> > >
-> > > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH) {
-> > > +       if (strlen(type) >= THERMAL_NAME_LENGTH) {
-> > >                 pr_err("Error: Thermal zone name (%s) too long, should be under %d chars\n",
-> > >                        type, THERMAL_NAME_LENGTH);
-> > >                 return ERR_PTR(-EINVAL);
-> > > --
-> > > 2.24.0.393.g34dc348eaf-goog
-> > >
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: vmalloc-out-of-bounds in bitfill_aligned  
+drivers/video/fbdev/core/sysfillrect.c:54 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in bitfill_aligned+0x356/0x410  
+drivers/video/fbdev/core/sysfillrect.c:25
+Write of size 8 at addr ffffc90008b11000 by task syz-executor.2/9476
+
+CPU: 2 PID: 9476 Comm: syz-executor.2 Not tainted 5.4.0-syzkaller #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS  
+rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:638
+  __asan_report_store8_noabort+0x17/0x20 mm/kasan/generic_report.c:140
+  bitfill_aligned drivers/video/fbdev/core/sysfillrect.c:54 [inline]
+  bitfill_aligned+0x356/0x410 drivers/video/fbdev/core/sysfillrect.c:25
+  sys_fillrect+0x421/0x7c0 drivers/video/fbdev/core/sysfillrect.c:291
+  drm_fb_helper_sys_fillrect+0x21/0x190 drivers/gpu/drm/drm_fb_helper.c:736
+  bit_clear_margins+0x30b/0x530 drivers/video/fbdev/core/bitblit.c:232
+  fbcon_clear_margins+0x1e9/0x250 drivers/video/fbdev/core/fbcon.c:1372
+  fbcon_switch+0xd7f/0x17f0 drivers/video/fbdev/core/fbcon.c:2354
+  redraw_screen+0x2b6/0x7d0 drivers/tty/vt/vt.c:997
+  fbcon_modechanged+0x5c3/0x790 drivers/video/fbdev/core/fbcon.c:2991
+  fbcon_update_vcs+0x42/0x50 drivers/video/fbdev/core/fbcon.c:3038
+  fb_set_var+0xb32/0xdd0 drivers/video/fbdev/core/fbmem.c:1051
+  do_fb_ioctl+0x390/0x7d0 drivers/video/fbdev/core/fbmem.c:1104
+  fb_ioctl+0xe6/0x130 drivers/video/fbdev/core/fbmem.c:1180
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a759
+Code: bd b1 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 8b b1 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f8280324c88 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 000000000072bf00 RCX: 000000000045a759
+RDX: 0000000020000040 RSI: 0000000000004601 RDI: 0000000000000003
+RBP: 0000000000000003 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f82803256d4
+R13: 00000000004a9e78 R14: 00000000006ec2d8 R15: 00000000ffffffff
+
+
+Memory state around the buggy address:
+  ffffc90008b10f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ffffc90008b10f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ffffc90008b11000: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+                    ^
+  ffffc90008b11080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  ffffc90008b11100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
