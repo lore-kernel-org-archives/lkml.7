@@ -2,105 +2,188 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB18C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA2AC2BD09
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75372464D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:54:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJuwZ9C5"
+	by mail.kernel.org (Postfix) with ESMTP id 10C4B2464D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 18:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbfLESy0 (ORCPT
+        id S1730008AbfLESyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 13:54:26 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46933 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfLESy0 (ORCPT
+        Thu, 5 Dec 2019 13:54:31 -0500
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:34731 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729956AbfLESy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 13:54:26 -0500
-Received: by mail-pl1-f193.google.com with SMTP id k20so1597541pll.13;
-        Thu, 05 Dec 2019 10:54:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WN8ERINy6PXUGcWY7m9MoPwmPVqxaKRp2RAYWnDloq4=;
-        b=YJuwZ9C5x9gP/4dhKBFCfhkq+pDYAjYcl10yYW0hgcWgTz3pG4ORfl5iAzoThLRWZC
-         2uPWnUdI2s6YnkL+puMXun/cNGR9tT8YX/DLIw2CzXA+wy70ln6mSGkai9+EHU9mw0+9
-         eKhiKH9w+t/Dj4b8L+a0PQ+rjGi7q5V46LzUKrLz2VHTEjJ+nXK5It8gRRDR8KD5tQTI
-         xEl7F90XB98VydSe82zxNn2DaLwPSA5SAHNsPt6dueTBl9vmlbaVVwPKvtPmrFw7I/Wv
-         Gn5jIuYbzKI7I1TTijHskJivYyKGLQenmM9y4MSl27IoH/u7Kj6nOnchzyiMBioxmIz6
-         NZCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WN8ERINy6PXUGcWY7m9MoPwmPVqxaKRp2RAYWnDloq4=;
-        b=mmmvu5hhS/vVciV/cxsROVRuFFozMJVcZbBv316wrwLIhd+vwvvVUlr8eNqWbTpKBr
-         SvkAQJC6RnXHJ5KpYoictJA655YwLcMYPY7d2PjQU7dQ2thPY9VdDE8HSy+B+wB1qX0W
-         REd7Q4TsvRygYPXqia3YP0gA4rbBoteDC83EqWd2qbuLrHzFPZUKfk/GoaoKoD/izinn
-         4VlJz9OTF/2JFc/DcURUbgSZzBi6g/r13oJ74ybguNfEhX5phjdf7WMqToVbYOfb3pdt
-         n3HvlbFxjHWpAgnbTglZ/DIvKB4byF/MDUeUMwS7Xdkm7smVLadFaYtSbFvPCSoQa6+g
-         38gw==
-X-Gm-Message-State: APjAAAWrOPY0qMgBOKeuB1W/yRqefxTR/fLdsHzbR9kLa48IXZjM7n7W
-        bSXpMRO1tC1KjVKPBXo1n2w=
-X-Google-Smtp-Source: APXvYqzh8EYHVNRpV4wFsffi47Ko9oBUP66rlZ+yK5qxrXBj3EBpf5iASprcZ8zOukIdAWSERYqTtA==
-X-Received: by 2002:a17:902:860a:: with SMTP id f10mr10632648plo.326.1575572064915;
-        Thu, 05 Dec 2019 10:54:24 -0800 (PST)
-Received: from localhost.localdomain ([2402:3a80:cf3:351e:3984:ab1:9b44:803])
-        by smtp.gmail.com with ESMTPSA id 73sm12114203pgc.13.2019.12.05.10.54.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 10:54:24 -0800 (PST)
-From:   madhuparnabhowmik04@gmail.com
-To:     paulmck@kernel.org, josh@joshtriplett.org, joel@joelfernandes.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: [PATCH] include: linux: rculist_nulls: Change docbook comment headers
-Date:   Fri,  6 Dec 2019 00:23:52 +0530
-Message-Id: <20191205185352.1957-1-madhuparnabhowmik04@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 5 Dec 2019 13:54:29 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Tk3fIrL_1575572053;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk3fIrL_1575572053)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 06 Dec 2019 02:54:20 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     fabecassis@nvidia.com, jhubbard@nvidia.com, mhocko@suse.com,
+        cl@linux.com, vbabka@suse.cz, mgorman@techsingularity.net,
+        akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [v3 PATCH] mm: move_pages: return valid node id in status if the page is already on the target node
+Date:   Fri,  6 Dec 2019 02:54:13 +0800
+Message-Id: <1575572053-128363-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Felix Abecassis reports move_pages() would return random status if the
+pages are already on the target node by the below test program:
 
-This patch changes the docbook comment "head for your list"
-to "head of the list".
+---8<---
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+int main(void)
+{
+	const long node_id = 1;
+	const long page_size = sysconf(_SC_PAGESIZE);
+	const int64_t num_pages = 8;
+
+	unsigned long nodemask =  1 << node_id;
+	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
+	if (ret < 0)
+		return (EXIT_FAILURE);
+
+	void **pages = malloc(sizeof(void*) * num_pages);
+	for (int i = 0; i < num_pages; ++i) {
+		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
+				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
+				-1, 0);
+		if (pages[i] == MAP_FAILED)
+			return (EXIT_FAILURE);
+	}
+
+	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
+	if (ret < 0)
+		return (EXIT_FAILURE);
+
+	int *nodes = malloc(sizeof(int) * num_pages);
+	int *status = malloc(sizeof(int) * num_pages);
+	for (int i = 0; i < num_pages; ++i) {
+		nodes[i] = node_id;
+		status[i] = 0xd0; /* simulate garbage values */
+	}
+
+	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
+	printf("move_pages: %ld\n", ret);
+	for (int i = 0; i < num_pages; ++i)
+		printf("status[%d] = %d\n", i, status[i]);
+}
+---8<---
+
+Then running the program would return nonsense status values:
+$ ./move_pages_bug
+move_pages: 0
+status[0] = 208
+status[1] = 208
+status[2] = 208
+status[3] = 208
+status[4] = 208
+status[5] = 208
+status[6] = 208
+status[7] = 208
+
+This is because the status is not set if the page is already on the
+target node, but move_pages() should return valid status as long as it
+succeeds.  The valid status may be errno or node id.
+
+We can't simply initialize status array to zero since the pages may be
+not on node 0.  Fix it by updating status with node id which the page is
+already on.
+
+Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+Reported-by: Felix Abecassis <fabecassis@nvidia.com>
+Tested-by: Felix Abecassis <fabecassis@nvidia.com>
+Suggested-by: Michal Hocko <mhocko@suse.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: <stable@vger.kernel.org> 4.17+
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
- include/linux/rculist_nulls.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v3: * Adopted the suggestion from Michal.
+v2: * Correted the return value when add_page_for_migration() returns 1.
 
-diff --git a/include/linux/rculist_nulls.h b/include/linux/rculist_nulls.h
-index 517a06f36c7a..bea311c884b3 100644
---- a/include/linux/rculist_nulls.h
-+++ b/include/linux/rculist_nulls.h
-@@ -104,7 +104,7 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
-  * hlist_nulls_for_each_entry_rcu - iterate over rcu list of given type
-  * @tpos:	the type * to use as a loop cursor.
-  * @pos:	the &struct hlist_nulls_node to use as a loop cursor.
-- * @head:	the head for your list.
-+ * @head:	the head of the list.
-  * @member:	the name of the hlist_nulls_node within the struct.
-  *
-  * The barrier() is needed to make sure compiler doesn't cache first element [1],
-@@ -124,7 +124,7 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
-  *   iterate over list of given type safe against removal of list entry
-  * @tpos:	the type * to use as a loop cursor.
-  * @pos:	the &struct hlist_nulls_node to use as a loop cursor.
-- * @head:	the head for your list.
-+ * @head:	the head of the list.
-  * @member:	the name of the hlist_nulls_node within the struct.
+ mm/migrate.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/mm/migrate.c b/mm/migrate.c
+index a8f87cb..9c172f4 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1512,9 +1512,11 @@ static int do_move_pages_to_node(struct mm_struct *mm,
+ /*
+  * Resolves the given address to a struct page, isolates it from the LRU and
+  * puts it to the given pagelist.
+- * Returns -errno if the page cannot be found/isolated or 0 when it has been
+- * queued or the page doesn't need to be migrated because it is already on
+- * the target node
++ * Returns:
++ *     errno - if the page cannot be found/isolated
++ *     0 - when it doesn't have to be migrated because it is already on the
++ *         target node
++ *     1 - when it has been queued
   */
- #define hlist_nulls_for_each_entry_safe(tpos, pos, head, member)		\
+ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+ 		int node, struct list_head *pagelist, bool migrate_all)
+@@ -1553,7 +1555,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+ 	if (PageHuge(page)) {
+ 		if (PageHead(page)) {
+ 			isolate_huge_page(page, pagelist);
+-			err = 0;
++			err = 1;
+ 		}
+ 	} else {
+ 		struct page *head;
+@@ -1563,7 +1565,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+ 		if (err)
+ 			goto out_putpage;
+ 
+-		err = 0;
++		err = 1;
+ 		list_add_tail(&head->lru, pagelist);
+ 		mod_node_page_state(page_pgdat(head),
+ 			NR_ISOLATED_ANON + page_is_file_cache(head),
+@@ -1578,6 +1580,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+ 	put_page(page);
+ out:
+ 	up_read(&mm->mmap_sem);
++
+ 	return err;
+ }
+ 
+@@ -1640,8 +1643,17 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+ 		 */
+ 		err = add_page_for_migration(mm, addr, current_node,
+ 				&pagelist, flags & MPOL_MF_MOVE_ALL);
+-		if (!err)
++
++		/* The page is already on the target node */
++		if (!err) {
++			err = store_status(status, i, current_node, 1);
++			if (err)
++				goto out_flush;
+ 			continue;
++		/* The page is successfully queued */
++		} else if (err > 0) {
++			continue;
++		}
+ 
+ 		err = store_status(status, i, err, 1);
+ 		if (err)
 -- 
-2.17.1
+1.8.3.1
 
