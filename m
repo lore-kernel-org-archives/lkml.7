@@ -2,114 +2,109 @@ Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F12C43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D121BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C0F42465B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D8D21823
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 14:01:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="e/zfhcrU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NfTY6uPL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbfLEOBy (ORCPT
+        id S1729605AbfLEOBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 09:01:54 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:10787 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbfLEOBv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 5 Dec 2019 09:01:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575554511; x=1607090511;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3V/slw6i8lEhvkIzZyT6X8o1Z4Oo4kiWfC2gC+XC92E=;
-  b=e/zfhcrUs8YBDAcPMluZdoedp8ptazW6MdTWmvv2n3Gp2I5YgJvGgH2M
-   OB/zj+lT2rtlUaewmWpgAYpSIZJnmQ+tu6XhvuLlyCvjbaVLY9DczknB4
-   nEiD7Aw0hg3TGgQKqVC5m1fHPhyoA9TCsGiKtgHHwbEUG5FChFofWLHA1
-   8=;
-IronPort-SDR: jZ7e9uzRrTtrcEfwO8IvA3gzi/yT0CgX020KZM87+W0LUhDIm/3rcRxMA2UpgNXRQmt4BPG2e6
- WcmrHkejHKfA==
-X-IronPort-AV: E=Sophos;i="5.69,281,1571702400"; 
-   d="scan'208";a="11809799"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 05 Dec 2019 14:01:42 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id F0512A283A;
-        Thu,  5 Dec 2019 14:01:41 +0000 (UTC)
-Received: from EX13D32EUC001.ant.amazon.com (10.43.164.159) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 5 Dec 2019 14:01:41 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D32EUC001.ant.amazon.com (10.43.164.159) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 5 Dec 2019 14:01:39 +0000
-Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
- mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Thu, 5 Dec 2019 14:01:38 +0000
-From:   Paul Durrant <pdurrant@amazon.com>
-To:     <linux-kernel@vger.kernel.org>, <xen-devel@lists.xenproject.org>
-CC:     Paul Durrant <pdurrant@amazon.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>
-Subject: [PATCH 3/4] xen/interface: don't discard pending work in FRONT/BACK_RING_ATTACH
-Date:   Thu, 5 Dec 2019 14:01:22 +0000
-Message-ID: <20191205140123.3817-4-pdurrant@amazon.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191205140123.3817-1-pdurrant@amazon.com>
-References: <20191205140123.3817-1-pdurrant@amazon.com>
+Received: from vps0.lunn.ch ([185.16.172.187]:38166 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729236AbfLEOBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 09:01:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=RJnmT508lemxn3jZi6MdCEa9v5+oeCEtGVN1/x2fxsI=; b=NfTY6uPLTCxtmjnAZ0CO2N5bAN
+        +1UtQ6loR8ACDhPxgRwvAHil2EQmV9qO/dcNEdIwWgivM94RWLlV6B+o3gKJYTEfPeEql0cS4j8rp
+        lT0sTUgHgepN5Eov3d+zdpuBcrSwPp/YIiM5IRS2m9CIUeM/yywtXKEIKtgEQzl5Js9E=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1icrhE-0007fM-6f; Thu, 05 Dec 2019 15:01:32 +0100
+Date:   Thu, 5 Dec 2019 15:01:32 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexander Lobakin <alobakin@dlink.ru>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Muciri Gatimu <muciri@openmesh.com>,
+        Shashidhar Lakkavalli <shashidhar.lakkavalli@openmesh.com>,
+        John Crispin <john@phrozen.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Matteo Croce <mcroce@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: dsa: fix flow dissection on Tx path
+Message-ID: <20191205140132.GD28269@lunn.ch>
+References: <20191205100235.14195-1-alobakin@dlink.ru>
+ <20191205125827.GA28269@lunn.ch>
+ <2e03b82a8ec999fade26253ff35077c6@dlink.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2e03b82a8ec999fade26253ff35077c6@dlink.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently these macros will skip over any requests/responses that are
-added to the shared ring whilst it is detached. This, in general, is not
-a desirable semantic since most frontend implementations will eventually
-block waiting for a response which would either never appear or never be
-processed.
+> Hi,
+> 
+> > What i'm missing here is an explanation why the flow dissector is
+> > called here if the protocol is already set? It suggests there is a
+> > case when the protocol is not correctly set, and we do need to look
+> > into the frame?
+> 
+> If we have a device with multiple Tx queues, but XPS is not configured
+> or system is running on uniprocessor system, then networking core code
+> selects Tx queue depending on the flow to utilize as much Tx queues as
+> possible but without breaking frames order.
+> This selection happens in net/core/dev.c:skb_tx_hash() as:
+> 
+> reciprocal_scale(skb_get_hash(skb), qcount)
+> 
+> where 'qcount' is the total number of Tx queues on the network device.
+> 
+> If skb has not been hashed prior to this line, then skb_get_hash() will
+> call flow dissector to generate a new hash. That's why flow dissection
+> can occur on Tx path.
 
-NOTE: These macros are currently unused. BACK_RING_ATTACH(), however, will
-      be used in a subsequent patch.
 
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
----
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
----
- include/xen/interface/io/ring.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi Alexander
 
-diff --git a/include/xen/interface/io/ring.h b/include/xen/interface/io/ring.h
-index 3f40501fc60b..405adfed87e6 100644
---- a/include/xen/interface/io/ring.h
-+++ b/include/xen/interface/io/ring.h
-@@ -143,14 +143,14 @@ struct __name##_back_ring {						\
- #define FRONT_RING_ATTACH(_r, _s, __size) do {				\
-     (_r)->sring = (_s);							\
-     (_r)->req_prod_pvt = (_s)->req_prod;				\
--    (_r)->rsp_cons = (_s)->rsp_prod;					\
-+    (_r)->rsp_cons = (_s)->req_prod;					\
-     (_r)->nr_ents = __RING_SIZE(_s, __size);				\
- } while (0)
- 
- #define BACK_RING_ATTACH(_r, _s, __size) do {				\
-     (_r)->sring = (_s);							\
-     (_r)->rsp_prod_pvt = (_s)->rsp_prod;				\
--    (_r)->req_cons = (_s)->req_prod;					\
-+    (_r)->req_cons = (_s)->rsp_prod;					\
-     (_r)->nr_ents = __RING_SIZE(_s, __size);				\
- } while (0)
- 
--- 
-2.20.1
+So it looks like you are now skipping this hash. Which in your
+testing, give better results, because the protocol is already set
+correctly. But are there cases when the protocol is not set correctly?
+We really do need to look into the frame?
 
+How about when an outer header has just been removed? The frame was
+received on a GRE tunnel, the GRE header has just been removed, and
+now the frame is on its way out? Is the protocol still GRE, and we
+should look into the frame to determine if it is IPv4, ARP etc?
+
+Your patch looks to improve things for the cases you have tested, but
+i'm wondering if there are other use cases where we really do need to
+look into the frame? In which case, your fix is doing the wrong thing.
+Should we be extending the tagger to handle the TX case as well as the
+RX case?
+
+   Andrew
