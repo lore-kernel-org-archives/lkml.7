@@ -2,179 +2,146 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8152BC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A60C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47B2824679
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575619028;
-	bh=Vo/Nyoj6NYsP3WDzflA7vAE83GEcxJjOqXtGgl4Mqnk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N60nR0F2+P9+rfGgnbPGslt0roGLtEoQ3L/poFnXnJjpNz2BUXK557MJuvpBIxKYs
-	 97ONXn4rqW5eP61CMK3+KTPVfYHjGufshiW2FhlbYikFo0g54N7Xm3EG/9byzUQ1F3
-	 SDr9OlnSQBc3xUOc1ggPNM6ZP7qMhD+j9kR1I3/k=
+	by mail.kernel.org (Postfix) with ESMTP id E836A24679
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:57:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kt41mzhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLFH5H (ORCPT
+        id S1726769AbfLFH5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 02:57:07 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33439 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbfLFH5H (ORCPT
+        Fri, 6 Dec 2019 02:57:25 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40802 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfLFH5Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 02:57:07 -0500
-Received: by mail-wr1-f67.google.com with SMTP id b6so6725903wrq.0;
-        Thu, 05 Dec 2019 23:57:05 -0800 (PST)
+        Fri, 6 Dec 2019 02:57:25 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y5so4545134lfy.7
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 23:57:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=mobGWCFRoNiMon+fqSNJqSuTbmxm/A3xC/X3cT3Seb0=;
-        b=LWUlNxSbHCzFXZLB8agEx6kq0Lr+L7BO6q5U8JrQt8DGMW1GheHVeyiciK3Oo5mfew
-         cE6mQsirmIsKrXEjM1LhrF78ExZM3SpFMCg0cdHzysMvtrymKfElUG62ZYDyTfWAE4IW
-         EcSVpaMIU+refwdI7zDE9XPEAObqdNo0+riBPyR+Qtq/SCKiygeu0YNOGamyWFYsbwaN
-         Mej8h6CoiGOtDTk4BlExMjAeL9mm3+fRjEr9zr1zM0WOmgvVM/MblyrEU041HJzZKUDb
-         8TOzX+PgrIKZW7eVnGJq6bCp6xeekwX1D9z40LhWlDCFWIxoseLBhKwo6TzAWfYtXjZL
-         1rMA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xEu6cAM9pmTpfttF8e2oMkl90xLdoRvHCVPFFTjvbNo=;
+        b=kt41mzhhzZcrOKXdVDG0ccgMoWbimeOhH2wggSrbIcSDNKHbn4jYw83Gvalvmc5JKX
+         wgY+GKv1z8Y3ibrydIiYHEt/YWwmo17l9aslJWB4BMso65+PQH1CPFHWbAlb65oCLwXF
+         LrrAPAPLo34QAbwT7QFPQx0RRKRfjH87www/57ahU2E+M9uJ8xT6f3awrJwRXpRLx63R
+         s6ryERgUUIKQWsJk0zm/E46Zf69vLJU8RbfdEz36mvBtM2Hwzd2HVPThl7z3EwYNYZHB
+         8f8+1q1IGmuQZlwps6Z/TvjVKhcNQiDIlUHNVkLfu34mYgIuu/pmtFQnm7y1J+ELrL6L
+         VyYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=mobGWCFRoNiMon+fqSNJqSuTbmxm/A3xC/X3cT3Seb0=;
-        b=NBiNlh9v/Si3hKi5FqlP8topsdN3j/El4liBO71bF0Gg3Hc45L0iDgWq6zbHesSk9Z
-         eMNeQ+8oRAMw5NpS832MV/VoDOJycy+wOGKpILy+RhPmBAMFgZIRxgxETOgzlu04hEcL
-         2tIj37UnddueIrufbHXO6PVOrLcUlbrgtHSBoOJtO9m5sW+RBO4xw4cHLbgBV1eKeC39
-         GxuY8nWHWB4qJQyZ5kH3wAYK+g4O87oz8DTetANYmhLqUk9CT5svKZi0U3e9AF4Wor8G
-         dSkHP/K2AdMtF39ioMoYClnHSzbHRs7pfvBmAT+y4F3dG7osraC6QN4Bp3ZrBHAh2d46
-         thpQ==
-X-Gm-Message-State: APjAAAVmGvYnHebwhknmxv8QxD+DvW05rgbivKjzo/m37DiCH22IwDsk
-        1NXPI08SrgXgHal6jZaTOF4=
-X-Google-Smtp-Source: APXvYqx6b0WeQZToKrHXjPkM2js0Cqt7opPY63PI72cwR+1CgkgVYeQD5s8RRWLAFRS138zztkcnGg==
-X-Received: by 2002:a5d:62d0:: with SMTP id o16mr13856031wrv.197.1575619024663;
-        Thu, 05 Dec 2019 23:57:04 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id e18sm14893868wrr.95.2019.12.05.23.57.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 23:57:03 -0800 (PST)
-Date:   Fri, 6 Dec 2019 08:57:01 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL 0/6] perf/urgent fixes
-Message-ID: <20191206075701.GA25384@gmail.com>
-References: <20191205193224.24629-1-acme@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xEu6cAM9pmTpfttF8e2oMkl90xLdoRvHCVPFFTjvbNo=;
+        b=Cy8Ox5uuLs6piDnw6UBuSD8pdkbH1YvT4e25Tvyq1YS6CqwdcAukt0pFuxTEvs2ruP
+         pdueO8nVjjn3TpfIAwzPhBu0cnA86ezTRg/yOCBdSUYdVQhy77QOrZ4JCB3yleg4LL4w
+         OLHy3ei7ccgVCM9a37DNlWUsRuZLZeTUM0UXxXmJh0H8/IcE7YEctRiw2fsb1YQSJEhv
+         9hj5uHfkgUbZkNqzr9AN4xrGUxH0fYWx/UnzqYPDhGB84nsOGpZdmppeRq7BBQwCqfPJ
+         In/akcyNGNmi8ERzGJfcf/F8ViPkZt1tqsQ1p4dSxwSjPnC+5MN3JLBGOd52SDtWjoOa
+         /FPg==
+X-Gm-Message-State: APjAAAWvplNBPSKUqWGX+286Zo9h0yrAcO07YYKJNGmwOjCZLA2M5ylH
+        iR5nuSIfs4DhhPqn7X+xVwI4hOFiHwRdB9Rl5uLdWQ==
+X-Google-Smtp-Source: APXvYqzgrpwRRY7jmgSpXqLkEQarYAJPki0cVzClvDnOhM80LLiZpSNMjfQ9GSfZvN00MLkn1aHXTncqJYe9U6WKyeQ=
+X-Received: by 2002:ac2:43a7:: with SMTP id t7mr6729587lfl.125.1575619043523;
+ Thu, 05 Dec 2019 23:57:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191205193224.24629-1-acme@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191204200623.198897-1-joshdon@google.com>
+In-Reply-To: <20191204200623.198897-1-joshdon@google.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 6 Dec 2019 08:57:11 +0100
+Message-ID: <CAKfTPtBZUUtJ=ZvQOWmKx_1zUXtNoqcS0M85ouQmgi36xzfM2A@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/fair: Do not set skip buddy up the sched hierarchy
+To:     Josh Don <joshdon@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Turner <pjt@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Josh,
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On Wed, 4 Dec 2019 at 21:06, Josh Don <joshdon@google.com> wrote:
+>
+> From: Venkatesh Pallipadi <venki@google.com>
+>
+> Setting skip buddy all the way up the hierarchy does not play well
+> with intra-cgroup yield. One typical usecase of yield is when a
+> thread in a cgroup wants to yield CPU to another thread within the
+> same cgroup. For such a case, setting the skip buddy all the way up
+> the hierarchy is counter-productive, as that results in CPU being
+> yielded to a task in some other cgroup.
+>
+> So, limit the skip effect only to the task requesting it.
+>
+> Signed-off-by: Josh Don <joshdon@google.com>
 
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 9f58c93efdffc2cba91fdcee010b3e5e8860334d:
-> 
->   Merge tag 'perf-core-for-mingo-5.5-20191203' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2019-12-04 08:49:52 +0100)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.5-20191205
-> 
-> for you to fetch changes up to fd9bee5e24141d00e23b66d1b51bc759efa7e3fe:
-> 
->   tools headers UAPI: Update tools's copy of drm.h headers (2019-12-04 16:22:38 -0300)
-> 
-> ----------------------------------------------------------------
-> perf inject:
-> 
->   Adrian Hunter:
-> 
->   - Fix processing of ID index for injected instruction tracing
-> 
-> perf report:
-> 
->   Ravi Bangoria:
-> 
->   - Replace pr_err() with ui__error(), so that we can see the output
->     in the TUI mode instead of showing and immediately restoring the
->     screen to the state before perf was started.
-> 
->   - Don't start --mem-mode/--branch-mode mode if required samples are not
->     available.
-> 
-> tools headers UAPI:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Sync drm/i915_drm.h with the kernel sources
-> 
->   - Update tools's copy of drm.h headers.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Adrian Hunter (1):
->       perf inject: Fix processing of ID index for injected instruction tracing
-> 
-> Arnaldo Carvalho de Melo (2):
->       tools headers UAPI: Sync drm/i915_drm.h with the kernel sources
->       tools headers UAPI: Update tools's copy of drm.h headers
-> 
-> Ravi Bangoria (3):
->       perf report/top TUI: Replace pr_err() with ui__error()
->       perf report: Make -F more strict like -s
->       perf report: Bail out --mem-mode if mem info is not available
-> 
->  tools/include/uapi/drm/drm.h      |   3 +-
->  tools/include/uapi/drm/i915_drm.h | 128 +++++++++++++++++++++++++++++++++++++-
->  tools/perf/builtin-inject.c       |  13 +---
->  tools/perf/builtin-report.c       |   8 +++
->  tools/perf/util/sort.c            |  16 +++--
->  5 files changed, 147 insertions(+), 21 deletions(-)
+There is a mismatch between the author Venkatesh Pallipadi and the
+signoff Josh Don
+If Venkatesh is the original author and you have then done some
+modifications, your both signed-off should be there
 
-Pulled, thanks a lot Arnaldo!
+Apart from that, the change makes sense to me
 
-JFYI, on my system the default perf/urgent build still has this noise 
-generated by util/parse-events.y and util/expr.y:
-
-  util/parse-events.y:1.1-12: warning: deprecated directive, use ‘%define api.pure’ [-Wdeprecated]
-      1 | %pure-parser
-      | ^~~~~~~~~~~~
-  util/parse-events.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
-  util/expr.y:15.1-12: warning: deprecated directive, use ‘%define api.pure’ [-Wdeprecated]
-     15 | %pure-parser
-      | ^~~~~~~~~~~~
-  util/expr.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
-
-
-Thanks,
-
-	Ingo
+> ---
+> v2: Only clear skip buddy on the current cfs_rq
+>
+>  kernel/sched/fair.c | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 08a233e97a01..0b7a1958ad52 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4051,13 +4051,10 @@ static void __clear_buddies_next(struct sched_entity *se)
+>
+>  static void __clear_buddies_skip(struct sched_entity *se)
+>  {
+> -       for_each_sched_entity(se) {
+> -               struct cfs_rq *cfs_rq = cfs_rq_of(se);
+> -               if (cfs_rq->skip != se)
+> -                       break;
+> +       struct cfs_rq *cfs_rq = cfs_rq_of(se);
+>
+> +       if (cfs_rq->skip == se)
+>                 cfs_rq->skip = NULL;
+> -       }
+>  }
+>
+>  static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se)
+> @@ -6552,8 +6549,15 @@ static void set_next_buddy(struct sched_entity *se)
+>
+>  static void set_skip_buddy(struct sched_entity *se)
+>  {
+> -       for_each_sched_entity(se)
+> -               cfs_rq_of(se)->skip = se;
+> +       /*
+> +        * One typical usecase of yield is when a thread in a cgroup
+> +        * wants to yield CPU to another thread within the same cgroup.
+> +        * For such a case, setting the skip buddy all the way up the
+> +        * hierarchy is counter-productive, as that results in CPU being
+> +        * yielded to a task in some other cgroup. So, only set skip
+> +        * for the task requesting it.
+> +        */
+> +       cfs_rq_of(se)->skip = se;
+>  }
+>
+>  /*
+> --
+> 2.24.0.393.g34dc348eaf-goog
+>
