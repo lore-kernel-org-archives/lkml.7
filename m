@@ -2,119 +2,91 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45477C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD9BC2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16DB32464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FCA32464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:43:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b="Vq9KbSly"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FI3uXTGC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfLFUiS (ORCPT
+        id S1726407AbfLFUn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 15:38:18 -0500
-Received: from mail.kapsi.fi ([91.232.154.25]:58637 "EHLO mail.kapsi.fi"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbfLFUiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 15:38:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
-         s=20161220; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=7Ue6ST1C9P1tY1QLUauLPe7lfUfde9A/Tmm51Dk5Bko=; b=Vq9KbSlyUezdNuy+axSowJqc+I
-        Hik7ks85MmhCKX5KvuSOu5+6a3DKasW8RTdc4uQzNP+uMxHgQZUhHUh7RVzd22u/IUsEXUPapwnb/
-        gRZ59wV2+jVnwIek8LVXr5ggyWVPwTrp2gDVPNJET1PeQVG/V2si7/YC1q6jHrBSwFXWagtIqz9FX
-        5w7MoryfQiWXpdhLxmwPAKfXEInCugyrY4Z3L0E/zj822D9Dh5DMEv0IWOD6juICAp0gF90E3mlyM
-        wAAOBPoXfGdqO3FosdXr/CHJ1on+asPaANCu9+sacR4oFLWzHm1JHZ+m6+wcq3QEVpuq9RgrTgsff
-        8oD+fjRQ==;
-Received: from 91-154-92-5.elisa-laajakaista.fi ([91.154.92.5] helo=localhost)
-        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <jarkko.sakkinen@linux.intel.com>)
-        id 1idKMa-0006HJ-Tp; Fri, 06 Dec 2019 22:38:09 +0200
-Date:   Fri, 6 Dec 2019 22:38:07 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Suresh Siddha <suresh.b.siddha@intel.com>
-Subject: Re: [PATCH v23 12/24] x86/sgx: Linux Enclave Driver
-Message-ID: <20191206203807.GA9971@linux.intel.com>
-References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
- <20191028210324.12475-13-jarkko.sakkinen@linux.intel.com>
- <20191128182450.GA3493127@kroah.com>
+        Fri, 6 Dec 2019 15:43:57 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39069 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbfLFUn5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 15:43:57 -0500
+Received: by mail-lj1-f195.google.com with SMTP id e10so9043172ljj.6
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 12:43:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oF+xlo1sx9gytHOVJmZzD5EHDYm2UDoLMUn75V8RhEs=;
+        b=FI3uXTGCTF/CsvRtjzUm5SGnAxOj8iYUwPwy84nNUJAQJIy5Z6jDPZ43JCM/HizVKg
+         wjalGmSGIL0vznEvGNI1fgY2QOncXYDyRCXqkbhLZL8a9TB613Tjf+UBXDFFD4K0KOTd
+         X/6uFMhEOqGq73YaEAyW74x0y8WYPWnVAscv0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oF+xlo1sx9gytHOVJmZzD5EHDYm2UDoLMUn75V8RhEs=;
+        b=jIsb8cSQUFacCNsPJ/drrrAcDspiEkHownmVQPsT1yLXTezwIC7C1AieYkr0ToRHrG
+         /hq1RKQxfznjTt7hQAMnSqjqvDL5yeBcQeh/75Qh5yop97Q83fkfPdSIUGO+vP+HYCCe
+         ph1m+LNtadRRoy/Bi9+L7WHiqV6IPQzwj8piEePZz5zPSJnH0B2DXMYPq8ovr3yc+yb2
+         mvdkm1peX8fht/7G5KQPugvobXxVxvxbDVL4tpXLGyZ95aYJb3jmtqIMZLBCXtB/OHGH
+         F0QU01qP3hnhFzYIx1XL0a4qgR6jwCx8JOMoD4T0aCkYHHyVtuXXuDIT3n9JOMZscxva
+         iS8w==
+X-Gm-Message-State: APjAAAVmmuIvg1yJE7Om9gRBnbKDSW79AakWgCuxnHLLxwDjktdT1MMp
+        QJwTyFa27xSIOpe7d3L6fiYWDKZSpTI=
+X-Google-Smtp-Source: APXvYqyLzYrfiF8hqBNBQsX3ZlL0rrT4ZQudDFkqfMZzoLDYJJkJwznKJbTPQp2hNmDXhWSqcz+Ibw==
+X-Received: by 2002:a2e:9942:: with SMTP id r2mr10085754ljj.182.1575665034801;
+        Fri, 06 Dec 2019 12:43:54 -0800 (PST)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id b22sm7422812lji.66.2019.12.06.12.43.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 12:43:53 -0800 (PST)
+Received: by mail-lj1-f180.google.com with SMTP id c19so8994625lji.11
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 12:43:53 -0800 (PST)
+X-Received: by 2002:a05:651c:285:: with SMTP id b5mr9852969ljo.14.1575665033279;
+ Fri, 06 Dec 2019 12:43:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128182450.GA3493127@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 91.154.92.5
-X-SA-Exim-Mail-From: jarkko.sakkinen@linux.intel.com
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+References: <20191128134839.27606-1-georgi.djakov@linaro.org>
+In-Reply-To: <20191128134839.27606-1-georgi.djakov@linaro.org>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Fri, 6 Dec 2019 12:43:17 -0800
+X-Gmail-Original-Message-ID: <CAE=gft6YoDyOFvYLh-zOmpbNJwfgB0OGugeZKCORz0euMJyS0w@mail.gmail.com>
+Message-ID: <CAE=gft6YoDyOFvYLh-zOmpbNJwfgB0OGugeZKCORz0euMJyS0w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] interconnect: Add a common standard aggregate function
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-pm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        David Dai <daidavid1@codeaurora.org>, masneyb@onstation.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 07:24:50PM +0100, Greg KH wrote:
-> On Mon, Oct 28, 2019 at 11:03:12PM +0200, Jarkko Sakkinen wrote:
-> > +static struct device sgx_encl_dev;
-> 
-> Ugh, really?  After 23 versions of this patchset no one saw this?
+On Thu, Nov 28, 2019 at 5:48 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>
+> Currently there is one very standard aggregation method that is used by
+> several drivers. Let's add this as a common function, so that drivers
+> could just point to it, instead of copy/pasting code.
+>
+> Suggested-by: Evan Green <evgreen@chromium.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-Nobody has really given feedback on the device model. This is the
-first review on that and thanks for taking your time. Previously
-feeback has been mainly on the ioctl API and file management.
-
-> > +static dev_t sgx_devt;
-> > +
-> > +static void sgx_dev_release(struct device *dev)
-> > +{
-> > +}
-> 
-> The old kernel documentation used to say I was allowed to make fun of
-> people who did this, but that was removed as it really wasn't that nice.
-> 
-> But I'm seriously reconsidering that at the moment.
-> 
-> No, this is NOT OK!
-> 
-> Think about what you are doing here, and why you feel that it is ok to
-> work around a kernel message that was added there explicitly to help you
-> do things the right way.  I didn't add it just because I felt like it, I
-> was trying to give you a chance to not get the use of this api
-> incorrect.
-> 
-> That failed :(
-> 
-> Ugh, not ok.  Seriously, not ok...
-
-It used to delete a context structure called sgx_dev_ctx. This structure
-was removed in v20. I've failed to notice this when the code was refactored
-for v20.
-
-> Why a whole cdev?
-> 
-> Why not use a misc device?  YOu only have 2 devices right?  Why not 2
-> misc devices then?  That saves the use of a whole major number and makes
-> your code a _LOT_ simpler.
-
-The downside would be that if we ever want to add sysfs attributes, that
-could not be done synchronously with the device creation.
-
-/Jarkko
+Reviewed-by: Evan Green <evgreen@chromium.org>
