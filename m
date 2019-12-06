@@ -2,86 +2,112 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB84C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0CAC2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEDD824671
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575634459;
-	bh=o9F0FuHOka2xZ0DmTCxH9WxB/cnnsDObFTkSmj9uGn4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z27u+/Gb8gGa91/vrbQbFx7mBzMw4772pF/dQWrZbwEgDb+CJh3LBmAyy5wnpq/CZ
-	 YyQwCMmPgBSDK2xO7aoBQ9dWi1fvaeErIiYxwaXfcgjZLSWao4jdacw77+aEdgCnp9
-	 uoMmyXtZBZtFyrzYgEuq7TDZpNlPIqPb5O5+t3PU=
+	by mail.kernel.org (Postfix) with ESMTP id F374924659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbfLFMOS (ORCPT
+        id S1726262AbfLFMRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:14:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40868 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbfLFMOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:14:18 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1060C24659;
-        Fri,  6 Dec 2019 12:14:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575634457;
-        bh=o9F0FuHOka2xZ0DmTCxH9WxB/cnnsDObFTkSmj9uGn4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n4V/NNwpig9+WVhOViCP9jYRxmz4yhy2Qed2W6VvichITokR4w5POCyM+QIBRPOjJ
-         AEFIEm7KySg7SrSUydZi0VDehdLQDHN31QYpE3zreqyWVSzq/H2LEC1CCUDZiyIzX3
-         uLaaOjwdvHoBIPeY3erxearcvRIu7REdPNQ58kcA=
-Date:   Fri, 6 Dec 2019 07:14:16 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Lyude Paul <lyude@redhat.com>, linux-input@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 24/25] Input: synaptics - enable RMI mode
- for X1 Extreme 2nd Generation
-Message-ID: <20191206121415.GV5861@sasha-vm>
-References: <20191122194859.24508-1-sashal@kernel.org>
- <20191122194859.24508-24-sashal@kernel.org>
- <20191122195532.GB248138@dtor-ws>
+        Fri, 6 Dec 2019 07:17:16 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:43255 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbfLFMRP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 07:17:15 -0500
+Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=calabresa)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <cascardo@canonical.com>)
+        id 1idCXo-00079d-9v; Fri, 06 Dec 2019 12:17:12 +0000
+Date:   Fri, 6 Dec 2019 09:17:07 -0300
+From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        posk@google.com
+Subject: Re: [PATCH] selftests: net: ip_defrag: increase netdev_max_backlog
+Message-ID: <20191206121707.GC5083@calabresa>
+References: <20191204195321.406365-1-cascardo@canonical.com>
+ <483097a3-92ec-aedd-60d9-ab7f58b9708d@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191122195532.GB248138@dtor-ws>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <483097a3-92ec-aedd-60d9-ab7f58b9708d@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 11:55:32AM -0800, Dmitry Torokhov wrote:
->Hi Sasha,
->
->On Fri, Nov 22, 2019 at 02:48:57PM -0500, Sasha Levin wrote:
->> From: Lyude Paul <lyude@redhat.com>
->>
->> [ Upstream commit 768ea88bcb235ac3a92754bf82afcd3f12200bcc ]
->>
->> Just got one of these for debugging some unrelated issues, and noticed
->> that Lenovo seems to have gone back to using RMI4 over smbus with
->> Synaptics touchpads on some of their new systems, particularly this one.
->> So, let's enable RMI mode for the X1 Extreme 2nd Generation.
->>
->> Signed-off-by: Lyude Paul <lyude@redhat.com>
->> Link: https://lore.kernel.org/r/20191115221814.31903-1-lyude@redhat.com
->> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->
->This will be reverted, do not pick up for stable.
+On Wed, Dec 04, 2019 at 12:03:57PM -0800, Eric Dumazet wrote:
+> 
+> 
+> On 12/4/19 11:53 AM, Thadeu Lima de Souza Cascardo wrote:
+> > When using fragments with size 8 and payload larger than 8000, the backlog
+> > might fill up and packets will be dropped, causing the test to fail. This
+> > happens often enough when conntrack is on during the IPv6 test.
+> > 
+> > As the larger payload in the test is 10000, using a backlog of 1250 allow
+> > the test to run repeatedly without failure. At least a 1000 runs were
+> > possible with no failures, when usually less than 50 runs were good enough
+> > for showing a failure.
+> > 
+> > As netdev_max_backlog is not a pernet setting, this sets the backlog to
+> > 1000 during exit to prevent disturbing following tests.
+> > 
+> 
+> Hmmm... I would prefer not changing a global setting like that.
+> This is going to be flaky since we often run tests in parallel (using different netns)
+> 
+> What about adding a small delay after each sent packet ?
+> 
+> diff --git a/tools/testing/selftests/net/ip_defrag.c b/tools/testing/selftests/net/ip_defrag.c
+> index c0c9ecb891e1d78585e0db95fd8783be31bc563a..24d0723d2e7e9b94c3e365ee2ee30e9445deafa8 100644
+> --- a/tools/testing/selftests/net/ip_defrag.c
+> +++ b/tools/testing/selftests/net/ip_defrag.c
+> @@ -198,6 +198,7 @@ static void send_fragment(int fd_raw, struct sockaddr *addr, socklen_t alen,
+>                 error(1, 0, "send_fragment: %d vs %d", res, frag_len);
+>  
+>         frag_counter++;
+> +       usleep(1000);
+>  }
+>  
+>  static void send_udp_frags(int fd_raw, struct sockaddr *addr,
+> 
 
-I've dropped it, thanks!
+That won't work because the issue only shows when we using conntrack, as the
+packet will be reassembled on output, then fragmented again. When this happens,
+the fragmentation code is transmitting the fragments in a tight loop, which
+floods the backlog.
 
--- 
-Thanks,
-Sasha
+One other option is limit the number of fragments to a 1000, like the following
+patch:
+
+diff --git a/tools/testing/selftests/net/ip_defrag.c b/tools/testing/selftests/net/ip_defrag.c
+index c0c9ecb891e1..f4086ba9d16c 100644
+--- a/tools/testing/selftests/net/ip_defrag.c
++++ b/tools/testing/selftests/net/ip_defrag.c
+@@ -16,6 +16,9 @@
+ #include <time.h>
+ #include <unistd.h>
+ 
++#define ALIGN(x, sz) ((x + (sz-1)) & ~(sz-1))
++#define MAX(a, b) ((a < b) ? b : a)
++
+ static bool		cfg_do_ipv4;
+ static bool		cfg_do_ipv6;
+ static bool		cfg_verbose;
+@@ -362,6 +365,7 @@ static void run_test(struct sockaddr *addr, socklen_t alen, bool ipv6)
+ 
+ 	for (payload_len = min_frag_len; payload_len < MSG_LEN_MAX;
+ 			payload_len += (rand() % 4096)) {
++		min_frag_len = MAX(8, ALIGN(payload_len / 1000, 8));
+ 		if (cfg_verbose)
+ 			printf("payload_len: %d\n", payload_len);
+ 
