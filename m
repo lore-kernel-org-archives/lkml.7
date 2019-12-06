@@ -2,106 +2,113 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921E4C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 561D9C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B88A2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2F42075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:47:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="f6tCm1D/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbfLFBpP (ORCPT
+        id S1726174AbfLFBri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 20:45:15 -0500
-Received: from mga06.intel.com ([134.134.136.31]:43238 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfLFBpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 20:45:14 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 17:45:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,282,1571727600"; 
-   d="scan'208";a="413183225"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 05 Dec 2019 17:45:12 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1id2gC-0006Wa-EP; Fri, 06 Dec 2019 09:45:12 +0800
-Date:   Fri, 6 Dec 2019 09:45:01 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     kbuild-all@lists.01.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] x86: Optimise x86 IP checksum code
-Message-ID: <201912060941.f3Qi9xtV%lkp@intel.com>
-References: <c92db041c78e4d81a70aaf4249393901@AcuMS.aculab.com>
+        Thu, 5 Dec 2019 20:47:38 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:1493 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbfLFBrh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 20:47:37 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de9b33d0000>; Thu, 05 Dec 2019 17:47:41 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 05 Dec 2019 17:47:37 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 05 Dec 2019 17:47:37 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec
+ 2019 01:47:36 +0000
+Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec 2019
+ 01:47:36 +0000
+Subject: Re: [PATCH] move_pages.2: not return ENOENT if the page are already
+ on the target nodes
+To:     Yang Shi <yang.shi@linux.alibaba.com>, <mtk.manpages@gmail.com>,
+        <cl@linux.com>, <mhocko@suse.com>, <cai@lca.pw>,
+        <akpm@linux-foundation.org>
+CC:     <linux-man@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+References: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <683f6cae-0e0c-d4e4-0929-7fd1a79a2266@nvidia.com>
+Date:   Thu, 5 Dec 2019 17:47:35 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c92db041c78e4d81a70aaf4249393901@AcuMS.aculab.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575596861; bh=hHAqZuqTQkT4Jg75DDaPISOvw/O4fuowgbjbEnHGf64=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=f6tCm1D/suIescD8w+pxCD2rleaR43m1WcZ5BxpODtT57dOMzvFdKTb0ou58JXsBL
+         myUNvQvY77xa9Ds51TSoJjp78o/Ss96pAv4jnfqTGAmWpgdHE1pno3y9pCu365EnXl
+         UHwvY9vmfGltMN1M2EiH3Gn7ZksERB31c1jFtN/DkOOWVrD2zlBg2XBvoSLYH8YsYB
+         iy5jpU3sIw0Wr/mWb4yiyok+YlL/R2wvhRONVgj58Sp/gEFFD8vgj2pGtckc8prZxd
+         J2C0PMS1e6I1UT2M30e+Ytfc/FchC1kDISdWP67a0toIT7CyFw+uE1Y2939yHLoqit
+         xRO8aymsX2TCw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On 12/5/19 5:34 PM, Yang Shi wrote:
+...
+> 
+> diff --git a/man2/move_pages.2 b/man2/move_pages.2
+> index 2d96468..2a2f3cd 100644
+> --- a/man2/move_pages.2
+> +++ b/man2/move_pages.2
+> @@ -192,9 +192,8 @@ was specified or an attempt was made to migrate pages of a kernel thread.
+>  One of the target nodes is not online.
+>  .TP
+>  .B ENOENT
+> -No pages were found that require moving.
+> -All pages are either already
+> -on the target node, not present, had an invalid address or could not be
+> +No pages were found.
+> +All pages are either not present, had an invalid address or could not be
+>  moved because they were mapped by multiple processes.
 
-Thank you for the patch! Perhaps something to improve:
+How about this wording (ignoring man formatting for the moment):
 
-[auto build test WARNING on tip/auto-latest]
-[also build test WARNING on tip/x86/core linus/master v5.4 next-20191202]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+No pages were moved, because all requested pages fell into one or more of
+the following cases:
 
-url:    https://github.com/0day-ci/linux/commits/David-Laight/x86-Optimise-x86-IP-checksum-code/20191203-211313
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git e445033e58108a9891abfbc0dea90b066a75e4a9
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-91-g817270f-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+* Page not present.
+* Page has an invalid address.
+* Page is mapped by multiple processes.
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+Reasoning: I don't like the "no pages were found" all by itself, because it
+blindly rewords the meaning of ENOENT. ENOENT is merely the closest
+symbol we have. So we use ENOENT and that's fine, but the descriptive text 
+should describe what really happened, which is "no pages were moved". If we had 
+an ENOPAGESMOVED then we'd use that. :)
 
-
-sparse warnings: (new ones prefixed by >>)
-
->> arch/x86/lib/csum-partial_64.c:141:23: sparse: sparse: incorrect type in return expression (different base types) @@    expected restricted __wsum @@    got icted __wsum @@
->> arch/x86/lib/csum-partial_64.c:141:23: sparse:    expected restricted __wsum
->> arch/x86/lib/csum-partial_64.c:141:23: sparse:    got unsigned int
-
-vim +141 arch/x86/lib/csum-partial_64.c
-
-   126	
-   127	/*
-   128	 * computes the checksum of a memory block at buff, length len,
-   129	 * and adds in "sum" (32-bit)
-   130	 *
-   131	 * returns a 32-bit number suitable for feeding into itself
-   132	 * or csum_tcpudp_magic
-   133	 *
-   134	 * this function must be called with even lengths, except
-   135	 * for the last fragment, which may be odd
-   136	 *
-   137	 * it's best to have buff aligned on a 64-bit boundary
-   138	 */
-   139	__wsum csum_partial(const void *buff, int len, __wsum sum)
-   140	{
- > 141		return do_csum(buff, len, (__force u32)sum);
-   142	}
-   143	EXPORT_SYMBOL(csum_partial);
-   144	
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+thanks,
+-- 
+John Hubbard
+NVIDIA
