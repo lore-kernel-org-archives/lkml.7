@@ -2,110 +2,67 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89FBC2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D890FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3D8206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575648723;
-	bh=3R+PC8Ff3M5yx19vaH341IDsCcc0jMlrqtmK1IJiZAc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=M07RkBIOILPmV/xVu90J54NpSI/+5qd23H2ky4wUMFipNsIVSmBRr4Ix7erjMXCrf
-	 UEZuQPmHkRZcEkpnhimhJFB7J6O7E46JW+S+oY+3KxXa/GWsugRaZEp6QUcYPklJdo
-	 DGuX63e4POzCa84m7bK70+aQpYl3r+7VueBHmqo8=
+	by mail.kernel.org (Postfix) with ESMTP id A4E0F206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:15:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbfLFQMC (ORCPT
+        id S1726345AbfLFQPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:12:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbfLFQMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:12:02 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63349206DF;
-        Fri,  6 Dec 2019 16:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575648721;
-        bh=3R+PC8Ff3M5yx19vaH341IDsCcc0jMlrqtmK1IJiZAc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=2KY561JwdQ6U0gtI10EgrHS/V+IZj3bshbV5dB/HBR3ySMGIm6HWbbvYTEuBx8dFI
-         x/GqAF17JWtwmewJ76R82AKu0jZ1gLyLhcSaHc0BHvEqXJ7hG7orMrs3JovQys3+gc
-         0EHwNmuiae58NPAYHd88l9LkQszbRRUhjUjzywRM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3768835206AB; Fri,  6 Dec 2019 08:12:01 -0800 (PST)
-Date:   Fri, 6 Dec 2019 08:12:01 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     madhuparnabhowmik04@gmail.com, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, linux-nfs@vger.kernel.org,
-        rcu@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
-Message-ID: <20191206161201.GF2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
- <20191206160002.GB15547@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206160002.GB15547@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 6 Dec 2019 11:15:37 -0500
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:58981 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726271AbfLFQPh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 11:15:37 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=rocking@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tk8WAei_1575648901;
+Received: from localhost(mailfrom:rocking@linux.alibaba.com fp:SMTPD_---0Tk8WAei_1575648901)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 07 Dec 2019 00:15:35 +0800
+From:   Peng Wang <rocking@linux.alibaba.com>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org, Peng Wang <rocking@linux.alibaba.com>
+Subject: [PATCH] schied/fair: Skip updating "contrib" without load
+Date:   Sat,  7 Dec 2019 00:14:22 +0800
+Message-Id: <1575648862-12095-1-git-send-email-rocking@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 11:00:02AM -0500, Joel Fernandes wrote:
-> +Paul, here is the dependent patch for the list_prev_rcu() patch Madhuparna
-> posted.
+We only update load_sum/runnable_load_sum/util_sum with
+decayed old sum when load is clear.
 
-Got it, thank you!
+Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
+---
+ kernel/sched/pelt.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-And however this turns out, it does illustrate the value of the sparse
-address-space checks!
+diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+index a96db50..4392953 100644
+--- a/kernel/sched/pelt.c
++++ b/kernel/sched/pelt.c
+@@ -129,8 +129,9 @@ static u32 __accumulate_pelt_segments(u64 periods, u32 d1, u32 d3)
+ 		 * Step 2
+ 		 */
+ 		delta %= 1024;
+-		contrib = __accumulate_pelt_segments(periods,
+-				1024 - sa->period_contrib, delta);
++		if (load)
++			contrib = __accumulate_pelt_segments(periods,
++					1024 - sa->period_contrib, delta);
+ 	}
+ 	sa->period_contrib = delta;
+ 
+-- 
+1.8.3.1
 
-							Thanx, Paul
-
-> On Fri, Dec 06, 2019 at 08:46:40PM +0530, madhuparnabhowmik04@gmail.com wrote:
-> > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> > 
-> > This patch fixes the following errors:
-> > fs/nfs/dir.c:2353:14: error: incompatible types in comparison expression (different address spaces):
-> > fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
-> > fs/nfs/dir.c:2353:14:    struct list_head *
-> > 
-> > caused due to directly accessing the prev pointer of
-> > a RCU protected list.
-> > Accessing the pointer using the macro list_prev_rcu() fixes this error.
-> > 
-> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> > ---
-> >  fs/nfs/dir.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> > index e180033e35cf..2035254cc283 100644
-> > --- a/fs/nfs/dir.c
-> > +++ b/fs/nfs/dir.c
-> > @@ -2350,7 +2350,7 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
-> >  	rcu_read_lock();
-> >  	if (nfsi->cache_validity & NFS_INO_INVALID_ACCESS)
-> >  		goto out;
-> > -	lh = rcu_dereference(nfsi->access_cache_entry_lru.prev);
-> > +	lh = rcu_dereference(list_prev_rcu(&nfsi->access_cache_entry_lru));
-> >  	cache = list_entry(lh, struct nfs_access_entry, lru);
-> >  	if (lh == &nfsi->access_cache_entry_lru ||
-> >  	    cred != cache->cred)
-> > -- 
-> > 2.17.1
-> > 
