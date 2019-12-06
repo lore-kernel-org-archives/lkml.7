@@ -8,64 +8,65 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11655C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C37C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D84192467B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8488924679
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:53:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lG2d9ugx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qN1H8LBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfLFHwz (ORCPT
+        id S1726465AbfLFHxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 02:52:55 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:32850 "EHLO
+        Fri, 6 Dec 2019 02:53:12 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:35480 "EHLO
         mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbfLFHwy (ORCPT
+        with ESMTP id S1726184AbfLFHxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 02:52:54 -0500
-Received: by mail-pj1-f68.google.com with SMTP id r67so2410506pjb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 23:52:54 -0800 (PST)
+        Fri, 6 Dec 2019 02:53:12 -0500
+Received: by mail-pj1-f68.google.com with SMTP id w23so2410809pjd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 23:53:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=2kAJkkEoeN3MEGLHwJYyylmkvJRvoWmMXbreTxA7D7g=;
-        b=lG2d9ugxobHRE41/kg5UWdt0/yE4MsppHo+FrDfzlbWQN240CcA9QpUdB3SQ3LGPIW
-         FHvT7uruy43ruGMQXKstaoy8ymSo8ryl7KSqDmRj29NpfpOXlKcQPZWrl6dt8ALkkOZ9
-         Zig5X8896xQgd+00Uoi/PyyvzDO08m+wsfWdIGLNg2+MAXX8sDplWJSkgGmADIRpEuPD
-         lUhfMkSw4+Rn7J680wUJySL2nPtRwwNabx3qXoaws0M2oA6UZCiiSdzakhdpFF05Zt9l
-         9/ms06dU6dNYtdFBV3TYOOo6NphX8GCXZRbW7xX025t/adrKwXjtamf1ErokL3M3h4w8
-         1vLg==
+        bh=4QO+ulCytfHgL7qVYv09QqcQL+hLC3saTPny9UiLdvA=;
+        b=qN1H8LBYbMmKIwNlI9yzqDRW2TyamGui3efbW/hiY6qegMZI6tvwZsels63TUNqDov
+         ky6rAXJvi3QSSPnrul01cUfqF4sZ1EsVtg4L9+2Pdb7ZFuxVWaC8d73ezcr9Hrd8HkHG
+         hW6zIFeDgEuxBWuYxYSqVkJWySSRbst0ZJIkdPyTo/NKNuzjhRJvK4A2KQoxf6IdJozY
+         ee5KlI8s4ccDDP/OnlUDWkZ/Nxr49cFZZDaRdxxU9FL+9BpPuJQXedzcXL3sMqzhIeWV
+         gKL4O/IY2wSfy5HAizvO7JByJiaNqqFIHP6bE7e88PeEUK5hVmCodAsiNNCWZIudtCRa
+         juEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=2kAJkkEoeN3MEGLHwJYyylmkvJRvoWmMXbreTxA7D7g=;
-        b=lf8W1POGj/2BkS/iIG87ULA9gl21vroNReB3hgaHY74P5NS3vD3yekuwrNmSjmRb6W
-         ofz+wjYJ/R+EXLoGjRjDza3KS6AZGkR2/vF6hx7nbe6omlOsrdUAdUU28SWk9757HGf5
-         kerf0Ccn3UE4jVV8r8Jb+w0wG9KRjbYDrhOHY6YK78ofQ/PwQ718agBAzfsbodBeWoto
-         wUBYQD6+DTSaWasChahn1Wt/T6qqmOyrXVXVjlAAObEaXcwoNDjwciFRB2flZ8TnpslT
-         0lGpD/greLHhw5qBsR/VxSKEjjzRR1Y2YWRQS3K9di5It/GDweFV7YidRGtOOeevgQuv
-         wR2A==
-X-Gm-Message-State: APjAAAXTjp0rIx3KhEDURO3/sNv4ZmSuDRSSiZBFoKIJFjGnkhsKiJkR
-        Ig9HeLobxfJ3JMizHn/nEIA=
-X-Google-Smtp-Source: APXvYqw3qlredLsb+GwlZ2m05paSNQl2kY1qLzfGL5YtxkQXqv7xVIAc82ovW1wqhDwKFuUPyJENJw==
-X-Received: by 2002:a17:902:7084:: with SMTP id z4mr13014504plk.247.1575618774178;
-        Thu, 05 Dec 2019 23:52:54 -0800 (PST)
+        bh=4QO+ulCytfHgL7qVYv09QqcQL+hLC3saTPny9UiLdvA=;
+        b=XnwZ0O5O1S7qi6aWtf1BNJdHFgFme8sqx+0VI4RxrwYUWWyiJEhKlpRqrDXGkqMDeE
+         tB324PwSqmI+x+I2a6UOm0t9PeYe3s1pRbpUwbJqsnuVrixVRucthlWlVtFch9fI72Kz
+         l+bYk9lkhB/kSo7CGCLsm3vipwdXMd4UKqvY/yg54e6fcZsYHL23cC4JfSkS1BeaeaB1
+         4ZQW0Oi4IcdIFk5uCQqeWAlekA22WSPQTbpFNY96i1mCdpvS2KOojG6NHH7WoF/bZ1xY
+         CmBYsVp7o31S62D5ywzv9ayMfyt1zvvUkSzoTE1OEio98TznnwMrvDq3OeVBJQuoWMbi
+         rkAg==
+X-Gm-Message-State: APjAAAWws5b9CxSH5ey0JqtqYifchcN9VgPjzm7Gr6D5zp3vbVzp5KqQ
+        64iUt7OMKhIJ1Zc3R/pGh5k=
+X-Google-Smtp-Source: APXvYqzUWI9hR0utwQQmr4dSL+uVpikqVFuARQHqDsWtZnT0kqMol7jeccCmFX6CmDqhW41doA88Cw==
+X-Received: by 2002:a17:902:9682:: with SMTP id n2mr13035545plp.336.1575618791691;
+        Thu, 05 Dec 2019 23:53:11 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id i16sm14491341pfo.12.2019.12.05.23.52.45
+        by smtp.gmail.com with ESMTPSA id h68sm15999256pfe.162.2019.12.05.23.53.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 23:52:53 -0800 (PST)
+        Thu, 05 Dec 2019 23:53:11 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] ASoC: tas2552: add missed regulator_bulk_disable in remove
-Date:   Fri,  6 Dec 2019 15:52:39 +0800
-Message-Id: <20191206075239.18125-1-hslester96@gmail.com>
+        Takashi Iwai <tiwai@suse.com>, patches@opensource.cirrus.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] ASoC: wm5100: add missed regulator_bulk_disable
+Date:   Fri,  6 Dec 2019 15:53:00 +0800
+Message-Id: <20191206075300.18182-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -81,23 +82,22 @@ Add the missed call to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- sound/soc/codecs/tas2552.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/codecs/wm5100.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/codecs/tas2552.c b/sound/soc/codecs/tas2552.c
-index 56671f21cfe5..0e19ec76aae0 100644
---- a/sound/soc/codecs/tas2552.c
-+++ b/sound/soc/codecs/tas2552.c
-@@ -616,6 +616,9 @@ static void tas2552_component_remove(struct snd_soc_component *component)
- 	pm_runtime_put(component->dev);
+diff --git a/sound/soc/codecs/wm5100.c b/sound/soc/codecs/wm5100.c
+index 91cc63c5a51f..d985b2061169 100644
+--- a/sound/soc/codecs/wm5100.c
++++ b/sound/soc/codecs/wm5100.c
+@@ -2653,6 +2653,8 @@ static int wm5100_i2c_remove(struct i2c_client *i2c)
+ 		gpio_set_value_cansleep(wm5100->pdata.ldo_ena, 0);
+ 		gpio_free(wm5100->pdata.ldo_ena);
+ 	}
++	regulator_bulk_disable(ARRAY_SIZE(wm5100->core_supplies),
++			       wm5100->core_supplies);
  
- 	gpiod_set_value(tas2552->enable_gpio, 0);
-+
-+	regulator_bulk_disable(ARRAY_SIZE(tas2552->supplies),
-+					tas2552->supplies);
- };
- 
- #ifdef CONFIG_PM
+ 	return 0;
+ }
 -- 
 2.24.0
 
