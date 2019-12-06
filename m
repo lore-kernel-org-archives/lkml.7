@@ -2,182 +2,121 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBE0C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F642C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B186424659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:35:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgpnVv9z"
+	by mail.kernel.org (Postfix) with ESMTP id 44A392466E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:35:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575646552;
+	bh=52ocqDEIJig2TColhNlnLcGJC2vivQudJqfwPcjsBkI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=skrqXWdrCpaa7t3BctKbopiEP6rTnMHyigOj1cMJLOzXQBKqKm71g9DM9w8FfZ6OA
+	 A7w6r35mNt4yG+KGB+D8LSjwnzxvF+Yb7j0FnkdodF2pXnrNhnZxVbBHGAz1Hff84y
+	 uuXUWSskR5vYlNRdxEmGu4ov/3ySiNsXlBd7s4Us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbfLFPfP (ORCPT
+        id S1726472AbfLFPfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 10:35:15 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:35396 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfLFPfO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 10:35:14 -0500
-Received: by mail-ua1-f66.google.com with SMTP id y23so3005012ual.2;
-        Fri, 06 Dec 2019 07:35:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Z3vTy7H/7lOXWPNaODhyF3/E/KgHLJ7DB3lysc2zBWE=;
-        b=jgpnVv9zC5Dx0ZQl4zFQG42kE4SgF6sWasBjphggAmpGJeL8N+ZMZI7o8laneng5sF
-         40xVd+iS4PMzAt96UJWrKqIzwwKHWjkD2NGLvDl8Bq+SgfKOKjkXRPKTjtgSpIxmXkPo
-         /ZAIjpw0wfr1gLm9obKJaO6G3Tpo/REGgCiFXl+5+6NuktaLP01grdFjP19xajxafxXT
-         n+rCE54tn32CF+0y6Z7FeLeInYzsHpPOogo10ESD0l6/GMGtd7o6qMyfelfwZSIWvQG7
-         43VFx5u17uhGhGgrmCUBwy01LA+XxsW/gThta+WbpEeX2UyxikSGBkmYPTH27wxWv/e3
-         bJ0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Z3vTy7H/7lOXWPNaODhyF3/E/KgHLJ7DB3lysc2zBWE=;
-        b=dXVdOBJvW31w5uXz3dg1hFc7sLexo22tKYiHP9v7bDQXsrju7hucAkgBrtfpiQXAq3
-         xLcC6svpSpyEceGHdVsdxpc3Iuz58wMYZXpc0f1AghIPRsKaR9EAgt6skr9y7G61F+Vp
-         hR+Euv0+gPNUcqnw3ryySajtLWAVniq4Aeokakaxdgwrp+m1VnM7CHptI3/01Bqn2uT5
-         XurCJCKxQySOzAuBsntrXy8Cl0+6L2m8QWhXep17383IVioVjmiuLZQ331p03RGxDcvw
-         dzcNbNvTQunxQgp5g71jSnI8MgpLlZg9xWOs4uyCM1KI7V4B6VfrHCX2fYPTsJmuyzq5
-         7Gzg==
-X-Gm-Message-State: APjAAAXeRAbVaAi9ZOOqw+oMdD8TCJ+22YyT9FDDLAgK0wqnv/IXdOS4
-        S8/2DSk7HhS0N5u7my1yhIE=
-X-Google-Smtp-Source: APXvYqzZelqxHkcUVQ1yxAiJuLc77p0etLU/znKr78zJ13wtkDs+bFmDpmoxPyZd3xEGW3NR2ssuSw==
-X-Received: by 2002:ab0:42c1:: with SMTP id j59mr12994602uaj.101.1575646513773;
-        Fri, 06 Dec 2019 07:35:13 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id y129sm6093449vky.43.2019.12.06.07.35.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 07:35:12 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A99EE40352; Fri,  6 Dec 2019 12:35:09 -0300 (-03)
-Date:   Fri, 6 Dec 2019 12:35:09 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL 0/6] perf/urgent fixes
-Message-ID: <20191206153509.GB13965@kernel.org>
-References: <20191205193224.24629-1-acme@kernel.org>
- <20191206075701.GA25384@gmail.com>
- <20191206142516.GA31721@krava>
- <20191206144354.GD30698@kernel.org>
- <20191206150455.GC31721@krava>
+        Fri, 6 Dec 2019 10:35:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbfLFPfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 10:35:50 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C41D924659;
+        Fri,  6 Dec 2019 15:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575646550;
+        bh=52ocqDEIJig2TColhNlnLcGJC2vivQudJqfwPcjsBkI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=yqfmoM/AEvRFAxuMzU2E4KiVcswict1pZ2zOcupnY7Zldm3NaXD5lAvEOLboJw7es
+         bfjmzyOEKTh2H7aY3+Cm7TOVq8R39CRRhnKuqA7IFVFkBI6AeCPO/7HaUkRHkEcNMH
+         HkKv628pnB5lEq+uRUqxSFRE2R98jvqHL4B4BcAI=
+Subject: Re: [PATCH 4.14 000/209] 4.14.158-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20191204175321.609072813@linuxfoundation.org>
+ <1dac10cd-7183-9dfd-204c-05fae75bcd74@kernel.org>
+ <20191206152823.GA75339@kroah.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <785c9534-1eb2-ea9b-8c9b-6713fdefdd01@kernel.org>
+Date:   Fri, 6 Dec 2019 08:35:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191206150455.GC31721@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20191206152823.GA75339@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Dec 06, 2019 at 04:04:55PM +0100, Jiri Olsa escreveu:
-> On Fri, Dec 06, 2019 at 11:43:54AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Fri, Dec 06, 2019 at 03:25:16PM +0100, Jiri Olsa escreveu:
-> > > On Fri, Dec 06, 2019 at 08:57:01AM +0100, Ingo Molnar wrote:
-> > > 
-> > > SNIP
-> > > 
-> > > > >  tools/include/uapi/drm/drm.h      |   3 +-
-> > > > >  tools/include/uapi/drm/i915_drm.h | 128 +++++++++++++++++++++++++++++++++++++-
-> > > > >  tools/perf/builtin-inject.c       |  13 +---
-> > > > >  tools/perf/builtin-report.c       |   8 +++
-> > > > >  tools/perf/util/sort.c            |  16 +++--
-> > > > >  5 files changed, 147 insertions(+), 21 deletions(-)
-> > > > 
-> > > > Pulled, thanks a lot Arnaldo!
-> > > > 
-> > > > JFYI, on my system the default perf/urgent build still has this noise 
-> > > > generated by util/parse-events.y and util/expr.y:
-> > > > 
-> > > >   util/parse-events.y:1.1-12: warning: deprecated directive, use ‘%define api.pure’ [-Wdeprecated]
-> > > >       1 | %pure-parser
-> > > >       | ^~~~~~~~~~~~
-> > > >   util/parse-events.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
-> > > >   util/expr.y:15.1-12: warning: deprecated directive, use ‘%define api.pure’ [-Wdeprecated]
-> > > >      15 | %pure-parser
-> > > >       | ^~~~~~~~~~~~
-> > > >   util/expr.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
-> > > 
-> > > just saw it in fedora 31 with new bison, change below
-> > > should fix it, I'll post it with other fixes later
-> > 
-> > As I explained to Ingo, this will make it fail with older systems, for
-> > now this is just a warning, thus I've not been eager to get this merged,
-> > Andi alredy submitted this, for instance.
-> > 
-> > Is there some way to have some sort of ifdef based on bison's version so
-> > that we can have both?
+On 12/6/19 8:28 AM, Greg Kroah-Hartman wrote:
+> On Fri, Dec 06, 2019 at 08:24:36AM -0700, shuah wrote:
+>> On 12/4/19 10:53 AM, Greg Kroah-Hartman wrote:
+>>> This is the start of the stable review cycle for the 4.14.158 release.
+>>> There are 209 patches in this series, all will be posted as a response
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Fri, 06 Dec 2019 17:50:10 +0000.
+>>> Anything received after that time might be too late.
+>>>
+>>> The whole patch series can be found in one patch at:
+>>> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.158-rc1.gz
+>>> or in the git tree and branch at:
+>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+>>> and the diffstat can be found below.
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>>
+>>
+>> Starting with Linux 4.14.157, 4.9.204, and 4.4.204 stables stopped
+>> booting on my system. It can't find the root disk. No config changes
+>> in between.
+>>
+>> I have been bisecting 4.14 and 4.9 with no luck so far. I updated
+>> to Ubuntu 19.10 in between.
+>>
+>> The only other thing I see is CONFIG_GCC_VERSION which is supported
+>> starting 4.18. I don't this boot failing issue on 4.19 + up. I am
+>> also chasing any links between this config and scripts and tools
+>> that generate the initramfs.
 > 
-> I see, I guess we could use one or another based on
-> bison version with macro
+> Did you also upgrade your version of gcc?  I know I build those older
+> kernels with the latest version of gcc for build tests, but I do not
+> boot them.  I think everyone who still uses them uses older versions of
+> gcc.
 
-If you could do that, that would be great, the attempt may well
-enlighten us if that is possible and if not, then, oh well, I can just
-update bison on these older systems and keep a note in my container
-definition files :-)
+Yes. gcc version changed. That has been my strong suspect since I 
+started poking around the CONFIG_GCC_VERSION.
 
-- Arnaldo
- 
-> jirka
+I will try to force it to use older gcc and see if things improve.
+
 > 
-> > 
-> > At some point I'll just bite the bullet and stop testing on such older
-> > systems, but while this is not strictly needed...
-> > 
-> > - Arnaldo
-> >  
-> > > jirka
-> > > 
-> > > ---
-> > > diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> > > index f9a20a39b64a..4ef801334b9d 100644
-> > > --- a/tools/perf/util/expr.y
-> > > +++ b/tools/perf/util/expr.y
-> > > @@ -12,7 +12,7 @@
-> > >  #define MAXIDLEN 256
-> > >  %}
-> > >  
-> > > -%pure-parser
-> > > +%define api.pure
-> > >  %parse-param { double *final_val }
-> > >  %parse-param { struct parse_ctx *ctx }
-> > >  %parse-param { const char **pp }
-> > > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> > > index e2eea4e601b4..87a0d11676f0 100644
-> > > --- a/tools/perf/util/parse-events.y
-> > > +++ b/tools/perf/util/parse-events.y
-> > > @@ -1,4 +1,4 @@
-> > > -%pure-parser
-> > > +%define api.pure
-> > >  %parse-param {void *_parse_state}
-> > >  %parse-param {void *scanner}
-> > >  %lex-param {void* scanner}
-> > 
-> > -- 
-> > 
-> > - Arnaldo
-> > 
+>> I am still debugging ... Serious for me since I can no longer test
+>> older stables. :(
+> 
+> Ick, not good, sorry.  If you find anything bisecting, please let me
+> know.
+> 
+Will do.
 
--- 
+thanks,
+-- Shuah
 
-- Arnaldo
