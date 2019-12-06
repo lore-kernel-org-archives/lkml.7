@@ -2,223 +2,107 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B9DC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DF6C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB8C2467A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:58:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575619088;
-	bh=yZyxp7Du9wzv3IjqNi/veyWAPOOBRX2Q9uwBRe42CcY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UrHZwJUARWAdrmckCrGpiNjaDfL8AU/6BlpHM0jEiCgei5TF1pGtd/r96q9DGk+hK
-	 nHqecJJ1bcVFcx1HRZ2mxDM1A8knATQElcvcBVTTwuozzBE7DQA+DLeFxnwb+ONc4L
-	 ZoqIKL84j5XAChClDqMeKZ7mhZVzp9RLjBlKK1jo=
+	by mail.kernel.org (Postfix) with ESMTP id 9FC4424679
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfLFH6H (ORCPT
+        id S1726697AbfLFIA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 02:58:07 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34892 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfLFH6H (ORCPT
+        Fri, 6 Dec 2019 03:00:59 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:52687 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfLFIA7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 02:58:07 -0500
-Received: by mail-wr1-f67.google.com with SMTP id g17so6727851wro.2;
-        Thu, 05 Dec 2019 23:58:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZaY9V6y1V5MsDjFDz10SfPw/VXwiIICF1N4b4ZGmkwQ=;
-        b=p1Zu8BXfPLTU2q2y4ObjJNRt4AZUm9nTUdXhH4wwLz/OU0+T9zME3nP17nHPSw21Fa
-         xcYbf9pr43yUZTQeNI0p/O2PYiXrmvWf+qiuc9SLLxEkGKZOxoQ4qYIwdGjzdqBBNvUx
-         ySD6+WuOg4u1NnyIy4h7Cj8+d9lgxpHDclts58MzwqnO5YK8IS7BxwGQn8UYd3uvrg+U
-         Y/CyOZjjiK5i7WgBj7MjGYaSJHy9iqq1VGfz6Hb9OyJdwycopy0Pi8xWrDQqqNQivjj+
-         BOjdk4GWAIypy2KlEWmN7PTxzIyCSlkCJpI9wx3UmeVJxR1OOdAs24Idv/0NA/PqARqu
-         KZXw==
-X-Gm-Message-State: APjAAAUrjoMzFeyNTquijwAeiEYZFGUWYKpmxeOKzv/1R9Re6cJA19pF
-        nMwkfh1DgTt91PwKSqWwm2Y=
-X-Google-Smtp-Source: APXvYqyWCkNQjW16kFjaRbAj+qrdynxSV3xnUz5xyhlTj/rhN4BFkPM7WqIoHmDZWl058MZeT2ELow==
-X-Received: by 2002:a5d:4481:: with SMTP id j1mr14792795wrq.348.1575619084381;
-        Thu, 05 Dec 2019 23:58:04 -0800 (PST)
-Received: from localhost (ip-37-188-170-11.eurotel.cz. [37.188.170.11])
-        by smtp.gmail.com with ESMTPSA id a127sm2693839wmh.43.2019.12.05.23.58.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 23:58:03 -0800 (PST)
-Date:   Fri, 6 Dec 2019 08:58:02 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     fabecassis@nvidia.com, jhubbard@nvidia.com, cl@linux.com,
-        vbabka@suse.cz, mgorman@techsingularity.net,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [v4 PATCH] mm: move_pages: return valid node id in status if the
- page is already on the target node
-Message-ID: <20191206075802.GJ28317@dhcp22.suse.cz>
-References: <1575584353-125392-1-git-send-email-yang.shi@linux.alibaba.com>
+        Fri, 6 Dec 2019 03:00:59 -0500
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MLQgv-1iLKZu35U3-00IRyV for <linux-kernel@vger.kernel.org>; Fri, 06 Dec
+ 2019 09:00:57 +0100
+Received: by mail-qk1-f179.google.com with SMTP id f5so5733312qkm.13
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 00:00:57 -0800 (PST)
+X-Gm-Message-State: APjAAAVX4YPhryGZ6Bnx11bB/lSzmCqe3qcCS6+Iha0YZsXNOxaCx7gt
+        GETGngEHICpWlL9a5Da15elt1sWaOGkErP6rLh4=
+X-Google-Smtp-Source: APXvYqxvPvngGnqI3KfxX5TA14iqLHRpY0Nw9Q8k2LQPLebD37U3xSpF1VsHKNGGBRVISdDBrCF58YljODTEnh8KDV0=
+X-Received: by 2002:a37:84a:: with SMTP id 71mr12246779qki.138.1575619256605;
+ Fri, 06 Dec 2019 00:00:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575584353-125392-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <201912060818.dgGGxpRK%lkp@intel.com>
+In-Reply-To: <201912060818.dgGGxpRK%lkp@intel.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 6 Dec 2019 09:00:40 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a23_rWdmjyZNezd9k=-KL4VZyV+DCLvh-UgCQUQTsysyw@mail.gmail.com>
+Message-ID: <CAK8P3a23_rWdmjyZNezd9k=-KL4VZyV+DCLvh-UgCQUQTsysyw@mail.gmail.com>
+Subject: Re: drivers/scsi/.tmp_mc_st.s:3: Error: invalid operands (*UND* and
+ *UND* sections) for `^'
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:3tcRftNLo6AAe96emUVRqtlq1TFfAHHTissaNYKAicwtWEOgFr5
+ G/3XvWBNf1beqBdn34+r0oLj8SfRMoZpZ9/E7Cnajt4/sVJDW3xKwNbEwkuS6nb1ctiPrnz
+ sG/jN+xggqKSebXCI7y77aCPCnZh9BiWwcQKwQYpp+qVJINHXHaJruXURdRsYDrZ9hxY0JJ
+ jSm6r3INFlBMjXcUbvEdw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sbiIH7oMTlU=:zTrPq+BH57aTAw6CHmSK51
+ hUtX4uwZM2PJ2uBA3VoOLXQjVeOnsaL3lMm/PCu4hSm5dLo/Kr/Yc6enFP7/D+FckvabnczJ0
+ UNpJvyj2NN3RAZvTo+ujWSyOmhles2wf+cLZ6PoWwD/dNR6tUcnN4Qme85Pi3TG0j7GqNMo1U
+ R4WnuiU5zn2SLMphuiDezv7l5V82aYxYh1wkdoCzjt+6r3bxchtyb4F78itdv/58LvGQ5Av7a
+ OsnODxSAHHr3KQ+714KW8KN+8DDIWZVYBoTUCu1PUn8cR6pU/vr0BhKgdBR6UPhn5FljJJTGx
+ EITbi4HvtVNXq+y+LO/A++fW+cWhGPOJ1nK7h2ZFrFqp32kby7NZ/2Bc6uCfJIFuKnWHuwjMg
+ DQm3PaKoM7u81/l1YaYIJMZR7dRVp8lFQWfCNoN0j1l2DzLDK7zBl53mzTJ2f27vcLIter/X5
+ Z9F6N+LUFgIhTY7YOn+rqCSGOjGA8MF3pTnVTAc/4CVOZQqNWQ7bBcBwgQbndTTz+EjgIwsav
+ 9wMHPm9wrRHuCXiAdt4HrSMod91Cuh94gPN19LPAF/VR8bJrYerAAPQ5Quj0kuF/ayueChAqG
+ VZdZ09DQLU7QDCajc1g70GgVPVRjBqLEkceI/GKCCLbldVp8P7BhKQ0qn3qYgCn4R/+Ffvy1w
+ 3udZ9dJdBIB3lz2TUwx/A3s0Al9G/YYJkEOqvGVQEj98Fb9ET7jJn+PRgBz8UI0OmXPBApoiR
+ 073UrppIb3yjvEYXgTSyKu+Yo0QfeOolFEHaWWv5IGMIgp/Xq/T8HcS4rB+Hlzag1pANleBIn
+ bCb+qx/GN6PkmQey++4a461UtsH/uPeH6GKRe2vtFhUfxkzHSr5LfXyiD7KO/Pjv9uxrUBpge
+ vu397cVXfMkpRhWkXAvg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 06-12-19 06:19:13, Yang Shi wrote:
-> Felix Abecassis reports move_pages() would return random status if the
-> pages are already on the target node by the below test program:
-> 
-> ---8<---
-> 
-> int main(void)
-> {
-> 	const long node_id = 1;
-> 	const long page_size = sysconf(_SC_PAGESIZE);
-> 	const int64_t num_pages = 8;
-> 
-> 	unsigned long nodemask =  1 << node_id;
-> 	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
-> 	if (ret < 0)
-> 		return (EXIT_FAILURE);
-> 
-> 	void **pages = malloc(sizeof(void*) * num_pages);
-> 	for (int i = 0; i < num_pages; ++i) {
-> 		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
-> 				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
-> 				-1, 0);
-> 		if (pages[i] == MAP_FAILED)
-> 			return (EXIT_FAILURE);
-> 	}
-> 
-> 	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
-> 	if (ret < 0)
-> 		return (EXIT_FAILURE);
-> 
-> 	int *nodes = malloc(sizeof(int) * num_pages);
-> 	int *status = malloc(sizeof(int) * num_pages);
-> 	for (int i = 0; i < num_pages; ++i) {
-> 		nodes[i] = node_id;
-> 		status[i] = 0xd0; /* simulate garbage values */
-> 	}
-> 
-> 	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
-> 	printf("move_pages: %ld\n", ret);
-> 	for (int i = 0; i < num_pages; ++i)
-> 		printf("status[%d] = %d\n", i, status[i]);
-> }
-> ---8<---
-> 
-> Then running the program would return nonsense status values:
-> $ ./move_pages_bug
-> move_pages: 0
-> status[0] = 208
-> status[1] = 208
-> status[2] = 208
-> status[3] = 208
-> status[4] = 208
-> status[5] = 208
-> status[6] = 208
-> status[7] = 208
-> 
-> This is because the status is not set if the page is already on the
-> target node, but move_pages() should return valid status as long as it
-> succeeds.  The valid status may be errno or node id.
-> 
-> We can't simply initialize status array to zero since the pages may be
-> not on node 0.  Fix it by updating status with node id which the page is
-> already on.
-> 
-> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
-> Reported-by: Felix Abecassis <fabecassis@nvidia.com>
-> Tested-by: Felix Abecassis <fabecassis@nvidia.com>
-> Suggested-by: Michal Hocko <mhocko@suse.com>
-> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-> Acked-by: Christoph Lameter <cl@linux.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: <stable@vger.kernel.org> 4.17+
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+On Fri, Dec 6, 2019 at 2:05 AM kbuild test robot <lkp@intel.com> wrote:
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   2f13437b8917627119d163d62f73e7a78a92303a
+> commit: 1207045da5a7c94344e0ea9a9e7495985eef499a compat_ioctl: move tape handling into drivers
+> date:   6 weeks ago
+> config: nds32-allyesconfig (attached as .config)
+> compiler: nds32le-linux-gcc (GCC) 9.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 1207045da5a7c94344e0ea9a9e7495985eef499a
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=9.2.0 make.cross ARCH=nds32
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>    drivers/scsi/.tmp_mc_st.s: Assembler messages:
+> >> drivers/scsi/.tmp_mc_st.s:3: Error: invalid operands (*UND* and *UND* sections) for `^'
+>    drivers/scsi/.tmp_mc_st.s:4: Error: invalid operands (*UND* and *UND* sections) for `^'
+>    drivers/scsi/.tmp_mc_st.s:5: Error: invalid operands (*UND* and *UND* sections) for `^'
+>    drivers/scsi/.tmp_mc_st.s:6: Error: invalid operands (*UND* and *UND* sections) for `^'
+>    drivers/scsi/.tmp_mc_st.s:7: Error: invalid operands (*UND* and *UND* sections) for `^'
+>    drivers/scsi/.tmp_mc_st.s:8: Error: invalid operands (*UND* and *UND* sections) for `^'
+>    drivers/scsi/.tmp_mc_st.s:9: Error: invalid operands (*UND* and *UND* sections) for `^'
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+Adding nds32 maintainers to Cc:
 
-Thanks!
+It looks like a regression caused by my patch, but I don't think it's something
+I did wrong, but rather a toolchain bug being uncovered by the modified sources.
 
-> ---
-> v4: * Fixed the comments from Christopher and John and added their Acked-by
->       and Reviewed-by.
-> v3: * Adopted the suggestion from Michal.
-> v2: * Correted the return value when add_page_for_migration() returns 1.
-> 
->  mm/migrate.c | 23 +++++++++++++++++------
->  1 file changed, 17 insertions(+), 6 deletions(-)
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index a8f87cb..6b44818f 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1512,9 +1512,11 @@ static int do_move_pages_to_node(struct mm_struct *mm,
->  /*
->   * Resolves the given address to a struct page, isolates it from the LRU and
->   * puts it to the given pagelist.
-> - * Returns -errno if the page cannot be found/isolated or 0 when it has been
-> - * queued or the page doesn't need to be migrated because it is already on
-> - * the target node
-> + * Returns:
-> + *     errno - if the page cannot be found/isolated
-> + *     0 - when it doesn't have to be migrated because it is already on the
-> + *         target node
-> + *     1 - when it has been queued
->   */
->  static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
->  		int node, struct list_head *pagelist, bool migrate_all)
-> @@ -1553,7 +1555,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
->  	if (PageHuge(page)) {
->  		if (PageHead(page)) {
->  			isolate_huge_page(page, pagelist);
-> -			err = 0;
-> +			err = 1;
->  		}
->  	} else {
->  		struct page *head;
-> @@ -1563,7 +1565,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
->  		if (err)
->  			goto out_putpage;
->  
-> -		err = 0;
-> +		err = 1;
->  		list_add_tail(&head->lru, pagelist);
->  		mod_node_page_state(page_pgdat(head),
->  			NR_ISOLATED_ANON + page_is_file_cache(head),
-> @@ -1640,8 +1642,17 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->  		 */
->  		err = add_page_for_migration(mm, addr, current_node,
->  				&pagelist, flags & MPOL_MF_MOVE_ALL);
-> -		if (!err)
-> +
-> +		if (!err) {
-> +			/* The page is already on the target node */
-> +			err = store_status(status, i, current_node, 1);
-> +			if (err)
-> +				goto out_flush;
->  			continue;
-> +		} else if (err > 0) {
-> +			/* The page is successfully queued for migration */
-> +			continue;
-> +		}
->  
->  		err = store_status(status, i, err, 1);
->  		if (err)
-> -- 
-> 1.8.3.1
-> 
+Are you able to reproduce this?
 
--- 
-Michal Hocko
-SUSE Labs
+       Arnd
