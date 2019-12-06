@@ -2,181 +2,162 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A24C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90639C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 962FA24685
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 670882466E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:11:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EokTTUjH"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="nrDzP7yd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfLFIKn (ORCPT
+        id S1726837AbfLFILy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 03:10:43 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:45805 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfLFIKn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 03:10:43 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r11so2412069pjp.12;
-        Fri, 06 Dec 2019 00:10:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C1UE8dpxmbMCTvXIK4iZw65YiC8lrgI7y3O+kpqnJKM=;
-        b=EokTTUjHKXuUFWclSh+eqpOTCZZ6jVwb1e3UWinw3vGTYKuvW46UP99DzrRbnAtIF2
-         Gbv3+yDv1S6TKXGtmZMjZ9kDLDIsRxtfDdrQ0BRrRmhhcBC6hy58d50swXHS482KXTFe
-         5AUkweroQhK2nUZeuRjg2BSIk+rzUuDcVXUJriC1U5H/GvteYZ0TMfzU51BT2EAa3gzg
-         4e6rOY71ADOM9oZcQSyYNOVzT1V51Pwpf54cpY/6zZh1Gf0P3t5jQDRO+XHTvIFH5/mp
-         s5C3LgUvth2CXOGO1aBgV+40rFWEKTgprNbPDJlocVRDyGfuIB91qTkRz2U2+zn9rVr5
-         rT4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=C1UE8dpxmbMCTvXIK4iZw65YiC8lrgI7y3O+kpqnJKM=;
-        b=rD+4omx05JrUgdnuCy1Qg49L5TgElf1qHzuhIQ0smCjW9z0UPlS4L0UM8AOtVeknqV
-         74t7h14HeQCqEsoEtXULvLtfJmGT62U8iUhOusQPRbLeG+rQEb05rVsb1KACio0OXWdU
-         U5DE3aZ6p/ST0zWuvIqmY6m8eGj93abe7MehrZbJ/ywIw/opo4zlc05bExMI6MAMuZiK
-         uW/3OUy4t3cmg+3kAl7GiqjFAcxhP7rOtS64X+qKFKi2oqsLrp1YiDikmylEuM3FLyjK
-         DsqEeHAna3wDKpVQ0aPOodQ1WcGDegt9ADk731HHD4H0jwPw+3oEkNdTT7zZ4m7Hh3ee
-         hVSg==
-X-Gm-Message-State: APjAAAVUResvDlGBOq+XjAyRf961vbwYZgkbvvGJSBrj08GqgU+BVjXn
-        8VgP4r377f/8f8DfdCmKidc=
-X-Google-Smtp-Source: APXvYqxH5fNfj16ZBr2+7TU0If7d/yWkIH9rk7fjW7ds2lUiymvcKmlSwlwPwWj1wtqUP0SPtqgpKw==
-X-Received: by 2002:a17:902:7207:: with SMTP id ba7mr13594976plb.254.1575619842473;
-        Fri, 06 Dec 2019 00:10:42 -0800 (PST)
-Received: from ArchLinux ([103.231.90.172])
-        by smtp.gmail.com with ESMTPSA id f18sm15401079pfk.124.2019.12.06.00.10.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 00:10:40 -0800 (PST)
-Date:   Fri, 6 Dec 2019 13:40:27 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     dsterba@suse.cz, Michal Marek <michal.lkml@markovi.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] Enlist running kernel modules information
-Message-ID: <20191206081027.GA1165@ArchLinux>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>, dsterba@suse.cz,
-        Michal Marek <michal.lkml@markovi.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191203094845.610692-1-unixbhaskar@gmail.com>
- <CAK7LNASyrYv+pufwe4CfiNvd7NtriLw=FRdLOtu7CrbmZDSVHg@mail.gmail.com>
- <20191204150728.GD2734@twin.jikos.cz>
- <20191205032503.GA3981@debian>
- <CAK7LNARdOGfvc_8TMX+KbJQ1DRGy8_xZsdDye1ZrvimSS1VoFQ@mail.gmail.com>
+        Fri, 6 Dec 2019 03:11:54 -0500
+Received: from mail.dlink.ru ([178.170.168.18]:47228 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726350AbfLFILy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 03:11:54 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id D4A7B1B20153; Fri,  6 Dec 2019 11:11:49 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru D4A7B1B20153
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1575619910; bh=za+GdP4j4RE1pd9atrwIHfrHFE+ujrS1ZdTfSPyF48Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=nrDzP7yd6HXSc1LtC8Gjwu8u+3kzSGnBldhMKb0ZZBXrSgaTE+SLavTEnnumW08b0
+         HJ+PIXJJ7xvJsunyP4ArMuH2xlHoUKlLkbv9HpFrWofYFK//0PsHzgDu/1esHI4rqP
+         YB9b+PTcGB5kVqh+OhS1RLgR/zaHOeDwGLGOTwe0=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id 6B7ED1B20153;
+        Fri,  6 Dec 2019 11:11:41 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 6B7ED1B20153
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id D1A151B22664;
+        Fri,  6 Dec 2019 11:11:40 +0300 (MSK)
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Fri,  6 Dec 2019 11:11:40 +0300 (MSK)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARdOGfvc_8TMX+KbJQ1DRGy8_xZsdDye1ZrvimSS1VoFQ@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 06 Dec 2019 11:11:40 +0300
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     Paul Burton <paulburton@kernel.org>
+Cc:     Paul Burton <paul.burton@mips.com>,
+        Hassan Naveed <hnaveed@wavecomp.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: MIPS eBPF JIT support on pre-32R2
+In-Reply-To: <647fa62c7111a27a2cc217cf06cbe355@dlink.ru>
+References: <09d713a59665d745e21d021deeaebe0a@dlink.ru>
+ <20191205184450.lbrkenmursz4zpdm@lantea.localdomain>
+ <647fa62c7111a27a2cc217cf06cbe355@dlink.ru>
+User-Agent: Roundcube Webmail/1.4.0
+Message-ID: <cd821557a6540d4139a3b5be81b42adf@dlink.ru>
+X-Sender: alobakin@dlink.ru
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Alexander Lobakin писал 06.12.2019 10:20:
+> Paul Burton wrote 05.12.2019 21:44:
+>> Hi Alexander,
+> 
+> Hi Paul!
+> 
+>> On Thu, Dec 05, 2019 at 03:45:27PM +0300, Alexander Lobakin wrote:
+>>> Hey all,
+>>> 
+>>> I'm writing about lines arch/mips/net/ebpf_jit.c:1806-1807:
+>>> 
+>>> 	if (!prog->jit_requested || MIPS_ISA_REV < 2)
+>>> 		return prog;
+>>> 
+>>> Do pre-32R2 architectures (32R1, maybe even R3000-like) actually 
+>>> support
+>>> this eBPF JIT code?
+>> 
+>> No, they don't; the eBPF JIT makes unconditional use of at least the
+>> (d)ins & (d)ext instructions which were added in MIPSr2, so it would
+>> result in reserved instruction exceptions & panics if enabled on
+>> pre-MIPSr2 CPUs.
+>> 
+>>> If they do, then the condition 'MIPS_ISA_REV < 2'
+>>> should be removed as it is always true for them and tells CC to 
+>>> remove
+>>> JIT completely.
+>>> 
+>>> If they don't support instructions from this JIT, then the line
+>>> arch/mips/Kconfig:50:
+>>> 
+>>> 	select HAVE_EBPF_JIT if (!CPU_MICROMIPS)
+>>> 
+>>> should be changed to something like:
+>>> 
+>>> 	select HAVE_EBPF_JIT if !CPU_MICROMIPS && TARGET_ISA_REV >= 2
+>>> 
+>>> (and then the mentioned 'if' condition would become redundant)
+>> 
+>> Good spot; I agree entirely, this dependency should be reflected in
+>> Kconfig.
+>> 
+>>> At the moment it is possible to build a kernel without both JIT and
+>>> interpreter, but with CONFIG_BPF_SYSCALL=y (what should not be 
+>>> allowed
+>>> I suppose?) within the following configuration:
+>>> 
+>>> - select any pre-32R2 CPU (e.g. CONFIG_CPU_MIPS32_R1);
+>>> - enable CONFIG_BPF_JIT (CONFIG_MIPS_EBPF_JIT will be autoselected);
+>>> - enable CONFIG_BPF_JIT_ALWAYS_ON (this removes BPF interpreter from
+>>>   the system).
+>>> 
+>>> I may prepare a proper patch by myself if needed (after 
+>>> clarification).
+>> 
+>> That would be great, thanks!
+> 
+> Great, I'll send it in about ~2-3 hours.
 
---huq684BweRXVnRxX
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Here we are: [1]
+Yep, this will conflict with your patch restoring cBPF for MIPS32.
+If you have any questions about my patch or I should change anything in
+it, please let me know.
+Thanks!
 
-On 01:08 Fri 06 Dec 2019, Masahiro Yamada wrote:
->   On Thu, Dec 5, 2019 at 12:25 PM Bhaskar Chowdhury
->   <[1]unixbhaskar@gmail.com> wrote:
->
->     On 16:07 Wed 04 Dec 2019, David Sterba wrote:
->     >On Wed, Dec 04, 2019 at 12:10:25PM +0900, Masahiro Yamada wrote:
->     >> On Tue, Dec 3, 2019 at 6:49 PM Bhaskar Chowdhury
->     <[2]unixbhaskar@gmail.com> wrote:
->     >> > +awk '{print $1}' "/proc/modules" | xargs modinfo | awk
->     '/^(filename|desc|depends)/'
->     >>
->     >> I want to see a good reason (e.g. useful for other developers)
->     for upstreaming.
->     >> This script looks like your custom script, which you can maintain
->     locally.
->     >
->     >I think the verbosity should be added to either lsmod or modinfo,
->     not
->     >some script in kernel git.
->     lsmod and modinfo already are pretty verbose and the one liner is
->     using
->     one of them to cut thing out of it....can you give it another
->     look???
->     Moreover,this is sort and precise and can be parsed by other
->     scripts.
->     The whole point behind this is to give the developers a convenient
->     point
->     without going through all the rigorous details.
->
->   lsmod and modinfo are good.
->   If you are not satisfied with the current format,
->   talk to the kmod maintainer.
->   As a maintainer, I need to avoid the situation
->   where upstream tree is flooded with weird scripts like this.
->   One more thing:
->   Despite advice from Randy over again,
->   you are still not able to submit a patch correctly.
->   (see what you sent as v2).
->   Do not get me wrong. I am not saying you to send v3.
->   I do not like this patch. Please stop.
->   --
-I completely get you. I should stop sending this. Thanks for the heads
-up.=20
+>> One thing to note is that I hope we'll restore the cBPF JIT with this
+>> patch:
+>> 
+>> https://lore.kernel.org/linux-mips/20191205182318.2761605-1-paulburton@kernel.org/T/#u
+>> 
+>> The cBPF JIT looks like it should work on older pre-MIPSr2 CPUs, so 
+>> the
+>> only way this is relevant is that your patch might have a minor
+>> conflict. But I thought I'd mention it anyway :)
+> 
+> Yes, I thought about this too. If pre-32R2 CPUs don't support our eBPF
+> JIT, we'd better restore cBPF for them, so they could speed-up at least
+> "classic" instructions. Glad you've decided to do that.
+> 
+>> Thanks,
+>>     Paul
+> 
+> Regards,
+> ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
 
-And I was not denying the verbosity of lsmod and modinfo , as I was
-pointing out to someone else.
+[1] 
+https://lore.kernel.org/linux-mips/20191206080741.12306-1-alobakin@dlink.ru/
 
-About the V2, this was a mistake , I know once I saw it alas! after
-sending it you. So, my apology.=20
-
-One thing get it straight , I am NOT trying to flooding with some airy
-fairy script , I know what it takes to maintain that bloody thing.
-
-Your time is precious like mine, never try to gobbles it by sending
-garbage.
-
-I was thinking make it easy for others, not sure why you think it's
-wired.
-
-Again , thanks for the heads up...above statements are STRICTLY NOT in my
-defence not to cover the mistake.
-
->   Best Regards
->   Masahiro Yamada
->
->References
->
->   1. mailto:unixbhaskar@gmail.com
->   2. mailto:unixbhaskar@gmail.com
-
---huq684BweRXVnRxX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3qDO8ACgkQsjqdtxFL
-KRX92QgAjHkoScuG/jGzDUGWVxlstQ/vqjht3c4mVgIpuTQlEnd9GtpLRS6SWsn3
-mPlrmdVxYpOWUhdRekIfwPQ3I0bcY/teccY04VkoYqvzCq/UGy0xr72fpUrCkN+m
-8nVXztrMDgo5MEiLEmFrpnGIsSPJcOGOekWCotFVu+m14dPPOGzWSTVYm1rCppSn
-PZYrHyiJds0dEM93SH1ruLbqQZvbvMt0jXVa3SBARoknRSBQKs2LdEpZCvi+7gJz
-dior+esWl0a4ajcWXk0MKyjaDPH/LGTI0m12AwA6Ortkr+h73yccxqt2OvcbOHj/
-k4t+Bd44GVymXe/JBKeiPT5vI1Ozlw==
-=4dLL
------END PGP SIGNATURE-----
-
---huq684BweRXVnRxX--
+Regards,
+ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
