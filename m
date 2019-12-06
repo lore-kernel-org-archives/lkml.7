@@ -2,183 +2,93 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA01C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 05:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD072C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 05:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7320724677
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 05:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EE2E24676
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 05:57:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfLFFq5 (ORCPT
+        id S1726184AbfLFF5s convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 00:46:57 -0500
-Received: from mail-eopbgr760057.outbound.protection.outlook.com ([40.107.76.57]:62791
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726214AbfLFFqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 00:46:54 -0500
-Received: from BL0PR02CA0086.namprd02.prod.outlook.com (2603:10b6:208:51::27)
- by CY4PR02MB3288.namprd02.prod.outlook.com (2603:10b6:910:7d::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.22; Fri, 6 Dec
- 2019 05:46:51 +0000
-Received: from CY1NAM02FT062.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::205) by BL0PR02CA0086.outlook.office365.com
- (2603:10b6:208:51::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13 via Frontend
- Transport; Fri, 6 Dec 2019 05:46:51 +0000
-Authentication-Results: spf=softfail (sender IP is 149.199.60.83)
- smtp.mailfrom=gmail.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=fail action=none header.from=gmail.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- gmail.com discourages use of 149.199.60.83 as permitted sender)
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT062.mail.protection.outlook.com (10.152.75.60) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Fri, 6 Dec 2019 05:46:51 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@gmail.com>)
-        id 1id6Lv-0000Nd-LN; Thu, 05 Dec 2019 21:40:31 -0800
-Received: from [127.0.0.1] (helo=xsj-smtp-dlp2.xlnx.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@gmail.com>)
-        id 1id6Lq-0004Sm-HD; Thu, 05 Dec 2019 21:40:26 -0800
-Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB65ePR1007317;
-        Thu, 5 Dec 2019 21:40:25 -0800
-Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@gmail.com>)
-        id 1id6Lp-0003rO-8o; Thu, 05 Dec 2019 21:40:25 -0800
-From:   shubhrajyoti.datta@gmail.com
-To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCH v2 3/3] Documentation: short descriptions for Flexnoc Performance Monitor driver
-Date:   Fri,  6 Dec 2019 11:09:58 +0530
-Message-Id: <b3ff8f0fe3cb758c6b385465ad44580553e011b0.1575609926.git.shubhrajyoti.datta@xilinx.com>
-X-Mailer: git-send-email 2.1.1
-In-Reply-To: <19bb1ad0783e66aef45b140ccf409917ef94e63b.1575609926.git.shubhrajyoti.datta@xilinx.com>
-References: <19bb1ad0783e66aef45b140ccf409917ef94e63b.1575609926.git.shubhrajyoti.datta@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No--8.169-7.0-31-1
-X-imss-scan-details: No--8.169-7.0-31-1;No--8.169-5.0-31-1
-X-TM-AS-User-Approved-Sender: No;No
-X-TM-AS-Result-Xfilter: Match text exemption rules:No
-X-EOPAttributedMessage: 0
-X-Matching-Connectors: 132200848112472141;(f9e945fa-a09a-4caa-7158-08d2eb1d8c44);()
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(39860400002)(136003)(189003)(199004)(450100002)(305945005)(81166006)(426003)(50226002)(336012)(118296001)(48376002)(73392003)(8676002)(36756003)(5660300002)(70206006)(70586007)(16586007)(81156014)(50466002)(82202003)(14444005)(8936002)(316002)(76482006)(2906002)(86362001)(11346002)(7696005)(51416003)(9686003)(356004)(76176011)(6666004)(26005)(4326008)(107886003)(9786002)(498600001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB3288;H:xsj-pvapsmtpgw01;FPR:;SPF:SoftFail;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4b43dfab-04b0-4720-e5bd-08d77a0fb135
-X-MS-TrafficTypeDiagnostic: CY4PR02MB3288:
-X-Microsoft-Antispam-PRVS: <CY4PR02MB3288B73AB272C9D8A593C312875F0@CY4PR02MB3288.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:569;
-X-Forefront-PRVS: 0243E5FD68
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BcS8DySAQA1wuhzJLAfnhnSwevorsgfNTmK6tpjlXxPWTusKhCuZX/DcwB77jFAYGekk80dFZvwYbWtAd7DGVyAbrzlM38hbuzJQjODVrw9dMaLvSkF+iu1lPwIEtflrkKtkFM5zYMP1TFM0rL6rgS1CqTL8f0n7e6yHz4BgYIE+x+chQSpfOKSWoBN5YxHo8JBIZkHq+p0LxQ9y8CcNj2FZFxpKisZppKN42/2fYDn0rGjMaY01eZZVSVjVVWrPlP+eTbqSOVxUxlENPDRzUSq59GSSznR6rgj7LmwtWB978K0vbmRey9tQ6F/JHBnflmi6nBc5hVQqjHLpD3nfORx32VlWI3Fif2IB6EEH/YFQmHR2wZeH/te9c4v/86DrubUS83Cdptcis38fSo6KvXuc81jM7EMfLhJuqRV3wRi9K7gOt3QXqDm1JXr6UB6O
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2019 05:46:51.0690
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b43dfab-04b0-4720-e5bd-08d77a0fb135
-X-MS-Exchange-CrossTenant-Id: 5afe0b00-7697-4969-b663-5eab37d5f47e
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5afe0b00-7697-4969-b663-5eab37d5f47e;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB3288
+        Fri, 6 Dec 2019 00:57:48 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:35302 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbfLFF5s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 00:57:48 -0500
+Received: from mail-pl1-f200.google.com ([209.85.214.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1id6cc-0005Q2-6E
+        for linux-kernel@vger.kernel.org; Fri, 06 Dec 2019 05:57:46 +0000
+Received: by mail-pl1-f200.google.com with SMTP id a11so2967018plp.21
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 21:57:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=6QtFl09nSid+JllEcjtMOengdLUy/DcEPJvF+2i249o=;
+        b=E3KeHHg3s436wydEhsgIPBBgibCz0QhdQUnq+nlBsuiZeHH5SR4zlQxyFoAMLeowZX
+         CpVHEZi6geJj8CTv4Ydssd8oJR8dG4YnQiQ+giY7TGpiq5tc0UL3m+Z+kajWBMBQXa0J
+         cIOqpCoJCzX/q0OBxCVMTNVjFTlZo4Kw2uHyTNE2NpoWPaRbc7X002Da9Ql1NDM1DcMZ
+         JhxbhAx/OEeO2au4w+Vl7qD0vS44tyuow13GmWoHTHSbdUxTNErpxwHmCQJBFZkVqqvu
+         3yjwJ4rCMz75kmYytsFjfFEtu5GDkxUVzs7gnuIteBkVvn5z3CswoCoNnZ5IB7KiUoO2
+         pMOw==
+X-Gm-Message-State: APjAAAWd2mlAGn20/VMl+qXKlPeoyQ1Fr9LRd7vV+a/nO4qTg+u+cHGV
+        pdu7b/N2MzuKumKGt27mx2rDTIpYvQBLpt72SFbm/mZZzYJ6FIaYvkWgKCK+bvjjuzPaiG9aEJO
+        ECyeq9XXzvFn3QSm2jn9SSGGbb5cKYKwqjeBpfYHpKA==
+X-Received: by 2002:a63:4f5c:: with SMTP id p28mr1595530pgl.409.1575611864630;
+        Thu, 05 Dec 2019 21:57:44 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxpwzCXZBTrYxhlnFEvhDqo8N995kvpUShDhO5qBE99rEBZ7AsxOo9MkgDPfLC5V9zwBYSYNg==
+X-Received: by 2002:a63:4f5c:: with SMTP id p28mr1595519pgl.409.1575611864341;
+        Thu, 05 Dec 2019 21:57:44 -0800 (PST)
+Received: from 2001-b011-380f-3c42-d14c-a8f0-9761-234f.dynamic-ip6.hinet.net (2001-b011-380f-3c42-d14c-a8f0-9761-234f.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:d14c:a8f0:9761:234f])
+        by smtp.gmail.com with ESMTPSA id s130sm13560628pgc.82.2019.12.05.21.57.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Dec 2019 21:57:43 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v2] iommu/amd: Disable IOMMU on Stoney Ridge systems
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20191202170011.GC30032@infradead.org>
+Date:   Fri, 6 Dec 2019 13:57:41 +0800
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        iommu@lists.linux-foundation.org,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <974A8EB3-70B6-4A33-B36C-CFF69464493C@canonical.com>
+References: <20191129142154.29658-1-kai.heng.feng@canonical.com>
+ <20191202170011.GC30032@infradead.org>
+To:     Joerg Roedel <joro@8bytes.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Hi Joerg,
 
-Add short documentation for FlexNoc Performance Monitor driver.
+> On Dec 3, 2019, at 01:00, Christoph Hellwig <hch@infradead.org> wrote:
+> 
+> On Fri, Nov 29, 2019 at 10:21:54PM +0800, Kai-Heng Feng wrote:
+>> Serious screen flickering when Stoney Ridge outputs to a 4K monitor.
+>> 
+>> According to Alex Deucher, IOMMU isn't enabled on Windows, so let's do
+>> the same here to avoid screen flickering on 4K monitor.
+> 
+> Disabling the IOMMU entirely seem pretty severe.  Isn't it enough to
+> identity map the GPU device?
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
- Documentation/misc-devices/xilinx_flex.txt | 66 ++++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/misc-devices/xilinx_flex.txt
+Ok, there's set_device_exclusion_range() to exclude the device from IOMMU.
+However I don't know how to generate range_start and range_length, which are read from ACPI.
 
-diff --git a/Documentation/misc-devices/xilinx_flex.txt b/Documentation/misc-devices/xilinx_flex.txt
-new file mode 100644
-index 0000000..c075934
---- /dev/null
-+++ b/Documentation/misc-devices/xilinx_flex.txt
-@@ -0,0 +1,66 @@
-+Kernel driver xilinx_flex
-+============================
-+
-+Supported chips:
-+Versal SOC
-+
-+Author:
-+	Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-+
-+Description
-+-----------
-+
-+Versal uses the Arteris FlexNoC interconnect instead of the ARM NIC. FlexNoC
-+provides the capability to integrate performance counters in the interconnect.
-+It has configurable probe points to monitor the packet and forwards it to
-+observer for logging. It supports read and write transaction counts for
-+request and response.
-+
-+Features:
-+---> Run-time programmable selection of packet probe points.
-+---> Recording of traffic and link statistics.
-+---> Separate read and write response and request count.
-+
-+SYSFS:
-+
-+counteridfpd
-+	RW - shows the counter number selected for the FPD Flexnoc.
-+
-+counterfpd_rdreq
-+	RO - shows the read request count for the FPD counters.
-+
-+counterfpdsrc
-+	WO - sets the source of the FPD counter.
-+
-+counterfpd_wrrsp
-+	RO - shows the write response count for the FPD counters.
-+
-+counterfpd_rdrsp
-+	RO - shows the read response count for the FPD counters.
-+
-+counterfpd_wrreq
-+	RO - shows the write request count for the FPD counters.
-+
-+counterfpdport
-+	WO - sets the port number selected for the FPD Flexnoc.
-+
-+counteridlpd
-+	RW - shows the counter number selected for the LPD Flexnoc.
-+
-+counterlpdport
-+	WO - sets the port number selected for the LPD Flexnoc.
-+
-+counterlpd_rdreq
-+	RO - shows the read request count for the LPD counters.
-+
-+counterlpd_wrreq
-+	RO - shows the write request count for the LPD counters.
-+
-+counterlpd_wrrsp
-+	RO - shows the write response count for the LPD counters.
-+
-+counterlpdsrc
-+	WO - sets the source of the LPD counter.
-+
-+counterlpd_rdrsp
-+	RO - shows the read response count for the LPD counters.
--- 
-2.1.1
+Can you please give me some advice here?
 
+Kai-Henge
