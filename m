@@ -2,137 +2,353 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6629AC2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E074C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AABE24677
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489A720659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:11:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BE6ht680"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtvwX1So"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbfLFJIN (ORCPT
+        id S1726287AbfLFJLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 04:08:13 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38598 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfLFJIM (ORCPT
+        Fri, 6 Dec 2019 04:11:21 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43662 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfLFJLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 04:08:12 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y17so6910830wrh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 01:08:11 -0800 (PST)
+        Fri, 6 Dec 2019 04:11:20 -0500
+Received: by mail-wr1-f67.google.com with SMTP id d16so6869316wre.10;
+        Fri, 06 Dec 2019 01:11:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=IC0nFJQovPdziVzgU2aFSV4eEeO6kPT3TlMkyeyMjTY=;
-        b=BE6ht680FK89WSCevAr+hDyb8eiiRaSME+dcBCpdAfBPuoSvfGpOOy8GTvuMkQot8K
-         qbPX0nc8xReBu8fQo1uAJ01WyJ7Sn+MJ9qlNLfdJe8VJhQmETJmZdvFuzekZk9T7jguD
-         1wtEIImojrv6poPBjtrkJo6rqpqlfzJvFsaSLoa1I1SE7pFzYslfnB3cMJOziys4d7el
-         P4GqzCVIPomt19lNJy0tt9k1AqiKL1RuJDu1Ls0BqcStkQMOoTl1bGN9sPT+wIEfn0iH
-         0Wu7B5mhZZLC913K2lXnVFrcQROMYMdKVoQE0mte0Z2XkYXYPIM+nt/wF8YE/9BR7QC0
-         rSKg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ICnCLQJEcZVaNESgjm6cIy6sqQ3eNkpx+iDd/M6Htno=;
+        b=FtvwX1Soh2c9BFGQO3+CR96nyxGbj8MJDSH4p0f/bAcaodcSJLYeVihjBsqzDEUSog
+         vnsB88eRjK8Gic14sAw8VngTHXSvdpOdlvV2yrozXs/yJZcG+hmI4umza7pLuljWAbyj
+         NkfgVtDNMOvfjxWCHndi61CyPoUoI2dw8xgNDrG43nG0mjHtRxDx4Nhvgumhw+1aWAdC
+         q0hdnbWoVcgoLCoOyplvODMuPXbqxRUq1zh42jSbjW8aWvkXuohkqraTCUdRKFZyQndJ
+         m1z07RvmZuAjqNv/zyRHaGNnOU9EpAOMDN5JaKej+IBB1vJqE4rdS5EE7eV6M2BfwUke
+         V7BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=IC0nFJQovPdziVzgU2aFSV4eEeO6kPT3TlMkyeyMjTY=;
-        b=tDqfU3/JJze5JlP3lBgy6YEOM/TmhkGGEeAfTQyD4OdB9Hxtivd4XDflwaoSyrBWaN
-         jEM659NHVSPMsgcaTghUa5smovkRTVYWOVRvUlKL/0lqUKlpSpDjNObEjn9M7NmJadDC
-         km7JAB51HR03lVInb62unuiUJmJnzKKyT5iSn51cKJ4bSe1s7OAsdMaAJIBX6gna5BDk
-         PtgwkGEj1it/D5ncv71wdBM2y4qSvIoKGLpsH7b67V53iMp0vhiKi0xMAt/N7EC3QkS+
-         EwpaKken4zUtnUMzfCN1LCkCaEXifk3/nnOAOuBn3PqHdZ6w1OPw/Zw4jwg5Dwdar8h9
-         vFXg==
-X-Gm-Message-State: APjAAAXUiDuWzpvm2PrGt1VFZCKdCFQ6TUzsTg9TBxcmYVUA1vc/ptyP
-        IprLd4F8SPyEFDKfiYIbZSQx9/pmP5dyJQ==
-X-Google-Smtp-Source: APXvYqxAwUOIdiopWUwCUwN0Qp3EG6FDEluwivT/IAoznBn8WYyf9gk/0j9zA4KkkFZDgCe44j+tSw==
-X-Received: by 2002:adf:dd46:: with SMTP id u6mr14998118wrm.13.1575623290069;
-        Fri, 06 Dec 2019 01:08:10 -0800 (PST)
-Received: from [10.1.4.98] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id g25sm4662913wmh.3.2019.12.06.01.08.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2019 01:08:09 -0800 (PST)
-Subject: Re: [PATCH v2] bluetooth: hci_bcm: enable IRQ capability from node
-To:     Kevin Hilman <khilman@baylibre.com>, marcel@holtmann.org,
-        johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20191204161239.16653-1-glaroque@baylibre.com>
- <7hv9qu2rt1.fsf@baylibre.com>
-From:   guillaume La Roque <glaroque@baylibre.com>
-Message-ID: <6f6cbb0d-3265-8e6d-60fb-6df2539d36af@baylibre.com>
-Date:   Fri, 6 Dec 2019 10:08:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ICnCLQJEcZVaNESgjm6cIy6sqQ3eNkpx+iDd/M6Htno=;
+        b=o5Xv2LxB4cP7c0dQ2pFZzVh63XXBrRTJ3k6wyBhnZcO+0Osxl53b5sjkzOjxxWu3M5
+         pCEh+DVIFkWB11kV4sjQzjy3u7UFsdaOJ/cl/PEFAG6nabyqWED8t3TJMQcU2jg5mF7d
+         EOZAmOm0FOZboLOFh4IT9632ougK3p6he0Mul2x3ZtuuDNP80y76SszZbQ3+SGPPACAl
+         rthstOuRmJVGIakHcYkB64r1/T5SmB0Q7QgIuK+k0OKxvWx/8XPL21pJnrkHg9pLs4Nh
+         9r381O/xnoV34pQCYkmz7rCXxNcygCYvZIJVqIQnVV4HWeOxTAeb/1gSrcf24vsdhk2L
+         wqMg==
+X-Gm-Message-State: APjAAAVKqxWymy/FczQmNs5Pj7JFj7mIB5aOIC+bGqzzt/1jg4S0qA9n
+        JFa31VdmeMFaS+GzVlZNpdc=
+X-Google-Smtp-Source: APXvYqyqYQWbYi4Wx/WRJv764bGFVZc1LaWoP5u6aGVIPLNCZgK5Oycpq83AoHwG8mESWZG4r9nVaA==
+X-Received: by 2002:adf:fa12:: with SMTP id m18mr13910568wrr.309.1575623476456;
+        Fri, 06 Dec 2019 01:11:16 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id o15sm16442925wra.83.2019.12.06.01.11.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 06 Dec 2019 01:11:15 -0800 (PST)
+Date:   Fri, 6 Dec 2019 10:11:14 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
+Message-ID: <20191206091114.kh255jrmerruumnq@pali>
+References: <20191202012305.GQ248138@dtor-ws>
+ <20191202084750.k7lafzzrf3yq2tqs@pali>
+ <20191202175440.GA50317@dtor-ws>
+ <20191202185340.nae4lljten5jqp3y@pali>
+ <20191202193628.GI50317@dtor-ws>
+ <20191202230947.ld5ibnczdpkekfcm@pali>
+ <20191203173821.4u6uzxeaqnt3gyz3@pali>
+ <20191203191112.GJ50317@dtor-ws>
+ <20191205105206.slibwytrcteicx6y@pali>
+ <CANFp7mXyaqoMDBs4m_Dfm9+4U88g9WoJVcV1g_4KM4xzFhiGXQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <7hv9qu2rt1.fsf@baylibre.com>
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <CANFp7mXyaqoMDBs4m_Dfm9+4U88g9WoJVcV1g_4KM4xzFhiGXQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Kevin,
+On Thursday 05 December 2019 12:03:05 Abhishek Pandit-Subedi wrote:
+> On Thu, Dec 5, 2019 at 2:52 AM Pali Rohár <pali.rohar@gmail.com> wrote:
+> >
+> > On Tuesday 03 December 2019 11:11:12 Dmitry Torokhov wrote:
+> > > On Tue, Dec 03, 2019 at 06:38:21PM +0100, Pali Rohár wrote:
+> > > > On Tuesday 03 December 2019 00:09:47 Pali Rohár wrote:
+> > > > > On Monday 02 December 2019 11:36:28 Dmitry Torokhov wrote:
+> > > > > > On Mon, Dec 02, 2019 at 07:53:40PM +0100, Pali Rohár wrote:
+> > > > > > > On Monday 02 December 2019 09:54:40 Dmitry Torokhov wrote:
+> > > > > > > > On Mon, Dec 02, 2019 at 09:47:50AM +0100, Pali Rohár wrote:
+> > > > > > > > > On Sunday 01 December 2019 17:23:05 Dmitry Torokhov wrote:
+> > > > > > > > > > Hi Pali,
+> > > > > > > > > >
+> > > > > > > > > > On Sun, Dec 01, 2019 at 03:53:57PM +0100, Pali Rohár wrote:
+> > > > > > > > > > > Hello!
+> > > > > > > > > > >
+> > > > > > > > > > > On Wednesday 27 November 2019 10:51:39 Abhishek Pandit-Subedi wrote:
+> > > > > > > > > > > > Support setting the uniq attribute of the input device. The uniq
+> > > > > > > > > > > > attribute is used as a unique identifier for the connected device.
+> > > > > > > > > > > >
+> > > > > > > > > > > > For example, uinput devices created by BlueZ will store the address of
+> > > > > > > > > > > > the connected device as the uniq property.
+> > > > > > > > > > > >
+> > > > > > > > > > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > > > > > > > > > >
+> > > > > > > > > > > ...
+> > > > > > > > > > >
+> > > > > > > > > > > > diff --git a/include/uapi/linux/uinput.h b/include/uapi/linux/uinput.h
+> > > > > > > > > > > > index c9e677e3af1d..d5b7767c1b02 100644
+> > > > > > > > > > > > --- a/include/uapi/linux/uinput.h
+> > > > > > > > > > > > +++ b/include/uapi/linux/uinput.h
+> > > > > > > > > > > > @@ -145,6 +145,7 @@ struct uinput_abs_setup {
+> > > > > > > > > > > >  #define UI_SET_PHYS                _IOW(UINPUT_IOCTL_BASE, 108, char*)
+> > > > > > > > > > > >  #define UI_SET_SWBIT               _IOW(UINPUT_IOCTL_BASE, 109, int)
+> > > > > > > > > > > >  #define UI_SET_PROPBIT             _IOW(UINPUT_IOCTL_BASE, 110, int)
+> > > > > > > > > > > > +#define UI_SET_UNIQ                _IOW(UINPUT_IOCTL_BASE, 111, char*)
+> > > > > > > > > > >
+> > > > > > > > > > > I think that usage of char* as type in _IOW would cause compatibility
+> > > > > > > > > > > problems like it is for UI_SET_PHYS (there is UI_SET_PHYS_COMPAT). Size
+> > > > > > > > > > > of char* pointer depends on userspace (32 vs 64bit), so 32bit process on
+> > > > > > > > > > > 64bit kernel would not be able to call this new UI_SET_UNIQ ioctl.
+> > > > > > > > > > >
+> > > > > > > > > > > I would suggest to define this ioctl as e.g.:
+> > > > > > > > > > >
+> > > > > > > > > > >   #define UI_SET_UNIQ         _IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
+> > > > > > > > > > >
+> > > > > > > > > > > And then in uinput.c code handle it as:
+> > > > > > > > > > >
+> > > > > > > > > > >   case UI_SET_UNIQ & ~IOCSIZE_MASK:
+> > > > > > > > > > >
+> > > > > > > > > > > as part of section /* Now check variable-length commands */
+> > > > > > > > > >
+> > > > > > > > > > If we did not have UI_SET_PHYS in its current form, I'd agree with you,
+> > > > > > > > > > but I think there is benefit in having UI_SET_UNIQ be similar to
+> > > > > > > > > > UI_SET_PHYS.
+> > > > > > > > >
+> > > > > > > > > I thought that ioctl is just number, so we can define it as we want. And
+> > > > > > > > > because uinput.c has already switch for variable-length commands it
+> > > > > > > > > would be easy to use it. Final handling can be in separate function like
+> > > > > > > > > for UI_SET_PHYS which can look like same.
+> > > > > > > >
+> > > > > > > > Yes, we can define ioctl number as whatever we want. What I was trying
+> > > > > > > > to say, right now users do this:
+> > > > > > > >
+> > > > > > > >     rc = ioctl(fd, UI_SET_PHYS, "whatever");
+> > > > > > > >     ...
+> > > > > > > >
+> > > > > > > > and with UI_SET_UNIQ they expect the following to work:
+> > > > > > > >
+> > > > > > > >     rc = ioctl(fd, UI_SET_UNIQ, "whatever");
+> > > > > > > >     ...
+> > > > > > >
+> > > > > > > And would not following definition
+> > > > > > >
+> > > > > > >   #define UI_SET_UNIQ _IOW(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, 0)
+> > > > > > >
+> > > > > > > allow userspace to call
+> > > > > > >
+> > > > > > >   rc = ioctl(fd, UI_SET_UNIQ, "whatever");
+> > > > > > >
+> > > > > > > as you want?
+> > > > > >
+> > > > > > OK, so what you are saying is that we can have whatever in the size
+> > > > > > portion of ioctl number and simply ignore it in the driver
+> > > > >
+> > > > > Yes.
+> > > > >
+> > > > > > (and I do not
+> > > > > > think we need to do any of "UI_SET_UNIQ & ~IOCSIZE_MASK" really).
+> > > > >
+> > > > > You are right, we do not need to clear any IOCSIZE_MASK. As ioctl number
+> > > > > would be always sam constant number. So it would be really simple. So
+> > > > > original patch would work if UI_SET_UNIQ define would be changed to
+> > > > > above with _IOW() macro.
+> > > > >
+> > > > > > While this would work, I am not sure it is the best option as I think
+> > > > > > we'd have to comment extensively why we have arbitrary number in place
+> > > > > > of the size.
+> > > > >
+> > > > > Comment can be added. But this is as ioctl is going to accept variable
+> > > > > length array (not fixed array), zero value make sense for me (zero as we
+> > > > > do not know exact size).
+> > > > >
+> > > > > > And we still do not really save anything, as we still have to go through
+> > > > > > compat ioctl handler (since we have it already) and it is very simple to
+> > > > > > add a case for UI_SET_UNIQ there...
+> > > > >
+> > > > > Yes, compat ioctl is still used. But my proposed solution does not
+> > > > > involve to define a new compact ioctl number just for sizeof(char *).
+> > > > >
+> > > > > I'm looking at this particular problem from side, that there is no
+> > > > > reason to define two new ioctl numbers for UI_SET_UNIQ (one normal
+> > > > > number and one compat number), when one number is enough. It is one new
+> > > > > ioctl call, so one ioctl number should be enough.
+> > > > >
+> > > > > And also with my proposed solution with ioctl size=0 it simplify
+> > > > > implementation of UI_SET_UNIQ as it is not needed to implement also
+> > > > > UI_SET_UNIQ_COMPAT ioctl nor touch compat ioct code path. Basically
+> > > > > original patch (with changed UI_SET_UNIQ macro) is enough.
+> > > > >
+> > > > > But of of course, this is my view of this problem and I would not be
+> > > > > against your decision from maintainer position. Both solutions would
+> > > > > work correctly and bring same behavior for userspace applications.
+> > > >
+> > > >
+> > > > Hi Dmitry!
+> > > >
+> > > > I was looking again at those _IOW defines for ioctl calls and I have
+> > > > another argument why not specify 'char *' in _IOW:
+> > > >
+> > > > All ioctls in _IOW() specify as a third macro argument type which is
+> > > > passed as pointer to the third argument for ioctl() syscall.
+> > > >
+> > > > So e.g.:
+> > > >
+> > > >   #define EVIOCSCLOCKID _IOW('E', 0xa0, int)
+> > > >
+> > > > is called from userspace as:
+> > > >
+> > > >   int val;
+> > > >   ioctl(fd, EVIOCSCLOCKID, &val);
+> > > >
+> > > > Or
+> > > >
+> > > >   #define EVIOCSMASK _IOW('E', 0x93, struct input_mask)
+> > > >
+> > > > is called as:
+> > > >
+> > > >   struct input_mask val;
+> > > >   ioctl(fd, EVIOCSMASK, &val);
+> > > >
+> > > > So basically third argument for _IOW specify size of byte buffer passed
+> > > > as third argument for ioctl(). In _IOW is not specified pointer to
+> > > > struct input_mask, but struct input_mask itself.
+> > > >
+> > > > And in case you define
+> > > >
+> > > >   #define MY_NEW_IOCTL _IOW(UINPUT_IOCTL_BASE, 200, char*)
+> > > >
+> > > > then you by above usage you should pass data as:
+> > > >
+> > > >   char *val = "DATA";
+> > > >   ioctl(fd, MY_NEW_IOCTL, &val);
+> > > >
+> > > > Which is not same as just:
+> > > >
+> > > >   ioctl(fd, MY_NEW_IOCTL, "DATA");
+> > > >
+> > > > As in former case you passed pointer to pointer to data and in later
+> > > > case you passed only pointer to data.
+> > > >
+> > > > It just mean that UI_SET_PHYS is already defined inconsistently which is
+> > > > also reason why compat ioctl for it was introduced.
+> > >
+> > > Yes, you are right. UI_SET_PHYS is messed up. I guess the question is
+> > > what to do with all of this...
+> > >
+> > > Maybe we should define
+> > >
+> > > #define UI_SET_PHYS_STR(len)  _IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 111, len)
+> > > #define UI_SET_UNIQ_STR(len)  _IOC(_IOC_WRITE, UINPUT_IOCTL_BASE, 112, len)
+> >
+> > I'm not sure if this is ideal. Normally in C strings are nul-termined,
+> > so functions/macros do not take buffer length.
+> Except strncpy, strndup, snprintf, etc. all expect a buffer length. At
 
+This is something different as for these functions you pass buffer and
+length of buffer which is used in write mode -- not for read mode.
 
-On 12/6/19 1:58 AM, Kevin Hilman wrote:
-> Guillaume La Roque <glaroque@baylibre.com> writes:
->
->> Actually IRQ can be found from GPIO but all platorms don't support
-> nit: s/platorms/platforms/
-will fix in v3
->> gpiod_to_irq, it's the case on amlogic chip.
->> so to have possibility to use interrupt mode we need to add interrupts
->> field in node and support it in driver.
->>
->> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
->> ---
->> sorry for noise,
->>
->> v2 is for rebasing on master branch
->>
->> guillaume
->>
->>  drivers/bluetooth/hci_bcm.c | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
->> index f8f5c593a05c..9f52d57c56de 100644
->> --- a/drivers/bluetooth/hci_bcm.c
->> +++ b/drivers/bluetooth/hci_bcm.c
->> @@ -1409,6 +1409,7 @@ static int bcm_serdev_probe(struct serdev_device *serdev)
->>  {
->>  	struct bcm_device *bcmdev;
->>  	const struct bcm_device_data *data;
->> +	struct platform_device *pdev;
->>  	int err;
->>  
->>  	bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
->> @@ -1421,6 +1422,8 @@ static int bcm_serdev_probe(struct serdev_device *serdev)
->>  #endif
->>  	bcmdev->serdev_hu.serdev = serdev;
->>  	serdev_device_set_drvdata(serdev, bcmdev);
->> +	pdev = to_platform_device(bcmdev->dev);
->> +	bcmdev->irq = platform_get_irq(pdev, 0);
-> I don't know this driver well enough to be sure, but don't you need some
-> error checking here?
->
-> If this fails (on platforms with no IRQ defined), is an error code in
-> bcmdev->irq going to affect later code that tries to setup IRQs?
+> the user to kernel boundary of ioctl, I think we should require size
+> of the user buffer regardless of the data type.
+> 
+> > _STR therefore in names looks inconsistent.
+> The _STR suffix is odd (what to name UI_SET_PHYS_STR then??) but
+> requiring the length seems to be common across various ioctls.
+> * input.h requires a length when requesting the phys and uniq
+> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/input.h#n138)
+> * Same with HIDRAW when setting and getting features:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/hidraw.h#n40,
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/samples/hidraw/hid-example.c#n88
 
-not needed to do something here because  bcm_get_resources function check irq <=0 if yes it check if host-wakeup gpio was defined in node and try a gpiod_to_irq.
+All these ioctls where is passed length are in opposite direction
+(_IOC_READ) as our PHYS and UNIQ (_IOC_WRITE).
 
-at the end in bcm_request_irq function i check if irq <=0 if yes return EOPNOTSUPP
+I fully agree that when you need to read something from kernel
+(_IOC_READ) and then writing it to userspace, you need to specify length
+of userspace buffer. Exactly same as with userspace functions like
+memcpy, snprintf, etc... as you pointed. Otherwise you get buffer
+overflow as callee does not know length of buffer.
 
+But here we we have there quite different problem, we need to write
+something to kernel from userspace (_IOC_WRITE) and we are passing
+nul-term string. So in this case specifying size is not required as it
+is implicitly specified as part of passed string.
 
-> Kevin
->
+> >
+> > Maybe this is something which should be handled and unified at global
+> > scope of linux include files. Or al least make consensus how should be
+> > new ioctls for linux written.
+> >
+> > Otherwise each API would use different ioctl schema and mess would be
+> > still there. Which means that defining a new ioctl UI_SET_PHYS_STR for
+> > existing one UI_SET_PHYS does not fix anything -- but rather make mess a
+> > big larger.
+> >
+> > Or is there already some discussion on LKML about this ioctl problem?
+> I found this fairly old email (couldn't find something more recent):
+> http://lkml.iu.edu/hypermail/linux/kernel/9903.3/0325.html
+> I think the intent is for userspace to provide the size of the string
+> they're passing in (or at least the size of the allocated buffer that
+> has the string).
 
-Guillaume
+Yes, but this is again opposite direction _IOC_READ. As wrote above I
+agree that specifying size of buffer for filling data is required.
 
+> >
+> > > and mark UI_SET_PHYS as deprecated/wrong? This will allow us to specify
+> > > exactly how much data kernel is supposed to fetch from userspace instead
+> > > of trying to rely on a null-terminated string.
+> > >
+> > > It would also be very helpful if BlueZ did not accept changes that use
+> > > this brand new ioctl until after we agreed on how it should look like.
+> > > Luiz, can it be reverted for now please?
+> > >
+> > > Thanks.
+> > >
+> >
+> > --
+> > Pali Rohár
+> > pali.rohar@gmail.com
+> 
+> 
+> Abhishek
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
