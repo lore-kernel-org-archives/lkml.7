@@ -7,187 +7,105 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E50C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ED3C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1972464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD7A62464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:00:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="xA4bTKeR"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="lnAxMEOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfLFP6v (ORCPT
+        id S1726395AbfLFQAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 10:58:51 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39005 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbfLFP6v (ORCPT
+        Fri, 6 Dec 2019 11:00:04 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38456 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfLFQAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 10:58:51 -0500
-Received: by mail-pl1-f194.google.com with SMTP id o9so2889317plk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 07:58:50 -0800 (PST)
+        Fri, 6 Dec 2019 11:00:04 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x185so3544307pfc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 08:00:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=pygl8oMQvOdcJfo8OD7ZqM6kANo2v/N/jTBIk1Ungko=;
-        b=xA4bTKeRYpdY/+/mnZnlANfDTD1eYnEC7UKH0/cEPhEwJbsOPPMAUnf6ZEZR6SfzOo
-         1KCMflEIr/QemVn4RA4X38oHl2/j7bKcP5g5l7b+ETLaztmPs48Pyx9wFxp7EXWhHBZa
-         p0gOEZkOjQlpqF+nvYKTw5d4SqmN5wJsj33r0=
+        bh=Yp4NDcto5u3LEI/hPsxbY59xGgx6y4i/6vjXYjtnjow=;
+        b=lnAxMEOEHX+2ySVymkjh100nDEHcIL4fsUSOKlWMR5nDBzDCp4AATKxrpWzWyI8Dk4
+         zg58wU4yvgBvfrNP1HGcAvWjaydR5zG2JJOEldi2nbebNK0efx4k8YZTKryX3VIvQOyb
+         lo74CFW4MxylA/c6L7/iqA0GePoca2b3t8d3g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pygl8oMQvOdcJfo8OD7ZqM6kANo2v/N/jTBIk1Ungko=;
-        b=ioEdvjVb84P4oi3c8+jI3VFHuGuaMwYnmlAICF8bhLQyVaVNk9NDfdJtrzWPILnrES
-         5Hv6PvV9QGcWioS8+f/DmSwsLWvU8LsgZKcXBI8N/rAnUODzuJWPKSdE2vdvevWrE00V
-         /Not2VDLAZDjls8BBDnjyp14P6acj5r4OCqsy6PZ8KTHPcD91u4bT694JB1EdHBENaiZ
-         v8gSF/9BD17DSYwafzbVu0gDUjvi7RZCLpUPFccw5gZsYccVokVgChiu6tm+GL4HOd7b
-         i+ZvE+PIDDDZBxYGIyK5SlUuQK5whdlZ66TkOCYF5FkU5+yMQwTopfXn2mMyq8yjqC3M
-         pdGQ==
-X-Gm-Message-State: APjAAAXY8F3fWwi3P0mfDL19HTzU75Ivc9HWlAgCsEBLJPIk1w9zUv2f
-        bP8Sse//5uSb1uNehIJSFJ+HIQ==
-X-Google-Smtp-Source: APXvYqyHcbMY2FvYIEPh6SR56LzKLX4vx0Fs5FhrAhi/UkKIZHLUhBBdgWkmqf97Fdj9mmK8tA1Hxg==
-X-Received: by 2002:a17:90a:178f:: with SMTP id q15mr16632135pja.132.1575647929759;
-        Fri, 06 Dec 2019 07:58:49 -0800 (PST)
+        bh=Yp4NDcto5u3LEI/hPsxbY59xGgx6y4i/6vjXYjtnjow=;
+        b=XsqjUATAJAY6rBcBtszyHSKGGGEjji3bpB35V1M0EUZgo1G+tfElLrcTM3zX0GlB+8
+         8ojfTelz+PV+0z/AZFpLD/iR/Ei5TS97zHbjpFiXOMxctyoi6ON05KQ6qVgOGxK86ES6
+         eFkNOK8KUR9mNGXQSxQCMpUwa9iPV7esf45z3YAmKf9IoJiIBE8Uvv1gUlS0BasYODVp
+         JHVzojsdrGpY3XaR32AhkwvjygYA2YlrcY7TLZ4j04rBvuOwBT+vhAFQOxfRdvEpbtx/
+         PX2gVreV/NFGM9aZOtpuBsucQqzOPko2LdBLQzJiYJDcLI8vQlrOBfexRS9cE/MDzeOF
+         bWNA==
+X-Gm-Message-State: APjAAAWR56TXfkUuBbmdCcnNH8UK87w6E++eQ0Nfc4Ko71BYIKFde0gH
+        Yuc5Kix7nfF0ACC7Yz8w+QJXxQ==
+X-Google-Smtp-Source: APXvYqypv1DWB8/LOdDKSMQkxkwrrdr8pO+nq2V/VfOTVcMO5ym9WNe6AXU+sPVo6aMYwGOSopGp9Q==
+X-Received: by 2002:aa7:9315:: with SMTP id 21mr15127246pfj.187.1575648003565;
+        Fri, 06 Dec 2019 08:00:03 -0800 (PST)
 Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id x197sm17302182pfc.1.2019.12.06.07.58.48
+        by smtp.gmail.com with ESMTPSA id d14sm3740684pjz.12.2019.12.06.08.00.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 07:58:49 -0800 (PST)
-Date:   Fri, 6 Dec 2019 10:58:48 -0500
+        Fri, 06 Dec 2019 08:00:03 -0800 (PST)
+Date:   Fri, 6 Dec 2019 11:00:02 -0500
 From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     madhuparnabhowmik04@gmail.com, rostedt@goodmis.org,
-        rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] rculist: Add macro list_prev_rcu
-Message-ID: <20191206155848.GA15547@google.com>
-References: <20191206150554.10479-1-madhuparnabhowmik04@gmail.com>
- <20191206153258.GD2889@paulmck-ThinkPad-P72>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        linux-nfs@vger.kernel.org, rcu@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, paulmck@kernel.org
+Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
+Message-ID: <20191206160002.GB15547@google.com>
+References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191206153258.GD2889@paulmck-ThinkPad-P72>
+In-Reply-To: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 07:32:58AM -0800, Paul E. McKenney wrote:
-> On Fri, Dec 06, 2019 at 08:35:54PM +0530, madhuparnabhowmik04@gmail.com wrote:
-> > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> > 
-> > There are instances in the linux kernel where the prev pointer
-> > of a list is accessed.
-> > Unlike list_next_rcu, a similar macro for accessing the prev
-> > pointer was not present.
-> 
-> Interesting patch, but...
-> 
-> You lost me on this one.  The list_head ->prev pointer is not marked
-> __rcu, so why is sparse complaining?  Or is someone trying to use
-> rcu_dereference() or similar on ->prev?  If so, it is important to note
-> that both list_del() and list_del_rcu() poision ->prev, so it is not
-> usually safe to access ->prev within an RCU read-side critical section.
-> At the very least, this restriction needs to be called out in the
-> list_prev_rcu() comment header.  And that use of rcu_dereference() and
-> friends on the ->prev pointer is almost always the result of confusion,
-> if not a bug.  (Or is this some new-to-me use case?)
++Paul, here is the dependent patch for the list_prev_rcu() patch Madhuparna
+posted.
 
-Madhuparna, could you please send the patch using this as well, to prevent
-confusion? You can see how just sending one patch and not the user of it
-creates avoidable confusion. Thanks.
-
-Thanks Paul for taking a look. If I remember the dependent patch uses
-rcu_dereference() but I don't remember all the details at the top of my head.
-
-thanks,
-
- - Joel
-
-
+On Fri, Dec 06, 2019 at 08:46:40PM +0530, madhuparnabhowmik04@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 > 
-> Either way, the big question is how we are sure that the uses of ->prev
-> that sparse is complaining about are in fact safe.  More specifically,
-> what have those use cases done to ensure that there will be no invocation
-> of either list_del() or list_del_rcu() on the current element just before
-> the use of ->prev?  Here are a couple of possibilities:
+> This patch fixes the following errors:
+> fs/nfs/dir.c:2353:14: error: incompatible types in comparison expression (different address spaces):
+> fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
+> fs/nfs/dir.c:2353:14:    struct list_head *
 > 
-> 1.	The list only grows, so list_del() and list_del_rcu() are never
-> 	ever invoked on it.
+> caused due to directly accessing the prev pointer of
+> a RCU protected list.
+> Accessing the pointer using the macro list_prev_rcu() fixes this error.
 > 
-> 	But even this is not safe because __list_add_rcu() does
-> 	smp_store_release() only on ->next.  The initialization of
-> 	->prev is completely unordered with any other initialization,
-> 	which can result in bugs on lookup/insertion concurrency.
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> ---
+>  fs/nfs/dir.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> 	So this instead becomes the list being constant.
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index e180033e35cf..2035254cc283 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -2350,7 +2350,7 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
+>  	rcu_read_lock();
+>  	if (nfsi->cache_validity & NFS_INO_INVALID_ACCESS)
+>  		goto out;
+> -	lh = rcu_dereference(nfsi->access_cache_entry_lru.prev);
+> +	lh = rcu_dereference(list_prev_rcu(&nfsi->access_cache_entry_lru));
+>  	cache = list_entry(lh, struct nfs_access_entry, lru);
+>  	if (lh == &nfsi->access_cache_entry_lru ||
+>  	    cred != cache->cred)
+> -- 
+> 2.17.1
 > 
-> 2.	The ->prev pointer is never actually dereferenced, but only
-> 	compared.  One example use case is determining whether the
-> 	current element is first in the list by comparing its
-> 	->prev pointer to the address of the list header.
-> 
-> 	But this use case needs a READ_ONCE().
-> 
-> 3.	These accesses are single-threaded, for example while the list
-> 	is being initialized but before it is exposed to readers or
-> 	after the list has been rendered inaccessible to readers
-> 	(and following at least one grace period after that).  But in
-> 	this case, there is no need for rcu_dereference(), so sparse
-> 	should not be complaining.
-> 
-> 4.	#3 above, but code is shared with the non-single-threaded case.
-> 	But then the non-single-threaded code needs to be safe with
-> 	respect to concurrent insertions and deletions, as called
-> 	out above.
-> 
-> So what am I missing here?
-> 
-> 							Thanx, Paul
-> 
-> > Therefore, directly accessing the prev pointer was causing
-> > sparse errors.
-> > One such example is the sparse error in fs/nfs/dir.c
-> > 
-> > error:
-> > fs/nfs/dir.c:2353:14: error: incompatible types in comparison expression (different address spaces):
-> > fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
-> > fs/nfs/dir.c:2353:14:    struct list_head *
-> > 
-> > The error is caused due to the following line:
-> > 
-> > lh = rcu_dereference(nfsi->access_cache_entry_lru.prev);
-> > 
-> > After adding the macro, this error can be fixed as follows:
-> > 
-> > lh = rcu_dereference(list_prev_rcu(&nfsi->access_cache_entry_lru));
-> > 
-> > Therefore, we think there is a need to add this macro to rculist.h.
-> > 
-> > Suggested-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> > ---
-> >  include/linux/rculist.h | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> > index 4b7ae1bf50b3..49eef8437753 100644
-> > --- a/include/linux/rculist.h
-> > +++ b/include/linux/rculist.h
-> > @@ -40,6 +40,12 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
-> >   */
-> >  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
-> >  
-> > +/*
-> > + * return the prev pointer of a list_head in an rcu safe
-> > + * way, we must not access it directly
-> > + */
-> > +#define list_prev_rcu(list)	(*((struct list_head __rcu **)(&(list)->prev)))
-> > +
-> >  /*
-> >   * Check during list traversal that we are within an RCU reader
-> >   */
-> > -- 
-> > 2.17.1
-> > 
