@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C37BC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D78C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E2A205ED
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C711205ED
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VMnp87Kd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tL/oX+/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfLFSqg (ORCPT
+        id S1726359AbfLFSqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 13:46:36 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33453 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfLFSqc (ORCPT
+        Fri, 6 Dec 2019 13:46:39 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36160 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbfLFSqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 13:46:32 -0500
-Received: by mail-pf1-f194.google.com with SMTP id y206so3783929pfb.0;
-        Fri, 06 Dec 2019 10:46:32 -0800 (PST)
+        Fri, 6 Dec 2019 13:46:36 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x184so2330689pfb.3;
+        Fri, 06 Dec 2019 10:46:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=I11/1g/9q+frAVf8+DPvgghH4KQ81JT2S0kbypabsyc=;
-        b=VMnp87KdtKaHKbIdIynQJjnh6Rwx73cgOqHapRh8B69i4jp/3sjISCsxhLktJIGkSy
-         ZNe1M/lVfmzI6SIW2RwIZd/xu5yFsCzRRZOmM7mhk/UlM0bWSQrRNUBxQQnAmPprF42J
-         sZVVochTM/CWvOunmhgF/FvGmCl+XtfvNxs2ZmvDeqHmpb2EX5Y08QJCJDs4qAD+fRjo
-         Y5ojsHjT4xc3OK5ssN763cBtqpVYzc7Ec4VqydoM4Jlmha7xuedeCW5Fl0Hr23YdJxPt
-         ChmAu38tXs01yOllIWYQTSVi32qxfNHAoT1Gj3Ikgiy6PR1RCo+9jbDRygLnTxTKky6a
-         aHGw==
+        bh=9o4ISVa2P6pOeqYh0Ll8+Jro095934ZjUwAjarWJmTU=;
+        b=tL/oX+/6yHqXUXzX9ilD1PgPWLPOMzVBR1dBoaFG2pmRikiMDiyU+BORtPIIQ6mf8D
+         OQc3zUnXJcQzagrDQaMl3ClK5KSxERD9s+mXw9QC9+2Wg28S3XYQlnQB4ljlWWNdVrON
+         6shAspe+xql4Eg8kvEPE+mOHEiiUzLowdIwR1KAvBfQAE+p+aVwFBvEKjlH13drSkXlc
+         wo7NXXihiKBxGIbakXeBTuTAPrj/st4djtnmIRwKYyZ+q6pZl7144sHhRa2QGqLHjAm9
+         phfcrSs4dftiLzBrHwImqxI2shC3/QYSJ6L4vyH6YLhXaeSsvYI8N/O6ATkUhmiDWx78
+         CnzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=I11/1g/9q+frAVf8+DPvgghH4KQ81JT2S0kbypabsyc=;
-        b=miJw0UmpmA6pTGRznRI+y45+WjGg3X4JP/FiDJ3YPzAfzRzzqpVV7shuA+Ff8/KfBI
-         w6HviFvchbPyFVZ0FXgxPrs4g6fiGVGimxakm1owR6zKXN7znxm3KOW8L3Dum+rEtnLY
-         clFBbH7+GKDuP39B6FCYkdlDEBPUWuRL3siWeCuCzjZqUtAR01YrRj7bAuKdklryfjZj
-         ci8+l3BMSvBiR5Y3biBeIdBSgIV2dPxFRlKR1Sa+342+aCQbEM5JTqaB2F8XCjaRJK+A
-         DUcmo/onSgfTyreLt9Qxm9BF9MW5qHLEzDe7QvdweWLVOOwd8HmpTcIfgm6x0fxjKlLJ
-         9iWg==
-X-Gm-Message-State: APjAAAXwjbee2YbA+amSKXLVWKweCT19sjY0GAFuAPWOuTCZW1VN0hUu
-        m0aRNGUT399nwoRW9rHdJl8=
-X-Google-Smtp-Source: APXvYqwoypDoF4nKIA4Nt1tXSNz7e6TbMFkJOI8WhnkDVk2bs1ION4YrEP1wl6B0klb7gqb3Vn4+mA==
-X-Received: by 2002:aa7:90c4:: with SMTP id k4mr15684240pfk.216.1575657991783;
-        Fri, 06 Dec 2019 10:46:31 -0800 (PST)
+        bh=9o4ISVa2P6pOeqYh0Ll8+Jro095934ZjUwAjarWJmTU=;
+        b=rIGrtftlhmN2PNDe+HzjvRNewd4YIMUmDAtBnE8/qic++oXYa19PWqGhaT8slEOtFm
+         mPJQtx7vfT0iTLUmlFYsE9EMmOjoXFM7wtlsBFI6QRg/8OCw+Awhh1l2LIeBli5V0iiZ
+         bBmTsnw/AyK+vmm0C87clRhW2VItYL82Bh06HYyauaj5yv3OQ22b28K6yODawEv2QVeb
+         mq96W+nSKhjjuDPfuowo9VDd1pkj/DL2ywGTkQH+sf6jfxQ7mfojR7IB3aGdfA+s6k4/
+         B2kH7lE4Hnvl2lBQBJVehO5sEoyvtvPeOCV5vGFRBZNtaEMxKN2JWRk6Xix8zIzL7zpp
+         lY3w==
+X-Gm-Message-State: APjAAAXmWu1ROVHHygT/1w2x1duzk7oAhCvbMIufS6SSZj15Ieyb5S9I
+        ZMogFKizFezRNF+oly1xhxE=
+X-Google-Smtp-Source: APXvYqykwrefj/zfHpIuihall3bC06p3CtkdcyZnCXMvVfTYduRK+b1RSF6fUPRmcgOs39GO5I/Qcg==
+X-Received: by 2002:a63:4f5c:: with SMTP id p28mr4984722pgl.409.1575657995416;
+        Fri, 06 Dec 2019 10:46:35 -0800 (PST)
 Received: from localhost.localdomain ([103.51.73.190])
-        by smtp.gmail.com with ESMTPSA id p4sm16777039pfb.157.2019.12.06.10.46.28
+        by smtp.gmail.com with ESMTPSA id p4sm16777039pfb.157.2019.12.06.10.46.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 10:46:31 -0800 (PST)
+        Fri, 06 Dec 2019 10:46:35 -0800 (PST)
 From:   Anand Moon <linux.amoon@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -67,9 +67,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Daniel Schultz <d.schultz@phytec.de>
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFCv1 4/8] mfd: rk808: use syscore for RK818 PMIC shutdown
-Date:   Fri,  6 Dec 2019 18:45:32 +0000
-Message-Id: <20191206184536.2507-5-linux.amoon@gmail.com>
+Subject: [RFCv1 5/8] mfd: rk808: cleanup unused function pointer
+Date:   Fri,  6 Dec 2019 18:45:33 +0000
+Message-Id: <20191206184536.2507-6-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191206184536.2507-1-linux.amoon@gmail.com>
 References: <20191206184536.2507-1-linux.amoon@gmail.com>
@@ -80,50 +80,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use common syscore_shutdown for RK818 PMIC to do
-clean I2C shutdown, drop the unused pm_pwroff_fn
-function pointers.
+Cleanup unused pm_poweroff_fn and pm_pwroff_prep_fn function,
+drop the unused rockchip,system-power-controller dts binding.
 
 Cc: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
- drivers/mfd/rk808.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/mfd/rk808.c       | 28 ++--------------------------
+ include/linux/mfd/rk808.h |  2 --
+ 2 files changed, 2 insertions(+), 28 deletions(-)
 
 diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
-index 0a098fbdf112..4b3b90dad4f8 100644
+index 4b3b90dad4f8..9a7be379946a 100644
 --- a/drivers/mfd/rk808.c
 +++ b/drivers/mfd/rk808.c
-@@ -467,11 +467,6 @@ static void rk808_update_bits(unsigned int reg, unsigned int mask,
- 			"can't write to register 0x%x: %x!\n", reg, ret);
+@@ -521,7 +521,7 @@ static int rk808_probe(struct i2c_client *client,
+ 	const struct mfd_cell *cells;
+ 	int nr_pre_init_regs;
+ 	int nr_cells;
+-	int pm_off = 0, msb, lsb;
++	int msb, lsb;
+ 	unsigned char pmic_id_msb, pmic_id_lsb;
+ 	int ret;
+ 	int i;
+@@ -641,18 +641,8 @@ static int rk808_probe(struct i2c_client *client,
+ 		goto err_irq;
+ 	}
+ 
+-	pm_off = of_property_read_bool(np,
+-				"rockchip,system-power-controller");
+-	if (pm_off && !pm_power_off) {
++	if (!rk808_i2c_client)
+ 		rk808_i2c_client = client;
+-		pm_power_off = rk808->pm_pwroff_fn;
+-	}
+-
+-	if (pm_off && !pm_power_off_prepare) {
+-		if (!rk808_i2c_client)
+-			rk808_i2c_client = client;
+-		pm_power_off_prepare = rk808->pm_pwroff_prep_fn;
+-	}
+ 
+ 	return 0;
+ 
+@@ -667,20 +657,6 @@ static int rk808_remove(struct i2c_client *client)
+ 
+ 	regmap_del_irq_chip(client->irq, rk808->irq_data);
+ 
+-	/**
+-	 * pm_power_off may points to a function from another module.
+-	 * Check if the pointer is set by us and only then overwrite it.
+-	 */
+-	if (rk808->pm_pwroff_fn && pm_power_off == rk808->pm_pwroff_fn)
+-		pm_power_off = NULL;
+-
+-	/**
+-	 * As above, check if the pointer is set by us before overwrite.
+-	 */
+-	if (rk808->pm_pwroff_prep_fn &&
+-	    pm_power_off_prepare == rk808->pm_pwroff_prep_fn)
+-		pm_power_off_prepare = NULL;
+-
+ 	return 0;
  }
  
--static void rk818_device_shutdown(void)
--{
--	rk808_update_bits(RK818_DEVCTRL_REG, DEV_OFF, DEV_OFF);
--}
--
- static void rk8xx_syscore_shutdown(void)
- {
- 	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
-@@ -494,6 +489,9 @@ static void rk8xx_syscore_shutdown(void)
- 			rk808_update_bits(RK817_SYS_CFG(3),
- 					RK817_SLPPIN_FUNC_MSK, SLPPIN_DN_FUN);
- 			break;
-+		case RK818_ID:
-+			rk808_update_bits(RK818_DEVCTRL_REG, DEV_OFF, DEV_OFF);
-+			break;
- 		default:
- 			break;
- 		}
-@@ -583,7 +581,6 @@ static int rk808_probe(struct i2c_client *client,
- 		nr_pre_init_regs = ARRAY_SIZE(rk818_pre_init_reg);
- 		cells = rk818s;
- 		nr_cells = ARRAY_SIZE(rk818s);
--		rk808->pm_pwroff_fn = rk818_device_shutdown;
- 		break;
- 	case RK809_ID:
- 	case RK817_ID:
+diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+index a59bf323f713..e07f6e61cd38 100644
+--- a/include/linux/mfd/rk808.h
++++ b/include/linux/mfd/rk808.h
+@@ -620,7 +620,5 @@ struct rk808 {
+ 	long				variant;
+ 	const struct regmap_config	*regmap_cfg;
+ 	const struct regmap_irq_chip	*regmap_irq_chip;
+-	void				(*pm_pwroff_fn)(void);
+-	void				(*pm_pwroff_prep_fn)(void);
+ };
+ #endif /* __LINUX_REGULATOR_RK808_H */
 -- 
 2.24.0
 
