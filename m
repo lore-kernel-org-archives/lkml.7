@@ -2,143 +2,158 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D70C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8DEC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCFC24673
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:38:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cBDawEAn"
+	by mail.kernel.org (Postfix) with ESMTP id AD16624659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbfLFNiy (ORCPT
+        id S1726535AbfLFNji convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 08:38:54 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:36606 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726388AbfLFNir (ORCPT
+        Fri, 6 Dec 2019 08:39:38 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:42808 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726195AbfLFNji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:38:47 -0500
-X-UUID: 2662c01cbe4446f8a55ce39142e75865-20191206
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=P++ZF9XPcWo4AuTptQ8AjzD5eSZlNPabfWQRMDPze2A=;
-        b=cBDawEAniaIKe9p+nENNJDcRCVD5JxLmvNleC9ITamiTc0Rkp5/FCey59nuE0R2Urx3YwqvNgFhZGcMtpYAUGlp9/x9prcNNHXIs3f7cd6TA5cf/XUr0FjeGKbse/4wX1wj/bwSztgZI2zx0IyNX69Fj6477weKH5vFpfO2erzg=;
-X-UUID: 2662c01cbe4446f8a55ce39142e75865-20191206
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 681484339; Fri, 06 Dec 2019 21:38:42 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 6 Dec 2019 21:38:26 +0800
-Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 6 Dec 2019 21:37:59 +0800
-From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "Alessandro Zummo" <a.zummo@towertech.it>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>,
-        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Subject: [PATCH v6 1/6] mfd: mt6397: modify suspend/resume behavior
-Date:   Fri, 6 Dec 2019 21:32:58 +0800
-Message-ID: <1575639183-17606-2-git-send-email-hsin-hsiung.wang@mediatek.com>
-X-Mailer: git-send-email 2.6.4
-In-Reply-To: <1575639183-17606-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1575639183-17606-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Fri, 6 Dec 2019 08:39:38 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-16-t457RrF7MGGa9WB2Ppc0Xw-1; Fri, 06 Dec 2019 13:39:35 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 6 Dec 2019 13:39:35 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 6 Dec 2019 13:39:35 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     network dev <netdev@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
+Thread-Topic: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
+Thread-Index: AdWsNynavvs+VRwOQ6mSStk+IzVA6A==
+Date:   Fri, 6 Dec 2019 13:39:35 +0000
+Message-ID: <23db23416d3148fa86e54dccc6152266@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-MC-Unique: t457RrF7MGGa9WB2Ppc0Xw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U29tZSBwbWljcyBkb24ndCBuZWVkIGJhY2t1cCBpbnRlcnJ1cHQgc2V0dGluZ3MsIHNvIHdlIGNo
-YW5nZSB0byB1c2UNCnBtIG5vdGlmaWVyIGZvciB0aGUgcG1pY3Mgd2hpY2ggYXJlIG5lY2Vzc2Fy
-eSB0byBzdG9yZSBzZXR0aW5ncy4NCg0KU2lnbmVkLW9mZi1ieTogSHNpbi1Ic2l1bmcgV2FuZyA8
-aHNpbi1oc2l1bmcud2FuZ0BtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL21mZC9tdDYzOTct
-Y29yZS5jICAgICAgIHwgMzAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQogZHJpdmVy
-cy9tZmQvbXQ2Mzk3LWlycS5jICAgICAgICB8IDMzICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKw0KIGluY2x1ZGUvbGludXgvbWZkL210NjM5Ny9jb3JlLmggfCAgMiArKw0KIDMgZmls
-ZXMgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKSwgMzAgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1n
-aXQgYS9kcml2ZXJzL21mZC9tdDYzOTctY29yZS5jIGIvZHJpdmVycy9tZmQvbXQ2Mzk3LWNvcmUu
-Yw0KaW5kZXggYjJjMzI1ZS4uM2U3NDMwZSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbWZkL210NjM5
-Ny1jb3JlLmMNCisrKyBiL2RyaXZlcnMvbWZkL210NjM5Ny1jb3JlLmMNCkBAIC0xMDAsMzUgKzEw
-MCw2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgbXQ2Mzk3X2RldnNbXSA9IHsNCiAJ
-fQ0KIH07DQogDQotI2lmZGVmIENPTkZJR19QTV9TTEVFUA0KLXN0YXRpYyBpbnQgbXQ2Mzk3X2ly
-cV9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCi17DQotCXN0cnVjdCBtdDYzOTdfY2hpcCAq
-Y2hpcCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KLQ0KLQlyZWdtYXBfd3JpdGUoY2hpcC0+cmVn
-bWFwLCBjaGlwLT5pbnRfY29uWzBdLCBjaGlwLT53YWtlX21hc2tbMF0pOw0KLQlyZWdtYXBfd3Jp
-dGUoY2hpcC0+cmVnbWFwLCBjaGlwLT5pbnRfY29uWzFdLCBjaGlwLT53YWtlX21hc2tbMV0pOw0K
-LQ0KLQllbmFibGVfaXJxX3dha2UoY2hpcC0+aXJxKTsNCi0NCi0JcmV0dXJuIDA7DQotfQ0KLQ0K
-LXN0YXRpYyBpbnQgbXQ2Mzk3X2lycV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KLXsNCi0J
-c3RydWN0IG10NjM5N19jaGlwICpjaGlwID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQotDQotCXJl
-Z21hcF93cml0ZShjaGlwLT5yZWdtYXAsIGNoaXAtPmludF9jb25bMF0sIGNoaXAtPmlycV9tYXNr
-c19jdXJbMF0pOw0KLQlyZWdtYXBfd3JpdGUoY2hpcC0+cmVnbWFwLCBjaGlwLT5pbnRfY29uWzFd
-LCBjaGlwLT5pcnFfbWFza3NfY3VyWzFdKTsNCi0NCi0JZGlzYWJsZV9pcnFfd2FrZShjaGlwLT5p
-cnEpOw0KLQ0KLQlyZXR1cm4gMDsNCi19DQotI2VuZGlmDQotDQotc3RhdGljIFNJTVBMRV9ERVZf
-UE1fT1BTKG10NjM5N19wbV9vcHMsIG10NjM5N19pcnFfc3VzcGVuZCwNCi0JCQltdDYzOTdfaXJx
-X3Jlc3VtZSk7DQotDQogc3RydWN0IGNoaXBfZGF0YSB7DQogCXUzMiBjaWRfYWRkcjsNCiAJdTMy
-IGNpZF9zaGlmdDsNCkBAIC0yMzgsNyArMjA5LDYgQEAgc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9k
-cml2ZXIgbXQ2Mzk3X2RyaXZlciA9IHsNCiAJLmRyaXZlciA9IHsNCiAJCS5uYW1lID0gIm10NjM5
-NyIsDQogCQkub2ZfbWF0Y2hfdGFibGUgPSBvZl9tYXRjaF9wdHIobXQ2Mzk3X29mX21hdGNoKSwN
-Ci0JCS5wbSA9ICZtdDYzOTdfcG1fb3BzLA0KIAl9LA0KIAkuaWRfdGFibGUgPSBtdDYzOTdfaWQs
-DQogfTsNCmRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9tdDYzOTctaXJxLmMgYi9kcml2ZXJzL21m
-ZC9tdDYzOTctaXJxLmMNCmluZGV4IGIyZDNjZTEuLjY2OWU5M2QgMTAwNjQ0DQotLS0gYS9kcml2
-ZXJzL21mZC9tdDYzOTctaXJxLmMNCisrKyBiL2RyaXZlcnMvbWZkL210NjM5Ny1pcnEuYw0KQEAg
-LTksNiArOSw3IEBADQogI2luY2x1ZGUgPGxpbnV4L29mX2lycS5oPg0KICNpbmNsdWRlIDxsaW51
-eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCiAjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQorI2luY2x1
-ZGUgPGxpbnV4L3N1c3BlbmQuaD4NCiAjaW5jbHVkZSA8bGludXgvbWZkL210NjMyMy9jb3JlLmg+
-DQogI2luY2x1ZGUgPGxpbnV4L21mZC9tdDYzMjMvcmVnaXN0ZXJzLmg+DQogI2luY2x1ZGUgPGxp
-bnV4L21mZC9tdDYzOTcvY29yZS5oPg0KQEAgLTEyOCw2ICsxMjksMzYgQEAgc3RhdGljIGNvbnN0
-IHN0cnVjdCBpcnFfZG9tYWluX29wcyBtdDYzOTdfaXJxX2RvbWFpbl9vcHMgPSB7DQogCS5tYXAg
-PSBtdDYzOTdfaXJxX2RvbWFpbl9tYXAsDQogfTsNCiANCitzdGF0aWMgaW50IG10NjM5N19pcnFf
-cG1fbm90aWZpZXIoc3RydWN0IG5vdGlmaWVyX2Jsb2NrICpub3RpZmllciwNCisJCQkJICB1bnNp
-Z25lZCBsb25nIHBtX2V2ZW50LCB2b2lkICp1bnVzZWQpDQorew0KKwlzdHJ1Y3QgbXQ2Mzk3X2No
-aXAgKmNoaXAgPQ0KKwkJY29udGFpbmVyX29mKG5vdGlmaWVyLCBzdHJ1Y3QgbXQ2Mzk3X2NoaXAs
-IHBtX25iKTsNCisNCisJc3dpdGNoIChwbV9ldmVudCkgew0KKwljYXNlIFBNX1NVU1BFTkRfUFJF
-UEFSRToNCisJCXJlZ21hcF93cml0ZShjaGlwLT5yZWdtYXAsDQorCQkJICAgICBjaGlwLT5pbnRf
-Y29uWzBdLCBjaGlwLT53YWtlX21hc2tbMF0pOw0KKwkJcmVnbWFwX3dyaXRlKGNoaXAtPnJlZ21h
-cCwNCisJCQkgICAgIGNoaXAtPmludF9jb25bMV0sIGNoaXAtPndha2VfbWFza1sxXSk7DQorCQll
-bmFibGVfaXJxX3dha2UoY2hpcC0+aXJxKTsNCisJCWJyZWFrOw0KKw0KKwljYXNlIFBNX1BPU1Rf
-U1VTUEVORDoNCisJCXJlZ21hcF93cml0ZShjaGlwLT5yZWdtYXAsDQorCQkJICAgICBjaGlwLT5p
-bnRfY29uWzBdLCBjaGlwLT5pcnFfbWFza3NfY3VyWzBdKTsNCisJCXJlZ21hcF93cml0ZShjaGlw
-LT5yZWdtYXAsDQorCQkJICAgICBjaGlwLT5pbnRfY29uWzFdLCBjaGlwLT5pcnFfbWFza3NfY3Vy
-WzFdKTsNCisJCWRpc2FibGVfaXJxX3dha2UoY2hpcC0+aXJxKTsNCisJCWJyZWFrOw0KKw0KKwlk
-ZWZhdWx0Og0KKwkJYnJlYWs7DQorCX0NCisNCisJcmV0dXJuIE5PVElGWV9ET05FOw0KK30NCisN
-CiBpbnQgbXQ2Mzk3X2lycV9pbml0KHN0cnVjdCBtdDYzOTdfY2hpcCAqY2hpcCkNCiB7DQogCWlu
-dCByZXQ7DQpAQCAtMTU5LDYgKzE5MCw3IEBAIGludCBtdDYzOTdfaXJxX2luaXQoc3RydWN0IG10
-NjM5N19jaGlwICpjaGlwKQ0KIAlyZWdtYXBfd3JpdGUoY2hpcC0+cmVnbWFwLCBjaGlwLT5pbnRf
-Y29uWzBdLCAweDApOw0KIAlyZWdtYXBfd3JpdGUoY2hpcC0+cmVnbWFwLCBjaGlwLT5pbnRfY29u
-WzFdLCAweDApOw0KIA0KKwljaGlwLT5wbV9uYi5ub3RpZmllcl9jYWxsID0gbXQ2Mzk3X2lycV9w
-bV9ub3RpZmllcjsNCiAJY2hpcC0+aXJxX2RvbWFpbiA9IGlycV9kb21haW5fYWRkX2xpbmVhcihj
-aGlwLT5kZXYtPm9mX25vZGUsDQogCQkJCQkJIE1UNjM5N19JUlFfTlIsDQogCQkJCQkJICZtdDYz
-OTdfaXJxX2RvbWFpbl9vcHMsDQpAQCAtMTc3LDUgKzIwOSw2IEBAIGludCBtdDYzOTdfaXJxX2lu
-aXQoc3RydWN0IG10NjM5N19jaGlwICpjaGlwKQ0KIAkJcmV0dXJuIHJldDsNCiAJfQ0KIA0KKwly
-ZWdpc3Rlcl9wbV9ub3RpZmllcigmY2hpcC0+cG1fbmIpOw0KIAlyZXR1cm4gMDsNCiB9DQpkaWZm
-IC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tZmQvbXQ2Mzk3L2NvcmUuaCBiL2luY2x1ZGUvbGludXgv
-bWZkL210NjM5Ny9jb3JlLmgNCmluZGV4IGZjODhkMzEuLmI4MWQzMzMgMTAwNjQ0DQotLS0gYS9p
-bmNsdWRlL2xpbnV4L21mZC9tdDYzOTcvY29yZS5oDQorKysgYi9pbmNsdWRlL2xpbnV4L21mZC9t
-dDYzOTcvY29yZS5oDQpAQCAtOCw2ICs4LDcgQEANCiAjZGVmaW5lIF9fTUZEX01UNjM5N19DT1JF
-X0hfXw0KIA0KICNpbmNsdWRlIDxsaW51eC9tdXRleC5oPg0KKyNpbmNsdWRlIDxsaW51eC9ub3Rp
-Zmllci5oPg0KIA0KIGVudW0gY2hpcF9pZCB7DQogCU1UNjMyM19DSElQX0lEID0gMHgyMywNCkBA
-IC01NCw2ICs1NSw3IEBAIGVudW0gbXQ2Mzk3X2lycV9udW1iZXJzIHsNCiBzdHJ1Y3QgbXQ2Mzk3
-X2NoaXAgew0KIAlzdHJ1Y3QgZGV2aWNlICpkZXY7DQogCXN0cnVjdCByZWdtYXAgKnJlZ21hcDsN
-CisJc3RydWN0IG5vdGlmaWVyX2Jsb2NrIHBtX25iOw0KIAlpbnQgaXJxOw0KIAlzdHJ1Y3QgaXJx
-X2RvbWFpbiAqaXJxX2RvbWFpbjsNCiAJc3RydWN0IG11dGV4IGlycWxvY2s7DQotLSANCjIuNi40
-DQo=
+Some tests I've done seem to show that recvmsg() is much slower that recvfrom()
+even though most of what they do is the same.
+One thought is that the difference is all the extra copy_from_user() needed by
+recvmsg. CONFIG_HARDENED_USERCOPY can add a significant cost.
+
+I've built rebuilt my 5.4-rc7 kernel with all the copy_to/from_user() in net/socket.c
+replaced with the '_' prefixed versions (that don't call check_object()).
+And also changed rw_copy_check_uvector() in fs/read_write.c.
+
+Schedviz then showed the time spent by the application thread that calls
+recvmsg() (about) 225 times being reduced from 0.9ms to 0.75ms.
+
+I've now instrumented the actual recv calls. It show some differences,
+but now enough to explain the 20% difference above.
+(This is all made more difficult because my Ivy Bridge i7-3770 refuses
+to run at a fixed frequency.)
+
+Anyway using PERF_COUNT_HW_CPU_CYCLES I've got the following
+histograms for the number of cycles in each recv call.
+There are about the same number (2.8M) in each column over
+an elapsed time of 20 seconds.
+There are 450 active UDP sockets, each receives 1 message every 20ms.
+Every 10ms a RT thread that is pinned to a cpu reads all the pending messages.
+This is a 4 core hyperthreading (8 cpu) system.
+During these tests 5 other threads are also busy.
+There are no sends (on those sockets).
+
+         |       recvfrom      |       recvmsg
+ cycles  |   unhard  |    hard |   unhard  |    hard
+-----------------------------------------------------
+   1472:         29          1          0          0
+   1600:       8980       4887          3          0
+   1728:     112540     159518       5393       2895
+   1856:     174555     270148     119054     111230
+   1984:     126007     168383     152310     195288
+   2112:      80249      87045     118941     168801
+   2240:      61570      54790      81847     110561
+   2368:      95088      61796      57496      71732
+   2496:     193633     155870      54020      54801
+   2624:     274997     284921     102465      74626
+   2752:     276661     295715     160492     119498
+   2880:     248751     264174     206327     186028
+   3008:     207532     213067     230704     229232
+   3136:     167976     164804     226493     238555
+   3264:     133708     124857     202639     220574
+   3392:     107859      95696     172949     189475
+   3520:      88599      75943     141056     153524
+   3648:      74290      61586     115873     120994
+   3776:      62253      50891      96061      95040
+   3904:      52213      42482      81113      76577
+   4032:      42920      34632      69077      63131
+   4160:      35472      28327      60074      53631
+   4288:      28787      22603      51345      46620
+   4416:      24072      18496      44006      40325
+   4544:      20107      14886      37185      34516
+   4672:      16759      12206      31408      29031
+   4800:      14195       9991      26843      24396
+   4928:      12356       8167      22775      20165
+   5056:      10387       6931      19404      16591
+   5184:       9284       5916      16817      13743
+   5312:       7994       5116      14737      11452
+   5440:       7152       4495      12592       9607
+   5568:       6300       3969      11117       8592
+   5696:       5445       3421       9988       7237
+   5824:       4683       2829       8839       6368
+   5952:       3959       2643       7652       5652
+   6080:       3454       2377       6442       4814
+   6208:       3041       2219       5735       4170
+   6336:       2840       2060       5059       3615
+   6464:       2428       1975       4433       3201
+   6592:       2109       1794       4078       2823
+   6720:       1871       1382       3549       2558
+   6848:       1706       1262       3110       2328
+   6976:       1567       1001       2733       1991
+   7104:       1436        873       2436       1819
+   7232:       1417        860       2102       1652
+   7360:       1414        741       1823       1429
+   7488:       1372        814       1663       1239
+   7616:       1201        896       1430       1152
+   7744:       1275       1008       1364       1049
+   7872:       1382       1120       1367        925
+   8000:       1316       1282       1253        815
+   8128:       1264       1266       1313        792
+  8256+:      19252      19450      34703      30228
+----------------------------------------------------
+  Total:    2847707    2863582    2853688    2877088
+
+This does show a few interesting things:
+1) The 'hardened' kernel is slower, especially for recvmsg.
+2) The difference for recvfrom isn't enough for the 20% reduction I saw.
+3) There are two peaks at the top a 'not insubstantial' number are a lot
+   faster than the main peak.
+4) There is second peak way down at 8000 cycles.
+   This is repeatable.
+
+Any idea what is actually going on??
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
