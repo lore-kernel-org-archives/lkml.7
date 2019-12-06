@@ -2,108 +2,143 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D78C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6348C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B9E24673
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:17:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Orv0ZhCR"
+	by mail.kernel.org (Postfix) with ESMTP id 838572464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfLFNRN (ORCPT
+        id S1726259AbfLFNTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 08:17:13 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:47864 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbfLFNRN (ORCPT
+        Fri, 6 Dec 2019 08:19:49 -0500
+Received: from michel.telenet-ops.be ([195.130.137.88]:37688 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfLFNTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:17:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=c/BS0k8X+8NG/g3S4NAeJDxb7dNaLWprIW3ucB/d7FI=; b=Orv0ZhCRtyr6C280YO0QMvQZ2
-        NLIRlOF2R1VcTi8UQ64A9l3gqUZ6zhu05V6kXJUgUQbXnPoilSWNKsCXK061mPrp7Fag5L5UudX2+
-        Net8OnlcMe75RQ4Gqu2hRvMi0QyYkqu+kfdYyWIO8d9zKvcRl6f9LZLYdJgDX7SQgeYB/C0MDPrrP
-        pl6607VUyQOCfcJKRkv2g8qs8rSVqJ6TT17NQyt8UYfmbuSbrwtpfMuGeBgbKJYDPNrqkJjnnuDfz
-        rTxYDz1H4TRsmFIb26kiFXvwmG0zj9VOdfV7n2jsezpjOT+JQBbKKlzBWzXWmmaiqIt28oOPeQ7R2
-        oEbok13BA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1idDTY-0007Xj-Ha; Fri, 06 Dec 2019 13:16:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0CC7930025A;
-        Fri,  6 Dec 2019 14:15:33 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A750E2B275E62; Fri,  6 Dec 2019 14:16:50 +0100 (CET)
-Date:   Fri, 6 Dec 2019 14:16:50 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
-        elver@google.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, christophe.leroy@c-s.fr,
-        linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
-        x86@kernel.org, kasan-dev@googlegroups.com,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-2 tag
- (topic/kasan-bitops)
-Message-ID: <20191206131650.GM2827@hirez.programming.kicks-ass.net>
-References: <87blslei5o.fsf@mpe.ellerman.id.au>
+        Fri, 6 Dec 2019 08:19:48 -0500
+Received: from ramsan ([84.195.182.253])
+        by michel.telenet-ops.be with bizsmtp
+        id adKm210035USYZQ06dKmN3; Fri, 06 Dec 2019 14:19:46 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1idDWL-00069B-UC; Fri, 06 Dec 2019 14:19:45 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1idDWL-0007Tm-RC; Fri, 06 Dec 2019 14:19:45 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3] iio: adc: max9611: Fix too short conversion time delay
+Date:   Fri,  6 Dec 2019 14:19:44 +0100
+Message-Id: <20191206131944.28707-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87blslei5o.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 11:46:11PM +1100, Michael Ellerman wrote:
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: SHA256
-> 
-> Hi Linus,
-> 
-> Please pull another powerpc update for 5.5.
-> 
-> As you'll see from the diffstat this is mostly not powerpc code. In order to do
-> KASAN instrumentation of bitops we needed to juggle some of the generic bitops
-> headers.
-> 
-> Because those changes potentially affect several architectures I wasn't
-> confident putting them directly into my tree, so I've had them sitting in a
-> topic branch. That branch (topic/kasan-bitops) has been in linux-next for a
-> month, and I've not had any feedback that it's caused any problems.
-> 
-> So I think this is good to merge, but it's a standalone pull so if anyone does
-> object it's not a problem.
+As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
+reading in probe"), max9611 initialization sometimes fails on the
+Salvator-X(S) development board with:
 
-No objections, but here:
+    max9611 4-007f: Invalid value received from ADC 0x8000: aborting
+    max9611: probe of 4-007f failed with error -5
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git/commit/?h=topic/kasan-bitops&id=81d2c6f81996e01fbcd2b5aeefbb519e21c806e9
+The max9611 driver tests communications with the chip by reading the die
+temperature during the probe function, which returns an invalid value.
 
-you write:
+According to the datasheet, the typical ADC conversion time is 2 ms, but
+no minimum or maximum values are provided.  Maxim Technical Support
+confirmed this was tested with temperature Ta=25 degreeC, and promised
+to inform me if a maximum/minimum value is available (they didn't get
+back to me, so I assume it is not).
 
-  "Currently bitops-instrumented.h assumes that the architecture provides
-atomic, non-atomic and locking bitops (e.g. both set_bit and __set_bit).
-This is true on x86 and s390, but is not always true: there is a
-generic bitops/non-atomic.h header that provides generic non-atomic
-operations, and also a generic bitops/lock.h for locking operations."
+However, the driver assumes a 1 ms conversion time.  Usually the
+usleep_range() call returns after more than 1.8 ms, hence it succeeds.
+When it returns earlier, the data register may be read too early, and
+the previous measurement value will be returned.  After boot, this is
+the temperature POR (power-on reset) value, causing the failure above.
 
-Is there any actual benefit for PPC to using their own atomic bitops
-over bitops/lock.h ? I'm thinking that the generic code is fairly
-optimal for most LL/SC architectures.
+Fix this by increasing the delay from 1000-2000 µs to 3000-3300 µs.
 
-I've been meaning to audit the various architectures and move them over,
-but alas, it's something I've not yet had time for...
+Note that this issue has always been present, but it was exposed by the
+aformentioned commit.
+
+Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+After this patch, probing of the two max9611 sensors succeeded during
+ca. 3000 boot cycles on Salvator-X(S) boards, equipped with various
+R-Car H3/M3-W/M3-N SoCs.
+
+v3:
+  - Add Reviewed-by,
+  - Join split comment line,
+
+v2:
+  - Add Reviewed-by,
+  - Add feedback from Maxim Technical Support,
+  - Increase delay from 2000-2200 µs to 3000-3300 µs to play safe.
+---
+ drivers/iio/adc/max9611.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+index bf76dfb3f2c9530b..6250d4bf46dc9642 100644
+--- a/drivers/iio/adc/max9611.c
++++ b/drivers/iio/adc/max9611.c
+@@ -89,6 +89,12 @@
+ #define MAX9611_TEMP_SCALE_NUM		1000000
+ #define MAX9611_TEMP_SCALE_DIV		2083
+ 
++/*
++ * Conversion time is 2 ms (typically) at Ta=25 degreeC
++ * No maximum value is known, so play it safe
++ */
++#define MAX9611_CONV_TIME_US_RANGE	3000, 3300
++
+ struct max9611_dev {
+ 	struct device *dev;
+ 	struct i2c_client *i2c_client;
+@@ -223,10 +229,9 @@ static int max9611_read_single(struct max9611_dev *max9611,
+ 	}
+ 
+ 	/*
+-	 * need a delay here to make register configuration
+-	 * stabilize. 1 msec at least, from empirical testing.
++	 * need a delay here to make register configuration stabilize.
+ 	 */
+-	usleep_range(1000, 2000);
++	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+ 
+ 	ret = i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
+ 	if (ret < 0) {
+@@ -493,7 +498,7 @@ static int max9611_init(struct max9611_dev *max9611)
+ 			MAX9611_REG_CTRL2, 0);
+ 		return ret;
+ 	}
+-	usleep_range(1000, 2000);
++	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+ 
+ 	return 0;
+ }
+-- 
+2.17.1
+
