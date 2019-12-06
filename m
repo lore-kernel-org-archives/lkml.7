@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CC6C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F8FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940BF20706
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F11E820706
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfLFNyF (ORCPT
+        id S1726684AbfLFNyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 08:54:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:44538 "EHLO foss.arm.com"
+        Fri, 6 Dec 2019 08:54:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:44658 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726395AbfLFNyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:54:01 -0500
+        id S1726654AbfLFNyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 08:54:11 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CF80113E;
-        Fri,  6 Dec 2019 05:54:01 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7FA011D4;
+        Fri,  6 Dec 2019 05:54:10 -0800 (PST)
 Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C43AE3F718;
-        Fri,  6 Dec 2019 05:53:57 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 002AD3F718;
+        Fri,  6 Dec 2019 05:54:07 -0800 (PST)
 From:   Steven Price <steven.price@arm.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -43,13 +43,10 @@ Cc:     Steven Price <steven.price@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, kvm-ppc@vger.kernel.org
-Subject: [PATCH v16 06/25] powerpc: mm: Add p?d_leaf() definitions
-Date:   Fri,  6 Dec 2019 13:52:57 +0000
-Message-Id: <20191206135316.47703-7-steven.price@arm.com>
+        "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Subject: [PATCH v16 09/25] sparc: mm: Add p?d_leaf() definitions
+Date:   Fri,  6 Dec 2019 13:53:00 +0000
+Message-Id: <20191206135316.47703-10-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191206135316.47703-1-steven.price@arm.com>
 References: <20191206135316.47703-1-steven.price@arm.com>
@@ -65,82 +62,37 @@ those of user space. For this it needs to know when it has reached a
 'leaf' entry in the page tables. This information is provided by the
 p?d_leaf() functions/macros.
 
-For powerpc pmd_large() already exists and does what we want, so hoist
-it out of the CONFIG_TRANSPARENT_HUGEPAGE condition and implement the
-other levels. Macros are used to provide the generic p?d_leaf() names.
+For sparc 64 bit, pmd_large() and pud_large() are already provided, so
+add macros to provide the p?d_leaf names required by the generic code.
 
-CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-CC: Paul Mackerras <paulus@samba.org>
-CC: Michael Ellerman <mpe@ellerman.id.au>
-CC: linuxppc-dev@lists.ozlabs.org
-CC: kvm-ppc@vger.kernel.org
+CC: "David S. Miller" <davem@davemloft.net>
+CC: sparclinux@vger.kernel.org
+Acked-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/powerpc/include/asm/book3s/64/pgtable.h | 30 ++++++++++++++------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+ arch/sparc/include/asm/pgtable_64.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index b01624e5c467..3dd7b6f5edd0 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -923,6 +923,12 @@ static inline int pud_present(pud_t pud)
- 	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PRESENT));
- }
- 
-+#define pud_leaf	pud_large
-+static inline int pud_large(pud_t pud)
-+{
-+	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
-+}
-+
- extern struct page *pud_page(pud_t pud);
- extern struct page *pmd_page(pmd_t pmd);
- static inline pte_t pud_pte(pud_t pud)
-@@ -966,6 +972,12 @@ static inline int pgd_present(pgd_t pgd)
- 	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PRESENT));
- }
- 
-+#define pgd_leaf	pgd_large
-+static inline int pgd_large(pgd_t pgd)
-+{
-+	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PTE));
-+}
-+
- static inline pte_t pgd_pte(pgd_t pgd)
- {
- 	return __pte_raw(pgd_raw(pgd));
-@@ -1133,6 +1145,15 @@ static inline bool pmd_access_permitted(pmd_t pmd, bool write)
- 	return pte_access_permitted(pmd_pte(pmd), write);
+diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
+index 6ae8016ef4ec..43206652eaf5 100644
+--- a/arch/sparc/include/asm/pgtable_64.h
++++ b/arch/sparc/include/asm/pgtable_64.h
+@@ -683,6 +683,7 @@ static inline unsigned long pte_special(pte_t pte)
+ 	return pte_val(pte) & _PAGE_SPECIAL;
  }
  
 +#define pmd_leaf	pmd_large
-+/*
-+ * returns true for pmd migration entries, THP, devmap, hugetlb
-+ */
-+static inline int pmd_large(pmd_t pmd)
-+{
-+	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
-+}
-+
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- extern pmd_t pfn_pmd(unsigned long pfn, pgprot_t pgprot);
- extern pmd_t mk_pmd(struct page *page, pgprot_t pgprot);
-@@ -1159,15 +1180,6 @@ pmd_hugepage_update(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp,
- 	return hash__pmd_hugepage_update(mm, addr, pmdp, clr, set);
- }
- 
--/*
-- * returns true for pmd migration entries, THP, devmap, hugetlb
-- * But compile time dependent on THP config
-- */
--static inline int pmd_large(pmd_t pmd)
--{
--	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
--}
--
- static inline pmd_t pmd_mknotpresent(pmd_t pmd)
+ static inline unsigned long pmd_large(pmd_t pmd)
  {
- 	return __pmd(pmd_val(pmd) & ~_PAGE_PRESENT);
+ 	pte_t pte = __pte(pmd_val(pmd));
+@@ -867,6 +868,7 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
+ /* only used by the stubbed out hugetlb gup code, should never be called */
+ #define pgd_page(pgd)			NULL
+ 
++#define pud_leaf	pud_large
+ static inline unsigned long pud_large(pud_t pud)
+ {
+ 	pte_t pte = __pte(pud_val(pud));
 -- 
 2.20.1
 
