@@ -2,101 +2,160 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A622FC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C3EC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83477206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1212064B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:58:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Jc3fFCFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfLFQ6H (ORCPT
+        id S1726492AbfLFQ65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:58:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:50636 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbfLFQ6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:58:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CBD1F31B;
-        Fri,  6 Dec 2019 08:58:06 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9710F3F52E;
-        Fri,  6 Dec 2019 08:58:05 -0800 (PST)
-Date:   Fri, 6 Dec 2019 16:58:03 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Thomas Renninger <trenn@suse.de>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org,
-        fschnitzlein@suse.de
-Subject: Re: [PATCH v5 0/3] sysfs: add sysfs based cpuinfo
-Message-ID: <20191206165803.GD21671@lakrids.cambridge.arm.com>
-References: <20191206162421.15050-1-trenn@suse.de>
+        Fri, 6 Dec 2019 11:58:57 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:13831 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbfLFQ64 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 11:58:56 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: dKosNgJHfZQ0/A6WBOpD5/ufMMAWFOumrbuYgSPsAJKY97RK8X1HhJLqhTwyheKoS2YHaTal/n
+ 17MlyA+YSNAO4ozUCBt7LDa+8w5L06SzRgCIwkepsGBJZ/4TgF9v4czWUjcNVv4ZRDskq+9yFg
+ 3cfQbHXEd2lATnlTNU9cCfgjpwmXT0KKlPVoxI90A16sLJoTImw+x+gK/k2b9LQH/Wswk9Ej/q
+ 7+mZGxDyF3Cqyh3yRaKtf+hVDBSVTK/nBqDWfXsGcD+9MC10oH1ebev64Bi58MOXrVPhqDToRI
+ 8Hk=
+X-IronPort-AV: E=Sophos;i="5.69,285,1571727600"; 
+   d="scan'208";a="58105049"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Dec 2019 09:58:55 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 6 Dec 2019 09:58:57 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Fri, 6 Dec 2019 09:58:59 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kG6V+rQdXhXSuBXozcKx8E4Vh3WkDavz4WK1QJKW/oJXYIK05oZC120CTBT352Yu/7Yy7OmT8Kwp/xHHxByKADaAIkC0HpexLfYowFURD3sweKONtPDP7Kjuwf3zbdkfMn5pxXaXuiS7C+uZ/UEQW5FQKgOBlN4itTDcmo1vbt6yRWB5/EKfL7droZ09GqzPT7LUYprSk6WNIxonhE4s3hSFtkSxJnEbo0NJAUgPqBruCr+DBciR8b2yEh+RKMo4tdfBO4yaWe4oh95uNBGwyFGnyOrD2tlM1Y0ewLjk35xrUXR0k2v7xDSZtfo2AXQzDpQnqoVocxVrcfdGcpuKYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XyoNdPy74N+2xviunhx0ZAdGqwDeOcHpt4Z50ToVUWg=;
+ b=hKyXlIwSB5jL38e19hpaNf7ZpFAOcTp6qs1sMbJxtoYgP9Zh8ksTWEvuUXEL8YOf5jXEYuL1XjwnIL6EKprGY7xWUcTCxqixivNJ4j7L5rnbO3nzOfnh9GwmnKK+5b9aX8DiKJYJzQu+9+7TkYrcIHpDT8XVkpRcHcw0lXlXk1VE1JJ3nKTrCpqmT52e+hE/3N7Ga5HgbflKdrlj5vlE2ivpRMeX8Nz7mWVOOP4nfGxGY+1ez1WuodVlpbRvcksMAt2z5w5/GKrEckpsnuBD2Lv7hPJm4jM9PpYr8aPxJx+V4KM0UcAYfPf2J/SdlBUkVnSO3Oyw7M1Lrmz4kmIiow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XyoNdPy74N+2xviunhx0ZAdGqwDeOcHpt4Z50ToVUWg=;
+ b=Jc3fFCFsw290I+wU9kz1CA7Mrp0UrRt4AeBoQmvq7+XOJne9bcm/Z4FAyiZpY3TwbdLKz6+7Hk1VYfvQ/gDzlE0CYitDvM8SA/vdqAVx7bQSsGsmDI9AtZiXjAOhhfUonUJJ3sXB8pW5FuY/ROc4lI7VVvyrDtDgfm4G3bHdmKk=
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com (52.132.255.220) by
+ BY5PR11MB4275.namprd11.prod.outlook.com (52.132.253.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.22; Fri, 6 Dec 2019 16:58:53 +0000
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::b034:f6be:ee33:8fe6]) by BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::b034:f6be:ee33:8fe6%7]) with mapi id 15.20.2516.013; Fri, 6 Dec 2019
+ 16:58:53 +0000
+From:   <Codrin.Ciubotariu@microchip.com>
+To:     <Eugen.Hristev@microchip.com>, <robh+dt@kernel.org>,
+        <Ludovic.Desroches@microchip.com>, <wsa@the-dreams.de>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <peda@axentia.se>
+CC:     <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH 2/3] i2c: at91: fix clk_offset for sama5d2
+Thread-Topic: [PATCH 2/3] i2c: at91: fix clk_offset for sama5d2
+Thread-Index: AQHVqO5phmRDsF11wkuKIRrB0InCP6etWvsA
+Date:   Fri, 6 Dec 2019 16:58:53 +0000
+Message-ID: <8b911756-e1ad-0a49-f553-7d58b2f3c155@microchip.com>
+References: <1575276957-5615-1-git-send-email-eugen.hristev@microchip.com>
+ <1575276957-5615-2-git-send-email-eugen.hristev@microchip.com>
+In-Reply-To: <1575276957-5615-2-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR11CA0058.namprd11.prod.outlook.com
+ (2603:10b6:a03:80::35) To BY5PR11MB4497.namprd11.prod.outlook.com
+ (2603:10b6:a03:1cc::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 968d272b-03a5-44eb-49eb-08d77a6d92be
+x-ms-traffictypediagnostic: BY5PR11MB4275:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR11MB427563DD7FC14B7D12A8E9A9E75F0@BY5PR11MB4275.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0243E5FD68
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(376002)(396003)(366004)(136003)(199004)(189003)(52116002)(305945005)(81166006)(76176011)(81156014)(66476007)(53546011)(31686004)(71200400001)(71190400001)(26005)(8676002)(31696002)(99286004)(66446008)(64756008)(2906002)(102836004)(8936002)(110136005)(4326008)(2616005)(5660300002)(66946007)(66556008)(316002)(6486002)(186003)(6506007)(86362001)(107886003)(6512007)(36756003)(478600001)(229853002)(138113003);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB4275;H:BY5PR11MB4497.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5FeYWCR9f0H6Y+RLZ3BEjiFrYQhhgSYk1wwTS1vjdByPlKXXUaCaESOmrnIyTNzhJS/4CAFOZ7Fs+P9AAA0IuWt0t8+LktiDZChdGvp+n3ka+FDZCdiwfcQzzvj+fkEBZnoi0DRbNYUY/bFw/BaNhsLxLvswn9KXvJSPEjtreyxKQpb9+PvexNVChmoPFZGJtg2BHHbm7X/Qfktx2pGqz8wmp8haiEWUjHMX/4taaxL2UVpopVk7iXlSiG1FukPPz0UmmqaQPPpQyh74DQgUL9z0fTyx0AHZOB2LE+vahd0ac8joMOccBJwYGrepMZqNWx/eW429k+yk1w7ThcSkhwInLBEcuAQwRBO4o8mfSCKYwXr/uqdHF55iD7gH4TsN6j2BR2csCqpJfhDH+BMo92/raumn3mT6xDETFlBIlpHtH7wmB7fzxkHE+e/7jEalasysWgAOTpT24d3o6mo0/98oerBAMxLn3yaReA1rKfOaurWqADdvwawGTpvtdMmr
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FC865B96EAA9D24DA092B77F09DD1490@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206162421.15050-1-trenn@suse.de>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 968d272b-03a5-44eb-49eb-08d77a6d92be
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Dec 2019 16:58:53.0681
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: haRjIHlUi9Axqjs5849WLOaxDfjfznMwM9oRKL76stABZR493eeOpi3+1viJ9pq4Ggd6DqHcZxsXoZ5HbEFXWazIGJQzFZ9XMXNp1RMl6fA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4275
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
-
-On Fri, Dec 06, 2019 at 05:24:18PM +0100, Thomas Renninger wrote:
-> I picked up Felix Schnizlein's work from 2017.
-> 
-> It was already reviewed by Greg-KH at this time and even
-> pushed into linux-next tree, when it came out that the mails
-> never reached lkml, even the list was added to CC.
-> 
-> ARM people then correctly complained that this needs more review
-> by ARCH people. It got reverted, Felix had no time anymore and this
-> nice patcheset was hanging around nowhere...
-
-Can you please provide a rationale for this?
-
-It's not entirely clear to me what information people need or want, and
-there's some data in /proc/cpuinfo that I think makes no sense to try to
-export export in a structured way (e.g. bogomips).
-
-> 
-> Tested on aarch64:
-> 
-> /sys/devices/system/cpu/cpu1/info/:[0]# ls
-> architecture  bogomips  flags  implementer  part  revision  variant
-> 
-> ------------------------------------------------------------
-> 
-> for file in *;do echo $file; cat $file;echo;done
-> architecture
-> 8
-> 
-> bogomips
-> 40.00
-> 
-> flags
-> fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid asimdrdm
-> 
-> implementer
-> 0x51
-> 
-> part
-> 0xc00
-> 
-> revision
-> 1
-> 
-> variant
-> 0x0
- 
-For arm64 we already expose the MIDR and REVIDR register values under
-/sys/devices/system/cpu/cpu*/regs/identification, and that's the bulk of
-the useful information above (aside from the flags/hwcaps).
-
-Thanks,
-Mark.
+T24gMDIuMTIuMjAxOSAxMDo1NiwgRXVnZW4gSHJpc3RldiAtIE0xODI4MiB3cm90ZToNCj4gRnJv
+bTogRXVnZW4gSHJpc3RldiA8ZXVnZW4uaHJpc3RldkBtaWNyb2NoaXAuY29tPg0KPiANCj4gSW4g
+U0FNOVg2MCBkYXRhc2hlZXQsIEZMRVhfVFdJX0NXR1IgcmVnaXN0ZXIgcmVzY3JpcHRpb24gbWVu
+dGlvbnMgY2xvY2sNCj4gb2Zmc2V0IG9mIDMgY3ljbGVzIChjb21wYXJlZCB0byA0IGluIGVnLiBT
+QU1BNUQzKS4NCj4gVGhpcyBpcyB0aGUgc2FtZSBvZmZzZXQgYXMgaW4gU0FNQTVEMi4NCj4gDQo+
+IEZpeGVzOiBiMDAyNzc5MjM3NDMgKCJpMmM6IGF0OTE6IGFkZCBuZXcgcGxhdGZvcm0gc3VwcG9y
+dCBmb3Igc2FtOXg2MCIpDQo+IFN1Z2dlc3RlZC1ieTogQ29kcmluIENpdWJvdGFyaXUgPGNvZHJp
+bi5jaXVib3Rhcml1QG1pY3JvY2hpcC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IEV1Z2VuIEhyaXN0
+ZXYgPGV1Z2VuLmhyaXN0ZXZAbWljcm9jaGlwLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IENvZHJpbiBD
+aXVib3Rhcml1IDxjb2RyaW4uY2l1Ym90YXJpdUBtaWNyb2NoaXAuY29tPg0KDQpUaGFua3MhDQoN
+CkJlc3QgcmVnYXJkcywNCkNvZHJpbg0KDQo+IC0tLQ0KPiAgIGRyaXZlcnMvaTJjL2J1c3Nlcy9p
+MmMtYXQ5MS1jb3JlLmMgfCAyICstDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCsp
+LCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvYnVzc2VzL2ky
+Yy1hdDkxLWNvcmUuYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtYXQ5MS1jb3JlLmMNCj4gaW5k
+ZXggZTEzYWY0OC4uNTEzN2U2MiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9pMmMvYnVzc2VzL2ky
+Yy1hdDkxLWNvcmUuYw0KPiArKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLWF0OTEtY29yZS5j
+DQo+IEBAIC0xNzQsNyArMTc0LDcgQEAgc3RhdGljIHN0cnVjdCBhdDkxX3R3aV9wZGF0YSBzYW1h
+NWQyX2NvbmZpZyA9IHsNCj4gICANCj4gICBzdGF0aWMgc3RydWN0IGF0OTFfdHdpX3BkYXRhIHNh
+bTl4NjBfY29uZmlnID0gew0KPiAgIAkuY2xrX21heF9kaXYgPSA3LA0KPiAtCS5jbGtfb2Zmc2V0
+ID0gNCwNCj4gKwkuY2xrX29mZnNldCA9IDMsDQo+ICAgCS5oYXNfdW5yZV9mbGFnID0gdHJ1ZSwN
+Cj4gICAJLmhhc19hbHRfY21kID0gdHJ1ZSwNCj4gICAJLmhhc19ob2xkX2ZpZWxkID0gdHJ1ZSwN
+Cj4gDQoNCg==
