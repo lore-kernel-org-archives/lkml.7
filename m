@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB13C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C16C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F982464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D3A24673
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IKUt7ka9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XpQfC+Me"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfLFWOi (ORCPT
+        id S1726780AbfLFWOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 17:14:38 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:48382 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbfLFWOe (ORCPT
+        Fri, 6 Dec 2019 17:14:25 -0500
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:46193 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbfLFWOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 17:14:34 -0500
-Received: by mail-pg1-f201.google.com with SMTP id p188so4542921pgp.15
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 14:14:34 -0800 (PST)
+        Fri, 6 Dec 2019 17:14:22 -0500
+Received: by mail-pf1-f202.google.com with SMTP id w127so4797142pfb.13
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 14:14:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=RFQeZBUfRbHmuBkixdwdHyK03/i2WwDYL6zKZ0PVNPE=;
-        b=IKUt7ka9OPp04nuNFtbFmNhMED5ty9XakjQvaYcOsgsRH/SYzLcVVpMACFeRRQLdNK
-         a0mE4lnUMI89KyyiE6NlXFQ2m8GZLvuy4PR6RLdT9AEzgHkAZhU6G5b+ckma8n0/nC3A
-         uTP3fT2oiMISqhQbVaIW4gO4gBClTWdiTL7rm1J1XulV10rrt/IDRTieIL/GcGuQQsG4
-         6Egq9+uHYBwiCGJ5LMSdZgryo1aNlorDmLG/eGF39k5gHk7IQUupl1+Ijf3qbFwsleLT
-         LLpe6caJ3SjrMFXnNFw4D60rd2Nj6RFgfq1c/qqHzMkzJxwAtqhrgHtf2Hz7J2QnnbA5
-         OZRg==
+        bh=q0VCePxuQrqw4BBZGnamleajd+Jt3fiHSwLdib7c23k=;
+        b=XpQfC+MeF/x/58JAAU0Gq9P6sK3UThDbiX4tokqcmE5W2JlFjupWk3t7S6fJEl7bmQ
+         uG77IKQKNCjwNeXL5gKTK4hYsXwcw3IEb3xYsQMThtapSpkH/6n8NZA1P7BK9GoJvjlv
+         gjsgrx6f2M8YtuUoFz6xW2/sVs3avmftC2FD9rLUg7uPIxxu1nky1tI+067SAycFIIZv
+         I5Ox0b34VKtUQTfOqlCtC7ANi+wPbCIGo5s06hQc0p9ToPPN7U2DDRK+8/gr5u99Ip8U
+         6665xOHYKE53S80IzppbeI1PtBJzI2Bw2DR42y5FZrTsuJwM4wsLA+y323NiZkNZTWXF
+         YfbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=RFQeZBUfRbHmuBkixdwdHyK03/i2WwDYL6zKZ0PVNPE=;
-        b=AGUwrYTlU9B1NwaCXgSpuWpXCFrHNgiIFM3U+6jUvlnGABsrmXBAKckMVybSoXvf/z
-         IL4r8Ga2GS3VA6jFNF0o4TxgKsNKDIc01n0mwh6iP0JjUBVLcxUGXV+c1vEO5fK52Q0m
-         3xtJ9Az2990qO6ItEZRudDHoFQ06u5oFU4dddAvE2t7DLl1riqNdC3RomYl5Z7i4QzxL
-         vNjKASvewh9KhDUj5Vz00Nvcr3QwU1QJH56Wtj0yekrlF/8snSpSLev5US9nO52gtgJh
-         3E/Pb0dCA9L7+riiLblrzqaqYDdECK5NUFetJhXBUk9zOCFBjqzXCPM9MouzlQ9sOqbB
-         oGuQ==
-X-Gm-Message-State: APjAAAXAzzmwePGI6B4qjNl2HZE4wtBZm+zyxfNV4Zit3iT9lEWbkk3L
-        4+YI0yjnq+TvcQsgdLLOP4dOYGHlHR+4V/Pwgo8=
-X-Google-Smtp-Source: APXvYqxpGanN1bCoq5Nmn3aCH0YBZJAgBLdmk2cjRtHg7acgtGNdUOb0ffYjmscMm2O9CKp+3KwgpjzPR+bJF894TjI=
-X-Received: by 2002:a63:3484:: with SMTP id b126mr5874359pga.17.1575670473753;
- Fri, 06 Dec 2019 14:14:33 -0800 (PST)
-Date:   Fri,  6 Dec 2019 14:13:51 -0800
+        bh=q0VCePxuQrqw4BBZGnamleajd+Jt3fiHSwLdib7c23k=;
+        b=q1pv+iRVNHZnsIdZiRTXIYX200OVNUOKUqX/id/9pwxUhyhWAFOSSobcaokoE1DG8a
+         26OC1Fsz/kAcuJQCKOmBpEkitT4kbUG7QnIxHR2PKVeOG5gKrdpxDY1MpVWqt5aCQ1Gb
+         fGt8iqHgiDKL9bwn5Gv7N7UowNKMFXjxo3eAwJ01aopYXiMpXWkLhl5rXjsY/VGTrFEP
+         jr6UqTwrldR48YNvokDPsFFMJ1R2/YhnZk6xU2zdZ3EAI9oerPJ96HCuKcr3VyqrXFjc
+         k05WcJZyWsLnjnkH0pAZRXSLW9MLbzDsBFzwlTSJKzW14zpQMZiLExyB+nF82PrOvnSy
+         Tnjg==
+X-Gm-Message-State: APjAAAXAu4ES0SBaBTjG1PVeKxhd0ggOKMbQ8k/1GsnVoBetA4zAf2ux
+        34nE2sbF0FXAhobn88N4vqqVIKSw8FYU30iMm8Y=
+X-Google-Smtp-Source: APXvYqxcGyciG3MMD7PbQn8IKkK3yA7MJ/fwU2YEUvmtPTk2dDChHbcnuIxBvmADPyGDroBjAeLdoXj34UKB4SrRjVg=
+X-Received: by 2002:a63:d543:: with SMTP id v3mr5881958pgi.285.1575670461425;
+ Fri, 06 Dec 2019 14:14:21 -0800 (PST)
+Date:   Fri,  6 Dec 2019 14:13:46 -0800
 In-Reply-To: <20191206221351.38241-1-samitolvanen@google.com>
-Message-Id: <20191206221351.38241-16-samitolvanen@google.com>
+Message-Id: <20191206221351.38241-11-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20191206221351.38241-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [PATCH v6 15/15] arm64: scs: add shadow stacks for SDEI
+Subject: [PATCH v6 10/15] arm64: preserve x18 when CPU is suspended
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -84,227 +84,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds per-CPU shadow call stacks for the SDEI handler.
-Similarly to how the kernel stacks are handled, we add separate shadow
-stacks for normal and critical events.
+Don't lose the current task's shadow stack when the CPU is suspended.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 ---
- arch/arm64/include/asm/scs.h |   2 +
- arch/arm64/kernel/entry.S    |  14 ++++-
- arch/arm64/kernel/scs.c      | 106 +++++++++++++++++++++++++++++------
- arch/arm64/kernel/sdei.c     |   7 +++
- 4 files changed, 112 insertions(+), 17 deletions(-)
+ arch/arm64/include/asm/suspend.h |  2 +-
+ arch/arm64/mm/proc.S             | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/scs.h b/arch/arm64/include/asm/scs.h
-index c50d2b0c6c5f..8e327e14bc15 100644
---- a/arch/arm64/include/asm/scs.h
-+++ b/arch/arm64/include/asm/scs.h
-@@ -9,6 +9,7 @@
- #ifdef CONFIG_SHADOW_CALL_STACK
+diff --git a/arch/arm64/include/asm/suspend.h b/arch/arm64/include/asm/suspend.h
+index 8939c87c4dce..0cde2f473971 100644
+--- a/arch/arm64/include/asm/suspend.h
++++ b/arch/arm64/include/asm/suspend.h
+@@ -2,7 +2,7 @@
+ #ifndef __ASM_SUSPEND_H
+ #define __ASM_SUSPEND_H
  
- extern void scs_init_irq(void);
-+extern int scs_init_sdei(void);
+-#define NR_CTX_REGS 12
++#define NR_CTX_REGS 13
+ #define NR_CALLEE_SAVED_REGS 12
  
- static __always_inline void scs_save(struct task_struct *tsk)
- {
-@@ -27,6 +28,7 @@ static inline void scs_overflow_check(struct task_struct *tsk)
- #else /* CONFIG_SHADOW_CALL_STACK */
+ /*
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index fdabf40a83c8..5c8219c55948 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -49,6 +49,8 @@
+  * cpu_do_suspend - save CPU registers context
+  *
+  * x0: virtual address of context pointer
++ *
++ * This must be kept in sync with struct cpu_suspend_ctx in <asm/suspend.h>.
+  */
+ ENTRY(cpu_do_suspend)
+ 	mrs	x2, tpidr_el0
+@@ -73,6 +75,11 @@ alternative_endif
+ 	stp	x8, x9, [x0, #48]
+ 	stp	x10, x11, [x0, #64]
+ 	stp	x12, x13, [x0, #80]
++	/*
++	 * Save x18 as it may be used as a platform register, e.g. by shadow
++	 * call stack.
++	 */
++	str	x18, [x0, #96]
+ 	ret
+ ENDPROC(cpu_do_suspend)
  
- static inline void scs_init_irq(void) {}
-+static inline int scs_init_sdei(void) { return 0; }
- static inline void scs_save(struct task_struct *tsk) {}
- static inline void scs_overflow_check(struct task_struct *tsk) {}
- 
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 7aa2d366b2df..9327c3d21b64 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -1048,13 +1048,16 @@ ENTRY(__sdei_asm_handler)
- 
- 	mov	x19, x1
- 
-+#if defined(CONFIG_VMAP_STACK) || defined(CONFIG_SHADOW_CALL_STACK)
-+	ldrb	w4, [x19, #SDEI_EVENT_PRIORITY]
-+#endif
-+
- #ifdef CONFIG_VMAP_STACK
- 	/*
- 	 * entry.S may have been using sp as a scratch register, find whether
- 	 * this is a normal or critical event and switch to the appropriate
- 	 * stack for this CPU.
- 	 */
--	ldrb	w4, [x19, #SDEI_EVENT_PRIORITY]
- 	cbnz	w4, 1f
- 	ldr_this_cpu dst=x5, sym=sdei_stack_normal_ptr, tmp=x6
- 	b	2f
-@@ -1064,6 +1067,15 @@ ENTRY(__sdei_asm_handler)
- 	mov	sp, x5
- #endif
- 
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	/* Use a separate shadow call stack for normal and critical events */
-+	cbnz	w4, 3f
-+	ldr_this_cpu dst=x18, sym=sdei_shadow_call_stack_normal_ptr, tmp=x6
-+	b	4f
-+3:	ldr_this_cpu dst=x18, sym=sdei_shadow_call_stack_critical_ptr, tmp=x6
-+4:
-+#endif
-+
- 	/*
- 	 * We may have interrupted userspace, or a guest, or exit-from or
- 	 * return-to either of these. We can't trust sp_el0, restore it.
-diff --git a/arch/arm64/kernel/scs.c b/arch/arm64/kernel/scs.c
-index eaadf5430baa..dddb7c56518b 100644
---- a/arch/arm64/kernel/scs.c
-+++ b/arch/arm64/kernel/scs.c
-@@ -10,31 +10,105 @@
- #include <asm/pgtable.h>
- #include <asm/scs.h>
- 
--DEFINE_PER_CPU(unsigned long *, irq_shadow_call_stack_ptr);
-+#define DECLARE_SCS(name)						\
-+	DECLARE_PER_CPU(unsigned long *, name ## _ptr);			\
-+	DECLARE_PER_CPU(unsigned long [SCS_SIZE/sizeof(long)], name)
- 
--#ifndef CONFIG_SHADOW_CALL_STACK_VMAP
--DEFINE_PER_CPU(unsigned long [SCS_SIZE/sizeof(long)], irq_shadow_call_stack)
--	__aligned(SCS_SIZE);
-+#ifdef CONFIG_SHADOW_CALL_STACK_VMAP
-+#define DEFINE_SCS(name)						\
-+	DEFINE_PER_CPU(unsigned long *, name ## _ptr)
-+#else
-+/* Allocate a static per-CPU shadow stack */
-+#define DEFINE_SCS(name)						\
-+	DEFINE_PER_CPU(unsigned long *, name ## _ptr);			\
-+	DEFINE_PER_CPU(unsigned long [SCS_SIZE/sizeof(long)], name)	\
-+		__aligned(SCS_SIZE)
-+#endif /* CONFIG_SHADOW_CALL_STACK_VMAP */
-+
-+DECLARE_SCS(irq_shadow_call_stack);
-+DECLARE_SCS(sdei_shadow_call_stack_normal);
-+DECLARE_SCS(sdei_shadow_call_stack_critical);
-+
-+DEFINE_SCS(irq_shadow_call_stack);
-+#ifdef CONFIG_ARM_SDE_INTERFACE
-+DEFINE_SCS(sdei_shadow_call_stack_normal);
-+DEFINE_SCS(sdei_shadow_call_stack_critical);
- #endif
- 
-+static int scs_alloc_percpu(unsigned long * __percpu *ptr, int cpu)
-+{
-+	unsigned long *p;
-+
-+	p = __vmalloc_node_range(PAGE_SIZE, SCS_SIZE,
-+				 VMALLOC_START, VMALLOC_END,
-+				 GFP_SCS, PAGE_KERNEL,
-+				 0, cpu_to_node(cpu),
-+				 __builtin_return_address(0));
-+
-+	if (!p)
-+		return -ENOMEM;
-+	per_cpu(*ptr, cpu) = p;
-+
-+	return 0;
-+}
-+
-+static void scs_free_percpu(unsigned long * __percpu *ptr, int cpu)
-+{
-+	unsigned long *p = per_cpu(*ptr, cpu);
-+
-+	if (p) {
-+		per_cpu(*ptr, cpu) = NULL;
-+		vfree(p);
-+	}
-+}
-+
-+static void scs_free_sdei(void)
-+{
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu) {
-+		scs_free_percpu(&sdei_shadow_call_stack_normal_ptr, cpu);
-+		scs_free_percpu(&sdei_shadow_call_stack_critical_ptr, cpu);
-+	}
-+}
-+
- void scs_init_irq(void)
- {
- 	int cpu;
- 
- 	for_each_possible_cpu(cpu) {
--#ifdef CONFIG_SHADOW_CALL_STACK_VMAP
--		unsigned long *p;
-+		if (IS_ENABLED(CONFIG_SHADOW_CALL_STACK_VMAP))
-+			WARN_ON(scs_alloc_percpu(&irq_shadow_call_stack_ptr,
-+						 cpu));
-+		else
-+			per_cpu(irq_shadow_call_stack_ptr, cpu) =
-+				per_cpu(irq_shadow_call_stack, cpu);
-+	}
-+}
- 
--		p = __vmalloc_node_range(PAGE_SIZE, SCS_SIZE,
--					 VMALLOC_START, VMALLOC_END,
--					 GFP_SCS, PAGE_KERNEL,
--					 0, cpu_to_node(cpu),
--					 __builtin_return_address(0));
-+int scs_init_sdei(void)
-+{
-+	int cpu;
- 
--		per_cpu(irq_shadow_call_stack_ptr, cpu) = p;
--#else
--		per_cpu(irq_shadow_call_stack_ptr, cpu) =
--			per_cpu(irq_shadow_call_stack, cpu);
--#endif /* CONFIG_SHADOW_CALL_STACK_VMAP */
-+	if (!IS_ENABLED(CONFIG_ARM_SDE_INTERFACE))
-+		return 0;
-+
-+	for_each_possible_cpu(cpu) {
-+		if (IS_ENABLED(CONFIG_SHADOW_CALL_STACK_VMAP)) {
-+			if (scs_alloc_percpu(
-+				&sdei_shadow_call_stack_normal_ptr, cpu) ||
-+			    scs_alloc_percpu(
-+				&sdei_shadow_call_stack_critical_ptr, cpu)) {
-+				scs_free_sdei();
-+				return -ENOMEM;
-+			}
-+		} else {
-+			per_cpu(sdei_shadow_call_stack_normal_ptr, cpu) =
-+				per_cpu(sdei_shadow_call_stack_normal, cpu);
-+			per_cpu(sdei_shadow_call_stack_critical_ptr, cpu) =
-+				per_cpu(sdei_shadow_call_stack_critical, cpu);
-+		}
- 	}
-+
-+	return 0;
- }
-diff --git a/arch/arm64/kernel/sdei.c b/arch/arm64/kernel/sdei.c
-index d6259dac62b6..2854b9f7760a 100644
---- a/arch/arm64/kernel/sdei.c
-+++ b/arch/arm64/kernel/sdei.c
-@@ -13,6 +13,7 @@
- #include <asm/kprobes.h>
- #include <asm/mmu.h>
- #include <asm/ptrace.h>
-+#include <asm/scs.h>
- #include <asm/sections.h>
- #include <asm/stacktrace.h>
- #include <asm/sysreg.h>
-@@ -162,6 +163,12 @@ unsigned long sdei_arch_get_entry_point(int conduit)
- 			return 0;
- 	}
- 
-+	if (scs_init_sdei()) {
-+		if (IS_ENABLED(CONFIG_VMAP_STACK))
-+			free_sdei_stacks();
-+		return 0;
-+	}
-+
- 	sdei_exit_mode = (conduit == SMCCC_CONDUIT_HVC) ? SDEI_EXIT_HVC : SDEI_EXIT_SMC;
- 
- #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+@@ -89,6 +96,13 @@ ENTRY(cpu_do_resume)
+ 	ldp	x9, x10, [x0, #48]
+ 	ldp	x11, x12, [x0, #64]
+ 	ldp	x13, x14, [x0, #80]
++	/*
++	 * Restore x18, as it may be used as a platform register, and clear
++	 * the buffer to minimize the risk of exposure when used for shadow
++	 * call stack.
++	 */
++	ldr	x18, [x0, #96]
++	str	xzr, [x0, #96]
+ 	msr	tpidr_el0, x2
+ 	msr	tpidrro_el0, x3
+ 	msr	contextidr_el1, x4
 -- 
 2.24.0.393.g34dc348eaf-goog
 
