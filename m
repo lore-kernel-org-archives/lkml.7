@@ -2,106 +2,111 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AAFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDDBC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0090221835
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E602721835
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575637385;
-	bh=nu9QCTqM5WXOIT+G9aiycC+1A31iUFHQjDd4ZczZSCQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r6fwRT7LBOsR6Qtkz2M6toOyOPVIngHjnfrmCKxnNQ/FOoOsiYs2tCLOAElOG3FHb
-	 +N4wTOpitMYL2NOwwY5G6FLXWEW4CPfOOKhFpJF4PpH2qn4917rHF8+p0HxTBbJINZ
-	 lrBICvWrTCj9/XbXIIM1VzhpG9q1tDXTjbfgJrNA=
+	s=default; t=1575637415;
+	bh=Svrynssv+pAbLWX5q6TOvwpz7p6/oXocxZvSEBevbK0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Va4ClWxRYWyPk9mVKyBMy5VOCmEgdY4JMbyTqPedL02wcNkffHP4S9wwM+TkLczKb
+	 2uTNO7NXw80zbzdY+LgWOGczL0PuM2MEKv6Z/iBqOWR4Hl20AIK1jUPH75Y1Z6ZVE1
+	 U2jxyeQ5KLu9K6aRkLkWm8gxyZ636ksO/BU2J0Yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbfLFNDE (ORCPT
+        id S1726271AbfLFNDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 08:03:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbfLFNDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:03:03 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 903EF2464E;
-        Fri,  6 Dec 2019 13:03:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575637383;
-        bh=nu9QCTqM5WXOIT+G9aiycC+1A31iUFHQjDd4ZczZSCQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A7/Uc0ULYMTnDP7XBhIKeKkTGXW5DcmM/GjnT7fPd2vQ+hHIhe/OnDNUPtE9ymA3U
-         PeN53l7aGoU9A7T5xoWwlklJ+HezOHBgdlbyJFaOU81xt2s4GEDbkVJ/7nDZOX0D4A
-         l8V1IZiPOox7WXZobykU4ElqZHgFHTGHEI1DNq3o=
-Date:   Fri, 6 Dec 2019 14:03:00 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     =?utf-8?B?546L5paH5rab?= <witallwang@gmail.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>, Pavel Machek <pavel@denx.de>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 200/321] mm/page_alloc.c: deduplicate
- __memblock_free_early() and memblock_free()
-Message-ID: <20191206130300.GB1399220@kroah.com>
-References: <20191203223427.103571230@linuxfoundation.org>
- <20191203223437.527630884@linuxfoundation.org>
- <20191205115043.GA25107@duo.ucw.cz>
- <20191205131128.GA25566@linux.ibm.com>
- <CACzRS4cYJkJAhOdm+qf55H7O4S5HiQEe_fguJGx-mZYJzz62ug@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACzRS4cYJkJAhOdm+qf55H7O4S5HiQEe_fguJGx-mZYJzz62ug@mail.gmail.com>
+        Fri, 6 Dec 2019 08:03:33 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:45594 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfLFNDd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 08:03:33 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id xB6D34Go005873;
+        Fri, 6 Dec 2019 22:03:05 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xB6D34Go005873
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1575637385;
+        bh=4stJbos6zT3j7PistBFOOfUOCop0dkMXYxlz1QqamUc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BCHpRiAb+2t4Es1WaG6qGk3K48C3sN+SD+ODGXTZULJC6Gw39AoSRWGH9ykwf6pqs
+         WE/pXz/h0ARUV1EfwaXvgVmraNMSUt7fo4hAAzip51w0CJv98iSZR9DIHV8U3hhJgv
+         Wc34hkgeDO798FGAFfZXkO7yBa+W6QISIf4HpZigtFkue+xUYCyB88p5ecNoo77Dng
+         3n4Q/ZpdDQ3+7DDM6ESiPgh+rzpPcdje3oyi3K4PmLnDyBK7YSudy3XMiqoz2VrBXZ
+         AVBOg/uc2M7lyrmn/GPuFSvjqCBK9Ag8txJqTgv1fqejxt3OpltaLgwUEm2FlrwMoy
+         7hQIzVZTOdXNA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] mkcompile_h: git rid of UTS_TRUNCATE from LINUX_COMPILE_{BY,HOST}
+Date:   Fri,  6 Dec 2019 22:03:01 +0900
+Message-Id: <20191206130302.11473-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 10:34:19AM +0800, 王文涛 wrote:
-> Yes, Mike's follow up fix should be picked too with this change.
-> 
-> On Thu, Dec 5, 2019 at 9:11 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> 
-> > On Thu, Dec 05, 2019 at 12:50:43PM +0100, Pavel Machek wrote:
-> > > Hi!
-> > > On Tue 2019-12-03 23:34:26, Greg Kroah-Hartman wrote:
-> > > > From: Wentao Wang <witallwang@gmail.com>
-> > > >
-> > > > [ Upstream commit d31cfe7bff9109476da92c245b56083e9b48d60a ]
-> > >
-> > >
-> > > > @@ -1537,12 +1537,7 @@ void * __init memblock_virt_alloc_try_nid(
-> > > >   */
-> > > >  void __init __memblock_free_early(phys_addr_t base, phys_addr_t size)
-> > > >  {
-> > > > -   phys_addr_t end = base + size - 1;
-> > > > -
-> > > > -   memblock_dbg("%s: [%pa-%pa] %pF\n",
-> > > > -                __func__, &base, &end, (void *)_RET_IP_);
-> > > > -   kmemleak_free_part_phys(base, size);
-> > > > -   memblock_remove_range(&memblock.reserved, base, size);
-> > > > +   memblock_free(base, size);
-> > > >  }
-> > >
-> > > This makes the memblock_dbg() less useful: _RET_IP_ will now be one of
-> > > __memblock_free_early(), not of the original caller.
-> > >
-> > > That may be okay, but I guess it should be mentioned in changelog, and
-> > > I don't really see why it is queued for -stable.
-> >
-> > Not sure why this one was picked for -stable, but in upstream there is a
-> > followup commit 4d72868c8f7c ("memblock: replace usage of
-> > __memblock_free_early() with memblock_free()") that completely eliminates
-> > __memblock_free_early(). IMHO it would make sense to either to take both or
-> > to drop both.
+UTS_VERSION is set to struct uts_namespace, hence a too long string
+should be truncated so it fits in 64 characters.
 
+On the other hand, LINUX_COMPILE_BY/HOST are not set to uts_namespace.
+They are just used in the banners, which do not have specific length
+limitation.
 
-This commit does not apply to the 4.19.y tree :(
+I dug into the git history, but I could not find the reason why
+these two strings must fit in 64 characters. Remove them.
+
+Now that UTS_VERSION is the only user of UTS_TRUNCATE, I squashed it.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ scripts/mkcompile_h | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
+index d1d757c6edf4..3097fec1756a 100755
+--- a/scripts/mkcompile_h
++++ b/scripts/mkcompile_h
+@@ -55,12 +55,10 @@ CONFIG_FLAGS=""
+ if [ -n "$SMP" ] ; then CONFIG_FLAGS="SMP"; fi
+ if [ -n "$PREEMPT" ] ; then CONFIG_FLAGS="$CONFIG_FLAGS PREEMPT"; fi
+ if [ -n "$PREEMPT_RT" ] ; then CONFIG_FLAGS="$CONFIG_FLAGS PREEMPT_RT"; fi
+-UTS_VERSION="$UTS_VERSION $CONFIG_FLAGS $TIMESTAMP"
+ 
+ # Truncate to maximum length
+-
+ UTS_LEN=64
+-UTS_TRUNCATE="cut -b -$UTS_LEN"
++UTS_VERSION="$(echo $UTS_VERSION $CONFIG_FLAGS $TIMESTAMP | cut -b -$UTS_LEN)"
+ 
+ # Generate a temporary compile.h
+ 
+@@ -69,10 +67,10 @@ UTS_TRUNCATE="cut -b -$UTS_LEN"
+ 
+   echo \#define UTS_MACHINE \"$ARCH\"
+ 
+-  echo \#define UTS_VERSION \"`echo $UTS_VERSION | $UTS_TRUNCATE`\"
++  echo \#define UTS_VERSION \"$UTS_VERSION\"
+ 
+-  echo \#define LINUX_COMPILE_BY \"`echo $LINUX_COMPILE_BY | $UTS_TRUNCATE`\"
+-  echo \#define LINUX_COMPILE_HOST \"`echo $LINUX_COMPILE_HOST | $UTS_TRUNCATE`\"
++  echo \#define LINUX_COMPILE_BY \"$LINUX_COMPILE_BY\"
++  echo \#define LINUX_COMPILE_HOST \"$LINUX_COMPILE_HOST\"
+ 
+   echo \#define LINUX_COMPILER \"`$CC -v 2>&1 | grep ' version ' | sed 's/[[:space:]]*$//'`\"
+ } > .tmpcompile
+-- 
+2.17.1
 
