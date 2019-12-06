@@ -2,171 +2,153 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268D4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB36C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 009D224670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7966E2053B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:52:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="ek22Sg1s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfLFRvB (ORCPT
+        id S1726377AbfLFRwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 12:51:01 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:37399 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfLFRvA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 12:51:00 -0500
-Received: from [192.168.1.155] ([95.117.69.190]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MnaY1-1hwYUP3VcD-00jWXk; Fri, 06 Dec 2019 18:50:56 +0100
-Subject: Re: [PATCH 0/8] gpiolib: add an ioctl() for monitoring line status
- changes
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20191127133510.10614-1-brgl@bgdev.pl>
- <CACRpkdZ6e0GaE9KBJ1-E+cS_KnPY-EKLNxJFqjArr28hYMQqOg@mail.gmail.com>
- <CAMRc=McH6m3Lsvz8g1JSD_c-QNdb-Kh0+8BH5EKcEW2vM2VYJA@mail.gmail.com>
- <0058e57c-5765-3944-3137-10b780985a36@metux.net>
- <CACRpkda-nucsM-b=68t5N2gQ7910G_a5Hz1cEwSNgVHgvJhqLA@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <e642378f-11c2-9def-da75-4a03b5ef8f77@metux.net>
-Date:   Fri, 6 Dec 2019 18:50:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 6 Dec 2019 12:52:22 -0500
+Received: from mail-eopbgr770139.outbound.protection.outlook.com ([40.107.77.139]:48366
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726298AbfLFRwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 12:52:22 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MNeQUG9sL9sS5ZRbTeb0Q5Q/Pu8I7sHe0JjJ03Szl1eMMBoai/khAIlbCie+6Gc96lcal1Z7Or/McNlHUGNs+PQ5hxk6jva7txbtR+0dG6MQpmA9Vxl2Lcvu7yTrrcJAENWSEFlVlcOTE9kxSaxFGpCewFgUt8UBBoz9VY/NhzGzNyk06O+fLY1CYWD32N2jUsg3M13E57ElxS/UCMBEU23JAXSW8eanoiC6Iron4nOBu3bCIsZb+i1ucXUg/IHgjs4ZzYqj6ZwzbW6vWyrhqFJZTul9+NbkHzvgEJGfbDnapYHbsXFrVfXDcSU7CJzxWhZcCWyI/L8N4q6y3rcnQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pBBgBW+lbbplum7iVCngRLCHZ2IiQ4aM/t38K44Fx24=;
+ b=H63OAl14sbSV4FqTAOejFyHQA0UkA4mpvHfNpAIc4m+F0bViu333QZ3OTOr4m+O4ixYKpKADESOleqViLPoS91apiyzdjRWTnthkBQgbkx8beam2IayBJZ1zkOOcPKmRJksa+fzrdCklsOKW553JTEsWGdI4jra1kJbAU3P6/iwF0y/mtdCy0O9emqHmXUn5JCLxT+hCIt3oiqfM5/enZeavufEUygiHZC6F7z3G8Ll5BVlgwBrdtygEpkhko76QFOjnQPq+gP52FZaEI7JSEjphO9Zgw4S7XWG3g8JOFXXxmAElvZVFzkMdGcpNOE0Bl5huoH9aEYZ5PAbGwtk/YA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pBBgBW+lbbplum7iVCngRLCHZ2IiQ4aM/t38K44Fx24=;
+ b=ek22Sg1sV8qg3VXHpvyVtL6XuKjMEVR8Mm8ACem4AuFr21z3LGo9Z6A+phpUoRz5Sk7cITLZN6Sv33DU+P+nzBQDLHa4FR+OALlvK0I3KAWHEmyjYwelRKaOQ8Cq0AElgNOLmE874P4hTYDIRKQj25K/Z2J+KhGNHhlf+uIXkrg=
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
+ DM5PR1301MB1962.namprd13.prod.outlook.com (10.174.184.160) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.4; Fri, 6 Dec 2019 17:52:10 +0000
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d23:b456:d67:f230]) by DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d23:b456:d67:f230%6]) with mapi id 15.20.2516.017; Fri, 6 Dec 2019
+ 17:52:10 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "paulmck@kernel.org" <paulmck@kernel.org>,
+        "madhuparnabhowmik04@gmail.com" <madhuparnabhowmik04@gmail.com>
+CC:     "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "joel@joelfernandes.org" <joel@joelfernandes.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
+Thread-Topic: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
+Thread-Index: AQHVrEg0Ten5696hykeZOOX4T18u0aetRJkAgAAemAA=
+Date:   Fri, 6 Dec 2019 17:52:10 +0000
+Message-ID: <2ec21ec537144bb3c0d5fbdaf88ea022d07b7ff8.camel@hammerspace.com>
+References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
+         <20191206160238.GE2889@paulmck-ThinkPad-P72>
+In-Reply-To: <20191206160238.GE2889@paulmck-ThinkPad-P72>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [88.95.63.95]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4b2813b6-f24f-4f89-df0b-08d77a7504d2
+x-ms-traffictypediagnostic: DM5PR1301MB1962:
+x-microsoft-antispam-prvs: <DM5PR1301MB19625B3D0CBABA8E74A4BDFBB85F0@DM5PR1301MB1962.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0243E5FD68
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(376002)(396003)(136003)(346002)(366004)(189003)(199004)(66446008)(508600001)(64756008)(2906002)(54906003)(26005)(8676002)(110136005)(229853002)(76116006)(91956017)(66476007)(2616005)(102836004)(36756003)(6486002)(4326008)(66556008)(5660300002)(186003)(316002)(76176011)(118296001)(66946007)(305945005)(99286004)(6506007)(71190400001)(71200400001)(8936002)(6512007)(81166006)(81156014)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1962;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: B1sKE9HcNAbQ9JZwVVnFC3mdOr6xHw1WkyDrRWTgUOk2JpiJMV5yRoc2fu/phXIQuM6sMkFHQ2+rNHyVgJuQm2Cd5lPRN7QaDjP7RWbT+ZSuppry0gMDZYt5buDnv+bO1zT+wm3l/JVcMh3AoJwWd3qPlbxARjbVzK0F9L67vlXhcWVLm17WEOe4EboSJiUC0IItIrgr5VpMZFJbLJno7tcbBAM63Tw2S+SvOUaDRq1TN9VmxVYZ+hE9Y1YthfpOU6nZEHYeGsiTdfDaa7C/nHzrFKBryWlSwSqlyEPTM28gHAKB63GL5NKT+xq36ZWVkb7cjzsJqUOc1MWBU6bWansrOpgamZTPpXmbfiK3kxIz1UYo4Fm0XXAW+cylZUPxe2Mt46oeclPxs7MSrRvbA5CqMPS4k1kdLJI3PSoG8Ykpae78zemm7Ted21ae1aOC
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <87B74384B4FA6C48A324B0DD2BE0D477@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <CACRpkda-nucsM-b=68t5N2gQ7910G_a5Hz1cEwSNgVHgvJhqLA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:k+Cc2sODvJPuFhC9Uww1N2/vyzGbYzhZjQkxLf8X6RW99r2sP8o
- 5y3WhOg7MBs1owGviMs/rS8ZAbWHIwri8TQmORs2OJ9SsrFAZiDWa2rc+TOCobGZHwaJfW8
- CE8g3L0I7q1LmZluqR+5xnjTmsrbct9zcJu6j7bFTj5iIzqpac9DSUxG76nSKr/zW43iSg4
- 4LYGLt8pTyNrJ/OR00zgQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OP82d5Glzrk=:sMnU0uCbD5H4SS7AeQ4p5J
- U5T70kCIzrrTqgYN24tvwAvXmydsAVuc+I44F3/jzFGUZAft/7kIrco+my9gCHV4EtatDGBDP
- 7Bp6xRjVTSSQdBhw72SuSJhv4TfN4N/qeWgOrTrtrEG7ojvKdo7Gmv70vVnTP/wr92bjQ/NmB
- YhQnHw9cveizXN+Tm+3FJgrEAGqahKde+RWOdratDDUfm7CES3tFgXNxolMhXszMGogw9Suep
- ZyyGQ5XFxqFB5q2bDD+4F1yeKGK2rNWKmbqLt6whatJmWB1OKYSTFrxstjnnmnPG1bo1jqwOQ
- a8Xfz2V6RdUfEr45DrjiFFudDE7MZt87HLFN27YgXqv/gYZrE3dsj7wxVvnRPefo0XE8IZbXx
- Pt/A/Wk3ho2Y8NNNeSkiUCucGmK0XL9b3PIlf6heDdw0xOe0Q3ZVpLEEPaeO/eorYZYhtLbKn
- ztBqy+TMLIZz/Zg5wZxdPGi6WRrcJU58jsUuhRLntriDSP4foBcgVSfE5zpm6S15ZbOHtDgJU
- zn0Q4v9ImNJZAmLStx3SGolyaILYDmnmDvYnS8At4NUoNZjD+22TIhri4tlKuxNmwwMpHJr7X
- 3gDATneAJnVcPCepGtwvgAlsZq/2tawgyEa+mvM/zBo8QFsQFCAJAM0f5WBA9C3FguCn+wAXo
- WKHHv5gVLNMitSNYMV7EfsuGZP8rgE/a5VMhc0d4NF9gyouSTmPHWhm8BG/bmwBx0ZF/PV+V7
- 63q7ACC8LSWa2dTrEaMGmvb16Dl8tsi14cEAdnt/Z6vsEYBaHshsOyNF8cpsexlh7MzQg78QA
- OpWn+51PxKShLHq8ugSP11nXao8xJ4GIsbXXVjHuwC9x4zpjlQjHf7Po2/wbJC1rUbhHPYCI6
- n9J5R8Hyp8Tb3gORXwZg==
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b2813b6-f24f-4f89-df0b-08d77a7504d2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Dec 2019 17:52:10.5476
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jrjA+r5zdwZ6zcu8GjAMQ1d0O/sGpSsXD3DMiuKXnQC7K4inSG4qs6FstifRJRXzDsZpgmZ4td2IPs2Mna376A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1962
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06.12.19 16:44, Linus Walleij wrote:
-
-> The main issue sysfs in its current form had to die was that it relied
-> on global GPIO numbers. An alternative to the character device
-> would be to use e.g. subdirs for each GPIO chip and export
-> local offset numbers from there,
-
-Yes, shouldn't be such a big deal. Maybe I'll find some time to fix
-this. Another nice feature would be supporting gpio names for export
-and unexport, as well as a file that lists all available gpios.
-
-> but well we reached a fork in the road with the chardev I'd say.
-
-Why can't we support both ? These two interfaces have different use
-cases, neither one can replace the other one completely. The cool
-thing w/ Linux is the configurability (once I've got some spare time,
-I'll create some patches to make the chardev optional :p).
-
-> The main problem solved with the chardev was that scripts that
-> died/crashed left the sysfs nodes explicitly exported and
-> populated and everything just in the general mess it was at the time
-> the application crashed.
-
-Yes, but this cleanup-on-close also could have been done in the old
-interface. OTOH, there are use cases where you do not want this,
-where sysfs interface is fine (eg. set up certain things in a boot
-script, etc)
-
-> Of course it is easy to pose things like that the application should
-> register crash handlers or whatnot, but it turns out people weren't
-> doing that and with a character device, then it cleans up automatically
-> if the application dies or get terminated by a signal for example,
-
-I don't question this usecase. Such automatic cleanup is indeed an
-important feature. (even though I never had a practical usecase myself,
-where I did go via raw gpios instead of binding some driver).
-
-My bad feelings about chardev comes from entirely different angles, eg:
-
-* not portable, not network transparent (needs special ioctl())
-* needs a lot of more code in application side (yes: I also count in
-  libraries :p)
-* no access control for individual lines
-* can't use filesystem (eg. symlinks) to assign application /
-  installation specific (path)names, which individual programs can
-  act on.
-
-> I see your stance, but it also makes it much easier to shoot
-> yourself in the foot.
-
-Yes, you have to care about state tracking (even in error cases) on your
-own. Typical issue for such lowlevel things. The optimal case would be
-having higher level drivers (eg. led, keys, ...) to bind to, but we're
-talking about use cases where that isn't an option.
-
-> Nobody should. The users of userspace GPIO are factory lines,
-> industrial control and automation, maker communities and odd
-> prototypes. Not deployed products like phones or computers.
-
-Unfortunately, the real-world is different :(
-
-I've had many cases where folks we using raw gpios (with insanely huge
-userland code around that) even for trivial things like leds, keys,
-serial control lines, etc.
-
-Okay, this isn't a technical, but an educational problem. Don't know
-a good solution, except for either trying educate folks or just
-ignoring them :o
-
-> The typical cases involves rigging a few relays and sensors
-> up in a lab to perform some automation, not dissimilar to e.g.
-> PLC (programmable logic controllers) and such. The world is
-> full of these one-offs, some in more expensive and intimidating
-> environments than others. Some are the lab bench of a few
-> select makers. Makers are not important to big capital and
-> big business (who are not talking to us) but they are important
-> to the community exactly because they are talking to us.
-
-Yeah, expected you'll be saying that ;-)
-
-That bad side here is, this stuff often is going into the field
-this way. Seen that many times.
-
-I believe the real problem is on a completely different layer: it's
-still too hard (for non-kernel-hackers) to configure things like
-platform devices. For DT-based systems we've got DT-overlays (already
-solves the kernel side here) - but for non-DT (eg. ACPI) world, it's
-ugly. And even worse: if things like gpios come in on probe'able
-bus'es like PCI or USB, it gets even more weird.
-
-So, IMHO; the actual topic we should concentrate on is dynamic
-multi-level device provisioning / binding. Yes, it's a big topic, but
-something I definitively have on my 2do list.
-
-
---mtx
-
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+SGkgUGF1bCwNCg0KT24gRnJpLCAyMDE5LTEyLTA2IGF0IDA4OjAyIC0wODAwLCBQYXVsIEUuIE1j
+S2VubmV5IHdyb3RlOg0KPiBPbiBGcmksIERlYyAwNiwgMjAxOSBhdCAwODo0Njo0MFBNICswNTMw
+LCANCj4gbWFkaHVwYXJuYWJob3dtaWswNEBnbWFpbC5jb20gd3JvdGU6DQo+ID4gRnJvbTogTWFk
+aHVwYXJuYSBCaG93bWlrIDxtYWRodXBhcm5hYmhvd21pazA0QGdtYWlsLmNvbT4NCj4gPiANCj4g
+PiBUaGlzIHBhdGNoIGZpeGVzIHRoZSBmb2xsb3dpbmcgZXJyb3JzOg0KPiA+IGZzL25mcy9kaXIu
+YzoyMzUzOjE0OiBlcnJvcjogaW5jb21wYXRpYmxlIHR5cGVzIGluIGNvbXBhcmlzb24NCj4gPiBl
+eHByZXNzaW9uIChkaWZmZXJlbnQgYWRkcmVzcyBzcGFjZXMpOg0KPiA+IGZzL25mcy9kaXIuYzoy
+MzUzOjE0OiAgICBzdHJ1Y3QgbGlzdF9oZWFkIFtub2RlcmVmXSA8YXNuOjQ+ICoNCj4gPiBmcy9u
+ZnMvZGlyLmM6MjM1MzoxNDogICAgc3RydWN0IGxpc3RfaGVhZCAqDQo+ID4gDQo+ID4gY2F1c2Vk
+IGR1ZSB0byBkaXJlY3RseSBhY2Nlc3NpbmcgdGhlIHByZXYgcG9pbnRlciBvZg0KPiA+IGEgUkNV
+IHByb3RlY3RlZCBsaXN0Lg0KPiA+IEFjY2Vzc2luZyB0aGUgcG9pbnRlciB1c2luZyB0aGUgbWFj
+cm8gbGlzdF9wcmV2X3JjdSgpIGZpeGVzIHRoaXMNCj4gPiBlcnJvci4NCj4gPiANCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBNYWRodXBhcm5hIEJob3dtaWsgPG1hZGh1cGFybmFiaG93bWlrMDRAZ21haWwu
+Y29tPg0KPiA+IC0tLQ0KPiA+ICBmcy9uZnMvZGlyLmMgfCAyICstDQo+ID4gIDEgZmlsZSBjaGFu
+Z2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQg
+YS9mcy9uZnMvZGlyLmMgYi9mcy9uZnMvZGlyLmMNCj4gPiBpbmRleCBlMTgwMDMzZTM1Y2YuLjIw
+MzUyNTRjYzI4MyAxMDA2NDQNCj4gPiAtLS0gYS9mcy9uZnMvZGlyLmMNCj4gPiArKysgYi9mcy9u
+ZnMvZGlyLmMNCj4gPiBAQCAtMjM1MCw3ICsyMzUwLDcgQEAgc3RhdGljIGludCBuZnNfYWNjZXNz
+X2dldF9jYWNoZWRfcmN1KHN0cnVjdA0KPiA+IGlub2RlICppbm9kZSwgY29uc3Qgc3RydWN0IGNy
+ZWQgKmNyZQ0KPiA+ICAJcmN1X3JlYWRfbG9jaygpOw0KPiA+ICAJaWYgKG5mc2ktPmNhY2hlX3Zh
+bGlkaXR5ICYgTkZTX0lOT19JTlZBTElEX0FDQ0VTUykNCj4gPiAgCQlnb3RvIG91dDsNCj4gPiAt
+CWxoID0gcmN1X2RlcmVmZXJlbmNlKG5mc2ktPmFjY2Vzc19jYWNoZV9lbnRyeV9scnUucHJldik7
+DQo+ID4gKwlsaCA9IHJjdV9kZXJlZmVyZW5jZShsaXN0X3ByZXZfcmN1KCZuZnNpLQ0KPiA+ID5h
+Y2Nlc3NfY2FjaGVfZW50cnlfbHJ1KSk7DQo+IA0KPiBBbmQgYXMgbm90ZWQgaW4gdGhlIGVhcmxp
+ZXIgZW1haWwsIHdoYXQgaXMgcHJldmVudGluZyBjb25jdXJyZW50DQo+IGluc2VydGlvbnMgaW50
+byAgYW5kIGRlbGV0aW9ucyBmcm9tIHRoaXMgbGlzdD8NCj4gDQo+IG8JVGhpcyB1c2Ugb2YgbGlz
+dF9tb3ZlX3RhaWwoKSBpcyBPSyBiZWNhdXNlIGl0IGRvZXMgbm90IHBvaXNvbi4NCj4gCVRob3Vn
+aCBpdCBpc24ndCBiZWluZyBhbGwgdGhhdCBmcmllbmRseSB0byBsb2NrbGVzcyBhY2Nlc3MgdG8N
+Cj4gCS0+cHJldiAtLSBubyBXUklURV9PTkNFKCkgaW4gbGlzdF9tb3ZlX3RhaWwoKS4NCj4gDQo+
+IG8JVGhlIHVzZSBvZiBsaXN0X2FkZF90YWlsKCkgaXMgbm90IHNhZmUgd2l0aCBSQ1UgcmVhZGVy
+cywgdGhvdWdoDQo+IAl0aGV5IGRvIGF0IGxlYXN0IHBhcnRpYWxseSBjb21wZW5zYXRlIHZpYSB1
+c2Ugb2Ygc21wX3dtYigpDQo+IAlpbiBuZnNfYWNjZXNzX2FkZF9jYWNoZSgpIGJlZm9yZSBjYWxs
+aW5nDQo+IG5mc19hY2Nlc3NfYWRkX3JidHJlZSgpLg0KPiANCj4gbwlUaGUgbGlzdF9kZWwoKSBu
+ZWFyIHRoZSBlbmQgb2YgbmZzX2FjY2Vzc19hZGRfcmJ0cmVlKCkgd2lsbA0KPiAJcG9pc29uIHRo
+ZSAtPnByZXYgcG9pbnRlci4gIEkgZG9uJ3Qgc2VlIGhvdyB0aGlzIGlzIHNhZmUgZ2l2ZW4NCj4g
+dGhlDQo+IAlwb3NzaWJpbGl0eSBvZiBhIGNvbmN1cnJlbnQgY2FsbCB0bw0KPiBuZnNfYWNjZXNz
+X2dldF9jYWNoZWRfcmN1KCkuDQoNClRoZSBwb2ludGVyIG5mc2ktPmFjY2Vzc19jYWNoZV9lbnRy
+eV9scnUgaXMgdGhlIGhlYWQgb2YgdGhlIGxpc3QsIHNvIGl0DQp3b24ndCBnZXQgcG9pc29uZWQu
+IEZ1cnRoZXJtb3JlLCB0aGUgb2JqZWN0cyBpdCBwb2ludHMgdG8gYXJlIGZyZWVkDQp1c2luZyBr
+ZnJlZV9yY3UoKSwgc28gdGhleSB3aWxsIHN1cnZpdmUgYXMgbG9uZyBhcyB3ZSBob2xkIHRoZSBy
+Y3UgcmVhZA0KbG9jay4gVGhlIG9iamVjdCdzIGNyZWQgcG9pbnRlcnMgYWxzbyBwb2ludHMgdG8g
+c29tZXRoaW5nIHRoYXQgaXMgZnJlZWQNCmluIGFuIHJjdS1zYWZlIG1hbm5lci4NCg0KVGhlIHBy
+b2JsZW0gaGVyZSBpcyByYXRoZXIgdGhhdCBhIHJhY2luZyBsaXN0X2RlbCgpIGNhbiBjYXVzZSBu
+ZnNpLQ0KPmFjY2Vzc19jYWNoZV9lbnRyeV9scnUgdG8gYmUgZW1wdHksIHdoaWNoIGlzIHByZXN1
+bWFibHkgd2h5IE5laWwgYWRkZWQNCnRoYXQgY2hlY2sgcGx1cyB0aGUgZW1wdHkgY3JlZCBwb2lu
+dGVyIGNoZWNrIGluIHRoZSBmb2xsb3dpbmcgbGluZS4NCg0KVGhlIGJhcnJpZXIgc2VtYW50aWNz
+IG1heSBiZSBzdXNwZWN0LCBhbHRob3VnaCB0aGUgc3BpbiB1bmxvY2sgYWZ0ZXINCmxpc3RfZGVs
+KCkgc2hvdWxkIHByZXN1bWFibHkgZ3VhcmFudGVlIHJlbGVhc2Ugc2VtYW50aWNzPw0KDQoNCi0t
+IA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNw
+YWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
