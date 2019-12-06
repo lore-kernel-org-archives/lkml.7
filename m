@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE90C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37D1C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAFBB21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86FAE206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="au1NZhTF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c1Wx0pmg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLFWOV (ORCPT
+        id S1726801AbfLFWO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 17:14:21 -0500
-Received: from mail-pj1-f74.google.com ([209.85.216.74]:53182 "EHLO
-        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbfLFWOT (ORCPT
+        Fri, 6 Dec 2019 17:14:27 -0500
+Received: from mail-qv1-f74.google.com ([209.85.219.74]:36402 "EHLO
+        mail-qv1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfLFWOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 17:14:19 -0500
-Received: by mail-pj1-f74.google.com with SMTP id b22so3121376pjp.19
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 14:14:19 -0800 (PST)
+        Fri, 6 Dec 2019 17:14:25 -0500
+Received: by mail-qv1-f74.google.com with SMTP id r8so764467qvp.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 14:14:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=4aDgrw7n3sKpB8rlb4e1FXGpnlGkWbIPMM9nhNp+jXs=;
-        b=au1NZhTF4wAsexOlDW3QvGUTHHibdiuoOGtKnmjfRLZ0pPJFJKE+opISQXIrUR97ye
-         Jne0qPeQQiFimsKZER4HaK21Z32PFAMdXThycc6amcnFXyiRGqcBd7hzGtaSxtjLovKA
-         MtCxYRCUfBUiozbQAY8WWFFWshKqoTOktvqXvtAigS6VHdCV5+fVo6wqlgPIj5sUrPy7
-         nyM+Yj6Rc076XJ7CjGnjpbrP4L2nSj+srGB86VsKIU0Wi383uYJUprK31BiItYr5v/o2
-         Pxb9DYcCbj3fcvL19VOlmfxX8nuMHZ73nI0/DFRRg8SJ94YuyFgsEVGXyEeevmK3xEjY
-         Wuvw==
+        bh=FhYYEjTDkPuKHbZnKePlOaf9pf8CUWO3nD3sOS+po+M=;
+        b=c1Wx0pmgZzJDLcr5nKIxS6pdb72MNBZXygUHxUgHfIREUjivSfJmFNkd4nH821+c7c
+         XdMpdHUqSUmAmYnv/wYcSmRCYqJtUh+jdTQ3/0TYFxbvGCg3KubysunPGfqG0BjN6R5p
+         FZYsTRty1KKiwCF3GFPmHDSfqSVDKBB9Dl9Svv8Esh85iZQ6Gp8IldBOuKDVG0NAYrct
+         KCNN1c4Jt5Qnd9QE5BIqwUiELeUVYdQWv32ArtiqQbBLSzZpaS8483/PTd49tfr3IpbZ
+         ZlBwyqxJM8pdiJ2dTz9waDv/2F+kWZdAUGGPKaihus1bQ20pRuQajRsHhJifC3dGS/Vz
+         k2Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=4aDgrw7n3sKpB8rlb4e1FXGpnlGkWbIPMM9nhNp+jXs=;
-        b=WG4oUc743RpxK/dXy84xhvNnc5oOvWVpR1/1UgauPBCTYjsr9BSzGbSYsOPyVfBdU1
-         W/H4o7nFq/yzB8Vb4XNzTzysws96tpVf8fdcIw4bOYIfKIRsva1AWPcwsjpMiDyA7h3J
-         0/lnaqfvxVEiwCDmjQdc5ARrYpPEnqOD1gysuJLBJ78mCVQSu/pv0JErAhSsxBrIAYyA
-         GatrN0V9DbA94L0y4bytrusP7EgQQtiW+Va2SrLnyZ1fagal5P2aW2E/jD7K7kqzSclu
-         i/iFMMe7/57hVP4E29QP9Ys8dT8/3qbznQaCbuCD6XJS9tAWC5RGgg68e1mLk3Tg02j/
-         bE8g==
-X-Gm-Message-State: APjAAAWtS+6mZL+doqCr8C4ZezWgfoomr+ai0UhkUrI53NEmCu3NOJCD
-        NkBYZhyNN1R797J7GmGbJmkys0oB0fak6Mkv5ic=
-X-Google-Smtp-Source: APXvYqwRlAi+m5KSot17CZFEPydPDuL4iAvmhFlppFfNB1e6R6A3XWaehHnjib1r5pVc/bUaEbkOTOtXqUzvI+1YHGE=
-X-Received: by 2002:a65:518b:: with SMTP id h11mr5968857pgq.133.1575670459027;
- Fri, 06 Dec 2019 14:14:19 -0800 (PST)
-Date:   Fri,  6 Dec 2019 14:13:45 -0800
+        bh=FhYYEjTDkPuKHbZnKePlOaf9pf8CUWO3nD3sOS+po+M=;
+        b=N2cUY7Wp//m09h+MzwlnHTL0hygXJnpMpx2DJNKtCdwhe/KnKpdsUWfZFoPsvOq5I8
+         JXUb/T/rlPkMwFWZTSUZCnL9KsZ6xG8eWfNutvZ66H+GeeRkLyOG3WQMUqafrmkseSaZ
+         SmreTujOvkPQBOYA6B6+USHCmJ/2BZYe0W/DUMc524P+i5/hUSiH6+XwEKKsn2tyfTif
+         6vmratKmnrje/S7fIvwrOKO740mF83DvjGakcsc3JuQGwE5/zPYI4ZTMlRHuYOqZ5L3s
+         qIE3VqYobuJ6opFDj55QAT7rIQohvvD6svZRmkqxHd38L2WX430npdAPTKrcQ8KBuIyB
+         GMlg==
+X-Gm-Message-State: APjAAAVg24zoLLZfHWk3wFt9a/J/t9N/Ckzw9jAUTIkyaSCwre7xvnvJ
+        yYNrBcqD/LMsacFN06TqnAVpur6t02yijg/7va0=
+X-Google-Smtp-Source: APXvYqwZLBeooXOHcOO29WvEdpgbxookvNvj944sJ15kbZCCqA2Ea8mnulB5DEVBZW8wLWpSg85W/yQRRXH7nkmyS6o=
+X-Received: by 2002:ac8:2201:: with SMTP id o1mr15071384qto.247.1575670464028;
+ Fri, 06 Dec 2019 14:14:24 -0800 (PST)
+Date:   Fri,  6 Dec 2019 14:13:47 -0800
 In-Reply-To: <20191206221351.38241-1-samitolvanen@google.com>
-Message-Id: <20191206221351.38241-10-samitolvanen@google.com>
+Message-Id: <20191206221351.38241-12-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20191206221351.38241-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [PATCH v6 09/15] arm64: reserve x18 from general allocation with SCS
+Subject: [PATCH v6 11/15] arm64: efi: restore x18 if it was corrupted
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -84,33 +84,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reserve the x18 register from general allocation when SCS is enabled,
-because the compiler uses the register to store the current task's
-shadow stack pointer. Note that all external kernel modules must also be
-compiled with -ffixed-x18 if the kernel has SCS enabled.
+If we detect a corrupted x18 and SCS is enabled, restore the register
+before jumping back to instrumented code. This is safe, because the
+wrapper is called with preemption disabled and a separate shadow stack
+is used for interrupt handling.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/kernel/efi-rt-wrapper.S | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 1fbe24d4fdb6..e69736fc1106 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -72,6 +72,10 @@ stack_protector_prepare: prepare0
- 					include/generated/asm-offsets.h))
- endif
- 
-+ifeq ($(CONFIG_SHADOW_CALL_STACK), y)
-+KBUILD_CFLAGS	+= -ffixed-x18
-+endif
-+
- ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
- KBUILD_CPPFLAGS	+= -mbig-endian
- CHECKFLAGS	+= -D__AARCH64EB__
+diff --git a/arch/arm64/kernel/efi-rt-wrapper.S b/arch/arm64/kernel/efi-rt-wrapper.S
+index 3fc71106cb2b..62f0260f5c17 100644
+--- a/arch/arm64/kernel/efi-rt-wrapper.S
++++ b/arch/arm64/kernel/efi-rt-wrapper.S
+@@ -34,5 +34,14 @@ ENTRY(__efi_rt_asm_wrapper)
+ 	ldp	x29, x30, [sp], #32
+ 	b.ne	0f
+ 	ret
+-0:	b	efi_handle_corrupted_x18	// tail call
++0:
++#ifdef CONFIG_SHADOW_CALL_STACK
++	/*
++	 * Restore x18 before returning to instrumented code. This is
++	 * safe because the wrapper is called with preemption disabled and
++	 * a separate shadow stack is used for interrupts.
++	 */
++	mov	x18, x2
++#endif
++	b	efi_handle_corrupted_x18	// tail call
+ ENDPROC(__efi_rt_asm_wrapper)
 -- 
 2.24.0.393.g34dc348eaf-goog
 
