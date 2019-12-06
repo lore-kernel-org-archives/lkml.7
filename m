@@ -2,139 +2,238 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFABC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5027C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE752464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905CA20707
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:16:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="EpmpyI3Z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W9rhlogH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfLFOQR (ORCPT
+        id S1726635AbfLFOQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:16:17 -0500
-Received: from mail-eopbgr770082.outbound.protection.outlook.com ([40.107.77.82]:3972
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726453AbfLFOQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 09:16:16 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UA6xjD4UcCTt+CwnywC3pglPDD1VuzWXthAhB2MdoLfwNVkvAfRta8xXgnE+OPDU4nhsJqm6Uh6YUOGDG8iORpWpZOzUvZY1lyB0+Li+pcyZfK8U2kPSeOrTry1z9gBWou7z7gkJ7xzVnXubnQS2Hw6jwGSFc5JUKnSidujNOZgvProiX6CrteLE8jz0X7iQR+h4pi78b8sTQUrhSWV9TuaDHYgv/IL2kNQJlQkZuxyt5Xtt2fDX8GAKkAnvL8a8FZ+8q5TVC8RZbuYlZQmafr6o0qWw5DX2hDwJcncG+Pp0Wdo/Ky0Z7MNuNb1riQGs87eNyX8FHKSnw6IPLKDKfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9XlgyWpifDYgef7G1rkOHYR2e28iiXM5HXblScXBIhk=;
- b=MECwoSmB38/mrDWRqAv1rW6JWbOdptlJxQ0JbyM3dLYo5cc09WGpyDRr2j1fMyekrt8NUl0brVCKe0S09T0HqYbYzEWcYX4gXeX6BrD1iMnG6dU4nfeJD16LBlN/iU+/B5KGzCYyRq4tLx5Bg+dXEmUZH375rBxhEXKtEzrRb4wBjKEhL+UiQrM7MAXvqzXE0v9XeJaO/geDy3+HvMfletLLNegr4RgY3iA3tems2poEHrwUHm+yoiet8F6F3nbbUbRNyoO9ILm2Rf7s64/XXSxAjInmUDYMTfBFpo/8bpZvVNzayTD/5tb4yHSxz1Hf91HDE+9EjkH88nj5giPwdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9XlgyWpifDYgef7G1rkOHYR2e28iiXM5HXblScXBIhk=;
- b=EpmpyI3Zj6+rsQCAitYr1miK5WIpVSOPVqAArQmpxHpIUuj3AIeep9pb676GgU7lG8PwKBUnU9DaMshltXiIxMNVemlgv6ip/2iCoPy3/x5llXqFPC+zQQUKg0LzBJShcxf3OmE21Mpv4TvdZyXCoHi0X4xsuDSGeO6LwCNcZyo=
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
- MN2PR05MB6334.namprd05.prod.outlook.com (20.178.249.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.6; Fri, 6 Dec 2019 14:16:11 +0000
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::611e:6a6b:9109:5aa8]) by MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::611e:6a6b:9109:5aa8%7]) with mapi id 15.20.2516.003; Fri, 6 Dec 2019
- 14:16:11 +0000
-From:   Thomas Hellstrom <thellstrom@vmware.com>
-To:     "mhocko@kernel.org" <mhocko@kernel.org>,
-        "thomas_os@shipmail.org" <thomas_os@shipmail.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Pv-drivers <Pv-drivers@vmware.com>,
-        "rcampbell@nvidia.com" <rcampbell@nvidia.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "jglisse@redhat.com" <jglisse@redhat.com>,
-        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>
-Subject: Re: [PATCH v3 2/2] mm, drm/ttm: Fix vm page protection handling
-Thread-Topic: [PATCH v3 2/2] mm, drm/ttm: Fix vm page protection handling
-Thread-Index: AQHVrA6f2/W6HP9nIkCwMUjaCAk1D6es6F2AgAA+8AA=
-Date:   Fri, 6 Dec 2019 14:16:10 +0000
-Message-ID: <10c4835486275e87334058bc2f406609c55271eb.camel@vmware.com>
-References: <20191206082426.2958-1-thomas_os@shipmail.org>
-         <20191206082426.2958-3-thomas_os@shipmail.org>
-         <20191206103055.GO28317@dhcp22.suse.cz>
-In-Reply-To: <20191206103055.GO28317@dhcp22.suse.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thellstrom@vmware.com; 
-x-originating-ip: [155.4.205.35]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9279fd4b-cb89-46fb-f795-08d77a56d849
-x-ms-traffictypediagnostic: MN2PR05MB6334:|MN2PR05MB6334:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR05MB63348FCF85E91CC1D9C143E4A15F0@MN2PR05MB6334.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0243E5FD68
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(396003)(136003)(366004)(199004)(189003)(64756008)(76116006)(99286004)(107886003)(71200400001)(66946007)(66556008)(4326008)(26005)(86362001)(118296001)(66476007)(71190400001)(66446008)(7416002)(305945005)(316002)(81156014)(2906002)(81166006)(54906003)(91956017)(102836004)(186003)(6506007)(110136005)(6486002)(76176011)(8936002)(229853002)(5660300002)(8676002)(36756003)(66574012)(478600001)(6512007)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6334;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: O8oBu8Gxsk2wzYSfBOci42C81GJiHiJUYl99EcF/jVEVz4RMXYC0y6sWPYbTnE6aIKo7rOxFzKV76WqsTi/qZ/JbSgIVH5wsZWs31sFzyAfWxpjGJz7lhe8Lkm/GpZNDL7/GuWs4wgwE3fZRKqwrwSRmrmzfNqBs+cKmbos1JsD5UqkFEJNVlMYudPp4v3JTQemjS6p+bF7xB/H1SmFP9kL4Icx7EeRQH1SuYM3omkVO6OuoODSyNP+JzJiaZ93bQJKKASoIuz2lQ+N7NZOTyVh2Q5S41MpocaMc1hd9Mi3VKHbKuPbthyzNWCvFy62R7O3aypL3b0kpdhsobELjZ06EexOuMH6kYv0yuvaDElvK9cA6d7rgIvt8sStDp3TyQESMRjvF25XJnb5Th+gFbEQHaCnpcjUaX6avESI5xkDBnAqBVtZvMX8nFsqIM/SY
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B73A1EED70AC1C40AE53773DE07C2F0E@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 6 Dec 2019 09:16:00 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39532 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfLFOP7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 09:15:59 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y11so7914886wrt.6
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 06:15:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=t5llNTRUbyRpihnmRqZnRoqYD+4XI93t6fyxrzfPIvk=;
+        b=W9rhlogH9A+SQ9Z7RRHOfvR0jHQr+XubRvBNbZnelmkbiHmvaVoAq0Isl5VKP836Lg
+         RSo4otnt0T0d/gZql8yEsfQY1/6le/I5/OPUJEcFva+6tKwCDyyfZKr41L7ldVdhIupB
+         3IPcmNL8rBES8QTw8mFPWeViQkBMV1RERDu6giLuwwSRFAuZ+PeJXekJ6l5nk8juLReD
+         zR88uuBjdyy74Gswb8f+0SQrS+4aYrEK5tK0angsroxuk7z25BwCn0hM6L9lxa/ZxbdH
+         Rjzsjm9QrDKybjAhq+OU7sy5yyOMoTyHh7XphAIIGgomuKZQZMXT6aoDvcBH0nXRJNh0
+         wIWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=t5llNTRUbyRpihnmRqZnRoqYD+4XI93t6fyxrzfPIvk=;
+        b=DC7mNJ0vWlI7KngIS3Lx/TJnLaH8b1OhBybY66B4qWt36zZQ+AWjefpflb/mw6DZC5
+         qLVUCqqGq8DfBgEso70pG6+/NxK1ue3JKkrQVz+5hSMD95vgAMknW+WHlIPKeyo/W3q9
+         ppyK5IHuBkYG9zcQ77FcxjVWxZcUKtwOaALXdgC6DklHhHKW6oGZPgrcksAcL0R1OYBn
+         jwRXvFqHC+B8lgWhTBre8EwbHxmN1+2UOHNE+JbPpPOqNOecz62R37MiLBNYAARrCtqx
+         eZ6GPWlRAUy19fVtUJtszqRlyDS1mQut1n8AcAZk6MzL9CAmpsDcgQrcEIXlha5Nocwb
+         KQqg==
+X-Gm-Message-State: APjAAAUN4SN4OtW/EjlyS9LYGa/GinwQid7kfOYZ4ZhHTW1IW9ToMdvt
+        wgvuc1WdBZr5JyXhioVbZfXJGuyhzAM=
+X-Google-Smtp-Source: APXvYqy3Ks3x6f/3AG9PEkTmOEy6rizrQt+gdL/t2ewEYJVrbPtTANP67BPvpeqGqtX8YupziUZYdg==
+X-Received: by 2002:adf:df8e:: with SMTP id z14mr15798347wrl.190.1575641756231;
+        Fri, 06 Dec 2019 06:15:56 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:143f:da10:4344:50a6? ([2a01:e34:ed2f:f020:143f:da10:4344:50a6])
+        by smtp.googlemail.com with ESMTPSA id t81sm3745672wmg.6.2019.12.06.06.15.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 06:15:55 -0800 (PST)
+Subject: Re: [PATCH V4 4/4] thermal/drivers/cpu_cooling: Rename to
+ cpufreq_cooling
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>, edubezval@gmail.com,
+        rui.zhang@intel.com
+Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        viresh.kumar@linaro.org, amit.kucheria@linaro.org,
+        linux-kernel@vger.kernel.org
+References: <20191204153930.9128-4-daniel.lezcano@linaro.org>
+ <20191206113315.18954-1-martin.kepplinger@puri.sm>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <e6cbe4fb-8b04-cff6-f2af-6c5829d9deb1@linaro.org>
+Date:   Fri, 6 Dec 2019 15:15:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9279fd4b-cb89-46fb-f795-08d77a56d849
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Dec 2019 14:16:10.9427
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aL3LtW99Gh/P55CcSP2jfVuJX917IjJkUm3So5QcKib5MxmYLD/5dqQ99jn+d96PFqbIYm2UXmFWFxBejdWiuA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6334
+In-Reply-To: <20191206113315.18954-1-martin.kepplinger@puri.sm>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWljaGFsLA0KDQpPbiBGcmksIDIwMTktMTItMDYgYXQgMTE6MzAgKzAxMDAsIE1pY2hhbCBI
-b2NrbyB3cm90ZToNCj4gT24gRnJpIDA2LTEyLTE5IDA5OjI0OjI2LCBUaG9tYXMgSGVsbHN0csO2
-bSAoVk13YXJlKSB3cm90ZToNCj4gWy4uLl0NCj4gPiBAQCAtMjgzLDExICsyODIsMjYgQEAgdm1f
-ZmF1bHRfdCB0dG1fYm9fdm1fZmF1bHRfcmVzZXJ2ZWQoc3RydWN0DQo+ID4gdm1fZmF1bHQgKnZt
-ZiwNCj4gPiAgCQkJcGZuID0gcGFnZV90b19wZm4ocGFnZSk7DQo+ID4gIAkJfQ0KPiA+ICANCj4g
-PiArCQkvKg0KPiA+ICsJCSAqIE5vdGUgdGhhdCB0aGUgdmFsdWUgb2YgQHByb3QgYXQgdGhpcyBw
-b2ludCBtYXkNCj4gPiBkaWZmZXIgZnJvbQ0KPiA+ICsJCSAqIHRoZSB2YWx1ZSBvZiBAdm1hLT52
-bV9wYWdlX3Byb3QgaW4gdGhlIGNhY2hpbmctIGFuZA0KPiA+ICsJCSAqIGVuY3J5cHRpb24gYml0
-cy4gVGhpcyBpcyBiZWNhdXNlIHRoZSBleGFjdCBsb2NhdGlvbg0KPiA+IG9mIHRoZQ0KPiA+ICsJ
-CSAqIGRhdGEgbWF5IG5vdCBiZSBrbm93biBhdCBtbWFwKCkgdGltZSBhbmQgbWF5IGFsc28NCj4g
-PiBjaGFuZ2UNCj4gPiArCQkgKiBhdCBhcmJpdHJhcnkgdGltZXMgd2hpbGUgdGhlIGRhdGEgaXMg
-bW1hcCdlZC4NCj4gPiArCQkgKiBUaGlzIGlzIG9rIGFzIGxvbmcgYXMgQHZtYS0+dm1fcGFnZV9w
-cm90IGlzIG5vdCB1c2VkDQo+ID4gYnkNCj4gPiArCQkgKiB0aGUgY29yZSB2bSB0byBzZXQgY2Fj
-aGluZy0gYW5kIGVuY3J5cHRpb24gYml0cy4NCj4gPiArCQkgKiBUaGlzIGlzIGVuc3VyZWQgYnkg
-Y29yZSB2bSB1c2luZyBwdGVfbW9kaWZ5KCkgdG8NCj4gPiBtb2RpZnkNCj4gPiArCQkgKiBwYWdl
-IHRhYmxlIGVudHJ5IHByb3RlY3Rpb24gYml0cyAodGhhdCBmdW5jdGlvbg0KPiA+IHByZXNlcnZl
-cw0KPiA+ICsJCSAqIG9sZCBjYWNoaW5nLSBhbmQgZW5jcnlwdGlvbiBiaXRzKSwgYW5kIHRoZSBA
-ZmF1bHQNCj4gPiArCQkgKiBjYWxsYmFjayBiZWluZyB0aGUgb25seSBmdW5jdGlvbiB0aGF0IGNy
-ZWF0ZXMgbmV3DQo+ID4gKwkJICogcGFnZSB0YWJsZSBlbnRyaWVzLg0KPiA+ICsJCSAqLw0KPiAN
-Cj4gV2hpbGUgdGhpcyBpcyBhIHZlcnkgdmFsdWFibGUgcGllY2Ugb2YgaW5mb3JtYXRpb24gSSBi
-ZWxpZXZlIHdlIG5lZWQNCj4gdG8NCj4gZG9jdW1lbnQgdGhpcyBpbiB0aGUgZ2VuZXJpYyBjb2Rl
-IHdoZXJlIGV2ZXJ5Ym9keSB3aWxsIGZpbmQgaXQuDQo+IHZtZl9pbnNlcnRfbWl4ZWRfcHJvdCBz
-b3VuZHMgbGlrZSBhIGdvb2QgcGxhY2UgdG8gbWUuIFNvIGJlaW5nDQo+IGV4cGxpY2l0DQo+IGFi
-b3V0IFZNX01JWEVETUFQLiBBbHNvIGEgcmVmZXJlbmNlIGZyb20gdm1fcGFnZV9wcm90IHRvIHRo
-aXMNCj4gZnVuY3Rpb24NCj4gd291bGQgYmUgcmVhbGx5IGhlbHBlZnVsLg0KPiANCj4gVGhhbmtz
-IQ0KPiANCg0KSnVzdCB0byBtYWtlIHN1cmUgSSB1bmRlcnN0YW5kIGNvcnJlY3RseS4gWW91J2Qg
-cHJlZmVyIHRoaXMgKG9yDQpzaW1pbGFyKSB0ZXh0IHRvIGJlIHByZXNlbnQgYXQgdGhlIHZtZl9p
-bnNlcnRfbWl4ZWRfcHJvdCgpIGFuZA0Kdm1mX2luc2VydF9wZm5fcHJvdCgpIGRlZmluaXRpb25z
-IGZvciBNSVhFRE1BUCBhbmQgUEZOTUFQIHJlc3BlY3RpdmVseSwNCmFuZCBhIHBvaW50ZXIgZnJv
-bSB2bV9wYWdlX3Byb3QgdG8gdGhhdCB0ZXh0LiBJcyB0aGF0IGNvcnJlY3Q/DQoNClRoYW5rcywN
-ClRob21hcw0KDQoNCg==
+On 06/12/2019 12:33, Martin Kepplinger wrote:
+> I tested this on the librem5-devkit and see the
+> cooling devices in sysfs. I configure ARM_PSCI_CPUIDLE, not ARM_CPUIDLE and
+> add the patch below in register the cooling device there. "psci_idle"
+> is listed as the cpuidle_driver.
+> 
+> That's what I'm running, in case you want to see it all:
+> https://source.puri.sm/martin.kepplinger/linux-next/commits/next-20191205/librem5_cpuidle_mainline_atf
+> 
+> so I add a trip temperature description like this:
+> https://source.puri.sm/martin.kepplinger/linux-next/commit/361f49f93ae2c477fd012790831cabd0ed976660
+> 
+> When I let the SoC heat up, cpuidle cooling won't kick it. In sysfs:
+> 
+> catting the relevant files in /sys/class/thermal after heating up,
+> if that makes sense:
+> 
+> 87000
+> 85000
+> 85000
+> thermal-cpufreq-0
+> 1
+> thermal-idle-0
+> 0
+> thermal-idle-1                                                                  
+> 0                                                                               
+> thermal-idle-2
+> 0
+> thermal-idle-3
+> 0
+> 
+> with ARM_CPUIDLE instead of ARM_PSCI_CPUIDLE (and registering the cooling dev
+> during cpuidle-arm.c init) I won't have a cpuidle driver and thus no cpu-sleep
+> state at all.
+> 
+> Can you see where the problem here lies?
+
+Yes, I removed the registration via the DT.
+
+Can you try the following:
+
+diff --git a/drivers/cpuidle/dt_idle_states.c
+b/drivers/cpuidle/dt_idle_states.c
+index d06d21a9525d..01367ddec49a 100644
+--- a/drivers/cpuidle/dt_idle_states.c
++++ b/drivers/cpuidle/dt_idle_states.c
+@@ -13,6 +13,7 @@
+ #include <linux/errno.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/cpu_cooling.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+
+@@ -205,6 +206,9 @@ int dt_init_idle_driver(struct cpuidle_driver *drv,
+ 			err = -EINVAL;
+ 			break;
+ 		}
++
++		cpuidle_of_cooling_register(state_node, drv);
++
+ 		of_node_put(state_node);
+ 	}
+
+That's a hack for the moment.
+
+
+> ---
+>  drivers/cpuidle/cpuidle-psci.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+> index f3c1a2396f98..de6e7f444a66 100644
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -8,6 +8,7 @@
+>  
+>  #define pr_fmt(fmt) "CPUidle PSCI: " fmt
+>  
+> +#include <linux/cpu_cooling.h>
+>  #include <linux/cpuidle.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/cpu_pm.h>
+> @@ -195,6 +196,8 @@ static int __init psci_idle_init_cpu(int cpu)
+>  	if (ret)
+>  		goto out_kfree_drv;
+>  
+> +	cpuidle_cooling_register(drv);
+> +
+>  	return 0;
+>  
+>  out_kfree_drv:
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
