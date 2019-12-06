@@ -2,339 +2,514 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE08C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21017C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E1E24670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575672719;
-	bh=0MLMVm+jMcU3dDF+PAiE33hsJ6299bO4SnORGeCEka8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=DrPjFUOerDQcbmpHyD2ON5n/OkapSq3JNwbb9JKI8Fhuh+2nkFzpQb7A08p/jaSw9
-	 /qdGMZiKEeW+p3G4jtuVS8EZPrciuDQilIzLtv11lFynJH4Exbh+9a1nOMPNDSECYU
-	 PZkNp5qKJWk8zl4mDc/AvoLlAPG/vsZwbLdexApw=
+	by mail.kernel.org (Postfix) with ESMTP id CA3792173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:57:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eWQkFdW2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbfLFWv6 (ORCPT
+        id S1726413AbfLFW5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 17:51:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726353AbfLFWv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 17:51:58 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BB18217BA;
-        Fri,  6 Dec 2019 22:51:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575672717;
-        bh=0MLMVm+jMcU3dDF+PAiE33hsJ6299bO4SnORGeCEka8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=v9p3E0BauvH8AdUkjKMwmdBSA/Tx8ndeSCL4gTwv8kDPXsfVfhYD8Bvl8RdQiwtkL
-         +bN3DIq+lfNuj2DgFD/8/AeGmpgOG2mSJl8X4LNJRw5dwQqbJo+b/vPzqS5UADJgzT
-         T6NXwF/gPwiv8shAQR6cvG7yE3IDw0k1vlH0Ji3E=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E7CB135207A9; Fri,  6 Dec 2019 14:51:56 -0800 (PST)
-Date:   Fri, 6 Dec 2019 14:51:56 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>, notify@kernel.org,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: [PATCH v2] Documentation/barriers/kokr: Remove references to
- [smp_]read_barrier_depends()
-Message-ID: <20191206225156.GM2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191121193209.15687-1-sj38.park@gmail.com>
- <20191129180837.7233-1-sjpark@amazon.de>
- <CAEjAshpsnrfkb83738rtkPbQohoFP0LZbP_45rUqyBX-RvsVwg@mail.gmail.com>
- <20191206204406.GK2889@paulmck-ThinkPad-P72>
- <CAEjAshrGRafO4-k0tDD_XjC8EDq11AOh3PX+bPUhrjkuo+N76A@mail.gmail.com>
- <20191206220858.GL2889@paulmck-ThinkPad-P72>
- <CAEjAshosihoc7YR4WrseZDe_oquiJPeP+2yyCDRJuMJ4rzsp8w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEjAshosihoc7YR4WrseZDe_oquiJPeP+2yyCDRJuMJ4rzsp8w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 6 Dec 2019 17:57:22 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:42418 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbfLFW5V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 17:57:21 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB6JYpNl084199;
+        Fri, 6 Dec 2019 19:50:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=rJO1uhk/Y/8aZqrAgWAB9bitCcc+AuiUYab3I75DnTY=;
+ b=eWQkFdW25BCtdkloqpdv0a7JD4UCtv/HP9+2sEG11MC7yYUE2Lis6F4y40s6c9piG8Lg
+ PBd9TVOETB2J39ZNY+yh5mOchwMc8GzLL+ktyrEcJk7ayNn3zNUW6obPSDdmioqt/9qu
+ OZUkJ4vx47GhXHjXyiXaKIV5XVyCE4mabRJrwlok1JhwnCjbXbHclvGxRF47p9hGri9o
+ VQRCa3pyLBk4oB9j4q9ED+8uINdkoU6RTFDn73KzzzQDXnTW8as8kkLEjH/w3OW8MAZN
+ pv9iqp2UIsI8y8K1vlluYFhsCBjwhvwTx3lR9L1iG+FyfCCDKjb6lhQW5iZYXQvhy4CU mA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2wkh2rx0cd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Dec 2019 19:50:49 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB6JdHtp172837;
+        Fri, 6 Dec 2019 19:50:48 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2wqcbcqxa0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Dec 2019 19:50:48 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB6JohFI031919;
+        Fri, 6 Dec 2019 19:50:43 GMT
+Received: from [10.39.224.161] (/10.39.224.161)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 06 Dec 2019 11:50:43 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v7 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+From:   Alex Kogan <alex.kogan@oracle.com>
+In-Reply-To: <ec048549-c522-27af-d638-789c8465a224@redhat.com>
+Date:   Fri, 6 Dec 2019 14:50:39 -0500
+Cc:     linux@armlinux.org.uk, Peter Zijlstra <peterz@infradead.org>,
+        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
+        jglauber@marvell.com, steven.sistare@oracle.com,
+        daniel.m.jordan@oracle.com, dave.dice@oracle.com,
+        rahul.x.yadav@oracle.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <436D6D76-21C0-451B-B74E-5516864925FF@oracle.com>
+References: <20191125210709.10293-1-alex.kogan@oracle.com>
+ <20191125210709.10293-4-alex.kogan@oracle.com>
+ <ec048549-c522-27af-d638-789c8465a224@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9463 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912060158
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9463 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912060158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 11:38:22PM +0100, SeongJae Park wrote:
-> On Fri, Dec 6, 2019 at 11:08 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Fri, Dec 06, 2019 at 10:29:50PM +0100, SeongJae Park wrote:
-> > > On Fri, Dec 6, 2019 at 9:44 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > >
-> > > > On Fri, Dec 06, 2019 at 06:20:51PM +0100, SeongJae Park wrote:
-> > > > > Hello Paul and Will,
-> > > > >
-> > > > > On Fri, Nov 29, 2019 at 7:09 PM SeongJae Park <sj38.park@gmail.com> wrote:
-> > > > > >
-> > > > > > Paul, thank you for waiting long.  I got reviewed by another Korean
-> > > > > > hacker, Yunjae.
-> > > > > >
-> > > > > > Changes from v1 (https://lore.kernel.org/lkml/20191121193209.15687-1-sj38.park@gmail.com/)
-> > > > > > - Get a review from Yunjae
-> > > > > > - Minor wordsmith based on the review comment
-> > > > > > - Rebased on git://git.lwn.net/linux.git tags/docs-5.5
-> > > > > > - Update author's email address
-> > > > >
-> > > > > May I ask your comments?
-> > > >
-> > > > I thought that Jon Corbet had already queued these.  Did I miss some?
-> > >
-> > > This patch has not queued by Jon, indeed.  I haven't CC-ed neither Jon, nor
-> > > linux-doc for the 1st version of this patch because this is a followup of
-> > > Will's patch[1] and the Will's patch also have not CC-ed them.
-> > >
-> > > I sent another patchset[2] for documents simultaneously but CC-ed Jon and
-> > > linux-doc for the patch, because the patchset is a followup of the commits
-> > > which already merged in Torvalds's tree.  The patchset has queued by both of
-> > > you and then you agreed to merge it by Jon's tree.  I guess I made the
-> > > confusion in this way.  Sorry for making such confusion.  Anyway, this patch
-> > > is not queued in any tree, AFIK.
-> >
-> > Not a problem at all!
-> 
-> That's a relief!
-> 
-> >
-> > But since Jon seems to be taking these in his capacity and Documentation
-> > maintainer, could you please resend CCing him?  If we have these changes
-> > scattered across too many trees, someone is going to get confused,
-> > and it probably will be me.  ;-)
-> 
-> Agreed, CC-ing Jon to this mail.  That said, this is a followup of Will's
-> patch[1] and the patch is also not queued in Jon's tree.  So, I would like to
-> hear Will's opinion either, if possible.
-> 
-> [1]  https://lore.kernel.org/lkml/20191108170120.22331-10-will@kernel.org/
+Thanks for the feedback. I will take care of that and resubmit.
 
-Ah, this one got caught out in the conversion from .html to .rst.
+Regards,
+=E2=80=94 Alex
 
-I did get an ack on one of those, and thus queued it.  I clearly need to
-take another look at Will's series, and thank you for the reminder!
+> On Dec 6, 2019, at 12:21 PM, Waiman Long <longman@redhat.com> wrote:
+>=20
+> On 11/25/19 4:07 PM, Alex Kogan wrote:
+>> In CNA, spinning threads are organized in two queues, a main queue =
+for
+>> threads running on the same node as the current lock holder, and a
+>> secondary queue for threads running on other nodes. After acquiring =
+the
+>> MCS lock and before acquiring the spinlock, the lock holder scans the
+>> main queue looking for a thread running on the same node (pre-scan). =
+If
+>> found (call it thread T), all threads in the main queue between the
+>> current lock holder and T are moved to the end of the secondary =
+queue.
+>> If such T is not found, we make another scan of the main queue when
+>> unlocking the MCS lock (post-scan), starting at the position where
+>> pre-scan stopped. If both scans fail to find such T, the MCS lock is
+>> passed to the first thread in the secondary queue. If the secondary =
+queue
+>> is empty, the lock is passed to the next thread in the main queue.
+>> For more details, see =
+https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__arxiv.org_abs_1810.=
+05600&d=3DDwIFaQ&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3DHvhk3=
+F4omdCk-GE1PTOm3Kn0A7ApWOZ2aZLTuVxFK4k&m=3DFcJA-hpAHs8MxL3rksMfq_GYsA7RIci=
+HEF3AE4ZATOI&s=3DSR-p0LtEzUCrpwWY2ShRIF9lXod5Wc_NkN9zIOVvfxM&e=3D .
+>>=20
+>> Note that this variant of CNA may introduce starvation by =
+continuously
+>> passing the lock to threads running on the same node. This issue
+>> will be addressed later in the series.
+>>=20
+>> Enabling CNA is controlled via a new configuration option
+>> (NUMA_AWARE_SPINLOCKS). By default, the CNA variant is patched in at =
+the
+>> boot time only if we run on a multi-node machine in native =
+environment and
+>> the new config is enabled. (For the time being, the patching requires
+>> CONFIG_PARAVIRT_SPINLOCKS to be enabled as well. However, this should =
+be
+>> resolved once static_call() is available.) This default behavior can =
+be
+>> overridden with the new kernel boot command-line option
+>> "numa_spinlock=3Don/off" (default is "auto").
+>>=20
+>> Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
+>> Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
+>> ---
+>> .../admin-guide/kernel-parameters.txt         |  10 +
+>> arch/x86/Kconfig                              |  20 ++
+>> arch/x86/include/asm/qspinlock.h              |   4 +
+>> arch/x86/kernel/alternative.c                 |  43 +++
+>> kernel/locking/mcs_spinlock.h                 |   2 +-
+>> kernel/locking/qspinlock.c                    |  34 ++-
+>> kernel/locking/qspinlock_cna.h                | 264 =
+++++++++++++++++++
+>> 7 files changed, 372 insertions(+), 5 deletions(-)
+>> create mode 100644 kernel/locking/qspinlock_cna.h
+>>=20
+>   :
+>> diff --git a/arch/x86/kernel/alternative.c =
+b/arch/x86/kernel/alternative.c
+>> index 9d3a971ea364..6a4ccbf4e09c 100644
+>> --- a/arch/x86/kernel/alternative.c
+>> +++ b/arch/x86/kernel/alternative.c
+>> @@ -698,6 +698,33 @@ static void __init int3_selftest(void)
+>> 	unregister_die_notifier(&int3_exception_nb);
+>> }
+>>=20
+>> +#if defined(CONFIG_NUMA_AWARE_SPINLOCKS)
+>> +/*
+>> + * Constant (boot-param configurable) flag selecting the NUMA-aware =
+variant
+>> + * of spinlock.  Possible values: -1 (off) / 0 (auto, default) / 1 =
+(on).
+>> + */
+>> +static int numa_spinlock_flag;
+>> +
+>> +static int __init numa_spinlock_setup(char *str)
+>> +{
+>> +	if (!strcmp(str, "auto")) {
+>> +		numa_spinlock_flag =3D 0;
+>> +		return 1;
+>> +	} else if (!strcmp(str, "on")) {
+>> +		numa_spinlock_flag =3D 1;
+>> +		return 1;
+>> +	} else if (!strcmp(str, "off")) {
+>> +		numa_spinlock_flag =3D -1;
+>> +		return 1;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +__setup("numa_spinlock=3D", numa_spinlock_setup);
+>> +
+>> +#endif
+>> +
+>=20
+> This __init function should be in qspinlock_cna.h. We generally like =
+to
+> put as much related code into as few places as possible instead of
+> spreading them around in different places.
+>=20
+>> void __init alternative_instructions(void)
+>> {
+>> 	int3_selftest();
+>> @@ -738,6 +765,22 @@ void __init alternative_instructions(void)
+>> 	}
+>> #endif
+>>=20
+>> +#if defined(CONFIG_NUMA_AWARE_SPINLOCKS)
+>> +	/*
+>> +	 * By default, switch to the NUMA-friendly slow path for
+>> +	 * spinlocks when we have multiple NUMA nodes in native =
+environment.
+>> +	 */
+>> +	if ((numa_spinlock_flag =3D=3D 1) ||
+>> +	    (numa_spinlock_flag =3D=3D 0 && nr_node_ids > 1 &&
+>> +		    pv_ops.lock.queued_spin_lock_slowpath =3D=3D
+>> +			native_queued_spin_lock_slowpath)) {
+>> +		pv_ops.lock.queued_spin_lock_slowpath =3D
+>> +		    __cna_queued_spin_lock_slowpath;
+>> +
+>> +		pr_info("Enabling CNA spinlock\n");
+>> +	}
+>> +#endif
+>> +
+>> 	apply_paravirt(__parainstructions, __parainstructions_end);
+>=20
+> Encapsulate the logic into another __init function in qspinlock_cna.h
+> and just make a function call here. You can declare the function in
+> arch/x86/include/asm/qspinlock.h.
+>=20
+>=20
+>>=20
+>> 	restart_nmi();
+>> diff --git a/kernel/locking/mcs_spinlock.h =
+b/kernel/locking/mcs_spinlock.h
+>> index 52d06ec6f525..e40b9538b79f 100644
+>> --- a/kernel/locking/mcs_spinlock.h
+>> +++ b/kernel/locking/mcs_spinlock.h
+>> @@ -17,7 +17,7 @@
+>>=20
+>> struct mcs_spinlock {
+>> 	struct mcs_spinlock *next;
+>> -	int locked; /* 1 if lock acquired */
+>> +	unsigned int locked; /* 1 if lock acquired */
+>> 	int count;  /* nesting count, see qspinlock.c */
+>> };
+>>=20
+>> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+>> index c06d1e8075d9..6d8c4a52e44e 100644
+>> --- a/kernel/locking/qspinlock.c
+>> +++ b/kernel/locking/qspinlock.c
+>> @@ -11,7 +11,7 @@
+>>  *          Peter Zijlstra <peterz@infradead.org>
+>>  */
+>>=20
+>> -#ifndef _GEN_PV_LOCK_SLOWPATH
+>> +#if !defined(_GEN_PV_LOCK_SLOWPATH) && =
+!defined(_GEN_CNA_LOCK_SLOWPATH)
+>>=20
+>> #include <linux/smp.h>
+>> #include <linux/bug.h>
+>> @@ -70,7 +70,8 @@
+>> /*
+>>  * On 64-bit architectures, the mcs_spinlock structure will be 16 =
+bytes in
+>>  * size and four of them will fit nicely in one 64-byte cacheline. =
+For
+>> - * pvqspinlock, however, we need more space for extra data. To =
+accommodate
+>> + * pvqspinlock, however, we need more space for extra data. The same =
+also
+>> + * applies for the NUMA-aware variant of spinlocks (CNA). To =
+accommodate
+>>  * that, we insert two more long words to pad it up to 32 bytes. IOW, =
+only
+>>  * two of them can fit in a cacheline in this case. That is OK as it =
+is rare
+>>  * to have more than 2 levels of slowpath nesting in actual use. We =
+don't
+>> @@ -79,7 +80,7 @@
+>>  */
+>> struct qnode {
+>> 	struct mcs_spinlock mcs;
+>> -#ifdef CONFIG_PARAVIRT_SPINLOCKS
+>> +#if defined(CONFIG_PARAVIRT_SPINLOCKS) || =
+defined(CONFIG_NUMA_AWARE_SPINLOCKS)
+>> 	long reserved[2];
+>> #endif
+>> };
+>> @@ -103,6 +104,8 @@ struct qnode {
+>>  * Exactly fits one 64-byte cacheline on a 64-bit architecture.
+>>  *
+>>  * PV doubles the storage and uses the second cacheline for PV state.
+>> + * CNA also doubles the storage and uses the second cacheline for
+>> + * CNA-specific state.
+>>  */
+>> static DEFINE_PER_CPU_ALIGNED(struct qnode, qnodes[MAX_NODES]);
+>>=20
+>> @@ -316,7 +319,7 @@ static __always_inline void =
+__mcs_pass_lock(struct mcs_spinlock *node,
+>> #define try_clear_tail	__try_clear_tail
+>> #define mcs_pass_lock		__mcs_pass_lock
+>>=20
+>> -#endif /* _GEN_PV_LOCK_SLOWPATH */
+>> +#endif /* _GEN_PV_LOCK_SLOWPATH && _GEN_CNA_LOCK_SLOWPATH */
+>>=20
+>> /**
+>>  * queued_spin_lock_slowpath - acquire the queued spinlock
+>> @@ -588,6 +591,29 @@ void queued_spin_lock_slowpath(struct qspinlock =
+*lock, u32 val)
+>> }
+>> EXPORT_SYMBOL(queued_spin_lock_slowpath);
+>>=20
+>> +/*
+>> + * Generate the code for NUMA-aware spinlocks
+>> + */
+>> +#if !defined(_GEN_CNA_LOCK_SLOWPATH) && =
+defined(CONFIG_NUMA_AWARE_SPINLOCKS)
+>> +#define _GEN_CNA_LOCK_SLOWPATH
+>> +
+>> +#undef pv_wait_head_or_lock
+>> +#define pv_wait_head_or_lock		cna_pre_scan
+>> +
+>> +#undef try_clear_tail
+>> +#define try_clear_tail			cna_try_change_tail
+>> +
+>> +#undef mcs_pass_lock
+>> +#define mcs_pass_lock			cna_pass_lock
+>> +
+>> +#undef  queued_spin_lock_slowpath
+>> +#define queued_spin_lock_slowpath	__cna_queued_spin_lock_slowpath
+>> +
+>> +#include "qspinlock_cna.h"
+>> +#include "qspinlock.c"
+>> +
+>> +#endif
+>> +
+>> /*
+>>  * Generate the paravirt code for queued_spin_unlock_slowpath().
+>>  */
+>> diff --git a/kernel/locking/qspinlock_cna.h =
+b/kernel/locking/qspinlock_cna.h
+>> new file mode 100644
+>> index 000000000000..a638336f9560
+>> --- /dev/null
+>> +++ b/kernel/locking/qspinlock_cna.h
+>> @@ -0,0 +1,264 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#ifndef _GEN_CNA_LOCK_SLOWPATH
+>> +#error "do not include this file"
+>> +#endif
+>> +
+>> +#include <linux/topology.h>
+>> +
+>> +/*
+>> + * Implement a NUMA-aware version of MCS (aka CNA, or compact =
+NUMA-aware lock).
+>> + *
+>> + * In CNA, spinning threads are organized in two queues, a main =
+queue for
+>> + * threads running on the same NUMA node as the current lock holder, =
+and a
+>> + * secondary queue for threads running on other nodes. =
+Schematically, it
+>> + * looks like this:
+>> + *
+>> + *    cna_node
+>> + *   +----------+    +--------+        +--------+
+>> + *   |mcs:next  | -> |mcs:next| -> ... |mcs:next| -> NULL      [Main =
+queue]
+>> + *   |mcs:locked| -+ +--------+        +--------+
+>> + *   +----------+  |
+>> + *                 +----------------------+
+>> + *                                        \/
+>> + *                 +--------+         +--------+
+>> + *                 |mcs:next| -> ...  |mcs:next|          [Secondary =
+queue]
+>> + *                 +--------+         +--------+
+>> + *                     ^                    |
+>> + *                     +--------------------+
+>> + *
+>> + * N.B. locked =3D 1 if secondary queue is absent. Othewrise, it =
+contains the
+>> + * encoded pointer to the tail of the secondary queue, which is =
+organized as a
+>> + * circular list.
+>> + *
+>> + * After acquiring the MCS lock and before acquiring the spinlock, =
+the lock
+>> + * holder scans the main queue looking for a thread running on the =
+same node
+>> + * (pre-scan). If found (call it thread T), all threads in the main =
+queue
+>> + * between the current lock holder and T are moved to the end of the =
+secondary
+>> + * queue.  If such T is not found, we make another scan of the main =
+queue when
+>> + * unlocking the MCS lock (post-scan), starting at the node where =
+pre-scan
+>> + * stopped. If both scans fail to find such T, the MCS lock is =
+passed to the
+>> + * first thread in the secondary queue. If the secondary queue is =
+empty, the
+>> + * lock is passed to the next thread in the main queue.
+>> + *
+>> + * For more details, see =
+https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__arxiv.org_abs_1810.=
+05600&d=3DDwIFaQ&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3DHvhk3=
+F4omdCk-GE1PTOm3Kn0A7ApWOZ2aZLTuVxFK4k&m=3DFcJA-hpAHs8MxL3rksMfq_GYsA7RIci=
+HEF3AE4ZATOI&s=3DSR-p0LtEzUCrpwWY2ShRIF9lXod5Wc_NkN9zIOVvfxM&e=3D .
+>> + *
+>> + * Authors: Alex Kogan <alex.kogan@oracle.com>
+>> + *          Dave Dice <dave.dice@oracle.com>
+>> + */
+>> +
+>> +struct cna_node {
+>> +	struct mcs_spinlock	mcs;
+>> +	int			numa_node;
+>> +	u32			encoded_tail;
+>> +	u32			pre_scan_result; /* 0 or encoded tail */
+>> +};
+>> +
+>> +static void __init cna_init_nodes_per_cpu(unsigned int cpu)
+>> +{
+>> +	struct mcs_spinlock *base =3D per_cpu_ptr(&qnodes[0].mcs, cpu);
+>> +	int numa_node =3D cpu_to_node(cpu);
+>> +	int i;
+>> +
+>> +	for (i =3D 0; i < MAX_NODES; i++) {
+>> +		struct cna_node *cn =3D (struct cna_node =
+*)grab_mcs_node(base, i);
+>> +
+>> +		cn->numa_node =3D numa_node;
+>> +		cn->encoded_tail =3D encode_tail(cpu, i);
+>> +		/*
+>> +		 * @encoded_tail has to be larger than 1, so we do not =
+confuse
+>> +		 * it with other valid values for @locked or =
+@pre_scan_result
+>> +		 * (0 or 1)
+>> +		 */
+>> +		WARN_ON(cn->encoded_tail <=3D 1);
+>> +	}
+>> +}
+>> +
+>> +static int __init cna_init_nodes(void)
+>> +{
+>> +	unsigned int cpu;
+>> +
+>> +	/*
+>> +	 * this will break on 32bit architectures, so we restrict
+>> +	 * the use of CNA to 64bit only (see arch/x86/Kconfig)
+>> +	 */
+>> +	BUILD_BUG_ON(sizeof(struct cna_node) > sizeof(struct qnode));
+>> +	/* we store an ecoded tail word in the node's @locked field */
+>> +	BUILD_BUG_ON(sizeof(u32) > sizeof(unsigned int));
+>> +
+>> +	for_each_possible_cpu(cpu)
+>> +		cna_init_nodes_per_cpu(cpu);
+>> +
+>> +	return 0;
+>> +}
+>> +early_initcall(cna_init_nodes);
+>> +
+>=20
+> Include a comment here saying that the cna_try_change_tail() function =
+is
+> only called when the primary queue is empty. That will make the code
+> easier to read.
+>=20
+>=20
+>> +static inline bool cna_try_change_tail(struct qspinlock *lock, u32 =
+val,
+>> +				       struct mcs_spinlock *node)
+>> +{
+>> +	struct mcs_spinlock *head_2nd, *tail_2nd;
+>> +	u32 new;
+>> +
+>> +	/* If the secondary queue is empty, do what MCS does. */
+>> +	if (node->locked <=3D 1)
+>> +		return __try_clear_tail(lock, val, node);
+>> +
+>> +	/*
+>> +	 * Try to update the tail value to the last node in the =
+secondary queue.
+>> +	 * If successful, pass the lock to the first thread in the =
+secondary
+>> +	 * queue. Doing those two actions effectively moves all nodes =
+from the
+>> +	 * secondary queue into the main one.
+>> +	 */
+>> +	tail_2nd =3D decode_tail(node->locked);
+>> +	head_2nd =3D tail_2nd->next;
+>> +	new =3D ((struct cna_node *)tail_2nd)->encoded_tail + =
+_Q_LOCKED_VAL;
+>> +
+>> +	if (atomic_try_cmpxchg_relaxed(&lock->val, &val, new)) {
+>> +		/*
+>> +		 * Try to reset @next in tail_2nd to NULL, but no need =
+to check
+>> +		 * the result - if failed, a new successor has updated =
+it.
+>> +		 */
+>> +		cmpxchg_relaxed(&tail_2nd->next, head_2nd, NULL);
+>> +		arch_mcs_pass_lock(&head_2nd->locked, 1);
+>> +		return true;
+>> +	}
+>> +
+>> +	return false;
+>> +}
+> Cheers,
+> Longman
+>=20
 
-							Thanx, Paul
-
-> Thanks,
-> SeongJae Park
-> 
-> >
-> >                                                         Thanx, Paul
-> >
-> > > Thanks,
-> > > SeongJae Park
-> > >
-> > >
-> > > [1] https://lore.kernel.org/lkml/20191108170120.22331-10-will@kernel.org/
-> > > [2] https://lore.kernel.org/linux-doc/20191121234125.28032-1-sj38.park@gmail.com/
-> > >
-> > > >
-> > > >                                                         Thanx, Paul
-> > > >
-> > > > > Thanks,
-> > > > > SeongJae Park
-> > > > >
-> > > > > >
-> > > > > > --------------------------------- >8 -----------------------------------------
-> > > > > >
-> > > > > > This commit translates commit 8088616d4ca6 ("Documentation/barriers:
-> > > > > > Remove references to [smp_]read_barrier_depends()") of Will's tree[1]
-> > > > > > into Korean.
-> > > > > >
-> > > > > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/commit/Documentation/memory-barriers.txt?h=lto&id=8088616d4ca61cd6b770225f30fec66c6f6767fb
-> > > > > >
-> > > > > > Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> > > > > > Reviewed-by: Yunjae Lee <lyj7694@gmail.com>
-> > > > > >
-> > > > > > ---
-> > > > > >  .../translations/ko_KR/memory-barriers.txt    | 146 +-----------------
-> > > > > >  1 file changed, 3 insertions(+), 143 deletions(-)
-> > > > > >
-> > > > > > diff --git a/Documentation/translations/ko_KR/memory-barriers.txt b/Documentation/translations/ko_KR/memory-barriers.txt
-> > > > > > index f07c40a068b5..a8d26df9360b 100644
-> > > > > > --- a/Documentation/translations/ko_KR/memory-barriers.txt
-> > > > > > +++ b/Documentation/translations/ko_KR/memory-barriers.txt
-> > > > > > @@ -577,7 +577,7 @@ ACQUIRE 는 해당 오퍼레이션의 로드 부분에만 적용되고 RELEASE
-> > > > > >  데이터 의존성 배리어 (역사적)
-> > > > > >  -----------------------------
-> > > > > >
-> > > > > > -리눅스 커널 v4.15 기준으로, smp_read_barrier_depends() 가 READ_ONCE() 에
-> > > > > > +리눅스 커널 v4.15 기준으로, smp_mb() 가 DEC Alpha 용 READ_ONCE() 코드에
-> > > > > >  추가되었는데, 이는 이 섹션에 주의를 기울여야 하는 사람들은 DEC Alpha 아키텍쳐
-> > > > > >  전용 코드를 만드는 사람들과 READ_ONCE() 자체를 만드는 사람들 뿐임을 의미합니다.
-> > > > > >  그런 분들을 위해, 그리고 역사에 관심 있는 분들을 위해, 여기 데이터 의존성
-> > > > > > @@ -2661,144 +2661,6 @@ CPU 코어는 프로그램의 인과성이 유지된다고만 여겨진다면
-> > > > > >  수도 있습니다.
-> > > > > >
-> > > > > >
-> > > > > > -캐시 일관성
-> > > > > > ------------
-> > > > > > -
-> > > > > > -하지만 삶은 앞에서 이야기한 것처럼 단순하지 않습니다: 캐시들은 일관적일 것으로
-> > > > > > -기대되지만, 그 일관성이 순서에도 적용될 거라는 보장은 없습니다.  한 CPU 에서
-> > > > > > -만들어진 변경 사항은 최종적으로는 시스템의 모든 CPU 에게 보여지게 되지만, 다른
-> > > > > > -CPU 들에게도 같은 순서로 보이게 될 거라는 보장은 없다는 뜻입니다.
-> > > > > > -
-> > > > > > -
-> > > > > > -두개의 CPU (1 & 2) 가 달려 있고, 각 CPU 에 두개의 데이터 캐시(CPU 1 은 A/B 를,
-> > > > > > -CPU 2 는 C/D 를 갖습니다)가 병렬로 연결되어 있는 시스템을 다룬다고 생각해
-> > > > > > -봅시다:
-> > > > > > -
-> > > > > > -                   :
-> > > > > > -                   :                          +--------+
-> > > > > > -                   :      +---------+         |        |
-> > > > > > -       +--------+  : +--->| Cache A |<------->|        |
-> > > > > > -       |        |  : |    +---------+         |        |
-> > > > > > -       |  CPU 1 |<---+                        |        |
-> > > > > > -       |        |  : |    +---------+         |        |
-> > > > > > -       +--------+  : +--->| Cache B |<------->|        |
-> > > > > > -                   :      +---------+         |        |
-> > > > > > -                   :                          | Memory |
-> > > > > > -                   :      +---------+         | System |
-> > > > > > -       +--------+  : +--->| Cache C |<------->|        |
-> > > > > > -       |        |  : |    +---------+         |        |
-> > > > > > -       |  CPU 2 |<---+                        |        |
-> > > > > > -       |        |  : |    +---------+         |        |
-> > > > > > -       +--------+  : +--->| Cache D |<------->|        |
-> > > > > > -                   :      +---------+         |        |
-> > > > > > -                   :                          +--------+
-> > > > > > -                   :
-> > > > > > -
-> > > > > > -이 시스템이 다음과 같은 특성을 갖는다 생각해 봅시다:
-> > > > > > -
-> > > > > > - (*) 홀수번 캐시라인은 캐시 A, 캐시 C 또는 메모리에 위치할 수 있음;
-> > > > > > -
-> > > > > > - (*) 짝수번 캐시라인은 캐시 B, 캐시 D 또는 메모리에 위치할 수 있음;
-> > > > > > -
-> > > > > > - (*) CPU 코어가 한개의 캐시에 접근하는 동안, 다른 캐시는 - 더티 캐시라인을
-> > > > > > -     메모리에 내리거나 추측성 로드를 하거나 하기 위해 - 시스템의 다른 부분에
-> > > > > > -     액세스 하기 위해 버스를 사용할 수 있음;
-> > > > > > -
-> > > > > > - (*) 각 캐시는 시스템의 나머지 부분들과 일관성을 맞추기 위해 해당 캐시에
-> > > > > > -     적용되어야 할 오퍼레이션들의 큐를 가짐;
-> > > > > > -
-> > > > > > - (*) 이 일관성 큐는 캐시에 이미 존재하는 라인에 가해지는 평범한 로드에 의해서는
-> > > > > > -     비워지지 않는데, 큐의 오퍼레이션들이 이 로드의 결과에 영향을 끼칠 수 있다
-> > > > > > -     할지라도 그러함.
-> > > > > > -
-> > > > > > -이제, 첫번째 CPU 에서 두개의 쓰기 오퍼레이션을 만드는데, 해당 CPU 의 캐시에
-> > > > > > -요청된 순서로 오퍼레이션이 도달됨을 보장하기 위해 두 오퍼레이션 사이에 쓰기
-> > > > > > -배리어를 사용하는 상황을 상상해 봅시다:
-> > > > > > -
-> > > > > > -       CPU 1           CPU 2           COMMENT
-> > > > > > -       =============== =============== =======================================
-> > > > > > -                                       u == 0, v == 1 and p == &u, q == &u
-> > > > > > -       v = 2;
-> > > > > > -       smp_wmb();                      v 의 변경이 p 의 변경 전에 보일 것을
-> > > > > > -                                        분명히 함
-> > > > > > -       <A:modify v=2>                  v 는 이제 캐시 A 에 독점적으로 존재함
-> > > > > > -       p = &v;
-> > > > > > -       <B:modify p=&v>                 p 는 이제 캐시 B 에 독점적으로 존재함
-> > > > > > -
-> > > > > > -여기서의 쓰기 메모리 배리어는 CPU 1 의 캐시가 올바른 순서로 업데이트 된 것으로
-> > > > > > -시스템의 다른 CPU 들이 인지하게 만듭니다.  하지만, 이제 두번째 CPU 가 그 값들을
-> > > > > > -읽으려 하는 상황을 생각해 봅시다:
-> > > > > > -
-> > > > > > -       CPU 1           CPU 2           COMMENT
-> > > > > > -       =============== =============== =======================================
-> > > > > > -       ...
-> > > > > > -                       q = p;
-> > > > > > -                       x = *q;
-> > > > > > -
-> > > > > > -위의 두개의 읽기 오퍼레이션은 예상된 순서로 일어나지 못할 수 있는데, 두번째 CPU
-> > > > > > -의 한 캐시에 다른 캐시 이벤트가 발생해 v 를 담고 있는 캐시라인의 해당 캐시에의
-> > > > > > -업데이트가 지연되는 사이, p 를 담고 있는 캐시라인은 두번째 CPU 의 다른 캐시에
-> > > > > > -업데이트 되어버렸을 수 있기 때문입니다.
-> > > > > > -
-> > > > > > -       CPU 1           CPU 2           COMMENT
-> > > > > > -       =============== =============== =======================================
-> > > > > > -                                       u == 0, v == 1 and p == &u, q == &u
-> > > > > > -       v = 2;
-> > > > > > -       smp_wmb();
-> > > > > > -       <A:modify v=2>  <C:busy>
-> > > > > > -                       <C:queue v=2>
-> > > > > > -       p = &v;         q = p;
-> > > > > > -                       <D:request p>
-> > > > > > -       <B:modify p=&v> <D:commit p=&v>
-> > > > > > -                       <D:read p>
-> > > > > > -                       x = *q;
-> > > > > > -                       <C:read *q>     캐시에 업데이트 되기 전의 v 를 읽음
-> > > > > > -                       <C:unbusy>
-> > > > > > -                       <C:commit v=2>
-> > > > > > -
-> > > > > > -기본적으로, 두개의 캐시라인 모두 CPU 2 에 최종적으로는 업데이트 될 것이지만,
-> > > > > > -별도의 개입 없이는, 업데이트의 순서가 CPU 1 에서 만들어진 순서와 동일할
-> > > > > > -것이라는 보장이 없습니다.
-> > > > > > -
-> > > > > > -
-> > > > > > -여기에 개입하기 위해선, 데이터 의존성 배리어나 읽기 배리어를 로드 오퍼레이션들
-> > > > > > -사이에 넣어야 합니다 (v4.15 부터는 READ_ONCE() 매크로에 의해 무조건적으로
-> > > > > > -그렇게 됩니다).  이렇게 함으로써 캐시가 다음 요청을 처리하기 전에 일관성 큐를
-> > > > > > -처리하도록 강제하게 됩니다.
-> > > > > > -
-> > > > > > -       CPU 1           CPU 2           COMMENT
-> > > > > > -       =============== =============== =======================================
-> > > > > > -                                       u == 0, v == 1 and p == &u, q == &u
-> > > > > > -       v = 2;
-> > > > > > -       smp_wmb();
-> > > > > > -       <A:modify v=2>  <C:busy>
-> > > > > > -                       <C:queue v=2>
-> > > > > > -       p = &v;         q = p;
-> > > > > > -                       <D:request p>
-> > > > > > -       <B:modify p=&v> <D:commit p=&v>
-> > > > > > -                       <D:read p>
-> > > > > > -                       smp_read_barrier_depends()
-> > > > > > -                       <C:unbusy>
-> > > > > > -                       <C:commit v=2>
-> > > > > > -                       x = *q;
-> > > > > > -                       <C:read *q>     캐시에 업데이트 된 v 를 읽음
-> > > > > > -
-> > > > > > -
-> > > > > > -이런 부류의 문제는 DEC Alpha 계열 프로세서들에서 발견될 수 있는데, 이들은
-> > > > > > -데이터 버스를 좀 더 잘 사용해 성능을 개선할 수 있는, 분할된 캐시를 가지고 있기
-> > > > > > -때문입니다.  대부분의 CPU 는 하나의 읽기 오퍼레이션의 메모리 액세스가 다른 읽기
-> > > > > > -오퍼레이션에 의존적이라면 데이터 의존성 배리어를 내포시킵니다만, 모두가 그런건
-> > > > > > -아니기 때문에 이점에 의존해선 안됩니다.
-> > > > > > -
-> > > > > > -다른 CPU 들도 분할된 캐시를 가지고 있을 수 있지만, 그런 CPU 들은 평범한 메모리
-> > > > > > -액세스를 위해서도 이 분할된 캐시들 사이의 조정을 해야만 합니다.  Alpha 는 가장
-> > > > > > -약한 메모리 순서 시맨틱 (semantic) 을 선택함으로써 메모리 배리어가 명시적으로
-> > > > > > -사용되지 않았을 때에는 그런 조정이 필요하지 않게 했으며, 이는 Alpha 가 당시에
-> > > > > > -더 높은 CPU 클락 속도를 가질 수 있게 했습니다.  하지만, (다시 말하건대, v4.15
-> > > > > > -이후부터는) Alpha 아키텍쳐 전용 코드와 READ_ONCE() 매크로 내부에서를 제외하고는
-> > > > > > -smp_read_barrier_depends() 가 사용되지 않아야 함을 알아두시기 바랍니다.
-> > > > > > -
-> > > > > > -
-> > > > > >  캐시 일관성 VS DMA
-> > > > > >  ------------------
-> > > > > >
-> > > > > > @@ -2959,10 +2821,8 @@ Alpha CPU 의 일부 버전은 분할된 데이터 캐시를 가지고 있어서
-> > > > > >  데이터의 발견을 올바른 순서로 일어나게 하기 때문입니다.
-> > > > > >
-> > > > > >  리눅스 커널의 메모리 배리어 모델은 Alpha 에 기초해서 정의되었습니다만, v4.15
-> > > > > > -부터는 리눅스 커널이 READ_ONCE() 내에 smp_read_barrier_depends() 를 추가해서
-> > > > > > -Alpha 의 메모리 모델로의 영향력이 크게 줄어들긴 했습니다.
-> > > > > > -
-> > > > > > -위의 "캐시 일관성" 서브섹션을 참고하세요.
-> > > > > > +부터는 Alpha 용 READ_ONCE() 코드 내에 smp_mb() 가 추가되어서 메모리 모델로의
-> > > > > > +Alpha 의 영향력이 크게 줄어들었습니다.
-> > > > > >
-> > > > > >
-> > > > > >  가상 머신 게스트
-> > > > > > --
-> > > > > > 2.17.2
-> > > > > >
