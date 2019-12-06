@@ -2,229 +2,83 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647FFC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4EBC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BFC020659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AFFF24659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfLFQdp (ORCPT
+        id S1726814AbfLFQeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:33:45 -0500
-Received: from relmlor1.renesas.com ([210.160.252.171]:21444 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726258AbfLFQdp (ORCPT
+        Fri, 6 Dec 2019 11:34:02 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:49367 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbfLFQeC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:33:45 -0500
-X-IronPort-AV: E=Sophos;i="5.69,285,1571670000"; 
-   d="scan'208";a="33693129"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 07 Dec 2019 01:33:43 +0900
-Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 42A6F400D4D7;
-        Sat,  7 Dec 2019 01:33:38 +0900 (JST)
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        ebiharaml@si-linux.co.jp
-Subject: [PATCH v4 7/7] arm64: dts: renesas: Add EK874 board with idk-2121wr display support
-Date:   Fri,  6 Dec 2019 16:32:54 +0000
-Message-Id: <1575649974-31472-8-git-send-email-fabrizio.castro@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575649974-31472-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1575649974-31472-1-git-send-email-fabrizio.castro@bp.renesas.com>
+        Fri, 6 Dec 2019 11:34:02 -0500
+Received: by mail-il1-f197.google.com with SMTP id t13so5630593ilk.16
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 08:34:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=eN4yK+b1Bwvylv7Nm0VpeOFgnJkXHsh0eveEUiwrQH8=;
+        b=iySw4DAAmH4AW5SW3HFPi8KufYsC6kbtKEJtBfu212yEJA7EkRgfbKFusXVdIsm7za
+         SPUW9wEUSpwq+t0bAnvlTepTaR1wXpxDc7oqG1H2HP8gu0MZkX8XXXutrIH3d1x/PVdO
+         JCdKVUGqDTnFxzOd0dJ9GJ6nVeJgkLVrs9Z8iOyUuYqQ3ylVDi+Ao4XoGmgU9E6qDcvA
+         Lvjgi/hv28VZ18y3eqmxr33IV8+sKj2+Tszq52FsZC73PO/qOel2SdtPNkdNHZGDqn2x
+         UZfjewyRF7NuunD2eUoz47gvoZk8BZfN2bEjKniHjPFQrKpyuT//0ekszg/wdvX+vsXu
+         lvDw==
+X-Gm-Message-State: APjAAAWC9oDVNXzzKwvCMPraJKyo1aYgV9vDK3BTJKpdBOHLz2p85A0C
+        X/FO0O9PVlncR+6tWHFUucnMUkipMeT/lBOR9/vF35TsaicK
+X-Google-Smtp-Source: APXvYqzZYpNyvisihbt8EN3KnLhQ+QrZm3JeQEpbdA8h9nBmjE1AdDXOmVmenOawWmDOfOfWECCiqsoRsetDdfRKflEyZvm4mUC+
+MIME-Version: 1.0
+X-Received: by 2002:a92:4891:: with SMTP id j17mr14417440ilg.33.1575650041118;
+ Fri, 06 Dec 2019 08:34:01 -0800 (PST)
+Date:   Fri, 06 Dec 2019 08:34:01 -0800
+In-Reply-To: <000000000000e1d639059908223b@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fdd04105990b9c93@google.com>
+Subject: Re: KASAN: use-after-free Read in soft_cursor
+From:   syzbot <syzbot+cf43fb300aa142fb024b@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, coreteam@netfilter.org,
+        davem@davemloft.net, dri-devel@lists.freedesktop.org,
+        gwshan@linux.vnet.ibm.com, kaber@trash.net,
+        kadlec@blackhole.kfki.hu, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mpe@ellerman.id.au,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, ruscur@russell.cc, stewart@linux.vnet.ibm.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EK874 is advertised as compatible with panel IDK-2121WR from
-Advantech, however the panel isn't sold alongside the board.
-A new dts, adding everything that's required to get the panel to
-to work with the EK874, is the most convenient way to support the
-EK874 when it's connected to the IDK-2121WR.
+syzbot has bisected this bug to:
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+commit 2de50e9674fc4ca3c6174b04477f69eb26b4ee31
+Author: Russell Currey <ruscur@russell.cc>
+Date:   Mon Feb 8 04:08:20 2016 +0000
 
----
-v3->v4:
-* no change
+     powerpc/powernv: Remove support for p5ioc2
 
-v2->v3:
-* removed renesas,swap-data property
-* added dual-lvds-odd-pixels and dual-lvds-even-pixels properties
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1512d1bce00000
+start commit:   b0d4beaa Merge branch 'next.autofs' of git://git.kernel.or..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1712d1bce00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1312d1bce00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f07a23020fd7d21a
+dashboard link: https://syzkaller.appspot.com/bug?extid=cf43fb300aa142fb024b
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1745a90ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1361042ae00000
 
-v1->v2:
-* Added comment for lvds-connector-en-gpio
-* Renamed &lvds0_panel_in to panel_in0
-* Renamed &lvds1_panel_in to panel_in1
----
- arch/arm64/boot/dts/renesas/Makefile               |   3 +-
- .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 116 +++++++++++++++++++++
- 2 files changed, 118 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+Reported-by: syzbot+cf43fb300aa142fb024b@syzkaller.appspotmail.com
+Fixes: 2de50e9674fc ("powerpc/powernv: Remove support for p5ioc2")
 
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index 8fdbd22..2635799 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -3,7 +3,8 @@ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m.dtb
- dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
--dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb
-+dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
-+			       r8a774c0-ek874-idk-2121wr.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-h3ulcb-kf.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-xs.dtb
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
-new file mode 100644
-index 0000000..a7b27d0
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
-@@ -0,0 +1,116 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the Silicon Linux RZ/G2E evaluation kit (EK874),
-+ * connected to an Advantech IDK-2121WR 21.5" LVDS panel
-+ *
-+ * Copyright (C) 2019 Renesas Electronics Corp.
-+ */
-+
-+#include "r8a774c0-ek874.dts"
-+
-+/ {
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm5 0 50000>;
-+
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+
-+		power-supply = <&reg_12p0v>;
-+		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	panel-lvds {
-+		compatible = "advantech,idk-2121wr", "panel-lvds";
-+
-+		width-mm = <476>;
-+		height-mm = <268>;
-+
-+		data-mapping = "vesa-24";
-+
-+		panel-timing {
-+			clock-frequency = <148500000>;
-+			hactive = <1920>;
-+			vactive = <1080>;
-+			hsync-len = <44>;
-+			hfront-porch = <88>;
-+			hback-porch = <148>;
-+			vfront-porch = <4>;
-+			vback-porch = <36>;
-+			vsync-len = <5>;
-+		};
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				dual-lvds-odd-pixels;
-+				panel_in0: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				dual-lvds-even-pixels;
-+				panel_in1: endpoint {
-+					remote-endpoint = <&lvds1_out>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&gpio0 {
-+	/*
-+	 * When GP0_17 is low LVDS[01] are connected to the LVDS connector
-+	 * When GP0_17 is high LVDS[01] are connected to the LT8918L
-+	 */
-+	lvds-connector-en-gpio{
-+		gpio-hog;
-+		gpios = <17 GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "lvds-connector-en-gpio";
-+	};
-+};
-+
-+&lvds0 {
-+	ports {
-+		port@1 {
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&panel_in0>;
-+			};
-+		};
-+	};
-+};
-+
-+&lvds1 {
-+	status = "okay";
-+
-+	clocks = <&cpg CPG_MOD 727>, <&x13_clk>, <&extal_clk>;
-+	clock-names = "fck", "dclkin.0", "extal";
-+
-+	ports {
-+		port@1 {
-+			lvds1_out: endpoint {
-+				remote-endpoint = <&panel_in1>;
-+			};
-+		};
-+	};
-+};
-+
-+&pfc {
-+	pwm5_pins: pwm5 {
-+		groups = "pwm5_a";
-+		function = "pwm5";
-+	};
-+};
-+
-+&pwm5 {
-+	pinctrl-0 = <&pwm5_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
--- 
-2.7.4
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
