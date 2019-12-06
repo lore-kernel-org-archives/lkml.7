@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B001FC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D3AC2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901C72464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B44252053B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfLFX5i (ORCPT
+        id S1726659AbfLFX5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 18:57:38 -0500
+        Fri, 6 Dec 2019 18:57:43 -0500
 Received: from mga07.intel.com ([134.134.136.100]:55585 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbfLFX5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 18:57:37 -0500
+        id S1726538AbfLFX5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 18:57:39 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Dec 2019 15:57:35 -0800
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Dec 2019 15:57:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,286,1571727600"; 
-   d="scan'208";a="219530326"
+   d="scan'208";a="219530346"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 06 Dec 2019 15:57:35 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 06 Dec 2019 15:57:37 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
@@ -37,9 +37,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 02/16] KVM: x86/mmu: Move definition of make_mmu_pages_available() up
-Date:   Fri,  6 Dec 2019 15:57:15 -0800
-Message-Id: <20191206235729.29263-3-sean.j.christopherson@intel.com>
+Subject: [PATCH 08/16] KVM: x86/mmu: Incorporate guest's page level into max level for shadow MMU
+Date:   Fri,  6 Dec 2019 15:57:21 -0800
+Message-Id: <20191206235729.29263-9-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191206235729.29263-1-sean.j.christopherson@intel.com>
 References: <20191206235729.29263-1-sean.j.christopherson@intel.com>
@@ -50,82 +50,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move make_mmu_pages_available() above its first user to put it closer
-to related code and eliminate a forward declaration.
+Restrict the max level for a shadow page based on the guest's level
+instead of capping the level after the fact for host-mapped huge pages,
+e.g. hugetlbfs pages.  Explicitly capping the max level using the guest
+mapping level also eliminates FNAME(page_fault)'s subtle dependency on
+THP only supporting 2mb pages.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 41 ++++++++++++++++++++---------------------
- 1 file changed, 20 insertions(+), 21 deletions(-)
+ arch/x86/kvm/mmu/paging_tmpl.h | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 3977c2b7e8e5..e2792305ce32 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -2899,6 +2899,26 @@ static bool prepare_zap_oldest_mmu_page(struct kvm *kvm,
- 	return kvm_mmu_prepare_zap_page(kvm, sp, invalid_list);
- }
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 1938a6e4e631..7d57ec576df0 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -773,7 +773,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
+ 	struct guest_walker walker;
+ 	int r;
+ 	kvm_pfn_t pfn;
+-	int level = PT_PAGE_TABLE_LEVEL;
++	int level;
+ 	unsigned long mmu_seq;
+ 	bool map_writable, is_self_change_mapping;
+ 	bool lpage_disallowed = (error_code & PFERR_FETCH_MASK) &&
+@@ -818,18 +818,14 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
+ 	is_self_change_mapping = FNAME(is_self_change_mapping)(vcpu,
+ 	      &walker, user_fault, &vcpu->arch.write_fault_to_shadow_pgtable);
  
-+static int make_mmu_pages_available(struct kvm_vcpu *vcpu)
-+{
-+	LIST_HEAD(invalid_list);
-+
-+	if (likely(kvm_mmu_available_pages(vcpu->kvm) >= KVM_MIN_FREE_MMU_PAGES))
-+		return 0;
-+
-+	while (kvm_mmu_available_pages(vcpu->kvm) < KVM_REFILL_PAGES) {
-+		if (!prepare_zap_oldest_mmu_page(vcpu->kvm, &invalid_list))
-+			break;
-+
-+		++vcpu->kvm->stat.mmu_recycled;
-+	}
-+	kvm_mmu_commit_zap_page(vcpu->kvm, &invalid_list);
-+
-+	if (!kvm_mmu_available_pages(vcpu->kvm))
-+		return -ENOSPC;
-+	return 0;
-+}
-+
- /*
-  * Changing the number of mmu pages allocated to the vm
-  * Note: if goal_nr_mmu_pages is too small, you will get dead lock
-@@ -3636,7 +3656,6 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, int level,
- static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
- 			 gpa_t cr2_or_gpa, kvm_pfn_t *pfn, bool write,
- 			 bool *writable);
--static int make_mmu_pages_available(struct kvm_vcpu *vcpu);
- 
- static int nonpaging_map(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
- 			 gfn_t gfn, bool prefault)
-@@ -5507,26 +5526,6 @@ int kvm_mmu_unprotect_page_virt(struct kvm_vcpu *vcpu, gva_t gva)
- }
- EXPORT_SYMBOL_GPL(kvm_mmu_unprotect_page_virt);
- 
--static int make_mmu_pages_available(struct kvm_vcpu *vcpu)
--{
--	LIST_HEAD(invalid_list);
+-	max_level = lpage_disallowed ? PT_PAGE_TABLE_LEVEL :
+-				       PT_MAX_HUGEPAGE_LEVEL;
 -
--	if (likely(kvm_mmu_available_pages(vcpu->kvm) >= KVM_MIN_FREE_MMU_PAGES))
--		return 0;
--
--	while (kvm_mmu_available_pages(vcpu->kvm) < KVM_REFILL_PAGES) {
--		if (!prepare_zap_oldest_mmu_page(vcpu->kvm, &invalid_list))
--			break;
--
--		++vcpu->kvm->stat.mmu_recycled;
+-	if (walker.level >= PT_DIRECTORY_LEVEL && !is_self_change_mapping) {
+-		level = mapping_level(vcpu, walker.gfn, &max_level);
+-		if (likely(max_level > PT_DIRECTORY_LEVEL)) {
+-			level = min(walker.level, level);
+-			walker.gfn = walker.gfn & ~(KVM_PAGES_PER_HPAGE(level) - 1);
+-		}
+-	} else {
++	if (lpage_disallowed || is_self_change_mapping)
+ 		max_level = PT_PAGE_TABLE_LEVEL;
 -	}
--	kvm_mmu_commit_zap_page(vcpu->kvm, &invalid_list);
--
--	if (!kvm_mmu_available_pages(vcpu->kvm))
--		return -ENOSPC;
--	return 0;
--}
--
- int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
- 		       void *insn, int insn_len)
- {
++	else
++		max_level = walker.level;
++
++	level = mapping_level(vcpu, walker.gfn, &max_level);
++	if (level > PT_PAGE_TABLE_LEVEL)
++		walker.gfn = walker.gfn & ~(KVM_PAGES_PER_HPAGE(level) - 1);
+ 
+ 	mmu_seq = vcpu->kvm->mmu_notifier_seq;
+ 	smp_rmb();
 -- 
 2.24.0
 
