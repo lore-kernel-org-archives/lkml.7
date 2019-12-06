@@ -2,151 +2,139 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F449C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EB1C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4644021835
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:49:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575636540;
-	bh=RcAid3Q85jwRgv30uwm5l3b6o2yOnXW3SLXq6APNSfk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KfohbNmHdALSu+6q84XAbNty16ChEbWwvYpf4KOZDed3VTijEjCdmucuWjusoWhlL
-	 AziEAL/5qNTkVp+2SzpXbBbuHR++jdeDJdDGX3MqLT2U+yPV+/tGv0lfgOq02Zw14k
-	 YGD4PVI4Vlh9+hl8LWvILNTN7vcSXltafWWaMQVE=
+	by mail.kernel.org (Postfix) with ESMTP id 6E5E0205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:51:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="X9D+TJ1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfLFMs7 (ORCPT
+        id S1726246AbfLFMv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:48:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbfLFMs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:48:59 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6665205F4;
-        Fri,  6 Dec 2019 12:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575636538;
-        bh=RcAid3Q85jwRgv30uwm5l3b6o2yOnXW3SLXq6APNSfk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mq6KZ0gLrxaZO23IUL/dIcoNXVplyKO2N1F/AmlUgbvXsbymiL7rtfoxlvtt6CkB9
-         hxPxNmzW0R4BOePNeBwnH3okTWl8xlBcu2bF4WG+RH4rBWLBRISiqp3jRAN6bIVbxQ
-         6W4/DcMJ9YNECSVgkaECzhfCgTzccVdw5YVVfBZE=
-Date:   Fri, 6 Dec 2019 13:48:55 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc:     mpe@ellerman.id.au, mahesh@linux.vnet.ibm.com,
-        hbathini@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@ozlabs.org, corbet@lwn.net, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 6/6] powerpc/fadump: sysfs for fadump memory
- reservation
-Message-ID: <20191206124855.GE1360047@kroah.com>
-References: <20191206122434.29587-1-sourabhjain@linux.ibm.com>
- <20191206122434.29587-7-sourabhjain@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206122434.29587-7-sourabhjain@linux.ibm.com>
+        Fri, 6 Dec 2019 07:51:26 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:59249 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfLFMvZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 07:51:25 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191206125124euoutp014e35b46a47203565241e02b878937f16~dyTdl7kra2068520685euoutp01q
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Dec 2019 12:51:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191206125124euoutp014e35b46a47203565241e02b878937f16~dyTdl7kra2068520685euoutp01q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575636684;
+        bh=wF1Iy7VsoT2dA4yuiPpiriyC0w9NhNDxY4A8+kILiJk=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=X9D+TJ1jpuWYWlNh0VcSUHOxpmchQi+awZxcGlzfUNxITsJrm+8goXrkw+qkfwNoK
+         N5IN9G8dfyyz+7r4bJAu6PzBaIjdGiraQ4BNGSU5kmBYiMb1lWjrnx+vzJ1KW2q4oY
+         vOMUrEKjImTLJkH/78ZmTuwVi8PLG/AbOFmRDwcQ=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191206125124eucas1p1d7f4a644ba4feea13d90848c6bad9607~dyTdO4M7b3207632076eucas1p1i;
+        Fri,  6 Dec 2019 12:51:24 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 31.D7.60679.BCE4AED5; Fri,  6
+        Dec 2019 12:51:23 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191206125123eucas1p1c1652484cbccef8d8df37e09affe4e25~dyTc0k1df1825518255eucas1p1d;
+        Fri,  6 Dec 2019 12:51:23 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191206125123eusmtrp2ffb17d3f3f0243921fd4239724b33edf~dyTcz7C4Y0189301893eusmtrp2I;
+        Fri,  6 Dec 2019 12:51:23 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-1f-5dea4ecbcf79
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id D4.D6.08375.BCE4AED5; Fri,  6
+        Dec 2019 12:51:23 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191206125123eusmtip2070f004f9a6e9b6c4ef2024ffd34fe94~dyTcVHUsz0588405884eusmtip2K;
+        Fri,  6 Dec 2019 12:51:23 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        Kusanagi Kouichi <slash@ac.auone-net.jp>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH] arm: multi_v7_config: Restore debugfs support
+Date:   Fri,  6 Dec 2019 13:51:12 +0100
+Message-Id: <20191206125112.11006-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphleLIzCtJLcpLzFFi42LZduznOd3Tfq9iDeZ9Mbf4O+kYu8XGGetZ
+        Lc6f38BusenxNVaLy7vmsFnMOL+PyWLtkbvsFqeuf2az2NfxgMni+auzzA5cHisW7WX3+P1r
+        EqNHy75b7B6bVnWyeWxeUu9x5UQTq0ffllWMHp83yQVwRHHZpKTmZJalFunbJXBlHPj1h7Hg
+        PEdF356rbA2Me9m7GDk5JARMJGbf2sTSxcjFISSwglHiztJrjBDOF0aJ6ZPvsIFUCQl8ZpQ4
+        d8kWpmNrz1QmiKLljBK/+r+xw3Us7rrPDFLFJmAo0fW2C6xbRCBbovPxA7CxzAKLmCT+LNwH
+        tlxYwE6i8cJaoAYODhYBVYklbypBwrwCthITT81hgtgmL7F6wwFmkF4JgWZ2ieM7/kIlXCSO
+        dE5jhrCFJV4d3wL1kIzE/53zmaAaGCUenlvLDuH0MEpcbprBCFFlLXH4+EVWkM3MApoS63fp
+        Q4QdJd6+aWUDCUsI8EnceCsIEmYGMidtm84MEeaV6GgTgqhWk5h1fB3c2oMXLkGd4yHR2b6M
+        BRJysRJf1m9hn8AoNwth1wJGxlWM4qmlxbnpqcVGeanlesWJucWleel6yfm5mxiBaeT0v+Nf
+        djDu+pN0iFGAg1GJh3fG5xexQqyJZcWVuYcYJTiYlUR40/lexgrxpiRWVqUW5ccXleakFh9i
+        lOZgURLnNV4ElBJITyxJzU5NLUgtgskycXBKNTBO0VhYfyP1mEPbLNncLct7giTZEkqeiscc
+        8D8ZPqN4T+HrXp8vF/5vfKZ6l1e76LPTNN3D7xZPr6swtW9+9SnO4O09/xonwYk2V7WMDK0i
+        GX7pPfG8vGzlhl+LptVtmCazIod79QeuuL/zbutO2v9lq+PmB+1ia379Zchb1mnvf5hhJ2M6
+        1zc5JZbijERDLeai4kQAXjPhyx8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrILMWRmVeSWpSXmKPExsVy+t/xe7qn/V7FGkw8pGjxd9IxdouNM9az
+        Wpw/v4HdYtPja6wWl3fNYbOYcX4fk8XaI3fZLU5d/8xmsa/jAZPF81dnmR24PFYs2svu8fvX
+        JEaPln232D02repk89i8pN7jyokmVo++LasYPT5vkgvgiNKzKcovLUlVyMgvLrFVija0MNIz
+        tLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DLOPDrD2PBeY6Kvj1X2RoY97J3MXJySAiY
+        SGztmcrUxcjFISSwlFGi5egpqISMxMlpDawQtrDEn2tdbBBFnxglVs/9xAaSYBMwlOh6C5Lg
+        4BARyJV4s0wcpIZZYAWTxK1n+8FqhAXsJBovrGUGqWERUJVY8qYSJMwrYCsx8dQcJoj58hKr
+        NxxgnsDIs4CRYRWjSGppcW56brGhXnFibnFpXrpecn7uJkZg8G479nPzDsZLG4MPMQpwMCrx
+        8M74/CJWiDWxrLgy9xCjBAezkghvOt/LWCHelMTKqtSi/Pii0pzU4kOMpkC7JzJLiSbnAyMr
+        ryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QDo0HLzVflKYarshuW
+        uV/Mn+WonvHV3WjJ1PNMpjFhctWBB65ceZBQ+X3R5m0WB6V+e726MbGdn2dWetyCpuObE7W4
+        2J7eOsZz/hxf7KQL1zjZ72efSTweve4rdzu/Jl/84yif4knt4fcun772vePvtvlrb0zbL/Vk
+        0sXZ23PX+yn4TJio4PvYoUmJpTgj0VCLuag4EQD4BPjIdAIAAA==
+X-CMS-MailID: 20191206125123eucas1p1c1652484cbccef8d8df37e09affe4e25
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191206125123eucas1p1c1652484cbccef8d8df37e09affe4e25
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191206125123eucas1p1c1652484cbccef8d8df37e09affe4e25
+References: <CGME20191206125123eucas1p1c1652484cbccef8d8df37e09affe4e25@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 05:54:34PM +0530, Sourabh Jain wrote:
-> Add a sys interface to allow querying the memory reserved by FADump for
-> saving the crash dump.
-> 
-> Also added Documentation/ABI for the new sysfs file.
-> 
-> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> ---
->  Documentation/ABI/testing/sysfs-kernel-fadump    |  7 +++++++
->  Documentation/powerpc/firmware-assisted-dump.rst |  5 +++++
->  arch/powerpc/kernel/fadump.c                     | 15 +++++++++++++++
->  3 files changed, 27 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-fadump b/Documentation/ABI/testing/sysfs-kernel-fadump
-> index 5d988b919e81..8f7a64a81783 100644
-> --- a/Documentation/ABI/testing/sysfs-kernel-fadump
-> +++ b/Documentation/ABI/testing/sysfs-kernel-fadump
-> @@ -31,3 +31,10 @@ Description:	write only
->  		the system is booted to capture the vmcore using FADump.
->  		It is used to release the memory reserved by FADump to
->  		save the crash dump.
-> +
-> +What:		/sys/kernel/fadump/mem_reserved
-> +Date:		Dec 2019
-> +Contact:	linuxppc-dev@lists.ozlabs.org
-> +Description:	read only
-> +		Provide information about the amount of memory reserved by
-> +		FADump to save the crash dump in bytes.
-> diff --git a/Documentation/powerpc/firmware-assisted-dump.rst b/Documentation/powerpc/firmware-assisted-dump.rst
-> index 365c10209ef3..04993eaf3113 100644
-> --- a/Documentation/powerpc/firmware-assisted-dump.rst
-> +++ b/Documentation/powerpc/firmware-assisted-dump.rst
-> @@ -268,6 +268,11 @@ Here is the list of files under kernel sysfs:
->      be handled and vmcore will not be captured. This interface can be
->      easily integrated with kdump service start/stop.
->  
-> + /sys/kernel/fadump/mem_reserved
-> +
-> +   This is used to display the memory reserved by FADump for saving the
-> +   crash dump.
-> +
->   /sys/kernel/fadump_release_mem
->      This file is available only when FADump is active during
->      second kernel. This is used to release the reserved memory
-> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-> index 41a3cda81791..b2af51b7c750 100644
-> --- a/arch/powerpc/kernel/fadump.c
-> +++ b/arch/powerpc/kernel/fadump.c
-> @@ -1357,6 +1357,13 @@ static ssize_t fadump_enabled_show(struct kobject *kobj,
->  	return sprintf(buf, "%d\n", fw_dump.fadump_enabled);
->  }
->  
-> +static ssize_t fadump_mem_reserved_show(struct kobject *kobj,
-> +					struct kobj_attribute *attr,
-> +					char *buf)
-> +{
-> +	return sprintf(buf, "%ld\n", fw_dump.reserve_dump_area_size);
-> +}
-> +
->  static ssize_t fadump_register_show(struct kobject *kobj,
->  					struct kobj_attribute *attr,
->  					char *buf)
-> @@ -1430,6 +1437,10 @@ static struct kobj_attribute enable_attr = __ATTR(enabled,
->  static struct kobj_attribute register_attr = __ATTR(registered,
->  						0644, fadump_register_show,
->  						fadump_register_store);
-> +static struct kobj_attribute mem_reserved_attr = __ATTR(mem_reserved,
-> +						0444, fadump_mem_reserved_show,
-> +						NULL);
+Commit fd7d58f0dbc3 ("ARM: multi_v7_defconfig: renormalize based on recent
+additions") removed explicit enable line for CONFIG_DEBUG_FS, because
+that feature has been selected by other enabled options: CONFIG_TRACING,
+which were enabled by CONFIG_PERF_EVENTS.
 
-__ATTRI_RO()?
+In meantime, commit 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS
+dependency") removed the dependency between CONFIG_DEBUG_FS and
+CONFIG_TRACING, so CONFIG_DEBUG_FS is no longer enabled in default builds.
 
-> +
->  
->  DEFINE_SHOW_ATTRIBUTE(fadump_region);
->  
-> @@ -1464,6 +1475,10 @@ static void fadump_init_files(void)
->  			pr_err("unable to create release_mem sysfs file (%d)\n",
->  			       rc);
->  	}
-> +	rc = sysfs_create_file(fadump_kobj, &mem_reserved_attr.attr);
-> +	if (rc)
-> +		pr_err("unable to create mem_reserved sysfs file (%d)\n",
-> +		       rc);
+Enable it again explicitly, as debugfs support is essential for various
+automated testing tools.
 
-Again, put it in an attribute group, that would have only required one
-line, and not this mess of not cleaning up if something went wrong.
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-thanks,
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 24962d0e71c7..0ffa957f2c94 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -1121,3 +1121,4 @@ CONFIG_CRYPTO_DEV_ROCKCHIP=m
+ CONFIG_CMA_SIZE_MBYTES=64
+ CONFIG_PRINTK_TIME=y
+ CONFIG_MAGIC_SYSRQ=y
++CONFIG_DEBUG_FS=y
+-- 
+2.17.1
 
-greg k-h
