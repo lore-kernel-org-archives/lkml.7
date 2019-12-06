@@ -2,122 +2,139 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44745C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA3CC2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2175E24670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E84BC24659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:41:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rn0r9y4M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfLFNjm (ORCPT
+        id S1726352AbfLFNlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 08:39:42 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27614 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726246AbfLFNjk (ORCPT
+        Fri, 6 Dec 2019 08:41:04 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33763 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfLFNlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:39:40 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB6DWReJ015392
-        for <linux-kernel@vger.kernel.org>; Fri, 6 Dec 2019 08:39:39 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wq905ktrd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 08:39:39 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Fri, 6 Dec 2019 13:39:36 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 6 Dec 2019 13:39:33 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB6DdWbd58654918
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 Dec 2019 13:39:32 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B6AA4A4057;
-        Fri,  6 Dec 2019 13:39:32 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1D5D3A404D;
-        Fri,  6 Dec 2019 13:39:31 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri,  6 Dec 2019 13:39:30 +0000 (GMT)
-Date:   Fri, 6 Dec 2019 19:09:30 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH] sched/fair: Optimize select_idle_core
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20191205172316.8198-1-srikar@linux.vnet.ibm.com>
- <CAKfTPtBH9ff=efTeJbM4UdzrHCXZs7wwn=pdE4As8pB859e++Q@mail.gmail.com>
- <20191205175153.GA14172@linux.vnet.ibm.com>
- <CAKfTPtDp097ww0war7H1THtRxDWzA3CDuokDQSUoqzRDcD1d3g@mail.gmail.com>
- <20191206081654.GA22330@linux.vnet.ibm.com>
- <CAKfTPtBOVe+-fMBd+oHxZ51q5GtaxR6uyYep+a+NWJArbV9EcQ@mail.gmail.com>
+        Fri, 6 Dec 2019 08:41:04 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 6so3352177pgk.0;
+        Fri, 06 Dec 2019 05:41:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3EFCJeRV2jMf+iQ+j1NhNnzIhn47IDN/JAAO+nGlAGU=;
+        b=rn0r9y4MNjQb5vsu88mzLjNm0oUlpl/NY+ttecEbHb2mr82tElxKnFHiEE49UMuLFu
+         2GDmEqj7H+Z/pNuhLTQzgpzB1xoQ3LseCus1xviES7APeu2ZPo/piNpI70zRsqe8jYI4
+         n9lxAtkegvvyEBBZk4Tyk2RA6FpoC1ExcvjEhFnAmHWJdz558NEYdaackd3r6HQmbfDF
+         KZRF4RTuB0zhQ8uP3bmAFrKd2GSdxq5cxrmqinmkjOSmGNzRoW6S1RD1b2xpPXBDBmJL
+         X7NHGhNHXMELfqLJSSxwEikYAF97tpZD8svdq3TCzvPna+21CSwqgWUALGjWX6DcITNq
+         NZ1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3EFCJeRV2jMf+iQ+j1NhNnzIhn47IDN/JAAO+nGlAGU=;
+        b=FCbCzRpFvFZ2UyV8fe1kRc316Eemcs3wZuQUrOH5sb2oCrHfxe1ADOh3eHv/PYgcJc
+         7ROBvMqbolwX6Mg75pAToF+M6arEltKDfip4dIjVUBvxQoE5y4F+aAJtMXlgwHYQ/Mlx
+         e6rmOpSeLxbBOnMzlHRpBPqroRRV29O8aiVuqrLwKm9l1Z3b5R+q4hzguj0Ym8A+iJ+k
+         YW/Cp02yFXuTEtRQFuWywo0cE1KqGWlaZzvW5phtXKV36eTDdgzP6qhkMlBZQUIb62aD
+         mu0mAlGs4K2cCqcHw1dsiH9v2v3c17Mzj/ePn0u2VfaR9nvls3vCOT6EdlWg8jPMswNk
+         W18Q==
+X-Gm-Message-State: APjAAAUzSla3A49oNY0dENjHdW03fNbrIQnScPx67jNnkbJFZp4t4K+U
+        gF7Ou8E+Y1FJcI/ydStRs8k=
+X-Google-Smtp-Source: APXvYqy+STqdn3H3r8DJnP94GB2uQbw7gMpPHzPAmc32MRNlyiXZJqgSHJ+AG0RxOsAQuQNQp/BUIQ==
+X-Received: by 2002:a62:ea19:: with SMTP id t25mr14534879pfh.74.1575639663699;
+        Fri, 06 Dec 2019 05:41:03 -0800 (PST)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id f24sm3398977pjp.12.2019.12.06.05.41.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 05:41:02 -0800 (PST)
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Subject: Re: [PATCH] selftests: net: ip_defrag: increase netdev_max_backlog
+To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        posk@google.com
+References: <20191204195321.406365-1-cascardo@canonical.com>
+ <483097a3-92ec-aedd-60d9-ab7f58b9708d@gmail.com>
+ <20191206121707.GC5083@calabresa>
+Message-ID: <d2dddb34-f126-81f8-cbf7-04635f04795a@gmail.com>
+Date:   Fri, 6 Dec 2019 05:41:01 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtBOVe+-fMBd+oHxZ51q5GtaxR6uyYep+a+NWJArbV9EcQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19120613-0028-0000-0000-000003C5FFB8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120613-0029-0000-0000-00002489257A
-Message-Id: <20191206133930.GA25024@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-06_03:2019-12-05,2019-12-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 suspectscore=0 adultscore=0
- malwarescore=0 impostorscore=0 clxscore=1015 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912060117
+In-Reply-To: <20191206121707.GC5083@calabresa>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vincent,
 
-> >
-> > Collecting ticks on a Power 9 SMT 8 system around select_idle_core
-> > while running schbench shows us that
-> >
-> > (units are in ticks, hence lesser is better)
-> > Without patch
-> >     N           Min           Max        Median           Avg        Stddev
-> > x 130           151          1083           284     322.72308     144.41494
-> >
-> >
-> > With patch
-> >     N           Min           Max        Median           Avg        Stddev   Improvement
-> > x 164            88           610           201     225.79268     106.78943        30.03%
+
+On 12/6/19 4:17 AM, Thadeu Lima de Souza Cascardo wrote:
+> On Wed, Dec 04, 2019 at 12:03:57PM -0800, Eric Dumazet wrote:
+>>
+>>
+>> On 12/4/19 11:53 AM, Thadeu Lima de Souza Cascardo wrote:
+>>> When using fragments with size 8 and payload larger than 8000, the backlog
+>>> might fill up and packets will be dropped, causing the test to fail. This
+>>> happens often enough when conntrack is on during the IPv6 test.
+>>>
+>>> As the larger payload in the test is 10000, using a backlog of 1250 allow
+>>> the test to run repeatedly without failure. At least a 1000 runs were
+>>> possible with no failures, when usually less than 50 runs were good enough
+>>> for showing a failure.
+>>>
+>>> As netdev_max_backlog is not a pernet setting, this sets the backlog to
+>>> 1000 during exit to prevent disturbing following tests.
+>>>
+>>
+>> Hmmm... I would prefer not changing a global setting like that.
+>> This is going to be flaky since we often run tests in parallel (using different netns)
+>>
+>> What about adding a small delay after each sent packet ?
+>>
+>> diff --git a/tools/testing/selftests/net/ip_defrag.c b/tools/testing/selftests/net/ip_defrag.c
+>> index c0c9ecb891e1d78585e0db95fd8783be31bc563a..24d0723d2e7e9b94c3e365ee2ee30e9445deafa8 100644
+>> --- a/tools/testing/selftests/net/ip_defrag.c
+>> +++ b/tools/testing/selftests/net/ip_defrag.c
+>> @@ -198,6 +198,7 @@ static void send_fragment(int fd_raw, struct sockaddr *addr, socklen_t alen,
+>>                 error(1, 0, "send_fragment: %d vs %d", res, frag_len);
+>>  
+>>         frag_counter++;
+>> +       usleep(1000);
+>>  }
+>>  
+>>  static void send_udp_frags(int fd_raw, struct sockaddr *addr,
+>>
 > 
-> Thanks for the figures. Might be good to include them in the commit message
-> 
+> That won't work because the issue only shows when we using conntrack, as the
+> packet will be reassembled on output, then fragmented again. When this happens,
+> the fragmentation code is transmitting the fragments in a tight loop, which
+> floods the backlog.
 
-Since I needed a debug/hack patch on top of upstream/my-patch to get these
-numbers, I wasn't sure if this would be ideal to be included in a commit
-message. But if you still think it's good to have, I can re-spin the patch
-with these numbers included.
+Interesting !
 
-> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
->
+So it looks like the test is correct, and exposed a long standing problem in this code.
 
-Thanks.
+We should not adjust the test to some kernel-of-the-day-constraints, and instead fix the kernel bug ;)
 
--- 
-Thanks and Regards
-Srikar Dronamraju
+Where is this tight loop exactly ?
 
+If this is feeding/bursting ~1000 skbs via netif_rx() in a BH context, maybe we need to call a variant
+that allows immediate processing instead of (ab)using the softnet backlog.
+
+Thanks !
