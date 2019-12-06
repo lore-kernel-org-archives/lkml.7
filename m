@@ -2,110 +2,125 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E877DC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809D2C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE56421823
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:07:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BxzFDejE"
+	by mail.kernel.org (Postfix) with ESMTP id 54C0F24659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:09:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575626946;
+	bh=L86FFzaMyKUMr0tRF/wXc0S1UjDEFgsImzL2rIudDqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X9/zfM3yXpyITr0mns6tBCz6Mu2G+HM9swDgqUmEH+77CDbweKQGlVT5obnRX7Bzr
+	 V8TpExKxrjnuqbgtxr8UtBOxFVl8WccZSIvEUciyq++hqfBLNiO3O1qh7aCcCJTSE1
+	 6aJUMNCdjaS84y//h4/LG8fD+14fxA2r/Mv9kPtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfLFKHc (ORCPT
+        id S1726330AbfLFKJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 05:07:32 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53899 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726102AbfLFKHc (ORCPT
+        Fri, 6 Dec 2019 05:09:05 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37623 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfLFKJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 05:07:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575626851;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Wc1Uv6Nj7IUv6CX0rM0U3pEdROrdD6V3JPm9xjrxf2s=;
-        b=BxzFDejEJcZGsF+SZFlnJqQBxChvKaJufogYLXDJpYE8SE4bSRnifFpRBHMXR5rmBJWO6F
-        ZuSPbCg7G43avF54j7npeaMccQI9PHIqQhx3bZa9ZDkabdi7Gyvu+iQhRogaeBK68IaFYB
-        fx1+XNJI9EeeT846TYSM0vSNFaJdUDY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-255-CmzEfi7tP9evyYLm71Htdg-1; Fri, 06 Dec 2019 05:07:28 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E96A0107ACC4;
-        Fri,  6 Dec 2019 10:07:25 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-67.ams2.redhat.com [10.36.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A4CD15D6A3;
-        Fri,  6 Dec 2019 10:07:25 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id D155616E18; Fri,  6 Dec 2019 11:07:24 +0100 (CET)
-Date:   Fri, 6 Dec 2019 11:07:24 +0100
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org, robh@kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] drm: call drm_gem_object_funcs.mmap with fake
- offset
-Message-ID: <20191206100724.ukzdyaym3ltcyfaa@sirius.home.kraxel.org>
-References: <20191127092523.5620-1-kraxel@redhat.com>
- <20191127092523.5620-2-kraxel@redhat.com>
- <20191128113930.yhckvneecpvfhlls@sirius.home.kraxel.org>
- <20191205221523.GN624164@phenom.ffwll.local>
+        Fri, 6 Dec 2019 05:09:05 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so7134300wru.4;
+        Fri, 06 Dec 2019 02:09:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZgEefvOziF7z8mrF0WSJDLRpK1yoVeyxX5+8c1qtWd8=;
+        b=ofbqXxLUpt+f4orqUBASv7mzvuuiytJi6rquais0s5d7bPXuqb2Cfgd5WmUscxyibP
+         xIzRnO8mfb9okhAje29nO7euJjoi6Ghv7L78klNwWhwPsP1j84Y1gsH0V9fF1aE8C4qA
+         eBm95VAaydWRyrcZD+KevSfV7ZlRno02uILQDguu9Q5DYW+/T3CCAABuoy7uxXwBPkqX
+         dwfR1ZNzRkhfur40wSIhPUYWGXo0lZ9ya0cKdFlcZDKEJHWC7qqy9RIiVfdAuaAkLeOF
+         +rOwEAuKZMJlFKiYpnK0JuOGbjsx1ZfuIUCJnkHdqBqOXG310ARvqVe4HAVe7KLkyDYM
+         KfiQ==
+X-Gm-Message-State: APjAAAXI2tmAzLc5dn53x2BZgSHGgukBHOE8qAQo3SHVqjjaeX5g1StV
+        jR4D3tJtnp/m7T0Mn/705DQ=
+X-Google-Smtp-Source: APXvYqwp/JAvBhEznJnvSk6geU/+ptgT24gTDjlJXdPPSVOp5WR/4oUSZ5jnN+uUQrMCeUwvJhcIiQ==
+X-Received: by 2002:a5d:6901:: with SMTP id t1mr13926482wru.94.1575626942441;
+        Fri, 06 Dec 2019 02:09:02 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id c2sm15761600wrp.46.2019.12.06.02.09.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 02:09:01 -0800 (PST)
+Date:   Fri, 6 Dec 2019 11:09:00 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] mm: fix hanging shrinker management on long
+ do_shrink_slab
+Message-ID: <20191206100900.GM28317@dhcp22.suse.cz>
+References: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
+ <4e2d959a-0b0e-30aa-59b4-8e37728e9793@virtuozzo.com>
+ <20191206020953.GS2695@dread.disaster.area>
 MIME-Version: 1.0
-In-Reply-To: <20191205221523.GN624164@phenom.ffwll.local>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: CmzEfi7tP9evyYLm71Htdg-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
+In-Reply-To: <20191206020953.GS2695@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 11:15:23PM +0100, Daniel Vetter wrote:
-> On Thu, Nov 28, 2019 at 12:39:30PM +0100, Gerd Hoffmann wrote:
-> > On Wed, Nov 27, 2019 at 10:25:22AM +0100, Gerd Hoffmann wrote:
-> > > The fake offset is going to stay, so change the calling convention fo=
-r
-> > > drm_gem_object_funcs.mmap to include the fake offset.  Update all use=
-rs
-> > > accordingly.
-> > >=20
-> > > Note that this reverts 83b8a6f242ea ("drm/gem: Fix mmap fake offset
-> > > handling for drm_gem_object_funcs.mmap") and on top then adds the fak=
-e
-> > > offset to  drm_gem_prime_mmap to make sure all paths leading to
-> > > obj->funcs->mmap are consistent.
-> > >=20
-> > > v3: move fake-offset tweak in drm_gem_prime_mmap() so we have this co=
-de
-> > >     only once in the function (Rob Herring).
-> >=20
-> > Now this series fails in Intel CI.  Can't see why though.  The
-> > difference between v2 and v3 is just the place where vma->vm_pgoff gets
-> > updated, and no code between the v2 and v3 location touches vma ...
->=20
-> Looks like unrelated flukes, this happens occasionally. If you're paranoi=
-d
-> hit the retest button on patchwork to double-check.
-> -Daniel
+On Fri 06-12-19 13:09:53, Dave Chinner wrote:
+> [please cc me on future shrinker infrastructure modifications]
+> 
+> On Mon, Dec 02, 2019 at 07:36:03PM +0300, Andrey Ryabinin wrote:
+> > 
+> > On 11/30/19 12:45 AM, Pavel Tikhomirov wrote:
+> > > We have a problem that shrinker_rwsem can be held for a long time for
+> > > read in shrink_slab, at the same time any process which is trying to
+> > > manage shrinkers hangs.
+> > > 
+> > > The shrinker_rwsem is taken in shrink_slab while traversing shrinker_list.
+> > > It tries to shrink something on nfs (hard) but nfs server is dead at
+> > > these moment already and rpc will never succeed. Generally any shrinker
+> > > can take significant time to do_shrink_slab, so it's a bad idea to hold
+> > > the list lock here.
+> 
+> registering/unregistering a shrinker is not a performance critical
+> task.
 
-Guess you kicked CI?  Just got CI mails, now reporting success, without
-doing anything.  So I'll go push v3 to misc-next.
+We have had a bug report from production system which stumbled over a
+long [u]nmount which was stuck on a shrinker {un}register path waiting for
+the lock. This wouldn't be a big deal most of the time but [u]mount were
+part of the login session in this case. This was on an older
+distribution kernel and e496612c5130 ("mm: do not stall register_shrinker()")
+helped a bit but not really for shrinkers that take a lot of time.
 
-cheers,
-  Gerd
+> If a shrinker is blocking for a long time, then we need to
+> work to fix the shrinker implementation because blocking is a much
+> bigger problem than just register/unregister.
 
+Absolutely agreed here.
+-- 
+Michal Hocko
+SUSE Labs
