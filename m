@@ -2,154 +2,167 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B97C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82327C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 456E824670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:45:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kUh88S/s"
+	by mail.kernel.org (Postfix) with ESMTP id 5247A24676
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:45:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575657956;
+	bh=uI9EKANieQp4/2Z6MB2ZAs2MMN7vumj93kZAcBBUEt0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=NgH0lXT4HzJkvDQHQIZrFKTnaSQmzYaNbvYxUiYCYmso3UScSrvElWOed9TzX4Cf7
+	 bjx2UbDCrpj7Pw5MwdGvuHxjGms3pwja8/o10+Rm3F+5Hw5QotNpH1DUxTDi2qMFra
+	 tnk2nedhs5mZ3P14eZJtrse8dg5fu6mu5mvOa94A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfLFSpq (ORCPT
+        id S1726404AbfLFSpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 13:45:46 -0500
-Received: from mail-pl1-f172.google.com ([209.85.214.172]:46209 "EHLO
-        mail-pl1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfLFSpq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 13:45:46 -0500
-Received: by mail-pl1-f172.google.com with SMTP id k20so3057117pll.13;
-        Fri, 06 Dec 2019 10:45:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Fi0v276DytflAY2h044Dlr4Bh1mkN9HRCT9MVIFntkY=;
-        b=kUh88S/sioS4h6odf8ciymAoRA+iF6r6am/1niCdnSLdPozYU9dH9/TqVtEM0FdTqJ
-         DvARn1aA34ayQ9UgeiGdEylxIUc+/5D7F2McVzdOShdS6npIMJf73uC1lZABX0pr9ve1
-         em8TXNYcm/OxQkkFoL9030k/+5snXhw1KXnB2Ys5jiDv2BGTLwNtZ1DKQ7EBGPPuWvz6
-         a2IVyzKZnPoryhDfFVikzF01PPJiDI4yV2DXl0/pe2zEqnPK29qUY+kQkLjPfXeRtMQt
-         re7GZ7QNKP3dHIooQsBlP0V8NxxJEchC4kj2a6TnD+5uPLpOMnQ0a+Bm2M6HtEhFwXDx
-         3tEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Fi0v276DytflAY2h044Dlr4Bh1mkN9HRCT9MVIFntkY=;
-        b=lFLdqRlyrKXV4MYO3A1jpFWUTxWdaFIyvbKj+SRizOR2LhT+bJJtFx78drqBzOOUhl
-         7vcHT0WIWhd4smyTl/FaMPpLNWTae2+hqe/iAWhbDmM3vaRf9VKyjzWhAG9NaYPT6UTC
-         frbt7HMXQWRDLAd7do00CViNaUXWyyFw5Rzi6ciafhKZC5jWHUjZFaAEXWSroT8xfr5o
-         aj/FYNXAa1E3DI6Av6K0dxPhuwSrSz37tj0Q7wG5RhBwxr7mhAiZBCRuEb8nh8Yf7UI3
-         wxZ3CSyagr1iL8uDC4LDl67/cidjb8k21dcoOD+RRQq5oEVs7VtkohY5datVeTmMA+Fk
-         3r7Q==
-X-Gm-Message-State: APjAAAUzNThomtqt7GLqdZvBssP0uoNDXEb+xRiW9XGTEXRYiremT/lZ
-        mjJEY5CuwoyNnXJqwpaHWYU=
-X-Google-Smtp-Source: APXvYqzFULyrWU1raYozRu6SwmVgDm85vacQym1/ejWbOJHlKBERhL2ywaXfNAK4/2L+wy8DtxUqpA==
-X-Received: by 2002:a17:90a:868b:: with SMTP id p11mr17241511pjn.60.1575657945401;
-        Fri, 06 Dec 2019 10:45:45 -0800 (PST)
-Received: from localhost.localdomain ([103.51.73.190])
-        by smtp.gmail.com with ESMTPSA id p4sm16777039pfb.157.2019.12.06.10.45.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 10:45:44 -0800 (PST)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Daniel Schultz <d.schultz@phytec.de>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFCv1 0/8] RK3399 clean shutdown issue
-Date:   Fri,  6 Dec 2019 18:45:28 +0000
-Message-Id: <20191206184536.2507-1-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Fri, 6 Dec 2019 13:45:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726317AbfLFSpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 13:45:54 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3622024670;
+        Fri,  6 Dec 2019 18:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575657953;
+        bh=uI9EKANieQp4/2Z6MB2ZAs2MMN7vumj93kZAcBBUEt0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=1wiQHNi35PaEkG8c+sJQrPmvIkrOI/hWxm7imrIqmIQHlt1NZuKXhss6iRwGFU39D
+         bpjt5/DslssYZVyMiM8JtFzAxn6dtHXeIMXZ0Ir9xeC9GRGBAfnSA1UijLPVHmAkBm
+         g3CNDUixy30L8My/oZEi+y4wch3I/jeCaNGlu36g=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0E73635206AB; Fri,  6 Dec 2019 10:45:53 -0800 (PST)
+Date:   Fri, 6 Dec 2019 10:45:53 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        "madhuparnabhowmik04@gmail.com" <madhuparnabhowmik04@gmail.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "joel@joelfernandes.org" <joel@joelfernandes.org>
+Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
+Message-ID: <20191206184553.GI2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
+ <20191206160238.GE2889@paulmck-ThinkPad-P72>
+ <2ec21ec537144bb3c0d5fbdaf88ea022d07b7ff8.camel@hammerspace.com>
+ <20191206182414.GH2889@paulmck-ThinkPad-P72>
+ <127792d6811173921733542052f061a18991f441.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <127792d6811173921733542052f061a18991f441.camel@hammerspace.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most of the RK3399 SBC boards do not perform clean
-shutdown and clean reboot.
+On Fri, Dec 06, 2019 at 06:28:14PM +0000, Trond Myklebust wrote:
+> On Fri, 2019-12-06 at 10:24 -0800, Paul E. McKenney wrote:
+> > On Fri, Dec 06, 2019 at 05:52:10PM +0000, Trond Myklebust wrote:
+> > > Hi Paul,
+> > > 
+> > > On Fri, 2019-12-06 at 08:02 -0800, Paul E. McKenney wrote:
+> > > > On Fri, Dec 06, 2019 at 08:46:40PM +0530, 
+> > > > madhuparnabhowmik04@gmail.com wrote:
+> > > > > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> > > > > 
+> > > > > This patch fixes the following errors:
+> > > > > fs/nfs/dir.c:2353:14: error: incompatible types in comparison
+> > > > > expression (different address spaces):
+> > > > > fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
+> > > > > fs/nfs/dir.c:2353:14:    struct list_head *
+> > > > > 
+> > > > > caused due to directly accessing the prev pointer of
+> > > > > a RCU protected list.
+> > > > > Accessing the pointer using the macro list_prev_rcu() fixes
+> > > > > this
+> > > > > error.
+> > > > > 
+> > > > > Signed-off-by: Madhuparna Bhowmik <
+> > > > > madhuparnabhowmik04@gmail.com>
+> > > > > ---
+> > > > >  fs/nfs/dir.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> > > > > index e180033e35cf..2035254cc283 100644
+> > > > > --- a/fs/nfs/dir.c
+> > > > > +++ b/fs/nfs/dir.c
+> > > > > @@ -2350,7 +2350,7 @@ static int
+> > > > > nfs_access_get_cached_rcu(struct
+> > > > > inode *inode, const struct cred *cre
+> > > > >  	rcu_read_lock();
+> > > > >  	if (nfsi->cache_validity & NFS_INO_INVALID_ACCESS)
+> > > > >  		goto out;
+> > > > > -	lh = rcu_dereference(nfsi-
+> > > > > >access_cache_entry_lru.prev);
+> > > > > +	lh = rcu_dereference(list_prev_rcu(&nfsi-
+> > > > > > access_cache_entry_lru));
+> > > > 
+> > > > And as noted in the earlier email, what is preventing concurrent
+> > > > insertions into  and deletions from this list?
+> > > > 
+> > > > o	This use of list_move_tail() is OK because it does not poison.
+> > > > 	Though it isn't being all that friendly to lockless access to
+> > > > 	->prev -- no WRITE_ONCE() in list_move_tail().
+> > > > 
+> > > > o	The use of list_add_tail() is not safe with RCU readers, though
+> > > > 	they do at least partially compensate via use of smp_wmb()
+> > > > 	in nfs_access_add_cache() before calling
+> > > > nfs_access_add_rbtree().
+> > > > 
+> > > > o	The list_del() near the end of nfs_access_add_rbtree() will
+> > > > 	poison the ->prev pointer.  I don't see how this is safe given
+> > > > the
+> > > > 	possibility of a concurrent call to
+> > > > nfs_access_get_cached_rcu().
+> > > 
+> > > The pointer nfsi->access_cache_entry_lru is the head of the list,
+> > > so it
+> > > won't get poisoned. Furthermore, the objects it points to are freed
+> > > using kfree_rcu(), so they will survive as long as we hold the rcu
+> > > read
+> > > lock. The object's cred pointers also points to something that is
+> > > freed
+> > > in an rcu-safe manner.
+> > > 
+> > > The problem here is rather that a racing list_del() can cause nfsi-
+> > > > access_cache_entry_lru to be empty, which is presumably why Neil
+> > > > added
+> > > that check plus the empty cred pointer check in the following line.
+> > > 
+> > > The barrier semantics may be suspect, although the spin unlock
+> > > after
+> > > list_del() should presumably guarantee release semantics?
+> > 
+> > Ah, OK, so you are only ever using ->prev only from the head of the
+> > list,
+> > and presumably never do list_del() on the head itself.  (Don't laugh,
+> > this does really happen as a way to remove the entire list, though
+> > perhaps with list_del_init() rather than list_del().)
+> 
+> Correct.
+> 
+> > Maybe we should have a list_tail_rcu() that is only expected to work
+> > on the head of the list?
+> 
+> That might be the best way to resolve this, yes.
 
-These patches try to help resolve the issue with proper
-shutdown by turning off the PMIC.
+Madhuparna, would you be willing to do a patch series along these lines?
 
-For reference 
-RK805 PMCI data sheet:
-[0] http://rockchip.fr/RK805%20datasheet%20V1.3.pdf
-RK808 PMIC data sheet:
-[1] http://rockchip.fr/RK808%20datasheet%20V1.4.pdf
-RK817 PMIC data sheet:
-[2] http://rockchip.fr/RK817%20datasheet%20V1.01.pdf 
-RK818 PMIC data sheet:
-[3] http://rockchip.fr/RK818%20datasheet%20V1.0.pdf
-
-Reboot issue:
-My guess is that we need to some proper sequence of
-setting to PMCI to perform clean.
-
-If you have any input please share them.
-
-Tested on SBC
-Rock960 Model A
-Odroid N1
-Rock64
-
--Anand Moon
-
-Anand Moon (8):
-  mfd: rk808: Refactor shutdown functions
-  mfd: rk808: use syscore for RK805 PMIC shutdown
-  mfd: rk808: use syscore for RK808 PMIC shutdown
-  mfd: rk808: use syscore for RK818 PMIC shutdown
-  mfd: rk808: cleanup unused function pointer
-  mfd: rk808: use common syscore for all PMCI for clean shutdown
-  arm64: rockchip: drop unused field from rk8xx i2c node
-  arm: rockchip: drop unused field from rk8xx i2c node
-
- arch/arm/boot/dts/rk3036-kylin.dts            |   1 -
- arch/arm/boot/dts/rk3188-px3-evb.dts          |   1 -
- arch/arm/boot/dts/rk3288-evb-rk808.dts        |   1 -
- arch/arm/boot/dts/rk3288-phycore-som.dtsi     |   1 -
- arch/arm/boot/dts/rk3288-popmetal.dts         |   1 -
- arch/arm/boot/dts/rk3288-tinker.dtsi          |   1 -
- arch/arm/boot/dts/rk3288-veyron.dtsi          |   1 -
- arch/arm/boot/dts/rk3288-vyasa.dts            |   1 -
- arch/arm/boot/dts/rv1108-elgin-r1.dts         |   1 -
- arch/arm/boot/dts/rv1108-evb.dts              |   1 -
- arch/arm64/boot/dts/rockchip/px30-evb.dts     |   1 -
- arch/arm64/boot/dts/rockchip/rk3328-a1.dts    |   1 -
- arch/arm64/boot/dts/rockchip/rk3328-evb.dts   |   1 -
- .../arm64/boot/dts/rockchip/rk3328-roc-cc.dts |   1 -
- .../arm64/boot/dts/rockchip/rk3328-rock64.dts |   1 -
- .../boot/dts/rockchip/rk3368-geekbox.dts      |   1 -
- arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi |   1 -
- .../boot/dts/rockchip/rk3368-px5-evb.dts      |   1 -
- .../boot/dts/rockchip/rk3399-firefly.dts      |   1 -
- .../boot/dts/rockchip/rk3399-hugsun-x99.dts   |   1 -
- .../boot/dts/rockchip/rk3399-khadas-edge.dtsi |   1 -
- .../boot/dts/rockchip/rk3399-leez-p710.dts    |   1 -
- .../boot/dts/rockchip/rk3399-nanopi4.dtsi     |   1 -
- .../boot/dts/rockchip/rk3399-orangepi.dts     |   1 -
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi |   1 -
- .../boot/dts/rockchip/rk3399-roc-pc.dtsi      |   1 -
- .../boot/dts/rockchip/rk3399-rock-pi-4.dts    |   1 -
- .../boot/dts/rockchip/rk3399-rock960.dtsi     |   1 -
- .../boot/dts/rockchip/rk3399-rockpro64.dts    |   1 -
- .../boot/dts/rockchip/rk3399-sapphire.dtsi    |   1 -
- drivers/mfd/rk808.c                           | 144 +++++-------------
- include/linux/mfd/rk808.h                     |   2 -
- 32 files changed, 42 insertions(+), 134 deletions(-)
-
--- 
-2.24.0
-
+							Thanx, Paul
