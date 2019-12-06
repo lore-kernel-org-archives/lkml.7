@@ -2,183 +2,94 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DABC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA91C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E742324679
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:39:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0CATjTs"
+	by mail.kernel.org (Postfix) with ESMTP id 25F242467A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575614425;
+	bh=p+tIxBSz0bQmkPz89oUoLma0YvcFZrDr6uINE15sZsg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jRo5zetqtxA+/7NmDHMXqVcYJWXBPA7x7XkbzFacviRHG43iA2OJJMFe+8B07sWOz
+	 g88CqBjG71g02J8Ck2/46NyTdoUX7O+IeiWSdV+vRpVJMDqhT1b5ykRoEWErtczR7Z
+	 doJYRK5pjw2OP9zbfQSM8G+xWB3WqTvoGcB3Cz9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfLFGjt (ORCPT
+        id S1726375AbfLFGkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 01:39:49 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45078 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfLFGjs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 01:39:48 -0500
-Received: by mail-pl1-f194.google.com with SMTP id w7so2285162plz.12;
-        Thu, 05 Dec 2019 22:39:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PnshtQ+DzSYB1m1s28YhSp8Zch6aeX4Qzf6E+sbGNmo=;
-        b=V0CATjTs5ss1fAXSo5bWATeALS7lPYJIkaR9pZK7xjv+dw92RFc5wl4BIfvRvJKzTp
-         nUwC8e0mWh2IHlvV677ssfj8jHS1T0LvIG42N41uPRsiiKkowuPhGanjXnwzXeUK/iMT
-         fKvNFyUaU4s+tmKbWIEWCM63VzHMPaOuB3UU94F2TiqBtxHpaO2GZkFChsqt8Do86aJC
-         TiYi+gMoQYh8XJ5SfeA7GIVeqbMizBF1Jh19ZCjDqP7g706aeWeLvDrgCSFxb4/poJwe
-         WMQcZYLKn4UoZGErZaB6ZvYtsu1uCQUVQOjyVjAYtfxeK2y4/wdMG17jem5QALz8SdOG
-         MFxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PnshtQ+DzSYB1m1s28YhSp8Zch6aeX4Qzf6E+sbGNmo=;
-        b=NcIy6Da+9ZgY77H7k42caUhLEY77GWmfLIKr2lAvMYKkviCgWLs8F5lMByQma12WKq
-         80cjcaSrtgo/pRJWxK4zSnbeLU0La4M+Pr7oHbVdVNKq/rfEtUV60Cd+ua08wUf45Fna
-         XUB2Rb228mtGpPvywE+9IkJAgXMh3NXJEQDduYFW34VwZ8lnxpIr2XOeg8MiS9PoTjom
-         PLyrQ0l/oafAt/lL/oisaONb/AICplTlfC/cEb+DislqfDzTAmKr26a9T2IIYk0PY1jj
-         cnGhmVYzbwdOmLHpQf8YkYG+0AEW0rcLRC42Fh1L0tHeUDzefiBef9AX/a8mVeXSO1kp
-         PCoQ==
-X-Gm-Message-State: APjAAAW/zFJ5tqNOgM1PbBQOyDabsQY3mod2hApg2vR36KUEYnWKhJ08
-        AEkZ+UM6eG5jWmLv/a8jBystQYHV
-X-Google-Smtp-Source: APXvYqxIDjbtlEDF9USGivZjgPtRtUc5jVe6auF3YFJtnwos7C2FzEiVwPRfq3vgfXYVNHaDrIzbkQ==
-X-Received: by 2002:a17:90a:9f85:: with SMTP id o5mr2442419pjp.0.1575614387092;
-        Thu, 05 Dec 2019 22:39:47 -0800 (PST)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::3f95])
-        by smtp.gmail.com with ESMTPSA id v29sm13336847pgl.88.2019.12.05.22.39.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Dec 2019 22:39:46 -0800 (PST)
-Date:   Thu, 5 Dec 2019 22:39:44 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Daniel Xu <dxu@dxuuu.xyz>
-Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, kafai@fb.com,
-        songliubraving@fb.com, andriin@fb.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH bpf] bpf: Add LBR data to BPF_PROG_TYPE_PERF_EVENT prog
- context
-Message-ID: <20191206063942.5qd6opj6dfgqyxyx@ast-mbp.dhcp.thefacebook.com>
-References: <20191206001226.67825-1-dxu@dxuuu.xyz>
+        Fri, 6 Dec 2019 01:40:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41642 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbfLFGkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 01:40:24 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1043D24679;
+        Fri,  6 Dec 2019 06:40:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575614423;
+        bh=p+tIxBSz0bQmkPz89oUoLma0YvcFZrDr6uINE15sZsg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hml23TGZcwh3DGHy6YiUYyWCx3/yK8SjA6ahPmbeXXwggLNiZ9/h1aHnwkgL8Bhk6
+         IpTghxQznhBFiRqEG/yMkMpL2q7dSEryGMZc/DrJ0nkGg4ZNeLnvbGH8pWwOulXfgT
+         jcZzZNsyOhCoceEbDr4eMhNqplQVEMcntqyhRsAQ=
+Date:   Fri, 6 Dec 2019 07:40:20 +0100
+From:   'Greg KH' <gregkh@linuxfoundation.org>
+To:     =?utf-8?B?77+977+977+977+977+977+9L0hZVU4tS0k=?= KOO 
+        <hyunki00.koo@samsung.com>
+Cc:     'Krzysztof Kozlowski' <krzk@kernel.org>,
+        'Hyunki Koo' <kkoos00@naver.com>, jslaby@suse.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kkoos00@gmail.com, 'Shinbeom Choi' <sbeom.choi@samsung.com>
+Subject: Re: [PATCH] tty: serial: samsung: support driver modulization
+Message-ID: <20191206064020.GA1318959@kroah.com>
+References: <20191201075914.23512-1-kkoos00@naver.com>
+ <20191201080314.GA3716559@kroah.com>
+ <CAJKOXPet=RyJ3nrcOooHdN0GSO33Ce82-9L_X0oYC2MjN7nOig@mail.gmail.com>
+ <CGME20191205160249epcas2p3c1dcb24aba71f6b4264e76ebea36348c@epcas2p3.samsung.com>
+ <20191205160243.GA757198@kroah.com>
+ <000001d5abd6$ae5a6b50$0b0f41f0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191206001226.67825-1-dxu@dxuuu.xyz>
-User-Agent: NeoMutt/20180223
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <000001d5abd6$ae5a6b50$0b0f41f0$@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 04:12:26PM -0800, Daniel Xu wrote:
-> Last-branch-record is an intel CPU feature that can be configured to
-> record certain branches that are taken during code execution. This data
-> is particularly interesting for profile guided optimizations. perf has
-> had LBR support for a while but the data collection can be a bit coarse
-> grained.
-> 
-> We (Facebook) have recently run a lot of experiments with feeding
-> filtered LBR data to various PGO pipelines. We've seen really good
-> results (+2.5% throughput with lower cpu util and lower latency) by
-> feeding high request latency LBR branches to the compiler on a
-> request-oriented service. We used bpf to read a special request context
-> ID (which is how we associate branches with latency) from a fixed
-> userspace address. Reading from the fixed address is why bpf support is
-> useful.
-> 
-> Aside from this particular use case, having LBR data available to bpf
-> progs can be useful to get stack traces out of userspace applications
-> that omit frame pointers.
-> 
-> This patch adds support for LBR data to bpf perf progs.
-> 
-> Some notes:
-> * We use `__u64 entries[BPF_MAX_LBR_ENTRIES * 3]` instead of
->   `struct perf_branch_entry[BPF_MAX_LBR_ENTRIES]` because checkpatch.pl
->   warns about including a uapi header from another uapi header
-> 
-> * We define BPF_MAX_LBR_ENTRIES as 32 (instead of using the value from
->   arch/x86/events/perf_events.h) because including arch specific headers
->   seems wrong and could introduce circular header includes.
-> 
-> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-> ---
->  include/uapi/linux/bpf_perf_event.h |  5 ++++
->  kernel/trace/bpf_trace.c            | 39 +++++++++++++++++++++++++++++
->  2 files changed, 44 insertions(+)
-> 
-> diff --git a/include/uapi/linux/bpf_perf_event.h b/include/uapi/linux/bpf_perf_event.h
-> index eb1b9d21250c..dc87e3d50390 100644
-> --- a/include/uapi/linux/bpf_perf_event.h
-> +++ b/include/uapi/linux/bpf_perf_event.h
-> @@ -10,10 +10,15 @@
->  
->  #include <asm/bpf_perf_event.h>
->  
-> +#define BPF_MAX_LBR_ENTRIES 32
-> +
->  struct bpf_perf_event_data {
->  	bpf_user_pt_regs_t regs;
->  	__u64 sample_period;
->  	__u64 addr;
-> +	__u64 nr_lbr;
-> +	/* Cast to struct perf_branch_entry* before using */
-> +	__u64 entries[BPF_MAX_LBR_ENTRIES * 3];
->  };
->  
->  #endif /* _UAPI__LINUX_BPF_PERF_EVENT_H__ */
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index ffc91d4935ac..96ba7995b3d7 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1259,6 +1259,14 @@ static bool pe_prog_is_valid_access(int off, int size, enum bpf_access_type type
->  		if (!bpf_ctx_narrow_access_ok(off, size, size_u64))
->  			return false;
->  		break;
-> +	case bpf_ctx_range(struct bpf_perf_event_data, nr_lbr):
-> +		bpf_ctx_record_field_size(info, size_u64);
-> +		if (!bpf_ctx_narrow_access_ok(off, size, size_u64))
-> +			return false;
-> +		break;
-> +	case bpf_ctx_range(struct bpf_perf_event_data, entries):
-> +		/* No narrow loads */
-> +		break;
->  	default:
->  		if (size != sizeof(long))
->  			return false;
-> @@ -1273,6 +1281,7 @@ static u32 pe_prog_convert_ctx_access(enum bpf_access_type type,
->  				      struct bpf_prog *prog, u32 *target_size)
->  {
->  	struct bpf_insn *insn = insn_buf;
-> +	int off;
->  
->  	switch (si->off) {
->  	case offsetof(struct bpf_perf_event_data, sample_period):
-> @@ -1291,6 +1300,36 @@ static u32 pe_prog_convert_ctx_access(enum bpf_access_type type,
->  				      bpf_target_off(struct perf_sample_data, addr, 8,
->  						     target_size));
->  		break;
-> +	case offsetof(struct bpf_perf_event_data, nr_lbr):
-> +		/* Load struct perf_sample_data* */
-> +		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct bpf_perf_event_data_kern,
-> +						       data), si->dst_reg, si->src_reg,
-> +				      offsetof(struct bpf_perf_event_data_kern, data));
-> +		/* Load struct perf_branch_stack* */
-> +		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct perf_sample_data, br_stack),
-> +				      si->dst_reg, si->dst_reg,
-> +				      offsetof(struct perf_sample_data, br_stack));
 
-br_stack can be NULL.
-if != NULL check has to be emitted too.
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
 
-Otherwise looks good.
-Please add a selftest and resubmit when bpf-next reopens next week.
+A: No.
+Q: Should I include quotations after my reply?
 
+http://daringfireball.net/2007/07/on_top
+
+On Fri, Dec 06, 2019 at 10:44:20AM +0900, ������/HYUN-KI KOO wrote:
+> To support module for Samsung serial driver,
+> I would like to split the file into 2 files.
+
+But you did not do that here in this patch, right?
+
+> Because it cannot be supported in one file both early console and
+> module driver
+> Thus some function need to change to EXPORT_SYMBOL to use in module
+> driver file.
+> I'm not pushed yet for module driver.
+
+I do not understand, this patch feels wrong and incomplete as-is, right?
+Please fix it up to work properly.
+
+thanks,
+
+greg k-h
