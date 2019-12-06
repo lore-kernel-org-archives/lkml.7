@@ -2,109 +2,89 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B4BC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951CAC2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3213F21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 656E824673
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575637418;
-	bh=1P4JJX8/2H20+EM+DrAXFfSI4JjlzpxUMZw4FcxpDLg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GbwiA7O8lvG44XnZXXwlYjktrV24T8cDY6w/7/uBloIL56SQK9Uq0RU7o43Fgj5uj
-	 obKZSAP6rKNv21SlayrzY0NmXOyDjPGTQpS0Ni9UmJjS2bYxlzOQpTgmJLv/80Eheh
-	 Z6vYJ4NiCanaIr7h2G35P5aSfAbuvFNnFjZ91WPI=
+	s=default; t=1575637432;
+	bh=FzzokkCcsl2DCADaSPwOIroR+3F5YdUB7UOvT1k/t0s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lo7cd+cHijLXtq20Xu7VNMkKiKVD+t1Ylt//rwuVMG87mMo4cfqAU6TOlAdoivyO+
+	 28T15ziLOeCB37HGFu0aBaDSptrgPDtjTYralWgMXYkZaS8dVCXbgaQfrvNjy4FOOZ
+	 pKysma2/97kV83U7N66NPoDP8Sa7rWCwxOBzzOKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfLFNDh (ORCPT
+        id S1726353AbfLFNDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 08:03:37 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:45593 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfLFNDd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:03:33 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id xB6D34Gp005873;
-        Fri, 6 Dec 2019 22:03:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xB6D34Gp005873
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1575637387;
-        bh=ekwM9UUGKGl3f+58UAKf0ESmjI1Emgokd72qoh9WRnU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yhoE4qNwV+ZeVhLWKFj3IQCl3XNJt03vtMY2I1LAWMZyj0ZoXgeaL/tMGmv1DeKH7
-         Q+/8JyBFo10WNHvx6Hb/2K4aQ0rI81KnCUU6T94z+Lm+IgSi6P6VTjYls8xGglxFf3
-         WN01PAPEUKI5advI/4ft1YMlBOQeovQd9ifuYDa2a0kOgvyeVOYKQWoAuL+WxojluZ
-         5XXcPUU4rLc4p1hvkfOF5JTp+D7hJ4P7N9/LMvwUpDxfWO2BLouLws10pyXCvzjamT
-         O/TpMjtTgHbfKzD7udhU6R03WiuCYBSYj5HonVVyg945tpHkiD0SkZt6FenaPaxkkW
-         NjqBvEB9dsx1g==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] mkcompile_h: use printf for LINUX_COMPILE_BY
-Date:   Fri,  6 Dec 2019 22:03:02 +0900
-Message-Id: <20191206130302.11473-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191206130302.11473-1-masahiroy@kernel.org>
-References: <20191206130302.11473-1-masahiroy@kernel.org>
+        Fri, 6 Dec 2019 08:03:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726245AbfLFNDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 08:03:51 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2591321835;
+        Fri,  6 Dec 2019 13:03:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575637430;
+        bh=FzzokkCcsl2DCADaSPwOIroR+3F5YdUB7UOvT1k/t0s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=knZBFrdnZxQK9YfYLjhMkJD99VKX+jihYEEYGQOeS09PK4lUz6HiSsTxOP29zLYPZ
+         d5NaPkp/R83BBLNEfH/6AmVSaWshlTm7KVtlvu56sdURwpEbfqd870oUGGG6yl7n76
+         sdrh/x9Ja+kOzY/6X4QniRNSEU+p33voG2TH3I9c=
+Date:   Fri, 6 Dec 2019 14:03:48 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Eric Biggers <ebiggers@kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com
+Subject: Re: [PATCH 4.19 242/321] kvm: properly check debugfs dentry before
+ using it
+Message-ID: <20191206130348.GC1399220@kroah.com>
+References: <20191203223427.103571230@linuxfoundation.org>
+ <20191203223439.731003476@linuxfoundation.org>
+ <20191205222928.GD25107@duo.ucw.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191205222928.GD25107@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 858805b336be ("kbuild: add $(BASH) to run scripts with
-bash-extension") shed light on portability issues. Here is another one.
+On Thu, Dec 05, 2019 at 11:29:28PM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > 
+> > [ Upstream commit 8ed0579c12b2fe56a1fac2f712f58fc26c1dc49b ]
+> > 
+> > debugfs can now report an error code if something went wrong instead of
+> > just NULL.  So if the return value is to be used as a "real" dentry, it
+> > needs to be checked if it is an error before dereferencing it.
+> > 
+> > This is now happening because of ff9fb72bc077 ("debugfs: return error
+> > values, not NULL").  syzbot has found a way to trigger multiple debugfs
+> > files attempting to be created, which fails, and then the error code
+> > gets passed to dentry_path_raw() which obviously does not like it.
+> 
+> 4.19-stable does not contain patch ff9fb72bc077, so is this still good
+> idea? It should not break anything, as it still uses IS_ERR_OR_NULL,
+> but...
 
-Since commit f07726048d59 ("Fix handling of backlash character in
-LINUX_COMPILE_BY name"), we must escape a backslash contained in
-LINUX_COMPILE_BY. This is not working on distros like Ubuntu.
+Yes it should as just testing for NULL was incorrect in the first place.
 
-As the POSIX spec [1] says, if any of the operands contain a backslash
-( '\' ) character, the results are implementation-defined.
+thanks,
 
-The actual shell of /bin/sh could be bash, dash depending on distros,
-and the behavior of builtin echo command is different among them.
-
-The bash builtin echo, unless -e is given, copies the arguments to
-output without expanding escape sequences (BSD-like behavior).
-
-The dash builtin echo, in contrast, adopts System V behavior, which
-does expand escape sequences without any option.
-
-Even non-builtin /bin/echo behaves differently depending on the system.
-Due to these variations, echo is considered as a non-portable command.
-Using printf is the common solution to avoid the portability issue.
-
-[1] https://pubs.opengroup.org/onlinepubs/009695399/utilities/echo.html
-
-Fixes: 858805b336be ("kbuild: add $(BASH) to run scripts with bash-extension")
-Reported-by: XXing Wei <xxing.wei@unisoc.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- scripts/mkcompile_h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
-index 3097fec1756a..3a5a4b210c86 100755
---- a/scripts/mkcompile_h
-+++ b/scripts/mkcompile_h
-@@ -69,7 +69,7 @@ UTS_VERSION="$(echo $UTS_VERSION $CONFIG_FLAGS $TIMESTAMP | cut -b -$UTS_LEN)"
- 
-   echo \#define UTS_VERSION \"$UTS_VERSION\"
- 
--  echo \#define LINUX_COMPILE_BY \"$LINUX_COMPILE_BY\"
-+  printf '#define LINUX_COMPILE_BY "%s"\n' "$LINUX_COMPILE_BY"
-   echo \#define LINUX_COMPILE_HOST \"$LINUX_COMPILE_HOST\"
- 
-   echo \#define LINUX_COMPILER \"`$CC -v 2>&1 | grep ' version ' | sed 's/[[:space:]]*$//'`\"
--- 
-2.17.1
-
+greg k-h
