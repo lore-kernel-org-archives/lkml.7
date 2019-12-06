@@ -2,92 +2,104 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD09C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E15C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2C0206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C666206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:19:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDCgPSRH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfLFSRD (ORCPT
+        id S1726388AbfLFSTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 13:17:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:52756 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbfLFSRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 13:17:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFE2931B;
-        Fri,  6 Dec 2019 10:17:02 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 895B93F52E;
-        Fri,  6 Dec 2019 10:17:01 -0800 (PST)
-Date:   Fri, 6 Dec 2019 18:16:56 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Thomas Renninger <trenn@suse.de>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org,
-        fschnitzlein@suse.de
-Subject: Re: [PATCH v5 0/3] sysfs: add sysfs based cpuinfo
-Message-ID: <20191206181655.GA35318@lakrids.cambridge.arm.com>
-References: <20191206162421.15050-1-trenn@suse.de>
- <20191206165803.GD21671@lakrids.cambridge.arm.com>
- <2898795.Dnvf4huJ59@skinner.arch.suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2898795.Dnvf4huJ59@skinner.arch.suse.de>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+        Fri, 6 Dec 2019 13:19:21 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35185 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfLFSTV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 13:19:21 -0500
+Received: by mail-wm1-f65.google.com with SMTP id c20so6807446wmb.0;
+        Fri, 06 Dec 2019 10:19:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=FLXIS+tKJCZqQe3ftQxxCM+L53W0Z6CULqU1f8qurnM=;
+        b=iDCgPSRHh0gUGVnFOkxtPY2RDOw572sk0YWW6UlwZ598i8jnR/Xhr9PhI+ECGk20r4
+         Ijh4TfgHHU2/MltTHFfh5RdL3WuPZ6M2TPj9Ju/TsKr/5CD8TSGAJlN0AHsKbL4fgMHz
+         oDeO0I8qbQeHGuamUJYZVwk2NLxJlk+LCSQVwRXfYIk8cIwodbRjXm4mGFkqEvfGv4n8
+         vIoq46nsn/7kkshxMSrM2ZOV/oao5+vRXA/4KX1cDgZGbtJ43Vzaztl84tO5TrB0PAp2
+         znAlo82zWdAf8NM54dJP/6z4ZyCQUUOxCxCXqCZxzn5z4MiGpsqtMk1BnaqUv+NXEvmu
+         fXAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FLXIS+tKJCZqQe3ftQxxCM+L53W0Z6CULqU1f8qurnM=;
+        b=YfZM3Juv++n9LXL2XwCcgaJtB8VoM/9uucuAB3sdxR+GjLB+JV5Y+qQCbqC7F0uZRe
+         AnC4lcQkTYAUcX06b1jkNeV7SPHM2iX4hGcbP79ou4pUypLKB5aXsY8IP9rd3hTTKmc2
+         pUGI+l+8DzoyK9abb4fMr5jsHpBbhQp6DENhjuqRWx1E8joKiZdD1r4VEZPDH2vBztte
+         XhZD/QiH/s53Nz8UZdvNUmrDDtrHDe+Y3A7hlSJN2R5JuoI9+CpuxLa2He5sjXdf9/jF
+         IGNF+Fo4FE4Oh7STW0Utly7pn65NaYQHpG+YkC4MNJWrzezreBWgwXo1B17WKIFKUtms
+         ayBg==
+X-Gm-Message-State: APjAAAWJd3yo8ZsNEY2x3S9qoRnspmfV3VP37CEhY1E/NfaIwsgE9WRu
+        HI6bmLnV4zWMzDiuPuDQIaA=
+X-Google-Smtp-Source: APXvYqyfwNCbAL3g1EUSeCA3aLJS8wmE10SYjLXzCh/SY2IcTNyz2rf2XMLQRBmVXph3Ztp0xP0JMA==
+X-Received: by 2002:a1c:3d87:: with SMTP id k129mr11474183wma.26.1575656358536;
+        Fri, 06 Dec 2019 10:19:18 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id b17sm17073339wrx.15.2019.12.06.10.19.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 10:19:17 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     grygorii.strashko@ti.com, simon.horman@netronome.com,
+        robh+dt@kernel.org, rafal@milecki.pl, davem@davemloft.net,
+        andrew@lunn.ch, mark.rutland@arm.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ARM: dts: Cygnus: Fix MDIO node address/size cells
+Date:   Fri,  6 Dec 2019 10:19:09 -0800
+Message-Id: <20191206181909.10962-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 06:29:39PM +0100, Thomas Renninger wrote:
-> On Friday, December 6, 2019 5:58:03 PM CET Mark Rutland wrote:
-> > On Fri, Dec 06, 2019 at 05:24:18PM +0100, Thomas Renninger wrote:
+The MDIO node on Cygnus had an reversed #address-cells and
+ #size-cells properties, correct those.
 
-> > For arm64 we already expose the MIDR and REVIDR register values under
-> > /sys/devices/system/cpu/cpu*/regs/identification, and that's the bulk of
-> > the useful information above
-> 
-> I'd like to come up with an extra CONFIG which parses:
-> 
-> arch/arm64/include/asm/cputype.h:
-> 
-> #define ARM_CPU_PART_AEM_V8             0xD0F
-> #define ARM_CPU_PART_FOUNDATION         0xD00
-> #define ARM_CPU_PART_CORTEX_A57         0xD07
-> #define ARM_CPU_PART_CORTEX_A72         0xD08
-> 
-> and
-> 
-> #define ARM_CPU_IMP_ARM                 0x41
-> #define ARM_CPU_IMP_APM                 0x50
-> #define ARM_CPU_IMP_CAVIUM              0x43
-> #define ARM_CPU_IMP_BRCM                0x42
-> #define ARM_CPU_IMP_QCOM                0x51
-> #define ARM_CPU_IMP_NVIDIA              0x4E
-> 
-> and converts the defines to strings, same as here:
+Fixes: 40c26d3af60a ("ARM: dts: Cygnus: Add the ethernet switch and ethernet PHY")
+Reported-by: Simon Horman <simon.horman@netronome.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-A similar approach for /proc/cpuinfo has been NAK'd repeatedly in the
-past. While some arguments against that don't apply here, I don't think
-that we want to have to maintain an ever-growing list of strings that
-end up being ABI which we cannot manage in a forwards-compatible manner.
+diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+index 2dac3efc7640..1bc45cfd5453 100644
+--- a/arch/arm/boot/dts/bcm-cygnus.dtsi
++++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+@@ -174,8 +174,8 @@
+ 		mdio: mdio@18002000 {
+ 			compatible = "brcm,iproc-mdio";
+ 			reg = <0x18002000 0x8>;
+-			#size-cells = <1>;
+-			#address-cells = <0>;
++			#size-cells = <0>;
++			#address-cells = <1>;
+ 			status = "disabled";
+ 
+ 			gphy0: ethernet-phy@0 {
+-- 
+2.17.1
 
-When it is necessary to reliably and unambiguously identify a CPU, it'll
-always end up being necessary to look at the MIDR (and possibly REVIDR),
-so that's what applications should always do, and it's what users will
-necessarily have to do when the kernel doesn't have a string for a CPU,
-as is the case for all existing kernels.
-
-I don't think that in-kernel stringification of the MIDR is a good idea,
-and I would suggest not wasting your time on that.
-
-Thanks,
-Mark.
