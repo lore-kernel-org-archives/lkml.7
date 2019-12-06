@@ -2,103 +2,118 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C87CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63F7C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6658E2464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C4DE20706
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:37:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fy0OQ3oA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PFDgxgxf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfLFOem (ORCPT
+        id S1726287AbfLFOhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:34:42 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49629 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726195AbfLFOem (ORCPT
+        Fri, 6 Dec 2019 09:37:07 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36885 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfLFOhG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 09:34:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575642881;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iKCGK3c2hrW8VTxOV/U7+PqjCXy11yQ76vuS6HAcuQ8=;
-        b=fy0OQ3oAzHK4SWvjmD37SwVp1kvKNHLLNOJmUjOUuihijxF4OfTjhjNAfhx11YR8Yzgall
-        tBlFBpeOztYbeLcMJtPxQfMwOdneMYaeT2bRBKyklwALeCBmbZhLZ/Fe8lpvvktIOke0DI
-        Jn1fXv2aFi9QqOv1WUor+L+Dr3SLPcA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-2G6g2vfjNaazQSPyWw1r4Q-1; Fri, 06 Dec 2019 09:34:37 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6EB36593A3;
-        Fri,  6 Dec 2019 14:34:36 +0000 (UTC)
-Received: from krava (unknown [10.43.17.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 864E63B5;
-        Fri,  6 Dec 2019 14:34:34 +0000 (UTC)
-Date:   Fri, 6 Dec 2019 15:34:32 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH 0/3] perf/libperf move
-Message-ID: <20191206143432.GB31721@krava>
-References: <20191206135513.31586-1-jolsa@kernel.org>
- <20191206142154.GA30698@kernel.org>
+        Fri, 6 Dec 2019 09:37:06 -0500
+Received: by mail-pl1-f195.google.com with SMTP id bb5so2805261plb.4;
+        Fri, 06 Dec 2019 06:37:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MmAJYe9y7hqJDFUyCzbIg+/OBoZV4/dfN8ALgALbljo=;
+        b=PFDgxgxfa1SQfvN602ZGkhQGP+RUlpRbKFPdeHwt1yx2/1QK8DF9XuSXfmlbmGFH3O
+         qdnjDNdPuTVtV3jDzel/MzOUc0ADPf/EZrQDJVSCc+FlKKP/WO1hJawk+sYjb+tp5mq3
+         fkpyaBZY6P5YQ4/RXNM0BN9xMn63GrqAgPsU5CBo1mUlwVt+pUF1uyQyMQDPe+/seJPo
+         QqE3SwtEf+cZtfGvCVduV/gvw6mE20+J5bTBs1M2BoDfN/RO4vv+OupEtubpY3j7LoYx
+         xziCwRNHPRfT1QxlUOcEOftAzCunpp47VZilf2huVZBnJNvoJBPpRLq808H7MXSuQq1M
+         3iQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MmAJYe9y7hqJDFUyCzbIg+/OBoZV4/dfN8ALgALbljo=;
+        b=fVAeNcPmYHjQGV4JpR4jJW8RVWXZzY/SAkW6CgGU/hRnHbR/rtYM89L/TG5bv/jKjS
+         7qgR8DUPo5ZdWdxSt3KUDyq7/HRrfeFZBspAYVQgtoeE3UlHdNy//Wj8cBNFqXMmyUn7
+         lgBHw30++IU6QaPE3K6m/kWabAFz6rfdjRXljKcBenchw1i2QlTrGHreQGOFzCajCzH2
+         pbEvlL0MsE9SAJTC34i2fzPwXnWzyR6+h96qoz6ebWTtYf+jscDBpCK5Q3EvCDysc1p0
+         HPwWYUwA+jrTxkHNxjaSXR/XQLhVNsbPnRK/LxIvviCD27Lz+h5UdNCxQQrSKa/xH2Lu
+         PB9w==
+X-Gm-Message-State: APjAAAUobGja8EqZTflDleX4zUBW6IKOoi7pfOx+57gYp2PUxv8McRR4
+        GCKzbCwZD54r8XrkvZMCg80=
+X-Google-Smtp-Source: APXvYqxJGdkN7RNKsZLyt14TxInds+wbC8VNpPQfJGJOSwV7v/peQJDCs7D08nXCIJ/B4vPMqxaFrA==
+X-Received: by 2002:a17:90a:a44:: with SMTP id o62mr15799733pjo.80.1575643025840;
+        Fri, 06 Dec 2019 06:37:05 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 186sm16865700pfe.141.2019.12.06.06.37.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 06 Dec 2019 06:37:05 -0800 (PST)
+Date:   Fri, 6 Dec 2019 06:37:03 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] hwmon: (adt7475) Make volt2reg return same reg as
+ reg2volt input
+Message-ID: <20191206143703.GA2291@roeck-us.net>
+References: <20191205225755.GC2532@roeck-us.net>
+ <20191205231659.1301-1-luuk.paulussen@alliedtelesis.co.nz>
 MIME-Version: 1.0
-In-Reply-To: <20191206142154.GA30698@kernel.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: 2G6g2vfjNaazQSPyWw1r4Q-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
+In-Reply-To: <20191205231659.1301-1-luuk.paulussen@alliedtelesis.co.nz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 11:21:54AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Dec 06, 2019 at 02:55:10PM +0100, Jiri Olsa escreveu:
-> > NOTE 'make perf-targz-src-pkg' works nicely with this change,
-> > but is currently failing because of recent bpf changes, I have
-> > a fix for that and will send it shortly
->=20
-> By any means it is one of:
->=20
-> "libbpf: Fix up generation of bpf_helper_defs.h"
-> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/commit/?id=
-=3D1fd450f99272
+On Fri, Dec 06, 2019 at 12:16:59PM +1300, Luuk Paulussen wrote:
+> reg2volt returns the voltage that matches a given register value.
+> Converting this back the other way with volt2reg didn't return the same
+> register value because it used truncation instead of rounding.
+> 
+> This meant that values read from sysfs could not be written back to sysfs
+> to set back the same register value.
+> 
+> With this change, volt2reg will return the same value for every voltage
+> previously returned by reg2volt (for the set of possible input values)
+> 
+> Signed-off-by: Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>
 
-yep, I ended up wit hthe same patch.. great ;-)
+Applied.
 
-thanks,
-jirka
+Thanks,
+Guenter
 
->=20
-> And:
->=20
-> "libbpf: Fix sym->st_value print on 32-bit arches"
-> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/commit/?id=
-=3D7c3977d1e804
->=20
-> ?
->=20
-> I've been cherry-picking this to have my build-test and container builds
-> for some time waiting for those to get upstream.
->=20
-> - Arnaldo
->=20
-
+> ---
+>  changes in v2:
+>  - remove unnecessary braces.
+>  drivers/hwmon/adt7475.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
+> index 6c64d50c9aae..01c2eeb02aa9 100644
+> --- a/drivers/hwmon/adt7475.c
+> +++ b/drivers/hwmon/adt7475.c
+> @@ -294,9 +294,10 @@ static inline u16 volt2reg(int channel, long volt, u8 bypass_attn)
+>  	long reg;
+>  
+>  	if (bypass_attn & (1 << channel))
+> -		reg = (volt * 1024) / 2250;
+> +		reg = DIV_ROUND_CLOSEST(volt * 1024, 2250);
+>  	else
+> -		reg = (volt * r[1] * 1024) / ((r[0] + r[1]) * 2250);
+> +		reg = DIV_ROUND_CLOSEST(volt * r[1] * 1024,
+> +					(r[0] + r[1]) * 2250);
+>  	return clamp_val(reg, 0, 1023) & (0xff << 2);
+>  }
+>  
