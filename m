@@ -2,144 +2,100 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BA5C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB531C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A0621823
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:56:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575629798;
-	bh=vs7fz85kQNDofToi4WfYvmrbZmp8cI8zREDtKpBWofc=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=e7u/BylfJdNaY9/SU9wnXVAFvehRLWJMrODYvWcdSxo9C+IBuT+OljUOrmLyYEL6Q
-	 QfuhwGnoaGD+bK0DOdh8EVI8R6xfXJSkA9hWkY/n6dOc5IVhfEXxOdr0AtkJIiM2V7
-	 rNM8MsopND2L6GRtqJkCDMZVTddSSY4g+zqdZehI=
+	by mail.kernel.org (Postfix) with ESMTP id 8904F21823
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:04:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+lO5rde"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfLFK4h (ORCPT
+        id S1726284AbfLFLES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 05:56:37 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:37079 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726154AbfLFK4g (ORCPT
+        Fri, 6 Dec 2019 06:04:18 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:34974 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfLFLES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 05:56:36 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1idBHd-0001CF-6Z; Fri, 06 Dec 2019 11:56:25 +0100
-To:     linmiaohe <linmiaohe@huawei.com>
-Subject: Re: [PATCH] KVM: arm: fix missing =?UTF-8?Q?free=5Fpercpu=5Firq?=  =?UTF-8?Q?=20in=20kvm=5Ftimer=5Fhyp=5Finit=28=29?=
-X-PHP-Originating-Script: 0:main.inc
+        Fri, 6 Dec 2019 06:04:18 -0500
+Received: by mail-il1-f194.google.com with SMTP id g12so5922274ild.2;
+        Fri, 06 Dec 2019 03:04:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+K2i2NBMzFxBPENxFOj55e/4N2mWKkV/KyZn4aZDJ/E=;
+        b=J+lO5rdeGz/uq0GRKk7Vlr5+fkJbi9Q/1L1Gwh+GLdHU53JmXXqwGZSMXm4oTnW/pJ
+         xFdXk3URIBtlYttPmbi80Mq2JLb2ijEE/qFoMXLoZlwOeNlLDSfkVCFL3UUPA3BikOgv
+         oWM8lcunhgf4MF6NvE7wr1iJBsgDKzvIj3chFPjOlSB143YYRduKSiACDtZ4Svc5+T72
+         A4svWQQNE8vdhl7W6uOVrUWI6gKNE050XWF7CwV66vQCdRScdvKt7A9qfH9P9LrTbj0B
+         DDgMm14YybtG8sEkxlQnl1SIK0Fm7uSmviAK9gKti8JayhDQsXq9pmj2CKEKEYoPmZIU
+         VD1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+K2i2NBMzFxBPENxFOj55e/4N2mWKkV/KyZn4aZDJ/E=;
+        b=LylePvITvvCyTax2LjGOM7QrjgnW1Yi3uNsWVesRsl6huPyT+Tj6+XcdsQERqrJ5LZ
+         7UX5sGvGFH/p+hWd3zdT/4OGkwk11b2j0PiSfqCs0JCYIiM1HVXamtYcM5q41eKLYEoF
+         NkDqLPa7CThSZsfSpT2l3TzIbzjgARzOzcIg0quZbgrFHfGmu3azHTakiRmE6VzT8s7X
+         mAmVvXbnyub3eVGQ4JOoQs7w/3zXQBE7b/OldxOig7W8Zsr3LesbJF3C8jhJk+mjuOku
+         XZH+D+qifX597LkeOYL87Rs7x2fCDVbI8ddPLZsgLB3SL0YYXNSBfSpvDkSnQyRwcm6t
+         9gaw==
+X-Gm-Message-State: APjAAAVe+UxrnEyzIk3vrHPp1sQisyRsLenhitb4Frx0iLJC1HWzZoNF
+        SLm0Iy/HdGd7Oc9nAyuwgnMus42dIfqTMBl8S0w=
+X-Google-Smtp-Source: APXvYqya8X01NYggP7t3CVoWZjUKlt/yGkpN4d2gA6d/51cmQjMCHZUZmiorAjcnVj4Xoyt4OswyArH2DattCHmByvo=
+X-Received: by 2002:a92:b749:: with SMTP id c9mr13076534ilm.143.1575630257440;
+ Fri, 06 Dec 2019 03:04:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 06 Dec 2019 10:56:24 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>, <james.morse@arm.com>,
-        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        <kvm@vger.kernel.org>
-In-Reply-To: <1574476229-15448-1-git-send-email-linmiaohe@huawei.com>
-References: <1574476229-15448-1-git-send-email-linmiaohe@huawei.com>
-Message-ID: <96f07f61e3356c942ce934f81efc4a94@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: linmiaohe@huawei.com, pbonzini@redhat.com, rkrcmar@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+References: <20191204200307.21047-1-idryomov@gmail.com> <CAHk-=wjm+9rJvh=aRahfoN7z6waV87Eqr=-i_Cb7zOwHrugf5A@mail.gmail.com>
+In-Reply-To: <CAHk-=wjm+9rJvh=aRahfoN7z6waV87Eqr=-i_Cb7zOwHrugf5A@mail.gmail.com>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Fri, 6 Dec 2019 12:05:01 +0100
+Message-ID: <CAOi1vP_biwOVuG9U4nemfH803O_ADHGgjmd0_6eL-ZJhyrkOYA@mail.gmail.com>
+Subject: Re: [GIT PULL] Ceph updates for 5.5-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ceph Development <ceph-devel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-23 02:30, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
+On Thu, Dec 5, 2019 at 10:19 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> When host_ptimer_irq request irq resource failed, we forget
-> to release the host_vtimer_irq resource already requested.
-> Fix this missing irq release and other similar scenario.
+> On Wed, Dec 4, 2019 at 12:02 PM Ilya Dryomov <idryomov@gmail.com> wrote:
+> >
+> > Colin Ian King (1):
+> >       rbd: fix spelling mistake "requeueing" -> "requeuing"
+>
+> Hmm. Why? That's not a spelling mistake, it's the same word.
+>
+> Arguably "requeue" isn't much of a real word to begin with, and is
+> more of a made-up tech language. And then on wiktionary apparently the
+> only "ing" form you find is the one without the final "e", but
+> honestly, that's reaching. The word doesn't exist in _real_
+> dictionaries at all.
+>
+> I suspect "re-queueing" with the explicit hyphen would be the more
+> legible spelling (with or without the "e" - both forms are as
+> correct), but whatever.
+>
+> I've pulled it, but I really don't think it was misspelled to begin
+> with, and somebody who actually cares about language probably wouldn't
+> like either form.
 
-That's really not a big deal, as nothing but KVM can use the
-timers anyway, but I guess it doesn't hurt to be correct.
-
->
-> Fixes: 9e01dc76be6a ("KVM: arm/arm64: arch_timer: Assign the phys
-> timer on VHE systems")
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  virt/kvm/arm/arch_timer.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
->
-> diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
-> index f182b2380345..73867f97040c 100644
-> --- a/virt/kvm/arm/arch_timer.c
-> +++ b/virt/kvm/arm/arch_timer.c
-> @@ -935,7 +935,7 @@ int kvm_timer_hyp_init(bool has_gic)
->  					    kvm_get_running_vcpus());
->  		if (err) {
->  			kvm_err("kvm_arch_timer: error setting vcpu affinity\n");
-> -			goto out_free_irq;
-> +			goto out_free_vtimer_irq;
->  		}
->
->  		static_branch_enable(&has_gic_active_state);
-> @@ -960,7 +960,7 @@ int kvm_timer_hyp_init(bool has_gic)
->  		if (err) {
->  			kvm_err("kvm_arch_timer: can't request ptimer interrupt %d 
-> (%d)\n",
->  				host_ptimer_irq, err);
-> -			return err;
-> +			goto out_disable_gic_state;
->  		}
->
->  		if (has_gic) {
-> @@ -968,7 +968,7 @@ int kvm_timer_hyp_init(bool has_gic)
->  						    kvm_get_running_vcpus());
->  			if (err) {
->  				kvm_err("kvm_arch_timer: error setting vcpu affinity\n");
-> -				goto out_free_irq;
-> +				goto out_free_ptimer_irq;
->  			}
->  		}
->
-> @@ -977,15 +977,22 @@ int kvm_timer_hyp_init(bool has_gic)
->  		kvm_err("kvm_arch_timer: invalid physical timer IRQ: %d\n",
->  			info->physical_irq);
->  		err = -ENODEV;
-> -		goto out_free_irq;
-> +		goto out_disable_gic_state;
->  	}
->
->  	cpuhp_setup_state(CPUHP_AP_KVM_ARM_TIMER_STARTING,
->  			  "kvm/arm/timer:starting", kvm_timer_starting_cpu,
->  			  kvm_timer_dying_cpu);
->  	return 0;
-> -out_free_irq:
-> +
-> +out_free_ptimer_irq:
-> +	free_percpu_irq(host_ptimer_irq, kvm_get_running_vcpus());
-> +out_disable_gic_state:
-> +	if (has_gic)
-> +		static_branch_disable(&has_gic_active_state);
-
-Given that we're failing the init of KVM, this is totally
-superfluous. Also, this state is still valid, no matter
-what happens (the GIC is not going away from under our feet).
-
-> +out_free_vtimer_irq:
->  	free_percpu_irq(host_vtimer_irq, kvm_get_running_vcpus());
-> +
->  	return err;
->  }
+FWIW that was my spelling.  I suspected the same thing, saw it being
+used in various spellings, but since Colin is a native speaker I took
+the patch.
 
 Thanks,
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+                Ilya
