@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256AFC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27D5C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBBDB2064B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E0421835
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:57:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m6zOpJSM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNvFyTAU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbfLFQ5b (ORCPT
+        id S1726627AbfLFQ5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:57:31 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:35902 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfLFQ53 (ORCPT
+        Fri, 6 Dec 2019 11:57:33 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:39734 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfLFQ5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:57:29 -0500
-Received: by mail-qv1-f65.google.com with SMTP id b18so150514qvy.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 08:57:28 -0800 (PST)
+        Fri, 6 Dec 2019 11:57:31 -0500
+Received: by mail-qv1-f66.google.com with SMTP id y8so140542qvk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 08:57:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/kvBFKQi677ga7uy55gslQEdaVWu0/AqECgiCr1RRo4=;
-        b=m6zOpJSM8yCyfTXahxG+OL8+V57Vx6gFwau0g6LXxOvALmUvIKTagAfW39yvzxqGNL
-         TjBpm72RRL0Ww/yzjWMdK+uaaDnUQ2dzuQsAoe/6NUn1VxI95Vz2lWvFaz+FUZrP+/Uc
-         OkmXYG0LcAYv+WXfe0XjiVrC0SelB+kkZMXLf+Oo2z9ICorZWiIRWt4HqCtB8dj/VDUB
-         87+VYt1PYSsRRI+3T5tdBtXY+Aa03P2l7wb4/IAQZnS74bzthN0pYWCSdelJFTbuIpoW
-         BtET0oFC9qi50hjPdLYYAs3Rg0GBGwmmgqyM5cglL0wnGPyeQQ7g2wU9YNco6WcOnhv0
-         BwWA==
+        bh=l+4mkyNeIAriOyBCvcPCL0FWxBlCR+Eo/bwv8rBr75Q=;
+        b=GNvFyTAU6v6aXSQWFKL0VuXC2dEXOok0bp4rkLsKKc1mrqq3AD4IWT8hY3mHdf/Awv
+         yBZKhIUZgTHkAwkDJBIRuZRfTqLDLmho+s9CaQC2Ntfs9gShEoGUyc7cOGVpC2etN4Ue
+         bWcI6gyfa4bh0tlk4sFfQKX35RVAmAK58tvZ3H+LsCVQu6XJRl/KdOAZZlyLVGLTwBPC
+         ltsKVWM+CiOsSXv7Ic/rFkZ+qfCxZLh33yNnxjytBOD3Doa0FJYN+2lzHdjfecbpu6ZG
+         I36bHPZRpPrqEYbXaxTVNIvU6zPtJyNNWYeQnw3GeKB9HoKG9JUy5UHgemEGEIQZMabY
+         Ps9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=/kvBFKQi677ga7uy55gslQEdaVWu0/AqECgiCr1RRo4=;
-        b=Tk8lRsNvKXG6ivHwdnd2gw/HonS6I4uC+5wxtwznAY6CzJmyS8bBNirS8++j26v1UP
-         r8YVHwFATKjS7B0WyWYXBu6059i1sTBfIXLoBGQDJVWDjM0NrN5L6/r4rQ4UM9Y6JXFt
-         gsWChkm+tnafK/KgQZaMQMu/qxvXCvwlFs0OXBd67rvFNvWNhFUwQqmEj+dyFuL0Yq/j
-         h24Y3wZaSiQfeVsWRtiSL/+3kuGjxWxHWQeDIuNz0XB2hQJr4nfBj5P19YoO7n80B/ZV
-         +hK3PtCu4mwrsrXyXvbMExI6FdHIUR/sF94TKKckcYzptKjoPRa5jGJVfCIDeqXeGGi8
-         TSrg==
-X-Gm-Message-State: APjAAAXLTZnJCygo2G8wnbxmOmSmCSf12jXYqoQgcH/WbdXDg9UMCqrq
-        g/sDYvU+TmsxUaiA2gi9ziYC6RI=
-X-Google-Smtp-Source: APXvYqymBvd/1/AxoAWKH4D/DsXpniRWT1qj+AJV7blzQm6b/wWqMBwBLoT7ab/8K0ssXhLBLH3JDQ==
-X-Received: by 2002:ad4:478b:: with SMTP id z11mr13422754qvy.185.1575651448568;
-        Fri, 06 Dec 2019 08:57:28 -0800 (PST)
+        bh=l+4mkyNeIAriOyBCvcPCL0FWxBlCR+Eo/bwv8rBr75Q=;
+        b=DIo8vNy3NApeWp89yblW/fjCwDo5BRnrOzvrs9LW6JVAUVx4adgjuye33uRvpT0e5i
+         xcUK96aHazSxoCELhUj6vWHxbPTMFzbuGWt7r6367c/43E1C0sMN/ml6MJAyc59HDZjH
+         XHjCSX5b8UhqJ8xrEct9liuV0Tlx/3522dNSKVIcIvC5IZiiLr67412xzFv93lRpjhQJ
+         tfvbUEZK4ljPtZz8BM6ZfcJ5DoWix7RDVPXH2++SeSm7PPUaomca79BTBGvFdyvkDWCE
+         6vS6ZGQSgAGVJuItu5J/4Lnhn87MlWZocRbuBb6XyVumJ9I+AHWAnIy1XyLleWA+L6ld
+         BwWQ==
+X-Gm-Message-State: APjAAAVRZNrVnvcH1qFafSayZ6DBnBvtnmgE2ECsdrh2f1+jbCKomIpA
+        wEFdq5ee4PBst6G3qycr3g==
+X-Google-Smtp-Source: APXvYqzP02vYEztCRv3k64AwB8k1FT05immmIt3+5IRzko9VEccNNPbPPHkbG3h70zIAjnCB+teSeQ==
+X-Received: by 2002:a0c:92c9:: with SMTP id c9mr13598384qvc.168.1575651450760;
+        Fri, 06 Dec 2019 08:57:30 -0800 (PST)
 Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id y28sm6531373qtk.65.2019.12.06.08.57.27
+        by smtp.gmail.com with ESMTPSA id y28sm6531373qtk.65.2019.12.06.08.57.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 08:57:28 -0800 (PST)
+        Fri, 06 Dec 2019 08:57:30 -0800 (PST)
 From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
 To:     Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -65,9 +65,9 @@ To:     Borislav Petkov <bp@alien8.de>,
 Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
         Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 1/4] x86/boot: Wrap up the SRAT traversing code into subtable_parse()
-Date:   Fri,  6 Dec 2019 11:57:04 -0500
-Message-Id: <20191206165707.20806-2-msys.mizuma@gmail.com>
+Subject: [PATCH v6 3/4] x86/boot: Get the max address from SRAT
+Date:   Fri,  6 Dec 2019 11:57:06 -0500
+Message-Id: <20191206165707.20806-4-msys.mizuma@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191206165707.20806-1-msys.mizuma@gmail.com>
 References: <20191206165707.20806-1-msys.mizuma@gmail.com>
@@ -78,54 +78,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-Wrap up the SRAT traversing code into subtable_parse().
+Get the max address from SRAT and write it into boot_params->max_addr.
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
+Acked-by: Baoquan He <bhe@redhat.com>
 Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 ---
- arch/x86/boot/compressed/acpi.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ arch/x86/boot/compressed/acpi.c | 33 +++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-index 25019d42ae93..a0f81438a0fd 100644
+index a0f81438a0fd..47db706656e0 100644
 --- a/arch/x86/boot/compressed/acpi.c
 +++ b/arch/x86/boot/compressed/acpi.c
-@@ -362,6 +362,19 @@ static unsigned long get_acpi_srat_table(void)
+@@ -362,17 +362,32 @@ static unsigned long get_acpi_srat_table(void)
  	return 0;
  }
  
-+static void subtable_parse(struct acpi_subtable_header *sub_table, int *num)
-+{
-+	struct acpi_srat_mem_affinity *ma;
+-static void subtable_parse(struct acpi_subtable_header *sub_table, int *num)
++/**
++ * subtable_parse - Cache the immovable memory regions into the
++ * immovable_mem array and update the index of the array.
++ *
++ * Return the end physical address of hotpluggable region.
++ * The system memory can be extended to the address by hotplug.
++ */
++static unsigned long subtable_parse(struct acpi_subtable_header *sub_table,
++				    int *num)
+ {
+ 	struct acpi_srat_mem_affinity *ma;
++	unsigned long addr = 0;
+ 
+ 	ma = (struct acpi_srat_mem_affinity *)sub_table;
+ 
+-	if (!(ma->flags & ACPI_SRAT_MEM_HOT_PLUGGABLE) && ma->length) {
+-		immovable_mem[*num].start = ma->base_address;
+-		immovable_mem[*num].size = ma->length;
+-		(*num)++;
++	if (ma->length) {
++		if (ma->flags & ACPI_SRAT_MEM_HOT_PLUGGABLE)
++			addr = ma->base_address + ma->length;
++		else {
++			immovable_mem[*num].start = ma->base_address;
++			immovable_mem[*num].size = ma->length;
++			(*num)++;
++		}
+ 	}
 +
-+	ma = (struct acpi_srat_mem_affinity *)sub_table;
-+
-+	if (!(ma->flags & ACPI_SRAT_MEM_HOT_PLUGGABLE) && ma->length) {
-+		immovable_mem[*num].start = ma->base_address;
-+		immovable_mem[*num].size = ma->length;
-+		(*num)++;
-+	}
-+}
-+
++	return addr;
+ }
+ 
  /**
-  * count_immovable_mem_regions - Parse SRAT and cache the immovable
-  * memory regions into the immovable_mem array.
-@@ -395,14 +408,8 @@ int count_immovable_mem_regions(void)
- 	while (table + sizeof(struct acpi_subtable_header) < table_end) {
+@@ -391,6 +406,7 @@ int count_immovable_mem_regions(void)
+ 	struct acpi_subtable_header *sub_table;
+ 	struct acpi_table_header *table_header;
+ 	char arg[MAX_ACPI_ARG_LENGTH];
++	unsigned long max_addr = 0, addr;
+ 	int num = 0;
+ 
+ 	if (cmdline_find_option("acpi", arg, sizeof(arg)) == 3 &&
+@@ -409,7 +425,9 @@ int count_immovable_mem_regions(void)
  		sub_table = (struct acpi_subtable_header *)table;
  		if (sub_table->type == ACPI_SRAT_TYPE_MEMORY_AFFINITY) {
--			struct acpi_srat_mem_affinity *ma;
  
--			ma = (struct acpi_srat_mem_affinity *)sub_table;
--			if (!(ma->flags & ACPI_SRAT_MEM_HOT_PLUGGABLE) && ma->length) {
--				immovable_mem[num].start = ma->base_address;
--				immovable_mem[num].size = ma->length;
--				num++;
--			}
-+			subtable_parse(sub_table, &num);
+-			subtable_parse(sub_table, &num);
++			addr = subtable_parse(sub_table, &num);
++			if (addr > max_addr)
++				max_addr = addr;
  
  			if (num >= MAX_NUMNODES*2) {
  				debug_putstr("Too many immovable memory regions, aborting.\n");
+@@ -418,6 +436,9 @@ int count_immovable_mem_regions(void)
+ 		}
+ 		table += sub_table->length;
+ 	}
++
++	boot_params->max_addr = max_addr;
++
+ 	return num;
+ }
+ #endif /* CONFIG_RANDOMIZE_BASE && CONFIG_MEMORY_HOTREMOVE */
 -- 
 2.20.1
 
