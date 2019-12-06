@@ -2,139 +2,140 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EB1C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B07C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5E0205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="X9D+TJ1j"
+	by mail.kernel.org (Postfix) with ESMTP id 9677521835
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfLFMv0 (ORCPT
+        id S1726251AbfLFMx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:51:26 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:59249 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfLFMvZ (ORCPT
+        Fri, 6 Dec 2019 07:53:26 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53940 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726160AbfLFMx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:51:25 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191206125124euoutp014e35b46a47203565241e02b878937f16~dyTdl7kra2068520685euoutp01q
-        for <linux-kernel@vger.kernel.org>; Fri,  6 Dec 2019 12:51:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191206125124euoutp014e35b46a47203565241e02b878937f16~dyTdl7kra2068520685euoutp01q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1575636684;
-        bh=wF1Iy7VsoT2dA4yuiPpiriyC0w9NhNDxY4A8+kILiJk=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=X9D+TJ1jpuWYWlNh0VcSUHOxpmchQi+awZxcGlzfUNxITsJrm+8goXrkw+qkfwNoK
-         N5IN9G8dfyyz+7r4bJAu6PzBaIjdGiraQ4BNGSU5kmBYiMb1lWjrnx+vzJ1KW2q4oY
-         vOMUrEKjImTLJkH/78ZmTuwVi8PLG/AbOFmRDwcQ=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191206125124eucas1p1d7f4a644ba4feea13d90848c6bad9607~dyTdO4M7b3207632076eucas1p1i;
-        Fri,  6 Dec 2019 12:51:24 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 31.D7.60679.BCE4AED5; Fri,  6
-        Dec 2019 12:51:23 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191206125123eucas1p1c1652484cbccef8d8df37e09affe4e25~dyTc0k1df1825518255eucas1p1d;
-        Fri,  6 Dec 2019 12:51:23 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191206125123eusmtrp2ffb17d3f3f0243921fd4239724b33edf~dyTcz7C4Y0189301893eusmtrp2I;
-        Fri,  6 Dec 2019 12:51:23 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-1f-5dea4ecbcf79
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id D4.D6.08375.BCE4AED5; Fri,  6
-        Dec 2019 12:51:23 +0000 (GMT)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191206125123eusmtip2070f004f9a6e9b6c4ef2024ffd34fe94~dyTcVHUsz0588405884eusmtip2K;
-        Fri,  6 Dec 2019 12:51:23 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        Kusanagi Kouichi <slash@ac.auone-net.jp>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH] arm: multi_v7_config: Restore debugfs support
-Date:   Fri,  6 Dec 2019 13:51:12 +0100
-Message-Id: <20191206125112.11006-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphleLIzCtJLcpLzFFi42LZduznOd3Tfq9iDeZ9Mbf4O+kYu8XGGetZ
-        Lc6f38BusenxNVaLy7vmsFnMOL+PyWLtkbvsFqeuf2az2NfxgMni+auzzA5cHisW7WX3+P1r
-        EqNHy75b7B6bVnWyeWxeUu9x5UQTq0ffllWMHp83yQVwRHHZpKTmZJalFunbJXBlHPj1h7Hg
-        PEdF356rbA2Me9m7GDk5JARMJGbf2sTSxcjFISSwglHiztJrjBDOF0aJ6ZPvsIFUCQl8ZpQ4
-        d8kWpmNrz1QmiKLljBK/+r+xw3Us7rrPDFLFJmAo0fW2C6xbRCBbovPxA7CxzAKLmCT+LNwH
-        tlxYwE6i8cJaoAYODhYBVYklbypBwrwCthITT81hgtgmL7F6wwFmkF4JgWZ2ieM7/kIlXCSO
-        dE5jhrCFJV4d3wL1kIzE/53zmaAaGCUenlvLDuH0MEpcbprBCFFlLXH4+EVWkM3MApoS63fp
-        Q4QdJd6+aWUDCUsI8EnceCsIEmYGMidtm84MEeaV6GgTgqhWk5h1fB3c2oMXLkGd4yHR2b6M
-        BRJysRJf1m9hn8AoNwth1wJGxlWM4qmlxbnpqcVGeanlesWJucWleel6yfm5mxiBaeT0v+Nf
-        djDu+pN0iFGAg1GJh3fG5xexQqyJZcWVuYcYJTiYlUR40/lexgrxpiRWVqUW5ccXleakFh9i
-        lOZgURLnNV4ElBJITyxJzU5NLUgtgskycXBKNTBO0VhYfyP1mEPbLNncLct7giTZEkqeiscc
-        8D8ZPqN4T+HrXp8vF/5vfKZ6l1e76LPTNN3D7xZPr6swtW9+9SnO4O09/xonwYk2V7WMDK0i
-        GX7pPfG8vGzlhl+LptVtmCazIod79QeuuL/zbutO2v9lq+PmB+1ia379Zchb1mnvf5hhJ2M6
-        1zc5JZbijERDLeai4kQAXjPhyx8DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrILMWRmVeSWpSXmKPExsVy+t/xe7qn/V7FGkw8pGjxd9IxdouNM9az
-        Wpw/v4HdYtPja6wWl3fNYbOYcX4fk8XaI3fZLU5d/8xmsa/jAZPF81dnmR24PFYs2svu8fvX
-        JEaPln232D02repk89i8pN7jyokmVo++LasYPT5vkgvgiNKzKcovLUlVyMgvLrFVija0MNIz
-        tLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DLOPDrD2PBeY6Kvj1X2RoY97J3MXJySAiY
-        SGztmcrUxcjFISSwlFGi5egpqISMxMlpDawQtrDEn2tdbBBFnxglVs/9xAaSYBMwlOh6C5Lg
-        4BARyJV4s0wcpIZZYAWTxK1n+8FqhAXsJBovrGUGqWERUJVY8qYSJMwrYCsx8dQcJoj58hKr
-        NxxgnsDIs4CRYRWjSGppcW56brGhXnFibnFpXrpecn7uJkZg8G479nPzDsZLG4MPMQpwMCrx
-        8M74/CJWiDWxrLgy9xCjBAezkghvOt/LWCHelMTKqtSi/Pii0pzU4kOMpkC7JzJLiSbnAyMr
-        ryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QDo0HLzVflKYarshuW
-        uV/Mn+WonvHV3WjJ1PNMpjFhctWBB65ceZBQ+X3R5m0WB6V+e726MbGdn2dWetyCpuObE7W4
-        2J7eOsZz/hxf7KQL1zjZ72efSTweve4rdzu/Jl/84yif4knt4fcun772vePvtvlrb0zbL/Vk
-        0sXZ23PX+yn4TJio4PvYoUmJpTgj0VCLuag4EQD4BPjIdAIAAA==
-X-CMS-MailID: 20191206125123eucas1p1c1652484cbccef8d8df37e09affe4e25
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191206125123eucas1p1c1652484cbccef8d8df37e09affe4e25
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191206125123eucas1p1c1652484cbccef8d8df37e09affe4e25
-References: <CGME20191206125123eucas1p1c1652484cbccef8d8df37e09affe4e25@eucas1p1.samsung.com>
+        Fri, 6 Dec 2019 07:53:26 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB6ClbV6064006
+        for <linux-kernel@vger.kernel.org>; Fri, 6 Dec 2019 07:53:25 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wq55tfmrn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 07:53:24 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Fri, 6 Dec 2019 12:53:22 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 6 Dec 2019 12:53:20 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB6CrJSh61407486
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 6 Dec 2019 12:53:19 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 90BBB11C052;
+        Fri,  6 Dec 2019 12:53:19 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F11FA11C050;
+        Fri,  6 Dec 2019 12:53:17 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Fri,  6 Dec 2019 12:53:17 +0000 (GMT)
+Date:   Fri, 6 Dec 2019 18:23:17 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH] sched/fair: Optimize select_idle_core
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20191205172316.8198-1-srikar@linux.vnet.ibm.com>
+ <6242deaa-e570-3384-0737-e49abb0599dd@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <6242deaa-e570-3384-0737-e49abb0599dd@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19120612-4275-0000-0000-0000038C63DA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120612-4276-0000-0000-000038A00C9D
+Message-Id: <20191206125317.GC22330@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-06_03:2019-12-05,2019-12-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 spamscore=0 malwarescore=0
+ adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912060110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit fd7d58f0dbc3 ("ARM: multi_v7_defconfig: renormalize based on recent
-additions") removed explicit enable line for CONFIG_DEBUG_FS, because
-that feature has been selected by other enabled options: CONFIG_TRACING,
-which were enabled by CONFIG_PERF_EVENTS.
+Hi Valentin,
 
-In meantime, commit 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS
-dependency") removed the dependency between CONFIG_DEBUG_FS and
-CONFIG_TRACING, so CONFIG_DEBUG_FS is no longer enabled in default builds.
+> Say you have a 4-core SMT2 system with the usual numbering scheme:
+> 
+> {0, 4}  {1, 5}  {2, 6}  {3, 7}
+> CORE0   CORE1   CORE2   CORE3
+> 
+> 
+> Say 'target' is the prev_cpu, in that case let's pick 5. Because we do a
+> for_each_cpu_wrap(), our iteration for 'core' would start with 
+> 
+>   5, 6, 7, ...
+> 
+> So say CORE2 is entirely idle and CORE1 isn't, we would go through the
+> inner loop on CORE1 (with 'core' == 5), then go through CORE2 (with
+> 'core' == 6) and return 'core'. I find it a bit unusual that we wouldn't
+> return the first CPU in the SMT mask, usually we try to fill sched_groups
+> in cpumask order.
+> 
+> 
+> If we could have 'cpus' start with only primary CPUs, that would simplify
+> things methinks:
+> 
 
-Enable it again explicitly, as debugfs support is essential for various
-automated testing tools.
+Its probably something to think over. I probably don't have an answer on why
+we are not choosing the starting cpu to be primary CPU.  Would we have to
+think of the case where the Primary CPUs are online / offline etc? I mean
+with target cpu, we know the CPU is online for sure.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+>   for_each_cpu_wrap(core, cpus, target) {
+> 	  bool idle = true;
+> 
+> 	  for_each_cpu(cpu, cpu_smt_mask(core)) {
+> 		  if (!available_idle_cpu(cpu)) {
+> 			  idle = false;
+> 			  break;
+> 		  }
+> 
+> 	  __cpumask_clear_cpu(core, cpus);
+> 
+> 	  if (idle)
+> 		  return core;
+> 
+> 
+> Food for thought; your change itself looks fine as it is.
+> 
+> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+> 
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 24962d0e71c7..0ffa957f2c94 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -1121,3 +1121,4 @@ CONFIG_CRYPTO_DEV_ROCKCHIP=m
- CONFIG_CMA_SIZE_MBYTES=64
- CONFIG_PRINTK_TIME=y
- CONFIG_MAGIC_SYSRQ=y
-+CONFIG_DEBUG_FS=y
+Thanks for the review.
+
 -- 
-2.17.1
+Thanks and Regards
+Srikar Dronamraju
 
