@@ -2,146 +2,91 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA225C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D7BC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 911382173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:02:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575648163;
-	bh=uN49J2KjPjCG2q1vrkZZhYout9vUnOgmq5AHuzL7OmY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=roBT/nSfDDbYgMp91ZJAPypL2PDJTMxHugnX+efj6qWxRltAdjYcaVX7vxTEuT3Ms
-	 KZh2V4RaOG0iqWcUCfP5kbympPoZdO3u0BxWGQIrwgecnEs5TrkcBE6l0rnBbqah/7
-	 PB+5NMYrMfTp8Cqh3RFejccMha5jqNyNOqw2W12k=
+	by mail.kernel.org (Postfix) with ESMTP id AAA202173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:05:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfLFQCm (ORCPT
+        id S1726347AbfLFQFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:02:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59266 "EHLO mail.kernel.org"
+        Fri, 6 Dec 2019 11:05:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:48996 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbfLFQCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:02:40 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22B232173E;
-        Fri,  6 Dec 2019 16:02:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575648159;
-        bh=uN49J2KjPjCG2q1vrkZZhYout9vUnOgmq5AHuzL7OmY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=dhBUf+ww+91PA7OIoUovoazx+Zee9VhrqKOW7tvxd09vcuMDCb5ZqA/Xh//Y8mUTG
-         f8gBztw7LPmmF9Ptmm0dmheqcx1kCMIhpl7Rnx+bubZ6acaSfZrRnn8cc8pKCVsolB
-         Q0ieCCicDMxk1sWnpr3m9eetaba0Ru77BQMujAis=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id DB9F435206AB; Fri,  6 Dec 2019 08:02:38 -0800 (PST)
-Date:   Fri, 6 Dec 2019 08:02:38 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     madhuparnabhowmik04@gmail.com
-Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        joel@joelfernandes.org, linux-nfs@vger.kernel.org,
-        rcu@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
-Message-ID: <20191206160238.GE2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
+        id S1726258AbfLFQFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 11:05:02 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B60E31B;
+        Fri,  6 Dec 2019 08:05:01 -0800 (PST)
+Received: from [192.168.1.13] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 418ED3F718;
+        Fri,  6 Dec 2019 08:04:58 -0800 (PST)
+Subject: Re: [RFC 3/3] Allow sched_{get,set}attr to change latency_tolerance
+ of the task
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+To:     Parth Shah <parth@linux.ibm.com>, Qais Yousef <qais.yousef@arm.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, vincent.guittot@linaro.org,
+        patrick.bellasi@matbug.net, valentin.schneider@arm.com,
+        pavel@ucw.cz, dhaval.giani@oracle.com, qperret@qperret.net,
+        David.Laight@ACULAB.COM, morten.rasmussen@arm.com, pjt@google.com,
+        tj@kernel.org, viresh.kumar@linaro.org, rafael.j.wysocki@intel.com,
+        daniel.lezcano@linaro.org
+References: <20191125094618.30298-1-parth@linux.ibm.com>
+ <20191125094618.30298-4-parth@linux.ibm.com>
+ <20191203083915.yahl2qd3wnnkqxxs@e107158-lin.cambridge.arm.com>
+ <cfb607c1-6be9-853d-cfad-6787f78fa6ad@linux.ibm.com>
+ <ffe4f4de-d433-91be-00ce-20b625807f20@arm.com>
+Message-ID: <09e9a3e1-9c43-a541-01e6-e1b429a63a6f@arm.com>
+Date:   Fri, 6 Dec 2019 17:04:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <ffe4f4de-d433-91be-00ce-20b625807f20@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 08:46:40PM +0530, madhuparnabhowmik04@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+
+
+On 05.12.19 10:24, Dietmar Eggemann wrote:
+> On 03/12/2019 16:51, Parth Shah wrote:
+>>  
+>> On 12/3/19 2:09 PM, Qais Yousef wrote:
+>>> On 11/25/19 15:16, Parth Shah wrote:
 > 
-> This patch fixes the following errors:
-> fs/nfs/dir.c:2353:14: error: incompatible types in comparison expression (different address spaces):
-> fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
-> fs/nfs/dir.c:2353:14:    struct list_head *
+> [...]
 > 
-> caused due to directly accessing the prev pointer of
-> a RCU protected list.
-> Accessing the pointer using the macro list_prev_rcu() fixes this error.
+>>>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+>>>> index ea7abbf5c1bb..dfd36ec14404 100644
+>>>> --- a/kernel/sched/core.c
+>>>> +++ b/kernel/sched/core.c
+>>>> @@ -4695,6 +4695,9 @@ static void __setscheduler_params(struct task_struct *p,
+>>>>  	p->rt_priority = attr->sched_priority;
+>>>>  	p->normal_prio = normal_prio(p);
+>>>>  	set_load_weight(p, true);
+>>>> +
+>>>> +	/* Change latency tolerance of the task if !SCHED_FLAG_KEEP_PARAMS */
 > 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> ---
->  fs/nfs/dir.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> IMHO, this comment seems to be gratuitous.
 > 
-> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> index e180033e35cf..2035254cc283 100644
-> --- a/fs/nfs/dir.c
-> +++ b/fs/nfs/dir.c
-> @@ -2350,7 +2350,7 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
->  	rcu_read_lock();
->  	if (nfsi->cache_validity & NFS_INO_INVALID_ACCESS)
->  		goto out;
-> -	lh = rcu_dereference(nfsi->access_cache_entry_lru.prev);
-> +	lh = rcu_dereference(list_prev_rcu(&nfsi->access_cache_entry_lru));
+>>>> +	p->latency_tolerance = attr->sched_latency_tolerance;
+>>>>  }
+> 
+> [...]
+> 
 
-And as noted in the earlier email, what is preventing concurrent
-insertions into  and deletions from this list?
-
-o	This use of list_move_tail() is OK because it does not poison.
-	Though it isn't being all that friendly to lockless access to
-	->prev -- no WRITE_ONCE() in list_move_tail().
-
-o	The use of list_add_tail() is not safe with RCU readers, though
-	they do at least partially compensate via use of smp_wmb()
-	in nfs_access_add_cache() before calling nfs_access_add_rbtree().
-
-o	The list_del() near the end of nfs_access_add_rbtree() will
-	poison the ->prev pointer.  I don't see how this is safe given the
-	possibility of a concurrent call to nfs_access_get_cached_rcu().
-
->  	cache = list_entry(lh, struct nfs_access_entry, lru);
->  	if (lh == &nfsi->access_cache_entry_lru ||
->  	    cred != cache->cred)
-
-And a few lines below here, it really does dereference the pointer
-obtained from ->prev!
-
-So how to really fix this?  Here is one possibility, but we of course
-need to get the NFS developers' and maintainers' thoughts:
-
-o	Create a list that is safe for bidirectional RCU traversal.
-	This can use list_head, and would need these functions,
-	give or take the exact names:
-
-	list_add_tail_rcuprev():  This is like list_add_tail_rcu(),
-	but also has smp_store_release() for ->prev.  (As in there is
-	also a __list_add_rcuprev() helper that actually contains the
-	additional smp_store_release().)
-
-	list_del_rcuprev():  This can be exactly __list_del_entry(),
-	but with the assignment to ->prev in __list_del() becoming
-	WRITE_ONCE().  And it looks like callers to __list_del_entry()
-	and __list_del() might need some attention!  And these might
-	result in additional users of *_rcuprev().
-
-	list_prev_rcu() as in your first patch, but with READ_ONCE().
-	Otherwise DEC Alpha can fail.  And more subtle compiler issues
-	can appear on other architectures.
-
-	Note that list_move_tail() will be OK give or take *_ONCE().
-	It might be better to define a list_move_tail_rcuprev(), given
-	the large number of users of list_move_tail() -- some of these
-	users might not like even the possibility of added overhead due
-	to volatile accesses.  ;-)
-
-Or am I missing something subtle here?
-
-							Thanx, Paul
+This also would require some changes to UAPI
+(include/uapi/linux/sched.h, include/uapi/linux/sched/types.h), see
+commit a509a7cd7974 ("sched/uclamp: Extend sched_setattr() to support
+utilization clamping") and tools headers UAPI
+(tools/include/uapi/linux/sched.h), see commit c093de6bd3c5 ("tools
+headers UAPI: Sync sched.h with the kernel").
