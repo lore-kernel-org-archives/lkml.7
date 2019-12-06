@@ -2,147 +2,146 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1C6C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA225C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE382466E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911382173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:02:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575648163;
+	bh=uN49J2KjPjCG2q1vrkZZhYout9vUnOgmq5AHuzL7OmY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=roBT/nSfDDbYgMp91ZJAPypL2PDJTMxHugnX+efj6qWxRltAdjYcaVX7vxTEuT3Ms
+	 KZh2V4RaOG0iqWcUCfP5kbympPoZdO3u0BxWGQIrwgecnEs5TrkcBE6l0rnBbqah/7
+	 PB+5NMYrMfTp8Cqh3RFejccMha5jqNyNOqw2W12k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfLFQCi (ORCPT
+        id S1726397AbfLFQCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:02:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:48930 "EHLO foss.arm.com"
+        Fri, 6 Dec 2019 11:02:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbfLFQCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:02:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DB2431B;
-        Fri,  6 Dec 2019 08:02:37 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B20C23F718;
-        Fri,  6 Dec 2019 08:02:36 -0800 (PST)
-Date:   Fri, 6 Dec 2019 16:02:35 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Auger Eric <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        james.morse@arm.com, suzuki.poulose@arm.com, drjones@redhat.com
-Subject: Re: [RFC 2/3] KVM: arm64: pmu: Fix chained SW_INCR counters
-Message-ID: <20191206160234.GP18399@e119886-lin.cambridge.arm.com>
-References: <20191204204426.9628-1-eric.auger@redhat.com>
- <20191204204426.9628-3-eric.auger@redhat.com>
- <561ac6df385e977cc51d51a8ab28ee49@www.loen.fr>
- <2b30c1ca-3bc0-9f73-4bea-ee42bb74cbac@redhat.com>
- <15507faca89a980056df7119e105e82a@www.loen.fr>
- <20191206152141.GN18399@e119886-lin.cambridge.arm.com>
- <ea510414e337a4cab8ed9df737959368@www.loen.fr>
+        id S1726258AbfLFQCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 11:02:40 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22B232173E;
+        Fri,  6 Dec 2019 16:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575648159;
+        bh=uN49J2KjPjCG2q1vrkZZhYout9vUnOgmq5AHuzL7OmY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=dhBUf+ww+91PA7OIoUovoazx+Zee9VhrqKOW7tvxd09vcuMDCb5ZqA/Xh//Y8mUTG
+         f8gBztw7LPmmF9Ptmm0dmheqcx1kCMIhpl7Rnx+bubZ6acaSfZrRnn8cc8pKCVsolB
+         Q0ieCCicDMxk1sWnpr3m9eetaba0Ru77BQMujAis=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id DB9F435206AB; Fri,  6 Dec 2019 08:02:38 -0800 (PST)
+Date:   Fri, 6 Dec 2019 08:02:38 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        joel@joelfernandes.org, linux-nfs@vger.kernel.org,
+        rcu@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
+Message-ID: <20191206160238.GE2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ea510414e337a4cab8ed9df737959368@www.loen.fr>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 03:35:03PM +0000, Marc Zyngier wrote:
-> On 2019-12-06 15:21, Andrew Murray wrote:
-> > On Thu, Dec 05, 2019 at 02:52:26PM +0000, Marc Zyngier wrote:
-> > > On 2019-12-05 14:06, Auger Eric wrote:
-> > > > Hi Marc,
-
-
-> > > > >
-> > > > > I think the whole function is a bit of a mess, and could be
-> > > better
-> > > > > structured to treat 64bit counters as a first class citizen.
-> > > > >
-> > > > > I'm suggesting something along those lines, which tries to
-> > > > > streamline things a bit and keep the flow uniform between the
-> > > > > two word sizes. IMHO, it helps reasonning about it and gives
-> > > > > scope to the ARMv8.5 full 64bit counters... It is of course
-> > > > > completely untested.
-> > > >
-> > > > Looks OK to me as well. One remark though, don't we need to test
-> > > if the
-> > > > n+1th reg is enabled before incrementing it?
-> > 
-> > Indeed - we don't want to indicate an overflow on a disabled counter.
-> > 
-> > 
-> > > 
-> > > Hmmm. I'm not sure. I think we should make sure that we don't flag
-> > > a counter as being chained if the odd counter is disabled, rather
-> > > than checking it here. As long as the odd counter is not chained
-> > > *and* enabled, we shouldn't touch it.
-> > 
-> > Does this mean that we don't care if the low counter is enabled or not
-> > when deciding if the pair is chained?
-> > 
-> > I would find the code easier to follow if we had an explicit 'is the
-> > high counter enabled here' check (at the point of deciding where to
-> > put the overflow).
+On Fri, Dec 06, 2019 at 08:46:40PM +0530, madhuparnabhowmik04@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 > 
-> Sure. But the point is that we're spreading that kind of checks all over
-> the map, and that we don't have a way to even reason about the state of
-> a 64bit counter. Doesn't it strike you as being mildly broken?
+> This patch fixes the following errors:
+> fs/nfs/dir.c:2353:14: error: incompatible types in comparison expression (different address spaces):
+> fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
+> fs/nfs/dir.c:2353:14:    struct list_head *
 > 
-
-Yup! To the point where I can't trust the function names and have to look
-at what the code does...
-
-
-> > > @@ -645,7 +647,8 @@ static void kvm_pmu_update_pmc_chained(struct
-> > > kvm_vcpu
-> > > *vcpu, u64 select_idx)
-> > >  	struct kvm_pmu *pmu = &vcpu->arch.pmu;
-> > >  	struct kvm_pmc *pmc = &pmu->pmc[select_idx];
-> > > 
-> > > -	if (kvm_pmu_idx_has_chain_evtype(vcpu, pmc->idx)) {
-> > > +	if (kvm_pmu_idx_has_chain_evtype(vcpu, pmc->idx) &&
-> > > +	    kvm_pmu_counter_is_enabled(vcpu, pmc->idx)) {
-> > 
-> > I.e. here we don't care what the state of enablement is for the low
-> > counter.
-> > 
-> > Also at present, this may break the following use-case
-> > 
-> >  - User creates and uses a pair of chained counters
-> >  - User disables odd/high counter
-> >  - User reads values of both counters
-> >  - User rewrites CHAIN event to odd/high counter OR user re-enables
-> > just the even/low counter
-> >  - User reads value of both counters <- this may now different to the
-> > last read
+> caused due to directly accessing the prev pointer of
+> a RCU protected list.
+> Accessing the pointer using the macro list_prev_rcu() fixes this error.
 > 
-> Hey, I didn't say it was perfect ;-). But for sure we can't let the
-> PMU bitrot more than it already has, and I'm not sure this is heading
-> the right way.
-
-I think we're aligned here. To me this code is becoming very fragile, difficult
-for me to make sense of and is stretching the abstractions we've made. This is
-why it is difficult to enhance it without breaking something. It's why I felt it
-was safer to add 'an extra check' in the SWINCR than to risk touching something
-that I didn't have the confidence I could be sure was correct. 
-
-
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> ---
+>  fs/nfs/dir.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I'm certainly going to push back on new PMU features until we can properly
-> reason about 64bit counters as a top-level entity (as opposed to a bunch
-> of discrete counters).
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index e180033e35cf..2035254cc283 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -2350,7 +2350,7 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
+>  	rcu_read_lock();
+>  	if (nfsi->cache_validity & NFS_INO_INVALID_ACCESS)
+>  		goto out;
+> -	lh = rcu_dereference(nfsi->access_cache_entry_lru.prev);
+> +	lh = rcu_dereference(list_prev_rcu(&nfsi->access_cache_entry_lru));
 
-Thanks,
+And as noted in the earlier email, what is preventing concurrent
+insertions into  and deletions from this list?
 
-Andrew Murray
+o	This use of list_move_tail() is OK because it does not poison.
+	Though it isn't being all that friendly to lockless access to
+	->prev -- no WRITE_ONCE() in list_move_tail().
 
-> 
-> Thanks,
-> 
->         M.
-> -- 
-> Jazz is not dead. It just smells funny...
+o	The use of list_add_tail() is not safe with RCU readers, though
+	they do at least partially compensate via use of smp_wmb()
+	in nfs_access_add_cache() before calling nfs_access_add_rbtree().
+
+o	The list_del() near the end of nfs_access_add_rbtree() will
+	poison the ->prev pointer.  I don't see how this is safe given the
+	possibility of a concurrent call to nfs_access_get_cached_rcu().
+
+>  	cache = list_entry(lh, struct nfs_access_entry, lru);
+>  	if (lh == &nfsi->access_cache_entry_lru ||
+>  	    cred != cache->cred)
+
+And a few lines below here, it really does dereference the pointer
+obtained from ->prev!
+
+So how to really fix this?  Here is one possibility, but we of course
+need to get the NFS developers' and maintainers' thoughts:
+
+o	Create a list that is safe for bidirectional RCU traversal.
+	This can use list_head, and would need these functions,
+	give or take the exact names:
+
+	list_add_tail_rcuprev():  This is like list_add_tail_rcu(),
+	but also has smp_store_release() for ->prev.  (As in there is
+	also a __list_add_rcuprev() helper that actually contains the
+	additional smp_store_release().)
+
+	list_del_rcuprev():  This can be exactly __list_del_entry(),
+	but with the assignment to ->prev in __list_del() becoming
+	WRITE_ONCE().  And it looks like callers to __list_del_entry()
+	and __list_del() might need some attention!  And these might
+	result in additional users of *_rcuprev().
+
+	list_prev_rcu() as in your first patch, but with READ_ONCE().
+	Otherwise DEC Alpha can fail.  And more subtle compiler issues
+	can appear on other architectures.
+
+	Note that list_move_tail() will be OK give or take *_ONCE().
+	It might be better to define a list_move_tail_rcuprev(), given
+	the large number of users of list_move_tail() -- some of these
+	users might not like even the possibility of added overhead due
+	to volatile accesses.  ;-)
+
+Or am I missing something subtle here?
+
+							Thanx, Paul
