@@ -2,218 +2,192 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5B6C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E50C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB652173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1972464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="FeMCmgTx"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="xA4bTKeR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfLFP5f (ORCPT
+        id S1726374AbfLFP6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 10:57:35 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35047 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfLFP5e (ORCPT
+        Fri, 6 Dec 2019 10:58:51 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39005 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbfLFP6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 10:57:34 -0500
-Received: by mail-io1-f66.google.com with SMTP id v18so7845970iol.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 07:57:33 -0800 (PST)
+        Fri, 6 Dec 2019 10:58:51 -0500
+Received: by mail-pl1-f194.google.com with SMTP id o9so2889317plk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 07:58:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oYj/cY+IkQcABP/RHpbzk07W4m53qLPa7pbqG3/gsVc=;
-        b=FeMCmgTxO2XRIuqCt2y7vZTJL3AmoxCJwXwYGcmcnhXds5E4lwp6kZXlvcHvRz49e1
-         LoM8XMuo5BZ6Dtm+LlpVMtbSYTf1TVZxbuxQoU3SNo9YThRNZ+cqO3BgNT13yEUNQc7N
-         RG4o6U4lmt55i8dmqLhlUfSyam+zPxLEoxkBGvNltgP73MuapvUSsRGk/tXaZmn60QjD
-         JxfLZrcUdsuj5Nb/svaY3elLeiNHrfRh6kpjYLIDFarfp06BLJq7Aaj8Iar+rGJVWDFI
-         3SSV64UKJyypL8gdxXxaMncDT8mtE6ossa48o02EER2Dr1quEh1qP0FRiFAbOsjhkE9v
-         L6Zw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pygl8oMQvOdcJfo8OD7ZqM6kANo2v/N/jTBIk1Ungko=;
+        b=xA4bTKeRYpdY/+/mnZnlANfDTD1eYnEC7UKH0/cEPhEwJbsOPPMAUnf6ZEZR6SfzOo
+         1KCMflEIr/QemVn4RA4X38oHl2/j7bKcP5g5l7b+ETLaztmPs48Pyx9wFxp7EXWhHBZa
+         p0gOEZkOjQlpqF+nvYKTw5d4SqmN5wJsj33r0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oYj/cY+IkQcABP/RHpbzk07W4m53qLPa7pbqG3/gsVc=;
-        b=mPkGUQibO2T6K+A1/w14NfNd1HIlUiQTjaTS6Rb2oKKMKQ2PLHqKR99AqILs9CEOdM
-         tJMtSk90N8i8ahg3Neun0CQQBBSVWJXDA/1w4lkdb5u+C9IEPssDWQCMIReMmwKPxElB
-         btqEIFYYjeQ9CSNtRCtUCNehNUPvzYoHF38xeS14Ay1wb5kLeImiDfzpy+ruzP9wprF7
-         p4hL92WS8/a/7zMt7lY8tVdC2uhAsuUR9PLGkCppH/Qwv3z7yymynX+6ZNmD5F9jIr+q
-         ShsuR8byn06C1YigGyKB+h69YDw3Scnq4HzO+KI3k5B1cSbyinbjJgmEwv2vrBsu89gl
-         BxtQ==
-X-Gm-Message-State: APjAAAVbB6Lf7cS5KFPKLSeQFnvNy8tHjyadOy9j5ow1FpuR1bTrS5XF
-        h3q25fmoV/un1R6OM6OGoOkq5vUmNFoOL+/53jsedw==
-X-Google-Smtp-Source: APXvYqyGyhUsvefq4YSTfs5lrMltP3arltw1tNx57NEnp74DB3h0rZIFJNink1+NYa3QS6J1cveyRbzyqwno0f6JjcU=
-X-Received: by 2002:a5e:9314:: with SMTP id k20mr6149061iom.6.1575647853075;
- Fri, 06 Dec 2019 07:57:33 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pygl8oMQvOdcJfo8OD7ZqM6kANo2v/N/jTBIk1Ungko=;
+        b=ioEdvjVb84P4oi3c8+jI3VFHuGuaMwYnmlAICF8bhLQyVaVNk9NDfdJtrzWPILnrES
+         5Hv6PvV9QGcWioS8+f/DmSwsLWvU8LsgZKcXBI8N/rAnUODzuJWPKSdE2vdvevWrE00V
+         /Not2VDLAZDjls8BBDnjyp14P6acj5r4OCqsy6PZ8KTHPcD91u4bT694JB1EdHBENaiZ
+         v8gSF/9BD17DSYwafzbVu0gDUjvi7RZCLpUPFccw5gZsYccVokVgChiu6tm+GL4HOd7b
+         i+ZvE+PIDDDZBxYGIyK5SlUuQK5whdlZ66TkOCYF5FkU5+yMQwTopfXn2mMyq8yjqC3M
+         pdGQ==
+X-Gm-Message-State: APjAAAXY8F3fWwi3P0mfDL19HTzU75Ivc9HWlAgCsEBLJPIk1w9zUv2f
+        bP8Sse//5uSb1uNehIJSFJ+HIQ==
+X-Google-Smtp-Source: APXvYqyHcbMY2FvYIEPh6SR56LzKLX4vx0Fs5FhrAhi/UkKIZHLUhBBdgWkmqf97Fdj9mmK8tA1Hxg==
+X-Received: by 2002:a17:90a:178f:: with SMTP id q15mr16632135pja.132.1575647929759;
+        Fri, 06 Dec 2019 07:58:49 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id x197sm17302182pfc.1.2019.12.06.07.58.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 07:58:49 -0800 (PST)
+Date:   Fri, 6 Dec 2019 10:58:48 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     madhuparnabhowmik04@gmail.com, rostedt@goodmis.org,
+        rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] rculist: Add macro list_prev_rcu
+Message-ID: <20191206155848.GA15547@google.com>
+References: <20191206150554.10479-1-madhuparnabhowmik04@gmail.com>
+ <20191206153258.GD2889@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-References: <20191127133510.10614-1-brgl@bgdev.pl> <CACRpkdZ6e0GaE9KBJ1-E+cS_KnPY-EKLNxJFqjArr28hYMQqOg@mail.gmail.com>
- <CAMRc=McH6m3Lsvz8g1JSD_c-QNdb-Kh0+8BH5EKcEW2vM2VYJA@mail.gmail.com>
- <0058e57c-5765-3944-3137-10b780985a36@metux.net> <CAMRc=McHdtrvkLvT67ew1+88iPtRpd+MO1+5Tr3YsuLceQor1A@mail.gmail.com>
- <569d7017-fe19-2f4f-a402-a1f28b3c9e84@metux.net>
-In-Reply-To: <569d7017-fe19-2f4f-a402-a1f28b3c9e84@metux.net>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 6 Dec 2019 16:57:21 +0100
-Message-ID: <CAMRc=MegWJsSfRWuRDSpn+tO_VyLYKgQkBZ54rXW5sqG6WzjhA@mail.gmail.com>
-Subject: Re: [PATCH 0/8] gpiolib: add an ioctl() for monitoring line status changes
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191206153258.GD2889@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 6 gru 2019 o 13:53 Enrico Weigelt, metux IT consult
-<lkml@metux.net> napisa=C5=82(a):
->
-> Hi,
->
-> >> Oh, no, I've been afraid that this would be coming ... desktop bus in
-> >> embedded system is a real nightmare. (yes, some people are even insane
-> >> enough to put that thing on an public IP interface and so make critica=
-l
-> >> machinery like cards easily remote controllable by average school kids=
-)
-> >
-> > Nah, you're overreacting, nobody is putting anything on the network.
->
-> Maybe you've just missed that (maybe better for mental health ;-)), but
-> people actually do put desktop bus on open networks. Chrysler/Harmann
-> are an famous example (rendering the cars easily remote-controllable)
-> I've had lots of similar cases w/ my clients. Whats going on in critical
-> industries like automotive or medical often is a real nightmare. One of
-> the reasons why I only buy old cars and do a careful inspection of
-> physicians before allowing them to treat me or my family.
->
+On Fri, Dec 06, 2019 at 07:32:58AM -0800, Paul E. McKenney wrote:
+> On Fri, Dec 06, 2019 at 08:35:54PM +0530, madhuparnabhowmik04@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> > 
+> > There are instances in the linux kernel where the prev pointer
+> > of a list is accessed.
+> > Unlike list_next_rcu, a similar macro for accessing the prev
+> > pointer was not present.
+> 
+> Interesting patch, but...
+> 
+> You lost me on this one.  The list_head ->prev pointer is not marked
+> __rcu, so why is sparse complaining?  Or is someone trying to use
+> rcu_dereference() or similar on ->prev?  If so, it is important to note
+> that both list_del() and list_del_rcu() poision ->prev, so it is not
+> usually safe to access ->prev within an RCU read-side critical section.
+> At the very least, this restriction needs to be called out in the
+> list_prev_rcu() comment header.  And that use of rcu_dereference() and
+> friends on the ->prev pointer is almost always the result of confusion,
+> if not a bug.  (Or is this some new-to-me use case?)
 
-I admit - I mostly work in consumer electronics. The two times I
-contracted for automotive companies I was actually surprised by how
-seriously security was approached. Nothing like your stories. Maybe I
-was just lucky though.
+Madhuparna, could you please send the patch using this as well, to prevent
+confusion? You can see how just sending one patch and not the user of it
+creates avoidable confusion. Thanks.
 
-> IMHO, we should be careful about not encouraging folks out there to do
-> silly things, just because they look so easy. (embedded development
-> isn't entirely easy)
->
-> > Most of my work isn't in upstream kernel development - it's actually
-> > launching CE products. And it's been a long time since I've worked
-> > with a client that could be convinced not to use systemd and dbus on
-> > an embedded system.
->
-> Yeah, same problem here. But actually, it's easier than one might think:
-> let them run into a scenario where that malware really does horrible
-> things and let the client drive against the wall. Some will learn,
-> others won't - just let evolution optimize that :p
->
-> > This just makes things so easy for people writing
-> > high-level application code that it's become de-facto standard -
-> > whether we like it or not.
->
-> Yeah, "hilevel" code, that completely ignores vital aspects of the
-> machine it then runs on, eg. RT or memory constraints. Seen that so
-> many times. Emperical experience tells: sooner or later it will go
-> nuts and things go horribly wrong. The unplesant question just is: how
-> many people have get hurt or killed in the process.
->
-> Lennartware isn't the only problem here, but also ancient and completely
-> unmaintained vendor kernels, patched-to-deah by rookies (eg. ublox).
-> OTOH, the positive side, eg. if I really need to get a *new* car, I'd
-> pick one where I can disable surveillance stuff like "ecall" easily :p
->
-> In general, what those industries completely ignore is maintainability
-> and stability. There, this only exists on the paper (cubic meters of
-> papers that formally look nice, but don't really tell anything about
-> the *actual* important facts) - formally proven bullshit.
->
-> I've made the personal decision that I don't wanna become yet another
-> Edward Teller, neither do I wanna allow some BSG-type scenario. That's
-> the reason I'm spending so much time in this discussion.
->
+Thanks Paul for taking a look. If I remember the dependent patch uses
+rcu_dereference() but I don't remember all the details at the top of my head.
 
-So I'm going through this e-mail for the third time now and I'm under
-the impression it's mostly just an unrelated rant. I'm not even sure
-how to respond.
+thanks,
 
-> > This is just your personal anecdote. I could bring up several examples
-> > of good implementations of event-based, dbus-oriented systems all
-> > right. Bad programmers don't make tools they're using bad.
->
-> Problem is: good programmers who can really deal with those concepts
-> are hard to find. And those systems usually are hard to test. Desktop
-> bus is magnitudes more complex than isolated FSMs.
->
-> Within the last decades, I never had a single case where desktop bus had
-> been the superior choice (actually, only few cases where purely event-
-> driven architecture was a good idea).
->
+ - Joel
 
-It depends on what you're hired to do. Most of the time our clients
-will have the entire applicative layer done by the time they reach out
-to us. What they need is the BSP, OTA updates, provisioning and
-factory tests. Good luck signing a deal if you start your pitch by
-saying "your architecture is bad and you should feel bad". :)
 
-> > I want to add this
-> > new feature to allow for creating a central entity controlling GPIO
-> > lines in the user-space. In case of sysfs - IT IS such a central
-> > entity except that it lives in the kernel. It doesn't need to be
-> > notified about changes in line properties.
->
-> I'm still wondering why exactly one would want such an central entity
-> in userspace and then letting it talk to others via desktop bus. At
-> least in critical embedded systems, not talking about self-knittet
-> hobby projects. Seems those ideas originate from people who don't know
-> what the OS/Kernel is for :p
->
-> Actually, I had a case where somebody attemted to do so (folks who tried
-> linux embedded development from a windows machine :o). Fortunately,
-> before they could write their planned "GPIO HAL" (several 10kLoc for
-> just doing some trivial sysfs ops), I've configured the lines to the
-> proper drivers in DT (basically, just some LEDs, inputs, rs485 signal
-> lines, etc). Later on they started to write some "HAL" for LEDs,
-> inputs, rs485 ... the manager of neighboring department on the other
-> end of the room then ask me: "don't they know that they've got an
-> operating system" ;-)
->
-> Seriously, we shouldn't do everything that some strange folks are asking
-> for, just to make them happy. We don't wanna desktop bus in the kernel,
-> do we ? :p
->
-> By the way: we *do* need some improvements for PLC-like applications:
-> Highlevel provisioning of platform devices, eg. configure which devices
-> are attached to certain interfaces in an specific installation, so the
-> applications don't ever need any knowledge about that, but just talk
-> to specific devices.
->
-> Most of what's needed (on kernel side) is already there: DT overlays.
-> Just yet have to get this working on non-DT (eg. ACPI platform).
->
-
-Sure, but this has been discussed a lot already on linux-gpio. Linus
-has just pointed out where GPIOs are used from user-space.
-
-Bart
-
-> In fact that's already in my pipeline, also for other purposes, eg.
-> replace simple board or mfd drivers by just a DT snippet. Yet lacked the
-> time to work out a suitable way for mixing DT and ACPI and allowing DT
-> to override ACPI. But that's a topic for a completely different thread.
->
->
-> --mtx--
->
-> ---
-> Enrico Weigelt, metux IT consult
-> Free software and Linux embedded engineering
-> info@metux.net -- +49-151-27565287
+> 
+> Either way, the big question is how we are sure that the uses of ->prev
+> that sparse is complaining about are in fact safe.  More specifically,
+> what have those use cases done to ensure that there will be no invocation
+> of either list_del() or list_del_rcu() on the current element just before
+> the use of ->prev?  Here are a couple of possibilities:
+> 
+> 1.	The list only grows, so list_del() and list_del_rcu() are never
+> 	ever invoked on it.
+> 
+> 	But even this is not safe because __list_add_rcu() does
+> 	smp_store_release() only on ->next.  The initialization of
+> 	->prev is completely unordered with any other initialization,
+> 	which can result in bugs on lookup/insertion concurrency.
+> 
+> 	So this instead becomes the list being constant.
+> 
+> 2.	The ->prev pointer is never actually dereferenced, but only
+> 	compared.  One example use case is determining whether the
+> 	current element is first in the list by comparing its
+> 	->prev pointer to the address of the list header.
+> 
+> 	But this use case needs a READ_ONCE().
+> 
+> 3.	These accesses are single-threaded, for example while the list
+> 	is being initialized but before it is exposed to readers or
+> 	after the list has been rendered inaccessible to readers
+> 	(and following at least one grace period after that).  But in
+> 	this case, there is no need for rcu_dereference(), so sparse
+> 	should not be complaining.
+> 
+> 4.	#3 above, but code is shared with the non-single-threaded case.
+> 	But then the non-single-threaded code needs to be safe with
+> 	respect to concurrent insertions and deletions, as called
+> 	out above.
+> 
+> So what am I missing here?
+> 
+> 							Thanx, Paul
+> 
+> > Therefore, directly accessing the prev pointer was causing
+> > sparse errors.
+> > One such example is the sparse error in fs/nfs/dir.c
+> > 
+> > error:
+> > fs/nfs/dir.c:2353:14: error: incompatible types in comparison expression (different address spaces):
+> > fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
+> > fs/nfs/dir.c:2353:14:    struct list_head *
+> > 
+> > The error is caused due to the following line:
+> > 
+> > lh = rcu_dereference(nfsi->access_cache_entry_lru.prev);
+> > 
+> > After adding the macro, this error can be fixed as follows:
+> > 
+> > lh = rcu_dereference(list_prev_rcu(&nfsi->access_cache_entry_lru));
+> > 
+> > Therefore, we think there is a need to add this macro to rculist.h.
+> > 
+> > Suggested-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> > ---
+> >  include/linux/rculist.h | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+> > index 4b7ae1bf50b3..49eef8437753 100644
+> > --- a/include/linux/rculist.h
+> > +++ b/include/linux/rculist.h
+> > @@ -40,6 +40,12 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+> >   */
+> >  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
+> >  
+> > +/*
+> > + * return the prev pointer of a list_head in an rcu safe
+> > + * way, we must not access it directly
+> > + */
+> > +#define list_prev_rcu(list)	(*((struct list_head __rcu **)(&(list)->prev)))
+> > +
+> >  /*
+> >   * Check during list traversal that we are within an RCU reader
+> >   */
+> > -- 
+> > 2.17.1
+> > 
