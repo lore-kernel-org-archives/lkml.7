@@ -2,100 +2,93 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB531C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB65C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8904F21823
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E0E121823
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:05:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+lO5rde"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DTExk/li"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbfLFLES (ORCPT
+        id S1726366AbfLFLFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 06:04:18 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:34974 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfLFLES (ORCPT
+        Fri, 6 Dec 2019 06:05:17 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54604 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfLFLFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 06:04:18 -0500
-Received: by mail-il1-f194.google.com with SMTP id g12so5922274ild.2;
-        Fri, 06 Dec 2019 03:04:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+K2i2NBMzFxBPENxFOj55e/4N2mWKkV/KyZn4aZDJ/E=;
-        b=J+lO5rdeGz/uq0GRKk7Vlr5+fkJbi9Q/1L1Gwh+GLdHU53JmXXqwGZSMXm4oTnW/pJ
-         xFdXk3URIBtlYttPmbi80Mq2JLb2ijEE/qFoMXLoZlwOeNlLDSfkVCFL3UUPA3BikOgv
-         oWM8lcunhgf4MF6NvE7wr1iJBsgDKzvIj3chFPjOlSB143YYRduKSiACDtZ4Svc5+T72
-         A4svWQQNE8vdhl7W6uOVrUWI6gKNE050XWF7CwV66vQCdRScdvKt7A9qfH9P9LrTbj0B
-         DDgMm14YybtG8sEkxlQnl1SIK0Fm7uSmviAK9gKti8JayhDQsXq9pmj2CKEKEYoPmZIU
-         VD1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+K2i2NBMzFxBPENxFOj55e/4N2mWKkV/KyZn4aZDJ/E=;
-        b=LylePvITvvCyTax2LjGOM7QrjgnW1Yi3uNsWVesRsl6huPyT+Tj6+XcdsQERqrJ5LZ
-         7UX5sGvGFH/p+hWd3zdT/4OGkwk11b2j0PiSfqCs0JCYIiM1HVXamtYcM5q41eKLYEoF
-         NkDqLPa7CThSZsfSpT2l3TzIbzjgARzOzcIg0quZbgrFHfGmu3azHTakiRmE6VzT8s7X
-         mAmVvXbnyub3eVGQ4JOoQs7w/3zXQBE7b/OldxOig7W8Zsr3LesbJF3C8jhJk+mjuOku
-         XZH+D+qifX597LkeOYL87Rs7x2fCDVbI8ddPLZsgLB3SL0YYXNSBfSpvDkSnQyRwcm6t
-         9gaw==
-X-Gm-Message-State: APjAAAVe+UxrnEyzIk3vrHPp1sQisyRsLenhitb4Frx0iLJC1HWzZoNF
-        SLm0Iy/HdGd7Oc9nAyuwgnMus42dIfqTMBl8S0w=
-X-Google-Smtp-Source: APXvYqya8X01NYggP7t3CVoWZjUKlt/yGkpN4d2gA6d/51cmQjMCHZUZmiorAjcnVj4Xoyt4OswyArH2DattCHmByvo=
-X-Received: by 2002:a92:b749:: with SMTP id c9mr13076534ilm.143.1575630257440;
- Fri, 06 Dec 2019 03:04:17 -0800 (PST)
+        Fri, 6 Dec 2019 06:05:16 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB6B53Gf086517;
+        Fri, 6 Dec 2019 05:05:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575630303;
+        bh=NQj04N73Ko2XwRvN2MeTWE69+YfdYaANdf4+pxQ7yuI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=DTExk/liU/hLK3PCPl+jiR4CEifmVjk9YGsGxnG1ubPwWPqJO/UYTvuBPMmryeK4k
+         XT5ZTgOxx7kP3pgaKocroEETq9kFwJRfHf64azx/y9VzgH1XqU8uAp8rCYIgun4RnM
+         72aw1OYvyFRuYqNgWzUYXww+PjzdHmLwa1YQH18Y=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB6B53Fm016763
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 6 Dec 2019 05:05:03 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 6 Dec
+ 2019 05:05:03 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 6 Dec 2019 05:05:03 -0600
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB6B50TX117761;
+        Fri, 6 Dec 2019 05:05:01 -0600
+Subject: Re: [PATCH 0/2] net: ethernet: ti: cpsw_switchdev: fix unmet direct
+ dependencies detected for NET_SWITCHDEV
+To:     David Miller <davem@davemloft.net>
+CC:     <rdunlap@infradead.org>, <netdev@vger.kernel.org>,
+        <tony@atomide.com>, <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
+References: <20191204174533.32207-1-grygorii.strashko@ti.com>
+ <20191205.143944.1644239054512253859.davem@davemloft.net>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <393acd95-7556-3d68-4e44-b940a7e9bfc8@ti.com>
+Date:   Fri, 6 Dec 2019 13:04:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191204200307.21047-1-idryomov@gmail.com> <CAHk-=wjm+9rJvh=aRahfoN7z6waV87Eqr=-i_Cb7zOwHrugf5A@mail.gmail.com>
-In-Reply-To: <CAHk-=wjm+9rJvh=aRahfoN7z6waV87Eqr=-i_Cb7zOwHrugf5A@mail.gmail.com>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Fri, 6 Dec 2019 12:05:01 +0100
-Message-ID: <CAOi1vP_biwOVuG9U4nemfH803O_ADHGgjmd0_6eL-ZJhyrkOYA@mail.gmail.com>
-Subject: Re: [GIT PULL] Ceph updates for 5.5-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ceph Development <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191205.143944.1644239054512253859.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 10:19 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, Dec 4, 2019 at 12:02 PM Ilya Dryomov <idryomov@gmail.com> wrote:
-> >
-> > Colin Ian King (1):
-> >       rbd: fix spelling mistake "requeueing" -> "requeuing"
->
-> Hmm. Why? That's not a spelling mistake, it's the same word.
->
-> Arguably "requeue" isn't much of a real word to begin with, and is
-> more of a made-up tech language. And then on wiktionary apparently the
-> only "ing" form you find is the one without the final "e", but
-> honestly, that's reaching. The word doesn't exist in _real_
-> dictionaries at all.
->
-> I suspect "re-queueing" with the explicit hyphen would be the more
-> legible spelling (with or without the "e" - both forms are as
-> correct), but whatever.
->
-> I've pulled it, but I really don't think it was misspelled to begin
-> with, and somebody who actually cares about language probably wouldn't
-> like either form.
 
-FWIW that was my spelling.  I suspected the same thing, saw it being
-used in various spellings, but since Colin is a native speaker I took
-the patch.
 
-Thanks,
+On 06/12/2019 00:39, David Miller wrote:
+> From: Grygorii Strashko <grygorii.strashko@ti.com>
+> Date: Wed, 4 Dec 2019 19:45:31 +0200
+> 
+>> This series fixes Kconfig warning with CONFIG_COMPILE_TEST=y reported by
+>> Randy Dunlap <rdunlap@infradead.org> [1]
+>>
+>> [1] https://lkml.org/lkml/2019/12/3/1373
+> 
+> I applied patch #1 to the networking tree, the defconfig update has to be routed via
+> the appropriate architecture tree.
+  
+Thank you.
+  
 
-                Ilya
+-- 
+Best regards,
+grygorii
