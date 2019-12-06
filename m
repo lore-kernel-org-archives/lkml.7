@@ -2,90 +2,88 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D91C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421DAC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B10E32077B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC1A2077B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:43:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCLNHz0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfLFCmo (ORCPT
+        id S1726484AbfLFCnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 21:42:44 -0500
-Received: from emcscan.emc.com.tw ([192.72.220.5]:45778 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfLFCmo (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 21:42:44 -0500
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="33171982"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 06 Dec 2019 10:42:43 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(71515:0:AUTH_RELAY)
-        (envelope-from <dave.wang@emc.com.tw>); Fri, 06 Dec 2019 10:42:43 +0800 (CST)
-Received: from 192.168.33.57
-        by webmail.emc.com.tw with Mail2000 ESMTP Server V7.00(101171:1:AUTH_RELAY)
-        (envelope-from <dave.wang@emc.com.tw>); Fri, 06 Dec 2019 10:42:42 +0800 (CST)
-From:   "Dave.Wang" <dave.wang@emc.com.tw>
-To:     <Linux-kernel@vger.kernel.org>, <Linux-input@vger.kernel.org>,
-        "'Benjamin Tissoires'" <benjamin.tissoires@redhat.com>,
-        <Dmitry.torokhov@gmail.com>
-Cc:     "'Josh.Chen'" <josh.chen@emc.com.tw>, <jingle.wu@emc.com.tw>,
-        "'phoenix'" <phoenix@emc.com.tw>
-Subject: [PATCH 6/6] Input: elantech - Add the flag which will also use host notify
-Date:   Fri, 6 Dec 2019 10:42:41 +0800
-Message-ID: <000e01d5abde$d4d8b900$7e8a2b00$@emc.com.tw>
+        Thu, 5 Dec 2019 21:43:39 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:44537 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbfLFCni (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 21:43:38 -0500
+Received: by mail-il1-f195.google.com with SMTP id z12so4899603iln.11;
+        Thu, 05 Dec 2019 18:43:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TwnBRTdDP35mDXJCuQNvxNiSYSSqXwSGYAdihSOqw+M=;
+        b=gCLNHz0qL4ivBuWruGSb8Xtxv2Z1379625iOP5mM4vBOY4sCCvuXZ+vvF2UJDRi+yn
+         QxHqtTvfoxkT5y8pzoTHiaWJiRIYMXDvjiGbgLBglM11TaQUOZZqHr0wmr2iUNkiNwk4
+         tJJ0BexyBfvQ3IWJl7duudecacL2B0mi2xk1VyYCJkv2SplICq+a5qha8bXgkE8ysj6u
+         xWP4t6uuzlfTJRrHemZx3MJpRhfgbal9n9D8BQylY9kElVBfPwxTLsbZYmpNvcAzGUsT
+         W4+96ljzNYUyPztXTqM6/v/gBgXt9tBYfiSIZcg69cxet1DimIaX4LTs/h7kGaKmf/V1
+         F/WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TwnBRTdDP35mDXJCuQNvxNiSYSSqXwSGYAdihSOqw+M=;
+        b=WiUjVf3iXLtM3dJGhm7YugRwY9TS37yUy4FnEJX4eUyXNJmDk4QYG6/o99rPDfj5hY
+         PfjNoDXZ2Cl/lA6uzOhPoUvbYWo3bcB06345h6Z2IJlTXnZVpcIBMv8AFlRNRHOPwGAC
+         e24WvI1rcyiBROi6QrKTHvQfzA9VB9ncrf96TjDoxxvZGyO99KAKLoTPsV1xkcmxZhzj
+         Z4KLPADSizQ9JIpuWm9SpVz8HP5CE6jGm/FJroBJxq0m3twYWp6jB3x2Znwq4WVHwy3d
+         V0rkjbsCCg82YSqQsOKzllncE6mKMlp0pboMUx4gtXKMvDJ8TGMZKZLHSuyT6FUcIwcG
+         zhZA==
+X-Gm-Message-State: APjAAAVWWE921Tt+1f185ydrvPJ43r3x33JZfncuTmbKd55+mbfaBj9B
+        4bugeIeViten3aoDQGyvaz1me8mu2XKnHglFfO8=
+X-Google-Smtp-Source: APXvYqzRyd3cAihQ+Rt6RtZIFeU6QgRGdFGDxYndwn7fjlACobL26vsFf06MfqJiSaF7mTavf4q0Snt02U+m1Zo1HH4=
+X-Received: by 2002:a92:7f0a:: with SMTP id a10mr12071154ild.110.1575600217860;
+ Thu, 05 Dec 2019 18:43:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AdWr3q9KwW2U8JWZR0uFdX9siCOSZQ==
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDYxMjlcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy0xMjU3MzNhNS0xN2QyLTExZWEtYWExOS04OGQ3ZjY1NjczMzBcYW1lLXRlc3RcMTI1NzMzYTctMTdkMi0xMWVhLWFhMTktODhkN2Y2NTY3MzMwYm9keS50eHQiIHN6PSIxMjU5IiB0PSIxMzIyMDA3Mzc2MTY0OTcxODkiIGg9IjRLOHdhd090ckY2dWJheG5vUUlNbk9wMW50dz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+References: <20191203051945.9440-1-deepa.kernel@gmail.com>
+In-Reply-To: <20191203051945.9440-1-deepa.kernel@gmail.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Thu, 5 Dec 2019 18:43:26 -0800
+Message-ID: <CABeXuvpkYQbsvGTuktEAR8ptr478peet3EH=RD0v+nK5o2Wmjg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] Delete timespec64_trunc()
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Jeff Layton <jlayton@kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        Steve French <stfrench@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the flag which will also use host notify technique in SMBus
-interface.
+On Mon, Dec 2, 2019 at 9:20 PM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> This series aims at deleting timespec64_trunc().
+> There is a new api: timestamp_truncate() that is the
+> replacement api. The api additionally does a limits
+> check on the filesystem timestamps.
 
-Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
----
- drivers/input/mouse/elantech.c | 1 +
- drivers/input/mouse/elantech.h | 1 +
- 2 files changed, 2 insertions(+)
+Al/Andrew, can one of you help merge these patches?
 
-diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index 0392b668cd39..3422710f4100 100644
---- a/drivers/input/mouse/elantech.c
-+++ b/drivers/input/mouse/elantech.c
-@@ -2022,6 +2022,7 @@ static bool elantech_use_host_notify(struct psmouse
-*psmouse,
- 	case ETP_BUS_SMB_HST_NTFY_ONLY:
- 		/* fall-through  */
- 	case ETP_BUS_PS2_SMB_HST_NTFY:
-+	case ETP_BUS_AMD_SMB_ALERT:
- 		return true;
- 	default:
- 		psmouse_dbg(psmouse,
-diff --git a/drivers/input/mouse/elantech.h b/drivers/input/mouse/elantech.h
-index a633ffa0eb07..3b35ebb56607 100644
---- a/drivers/input/mouse/elantech.h
-+++ b/drivers/input/mouse/elantech.h
-@@ -115,6 +115,7 @@
- #define ETP_BUS_SMB_HST_NTFY_ONLY	2
- #define ETP_BUS_PS2_SMB_ALERT		3
- #define ETP_BUS_PS2_SMB_HST_NTFY	4
-+#define ETP_BUS_AMD_SMB_ALERT		6
- 
- /*
-  * New ICs are either using SMBus Host Notify or just plain PS2.
--- 
-2.17.1
-
+Thanks,
+-Deepa
