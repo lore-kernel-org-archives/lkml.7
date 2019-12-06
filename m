@@ -2,125 +2,218 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809D2C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45045C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C0F24659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:09:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575626946;
-	bh=L86FFzaMyKUMr0tRF/wXc0S1UjDEFgsImzL2rIudDqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X9/zfM3yXpyITr0mns6tBCz6Mu2G+HM9swDgqUmEH+77CDbweKQGlVT5obnRX7Bzr
-	 V8TpExKxrjnuqbgtxr8UtBOxFVl8WccZSIvEUciyq++hqfBLNiO3O1qh7aCcCJTSE1
-	 6aJUMNCdjaS84y//h4/LG8fD+14fxA2r/Mv9kPtQ=
+	by mail.kernel.org (Postfix) with ESMTP id 11AF62245C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:09:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsLGG1uT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbfLFKJF (ORCPT
+        id S1726400AbfLFKJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 05:09:05 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37623 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfLFKJF (ORCPT
+        Fri, 6 Dec 2019 05:09:50 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:32867 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfLFKJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 05:09:05 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w15so7134300wru.4;
-        Fri, 06 Dec 2019 02:09:03 -0800 (PST)
+        Fri, 6 Dec 2019 05:09:50 -0500
+Received: by mail-wm1-f66.google.com with SMTP id y23so9413686wma.0;
+        Fri, 06 Dec 2019 02:09:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UsGwuJpmmXggI12c0BJbL3myfNW+vrDNmKExLXNygA8=;
+        b=WsLGG1uT0EHP0LWLa7rcecRpTgGQAwTESH1i7zL9UoTK5xHg3MI6tuNXVX2GIZhiCI
+         GxLb+b198fRzaRZIDlPf3i9qYnKKZW1x/5wqajSgIRj9RSX1oyEuSvYoCAe/XEdHsNzx
+         jQqK9cs+U6vfYCxdXtO5g/vmT8DFjUjF4nj5Z/kOOF/zMHz1v/ZEW4NoExL7T2G3wGfs
+         cb7o6efTprnimGhqhAx5ReOt+GN1JXQJKF0cNL3hvofKkZUWBDuuiqyPZ66Jntm+C7/h
+         GZfi8xyv8R9LUe29mQX1AFY5ykit2tr7jkYIHVQ1xYbksbQ0NeHdE0Dwk51Eo1AohCbZ
+         2b7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZgEefvOziF7z8mrF0WSJDLRpK1yoVeyxX5+8c1qtWd8=;
-        b=ofbqXxLUpt+f4orqUBASv7mzvuuiytJi6rquais0s5d7bPXuqb2Cfgd5WmUscxyibP
-         xIzRnO8mfb9okhAje29nO7euJjoi6Ghv7L78klNwWhwPsP1j84Y1gsH0V9fF1aE8C4qA
-         eBm95VAaydWRyrcZD+KevSfV7ZlRno02uILQDguu9Q5DYW+/T3CCAABuoy7uxXwBPkqX
-         dwfR1ZNzRkhfur40wSIhPUYWGXo0lZ9ya0cKdFlcZDKEJHWC7qqy9RIiVfdAuaAkLeOF
-         +rOwEAuKZMJlFKiYpnK0JuOGbjsx1ZfuIUCJnkHdqBqOXG310ARvqVe4HAVe7KLkyDYM
-         KfiQ==
-X-Gm-Message-State: APjAAAXI2tmAzLc5dn53x2BZgSHGgukBHOE8qAQo3SHVqjjaeX5g1StV
-        jR4D3tJtnp/m7T0Mn/705DQ=
-X-Google-Smtp-Source: APXvYqwp/JAvBhEznJnvSk6geU/+ptgT24gTDjlJXdPPSVOp5WR/4oUSZ5jnN+uUQrMCeUwvJhcIiQ==
-X-Received: by 2002:a5d:6901:: with SMTP id t1mr13926482wru.94.1575626942441;
-        Fri, 06 Dec 2019 02:09:02 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id c2sm15761600wrp.46.2019.12.06.02.09.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 02:09:01 -0800 (PST)
-Date:   Fri, 6 Dec 2019 11:09:00 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] mm: fix hanging shrinker management on long
- do_shrink_slab
-Message-ID: <20191206100900.GM28317@dhcp22.suse.cz>
-References: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
- <4e2d959a-0b0e-30aa-59b4-8e37728e9793@virtuozzo.com>
- <20191206020953.GS2695@dread.disaster.area>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UsGwuJpmmXggI12c0BJbL3myfNW+vrDNmKExLXNygA8=;
+        b=kIA/OGo4jWPzxrhKpuvvhgou2kyw2CsWT9ToqDjbNx84/Zi0nQdHm6nJKm10UeR+c/
+         xtsDiEclylFIKbjJZ3c+mFUg9XdADE+0akdcPMVuRnNdlmOToEs2euCnzafvubtPuxI5
+         rR5/dx86vgRXLLHKFFVepGNn0eQEk5ID7vwRd+CiCAhUYK7WGbU/kRIVU2NGF3WQrerc
+         /MBdoHE6mxpbmuiAHgLYcWynhwAgJGdhLHke4u+gflPfL/OKNucsWD7L/XfxzsHcD0rP
+         b8XvNWKBmjZZiYl6WTCQSXWUB12KrhYmnlwpQyXMUzr5DamPMO8tz3Bj6y/93o7en+Fx
+         PJXw==
+X-Gm-Message-State: APjAAAVaRuSsx5664v+DrKGc3/K+dscLXChXQHZwbgDILyok6JYCOuAh
+        Spwv1pLLR2A1JcwhDCTGEMFDv16FcrKkFzT5Zjw=
+X-Google-Smtp-Source: APXvYqwDFvN6nRFU4i6tJIgVnMTN3dF1rix2W514PLzTBSRjPJ+dltNekFEdEtwWBnuLrcvSRDXwzoKiHOG6cO7SDpA=
+X-Received: by 2002:a7b:c74c:: with SMTP id w12mr9713944wmk.1.1575626986848;
+ Fri, 06 Dec 2019 02:09:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206020953.GS2695@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
+ <20191111090230.3402-6-chunyan.zhang@unisoc.com> <20191114210516.GB16668@bogus>
+ <CAAfSe-tg2Jp-kuKW5QC4cAityDiuEhMuDfDDyUgt1YZ4eXte7A@mail.gmail.com>
+ <CAL_JsqKqFmXZCJRKdHoYx14j=pzs80KqGpVd19ri4T_f6jrQCA@mail.gmail.com>
+ <CAAfSe-uU0O_hkNfCX7aptHyMSMagPH-=9KRKbXfUp2J26Bk4AA@mail.gmail.com> <CAL_Jsq+ciND5sCpR3L63yH2XvbMLE2b7DMdOzWSZJc8utE7gZg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+ciND5sCpR3L63yH2XvbMLE2b7DMdOzWSZJc8utE7gZg@mail.gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Fri, 6 Dec 2019 18:09:10 +0800
+Message-ID: <CAAfSe-tm-E-q-L4J=NP_Oa3+jLP5nM4yf69XuAm4=Uij_YB4AQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] arm64: dts: Add Unisoc's SC9863A SoC support
+To:     Rob Herring <robh@kernel.org>
+Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 06-12-19 13:09:53, Dave Chinner wrote:
-> [please cc me on future shrinker infrastructure modifications]
-> 
-> On Mon, Dec 02, 2019 at 07:36:03PM +0300, Andrey Ryabinin wrote:
-> > 
-> > On 11/30/19 12:45 AM, Pavel Tikhomirov wrote:
-> > > We have a problem that shrinker_rwsem can be held for a long time for
-> > > read in shrink_slab, at the same time any process which is trying to
-> > > manage shrinkers hangs.
-> > > 
-> > > The shrinker_rwsem is taken in shrink_slab while traversing shrinker_list.
-> > > It tries to shrink something on nfs (hard) but nfs server is dead at
-> > > these moment already and rpc will never succeed. Generally any shrinker
-> > > can take significant time to do_shrink_slab, so it's a bad idea to hold
-> > > the list lock here.
-> 
-> registering/unregistering a shrinker is not a performance critical
-> task.
+On Tue, 3 Dec 2019 at 00:33, Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Nov 25, 2019 at 2:34 AM Chunyan Zhang <zhang.lyra@gmail.com> wrot=
+e:
+> >
+> > On Fri, 15 Nov 2019 at 22:43, Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Fri, Nov 15, 2019 at 2:59 AM Chunyan Zhang <zhang.lyra@gmail.com> =
+wrote:
+> > > >
+> > > > On Fri, 15 Nov 2019 at 05:05, Rob Herring <robh@kernel.org> wrote:
+> > > > >
+> > > > > On Mon, Nov 11, 2019 at 05:02:30PM +0800, Chunyan Zhang wrote:
+> > > > > >
+> > > > > > Add basic DT to support Unisoc's SC9863A, with this patch,
+> > > > > > the board sp9863a-1h10 can run into console.
+> > > > > >
+> > > > > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > > > > > ---
+> > > > > >  arch/arm64/boot/dts/sprd/Makefile         |   3 +-
+> > > > > >  arch/arm64/boot/dts/sprd/sc9863a.dtsi     | 536 ++++++++++++++=
+++++++++
+> > > > > >  arch/arm64/boot/dts/sprd/sharkl3.dtsi     | 188 ++++++++
+> > > > > >  arch/arm64/boot/dts/sprd/sp9863a-1h10.dts |  40 ++
+> > > > > >  4 files changed, 766 insertions(+), 1 deletion(-)
+> > > > > >  create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
+> > > > > >  create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
+> > > > > >  create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+> > > > > >
+> > > > > > diff --git a/arch/arm64/boot/dts/sprd/Makefile b/arch/arm64/boo=
+t/dts/sprd/Makefile
+> > > > > > index 2bdc23804f40..f4f1f5148cc2 100644
+> > > > > > --- a/arch/arm64/boot/dts/sprd/Makefile
+> > > > > > +++ b/arch/arm64/boot/dts/sprd/Makefile
+> > > > > > @@ -1,3 +1,4 @@
+> > > > > >  # SPDX-License-Identifier: GPL-2.0
+> > > > > >  dtb-$(CONFIG_ARCH_SPRD) +=3D sc9836-openphone.dtb \
+> > > > > > -                     sp9860g-1h10.dtb
+> > > > > > +                     sp9860g-1h10.dtb        \
+> > > > > > +                     sp9863a-1h10.dtb
+> > > > > > diff --git a/arch/arm64/boot/dts/sprd/sc9863a.dtsi b/arch/arm64=
+/boot/dts/sprd/sc9863a.dtsi
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..578d71a932d9
+> > > > > > --- /dev/null
+> > > > > > +++ b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
+> > > > > > @@ -0,0 +1,536 @@
+> > > > > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > > > > +/*
+> > > > > > + * Unisoc SC9863A SoC DTS file
+> > > > > > + *
+> > > > > > + * Copyright (C) 2019, Unisoc Inc.
+> > > > > > + */
+> > > > > > +
+> > > > > > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > > > > > +#include "sharkl3.dtsi"
+> > > > > > +
+> > > > > > +/ {
+> > > > > > +     cpus {
+> > > > > > +             #address-cells =3D <2>;
+> > > > > > +             #size-cells =3D <0>;
+> > > > > > +
+> > > > > > +             cpu-map {
+> > > > > > +                     cluster0 {
+> > > > > > +                             core0 {
+> > > > > > +                                     cpu =3D <&CPU0>;
+> > > > > > +                             };
+> > > > > > +                             core1 {
+> > > > > > +                                     cpu =3D <&CPU1>;
+> > > > > > +                             };
+> > > > > > +                             core2 {
+> > > > > > +                                     cpu =3D <&CPU2>;
+> > > > > > +                             };
+> > > > > > +                             core3 {
+> > > > > > +                                     cpu =3D <&CPU3>;
+> > > > > > +                             };
+> > > > > > +                     };
+> > > > > > +
+> > > > > > +                     cluster1 {
+> > > > > > +                             core0 {
+> > > > > > +                                     cpu =3D <&CPU4>;
+> > > > > > +                             };
+> > > > > > +                             core1 {
+> > > > > > +                                     cpu =3D <&CPU5>;
+> > > > > > +                             };
+> > > > > > +                             core2 {
+> > > > > > +                                     cpu =3D <&CPU6>;
+> > > > > > +                             };
+> > > > > > +                             core3 {
+> > > > > > +                                     cpu =3D <&CPU7>;
+> > > > > > +                             };
+> > > > > > +                     };
+> > > > > > +             };
+> > > > > > +
+> > > > > > +             CPU0: cpu@0 {
+> > > > > > +                     device_type =3D "cpu";
+> > > > > > +                     compatible =3D "arm,cortex-a55";
+> > > > > > +                     reg =3D <0x0 0x0>;
+> > > > > > +                     enable-method =3D "psci";
+> > > > > > +                     cpu-idle-states =3D <&CORE_PD>;
+> > > > > > +             };
+> > > > > > +
+> > > > > > +             CPU1: cpu@100 {
+> > > > >
+> > > > > Your numbering seems odd. This follows the MPIDR reg? Normally a =
+cluster
+> > > > > would share the same number in one of the bytes.
+> > > >
+> > > > We're using A55, and the spec says that bit[15:8] identifies
+> > > > individual cores within the local DynamIQ=E2=84=A2 cluster
+> > >
+> > > Okay.
+> > >
+> > > > Also, we only support one cluster.
+> > >
+> > > cpu-map shows 2 clusters.
+> >
+> > From the scheduler view, we have two clusters, but there's actually
+> > one physical cluster only.
+>
+> What's the scheduler? ;)
 
-We have had a bug report from production system which stumbled over a
-long [u]nmount which was stuck on a shrinker {un}register path waiting for
-the lock. This wouldn't be a big deal most of the time but [u]mount were
-part of the login session in this case. This was on an older
-distribution kernel and e496612c5130 ("mm: do not stall register_shrinker()")
-helped a bit but not really for shrinkers that take a lot of time.
+It refers to EAS actually, which has a out-of-tree concept of Phantom
+Domains which are not congruent to the real cluster physical domains
+for DynamIQ.
+But now I understand the problem (saw the previous similar discussions
+on other DynamIQ SoC), dividing the cores into two phantom clusters is
+a workaround and cannot be merged into mainline.  :)
 
-> If a shrinker is blocking for a long time, then we need to
-> work to fix the shrinker implementation because blocking is a much
-> bigger problem than just register/unregister.
+>
+> DT describes the physical system.
 
-Absolutely agreed here.
--- 
-Michal Hocko
-SUSE Labs
+Got it, I will fix that to move all cores into a single cluster.
+
+Thanks for the review.
+Chunyan
+
+>
+> Rob
