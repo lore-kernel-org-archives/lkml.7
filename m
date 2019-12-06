@@ -2,256 +2,182 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9218FC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09265C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8862064B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:34:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PKS/nzTl"
+	by mail.kernel.org (Postfix) with ESMTP id CC073205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:41:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575636092;
+	bh=aqLQypulfXGCmFpkmbOvyZNzsxFpCZGWdHmNsW87B5g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=c710ntpg+C7MdnQmtXZbKhcHdSJgkaLJab1PaR3E3AIOQaRvxy8+WhSsFOiWGow/B
+	 h/52y4B2CqdMTXH+tycZOX0uu8W9XB8SrzS8EZiUGG9mPDBemW79TklYi45e65kmyn
+	 zhW1NJZ7KecpDF4e+hDgODiclwCX+juSpcELSSI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfLFMer (ORCPT
+        id S1726237AbfLFMlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:34:47 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35414 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbfLFMeq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:34:46 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB6CYgNA111821;
-        Fri, 6 Dec 2019 06:34:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575635682;
-        bh=joFDrNzOhUT60RGFjuqlc1nHUBu1/PZDn/gsZd/GAtY=;
-        h=From:To:CC:Subject:Date;
-        b=PKS/nzTlAIId1Z2NLvXR8X0a1f/JdhGQcneLhJyEGTudo7hFSQIV7nrT23hsboIO1
-         Y3Bu9b5kauvS6vH/34So+WQUN65Y+iCDYmthy88LPcw8sP0dJ40jx2xEMI5MvXPvaE
-         qX+4PqH6ji1bF0hZ15PG15ug7yPOAbzwWvEcHx28=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB6CYgvT078274
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 6 Dec 2019 06:34:42 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 6 Dec
- 2019 06:34:42 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 6 Dec 2019 06:34:42 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB6CYetl121397;
-        Fri, 6 Dec 2019 06:34:41 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>
-CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v2] net: phy: dp83867: fix hfs boot in rgmii mode
-Date:   Fri, 6 Dec 2019 14:34:32 +0200
-Message-ID: <20191206123432.25257-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 6 Dec 2019 07:41:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbfLFMlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 07:41:21 -0500
+Received: from linux-8ccs.suse.de (x2f7fd22.dyn.telefonica.de [2.247.253.34])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE2F8205F4;
+        Fri,  6 Dec 2019 12:41:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575636080;
+        bh=aqLQypulfXGCmFpkmbOvyZNzsxFpCZGWdHmNsW87B5g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JCT7oLqt3YpwEiMAXcSSiihpR9dsPGAXvYTuybXr7XXDnO0+HjDjfQAVBq/8YESjb
+         rTZB2hWN0XJthD/RtLZaiPbcuJCvHu7Tlqg+eg6gTIPjeCYNdN/BTzf1UzkDHJemfk
+         7UCyA63kmXKnJK25qqRk1WIKcqS1Po+subNJiCR4=
+From:   Jessica Yu <jeyu@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Matthias Maennich <maennich@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: [PATCH v3] export.h: reduce __ksymtab_strings string duplication by using "MS" section flags
+Date:   Fri,  6 Dec 2019 13:41:02 +0100
+Message-Id: <20191206124102.12334-1-jeyu@kernel.org>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191125154217.18640-1-jeyu@kernel.org>
+References: <20191125154217.18640-1-jeyu@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit ef87f7da6b28 ("net: phy: dp83867: move dt parsing to probe")
-causes regression on TI dra71x-evm and dra72x-evm, where DP83867 PHY is
-used in "rgmii-id" mode - the networking stops working.
-Unfortunately, it's not enough to just move DT parsing code to .probe() as
-it depends on phydev->interface value, which is set to correct value abter
-the .probe() is completed and before calling .config_init(). So, RGMII
-configuration can't be loaded from DT.
+Commit c3a6cf19e695 ("export: avoid code duplication in
+include/linux/export.h") refactors export.h quite nicely, but introduces
+a slight increase in memory usage due to using the empty string ""
+instead of NULL to indicate that an exported symbol has no namespace. As
+mentioned in that commit, this meant an increase of 1 byte per exported
+symbol without a namespace. For example, if a kernel configuration has
+about 10k exported symbols, this would mean that the size of
+__ksymtab_strings would increase by roughly 10kB.
 
-To fix and issue
-- move RGMII validation code to .config_init()
-- parse RGMII parameters in dp83867_of_init(), but consider them as
-optional.
+We can alleviate this situation by utilizing the SHF_MERGE and
+SHF_STRING section flags. SHF_MERGE|SHF_STRING indicate to the linker
+that the data in the section are null-terminated strings that can be
+merged to eliminate duplication. More specifically, from the binutils
+documentation - "for sections with both M and S, a string which is a
+suffix of a larger string is considered a duplicate. Thus "def" will be
+merged with "abcdef"; A reference to the first "def" will be changed to
+a reference to "abcdef"+3". Thus, all the empty strings would be merged
+as well as any strings that can be merged according to the cited method
+above. For example, "memset" and "__memset" would be merged to just
+"__memset" in __ksymtab_strings.
 
-Fixes: ef87f7da6b28 ("net: phy: dp83867: move dt parsing to probe")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+As of v5.4-rc5, the following statistics were gathered with x86
+defconfig with approximately 10.7k exported symbols.
+
+Size of __ksymtab_strings in vmlinux:
+-------------------------------------
+v5.4-rc5: 213834 bytes
+v5.4-rc5 with commit c3a6cf19e695: 224455 bytes
+v5.4-rc5 with this patch: 205759 bytes
+
+So, we already see memory savings of ~8kB compared to vanilla -rc5 and
+savings of nearly 18.7kB compared to -rc5 with commit c3a6cf19e695 on top.
+
+Unfortunately, as of this writing, strings will not get deduplicated for
+kernel modules, as ld does not do the deduplication for
+SHF_MERGE|SHF_STRINGS sections for relocatable files (ld -r), which
+kernel modules are. A patch for ld is currently being worked on to
+hopefully allow for string deduplication in relocatable files in the
+future.
+
+Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 ---
-v2:
- - fixed comments in code
+v3: 
+  - remove __KSTRTAB_ENTRY macros in favor of just putting the asm directly
+    in ___EXPORT_SYMBOL
+  - Document more clearly what the ___EXPORT_SYMBOL macro does
 
- drivers/net/phy/dp83867.c | 119 +++++++++++++++++++++++---------------
- 1 file changed, 71 insertions(+), 48 deletions(-)
+ include/asm-generic/export.h |  8 +++++---
+ include/linux/export.h       | 27 ++++++++++++++++++++-------
+ 2 files changed, 25 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index 0b95e7a2e273..9cd9dcee4eb2 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -101,8 +101,11 @@
- /* RGMIIDCTL bits */
- #define DP83867_RGMII_TX_CLK_DELAY_MAX		0xf
- #define DP83867_RGMII_TX_CLK_DELAY_SHIFT	4
-+#define DP83867_RGMII_TX_CLK_DELAY_INV	(DP83867_RGMII_TX_CLK_DELAY_MAX + 1)
- #define DP83867_RGMII_RX_CLK_DELAY_MAX		0xf
- #define DP83867_RGMII_RX_CLK_DELAY_SHIFT	0
-+#define DP83867_RGMII_RX_CLK_DELAY_INV	(DP83867_RGMII_RX_CLK_DELAY_MAX + 1)
+diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
+index fa577978fbbd..23bc98e97a66 100644
+--- a/include/asm-generic/export.h
++++ b/include/asm-generic/export.h
+@@ -26,9 +26,11 @@
+ .endm
+ 
+ /*
+- * note on .section use: @progbits vs %progbits nastiness doesn't matter,
+- * since we immediately emit into those sections anyway.
++ * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
++ * section flag requires it. Use '%progbits' instead of '@progbits' since the
++ * former apparently works on all arches according to the binutils source.
+  */
 +
+ .macro ___EXPORT_SYMBOL name,val,sec
+ #ifdef CONFIG_MODULES
+ 	.globl __ksymtab_\name
+@@ -37,7 +39,7 @@
+ __ksymtab_\name:
+ 	__put \val, __kstrtab_\name
+ 	.previous
+-	.section __ksymtab_strings,"a"
++	.section __ksymtab_strings,"aMS",%progbits,1
+ __kstrtab_\name:
+ 	.asciz "\name"
+ 	.previous
+diff --git a/include/linux/export.h b/include/linux/export.h
+index 201262793369..18dcdcd118e7 100644
+--- a/include/linux/export.h
++++ b/include/linux/export.h
+@@ -81,16 +81,29 @@ struct kernel_symbol {
  
- /* IO_MUX_CFG bits */
- #define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MASK	0x1f
-@@ -294,6 +297,48 @@ static int dp83867_config_port_mirroring(struct phy_device *phydev)
- 	return 0;
- }
+ #else
  
-+static int dp83867_verify_rgmii_cfg(struct phy_device *phydev)
-+{
-+	struct dp83867_private *dp83867 = phydev->priv;
-+
-+	/* Existing behavior was to use default pin strapping delay in rgmii
-+	 * mode, but rgmii should have meant no delay.  Warn existing users.
-+	 */
-+	if (phydev->interface == PHY_INTERFACE_MODE_RGMII) {
-+		const u16 val = phy_read_mmd(phydev, DP83867_DEVADDR,
-+					     DP83867_STRAP_STS2);
-+		const u16 txskew = (val & DP83867_STRAP_STS2_CLK_SKEW_TX_MASK) >>
-+				   DP83867_STRAP_STS2_CLK_SKEW_TX_SHIFT;
-+		const u16 rxskew = (val & DP83867_STRAP_STS2_CLK_SKEW_RX_MASK) >>
-+				   DP83867_STRAP_STS2_CLK_SKEW_RX_SHIFT;
-+
-+		if (txskew != DP83867_STRAP_STS2_CLK_SKEW_NONE ||
-+		    rxskew != DP83867_STRAP_STS2_CLK_SKEW_NONE)
-+			phydev_warn(phydev,
-+				    "PHY has delays via pin strapping, but phy-mode = 'rgmii'\n"
-+				    "Should be 'rgmii-id' to use internal delays txskew:%x rxskew:%x\n",
-+				    txskew, rxskew);
-+	}
-+
-+	/* RX delay *must* be specified if internal delay of RX is used. */
-+	if ((phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+	     phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) &&
-+	     dp83867->rx_id_delay == DP83867_RGMII_RX_CLK_DELAY_INV) {
-+		phydev_err(phydev, "ti,rx-internal-delay must be specified\n");
-+		return -EINVAL;
-+	}
-+
-+	/* TX delay *must* be specified if internal delay of TX is used. */
-+	if ((phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+	     phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) &&
-+	     dp83867->tx_id_delay == DP83867_RGMII_TX_CLK_DELAY_INV) {
-+		phydev_err(phydev, "ti,tx-internal-delay must be specified\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_OF_MDIO
- static int dp83867_of_init(struct phy_device *phydev)
- {
-@@ -335,55 +380,25 @@ static int dp83867_of_init(struct phy_device *phydev)
- 	dp83867->sgmii_ref_clk_en = of_property_read_bool(of_node,
- 					"ti,sgmii-ref-clock-output-enable");
+-/* For every exported symbol, place a struct in the __ksymtab section */
++/*
++ * For every exported symbol, do the following:
++ *
++ * - If applicable, place an entry in the __kcrctab section.
++ * - Put the name of the symbol and namespace (empty string "" for none) in
++ *   __ksymtab_strings.
++ * - Place an entry in the __ksymtab section.
++ *
++ * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
++ * section flag requires it. Use '%progbits' instead of '@progbits' since the
++ * former apparently works on all arches according to the binutils source.
++ */
+ #define ___EXPORT_SYMBOL(sym, sec, ns)					\
+ 	extern typeof(sym) sym;						\
++	extern const char __kstrtab_##sym[];				\
++	extern const char __kstrtabns_##sym[];				\
+ 	__CRC_SYMBOL(sym, sec);						\
+-	static const char __kstrtab_##sym[]				\
+-	__attribute__((section("__ksymtab_strings"), used, aligned(1)))	\
+-	= #sym;								\
+-	static const char __kstrtabns_##sym[]				\
+-	__attribute__((section("__ksymtab_strings"), used, aligned(1)))	\
+-	= ns;								\
++	asm("	.section \"__ksymtab_strings\",\"aMS\",%progbits,1\n"	\
++	    "__kstrtab_" #sym ":				\n"	\
++	    "	.asciz 	\"" #sym "\"				\n"	\
++	    "__kstrtabns_" #sym ":				\n"	\
++	    "	.asciz 	\"" ns "\"				\n"	\
++	    "	.previous					\n");	\
+ 	__KSYMTAB_ENTRY(sym, sec)
  
--	/* Existing behavior was to use default pin strapping delay in rgmii
--	 * mode, but rgmii should have meant no delay.  Warn existing users.
--	 */
--	if (phydev->interface == PHY_INTERFACE_MODE_RGMII) {
--		const u16 val = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_STRAP_STS2);
--		const u16 txskew = (val & DP83867_STRAP_STS2_CLK_SKEW_TX_MASK) >>
--				   DP83867_STRAP_STS2_CLK_SKEW_TX_SHIFT;
--		const u16 rxskew = (val & DP83867_STRAP_STS2_CLK_SKEW_RX_MASK) >>
--				   DP83867_STRAP_STS2_CLK_SKEW_RX_SHIFT;
- 
--		if (txskew != DP83867_STRAP_STS2_CLK_SKEW_NONE ||
--		    rxskew != DP83867_STRAP_STS2_CLK_SKEW_NONE)
--			phydev_warn(phydev,
--				    "PHY has delays via pin strapping, but phy-mode = 'rgmii'\n"
--				    "Should be 'rgmii-id' to use internal delays\n");
--	}
--
--	/* RX delay *must* be specified if internal delay of RX is used. */
--	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
--	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
--		ret = of_property_read_u32(of_node, "ti,rx-internal-delay",
--					   &dp83867->rx_id_delay);
--		if (ret) {
--			phydev_err(phydev, "ti,rx-internal-delay must be specified\n");
--			return ret;
--		}
--		if (dp83867->rx_id_delay > DP83867_RGMII_RX_CLK_DELAY_MAX) {
--			phydev_err(phydev,
--				   "ti,rx-internal-delay value of %u out of range\n",
--				   dp83867->rx_id_delay);
--			return -EINVAL;
--		}
-+	dp83867->rx_id_delay = DP83867_RGMII_RX_CLK_DELAY_INV;
-+	ret = of_property_read_u32(of_node, "ti,rx-internal-delay",
-+				   &dp83867->rx_id_delay);
-+	if (!ret && dp83867->rx_id_delay > DP83867_RGMII_RX_CLK_DELAY_MAX) {
-+		phydev_err(phydev,
-+			   "ti,rx-internal-delay value of %u out of range\n",
-+			   dp83867->rx_id_delay);
-+		return -EINVAL;
- 	}
- 
--	/* TX delay *must* be specified if internal delay of RX is used. */
--	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
--	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
--		ret = of_property_read_u32(of_node, "ti,tx-internal-delay",
--					   &dp83867->tx_id_delay);
--		if (ret) {
--			phydev_err(phydev, "ti,tx-internal-delay must be specified\n");
--			return ret;
--		}
--		if (dp83867->tx_id_delay > DP83867_RGMII_TX_CLK_DELAY_MAX) {
--			phydev_err(phydev,
--				   "ti,tx-internal-delay value of %u out of range\n",
--				   dp83867->tx_id_delay);
--			return -EINVAL;
--		}
-+	dp83867->tx_id_delay = DP83867_RGMII_TX_CLK_DELAY_INV;
-+	ret = of_property_read_u32(of_node, "ti,tx-internal-delay",
-+				   &dp83867->tx_id_delay);
-+	if (!ret && dp83867->tx_id_delay > DP83867_RGMII_TX_CLK_DELAY_MAX) {
-+		phydev_err(phydev,
-+			   "ti,tx-internal-delay value of %u out of range\n",
-+			   dp83867->tx_id_delay);
-+		return -EINVAL;
- 	}
- 
- 	if (of_property_read_bool(of_node, "enet-phy-lane-swap"))
-@@ -434,6 +449,10 @@ static int dp83867_config_init(struct phy_device *phydev)
- 	int ret, val, bs;
- 	u16 delay;
- 
-+	ret = dp83867_verify_rgmii_cfg(phydev);
-+	if (ret)
-+		return ret;
-+
- 	/* RX_DV/RX_CTRL strapped in mode 1 or mode 2 workaround */
- 	if (dp83867->rxctrl_strap_quirk)
- 		phy_clear_bits_mmd(phydev, DP83867_DEVADDR, DP83867_CFG4,
-@@ -485,8 +504,12 @@ static int dp83867_config_init(struct phy_device *phydev)
- 
- 		phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_RGMIICTL, val);
- 
--		delay = (dp83867->rx_id_delay |
--			(dp83867->tx_id_delay << DP83867_RGMII_TX_CLK_DELAY_SHIFT));
-+		delay = 0;
-+		if (dp83867->rx_id_delay != DP83867_RGMII_RX_CLK_DELAY_INV)
-+			delay |= dp83867->rx_id_delay;
-+		if (dp83867->tx_id_delay != DP83867_RGMII_TX_CLK_DELAY_INV)
-+			delay |= dp83867->tx_id_delay <<
-+				 DP83867_RGMII_TX_CLK_DELAY_SHIFT;
- 
- 		phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_RGMIIDCTL,
- 			      delay);
+ #endif
 -- 
-2.17.1
+2.16.4
 
