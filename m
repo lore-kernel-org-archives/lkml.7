@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C16C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D009C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D3A24673
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3236206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XpQfC+Me"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JUnATL/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfLFWOZ (ORCPT
+        id S1726598AbfLFWOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 17:14:25 -0500
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:46193 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbfLFWOW (ORCPT
+        Fri, 6 Dec 2019 17:14:10 -0500
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:38480 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbfLFWOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 17:14:22 -0500
-Received: by mail-pf1-f202.google.com with SMTP id w127so4797142pfb.13
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 14:14:22 -0800 (PST)
+        Fri, 6 Dec 2019 17:14:07 -0500
+Received: by mail-pg1-f201.google.com with SMTP id l13so4558951pgt.5
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 14:14:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=q0VCePxuQrqw4BBZGnamleajd+Jt3fiHSwLdib7c23k=;
-        b=XpQfC+MeF/x/58JAAU0Gq9P6sK3UThDbiX4tokqcmE5W2JlFjupWk3t7S6fJEl7bmQ
-         uG77IKQKNCjwNeXL5gKTK4hYsXwcw3IEb3xYsQMThtapSpkH/6n8NZA1P7BK9GoJvjlv
-         gjsgrx6f2M8YtuUoFz6xW2/sVs3avmftC2FD9rLUg7uPIxxu1nky1tI+067SAycFIIZv
-         I5Ox0b34VKtUQTfOqlCtC7ANi+wPbCIGo5s06hQc0p9ToPPN7U2DDRK+8/gr5u99Ip8U
-         6665xOHYKE53S80IzppbeI1PtBJzI2Bw2DR42y5FZrTsuJwM4wsLA+y323NiZkNZTWXF
-         YfbA==
+        bh=XVGcsXtiiPVE9a9TFllXGgGHEKcXDxSx20NO6hJScDc=;
+        b=JUnATL/qYc1oxv8iBdTskfQzu3dUUjyggOYJEMcIQnnUL/Y0NRoC+SEMllJtcFOWiS
+         N/ulKnmZgrhoasRLRMaSLDH6091pEOUYgXXuTdPJyA/+/zT+NjML18Xbk0q7JQJZlyWp
+         6rTkEVNH+fLD7+o9KvYuKvTopFNc6WKI4uib8O/Vx3iw4Shp3SUt/TKbmahphI0HKiU4
+         BPRPCXf6h87GZeFyHIHYFqSn3p3Rv69hjOpYO3XFPBCkg3Q3z4MrJ2EA56qijI8w4jiX
+         NQZtE0UhN3gJbyVa0+qGFUMyTZbRuK6Bc5RytwdbEZTnrQcmzPqvaU68OoqewWa4Q8Up
+         87AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=q0VCePxuQrqw4BBZGnamleajd+Jt3fiHSwLdib7c23k=;
-        b=q1pv+iRVNHZnsIdZiRTXIYX200OVNUOKUqX/id/9pwxUhyhWAFOSSobcaokoE1DG8a
-         26OC1Fsz/kAcuJQCKOmBpEkitT4kbUG7QnIxHR2PKVeOG5gKrdpxDY1MpVWqt5aCQ1Gb
-         fGt8iqHgiDKL9bwn5Gv7N7UowNKMFXjxo3eAwJ01aopYXiMpXWkLhl5rXjsY/VGTrFEP
-         jr6UqTwrldR48YNvokDPsFFMJ1R2/YhnZk6xU2zdZ3EAI9oerPJ96HCuKcr3VyqrXFjc
-         k05WcJZyWsLnjnkH0pAZRXSLW9MLbzDsBFzwlTSJKzW14zpQMZiLExyB+nF82PrOvnSy
-         Tnjg==
-X-Gm-Message-State: APjAAAXAu4ES0SBaBTjG1PVeKxhd0ggOKMbQ8k/1GsnVoBetA4zAf2ux
-        34nE2sbF0FXAhobn88N4vqqVIKSw8FYU30iMm8Y=
-X-Google-Smtp-Source: APXvYqxcGyciG3MMD7PbQn8IKkK3yA7MJ/fwU2YEUvmtPTk2dDChHbcnuIxBvmADPyGDroBjAeLdoXj34UKB4SrRjVg=
-X-Received: by 2002:a63:d543:: with SMTP id v3mr5881958pgi.285.1575670461425;
- Fri, 06 Dec 2019 14:14:21 -0800 (PST)
-Date:   Fri,  6 Dec 2019 14:13:46 -0800
+        bh=XVGcsXtiiPVE9a9TFllXGgGHEKcXDxSx20NO6hJScDc=;
+        b=T7qqYmA8vquPRJiAb8xbeIaqQaA1p/1Lw8OC4/Yj9CJunnuazlww/9kX9tytfknRzm
+         KAZoZwQ/KQHs20awWTuyxZKRHbf/JN9Ov0I2hlmaW5NrdaNRCIrSl1H9S25KEo8pSK6D
+         z/vnCI2UhxfNMPY5Xrq4abqKw2dfM+TX4OvwxZQpbcXixWYXnbycmQcdwEsfE0rSGLUM
+         vZvbXGkw4BH5b1Szm3c3NdAayOXoIBo2+Et2xfKuvuPN9b0cvuM+xJ2frqxC8Z/voPpP
+         1SskbNfc8/WkJLaR+IX5BDd3htK9dX3PSGpYtBbI8a8Y17rorCYOkIu+lL6RDvxSyjmb
+         Cy0A==
+X-Gm-Message-State: APjAAAWALJ9ALcZ94cyyiXx81o4jgRja+8w5bDRnIL1ktMHgho4B6XhI
+        MzQnk/omO+Rc1QJL6vlDMsNxHAVa+R5+C/NekN0=
+X-Google-Smtp-Source: APXvYqzpc2h9jpUCodzOkaKdDJjjZM8itrSvWPNDKAcJvhYbUWMf4zn2+0r1408XQPHyy98KZt3TkfsfH2+NYjTL2w4=
+X-Received: by 2002:a63:1c66:: with SMTP id c38mr5983922pgm.368.1575670446054;
+ Fri, 06 Dec 2019 14:14:06 -0800 (PST)
+Date:   Fri,  6 Dec 2019 14:13:40 -0800
 In-Reply-To: <20191206221351.38241-1-samitolvanen@google.com>
-Message-Id: <20191206221351.38241-11-samitolvanen@google.com>
+Message-Id: <20191206221351.38241-5-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20191206221351.38241-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [PATCH v6 10/15] arm64: preserve x18 when CPU is suspended
+Subject: [PATCH v6 04/15] arm64: kernel: avoid x18 in __cpu_soft_restart
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -84,69 +84,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't lose the current task's shadow stack when the CPU is suspended.
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
+The code in __cpu_soft_restart() uses x18 as an arbitrary temp register,
+which will shortly be disallowed. So use x8 instead.
+
+Link: https://patchwork.kernel.org/patch/9836877/
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+[Sami: updated commit message]
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/include/asm/suspend.h |  2 +-
- arch/arm64/mm/proc.S             | 14 ++++++++++++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/cpu-reset.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/suspend.h b/arch/arm64/include/asm/suspend.h
-index 8939c87c4dce..0cde2f473971 100644
---- a/arch/arm64/include/asm/suspend.h
-+++ b/arch/arm64/include/asm/suspend.h
-@@ -2,7 +2,7 @@
- #ifndef __ASM_SUSPEND_H
- #define __ASM_SUSPEND_H
+diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
+index 6ea337d464c4..32c7bf858dd9 100644
+--- a/arch/arm64/kernel/cpu-reset.S
++++ b/arch/arm64/kernel/cpu-reset.S
+@@ -42,11 +42,11 @@ ENTRY(__cpu_soft_restart)
+ 	mov	x0, #HVC_SOFT_RESTART
+ 	hvc	#0				// no return
  
--#define NR_CTX_REGS 12
-+#define NR_CTX_REGS 13
- #define NR_CALLEE_SAVED_REGS 12
+-1:	mov	x18, x1				// entry
++1:	mov	x8, x1				// entry
+ 	mov	x0, x2				// arg0
+ 	mov	x1, x3				// arg1
+ 	mov	x2, x4				// arg2
+-	br	x18
++	br	x8
+ ENDPROC(__cpu_soft_restart)
  
- /*
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index fdabf40a83c8..5c8219c55948 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -49,6 +49,8 @@
-  * cpu_do_suspend - save CPU registers context
-  *
-  * x0: virtual address of context pointer
-+ *
-+ * This must be kept in sync with struct cpu_suspend_ctx in <asm/suspend.h>.
-  */
- ENTRY(cpu_do_suspend)
- 	mrs	x2, tpidr_el0
-@@ -73,6 +75,11 @@ alternative_endif
- 	stp	x8, x9, [x0, #48]
- 	stp	x10, x11, [x0, #64]
- 	stp	x12, x13, [x0, #80]
-+	/*
-+	 * Save x18 as it may be used as a platform register, e.g. by shadow
-+	 * call stack.
-+	 */
-+	str	x18, [x0, #96]
- 	ret
- ENDPROC(cpu_do_suspend)
- 
-@@ -89,6 +96,13 @@ ENTRY(cpu_do_resume)
- 	ldp	x9, x10, [x0, #48]
- 	ldp	x11, x12, [x0, #64]
- 	ldp	x13, x14, [x0, #80]
-+	/*
-+	 * Restore x18, as it may be used as a platform register, and clear
-+	 * the buffer to minimize the risk of exposure when used for shadow
-+	 * call stack.
-+	 */
-+	ldr	x18, [x0, #96]
-+	str	xzr, [x0, #96]
- 	msr	tpidr_el0, x2
- 	msr	tpidrro_el0, x3
- 	msr	contextidr_el1, x4
+ .popsection
 -- 
 2.24.0.393.g34dc348eaf-goog
 
