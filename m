@@ -2,97 +2,127 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8A4C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E78C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2C82064B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B041120706
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:51:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="M4wOasyM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GDb5m2IF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfLFNtz (ORCPT
+        id S1726366AbfLFNvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 08:49:55 -0500
-Received: from first.geanix.com ([116.203.34.67]:36354 "EHLO first.geanix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbfLFNtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:49:55 -0500
-Received: from [192.168.100.95] (unknown [95.138.208.137])
-        by first.geanix.com (Postfix) with ESMTPSA id D20B23BF;
-        Fri,  6 Dec 2019 13:49:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1575640187; bh=SL0f1EfmZIUpsEaw4T2Bwmfal12c5jyQZVybKsFjToI=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=M4wOasyMtuLNdFg1ySNQcC5m6HqrJyzKre0K7gJ+DEJRV69beeEQ1OFPPPGcAwooR
-         XbMGPJWAYMzU1ST12VFfVDjX0XP3rjcQGxkQuA+sQLZpPdHAvvm1/PM5VVTbaIWsT4
-         4R3TiMiyryayUo6nO5WDwjiAXxJeeGBRSka/fzX89SmX0iOYFKij1vjNaelsdypjKm
-         +cknG5FLQB8JAGwhF/lZHVJQ06ApKur5ZvUX9auFL8FUj7BqX/ycpWggRCjxbP18Gf
-         zPqdWZA/3cHAssw20njZ3bZEdoT0Z1GDtD1LhuCnkjEy55FmVni++yMCn2FQVBrckJ
-         6GvL/Z5/BNkkA==
-Subject: Re: [PATCH 1/2] dt-bindings: tcan4x5x: Make wake-gpio an optional
- gpio
-From:   Sean Nyekjaer <sean@geanix.com>
-To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de
-Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-References: <20191204175112.7308-1-dmurphy@ti.com>
- <d34673db-cc43-6e1d-6f4a-07b25c2c8f7b@geanix.com>
-Message-ID: <bd4586d0-4ea7-e247-d72d-a759c99860b0@geanix.com>
-Date:   Fri, 6 Dec 2019 14:49:52 +0100
+        Fri, 6 Dec 2019 08:51:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39365 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726171AbfLFNvx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 08:51:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575640312;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3cPjTncpDFw41fx9F5xYvf+N54ckom4KcOA71nUG8Pg=;
+        b=GDb5m2IFkiz5Q2eCRn8omSoo+avhlHUvLMiIdJxD3MlW20ZkpOqSHTkH8l2+KMZR0IJXo/
+        b9G0lVIP9+RUF9NNY0iM1JgqLy3/qwN3m6qVOmQbP8WK5rj/q9YYHS0e+3YjpBbR2XK+j6
+        S3OWVaTh0ENk6zmHr+X1Ur8x2ZJ3iig=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-smptZJmoPsKSTjnPLWxBmA-1; Fri, 06 Dec 2019 08:51:49 -0500
+Received: by mail-wr1-f70.google.com with SMTP id j13so3164664wrr.20
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 05:51:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hBPfAz5d6cicO7lOtm3rsxxZRjo5sqJZor8zQVBqKpc=;
+        b=tfu6gau09zGClGHP47Fkt0i/3CXEkEUL7EpaMvHxV7DaVvvM2hSP8PPQExW50CY3/4
+         cBPClqRZKDMAJvgWi0W8M1uhtg7vHCgUyq3nRACZx4dPAWodX9OD0zOKMFurv+9H48Hd
+         rtmxSBXcVq5GNTVODzShx6yJsjm+OyGI/o4j7dsLDAY3o301PlSm3JH2ulZPHNw+sgZJ
+         VRPNNkOoMD4O5QAOjfdBN/zfU0Omy9fghyAu74m1NRuNUo9S+S//7zRim9iW4JyPLtss
+         z6rcQFHq2NbFXXliIk3hX2UsvLdwIInd3LTMYHmHZQ3dlC4Tnuu02avNSm7AfyeqeFAG
+         I/8w==
+X-Gm-Message-State: APjAAAU4aIN3em6uYyqCLjSKsie6nlOFxBWjBMovlRC/vEw7KJveGh3W
+        xIbdrSNgZLcW+uDePxHigT8K5PWDwETv7evbAZ5nYn1YHW1TXTv/rHuqgZlGlX++ZUkh4O5gTGh
+        2lrJgaHL8nPKLz8FEcc9J1qIL
+X-Received: by 2002:a05:600c:204c:: with SMTP id p12mr10876582wmg.61.1575640308099;
+        Fri, 06 Dec 2019 05:51:48 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwpWiFZTu2cRvelChSMS4nkUKyMuIPCV3x4l7zHobMJy/hcS33YDoKGgKGPEBCEJymenIdYjw==
+X-Received: by 2002:a05:600c:204c:: with SMTP id p12mr10876553wmg.61.1575640307831;
+        Fri, 06 Dec 2019 05:51:47 -0800 (PST)
+Received: from [10.201.49.168] (nat-pool-mxp-u.redhat.com. [149.6.153.187])
+        by smtp.gmail.com with ESMTPSA id b10sm16337198wrt.90.2019.12.06.05.51.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 05:51:47 -0800 (PST)
+Subject: Re: [PATCH] KVM: Radim is no longer available as KVM maintainer
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     rkrcmar@redhat.com, radimkrcmar@gmail.com, drjones@redhat.com,
+        stable@vger.kernel.org, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org
+References: <20191206134511.20036-1-thuth@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <2640ebbd-06b9-812f-7ba7-704fdb470220@redhat.com>
+Date:   Fri, 6 Dec 2019 14:51:45 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <d34673db-cc43-6e1d-6f4a-07b25c2c8f7b@geanix.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US-large
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191206134511.20036-1-thuth@redhat.com>
+Content-Language: en-US
+X-MC-Unique: smptZJmoPsKSTjnPLWxBmA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06/12/19 14:45, Thomas Huth wrote:
+> Radim's mail address @redhat.com is not valid anymore, so we should
+> remove this line from the MAINTAINERS file to avoid that people send
+> mails to this address in vain.
+>=20
+> Thank you very much for all your work on KVM during the past years,
+> Radim!
+>=20
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  MAINTAINERS | 2 --
+>  1 file changed, 2 deletions(-)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 067cae5bde23..54cf6e242e54 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9043,7 +9043,6 @@ F:=09include/linux/umh.h
+> =20
+>  KERNEL VIRTUAL MACHINE (KVM)
+>  M:=09Paolo Bonzini <pbonzini@redhat.com>
+> -M:=09Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+>  L:=09kvm@vger.kernel.org
+>  W:=09http://www.linux-kvm.org
+>  T:=09git git://git.kernel.org/pub/scm/virt/kvm/kvm.git
+> @@ -9115,7 +9114,6 @@ F:=09tools/testing/selftests/kvm/*/s390x/
+> =20
+>  KERNEL VIRTUAL MACHINE FOR X86 (KVM/x86)
+>  M:=09Paolo Bonzini <pbonzini@redhat.com>
+> -M:=09Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+>  R:=09Sean Christopherson <sean.j.christopherson@intel.com>
+>  R:=09Vitaly Kuznetsov <vkuznets@redhat.com>
+>  R:=09Wanpeng Li <wanpengli@tencent.com>
+>=20
 
+Queued, thanks.
 
-On 05/12/2019 08.36, Sean Nyekjaer wrote:
-> 
-> 
-> On 04/12/2019 18.51, Dan Murphy wrote:
->> The wake-up of the device can be configured as an optional
->> feature of the device.  Move the wake-up gpio from a requried
->> property to an optional property.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> CC: Rob Herring <robh@kernel.org>
-> Reviewed-by: Sean Nyekjaer <sean@geanix.com>
-Tested-by: Sean Nyekjaer <sean@geanix.com>
->> ---
->>   Documentation/devicetree/bindings/net/can/tcan4x5x.txt | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt 
->> b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
->> index 27e1b4cebfbd..7cf5ef7acba4 100644
->> --- a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
->> +++ b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
->> @@ -10,7 +10,6 @@ Required properties:
->>       - #size-cells: 0
->>       - spi-max-frequency: Maximum frequency of the SPI bus the chip can
->>                    operate at should be less than or equal to 18 MHz.
->> -    - device-wake-gpios: Wake up GPIO to wake up the TCAN device.
->>       - interrupt-parent: the phandle to the interrupt controller 
->> which provides
->>                       the interrupt.
->>       - interrupts: interrupt specification for data-ready.
->> @@ -23,6 +22,7 @@ Optional properties:
->>                  reset.
->>       - device-state-gpios: Input GPIO that indicates if the device is in
->>                     a sleep state or if the device is active.
->> +    - device-wake-gpios: Wake up GPIO to wake up the TCAN device.
->>   Example:
->>   tcan4x5x: tcan4x5x@0 {
->>
+Paolo
+
