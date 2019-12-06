@@ -2,153 +2,182 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A391C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936CDC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C05924677
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:24:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="YkhtrX0c"
+	by mail.kernel.org (Postfix) with ESMTP id 682DA24680
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfLFIYs (ORCPT
+        id S1726818AbfLFIZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 03:24:48 -0500
-Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:50406 "EHLO
-        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbfLFIYn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 03:24:43 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 0C2833F26D;
-        Fri,  6 Dec 2019 09:24:40 +0100 (CET)
-Authentication-Results: pio-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=YkhtrX0c;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id gHg2CEyS_O6z; Fri,  6 Dec 2019 09:24:39 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 1E7FB3F260;
-        Fri,  6 Dec 2019 09:24:35 +0100 (CET)
-Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 5C95436248A;
-        Fri,  6 Dec 2019 09:24:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1575620675; bh=vaz4Fv+7GImw8+vcszuFMdA6P2YC6/2kJMWKMuBG2ZE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YkhtrX0cdlFY/uXQGbmu6FwDrUf+pkXZee5ibUPmYxgy5YNt6UnC9GobHSO2Vv0Tu
-         vx0rm/fpXq9Ulzsv0ZzUlS0n7s4xXoJ26AafBEHiBtDsLi6bgADq0Kn9nJt2q30T06
-         e8Jx5Nwta7vsEMfqqRXkNr+fqJIS6sauiGmHEmCo=
-From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Subject: [PATCH v3 1/2] mm: Add a vmf_insert_mixed_prot() function
-Date:   Fri,  6 Dec 2019 09:24:25 +0100
-Message-Id: <20191206082426.2958-2-thomas_os@shipmail.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191206082426.2958-1-thomas_os@shipmail.org>
-References: <20191206082426.2958-1-thomas_os@shipmail.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 6 Dec 2019 03:25:07 -0500
+Received: from mga06.intel.com ([134.134.136.31]:25868 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726278AbfLFIZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 03:25:06 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Dec 2019 00:25:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,283,1571727600"; 
+   d="scan'208";a="294797887"
+Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
+  by orsmga001.jf.intel.com with ESMTP; 06 Dec 2019 00:25:04 -0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        sean.j.christopherson@intel.com
+Cc:     yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
+        edwin.zhai@intel.com, Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH v9 00/10] Enable Sub-Page Write Protection Support
+Date:   Fri,  6 Dec 2019 16:26:24 +0800
+Message-Id: <20191206082634.21042-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+EPT-Based Sub-Page write Protection(SPP) allows Virtual Machine Monitor(VMM)
+specify write-permission for guest physical memory at a sub-page(128 byte)
+granularity. When SPP works, HW enforces write-access check for sub-pages
+within a protected 4KB page.
 
-The TTM module today uses a hack to be able to set a different page
-protection than struct vm_area_struct::vm_page_prot. To be able to do
-this properly, add the needed vm functionality as vmf_insert_mixed_prot().
+The feature targets to provide fine-grained memory protection for
+usages such as memory guard and VM introspection etc.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Acked-by: Christian König <christian.koenig@amd.com>
----
- include/linux/mm.h |  2 ++
- mm/memory.c        | 14 ++++++++++----
- 2 files changed, 12 insertions(+), 4 deletions(-)
+SPP is active when the "sub-page write protection" (bit 23) is 1 in
+Secondary VM-Execution Controls. The feature is backed with a Sub-Page
+Permission Table(SPPT), and subpage permission vector is stored in the
+leaf entry of SPPT. The root page is referenced via a Sub-Page Permission
+Table Pointer (SPPTP) in VMCS.
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index cc292273e6ba..29575d3c1e47 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2548,6 +2548,8 @@ vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
- 			unsigned long pfn, pgprot_t pgprot);
- vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long addr,
- 			pfn_t pfn);
-+vm_fault_t vmf_insert_mixed_prot(struct vm_area_struct *vma, unsigned long addr,
-+			pfn_t pfn, pgprot_t pgprot);
- vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
- 		unsigned long addr, pfn_t pfn);
- int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long len);
-diff --git a/mm/memory.c b/mm/memory.c
-index b1ca51a079f2..b9e7f1d56b1c 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1719,9 +1719,9 @@ static bool vm_mixed_ok(struct vm_area_struct *vma, pfn_t pfn)
- }
- 
- static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
--		unsigned long addr, pfn_t pfn, bool mkwrite)
-+		unsigned long addr, pfn_t pfn, pgprot_t pgprot,
-+		bool mkwrite)
- {
--	pgprot_t pgprot = vma->vm_page_prot;
- 	int err;
- 
- 	BUG_ON(!vm_mixed_ok(vma, pfn));
-@@ -1764,10 +1764,16 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
- 	return VM_FAULT_NOPAGE;
- }
- 
-+vm_fault_t vmf_insert_mixed_prot(struct vm_area_struct *vma, unsigned long addr,
-+				 pfn_t pfn, pgprot_t pgprot)
-+{
-+	return __vm_insert_mixed(vma, addr, pfn, pgprot, false);
-+}
-+
- vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long addr,
- 		pfn_t pfn)
- {
--	return __vm_insert_mixed(vma, addr, pfn, false);
-+	return __vm_insert_mixed(vma, addr, pfn, vma->vm_page_prot, false);
- }
- EXPORT_SYMBOL(vmf_insert_mixed);
- 
-@@ -1779,7 +1785,7 @@ EXPORT_SYMBOL(vmf_insert_mixed);
- vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
- 		unsigned long addr, pfn_t pfn)
- {
--	return __vm_insert_mixed(vma, addr, pfn, true);
-+	return __vm_insert_mixed(vma, addr, pfn, vma->vm_page_prot, true);
- }
- EXPORT_SYMBOL(vmf_insert_mixed_mkwrite);
- 
+To enable SPP for guest memory, the guest page should be first mapped
+to a 4KB EPT entry, then set SPP bit 61 of the corresponding entry. 
+While HW walks EPT, it traverses SPPT with the gpa to look up the sub-page
+permission vector within SPPT leaf entry. If the corresponding bit is set,
+write to sub-page is permitted, otherwise, SPP induced EPT violation is generated.
+
+This patch serial passed SPP function test and selftest on Ice-Lake platform.
+
+Please refer to the SPP introduction document in this patch set and
+Intel SDM for details:
+
+Intel SDM:
+https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+
+Patch 1: Documentation for SPP and related API.
+Patch 2: Add control flags for Sub-Page Protection(SPP).
+Patch 3: Add SPP Table setup functions.
+Patch 4: Add functions to create/destroy SPP bitmap block.
+Patch 5: Introduce user-space SPP IOCTLs.
+Patch 6: Set up SPP paging table at vmentry/vmexit.
+Patch 7: Enable Lazy mode SPP protection.
+Patch 8: Handle SPP protected pages when VM memory changes.
+Patch 9: Add SPP protection check in emulation case.
+Patch 10: SPP selftest.
+
+Change logs:
+
+V8 ->V9:
+  1. Added SPP protection check in pte prefetch case.
+  2. Flushed EPT rmap to remove existing mappings of the target gfns.
+  3. Modified documentation to reflect recent changes.
+  4. Other minor code refactor.
+
+V7 -> V8:
+  1. Changed ioctl interface definition per Paolo's comments.
+  2. Replaced SPP_INIT ioctl funciton with KVM_ENABLE_CAP.
+  3. Removed SPP bit from X86 feature word.
+  4. Returned instruction length to user-space when SPP induced EPT
+     violation happens, this is to provide flexibility to use SPP,
+     revert write or track write.
+  5. Modified selftest application and added into this serial.
+  6. Simplified SPP permission vector check.
+  7. Moved spp.c and spp.h to kvm/mmu folder.
+  8. Other code fix according to Paolo's feedback and testing.
+
+V6 -> V7:
+  1. Configured all available protected pages once SPP induced vmexit
+     happens since there's no PRESENT bit in SPPT leaf entry.
+  2. Changed SPP protection check flow in tdp_page_fault().
+  3. Code refactor and minior fixes.
+
+V5 -> V6:
+  1. Added SPP protection patch for emulation cases per Jim's review.
+  2. Modified documentation and added API description per Jim's review.
+  3. Other minior changes suggested by Jim.
+
+V4 -> V5:
+  1. Enable SPP support for Hugepage(1GB/2MB) to extend application.
+  2. Make SPP miss vm-exit handler as the unified place to set up SPPT.
+  3. If SPP protected pages are access-tracked or dirty-page-tracked,
+     store SPP flag in reserved address bit, restore it in
+     fast_page_fault() handler.
+  4. Move SPP specific functions to vmx/spp.c and vmx/spp.h
+  5. Rebased code to kernel v5.3
+  6. Other change suggested by KVM community.
+  
+V3 -> V4:
+  1. Modified documentation to make it consistent with patches.
+  2. Allocated SPPT root page in init_spp() instead of vmx_set_cr3() to
+     avoid SPPT miss error.
+  3. Added back co-developers and sign-offs.
+
+V2 -> V3:                                                                
+  1. Rebased patches to kernel 5.1 release                                
+  2. Deferred SPPT setup to EPT fault handler if the page is not
+     available while set_subpage() is being called.
+  3. Added init IOCTL to reduce extra cost if SPP is not used.
+  4. Refactored patch structure, cleaned up cross referenced functions.
+  5. Added code to deal with memory swapping/migration/shrinker cases.
+
+V2 -> V1:
+  1. Rebased to 4.20-rc1
+  2. Move VMCS change to a separated patch.
+  3. Code refine and Bug fix 
+
+
+
+Yang Weijiang (10):
+  Documentation: Add EPT based Subpage Protection and related APIs
+  vmx: spp: Add control flags for Sub-Page Protection(SPP)
+  mmu: spp: Add SPP Table setup functions
+  mmu: spp: Add functions to operate SPP access bitmap
+  x86: spp: Introduce user-space SPP IOCTLs
+  vmx: spp: Set up SPP paging table at vmentry/vmexit
+  mmu: spp: Enable Lazy mode SPP protection
+  mmu: spp: Handle SPP protected pages when VM memory changes
+  x86: spp: Add SPP protection check in emulation
+  kvm: selftests: selftest for Sub-Page protection
+
+ Documentation/virt/kvm/api.txt                |  38 +
+ Documentation/virtual/kvm/spp_kvm.txt         | 179 +++++
+ arch/x86/include/asm/kvm_host.h               |  11 +-
+ arch/x86/include/asm/vmx.h                    |  10 +
+ arch/x86/include/uapi/asm/vmx.h               |   2 +
+ arch/x86/kvm/mmu.h                            |   2 +
+ arch/x86/kvm/mmu/mmu.c                        |  84 ++-
+ arch/x86/kvm/mmu/spp.c                        | 656 ++++++++++++++++++
+ arch/x86/kvm/mmu/spp.h                        |  35 +
+ arch/x86/kvm/vmx/capabilities.h               |   5 +
+ arch/x86/kvm/vmx/vmx.c                        | 102 +++
+ arch/x86/kvm/x86.c                            | 134 +++-
+ include/uapi/linux/kvm.h                      |  17 +
+ tools/testing/selftests/kvm/Makefile          |   2 +-
+ tools/testing/selftests/kvm/lib/kvm_util.c    |   1 +
+ tools/testing/selftests/kvm/x86_64/spp_test.c | 234 +++++++
+ 16 files changed, 1507 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
+ create mode 100644 arch/x86/kvm/mmu/spp.c
+ create mode 100644 arch/x86/kvm/mmu/spp.h
+ create mode 100644 tools/testing/selftests/kvm/x86_64/spp_test.c
+
 -- 
-2.21.0
+2.17.2
 
