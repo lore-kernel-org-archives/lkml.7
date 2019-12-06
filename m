@@ -2,160 +2,149 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8D9C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D92C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17F8121835
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:10:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575652210;
-	bh=cnUp3MMTWmr0jeElpcAs3FfhFQExmXjdVn6BToXvU58=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=p4CmBk0nzcctDhCDgX6pbqxzcpQNhgWRcBS/KgEXX6BFMJvloW0kZvfQzt7CrBxz8
-	 g4zHgUiuEB/ogdryk99cUMfVURs4EeDdL+fOPhDjvz8q4YQJWEcqC5iawjT2y6eIFg
-	 9mgUBAuPKywoS5TDDSD0e/38vgVxcriURacfqrB4=
+	by mail.kernel.org (Postfix) with ESMTP id 7B53720706
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:11:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7quL+pP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfLFRKJ (ORCPT
+        id S1726455AbfLFRLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 12:10:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726352AbfLFRKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 12:10:09 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C16AF20706;
-        Fri,  6 Dec 2019 17:10:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575652208;
-        bh=cnUp3MMTWmr0jeElpcAs3FfhFQExmXjdVn6BToXvU58=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=T/fsoK61BtPcpSWGYW3vyJzZZGzL49IVAqUvYZLKfI8aMAwerC5jJZuhonYA36swL
-         PVV5K8eo+JdsAZ60yZfhYV9oJQ05X0FpA27eT8vRrwgEJvlhnTNFjbBb5ku392S77T
-         L6ODDYlDzGICXNs+hHGZF2qBAC0N9qlwL4X93JUY=
-Date:   Fri, 6 Dec 2019 17:10:02 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Rodrigo Carvalho <rodrigorsdc@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        alexandru.ardelean@analog.com, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: Re: [PATCH v5 2/2] dt-bindings: iio: accel: add binding
- documentation for ADIS16240
-Message-ID: <20191206171002.2ad020e4@archlinux>
-In-Reply-To: <20191205152129.GA13911@bogus>
-References: <20191123233510.4890-1-rodrigorsdc@gmail.com>
-        <20191123233510.4890-2-rodrigorsdc@gmail.com>
-        <20191205152129.GA13911@bogus>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 6 Dec 2019 12:11:08 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46980 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfLFRLH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 12:11:07 -0500
+Received: by mail-qt1-f195.google.com with SMTP id 38so7741858qtb.13;
+        Fri, 06 Dec 2019 09:11:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DI7p9OTIgrgEnPGEh+lJXFr4UIv6maYDRk9V3SIdLFo=;
+        b=R7quL+pPGjwkAiTw9/ofD5HZu8wpN+/ZBKG8uQsn7UMRrLtxiX2E/ye0hDpk0K30Js
+         9VxaqscccQZprqW/ny0kDZKUTrf4i3vP4WVrpC6UHJSbas9LR3ZFMAOrkAzxCrxnnXmM
+         g1zTRF681PI6bTIl3Iy8NrqFD1TkPOgjxfc3FIBaib8d7rujrBTet4fo3bqd6K+u6P1d
+         yRD7JbUgjBmnLSDCD+YNm4eaZl5A+kakOHxui5X/ilNIRIMCbpbkIDqCd7BN8XkpVxPQ
+         /pqslJXMM7pucPEUeYrS4/zMQ7piR4rk/mGI+z3KGHRtOtkPArs527wbylr7adXCoYsA
+         CAOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DI7p9OTIgrgEnPGEh+lJXFr4UIv6maYDRk9V3SIdLFo=;
+        b=I8qNJ5TH76b9nXo4rOOk+0L8PmhlLQ8RtePbvjO1jKcCLZHIpfgbutUuS66rfX74xU
+         kqKblGYNQkRZ+OBxk5uu9GUSy5vuZOnyqGTvShrDIMWsad1Pjremekr19e6u8Y6BRgJH
+         RtQ++MRAGsqUXyHwS+3GJBm90z/EgmLbTc4+C83j1eMSo2QHf2xk/5+fmTbCyAl/hIyd
+         Ys6iaTuxyuMyCCnkgltXrf5WtDR5g54/ZYKNOIqlDfsapLctPh7KaBxJ3cMStvlSFVX1
+         II6q/9+v6phYNqhZ/tNXhTG2MF04SCqbuJK7VWL5EwX+EQffTM19SDCr2p4pTSMNGj4e
+         tCug==
+X-Gm-Message-State: APjAAAWBB1oovvClUUQMfzc4P7sLpTDyUN+fHpSQYcndoSqwvkpjAgPg
+        P0dMx042CaRSXGjgnCYpCkq8WX0y72lPxhwml98=
+X-Google-Smtp-Source: APXvYqyC/FGP5JOPFRRbXpu2MsJ6ADyHnA7+CWiirrS+6v68+WGimIVw/C2bXr0v+wRB+PrkaRl7bfM2yu5tyDGyYQo=
+X-Received: by 2002:ac8:1385:: with SMTP id h5mr13442494qtj.59.1575652266670;
+ Fri, 06 Dec 2019 09:11:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191206001226.67825-1-dxu@dxuuu.xyz>
+In-Reply-To: <20191206001226.67825-1-dxu@dxuuu.xyz>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 6 Dec 2019 09:10:48 -0800
+Message-ID: <CAEf4BzY-ahRm5HPrqRWF5seOjGM+PJs+J+DTbuws3r=jd_PArg@mail.gmail.com>
+Subject: Re: [PATCH bpf] bpf: Add LBR data to BPF_PROG_TYPE_PERF_EVENT prog context
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>, Martin Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Dec 2019 09:21:29 -0600
-Rob Herring <robh@kernel.org> wrote:
+On Thu, Dec 5, 2019 at 4:13 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> Last-branch-record is an intel CPU feature that can be configured to
+> record certain branches that are taken during code execution. This data
+> is particularly interesting for profile guided optimizations. perf has
+> had LBR support for a while but the data collection can be a bit coarse
+> grained.
+>
+> We (Facebook) have recently run a lot of experiments with feeding
+> filtered LBR data to various PGO pipelines. We've seen really good
+> results (+2.5% throughput with lower cpu util and lower latency) by
+> feeding high request latency LBR branches to the compiler on a
+> request-oriented service. We used bpf to read a special request context
+> ID (which is how we associate branches with latency) from a fixed
+> userspace address. Reading from the fixed address is why bpf support is
+> useful.
+>
+> Aside from this particular use case, having LBR data available to bpf
+> progs can be useful to get stack traces out of userspace applications
+> that omit frame pointers.
+>
+> This patch adds support for LBR data to bpf perf progs.
+>
+> Some notes:
+> * We use `__u64 entries[BPF_MAX_LBR_ENTRIES * 3]` instead of
+>   `struct perf_branch_entry[BPF_MAX_LBR_ENTRIES]` because checkpatch.pl
+>   warns about including a uapi header from another uapi header
+>
+> * We define BPF_MAX_LBR_ENTRIES as 32 (instead of using the value from
+>   arch/x86/events/perf_events.h) because including arch specific headers
+>   seems wrong and could introduce circular header includes.
+>
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> ---
+>  include/uapi/linux/bpf_perf_event.h |  5 ++++
+>  kernel/trace/bpf_trace.c            | 39 +++++++++++++++++++++++++++++
+>  2 files changed, 44 insertions(+)
+>
+> diff --git a/include/uapi/linux/bpf_perf_event.h b/include/uapi/linux/bpf_perf_event.h
+> index eb1b9d21250c..dc87e3d50390 100644
+> --- a/include/uapi/linux/bpf_perf_event.h
+> +++ b/include/uapi/linux/bpf_perf_event.h
+> @@ -10,10 +10,15 @@
+>
+>  #include <asm/bpf_perf_event.h>
+>
+> +#define BPF_MAX_LBR_ENTRIES 32
+> +
+>  struct bpf_perf_event_data {
+>         bpf_user_pt_regs_t regs;
+>         __u64 sample_period;
+>         __u64 addr;
+> +       __u64 nr_lbr;
+> +       /* Cast to struct perf_branch_entry* before using */
+> +       __u64 entries[BPF_MAX_LBR_ENTRIES * 3];
+>  };
+>
 
-> On Sat, Nov 23, 2019 at 08:35:10PM -0300, Rodrigo Carvalho wrote:
-> > This patch add device tree binding documentation for ADIS16240.
-> > 
-> > Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>  
-> 
-> checkpatch.pl complains about a mismatch between the author and S-o-b.
-The open question on patch 1 is resolved, so respin with the points Rob pointed
-out her resolved and I'll pick up v6.
+I wonder if instead of hard-coding this in bpf_perf_event_data, could
+we achieve this and perhaps even more flexibility by letting users
+access underlying bpf_perf_event_data_kern and use CO-RE to read
+whatever needs to be read from perf_sample_data, perf_event, etc?
+Would that work?
 
-Thanks,
+>  #endif /* _UAPI__LINUX_BPF_PERF_EVENT_H__ */
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index ffc91d4935ac..96ba7995b3d7 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
 
-Jonathan
-
-> 
-> > ---
-> > V5:
-> >   - None 
-> > 
-> >  .../bindings/iio/accel/adi,adis16240.yaml     | 49 +++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> > new file mode 100644
-> > index 000000000000..8e902f7c49e6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> > @@ -0,0 +1,49 @@
-> > +# SPDX-License-Identifier: GPL-2.0  
-> 
-> Dual license new bindings please: (GPL-2.0-only OR BSD-2-Clause)
-> 
-> With that,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ADIS16240 Programmable Impact Sensor and Recorder driver
-> > +
-> > +maintainers:
-> > +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > +
-> > +description: |
-> > +  ADIS16240 Programmable Impact Sensor and Recorder driver that supports
-> > +  SPI interface.
-> > +    https://www.analog.com/en/products/adis16240.html
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,adis16240
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    spi0 {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        /* Example for a SPI device node */
-> > +        accelerometer@0 {
-> > +            compatible = "adi,adis16240";
-> > +            reg = <0>;
-> > +            spi-max-frequency = <2500000>;
-> > +            interrupt-parent = <&gpio0>;
-> > +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> > +        };
-> > +    };
-> > -- 
-> > 2.24.0
-> >   
-
+[...]
