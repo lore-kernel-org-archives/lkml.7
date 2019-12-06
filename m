@@ -2,209 +2,90 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB33C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DA8C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 865422077B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:03:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Kwzmn/Sm"
+	by mail.kernel.org (Postfix) with ESMTP id 7C26C2077B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfLFCDF (ORCPT
+        id S1726222AbfLFCEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 21:03:05 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:23742 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfLFCDE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 21:03:04 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191206020302epoutp0227b75a22df49cdaefad33e26ad137245~dpdXJT_Io2785427854epoutp02D
-        for <linux-kernel@vger.kernel.org>; Fri,  6 Dec 2019 02:03:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191206020302epoutp0227b75a22df49cdaefad33e26ad137245~dpdXJT_Io2785427854epoutp02D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1575597782;
-        bh=/J4bbOh/im3Q0/SZMy2JQoaCbxm5WJSp6NHH/ELX6jw=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Kwzmn/SmkTEVl+RR4Rtn1JYdzO57aXQ34+tuDSU4GcPatYeOY9S96b7zBzK/qC5Tf
-         NmnX7hWq+rwnHQoYv0CYKo0JxJcRULERfUynnOUBt6ge7u9i8Dl+CKuGBnQZfTeVc4
-         foWz9opp2GQFo2lVes5w/yVJlHGQ2oQipgya1BZM=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p2.samsung.com
-        (KnoxPortal) with ESMTP id
-        20191206020301epcas1p2e08c5c9322489308bcecf46490b4afb6~dpdWaCtPZ3093830938epcas1p2C;
-        Fri,  6 Dec 2019 02:03:01 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191206015532epcas1p3c0555be59b53f966e45034fe4a171090~dpW0uE26l2233422334epcas1p3_;
-        Fri,  6 Dec 2019 01:55:32 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191206015532epsmtrp28f94a776a52cacf09935ee77571482a7~dpW0s5yfQ0278202782epsmtrp2J;
-        Fri,  6 Dec 2019 01:55:32 +0000 (GMT)
-X-AuditID: b6c32a2a-077ff700000019a9-d7-5de9b514c5d0
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E7.6C.06569.415B9ED5; Fri,  6 Dec 2019 10:55:32 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191206015532epsmtip2cfe59875bb2b9a36a68bcc782cc5ee5b~dpW0Z-dMX0080600806epsmtip2R;
-        Fri,  6 Dec 2019 01:55:32 +0000 (GMT)
-Subject: Re: [PATCH v3 2/3] devfreq: add clearing transitions stats
-To:     Kamil Konieczny <k.konieczny@samsung.com>
-Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "cpgs (cpgs@samsung.com)" <cpgs@samsung.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <1019298652.01575597781442.JavaMail.epsvc@epcpadp2>
-Date:   Fri, 6 Dec 2019 11:01:46 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Thu, 5 Dec 2019 21:04:42 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53122 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726109AbfLFCEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 21:04:42 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id ADCEB110BE5C4D92B220;
+        Fri,  6 Dec 2019 10:04:38 +0800 (CST)
+Received: from [127.0.0.1] (10.133.216.73) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Dec 2019
+ 10:04:32 +0800
+Subject: Re: firmware: dmi-sysfs: why is the access mode of dmi sysfs entries
+ restricted to 0400?
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Mike Waychison <mikew@google.com>, <linux-kernel@vger.kernel.org>,
+        wanghaibin 00208455 <wanghaibin.wang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <42bb2db8-66e0-3df4-75b7-98b2b2bcfca8@huawei.com>
+ <20191204074133.GA3548765@kroah.com>
+ <dac22bed-f138-471e-c19a-e31c5c910d48@huawei.com>
+ <20191204092942.GA3557583@kroah.com>
+From:   Guoheyi <guoheyi@huawei.com>
+Message-ID: <b75e2aac-e27c-8d26-36c7-6fb69b769bbd@huawei.com>
+Date:   Fri, 6 Dec 2019 10:04:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191205145527.26117-3-k.konieczny@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIIsWRmVeSWpSXmKPExsWy7bCSvK7I1pexBg0zzCzeLDnGbLFxxnpW
-        i5eHNC2aF69ns1jwaQarxfnzG9gtzja9Ybe4vGsOm8Xn3iOMFmuP3GW3WLbpD5PF7cYVbBaP
-        V7xld+D1WLznJZPHplWdbB4TFh1g9Ng/dw27R9+WVYwenzfJBbBFcdmkpOZklqUW6dslcGW0
-        9sxmKuiVrWj79Jy1gbFbvIuRk0NCwETixo1tLCC2kMBuRonzuxQg4pIS0y4eZe5i5ACyhSUO
-        Hy7uYuQCKnnLKLHw7ndGkBphAWeJvXsgekUEdCXe7FjKDFLELNDLInF6+S5WiI7DjBK9r46y
-        gVSxCWhJ7H9xA8zmF1CUuPrjMSPIBl4BO4kT6zlAwiwCKhIPJ3SwgtiiAmESO5c8ZgKxeQUE
-        JU7OfAK2jFPAVuJlxxNmEJtZQF3iz7xLULa4xK0n85kgbHmJ7W/nME9gFJ6FpH0WkpZZSFpm
-        IWlZwMiyilEytaA4Nz232LDAKC+1XK84Mbe4NC9dLzk/dxMjOCK1tHYwnjgRf4hRgINRiYd3
-        xucXsUKsiWXFlbmHGCU4mJVEeNP5XsYK8aYkVlalFuXHF5XmpBYfYpTmYFES55XPPxYpJJCe
-        WJKanZpakFoEk2Xi4JRqYNTZamR3w9nx5ZMlPdJOsXte7MnvT1dpsOKdcEpp/sv4nfOyWFps
-        ZjxW0qm86vgj0nrbwcqiBjtjnyMfNtc36Da8Mq3+J5+ykGNj3XOd16aq03aVX9MSWbxsL0/q
-        ysc26VsCxR9ZLG77Hb52xrZUpgX/0o4+1Hi+dv28/Qe2bJgxa+nmP3JfOFYpsRRnJBpqMRcV
-        JwIAzSYLUMQCAAA=
-X-CMS-MailID: 20191206015532epcas1p3c0555be59b53f966e45034fe4a171090
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20191205145543eucas1p1a317647203c47be07bbcee7867fb3e1e
-References: <20191205145527.26117-1-k.konieczny@samsung.com>
-        <CGME20191205145543eucas1p1a317647203c47be07bbcee7867fb3e1e@eucas1p1.samsung.com>
-        <20191205145527.26117-3-k.konieczny@samsung.com>
+In-Reply-To: <20191204092942.GA3557583@kroah.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.216.73]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/5/19 11:55 PM, Kamil Konieczny wrote:
-> Add clearing transition table and time in states devfreq statistics
-> by writing 0 (zero) to trans_stat file in devfreq sysfs. An example use
-> is like following:
-> 
-> echo 0 > /sys/class/devfreq/devfreqX/trans_stat
-> 
-> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
-> ---
-> Changes in v3:
-> - add checks for zero in input and clear stats only when zero is written
->   to trans_stats
-> - change documentation of trans_stat in sysfs
-> 
-> Changes in v2:
-> - instead of creating new sysfs file, add new functionality to trans_stat
->   and clear stats when anything is writen to it
-> ---
->  Documentation/ABI/testing/sysfs-class-devfreq | 11 +++++---
->  drivers/devfreq/devfreq.c                     | 27 ++++++++++++++++++-
->  2 files changed, 33 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-devfreq b/Documentation/ABI/testing/sysfs-class-devfreq
-> index 75897e2fde43..9758eb85ade3 100644
-> --- a/Documentation/ABI/testing/sysfs-class-devfreq
-> +++ b/Documentation/ABI/testing/sysfs-class-devfreq
-> @@ -55,12 +55,15 @@ What:		/sys/class/devfreq/.../trans_stat
->  Date:		October 2012
->  Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
->  Description:
-> -		This ABI shows the statistics of devfreq behavior on a
-> -		specific device. It shows the time spent in each state and
-> -		the number of transitions between states.
-> +		This ABI shows or clears the statistics of devfreq behavior
-> +		on a specific device. It shows the time spent in each state
-> +		and the number of transitions between states.
->  		In order to activate this ABI, the devfreq target device
->  		driver should provide the list of available frequencies
-> -		with its profile.
-> +		with its profile. If need to reset the statistics of devfreq
-> +		behavior on a specific device, enter 0(zero) to 'trans_stat'
-> +		as following:
-> +			echo 0 > /sys/class/devfreq/.../trans_stat
->  
->  What:		/sys/class/devfreq/.../userspace/set_freq
->  Date:		September 2011
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index abecadeb3dc2..218eb64d7f28 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -1478,7 +1478,32 @@ static ssize_t trans_stat_show(struct device *dev,
->  					devfreq->total_trans);
->  	return len;
->  }
-> -static DEVICE_ATTR_RO(trans_stat);
-> +
-> +static ssize_t trans_stat_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t count)
-> +{
-> +	struct devfreq *df = to_devfreq(dev);
-> +	unsigned int cnt = df->profile->max_state;
-> +	int err, value;
-> +
-> +	if (cnt == 0)
-> +		return count;
-> +
-> +	err = kstrtoint(buf, 10, &value);
-> +	if (err || value != 0)
-> +		return count;
 
-Better returning -EINVAL to inform the error of user.
-I changed it by myself.
+在 2019/12/4 17:29, Greg Kroah-Hartman 写道:
+> On Wed, Dec 04, 2019 at 05:01:06PM +0800, Guoheyi wrote:
+>> 在 2019/12/4 15:41, Greg Kroah-Hartman 写道:
+>>> On Wed, Dec 04, 2019 at 03:31:22PM +0800, Guoheyi wrote:
+>>>> Hi,
+>>>>
+>>>> Why is the access mode of dmi sysfs entries restricted to 0400? Is it for
+>>>> security concern? If it is, which information do we consider as privacy?
+>>> There's lots of "interesting" information in dmi entries that you
+>>> probably do not want all processes reading, which is why they are
+>>> restricted.
+>>>
+>>>> We would like to fetch CPU information from non-root application, is there
+>>>> feasible way to do that?
+>>> What specific CPU information is not currently exported in /proc/cpuinfo
+>>> that only shows up in DMI entries that you are interested in?
+>> We'd like to get processor manufacturer, speed and version, and pass the
+>> information to qemu virtual machine, for users of VM might be happy to see
+>> this instead of "unknown xxx", while qemu may run as non-root.
+> Careful about this as if you move that virtual machine around, those
+> values will change and if userspace was depending on them being static
+> (set up at program start time), then you might have problems.
+>
+> good luck!
 
-> +
-> +	mutex_lock(&df->lock);
-> +	memset(df->time_in_state, 0, cnt * sizeof(u64));
+The information will be used as VM DMI/SMBIOS as well, so it will be 
+read only once during VM boot. I guess we will be OK :)
 
-Changed the size calculation way as following by myself:
+Thanks a lot.
 
-    memset(df->time_in_state, 0, (df->profile->max_state *                  
-					sizeof(*devfreq->time_in_state)));  
+Heyi
 
-> +	memset(df->trans_table, 0, cnt * cnt * sizeof(int));
-
-Changed the size calculation way with array3_size() as following by myself:
-	memset(df->trans_table, 0, array3_size(sizeof(unsigned int),            
-					df->profile->max_state,                 
-					df->profile->max_state));     
-
-
-> +	df->last_stat_updated = get_jiffies_64();
-> +	df->total_trans = 0;
-
-Changed the init sequence as following by myself.
-	df->total_trans = 0;
-	df->last_stat_updated = get_jiffies_64();
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+>
+> greg k-h
+>
+> .
 
