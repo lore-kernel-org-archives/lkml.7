@@ -2,637 +2,209 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF8DC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB33C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D4E2077B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 865422077B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:03:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I+URPTph"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Kwzmn/Sm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbfLFCCH (ORCPT
+        id S1726386AbfLFCDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 21:02:07 -0500
-Received: from mail-qv1-f73.google.com ([209.85.219.73]:33377 "EHLO
-        mail-qv1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfLFCCE (ORCPT
+        Thu, 5 Dec 2019 21:03:05 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:23742 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfLFCDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 21:02:04 -0500
-Received: by mail-qv1-f73.google.com with SMTP id g6so3347271qvp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 18:02:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=Uoiqh1iH4v2ToeU0Yb3li8l0pRuRjEA756eXvPEi7Mo=;
-        b=I+URPTph6l0Gjs3Ty5lna/SaVY6dGnLiMvedep9LVzRlBnXh4BlRhEru9kNSK7kAgA
-         Sr1FEq019Zb8B8NkmYgdQWR06k1Sab84vy1YdjKtBrGGM1qOKfylPpP3BqK3Pgym8RNA
-         V9crMh95vDkLIDuTwMaaga8rAriY4ZWzjpNhS01LZXT32PoWm8cRD+bZ8KYKK+KsZlxR
-         ZlkEzFee724eKYHofmb5Yt/qrIUvfuc1tFAHZgZIQ5BfLLiO+rxyBGEPUjk8tkA3B6JI
-         ybGslqwWeP8xp47xYVzGKoXYTseDCW7VmHcitBDxe0d4KtQk4zZJH5HYnu+ZfiEuFxC1
-         YzuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Uoiqh1iH4v2ToeU0Yb3li8l0pRuRjEA756eXvPEi7Mo=;
-        b=s/tLLKm6WZnKwtEWIDe7cSpRPSaUkCw4ErlxSF/43byBegDKv2mQY7RYAEzH5XdMsx
-         /lxQFWbaOAnD+xhJ4Myuv4s0hK/KPhu774Qn3FFhg+6vSKwydpRg8+woKHHTchpDsWzD
-         fqjXZqqEqI0U7bbYlawIuDVS6/CbHyLJVvuyIN+Pz5+T+Jj5aaMxHag+2CU6182KM92j
-         nttN148OGvqV/rjLJPtqPNKTGTVQmWku7FgBvvo+vZRO4RFGB6unFIqsu3kUdE626F4n
-         yzJk3OmIiFAzksj+6UPhYOwZtQiRJzx+Nb8hOItWNJr03zeuPfwbofCuxqWeYrNMctqz
-         1M/Q==
-X-Gm-Message-State: APjAAAU2Beq5+FR8H5Wi4G0VrMClilBsmHm/FFXBOB4npRMmt4XWhUll
-        qxREwZkf17+snxnabPsSzcXHwfa0J9zZJ8E5Y+sYzQ==
-X-Google-Smtp-Source: APXvYqxnCAAePAJYwutn/nMNtv2h7hp4eBG3fP64yEX27E7cV5KiNxgEwZ9eXMu1isQAmWYuE4uF7xe7qroFbRXw978AKA==
-X-Received: by 2002:ac8:47cc:: with SMTP id d12mr10768532qtr.246.1575597722723;
- Thu, 05 Dec 2019 18:02:02 -0800 (PST)
-Date:   Thu,  5 Dec 2019 18:01:53 -0800
-In-Reply-To: <20191206020153.228283-1-brendanhiggins@google.com>
-Message-Id: <20191206020153.228283-3-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20191206020153.228283-1-brendanhiggins@google.com>
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [RFC v1 2/2] uml: remove support for CONFIG_STATIC_LINK
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com
-Cc:     johannes.berg@intel.com, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org, davidgow@google.com,
-        Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 5 Dec 2019 21:03:04 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191206020302epoutp0227b75a22df49cdaefad33e26ad137245~dpdXJT_Io2785427854epoutp02D
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Dec 2019 02:03:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191206020302epoutp0227b75a22df49cdaefad33e26ad137245~dpdXJT_Io2785427854epoutp02D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575597782;
+        bh=/J4bbOh/im3Q0/SZMy2JQoaCbxm5WJSp6NHH/ELX6jw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Kwzmn/SmkTEVl+RR4Rtn1JYdzO57aXQ34+tuDSU4GcPatYeOY9S96b7zBzK/qC5Tf
+         NmnX7hWq+rwnHQoYv0CYKo0JxJcRULERfUynnOUBt6ge7u9i8Dl+CKuGBnQZfTeVc4
+         foWz9opp2GQFo2lVes5w/yVJlHGQ2oQipgya1BZM=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p2.samsung.com
+        (KnoxPortal) with ESMTP id
+        20191206020301epcas1p2e08c5c9322489308bcecf46490b4afb6~dpdWaCtPZ3093830938epcas1p2C;
+        Fri,  6 Dec 2019 02:03:01 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20191206015532epcas1p3c0555be59b53f966e45034fe4a171090~dpW0uE26l2233422334epcas1p3_;
+        Fri,  6 Dec 2019 01:55:32 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191206015532epsmtrp28f94a776a52cacf09935ee77571482a7~dpW0s5yfQ0278202782epsmtrp2J;
+        Fri,  6 Dec 2019 01:55:32 +0000 (GMT)
+X-AuditID: b6c32a2a-077ff700000019a9-d7-5de9b514c5d0
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E7.6C.06569.415B9ED5; Fri,  6 Dec 2019 10:55:32 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191206015532epsmtip2cfe59875bb2b9a36a68bcc782cc5ee5b~dpW0Z-dMX0080600806epsmtip2R;
+        Fri,  6 Dec 2019 01:55:32 +0000 (GMT)
+Subject: Re: [PATCH v3 2/3] devfreq: add clearing transitions stats
+To:     Kamil Konieczny <k.konieczny@samsung.com>
+Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "cpgs (cpgs@samsung.com)" <cpgs@samsung.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <1019298652.01575597781442.JavaMail.epsvc@epcpadp2>
+Date:   Fri, 6 Dec 2019 11:01:46 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
+MIME-Version: 1.0
+In-Reply-To: <20191205145527.26117-3-k.konieczny@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIIsWRmVeSWpSXmKPExsWy7bCSvK7I1pexBg0zzCzeLDnGbLFxxnpW
+        i5eHNC2aF69ns1jwaQarxfnzG9gtzja9Ybe4vGsOm8Xn3iOMFmuP3GW3WLbpD5PF7cYVbBaP
+        V7xld+D1WLznJZPHplWdbB4TFh1g9Ng/dw27R9+WVYwenzfJBbBFcdmkpOZklqUW6dslcGW0
+        9sxmKuiVrWj79Jy1gbFbvIuRk0NCwETixo1tLCC2kMBuRonzuxQg4pIS0y4eZe5i5ACyhSUO
+        Hy7uYuQCKnnLKLHw7ndGkBphAWeJvXsgekUEdCXe7FjKDFLELNDLInF6+S5WiI7DjBK9r46y
+        gVSxCWhJ7H9xA8zmF1CUuPrjMSPIBl4BO4kT6zlAwiwCKhIPJ3SwgtiiAmESO5c8ZgKxeQUE
+        JU7OfAK2jFPAVuJlxxNmEJtZQF3iz7xLULa4xK0n85kgbHmJ7W/nME9gFJ6FpH0WkpZZSFpm
+        IWlZwMiyilEytaA4Nz232LDAKC+1XK84Mbe4NC9dLzk/dxMjOCK1tHYwnjgRf4hRgINRiYd3
+        xucXsUKsiWXFlbmHGCU4mJVEeNP5XsYK8aYkVlalFuXHF5XmpBYfYpTmYFES55XPPxYpJJCe
+        WJKanZpakFoEk2Xi4JRqYNTZamR3w9nx5ZMlPdJOsXte7MnvT1dpsOKdcEpp/sv4nfOyWFps
+        ZjxW0qm86vgj0nrbwcqiBjtjnyMfNtc36Da8Mq3+J5+ykGNj3XOd16aq03aVX9MSWbxsL0/q
+        ysc26VsCxR9ZLG77Hb52xrZUpgX/0o4+1Hi+dv28/Qe2bJgxa+nmP3JfOFYpsRRnJBpqMRcV
+        JwIAzSYLUMQCAAA=
+X-CMS-MailID: 20191206015532epcas1p3c0555be59b53f966e45034fe4a171090
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20191205145543eucas1p1a317647203c47be07bbcee7867fb3e1e
+References: <20191205145527.26117-1-k.konieczny@samsung.com>
+        <CGME20191205145543eucas1p1a317647203c47be07bbcee7867fb3e1e@eucas1p1.samsung.com>
+        <20191205145527.26117-3-k.konieczny@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_STATIC_LINK appears to have been broken since before v4.20. It
-doesn't play nice with CONFIG_UML_NET_VECTOR=y:
+On 12/5/19 11:55 PM, Kamil Konieczny wrote:
+> Add clearing transition table and time in states devfreq statistics
+> by writing 0 (zero) to trans_stat file in devfreq sysfs. An example use
+> is like following:
+> 
+> echo 0 > /sys/class/devfreq/devfreqX/trans_stat
+> 
+> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+> ---
+> Changes in v3:
+> - add checks for zero in input and clear stats only when zero is written
+>   to trans_stats
+> - change documentation of trans_stat in sysfs
+> 
+> Changes in v2:
+> - instead of creating new sysfs file, add new functionality to trans_stat
+>   and clear stats when anything is writen to it
+> ---
+>  Documentation/ABI/testing/sysfs-class-devfreq | 11 +++++---
+>  drivers/devfreq/devfreq.c                     | 27 ++++++++++++++++++-
+>  2 files changed, 33 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-devfreq b/Documentation/ABI/testing/sysfs-class-devfreq
+> index 75897e2fde43..9758eb85ade3 100644
+> --- a/Documentation/ABI/testing/sysfs-class-devfreq
+> +++ b/Documentation/ABI/testing/sysfs-class-devfreq
+> @@ -55,12 +55,15 @@ What:		/sys/class/devfreq/.../trans_stat
+>  Date:		October 2012
+>  Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
+>  Description:
+> -		This ABI shows the statistics of devfreq behavior on a
+> -		specific device. It shows the time spent in each state and
+> -		the number of transitions between states.
+> +		This ABI shows or clears the statistics of devfreq behavior
+> +		on a specific device. It shows the time spent in each state
+> +		and the number of transitions between states.
+>  		In order to activate this ABI, the devfreq target device
+>  		driver should provide the list of available frequencies
+> -		with its profile.
+> +		with its profile. If need to reset the statistics of devfreq
+> +		behavior on a specific device, enter 0(zero) to 'trans_stat'
+> +		as following:
+> +			echo 0 > /sys/class/devfreq/.../trans_stat
+>  
+>  What:		/sys/class/devfreq/.../userspace/set_freq
+>  Date:		September 2011
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index abecadeb3dc2..218eb64d7f28 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -1478,7 +1478,32 @@ static ssize_t trans_stat_show(struct device *dev,
+>  					devfreq->total_trans);
+>  	return len;
+>  }
+> -static DEVICE_ATTR_RO(trans_stat);
+> +
+> +static ssize_t trans_stat_store(struct device *dev,
+> +				struct device_attribute *attr,
+> +				const char *buf, size_t count)
+> +{
+> +	struct devfreq *df = to_devfreq(dev);
+> +	unsigned int cnt = df->profile->max_state;
+> +	int err, value;
+> +
+> +	if (cnt == 0)
+> +		return count;
+> +
+> +	err = kstrtoint(buf, 10, &value);
+> +	if (err || value != 0)
+> +		return count;
 
-/usr/bin/ld: arch/um/drivers/vector_user.o: in function
-`user_init_socket_fds': vector_user.c:(.text+0x430): warning: Using
-'getaddrinfo' in statically linked applications requires at runtime the
-shared libraries from the glibc version used for linking
+Better returning -EINVAL to inform the error of user.
+I changed it by myself.
 
-And it seems to break the ptrace check:
+> +
+> +	mutex_lock(&df->lock);
+> +	memset(df->time_in_state, 0, cnt * sizeof(u64));
 
-Checking that ptrace can change system call numbers...check_ptrace :
-child exited with exitcode 6, while expecting 0; status 0x67f
-[1]    126822 abort      ./linux mem=256M
+Changed the size calculation way as following by myself:
 
-Given the importance of ptrace in UML, CONFIG_STATIC_LINK seems totally
-broken right now; remove it in order to fix allyesconfig for ARCH=um.
+    memset(df->time_in_state, 0, (df->profile->max_state *                  
+					sizeof(*devfreq->time_in_state)));  
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
----
- arch/um/Kconfig              |  23 +----
- arch/um/Makefile             |   3 +-
- arch/um/kernel/dyn.lds.S     | 170 ----------------------------------
- arch/um/kernel/uml.lds.S     | 115 -----------------------
- arch/um/kernel/vmlinux.lds.S | 175 ++++++++++++++++++++++++++++++++++-
- 5 files changed, 172 insertions(+), 314 deletions(-)
- delete mode 100644 arch/um/kernel/dyn.lds.S
- delete mode 100644 arch/um/kernel/uml.lds.S
+> +	memset(df->trans_table, 0, cnt * cnt * sizeof(int));
 
-diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-index 2a6d04fcb3e91..00927fb7ce67a 100644
---- a/arch/um/Kconfig
-+++ b/arch/um/Kconfig
-@@ -19,6 +19,7 @@ config UML
- 	select GENERIC_CLOCKEVENTS
- 	select HAVE_GCC_PLUGINS
- 	select TTY # Needed for line.c
-+	select MODULE_REL_CRCS if MODVERSIONS
- 
- config MMU
- 	bool
-@@ -61,28 +62,6 @@ config NR_CPUS
- 
- source "arch/$(HEADER_ARCH)/um/Kconfig"
- 
--config STATIC_LINK
--	bool "Force a static link"
--	default n
--	help
--	  This option gives you the ability to force a static link of UML.
--	  Normally, UML is linked as a shared binary.  This is inconvenient for
--	  use in a chroot jail.  So, if you intend to run UML inside a chroot,
--	  you probably want to say Y here.
--	  Additionally, this option enables using higher memory spaces (up to
--	  2.75G) for UML.
--
--config LD_SCRIPT_STATIC
--	bool
--	default y
--	depends on STATIC_LINK
--
--config LD_SCRIPT_DYN
--	bool
--	default y
--	depends on !LD_SCRIPT_STATIC
--	select MODULE_REL_CRCS if MODVERSIONS
--
- config HOSTFS
- 	tristate "Host filesystem"
- 	help
-diff --git a/arch/um/Makefile b/arch/um/Makefile
-index d2daa206872da..ec8af28daf051 100644
---- a/arch/um/Makefile
-+++ b/arch/um/Makefile
-@@ -117,8 +117,7 @@ archheaders:
- archprepare:
- 	$(Q)$(MAKE) $(build)=$(HOST_DIR)/um include/generated/user_constants.h
- 
--LINK-$(CONFIG_LD_SCRIPT_STATIC) += -static
--LINK-$(CONFIG_LD_SCRIPT_DYN) += -Wl,-rpath,/lib $(call cc-option, -no-pie)
-+LINK-y += -Wl,-rpath,/lib $(call cc-option, -no-pie)
- 
- CFLAGS_NO_HARDENING := $(call cc-option, -fno-PIC,) $(call cc-option, -fno-pic,) \
- 	$(call cc-option, -fno-stack-protector,) \
-diff --git a/arch/um/kernel/dyn.lds.S b/arch/um/kernel/dyn.lds.S
-deleted file mode 100644
-index c69d69ee96beb..0000000000000
---- a/arch/um/kernel/dyn.lds.S
-+++ /dev/null
-@@ -1,170 +0,0 @@
--#include <asm/vmlinux.lds.h>
--#include <asm/page.h>
--
--OUTPUT_FORMAT(ELF_FORMAT)
--OUTPUT_ARCH(ELF_ARCH)
--ENTRY(_start)
--jiffies = jiffies_64;
--
--SECTIONS
--{
--  PROVIDE (__executable_start = START);
--  . = START + SIZEOF_HEADERS;
--  .interp         : { *(.interp) }
--  __binary_start = .;
--  . = ALIGN(4096);		/* Init code and data */
--  _text = .;
--  INIT_TEXT_SECTION(PAGE_SIZE)
--
--  . = ALIGN(PAGE_SIZE);
--
--  /* Read-only sections, merged into text segment: */
--  .hash           : { *(.hash) }
--  .gnu.hash       : { *(.gnu.hash) }
--  .dynsym         : { *(.dynsym) }
--  .dynstr         : { *(.dynstr) }
--  .gnu.version    : { *(.gnu.version) }
--  .gnu.version_d  : { *(.gnu.version_d) }
--  .gnu.version_r  : { *(.gnu.version_r) }
--  .rel.init       : { *(.rel.init) }
--  .rela.init      : { *(.rela.init) }
--  .rel.text       : { *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*) }
--  .rela.text      : { *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*) }
--  .rel.fini       : { *(.rel.fini) }
--  .rela.fini      : { *(.rela.fini) }
--  .rel.rodata     : { *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*) }
--  .rela.rodata    : { *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*) }
--  .rel.data       : { *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*) }
--  .rela.data      : { *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*) }
--  .rel.tdata	  : { *(.rel.tdata .rel.tdata.* .rel.gnu.linkonce.td.*) }
--  .rela.tdata	  : { *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*) }
--  .rel.tbss	  : { *(.rel.tbss .rel.tbss.* .rel.gnu.linkonce.tb.*) }
--  .rela.tbss	  : { *(.rela.tbss .rela.tbss.* .rela.gnu.linkonce.tb.*) }
--  .rel.ctors      : { *(.rel.ctors) }
--  .rela.ctors     : { *(.rela.ctors) }
--  .rel.dtors      : { *(.rel.dtors) }
--  .rela.dtors     : { *(.rela.dtors) }
--  .rel.got        : { *(.rel.got) }
--  .rela.got       : { *(.rela.got) }
--  .rel.bss        : { *(.rel.bss .rel.bss.* .rel.gnu.linkonce.b.*) }
--  .rela.bss       : { *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*) }
--  .rel.plt : {
--	*(.rel.plt)
--	PROVIDE_HIDDEN(__rel_iplt_start = .);
--	*(.rel.iplt)
--	PROVIDE_HIDDEN(__rel_iplt_end = .);
--  }
--  .rela.plt : {
--	*(.rela.plt)
--	PROVIDE_HIDDEN(__rela_iplt_start = .);
--	*(.rela.iplt)
--	PROVIDE_HIDDEN(__rela_iplt_end = .);
--  }
--  .init           : {
--    KEEP (*(.init))
--  } =0x90909090
--  .plt            : { *(.plt) }
--  .text           : {
--    _stext = .;
--    TEXT_TEXT
--    SCHED_TEXT
--    CPUIDLE_TEXT
--    LOCK_TEXT
--    IRQENTRY_TEXT
--    SOFTIRQENTRY_TEXT
--    *(.fixup)
--    *(.stub .text.* .gnu.linkonce.t.*)
--    /* .gnu.warning sections are handled specially by elf32.em.  */
--    *(.gnu.warning)
--
--    . = ALIGN(PAGE_SIZE);
--  } =0x90909090
--  . = ALIGN(PAGE_SIZE);
--  .syscall_stub : {
--	__syscall_stub_start = .;
--	*(.__syscall_stub*)
--	__syscall_stub_end = .;
--  }
--  .fini           : {
--    KEEP (*(.fini))
--  } =0x90909090
--
--  .kstrtab : { *(.kstrtab) }
--
--  #include <asm/common.lds.S>
--
--  __init_begin = .;
--  init.data : { INIT_DATA }
--  __init_end = .;
--
--  /* Ensure the __preinit_array_start label is properly aligned.  We
--     could instead move the label definition inside the section, but
--     the linker would then create the section even if it turns out to
--     be empty, which isn't pretty.  */
--  . = ALIGN(32 / 8);
--  .preinit_array     : { *(.preinit_array) }
--  .fini_array     : { *(.fini_array) }
--  .data           : {
--    INIT_TASK_DATA(KERNEL_STACK_SIZE)
--    . = ALIGN(KERNEL_STACK_SIZE);
--    *(.data..init_irqstack)
--    DATA_DATA
--    *(.data.* .gnu.linkonce.d.*)
--    SORT(CONSTRUCTORS)
--  }
--  .data1          : { *(.data1) }
--  .tdata	  : { *(.tdata .tdata.* .gnu.linkonce.td.*) }
--  .tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) }
--  .eh_frame       : { KEEP (*(.eh_frame)) }
--  .gcc_except_table   : { *(.gcc_except_table) }
--  .dynamic        : { *(.dynamic) }
--  .ctors          : {
--    /* gcc uses crtbegin.o to find the start of
--       the constructors, so we make sure it is
--       first.  Because this is a wildcard, it
--       doesn't matter if the user does not
--       actually link against crtbegin.o; the
--       linker won't look for a file to match a
--       wildcard.  The wildcard also means that it
--       doesn't matter which directory crtbegin.o
--       is in.  */
--    KEEP (*crtbegin.o(.ctors))
--    /* We don't want to include the .ctor section from
--       from the crtend.o file until after the sorted ctors.
--       The .ctor section from the crtend file contains the
--       end of ctors marker and it must be last */
--    KEEP (*(EXCLUDE_FILE (*crtend.o ) .ctors))
--    KEEP (*(SORT(.ctors.*)))
--    KEEP (*(.ctors))
--  }
--  .dtors          : {
--    KEEP (*crtbegin.o(.dtors))
--    KEEP (*(EXCLUDE_FILE (*crtend.o ) .dtors))
--    KEEP (*(SORT(.dtors.*)))
--    KEEP (*(.dtors))
--  }
--  .jcr            : { KEEP (*(.jcr)) }
--  .got            : { *(.got.plt) *(.got) }
--  _edata = .;
--  PROVIDE (edata = .);
--  .bss            : {
--   __bss_start = .;
--   *(.dynbss)
--   *(.bss .bss.* .gnu.linkonce.b.*)
--   *(COMMON)
--   /* Align here to ensure that the .bss section occupies space up to
--      _end.  Align after .bss to ensure correct alignment even if the
--      .bss section disappears because there are no input sections.  */
--   . = ALIGN(32 / 8);
--  . = ALIGN(32 / 8);
--  }
--   __bss_stop = .;
--  _end = .;
--  PROVIDE (end = .);
--
--  STABS_DEBUG
--
--  DWARF_DEBUG
--
--  DISCARDS
--}
-diff --git a/arch/um/kernel/uml.lds.S b/arch/um/kernel/uml.lds.S
-deleted file mode 100644
-index 9f21443be2c9e..0000000000000
---- a/arch/um/kernel/uml.lds.S
-+++ /dev/null
-@@ -1,115 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#include <asm/vmlinux.lds.h>
--#include <asm/page.h>
--
--OUTPUT_FORMAT(ELF_FORMAT)
--OUTPUT_ARCH(ELF_ARCH)
--ENTRY(_start)
--jiffies = jiffies_64;
--
--SECTIONS
--{
--  /* This must contain the right address - not quite the default ELF one.*/
--  PROVIDE (__executable_start = START);
--  /* Static binaries stick stuff here, like the sigreturn trampoline,
--   * invisibly to objdump.  So, just make __binary_start equal to the very
--   * beginning of the executable, and if there are unmapped pages after this,
--   * they are forever unusable.
--   */
--  __binary_start = START;
--
--  . = START + SIZEOF_HEADERS;
--
--  _text = .;
--  INIT_TEXT_SECTION(0)
--  . = ALIGN(PAGE_SIZE);
--
--  .text      :
--  {
--    _stext = .;
--    TEXT_TEXT
--    SCHED_TEXT
--    CPUIDLE_TEXT
--    LOCK_TEXT
--    IRQENTRY_TEXT
--    SOFTIRQENTRY_TEXT
--    *(.fixup)
--    /* .gnu.warning sections are handled specially by elf32.em.  */
--    *(.gnu.warning)
--    *(.gnu.linkonce.t*)
--  }
--
--  . = ALIGN(PAGE_SIZE);
--  .syscall_stub : {
--	__syscall_stub_start = .;
--	*(.__syscall_stub*)
--	__syscall_stub_end = .;
--  }
--
--  /*
--   * These are needed even in a static link, even if they wind up being empty.
--   * Newer glibc needs these __rel{,a}_iplt_{start,end} symbols.
--   */
--  .rel.plt : {
--	*(.rel.plt)
--	PROVIDE_HIDDEN(__rel_iplt_start = .);
--	*(.rel.iplt)
--	PROVIDE_HIDDEN(__rel_iplt_end = .);
--  }
--  .rela.plt : {
--	*(.rela.plt)
--	PROVIDE_HIDDEN(__rela_iplt_start = .);
--	*(.rela.iplt)
--	PROVIDE_HIDDEN(__rela_iplt_end = .);
--  }
--
--  #include <asm/common.lds.S>
--
--  __init_begin = .;
--  init.data : { INIT_DATA }
--  __init_end = .;
--
--  .data    :
--  {
--    INIT_TASK_DATA(KERNEL_STACK_SIZE)
--    . = ALIGN(KERNEL_STACK_SIZE);
--    *(.data..init_irqstack)
--    DATA_DATA
--    *(.gnu.linkonce.d*)
--    CONSTRUCTORS
--  }
--  .data1   : { *(.data1) }
--  .ctors         :
--  {
--    *(.ctors)
--  }
--  .dtors         :
--  {
--    *(.dtors)
--  }
--
--  .got           : { *(.got.plt) *(.got) }
--  .dynamic       : { *(.dynamic) }
--  .tdata	  : { *(.tdata .tdata.* .gnu.linkonce.td.*) }
--  .tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) }
--  /* We want the small data sections together, so single-instruction offsets
--     can access them all, and initialized data all before uninitialized, so
--     we can shorten the on-disk segment size.  */
--  .sdata     : { *(.sdata) }
--  _edata  =  .;
--  PROVIDE (edata = .);
--  . = ALIGN(PAGE_SIZE);
--  __bss_start = .;
--  PROVIDE(_bss_start = .);
--  SBSS(0)
--  BSS(0)
--   __bss_stop = .;
--  _end = .;
--  PROVIDE (end = .);
--
--  STABS_DEBUG
--
--  DWARF_DEBUG
--
--  DISCARDS
--}
-diff --git a/arch/um/kernel/vmlinux.lds.S b/arch/um/kernel/vmlinux.lds.S
-index 16e49bfa2b426..f4b6114e54d62 100644
---- a/arch/um/kernel/vmlinux.lds.S
-+++ b/arch/um/kernel/vmlinux.lds.S
-@@ -1,8 +1,173 @@
- 
- KERNEL_STACK_SIZE = 4096 * (1 << CONFIG_KERNEL_STACK_ORDER);
- 
--#ifdef CONFIG_LD_SCRIPT_STATIC
--#include "uml.lds.S"
--#else
--#include "dyn.lds.S"
--#endif
-+#include <asm/vmlinux.lds.h>
-+#include <asm/page.h>
-+
-+OUTPUT_FORMAT(ELF_FORMAT)
-+OUTPUT_ARCH(ELF_ARCH)
-+ENTRY(_start)
-+jiffies = jiffies_64;
-+
-+SECTIONS
-+{
-+  PROVIDE (__executable_start = START);
-+  . = START + SIZEOF_HEADERS;
-+  .interp         : { *(.interp) }
-+  __binary_start = .;
-+  . = ALIGN(4096);		/* Init code and data */
-+  _text = .;
-+  INIT_TEXT_SECTION(PAGE_SIZE)
-+
-+  . = ALIGN(PAGE_SIZE);
-+
-+  /* Read-only sections, merged into text segment: */
-+  .hash           : { *(.hash) }
-+  .gnu.hash       : { *(.gnu.hash) }
-+  .dynsym         : { *(.dynsym) }
-+  .dynstr         : { *(.dynstr) }
-+  .gnu.version    : { *(.gnu.version) }
-+  .gnu.version_d  : { *(.gnu.version_d) }
-+  .gnu.version_r  : { *(.gnu.version_r) }
-+  .rel.init       : { *(.rel.init) }
-+  .rela.init      : { *(.rela.init) }
-+  .rel.text       : { *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*) }
-+  .rela.text      : { *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*) }
-+  .rel.fini       : { *(.rel.fini) }
-+  .rela.fini      : { *(.rela.fini) }
-+  .rel.rodata     : { *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*) }
-+  .rela.rodata    : { *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*) }
-+  .rel.data       : { *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*) }
-+  .rela.data      : { *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*) }
-+  .rel.tdata	  : { *(.rel.tdata .rel.tdata.* .rel.gnu.linkonce.td.*) }
-+  .rela.tdata	  : { *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*) }
-+  .rel.tbss	  : { *(.rel.tbss .rel.tbss.* .rel.gnu.linkonce.tb.*) }
-+  .rela.tbss	  : { *(.rela.tbss .rela.tbss.* .rela.gnu.linkonce.tb.*) }
-+  .rel.ctors      : { *(.rel.ctors) }
-+  .rela.ctors     : { *(.rela.ctors) }
-+  .rel.dtors      : { *(.rel.dtors) }
-+  .rela.dtors     : { *(.rela.dtors) }
-+  .rel.got        : { *(.rel.got) }
-+  .rela.got       : { *(.rela.got) }
-+  .rel.bss        : { *(.rel.bss .rel.bss.* .rel.gnu.linkonce.b.*) }
-+  .rela.bss       : { *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*) }
-+  .rel.plt : {
-+	*(.rel.plt)
-+	PROVIDE_HIDDEN(__rel_iplt_start = .);
-+	*(.rel.iplt)
-+	PROVIDE_HIDDEN(__rel_iplt_end = .);
-+  }
-+  .rela.plt : {
-+	*(.rela.plt)
-+	PROVIDE_HIDDEN(__rela_iplt_start = .);
-+	*(.rela.iplt)
-+	PROVIDE_HIDDEN(__rela_iplt_end = .);
-+  }
-+  .init           : {
-+    KEEP (*(.init))
-+  } =0x90909090
-+  .plt            : { *(.plt) }
-+  .text           : {
-+    _stext = .;
-+    TEXT_TEXT
-+    SCHED_TEXT
-+    CPUIDLE_TEXT
-+    LOCK_TEXT
-+    IRQENTRY_TEXT
-+    SOFTIRQENTRY_TEXT
-+    *(.fixup)
-+    *(.stub .text.* .gnu.linkonce.t.*)
-+    /* .gnu.warning sections are handled specially by elf32.em.  */
-+    *(.gnu.warning)
-+
-+    . = ALIGN(PAGE_SIZE);
-+  } =0x90909090
-+  . = ALIGN(PAGE_SIZE);
-+  .syscall_stub : {
-+	__syscall_stub_start = .;
-+	*(.__syscall_stub*)
-+	__syscall_stub_end = .;
-+  }
-+  .fini           : {
-+    KEEP (*(.fini))
-+  } =0x90909090
-+
-+  .kstrtab : { *(.kstrtab) }
-+
-+  #include <asm/common.lds.S>
-+
-+  __init_begin = .;
-+  init.data : { INIT_DATA }
-+  __init_end = .;
-+
-+  /* Ensure the __preinit_array_start label is properly aligned.  We
-+     could instead move the label definition inside the section, but
-+     the linker would then create the section even if it turns out to
-+     be empty, which isn't pretty.  */
-+  . = ALIGN(32 / 8);
-+  .preinit_array     : { *(.preinit_array) }
-+  .fini_array     : { *(.fini_array) }
-+  .data           : {
-+    INIT_TASK_DATA(KERNEL_STACK_SIZE)
-+    . = ALIGN(KERNEL_STACK_SIZE);
-+    *(.data..init_irqstack)
-+    DATA_DATA
-+    *(.data.* .gnu.linkonce.d.*)
-+    SORT(CONSTRUCTORS)
-+  }
-+  .data1          : { *(.data1) }
-+  .tdata	  : { *(.tdata .tdata.* .gnu.linkonce.td.*) }
-+  .tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) }
-+  .eh_frame       : { KEEP (*(.eh_frame)) }
-+  .gcc_except_table   : { *(.gcc_except_table) }
-+  .dynamic        : { *(.dynamic) }
-+  .ctors          : {
-+    /* gcc uses crtbegin.o to find the start of
-+       the constructors, so we make sure it is
-+       first.  Because this is a wildcard, it
-+       doesn't matter if the user does not
-+       actually link against crtbegin.o; the
-+       linker won't look for a file to match a
-+       wildcard.  The wildcard also means that it
-+       doesn't matter which directory crtbegin.o
-+       is in.  */
-+    KEEP (*crtbegin.o(.ctors))
-+    /* We don't want to include the .ctor section from
-+       from the crtend.o file until after the sorted ctors.
-+       The .ctor section from the crtend file contains the
-+       end of ctors marker and it must be last */
-+    KEEP (*(EXCLUDE_FILE (*crtend.o ) .ctors))
-+    KEEP (*(SORT(.ctors.*)))
-+    KEEP (*(.ctors))
-+  }
-+  .dtors          : {
-+    KEEP (*crtbegin.o(.dtors))
-+    KEEP (*(EXCLUDE_FILE (*crtend.o ) .dtors))
-+    KEEP (*(SORT(.dtors.*)))
-+    KEEP (*(.dtors))
-+  }
-+  .jcr            : { KEEP (*(.jcr)) }
-+  .got            : { *(.got.plt) *(.got) }
-+  _edata = .;
-+  PROVIDE (edata = .);
-+  .bss            : {
-+   __bss_start = .;
-+   *(.dynbss)
-+   *(.bss .bss.* .gnu.linkonce.b.*)
-+   *(COMMON)
-+   /* Align here to ensure that the .bss section occupies space up to
-+      _end.  Align after .bss to ensure correct alignment even if the
-+      .bss section disappears because there are no input sections.  */
-+   . = ALIGN(32 / 8);
-+  . = ALIGN(32 / 8);
-+  }
-+   __bss_stop = .;
-+  _end = .;
-+  PROVIDE (end = .);
-+
-+  STABS_DEBUG
-+
-+  DWARF_DEBUG
-+
-+  DISCARDS
-+}
+Changed the size calculation way with array3_size() as following by myself:
+	memset(df->trans_table, 0, array3_size(sizeof(unsigned int),            
+					df->profile->max_state,                 
+					df->profile->max_state));     
+
+
+> +	df->last_stat_updated = get_jiffies_64();
+> +	df->total_trans = 0;
+
+Changed the init sequence as following by myself.
+	df->total_trans = 0;
+	df->last_stat_updated = get_jiffies_64();
+
 -- 
-2.24.0.393.g34dc348eaf-goog
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
 
