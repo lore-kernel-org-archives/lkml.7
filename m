@@ -2,119 +2,144 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BFEC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEC3C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896DF24679
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:46:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwOh2LW6"
+	by mail.kernel.org (Postfix) with ESMTP id 89C3E24659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:52:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfLFGqt (ORCPT
+        id S1726322AbfLFGwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 01:46:49 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:45347 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfLFGqs (ORCPT
+        Fri, 6 Dec 2019 01:52:45 -0500
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:44948 "EHLO
+        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfLFGwp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 01:46:48 -0500
-Received: by mail-yw1-f68.google.com with SMTP id d12so2291707ywl.12;
-        Thu, 05 Dec 2019 22:46:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7gaosEyCtS7figPaTevfhISyTIAcwkXEtc8ItLxSuls=;
-        b=NwOh2LW6GvrtCLPiYl0gp4bYM5mcmkPs5GMwnsSHyeOnf11ZgJRAkVQtdsioEwpgbB
-         xIaHJyK/DkrNiYHZ/qhBOzG4VtQCIovYFAB2fEtMXc7QG2Cua1pJBkgW0rsf0Mt0Lxn7
-         XaBpBbSPR+KJPzqsZvRZdTxy/w60i/sMIUp8LA7CUVC/yt8ap63wgimUM075+kZT6Woi
-         hC2SBX1lq/g3rmmNzJ/ggAwDhmMaBEpi9Au3FhiXhPo5F3/PVpAQM3qX7ZzznfsE+tsd
-         s76ey9TfKuBCyr2LgmbnE4MFFA3tD14/2Dr3XMdfAKzdPkMCIe/upu512JjlfwDFQ24E
-         SC5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7gaosEyCtS7figPaTevfhISyTIAcwkXEtc8ItLxSuls=;
-        b=VIMyeHZYpRJIzxiqukOSvy3IRwbWg4MMTcH84VU0nbJu9rSbxsmQvi36KXoywGO81i
-         vOXRtWcLJGpV3ZMiJl/lr/wMnQYQGqzTlVXGGyP8prAYBiwUEWjgDvvS2B2ooJma/v1x
-         B3Q9tL/rAikJkVSK/7yahXEtI1qLurvrD+w1kBOiC9F7SgcMoua+3WkymmPii28MHMBM
-         +wuC6s1ThokYy89Bd/3Hui6TkSF7KMOhPgnaDPu6y4N/PD4tFvMKlRhIoI4eGLQyAK5r
-         GlvshhuUdw84Sld1ZuiKd+NniEJPsCej7A4hnx1fi2V0SbJNf8urGwVGNtxjb8ZvzK9W
-         2ImQ==
-X-Gm-Message-State: APjAAAVB/gTD3/MtF2GGe8Xe+ANQVPMQ/pqpQdEfi00mCsYFHolsQHTz
-        1T2Azg6rt/yg8VhI6IztaSPdWmo/GsokACXtoo8=
-X-Google-Smtp-Source: APXvYqxZPoGPZ2g12UuMmnRst0eaRP4msgk/8mr3Sw9+PT/0v4fpiG2Jd/uCEF/o8zxSRZZJsFHnZ+hqe3yjhK8ZwpE=
-X-Received: by 2002:a81:14d:: with SMTP id 74mr8923710ywb.183.1575614807610;
- Thu, 05 Dec 2019 22:46:47 -0800 (PST)
+        Fri, 6 Dec 2019 01:52:45 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47Tjvb3xPkzQlBQ;
+        Fri,  6 Dec 2019 07:52:43 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id 8NucHSJ0hqGc; Fri,  6 Dec 2019 07:52:39 +0100 (CET)
+Date:   Fri, 6 Dec 2019 17:52:30 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     Jann Horn <jannh@google.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>
+Subject: Re: [RFC PATCH] ptrace: add PTRACE_GETFD request
+Message-ID: <20191206065230.uddea7uhslmfemrw@yavin.dot.cyphar.com>
+References: <20191205234450.GA26369@ircssh-2.c.rugged-nimbus-611.internal>
+ <CAG48ez0_CCxO=stFvK=4G4Og=xe9Rtws8PEVy-cSmLqcxfE2Zw@mail.gmail.com>
+ <CAMp4zn85sz_y8EvXUULVY0a0fAmg91pFkYX5zZSXDz6Q-EiUoA@mail.gmail.com>
 MIME-Version: 1.0
-References: <0000000000002492cc0587d58ed8@google.com> <000000000000db84550598ff519f@google.com>
-In-Reply-To: <000000000000db84550598ff519f@google.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 6 Dec 2019 08:46:36 +0200
-Message-ID: <CAOQ4uxgzGRJs3o=7_rM3HtdMjEP-Emy=0a98LMVvYa-3==ZpjQ@mail.gmail.com>
-Subject: Re: WARNING in ovl_rename
-To:     syzbot <syzbot+bb1836a212e69f8e201a@syzkaller.appspotmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cumsf4lv6dzy3snz"
+Content-Disposition: inline
+In-Reply-To: <CAMp4zn85sz_y8EvXUULVY0a0fAmg91pFkYX5zZSXDz6Q-EiUoA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 6, 2019 at 3:54 AM syzbot
-<syzbot+bb1836a212e69f8e201a@syzkaller.appspotmail.com> wrote:
->
-> syzbot suspects this bug was fixed by commit:
->
-> commit 146d62e5a5867fbf84490d82455718bfb10fe824
-> Author: Amir Goldstein <amir73il@gmail.com>
-> Date:   Thu Apr 18 14:42:08 2019 +0000
->
->      ovl: detect overlapping layers
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=138841dae00000
-> start commit:   037904a2 Merge branch 'x86-urgent-for-linus' of git://git...
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=a42d110b47dd6b36
-> dashboard link: https://syzkaller.appspot.com/bug?extid=bb1836a212e69f8e201a
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15ba097ca00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10be1ceca00000
->
-> If the result looks correct, please mark the bug fixed by replying with:
->
-> #syz fix: ovl: detect overlapping layers
->
 
-Not exactly. Depends how you define "the bug".
+--cumsf4lv6dzy3snz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The actual bug wasn't introduced by:
-     ovl: fix EIO from lookup of non-indexed upper
+On 2019-12-05, Sargun Dhillon <sargun@sargun.me> wrote:
+> On Thu, Dec 5, 2019 at 6:38 PM Jann Horn <jannh@google.com> wrote:
+> >
+> > On Fri, Dec 6, 2019 at 12:44 AM Sargun Dhillon <sargun@sargun.me> wrote:
+> > > PTRACE_GETFD is a generic ptrace API that allows the tracer to
+> > > get file descriptors from the traceee.
+> >
+> > typo: tracee
+> >
+> > > The primary reason to use this syscall is to allow sandboxers to
+> > > take action on an FD on behalf of the tracee. For example, this
+> > > can be combined with seccomp's user notification feature to extract
+> > > a file descriptor and call privileged syscalls, like binding
+> > > a socket to a privileged port.
+> > [...]
+> > > +/* This gets a file descriptor from a running process. It doesn't re=
+quire the
+> > > + * process to be stopped.
+> > > + */
+> > > +#define PTRACE_GETFD   0x420f
+> > [...]
+> > > +static int ptrace_getfd(struct task_struct *child, unsigned long fd)
+> >
+> > I'd make the "fd" parameter of this function an "unsigned int", given
+> > that that's also the argument type of fcheck_files().
+> >
+> > > +{
+> > > +       struct files_struct *files;
+> > > +       struct file *file;
+> > > +       int ret =3D 0;
+> > > +
+> > > +       files =3D get_files_struct(child);
+> > > +       if (!files)
+> > > +               return -ENOENT;
+> > > +
+> > > +       spin_lock(&files->file_lock);
+> > > +       file =3D fcheck_files(files, fd);
+> > > +       if (!file)
+> > > +               ret =3D -EBADF;
+> > > +       else
+> > > +               get_file(file);
+> > > +       spin_unlock(&files->file_lock);
+> > > +       put_files_struct(files);
+> > > +
+> > > +       if (ret)
+> > > +               goto out;
+> > > +
+> > > +       ret =3D get_unused_fd_flags(0);
+> >
+> > You're hardcoding the flags for the fd as 0, which means that there is
+> > no way for the caller to enable O_CLOEXEC on the fd in a way that is
+> > race-free against a concurrent execve(). If you can't easily plumb
+> > through an O_CLOEXEC flag from userspace to here, you should probably
+> > hardcode O_CLOEXEC here.
+> >
+> I thought about making addr used for flags. It seems a little weird,
+> given the name, but it'll do the job. Alternatively, it could be a
+> point to an options struct. If we introduce options, one of the nice
+> things we could add is add the ability to cleanse the FD of certain
+> information, like cgroups.
 
-Nor was it fixed by:
-     ovl: detect overlapping layers
+If you do end up opting for an options struct, please make sure you use
+copy_struct_from_user() or something similar so that we can painlessly
+extend it in the future (if necessary). Since there isn't an additional
+argument, you might want to do what perf_event_open() does and embed the
+size as the first field of the options struct.
 
-It would be more accurate to say that the former commit exposed the bug
-to this specific repro and the latter commit has masked it from this repro.
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-The actual bug was introduced by:
-    804032fabb3b ("ovl: don't check rename to self")
+--cumsf4lv6dzy3snz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Which did not take into account hardlinking underneath overlayfs.
+-----BEGIN PGP SIGNATURE-----
 
-I posted a fix to relax this WARN_ON(), which is marked for stable 4.9+,
-because I see that the repro is also reported on kernel 4.14.y and
-"ovl: detect overlapping layers" is not expected to land in 4.14.y.
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXen6qgAKCRCdlLljIbnQ
+EhQlAP4roSXSw1CdkPHQv45bE+qCNKoo5kwo6mVCLOWj3jQp6AEA49yr/WUUwAPL
+Jg2a71AZ1Dd0MwKVAyG6T9ViqGPxlgE=
+=oc5i
+-----END PGP SIGNATURE-----
 
-Thanks,
-Amir.
+--cumsf4lv6dzy3snz--
