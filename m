@@ -2,156 +2,136 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E56BC2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54191C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5902173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D82320707
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:11:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="nV6kfa7Q"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="L5vttkjE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfLFOLF (ORCPT
+        id S1726386AbfLFOLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:11:05 -0500
-Received: from mail-mw2nam12on2072.outbound.protection.outlook.com ([40.107.244.72]:61953
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726195AbfLFOLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 09:11:04 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lw2YdsVpbPAASPf5HLfoMwze/rZyxD01Tnwt4UmhUMYyaM+w1+2aBpDlZk6cKz50xB0rIa3AA3kJM0z9GM1g5Vn6VRAcknEPwetzQLgUjqSFSRVsFq2Yq1E5Q9x7H/Y7XKh1DbcXWihmbalA3/VYLBts2QVOP3tfwejT/AZpFS6AXnhXYbpczKYZANbX9W1MmMgWE6Sz4qE8qmLBqQLihG43IXm2PfGZ5dmVpXymu9VY/rUM/WaWCCqD+IqRVj8nvGWa8F9gZhuhigKgWW/FyGRmh4+DGUFB9r7xt9SPDYi+AiefPqgzAvDxsC2ZcH6655wXaJ4ggrJ91Cvh044+pg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Od4pN0+qEhGfsdE3/dEeHS9fPLMbYL+0sqtYoqoaV1U=;
- b=HzDlddk0TMfFdTgG/itw1u8fvtrwd64Or4WMbYvfSR8v56fZLq60Hi7IafFXZ/NBAUN1VTLwlI7gOD2z9y3uM7lWrw9K0ehfvVyp4AQ0nkvWogyDF7xVQMqWb0lRFLntWMoBZkjrEP5KBosnCTya9VKgrCoFsN7I2Cv+jRKVxVf7n5DjbkakYOWHjSxbhMbmRZ0w1H4mceGWiojHzTviTfXV8CyuLIb9t3Hoe7u1rkTXgAwqukv8tnQSvluHzFr1HCcOa39eVW19+7rzfeCjixSjEZEghOfBxPCvLa042EMwkJWHUSV1/kOEmtFMo+u0Op2ybKaim+o5JhViDVXkpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Od4pN0+qEhGfsdE3/dEeHS9fPLMbYL+0sqtYoqoaV1U=;
- b=nV6kfa7Q7ZK2EmASYDB835dq9LlMl75tZkRFmwKs++JkpVu3+94KPBiAvuSShubHn/0GADPs8elIwm7E5zQV5H7yT37WCNebxEawG9ZWYKlS9/sY8dVlyRaWc+lIXH+G1vLB1fsFtxCLeqMx6DJBtedHfioMIroXvewpPAOEu0c=
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
- MN2PR05MB6814.namprd05.prod.outlook.com (52.132.172.91) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.5; Fri, 6 Dec 2019 14:10:59 +0000
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::611e:6a6b:9109:5aa8]) by MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::611e:6a6b:9109:5aa8%7]) with mapi id 15.20.2516.003; Fri, 6 Dec 2019
- 14:10:59 +0000
-From:   Thomas Hellstrom <thellstrom@vmware.com>
-To:     "hch@lst.de" <hch@lst.de>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>
-CC:     "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: Re: [PATCH 2/2] dma-mapping: force unencryped devices are always
- addressing limited
-Thread-Topic: [PATCH 2/2] dma-mapping: force unencryped devices are always
- addressing limited
-Thread-Index: AQHVqqNPg/9Qsdg+60Sr+vJTCD2APKetKK8A
-Date:   Fri, 6 Dec 2019 14:10:59 +0000
-Message-ID: <c98d594b465d3d8228743bc54017b8c456695219.camel@vmware.com>
-References: <20191204130339.22804-1-hch@lst.de>
-         <20191204130339.22804-3-hch@lst.de>
-In-Reply-To: <20191204130339.22804-3-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thellstrom@vmware.com; 
-x-originating-ip: [155.4.205.35]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 25e2256e-836c-485f-9ad7-08d77a561eb0
-x-ms-traffictypediagnostic: MN2PR05MB6814:
-x-microsoft-antispam-prvs: <MN2PR05MB68143162087E1B6829692182A15F0@MN2PR05MB6814.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0243E5FD68
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(376002)(346002)(39860400002)(136003)(199004)(189003)(66446008)(316002)(8936002)(71190400001)(66556008)(71200400001)(66476007)(305945005)(5660300002)(91956017)(36756003)(54906003)(110136005)(2906002)(118296001)(66946007)(229853002)(6512007)(86362001)(99286004)(478600001)(102836004)(6506007)(8676002)(81166006)(76176011)(6486002)(186003)(2616005)(81156014)(26005)(4326008)(64756008)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6814;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0vNigA4u55E/GOHw8i99hED6wtGY8NN0R1cxCSIzed7w9PEAmjNNOjccHq2+i+UT4XDsY/zkd5rPsAxelKmAfPmsA6VszMwnEmJWyP46XMGco85yjJIKJuZjJh3IfmBdtwZNLYB5skCnJqPUsWomvbWPCNTCsCKyLZL9igp6ZkpzzpdjzESGX7anz8rC6dHDEi6Wm6mUKumJAgtGl4LC2oqtr276TnqylT/s4cF5YwHq944mPFzPHzGSQ009MjPy1uxEVtUPGWC2urgDATzzJu3HOBd9MXHM1znK5MCVo6nA0v5uxdIUuTMMyOg2E8/WAYtyFQNQ8Y8ODoOhZS3w/V4wT4kLA94wTKXHz4BwQwcnEUCTvm6pl271B6lBXmFY5NE7PXZtwXBV+8ssQ9ZnjrMRbyYvwC93hcHLjd28AKuDTtHJFYqgUZI5jIlf6UIr
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4EF5620F9EA7224F9ACF5E0AA5D5D863@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 6 Dec 2019 09:11:17 -0500
+Received: from mout.web.de ([212.227.17.12]:47357 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726195AbfLFOLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 09:11:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1575641462;
+        bh=XqI7p79AmWhyh+4a8A/NaMqCmpXiuTxQpmNCq3jVlLE=;
+        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
+        b=L5vttkjEBcyXlVrgmEpW2pYUECGTxKX4KFf0qwVJ/DBHkZbDe8b41RcHeoFkyUhxc
+         eIjahgJaW7UAD5hslBgbCEbiCrjHtjkIjRYxBEOX7jBg65XSiXHzGf3Bwx5tUxc27g
+         CUVwrkWH5u01PyH8IALKjLp25UD1aoKjKU7mmjfc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([2.243.146.60]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LcxtU-1hvKuk1jrU-00i8ax; Fri, 06
+ Dec 2019 15:11:02 +0100
+To:     Chuhong Yuan <hslester96@gmail.com>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+References: <20191206120735.21873-1-hslester96@gmail.com>
+Subject: Re: [PATCH] media: go7007: fix a miss of snd_card_free
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <f6fcd441-e92d-0fff-e488-9507999b1682@web.de>
+Date:   Fri, 6 Dec 2019 15:10:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25e2256e-836c-485f-9ad7-08d77a561eb0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Dec 2019 14:10:59.5092
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +BJ8IvB8xVjAvaPpbl3nqsXbhX+NXOBjkTRaLjlb/SnblsahndquM+UWf/hxPfMyo2qxUUBL6aEj9YWc90K7eA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6814
+In-Reply-To: <20191206120735.21873-1-hslester96@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:EAz2Flf44+Z4mK1LAGm4AITA+Y26Iz0jisGTwoI2vzoE445kqE7
+ Dd/mF532ha1UX6CJJyWL+6Jio+HwzUi3QIgeTpdObcKUcxfF+Yc+Qbb8/0bVc3G4V2YsxxN
+ 6/OuVVRLXH9/BiMqa6y7S4Zg897/jMreU5eVDodhFfxyGBbCrtwZh6QDAD+KxZi4wCJV27I
+ I+fYuuWJr60sq8u+QuuhA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zpWoRGcnENQ=:Xi8VpGBL8X0rHawoqBd2m/
+ /LmEnWP8O62QxZW8PKoXFD3ASQ9Zx+1NzsHX8/UqhQSB9Wx6+NpOHUkd94cBPPNiVmwxhj8ZZ
+ ouwJUeGouyKZfKe88OBwPqbx4WPksI5Rb1M61KzZJtGGxWGiIi3Snlk6JEwT/4raNmoyBWV0n
+ BIeykB5BslZ3DW8e5C0vo5Z7lmDcrcN6HKbA/l73zjcU0CgmLmd6O4y/GGFuDmVNTqtYT3KwR
+ KINOMoaECJTd2v5MjA3x/d0/iHI3hPukYHZAaIdqurxa48A/i1fWvaKxBasedeOxhsX7J5KAs
+ MAn/40kmypco8CvnkR+tm29Ui5NxDGpv0xr0GxPCqvg16rzTAUJEq8ioSksm/bsT/fkPCZ3hq
+ JoqkZ/4HLo86u1BeE/DOquoyN0Ci6adixnEynAokr+IGrls/gk4TXBzV8yjsZLFIJpj7tRiCG
+ LnVBiW8J9rnntIkWbupR0e7FhQAjZlL4Unz8CVwitxw8OV5TMdstNOSsN158/Ok2iDCt4Q+tC
+ JVxxhmSuYrpaRbqqief/LsK4uxCLWrlatt1G7qEDNaQ2E4M9WKgrDXKnfVVwIe/4gcTIB2HBf
+ kKIRGmDaeTk5GqXa5MsyNffRiE1BPKvEIR7LeSy2jC+rQ2kVovPCFTUU0BYRbAkzieSayujLM
+ tPl6VUeVayMCumxPZ9GHv9oC+QyjTn/1gA01a5Y/YW8yGa28cmhZRV9JdrnWORp4cnz7PCnr3
+ JE3BeIf/JB1DGoORTCRIiCiNnh4BK9xFoXuFfn68WqjVEJcQCzkEPVoAGk5Q0T2ZXFNJfDm1M
+ /MADuUsN0/LDgxLC4tbjDpttys6D3IaUoOnBbFCDkJXrmAVDqhVUOJM+AngP5QNenIcbrC0n+
+ 35ZYYwo87g+GqlqutK/BiOFzir3T9rNpsJI3iF/RR6/UuRZyOcUYJhMzd4Fe/+dF/ufhzkBn6
+ uFAozPFz1jypP8WSB+M2PRlA3lnO271jVbyAwAm9wm5RW+Tgp/cJIuVSiJQVCLxl01WmazE4B
+ TMAbSRogTSfL0dmTsVN0J3ORZruGyrDFUILWR5yLh9MD8Jv+sASmXICqiM7TdFJmx9o5R0OjZ
+ U4uG9hRYQ0Gg8oi5XVmCv6CuLUtTl7h/CxKvwgpmzHXdTtxza0boRc0AfaDDKnh4Ap4qHkk/4
+ HQuVO63xb+2u4cPRQLK+c2yyXRREvy+5dWKtWmP6kwVehGfhClHB8bReyWDFmAlY3Ds7oOsnK
+ JgLbb6xSrZQThsk/Vr/lwtoJksl6+6y+mhWmL8zxbWBmHA7N4dks9c4E8AEM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIENocmlzdG9waC4NCg0KDQpPbiBXZWQsIDIwMTktMTItMDQgYXQgMTQ6MDMgKzAxMDAsIENo
-cmlzdG9waCBIZWxsd2lnIHdyb3RlOg0KPiBEZXZpY2VzIHRoYXQgYXJlIGZvcmNlZCB0byBETUEg
-dGhyb3VnaCBzd2lvdGxiIG5lZWQgdG8gYmUgdHJlYXRlZCBhcw0KPiBpZg0KPiB0aGV5IGFyZSBh
-ZGRyZXNzaW5nIGxpbWl0ZWQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDaHJpc3RvcGggSGVsbHdp
-ZyA8aGNoQGxzdC5kZT4NCj4gLS0tDQo+ICBpbmNsdWRlL2xpbnV4L2RtYS1kaXJlY3QuaCB8IDEg
-Kw0KPiAga2VybmVsL2RtYS9kaXJlY3QuYyAgICAgICAgfCA4ICsrKysrKy0tDQo+ICBrZXJuZWwv
-ZG1hL21hcHBpbmcuYyAgICAgICB8IDMgKysrDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDEwIGluc2Vy
-dGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51
-eC9kbWEtZGlyZWN0LmggYi9pbmNsdWRlL2xpbnV4L2RtYS1kaXJlY3QuaA0KPiBpbmRleCAyNGI4
-Njg0YWEyMWQuLjgzYWFjMjE0MzRjNiAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9kbWEt
-ZGlyZWN0LmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9kbWEtZGlyZWN0LmgNCj4gQEAgLTg1LDQg
-Kzg1LDUgQEAgaW50IGRtYV9kaXJlY3RfbW1hcChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdA0K
-PiB2bV9hcmVhX3N0cnVjdCAqdm1hLA0KPiAgCQl2b2lkICpjcHVfYWRkciwgZG1hX2FkZHJfdCBk
-bWFfYWRkciwgc2l6ZV90IHNpemUsDQo+ICAJCXVuc2lnbmVkIGxvbmcgYXR0cnMpOw0KPiAgaW50
-IGRtYV9kaXJlY3Rfc3VwcG9ydGVkKHN0cnVjdCBkZXZpY2UgKmRldiwgdTY0IG1hc2spOw0KPiAr
-Ym9vbCBkbWFfZGlyZWN0X2FkZHJlc3NpbmdfbGltaXRlZChzdHJ1Y3QgZGV2aWNlICpkZXYpOw0K
-PiAgI2VuZGlmIC8qIF9MSU5VWF9ETUFfRElSRUNUX0ggKi8NCj4gZGlmZiAtLWdpdCBhL2tlcm5l
-bC9kbWEvZGlyZWN0LmMgYi9rZXJuZWwvZG1hL2RpcmVjdC5jDQo+IGluZGV4IDZhZjdhZTgzYzRh
-ZC4uNDUwZjNhYmU1Y2I1IDEwMDY0NA0KPiAtLS0gYS9rZXJuZWwvZG1hL2RpcmVjdC5jDQo+ICsr
-KyBiL2tlcm5lbC9kbWEvZGlyZWN0LmMNCj4gQEAgLTQ5NywxMSArNDk3LDE1IEBAIGludCBkbWFf
-ZGlyZWN0X3N1cHBvcnRlZChzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+IHU2NCBtYXNrKQ0KPiAgCXJl
-dHVybiBtYXNrID49IF9fcGh5c190b19kbWEoZGV2LCBtaW5fbWFzayk7DQo+ICB9DQo+ICANCj4g
-K2Jvb2wgZG1hX2RpcmVjdF9hZGRyZXNzaW5nX2xpbWl0ZWQoc3RydWN0IGRldmljZSAqZGV2KQ0K
-PiArew0KPiArCXJldHVybiBmb3JjZV9kbWFfdW5lbmNyeXB0ZWQoZGV2KSB8fCBzd2lvdGxiX2Zv
-cmNlID09DQo+IFNXSU9UTEJfRk9SQ0U7DQo+ICt9DQo+ICsNCj4gIHNpemVfdCBkbWFfZGlyZWN0
-X21heF9tYXBwaW5nX3NpemUoc3RydWN0IGRldmljZSAqZGV2KQ0KPiAgew0KPiAgCS8qIElmIFNX
-SU9UTEIgaXMgYWN0aXZlLCB1c2UgaXRzIG1heGltdW0gbWFwcGluZyBzaXplICovDQo+IC0JaWYg
-KGlzX3N3aW90bGJfYWN0aXZlKCkgJiYNCj4gLQkgICAgKGRtYV9hZGRyZXNzaW5nX2xpbWl0ZWQo
-ZGV2KSB8fCBzd2lvdGxiX2ZvcmNlID09DQo+IFNXSU9UTEJfRk9SQ0UpKQ0KPiArCWlmIChpc19z
-d2lvdGxiX2FjdGl2ZSgpICYmIGRtYV9hZGRyZXNzaW5nX2xpbWl0ZWQoZGV2KSkNCj4gIAkJcmV0
-dXJuIHN3aW90bGJfbWF4X21hcHBpbmdfc2l6ZShkZXYpOw0KPiAgCXJldHVybiBTSVpFX01BWDsN
-Cj4gIH0NCj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9kbWEvbWFwcGluZy5jIGIva2VybmVsL2RtYS9t
-YXBwaW5nLmMNCj4gaW5kZXggMWRiZTZkNzI1OTYyLi5lYmM2MDYzM2Q4OWEgMTAwNjQ0DQo+IC0t
-LSBhL2tlcm5lbC9kbWEvbWFwcGluZy5jDQo+ICsrKyBiL2tlcm5lbC9kbWEvbWFwcGluZy5jDQo+
-IEBAIC00MTYsNiArNDE2LDkgQEAgRVhQT1JUX1NZTUJPTF9HUEwoZG1hX2dldF9tZXJnZV9ib3Vu
-ZGFyeSk7DQo+ICAgKi8NCj4gIGJvb2wgZG1hX2FkZHJlc3NpbmdfbGltaXRlZChzdHJ1Y3QgZGV2
-aWNlICpkZXYpDQo+ICB7DQo+ICsJaWYgKGRtYV9pc19kaXJlY3QoZ2V0X2RtYV9vcHMoZGV2KSkg
-JiYNCj4gKwkgICAgZG1hX2RpcmVjdF9hZGRyZXNzaW5nX2xpbWl0ZWQoZGV2KSkNCj4gKwkJcmV0
-dXJuIHRydWU7DQoNClRoaXMgd29ya3MgZmluZSBmb3Igdm13Z2Z4LCBmb3Igd2hpY2ggdGhlIGJl
-bG93IGV4cHJlc3Npb24gaXMgYWx3YXlzIDAuDQpCdXQgaXQgbG9va3MgbGlrZSB0aGUgb25seSBj
-dXJyZW50IHVzZXIgb2YgZG1hX2FkZHJlc3NpbmdfbGltaXRlZA0Kb3V0c2lkZSBvZiB0aGUgZG1h
-IGNvZGUsIHJhZGVvbiwgYWN0dWFsbHkgd2FudHMgb25seSB0aGUgYmVsb3cNCmV4cHJlc3Npb24g
-dG8gZm9yY2UgR0ZQX0RNQTMyIHBhZ2UgYWxsb2NhdGlvbnMgd2hlbiB0aGUgZGV2aWNlcyBoYXZl
-DQpsaW1pdGVkIGRtYSBhZGRyZXNzIHNwYWNlLiBQZXJoYXBzIENocmlzdGlhbiBjYW4gZWxhYm9y
-YXRlIG9uIHRoYXQuDQoNClNvIGluIHRoZSBlbmQgaXQgbG9va3MgbGlrZSB3ZSBoYXZlIHR3byBk
-aWZmZXJlbnQgdXNlIGNhc2VzLiBPbmUgdG8NCmZvcmNlIGNvaGVyZW50IG1lbW9yeSAodm13Z2Z4
-LCBwb3NzaWJseSBvdGhlciBncmFocGljcyBkcml2ZXJzKSBvcg0KcmVkdWNlZCBxdWV1ZSBkZXB0
-aCAodm13X3B2c2NzaSkgd2hlbiB3ZSBoYXZlIGJvdW5jZS1idWZmZXJpbmcuDQoNClRoZSBvdGhl
-ciBvbmUgaXMgdG8gZm9yY2UgR0ZQX0RNQTMyIHBhZ2UgYWxsb2NhdGlvbiB3aGVuIHRoZSBkZXZp
-Y2UNCmRtYS1hZGRyZXNzaW5nIGlzIGxpbWl0ZWQuIFBlcmhhcHMgdGhpcyBtb2RlIGNhbiBiZSBy
-ZXBsYWNlZCBieSB1c2luZw0KZG1hX2NvaGVyZW50IG1lbW9yeSBhbmQgc3RyaXBwZWQgdGhhdCBm
-dW5jdGlvbmFsaXR5IGZyb20gVFRNPw0KDQo+ICAJcmV0dXJuIG1pbl9ub3RfemVybyhkbWFfZ2V0
-X21hc2soZGV2KSwgZGV2LT5idXNfZG1hX2xpbWl0KSA8DQo+ICAJCQkgICAgZG1hX2dldF9yZXF1
-aXJlZF9tYXNrKGRldik7DQo+ICB9DQoNCg0KVGhhbmtzLA0KVGhvbWFzDQoNCg==
+> go7007_snd_init() misses a snd_card_free() in an error path.
+> Add the missed call to fix it.
+
+How do you think about to take another look also at the previous update su=
+ggestion
+=E2=80=9C[PATCH 5/6] [media] go7007: Use common error handling code in go7=
+007_snd_init()=E2=80=9D?
+https://lore.kernel.org/linux-media/05efac78-3a14-803c-5b4a-68670728628b@u=
+sers.sourceforge.net/
+https://lore.kernel.org/patchwork/patch/831887/
+https://lkml.org/lkml/2017/9/19/115
+
+Regards,
+Markus
