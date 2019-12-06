@@ -2,91 +2,73 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E370AC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1845BC2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B099A20706
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFADA20706
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:05:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GK/e2Q9A"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FEjicv0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfLFODy (ORCPT
+        id S1726345AbfLFOFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:03:54 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:41293 "EHLO
+        Fri, 6 Dec 2019 09:05:16 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35608 "EHLO
         mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbfLFODy (ORCPT
+        with ESMTP id S1726195AbfLFOFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 09:03:54 -0500
-Received: by mail-pj1-f66.google.com with SMTP id ca19so2791139pjb.8;
-        Fri, 06 Dec 2019 06:03:54 -0800 (PST)
+        Fri, 6 Dec 2019 09:05:16 -0500
+Received: by mail-pj1-f66.google.com with SMTP id w23so2805697pjd.2;
+        Fri, 06 Dec 2019 06:05:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8wIrvhx8JUqZ1A5Y/qZAw3J3FP6nnjrOWQ5P/LuZL9M=;
-        b=GK/e2Q9AV7ulM8ubyjDOu23Kfo4nJwYsSVMncffTSorVKl7aRdeGiWeHx6Oa2Zorfd
-         GKGAr1ncvXwGbStpwGs/H4Fj28Kn1wOiy8dgRscKZjtwT/nmh6w4EQHRlzjSk94u1lmu
-         W55DfVsxejQJZnT9TSZYWBYGsV9+NZKtRipaVi0zdMwXJC9Jw4ziUHBuu+cCxZYULETt
-         iyM0JES4zX3gcCbS2IXBVZazLOGZHg1Q1S8hFXFXknRs0S8rhPuWmM4I0KcHq88dQ2zT
-         HnlqVZZ4baF9lXNUmMpqvqbDY0iZr1hrO2PqoBgBWz0pD13MnjAgVasWUa8XNrmyI+H3
-         bWrw==
+        bh=u0BBBBffFWSAiTSIMpvOYtG57WXglTAMWySrfaeUACk=;
+        b=FEjicv0cd/jsGOOu1p8NCgngbt4hyeD9hRJboCPlIAwfo0I5vYydvj5RumPqZTYanD
+         jsDSSoyEmt0CAvNMVpbpjuPchrj84YPCE8OZ4WDGwZs96MEl0TqMe0pXHpdPsOczpcIV
+         4iG9d89XMTPYrcnqeb/effFrCPSQhFmSsSF1bdcUIQ9uDwPAXCAYxOhoPoqEvs1oOkCN
+         bxOqpQnRM9CZKN8yJ5WrnRn7UzxEvghU7r6Bgl4bK78BCEagaqmFcxXNZ2qioFt7vjir
+         FwXkHMJ8GMTYhhP9/VmlWRXZE54ejPF1b3ecB9Ibhu5nynCmxt+Gq9H2JUpitTNKfJKR
+         4n0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=8wIrvhx8JUqZ1A5Y/qZAw3J3FP6nnjrOWQ5P/LuZL9M=;
-        b=QDOZdj6tai3wtVvqus6jW/1UhPpI5u9civzq26tu/FLQhQLcPz4Bvl0eAUszjQcfTv
-         L9wZ/fsMc7F4nNt3oQ6T14I71KeRNTxCtkeLP8i/hPPPVIjRU8wVue+EslOrtDXc6yev
-         /lS0a6hlHLYHnEOkJKQHRHh7Y7vQi1t28CN1W3PuXl963ZQ1YiatHrubTMs75G4m2KHW
-         xhRHwTczRD4wY0Di/7ZvF1kUoDpj9PN/XAwm9ny/m4TwbBt8RVOHkQC4JdWqAdcTYtFo
-         JbrzGCcPw9w4ZG9kR7OgShMqFajCCCHjcFvMIlqRYJ3qkFXZFT8CCG/Yp07jYiEWb/FJ
-         XMOQ==
-X-Gm-Message-State: APjAAAUoU+IS1ytEfmBhHOHYkga1sQhAfh/D7z5pAN54ZstwmYOiXilj
-        HWpj9rFT7Nx25qTWIIOVqHUCOsVe
-X-Google-Smtp-Source: APXvYqxvKaJM6EDjuu/uqW8Ut6UxmtOSbcT1Y9insDdQ+O5F3RBBmvjvsJJLADCR00rQ/nwCHagfXw==
-X-Received: by 2002:a17:902:1:: with SMTP id 1mr14707267pla.108.1575641033225;
-        Fri, 06 Dec 2019 06:03:53 -0800 (PST)
+        bh=u0BBBBffFWSAiTSIMpvOYtG57WXglTAMWySrfaeUACk=;
+        b=MiZ2BPjPXkQ11GW26gHGJdRHTOJHPzKAaa4ykNcBqAAOR05zb1ZiPZfileRsnylUkX
+         cwGkA9/WA/wAYIopPMUkOcHFuulDEBbJPYfhqEWAblpI27njz3kwYW5Xpe6hZD9TxzQU
+         80IWwbfHBYY0LbxHOlFW5EeY4IJICk2s50sCO4zf4SVoievyYaf0pDf1Y9blNfT4SFc0
+         +9fQ+RJAL4OyVhVw+MJPixyW/zPmHVA89dNHgjZdo0nUAc13m41zP+VGP+ol3pmU6gXa
+         gDhFsYmKQDhusojvc5/TZj8FP8q/7YNX2YYWvjBqfl4VHoH2aA/UMb6+2NeouOUDJrr8
+         OBVQ==
+X-Gm-Message-State: APjAAAXm+8XhLDq7kWAA4STW0N2OqxyfPSuJhekVIrFRcdvQfB8FE185
+        AzpVg9CsFS3zGWUYqtInylKh8XVM
+X-Google-Smtp-Source: APXvYqyXKgDbEvQ3tt9b6x1n3t8KK1rtJ4bRNhAsxfSedj629OarimobGgH7gQaxcBm12hRiHJxoKQ==
+X-Received: by 2002:a17:90a:2351:: with SMTP id f75mr14355096pje.133.1575641115248;
+        Fri, 06 Dec 2019 06:05:15 -0800 (PST)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l66sm15350513pga.30.2019.12.06.06.03.50
+        by smtp.gmail.com with ESMTPSA id 23sm3490709pjx.29.2019.12.06.06.05.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2019 06:03:52 -0800 (PST)
-Subject: Re: [PATCH v6 10/18] sh/tlb: Convert SH to generic mmu_gather
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Will Deacon <will.deacon@arm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-References: <20190219103148.192029670@infradead.org>
- <20190219103233.443069009@infradead.org>
- <CAMuHMdW3nwckjA9Bt-_Dmf50B__sZH+9E5s0_ziK1U_y9onN=g@mail.gmail.com>
- <20191204104733.GR2844@hirez.programming.kicks-ass.net>
- <3c83eaec-8f33-1b90-1c70-9e7c1c8b1855@physik.fu-berlin.de>
- <20191205225610.GB2532@roeck-us.net>
- <a188f905-bb08-db98-0b8a-e31bec1dfa31@physik.fu-berlin.de>
+        Fri, 06 Dec 2019 06:05:14 -0800 (PST)
+Subject: Re: [PATCH -next] watchdog: tqmx86_wdt: Fix build error
+To:     YueHaibing <yuehaibing@huawei.com>, wim@linux-watchdog.org,
+        andrew@lunn.ch
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191206124259.25880-1-yuehaibing@huawei.com>
 From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <4f959f9b-9b8c-c880-0f55-172db732b783@roeck-us.net>
-Date:   Fri, 6 Dec 2019 06:03:50 -0800
+Message-ID: <1c31d0e5-37f9-4608-3af3-ba94f3b764e9@roeck-us.net>
+Date:   Fri, 6 Dec 2019 06:05:13 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <a188f905-bb08-db98-0b8a-e31bec1dfa31@physik.fu-berlin.de>
+In-Reply-To: <20191206124259.25880-1-yuehaibing@huawei.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -95,40 +77,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/6/19 5:38 AM, John Paul Adrian Glaubitz wrote:
-> Hi!
+On 12/6/19 4:42 AM, YueHaibing wrote:
+> If TQMX86_WDT is y and WATCHDOG_CORE is m, building fails:
 > 
-> On 12/5/19 11:56 PM, Guenter Roeck wrote:
->>> I have to admit, I have been very lazy with kernel updates. I have been
->>> planning to upgrade to a much more recent release on my boards for a while
->>> now, I have just been postponing it since the machines run very stable
->>> with the current kernel I am using.
->>>
->>
->> Hey, if you write a qemu emulation, I'll be happy to run it on a regular
->> basis :-)
+> drivers/watchdog/tqmx86_wdt.o: In function `tqmx86_wdt_probe':
+> tqmx86_wdt.c:(.text+0x46e): undefined reference to `watchdog_init_timeout'
+> tqmx86_wdt.c:(.text+0x4e0): undefined reference to `devm_watchdog_register_device'
 > 
-> There is working SH emulation in QEMU. I have been wanting to prepare a
-> current Debian/sh4 test image for that purpose for a while now.
+> Select WATCHDOG_CORE to fix this.
 > 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: e3c21e088f89 ("watchdog: tqmx86: Add watchdog driver for the IO controller")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-I do run this emulation in my tests. It does not support the affected CPU,
-unfortunately.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Guenter
-
-> For the time being, you can use the image by Aurelien Jarno:
+> ---
+>   drivers/watchdog/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
 > 
->> https://people.debian.org/~aurel32/qemu/sh4/
-> 
->> Problem is really that the architecture doesn't get as much attention as
->> it needs. The backtrace pointed to by Rob has been seen for a long time,
->> but either there is no one with the knowledge to fix it, or they are all
->> busy with other stuff.
-> 
-> I fully agree. I'm mostly busy with the userland stuff, i.e. Debian packages
-> for sh4 and not so much with the kernel.
-> 
-> Adrian
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 1679e0d..20bd967 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -1444,6 +1444,7 @@ config SMSC37B787_WDT
+>   config TQMX86_WDT
+>   	tristate "TQ-Systems TQMX86 Watchdog Timer"
+>   	depends on X86
+> +	select WATCHDOG_CORE
+>   	help
+>   	This is the driver for the hardware watchdog timer in the TQMX86 IO
+>   	controller found on some of their ComExpress Modules.
 > 
 
