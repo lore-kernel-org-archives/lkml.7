@@ -2,149 +2,182 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237D7C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE74EC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA0C24670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83FDA24659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:43:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BvtZ6v/K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbfLFNlN (ORCPT
+        id S1726259AbfLFNna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 08:41:13 -0500
-Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:35097
-        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726250AbfLFNlM (ORCPT
+        Fri, 6 Dec 2019 08:43:30 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45291 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfLFNna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:41:12 -0500
-X-Greylist: delayed 403 seconds by postgrey-1.27 at vger.kernel.org; Fri, 06 Dec 2019 08:41:12 EST
-Received: from mschiller01.dev.tdt.de (unknown [10.2.3.20])
-        by mail.dev.tdt.de (Postfix) with ESMTPSA id 8BBC42011E;
-        Fri,  6 Dec 2019 13:34:26 +0000 (UTC)
-From:   Martin Schiller <ms@dev.tdt.de>
-To:     andrew.hendry@gmail.com, davem@davemloft.net
-Cc:     edumazet@google.com, linux-x25@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin Schiller <ms@dev.tdt.de>
-Subject: [PATCH] net/x25: add new state X25_STATE_5
-Date:   Fri,  6 Dec 2019 14:34:18 +0100
-Message-Id: <20191206133418.14075-1-ms@dev.tdt.de>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 6 Dec 2019 08:43:30 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 2so3357679pfg.12;
+        Fri, 06 Dec 2019 05:43:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=r1n5pvqLG2z6eBpv3libroUGed6tLBBxHVt4i5CbkMg=;
+        b=BvtZ6v/KAbAE1G23ShR8R/onH0EbwGsbCdIZyTcqVoVpP2x0wYJy1c1ScTeqpLY542
+         hYruSoVX0lAsq+Zf0jFUAms0t6XpJ1DDKaUE8gpXrgXQIsLm5SILHzrt0eg3UtRxUQ+M
+         LDEsaUA4DpyA/uJERYx6H5KsegMS6aRtweNy7Z8gFu9tHp3lMLNDYeLO3Az6kODH/k2K
+         /XX+DTAYze38hr6b4Pv2Q7S4vm9Ssm0cp9CdPBH7gNzGLI9XwxpFHoyVZTDRcTm3ep47
+         paLnXGxEzoC3PYqrTryTe2705gRc0dN0FrgpBpCXUfIMoIj1M2js9tiJIzWvXLuYzdIx
+         87PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=r1n5pvqLG2z6eBpv3libroUGed6tLBBxHVt4i5CbkMg=;
+        b=gk7edtRVuYX0GemOAX4UYY3oAkaQ7ogkpNSx/eLDG4F4On0GlcJ25iRTH6DLV7n0zl
+         JYzB8v2TN/YQQZprBSV5ixK8kyczxUa3yX4oNTcHTFPh4yXFCGSH+6HtziD9x74W21yq
+         pyp3fLIaiUdlak7XBvh94ndkGDrrdX4urjAqxBjCXCVUMhoFqSKroe2PA0/702sD7iji
+         g3bHYAwadSoJe+WsnrBMue9fnjbt+/FblOHvw/ckx7iycX+Jo6p064GWGc/O3RzJ+yjG
+         Ei5CPFnu0BHDW3yN+E1fsTjfpVvRdyeaAzUMoDaJvrxnrVXYUH6jOyIzdIp76Mh4Uoa0
+         qhaw==
+X-Gm-Message-State: APjAAAWAo6rZ4G/T4x1l9cWwW/RLxOvmdURJYe3F1eJlrJTSS8MNDOjB
+        rlxD+M1meqvFTs18JQpP8AvrpiuJRxQ=
+X-Google-Smtp-Source: APXvYqw4SVt4XXbvzo+F0UIJa3Z8CxgI+x9x9WcadfupHaqHRA+LVzyRfltVNvxP0K/Ff6LIUiDUqw==
+X-Received: by 2002:a63:d544:: with SMTP id v4mr3462664pgi.288.1575639809712;
+        Fri, 06 Dec 2019 05:43:29 -0800 (PST)
+Received: from workstation.localdomain ([170.178.178.163])
+        by smtp.gmail.com with ESMTPSA id x7sm16297631pfa.107.2019.12.06.05.43.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Dec 2019 05:43:29 -0800 (PST)
+From:   Liang Chen <liangchen.linux@gmail.com>
+To:     colyli@suse.de
+Cc:     kent.overstreet@gmail.com, linux-kernel@vger.kernel.org,
+        linux-bcache@vger.kernel.org,
+        Liang Chen <liangchen.linux@gmail.com>
+Subject: [PATCH v2 2/2] [PATCH] bcache: __write_super to handle page sizes other than 4k
+Date:   Fri,  6 Dec 2019 21:43:14 +0800
+Message-Id: <1575639794-30056-1-git-send-email-liangchen.linux@gmail.com>
+X-Mailer: git-send-email 2.7.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is needed, because if the flag X25_ACCPT_APPRV_FLAG is not set on a
-socket (manual call confirmation) and the channel is cleared by remote
-before the manual call confirmation was sent, this situation needs to
-be handled.
+__write_super assumes super block data starts at offset 0 of the page
+read in with __bread from read_super, which is not true when page size
+is not 4k. We encountered the issue on system with 64K page size - commonly
+ seen on aarch64 architecture.
 
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Instead of making any assumption on the offset of the data within the page,
+this patch calls __bread again to locate the data. That should not introduce
+an extra io since the page has been held when it's read in from read_super,
+and __write_super is not on performance critical code path.
+
+Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
 ---
- include/net/x25.h |  3 ++-
- net/x25/af_x25.c  |  8 ++++++++
- net/x25/x25_in.c  | 35 +++++++++++++++++++++++++++++++++++
- 3 files changed, 45 insertions(+), 1 deletion(-)
+ drivers/md/bcache/super.c | 56 ++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 50 insertions(+), 6 deletions(-)
 
-diff --git a/include/net/x25.h b/include/net/x25.h
-index ed1acc3044ac..d7d6c2b4ffa7 100644
---- a/include/net/x25.h
-+++ b/include/net/x25.h
-@@ -62,7 +62,8 @@ enum {
- 	X25_STATE_1,		/* Awaiting Call Accepted */
- 	X25_STATE_2,		/* Awaiting Clear Confirmation */
- 	X25_STATE_3,		/* Data Transfer */
--	X25_STATE_4		/* Awaiting Reset Confirmation */
-+	X25_STATE_4,		/* Awaiting Reset Confirmation */
-+	X25_STATE_5		/* Call Accepted / Call Connected pending */
- };
- 
- enum {
-diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
-index c34f7d077604..2efe44a34644 100644
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -659,6 +659,12 @@ static int x25_release(struct socket *sock)
- 			sock_set_flag(sk, SOCK_DEAD);
- 			sock_set_flag(sk, SOCK_DESTROY);
- 			break;
-+
-+		case X25_STATE_5:
-+			x25_write_internal(sk, X25_CLEAR_REQUEST);
-+			x25_disconnect(sk, 0, 0, 0);
-+			__x25_destroy_socket(sk);
-+			goto out;
- 	}
- 
- 	sock_orphan(sk);
-@@ -1054,6 +1060,8 @@ int x25_rx_call_request(struct sk_buff *skb, struct x25_neigh *nb,
- 	if (test_bit(X25_ACCPT_APPRV_FLAG, &makex25->flags)) {
- 		x25_write_internal(make, X25_CALL_ACCEPTED);
- 		makex25->state = X25_STATE_3;
-+	} else {
-+		makex25->state = X25_STATE_5;
- 	}
- 
- 	/*
-diff --git a/net/x25/x25_in.c b/net/x25/x25_in.c
-index f97c43344e95..3f0f42bdd086 100644
---- a/net/x25/x25_in.c
-+++ b/net/x25/x25_in.c
-@@ -382,6 +382,38 @@ static int x25_state4_machine(struct sock *sk, struct sk_buff *skb, int frametyp
- 	return 0;
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index a573ce1d85aa..a40eb6335cb8 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -207,15 +207,43 @@ static void write_bdev_super_endio(struct bio *bio)
+ 	closure_put(&dc->sb_write);
  }
  
+-static void __write_super(struct cache_sb *sb, struct bio *bio)
 +/*
-+ * State machine for state 5, Call Accepted / Call Connected pending (X25_ACCPT_APPRV_FLAG).
-+ * The handling of the timer(s) is in file x25_timer.c
-+ * Handling of state 0 and connection release is in af_x25.c.
++ * With 4k page size, the 4k super block will be read in at offset 0 of
++ * the cache page. But it's not the case with larger page sizes. For
++ * example, with 64k page size reading in a 4k size block will cause the
++ * cache page being divided into 16 equal sized buffers, and block 1
++ * to be put at offset 4K in the page.
++ * Thus locating the super block again is nessessary in order to be
++ * compatilbe with different page sizes. And the page is held since
++ * read_super, this __bread should not cause an extra io.
 + */
-+static int x25_state5_machine(struct sock *sk, struct sk_buff *skb, int frametype)
++static inline struct cache_sb *locate_bch_sb(struct block_device *bdev)
 +{
-+	struct x25_sock *x25 = x25_sk(sk);
++ 	struct cache_sb *s;
++	struct buffer_head *bh = __bread(bdev, 1, SB_SIZE);
++	if (!bh)
++		return NULL;
++	s = (struct cache_sb *)bh->b_data;
 +
-+	switch (frametype) {
-+
-+		case X25_CLEAR_REQUEST:
-+			if (!pskb_may_pull(skb, X25_STD_MIN_LEN + 2))
-+				goto out_clear;
-+
-+			x25_write_internal(sk, X25_CLEAR_CONFIRMATION);
-+			x25_disconnect(sk, 0, skb->data[3], skb->data[4]);
-+			break;
-+
-+		default:
-+			break;
-+	}
-+
-+	return 0;
-+
-+out_clear:
-+	x25_write_internal(sk, X25_CLEAR_REQUEST);
-+	x25->state = X25_STATE_2;
-+	x25_start_t23timer(sk);
-+	return 0;
++	/* The page will still be held without this bh.*/
++	put_bh(bh);
++	return s;
 +}
 +
- /* Higher level upcall for a LAPB frame */
- int x25_process_rx_frame(struct sock *sk, struct sk_buff *skb)
++static int __write_super(struct cache_sb *sb, struct bio *bio,
++			 struct block_device *bdev)
  {
-@@ -406,6 +438,9 @@ int x25_process_rx_frame(struct sock *sk, struct sk_buff *skb)
- 	case X25_STATE_4:
- 		queued = x25_state4_machine(sk, skb, frametype);
- 		break;
-+	case X25_STATE_5:
-+		queued = x25_state5_machine(sk, skb, frametype);
-+		break;
+-	struct cache_sb *out = page_address(bio_first_page_all(bio));
++	struct cache_sb *out;
+ 	unsigned int i;
+ 
++	out = locate_bch_sb(bdev);
++	if (!out)
++		goto out_locate;
++
+ 	bio->bi_iter.bi_sector	= SB_SECTOR;
+ 	bio->bi_iter.bi_size	= SB_SIZE;
+ 	bio_set_op_attrs(bio, REQ_OP_WRITE, REQ_SYNC|REQ_META);
+-	bch_bio_map(bio, NULL);
++	bch_bio_map(bio, out);
+ 
+ 	out->offset		= cpu_to_le64(sb->offset);
+ 	out->version		= cpu_to_le64(sb->version);
+@@ -240,6 +268,11 @@ static void __write_super(struct cache_sb *sb, struct bio *bio)
+ 		 sb->version, sb->flags, sb->seq);
+ 
+ 	submit_bio(bio);
++	return 0;
++
++out_locate:
++	pr_err("Couldn't locate super block, __write_super failed");
++	return -1;
+ }
+ 
+ static void bch_write_bdev_super_unlock(struct closure *cl)
+@@ -263,8 +296,13 @@ void bch_write_bdev_super(struct cached_dev *dc, struct closure *parent)
+ 	bio->bi_private = dc;
+ 
+ 	closure_get(cl);
+-	/* I/O request sent to backing device */
+-	__write_super(&dc->sb, bio);
++	/* I/O request sent to backing device
++	 * Needs to put the clouser explicitly if __write_super failed,
++	 * because the bio is not submitted and write_bdev_super_endio
++	 * will not have a chance to put the closure.
++	 */
++	if(__write_super(&dc->sb, bio, dc->bdev))
++		closure_put(cl);
+ 
+ 	closure_return_with_destructor(cl, bch_write_bdev_super_unlock);
+ }
+@@ -312,7 +350,13 @@ void bcache_write_super(struct cache_set *c)
+ 		bio->bi_private = ca;
+ 
+ 		closure_get(cl);
+-		__write_super(&ca->sb, bio);
++		/* Needs to put the clouser explicitly if __write_super failed,
++		 * because the bio is not submitted and write_super_endio
++		 * will not have a chance to put the closure.
++		 */
++		if(__write_super(&ca->sb, bio, ca->bdev))
++			closure_put(cl);
++
  	}
  
- 	x25_kick(sk);
+ 	closure_return_with_destructor(cl, bcache_write_super_unlock);
 -- 
-2.20.1
+2.17.0
 
