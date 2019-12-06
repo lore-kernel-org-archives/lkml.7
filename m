@@ -2,214 +2,207 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CE3C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F67BC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7259C24675
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1316124676
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbfLFMZC (ORCPT
+        id S1726508AbfLFMZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:25:02 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24846 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726261AbfLFMY5 (ORCPT
+        Fri, 6 Dec 2019 07:25:12 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:38377 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbfLFMZI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:24:57 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB6CGwdG015153
-        for <linux-kernel@vger.kernel.org>; Fri, 6 Dec 2019 07:24:55 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wq9hg9r1d-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 07:24:55 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
-        Fri, 6 Dec 2019 12:24:53 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 6 Dec 2019 12:24:51 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB6COn9f60489814
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 Dec 2019 12:24:49 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89A094C050;
-        Fri,  6 Dec 2019 12:24:49 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E720A4C046;
-        Fri,  6 Dec 2019 12:24:47 +0000 (GMT)
-Received: from localhost.in.ibm.com (unknown [9.124.35.191])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  6 Dec 2019 12:24:47 +0000 (GMT)
-From:   Sourabh Jain <sourabhjain@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     mahesh@linux.vnet.ibm.com, hbathini@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        corbet@lwn.net, linux-doc@vger.kernel.org,
-        gregkh@linuxfoundation.org,
-        Sourabh Jain <sourabhjain@linux.ibm.com>
-Subject: [PATCH v4 4/6] powerpc/powernv: move core and fadump_release_opalcore under new kobject
-Date:   Fri,  6 Dec 2019 17:54:32 +0530
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20191206122434.29587-1-sourabhjain@linux.ibm.com>
-References: <20191206122434.29587-1-sourabhjain@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19120612-0016-0000-0000-000002D241F2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120612-0017-0000-0000-000033344BFE
-Message-Id: <20191206122434.29587-5-sourabhjain@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-06_03:2019-12-05,2019-12-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- mlxscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- bulkscore=0 adultscore=0 malwarescore=0 suspectscore=1 clxscore=1015
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912060105
+        Fri, 6 Dec 2019 07:25:08 -0500
+Received: by mail-il1-f199.google.com with SMTP id o18so5116441ilb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 04:25:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=1Iq671YgDjKDD3K/l4MlVvnbM8/18AXfYGtT+naeDN0=;
+        b=pm7l1AJ2oI12wNqWrPaiDtH0ddrzJlGvIzCnqjCqDaQuMZHG9tlvVGinliVRuLoYAu
+         1yA1jpeaoJ5o1LZ/yj/vFwlu+VYkE7RcTCu+OHWae1tbLUbS7Q8BNYp3B3QK5KnyWU7j
+         WnqCFWHoXqMMpM57OdCMj5RcCxugMOfP7Xt0m9ZQWYq3QsEasUubAhExLPmUjVOYVqw0
+         uZn4JmnEf/9z70AtrNoSaJcbq+1g0NCKL6OUZecjaYM+B8rd2SVNTn30yXBUZsqI5xHA
+         o0qjRJUuUv9W+JI/KIDrYHM7RU6fGtMFbCxQsOhQiT+Cb1gwXZpkXOHIPxxZisiuC8BG
+         FqBg==
+X-Gm-Message-State: APjAAAWOosBoMBJ6pTGvxJFNaQDzwwKo0aJXhKX2+72HHhS5AfjpFCUd
+        T3FATghdozcrAo+nlL4ew9iOjKPW7gTdTPyjMxzAReID9hn6
+X-Google-Smtp-Source: APXvYqzuBIdf/7oxCmAcv3LAKa4fxkNNDcqAxTHjwxqGsraF4G4Rdpxy+ZEkyrR2jeHWs23F1aJ7DWoz9YfsdNB97JAxPx20CvnE
+MIME-Version: 1.0
+X-Received: by 2002:a6b:6310:: with SMTP id p16mr9729553iog.5.1575635107564;
+ Fri, 06 Dec 2019 04:25:07 -0800 (PST)
+Date:   Fri, 06 Dec 2019 04:25:07 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e1d639059908223b@google.com>
+Subject: KASAN: use-after-free Read in soft_cursor
+From:   syzbot <syzbot+cf43fb300aa142fb024b@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The /sys/firmware/opal/core and /sys/kernel/fadump_release_opalcore sysfs
-files are used to export and release the OPAL memory on PowerNV platform.
-let's organize them into a new kobject under /sys/firmware/opal/mpipl/
-directory.
+Hello,
 
-A symlink is added to maintain the backward compatibility for
-/sys/firmware/opal/core sysfs file.
+syzbot found the following crash on:
 
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+HEAD commit:    b0d4beaa Merge branch 'next.autofs' of git://git.kernel.or..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11b97e41e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f07a23020fd7d21a
+dashboard link: https://syzkaller.appspot.com/bug?extid=cf43fb300aa142fb024b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1745a90ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1361042ae00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+cf43fb300aa142fb024b@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in memcpy include/linux/string.h:380 [inline]
+BUG: KASAN: use-after-free in soft_cursor+0x439/0xa30  
+drivers/video/fbdev/core/softcursor.c:70
+Read of size 9 at addr ffff8880a1b23851 by task syz-executor549/8989
+
+CPU: 0 PID: 8989 Comm: syz-executor549 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:639
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+  memcpy+0x24/0x50 mm/kasan/common.c:125
+  memcpy include/linux/string.h:380 [inline]
+  soft_cursor+0x439/0xa30 drivers/video/fbdev/core/softcursor.c:70
+  bit_cursor+0x12fc/0x1a60 drivers/video/fbdev/core/bitblit.c:386
+  fbcon_cursor+0x487/0x660 drivers/video/fbdev/core/fbcon.c:1402
+  hide_cursor+0x9d/0x2b0 drivers/tty/vt/vt.c:895
+  redraw_screen+0x60b/0x7d0 drivers/tty/vt/vt.c:988
+  vc_do_resize+0x10c9/0x1460 drivers/tty/vt/vt.c:1284
+  vc_resize+0x4d/0x60 drivers/tty/vt/vt.c:1304
+  vt_ioctl+0x2076/0x26d0 drivers/tty/vt/vt_ioctl.c:887
+  tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440219
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe3702aa48 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440219
+RDX: 00000000200002c0 RSI: 000000000000560a RDI: 0000000000000004
+RBP: 00000000006ca018 R08: 0000000000000001 R09: 00000000004002c8
+R10: 0000000000000002 R11: 0000000000000246 R12: 0000000000401b00
+R13: 0000000000401b90 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 8975:
+  save_stack+0x23/0x90 mm/kasan/common.c:72
+  set_track mm/kasan/common.c:80 [inline]
+  __kasan_kmalloc mm/kasan/common.c:513 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+  __do_kmalloc mm/slab.c:3656 [inline]
+  __kmalloc+0x163/0x770 mm/slab.c:3665
+  kmalloc include/linux/slab.h:561 [inline]
+  kzalloc include/linux/slab.h:670 [inline]
+  tomoyo_init_log+0x141f/0x2070 security/tomoyo/audit.c:275
+  tomoyo_supervisor+0x33f/0xef0 security/tomoyo/common.c:2095
+  tomoyo_audit_path_log security/tomoyo/file.c:168 [inline]
+  tomoyo_path_permission security/tomoyo/file.c:587 [inline]
+  tomoyo_path_permission+0x263/0x360 security/tomoyo/file.c:573
+  tomoyo_check_open_permission+0x3a6/0x3e0 security/tomoyo/file.c:777
+  tomoyo_file_open security/tomoyo/tomoyo.c:319 [inline]
+  tomoyo_file_open+0xa9/0xd0 security/tomoyo/tomoyo.c:314
+  security_file_open+0x71/0x300 security/security.c:1497
+  do_dentry_open+0x37a/0x1380 fs/open.c:784
+  vfs_open+0xa0/0xd0 fs/open.c:914
+  do_last fs/namei.c:3412 [inline]
+  path_openat+0x10e4/0x4710 fs/namei.c:3529
+  do_filp_open+0x1a1/0x280 fs/namei.c:3559
+  do_sys_open+0x3fe/0x5d0 fs/open.c:1097
+  __do_sys_open fs/open.c:1115 [inline]
+  __se_sys_open fs/open.c:1110 [inline]
+  __x64_sys_open+0x7e/0xc0 fs/open.c:1110
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 8975:
+  save_stack+0x23/0x90 mm/kasan/common.c:72
+  set_track mm/kasan/common.c:80 [inline]
+  kasan_set_free_info mm/kasan/common.c:335 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
+  __cache_free mm/slab.c:3426 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3757
+  tomoyo_supervisor+0x360/0xef0 security/tomoyo/common.c:2147
+  tomoyo_audit_path_log security/tomoyo/file.c:168 [inline]
+  tomoyo_path_permission security/tomoyo/file.c:587 [inline]
+  tomoyo_path_permission+0x263/0x360 security/tomoyo/file.c:573
+  tomoyo_check_open_permission+0x3a6/0x3e0 security/tomoyo/file.c:777
+  tomoyo_file_open security/tomoyo/tomoyo.c:319 [inline]
+  tomoyo_file_open+0xa9/0xd0 security/tomoyo/tomoyo.c:314
+  security_file_open+0x71/0x300 security/security.c:1497
+  do_dentry_open+0x37a/0x1380 fs/open.c:784
+  vfs_open+0xa0/0xd0 fs/open.c:914
+  do_last fs/namei.c:3412 [inline]
+  path_openat+0x10e4/0x4710 fs/namei.c:3529
+  do_filp_open+0x1a1/0x280 fs/namei.c:3559
+  do_sys_open+0x3fe/0x5d0 fs/open.c:1097
+  __do_sys_open fs/open.c:1115 [inline]
+  __se_sys_open fs/open.c:1110 [inline]
+  __x64_sys_open+0x7e/0xc0 fs/open.c:1110
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880a1b23800
+  which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 81 bytes inside of
+  512-byte region [ffff8880a1b23800, ffff8880a1b23a00)
+The buggy address belongs to the page:
+page:ffffea000286c8c0 refcount:1 mapcount:0 mapping:ffff8880aa400a80  
+index:0xffff8880a1b23000
+raw: 00fffe0000000200 ffffea00028bd888 ffffea0002a4a388 ffff8880aa400a80
+raw: ffff8880a1b23000 ffff8880a1b23000 0000000100000003 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880a1b23700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880a1b23780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff8880a1b23800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                  ^
+  ffff8880a1b23880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a1b23900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
 ---
- .../sysfs-kernel-fadump_release_opalcore      |  2 ++
- .../powerpc/firmware-assisted-dump.rst        | 15 +++++----
- arch/powerpc/platforms/powernv/opal-core.c    | 31 ++++++++++++++-----
- 3 files changed, 34 insertions(+), 14 deletions(-)
- rename Documentation/ABI/{testing => removed}/sysfs-kernel-fadump_release_opalcore (82%)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore b/Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
-similarity index 82%
-rename from Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore
-rename to Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
-index 53313c1d4e7a..a8d46cd0f4e6 100644
---- a/Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore
-+++ b/Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
-@@ -1,3 +1,5 @@
-+This ABI is moved to /sys/firmware/opal/mpipl/release_core.
-+
- What:		/sys/kernel/fadump_release_opalcore
- Date:		Sep 2019
- Contact:	linuxppc-dev@lists.ozlabs.org
-diff --git a/Documentation/powerpc/firmware-assisted-dump.rst b/Documentation/powerpc/firmware-assisted-dump.rst
-index 0455a78486d5..345a3405206e 100644
---- a/Documentation/powerpc/firmware-assisted-dump.rst
-+++ b/Documentation/powerpc/firmware-assisted-dump.rst
-@@ -112,13 +112,13 @@ to ensure that crash data is preserved to process later.
- 
- -- On OPAL based machines (PowerNV), if the kernel is build with
-    CONFIG_OPAL_CORE=y, OPAL memory at the time of crash is also
--   exported as /sys/firmware/opal/core file. This procfs file is
-+   exported as /sys/firmware/opal/mpipl/core file. This procfs file is
-    helpful in debugging OPAL crashes with GDB. The kernel memory
-    used for exporting this procfs file can be released by echo'ing
--   '1' to /sys/kernel/fadump_release_opalcore node.
-+   '1' to /sys/firmware/opal/mpipl/release_core node.
- 
-    e.g.
--     # echo 1 > /sys/kernel/fadump_release_opalcore
-+     # echo 1 > /sys/firmware/opal/mpipl/release_core
- 
- Implementation details:
- -----------------------
-@@ -283,14 +283,17 @@ Here is the list of files under kernel sysfs:
-     enhanced to use this interface to release the memory reserved for
-     dump and continue without 2nd reboot.
- 
-- /sys/kernel/fadump_release_opalcore
-+Note: /sys/kernel/fadump_release_opalcore sysfs has moved to
-+      /sys/firmware/opal/mpipl/release_core
-+
-+ /sys/firmware/opal/mpipl/release_core
- 
-     This file is available only on OPAL based machines when FADump is
-     active during capture kernel. This is used to release the memory
--    used by the kernel to export /sys/firmware/opal/core file. To
-+    used by the kernel to export /sys/firmware/opal/mpipl/core file. To
-     release this memory, echo '1' to it:
- 
--    echo 1  > /sys/kernel/fadump_release_opalcore
-+    echo 1  > /sys/firmware/opal/mpipl/release_core
- 
- Here is the list of files under powerpc debugfs:
- (Assuming debugfs is mounted on /sys/kernel/debug directory.)
-diff --git a/arch/powerpc/platforms/powernv/opal-core.c b/arch/powerpc/platforms/powernv/opal-core.c
-index ed895d82c048..7fcc092d065e 100644
---- a/arch/powerpc/platforms/powernv/opal-core.c
-+++ b/arch/powerpc/platforms/powernv/opal-core.c
-@@ -589,7 +589,8 @@ static ssize_t fadump_release_opalcore_store(struct kobject *kobj,
- 	return count;
- }
- 
--static struct kobj_attribute opalcore_rel_attr = __ATTR(fadump_release_opalcore,
-+struct kobject *mpipl_kobj;
-+static struct kobj_attribute opalcore_rel_attr = __ATTR(release_core,
- 						0200, NULL,
- 						fadump_release_opalcore_store);
- 
-@@ -609,7 +610,7 @@ static int __init opalcore_init(void)
- 	 * then capture the dump.
- 	 */
- 	if (!(is_opalcore_usable())) {
--		pr_err("Failed to export /sys/firmware/opal/core\n");
-+		pr_err("Failed to export /sys/firmware/opal/mpipl/core\n");
- 		opalcore_cleanup();
- 		return rc;
- 	}
-@@ -617,18 +618,32 @@ static int __init opalcore_init(void)
- 	/* Set OPAL core file size */
- 	opal_core_attr.size = oc_conf->opalcore_size;
- 
-+	mpipl_kobj = kobject_create_and_add("mpipl", opal_kobj);
-+	if (!mpipl_kobj) {
-+		pr_err("unable to create mpipl kobject\n");
-+		return -ENOMEM;
-+	}
-+
- 	/* Export OPAL core sysfs file */
--	rc = sysfs_create_bin_file(opal_kobj, &opal_core_attr);
-+	rc = sysfs_create_bin_file(mpipl_kobj, &opal_core_attr);
- 	if (rc != 0) {
--		pr_err("Failed to export /sys/firmware/opal/core\n");
-+		pr_err("Failed to export /sys/firmware/opal/mpipl/core\n");
- 		opalcore_cleanup();
- 		return rc;
- 	}
--
--	rc = sysfs_create_file(kernel_kobj, &opalcore_rel_attr.attr);
-+	/* The /sys/firmware/opal/core is moved to /sys/firmware/opal/mpipl/
-+	 * directory, need to create symlink at old location to maintain
-+	 * backward compatibility.
-+	 */
-+	rc = create_sysfs_symlink_entry_to_kobj(opal_kobj, mpipl_kobj,
-+						"core", NULL);
-+	if (rc) {
-+		pr_err("unable to create core symlink (%d)\n", rc);
-+		return rc;
-+	}
-+	rc = sysfs_create_file(mpipl_kobj, &opalcore_rel_attr.attr);
- 	if (rc) {
--		pr_warn("unable to create sysfs file fadump_release_opalcore (%d)\n",
--			rc);
-+		pr_warn("unable to create sysfs file release_core (%d)\n", rc);
- 	}
- 
- 	return 0;
--- 
-2.17.2
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
