@@ -2,222 +2,214 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AED8C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B7DC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3AA20707
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F8920659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:21:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BhnQJYqX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfLFOUJ (ORCPT
+        id S1726407AbfLFOVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:20:09 -0500
-Received: from mout-p-202.mailbox.org ([80.241.56.172]:29124 "EHLO
-        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbfLFOUH (ORCPT
+        Fri, 6 Dec 2019 09:21:35 -0500
+Received: from mail-pg1-f180.google.com ([209.85.215.180]:34896 "EHLO
+        mail-pg1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbfLFOVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 09:20:07 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 47Tvql22RHzQkK1;
-        Fri,  6 Dec 2019 15:20:03 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id 8G5RMpKVsMbp; Fri,  6 Dec 2019 15:19:58 +0100 (CET)
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        dev@opencontainers.org, containers@lists.linux-foundation.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-api@vger.kernel.org,
-        libc-alpha@sourceware.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: [PATCH v18 13/13] Documentation: path-lookup: include new LOOKUP flags
-Date:   Sat,  7 Dec 2019 01:13:38 +1100
-Message-Id: <20191206141338.23338-14-cyphar@cyphar.com>
-In-Reply-To: <20191206141338.23338-1-cyphar@cyphar.com>
-References: <20191206141338.23338-1-cyphar@cyphar.com>
+        Fri, 6 Dec 2019 09:21:35 -0500
+Received: by mail-pg1-f180.google.com with SMTP id l24so3393178pgk.2;
+        Fri, 06 Dec 2019 06:21:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=m9FvOToT/3pDAr+KR5PpVtiNMReb8JhZS+HVbFTxzeU=;
+        b=BhnQJYqXp3dCFKpMyPzbHjs06rzt4rVlEh2Lf1ZtZu2sEmECc8cMTy87Zx3w56I4sF
+         9ifFvm/GqXsPtaUgeR9r86tJ/fTUZ54zJaoCMlhXV8/Cj+pIJvAII0A+9+SdCM4I293D
+         flTMV580meB0rZHEmBdKxYifYmRvLolcg1ePYqoOJNXRTogZtNR1kCKrCMlOW82Oic9x
+         8VipAqPe1ppXeF1eBekFdJQur66u/ruhZxaptIxcNVtJT6B3dwyy2xpbrP0cEvZRyj0S
+         4gPhzdYXo6+z5dwx5E7V6sGDTYA7sDJpBk1re0s7xxFal3C64j1iwr2iS0Iz+KY2bR6e
+         45bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=m9FvOToT/3pDAr+KR5PpVtiNMReb8JhZS+HVbFTxzeU=;
+        b=HL5z4yhFFjsdcEAh/DCEevcgj9MzfSB9cevhm9gTuzFXN4h9rHdRNZ8IeAd05WlLd+
+         Xe9Mqvr4yyIndSL43wzGaSzwbuaJ8JSJM4Mdo3J3ejrXoFgKe/OTGYrORtDWe78XRCiW
+         n7M5GzbHkHfsGjk6ZH41bUGd9g5Pq8Bqec02d3RHBjszTmvpo6nJ6l3wOUThjG7NJJuO
+         UiRyMtbAmumz0zWpt+nzsJPOrp8/Po6BtnZ/KnbDSqQsbz53DoJFs1cnZLsyTOx9Tf2m
+         oOYtNjIhDZmeqhZvAFq5avV246SNOiLEWz7YnUxlo6yM1Ijkkh+7U75revVibfs6P9Be
+         tDMw==
+X-Gm-Message-State: APjAAAWzyVo5N429VnprCuyJD7GwBl/j4Vl3yf8SABdDnI/N52TyIbFJ
+        tuTTxm1Pe0Fj4FkyIGBIqG5Mmuvz
+X-Google-Smtp-Source: APXvYqw2hLHXA/50bzABkNKq4dEOWcAl1WjfkRPVm7jOaj4G5w9/nnJjRCPoHEaGnG/U3KAryQikrg==
+X-Received: by 2002:a63:d406:: with SMTP id a6mr3782454pgh.264.1575642094177;
+        Fri, 06 Dec 2019 06:21:34 -0800 (PST)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id 23sm6986433pfj.148.2019.12.06.06.21.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 06:21:33 -0800 (PST)
+Subject: Re: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
+To:     David Laight <David.Laight@ACULAB.COM>,
+        network dev <netdev@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <23db23416d3148fa86e54dccc6152266@AcuMS.aculab.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <dc10298d-4280-b9b4-9203-be4000e85c42@gmail.com>
+Date:   Fri, 6 Dec 2019 06:21:31 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <23db23416d3148fa86e54dccc6152266@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we have new LOOKUP flags, we should document them in the
-relevant path-walking documentation. And now that we've settled on a
-common name for nd_jump_link() style symlinks ("magic links"), use that
-term where magic-link semantics are described.
 
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
----
- Documentation/filesystems/path-lookup.rst | 68 +++++++++++++++++++++--
- 1 file changed, 62 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/filesystems/path-lookup.rst b/Documentation/filesystems/path-lookup.rst
-index 434a07b0002b..a3216979298b 100644
---- a/Documentation/filesystems/path-lookup.rst
-+++ b/Documentation/filesystems/path-lookup.rst
-@@ -13,6 +13,7 @@ It has subsequently been updated to reflect changes in the kernel
- including:
+On 12/6/19 5:39 AM, David Laight wrote:
+> Some tests I've done seem to show that recvmsg() is much slower that recvfrom()
+> even though most of what they do is the same.
+
+Not really.
+
+> One thought is that the difference is all the extra copy_from_user() needed by
+> recvmsg. CONFIG_HARDENED_USERCOPY can add a significant cost.
+> 
+> I've built rebuilt my 5.4-rc7 kernel with all the copy_to/from_user() in net/socket.c
+> replaced with the '_' prefixed versions (that don't call check_object()).
+> And also changed rw_copy_check_uvector() in fs/read_write.c.
+> 
+> Schedviz then showed the time spent by the application thread that calls
+> recvmsg() (about) 225 times being reduced from 0.9ms to 0.75ms.
+> 
+> I've now instrumented the actual recv calls. It show some differences,
+> but now enough to explain the 20% difference above.
+> (This is all made more difficult because my Ivy Bridge i7-3770 refuses
+> to run at a fixed frequency.)
+> 
+> Anyway using PERF_COUNT_HW_CPU_CYCLES I've got the following
+> histograms for the number of cycles in each recv call.
+> There are about the same number (2.8M) in each column over
+> an elapsed time of 20 seconds.
+> There are 450 active UDP sockets, each receives 1 message every 20ms.
+> Every 10ms a RT thread that is pinned to a cpu reads all the pending messages.
+> This is a 4 core hyperthreading (8 cpu) system.
+> During these tests 5 other threads are also busy.
+> There are no sends (on those sockets).
+> 
+>          |       recvfrom      |       recvmsg
+>  cycles  |   unhard  |    hard |   unhard  |    hard
+> -----------------------------------------------------
+>    1472:         29          1          0          0
+>    1600:       8980       4887          3          0
+>    1728:     112540     159518       5393       2895
+>    1856:     174555     270148     119054     111230
+>    1984:     126007     168383     152310     195288
+>    2112:      80249      87045     118941     168801
+>    2240:      61570      54790      81847     110561
+>    2368:      95088      61796      57496      71732
+>    2496:     193633     155870      54020      54801
+>    2624:     274997     284921     102465      74626
+>    2752:     276661     295715     160492     119498
+>    2880:     248751     264174     206327     186028
+>    3008:     207532     213067     230704     229232
+>    3136:     167976     164804     226493     238555
+>    3264:     133708     124857     202639     220574
+>    3392:     107859      95696     172949     189475
+>    3520:      88599      75943     141056     153524
+>    3648:      74290      61586     115873     120994
+>    3776:      62253      50891      96061      95040
+>    3904:      52213      42482      81113      76577
+>    4032:      42920      34632      69077      63131
+>    4160:      35472      28327      60074      53631
+>    4288:      28787      22603      51345      46620
+>    4416:      24072      18496      44006      40325
+>    4544:      20107      14886      37185      34516
+>    4672:      16759      12206      31408      29031
+>    4800:      14195       9991      26843      24396
+>    4928:      12356       8167      22775      20165
+>    5056:      10387       6931      19404      16591
+>    5184:       9284       5916      16817      13743
+>    5312:       7994       5116      14737      11452
+>    5440:       7152       4495      12592       9607
+>    5568:       6300       3969      11117       8592
+>    5696:       5445       3421       9988       7237
+>    5824:       4683       2829       8839       6368
+>    5952:       3959       2643       7652       5652
+>    6080:       3454       2377       6442       4814
+>    6208:       3041       2219       5735       4170
+>    6336:       2840       2060       5059       3615
+>    6464:       2428       1975       4433       3201
+>    6592:       2109       1794       4078       2823
+>    6720:       1871       1382       3549       2558
+>    6848:       1706       1262       3110       2328
+>    6976:       1567       1001       2733       1991
+>    7104:       1436        873       2436       1819
+>    7232:       1417        860       2102       1652
+>    7360:       1414        741       1823       1429
+>    7488:       1372        814       1663       1239
+>    7616:       1201        896       1430       1152
+>    7744:       1275       1008       1364       1049
+>    7872:       1382       1120       1367        925
+>    8000:       1316       1282       1253        815
+>    8128:       1264       1266       1313        792
+>   8256+:      19252      19450      34703      30228
+> ----------------------------------------------------
+>   Total:    2847707    2863582    2853688    2877088
+> 
+> This does show a few interesting things:
+> 1) The 'hardened' kernel is slower, especially for recvmsg.
+> 2) The difference for recvfrom isn't enough for the 20% reduction I saw.
+> 3) There are two peaks at the top a 'not insubstantial' number are a lot
+>    faster than the main peak.
+> 4) There is second peak way down at 8000 cycles.
+>    This is repeatable.
+> 
+> Any idea what is actually going on??
+> 
+
+Real question is : Do you actually need to use recvmsg() instead of recvfrom() ?
+
+If recvmsg() provides additional cmsg, this is not surprising it is more expensive.
+
+recvmsg() also uses an indirect call, so CONFIG_RETPOLINE=y is probably hurting.
+
+err = (nosec ? sock_recvmsg_nosec : sock_recvmsg)(sock, msg_sys, flags);
+
+Maybe a INDIRECT_CALL annotation could help, or rewriting this to not let gcc
+use an indirect call.
+
+
+diff --git a/net/socket.c b/net/socket.c
+index ea28cbb9e2e7a7180ee63de2d09a81aacb001ab7..752714281026dab6db850ec7fa75b7aa6240661f 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -2559,7 +2559,10 @@ static int ____sys_recvmsg(struct socket *sock, struct msghdr *msg_sys,
  
- - per-directory parallel name lookup.
-+- ``openat2()`` resolution restriction flags.
- 
- Introduction to pathname lookup
- ===============================
-@@ -235,6 +236,13 @@ renamed.  If ``d_lookup`` finds that a rename happened while it
- unsuccessfully scanned a chain in the hash table, it simply tries
- again.
- 
-+``rename_lock`` is also used to detect and defend against potential attacks
-+against ``LOOKUP_BENEATH`` and ``LOOKUP_IN_ROOT`` when resolving ".." (where
-+the parent directory is moved outside the root, bypassing the ``path_equal()``
-+check). If ``rename_lock`` is updated during the lookup and the path encounters
-+a "..", a potential attack occurred and ``handle_dots()`` will bail out with
-+``-EAGAIN``.
-+
- inode->i_rwsem
- ~~~~~~~~~~~~~~
- 
-@@ -348,6 +356,13 @@ any changes to any mount points while stepping up.  This locking is
- needed to stabilize the link to the mounted-on dentry, which the
- refcount on the mount itself doesn't ensure.
- 
-+``mount_lock`` is also used to detect and defend against potential attacks
-+against ``LOOKUP_BENEATH`` and ``LOOKUP_IN_ROOT`` when resolving ".." (where
-+the parent directory is moved outside the root, bypassing the ``path_equal()``
-+check). If ``mount_lock`` is updated during the lookup and the path encounters
-+a "..", a potential attack occurred and ``handle_dots()`` will bail out with
-+``-EAGAIN``.
-+
- RCU
- ~~~
- 
-@@ -405,6 +420,10 @@ is requested.  Keeping a reference in the ``nameidata`` ensures that
- only one root is in effect for the entire path walk, even if it races
- with a ``chroot()`` system call.
- 
-+It should be noted that in the case of ``LOOKUP_IN_ROOT`` or
-+``LOOKUP_BENEATH``, the effective root becomes the directory file descriptor
-+passed to ``openat2()`` (which exposes these ``LOOKUP_`` flags).
-+
- The root is needed when either of two conditions holds: (1) either the
- pathname or a symbolic link starts with a "'/'", or (2) a "``..``"
- component is being handled, since "``..``" from the root must always stay
-@@ -1149,7 +1168,7 @@ so ``NULL`` is returned to indicate that the symlink can be released and
- the stack frame discarded.
- 
- The other case involves things in ``/proc`` that look like symlinks but
--aren't really::
-+aren't really (and are therefore commonly referred to as "magic-links")::
- 
-      $ ls -l /proc/self/fd/1
-      lrwx------ 1 neilb neilb 64 Jun 13 10:19 /proc/self/fd/1 -> /dev/pts/4
-@@ -1286,7 +1305,9 @@ A few flags
- A suitable way to wrap up this tour of pathname walking is to list
- the various flags that can be stored in the ``nameidata`` to guide the
- lookup process.  Many of these are only meaningful on the final
--component, others reflect the current state of the pathname lookup.
-+component, others reflect the current state of the pathname lookup, and some
-+apply restrictions to all path components encountered in the path lookup.
-+
- And then there is ``LOOKUP_EMPTY``, which doesn't fit conceptually with
- the others.  If this is not set, an empty pathname causes an error
- very early on.  If it is set, empty pathnames are not considered to be
-@@ -1310,13 +1331,48 @@ longer needed.
- ``LOOKUP_JUMPED`` means that the current dentry was chosen not because
- it had the right name but for some other reason.  This happens when
- following "``..``", following a symlink to ``/``, crossing a mount point
--or accessing a "``/proc/$PID/fd/$FD``" symlink.  In this case the
--filesystem has not been asked to revalidate the name (with
--``d_revalidate()``).  In such cases the inode may still need to be
--revalidated, so ``d_op->d_weak_revalidate()`` is called if
-+or accessing a "``/proc/$PID/fd/$FD``" symlink (also known as a "magic
-+link"). In this case the filesystem has not been asked to revalidate the
-+name (with ``d_revalidate()``).  In such cases the inode may still need
-+to be revalidated, so ``d_op->d_weak_revalidate()`` is called if
- ``LOOKUP_JUMPED`` is set when the look completes - which may be at the
- final component or, when creating, unlinking, or renaming, at the penultimate component.
- 
-+Resolution-restriction flags
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+In order to allow userspace to protect itself against certain race conditions
-+and attack scenarios involving changing path components, a series of flags are
-+available which apply restrictions to all path components encountered during
-+path lookup. These flags are exposed through ``openat2()``'s ``resolve`` field.
-+
-+``LOOKUP_NO_SYMLINKS`` blocks all symlink traversals (including magic-links).
-+This is distinctly different from ``LOOKUP_FOLLOW``, because the latter only
-+relates to restricting the following of trailing symlinks.
-+
-+``LOOKUP_NO_MAGICLINKS`` blocks all magic-link traversals. Filesystems must
-+ensure that they return errors from ``nd_jump_link()``, because that is how
-+``LOOKUP_NO_MAGICLINKS`` and other magic-link restrictions are implemented.
-+
-+``LOOKUP_NO_XDEV`` blocks all ``vfsmount`` traversals (this includes both
-+bind-mounts and ordinary mounts). Note that the ``vfsmount`` which contains the
-+lookup is determined by the first mountpoint the path lookup reaches --
-+absolute paths start with the ``vfsmount`` of ``/``, and relative paths start
-+with the ``dfd``'s ``vfsmount``. Magic-links are only permitted if the
-+``vfsmount`` of the path is unchanged.
-+
-+``LOOKUP_BENEATH`` blocks any path components which resolve outside the
-+starting point of the resolution. This is done by blocking ``nd_jump_root()``
-+as well as blocking ".." if it would jump outside the starting point.
-+``rename_lock`` and ``mount_lock`` are used to detect attacks against the
-+resolution of "..". Magic-links are also blocked.
-+
-+``LOOKUP_IN_ROOT`` resolves all path components as though the starting point
-+were the filesystem root. ``nd_jump_root()`` brings the resolution back to to
-+the starting point, and ".." at the starting point will act as a no-op. As with
-+``LOOKUP_BENEATH``, ``rename_lock`` and ``mount_lock`` are used to detect
-+attacks against ".." resolution. Magic-links are also blocked.
-+
- Final-component flags
- ~~~~~~~~~~~~~~~~~~~~~
- 
--- 
-2.24.0
+        if (sock->file->f_flags & O_NONBLOCK)
+                flags |= MSG_DONTWAIT;
+-       err = (nosec ? sock_recvmsg_nosec : sock_recvmsg)(sock, msg_sys, flags);
++       if (nosec)
++               err = sock_recvmsg_nosec(sock, msg_sys, flags);
++       else
++               err = sock_recvmsg(sock, msg_sys, flags);
+        if (err < 0)
+                goto out;
+        len = err;
+
+
 
