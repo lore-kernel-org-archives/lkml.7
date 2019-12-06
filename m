@@ -2,74 +2,72 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=BITCOIN_SPAM_02,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5BDC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC6FC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED7021823
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C26A221823
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fs8dWx5u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUfAUSF3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbfLFAIQ (ORCPT
+        id S1726207AbfLFAJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 19:08:16 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44360 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfLFAIP (ORCPT
+        Thu, 5 Dec 2019 19:09:55 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41194 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbfLFAJz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 19:08:15 -0500
-Received: by mail-ed1-f65.google.com with SMTP id cm12so4271986edb.11;
-        Thu, 05 Dec 2019 16:08:14 -0800 (PST)
+        Thu, 5 Dec 2019 19:09:55 -0500
+Received: by mail-ed1-f67.google.com with SMTP id c26so4283414eds.8;
+        Thu, 05 Dec 2019 16:09:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mG6Q2op0uXAzpICHZXmmP8kiFDhmWFEmMXJj5AJuK7s=;
-        b=Fs8dWx5uZqrU94sFUdCA6ODW3/4LjbT0duyk0n//yF0m9AsV/iatXNrQ546dw6+UCD
-         Wkc7Lbl1Vm9bFquXiDYr4jKA03Ai/cGP3EWDQLCUhO7Wcdi9pk3G1uj/BVXLWwaTnpWH
-         yOW0oSuYRqd8adG+X7s9Aq+k5x7/xY4WeoHFSiQW2+8QF30y6Nug5UqpumWc/M+HEe07
-         v2QDqqk4m9f5IhV179nQyY/E5Kg4K6zjIQXUOMN+pV4Uj8KbJKsZDQlxk2UhCBIKU4nJ
-         cwMC0qEMfEaf75UOAkd4bp/+yz6M6r8QW8gvMDPf7V4znfWvuB4T3KPw41U939CJ+MBY
-         18kg==
+        bh=Pu7aZrCRpmbK9eIe5VfBppycurruZf1/Fg8oPrOmz5w=;
+        b=dUfAUSF3rN9GOZKG6L738lHqvfLhWP7D3l3q8HabmB/Q19pH1Zm2WmRf2gsukMZ0b4
+         kmdQoNOac/RjKeM+NUqzxBxixVEbzr9z1WUQheWM/NVseOfrvwfBgfxhm19KX6JSnWTn
+         8BKH1Jb8fTcUyUmNCut4nStLy/+Jnv1UIbtWfPqPtkkXyWqB70z0FPFjPlvpT3rdxkp/
+         VBP/iw7ks6/QwXJiyZ1BEBsbpDVYA/LBMAcQLToSxB0+hrJA05/P4J64gfQY2ub3QR/e
+         tfl/83XdOZEZFwOmP8efU+yBB3YJi1LwpUAMy/N5oY4JXmA7/XVzb8U78y1GCiybGhka
+         jWEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=mG6Q2op0uXAzpICHZXmmP8kiFDhmWFEmMXJj5AJuK7s=;
-        b=twBi/tiFXV6rzEwyecsYs2iB3dNUuLxDS2aNrh28IT4rbsNW89uB+jxGpTi1wEFx+H
-         oiJQqlaphUkNFI4Mwj9xdjqgz1Qx8vBcsstrmJBnoVfdoxSg5ttsB5nrSl3bsfmCzGBd
-         W2QBfRbSHto3RWgFZPIrIepk0qfgijUpxFdizGDLcfnjAeNKtb7188wY5O7IXfJqjZ7g
-         2/trheXT0ZVkxXC69ilnS7symT4bvun78+3mRyRcQR7L6kfV6/S0d6r7SeTL/Ayq/iVO
-         8IfUpdUJ21uzW4ZJS41GdeUoVeoiZeHF90xsgWx1LIoOyn+BbZVQw8YpNalgGRk47h7w
-         64Og==
-X-Gm-Message-State: APjAAAVbPwQVmz9JiCx4eM2FqfdgAUGpIUrVHP9LhPXKHTwAeOn8HAvk
-        XnkcKxhG6Pd9Zh7g04bmArSyG/NP
-X-Google-Smtp-Source: APXvYqzslYNqNXPwdCaqnjsAI7Qn+mWRNDaeGN9HcRuQdYRZMeBfkuyTE37YjQpFPdHNXDEpgwdbHA==
-X-Received: by 2002:a50:f612:: with SMTP id c18mr13766642edn.285.1575590893191;
-        Thu, 05 Dec 2019 16:08:13 -0800 (PST)
+        bh=Pu7aZrCRpmbK9eIe5VfBppycurruZf1/Fg8oPrOmz5w=;
+        b=QkWV7MSYqXwxIL2+j4DGmmLtjO0OoAIdntT3DfTkowAM+jKltmjFPddeuydIC/Pcyv
+         8kEYKdL+Opx4I8FqBCT1seAcKMxtUTWsgCZA0nGJk695rd/2NAk9LBxHy2KidBctc60x
+         YJRCgvOkTcwhRUBslMhPO1SzUVjARb4hK7MWUpd0SS8uWqXXZ9mM1rzIncdpHA2ZHV5L
+         tI1O9Bfs7p4qZmi9JxySbBBcktdYRlhe5oMG3SzHnD2DCNhRmiczynY5TmoojwS5+OzL
+         uNUHF3TyfTGgqYsF1RA7lBL4hB58aTpiQq4TpTq/MG/8HcRkrMPXo+CIQOcca9rQeD+R
+         XoFQ==
+X-Gm-Message-State: APjAAAWmjbL+CntpxVo3sJY9xfBpKV6UweOECe0cr6c6Sql9Gfy5oiPu
+        L3D/g9Rcuod2aV66C5on5VHuBMxk
+X-Google-Smtp-Source: APXvYqyrKCmObwIrxCughrq6gD80iLhJ2CFPGdEFQyBC+9iOmemQL2sVfeAqxlw3KYi/fFhqNlDzDQ==
+X-Received: by 2002:aa7:c701:: with SMTP id i1mr13463950edq.247.1575590992681;
+        Thu, 05 Dec 2019 16:09:52 -0800 (PST)
 Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id dj21sm413959edb.55.2019.12.05.16.08.09
+        by smtp.googlemail.com with ESMTPSA id w5sm140974eje.14.2019.12.05.16.09.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 16:08:12 -0800 (PST)
-Subject: Re: [PATCH] ARM: dts: bcm2711: fix soc's node dma-ranges
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Florian Fanelli <f.fainelli@gmail.com>
-Cc:     mbrugger@suse.com, phil@raspberrypi.org,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191204125633.27696-1-nsaenzjulienne@suse.de>
+        Thu, 05 Dec 2019 16:09:51 -0800 (PST)
+Subject: Re: [PATCH 1/2] dt-bindings: soc: Add binding doc for iProc IDM
+ device
+To:     Ray Jui <ray.jui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+References: <20191202233127.31160-1-ray.jui@broadcom.com>
+ <20191202233127.31160-2-ray.jui@broadcom.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -125,12 +123,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <711470d3-e683-69d4-8f4e-791a76faab29@gmail.com>
-Date:   Thu, 5 Dec 2019 16:08:08 -0800
+Message-ID: <62254bbb-168e-c0ad-a72d-bd659a2c23fa@gmail.com>
+Date:   Thu, 5 Dec 2019 16:09:48 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191204125633.27696-1-nsaenzjulienne@suse.de>
+In-Reply-To: <20191202233127.31160-2-ray.jui@broadcom.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -139,50 +137,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/4/19 4:56 AM, Nicolas Saenz Julienne wrote:
-> Raspberry Pi's firmware has a feature to select how much memory to
-> reserve for its GPU called 'gpu_mem'. The possible values go from 16MB
-> to 944MB, with a default of 64MB. This memory resides in the topmost
-> part of the lower 1GB memory area and grows bigger expanding towards the
-> begging of memory.
+On 12/2/19 3:31 PM, Ray Jui wrote:
+> Add binding document for iProc based IDM devices.
 > 
-> It turns out that with low 'gpu_mem' values (16MB and 32MB) the size of
-> the memory available to the system in the lower 1GB area can outgrow the
-> interconnect's dma-range as its size was selected based on the maximum
-> system memory available given the default gpu_mem configuration. This
-> makes that memory slice unavailable for DMA. And may cause nasty kernel
-> warnings if CMA happens to include it.
-> 
-> Change soc's dma-ranges to really reflect it's HW limitation, which is
-> being able to only DMA to the lower 1GB area.
-> 
-> Fixes: 7dbe8c62ceeb ("ARM: dts: Add minimal Raspberry Pi 4 support")
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+
+Looks good to me, it's 2019, nearly 2020, maybe make this a YAML
+compatible binding since it is a new one?
+
 > ---
+>  .../bindings/soc/bcm/brcm,iproc-idm.txt       | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
 > 
-> NOTE: I'd appreciate if someone from the RPi foundation commented on
-> this as it's something that I'll propose to be backported to their tree.
-
-I don't think our additional DTS changes will be merged until -rc1 is
-cut, so we have some time to figure this one out. Thanks
-
-> 
->  arch/arm/boot/dts/bcm2711.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
-> index 5b61cd915f2b..d6a0e350b7b4 100644
-> --- a/arch/arm/boot/dts/bcm2711.dtsi
-> +++ b/arch/arm/boot/dts/bcm2711.dtsi
-> @@ -43,7 +43,7 @@ soc {
->  			 <0x7c000000  0x0 0xfc000000  0x02000000>,
->  			 <0x40000000  0x0 0xff800000  0x00800000>;
->  		/* Emulate a contiguous 30-bit address range for DMA */
-> -		dma-ranges = <0xc0000000  0x0 0x00000000  0x3c000000>;
-> +		dma-ranges = <0xc0000000  0x0 0x00000000  0x40000000>;
->  
->  		/*
->  		 * This node is the provider for the enable-method for
+> diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
+> new file mode 100644
+> index 000000000000..388c6b036d7e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
+> @@ -0,0 +1,44 @@
+> +Broadcom iProc Interconnect Device Management (IDM) device
+> +
+> +The Broadcom iProc IDM device allows control and monitoring of ASIC internal
+> +bus transactions. Most importantly, it can be configured to detect bus
+> +transaction timeout. In such case, critical information such as transaction
+> +address that caused the error, bus master ID of the transaction that caused
+> +the error, and etc., are made available from the IDM device.
+> +
+> +-------------------------------------------------------------------------------
+> +
+> +Required properties for IDM device node:
+> +- compatible: must be "brcm,iproc-idm"
+> +- reg: base address and length of the IDM register space
+> +- interrupt: IDM interrupt number
+> +- brcm,iproc-idm-bus: IDM bus string
+> +
+> +Optional properties for IDM device node:
+> +- brcm,iproc-idm-elog: phandle to the device node of the IDM logging device
+> +
+> +-------------------------------------------------------------------------------
+> +
+> +Required properties for IDM error logging device node:
+> +- compatible: must be "brcm,iproc-idm-elog";
+> +- reg: base address and length of reserved memory location where IDM error
+> +  events can be saved
+> +
+> +-------------------------------------------------------------------------------
+> +
+> +Example:
+> +
+> +idm {
+> +	idm-elog {
+> +		compatible = "brcm,iproc-idm-elog";
+> +		reg = <0x8f221000 0x1000>;
+> +	};
+> +
+> +	idm-mhb-paxc-axi {
+> +		compatible = "brcm,iproc-idm";
+> +		reg = <0x60406900 0x200>;
+> +		interrupt = <GIC_SPI 516 IRQ_TYPE_LEVEL_HIGH>;
+> +		brcm,iproc-idm-bus = "idm-mhb-paxc-axi";
+> +		brcm,iproc-idm-elog = <&idm-elog>;
+> +	};
+> +};
 > 
 
 
