@@ -2,52 +2,52 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75CFC2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68309C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F5121823
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44BF221823
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbfLFMYr (ORCPT
+        id S1726328AbfLFMYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:24:47 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50148 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726140AbfLFMYr (ORCPT
+        Fri, 6 Dec 2019 07:24:54 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36546 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726261AbfLFMYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:24:47 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB6CGtWT109362
-        for <linux-kernel@vger.kernel.org>; Fri, 6 Dec 2019 07:24:46 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wq9hm9st1-1
+        Fri, 6 Dec 2019 07:24:51 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB6CHQMP073710
+        for <linux-kernel@vger.kernel.org>; Fri, 6 Dec 2019 07:24:50 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wq9hnsqpr-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 07:24:45 -0500
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 07:24:49 -0500
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
-        Fri, 6 Dec 2019 12:24:42 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Fri, 6 Dec 2019 12:24:48 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 6 Dec 2019 12:24:40 -0000
+        Fri, 6 Dec 2019 12:24:45 -0000
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB6COclV38207704
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB6COiZI55312510
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 Dec 2019 12:24:38 GMT
+        Fri, 6 Dec 2019 12:24:44 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B0FDA4C040;
-        Fri,  6 Dec 2019 12:24:38 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 37E374C04A;
+        Fri,  6 Dec 2019 12:24:44 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 16A064C044;
-        Fri,  6 Dec 2019 12:24:37 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 950D44C044;
+        Fri,  6 Dec 2019 12:24:42 +0000 (GMT)
 Received: from localhost.in.ibm.com (unknown [9.124.35.191])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  6 Dec 2019 12:24:36 +0000 (GMT)
+        Fri,  6 Dec 2019 12:24:42 +0000 (GMT)
 From:   Sourabh Jain <sourabhjain@linux.ibm.com>
 To:     mpe@ellerman.id.au
 Cc:     mahesh@linux.vnet.ibm.com, hbathini@linux.ibm.com,
@@ -55,81 +55,120 @@ Cc:     mahesh@linux.vnet.ibm.com, hbathini@linux.ibm.com,
         corbet@lwn.net, linux-doc@vger.kernel.org,
         gregkh@linuxfoundation.org,
         Sourabh Jain <sourabhjain@linux.ibm.com>
-Subject: [PATCH v4 0/6] reorganize and add FADump sysfs files
-Date:   Fri,  6 Dec 2019 17:54:28 +0530
+Subject: [PATCH v4 2/6] sysfs: wrap __compat_only_sysfs_link_entry_to_kobj function to change the symlink name
+Date:   Fri,  6 Dec 2019 17:54:30 +0530
 X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20191206122434.29587-1-sourabhjain@linux.ibm.com>
+References: <20191206122434.29587-1-sourabhjain@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19120612-0020-0000-0000-00000394F60D
+x-cbid: 19120612-4275-0000-0000-0000038C6157
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120612-0021-0000-0000-000021EC28EA
-Message-Id: <20191206122434.29587-1-sourabhjain@linux.ibm.com>
+x-cbparentid: 19120612-4276-0000-0000-000038A00A09
+Message-Id: <20191206122434.29587-3-sourabhjain@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-06_03:2019-12-05,2019-12-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 lowpriorityscore=0 adultscore=0 suspectscore=1 impostorscore=0
- clxscore=1015 spamscore=0 mlxlogscore=769 phishscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=1 malwarescore=0 lowpriorityscore=0
+ adultscore=0 spamscore=0 bulkscore=0 priorityscore=1501 clxscore=1015
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1910280000 definitions=main-1912060105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, FADump sysfs files are present inside /sys/kernel directory.
-But as the number of FADump sysfs file increases it is not a good idea to
-push all of them in /sys/kernel directory. It is better to have separate
-directory to keep all the FADump sysfs files.
+The __compat_only_sysfs_link_entry_to_kobj function creates a symlink to a
+kobject but doesn't provide an option to change the symlink file name.
 
-Patch series reorganizes the FADump sysfs files and avail all the existing
-FADump sysfs files present inside /sys/kernel into a new directory
-/sys/kernel/fadump. The backward compatibility is maintained by adding a
-symlink for every sysfs file that has moved to new location. Also a new
-FADump sys interface is added to get the amount of memory reserved by FADump
-for saving the crash dump.
+This patch adds a wrapper function create_sysfs_symlink_entry_to_kobj that
+extends the __compat_only_sysfs_link_entry_to_kobj functionality which
+allows function caller to customize the symlink name.
 
-Changelog:
-v1 -> v2:
- - Move fadump_release_opalcore sysfs to FADump Kobject instead of
-   replicating.
- - Changed the patch order 1,2,3,4 -> 2,1,3,4 (First add the ABI doc for
-   exisiting sysfs file then replicate them under FADump kobject).
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ fs/sysfs/group.c      | 28 +++++++++++++++++++++++++---
+ include/linux/sysfs.h | 12 ++++++++++++
+ 2 files changed, 37 insertions(+), 3 deletions(-)
 
-v2 -> v3:
- - Remove the fadump_ prefix from replicated FADump sysfs file names.
-
- v3 -> v4:
- - New patch that adds a wrapper function to create symlink with
-   custom symlink file name.
- - Add symlink instead of replicating the FADump sysfs files.
- - Move the OPAL core rel
-
-Sourabh Jain (6):
-  Documentation/ABI: add ABI documentation for /sys/kernel/fadump_*
-  sysfs: wrap __compat_only_sysfs_link_entry_to_kobj function to change
-    the symlink name
-  powerpc/fadump: reorganize /sys/kernel/fadump_* sysfs files
-  powerpc/powernv: move core and fadump_release_opalcore under new
-    kobject
-  Documentation/ABI: mark /sys/kernel/fadump_* sysfs files deprecated
-  powerpc/fadump: sysfs for fadump memory reservation
-
- .../ABI/obsolete/sysfs-kernel-fadump_enabled  |  9 +++
- .../obsolete/sysfs-kernel-fadump_registered   | 10 +++
- .../obsolete/sysfs-kernel-fadump_release_mem  | 10 +++
- .../sysfs-kernel-fadump_release_opalcore      |  9 +++
- Documentation/ABI/testing/sysfs-kernel-fadump | 40 +++++++++
- .../powerpc/firmware-assisted-dump.rst        | 28 +++++--
- arch/powerpc/kernel/fadump.c                  | 81 +++++++++++++++----
- arch/powerpc/platforms/powernv/opal-core.c    | 31 +++++--
- fs/sysfs/group.c                              | 28 ++++++-
- include/linux/sysfs.h                         | 12 +++
- 10 files changed, 225 insertions(+), 33 deletions(-)
- create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_enabled
- create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_registered
- create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_release_mem
- create mode 100644 Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-fadump
-
+diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+index d41c21fef138..5eb38145b957 100644
+--- a/fs/sysfs/group.c
++++ b/fs/sysfs/group.c
+@@ -424,6 +424,25 @@ EXPORT_SYMBOL_GPL(sysfs_remove_link_from_group);
+ int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+ 				      struct kobject *target_kobj,
+ 				      const char *target_name)
++{
++	return create_sysfs_symlink_entry_to_kobj(kobj, target_kobj,
++						target_name, NULL);
++}
++EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
++
++/**
++ * create_sysfs_symlink_entry_to_kobj - add a symlink to a kobject pointing
++ * to a group or an attribute
++ * @kobj:		The kobject containing the group.
++ * @target_kobj:	The target kobject.
++ * @target_name:	The name of the target group or attribute.
++ * @symlink_name:	The name of the symlink file (target_name will be
++ *			considered if symlink_name is NULL).
++ */
++int create_sysfs_symlink_entry_to_kobj(struct kobject *kobj,
++				       struct kobject *target_kobj,
++				       const char *target_name,
++				       const char *symlink_name)
+ {
+ 	struct kernfs_node *target;
+ 	struct kernfs_node *entry;
+@@ -448,12 +467,15 @@ int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+ 		return -ENOENT;
+ 	}
+ 
+-	link = kernfs_create_link(kobj->sd, target_name, entry);
++	if (!symlink_name)
++		symlink_name = target_name;
++
++	link = kernfs_create_link(kobj->sd, symlink_name, entry);
+ 	if (IS_ERR(link) && PTR_ERR(link) == -EEXIST)
+-		sysfs_warn_dup(kobj->sd, target_name);
++		sysfs_warn_dup(kobj->sd, symlink_name);
+ 
+ 	kernfs_put(entry);
+ 	kernfs_put(target);
+ 	return PTR_ERR_OR_ZERO(link);
+ }
+-EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
++EXPORT_SYMBOL_GPL(create_sysfs_symlink_entry_to_kobj);
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index 5420817ed317..123c6f10333a 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -300,6 +300,10 @@ void sysfs_remove_link_from_group(struct kobject *kobj, const char *group_name,
+ int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+ 				      struct kobject *target_kobj,
+ 				      const char *target_name);
++int create_sysfs_symlink_entry_to_kobj(struct kobject *kobj,
++				       struct kobject *target_kobj,
++				       const char *target_name,
++				       const char *symlink_name);
+ 
+ void sysfs_notify(struct kobject *kobj, const char *dir, const char *attr);
+ 
+@@ -508,6 +512,14 @@ static inline int __compat_only_sysfs_link_entry_to_kobj(
+ 	return 0;
+ }
+ 
++static int create_sysfs_symlink_entry_to_kobj(struct kobject *kobj,
++					      struct kobject *target_kobj,
++					      const char *target_name,
++					      const char *symlink_name)
++{
++	return 0;
++}
++
+ static inline void sysfs_notify(struct kobject *kobj, const char *dir,
+ 				const char *attr)
+ {
 -- 
 2.17.2
 
