@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 918CAC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE90C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64AE8206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAFBB21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SXuPCZw5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="au1NZhTF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLFWOS (ORCPT
+        id S1726718AbfLFWOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 17:14:18 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:39747 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbfLFWOO (ORCPT
+        Fri, 6 Dec 2019 17:14:21 -0500
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:53182 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbfLFWOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 17:14:14 -0500
-Received: by mail-pg1-f201.google.com with SMTP id v2so1343676pgv.6
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 14:14:14 -0800 (PST)
+        Fri, 6 Dec 2019 17:14:19 -0500
+Received: by mail-pj1-f74.google.com with SMTP id b22so3121376pjp.19
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 14:14:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=dSkqIg9MhTEqSRuUPD+wLwf3dmJwcSH5rhdG+lQGY0Y=;
-        b=SXuPCZw5St6pvwTst8kmf5KElVFLKMFMp+CAkmkUaQLus5cyU/8kqr6V5JxAIwmDV8
-         RWdDAn+WZ18vV4T9eqQoonAjHW3Rzl/rq+nVdoOiKpP2KO897WS7qgb0uHjTrgJkEo1F
-         0w2fuPU7iE//Mhmc1AStldjXFL0gQujdjqFyhIQqo0PX3BYn+fe6w0aILNtXks9GiWbX
-         y15Zqo4dF7akKdP8o3QHjsZgpRBi+Vh9QT2pwFLxPBRKjS+x9TmrUCopcszBpJQvv4wL
-         EQLbAdHZz6TZ6uqyOto/Ft9UcaQoXc6w3u8Hni2mOOXu4O7zVJWi0IlEALO+ifSUBL0a
-         F4QA==
+        bh=4aDgrw7n3sKpB8rlb4e1FXGpnlGkWbIPMM9nhNp+jXs=;
+        b=au1NZhTF4wAsexOlDW3QvGUTHHibdiuoOGtKnmjfRLZ0pPJFJKE+opISQXIrUR97ye
+         Jne0qPeQQiFimsKZER4HaK21Z32PFAMdXThycc6amcnFXyiRGqcBd7hzGtaSxtjLovKA
+         MtCxYRCUfBUiozbQAY8WWFFWshKqoTOktvqXvtAigS6VHdCV5+fVo6wqlgPIj5sUrPy7
+         nyM+Yj6Rc076XJ7CjGnjpbrP4L2nSj+srGB86VsKIU0Wi383uYJUprK31BiItYr5v/o2
+         Pxb9DYcCbj3fcvL19VOlmfxX8nuMHZ73nI0/DFRRg8SJ94YuyFgsEVGXyEeevmK3xEjY
+         Wuvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=dSkqIg9MhTEqSRuUPD+wLwf3dmJwcSH5rhdG+lQGY0Y=;
-        b=ag/OkMXhRR4JLbQ9m1ef2TtPuwk0iupZTBo/Ta/7ICD55ui3E9A/3EJ1TFueObSNi+
-         7nUrCNabp56wkO7alaZu8WUx7n72OPG+THhlxP+hW7e+q7+91OVplcwwZhTc5wi2d+EY
-         dxN9R0cngWL97XmoQUXJgJJkn894KIGBsOoGBXbbY8i7GdskeVXNUvDdehZSlO3Wus+A
-         ovkkRnEb/6UTTiH2yFLnqOl94V8zIfp/0TrCav7rLwjhBNDgigWhv7Hvjret51ZZFaVm
-         moec5oABRpcvrpzGDDqWzSC5RzVJ0kiE7jtjqYxO8P8uy93TRZyzQykWxj7x0NxY92pB
-         Y/DA==
-X-Gm-Message-State: APjAAAUzOHsxCb9V6kEOWakBMIaXrVt83e3hkdwTgDXPzQeDWU+UlKnd
-        2zqtrJ1GP9tqcJdJVCoNF64FYta0mICccNTbmwE=
-X-Google-Smtp-Source: APXvYqwr9gV3C2U9Vw8KNYzBqn9JcBiVcajDSJ2lm7uPyamXFOot36lh81Wh0+CfZKTc60xlWZW4gj6RW7XavjkgTmE=
-X-Received: by 2002:a63:4b52:: with SMTP id k18mr5960727pgl.371.1575670454000;
- Fri, 06 Dec 2019 14:14:14 -0800 (PST)
-Date:   Fri,  6 Dec 2019 14:13:43 -0800
+        bh=4aDgrw7n3sKpB8rlb4e1FXGpnlGkWbIPMM9nhNp+jXs=;
+        b=WG4oUc743RpxK/dXy84xhvNnc5oOvWVpR1/1UgauPBCTYjsr9BSzGbSYsOPyVfBdU1
+         W/H4o7nFq/yzB8Vb4XNzTzysws96tpVf8fdcIw4bOYIfKIRsva1AWPcwsjpMiDyA7h3J
+         0/lnaqfvxVEiwCDmjQdc5ARrYpPEnqOD1gysuJLBJ78mCVQSu/pv0JErAhSsxBrIAYyA
+         GatrN0V9DbA94L0y4bytrusP7EgQQtiW+Va2SrLnyZ1fagal5P2aW2E/jD7K7kqzSclu
+         i/iFMMe7/57hVP4E29QP9Ys8dT8/3qbznQaCbuCD6XJS9tAWC5RGgg68e1mLk3Tg02j/
+         bE8g==
+X-Gm-Message-State: APjAAAWtS+6mZL+doqCr8C4ZezWgfoomr+ai0UhkUrI53NEmCu3NOJCD
+        NkBYZhyNN1R797J7GmGbJmkys0oB0fak6Mkv5ic=
+X-Google-Smtp-Source: APXvYqwRlAi+m5KSot17CZFEPydPDuL4iAvmhFlppFfNB1e6R6A3XWaehHnjib1r5pVc/bUaEbkOTOtXqUzvI+1YHGE=
+X-Received: by 2002:a65:518b:: with SMTP id h11mr5968857pgq.133.1575670459027;
+ Fri, 06 Dec 2019 14:14:19 -0800 (PST)
+Date:   Fri,  6 Dec 2019 14:13:45 -0800
 In-Reply-To: <20191206221351.38241-1-samitolvanen@google.com>
-Message-Id: <20191206221351.38241-8-samitolvanen@google.com>
+Message-Id: <20191206221351.38241-10-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20191206221351.38241-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [PATCH v6 07/15] scs: add support for stack usage debugging
+Subject: [PATCH v6 09/15] arm64: reserve x18 from general allocation with SCS
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -84,72 +84,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implements CONFIG_DEBUG_STACK_USAGE for shadow stacks. When enabled,
-also prints out the highest shadow stack usage per process.
+Reserve the x18 register from general allocation when SCS is enabled,
+because the compiler uses the register to store the current task's
+shadow stack pointer. Note that all external kernel modules must also be
+compiled with -ffixed-x18 if the kernel has SCS enabled.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- kernel/scs.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/arm64/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/scs.c b/kernel/scs.c
-index 5245e992c692..ad74d13f2c0f 100644
---- a/kernel/scs.c
-+++ b/kernel/scs.c
-@@ -184,6 +184,44 @@ int scs_prepare(struct task_struct *tsk, int node)
- 	return 0;
- }
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 1fbe24d4fdb6..e69736fc1106 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -72,6 +72,10 @@ stack_protector_prepare: prepare0
+ 					include/generated/asm-offsets.h))
+ endif
  
-+#ifdef CONFIG_DEBUG_STACK_USAGE
-+static inline unsigned long scs_used(struct task_struct *tsk)
-+{
-+	unsigned long *p = __scs_base(tsk);
-+	unsigned long *end = scs_magic(p);
-+	unsigned long s = (unsigned long)p;
++ifeq ($(CONFIG_SHADOW_CALL_STACK), y)
++KBUILD_CFLAGS	+= -ffixed-x18
++endif
 +
-+	while (p < end && READ_ONCE_NOCHECK(*p))
-+		p++;
-+
-+	return (unsigned long)p - s;
-+}
-+
-+static void scs_check_usage(struct task_struct *tsk)
-+{
-+	static DEFINE_SPINLOCK(lock);
-+	static unsigned long highest;
-+	unsigned long used = scs_used(tsk);
-+
-+	if (used <= highest)
-+		return;
-+
-+	spin_lock(&lock);
-+
-+	if (used > highest) {
-+		pr_info("%s (%d): highest shadow stack usage: %lu bytes\n",
-+			tsk->comm, task_pid_nr(tsk), used);
-+		highest = used;
-+	}
-+
-+	spin_unlock(&lock);
-+}
-+#else
-+static inline void scs_check_usage(struct task_struct *tsk)
-+{
-+}
-+#endif
-+
- bool scs_corrupted(struct task_struct *tsk)
- {
- 	unsigned long *magic = scs_magic(__scs_base(tsk));
-@@ -200,6 +238,7 @@ void scs_release(struct task_struct *tsk)
- 		return;
- 
- 	WARN_ON(scs_corrupted(tsk));
-+	scs_check_usage(tsk);
- 
- 	scs_account(tsk, -1);
- 	task_set_scs(tsk, NULL);
+ ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
+ KBUILD_CPPFLAGS	+= -mbig-endian
+ CHECKFLAGS	+= -D__AARCH64EB__
 -- 
 2.24.0.393.g34dc348eaf-goog
 
