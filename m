@@ -2,98 +2,147 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D611AC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F72C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A43CB24673
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:22:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ioGYHue0"
+	by mail.kernel.org (Postfix) with ESMTP id B069D24677
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575656656;
+	bh=1adZ1AgCodi3yfl22ybU9XywdoW/YwynEVekYlf8iyg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=zcqncFYwqYVEwosuIrX/kxYjEKEIM+ZPx1UuAICT6HrHd0BWF0BmiwgQcUFkPVIBE
+	 HjMNlnOfXjA6XIZHlBKI3n+ylbVqcYmXTZGVkYj3eJYSj5uKtNJ7OlICfsuC/L2Ckg
+	 cJ3yOFStZ3QXgvsr08oOYfsKtG68NbaGxD0q3qFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfLFSWe (ORCPT
+        id S1726404AbfLFSYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 13:22:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32155 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726298AbfLFSWe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 13:22:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575656553;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=pkO2zZFmgQehl/A8nk21THxwcIqs5vjrYyeZ+q3C/Nk=;
-        b=ioGYHue0tQTvTDAMjy5+HXUbwtVzq3HV+oLgBpNRaChdmgX9GY8161LMdZ1F4dUYuQdEdq
-        g/M0yvPUsypoPUhLWmUjNKax5t4dujtXCuphxVKqivBaumsAcTCPOLQrSWWsMp5qODlFKW
-        v0n2CkfRQ4mP5Ltw68ozfISuY15102o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-333-S58x6o8wPNCLHbUrxi5mBA-1; Fri, 06 Dec 2019 13:22:30 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 6 Dec 2019 13:24:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726312AbfLFSYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 13:24:15 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D070800D4C;
-        Fri,  6 Dec 2019 18:22:29 +0000 (UTC)
-Received: from x1.home (ovpn-116-56.phx2.redhat.com [10.3.116.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AD5D6608A5;
-        Fri,  6 Dec 2019 18:22:28 +0000 (UTC)
-Date:   Fri, 6 Dec 2019 11:22:27 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: [GIT PULL] VFIO updates for v5.5-rc1
-Message-ID: <20191206112227.53e15607@x1.home>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CEC02173E;
+        Fri,  6 Dec 2019 18:24:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575656654;
+        bh=1adZ1AgCodi3yfl22ybU9XywdoW/YwynEVekYlf8iyg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=bip68FgbFhzD7abAaLaKKwmZ/PlKrEsoPog/fOBXd3A8vVVSJLOwL3Z7hM5oDt28X
+         x5kk2JXh6nTEpwuKmeqQ8tRKqP41kLhRJm3X7IeKrf82/z9NeEQ/FhP+pgtJaVl8en
+         eFj15Rtqf0hFVJJ8Lrw1ZuQAtrha5zryvGXnkMkk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 662B035206AB; Fri,  6 Dec 2019 10:24:14 -0800 (PST)
+Date:   Fri, 6 Dec 2019 10:24:14 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "madhuparnabhowmik04@gmail.com" <madhuparnabhowmik04@gmail.com>,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "joel@joelfernandes.org" <joel@joelfernandes.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
+Message-ID: <20191206182414.GH2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
+ <20191206160238.GE2889@paulmck-ThinkPad-P72>
+ <2ec21ec537144bb3c0d5fbdaf88ea022d07b7ff8.camel@hammerspace.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: S58x6o8wPNCLHbUrxi5mBA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ec21ec537144bb3c0d5fbdaf88ea022d07b7ff8.camel@hammerspace.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Dec 06, 2019 at 05:52:10PM +0000, Trond Myklebust wrote:
+> Hi Paul,
+> 
+> On Fri, 2019-12-06 at 08:02 -0800, Paul E. McKenney wrote:
+> > On Fri, Dec 06, 2019 at 08:46:40PM +0530, 
+> > madhuparnabhowmik04@gmail.com wrote:
+> > > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> > > 
+> > > This patch fixes the following errors:
+> > > fs/nfs/dir.c:2353:14: error: incompatible types in comparison
+> > > expression (different address spaces):
+> > > fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
+> > > fs/nfs/dir.c:2353:14:    struct list_head *
+> > > 
+> > > caused due to directly accessing the prev pointer of
+> > > a RCU protected list.
+> > > Accessing the pointer using the macro list_prev_rcu() fixes this
+> > > error.
+> > > 
+> > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> > > ---
+> > >  fs/nfs/dir.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> > > index e180033e35cf..2035254cc283 100644
+> > > --- a/fs/nfs/dir.c
+> > > +++ b/fs/nfs/dir.c
+> > > @@ -2350,7 +2350,7 @@ static int nfs_access_get_cached_rcu(struct
+> > > inode *inode, const struct cred *cre
+> > >  	rcu_read_lock();
+> > >  	if (nfsi->cache_validity & NFS_INO_INVALID_ACCESS)
+> > >  		goto out;
+> > > -	lh = rcu_dereference(nfsi->access_cache_entry_lru.prev);
+> > > +	lh = rcu_dereference(list_prev_rcu(&nfsi-
+> > > >access_cache_entry_lru));
+> > 
+> > And as noted in the earlier email, what is preventing concurrent
+> > insertions into  and deletions from this list?
+> > 
+> > o	This use of list_move_tail() is OK because it does not poison.
+> > 	Though it isn't being all that friendly to lockless access to
+> > 	->prev -- no WRITE_ONCE() in list_move_tail().
+> > 
+> > o	The use of list_add_tail() is not safe with RCU readers, though
+> > 	they do at least partially compensate via use of smp_wmb()
+> > 	in nfs_access_add_cache() before calling
+> > nfs_access_add_rbtree().
+> > 
+> > o	The list_del() near the end of nfs_access_add_rbtree() will
+> > 	poison the ->prev pointer.  I don't see how this is safe given
+> > the
+> > 	possibility of a concurrent call to
+> > nfs_access_get_cached_rcu().
+> 
+> The pointer nfsi->access_cache_entry_lru is the head of the list, so it
+> won't get poisoned. Furthermore, the objects it points to are freed
+> using kfree_rcu(), so they will survive as long as we hold the rcu read
+> lock. The object's cred pointers also points to something that is freed
+> in an rcu-safe manner.
+> 
+> The problem here is rather that a racing list_del() can cause nfsi-
+> >access_cache_entry_lru to be empty, which is presumably why Neil added
+> that check plus the empty cred pointer check in the following line.
+> 
+> The barrier semantics may be suspect, although the spin unlock after
+> list_del() should presumably guarantee release semantics?
 
-The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
+Ah, OK, so you are only ever using ->prev only from the head of the list,
+and presumably never do list_del() on the head itself.  (Don't laugh,
+this does really happen as a way to remove the entire list, though
+perhaps with list_del_init() rather than list_del().)
 
-  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
+Maybe we should have a list_tail_rcu() that is only expected to work
+on the head of the list?
 
-are available in the Git repository at:
-
-  git://github.com/awilliam/linux-vfio.git tags/vfio-v5.5-rc1
-
-for you to fetch changes up to 9917b54aded12dff9beb9e709981617b788e44b0:
-
-  Merge branch 'v5.5/vfio/jiang-yi-irq-bypass-unregister-v1' into v5.5/vfio/next (2019-12-04 10:15:56 -0700)
-
-----------------------------------------------------------------
-VFIO updates for v5.5-rc1
-
- - Remove hugepage checks for reserved pfns (Ben Luo)
-
- - Fix irq-bypass unregister ordering (Jiang Yi)
-
-----------------------------------------------------------------
-Alex Williamson (1):
-      Merge branch 'v5.5/vfio/jiang-yi-irq-bypass-unregister-v1' into v5.5/vfio/next
-
-Ben Luo (1):
-      vfio/type1: remove hugepage checks in is_invalid_reserved_pfn()
-
-Jiang Yi (1):
-      vfio/pci: call irq_bypass_unregister_producer() before freeing irq
-
- drivers/vfio/pci/vfio_pci_intrs.c |  2 +-
- drivers/vfio/vfio_iommu_type1.c   | 26 ++++----------------------
- 2 files changed, 5 insertions(+), 23 deletions(-)
-
+							Thanx, Paul
