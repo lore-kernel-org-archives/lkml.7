@@ -2,342 +2,121 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D329AC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB2DC47409
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA4F924681
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF56124682
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:28:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ru2aIusP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfLFIZz (ORCPT
+        id S1726516AbfLFI2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 03:25:55 -0500
-Received: from mga06.intel.com ([134.134.136.31]:25875 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbfLFIZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 03:25:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Dec 2019 00:25:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,283,1571727600"; 
-   d="scan'208";a="294797937"
-Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
-  by orsmga001.jf.intel.com with ESMTP; 06 Dec 2019 00:25:10 -0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        sean.j.christopherson@intel.com
-Cc:     yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
-        edwin.zhai@intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v9 03/10] mmu: spp: Add SPP Table setup functions
-Date:   Fri,  6 Dec 2019 16:26:27 +0800
-Message-Id: <20191206082634.21042-4-weijiang.yang@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20191206082634.21042-1-weijiang.yang@intel.com>
-References: <20191206082634.21042-1-weijiang.yang@intel.com>
+        Fri, 6 Dec 2019 03:28:44 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11643 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfLFI2n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 03:28:43 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dea11290001>; Fri, 06 Dec 2019 00:28:25 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 06 Dec 2019 00:28:42 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 06 Dec 2019 00:28:42 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec
+ 2019 08:28:42 +0000
+Received: from [10.2.163.87] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec 2019
+ 08:28:41 +0000
+Subject: Re: [PATCH] move_pages.2: not return ENOENT if the page are already
+ on the target nodes
+To:     Yang Shi <yang.shi@linux.alibaba.com>, <mtk.manpages@gmail.com>,
+        <cl@linux.com>, <mhocko@suse.com>, <cai@lca.pw>,
+        <akpm@linux-foundation.org>
+CC:     <linux-man@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+References: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <0dc96e40-5f2b-a2fe-6e5f-b6f3d5e9ebde@nvidia.com>
+Date:   Fri, 6 Dec 2019 00:25:53 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575620906; bh=1U4N9I7Sc9y0IjpHHe/ILL0my6L0bvlv/3soA/LZXBQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ru2aIusPL9M9jcFeBHIHwJL3XtTEuuYrZjBbbQ3J7Cbg8Ami0xgtltwuvHSHLAYnj
+         ufrGfv8+HhxpcBAqWuj+1diQqpDKAt6+G0arLN5UFadEBm5m3sv0FD1X3slEkcOrZC
+         exXvz6mIgaxUz6oK/oBsVvNU4BmwWeuo6IA1/1qyCTtgtSj48AAE/T9A2raC+/quM/
+         Hs7+SMLGPgIjxjs6IlK58OmrEkie+Jb/C5Z5YBpdQe7YWrwmqkOdmpPaIXCUbrYcIK
+         NKygTVKq1TqzibJgX8z16/XaOlsI8p1DHz4dWRBxr7Q3OxT2rqJoALrdAwOY0LfxFQ
+         H2vFanrsahMdQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SPPT is a 4-level paging structure similar to EPT, when SPP is
-armed for target physical page, bit 61 of the corresponding
-EPT entry is flaged, then SPPT is traversed with the gfn,
-the leaf entry of SPPT contains the access bitmap of subpages
-inside the target 4KB physical page, one bit per 128-byte subpage.
+On 12/5/19 5:34 PM, Yang Shi wrote:
+> Since commit e78bbfa82624 ("mm: stop returning -ENOENT
+> from sys_move_pages() if nothing got migrated"), move_pages doesn't
+> return -ENOENT anymore if the pages are already on the target nodes, but
+> this change is never reflected in manpage.
+> 
+> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+>   man2/move_pages.2 | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/man2/move_pages.2 b/man2/move_pages.2
+> index 2d96468..2a2f3cd 100644
+> --- a/man2/move_pages.2
+> +++ b/man2/move_pages.2
+> @@ -192,9 +192,8 @@ was specified or an attempt was made to migrate pages of a kernel thread.
+>   One of the target nodes is not online.
+>   .TP
+>   .B ENOENT
+> -No pages were found that require moving.
+> -All pages are either already
+> -on the target node, not present, had an invalid address or could not be
+> +No pages were found.
+> +All pages are either not present, had an invalid address or could not be
+>   moved because they were mapped by multiple processes.
+>   .TP
+>   .B EPERM
+> 
 
-Co-developed-by: He Chen <he.chen@linux.intel.com>
-Signed-off-by: He Chen <he.chen@linux.intel.com>
-Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
-Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
----
- arch/x86/include/asm/kvm_host.h |   5 +-
- arch/x86/kvm/mmu/spp.c          | 229 ++++++++++++++++++++++++++++++++
- arch/x86/kvm/mmu/spp.h          |  10 ++
- 3 files changed, 243 insertions(+), 1 deletion(-)
- create mode 100644 arch/x86/kvm/mmu/spp.c
- create mode 100644 arch/x86/kvm/mmu/spp.h
+whoa, hold on. If I'm reading through the various error paths correctly, then this
+code is *never* going to return ENOENT for the whole function. It can fill in that
+value per-page, in the status array, but that's all. Did I get that right?
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index bdc16b0aa7c6..f49b807ce3d3 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -270,7 +270,8 @@ union kvm_mmu_page_role {
- 		unsigned smap_andnot_wp:1;
- 		unsigned ad_disabled:1;
- 		unsigned guest_mode:1;
--		unsigned :6;
-+		unsigned spp:1;
-+		unsigned reserved:5;
- 
- 		/*
- 		 * This is left at the top of the word so that
-@@ -937,6 +938,8 @@ struct kvm_arch {
- 	bool exception_payload_enabled;
- 
- 	struct kvm_pmu_event_filter *pmu_event_filter;
-+
-+	hpa_t sppt_root;
- };
- 
- struct kvm_vm_stat {
-diff --git a/arch/x86/kvm/mmu/spp.c b/arch/x86/kvm/mmu/spp.c
-new file mode 100644
-index 000000000000..655d3254a241
---- /dev/null
-+++ b/arch/x86/kvm/mmu/spp.c
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include "spp.h"
-+
-+#define for_each_shadow_spp_entry(_vcpu, _addr, _walker)    \
-+	for (shadow_spp_walk_init(&(_walker), _vcpu, _addr);	\
-+	     shadow_walk_okay(&(_walker));			\
-+	     shadow_walk_next(&(_walker)))
-+
-+static void shadow_spp_walk_init(struct kvm_shadow_walk_iterator *iterator,
-+				 struct kvm_vcpu *vcpu, u64 addr)
-+{
-+	iterator->addr = addr;
-+	iterator->shadow_addr = vcpu->kvm->arch.sppt_root;
-+
-+	/* SPP Table is a 4-level paging structure */
-+	iterator->level = PT64_ROOT_4LEVEL;
-+}
-+
-+static bool __rmap_open_subpage_bit(struct kvm *kvm,
-+				    struct kvm_rmap_head *rmap_head)
-+{
-+	struct rmap_iterator iter;
-+	bool flush = false;
-+	u64 *sptep;
-+	u64 spte;
-+
-+	for_each_rmap_spte(rmap_head, &iter, sptep) {
-+		/*
-+		 * SPP works only when the page is write-protected
-+		 * and SPP bit is set in EPT leaf entry.
-+		 */
-+		flush |= spte_write_protect(sptep, false);
-+		spte = *sptep | PT_SPP_MASK;
-+		flush |= mmu_spte_update(sptep, spte);
-+	}
-+
-+	return flush;
-+}
-+
-+static int kvm_spp_open_write_protect(struct kvm *kvm,
-+				      struct kvm_memory_slot *slot,
-+				      gfn_t gfn)
-+{
-+	struct kvm_rmap_head *rmap_head;
-+	bool flush = false;
-+
-+	/*
-+	 * SPP is only supported with 4KB level1 memory page, check
-+	 * if the page is mapped in EPT leaf entry.
-+	 */
-+	rmap_head = __gfn_to_rmap(gfn, PT_PAGE_TABLE_LEVEL, slot);
-+
-+	if (!rmap_head->val)
-+		return -EFAULT;
-+
-+	flush |= __rmap_open_subpage_bit(kvm, rmap_head);
-+
-+	if (flush)
-+		kvm_flush_remote_tlbs(kvm);
-+
-+	return 0;
-+}
-+
-+static bool __rmap_clear_subpage_bit(struct kvm *kvm,
-+				     struct kvm_rmap_head *rmap_head)
-+{
-+	struct rmap_iterator iter;
-+	bool flush = false;
-+	u64 *sptep;
-+	u64 spte;
-+
-+	for_each_rmap_spte(rmap_head, &iter, sptep) {
-+		spte = (*sptep & ~PT_SPP_MASK);
-+		flush |= mmu_spte_update(sptep, spte);
-+	}
-+
-+	return flush;
-+}
-+
-+static int kvm_spp_clear_write_protect(struct kvm *kvm,
-+				       struct kvm_memory_slot *slot,
-+				       gfn_t gfn)
-+{
-+	struct kvm_rmap_head *rmap_head;
-+	bool flush = false;
-+
-+	rmap_head = __gfn_to_rmap(gfn, PT_PAGE_TABLE_LEVEL, slot);
-+
-+	if (!rmap_head->val)
-+		return -EFAULT;
-+
-+	flush |= __rmap_clear_subpage_bit(kvm, rmap_head);
-+
-+	if (flush)
-+		kvm_flush_remote_tlbs(kvm);
-+
-+	return 0;
-+}
-+
-+struct kvm_mmu_page *kvm_spp_get_page(struct kvm_vcpu *vcpu,
-+				      gfn_t gfn,
-+				      unsigned int level)
-+{
-+	struct kvm_mmu_page *sp;
-+	union kvm_mmu_page_role role;
-+
-+	role = vcpu->arch.mmu->mmu_role.base;
-+	role.level = level;
-+	role.direct = true;
-+	role.spp = true;
-+
-+	for_each_valid_sp(vcpu->kvm, sp, gfn) {
-+		if (sp->gfn != gfn)
-+			continue;
-+		if (sp->role.word != role.word)
-+			continue;
-+		if (sp->role.spp && sp->role.level == level)
-+			goto out;
-+	}
-+
-+	sp = kvm_mmu_alloc_page(vcpu, true);
-+	sp->gfn = gfn;
-+	sp->role = role;
-+	hlist_add_head(&sp->hash_link,
-+		       &vcpu->kvm->arch.mmu_page_hash
-+		       [kvm_page_table_hashfn(gfn)]);
-+	sp->mmu_valid_gen = vcpu->kvm->arch.mmu_valid_gen;
-+	clear_page(sp->spt);
-+out:
-+	return sp;
-+}
-+EXPORT_SYMBOL_GPL(kvm_spp_get_page);
-+
-+static void link_spp_shadow_page(struct kvm_vcpu *vcpu, u64 *sptep,
-+				 struct kvm_mmu_page *sp)
-+{
-+	u64 spte;
-+
-+	spte = __pa(sp->spt) | PT_PRESENT_MASK;
-+
-+	mmu_spte_set(sptep, spte);
-+
-+	mmu_page_add_parent_pte(vcpu, sp, sptep);
-+}
-+
-+static u64 format_spp_spte(u32 spp_wp_bitmap)
-+{
-+	u64 new_spte = 0;
-+	int i = 0;
-+
-+	/*
-+	 * One 4K page contains 32 sub-pages, in SPP table L4E, old bits
-+	 * are reserved, so we need to transfer u32 subpage write
-+	 * protect bitmap to u64 SPP L4E format.
-+	 */
-+	while (i < 32) {
-+		if (spp_wp_bitmap & (1ULL << i))
-+			new_spte |= 1ULL << (i * 2);
-+		i++;
-+	}
-+
-+	return new_spte;
-+}
-+
-+static void spp_spte_set(u64 *sptep, u64 new_spte)
-+{
-+	__set_spte(sptep, new_spte);
-+}
-+
-+bool is_spp_spte(struct kvm_mmu_page *sp)
-+{
-+	return sp->role.spp;
-+}
-+
-+#define SPPT_ENTRY_PHA_MASK (0xFFFFFFFFFF << 12)
-+
-+int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
-+			    u32 access_map, gfn_t gfn)
-+{
-+	struct kvm_shadow_walk_iterator iter;
-+	struct kvm_mmu_page *sp;
-+	gfn_t pseudo_gfn;
-+	u64 old_spte, spp_spte;
-+	int ret = -EFAULT;
-+
-+	/* direct_map spp start */
-+	if (!VALID_PAGE(vcpu->kvm->arch.sppt_root))
-+		return -EFAULT;
-+
-+	for_each_shadow_spp_entry(vcpu, (u64)gfn << PAGE_SHIFT, iter) {
-+		if (iter.level == PT_PAGE_TABLE_LEVEL) {
-+			spp_spte = format_spp_spte(access_map);
-+			old_spte = mmu_spte_get_lockless(iter.sptep);
-+			if (old_spte != spp_spte)
-+				spp_spte_set(iter.sptep, spp_spte);
-+			ret = 0;
-+			break;
-+		}
-+
-+		if (!is_shadow_present_pte(*iter.sptep)) {
-+			u64 base_addr = iter.addr;
-+
-+			base_addr &= PT64_LVL_ADDR_MASK(iter.level);
-+			pseudo_gfn = base_addr >> PAGE_SHIFT;
-+			spp_spte = *iter.sptep;
-+			sp = kvm_spp_get_page(vcpu, pseudo_gfn,
-+					      iter.level - 1);
-+			link_spp_shadow_page(vcpu, iter.sptep, sp);
-+		} else if (iter.level == PT_DIRECTORY_LEVEL  &&
-+			   !(spp_spte & PT_PRESENT_MASK) &&
-+			   (spp_spte & SPPT_ENTRY_PHA_MASK)) {
-+			spp_spte = *iter.sptep;
-+			spp_spte |= PT_PRESENT_MASK;
-+			spp_spte_set(iter.sptep, spp_spte);
-+		}
-+	}
-+
-+	kvm_flush_remote_tlbs(vcpu->kvm);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(kvm_spp_setup_structure);
-+
-+inline u64 construct_spptp(unsigned long root_hpa)
-+{
-+	return root_hpa & PAGE_MASK;
-+}
-+EXPORT_SYMBOL_GPL(construct_spptp);
-+
-diff --git a/arch/x86/kvm/mmu/spp.h b/arch/x86/kvm/mmu/spp.h
-new file mode 100644
-index 000000000000..25a23a4277eb
---- /dev/null
-+++ b/arch/x86/kvm/mmu/spp.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __KVM_X86_VMX_SPP_H
-+#define __KVM_X86_VMX_SPP_H
-+
-+bool is_spp_spte(struct kvm_mmu_page *sp);
-+inline u64 construct_spptp(unsigned long root_hpa);
-+int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
-+			    u32 access_map, gfn_t gfn);
-+
-+#endif /* __KVM_X86_VMX_SPP_H */
+If so, we need to redo this part of the man page.
+
+
+thanks,
 -- 
-2.17.2
-
+John Hubbard
+NVIDIA
