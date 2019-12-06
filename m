@@ -2,115 +2,136 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0432FC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60935C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBC524676
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:16:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iP/LrjVM"
+	by mail.kernel.org (Postfix) with ESMTP id 240F12464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:18:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575659928;
+	bh=inBHlJmpj5Ci2vWX/DDCUjHIESeY7Yn+V9YtffN/+hE=;
+	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=Br/EBdcuDNgeRfBT60AzfpuycRepc3hSCbXj//veCe8YEqCJz38B7ZcurzIdPBXAa
+	 C2MTWQcrX4hCkL420AkmxEh+SPJXMzIjgH4ZYe+zqyEB2nU+dHwO/lejjgQSbElFX6
+	 MPBNbOMVEHP9FkNDrJTup7U+BaBJwHRSec+/A3tI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfLFTQv (ORCPT
+        id S1726427AbfLFTSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 14:16:51 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37394 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfLFTQv (ORCPT
+        Fri, 6 Dec 2019 14:18:47 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41941 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfLFTSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 14:16:51 -0500
-Received: by mail-lf1-f66.google.com with SMTP id b15so6076419lfc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 11:16:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dp6TtsDVMwDLXVNf7z26o9XIaBeojD6ZI0FYrgN+jxw=;
-        b=iP/LrjVMleDaUJuXaUiNHfkocDJ+QBeAdqfEUhPU+zL8YR3HhO5xKQTteOaptagCby
-         4JT64mVbmW9G6XScfGCKDnVfbX1uYpgrUiMjou2dA9VpJ+z/yCj7jafk2C3g2wUjptE5
-         9tG9mdoGs2Tt9k7WwtEd68QJq7G3aLTs5ahc8=
+        Fri, 6 Dec 2019 14:18:46 -0500
+Received: by mail-pf1-f196.google.com with SMTP id s18so3804889pfd.8;
+        Fri, 06 Dec 2019 11:18:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dp6TtsDVMwDLXVNf7z26o9XIaBeojD6ZI0FYrgN+jxw=;
-        b=DXEvauyRaFAXzSzWQcMAKXkQMSRNzz/EzjRh4Whoa1abX/knMfziV2nW9Q1/WwS9Yp
-         vPYM9DKlEeEuj0n3/OqTw4dktl9W67qwFWMvb7h9/AlxlM2hdOQsOH7mo+E57H8m8LWC
-         UTSQ9wP4lXwOz7rJLkQsYLuCpMEFR+J/uXXfmVB7XqIDOIWjIVc5svW1VJ1J6Y4v3Teh
-         u5LUJc9UOPOnP6ViGkIoebVbSVji89oOr4bAWPmxO9OPLWOwakrdod2XhrbXHmcjGULU
-         iut6n5qS8jMnzxTysyJHSww1RCRIG7JzFI8O1UFiY7wdFq8NDai4eKVxYDHnBUIXu3Ot
-         pGng==
-X-Gm-Message-State: APjAAAXQ+6LW2KNIKGgQWmlgdR1lbtWwjUtsiEj5fwMM116aUZjpQx+J
-        NnIwv/NuFQqtj0CIgaRLbyJh+iiprKw=
-X-Google-Smtp-Source: APXvYqwIrQP95wfnRpUaBSQ1js3MSss6YGiQIeuFWXrh1c7x4fBsJIgSzjSHzG0u9zd8GWWUnB0u+w==
-X-Received: by 2002:ac2:4476:: with SMTP id y22mr9146713lfl.169.1575659808846;
-        Fri, 06 Dec 2019 11:16:48 -0800 (PST)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id v21sm3061155lfi.7.2019.12.06.11.16.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2019 11:16:47 -0800 (PST)
-Received: by mail-lf1-f48.google.com with SMTP id l18so6099492lfc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 11:16:47 -0800 (PST)
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr8789546lfi.93.1575659806793;
- Fri, 06 Dec 2019 11:16:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20191118154435.20357-1-sibis@codeaurora.org> <0101016e7f30ad15-18908ef0-a2b9-4a2a-bf32-6cb3aa447b01-000000@us-west-2.amazonses.com>
- <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
- <0101016e83897442-ecc4c00f-c0d1-4c2c-92ed-ce78e65c0935-000000@us-west-2.amazonses.com>
- <0101016eac068d05-761f0d60-b1ef-400f-bf84-3164c2a26d2e-000000@us-west-2.amazonses.com>
-In-Reply-To: <0101016eac068d05-761f0d60-b1ef-400f-bf84-3164c2a26d2e-000000@us-west-2.amazonses.com>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 6 Dec 2019 11:16:10 -0800
-X-Gmail-Original-Message-ID: <CAE=gft5cS54qn0JjxO58xL6sFyQk4t=8ofLFWPUSVQ9sdU4XpQ@mail.gmail.com>
-Message-ID: <CAE=gft5cS54qn0JjxO58xL6sFyQk4t=8ofLFWPUSVQ9sdU4XpQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] interconnect: qcom: Add OSM L3 interconnect
- provider support
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-kernel-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
+         :references:in-reply-to;
+        bh=EfuiC5g9uwuyk/XA/r2lQbj8CwOw/7zBQtIMHV2LGGg=;
+        b=dMFiAtmTLczQtk+CUYCSLNJ9VFaQv3JnOST7BH1Y7RfuihLmS44xq6qkXxurFp2qaE
+         DpJzatqPrfRFo2CnbHMzfGP8eDTQXza8/dDotgLlaRdIWh44jdN97HtxyCb/6VSi7wVx
+         dJPrTALmiFoYaQHsEfp5EUzUO0K9czMeANSlTXrnZswuIdXqat9Byca9vy+GrzbIBAfs
+         3vgHenHIAE2IAefIX7BmbRKpd4+RdY4hFN7b4u0RFwRQ4GIS9LYfe8B9/poA7ywu/G+3
+         WTe6mMx5tyH+RVVwSTr9TjvgNTobMa2CAnaFG8rMcGwxI4FgpdAL57cM88lP72fs5POe
+         ZvzA==
+X-Gm-Message-State: APjAAAVbjQK/9uA/iakeq6pfc/tpHiJBOkCqHsHWvDqUd+l/+jc6H+Sm
+        4fl1PUVU2ACPZRm1P9S+vA8=
+X-Google-Smtp-Source: APXvYqxC3rbCY2YzRS2G6XX19XoD+mFGP85/kEnW2NtNt2Ur2w+SKrkYWBZhVNsmhZeQfFgt7mHK9A==
+X-Received: by 2002:a63:e14a:: with SMTP id h10mr5174663pgk.74.1575659925557;
+        Fri, 06 Dec 2019 11:18:45 -0800 (PST)
+Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
+        by smtp.gmail.com with ESMTPSA id n188sm7984307pga.84.2019.12.06.11.18.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 11:18:44 -0800 (PST)
+Message-ID: <5deaa994.1c69fb81.97561.647e@mx.google.com>
+Date:   Fri, 06 Dec 2019 11:18:44 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Paul Burton <paulburton@kernel.org>
+CC:     linux-mips@vger.kernel.org
+CC:     linux-kernel@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Hassan Naveed <hnaveed@wavecomp.com>,
+        Tony Ambardar <itugrok@yahoo.com>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, stable@vger.kernel.org
+CC:     linux-mips@vger.kernel.org
+Subject: Re: [PATCH] MIPS: BPF: Restore MIPS32 cBPF JIT; disable MIPS32 eBPF JIT
+References:  <20191205182318.2761605-1-paulburton@kernel.org>
+In-Reply-To:  <20191205182318.2761605-1-paulburton@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 12:42 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> Hey Evan/Georgi,
->
-> https://git.linaro.org/people/georgi.djakov/linux.git/commit/?h=icc-dev&id=9197da7d06e88666d1588e3c21a743e60381264d
->
-> With the "Redefine interconnect provider
-> DT nodes for SDM845" series, wouldn't it
-> make more sense to define the OSM_L3 icc
-> nodes in the sdm845.c icc driver and have
-> the common helpers in osm_l3 driver? Though
-> we don't plan on linking the OSM L3 nodes
-> to the other nodes on SDM845/SC7180, we
-> might have GPU needing to be linked to the
-> OSM L3 nodes on future SoCs. Let me know
-> how you want this done.
->
-> Anyway I'll re-spin the series once the
-> SDM845 icc re-work gets re-posted.
+Hello,
 
-I don't have a clear picture of the proposal. You'd put the couple of
-extra defines in sdm845.c for the new nodes. But then you'd need to do
-something in icc_set() of sdm845. Is that when you'd call out to the
-osm_l3 driver?
+Paul Burton wrote:
+> Commit 716850ab104d ("MIPS: eBPF: Initial eBPF support for MIPS32
+> architecture.") enabled our eBPF JIT for MIPS32 kernels, whereas it has
+> previously only been availailable for MIPS64. It was my understanding at
+> the time that the BPF test suite was passing & JITing a comparable
+> number of tests to our cBPF JIT [1], but it turns out that was not the
+> case.
+> 
+> The eBPF JIT has a number of problems on MIPS32:
+> 
+> - Most notably various code paths still result in emission of MIPS64
+>   instructions which will cause reserved instruction exceptions & kernel
+>   panics when run on MIPS32 CPUs.
+> 
+> - The eBPF JIT doesn't account for differences between the O32 ABI used
+>   by MIPS32 kernels versus the N64 ABI used by MIPS64 kernels. Notably
+>   arguments beyond the first 4 are passed on the stack in O32, and this
+>   is entirely unhandled when JITing a BPF_CALL instruction. Stack space
+>   must be reserved for arguments even if they all fit in registers, and
+>   the callee is free to assume that stack space has been reserved for
+>   its use - with the eBPF JIT this is not the case, so calling any
+>   function can result in clobbering values on the stack & unpredictable
+>   behaviour. Function arguments in eBPF are always 64-bit values which
+>   is also entirely unhandled - the JIT still uses a single (32-bit)
+>   register per argument. As a result all function arguments are always
+>   passed incorrectly when JITing a BPF_CALL instruction, leading to
+>   kernel crashes or strange behavior.
+> 
+> - The JIT attempts to bail our on use of ALU64 instructions or 64-bit
+>   memory access instructions. The code doing this at the start of
+>   build_one_insn() incorrectly checks whether BPF_OP() equals BPF_DW,
+>   when it should really be checking BPF_SIZE() & only doing so when
+>   BPF_CLASS() is one of BPF_{LD,LDX,ST,STX}. This results in false
+>   positives that cause more bailouts than intended, and that in turns
+>   hides some of the problems described above.
+> 
+> - The kernel's cBPF->eBPF translation makes heavy use of 64-bit eBPF
+>   instructions that the MIPS32 eBPF JIT bails out on, leading to most
+>   cBPF programs not being JITed at all.
+> 
+> Until these problems are resolved, revert the removal of the cBPF JIT &
+> the enabling of the eBPF JIT on MIPS32 done by commit 716850ab104d
+> ("MIPS: eBPF: Initial eBPF support for MIPS32 architecture.").
+> 
+> Note that this does not undo the changes made to the eBPF JIT by that
+> commit, since they are a useful starting point to providing MIPS32
+> support - they're just not nearly complete.
+> 
+> [1] https://lore.kernel.org/linux-mips/MWHPR2201MB13583388481F01A422CE7D66D4410@MWHPR2201MB1358.namprd22.prod.outlook.com/
+
+Applied to mips-fixes.
+
+> commit c409cd05ab7f
+> https://git.kernel.org/mips/c/c409cd05ab7f
+> 
+> Signed-off-by: Paul Burton <paulburton@kernel.org>
+> Fixes: 716850ab104d ("MIPS: eBPF: Initial eBPF support for MIPS32 architecture.")
+
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paulburton@kernel.org to report it. ]
