@@ -2,76 +2,147 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95510C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E4DC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57CE724677
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F132467B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vCkW4+rw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZxzHy3KZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfLFIfj (ORCPT
+        id S1726584AbfLFIiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 03:35:39 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53906 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfLFIfj (ORCPT
+        Fri, 6 Dec 2019 03:38:54 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35096 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbfLFIiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 03:35:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UV9q3o7jAvEZwvvbVSHDzMwRL8D4dgdMETxRcUUBx3A=; b=vCkW4+rwW3x3/tPWqTK+TBxAv
-        IJizviNkGbYhLxrDY1gXfQH/lWAYJuc4jJ7pOJGNYvacY+ptkIr+xYQph4zh7i/nuQ+n5+p7sPjMl
-        hA8V/8eLkJ7pYeqidwfSGpkgwNiypUMFnOHcISYcqkWMzcpHvfGSOURLQ0DevI4hUWJXcxx19vyPV
-        Ud01AdChoYN5xkw+rW6E+0PFbxip++fyek69UhQMyhGf3t97BJEWBidhggQ/m0vFwDEaWN36/mGpV
-        Jdbsr5GByI9Cw02a08qD1knSOeWcKzCjcEWxQEgUSHWRry5bSSiX55betbCtoyqyBqxP/ufjB4LAp
-        MLUcy/BkA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1id95M-00076u-VM; Fri, 06 Dec 2019 08:35:36 +0000
-Date:   Fri, 6 Dec 2019 00:35:36 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Can Guo <cang@codeaurora.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scsi: ufs: Export query request interfaces
-Message-ID: <20191206083536.GA15390@infradead.org>
-References: <0101016ed90ccaa9-28e4056b-b182-4739-80e0-c9f1dff0f257-000000@us-west-2.amazonses.com>
+        Fri, 6 Dec 2019 03:38:54 -0500
+Received: by mail-qt1-f193.google.com with SMTP id s8so6466234qte.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 00:38:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=XULIdLphJK4qhxzEMS6r2yIrpC7a9xcmw/dOBrCCHnI=;
+        b=ZxzHy3KZPXua8EgoH1fYq6c6L99fALxELCYRV2aXAnlHF2bS8HCMol/iAk8kKemUFU
+         7hvvB9V8yE1GdD7LK0rZ4YCrp9q0A9ojDtRLQhKB/Hnasjv2oJQ2RmrnQ6GgqPlN0wrP
+         QCxLviZNEiMaT8clvyClMTq0zbuLMdgB2aw3+Xjc6aOgTXQEH4RYRVNHFuyMiTVsY3fH
+         4f4kKF8o95RLZFoQVwidWOU1W4AVMFdtYVsLiC4+uD3IjiI/MrDCM5vK+Ok3nJmwwpBB
+         qmoVVw8Q3dcOt4Yxeua+DH2cDCQ2B4O0v2dV9zenkoZPyc6Ic2D4fayVC97wQF3fkQ3z
+         wA3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XULIdLphJK4qhxzEMS6r2yIrpC7a9xcmw/dOBrCCHnI=;
+        b=SJgsjDXXy4T2TvfuQwEICGf5hNj74zHUtscaKBQ/yKSVcPTe7TC/ylan8kmcT/9+1Z
+         qlLqzccpQ6aVX1G1I4CU+GYQqH5sxgG/AEePM4EVEaMjFyv503Nl3/CIJcmaWEkwSDZo
+         2x/DALz8hLvE2MD3jEqGT6iHlaVEoznzd4qkf8MTE1F29m9T/vU7c3QiZFv0Vn5J/oci
+         7a3ADJxJJKDrxqUJEkMQWQNqUlS+136Q60YT/fOMS7oVkHhGpc4eOSSClaho08+5foB3
+         bD1yQdw4jaDkO0pQmS1gOs87LwrhJ6wqieEK9wB/yFZJsdCsq4GYQjf6IzmPHulPF+vJ
+         6KtQ==
+X-Gm-Message-State: APjAAAXO1cyojcqn6RUmE+04ceGxLoAKDjcg+/XEKqcQNjJXP6fRKRQF
+        XllP+WPZ0t4W0WNK3KWKBJ204b9zfgQXlXl3Mtw=
+X-Google-Smtp-Source: APXvYqytAoVioaolXPFeQOsQ1aeD3jkaPTX+RX7lY+dQPxZI6yABwCQKvblEpvDu+P99UBx+Qedtff5HSH9xuXHnrEo=
+X-Received: by 2002:ac8:5548:: with SMTP id o8mr12003824qtr.338.1575621532837;
+ Fri, 06 Dec 2019 00:38:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016ed90ccaa9-28e4056b-b182-4739-80e0-c9f1dff0f257-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <201912060818.dgGGxpRK%lkp@intel.com> <CAK8P3a23_rWdmjyZNezd9k=-KL4VZyV+DCLvh-UgCQUQTsysyw@mail.gmail.com>
+ <CAEbi=3fN83s1sp6Yt2B6d5M-uJ+TGz_a7-mWTt2LAfrX8B3JmA@mail.gmail.com>
+In-Reply-To: <CAEbi=3fN83s1sp6Yt2B6d5M-uJ+TGz_a7-mWTt2LAfrX8B3JmA@mail.gmail.com>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Fri, 6 Dec 2019 16:38:15 +0800
+Message-ID: <CAEbi=3cojt1shc84zH3tGtxK98rQ=PbGhkirWCe7C+JSj5jpFw@mail.gmail.com>
+Subject: Re: drivers/scsi/.tmp_mc_st.s:3: Error: invalid operands (*UND* and
+ *UND* sections) for `^'
+To:     Arnd Bergmann <arnd@arndb.de>, Nickhu <nickhu@andestech.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Vincent Chen <deanbo422@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 02:32:04AM +0000, Can Guo wrote:
-> Vendor drivers may need to send query requests in proprietary
-> implementations. Hence, export the query request interfaces
-> so that vendor drivers can use them.
+Greentime Hu <green.hu@gmail.com> =E6=96=BC 2019=E5=B9=B412=E6=9C=886=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:19=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Arnd Bergmann <arnd@arndb.de> =E6=96=BC 2019=E5=B9=B412=E6=9C=886=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:00=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > On Fri, Dec 6, 2019 at 2:05 AM kbuild test robot <lkp@intel.com> wrote:
+> > >
+> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
+x.git master
+> > > head:   2f13437b8917627119d163d62f73e7a78a92303a
+> > > commit: 1207045da5a7c94344e0ea9a9e7495985eef499a compat_ioctl: move t=
+ape handling into drivers
+> > > date:   6 weeks ago
+> > > config: nds32-allyesconfig (attached as .config)
+> > > compiler: nds32le-linux-gcc (GCC) 9.2.0
+> > > reproduce:
+> > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master=
+/sbin/make.cross -O ~/bin/make.cross
+> > >         chmod +x ~/bin/make.cross
+> > >         git checkout 1207045da5a7c94344e0ea9a9e7495985eef499a
+> > >         # save the attached .config to linux build tree
+> > >         GCC_VERSION=3D9.2.0 make.cross ARCH=3Dnds32
+> > >
+> > > If you fix the issue, kindly add following tag
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > >
+> > > All errors (new ones prefixed by >>):
+> > >
+> > >    drivers/scsi/.tmp_mc_st.s: Assembler messages:
+> > > >> drivers/scsi/.tmp_mc_st.s:3: Error: invalid operands (*UND* and *U=
+ND* sections) for `^'
+> > >    drivers/scsi/.tmp_mc_st.s:4: Error: invalid operands (*UND* and *U=
+ND* sections) for `^'
+> > >    drivers/scsi/.tmp_mc_st.s:5: Error: invalid operands (*UND* and *U=
+ND* sections) for `^'
+> > >    drivers/scsi/.tmp_mc_st.s:6: Error: invalid operands (*UND* and *U=
+ND* sections) for `^'
+> > >    drivers/scsi/.tmp_mc_st.s:7: Error: invalid operands (*UND* and *U=
+ND* sections) for `^'
+> > >    drivers/scsi/.tmp_mc_st.s:8: Error: invalid operands (*UND* and *U=
+ND* sections) for `^'
+> > >    drivers/scsi/.tmp_mc_st.s:9: Error: invalid operands (*UND* and *U=
+ND* sections) for `^'
+> >
+> > Adding nds32 maintainers to Cc:
+> >
+> > It looks like a regression caused by my patch, but I don't think it's s=
+omething
+> > I did wrong, but rather a toolchain bug being uncovered by the modified=
+ sources.
+> >
+> > Are you able to reproduce this?
+>
+> Hi Arnd,
+>
+> I am trying to reproduce this problem, but it happened to me.
+>
+> greentimeh@gamma07:/scratch/greentimeh/nds32/linux <(1207045da5a7...)>
+> $ GCC_VERSION=3D9.2.0 make.cross ARCH=3Dnds32
+> cd: received redirection to `https://download.01.org/0day-ci/cross-packag=
+e/'
+> Cannot find nds32-linux under
+> https://download.01.org/0day-ci/cross-package check
+> /tmp/crosstool-files
+>
+> Can you reproduce it?
 
-Vendor driver ain't matter.  If you submit your driver to mainline
-and can prove a need you can add a patch to export interface to the
-series adding the driver.
+I can reproduce it now by adding these 2 lines to make.cross.
+177                 nds32)
+178                         gcc_arch=3Dnds32le-linux
+
+It will be built failed with gcc-9.2.0-nolibc toolchain, but it can be
+built pass with gcc-8.1.0-nolibc toolchain.
