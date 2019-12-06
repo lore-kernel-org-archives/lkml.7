@@ -2,190 +2,119 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=BITCOIN_SPAM_02,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD87C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45477C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7BDD2064B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DB32464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:38:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Is/2io88"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b="Vq9KbSly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbfLFUb0 (ORCPT
+        id S1726397AbfLFUiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 15:31:26 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:47908 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbfLFUb0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 15:31:26 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB6KTUCc140204;
-        Fri, 6 Dec 2019 20:31:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=4nf1xKRn/USEHl15TdqwrDmyONfL6v+Du/F1d+Pr7+A=;
- b=Is/2io88nqEO+7vVxnk1NivaVaTP/E03UwABfCBvwkLELnLoOD2RXb32A7NRCF9DG5Lv
- irxff3HSlunuvSCKhFflOq3ymHv7Rs3cJMJ2gYXOUE5jQ07h+yQ/SQDI8xxGXttlUWBx
- MOpPDfpw+z2Pkstcvr3LXWwnQeEPosvRJtWcmYylPmYTDxfh3I1dcsMG0IbuPHAeW+sz
- xDX1BVr/63MTFcAf6QG69afDinjxkKTMTXuo21zEd5MMeL9YFTfKFPfp2KWgvWW3ZhBK
- iGGdX990wNjburHJU6545Zj3aYK2jjBHDcYX6pxcTX6tYq+LhU19xrUP05H2tNpAjT8T Lg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2wkfuuxdmr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Dec 2019 20:31:02 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB6KTTUA194845;
-        Fri, 6 Dec 2019 20:31:02 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2wqt45bap0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Dec 2019 20:31:02 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB6KUqJc024064;
-        Fri, 6 Dec 2019 20:30:58 GMT
-Received: from [10.156.74.184] (/10.156.74.184)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 06 Dec 2019 12:30:52 -0800
-Subject: Re: [PATCH RFC] KVM: x86: tell guests if the exposed SMT topology is
- trustworthy
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-References: <20191105161737.21395-1-vkuznets@redhat.com>
- <de3cade3-c069-dc6b-1d2d-aa10abe365b8@redhat.com>
- <4f835a11-1528-a04e-9e06-1b8cdb97a04d@oracle.com>
- <87wob9d0t3.fsf@vitty.brq.redhat.com>
-From:   Ankur Arora <ankur.a.arora@oracle.com>
-Message-ID: <2e16b707-f020-22a3-a618-4960db917dfa@oracle.com>
-Date:   Fri, 6 Dec 2019 12:31:56 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Fri, 6 Dec 2019 15:38:18 -0500
+Received: from mail.kapsi.fi ([91.232.154.25]:58637 "EHLO mail.kapsi.fi"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726325AbfLFUiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 15:38:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
+         s=20161220; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=7Ue6ST1C9P1tY1QLUauLPe7lfUfde9A/Tmm51Dk5Bko=; b=Vq9KbSlyUezdNuy+axSowJqc+I
+        Hik7ks85MmhCKX5KvuSOu5+6a3DKasW8RTdc4uQzNP+uMxHgQZUhHUh7RVzd22u/IUsEXUPapwnb/
+        gRZ59wV2+jVnwIek8LVXr5ggyWVPwTrp2gDVPNJET1PeQVG/V2si7/YC1q6jHrBSwFXWagtIqz9FX
+        5w7MoryfQiWXpdhLxmwPAKfXEInCugyrY4Z3L0E/zj822D9Dh5DMEv0IWOD6juICAp0gF90E3mlyM
+        wAAOBPoXfGdqO3FosdXr/CHJ1on+asPaANCu9+sacR4oFLWzHm1JHZ+m6+wcq3QEVpuq9RgrTgsff
+        8oD+fjRQ==;
+Received: from 91-154-92-5.elisa-laajakaista.fi ([91.154.92.5] helo=localhost)
+        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <jarkko.sakkinen@linux.intel.com>)
+        id 1idKMa-0006HJ-Tp; Fri, 06 Dec 2019 22:38:09 +0200
+Date:   Fri, 6 Dec 2019 22:38:07 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>
+Subject: Re: [PATCH v23 12/24] x86/sgx: Linux Enclave Driver
+Message-ID: <20191206203807.GA9971@linux.intel.com>
+References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
+ <20191028210324.12475-13-jarkko.sakkinen@linux.intel.com>
+ <20191128182450.GA3493127@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <87wob9d0t3.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9463 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912060164
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9463 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912060164
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191128182450.GA3493127@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 91.154.92.5
+X-SA-Exim-Mail-From: jarkko.sakkinen@linux.intel.com
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 12/6/19 5:46 AM, Vitaly Kuznetsov wrote:
-> Ankur Arora <ankur.a.arora@oracle.com> writes:
+On Thu, Nov 28, 2019 at 07:24:50PM +0100, Greg KH wrote:
+> On Mon, Oct 28, 2019 at 11:03:12PM +0200, Jarkko Sakkinen wrote:
+> > +static struct device sgx_encl_dev;
 > 
->> On 2019-11-05 3:56 p.m., Paolo Bonzini wrote:
->>> On 05/11/19 17:17, Vitaly Kuznetsov wrote:
->>>> There is also one additional piece of the information missing. A VM can be
->>>> sharing physical cores with other VMs (or other userspace tasks on the
->>>> host) so does KVM_FEATURE_TRUSTWORTHY_SMT imply that it's not the case or
->>>> not? It is unclear if this changes anything and can probably be left out
->>>> of scope (just don't do that).
->>>>
->>>> Similar to the already existent 'NoNonArchitecturalCoreSharing' Hyper-V
->>>> enlightenment, the default value of KVM_HINTS_TRUSTWORTHY_SMT is set to
->>>> !cpu_smt_possible(). KVM userspace is thus supposed to pass it to guest's
->>>> CPUIDs in case it is '1' (meaning no SMT on the host at all) or do some
->>>> extra work (like CPU pinning and exposing the correct topology) before
->>>> passing '1' to the guest.
->>>>
->>>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->>>> ---
->>>>    Documentation/virt/kvm/cpuid.rst     | 27 +++++++++++++++++++--------
->>>>    arch/x86/include/uapi/asm/kvm_para.h |  2 ++
->>>>    arch/x86/kvm/cpuid.c                 |  7 ++++++-
->>>>    3 files changed, 27 insertions(+), 9 deletions(-)
->>>>
->>>> diff --git a/Documentation/virt/kvm/cpuid.rst b/Documentation/virt/kvm/cpuid.rst
->>>> index 01b081f6e7ea..64b94103fc90 100644
->>>> --- a/Documentation/virt/kvm/cpuid.rst
->>>> +++ b/Documentation/virt/kvm/cpuid.rst
->>>> @@ -86,6 +86,10 @@ KVM_FEATURE_PV_SCHED_YIELD        13          guest checks this feature bit
->>>>                                                  before using paravirtualized
->>>>                                                  sched yield.
->>>>    
->>>> +KVM_FEATURE_TRUSTWORTHY_SMT       14          set when host supports 'SMT
->>>> +                                              topology is trustworthy' hint
->>>> +                                              (KVM_HINTS_TRUSTWORTHY_SMT).
->>>> +
->>>
->>> Instead of defining a one-off bit, can we make:
->>>
->>> ecx = the set of known "hints" (defaults to edx if zero)
->>>
->>> edx = the set of hints that apply to the virtual machine
->>>
->> Just to resurrect this thread, the guest could explicitly ACK
->> a KVM_FEATURE_DYNAMIC_HINT at init. This would allow the host
->> to change the hints whenever with the guest not needing to separately
->> ACK the changed hints.
+> Ugh, really?  After 23 versions of this patchset no one saw this?
+
+Nobody has really given feedback on the device model. This is the
+first review on that and thanks for taking your time. Previously
+feeback has been mainly on the ioctl API and file management.
+
+> > +static dev_t sgx_devt;
+> > +
+> > +static void sgx_dev_release(struct device *dev)
+> > +{
+> > +}
 > 
-> (I apologize for dropping the ball on this, I'm intended to do RFCv2 in
-> a nearby future)
+> The old kernel documentation used to say I was allowed to make fun of
+> people who did this, but that was removed as it really wasn't that nice.
 > 
-> Regarding this particular hint (let's call it 'no nonarchitectural
-> coresharing' for now) I don't see much value in communicating change to
-> guest when it happens. Imagine our host for some reason is not able to
-> guarantee that anymore e.g. we've migrated to a host with less pCPUs
-> and/or special restrictions and have to start sharing. What we, as a
-> guest, are supposed to do when we receive a notification? "You're now
-> insecure, deal with it!" :-) Equally, I don't see much value in
-> pre-acking such change. "I'm fine with becoming insecure at some point".
-True, for that use-case pre-ACK seems like exactly the thing you would
-not want.
-I do see some value in the guest receiving the notification though.
-Maybe it could print a big fat printk or something :). Or, it could
-change to a different security-policy-that-I-just-made-up.
+> But I'm seriously reconsidering that at the moment.
+> 
+> No, this is NOT OK!
+> 
+> Think about what you are doing here, and why you feel that it is ok to
+> work around a kernel message that was added there explicitly to help you
+> do things the right way.  I didn't add it just because I felt like it, I
+> was trying to give you a chance to not get the use of this api
+> incorrect.
+> 
+> That failed :(
+> 
+> Ugh, not ok.  Seriously, not ok...
 
+It used to delete a context structure called sgx_dev_ctx. This structure
+was removed in v20. I've failed to notice this when the code was refactored
+for v20.
 
-> If we, however, discuss other hints such 'pre-ACK' mechanism may make
-> sense, however, I'd make it an option to a 'challenge/response'
-> protocol: if host wants to change a hint it notifies the guest and waits
-> for an ACK from it (e.g. a pair of MSRs + an interrupt). I, however,
-My main reason for this 'pre-ACK' approach is some discomfort with
-changing the CPUID edx from under the guest.
+> Why a whole cdev?
+> 
+> Why not use a misc device?  YOu only have 2 devices right?  Why not 2
+> misc devices then?  That saves the use of a whole major number and makes
+> your code a _LOT_ simpler.
 
-The MSR+interrupt approach would work as well but then we have the
-same set of hints spread across CPUID and the MSR. What do you think
-is the right handling for a guest that refuses to ACK the MSR?
+The downside would be that if we ever want to add sysfs attributes, that
+could not be done synchronously with the device creation.
 
-> have no good candidate from the existing hints which would require guest
-> to ACK (e.g revoking PV EOI would probably do but why would we do that?)
-> As I said before, challenge/response protocol is needed if we'd like to
-> make TSC frequency change the way Hyper-V does it (required for updating
-> guest TSC pages in nested case) but this is less and less important with
-> the appearance of TSC scaling. I'm still not sure if this is an
-> over-engineering or not. We can wait for the first good candidate to
-> decide.
-As we've discussed offlist, the particular hint I'm interested in is
-KVM_HINT_REALTIME. That's not a particularly good candidate though
-because there's no correctness problem if the host does switch it
-off suddenly.
-
-
-Ankur
+/Jarkko
