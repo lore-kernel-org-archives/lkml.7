@@ -2,132 +2,206 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8723C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33B1C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9074B2464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575649441;
-	bh=F9OTDyXwrGShhha34PK6U8wuxLV81Kw3Kz0btZvBz6c=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=jcfNCLnMhL2gMtplES9SiJN/84KE5adC/WaFiQo6NXdCsX7uLlNeqGj7GmYAkB4gd
-	 zMkSTKzagFrFuahT2e3I0eJYJhB05+azEgiYM1/G2/Aepm+EbF08QkLYXwFJXt9va3
-	 zaElO0zGuKJrfmLiJteRAczV/dKjfSgDaFKy3g2g=
+	by mail.kernel.org (Postfix) with ESMTP id C212920659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:24:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfLFQYA (ORCPT
+        id S1726427AbfLFQYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:24:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbfLFQYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:24:00 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 977C520659;
-        Fri,  6 Dec 2019 16:23:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575649439;
-        bh=F9OTDyXwrGShhha34PK6U8wuxLV81Kw3Kz0btZvBz6c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Jou6FGmHqPVqcqnO2VJmeqnwycT8hsakmYNCGMZfr2CqTCqAUEBNTxKw3VMk4k4ff
-         qrcSONAFYYFOJ9VkhwlE9gl+0pEDfPIY/0bJhNkRaAv4VuUeyz2PhAzvXaKmz2Qlyc
-         FKzv7KlmwZiouw7Jb2RjyV9ll/5zuO2ouf3F8wxs=
-Subject: Re: [PATCH 4.14 000/209] 4.14.158-stable review
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20191204175321.609072813@linuxfoundation.org>
- <1dac10cd-7183-9dfd-204c-05fae75bcd74@kernel.org>
- <20191206152823.GA75339@kroah.com>
- <785c9534-1eb2-ea9b-8c9b-6713fdefdd01@kernel.org>
- <e04a233b-0854-2dd4-060e-47e1013879ee@roeck-us.net>
-From:   shuah <shuah@kernel.org>
-Message-ID: <f7e72654-42a6-864a-4b4c-41adcce74404@kernel.org>
-Date:   Fri, 6 Dec 2019 09:23:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 6 Dec 2019 11:24:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41968 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726332AbfLFQYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 11:24:37 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A9EB4B1D2;
+        Fri,  6 Dec 2019 16:24:35 +0000 (UTC)
+From:   Thomas Renninger <trenn@suse.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, Felix Schnizlein <fschnizlein@suse.de>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org,
+        trenn@suse.de, fschnitzlein@suse.de,
+        Felix Schnizlein <fschnizlein@suse.com>
+Subject: [PATCH 3/3] arm64 cpuinfo: implement sysfs nodes for arm64
+Date:   Fri,  6 Dec 2019 17:24:21 +0100
+Message-Id: <20191206162421.15050-4-trenn@suse.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191206162421.15050-1-trenn@suse.de>
+References: <20191206162421.15050-1-trenn@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <e04a233b-0854-2dd4-060e-47e1013879ee@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/6/19 9:10 AM, Guenter Roeck wrote:
-> On 12/6/19 7:35 AM, shuah wrote:
->> On 12/6/19 8:28 AM, Greg Kroah-Hartman wrote:
->>> On Fri, Dec 06, 2019 at 08:24:36AM -0700, shuah wrote:
->>>> On 12/4/19 10:53 AM, Greg Kroah-Hartman wrote:
->>>>> This is the start of the stable review cycle for the 4.14.158 release.
->>>>> There are 209 patches in this series, all will be posted as a response
->>>>> to this one.  If anyone has any issues with these being applied, 
->>>>> please
->>>>> let me know.
->>>>>
->>>>> Responses should be made by Fri, 06 Dec 2019 17:50:10 +0000.
->>>>> Anything received after that time might be too late.
->>>>>
->>>>> The whole patch series can be found in one patch at:
->>>>>     https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.158-rc1.gz 
->>>>>
->>>>> or in the git tree and branch at:
->>>>>     git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git 
->>>>> linux-4.14.y
->>>>> and the diffstat can be found below.
->>>>>
->>>>> thanks,
->>>>>
->>>>> greg k-h
->>>>>
->>>>
->>>> Starting with Linux 4.14.157, 4.9.204, and 4.4.204 stables stopped
->>>> booting on my system. It can't find the root disk. No config changes
->>>> in between.
->>>>
->>>> I have been bisecting 4.14 and 4.9 with no luck so far. I updated
->>>> to Ubuntu 19.10 in between.
->>>>
->>>> The only other thing I see is CONFIG_GCC_VERSION which is supported
->>>> starting 4.18. I don't this boot failing issue on 4.19 + up. I am
->>>> also chasing any links between this config and scripts and tools
->>>> that generate the initramfs.
->>>
->>> Did you also upgrade your version of gcc?  I know I build those older
->>> kernels with the latest version of gcc for build tests, but I do not
->>> boot them.  I think everyone who still uses them uses older versions of
->>> gcc.
->>
->> Yes. gcc version changed. That has been my strong suspect since I 
->> started poking around the CONFIG_GCC_VERSION.
->>
-> 
-> What version of gcc are you using ? I currently use gcc 8.3.0 for all
-> qemu boot tests (except for 3.16 which doesn't support it, or at least
-> it didn't when I last checked), and have not observed any problems.
-> 
+From: Felix Schnizlein <fschnizlein@suse.de>
 
-With the upgrade gcc version went from 8.3.0 to 9.2.1
+Export all information from /proc/cpuinfo to sysfs:
+implementer, architecture, variant, part, revision,
+bogomips and flags are exported.
 
-Interestingly enough all the older 4.14, 4.9, and 4.4 kernel I have
-on the system boot just fine. It fails when build newer rcs with new
-gcc, boot fails.
+Example:
+/sys/devices/system/cpu/cpu1/info/:[0]# head *
+==> architecture <==
+8
 
-I would really like to understand it just in case something in our
-kbuild scrips is the issue.
+==> bogomips <==
+40.00
 
-thanks,
--- Shuah
+==> flags <==
+fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid asimdrdm
+
+==> implementer <==
+0x51
+
+==> part <==
+0xc00
+
+==> revision <==
+1
+
+==> variant <==
+0x0
+
+Signed-off-by: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Felix Schnizlein <fschnizlein@suse.com>
+---
+ Documentation/ABI/testing/sysfs-devices-system-cpu | 22 +++++++++
+ arch/arm64/Kconfig                                 |  1 +
+ arch/arm64/kernel/cpuinfo.c                        | 55 ++++++++++++++++++++++
+ 3 files changed, 78 insertions(+)
+
+diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+index 791390ab66d5..b6a167cd0beb 100644
+--- a/Documentation/ABI/testing/sysfs-devices-system-cpu
++++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+@@ -604,3 +604,25 @@ Description:	Expose information about x86 cpu information.
+ 		flags: Extended capabilities supported by the cpu
+ 		bugs: Known bugs by cpu
+ 		bogomips: calculated bogomips
++
++
++What:		/sys/devices/system/cpu/cpu#/info/
++		/sys/devices/system/cpu/cpu#/info/implementer
++		/sys/devices/system/cpu/cpu#/info/architecture
++		/sys/devices/system/cpu/cpu#/info/variant
++		/sys/devices/system/cpu/cpu#/info/part
++		/sys/devices/system/cpu/cpu#/info/revision
++		/sys/devices/system/cpu/cpu#/info/flags
++		/sys/devices/system/cpu/cpu#/info/bogomips
++Date:		August 2017
++Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
++Description:	Expose information about arm64 cpu.
++
++		implementer,
++		architecture,
++		variant,
++		part,
++		revision: Cpu identification depending on each vendor
++
++		flags: Extended capabilities supported by the cpu
++		bogomips: calculated bogomips
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 43aa1de727f4..0e8f7733e8c3 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -169,6 +169,7 @@ config ARM64
+ 	select HAVE_KPROBES
+ 	select HAVE_KRETPROBES
+ 	select HAVE_GENERIC_VDSO
++	select HAVE_CPUINFO_SYSFS if SYSFS
+ 	select IOMMU_DMA if IOMMU_SUPPORT
+ 	select IRQ_DOMAIN
+ 	select IRQ_FORCED_THREADING
+diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
+index 56bba746da1c..d142e2d37ead 100644
+--- a/arch/arm64/kernel/cpuinfo.c
++++ b/arch/arm64/kernel/cpuinfo.c
+@@ -24,6 +24,7 @@
+ #include <linux/sched.h>
+ #include <linux/smp.h>
+ #include <linux/delay.h>
++#include <linux/cpuinfo.h>
+ 
+ /*
+  * In case the boot CPU is hotpluggable, we record its initial state and
+@@ -33,6 +34,8 @@
+ DEFINE_PER_CPU(struct cpuinfo_arm64, cpu_data);
+ static struct cpuinfo_arm64 boot_cpu_data;
+ 
++#define cpu_data(cpu)			per_cpu(cpu_data, cpu)
++
+ static const char *icache_policy_str[] = {
+ 	[0 ... ICACHE_POLICY_PIPT]	= "RESERVED/UNKNOWN",
+ 	[ICACHE_POLICY_VIPT]		= "VIPT",
+@@ -285,6 +288,58 @@ static int cpuid_cpu_offline(unsigned int cpu)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_HAVE_CPUINFO_SYSFS
++
++#define cpuinfo_implementer(cpu)	MIDR_IMPLEMENTOR(cpu_data(cpu).reg_midr)
++#define cpuinfo_architecture(cpu)	"8"
++#define cpuinfo_variant(cpu)		MIDR_VARIANT(cpu_data(cpu).reg_midr)
++#define cpuinfo_part(cpu)		MIDR_PARTNUM(cpu_data(cpu).reg_midr)
++#define cpuinfo_revision(cpu)		MIDR_REVISION(cpu_data(cpu).reg_midr)
++
++static ssize_t cpuinfo_flags(unsigned int c, char *buf)
++{
++	unsigned int i;
++	ssize_t len = 0;
++
++	for (i = 0; hwcap_str[i]; i++) {
++		if (cpu_have_feature(i))
++			len += sprintf(buf+len, len == 0 ? "%s" : " %s",
++				       hwcap_str[i]);
++	}
++	if (!len)
++		return 0;
++	return len + sprintf(buf+len, "\n");
++}
++
++static ssize_t cpuinfo_bogomips(unsigned int c, char *buf)
++{
++	return sprintf(buf, "%lu.%02lu\n", loops_per_jiffy / (500000 / HZ),
++		       (loops_per_jiffy / (5000 / HZ)) % 100);
++
++}
++
++CPUINFO_DEFINE_ATTR(implementer, "0x%02x");
++CPUINFO_DEFINE_ATTR(architecture, "%s");
++CPUINFO_DEFINE_ATTR(variant, "0x%x");
++CPUINFO_DEFINE_ATTR(part, "0x%03x");
++CPUINFO_DEFINE_ATTR(revision, "%d");
++
++CPUINFO_DEFINE_ATTR_FUNC(bogomips);
++CPUINFO_DEFINE_ATTR_FUNC(flags);
++
++struct attribute *cpuinfo_attrs[] = {
++	CPUINFO_ATTR(implementer),
++	CPUINFO_ATTR(architecture),
++	CPUINFO_ATTR(variant),
++	CPUINFO_ATTR(part),
++	CPUINFO_ATTR(revision),
++	CPUINFO_ATTR(bogomips),
++	CPUINFO_ATTR(flags),
++	NULL
++};
++#endif /* CONFIG_HAVE_CPUINFO_SYSFS */
++
++
+ static int __init cpuinfo_regs_init(void)
+ {
+ 	int cpu, ret;
+-- 
+2.16.4
 
