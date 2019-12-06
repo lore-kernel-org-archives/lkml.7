@@ -2,112 +2,123 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29E7C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 21:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EA1C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 21:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F2F2467B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 21:23:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b="xUYJuXxy"
+	by mail.kernel.org (Postfix) with ESMTP id 3FB9424679
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 21:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575667397;
+	bh=hwE3SK6fpB7hachHghZiNMwBgfWyDvEZA/GsueZNn+w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=e4EXvG6LkR50NrT18U2HHleo84ZRej/lsHvPVHHJkSm+T6iI3hAcfD9Td/kY+a2hI
+	 ZlGDPo8ySw21YT505tG1V0Fq7H4g2DUlGpdRLZQDLwFPV/pR+QCdCQMoIlCIQqOD0N
+	 NUU0FBapYpdK44IrVJVg4UAPe1dbwYAS44z2m3pY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfLFVXI (ORCPT
+        id S1726527AbfLFVXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 16:23:08 -0500
-Received: from mail.kapsi.fi ([91.232.154.25]:33869 "EHLO mail.kapsi.fi"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726374AbfLFVXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 16:23:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
-         s=20161220; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=LoKaIeDjhZSfcKeTupjxDeuwFFPSIeC+7wDiw8+vuGA=; b=xUYJuXxyqZHxS2jyrinnwMTegV
-        8Z8BWJEXsjtj+ogxqnoW1jElqMjMAn2topAivkf6NL5p+LSFPlkDJ/hErKE92jDFfwrB4Bj2xVYPb
-        bs8geU58fI+J/OAXMZrHUTtw9buhhi7HJsjmOgIZizEnCnCZEfJOpN1whlFTVmOkd3JGeEKtNJHXZ
-        rzmV8bixm8yX9CBgl1gV8AVmBmW4DqZp2nR4ctPqg8xZPwjLIibLDhD77pdQz25mPj5Y97M2heO2O
-        kS/3SmrTLUw9EIMcvIyEPkHQLN34RN/duM9DFOGuU27Nv9eDbpAivxbOxspsF8zGzuccqBmagDNAH
-        SqszrxzQ==;
-Received: from 91-154-92-5.elisa-laajakaista.fi ([91.154.92.5] helo=localhost)
-        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <jarkko.sakkinen@linux.intel.com>)
-        id 1idL42-0003Ij-Hu; Fri, 06 Dec 2019 23:23:02 +0200
-Date:   Fri, 6 Dec 2019 23:23:01 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Neil Horman <nhorman@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v24 01/24] x86/sgx: Update MAINTAINERS
-Message-ID: <20191206212301.GF9971@linux.intel.com>
-References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
- <20191129231326.18076-2-jarkko.sakkinen@linux.intel.com>
- <20191130013824.GA28617@hmswarspite.think-freely.org>
+        Fri, 6 Dec 2019 16:23:15 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35003 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbfLFVXP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 16:23:15 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 15so6335316lfr.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 13:23:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=33UvPPPikXdBo5UqVXIO9fOcJEfCIytsFl6Vq5hgbDY=;
+        b=QbFw/8XlQT2pipRqdCg9I+rSe4FLl6AknneKlqx43cRU3CNqoWkLozz28r7O2ZmCOz
+         zOYuDWbSSWb74gksR4qXilyw7QCfb4OvPTYw4S4vAvWvrq1NQPfh+Tc+iCjJF5j5Az70
+         Pw4O4duHeBe9zR9bdDicQDvbEQwD9fNNlNPMY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=33UvPPPikXdBo5UqVXIO9fOcJEfCIytsFl6Vq5hgbDY=;
+        b=ZHrKz23QQHOLpT7puX7W9AYxBSioMtikgVBjCSJdHPVlyHYuwZ97AVlp/GdkfqvPzw
+         CsuVBcEbCQw1xRbPgr+y8ehJumol2SeuZ8ffuG+rlhWev41v0dpMcu1Q7xEX7UulsB1L
+         lbDwyM6rPUyuQbaJ7pu8lnNJV/S4XCHQkGV9U4hOT+rpryx9WSNUoFXYHs8RTHMzNhKq
+         B0OCIWhBMtYvPEzTSLrlO3zslFGnAJfUGDEQER0MeWyfc+LVHaj9HqTb/kzgAsX5aEaS
+         0i4NuZZM5v0/LrYMiygRqiKic7sNPin4nVdwGIt5rNfmWPc3URAIF5I3SYnZHrb0p1oo
+         eZ9A==
+X-Gm-Message-State: APjAAAUFzXlZ8oyXgPUNO+htfaIgnxw3Qttplm8Xrt0J+t1zyRIzWJdQ
+        Hl8qClve1ILVNh5RCzFWVrvWWPNCx+8=
+X-Google-Smtp-Source: APXvYqwXCz76vldvQyNCeNj5i6c4RnymJgjx1v6A4bFEvKXi211IhotIpf93KNdRHRkIg86KeJ5qrQ==
+X-Received: by 2002:a19:3f51:: with SMTP id m78mr9592287lfa.70.1575667393031;
+        Fri, 06 Dec 2019 13:23:13 -0800 (PST)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id d24sm7059839lja.82.2019.12.06.13.23.11
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 13:23:12 -0800 (PST)
+Received: by mail-lj1-f180.google.com with SMTP id j6so9184803lja.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 13:23:11 -0800 (PST)
+X-Received: by 2002:a2e:86c4:: with SMTP id n4mr5352792ljj.97.1575667391454;
+ Fri, 06 Dec 2019 13:23:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191130013824.GA28617@hmswarspite.think-freely.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 91.154.92.5
-X-SA-Exim-Mail-From: jarkko.sakkinen@linux.intel.com
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+References: <alpine.DEB.2.21.9999.1912040050430.56420@viisi.sifive.com>
+ <CAAhSdy2id0FoLBxWwN7WHEk5Am770BizkK=sZO0-G54MtYa6DQ@mail.gmail.com>
+ <9044bad02aa6553cdb2523294500b50fccf3fd2a.camel@wdc.com> <alpine.DEB.2.21.9999.1912041128400.186402@viisi.sifive.com>
+ <81530734312456aab8b9625d7e9bb071c43db1c5.camel@wdc.com> <alpine.DEB.2.21.9999.1912041644170.206929@viisi.sifive.com>
+ <84c4ee600c0dd235a0fcc257115807af7207b5f6.camel@wdc.com> <alpine.DEB.2.21.9999.1912051435130.239155@viisi.sifive.com>
+ <99bbf5710da82c8b52e59ad5fc4e44471573ecd3.camel@wdc.com> <3286a00cb9c8033872f533ec3e7f3db3e652c30c.camel@wdc.com>
+ <CADnnUqe-=yTAFbwin_Lti6mQKqO2ABVYMa1XgTv_J=usT5w2gg@mail.gmail.com> <CAAhSdy0BXtkZPbav3QRtdMN9GcYG0SuxBDpwjFC8B_pr35s+Kg@mail.gmail.com>
+In-Reply-To: <CAAhSdy0BXtkZPbav3QRtdMN9GcYG0SuxBDpwjFC8B_pr35s+Kg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 6 Dec 2019 13:22:55 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjGqZk7XcmtqJ7J0Em_XP1ECYU4CDBwFuMOjLrBH0-AHw@mail.gmail.com>
+Message-ID: <CAHk-=wjGqZk7XcmtqJ7J0Em_XP1ECYU4CDBwFuMOjLrBH0-AHw@mail.gmail.com>
+Subject: Re: [GIT PULL] Second set of RISC-V updates for v5.5-rc1
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Carlos Eduardo de Paula <me@carlosedp.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "hch@lst.de" <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 08:38:24PM -0500, Neil Horman wrote:
-> On Sat, Nov 30, 2019 at 01:13:03AM +0200, Jarkko Sakkinen wrote:
-> > Add the maintainer information for the SGX subsystem.
-> > 
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  MAINTAINERS | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 0154674cbad3..08a67272ed14 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -8512,6 +8512,17 @@ F:	Documentation/x86/intel_txt.rst
-> >  F:	include/linux/tboot.h
-> >  F:	arch/x86/kernel/tboot.c
-> >  
-> > +INTEL SGX
-> > +M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > +M:	Sean Christopherson <sean.j.christopherson@intel.com>
-> > +L:	linux-sgx@vger.kernel.org
-> > +S:	Maintained
-> > +Q:	https://patchwork.kernel.org/project/intel-sgx/list/
-> > +T:	git https://github.com/jsakkine-intel/linux-sgx.git
-> > +F:	arch/x86/include/uapi/asm/sgx.h
-> > +F:	arch/x86/kernel/cpu/sgx/*
-> > +K:	\bSGX_
-> > +
-> >  INTERCONNECT API
-> >  M:	Georgi Djakov <georgi.djakov@linaro.org>
-> >  L:	linux-pm@vger.kernel.org
-> > -- 
-> > 2.20.1
-> > 
-> Wheres patch 12/24?
-> Neil
+On Fri, Dec 6, 2019 at 1:15 PM Anup Patel <anup@brainfault.org> wrote:
+>
+> Better approach is to have a fragmented .config for extra DEBUG options.
 
-I've had issues with my VPN connection lately. I'll do a repost
-next week.
+Guys, stop this silly thread already.
 
-/Jarkko
+The fact is, defconfig is useful for basic smoke testing - automated
+compile and boot testing, and getting perhaps random people to test
+something.
+
+But it is not appropriate for a distro to use. Anybody who makes that
+argument is wrong. If you actually know what you are doing, the
+defconfig is entirely irrelevant, and no, trying to make special debug
+fragments isn't going to make it more so.
+
+So if you are a RISC-V distro: stop using the defconfig. You shouldn't
+have used it in the first place. It's not meant to be a usable one.
+
+And no, don't start making "more defconfigs". We've had that mess too.
+It's broken too.
+
+If you are a distro maintainer and you cannot be bothered to make your
+own config file, then you should just stop being a distro maintainer,
+and maybe take up farming instead.
+
+Right now you guys are just wasting everybody elses time. Stop it.
+
+Or at least remove me from the cc, because I'm  not interested in this
+whiny "I'm too lazy to maintain my own config, and I _insist_ that the
+defconfig is meant only for me".
+
+             Linus
