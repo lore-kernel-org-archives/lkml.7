@@ -2,149 +2,106 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 153F5C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE39DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1EE2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2FAF2464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:04:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575590689;
+	bh=AHTJZcpN/qDv+wbWaTsS7NjJKUfm6INqxec1a3pa6FY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ksN84wvB2SjNywqw9zSWoiGJVDxQiFm7c/HuzYSDdZ6CuZtHKEa+/vGTRTkjvBOYc
+	 nCQBbTkqwnP10A5CUPVVQuYaFXQPPOSzbF8w2N9bMU2tOgbv3/p/S+BRyfHnGM3Sdm
+	 GkGE/RhIh7+EQBMYIgXfS43FoUXbPlE66uyZ8I0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbfLFAEb (ORCPT
+        id S1726266AbfLFAEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 19:04:31 -0500
-Received: from mx.ewheeler.net ([173.205.220.69]:52532 "EHLO mx.ewheeler.net"
+        Thu, 5 Dec 2019 19:04:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbfLFAEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 19:04:30 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mx.ewheeler.net (Postfix) with ESMTP id 693F2A0694;
-        Fri,  6 Dec 2019 00:04:24 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at ewheeler.net
-Received: from mx.ewheeler.net ([127.0.0.1])
-        by localhost (mx.ewheeler.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id vIKLpB6f9bby; Fri,  6 Dec 2019 00:04:03 +0000 (UTC)
-Received: from mx.ewheeler.net (mx.ewheeler.net [173.205.220.69])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        id S1726047AbfLFAEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 19:04:47 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx.ewheeler.net (Postfix) with ESMTPSA id 0A5EEA0440;
-        Fri,  6 Dec 2019 00:04:03 +0000 (UTC)
-Date:   Fri, 6 Dec 2019 00:04:02 +0000 (UTC)
-From:   Eric Wheeler <bcache@lists.ewheeler.net>
-X-X-Sender: lists@mx.ewheeler.net
-To:     Coly Li <colyli@suse.de>
-cc:     kungf <wings.wyang@gmail.com>, kent.overstreet@gmail.com,
-        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bcache: add REQ_FUA to avoid data lost in writeback
- mode
-In-Reply-To: <1a728329-1b12-0ebf-21a4-058ef6f65ead@suse.de>
-Message-ID: <alpine.LRH.2.11.1912052358380.11561@mx.ewheeler.net>
-References: <20191202102409.3980-1-wings.wyang@gmail.com> <785fe04f-f841-3083-66db-53fab7bc0577@suse.de> <alpine.LRH.2.11.1912021932570.11561@mx.ewheeler.net> <1a728329-1b12-0ebf-21a4-058ef6f65ead@suse.de>
-User-Agent: Alpine 2.11 (LRH 23 2013-08-11)
+        by mail.kernel.org (Postfix) with ESMTPSA id 864BD2173E;
+        Fri,  6 Dec 2019 00:04:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575590686;
+        bh=AHTJZcpN/qDv+wbWaTsS7NjJKUfm6INqxec1a3pa6FY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=MF82HqQXjxBVUdoCFnI8bNTstmeIMs1kGG0nx6Gei8RsgBLcHa6KrsYm55riGFZou
+         IAcf5bo6L0J9oDd8x8lYIPGK7UpZEsHGeh8nYBzxW1IhvVDEf1iXj5VErZk3EsdcB0
+         2yO1G34RiaaCIotKCsq3SkUnQoSxAGmmvmdoTVzc=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 564BD3522782; Thu,  5 Dec 2019 16:04:46 -0800 (PST)
+Date:   Thu, 5 Dec 2019 16:04:46 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     josh@joshtriplett.org, joel@joelfernandes.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] include: linux: rculist_nulls: Change docbook comment
+ headers
+Message-ID: <20191206000446.GW2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191205185352.1957-1-madhuparnabhowmik04@gmail.com>
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="-844282404-27533672-1575590423=:11561"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191205185352.1957-1-madhuparnabhowmik04@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
----844282404-27533672-1575590423=:11561
-Content-Type: TEXT/PLAIN; CHARSET=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-On Tue, 3 Dec 2019, Coly Li wrote:
-
-> On 2019/12/3 3:34 上午, Eric Wheeler wrote:
-> > On Mon, 2 Dec 2019, Coly Li wrote:
-> >> On 2019/12/2 6:24 下午, kungf wrote:
-> >>> data may lost when in the follow scene of writeback mode:
-> >>> 1. client write data1 to bcache
-> >>> 2. client fdatasync
-> >>> 3. bcache flush cache set and backing device
-> >>> if now data1 was not writed back to backing, it was only guaranteed safe in cache.
-> >>> 4.then cache writeback data1 to backing with only REQ_OP_WRITE
-> >>> So data1 was not guaranteed in non-volatile storage,  it may lost if  power interruption 
-> >>>
-> >>
-> >> Hi,
-> >>
-> >> Do you encounter such problem in real work load ? With bcache journal, I
-> >> don't see the possibility of data lost with your description.
-> >>
-> >> Correct me if I am wrong.
-> >>
-> >> Coly Li
-> > 
-> > If this does become necessary, then we should have a sysfs or superblock 
-> > flag to disable FUA for those with RAID BBUs.
+On Fri, Dec 06, 2019 at 12:23:52AM +0530, madhuparnabhowmik04@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 > 
-> Hi Eric,
+> This patch changes the docbook comment "head for your list"
+> to "head of the list".
 > 
-> I doubt it is necessary to add FUA tag for all writeback bios, it is
-> unnecessary. If power failure happens after dirty data written to
-> backing device and the bkey turns into clean, a following read request
-> will go to cache device because the LBA can be indexed no matter it is
-> dirty or clean. Unless the bkey is invalidated from the B+tree, read
-> will always go to cache device firstly in writeback mode. If a power
-> failure happens before the cached bkey turns from dirty to clean, just
-> an extra writeback bio flushed from cache device to backing device with
-> identical data. Comparing the FUA tag for all writeback bios (it will be
-> really slow), the extra writeback IOs after a power failure is more
-> acceptable to me.
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-I agree.  FWIW, I just learned about /sys/block/sdX/queue/write_cache from 
-Nikos Tsironis <ntsironis@arrikto.com>.  Thus, my flag request for a FUA 
-bypass isn't necessary anyway, even if you did want an FUA there, because 
-FUAs are stripped when a blockdev is set to "write back" (QUEUE_FLAG_WC).
+I applied both with some updates to the subject line and commit log.
+Could you please double-check for errors on my part?
 
-----------------------------------------------------------------------
-This happens in generic_make_request_checks():
+							Thanx, Paul
 
-              /*
-               * Filter flush bio's early so that make_request based
-               * drivers without flush support don't have to worry
-               * about them.
-               */
-              if (op_is_flush(bio->bi_opf) &&
-                  !test_bit(QUEUE_FLAG_WC, &q->queue_flags)) {
-                      bio->bi_opf &= ~(REQ_PREFLUSH | REQ_FUA);
-                      if (!nr_sectors) {
-                              status = BLK_STS_OK;
-                              goto end_io;
-                      }
-              }
-----------------------------------------------------------------------
-
--Eric
-
+> ---
+>  include/linux/rculist_nulls.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Coly Li
+> diff --git a/include/linux/rculist_nulls.h b/include/linux/rculist_nulls.h
+> index 517a06f36c7a..bea311c884b3 100644
+> --- a/include/linux/rculist_nulls.h
+> +++ b/include/linux/rculist_nulls.h
+> @@ -104,7 +104,7 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
+>   * hlist_nulls_for_each_entry_rcu - iterate over rcu list of given type
+>   * @tpos:	the type * to use as a loop cursor.
+>   * @pos:	the &struct hlist_nulls_node to use as a loop cursor.
+> - * @head:	the head for your list.
+> + * @head:	the head of the list.
+>   * @member:	the name of the hlist_nulls_node within the struct.
+>   *
+>   * The barrier() is needed to make sure compiler doesn't cache first element [1],
+> @@ -124,7 +124,7 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
+>   *   iterate over list of given type safe against removal of list entry
+>   * @tpos:	the type * to use as a loop cursor.
+>   * @pos:	the &struct hlist_nulls_node to use as a loop cursor.
+> - * @head:	the head for your list.
+> + * @head:	the head of the list.
+>   * @member:	the name of the hlist_nulls_node within the struct.
+>   */
+>  #define hlist_nulls_for_each_entry_safe(tpos, pos, head, member)		\
+> -- 
+> 2.17.1
 > 
-> > 
-> >>> Signed-off-by: kungf <wings.wyang@gmail.com>
-> >>> ---
-> >>>  drivers/md/bcache/writeback.c | 2 +-
-> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
-> >>> index 4a40f9eadeaf..e5cecb60569e 100644
-> >>> --- a/drivers/md/bcache/writeback.c
-> >>> +++ b/drivers/md/bcache/writeback.c
-> >>> @@ -357,7 +357,7 @@ static void write_dirty(struct closure *cl)
-> >>>  	 */
-> >>>  	if (KEY_DIRTY(&w->key)) {
-> >>>  		dirty_init(w);
-> >>> -		bio_set_op_attrs(&io->bio, REQ_OP_WRITE, 0);
-> >>> +		bio_set_op_attrs(&io->bio, REQ_OP_WRITE | REQ_FUA, 0);
-> >>>  		io->bio.bi_iter.bi_sector = KEY_START(&w->key);
-> >>>  		bio_set_dev(&io->bio, io->dc->bdev);
-> >>>  		io->bio.bi_end_io	= dirty_endio;
-> >>>
-> >>
-> 
----844282404-27533672-1575590423=:11561--
