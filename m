@@ -2,133 +2,149 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A93C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153F5C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66512464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:04:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="e4500oBY"
+	by mail.kernel.org (Postfix) with ESMTP id DD1EE2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbfLFAEL (ORCPT
+        id S1726198AbfLFAEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 19:04:11 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15992 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfLFAEK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 19:04:10 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de99afe0000>; Thu, 05 Dec 2019 16:04:14 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 05 Dec 2019 16:04:10 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 05 Dec 2019 16:04:10 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec
- 2019 00:04:09 +0000
-Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec 2019
- 00:04:09 +0000
-Subject: Re: [v3 PATCH] mm: move_pages: return valid node id in status if the
- page is already on the target node
-To:     Qian Cai <cai@lca.pw>
-CC:     Yang Shi <yang.shi@linux.alibaba.com>, <fabecassis@nvidia.com>,
-        <mhocko@suse.com>, <cl@linux.com>, <vbabka@suse.cz>,
-        <mgorman@techsingularity.net>, <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <a7f354b7-d2f9-71c0-7311-97255933b9a2@nvidia.com>
- <2139CED9-6C12-48A5-BF61-F36923EB948E@lca.pw>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <22b5bfde-45be-95bd-5c98-2ab13302c107@nvidia.com>
-Date:   Thu, 5 Dec 2019 16:04:09 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 5 Dec 2019 19:04:31 -0500
+Received: from mx.ewheeler.net ([173.205.220.69]:52532 "EHLO mx.ewheeler.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbfLFAEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 19:04:30 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mx.ewheeler.net (Postfix) with ESMTP id 693F2A0694;
+        Fri,  6 Dec 2019 00:04:24 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at ewheeler.net
+Received: from mx.ewheeler.net ([127.0.0.1])
+        by localhost (mx.ewheeler.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id vIKLpB6f9bby; Fri,  6 Dec 2019 00:04:03 +0000 (UTC)
+Received: from mx.ewheeler.net (mx.ewheeler.net [173.205.220.69])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx.ewheeler.net (Postfix) with ESMTPSA id 0A5EEA0440;
+        Fri,  6 Dec 2019 00:04:03 +0000 (UTC)
+Date:   Fri, 6 Dec 2019 00:04:02 +0000 (UTC)
+From:   Eric Wheeler <bcache@lists.ewheeler.net>
+X-X-Sender: lists@mx.ewheeler.net
+To:     Coly Li <colyli@suse.de>
+cc:     kungf <wings.wyang@gmail.com>, kent.overstreet@gmail.com,
+        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bcache: add REQ_FUA to avoid data lost in writeback
+ mode
+In-Reply-To: <1a728329-1b12-0ebf-21a4-058ef6f65ead@suse.de>
+Message-ID: <alpine.LRH.2.11.1912052358380.11561@mx.ewheeler.net>
+References: <20191202102409.3980-1-wings.wyang@gmail.com> <785fe04f-f841-3083-66db-53fab7bc0577@suse.de> <alpine.LRH.2.11.1912021932570.11561@mx.ewheeler.net> <1a728329-1b12-0ebf-21a4-058ef6f65ead@suse.de>
+User-Agent: Alpine 2.11 (LRH 23 2013-08-11)
 MIME-Version: 1.0
-In-Reply-To: <2139CED9-6C12-48A5-BF61-F36923EB948E@lca.pw>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575590654; bh=HDeKv827CiSQ8RzNL5TATYMtNjIBTbYkbw7NU4jWVmc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=e4500oBYXGcC8/koWSWB6iUl1ZFKQ4hL8OjrgxarlmjN3W3BViEVFRWaojft72r6L
-         hQ6AOW5/XOYcPNF5NN+IXSM8oiN5AW8G2lcmXuIVwVuYThty7VJnJH9Urj1pbrwJh+
-         KPUFCPxXk6/ydWrdWtKS/WxIPbTHPVdj8IAGRAt1m5sHpqe4/aeYquIJK4YctH2Kvf
-         WQ3wBtGo3e4IF6k09tVlTbaLO+9vY0vONgSfhnHIYykDP0w3kcfY+TnluubN9eov7b
-         2xpZkdqgepyjgEU2AilCc/axH7i+s6jq8CZvE2olsutb7UUchierqqoz6SkVlRiV6m
-         RJ6UWykhSVDMg==
+Content-Type: MULTIPART/MIXED; BOUNDARY="-844282404-27533672-1575590423=:11561"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/5/19 3:58 PM, Qian Cai wrote:
->=20
->=20
->> On Dec 5, 2019, at 6:24 PM, John Hubbard <jhubbard@nvidia.com> wrote:
->>
->> Let's check in the fix that is clearly correct and non-controversial, in=
- one
->> patch. Then another patch can be created for the other case. This allows=
- forward
->> progress and quick resolution of the user's bug report, while still deal=
-ing
->> with all the problems.
->>
->> If you try to fix too many problems in one patch (and remember, sometime=
-s ">1"
->> is too many), then things bog down. It's always a judgment call, but wha=
-t's=20
->> unfolding here is quite consistent with the usual judgment calls in this=
- area.
->>
->> I don't think anyone is saying, "don't work on the second problem", it's=
- just
->> that it's less urgent, due to no reports from the field. If you are pass=
-ionate
->> about fixing the second problem (and are ready and willing to handle the=
- fallout
->> from user space, if it occurs), then I'd encourage you to look into it.
->>
->> It could turn out to be one of those "cannot change this because user sp=
-ace expectations
->> have baked and hardened, and changes would break user space" situations,=
- just to
->> warn you in advance, though.
->=20
-> There is no need to paper over the underlying issue. One can think there =
-is only one problem. The way move_pages() deal with pages are already in th=
-e desired node. Then, I don=E2=80=99t see there is any controversy that it =
-was broken for so long and just restore it to according to the manpage. If =
-you worried about people has already depended on the broken behavior, it co=
-uld stay in linux-next for many releases to gather feedback. In any case, I=
- don=E2=80=99t see it need to hurry to fix this until someone can show the =
-real world use case for it apart from some random test code.
->=20
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Felix's code is not random test code. It's code he wrote and he expected it=
- to work.
+---844282404-27533672-1575590423=:11561
+Content-Type: TEXT/PLAIN; CHARSET=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Anyway, I've explained what I want here, and done my best to explain it. So=
- I'm=20
-dropping off now. :)
+On Tue, 3 Dec 2019, Coly Li wrote:
 
-thanks,
---=20
-John Hubbard
-NVIDIA
+> On 2019/12/3 3:34 上午, Eric Wheeler wrote:
+> > On Mon, 2 Dec 2019, Coly Li wrote:
+> >> On 2019/12/2 6:24 下午, kungf wrote:
+> >>> data may lost when in the follow scene of writeback mode:
+> >>> 1. client write data1 to bcache
+> >>> 2. client fdatasync
+> >>> 3. bcache flush cache set and backing device
+> >>> if now data1 was not writed back to backing, it was only guaranteed safe in cache.
+> >>> 4.then cache writeback data1 to backing with only REQ_OP_WRITE
+> >>> So data1 was not guaranteed in non-volatile storage,  it may lost if  power interruption 
+> >>>
+> >>
+> >> Hi,
+> >>
+> >> Do you encounter such problem in real work load ? With bcache journal, I
+> >> don't see the possibility of data lost with your description.
+> >>
+> >> Correct me if I am wrong.
+> >>
+> >> Coly Li
+> > 
+> > If this does become necessary, then we should have a sysfs or superblock 
+> > flag to disable FUA for those with RAID BBUs.
+> 
+> Hi Eric,
+> 
+> I doubt it is necessary to add FUA tag for all writeback bios, it is
+> unnecessary. If power failure happens after dirty data written to
+> backing device and the bkey turns into clean, a following read request
+> will go to cache device because the LBA can be indexed no matter it is
+> dirty or clean. Unless the bkey is invalidated from the B+tree, read
+> will always go to cache device firstly in writeback mode. If a power
+> failure happens before the cached bkey turns from dirty to clean, just
+> an extra writeback bio flushed from cache device to backing device with
+> identical data. Comparing the FUA tag for all writeback bios (it will be
+> really slow), the extra writeback IOs after a power failure is more
+> acceptable to me.
+
+I agree.  FWIW, I just learned about /sys/block/sdX/queue/write_cache from 
+Nikos Tsironis <ntsironis@arrikto.com>.  Thus, my flag request for a FUA 
+bypass isn't necessary anyway, even if you did want an FUA there, because 
+FUAs are stripped when a blockdev is set to "write back" (QUEUE_FLAG_WC).
+
+----------------------------------------------------------------------
+This happens in generic_make_request_checks():
+
+              /*
+               * Filter flush bio's early so that make_request based
+               * drivers without flush support don't have to worry
+               * about them.
+               */
+              if (op_is_flush(bio->bi_opf) &&
+                  !test_bit(QUEUE_FLAG_WC, &q->queue_flags)) {
+                      bio->bi_opf &= ~(REQ_PREFLUSH | REQ_FUA);
+                      if (!nr_sectors) {
+                              status = BLK_STS_OK;
+                              goto end_io;
+                      }
+              }
+----------------------------------------------------------------------
+
+-Eric
+
+> 
+> Coly Li
+> 
+> > 
+> >>> Signed-off-by: kungf <wings.wyang@gmail.com>
+> >>> ---
+> >>>  drivers/md/bcache/writeback.c | 2 +-
+> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
+> >>> index 4a40f9eadeaf..e5cecb60569e 100644
+> >>> --- a/drivers/md/bcache/writeback.c
+> >>> +++ b/drivers/md/bcache/writeback.c
+> >>> @@ -357,7 +357,7 @@ static void write_dirty(struct closure *cl)
+> >>>  	 */
+> >>>  	if (KEY_DIRTY(&w->key)) {
+> >>>  		dirty_init(w);
+> >>> -		bio_set_op_attrs(&io->bio, REQ_OP_WRITE, 0);
+> >>> +		bio_set_op_attrs(&io->bio, REQ_OP_WRITE | REQ_FUA, 0);
+> >>>  		io->bio.bi_iter.bi_sector = KEY_START(&w->key);
+> >>>  		bio_set_dev(&io->bio, io->dc->bdev);
+> >>>  		io->bio.bi_end_io	= dirty_endio;
+> >>>
+> >>
+> 
+---844282404-27533672-1575590423=:11561--
