@@ -6,77 +6,89 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A188DC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74854C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8552A24683
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43EC9206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfLFSUA (ORCPT
+        id S1726461AbfLFSUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 13:20:00 -0500
-Received: from gentwo.org ([3.19.106.255]:47162 "EHLO gentwo.org"
+        Fri, 6 Dec 2019 13:20:44 -0500
+Received: from muru.com ([72.249.23.125]:44270 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbfLFSUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 13:20:00 -0500
-Received: by gentwo.org (Postfix, from userid 1002)
-        id F0F143EE4A; Fri,  6 Dec 2019 18:19:58 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id F00093EE48;
-        Fri,  6 Dec 2019 18:19:58 +0000 (UTC)
-Date:   Fri, 6 Dec 2019 18:19:58 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     Qian Cai <cai@lca.pw>
-cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>, mtk.manpages@gmail.com,
-        akpm@linux-foundation.org, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] move_pages.2: not return ENOENT if the page are already
- on the target nodes
-In-Reply-To: <BE1B9B9B-17C2-4093-A332-183DF3B6F2A3@lca.pw>
-Message-ID: <alpine.DEB.2.21.1912061815160.17787@www.lameter.com>
-References: <5384814f-c937-9622-adbe-c03e199e0267@linux.alibaba.com> <BE1B9B9B-17C2-4093-A332-183DF3B6F2A3@lca.pw>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S1726298AbfLFSUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 13:20:44 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 277C08047;
+        Fri,  6 Dec 2019 18:21:22 +0000 (UTC)
+Date:   Fri, 6 Dec 2019 10:20:40 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Subject: Re: [PATCH] ARM: OMAP2+: Fix warnings with broken
+ omap2_set_init_voltage()
+Message-ID: <20191206182040.GH35479@atomide.com>
+References: <20190924233222.52757-1-tony@atomide.com>
+ <8FFD44DB-73F8-4807-91E1-C97DA8F781BA@goldelico.com>
+ <20191202213929.GB35479@atomide.com>
+ <EE749881-C3DB-4BBE-85FE-E5AF3D34884F@goldelico.com>
+ <BAF5B057-1017-4174-8C3F-4B49B31E2E0D@goldelico.com>
+ <20191203154447.GC35479@atomide.com>
+ <5F430C0D-7F25-4680-87B9-2D65A08A9F83@goldelico.com>
+ <FB42ED12-5DDB-4A9E-941A-ACBE2C10C36A@goldelico.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="531401748-481738838-1575656398=:17787"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <FB42ED12-5DDB-4A9E-941A-ACBE2C10C36A@goldelico.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+* H. Nikolaus Schaller <hns@goldelico.com> [191203 16:55]:
+> > What we could do is augment the printk (or dev_err) to tell
+> > in these warnings what it is looking for...
+> > 
+> > 	opp = dev_pm_opp_find_freq_ceil(dev, &freq);
+> > 	if (IS_ERR(opp)) {
+> > 		pr_err("%s: unable to find boot up OPP for vdd_%s freq %ulHz\n",
+> > 		__func__, vdd_name, freq);
+> > 		goto exit;
+> > 	}
+> 
+> Easier and always prints info:
+> 
+> 	freq = clk_get_rate(clk);
+> 	clk_put(clk);
+> 
+> 	pr_info("%s: vdd=%s clk=%s %luHz oh=%s\n", __func__, vdd_name, clk_name, freq, oh_name);
+> 
+> 	opp = dev_pm_opp_find_freq_ceil(dev, &freq);
+> 
+> I get this:
+> 
+> [    2.908142] omap2_set_init_voltage: vdd=mpu_iva clk=dpll1_ck 1000000000Hz oh=mpu
+> [    2.930816] omap2_set_init_voltage: vdd=core clk=l3_ick 200000000Hz oh=l3_main
+> [    2.946228] omap2_set_init_voltage: unable to find boot up OPP for vdd_core
+> [    2.953460] omap2_set_init_voltage: unable to set vdd_core
 
---531401748-481738838-1575656398=:17787
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+OK yeah that's more descriptive.
 
-On Fri, 6 Dec 2019, Qian Cai wrote:
+> Which means that cpufreq already has increased dpll1_ck to 1 GHz
+> (I have removed the turbo-mode tags so that it already boots at
+> full speed) and l3_ick runs at initial 200 MHz.
 
-> > On Dec 6, 2019, at 12:31 PM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
-> >
-> > It looks since commit e78bbfa82624 ("mm: stop returning -ENOENT from sys_move_pages() if nothing got migrated") too, which reset err to 0 unconditionally. It seems it is on purpose by that commit the syscall caller should check status for the details according to the commit log.
->
-> I don’t read it on purpose. “There is no point in returning -ENOENT from
-> sys_move_pages() if all pages were already on the right node”, so this
-> is only taking about the pages in the desired node. Anyway, but now it
-> is probably the best time to think outside the box redesigning this
-> syscalls and nuke this whole mess.
+OK. I wonder where this initial code should live though..
 
-The nature of the beast is that moving pages is not a deterministic
-process. The ability to move depends on pages being pinned and locked
-by other kernel subsystem. Other system components may also move the page
-independently.
+Regards,
 
-If the user calls this system call and wants to move some pages then he
-has presumably figured out somehow that pages are misplaced. If no pages
-can be moved then the system call did nothing which could indicate that
-some other process is interfering with the desire to move pages to certain
-nodes.
-
-This could be important to know (maybe the other system components already
-moved the page indepently or another user is also migrating pages).
---531401748-481738838-1575656398=:17787--
+Tony
