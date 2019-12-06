@@ -2,206 +2,204 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC6FC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1058AC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C26A221823
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0D921823
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:13:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUfAUSF3"
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="q1u3F8rY";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OIfCWXxt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbfLFAJz (ORCPT
+        id S1726209AbfLFAND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 19:09:55 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41194 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfLFAJz (ORCPT
+        Thu, 5 Dec 2019 19:13:03 -0500
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:51985 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725926AbfLFAND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 19:09:55 -0500
-Received: by mail-ed1-f67.google.com with SMTP id c26so4283414eds.8;
-        Thu, 05 Dec 2019 16:09:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Pu7aZrCRpmbK9eIe5VfBppycurruZf1/Fg8oPrOmz5w=;
-        b=dUfAUSF3rN9GOZKG6L738lHqvfLhWP7D3l3q8HabmB/Q19pH1Zm2WmRf2gsukMZ0b4
-         kmdQoNOac/RjKeM+NUqzxBxixVEbzr9z1WUQheWM/NVseOfrvwfBgfxhm19KX6JSnWTn
-         8BKH1Jb8fTcUyUmNCut4nStLy/+Jnv1UIbtWfPqPtkkXyWqB70z0FPFjPlvpT3rdxkp/
-         VBP/iw7ks6/QwXJiyZ1BEBsbpDVYA/LBMAcQLToSxB0+hrJA05/P4J64gfQY2ub3QR/e
-         tfl/83XdOZEZFwOmP8efU+yBB3YJi1LwpUAMy/N5oY4JXmA7/XVzb8U78y1GCiybGhka
-         jWEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Pu7aZrCRpmbK9eIe5VfBppycurruZf1/Fg8oPrOmz5w=;
-        b=QkWV7MSYqXwxIL2+j4DGmmLtjO0OoAIdntT3DfTkowAM+jKltmjFPddeuydIC/Pcyv
-         8kEYKdL+Opx4I8FqBCT1seAcKMxtUTWsgCZA0nGJk695rd/2NAk9LBxHy2KidBctc60x
-         YJRCgvOkTcwhRUBslMhPO1SzUVjARb4hK7MWUpd0SS8uWqXXZ9mM1rzIncdpHA2ZHV5L
-         tI1O9Bfs7p4qZmi9JxySbBBcktdYRlhe5oMG3SzHnD2DCNhRmiczynY5TmoojwS5+OzL
-         uNUHF3TyfTGgqYsF1RA7lBL4hB58aTpiQq4TpTq/MG/8HcRkrMPXo+CIQOcca9rQeD+R
-         XoFQ==
-X-Gm-Message-State: APjAAAWmjbL+CntpxVo3sJY9xfBpKV6UweOECe0cr6c6Sql9Gfy5oiPu
-        L3D/g9Rcuod2aV66C5on5VHuBMxk
-X-Google-Smtp-Source: APXvYqyrKCmObwIrxCughrq6gD80iLhJ2CFPGdEFQyBC+9iOmemQL2sVfeAqxlw3KYi/fFhqNlDzDQ==
-X-Received: by 2002:aa7:c701:: with SMTP id i1mr13463950edq.247.1575590992681;
-        Thu, 05 Dec 2019 16:09:52 -0800 (PST)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id w5sm140974eje.14.2019.12.05.16.09.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 16:09:51 -0800 (PST)
-Subject: Re: [PATCH 1/2] dt-bindings: soc: Add binding doc for iProc IDM
- device
-To:     Ray Jui <ray.jui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-References: <20191202233127.31160-1-ray.jui@broadcom.com>
- <20191202233127.31160-2-ray.jui@broadcom.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <62254bbb-168e-c0ad-a72d-bd659a2c23fa@gmail.com>
-Date:   Thu, 5 Dec 2019 16:09:48 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 5 Dec 2019 19:13:03 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 02D8E86B;
+        Thu,  5 Dec 2019 19:12:59 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 05 Dec 2019 19:13:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=fz1pVXQGQqPw7fMZqdwqo5yGT8
+        GE1PKnAQW+yVWgJV0=; b=q1u3F8rYdcY9H5WwJeAzUeAIOnOQdgJnFD1/QsYJtl
+        RRe7oN6YkdxYmKhApiArgPy7VrHHnNarfFFCOPqr9xKBqICMtgwmbEfxs3wLRjXr
+        QTfKgBGkX02Ez1hBmUnoxwIdOMGv+b/h/t8NaACHxc8KGUBf76tNaNlNTV02gBDl
+        Wr7xLsaFMbmRG35K0//M1oVAPuNlLfPPU/JG1yRn6pVgRaFEIjGE0ovq8hxwTktU
+        UVrt6tqjzavkxgsLOfMVpv4huPgxd4nApRtpbMAsO9K1CBPyHfqIYIrIRGmYGHk0
+        ZOp+rn6byY2oyvPkYieaYEMfRFu1oKz7Xrp2P4/J47fg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=fz1pVXQGQqPw7fMZq
+        dwqo5yGT8GE1PKnAQW+yVWgJV0=; b=OIfCWXxtwLG8CHraktq8HVxWmHQ/5w+1b
+        4kDvQIpauZDx7PBkBB9uYhdg8zqh6Paw3VYzzoMJ9FbAErWjQ1qoG2TV/XrsY1Sb
+        ZmdCedq9BVr1NTiu2QzUhxVOD5jxp3vQItiF7M45IRot+4kgLbWu6wIKsWGAyhOD
+        tnUiQr7IOg7grDfNQLgfQFEExYiyKqs+7bah0WHMGSpbTdKop50A0Jgt89idoAJK
+        MvfZ0KOveVpyNVu8vyr0A/ZLbIdunfGhhEM3O8s5tY0c3cXQcbGDXMVUL12DLO5U
+        3s0WqSAnPcqupVXEbFvQ32JWDB7y7jsCkLfqxj26wUR+MmqGuf6wg==
+X-ME-Sender: <xms:Cp3pXSB3GFN0nGQV23psR1i7PmDGZfYp7d5-8qrsOq8SLrnjprrfNQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudekuddgudekfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhephf
+    fvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceougig
+    uhesugiguhhuuhdrgiihiieqnecukfhppeejfedrleefrddvgeejrddufeegnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiinecuvehluhhsthgvrhfu
+    ihiivgeptd
+X-ME-Proxy: <xmx:Cp3pXULxqOWGFrErZbggpanLYLVoGbBQ7vtjpUcFLIgZsiYnJI_bOQ>
+    <xmx:Cp3pXVwMUUxTaJXi0fbjUIAG_1RyldRUxwhtOCW4aPYzOP0RXXNNCQ>
+    <xmx:Cp3pXYzQLuNzgMnkwhVjbKqzeD058bielN2rtsqPA-STQ3x0vdiWVA>
+    <xmx:C53pXX7WjExU2RyRdGAcOCp3yy4rM2zesO_T3lICaLJGOzkjcPRvyRxrKg4>
+Received: from localhost.localdomain (c-73-93-247-134.hsd1.ca.comcast.net [73.93.247.134])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 12F6180065;
+        Thu,  5 Dec 2019 19:12:56 -0500 (EST)
+From:   Daniel Xu <dxu@dxuuu.xyz>
+To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, kafai@fb.com,
+        songliubraving@fb.com, andriin@fb.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     Daniel Xu <dxu@dxuuu.xyz>, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCH bpf] bpf: Add LBR data to BPF_PROG_TYPE_PERF_EVENT prog context
+Date:   Thu,  5 Dec 2019 16:12:26 -0800
+Message-Id: <20191206001226.67825-1-dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20191202233127.31160-2-ray.jui@broadcom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/2/19 3:31 PM, Ray Jui wrote:
-> Add binding document for iProc based IDM devices.
-> 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+Last-branch-record is an intel CPU feature that can be configured to
+record certain branches that are taken during code execution. This data
+is particularly interesting for profile guided optimizations. perf has
+had LBR support for a while but the data collection can be a bit coarse
+grained.
 
-Looks good to me, it's 2019, nearly 2020, maybe make this a YAML
-compatible binding since it is a new one?
+We (Facebook) have recently run a lot of experiments with feeding
+filtered LBR data to various PGO pipelines. We've seen really good
+results (+2.5% throughput with lower cpu util and lower latency) by
+feeding high request latency LBR branches to the compiler on a
+request-oriented service. We used bpf to read a special request context
+ID (which is how we associate branches with latency) from a fixed
+userspace address. Reading from the fixed address is why bpf support is
+useful.
 
-> ---
->  .../bindings/soc/bcm/brcm,iproc-idm.txt       | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
-> new file mode 100644
-> index 000000000000..388c6b036d7e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
-> @@ -0,0 +1,44 @@
-> +Broadcom iProc Interconnect Device Management (IDM) device
-> +
-> +The Broadcom iProc IDM device allows control and monitoring of ASIC internal
-> +bus transactions. Most importantly, it can be configured to detect bus
-> +transaction timeout. In such case, critical information such as transaction
-> +address that caused the error, bus master ID of the transaction that caused
-> +the error, and etc., are made available from the IDM device.
-> +
-> +-------------------------------------------------------------------------------
-> +
-> +Required properties for IDM device node:
-> +- compatible: must be "brcm,iproc-idm"
-> +- reg: base address and length of the IDM register space
-> +- interrupt: IDM interrupt number
-> +- brcm,iproc-idm-bus: IDM bus string
-> +
-> +Optional properties for IDM device node:
-> +- brcm,iproc-idm-elog: phandle to the device node of the IDM logging device
-> +
-> +-------------------------------------------------------------------------------
-> +
-> +Required properties for IDM error logging device node:
-> +- compatible: must be "brcm,iproc-idm-elog";
-> +- reg: base address and length of reserved memory location where IDM error
-> +  events can be saved
-> +
-> +-------------------------------------------------------------------------------
-> +
-> +Example:
-> +
-> +idm {
-> +	idm-elog {
-> +		compatible = "brcm,iproc-idm-elog";
-> +		reg = <0x8f221000 0x1000>;
-> +	};
-> +
-> +	idm-mhb-paxc-axi {
-> +		compatible = "brcm,iproc-idm";
-> +		reg = <0x60406900 0x200>;
-> +		interrupt = <GIC_SPI 516 IRQ_TYPE_LEVEL_HIGH>;
-> +		brcm,iproc-idm-bus = "idm-mhb-paxc-axi";
-> +		brcm,iproc-idm-elog = <&idm-elog>;
-> +	};
-> +};
-> 
+Aside from this particular use case, having LBR data available to bpf
+progs can be useful to get stack traces out of userspace applications
+that omit frame pointers.
 
+This patch adds support for LBR data to bpf perf progs.
 
+Some notes:
+* We use `__u64 entries[BPF_MAX_LBR_ENTRIES * 3]` instead of
+  `struct perf_branch_entry[BPF_MAX_LBR_ENTRIES]` because checkpatch.pl
+  warns about including a uapi header from another uapi header
+
+* We define BPF_MAX_LBR_ENTRIES as 32 (instead of using the value from
+  arch/x86/events/perf_events.h) because including arch specific headers
+  seems wrong and could introduce circular header includes.
+
+Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+---
+ include/uapi/linux/bpf_perf_event.h |  5 ++++
+ kernel/trace/bpf_trace.c            | 39 +++++++++++++++++++++++++++++
+ 2 files changed, 44 insertions(+)
+
+diff --git a/include/uapi/linux/bpf_perf_event.h b/include/uapi/linux/bpf_perf_event.h
+index eb1b9d21250c..dc87e3d50390 100644
+--- a/include/uapi/linux/bpf_perf_event.h
++++ b/include/uapi/linux/bpf_perf_event.h
+@@ -10,10 +10,15 @@
+ 
+ #include <asm/bpf_perf_event.h>
+ 
++#define BPF_MAX_LBR_ENTRIES 32
++
+ struct bpf_perf_event_data {
+ 	bpf_user_pt_regs_t regs;
+ 	__u64 sample_period;
+ 	__u64 addr;
++	__u64 nr_lbr;
++	/* Cast to struct perf_branch_entry* before using */
++	__u64 entries[BPF_MAX_LBR_ENTRIES * 3];
+ };
+ 
+ #endif /* _UAPI__LINUX_BPF_PERF_EVENT_H__ */
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index ffc91d4935ac..96ba7995b3d7 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1259,6 +1259,14 @@ static bool pe_prog_is_valid_access(int off, int size, enum bpf_access_type type
+ 		if (!bpf_ctx_narrow_access_ok(off, size, size_u64))
+ 			return false;
+ 		break;
++	case bpf_ctx_range(struct bpf_perf_event_data, nr_lbr):
++		bpf_ctx_record_field_size(info, size_u64);
++		if (!bpf_ctx_narrow_access_ok(off, size, size_u64))
++			return false;
++		break;
++	case bpf_ctx_range(struct bpf_perf_event_data, entries):
++		/* No narrow loads */
++		break;
+ 	default:
+ 		if (size != sizeof(long))
+ 			return false;
+@@ -1273,6 +1281,7 @@ static u32 pe_prog_convert_ctx_access(enum bpf_access_type type,
+ 				      struct bpf_prog *prog, u32 *target_size)
+ {
+ 	struct bpf_insn *insn = insn_buf;
++	int off;
+ 
+ 	switch (si->off) {
+ 	case offsetof(struct bpf_perf_event_data, sample_period):
+@@ -1291,6 +1300,36 @@ static u32 pe_prog_convert_ctx_access(enum bpf_access_type type,
+ 				      bpf_target_off(struct perf_sample_data, addr, 8,
+ 						     target_size));
+ 		break;
++	case offsetof(struct bpf_perf_event_data, nr_lbr):
++		/* Load struct perf_sample_data* */
++		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct bpf_perf_event_data_kern,
++						       data), si->dst_reg, si->src_reg,
++				      offsetof(struct bpf_perf_event_data_kern, data));
++		/* Load struct perf_branch_stack* */
++		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct perf_sample_data, br_stack),
++				      si->dst_reg, si->dst_reg,
++				      offsetof(struct perf_sample_data, br_stack));
++		/* Load nr */
++		*insn++ = BPF_LDX_MEM(BPF_DW, si->dst_reg, si->dst_reg,
++				      bpf_target_off(struct perf_branch_stack, nr, 8,
++						     target_size));
++		break;
++	case bpf_ctx_range(struct bpf_perf_event_data, entries):
++		off = si->off;
++		off -= offsetof(struct bpf_perf_event_data, entries);
++
++		/* Load struct perf_sample_data* */
++		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct bpf_perf_event_data_kern,
++						       data), si->dst_reg, si->src_reg,
++				      offsetof(struct bpf_perf_event_data_kern, data));
++		/* Load struct perf_branch_stack* */
++		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct perf_sample_data, br_stack),
++				      si->dst_reg, si->dst_reg,
++				      offsetof(struct perf_sample_data, br_stack));
++		/* Load requested memory */
++		*insn++ = BPF_LDX_MEM(BPF_SIZE(si->code), si->dst_reg, si->dst_reg,
++				      offsetof(struct perf_branch_stack, entries) + off);
++		break;
+ 	default:
+ 		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct bpf_perf_event_data_kern,
+ 						       regs), si->dst_reg, si->src_reg,
 -- 
-Florian
+2.24.0
+
