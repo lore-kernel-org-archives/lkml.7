@@ -2,144 +2,102 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEC3C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A5FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C3E24659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D66DF24659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfLFGwp (ORCPT
+        id S1726397AbfLFGxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 01:52:45 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:44948 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfLFGwp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 01:52:45 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47Tjvb3xPkzQlBQ;
-        Fri,  6 Dec 2019 07:52:43 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id 8NucHSJ0hqGc; Fri,  6 Dec 2019 07:52:39 +0100 (CET)
-Date:   Fri, 6 Dec 2019 17:52:30 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     Jann Horn <jannh@google.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: Re: [RFC PATCH] ptrace: add PTRACE_GETFD request
-Message-ID: <20191206065230.uddea7uhslmfemrw@yavin.dot.cyphar.com>
-References: <20191205234450.GA26369@ircssh-2.c.rugged-nimbus-611.internal>
- <CAG48ez0_CCxO=stFvK=4G4Og=xe9Rtws8PEVy-cSmLqcxfE2Zw@mail.gmail.com>
- <CAMp4zn85sz_y8EvXUULVY0a0fAmg91pFkYX5zZSXDz6Q-EiUoA@mail.gmail.com>
+        Fri, 6 Dec 2019 01:53:10 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37418 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725858AbfLFGxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 01:53:10 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5006FFFC772847A8BCAD;
+        Fri,  6 Dec 2019 14:53:08 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Dec 2019
+ 14:52:59 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <thierry.reding@gmail.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <jonathanh@nvidia.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] drm/tegra: sor: Fix unused function warnings
+Date:   Fri, 6 Dec 2019 14:47:41 +0800
+Message-ID: <20191206064741.23432-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cumsf4lv6dzy3snz"
-Content-Disposition: inline
-In-Reply-To: <CAMp4zn85sz_y8EvXUULVY0a0fAmg91pFkYX5zZSXDz6Q-EiUoA@mail.gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+drivers/gpu/drm/tegra/sor.c:3984:12: warning: 'tegra_sor_resume' defined but not used [-Wunused-function]
+drivers/gpu/drm/tegra/sor.c:3970:12: warning: 'tegra_sor_suspend' defined but not used [-Wunused-function]
+drivers/gpu/drm/tegra/sor.c:3937:12: warning: 'tegra_sor_runtime_resume' defined but not used [-Wunused-function]
+drivers/gpu/drm/tegra/sor.c:3915:12: warning: 'tegra_sor_runtime_suspend' defined but not used [-Wunused-function]
 
---cumsf4lv6dzy3snz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Mark these functions as __maybe_unused so gcc can drop them
+silently.
 
-On 2019-12-05, Sargun Dhillon <sargun@sargun.me> wrote:
-> On Thu, Dec 5, 2019 at 6:38 PM Jann Horn <jannh@google.com> wrote:
-> >
-> > On Fri, Dec 6, 2019 at 12:44 AM Sargun Dhillon <sargun@sargun.me> wrote:
-> > > PTRACE_GETFD is a generic ptrace API that allows the tracer to
-> > > get file descriptors from the traceee.
-> >
-> > typo: tracee
-> >
-> > > The primary reason to use this syscall is to allow sandboxers to
-> > > take action on an FD on behalf of the tracee. For example, this
-> > > can be combined with seccomp's user notification feature to extract
-> > > a file descriptor and call privileged syscalls, like binding
-> > > a socket to a privileged port.
-> > [...]
-> > > +/* This gets a file descriptor from a running process. It doesn't re=
-quire the
-> > > + * process to be stopped.
-> > > + */
-> > > +#define PTRACE_GETFD   0x420f
-> > [...]
-> > > +static int ptrace_getfd(struct task_struct *child, unsigned long fd)
-> >
-> > I'd make the "fd" parameter of this function an "unsigned int", given
-> > that that's also the argument type of fcheck_files().
-> >
-> > > +{
-> > > +       struct files_struct *files;
-> > > +       struct file *file;
-> > > +       int ret =3D 0;
-> > > +
-> > > +       files =3D get_files_struct(child);
-> > > +       if (!files)
-> > > +               return -ENOENT;
-> > > +
-> > > +       spin_lock(&files->file_lock);
-> > > +       file =3D fcheck_files(files, fd);
-> > > +       if (!file)
-> > > +               ret =3D -EBADF;
-> > > +       else
-> > > +               get_file(file);
-> > > +       spin_unlock(&files->file_lock);
-> > > +       put_files_struct(files);
-> > > +
-> > > +       if (ret)
-> > > +               goto out;
-> > > +
-> > > +       ret =3D get_unused_fd_flags(0);
-> >
-> > You're hardcoding the flags for the fd as 0, which means that there is
-> > no way for the caller to enable O_CLOEXEC on the fd in a way that is
-> > race-free against a concurrent execve(). If you can't easily plumb
-> > through an O_CLOEXEC flag from userspace to here, you should probably
-> > hardcode O_CLOEXEC here.
-> >
-> I thought about making addr used for flags. It seems a little weird,
-> given the name, but it'll do the job. Alternatively, it could be a
-> point to an options struct. If we introduce options, one of the nice
-> things we could add is add the ability to cleanse the FD of certain
-> information, like cgroups.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/gpu/drm/tegra/sor.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-If you do end up opting for an options struct, please make sure you use
-copy_struct_from_user() or something similar so that we can painlessly
-extend it in the future (if necessary). Since there isn't an additional
-argument, you might want to do what perf_event_open() does and embed the
-size as the first field of the options struct.
+diff --git a/drivers/gpu/drm/tegra/sor.c b/drivers/gpu/drm/tegra/sor.c
+index a68d3b3..69b9ebe 100644
+--- a/drivers/gpu/drm/tegra/sor.c
++++ b/drivers/gpu/drm/tegra/sor.c
+@@ -3912,7 +3912,7 @@ static int tegra_sor_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static int tegra_sor_runtime_suspend(struct device *dev)
++static int __maybe_unused tegra_sor_runtime_suspend(struct device *dev)
+ {
+ 	struct tegra_sor *sor = dev_get_drvdata(dev);
+ 	int err;
+@@ -3934,7 +3934,7 @@ static int tegra_sor_runtime_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int tegra_sor_runtime_resume(struct device *dev)
++static int __maybe_unused tegra_sor_runtime_resume(struct device *dev)
+ {
+ 	struct tegra_sor *sor = dev_get_drvdata(dev);
+ 	int err;
+@@ -3967,7 +3967,7 @@ static int tegra_sor_runtime_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int tegra_sor_suspend(struct device *dev)
++static int __maybe_unused tegra_sor_suspend(struct device *dev)
+ {
+ 	struct tegra_sor *sor = dev_get_drvdata(dev);
+ 	int err;
+@@ -3981,7 +3981,7 @@ static int tegra_sor_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int tegra_sor_resume(struct device *dev)
++static int __maybe_unused tegra_sor_resume(struct device *dev)
+ {
+ 	struct tegra_sor *sor = dev_get_drvdata(dev);
+ 	int err;
+-- 
+2.7.4
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
 
---cumsf4lv6dzy3snz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXen6qgAKCRCdlLljIbnQ
-EhQlAP4roSXSw1CdkPHQv45bE+qCNKoo5kwo6mVCLOWj3jQp6AEA49yr/WUUwAPL
-Jg2a71AZ1Dd0MwKVAyG6T9ViqGPxlgE=
-=oc5i
------END PGP SIGNATURE-----
-
---cumsf4lv6dzy3snz--
