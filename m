@@ -2,178 +2,141 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B68C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF83C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B9821835
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:48:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575636486;
-	bh=EAvEnkkvOACU3sTjJ8LJHC33CNAeqgd5O8xnbCoNGHI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Juvi5oX2qm9D7XBbrpPmibdvH46jUKvsYltsht4yONffZubsy2s2Fl94zDEZW75wR
-	 BWVSgrRR2j7n727F4gyuC8DTgc6pOzpasj57/x9mg0Gj3XSq6sDGdwa0SPb5McA/93
-	 Dii1vbpjcZtuzcZ0/HlyjPaHrcbUAR5BL89zXvdA=
+	by mail.kernel.org (Postfix) with ESMTP id 247AD205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:48:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XEKnfpA2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfLFMsF (ORCPT
+        id S1726321AbfLFMs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:48:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfLFMsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:48:05 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EDF2205F4;
-        Fri,  6 Dec 2019 12:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575636484;
-        bh=EAvEnkkvOACU3sTjJ8LJHC33CNAeqgd5O8xnbCoNGHI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z8O3FTtmds3NfL0eaaWrqVeGod4cU1RlRvmbinaGEBGCryDrHEwCwnlYbf+obER7t
-         NZ2fuZzcu+QqnQ4prBoCUXSYl5tu4VTpw+sFElujF01j5Pu/roVLspvkaTgQiY/2qM
-         FyBeH+cjRSlklEAmeczWsCeoERj0ST+BpF7W6A6k=
-Date:   Fri, 6 Dec 2019 13:48:01 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc:     mpe@ellerman.id.au, mahesh@linux.vnet.ibm.com,
-        hbathini@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@ozlabs.org, corbet@lwn.net, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] powerpc/powernv: move core and
- fadump_release_opalcore under new kobject
-Message-ID: <20191206124801.GD1360047@kroah.com>
-References: <20191206122434.29587-1-sourabhjain@linux.ibm.com>
- <20191206122434.29587-5-sourabhjain@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206122434.29587-5-sourabhjain@linux.ibm.com>
+        Fri, 6 Dec 2019 07:48:29 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:58434 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfLFMs2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 07:48:28 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191206124827euoutp014c1e9b53f4411cbf58801bb3795c81cc~dyQ4ZO7gq1766517665euoutp01N
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Dec 2019 12:48:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191206124827euoutp014c1e9b53f4411cbf58801bb3795c81cc~dyQ4ZO7gq1766517665euoutp01N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575636507;
+        bh=0mPnHOxifTMNnDk+T8fh9C2CByasDOb3u9TlEkhdvR4=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=XEKnfpA2fXDm6f5sVUNBzF7SDyQ1nqBIgq4EY0vg8um2pjYjvIHpvcujsVYUUS+MY
+         YT2nVXy5GJkcgdTGuFIUKb7YD4WpX+PgQhz9arZ7Maplnf7kA0L63vK+8NLaNNeNNF
+         NjXAN/+5hSBn+z7ELVvB48UA9CXcFWpW0JyQqQWs=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191206124826eucas1p1e6e997b1a7927169c80d7d73249bd548~dyQ4LYOdH0877408774eucas1p1h;
+        Fri,  6 Dec 2019 12:48:26 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 49.77.60679.A1E4AED5; Fri,  6
+        Dec 2019 12:48:26 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191206124826eucas1p246538607df51f2d68bce3b09d974b292~dyQ34_iYE2365523655eucas1p2u;
+        Fri,  6 Dec 2019 12:48:26 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191206124826eusmtrp2e9ec69db6caf0d03d430b187952856dd~dyQ34Z2LY3235632356eusmtrp25;
+        Fri,  6 Dec 2019 12:48:26 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-4b-5dea4e1aa5a0
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 91.86.08375.A1E4AED5; Fri,  6
+        Dec 2019 12:48:26 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191206124825eusmtip216330cd05f244d74a0f3faecf941c28a~dyQ3Xd6RI0676806768eusmtip2B;
+        Fri,  6 Dec 2019 12:48:25 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Kusanagi Kouichi <slash@ac.auone-net.jp>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v2] arm: exynos_config: Restore debugfs support
+Date:   Fri,  6 Dec 2019 13:47:21 +0100
+Message-Id: <20191206124721.9025-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOIsWRmVeSWpSXmKPExsWy7djP87pSfq9iDbY90LXYOGM9q8X58xvY
+        LTY9vsZqcXnXHDaLGef3MVmsPXKX3WJfxwMmi+evzjI7cHisWLSX3aNl3y12j02rOtk8Ni+p
+        9+jbsorR4/MmuQC2KC6blNSczLLUIn27BK6M8+t/sBTs5qz4ePwlUwPjNI4uRk4OCQETicPX
+        rjJ1MXJxCAmsYJRo33SVHcL5wihxZdsbFgjnM6PEjWtH2WFarh/aB9WynFFidtc/FpAEWMuz
+        yYkgNpuAoUTX2y42EFtEIFui8/EDRpAGZoFHjBJ/dl5nAkkIC9hL7LuwixHEZhFQlVjRvRQs
+        zitgI7Fy5U+obfISqzccYIawn7NJTH4nCmG7SGye+YMJwhaWeHV8C1S9jMT/nfPBrpMQaGaU
+        eHhuLTuE08MocblpBiNElbXE4eMXWbsYOYBO0pRYv0sfxJQQcJRYskQZwuSTuPFWEKSYGcic
+        tG06M0SYV6KjTQhihprErOPr4LYevHAJ6koPiafrTzBDgiRWomfbfLYJjHKzEFYtYGRcxSie
+        Wlqcm55abJSXWq5XnJhbXJqXrpecn7uJEZgcTv87/mUH464/SYcYBTgYlXh4Z3x+ESvEmlhW
+        XJl7iFGCg1lJhDed72WsEG9KYmVValF+fFFpTmrxIUZpDhYlcV7jRUApgfTEktTs1NSC1CKY
+        LBMHp1QDI0PLcrP1E0veiShZ52gunGXyS/pZQYn3GoYrX/aaBUhd+hFh0v04Vrtsm4cOc8Wy
+        bvFpfruma8yUM0jb9FxjmfIfXtYT3HlLWoTniCvdmykWfuWU3Fy3fosV4SvCm76tnjBhg4ST
+        bfezrNnb4r6dXr1mWRujFcvR3lVM1wSrXhss2ilXuD6PX4mlOCPRUIu5qDgRADJOk0kKAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLLMWRmVeSWpSXmKPExsVy+t/xe7pSfq9iDdbtFbfYOGM9q8X58xvY
+        LTY9vsZqcXnXHDaLGef3MVmsPXKX3WJfxwMmi+evzjI7cHisWLSX3aNl3y12j02rOtk8Ni+p
+        9+jbsorR4/MmuQC2KD2bovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSc
+        zLLUIn27BL2M8+t/sBTs5qz4ePwlUwPjNI4uRk4OCQETieuH9jGB2EICSxklpq7RhojLSJyc
+        1sAKYQtL/LnWxdbFyAVU84lR4t7Ey2wgCTYBQ4mutyAJDg4RgVyJN8vEQWqYBZ4wSpxad54R
+        pEZYwF5i34VdYDaLgKrEiu6lYMt4BWwkVq78yQ6xQF5i9YYDzBMYeRYwMqxiFEktLc5Nzy02
+        1CtOzC0uzUvXS87P3cQIDMptx35u3sF4aWPwIUYBDkYlHt4Zn1/ECrEmlhVX5h5ilOBgVhLh
+        Ted7GSvEm5JYWZValB9fVJqTWnyI0RRo+URmKdHkfGDE5JXEG5oamltYGpobmxubWSiJ83YI
+        HIwREkhPLEnNTk0tSC2C6WPi4JRqYLRdvzU4NH/fweRlmtv3GFX0THs0Z3Jg+BqO74vP/5Cz
+        zHZcvbDmGPvWPyphZRtvGEg3vN+i9Vlw26TXmUl7a+ZOy+L+r2a1T8t75RZZrl9yz6K2mR5W
+        TbioEvQxdmvR3a2G4lwdlt+eFcV/FyiWuBO8asfTKEVBu+ajHC/1Tr3pYXf32XTa6K8SS3FG
+        oqEWc1FxIgCjTb9tYAIAAA==
+X-CMS-MailID: 20191206124826eucas1p246538607df51f2d68bce3b09d974b292
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191206124826eucas1p246538607df51f2d68bce3b09d974b292
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191206124826eucas1p246538607df51f2d68bce3b09d974b292
+References: <CGME20191206124826eucas1p246538607df51f2d68bce3b09d974b292@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 05:54:32PM +0530, Sourabh Jain wrote:
-> The /sys/firmware/opal/core and /sys/kernel/fadump_release_opalcore sysfs
-> files are used to export and release the OPAL memory on PowerNV platform.
-> let's organize them into a new kobject under /sys/firmware/opal/mpipl/
-> directory.
-> 
-> A symlink is added to maintain the backward compatibility for
-> /sys/firmware/opal/core sysfs file.
-> 
-> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> ---
->  .../sysfs-kernel-fadump_release_opalcore      |  2 ++
->  .../powerpc/firmware-assisted-dump.rst        | 15 +++++----
->  arch/powerpc/platforms/powernv/opal-core.c    | 31 ++++++++++++++-----
->  3 files changed, 34 insertions(+), 14 deletions(-)
->  rename Documentation/ABI/{testing => removed}/sysfs-kernel-fadump_release_opalcore (82%)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore b/Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
-> similarity index 82%
-> rename from Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore
-> rename to Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
-> index 53313c1d4e7a..a8d46cd0f4e6 100644
-> --- a/Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore
-> +++ b/Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
-> @@ -1,3 +1,5 @@
-> +This ABI is moved to /sys/firmware/opal/mpipl/release_core.
-> +
->  What:		/sys/kernel/fadump_release_opalcore
->  Date:		Sep 2019
->  Contact:	linuxppc-dev@lists.ozlabs.org
-> diff --git a/Documentation/powerpc/firmware-assisted-dump.rst b/Documentation/powerpc/firmware-assisted-dump.rst
-> index 0455a78486d5..345a3405206e 100644
-> --- a/Documentation/powerpc/firmware-assisted-dump.rst
-> +++ b/Documentation/powerpc/firmware-assisted-dump.rst
-> @@ -112,13 +112,13 @@ to ensure that crash data is preserved to process later.
->  
->  -- On OPAL based machines (PowerNV), if the kernel is build with
->     CONFIG_OPAL_CORE=y, OPAL memory at the time of crash is also
-> -   exported as /sys/firmware/opal/core file. This procfs file is
-> +   exported as /sys/firmware/opal/mpipl/core file. This procfs file is
->     helpful in debugging OPAL crashes with GDB. The kernel memory
->     used for exporting this procfs file can be released by echo'ing
-> -   '1' to /sys/kernel/fadump_release_opalcore node.
-> +   '1' to /sys/firmware/opal/mpipl/release_core node.
->  
->     e.g.
-> -     # echo 1 > /sys/kernel/fadump_release_opalcore
-> +     # echo 1 > /sys/firmware/opal/mpipl/release_core
->  
->  Implementation details:
->  -----------------------
-> @@ -283,14 +283,17 @@ Here is the list of files under kernel sysfs:
->      enhanced to use this interface to release the memory reserved for
->      dump and continue without 2nd reboot.
->  
-> - /sys/kernel/fadump_release_opalcore
-> +Note: /sys/kernel/fadump_release_opalcore sysfs has moved to
-> +      /sys/firmware/opal/mpipl/release_core
-> +
-> + /sys/firmware/opal/mpipl/release_core
->  
->      This file is available only on OPAL based machines when FADump is
->      active during capture kernel. This is used to release the memory
-> -    used by the kernel to export /sys/firmware/opal/core file. To
-> +    used by the kernel to export /sys/firmware/opal/mpipl/core file. To
->      release this memory, echo '1' to it:
->  
-> -    echo 1  > /sys/kernel/fadump_release_opalcore
-> +    echo 1  > /sys/firmware/opal/mpipl/release_core
->  
->  Here is the list of files under powerpc debugfs:
->  (Assuming debugfs is mounted on /sys/kernel/debug directory.)
-> diff --git a/arch/powerpc/platforms/powernv/opal-core.c b/arch/powerpc/platforms/powernv/opal-core.c
-> index ed895d82c048..7fcc092d065e 100644
-> --- a/arch/powerpc/platforms/powernv/opal-core.c
-> +++ b/arch/powerpc/platforms/powernv/opal-core.c
-> @@ -589,7 +589,8 @@ static ssize_t fadump_release_opalcore_store(struct kobject *kobj,
->  	return count;
->  }
->  
-> -static struct kobj_attribute opalcore_rel_attr = __ATTR(fadump_release_opalcore,
-> +struct kobject *mpipl_kobj;
-> +static struct kobj_attribute opalcore_rel_attr = __ATTR(release_core,
->  						0200, NULL,
->  						fadump_release_opalcore_store);
+Commit 9f532d26c75c ("ARM: exynos_defconfig: Trim and reorganize with
+savedefconfig") removed explicit enable line for CONFIG_DEBUG_FS, because
+that feature has been selected by other enabled options: CONFIG_TRACING,
+which in turn had been selected by CONFIG_PERF_EVENTS and
+CONFIG_PROVE_LOCKING.
 
-__ATTR_WO()?
+In meantime, commit 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS
+dependency") removed the dependency between CONFIG_DEBUG_FS and
+CONFIG_TRACING, so CONFIG_DEBUG_FS is no longer enabled in default builds.
 
->  
-> @@ -609,7 +610,7 @@ static int __init opalcore_init(void)
->  	 * then capture the dump.
->  	 */
->  	if (!(is_opalcore_usable())) {
-> -		pr_err("Failed to export /sys/firmware/opal/core\n");
-> +		pr_err("Failed to export /sys/firmware/opal/mpipl/core\n");
->  		opalcore_cleanup();
->  		return rc;
->  	}
-> @@ -617,18 +618,32 @@ static int __init opalcore_init(void)
->  	/* Set OPAL core file size */
->  	opal_core_attr.size = oc_conf->opalcore_size;
->  
-> +	mpipl_kobj = kobject_create_and_add("mpipl", opal_kobj);
-> +	if (!mpipl_kobj) {
-> +		pr_err("unable to create mpipl kobject\n");
-> +		return -ENOMEM;
-> +	}
-> +
->  	/* Export OPAL core sysfs file */
-> -	rc = sysfs_create_bin_file(opal_kobj, &opal_core_attr);
-> +	rc = sysfs_create_bin_file(mpipl_kobj, &opal_core_attr);
+Enable it again explicitly, as debugfs support is essential for various
+automated testing tools.
 
-Again, create an attribute group and add everything all at once, makes
-it much simpler and your error cleanup logic will actually work :)
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ arch/arm/configs/exynos_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-thanks,
+diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+index dd3e0684f746..3758311bcc27 100644
+--- a/arch/arm/configs/exynos_defconfig
++++ b/arch/arm/configs/exynos_defconfig
+@@ -350,6 +350,7 @@ CONFIG_PRINTK_TIME=y
+ CONFIG_DYNAMIC_DEBUG=y
+ CONFIG_DEBUG_INFO=y
+ CONFIG_MAGIC_SYSRQ=y
++CONFIG_DEBUG_FS=y
+ CONFIG_DEBUG_KERNEL=y
+ CONFIG_SOFTLOCKUP_DETECTOR=y
+ # CONFIG_DETECT_HUNG_TASK is not set
+-- 
+2.17.1
 
-greg k-h
