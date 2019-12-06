@@ -3,104 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D4EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692FDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB57724670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF9524677
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:00:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="xPIWUQdV"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kI0cWx5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbfLFR64 (ORCPT
+        id S1726400AbfLFSAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 12:58:56 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38368 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfLFR6x (ORCPT
+        Fri, 6 Dec 2019 13:00:22 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:36250 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbfLFSAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 12:58:53 -0500
-Received: by mail-lf1-f67.google.com with SMTP id r14so5929146lfm.5
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 09:58:51 -0800 (PST)
+        Fri, 6 Dec 2019 13:00:21 -0500
+Received: by mail-qk1-f193.google.com with SMTP id s25so2259425qks.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 10:00:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=7NoV/MZ+gAAoZ3Ywqfb6WiDTdgr5NlWMlKnaR0k7Lzk=;
-        b=xPIWUQdV5LzJHwy1Das6+ElrkvtWT59j1TuYG5c0CnFe8LLvlFSbV1AtTFeH0eWFXm
-         2HnkXvu4+LhaB/Yyc6Ebd3e9DMzQ73EOBA1BaGU3IKNO1wb/NW4fMm1QBsghglhTDEsh
-         aXfN2NpslfWhdWrWWlqkiLSCx3qcUFW4tLvoU2mPH8fARaN/V9jIpo9b7v4OnPr5RxMY
-         Kd7JixMDVB6cbCQF91N8w16hdQxNpvwTU7Aq9EhAY4NyuLPEXBLiEWN7kTZ0ZZaTyRpE
-         fh+15LYfm2UTLuQdzbkGChhYwzZWsUZHpcmFNXb8TTHSPsKoU4uMeGzaLsOW6cZNteyT
-         A7iA==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=P3LTWZSy3wKY6Vq6kTnLV1Tg9rnX8ii3T/WLf2zHvfQ=;
+        b=kI0cWx5NuSFo5k3faOPPdQI0tSENAiIOy+0iW1MIzFCOFEvQw8Elx6iYtXcEDSfNyL
+         Gtu+YAXP5mow0XNbpLBkfILQkn0RTJ9EoHgohP/SlgxhcMGmYKq1ctN5S4fYYAVUaWyg
+         z4cV0LVDRK2PmjmUFKJPP3NlnU3E2pAYOOhq6q+dBXtuFU7AqfhtujGxf02k0dPjxi/y
+         hL+AhKRrNnvH2DNIYYcAfDEZJrfXtIDfZsK7NBHxKYCNVK/2Ie/m9PEnKGclC/QstxZd
+         us/75WT+kEtMKAYY8kA8s7aJWQNBgKhcNVbihGh9ctxBM9XgYEickxDgjV4ChkE8qZMI
+         86jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=7NoV/MZ+gAAoZ3Ywqfb6WiDTdgr5NlWMlKnaR0k7Lzk=;
-        b=CzSFuWZxveElaJmMAYslKkpJI76mQ4QvsN7GZh6tXnn3VkPLMaR/m8+SMnBQKadgl0
-         A8vSIJaPt7YBBhDaP4gokk1qB7zDhs9LkECzKIlBPpEUx4AUBW02xHICDq29BJwIkBYs
-         dbmlXsVvUUYdFZ5EBgaZ3FZyb1bIcIvYRdQAb9zFN8rdxyXJeuXxsaZKwNBCemIP1e5K
-         xLU5thpox0OEWGPSlgvUlbxvDYtSNtBbrrtDE6rKMwWn2YfQjfNeA5kvhljURgyDG4lD
-         ciZ18frSItd4c9GI0zfNVrsIwvDTdif2h6eIjsE1Ux/6yOqS0XabJnut67SG3mdq3lhK
-         1e6w==
-X-Gm-Message-State: APjAAAW9Hjty63HAjRgpXKr7atRYq4RBswtk8uY2D89nqNwbe6uCAuw3
-        nzPdu24aaYDvCFO6vs3HiH613g==
-X-Google-Smtp-Source: APXvYqxjLx+wuStYVrUdLvIoHiJhniLWG67QUZ6v3B2GX1ZIkBURojsq0dmiv9FisfdZMreI2xy4vw==
-X-Received: by 2002:a19:84d:: with SMTP id 74mr8623455lfi.122.1575655130609;
-        Fri, 06 Dec 2019 09:58:50 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id c9sm5959949ljd.28.2019.12.06.09.58.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 09:58:50 -0800 (PST)
-Date:   Fri, 6 Dec 2019 09:58:39 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     syzbot <syzbot+5013d47539cdd43e7098@syzkaller.appspotmail.com>
-Cc:     ast@kernel.org, aviadye@mellanox.com, borisp@mellanox.com,
-        bpf@vger.kernel.org, daniel@iogearbox.net, davejwatson@fb.com,
-        davem@davemloft.net, dirk.vandermerwe@netronome.com,
-        edumazet@google.com, eranbe@mellanox.com, eric.dumazet@gmail.com,
-        john.fastabend@gmail.com, kafai@fb.com, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        yoshfuji@linux-ipv6.org
-Subject: Re: kernel BUG at include/linux/mm.h:LINE! (5)
-Message-ID: <20191206095839.29d2024c@cakuba.netronome.com>
-In-Reply-To: <000000000000fdad650599064dc5@google.com>
-References: <00000000000054cc6d05834c33d7@google.com>
-        <000000000000fdad650599064dc5@google.com>
-Organization: Netronome Systems, Ltd.
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=P3LTWZSy3wKY6Vq6kTnLV1Tg9rnX8ii3T/WLf2zHvfQ=;
+        b=XAlQDh6mt579iQ0hchLh60Zl8lcwRLK2+AKp8fef3f+v10OkbmFbFE4Ye5A6VcW6Os
+         rl19G5qNn5036BW506F0e4ZiMNA7w/ty79adWg38oXVBon3ziXSfGn0whk12Naguphle
+         4UQXsICwY+ngimRJn/KwIueS/B6lPw+Hf1IprOw+Ld3X1fD442P3k8eQwVsZtoLJRPB2
+         q5MoW1QyhBdPOEfbtkyRdjZn0Yt4XFUvvwzKWt0j70TaxZv/P9H8fN1dIBlRftt39kFx
+         5g/yfq1s0oE5V9ApBDxp0w/iSxrhtYqPyhAMgMcCZdqEn0v/Z4IbYXSmAHOk2BCG41pG
+         BRtw==
+X-Gm-Message-State: APjAAAXqbuAfUdB+R1O/nRhSNmDj6bZgkUUR7RDuFR1HERK5xkWjy2QD
+        NrtUl8NRwL+JSa0rgBjbfzd8pw==
+X-Google-Smtp-Source: APXvYqwP+gBo+6PfKaigR1Kw07O69ViABs/txMEDMfngJPHE5IHMuZN320HNB8zHCAjZM2YVbHEZyw==
+X-Received: by 2002:a05:620a:101b:: with SMTP id z27mr14239078qkj.241.1575655220899;
+        Fri, 06 Dec 2019 10:00:20 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id p3sm6001073qkf.107.2019.12.06.10.00.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 10:00:20 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] move_pages.2: not return ENOENT if the page are already on the target nodes
+Date:   Fri, 6 Dec 2019 13:00:18 -0500
+Message-Id: <BE1B9B9B-17C2-4093-A332-183DF3B6F2A3@lca.pw>
+References: <5384814f-c937-9622-adbe-c03e199e0267@linux.alibaba.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>, mtk.manpages@gmail.com,
+        cl@linux.com, akpm@linux-foundation.org, linux-man@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <5384814f-c937-9622-adbe-c03e199e0267@linux.alibaba.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+X-Mailer: iPhone Mail (17B111)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 06 Dec 2019 02:14:00 -0800, syzbot wrote:
-> syzbot suspects this bug was fixed by commit:
-> 
-> commit 9354544cbccf68da1b047f8fb7b47630e3c8a59d
-> Author: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-> Date:   Mon Jun 24 04:26:58 2019 +0000
-> 
->      net/tls: fix page double free on TX cleanup
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12ebd77ae00000
-> start commit:   9e9322e5 selftest/net: Remove duplicate header
-> git tree:       net-next
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=47f2db597668ac40
-> dashboard link: https://syzkaller.appspot.com/bug?extid=5013d47539cdd43e7098
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148763eb200000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1416ff3d200000
-> 
-> If the result looks correct, please mark the bug fixed by replying with:
-> 
-> #syz fix: net/tls: fix page double free on TX cleanup
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-#syz fix: net/tls: fix page double free on TX cleanup
+
+> On Dec 6, 2019, at 12:31 PM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>=20
+> It looks since commit e78bbfa82624 ("mm: stop returning -ENOENT from sys_m=
+ove_pages() if nothing got migrated") too, which reset err to 0 unconditiona=
+lly. It seems it is on purpose by that commit the syscall caller should chec=
+k status for the details according to the commit log.
+
+I don=E2=80=99t read it on purpose. =E2=80=9CThere is no point in returning -=
+ENOENT from sys_move_pages() if all pages
+were already on the right node=E2=80=9D, so this is only taking about the pa=
+ges in the desired node. Anyway, but now it is probably the best time to thi=
+nk outside the box redesigning this syscalls and nuke this whole mess.=
