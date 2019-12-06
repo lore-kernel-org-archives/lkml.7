@@ -2,111 +2,154 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1B8C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6ADC2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E421E24673
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3FED24673
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:20:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iAS0ndSZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FVutT6I8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfLFPR4 (ORCPT
+        id S1726287AbfLFPUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 10:17:56 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42675 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbfLFPR4 (ORCPT
+        Fri, 6 Dec 2019 10:20:49 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60389 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726244AbfLFPUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 10:17:56 -0500
-Received: by mail-wr1-f66.google.com with SMTP id a15so8133195wrf.9
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 07:17:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6wZeYmwl/YXx/GXyGvgJM6YWiEkEWNw1TRB/m4JK2Mo=;
-        b=iAS0ndSZ4+L7Yw0ilQ4vuMWKIlFL9Qowv0BJ8daD8ZwPeyFRl8pT5AlYH01+oAvK54
-         JXsUAVYKh2EZlQby55NWapr2AXx8FvBl/g5UbdSlVtrRzMIOaKKYUNe3GKEv5PYXKAJJ
-         JouAwi8otTBJgZZA5/IIwwZ8fivE7ve70GTH+1dUBod8FFe8Cc2zeRTQVUGlDrTzjQlH
-         FxGkWNnFPKN1wegAEifsurvD8B0hIsLax2RMIJWC9rIxo+kUmcho8slLD9esEW8n9Qnk
-         hyhAdipsLvSRRWWoRJ/9612misRRgQSqgJPi5VDZuiMLObgBZdKam4Qm5/S5JYgw6m4g
-         eNyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6wZeYmwl/YXx/GXyGvgJM6YWiEkEWNw1TRB/m4JK2Mo=;
-        b=J2lLio1vFQQubMj6CSN+1ZNou0YzzndaS7LUSzwnpWsYcq7h3x8YCjBFc1f5bm0B6k
-         qY+vyT1XwtCSDeA9gb5ikvfvpJNw88rrZz9+YU6e8znbW8mIR61PTWyK5N6HeLSTGJ4u
-         WkfeVWEIiKXXAXeCl96qRTcIi+OUDTU4jDff4sy0NfbQHTpYqHLVK6s1ZMR1rlb1LPD9
-         CHfLhS5mvkpuE2BAIGXhbqfbS5sGi5UD8J5dAFf1EsRNhG3+m2teLkDkQ3gwpYtl08Tb
-         DWpvLnvHlNuX7WkzuOaY+TL6j3lCaCn7OC3t/muhz5jTirfW80+vitkRnNGEey1cKwKz
-         5sSw==
-X-Gm-Message-State: APjAAAV1X/7JjOpy++cGAAWnDCnsUlsq2tyxaEEz3AejLRd0H9G1jw0g
-        uAm7DvooXfilgGV88e7y7IQ=
-X-Google-Smtp-Source: APXvYqzgtOQLhZ0eIRYIqblo1OUpve9MsEMDDEcKOnCYwn64157LXZf53QH0NFo4rwIHxXlbLbCN2w==
-X-Received: by 2002:a5d:6390:: with SMTP id p16mr16862837wru.170.1575645474304;
-        Fri, 06 Dec 2019 07:17:54 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id 5sm16932021wrh.5.2019.12.06.07.17.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 06 Dec 2019 07:17:53 -0800 (PST)
-Date:   Fri, 6 Dec 2019 15:17:52 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, richard.weiyang@gmail.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.or,
-        tglx@linutronix.de
-Subject: Re: [Patch v2 4/6] x86/mm: Refine debug print string retrieval
- function
-Message-ID: <20191206151752.phfiyls3govuqeja@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20191205021403.25606-1-richardw.yang@linux.intel.com>
- <20191205021403.25606-5-richardw.yang@linux.intel.com>
- <20191205091311.GD2810@hirez.programming.kicks-ass.net>
- <20191206015126.GB3846@richard>
- <20191206102746.GD2844@hirez.programming.kicks-ass.net>
+        Fri, 6 Dec 2019 10:20:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575645646;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Pfl977vnjhBWvFbZf/0f4eWRm+7D+y6Nr6bdSL6ElAo=;
+        b=FVutT6I8snFSZRnzOAVnkeqkVf6TF203ltNXybo8Ml0bFZ8iEA1yl/1pBGtbOyRlidA7Li
+        rYRK2XNRVCdJhQ5f4od2GSyc1cW3b+82A+VYx57y6UWsyS/InolHxizUbHM3PBZc+H3oGj
+        hYSIm+wk33HEsFy2gHNA60+du6rguIU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-61-6Lh95lYzNf-q7nqL4q1hig-1; Fri, 06 Dec 2019 10:20:45 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3AB1A800D4C;
+        Fri,  6 Dec 2019 15:20:43 +0000 (UTC)
+Received: from x1.home (ovpn-116-56.phx2.redhat.com [10.3.116.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B4A3960135;
+        Fri,  6 Dec 2019 15:20:39 +0000 (UTC)
+Date:   Fri, 6 Dec 2019 08:20:38 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [RFC PATCH 4/9] vfio-pci: register default
+ dynamic-trap-bar-info region
+Message-ID: <20191206082038.2b1078d9@x1.home>
+In-Reply-To: <20191206060407.GF31791@joy-OptiPlex-7040>
+References: <20191205032419.29606-1-yan.y.zhao@intel.com>
+        <20191205032650.29794-1-yan.y.zhao@intel.com>
+        <20191205165530.1f29fe85@x1.home>
+        <20191206060407.GF31791@joy-OptiPlex-7040>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206102746.GD2844@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: 6Lh95lYzNf-q7nqL4q1hig-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 11:27:46AM +0100, Peter Zijlstra wrote:
->On Fri, Dec 06, 2019 at 09:51:26AM +0800, Wei Yang wrote:
->
->> >> +#if defined(CONFIG_X86_32) && !defined(CONFIG_X86_PAE)
->> >> +	static const char *sz[2] = { "4K", "4M" };
->> >> +#else
->> >> +	static const char *sz[4] = { "4K", "2M", "1G", "" };
->> >> +#endif
->> >> +	unsigned int idx, s;
->> >>  
->> >> +	for (idx = 0; idx < maxidx; idx++, mr++) {
->> >> +		s = (mr->page_size_mask >> PG_LEVEL_2M) & (ARRAY_SIZE(sz) - 1);
->> >
->> >Is it at all possible for !PAE to have 1G here, if you use the sz[4]
->> >definition unconditionally?
->> >
->> 
->> You mean remove the ifdef and use sz[4] for both condition?
->> 
->> Then how to differentiate 4M and 2M?
->
->Argh, I'm blind.. I failed to spot that. N/m then.
+On Fri, 6 Dec 2019 01:04:07 -0500
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-Never mind. I always do the same thing :-(
+> On Fri, Dec 06, 2019 at 07:55:30AM +0800, Alex Williamson wrote:
+> > On Wed,  4 Dec 2019 22:26:50 -0500
+> > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> >   
+> > > Dynamic trap bar info region is a channel for QEMU and vendor driver to
+> > > communicate dynamic trap info. It is of type
+> > > VFIO_REGION_TYPE_DYNAMIC_TRAP_BAR_INFO and subtype
+> > > VFIO_REGION_SUBTYPE_DYNAMIC_TRAP_BAR_INFO.
+> > > 
+> > > This region has two fields: dt_fd and trap.
+> > > When QEMU detects a device regions of this type, it will create an
+> > > eventfd and write its eventfd id to dt_fd field.
+> > > When vendor drivre signals this eventfd, QEMU reads trap field of this
+> > > info region.
+> > > - If trap is true, QEMU would search the device's PCI BAR
+> > > regions and disable all the sparse mmaped subregions (if the sparse
+> > > mmaped subregion is disablable).
+> > > - If trap is false, QEMU would re-enable those subregions.
+> > > 
+> > > A typical usage is
+> > > 1. vendor driver first cuts its bar 0 into several sections, all in a
+> > > sparse mmap array. So initally, all its bar 0 are passthroughed.
+> > > 2. vendor driver specifys part of bar 0 sections to be disablable.
+> > > 3. on migration starts, vendor driver signals dt_fd and set trap to true
+> > > to notify QEMU disabling the bar 0 sections of disablable flags on.
+> > > 4. QEMU disables those bar 0 section and hence let vendor driver be able
+> > > to trap access of bar 0 registers and make dirty page tracking possible.
+> > > 5. on migration failure, vendor driver signals dt_fd to QEMU again.
+> > > QEMU reads trap field of this info region which is false and QEMU
+> > > re-passthrough the whole bar 0 region.
+> > > 
+> > > Vendor driver specifies whether it supports dynamic-trap-bar-info region
+> > > through cap VFIO_PCI_DEVICE_CAP_DYNAMIC_TRAP_BAR in
+> > > vfio_pci_mediate_ops->open().
+> > > 
+> > > If vfio-pci detects this cap, it will create a default
+> > > dynamic_trap_bar_info region on behalf of vendor driver with region len=0
+> > > and region->ops=null.
+> > > Vvendor driver should override this region's len, flags, rw, mmap in its
+> > > vfio_pci_mediate_ops.  
+> > 
+> > TBH, I don't like this interface at all.  Userspace doesn't pass data
+> > to the kernel via INFO ioctls.  We have a SET_IRQS ioctl for
+> > configuring user signaling with eventfds.  I think we only need to
+> > define an IRQ type that tells the user to re-evaluate the sparse mmap
+> > information for a region.  The user would enumerate the device IRQs via
+> > GET_IRQ_INFO, find one of this type where the IRQ info would also
+> > indicate which region(s) should be re-evaluated on signaling.  The user
+> > would enable that signaling via SET_IRQS and simply re-evaluate the  
+> ok. I'll try to switch to this way. Thanks for this suggestion.
+> 
+> > sparse mmap capability for the associated regions when signaled.  
+> 
+> Do you like the "disablable" flag of sparse mmap ?
+> I think it's a lightweight way for user to switch mmap state of a whole region,
+> otherwise going through a complete flow of GET_REGION_INFO and re-setup
+> region might be too heavy.
 
--- 
-Wei Yang
-Help you, Help me
+No, I don't like the disable-able flag.  At what frequency do we expect
+regions to change?  It seems like we'd only change when switching into
+and out of the _SAVING state, which is rare.  It seems easy for
+userspace, at least QEMU, to drop the entire mmap configuration and
+re-read it.  Another concern here is how do we synchronize the event?
+Are we assuming that this event would occur when a user switch to
+_SAVING mode on the device?  That operation is synchronous, the device
+must be in saving mode after the write to device state completes, but
+it seems like this might be trying to add an asynchronous dependency.
+Will the write to device_state only complete once the user handles the
+eventfd?  How would the kernel know when the mmap re-evaluation is
+complete.  It seems like there are gaps here that the vendor driver
+could miss traps required for migration because the user hasn't
+completed the mmap transition yet.  Thanks,
+
+Alex
+
