@@ -2,87 +2,158 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F350CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB90C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9DC82064B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1E8F2064B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:32:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B6CI9VtI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbfLFMcH (ORCPT
+        id S1726317AbfLFMcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:32:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:42110 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfLFMcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:32:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A39DC31B;
-        Fri,  6 Dec 2019 04:32:06 -0800 (PST)
-Received: from [192.168.1.13] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94B563F52E;
-        Fri,  6 Dec 2019 04:32:03 -0800 (PST)
-Subject: Re: [RFC 0/3] Introduce per-task latency_tolerance for scheduler
- hints
-To:     Parth Shah <parth@linux.ibm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        patrick.bellasi@matbug.net, qais.yousef@arm.com, pavel@ucw.cz,
-        dhaval.giani@oracle.com, qperret@qperret.net,
-        David.Laight@ACULAB.COM, morten.rasmussen@arm.com, pjt@google.com,
-        tj@kernel.org, viresh.kumar@linaro.org, rafael.j.wysocki@intel.com,
-        daniel.lezcano@linaro.org
-References: <20191125094618.30298-1-parth@linux.ibm.com>
- <450fc7e2-49d5-d809-281f-7d9a99d3e530@arm.com>
- <c26f7909-0e4e-a897-bf84-0aa9e5389a0d@arm.com>
- <838f233e-fa4c-d5a3-9b50-69e2e121edda@arm.com>
- <5c5b61fa-e8f7-5aa7-0fe0-91cb0d4736fb@linux.ibm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <1cc0a6a4-85e9-4b53-7139-261558682582@arm.com>
-Date:   Fri, 6 Dec 2019 13:31:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 6 Dec 2019 07:32:12 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:47668 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfLFMcM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 07:32:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HChchxal1vKq3ok9Joj98uYh27jwuE/ofFxDJGk+ASg=; b=B6CI9VtIRPr1O5K5oFxkxH5pn
+        Qtbs1WM//zfvRRmwZzBwTTqQ2PXrsqKccu9XPfWLYRtW7m95WwUEYJ4dCR3pzdcTA3I0A3jHjJJ1u
+        W1ApRNjW8d/N61mN8wd3RA4P4LHpKi6JO19H8MQNkxogHbbaHm1WapqDvQ2D/sTXtd6GHcIVzRK0b
+        nS5fDUsiP/q/y4rvOSjGuFBK16U9l2x+GBaftUelvsqIP+t7HK6fDX72IoBmpx03/iED40OKsn0c1
+        EGwe9sXh6WwMKFV52/hyikdWLPmM36zxkrnJnAPgwNBgi1uxJF34DiuC9e/ewNCgEXoVGBzslyrZs
+        OVfmWK9+A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1idCmC-00070O-BV; Fri, 06 Dec 2019 12:32:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2DB9430025A;
+        Fri,  6 Dec 2019 13:30:44 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D19232B27F3BE; Fri,  6 Dec 2019 13:32:01 +0100 (CET)
+Date:   Fri, 6 Dec 2019 13:32:01 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: Problem with WARN_ON in mutex_trylock() and rxrpc
+Message-ID: <20191206123201.GC2871@hirez.programming.kicks-ass.net>
+References: <26229.1575547344@warthog.procyon.org.uk>
+ <20191205132212.GK2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <5c5b61fa-e8f7-5aa7-0fe0-91cb0d4736fb@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191205132212.GK2827@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.12.19 18:13, Parth Shah wrote:
-> 
-> 
-> On 12/5/19 7:33 PM, Dietmar Eggemann wrote:
->> On 05/12/2019 11:49, Valentin Schneider wrote:
->>>  
->>> On 05/12/2019 09:24, Dietmar Eggemann wrote:
->>>> On 25/11/2019 10:46, Parth Shah wrote:
+On Thu, Dec 05, 2019 at 02:22:12PM +0100, Peter Zijlstra wrote:
 
-[...]
+> At the very least I'm going to do a lockdep patch that verifies the lock
+> stack is 'empty' for the current irq_context when it changes.
 
->> OK, I went through this thread again. So Google or we have to provide
->> the missing per-taskgroup API via cpu controller's attributes (like for
->> uclamp) for the EAS usecase.
-> 
-> I suppose many others (including myself) will also be interested in having
-> per-taskgroup attribute via CPU controller.
+Something like the below..
 
-Ok, let us have a look since Android needs it.
-
-[...]
-
-> I kept choosing appropriate name and possible values for this new attribute
-> in the separate thread. https://lkml.org/lkml/2019/9/30/215
-> From which discussion, looking at Patrick's comment
-> https://lkml.org/lkml/2019/9/18/678 I thought of picking latency_tolerance
-> as the appropriate name.
-> Still will be happy to change as per the community needs.
-
-Yeah, SCHED_FLAG_LATENCY_TOLERANCE seems to be pretty long.
+diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+index 21619c92c377..c0a314dc9969 100644
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -21,11 +21,13 @@
+   extern void trace_softirqs_off(unsigned long ip);
+   extern void lockdep_hardirqs_on(unsigned long ip);
+   extern void lockdep_hardirqs_off(unsigned long ip);
++  extern void lockdep_leave_irq_context(void);
+ #else
+   static inline void trace_softirqs_on(unsigned long ip) { }
+   static inline void trace_softirqs_off(unsigned long ip) { }
+   static inline void lockdep_hardirqs_on(unsigned long ip) { }
+   static inline void lockdep_hardirqs_off(unsigned long ip) { }
++  static inline void lockdep_leave_irq_context(void) { }
+ #endif
+ 
+ #ifdef CONFIG_TRACE_IRQFLAGS
+@@ -41,6 +43,8 @@ do {						\
+ } while (0)
+ # define trace_hardirq_exit()			\
+ do {						\
++	if (current->hardirq_context == 1)	\
++		lockdep_leave_irq_context();	\
+ 	current->hardirq_context--;		\
+ } while (0)
+ # define lockdep_softirq_enter()		\
+@@ -49,6 +53,8 @@ do {						\
+ } while (0)
+ # define lockdep_softirq_exit()			\
+ do {						\
++	if (current->softirq_context == 1)	\
++		lockdep_leave_irq_context();	\
+ 	current->softirq_context--;		\
+ } while (0)
+ #else
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 32282e7112d3..5c1102967927 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3600,6 +3600,43 @@ static inline unsigned int task_irq_context(struct task_struct *task)
+ 	return 2 * !!task->hardirq_context + !!task->softirq_context;
+ }
+ 
++/*
++ * Validate the current irqcontext holds no locks.
++ */
++void lockdep_leave_irq_context(void)
++{
++	struct task_struct *curr = current;
++	unsigned int irq_context = task_irq_context(curr);
++	int depth = curr->lockdep_depth;
++	struct held_lock *hlock;
++
++	if (unlikely(!debug_locks || curr->lockdep_recursion))
++		return;
++
++	if (!depth)
++		return;
++
++	if (curr->held_locks[depth-1].irq_context != irq_context)
++		return;
++
++	pr_warn("\n");
++	pr_warn("========================================================\n");
++	pr_warn("WARNING: Leaving (soft/hard) IRQ context with locks held\n");
++	print_kernel_ident();
++	pr_warn("--------------------------------------------------------\n");
++
++	for (; depth; depth--) {
++		hlock = curr->held_locks + depth - 1;
++		if (hlock->irq_context != irq_context)
++			break;
++		print_lock(hlock);
++	}
++
++	pr_warn("\nstack backtrace:\n");
++	dump_stack();
++}
++NOKPROBE_SYMBOL(lockdep_leave_irq_context);
++
+ static int separate_irq_context(struct task_struct *curr,
+ 		struct held_lock *hlock)
+ {
