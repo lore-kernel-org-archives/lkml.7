@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1721C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10BEC2D0C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901A420659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4873217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfLFX5z (ORCPT
+        id S1726814AbfLFX55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 18:57:55 -0500
-Received: from mga07.intel.com ([134.134.136.100]:55584 "EHLO mga07.intel.com"
+        Fri, 6 Dec 2019 18:57:57 -0500
+Received: from mga07.intel.com ([134.134.136.100]:55585 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726608AbfLFX5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726607AbfLFX5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Dec 2019 18:57:42 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,9 +25,9 @@ Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Dec 2019 15:57:40 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,286,1571727600"; 
-   d="scan'208";a="219530371"
+   d="scan'208";a="219530365"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 06 Dec 2019 15:57:40 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 06 Dec 2019 15:57:39 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
@@ -37,9 +37,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 15/16] KVM: x86/mmu: WARN on an invalid root_hpa
-Date:   Fri,  6 Dec 2019 15:57:28 -0800
-Message-Id: <20191206235729.29263-16-sean.j.christopherson@intel.com>
+Subject: [PATCH 13/16] KVM: x86/mmu: Move calls to thp_adjust() down a level
+Date:   Fri,  6 Dec 2019 15:57:26 -0800
+Message-Id: <20191206235729.29263-14-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191206235729.29263-1-sean.j.christopherson@intel.com>
 References: <20191206235729.29263-1-sean.j.christopherson@intel.com>
@@ -50,66 +50,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WARN on the existing invalid root_hpa checks in __direct_map() and
-FNAME(fetch).  The "legitimate" path that invalidated root_hpa in the
-middle of a page fault is long since gone, i.e. it should no longer be
-impossible to invalidate in the middle of a page fault[*].
+Move the calls to thp_adjust() down a level from the page fault handlers
+to the map/fetch helpers and remove the page count shuffling done in
+thp_adjust().
 
-The root_hpa checks were added by two related commits
+Despite holding a reference to the underlying page while processing a
+page fault, the page fault flows don't actually rely on holding a
+reference to the page when thp_adjust() is called.  At that point, the
+fault handlers hold mmu_lock, which prevents mmu_notifier from completing
+any invalidations, and have verified no invalidations from mmu_notifier
+have occurred since the page reference was acquired (which is done prior
+to taking mmu_lock).
 
-  989c6b34f6a94 ("KVM: MMU: handle invalid root_hpa at __direct_map")
-  37f6a4e237303 ("KVM: x86: handle invalid root_hpa everywhere")
+The kvm_release_pfn_clean()/kvm_get_pfn() dance in thp_adjust() is a
+quirk that is necessitated because thp_adjust() modifies the pfn that is
+consumed by its caller.  Because the page fault handlers call
+kvm_release_pfn_clean() on said pfn, thp_adjust() needs to transfer the
+reference to the correct pfn purely for correctness when the pfn is
+released.
 
-to fix a bug where nested_vmx_vmexit() could be called *in the middle*
-of a page fault.  At the time, vmx_interrupt_allowed(), which was and
-still is used by kvm_can_do_async_pf() via ->interrupt_allowed(),
-directly invoked nested_vmx_vmexit() to switch from L2 to L1 to emulate
-a VM-Exit on a pending interrupt.  Emulating the nested VM-Exit resulted
-in root_hpa being invalidated by kvm_mmu_reset_context() without
-explicitly terminating the page fault.
-
-Now that root_hpa is checked for validity by kvm_mmu_page_fault(), WARN
-on an invalid root_hpa to detect any flows that reset the MMU while
-handling a page fault.  The broken vmx_interrupt_allowed() behavior has
-long since been fixed and resetting the MMU during a page fault should
-not be considered legal behavior.
-
-[*] It's actually technically possible in FNAME(page_fault)() because it
-    calls inject_page_fault() when the guest translation is invalid, but
-    in that case the page fault handling is immediately terminated.
+Calling thp_adjust() from __direct_map() and FNAME(fetch) means the pfn
+adjustment doesn't change the pfn as seen by the page fault handlers,
+i.e. the pfn released by the page fault handlers is the same pfn that
+was returned by gfn_to_pfn().
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/mmu/mmu.c         | 2 +-
- arch/x86/kvm/mmu/paging_tmpl.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kvm/mmu/mmu.c         | 31 ++++++++++++-------------------
+ arch/x86/kvm/mmu/paging_tmpl.h | 11 ++++++-----
+ 2 files changed, 18 insertions(+), 24 deletions(-)
 
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 5e8666d25053..88fd1022731f 100644
+index 49e5d48e7327..904fb466dd24 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3387,7 +3387,7 @@ static int __direct_map(struct kvm_vcpu *vcpu, gpa_t gpa, int write,
- 	gfn_t gfn = gpa >> PAGE_SHIFT;
- 	gfn_t base_gfn = gfn;
+@@ -3341,24 +3341,15 @@ static void transparent_hugepage_adjust(struct kvm_vcpu *vcpu,
+ 	    !kvm_is_zone_device_pfn(pfn) && level == PT_PAGE_TABLE_LEVEL &&
+ 	    PageTransCompoundMap(pfn_to_page(pfn))) {
+ 		unsigned long mask;
++
+ 		/*
+-		 * mmu_notifier_retry was successful and we hold the
+-		 * mmu_lock here, so the pmd can't become splitting
+-		 * from under us, and in turn
+-		 * __split_huge_page_refcount() can't run from under
+-		 * us and we can safely transfer the refcount from
+-		 * PG_tail to PG_head as we switch the pfn to tail to
+-		 * head.
++		 * mmu_notifier_retry() was successful and mmu_lock is held, so
++		 * the pmd can't be split from under us.
+ 		 */
+ 		*levelp = level = PT_DIRECTORY_LEVEL;
+ 		mask = KVM_PAGES_PER_HPAGE(level) - 1;
+ 		VM_BUG_ON((gfn & mask) != (pfn & mask));
+-		if (pfn & mask) {
+-			kvm_release_pfn_clean(pfn);
+-			pfn &= ~mask;
+-			kvm_get_pfn(pfn);
+-			*pfnp = pfn;
+-		}
++		*pfnp = pfn & ~mask;
+ 	}
+ }
  
--	if (!VALID_PAGE(vcpu->arch.mmu->root_hpa))
-+	if (WARN_ON(!VALID_PAGE(vcpu->arch.mmu->root_hpa)))
+@@ -3386,8 +3377,9 @@ static void disallowed_hugepage_adjust(struct kvm_shadow_walk_iterator it,
+ }
+ 
+ static int __direct_map(struct kvm_vcpu *vcpu, gpa_t gpa, int write,
+-			int map_writable, int level, kvm_pfn_t pfn,
+-			bool prefault, bool account_disallowed_nx_lpage)
++			int map_writable, int level, int max_level,
++			kvm_pfn_t pfn, bool prefault,
++			bool account_disallowed_nx_lpage)
+ {
+ 	struct kvm_shadow_walk_iterator it;
+ 	struct kvm_mmu_page *sp;
+@@ -3398,6 +3390,9 @@ static int __direct_map(struct kvm_vcpu *vcpu, gpa_t gpa, int write,
+ 	if (!VALID_PAGE(vcpu->arch.mmu->root_hpa))
  		return RET_PF_RETRY;
  
- 	if (likely(max_level > PT_PAGE_TABLE_LEVEL))
++	if (likely(max_level > PT_PAGE_TABLE_LEVEL))
++		transparent_hugepage_adjust(vcpu, gfn, &pfn, &level);
++
+ 	trace_kvm_mmu_spte_requested(gpa, level, pfn);
+ 	for_each_shadow_entry(vcpu, gpa, it) {
+ 		/*
+@@ -4216,10 +4211,8 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+ 		goto out_unlock;
+ 	if (make_mmu_pages_available(vcpu) < 0)
+ 		goto out_unlock;
+-	if (likely(max_level > PT_PAGE_TABLE_LEVEL))
+-		transparent_hugepage_adjust(vcpu, gfn, &pfn, &level);
+-	r = __direct_map(vcpu, gpa, write, map_writable, level, pfn, prefault,
+-			 is_tdp && lpage_disallowed);
++	r = __direct_map(vcpu, gpa, write, map_writable, level, max_level, pfn,
++			 prefault, is_tdp && lpage_disallowed);
+ 
+ out_unlock:
+ 	spin_unlock(&vcpu->kvm->mmu_lock);
 diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-index 3b0ba2a77e28..b53bed3c901c 100644
+index 7d57ec576df0..3b0ba2a77e28 100644
 --- a/arch/x86/kvm/mmu/paging_tmpl.h
 +++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -637,7 +637,7 @@ static int FNAME(fetch)(struct kvm_vcpu *vcpu, gpa_t addr,
- 	if (FNAME(gpte_changed)(vcpu, gw, top_level))
- 		goto out_gpte_changed;
+@@ -613,7 +613,7 @@ static void FNAME(pte_prefetch)(struct kvm_vcpu *vcpu, struct guest_walker *gw,
+  */
+ static int FNAME(fetch)(struct kvm_vcpu *vcpu, gpa_t addr,
+ 			 struct guest_walker *gw,
+-			 int write_fault, int hlevel,
++			 int write_fault, int hlevel, int max_level,
+ 			 kvm_pfn_t pfn, bool map_writable, bool prefault,
+ 			 bool lpage_disallowed)
+ {
+@@ -673,6 +673,9 @@ static int FNAME(fetch)(struct kvm_vcpu *vcpu, gpa_t addr,
+ 	gfn = gw->gfn | ((addr & PT_LVL_OFFSET_MASK(gw->level)) >> PAGE_SHIFT);
+ 	base_gfn = gfn;
  
--	if (!VALID_PAGE(vcpu->arch.mmu->root_hpa))
-+	if (WARN_ON(!VALID_PAGE(vcpu->arch.mmu->root_hpa)))
- 		goto out_gpte_changed;
++	if (max_level > PT_PAGE_TABLE_LEVEL)
++		transparent_hugepage_adjust(vcpu, gw->gfn, &pfn, &hlevel);
++
+ 	trace_kvm_mmu_spte_requested(addr, gw->level, pfn);
  
- 	for (shadow_walk_init(&it, vcpu, addr);
+ 	for (; shadow_walk_okay(&it); shadow_walk_next(&it)) {
+@@ -865,10 +868,8 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
+ 	kvm_mmu_audit(vcpu, AUDIT_PRE_PAGE_FAULT);
+ 	if (make_mmu_pages_available(vcpu) < 0)
+ 		goto out_unlock;
+-	if (max_level > PT_PAGE_TABLE_LEVEL)
+-		transparent_hugepage_adjust(vcpu, walker.gfn, &pfn, &level);
+-	r = FNAME(fetch)(vcpu, addr, &walker, write_fault,
+-			 level, pfn, map_writable, prefault, lpage_disallowed);
++	r = FNAME(fetch)(vcpu, addr, &walker, write_fault, level, max_level,
++			 pfn, map_writable, prefault, lpage_disallowed);
+ 	kvm_mmu_audit(vcpu, AUDIT_POST_PAGE_FAULT);
+ 
+ out_unlock:
 -- 
 2.24.0
 
