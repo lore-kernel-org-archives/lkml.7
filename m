@@ -2,107 +2,178 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73743C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58F5C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F71C2245C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A42EA206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfLFR05 (ORCPT
+        id S1726455AbfLFR3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 12:26:57 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:45553 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726287AbfLFR05 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 12:26:57 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tk8dtRm_1575653168;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk8dtRm_1575653168)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 07 Dec 2019 01:26:17 +0800
-Subject: Re: [PATCH] move_pages.2: not return ENOENT if the page are already
- on the target nodes
-To:     John Hubbard <jhubbard@nvidia.com>, mtk.manpages@gmail.com,
-        cl@linux.com, mhocko@suse.com, cai@lca.pw,
-        akpm@linux-foundation.org
-Cc:     linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
- <0dc96e40-5f2b-a2fe-6e5f-b6f3d5e9ebde@nvidia.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <95170ea5-5b62-9168-fcd9-93b43330a1b4@linux.alibaba.com>
-Date:   Fri, 6 Dec 2019 09:26:05 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Fri, 6 Dec 2019 12:29:42 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36000 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726317AbfLFR3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 12:29:42 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EE2E9ABC7;
+        Fri,  6 Dec 2019 17:29:39 +0000 (UTC)
+From:   Thomas Renninger <trenn@suse.de>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org,
+        fschnitzlein@suse.de
+Subject: Re: [PATCH v5 0/3] sysfs: add sysfs based cpuinfo
+Date:   Fri, 06 Dec 2019 18:29:39 +0100
+Message-ID: <2898795.Dnvf4huJ59@skinner.arch.suse.de>
+In-Reply-To: <20191206165803.GD21671@lakrids.cambridge.arm.com>
+References: <20191206162421.15050-1-trenn@suse.de> <20191206165803.GD21671@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <0dc96e40-5f2b-a2fe-6e5f-b6f3d5e9ebde@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Friday, December 6, 2019 5:58:03 PM CET Mark Rutland wrote:
+> Hi Thomas,
+> 
+> On Fri, Dec 06, 2019 at 05:24:18PM +0100, Thomas Renninger wrote:
+> > I picked up Felix Schnizlein's work from 2017.
+> > 
+> > It was already reviewed by Greg-KH at this time and even
+> > pushed into linux-next tree, when it came out that the mails
+> > never reached lkml, even the list was added to CC.
+> > 
+> > ARM people then correctly complained that this needs more review
+> > by ARCH people. It got reverted, Felix had no time anymore and this
+> > nice patcheset was hanging around nowhere...
+> 
+> Can you please provide a rationale for this?
+
+/proc moves to /sys. For years already, some data needs longer...
+
+If you compare /proc/cpuinfo between different archs, you realize
+that it is rather different and a huge mess of arbitrary info.
+
+It would be great if people think a bit more about this...
+What else could show up on which architecture to avoid different
+interfaces (sys files) with the same info across architectures.
+
+I'd like to have general CPU identification, and other info like
+bugs, flags or whatever info that exists across architectures in one
+sysfs file/directory.
+
+arch=$(uname -m)
+case $arch in
+   x86_64)
+      cat /sys/devices/system/cpu/cpu0/info/name
+      ;;
+   aarch64)
+      cat /sys/devices/system/cpu/cpu0/regs/identification
+      ::
+   ...
+esac
+
+This is better than grepping on different identifiers in huge /proc/cpuinfo,
+but it still is lame.
+
+Ideal would be:
+/sys/devices/system/cpu/cpu0/info/{name,vendor,flags,bugs,base_freq,...}
+being avail for all CPUs on all archs.
+
+if it does not exist yet..., it should at least show up there if it gets
+implemented at some point of time.
+
+> there's some data in /proc/cpuinfo that I think makes no sense to try to
+> export export in a structured way (e.g. bogomips).
+
+I'd be happy to remove bogomips if nobody needs this.
+
+> 
+> > Tested on aarch64:
+> > 
+> > /sys/devices/system/cpu/cpu1/info/:[0]# ls
+> > architecture  bogomips  flags  implementer  part  revision  variant
+> > 
+> > ------------------------------------------------------------
+> > 
+> > for file in *;do echo $file; cat $file;echo;done
+> > architecture
+> > 8
+> > 
+> > bogomips
+> > 40.00
+> > 
+> > flags
+> > fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid asimdrdm
+> > 
+> > implementer
+> > 0x51
+> > 
+> > part
+> > 0xc00
+> > 
+> > revision
+> > 1
+> > 
+> > variant
+> > 0x0
+> 
+> For arm64 we already expose the MIDR and REVIDR register values under
+> /sys/devices/system/cpu/cpu*/regs/identification, and that's the bulk of
+> the useful information above
+
+I'd like to come up with an extra CONFIG which parses:
+
+arch/arm64/include/asm/cputype.h:
+
+#define ARM_CPU_PART_AEM_V8             0xD0F
+#define ARM_CPU_PART_FOUNDATION         0xD00
+#define ARM_CPU_PART_CORTEX_A57         0xD07
+#define ARM_CPU_PART_CORTEX_A72         0xD08
+
+and
+
+#define ARM_CPU_IMP_ARM                 0x41
+#define ARM_CPU_IMP_APM                 0x50
+#define ARM_CPU_IMP_CAVIUM              0x43
+#define ARM_CPU_IMP_BRCM                0x42
+#define ARM_CPU_IMP_QCOM                0x51
+#define ARM_CPU_IMP_NVIDIA              0x4E
+
+and converts the defines to strings, same as here:
+
+arch/x86/include/asm/intel-family.h
+
+#define INTEL_FAM6_SKYLAKE_L            0x4E
+#define INTEL_FAM6_SKYLAKE              0x5E
+#define INTEL_FAM6_SKYLAKE_X            0x55
+#define INTEL_FAM6_KABYLAKE_L           0x8E
+#define INTEL_FAM6_KABYLAKE             0x9E
+
+and provide the model name (and for ARM the vendor name)
+compiled in a module.
+
+At least for aarch64 and x86 it seem to be possible
+to get a vendor/model string from the same defined file:
+/sys/devices/system/cpu/cpu0/info/{model_name,vendor}
 
 
-On 12/6/19 12:25 AM, John Hubbard wrote:
-> On 12/5/19 5:34 PM, Yang Shi wrote:
->> Since commit e78bbfa82624 ("mm: stop returning -ENOENT
->> from sys_move_pages() if nothing got migrated"), move_pages doesn't
->> return -ENOENT anymore if the pages are already on the target nodes, but
->> this change is never reflected in manpage.
->>
->> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
->> Cc: Christoph Lameter <cl@linux.com>
->> Cc: John Hubbard <jhubbard@nvidia.com>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Qian Cai <cai@lca.pw>
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->> ---
->>   man2/move_pages.2 | 5 ++---
->>   1 file changed, 2 insertions(+), 3 deletions(-)
->>
->> diff --git a/man2/move_pages.2 b/man2/move_pages.2
->> index 2d96468..2a2f3cd 100644
->> --- a/man2/move_pages.2
->> +++ b/man2/move_pages.2
->> @@ -192,9 +192,8 @@ was specified or an attempt was made to migrate 
->> pages of a kernel thread.
->>   One of the target nodes is not online.
->>   .TP
->>   .B ENOENT
->> -No pages were found that require moving.
->> -All pages are either already
->> -on the target node, not present, had an invalid address or could not be
->> +No pages were found.
->> +All pages are either not present, had an invalid address or could 
->> not be
->>   moved because they were mapped by multiple processes.
->>   .TP
->>   .B EPERM
->>
->
-> whoa, hold on. If I'm reading through the various error paths 
-> correctly, then this
-> code is *never* going to return ENOENT for the whole function. It can 
-> fill in that
-> value per-page, in the status array, but that's all. Did I get that 
-> right?
+> (aside from the flags/hwcaps).
 
-Nice catch. Yes, you are right.
+which make sense to add there, right?
 
->
-> If so, we need to redo this part of the man page.
+Thanks,
 
-Yes.
+      Thomas
 
->
->
-> thanks,
+
 
