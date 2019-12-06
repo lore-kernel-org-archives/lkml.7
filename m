@@ -2,209 +2,115 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F78C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0432FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466782464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBC524676
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:16:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iP/LrjVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfLFTQc (ORCPT
+        id S1726492AbfLFTQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 14:16:32 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33926 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726321AbfLFTQc (ORCPT
+        Fri, 6 Dec 2019 14:16:51 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37394 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfLFTQv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 14:16:32 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB6JC7lt101865
-        for <linux-kernel@vger.kernel.org>; Fri, 6 Dec 2019 14:16:30 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wq2t4br3w-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 14:16:30 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
-        Fri, 6 Dec 2019 19:16:28 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 6 Dec 2019 19:16:26 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB6JGPWr60489848
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 Dec 2019 19:16:25 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5111D42049;
-        Fri,  6 Dec 2019 19:16:25 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 902D14204B;
-        Fri,  6 Dec 2019 19:16:23 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.71.21])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  6 Dec 2019 19:16:23 +0000 (GMT)
-Subject: Re: [PATCH v4 4/6] powerpc/powernv: move core and
- fadump_release_opalcore under new kobject
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     mpe@ellerman.id.au, mahesh@linux.vnet.ibm.com,
-        hbathini@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@ozlabs.org, corbet@lwn.net, linux-doc@vger.kernel.org
-References: <20191206122434.29587-1-sourabhjain@linux.ibm.com>
- <20191206122434.29587-5-sourabhjain@linux.ibm.com>
- <20191206124801.GD1360047@kroah.com>
-From:   Sourabh Jain <sourabhjain@linux.ibm.com>
-Date:   Sat, 7 Dec 2019 00:46:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 6 Dec 2019 14:16:51 -0500
+Received: by mail-lf1-f66.google.com with SMTP id b15so6076419lfc.4
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 11:16:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dp6TtsDVMwDLXVNf7z26o9XIaBeojD6ZI0FYrgN+jxw=;
+        b=iP/LrjVMleDaUJuXaUiNHfkocDJ+QBeAdqfEUhPU+zL8YR3HhO5xKQTteOaptagCby
+         4JT64mVbmW9G6XScfGCKDnVfbX1uYpgrUiMjou2dA9VpJ+z/yCj7jafk2C3g2wUjptE5
+         9tG9mdoGs2Tt9k7WwtEd68QJq7G3aLTs5ahc8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dp6TtsDVMwDLXVNf7z26o9XIaBeojD6ZI0FYrgN+jxw=;
+        b=DXEvauyRaFAXzSzWQcMAKXkQMSRNzz/EzjRh4Whoa1abX/knMfziV2nW9Q1/WwS9Yp
+         vPYM9DKlEeEuj0n3/OqTw4dktl9W67qwFWMvb7h9/AlxlM2hdOQsOH7mo+E57H8m8LWC
+         UTSQ9wP4lXwOz7rJLkQsYLuCpMEFR+J/uXXfmVB7XqIDOIWjIVc5svW1VJ1J6Y4v3Teh
+         u5LUJc9UOPOnP6ViGkIoebVbSVji89oOr4bAWPmxO9OPLWOwakrdod2XhrbXHmcjGULU
+         iut6n5qS8jMnzxTysyJHSww1RCRIG7JzFI8O1UFiY7wdFq8NDai4eKVxYDHnBUIXu3Ot
+         pGng==
+X-Gm-Message-State: APjAAAXQ+6LW2KNIKGgQWmlgdR1lbtWwjUtsiEj5fwMM116aUZjpQx+J
+        NnIwv/NuFQqtj0CIgaRLbyJh+iiprKw=
+X-Google-Smtp-Source: APXvYqwIrQP95wfnRpUaBSQ1js3MSss6YGiQIeuFWXrh1c7x4fBsJIgSzjSHzG0u9zd8GWWUnB0u+w==
+X-Received: by 2002:ac2:4476:: with SMTP id y22mr9146713lfl.169.1575659808846;
+        Fri, 06 Dec 2019 11:16:48 -0800 (PST)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id v21sm3061155lfi.7.2019.12.06.11.16.47
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 11:16:47 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id l18so6099492lfc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 11:16:47 -0800 (PST)
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr8789546lfi.93.1575659806793;
+ Fri, 06 Dec 2019 11:16:46 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191206124801.GD1360047@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120619-0008-0000-0000-0000033E5B01
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120619-0009-0000-0000-00004A5D8325
-Message-Id: <d22893e3-41e0-c8db-9262-670f90536816@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-06_06:2019-12-05,2019-12-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 malwarescore=0 lowpriorityscore=0
- mlxlogscore=999 mlxscore=0 impostorscore=0 clxscore=1015 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912060154
+References: <20191118154435.20357-1-sibis@codeaurora.org> <0101016e7f30ad15-18908ef0-a2b9-4a2a-bf32-6cb3aa447b01-000000@us-west-2.amazonses.com>
+ <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
+ <0101016e83897442-ecc4c00f-c0d1-4c2c-92ed-ce78e65c0935-000000@us-west-2.amazonses.com>
+ <0101016eac068d05-761f0d60-b1ef-400f-bf84-3164c2a26d2e-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016eac068d05-761f0d60-b1ef-400f-bf84-3164c2a26d2e-000000@us-west-2.amazonses.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Fri, 6 Dec 2019 11:16:10 -0800
+X-Gmail-Original-Message-ID: <CAE=gft5cS54qn0JjxO58xL6sFyQk4t=8ofLFWPUSVQ9sdU4XpQ@mail.gmail.com>
+Message-ID: <CAE=gft5cS54qn0JjxO58xL6sFyQk4t=8ofLFWPUSVQ9sdU4XpQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] interconnect: qcom: Add OSM L3 interconnect
+ provider support
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Dai <daidavid1@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 27, 2019 at 12:42 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+>
+> Hey Evan/Georgi,
+>
+> https://git.linaro.org/people/georgi.djakov/linux.git/commit/?h=icc-dev&id=9197da7d06e88666d1588e3c21a743e60381264d
+>
+> With the "Redefine interconnect provider
+> DT nodes for SDM845" series, wouldn't it
+> make more sense to define the OSM_L3 icc
+> nodes in the sdm845.c icc driver and have
+> the common helpers in osm_l3 driver? Though
+> we don't plan on linking the OSM L3 nodes
+> to the other nodes on SDM845/SC7180, we
+> might have GPU needing to be linked to the
+> OSM L3 nodes on future SoCs. Let me know
+> how you want this done.
+>
+> Anyway I'll re-spin the series once the
+> SDM845 icc re-work gets re-posted.
 
-
-On 12/6/19 6:18 PM, Greg KH wrote:
-> On Fri, Dec 06, 2019 at 05:54:32PM +0530, Sourabh Jain wrote:
->> The /sys/firmware/opal/core and /sys/kernel/fadump_release_opalcore sysfs
->> files are used to export and release the OPAL memory on PowerNV platform.
->> let's organize them into a new kobject under /sys/firmware/opal/mpipl/
->> directory.
->>
->> A symlink is added to maintain the backward compatibility for
->> /sys/firmware/opal/core sysfs file.
->>
->> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->> ---
->>  .../sysfs-kernel-fadump_release_opalcore      |  2 ++
->>  .../powerpc/firmware-assisted-dump.rst        | 15 +++++----
->>  arch/powerpc/platforms/powernv/opal-core.c    | 31 ++++++++++++++-----
->>  3 files changed, 34 insertions(+), 14 deletions(-)
->>  rename Documentation/ABI/{testing => removed}/sysfs-kernel-fadump_release_opalcore (82%)
->>
->> diff --git a/Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore b/Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
->> similarity index 82%
->> rename from Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore
->> rename to Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
->> index 53313c1d4e7a..a8d46cd0f4e6 100644
->> --- a/Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore
->> +++ b/Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
->> @@ -1,3 +1,5 @@
->> +This ABI is moved to /sys/firmware/opal/mpipl/release_core.
->> +
->>  What:		/sys/kernel/fadump_release_opalcore
->>  Date:		Sep 2019
->>  Contact:	linuxppc-dev@lists.ozlabs.org
->> diff --git a/Documentation/powerpc/firmware-assisted-dump.rst b/Documentation/powerpc/firmware-assisted-dump.rst
->> index 0455a78486d5..345a3405206e 100644
->> --- a/Documentation/powerpc/firmware-assisted-dump.rst
->> +++ b/Documentation/powerpc/firmware-assisted-dump.rst
->> @@ -112,13 +112,13 @@ to ensure that crash data is preserved to process later.
->>  
->>  -- On OPAL based machines (PowerNV), if the kernel is build with
->>     CONFIG_OPAL_CORE=y, OPAL memory at the time of crash is also
->> -   exported as /sys/firmware/opal/core file. This procfs file is
->> +   exported as /sys/firmware/opal/mpipl/core file. This procfs file is
->>     helpful in debugging OPAL crashes with GDB. The kernel memory
->>     used for exporting this procfs file can be released by echo'ing
->> -   '1' to /sys/kernel/fadump_release_opalcore node.
->> +   '1' to /sys/firmware/opal/mpipl/release_core node.
->>  
->>     e.g.
->> -     # echo 1 > /sys/kernel/fadump_release_opalcore
->> +     # echo 1 > /sys/firmware/opal/mpipl/release_core
->>  
->>  Implementation details:
->>  -----------------------
->> @@ -283,14 +283,17 @@ Here is the list of files under kernel sysfs:
->>      enhanced to use this interface to release the memory reserved for
->>      dump and continue without 2nd reboot.
->>  
->> - /sys/kernel/fadump_release_opalcore
->> +Note: /sys/kernel/fadump_release_opalcore sysfs has moved to
->> +      /sys/firmware/opal/mpipl/release_core
->> +
->> + /sys/firmware/opal/mpipl/release_core
->>  
->>      This file is available only on OPAL based machines when FADump is
->>      active during capture kernel. This is used to release the memory
->> -    used by the kernel to export /sys/firmware/opal/core file. To
->> +    used by the kernel to export /sys/firmware/opal/mpipl/core file. To
->>      release this memory, echo '1' to it:
->>  
->> -    echo 1  > /sys/kernel/fadump_release_opalcore
->> +    echo 1  > /sys/firmware/opal/mpipl/release_core
->>  
->>  Here is the list of files under powerpc debugfs:
->>  (Assuming debugfs is mounted on /sys/kernel/debug directory.)
->> diff --git a/arch/powerpc/platforms/powernv/opal-core.c b/arch/powerpc/platforms/powernv/opal-core.c
->> index ed895d82c048..7fcc092d065e 100644
->> --- a/arch/powerpc/platforms/powernv/opal-core.c
->> +++ b/arch/powerpc/platforms/powernv/opal-core.c
->> @@ -589,7 +589,8 @@ static ssize_t fadump_release_opalcore_store(struct kobject *kobj,
->>  	return count;
->>  }
->>  
->> -static struct kobj_attribute opalcore_rel_attr = __ATTR(fadump_release_opalcore,
->> +struct kobject *mpipl_kobj;
->> +static struct kobj_attribute opalcore_rel_attr = __ATTR(release_core,
->>  						0200, NULL,
->>  						fadump_release_opalcore_store);
-> 
-> __ATTR_WO()?
-
-Thanks :)
-> 
->>  
->> @@ -609,7 +610,7 @@ static int __init opalcore_init(void)
->>  	 * then capture the dump.
->>  	 */
->>  	if (!(is_opalcore_usable())) {
->> -		pr_err("Failed to export /sys/firmware/opal/core\n");
->> +		pr_err("Failed to export /sys/firmware/opal/mpipl/core\n");
->>  		opalcore_cleanup();
->>  		return rc;
->>  	}
->> @@ -617,18 +618,32 @@ static int __init opalcore_init(void)
->>  	/* Set OPAL core file size */
->>  	opal_core_attr.size = oc_conf->opalcore_size;
->>  
->> +	mpipl_kobj = kobject_create_and_add("mpipl", opal_kobj);
->> +	if (!mpipl_kobj) {
->> +		pr_err("unable to create mpipl kobject\n");
->> +		return -ENOMEM;
->> +	}
->> +
->>  	/* Export OPAL core sysfs file */
->> -	rc = sysfs_create_bin_file(opal_kobj, &opal_core_attr);
->> +	rc = sysfs_create_bin_file(mpipl_kobj, &opal_core_attr);
-> 
-> Again, create an attribute group and add everything all at once, makes
-> it much simpler and your error cleanup logic will actually work :)
-
-Agree.
-
-Thanks,
-Sourabh Jain
-
+I don't have a clear picture of the proposal. You'd put the couple of
+extra defines in sdm845.c for the new nodes. But then you'd need to do
+something in icc_set() of sdm845. Is that when you'd call out to the
+osm_l3 driver?
