@@ -2,147 +2,141 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E4DC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D974C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F132467B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D522467C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:45:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZxzHy3KZ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="A1x9Bawt";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bllD4dpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbfLFIiy (ORCPT
+        id S1726595AbfLFIpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 03:38:54 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35096 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfLFIiy (ORCPT
+        Fri, 6 Dec 2019 03:45:04 -0500
+Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:38748
+        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726088AbfLFIpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 03:38:54 -0500
-Received: by mail-qt1-f193.google.com with SMTP id s8so6466234qte.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 00:38:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XULIdLphJK4qhxzEMS6r2yIrpC7a9xcmw/dOBrCCHnI=;
-        b=ZxzHy3KZPXua8EgoH1fYq6c6L99fALxELCYRV2aXAnlHF2bS8HCMol/iAk8kKemUFU
-         7hvvB9V8yE1GdD7LK0rZ4YCrp9q0A9ojDtRLQhKB/Hnasjv2oJQ2RmrnQ6GgqPlN0wrP
-         QCxLviZNEiMaT8clvyClMTq0zbuLMdgB2aw3+Xjc6aOgTXQEH4RYRVNHFuyMiTVsY3fH
-         4f4kKF8o95RLZFoQVwidWOU1W4AVMFdtYVsLiC4+uD3IjiI/MrDCM5vK+Ok3nJmwwpBB
-         qmoVVw8Q3dcOt4Yxeua+DH2cDCQ2B4O0v2dV9zenkoZPyc6Ic2D4fayVC97wQF3fkQ3z
-         wA3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XULIdLphJK4qhxzEMS6r2yIrpC7a9xcmw/dOBrCCHnI=;
-        b=SJgsjDXXy4T2TvfuQwEICGf5hNj74zHUtscaKBQ/yKSVcPTe7TC/ylan8kmcT/9+1Z
-         qlLqzccpQ6aVX1G1I4CU+GYQqH5sxgG/AEePM4EVEaMjFyv503Nl3/CIJcmaWEkwSDZo
-         2x/DALz8hLvE2MD3jEqGT6iHlaVEoznzd4qkf8MTE1F29m9T/vU7c3QiZFv0Vn5J/oci
-         7a3ADJxJJKDrxqUJEkMQWQNqUlS+136Q60YT/fOMS7oVkHhGpc4eOSSClaho08+5foB3
-         bD1yQdw4jaDkO0pQmS1gOs87LwrhJ6wqieEK9wB/yFZJsdCsq4GYQjf6IzmPHulPF+vJ
-         6KtQ==
-X-Gm-Message-State: APjAAAXO1cyojcqn6RUmE+04ceGxLoAKDjcg+/XEKqcQNjJXP6fRKRQF
-        XllP+WPZ0t4W0WNK3KWKBJ204b9zfgQXlXl3Mtw=
-X-Google-Smtp-Source: APXvYqytAoVioaolXPFeQOsQ1aeD3jkaPTX+RX7lY+dQPxZI6yABwCQKvblEpvDu+P99UBx+Qedtff5HSH9xuXHnrEo=
-X-Received: by 2002:ac8:5548:: with SMTP id o8mr12003824qtr.338.1575621532837;
- Fri, 06 Dec 2019 00:38:52 -0800 (PST)
+        Fri, 6 Dec 2019 03:45:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575621903;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=XX2Qv/pDDSpq0MxzImXnpuNW4d3j9qxMv6fqhgnMWaM=;
+        b=A1x9BawtTJaxbqNXvDsdHmdeURQHwCBm6PEG7+HemibRj111my5Mbfx7ctfq4im6
+        ubY6doGyvJbsM7U9sEGd0fjMwG0D5Cj/4W+1Jbm9Wly/DuwDgdCHDBvtnZAUV8xByS5
+        6PvwwzYh/WnxajNM6RBP58bP0+0EiX9t1ythIAYs=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575621903;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+        bh=XX2Qv/pDDSpq0MxzImXnpuNW4d3j9qxMv6fqhgnMWaM=;
+        b=bllD4dpFKByTz6tAqe0Y0xJvgN2b++1/qwe8IjuTOt9sJFv+JO66bzKij42k43Fx
+        ecBphyZzJ/jPs5sFiBVJCEf3QhDJnUF/pcaliqpGUDQv/3uQIp1XRusHTdDc56AFtxa
+        jUVVM0xIgaKKnvTgr7qWx9Ie3GRVTPj5/k1EEbKQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3CD02C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
+Subject: Re: [PATCH v0] irqchip/gic-v3: Avoid check of lpi configuration for
+ non existent cpu
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <1575543357-31892-1-git-send-email-gkohli@codeaurora.org>
+ <60f61282c1b1e512ca6ce638b6dfca09@www.loen.fr>
+ <209f30c6-c03a-daeb-1f01-e03c489f41d8@codeaurora.org>
+ <18011d088d5202339048ac5e3c224bb5@www.loen.fr>
+From:   Gaurav Kohli <gkohli@codeaurora.org>
+Message-ID: <0101016eda62405c-0df52650-b61f-4ad6-a1df-2eed055e1984-000000@us-west-2.amazonses.com>
+Date:   Fri, 6 Dec 2019 08:45:03 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <201912060818.dgGGxpRK%lkp@intel.com> <CAK8P3a23_rWdmjyZNezd9k=-KL4VZyV+DCLvh-UgCQUQTsysyw@mail.gmail.com>
- <CAEbi=3fN83s1sp6Yt2B6d5M-uJ+TGz_a7-mWTt2LAfrX8B3JmA@mail.gmail.com>
-In-Reply-To: <CAEbi=3fN83s1sp6Yt2B6d5M-uJ+TGz_a7-mWTt2LAfrX8B3JmA@mail.gmail.com>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Fri, 6 Dec 2019 16:38:15 +0800
-Message-ID: <CAEbi=3cojt1shc84zH3tGtxK98rQ=PbGhkirWCe7C+JSj5jpFw@mail.gmail.com>
-Subject: Re: drivers/scsi/.tmp_mc_st.s:3: Error: invalid operands (*UND* and
- *UND* sections) for `^'
-To:     Arnd Bergmann <arnd@arndb.de>, Nickhu <nickhu@andestech.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vincent Chen <deanbo422@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <18011d088d5202339048ac5e3c224bb5@www.loen.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SES-Outgoing: 2019.12.06-54.240.27.186
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greentime Hu <green.hu@gmail.com> =E6=96=BC 2019=E5=B9=B412=E6=9C=886=E6=97=
-=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:19=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Arnd Bergmann <arnd@arndb.de> =E6=96=BC 2019=E5=B9=B412=E6=9C=886=E6=97=
-=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:00=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > On Fri, Dec 6, 2019 at 2:05 AM kbuild test robot <lkp@intel.com> wrote:
-> > >
-> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
-x.git master
-> > > head:   2f13437b8917627119d163d62f73e7a78a92303a
-> > > commit: 1207045da5a7c94344e0ea9a9e7495985eef499a compat_ioctl: move t=
-ape handling into drivers
-> > > date:   6 weeks ago
-> > > config: nds32-allyesconfig (attached as .config)
-> > > compiler: nds32le-linux-gcc (GCC) 9.2.0
-> > > reproduce:
-> > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master=
-/sbin/make.cross -O ~/bin/make.cross
-> > >         chmod +x ~/bin/make.cross
-> > >         git checkout 1207045da5a7c94344e0ea9a9e7495985eef499a
-> > >         # save the attached .config to linux build tree
-> > >         GCC_VERSION=3D9.2.0 make.cross ARCH=3Dnds32
-> > >
-> > > If you fix the issue, kindly add following tag
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > >
-> > > All errors (new ones prefixed by >>):
-> > >
-> > >    drivers/scsi/.tmp_mc_st.s: Assembler messages:
-> > > >> drivers/scsi/.tmp_mc_st.s:3: Error: invalid operands (*UND* and *U=
-ND* sections) for `^'
-> > >    drivers/scsi/.tmp_mc_st.s:4: Error: invalid operands (*UND* and *U=
-ND* sections) for `^'
-> > >    drivers/scsi/.tmp_mc_st.s:5: Error: invalid operands (*UND* and *U=
-ND* sections) for `^'
-> > >    drivers/scsi/.tmp_mc_st.s:6: Error: invalid operands (*UND* and *U=
-ND* sections) for `^'
-> > >    drivers/scsi/.tmp_mc_st.s:7: Error: invalid operands (*UND* and *U=
-ND* sections) for `^'
-> > >    drivers/scsi/.tmp_mc_st.s:8: Error: invalid operands (*UND* and *U=
-ND* sections) for `^'
-> > >    drivers/scsi/.tmp_mc_st.s:9: Error: invalid operands (*UND* and *U=
-ND* sections) for `^'
-> >
-> > Adding nds32 maintainers to Cc:
-> >
-> > It looks like a regression caused by my patch, but I don't think it's s=
-omething
-> > I did wrong, but rather a toolchain bug being uncovered by the modified=
- sources.
-> >
-> > Are you able to reproduce this?
->
-> Hi Arnd,
->
-> I am trying to reproduce this problem, but it happened to me.
->
-> greentimeh@gamma07:/scratch/greentimeh/nds32/linux <(1207045da5a7...)>
-> $ GCC_VERSION=3D9.2.0 make.cross ARCH=3Dnds32
-> cd: received redirection to `https://download.01.org/0day-ci/cross-packag=
-e/'
-> Cannot find nds32-linux under
-> https://download.01.org/0day-ci/cross-package check
-> /tmp/crosstool-files
->
-> Can you reproduce it?
 
-I can reproduce it now by adding these 2 lines to make.cross.
-177                 nds32)
-178                         gcc_arch=3Dnds32le-linux
 
-It will be built failed with gcc-9.2.0-nolibc toolchain, but it can be
-built pass with gcc-8.1.0-nolibc toolchain.
+On 12/5/2019 6:48 PM, Marc Zyngier wrote:
+> On 2019-12-05 13:01, Gaurav Kohli wrote:
+>> On 12/5/2019 6:17 PM, Marc Zyngier wrote:
+>>> Hi Gaurav,
+>>> On 2019-12-05 10:55, Gaurav Kohli wrote:
+>>>> As per GIC specification, we can configure gic for more no of cpus
+>>>> then the available cpus in the soc, But this can cause mem abort
+>>>> while iterating lpi region for non existent cpu as we don't map
+>>> Which LPI region? We're talking about RDs, right... Or does LPI mean
+>>> something other than GIC LPIs for you?
+>>>
+>>
+>> Yes RDs only.
+>>>> redistrubutor region for non-existent cpu.
+>>>>
+>>>> To avoid this issue, put one more check of valid mpidr.
+>>> Sorry, but I'm not sure I grasp your problem. Let me try and rephrase 
+>>> it:
+>>> - Your GIC is configured for (let's say) 8 CPUs, and your SoC has 
+>>> only 4.
+>> Yes, suppose gic is configured for 8 cpus but soc has only 4 cpus.
+>> Then in this case gic_iterate will iterate till it get TYPER_LAST.
+> 
+> And that's what is expected from the architecture.
+> 
+>>
+>> But as gic is configured for 8, So last bit sets in eight
+>> redistributor regions only.
+>>> - As part of the probing, the driver iterates on the RD regions and 
+>>> explodes
+>>>    because something isn't mapped?
+>>> That'd be a grave bug, but I believe the issue is somewhere else.
+>>
+>> There are 4 cpus present, that's why we have mapped 4 redistributor
+>> only, but during probe below function keeps iterating and give mem
+>> abort for 5th cpu.
+>>
+>> static void gic_update_vlpi_properties(void)
+>> {
+>>         gic_iterate_rdists(__gic_update_vlpi_properties);
+>>
+>> }
+>>
+>> We can solve this problem by mapping all eight redistributor in dt,
+>> but ideally code should also able to handle this and we can avoid
+>> mappin?
+> 
+> The whole point of DT is to describe the HW, all the HW, nothing but
+> the HW. This is what is expected by both the architecture and Linux.
+> 
+> So you have the solution already. Don't lie to the kernel, and everything
+> will be fine.
+> 
+>          M.
+
+HI Marc,
+
+Thanks for detailed explanation, Yes we have mapped all 8 distributors 
+now to resolve.
+But my main concern is that last 4 redistributor is not connected to 
+core, as core is not present.
+And as per gic driver it seems we are only
+iterating and populating per cpu rd pointer.
+
+So that would be fine correct, seems nothing wrong in this kind of 
+configuration?
+
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
