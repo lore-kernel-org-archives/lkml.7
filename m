@@ -2,133 +2,123 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875B3C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0033C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6492D20659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A00D820659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:35:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MLSDZRNh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbfLFQeL (ORCPT
+        id S1726416AbfLFQfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:34:11 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:55827 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbfLFQeK (ORCPT
+        Fri, 6 Dec 2019 11:35:25 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33212 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfLFQfZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:34:10 -0500
-Received: by mail-il1-f199.google.com with SMTP id d14so5605458ild.22
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 08:34:10 -0800 (PST)
+        Fri, 6 Dec 2019 11:35:25 -0500
+Received: by mail-ed1-f68.google.com with SMTP id l63so6337725ede.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 08:35:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XSkH0mMxJ0LjfyXh0N7TS7Y5Mgxh/voFS9v1bkgeE8Y=;
+        b=MLSDZRNhI0hqxF9SMOVeK0bzV/j3DpCPUVJapnYSllSGN0EMupN4ZEact+yah726dW
+         tgLTR2wLEun/p+pthj9h67Njj/fiNnXiCvs6Z1qMpYn2VQoO5Gx6i4nf6nzvCElH/JQF
+         r4jpmSRlPHQzcb6OlXyVnXKNJEQfJOBv7GY7A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=rqCputwRcsxKt2PlVXuw5MtF3XLiOp9UpYUuXc2aLgA=;
-        b=QOCA1/CJkB2vnTBnnFtIRP03Yjyz9BA+VBjGh0A2f+yA36QqAFkYox0nPoDtXsPByK
-         YRbM/9SZx373mSH3tmzTo+jYlTbjo08aI3zqATgtO3q2Bfj0cvuRDK7ijp7Z3LBP5nIG
-         gcS3REGW+E4H/sFVXU1Rh8MO4I+5Losar/xz3Z2qoxP+NPofLkUmGyMpvHijCO9xODnJ
-         lGGBXJ9u+mikcYlCbZwykwhnCPygJr4D1eHz7fG1JaEzOfq4GfGY5RCmpjuW6wIFlL+J
-         jcx+ndFhBJDOsmVqFbZeP9ACDh0nVWS2fMMD9WZme9Cqigx4+R+0C89LgDRi8PZQpxtO
-         rAxQ==
-X-Gm-Message-State: APjAAAUnwHeP2d/vcLRLHXWDaGXS8fg1sZmc6ZLknhjyhjxGpp00e0ZR
-        lg9/PuHLhk2DcY86ioN8hWR0QyKJgCFLPQOGkOrsYz1FADdX
-X-Google-Smtp-Source: APXvYqyByNLCVhQAXljCtTGdKG18t+bHUjiYlyEo7ulRihXdvs7rvToSmnxN1Bisrh0fnPxXMOEIw2rvuFKa3NROGJCVAOQ5gtng
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XSkH0mMxJ0LjfyXh0N7TS7Y5Mgxh/voFS9v1bkgeE8Y=;
+        b=UuGsM7xw5Jmyi4Aibuf0IWAscHUaVm3LwF3PcVDNLXAc/5c1XpAM5DXAdSjFphZZ/a
+         OAt2CL54DznCQqCP3ONgnPJpdMjHHakcApGzkE4kyC4YJQoRXtmTByulXOSLuQaN2h7A
+         Z5BdyfvDwvn/uXbVxogWBdDGkjyr0xSfMUCmq4krvYWrDG5Hy9o2jWzG4u031hMgjVq/
+         AHcQpMNQSXqT9MFdWOOCOFMX2Ky3AyS/Of0mEN2D+zCPcIGWqwtbid7leY1kBAqO+Ir+
+         muGEGqftA0q1CLeR0+13ZMgycYrvkBj0GisbVF6c31kGytba/llHOCri7efPRWP3S5V1
+         3pOA==
+X-Gm-Message-State: APjAAAWwgse2PwrAuiPVXJqc8zMhpy7vmlXWOLkWrFwKU6vO1+Sb07Qe
+        9nZOZL+6TciJVRleXysVF4Pkpc+38Qg=
+X-Google-Smtp-Source: APXvYqw4YICC5oqaQLbz2zP7qAwdexH6nPmtD/LJaOibhRVoY1SjWRumi6S26Wz9HMy1XK4GCzousA==
+X-Received: by 2002:a17:907:423b:: with SMTP id oi19mr16483316ejb.176.1575650122799;
+        Fri, 06 Dec 2019 08:35:22 -0800 (PST)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
+        by smtp.gmail.com with ESMTPSA id r13sm224764ejb.27.2019.12.06.08.35.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 08:35:22 -0800 (PST)
+Received: by mail-wr1-f48.google.com with SMTP id j42so8401835wrj.12
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 08:35:21 -0800 (PST)
+X-Received: by 2002:a5d:494f:: with SMTP id r15mr13261474wrs.143.1575650120873;
+ Fri, 06 Dec 2019 08:35:20 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:187:: with SMTP id m7mr11405177ioo.16.1575650049916;
- Fri, 06 Dec 2019 08:34:09 -0800 (PST)
-Date:   Fri, 06 Dec 2019 08:34:09 -0800
-In-Reply-To: <0000000000007b17010598f7aa1f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008409aa05990b9d8a@google.com>
-Subject: Re: KASAN: global-out-of-bounds Read in bit_putcs
-From:   syzbot <syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com>
-To:     b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191205000957.112719-1-thgarnie@chromium.org>
+ <20191205000957.112719-5-thgarnie@chromium.org> <20191205090355.GC2810@hirez.programming.kicks-ass.net>
+ <CAJcbSZF+vGE6ZseiQfcis2NMcimmpwvov_P-tZe--z5UxJPDdg@mail.gmail.com> <20191206102649.GC2844@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191206102649.GC2844@hirez.programming.kicks-ass.net>
+From:   Thomas Garnier <thgarnie@chromium.org>
+Date:   Fri, 6 Dec 2019 08:35:09 -0800
+X-Gmail-Original-Message-ID: <CAJcbSZHLcSN4BK=N7M3Kv9q-hkPe6dDxbHaRCG9v2JVwhSZxfw@mail.gmail.com>
+Message-ID: <CAJcbSZHLcSN4BK=N7M3Kv9q-hkPe6dDxbHaRCG9v2JVwhSZxfw@mail.gmail.com>
+Subject: Re: [PATCH v10 04/11] x86/entry/64: Adapt assembly for PIE support
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Fri, Dec 6, 2019 at 2:27 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Dec 05, 2019 at 09:01:50AM -0800, Thomas Garnier wrote:
+> > On Thu, Dec 5, 2019 at 1:04 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > On Wed, Dec 04, 2019 at 04:09:41PM -0800, Thomas Garnier wrote:
+> > >
+> > > > @@ -1625,7 +1627,11 @@ first_nmi:
+> > > >       addq    $8, (%rsp)      /* Fix up RSP */
+> > > >       pushfq                  /* RFLAGS */
+> > > >       pushq   $__KERNEL_CS    /* CS */
+> > > > -     pushq   $1f             /* RIP */
+> > > > +     pushq   $0              /* Future return address */
+> > >
+> > > We're building an IRET frame, the IRET frame does not have a 'future
+> > > return address' field.
+> >
+> > I assumed that's the target RIP after iretq.
+>
+> It is. But it's still the (R)IP field of the IRET frame. Calling it
+> anything else is just confusing. The frame is 5 words: SS, (R)SP, (R)FLAGS,
+> CS, (R)IP.
+>
+> > > > +     pushq   %rdx            /* Save RAX */
+> > > > +     leaq    1f(%rip), %rdx  /* RIP */
+> > >
+> > > nonsensical comment
+> >
+> > That was the same comment from the push $1f that I changed.
+>
+> Yes, but there it made sense since the PUSH actually created that field
+> of the frame, here it is nonsensical. What this instruction does is put
+> the address of the '1f' label into RDX, which is then stuck into the
+> (R)IP field on the next instruction.
 
-HEAD commit:    b0d4beaa Merge branch 'next.autofs' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1015a90ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f07a23020fd7d21a
-dashboard link: https://syzkaller.appspot.com/bug?extid=38a3699c7eaf165b97a6
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1795d941e00000
+Got it, make sense. Thanks.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: global-out-of-bounds in __fb_pad_aligned_buffer  
-include/linux/fb.h:655 [inline]
-BUG: KASAN: global-out-of-bounds in bit_putcs_aligned  
-drivers/video/fbdev/core/bitblit.c:96 [inline]
-BUG: KASAN: global-out-of-bounds in bit_putcs+0xd5d/0xf10  
-drivers/video/fbdev/core/bitblit.c:185
-Read of size 1 at addr ffffffff88726a41 by task syz-executor.5/9415
-
-CPU: 1 PID: 9415 Comm: syz-executor.5 Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:639
-  __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  __fb_pad_aligned_buffer include/linux/fb.h:655 [inline]
-  bit_putcs_aligned drivers/video/fbdev/core/bitblit.c:96 [inline]
-  bit_putcs+0xd5d/0xf10 drivers/video/fbdev/core/bitblit.c:185
-  fbcon_putcs+0x33c/0x3e0 drivers/video/fbdev/core/fbcon.c:1353
-  do_update_region+0x42b/0x6f0 drivers/tty/vt/vt.c:677
-  redraw_screen+0x676/0x7d0 drivers/tty/vt/vt.c:1011
-  fbcon_do_set_font+0x829/0x960 drivers/video/fbdev/core/fbcon.c:2605
-  fbcon_copy_font+0x12c/0x190 drivers/video/fbdev/core/fbcon.c:2620
-  con_font_copy drivers/tty/vt/vt.c:4594 [inline]
-  con_font_op+0x6b2/0x1270 drivers/tty/vt/vt.c:4609
-  vt_ioctl+0x181a/0x26d0 drivers/tty/vt/vt_ioctl.c:965
-  tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
-  vfs_ioctl fs/ioctl.c:47 [inline]
-  file_ioctl fs/ioctl.c:545 [inline]
-  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-  __do_sys_ioctl fs/ioctl.c:756 [inline]
-  __se_sys_ioctl fs/ioctl.c:754 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a679
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f5b74dffc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a679
-RDX: 0000000020000000 RSI: 0000000000004b72 RDI: 0000000000000005
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f5b74e006d4
-R13: 00000000004c37ab R14: 00000000004d8c38 R15: 00000000ffffffff
-
-The buggy address belongs to the variable:
-  oid_index+0xb01/0xb80
-
-Memory state around the buggy address:
-  ffffffff88726900: 00 00 02 fa fa fa fa fa 00 00 00 05 fa fa fa fa
-  ffffffff88726980: 00 00 00 fa fa fa fa fa 00 00 00 00 00 01 fa fa
-> ffffffff88726a00: fa fa fa fa 00 00 00 00 01 fa fa fa fa fa fa fa
-                                            ^
-  ffffffff88726a80: 00 00 00 00 fa fa fa fa 00 03 fa fa fa fa fa fa
-  ffffffff88726b00: 04 fa fa fa fa fa fa fa 00 00 01 fa fa fa fa fa
-==================================================================
-
+>
+> > > > +     movq    %rdx, 8(%rsp)   /* Put 1f on return address */
+> > > > +     popq    %rdx            /* Restore RAX */
