@@ -5,65 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFD5C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E39F1C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D9F24679
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B874D24679
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jjadsDBN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JjCpjTdl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfLFHzZ (ORCPT
+        id S1726890AbfLFHzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 02:55:25 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:33091 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfLFHzY (ORCPT
+        Fri, 6 Dec 2019 02:55:44 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38503 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfLFHzo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 02:55:24 -0500
-Received: by mail-pj1-f66.google.com with SMTP id r67so2413416pjb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 23:55:24 -0800 (PST)
+        Fri, 6 Dec 2019 02:55:44 -0500
+Received: by mail-pg1-f194.google.com with SMTP id a33so2692794pgm.5;
+        Thu, 05 Dec 2019 23:55:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=QaqU4ZZ/Urt5R21/nikc8rCEF6ts1fVjkR26xtBAyOA=;
-        b=jjadsDBNPS8OtHRSPNn6QtxEfvQBzpDZDLfkKU2DTOIaMvf03RP/kOkQ/D/LbYSgyH
-         x5nkPApqMZdMlAjPyQR/bXrWy1RRhxm3NGXvYJ5bjtMpV5bWtBOQA11CO1JLwESZN33v
-         ukIFxIOwWS7ZNyuIoSm7ELAPv4vFhGTDCHYeNNqHhRRmE5gEQyC7TU6BuGoRsI7Yj0HM
-         fncxDwvOewPurjd9a9E/A5kvOqzcme2NE/UPAwWFXbTvLz76qcbT0smbhefAHssfpSuf
-         LdI4h6HDmcvhWxYvGT0R+O9hvLozpSpvi7LZMc0dRePOQRR6QOqjuGBcGmIRrDv5p1Il
-         odSQ==
+        bh=b6sEPD+7f9rrFrxPhOl7e8WDEqgliGQGOKb/WtjO5Ls=;
+        b=JjCpjTdldUb5Ee7hf+FyCpro5m3bK+w+nKTnerlO61bkactO3Pyg/DYFivgT6NI8PC
+         B84PnZ/bCNOr4p+Wn1tV2ToQPvy1XTdvyjLTTWTw3Bzs/1VNYstBAOfITJT+uZKlmMgu
+         FjPUmvVbd1Kouub0lAIwtbreOKXF7zzrgdp0Sq571C/7L1rY/ph5vovRfrbuGKiRqM8n
+         kCC12Ye/dNaLbAoEcrXrmKI6QMG2tJFKVn75gQajCMFMcbDpi7DEe4mnmMyzru7bCH9Q
+         vcDpwm+GtdGap0BMgwSEzhqlnN06LkyGZGzJbRConkvc1zdr7h04fs0j6s8xV0vgr/H/
+         nWeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=QaqU4ZZ/Urt5R21/nikc8rCEF6ts1fVjkR26xtBAyOA=;
-        b=H+h/k7sCUKvXIx8Ym2U8vF+JNYqCIry+aiqoC672pUC+uSPZWuxHXAjqo03Qxe3oUl
-         rjlIcOZ/wN7NH6sYHCU4/2elc/OnHM3ywe6D6qcH+0MmCS7pDrvSNtsqAT+hw2XU9NCk
-         ABXvfRmOI0TnCZQjr12d3j3Xs5NWUj7ajln0gNpvpUUKoCg4Fw5VQO1EsR+U8o3OVOsJ
-         Q+dae6ucS3xujTZsFnFAblWZfmEOMLNtywzYteA2XG+9D5ZeUZviOjNKlrFE7c/mvV2Q
-         w2dG4LQGL8o6lq+7kpXQNSamtHwRIf5jpSF812TZ6CzH+vpgA0IcIHTDNM7ftftH5t9D
-         HbDQ==
-X-Gm-Message-State: APjAAAXQ6gGVCCCAi2mHh+3pTfeNypfHINK0jcv56k5YQcJNG/kbjZAt
-        9kBJtsoMAzRxCyaf7X/LhxA=
-X-Google-Smtp-Source: APXvYqzgg7fH/uj3wNC9qxJt7g/rdmxrFIo8YiaT1FrtCXHCjuwNzj4iChssf7KJ7/vc+FGiKEjkpA==
-X-Received: by 2002:a17:902:ba8e:: with SMTP id k14mr9867579pls.335.1575618924028;
-        Thu, 05 Dec 2019 23:55:24 -0800 (PST)
+        bh=b6sEPD+7f9rrFrxPhOl7e8WDEqgliGQGOKb/WtjO5Ls=;
+        b=fegqUmbvyGXUU1z8cA5iS8oRmzwMxwMmovO3yfD+fWpZambgqHFHX6HNzj8wU/LBZD
+         ycxtRAlJIykeL30cYCZNk4XdfbEUgb1yt1tSS/8043Eba/Jnsq5861VTvxpSOn5hnj0l
+         aCd7zGXl1UBpBNGFC/EeyhKZPLfhdFmlY1RDZf5G8n+P2CrBe9QddBF9uD1LjjA6ZPv0
+         lt0vjSUOs4FW5O7ZWnTzBCGYh/Aokc76vNqr/cdZ6TCY+fZgx/Kr7eMK013GghEqYTYR
+         l35BDZz49Nro/DqE2tY3alD8mJFAmyWE5isrYriInkTzFuWycfzIneu+V7y8wRsspLGk
+         nS3w==
+X-Gm-Message-State: APjAAAUr/lUnVnfnkWahIcMengqpZYTBR6Igg9Yrcycmw7nnitNckfy8
+        oUYCNWTk0FsompfOBeeCa9Q=
+X-Google-Smtp-Source: APXvYqxYsMlnlr32fMRFumCNpuqkIcvwFIN120LLG60hSJicwgrN05/T+i/EfDN6esL3zZuRH8S3dA==
+X-Received: by 2002:aa7:90c4:: with SMTP id k4mr12870805pfk.216.1575618943947;
+        Thu, 05 Dec 2019 23:55:43 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id u2sm13894922pgc.19.2019.12.05.23.55.20
+        by smtp.gmail.com with ESMTPSA id q3sm15890301pfc.114.2019.12.05.23.55.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 23:55:23 -0800 (PST)
+        Thu, 05 Dec 2019 23:55:43 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] staging: rts5208: add missed pci_release_regions
-Date:   Fri,  6 Dec 2019 15:55:15 +0800
-Message-Id: <20191206075515.18581-1-hslester96@gmail.com>
+Subject: [PATCH] thermal: intel: fix unmatched pci_release_region
+Date:   Fri,  6 Dec 2019 15:55:31 +0800
+Message-Id: <20191206075531.18637-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,47 +76,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to call pci_release_regions() in probe failure
-and remove.
-Add the missed calls to fix it.
+The driver calls pci_request_regions() in probe and uses
+pci_release_regions() in probe failure.
+However, it calls pci_release_region() in remove, which does
+match the other two calls.
+Use pci_release_regions() instead to unify them.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/staging/rts5208/rtsx.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/thermal/intel/intel_pch_thermal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/rts5208/rtsx.c b/drivers/staging/rts5208/rtsx.c
-index cb95ad6fa4f9..15fc96b42032 100644
---- a/drivers/staging/rts5208/rtsx.c
-+++ b/drivers/staging/rts5208/rtsx.c
-@@ -831,7 +831,8 @@ static int rtsx_probe(struct pci_dev *pci,
- 	host = scsi_host_alloc(&rtsx_host_template, sizeof(*dev));
- 	if (!host) {
- 		dev_err(&pci->dev, "Unable to allocate the scsi host\n");
--		return -ENOMEM;
-+		err = -ENOMEM;
-+		goto scsi_host_alloc_fail;
- 	}
- 
- 	dev = host_to_rtsx(host);
-@@ -971,7 +972,8 @@ static int rtsx_probe(struct pci_dev *pci,
- 	kfree(dev->chip);
- chip_alloc_fail:
- 	dev_err(&pci->dev, "%s failed\n", __func__);
--
-+scsi_host_alloc_fail:
-+	pci_release_regions(pci);
- 	return err;
+diff --git a/drivers/thermal/intel/intel_pch_thermal.c b/drivers/thermal/intel/intel_pch_thermal.c
+index 4f0bb8f502e1..5f7798b8d35f 100644
+--- a/drivers/thermal/intel/intel_pch_thermal.c
++++ b/drivers/thermal/intel/intel_pch_thermal.c
+@@ -365,7 +365,7 @@ static void intel_pch_thermal_remove(struct pci_dev *pdev)
+ 	thermal_zone_device_unregister(ptd->tzd);
+ 	iounmap(ptd->hw_base);
+ 	pci_set_drvdata(pdev, NULL);
+-	pci_release_region(pdev, 0);
++	pci_release_regions(pdev);
+ 	pci_disable_device(pdev);
  }
  
-@@ -983,6 +985,7 @@ static void rtsx_remove(struct pci_dev *pci)
- 
- 	quiesce_and_remove_host(dev);
- 	release_everything(dev);
-+	pci_release_regions(pci);
- }
- 
- /* PCI IDs */
 -- 
 2.24.0
 
