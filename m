@@ -2,82 +2,110 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0529FC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E877DC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B5920707
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE56421823
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:07:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BxzFDejE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfLFKEB (ORCPT
+        id S1726313AbfLFKHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 05:04:01 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57718 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726070AbfLFKEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 05:04:00 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D75C0B203;
-        Fri,  6 Dec 2019 10:03:58 +0000 (UTC)
-Date:   Fri, 6 Dec 2019 11:03:57 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: linux-next: build failure after merge of the printk tree
-Message-ID: <20191206100357.tgtdjcata6zrzc5l@pathway.suse.cz>
-References: <20191206092503.303d6a57@canb.auug.org.au>
+        Fri, 6 Dec 2019 05:07:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53899 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726102AbfLFKHc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 05:07:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575626851;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Wc1Uv6Nj7IUv6CX0rM0U3pEdROrdD6V3JPm9xjrxf2s=;
+        b=BxzFDejEJcZGsF+SZFlnJqQBxChvKaJufogYLXDJpYE8SE4bSRnifFpRBHMXR5rmBJWO6F
+        ZuSPbCg7G43avF54j7npeaMccQI9PHIqQhx3bZa9ZDkabdi7Gyvu+iQhRogaeBK68IaFYB
+        fx1+XNJI9EeeT846TYSM0vSNFaJdUDY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255-CmzEfi7tP9evyYLm71Htdg-1; Fri, 06 Dec 2019 05:07:28 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E96A0107ACC4;
+        Fri,  6 Dec 2019 10:07:25 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A4CD15D6A3;
+        Fri,  6 Dec 2019 10:07:25 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id D155616E18; Fri,  6 Dec 2019 11:07:24 +0100 (CET)
+Date:   Fri, 6 Dec 2019 11:07:24 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org, robh@kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] drm: call drm_gem_object_funcs.mmap with fake
+ offset
+Message-ID: <20191206100724.ukzdyaym3ltcyfaa@sirius.home.kraxel.org>
+References: <20191127092523.5620-1-kraxel@redhat.com>
+ <20191127092523.5620-2-kraxel@redhat.com>
+ <20191128113930.yhckvneecpvfhlls@sirius.home.kraxel.org>
+ <20191205221523.GN624164@phenom.ffwll.local>
 MIME-Version: 1.0
+In-Reply-To: <20191205221523.GN624164@phenom.ffwll.local>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: CmzEfi7tP9evyYLm71Htdg-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191206092503.303d6a57@canb.auug.org.au>
-User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-12-06 09:25:03, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the printk tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
-> 
-> kernel/trace/trace.c: In function 'register_tracer':
-> kernel/trace/trace.c:1892:3: error: implicit declaration of function 'pr_warning'; did you mean 'pr_warn'? [-Werror=implicit-function-declaration]
->  1892 |   pr_warning("Can not register tracer %s due to lockdown\n",
->       |   ^~~~~~~~~~
->       |   pr_warn
-> 
-> Caused by commit
-> 
->   55130ba7f010 ("printk: Drop pr_warning definition")
-> 
-> interacting with commit
-> 
->   a356646a5685 ("tracing: Do not create directories if lockdown is in affect")
-> 
-> from Linus' tree.
-> 
-> I have applied the following merge fix patch for today:
-> 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Fri, 6 Dec 2019 09:21:57 +1100
-> Subject: [PATCH] fix up for "printk: Drop pr_warning definition"
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+On Thu, Dec 05, 2019 at 11:15:23PM +0100, Daniel Vetter wrote:
+> On Thu, Nov 28, 2019 at 12:39:30PM +0100, Gerd Hoffmann wrote:
+> > On Wed, Nov 27, 2019 at 10:25:22AM +0100, Gerd Hoffmann wrote:
+> > > The fake offset is going to stay, so change the calling convention fo=
+r
+> > > drm_gem_object_funcs.mmap to include the fake offset.  Update all use=
+rs
+> > > accordingly.
+> > >=20
+> > > Note that this reverts 83b8a6f242ea ("drm/gem: Fix mmap fake offset
+> > > handling for drm_gem_object_funcs.mmap") and on top then adds the fak=
+e
+> > > offset to  drm_gem_prime_mmap to make sure all paths leading to
+> > > obj->funcs->mmap are consistent.
+> > >=20
+> > > v3: move fake-offset tweak in drm_gem_prime_mmap() so we have this co=
+de
+> > >     only once in the function (Rob Herring).
+> >=20
+> > Now this series fails in Intel CI.  Can't see why though.  The
+> > difference between v2 and v3 is just the place where vma->vm_pgoff gets
+> > updated, and no code between the v2 and v3 location touches vma ...
+>=20
+> Looks like unrelated flukes, this happens occasionally. If you're paranoi=
+d
+> hit the retest button on patchwork to double-check.
+> -Daniel
 
-I have pushed the patch into printk.git, for-5.5-pr_warning-removal.
-And updated the for-next branch.
+Guess you kicked CI?  Just got CI mails, now reporting success, without
+doing anything.  So I'll go push v3 to misc-next.
 
-Thanks a lot for the fix and sorry for the incovenience.
+cheers,
+  Gerd
 
-Best Regards,
-Petr
