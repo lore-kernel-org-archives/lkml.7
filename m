@@ -2,151 +2,201 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EE1C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDEDC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28FC2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45E9A22525
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:12:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TOkL9U4Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbfLFCKI (ORCPT
+        id S1726206AbfLFCMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 21:10:08 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:45500 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726065AbfLFCKH (ORCPT
+        Thu, 5 Dec 2019 21:12:15 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:29239 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfLFCMP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 21:10:07 -0500
-Received: from dread.disaster.area (pa49-179-150-192.pa.nsw.optusnet.com.au [49.179.150.192])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 4B22F7EA9DE;
-        Fri,  6 Dec 2019 13:09:54 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1id345-0007fT-Ps; Fri, 06 Dec 2019 13:09:53 +1100
-Date:   Fri, 6 Dec 2019 13:09:53 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] mm: fix hanging shrinker management on long
- do_shrink_slab
-Message-ID: <20191206020953.GS2695@dread.disaster.area>
-References: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
- <4e2d959a-0b0e-30aa-59b4-8e37728e9793@virtuozzo.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e2d959a-0b0e-30aa-59b4-8e37728e9793@virtuozzo.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=ZXpxJgW8/q3NVgupyyvOCQ==:117 a=ZXpxJgW8/q3NVgupyyvOCQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
-        a=7-415B0cAAAA:8 a=qrpnvERzZt7yDo6Pn0wA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        Thu, 5 Dec 2019 21:12:15 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191206021211epoutp029202265b8207034404c7f321a8272669~dplWm5f510389703897epoutp02q
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Dec 2019 02:12:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191206021211epoutp029202265b8207034404c7f321a8272669~dplWm5f510389703897epoutp02q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575598331;
+        bh=yVjyyT6cyfAJws8dtkCEPFuAEVTFjI069XI6tOasVco=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TOkL9U4Ytfswc9kOfD0iNblm2lqQ9eVVRgAcEsgVzT9RUAb/Stc7y2kYAZb6dFoj3
+         YKtB06sdvkF8BM0Ua+AsJTKvBwNLoz/qxPG9updtwV2AbZVthlULIdHAveC1OHvCEV
+         JaSS9kD2fMKGqqk1RgmAkR9p6dfHpxlzltNGwKas=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191206021211epcas1p15277bdbadc97c59092574f9d881869bb~dplWMaUhQ1340813408epcas1p1e;
+        Fri,  6 Dec 2019 02:12:11 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 47Tbgr49rpzMqYkq; Fri,  6 Dec
+        2019 02:12:08 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        84.7E.48498.8F8B9ED5; Fri,  6 Dec 2019 11:12:08 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191206021208epcas1p1d7b3bb434108f38b0ef83b1c7d7a5d79~dplTeC1Gl1339813398epcas1p1c;
+        Fri,  6 Dec 2019 02:12:08 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191206021208epsmtrp125a68fe2cd4077f830c21b10108a5f05~dplTdKUlN0289602896epsmtrp1K;
+        Fri,  6 Dec 2019 02:12:08 +0000 (GMT)
+X-AuditID: b6c32a36-a3dff7000001bd72-f5-5de9b8f8587a
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        07.8D.06569.7F8B9ED5; Fri,  6 Dec 2019 11:12:07 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191206021207epsmtip19b7f4826bf9feecd479158ddcd5f8a43~dplTMZTDx1992119921epsmtip1T;
+        Fri,  6 Dec 2019 02:12:07 +0000 (GMT)
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     rafael.j.wysocki@intel.com, myungjoo.ham@samsung.com,
+        b.zolnierkie@samsung.com, cw00.choi@samsung.com,
+        gregkh@linuxfoundation.org, krzk@kernel.org,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        mchehab@kernel.org, cpgs@samsung.com,
+        Kamil Konieczny <k.konieczny@samsung.com>
+Subject: [PATCH v4] PM / devfreq: add clearing transitions stats
+Date:   Fri,  6 Dec 2019 11:18:13 +0900
+Message-Id: <20191206021813.7193-1-cw00.choi@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191205145527.26117-1-k.konieczny@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGvZ12OhiLY3G5EoU6xkRQkAFbByKERGIa5YGEN2IDkzJpCd3s
+        tAj6IKiRsiqQECASFwS1YgoTJIhLtWKMimIlRI02kaBCcWepKCp2GIi+/fc/33/PybkXQ+S1
+        aDiWZ7IxVhNtINCl4u67UbExMz1+TZzrjoLqbHBJKL8nino+NSqhjra4UOrMRIOEGhjokFKP
+        j3yUUoO9p1BqsqoPUFf6fFKqjfslol6VXESpkYufpKkydcsNv0jNOctQtbu5Xaqu7nIC9SQX
+        kSHJyt+pZ+hcxqpgTFpzbp5Jl0zszczela1UxZExZCK1g1CYaCOTTKSlZ8TszjMEZyQUBbTB
+        HrQyaJYltqXstJrtNkahN7O2ZIKx5BosiZZYljaydpMuVms2JpFxcfHKIJiTr3cMPxJb3q0p
+        vN1zEykGL8PKQQgG8e3Q0d+MloOlmBzvAXDWUY0IhwkAn9TWAJ6S4wEAh46sW0zM/R4QCdDN
+        YOJ0YOEwBSD3s0rCUygeDd1jL1Ber8ST4FjpuJSHEPy8CL76Vi/lC2F4Kmx8OBhMY5gY3wS5
+        YQVvy/BE2NRYLhW6RcLLHbcRXofgybD72fv5ZhDvR6F39MMClAY7fV5E0GFw/H7Xgh8O/SeO
+        L+hD8NKDPlQIOwDscj+VCIUE6G6tmx8CwaOgq3ebYG+A12abgaBlsLhzdv4eBA+Fn6crJTzO
+        +47jcgHZCAff+ESCXgtbSstQAVHDugqVsJ+TAN64dgs5CSKb/jU7A4ATrGYsrFHHsKQl/v/X
+        48D8f4xW9YBzT9I9AMcAsUzWMDmmkUvoArbI6AEQQ4iVMl2oXyOX5dJFBxmrOdtqNzCsByiD
+        S61BwldpzcHfbbJlk8r4hIQEajupUpIksUaGzXg1clxH25h8hrEw1sWcCAsJLwbsoDZ18vWP
+        t1n0+Cfuakl86n76QJLm8PfhdrdqvDKfdjZ8LZz74x1dEXJdFPCmpThf77PF2AOBC3tqth47
+        +k6xuaOEMBYZuLb61qTlOWVfGlOGfv32oZljnhJnx/3mfnFERa++aahv2vf8Xn3Y2fbTjlib
+        Z4mWexu55ZJr/YiDELN6moxGrCz9F3UjZ8KlAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPLMWRmVeSWpSXmKPExsWy7bCSnO73HS9jDZo3WFpsnLGe1eLlIU2L
+        61+es1o0L17PZrHg0wxWi/PnN7BbnG16w25xedccNovPvUcYLdYeuctusWzTHyaL240r2Cwe
+        r3jL7sDrsXjPSyaPTas62Tz2z13D7tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZHQ9PsxQ8
+        Fa84sGMvcwPjTeEuRk4OCQETif9/zzN1MXJxCAnsZpSY93sPC0RCUmLaxaPMXYwcQLawxOHD
+        xRA1nxgl9m1qZAapYRPQktj/4gYbiC0iYCPxfu4ZFpAiZoENTBLrjm0DSwgLOEjMPHWZCWQQ
+        i4CqxKaHCiBhXgFLiVkzu9ghdslLrN5wAGwmp4CtxLZLz8DKhYBmNrxhmcDIt4CRYRWjZGpB
+        cW56brFhgVFearlecWJucWleul5yfu4mRnCwamntYDxxIv4QowAHoxIP74zPL2KFWBPLiitz
+        DzFKcDArifCm872MFeJNSaysSi3Kjy8qzUktPsQozcGiJM4rn38sUkggPbEkNTs1tSC1CCbL
+        xMEp1cDIcXfrwlsZ+/We/wuuctqce84kKr/d8Yjok5uii+Z5n1hZu1b64I/t2w/nxxTvtfMF
+        shWWKEr4N22Yt1ph35K8V684n2aHK0/bdX4nx4s/Bjp/U/T+ah/i/XSPpeTOdl7higAtpzbP
+        BKWlYncvVDQzPPl7ddLEJxcf8TOyNF/vmNb1put9uJkSS3FGoqEWc1FxIgB+O4t9UgIAAA==
+X-CMS-MailID: 20191206021208epcas1p1d7b3bb434108f38b0ef83b1c7d7a5d79
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+X-CPGSPASS: Y
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191206021208epcas1p1d7b3bb434108f38b0ef83b1c7d7a5d79
+References: <20191205145527.26117-1-k.konieczny@samsung.com>
+        <CGME20191206021208epcas1p1d7b3bb434108f38b0ef83b1c7d7a5d79@epcas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[please cc me on future shrinker infrastructure modifications]
+From: Kamil Konieczny <k.konieczny@samsung.com>
 
-On Mon, Dec 02, 2019 at 07:36:03PM +0300, Andrey Ryabinin wrote:
-> 
-> On 11/30/19 12:45 AM, Pavel Tikhomirov wrote:
-> > We have a problem that shrinker_rwsem can be held for a long time for
-> > read in shrink_slab, at the same time any process which is trying to
-> > manage shrinkers hangs.
-> > 
-> > The shrinker_rwsem is taken in shrink_slab while traversing shrinker_list.
-> > It tries to shrink something on nfs (hard) but nfs server is dead at
-> > these moment already and rpc will never succeed. Generally any shrinker
-> > can take significant time to do_shrink_slab, so it's a bad idea to hold
-> > the list lock here.
+Add clearing transition table and time in states devfreq statistics
+by writing 0 (zero) to trans_stat file in devfreq sysfs. An example use
+is like following:
 
-registering/unregistering a shrinker is not a performance critical
-task. If a shrinker is blocking for a long time, then we need to
-work to fix the shrinker implementation because blocking is a much
-bigger problem than just register/unregister.
+echo 0 > /sys/class/devfreq/devfreqX/trans_stat
 
-> > The idea of the patch is to inc a refcount to the chosen shrinker so it
-> > won't disappear and release shrinker_rwsem while we are in
-> > do_shrink_slab, after that we will reacquire shrinker_rwsem, dec
-> > the refcount and continue the traversal.
+Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+[cw00.choi: Edit return value if entering the wrong value for reset
+ and use arrary3_size() to get the size of 3-dimensional array]
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+---
+ Documentation/ABI/testing/sysfs-class-devfreq | 11 ++++---
+ drivers/devfreq/devfreq.c                     | 29 ++++++++++++++++++-
+ 2 files changed, 35 insertions(+), 5 deletions(-)
 
-This is going to cause a *lot* of traffic on the shrinker rwsem.
-It's already a pretty hot lock on large machines under memory
-pressure (think thousands of tasks all doing direct reclaim across
-hundreds of CPUs), and so changing them to cycle the rwsem on every
-shrinker that will only make this worse. Esepcially when we consider
-that there may be hundreds to thousands of registered shrinker
-instances on large machines.
-
-As an example of how frequent cycling of a global lock in shrinker
-instances causes issues, we used to take references to superblock
-shrinker count invocations to guarantee existence. This was found to
-be a scalability limitation when lots of near-empty superblocks were
-present in a system (see commit d23da150a37c ("fs/superblock: avoid
-locking counting inodes and dentries before reclaiming them")).
-
-This alleviated the problem for a while, but soon we had problems
-with just taking a reference to the superblock in the callbacks that
-did actual work. Hence we changed it to just take a per-superblock
-rwsem to get rid of the global sb_lock spinlock in this path. See
-commit eb6ef3df4faa ("trylock_super(): replacement for
-grab_super_passive()". Now we don't have a scalability problem.
-
-IOWs, we already know that cycling a global rwsem on every
-individual shrinker invocation is going to cause noticable
-scalability problems. Hence I don't think that this sort of "cycle
-the global rwsem faster to reduce [un]register latency" solution is
-going to fly because of the runtime performance regressions it will
-introduce....
-
-> I don't think this patch solves the problem, it only fixes one minor symptom of it.
-> The actual problem here the reclaim hang in the nfs.
-
-The nfs client is waiting on the NFS server to respond. It may
-actually be that the server has hung, not the client...
-
-> It means that any process, including kswapd, may go into nfs inode reclaim and stuck there.
-
-*nod*
-
-> I think this should be handled on nfs/vfs level by making  inode eviction during reclaim more asynchronous.
-
-That's what we are trying to do with similar blocking based issues
-in XFS inode reclaim. It's not simple, though, because these days
-memory reclaim is like a bowl full of spaghetti covered with a
-delicious sauce of non-obvious heuristics and broken
-functionality....
-
-Cheers,
-
-Dave.
+diff --git a/Documentation/ABI/testing/sysfs-class-devfreq b/Documentation/ABI/testing/sysfs-class-devfreq
+index 75897e2fde43..9758eb85ade3 100644
+--- a/Documentation/ABI/testing/sysfs-class-devfreq
++++ b/Documentation/ABI/testing/sysfs-class-devfreq
+@@ -55,12 +55,15 @@ What:		/sys/class/devfreq/.../trans_stat
+ Date:		October 2012
+ Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
+ Description:
+-		This ABI shows the statistics of devfreq behavior on a
+-		specific device. It shows the time spent in each state and
+-		the number of transitions between states.
++		This ABI shows or clears the statistics of devfreq behavior
++		on a specific device. It shows the time spent in each state
++		and the number of transitions between states.
+ 		In order to activate this ABI, the devfreq target device
+ 		driver should provide the list of available frequencies
+-		with its profile.
++		with its profile. If need to reset the statistics of devfreq
++		behavior on a specific device, enter 0(zero) to 'trans_stat'
++		as following:
++			echo 0 > /sys/class/devfreq/.../trans_stat
+ 
+ What:		/sys/class/devfreq/.../userspace/set_freq
+ Date:		September 2011
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index abecadeb3dc2..df31f430051d 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -1478,7 +1478,34 @@ static ssize_t trans_stat_show(struct device *dev,
+ 					devfreq->total_trans);
+ 	return len;
+ }
+-static DEVICE_ATTR_RO(trans_stat);
++
++static ssize_t trans_stat_store(struct device *dev,
++				struct device_attribute *attr,
++				const char *buf, size_t count)
++{
++	struct devfreq *df = to_devfreq(dev);
++	int err, value;
++
++	if (df->profile->max_state == 0)
++		return count;
++
++	err = kstrtoint(buf, 10, &value);
++	if (err || value != 0)
++		return -EINVAL;
++
++	mutex_lock(&df->lock);
++	memset(df->time_in_state, 0, (df->profile->max_state *
++					sizeof(*df->time_in_state)));
++	memset(df->trans_table, 0, array3_size(sizeof(unsigned int),
++					df->profile->max_state,
++					df->profile->max_state));
++	df->total_trans = 0;
++	df->last_stat_updated = get_jiffies_64();
++	mutex_unlock(&df->lock);
++
++	return count;
++}
++static DEVICE_ATTR_RW(trans_stat);
+ 
+ static struct attribute *devfreq_attrs[] = {
+ 	&dev_attr_name.attr,
 -- 
-Dave Chinner
-david@fromorbit.com
+2.17.1
+
