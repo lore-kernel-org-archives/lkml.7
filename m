@@ -2,208 +2,216 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0F8C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD50DC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784A62466E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:12:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Cxn8+h/I"
+	by mail.kernel.org (Postfix) with ESMTP id 9FB512466E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 06:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbfLFGL5 (ORCPT
+        id S1726420AbfLFGMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 01:11:57 -0500
-Received: from mail-bn8nam12on2059.outbound.protection.outlook.com ([40.107.237.59]:6034
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726156AbfLFGL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 01:11:56 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jKO4MfaPheAkarHTkTmKPMdGLBHnV8snRpV4y6/A6t8zFI+qcnqvrnUq509IJyPjPFpxge6+PJlGFmYl8nRTBb7G45Fuf0vqrIOjhe2JbUPhTP3N3aUbr4z4VgZFQ+H4c76LTjhjE/no4SJ8YW/oUOkDselEhDIXF5N2zJ8moHN0DlQkIqNEJm0FOmi61KcyN+qfdMyWoC5oaOG2CSe18r8XfkMnU8MxzDHRp6feBoMDNaiAhNYXSpyP6/+nVjQX8Wn6hJ3H4bLqvZ/Fu8Z4hA21k+n3f0tG+yZ8fIxeYsXZxuSdjqgEMxAxuJYD4QKZ/HikdXLmebHB9iSwx1h01g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YKpTJieFmsEPzhElMBbJ3O/Ru2YE2+3mooXyq70Rejs=;
- b=U9NmHQfpQpIPRbRRG/yOqxwfVrXLJWpFypPL+1e1GGo0Na1dh+PqpTWQjoHMRuLpX2RaZIQrHaRmnOGoM+sIB6uVilfK5fRi1z3aR2a6mtt9k7RmIM8dFm8p8iCgY89Jb0r306WVY06kEjOHF7zpBhmb4xOEI2uuRu3tfCaZk5ERFsEeuAAfj8+P+zsCzRVFiCaRjKciyBgwz4mhNYp902aL7YdaWGm5ADmGdlFvpLgBxZu0HYkZhuoyQYUc4HS4WS605i5Rs18kjMjdBkNz6gjjUZRRFU+xFXL5CRNmU2LRh3xB6ToRtvz580BjascCM9xuhBEizAbKpLoX8T9qBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YKpTJieFmsEPzhElMBbJ3O/Ru2YE2+3mooXyq70Rejs=;
- b=Cxn8+h/IlJ3SUS6VvMwW/BwZ2AL9rSLn/nDa9YycPE+J6zXWXcjtKQJlrI2hQknrG/fG3hd44IWUsAEqH/3Fiph5L3JRYXIQtzBv3wV69fb5bWNxV5IUWI/Hi6y3sK9SONpf2hjNYcIphIPSmKeGuXWQIOewv2F2MM1GtZk65TY=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Rijo-john.Thomas@amd.com; 
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
- CY4PR12MB1495.namprd12.prod.outlook.com (10.172.71.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.14; Fri, 6 Dec 2019 06:11:54 +0000
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::cd8b:1d7e:31c2:e8b4]) by CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::cd8b:1d7e:31c2:e8b4%7]) with mapi id 15.20.2495.014; Fri, 6 Dec 2019
- 06:11:53 +0000
-From:   Rijo Thomas <Rijo-john.Thomas@amd.com>
-To:     Jens Wiklander <jens.wiklander@linaro.org>,
-        tee-dev@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
-        Nimesh Easow <Nimesh.Easow@amd.com>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>
-Subject: [RFC PATCH v3 4/4] Documentation: tee: add AMD-TEE driver details
-Date:   Fri,  6 Dec 2019 10:48:44 +0530
-Message-Id: <dcb7478485b3c049ac813ce30db385674202009a.1575608819.git.Rijo-john.Thomas@amd.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1575608819.git.Rijo-john.Thomas@amd.com>
-References: <cover.1575608819.git.Rijo-john.Thomas@amd.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR0101CA0042.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:22::28) To CY4PR12MB1925.namprd12.prod.outlook.com
- (2603:10b6:903:120::7)
+        Fri, 6 Dec 2019 01:12:20 -0500
+Received: from mga02.intel.com ([134.134.136.20]:3059 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726156AbfLFGMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 01:12:20 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 22:12:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,283,1571727600"; 
+   d="scan'208";a="209359347"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Dec 2019 22:12:17 -0800
+Date:   Fri, 6 Dec 2019 01:04:07 -0500
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [RFC PATCH 4/9] vfio-pci: register default dynamic-trap-bar-info
+ region
+Message-ID: <20191206060407.GF31791@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20191205032419.29606-1-yan.y.zhao@intel.com>
+ <20191205032650.29794-1-yan.y.zhao@intel.com>
+ <20191205165530.1f29fe85@x1.home>
 MIME-Version: 1.0
-X-Mailer: git-send-email 1.9.1
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c5204187-53a7-4252-5e97-08d77a133076
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1495:|CY4PR12MB1495:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB14955D8882C1C8A7588BF1EBCF5F0@CY4PR12MB1495.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0243E5FD68
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(189003)(199004)(5660300002)(966005)(6512007)(6486002)(66946007)(14454004)(48376002)(14444005)(99286004)(66556008)(66476007)(6506007)(8676002)(305945005)(86362001)(8936002)(50226002)(81156014)(51416003)(76176011)(52116002)(478600001)(81166006)(11346002)(36756003)(16586007)(316002)(6666004)(118296001)(26005)(50466002)(25786009)(186003)(2906002)(4326008)(54906003)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1495;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XWFELUdahKm4rmbpiSEyH56jLxZBhsz/Jp8KVay/5JIZtUyNsxZHMJlt4lvYWAFHaXXLkn7OgUSOjHW1B6gAqoqeukmAQip0Hlzj6i9vpFMLX0XC/L2XWXTbxO9hwB3JBcLoQO4mQ9E9cO1cxbCBZKXpCoU8BrAkFcWq9bmR4Ntqd8y/wsU7eQPtjHvF+eDkdlxfqMO9DnJQ3mur5UFU5JmOpo05J7h6l3bxZadNSYlZnBloNUTqRhuk2OucSnMDy4ePYTW3orZYaJDUdICOSK4LXaM4+AIn1fWyPvbGCfLTkUGgWm1htJJCUt4Z+k79bOLtQsc3eKJonuGlEh5jMPSOcS8LCx1CjXFDMV8+eU9aKeZ7V/mm5bTgqHFBf/0YMHbuNQKKGQSR6e9Xc/mdYVs2BxoKmS7M2WfY3hTNXNRHAqZxB4A56/DgzHLm4pZiOxHlNvbtFKebgJ6oERsB21pFD8ngCER+06DpCwxWfFA=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5204187-53a7-4252-5e97-08d77a133076
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2019 06:11:53.8902
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TdN3B8DfFIrDFqJT1X/ARiKa7Dvewx4VIl/cJrwcMw0M6r6IyscLHvvDfqikuiUK2NnMDy3vsm70tOGjtmLhNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1495
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191205165530.1f29fe85@x1.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update tee.txt with AMD-TEE driver details. The driver is written
-to communicate with AMD's TEE.
+On Fri, Dec 06, 2019 at 07:55:30AM +0800, Alex Williamson wrote:
+> On Wed,  4 Dec 2019 22:26:50 -0500
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
+> 
+> > Dynamic trap bar info region is a channel for QEMU and vendor driver to
+> > communicate dynamic trap info. It is of type
+> > VFIO_REGION_TYPE_DYNAMIC_TRAP_BAR_INFO and subtype
+> > VFIO_REGION_SUBTYPE_DYNAMIC_TRAP_BAR_INFO.
+> > 
+> > This region has two fields: dt_fd and trap.
+> > When QEMU detects a device regions of this type, it will create an
+> > eventfd and write its eventfd id to dt_fd field.
+> > When vendor drivre signals this eventfd, QEMU reads trap field of this
+> > info region.
+> > - If trap is true, QEMU would search the device's PCI BAR
+> > regions and disable all the sparse mmaped subregions (if the sparse
+> > mmaped subregion is disablable).
+> > - If trap is false, QEMU would re-enable those subregions.
+> > 
+> > A typical usage is
+> > 1. vendor driver first cuts its bar 0 into several sections, all in a
+> > sparse mmap array. So initally, all its bar 0 are passthroughed.
+> > 2. vendor driver specifys part of bar 0 sections to be disablable.
+> > 3. on migration starts, vendor driver signals dt_fd and set trap to true
+> > to notify QEMU disabling the bar 0 sections of disablable flags on.
+> > 4. QEMU disables those bar 0 section and hence let vendor driver be able
+> > to trap access of bar 0 registers and make dirty page tracking possible.
+> > 5. on migration failure, vendor driver signals dt_fd to QEMU again.
+> > QEMU reads trap field of this info region which is false and QEMU
+> > re-passthrough the whole bar 0 region.
+> > 
+> > Vendor driver specifies whether it supports dynamic-trap-bar-info region
+> > through cap VFIO_PCI_DEVICE_CAP_DYNAMIC_TRAP_BAR in
+> > vfio_pci_mediate_ops->open().
+> > 
+> > If vfio-pci detects this cap, it will create a default
+> > dynamic_trap_bar_info region on behalf of vendor driver with region len=0
+> > and region->ops=null.
+> > Vvendor driver should override this region's len, flags, rw, mmap in its
+> > vfio_pci_mediate_ops.
+> 
+> TBH, I don't like this interface at all.  Userspace doesn't pass data
+> to the kernel via INFO ioctls.  We have a SET_IRQS ioctl for
+> configuring user signaling with eventfds.  I think we only need to
+> define an IRQ type that tells the user to re-evaluate the sparse mmap
+> information for a region.  The user would enumerate the device IRQs via
+> GET_IRQ_INFO, find one of this type where the IRQ info would also
+> indicate which region(s) should be re-evaluated on signaling.  The user
+> would enable that signaling via SET_IRQS and simply re-evaluate the
+ok. I'll try to switch to this way. Thanks for this suggestion.
 
-Co-developed-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
-Signed-off-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
-Signed-off-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
----
- Documentation/tee.txt | 81 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+> sparse mmap capability for the associated regions when signaled.
 
-diff --git a/Documentation/tee.txt b/Documentation/tee.txt
-index afacdf2..c8fad81 100644
---- a/Documentation/tee.txt
-+++ b/Documentation/tee.txt
-@@ -112,6 +112,83 @@ kernel are handled by the kernel driver. Other RPC messages will be forwarded to
- tee-supplicant without further involvement of the driver, except switching
- shared memory buffer representation.
- 
-+AMD-TEE driver
-+==============
-+
-+The AMD-TEE driver handles the communication with AMD's TEE environment. The
-+TEE environment is provided by AMD Secure Processor.
-+
-+The AMD Secure Processor (formerly called Platform Security Processor or PSP)
-+is a dedicated processor that features ARM TrustZone technology, along with a
-+software-based Trusted Execution Environment (TEE) designed to enable
-+third-party Trusted Applications. This feature is currently enabled only for
-+APUs.
-+
-+The following picture shows a high level overview of AMD-TEE::
-+
-+                                             |
-+    x86                                      |
-+                                             |
-+ User space            (Kernel space)        |    AMD Secure Processor (PSP)
-+ ~~~~~~~~~~            ~~~~~~~~~~~~~~        |    ~~~~~~~~~~~~~~~~~~~~~~~~~~
-+                                             |
-+ +--------+                                  |       +-------------+
-+ | Client |                                  |       | Trusted     |
-+ +--------+                                  |       | Application |
-+     /\                                      |       +-------------+
-+     ||                                      |             /\
-+     ||                                      |             ||
-+     ||                                      |             \/
-+     ||                                      |         +----------+
-+     ||                                      |         |   TEE    |
-+     ||                                      |         | Internal |
-+     \/                                      |         |   API    |
-+ +---------+           +-----------+---------+         +----------+
-+ | TEE     |           | TEE       | AMD-TEE |         | AMD-TEE  |
-+ | Client  |           | subsystem | driver  |         | Trusted  |
-+ | API     |           |           |         |         |   OS     |
-+ +---------+-----------+----+------+---------+---------+----------+
-+ |   Generic TEE API        |      | ASP     |      Mailbox       |
-+ |   IOCTL (TEE_IOC_*)      |      | driver  | Register Protocol  |
-+ +--------------------------+      +---------+--------------------+
-+
-+At the lowest level (in x86), the AMD Secure Processor (ASP) driver uses the
-+CPU to PSP mailbox regsister to submit commands to the PSP. The format of the
-+command buffer is opaque to the ASP driver. It's role is to submit commands to
-+the secure processor and return results to AMD-TEE driver. The interface
-+between AMD-TEE driver and AMD Secure Processor driver can be found in [6].
-+
-+The AMD-TEE driver packages the command buffer payload for processing in TEE.
-+The command buffer format for the different TEE commands can be found in [7].
-+
-+The TEE commands supported by AMD-TEE Trusted OS are:
-+* TEE_CMD_ID_LOAD_TA          - loads a Trusted Application (TA) binary into
-+                                TEE environment.
-+* TEE_CMD_ID_UNLOAD_TA        - unloads TA binary from TEE environment.
-+* TEE_CMD_ID_OPEN_SESSION     - opens a session with a loaded TA.
-+* TEE_CMD_ID_CLOSE_SESSION    - closes session with loaded TA
-+* TEE_CMD_ID_INVOKE_CMD       - invokes a command with loaded TA
-+* TEE_CMD_ID_MAP_SHARED_MEM   - maps shared memory
-+* TEE_CMD_ID_UNMAP_SHARED_MEM - unmaps shared memory
-+
-+AMD-TEE Trusted OS is the firmware running on AMD Secure Processor.
-+
-+The AMD-TEE driver registers itself with TEE subsystem and implements the
-+following driver function callbacks:
-+
-+* get_version - returns the driver implementation id and capability.
-+* open - sets up the driver context data structure.
-+* release - frees up driver resources.
-+* open_session - loads the TA binary and opens session with loaded TA.
-+* close_session -  closes session with loaded TA and unloads it.
-+* invoke_func - invokes a command with loaded TA.
-+
-+cancel_req driver callback is not supported by AMD-TEE.
-+
-+The GlobalPlatform TEE Client API [5] can be used by the user space (client) to
-+talk to AMD's TEE. AMD's TEE provides a secure environment for loading, opening
-+a session, invoking commands and clossing session with TA.
-+
- References
- ==========
- 
-@@ -125,3 +202,7 @@ References
- 
- [5] http://www.globalplatform.org/specificationsdevice.asp look for
-     "TEE Client API Specification v1.0" and click download.
-+
-+[6] include/linux/psp-tee.h
-+
-+[7] drivers/tee/amdtee/amdtee_if.h
--- 
-1.9.1
+Do you like the "disablable" flag of sparse mmap ?
+I think it's a lightweight way for user to switch mmap state of a whole region,
+otherwise going through a complete flow of GET_REGION_INFO and re-setup
+region might be too heavy.
 
+Thanks
+Yan
+
+> Thanks,
+> 
+> Alex
+>
+
+
+
+
+> > 
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > 
+> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > ---
+> >  drivers/vfio/pci/vfio_pci.c | 16 ++++++++++++++++
+> >  include/linux/vfio.h        |  3 ++-
+> >  include/uapi/linux/vfio.h   | 11 +++++++++++
+> >  3 files changed, 29 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> > index 059660328be2..62b811ca43e4 100644
+> > --- a/drivers/vfio/pci/vfio_pci.c
+> > +++ b/drivers/vfio/pci/vfio_pci.c
+> > @@ -127,6 +127,19 @@ void init_migration_region(struct vfio_pci_device *vdev)
+> >  		NULL);
+> >  }
+> >  
+> > +/**
+> > + * register a region to hold info for dynamically trap bar regions
+> > + */
+> > +void init_dynamic_trap_bar_info_region(struct vfio_pci_device *vdev)
+> > +{
+> > +	vfio_pci_register_dev_region(vdev,
+> > +		VFIO_REGION_TYPE_DYNAMIC_TRAP_BAR_INFO,
+> > +		VFIO_REGION_SUBTYPE_DYNAMIC_TRAP_BAR_INFO,
+> > +		NULL, 0,
+> > +		VFIO_REGION_INFO_FLAG_READ | VFIO_REGION_INFO_FLAG_WRITE,
+> > +		NULL);
+> > +}
+> > +
+> >  static void vfio_pci_probe_mmaps(struct vfio_pci_device *vdev)
+> >  {
+> >  	struct resource *res;
+> > @@ -538,6 +551,9 @@ static int vfio_pci_open(void *device_data)
+> >  				if (caps & VFIO_PCI_DEVICE_CAP_MIGRATION)
+> >  					init_migration_region(vdev);
+> >  
+> > +				if (caps & VFIO_PCI_DEVICE_CAP_DYNAMIC_TRAP_BAR)
+> > +					init_dynamic_trap_bar_info_region(vdev);
+> > +
+> >  				pr_info("vfio pci found mediate_ops %s, caps=%llx, handle=%x for %x:%x\n",
+> >  						vdev->mediate_ops->name, caps,
+> >  						handle, vdev->pdev->vendor,
+> > diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> > index cddea8e9dcb2..cf8ecf687bee 100644
+> > --- a/include/linux/vfio.h
+> > +++ b/include/linux/vfio.h
+> > @@ -197,7 +197,8 @@ extern void vfio_virqfd_disable(struct virqfd **pvirqfd);
+> >  
+> >  struct vfio_pci_mediate_ops {
+> >  	char	*name;
+> > -#define VFIO_PCI_DEVICE_CAP_MIGRATION (0x01)
+> > +#define VFIO_PCI_DEVICE_CAP_MIGRATION		(0x01)
+> > +#define VFIO_PCI_DEVICE_CAP_DYNAMIC_TRAP_BAR	(0x02)
+> >  	int	(*open)(struct pci_dev *pdev, u64 *caps, u32 *handle);
+> >  	void	(*release)(int handle);
+> >  	void	(*get_region_info)(int handle,
+> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > index caf8845a67a6..74a2d0b57741 100644
+> > --- a/include/uapi/linux/vfio.h
+> > +++ b/include/uapi/linux/vfio.h
+> > @@ -258,6 +258,9 @@ struct vfio_region_info {
+> >  struct vfio_region_sparse_mmap_area {
+> >  	__u64	offset;	/* Offset of mmap'able area within region */
+> >  	__u64	size;	/* Size of mmap'able area */
+> > +	__u32	disablable;	/* whether this mmap'able are able to
+> > +				 *  be dynamically disabled
+> > +				 */
+> >  };
+> >  
+> >  struct vfio_region_info_cap_sparse_mmap {
+> > @@ -454,6 +457,14 @@ struct vfio_device_migration_info {
+> >  #define VFIO_DEVICE_DIRTY_PFNS_ALL	(~0ULL)
+> >  } __attribute__((packed));
+> >  
+> > +/* Region type and sub-type to hold info to dynamically trap bars */
+> > +#define VFIO_REGION_TYPE_DYNAMIC_TRAP_BAR_INFO		(4)
+> > +#define VFIO_REGION_SUBTYPE_DYNAMIC_TRAP_BAR_INFO	(1)
+> > +
+> > +struct vfio_device_dt_bar_info_region {
+> > +	__u32 dt_fd; /* fd of eventfd to notify qemu trap/untrap bars*/
+> > +	__u32 trap;   /* trap/untrap bar regions */
+> > +};
+> >  
+> >  /* sub-types for VFIO_REGION_TYPE_PCI_* */
+> >  
+> 
