@@ -2,93 +2,98 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74854C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D611AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43EC9206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43CB24673
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:22:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ioGYHue0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfLFSUo (ORCPT
+        id S1726400AbfLFSWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 13:20:44 -0500
-Received: from muru.com ([72.249.23.125]:44270 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbfLFSUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 13:20:44 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 277C08047;
-        Fri,  6 Dec 2019 18:21:22 +0000 (UTC)
-Date:   Fri, 6 Dec 2019 10:20:40 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Subject: Re: [PATCH] ARM: OMAP2+: Fix warnings with broken
- omap2_set_init_voltage()
-Message-ID: <20191206182040.GH35479@atomide.com>
-References: <20190924233222.52757-1-tony@atomide.com>
- <8FFD44DB-73F8-4807-91E1-C97DA8F781BA@goldelico.com>
- <20191202213929.GB35479@atomide.com>
- <EE749881-C3DB-4BBE-85FE-E5AF3D34884F@goldelico.com>
- <BAF5B057-1017-4174-8C3F-4B49B31E2E0D@goldelico.com>
- <20191203154447.GC35479@atomide.com>
- <5F430C0D-7F25-4680-87B9-2D65A08A9F83@goldelico.com>
- <FB42ED12-5DDB-4A9E-941A-ACBE2C10C36A@goldelico.com>
+        Fri, 6 Dec 2019 13:22:34 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32155 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726298AbfLFSWe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 13:22:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575656553;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=pkO2zZFmgQehl/A8nk21THxwcIqs5vjrYyeZ+q3C/Nk=;
+        b=ioGYHue0tQTvTDAMjy5+HXUbwtVzq3HV+oLgBpNRaChdmgX9GY8161LMdZ1F4dUYuQdEdq
+        g/M0yvPUsypoPUhLWmUjNKax5t4dujtXCuphxVKqivBaumsAcTCPOLQrSWWsMp5qODlFKW
+        v0n2CkfRQ4mP5Ltw68ozfISuY15102o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-333-S58x6o8wPNCLHbUrxi5mBA-1; Fri, 06 Dec 2019 13:22:30 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D070800D4C;
+        Fri,  6 Dec 2019 18:22:29 +0000 (UTC)
+Received: from x1.home (ovpn-116-56.phx2.redhat.com [10.3.116.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AD5D6608A5;
+        Fri,  6 Dec 2019 18:22:28 +0000 (UTC)
+Date:   Fri, 6 Dec 2019 11:22:27 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: [GIT PULL] VFIO updates for v5.5-rc1
+Message-ID: <20191206112227.53e15607@x1.home>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <FB42ED12-5DDB-4A9E-941A-ACBE2C10C36A@goldelico.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: S58x6o8wPNCLHbUrxi5mBA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [191203 16:55]:
-> > What we could do is augment the printk (or dev_err) to tell
-> > in these warnings what it is looking for...
-> > 
-> > 	opp = dev_pm_opp_find_freq_ceil(dev, &freq);
-> > 	if (IS_ERR(opp)) {
-> > 		pr_err("%s: unable to find boot up OPP for vdd_%s freq %ulHz\n",
-> > 		__func__, vdd_name, freq);
-> > 		goto exit;
-> > 	}
-> 
-> Easier and always prints info:
-> 
-> 	freq = clk_get_rate(clk);
-> 	clk_put(clk);
-> 
-> 	pr_info("%s: vdd=%s clk=%s %luHz oh=%s\n", __func__, vdd_name, clk_name, freq, oh_name);
-> 
-> 	opp = dev_pm_opp_find_freq_ceil(dev, &freq);
-> 
-> I get this:
-> 
-> [    2.908142] omap2_set_init_voltage: vdd=mpu_iva clk=dpll1_ck 1000000000Hz oh=mpu
-> [    2.930816] omap2_set_init_voltage: vdd=core clk=l3_ick 200000000Hz oh=l3_main
-> [    2.946228] omap2_set_init_voltage: unable to find boot up OPP for vdd_core
-> [    2.953460] omap2_set_init_voltage: unable to set vdd_core
+Hi Linus,
 
-OK yeah that's more descriptive.
+The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
 
-> Which means that cpufreq already has increased dpll1_ck to 1 GHz
-> (I have removed the turbo-mode tags so that it already boots at
-> full speed) and l3_ick runs at initial 200 MHz.
+  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
 
-OK. I wonder where this initial code should live though..
+are available in the Git repository at:
 
-Regards,
+  git://github.com/awilliam/linux-vfio.git tags/vfio-v5.5-rc1
 
-Tony
+for you to fetch changes up to 9917b54aded12dff9beb9e709981617b788e44b0:
+
+  Merge branch 'v5.5/vfio/jiang-yi-irq-bypass-unregister-v1' into v5.5/vfio/next (2019-12-04 10:15:56 -0700)
+
+----------------------------------------------------------------
+VFIO updates for v5.5-rc1
+
+ - Remove hugepage checks for reserved pfns (Ben Luo)
+
+ - Fix irq-bypass unregister ordering (Jiang Yi)
+
+----------------------------------------------------------------
+Alex Williamson (1):
+      Merge branch 'v5.5/vfio/jiang-yi-irq-bypass-unregister-v1' into v5.5/vfio/next
+
+Ben Luo (1):
+      vfio/type1: remove hugepage checks in is_invalid_reserved_pfn()
+
+Jiang Yi (1):
+      vfio/pci: call irq_bypass_unregister_producer() before freeing irq
+
+ drivers/vfio/pci/vfio_pci_intrs.c |  2 +-
+ drivers/vfio/vfio_iommu_type1.c   | 26 ++++----------------------
+ 2 files changed, 5 insertions(+), 23 deletions(-)
+
