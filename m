@@ -2,129 +2,110 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FAAC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567C0C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969592467A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:17:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575620235;
-	bh=xNF4HFBCn6fvCdXmRfl4tqe31ZppPMp5cm+2u3VUVBs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K38HRfDzLXQ+8cQol/ONDGoeGvlBsFaCV3UHYkJaAAAJASrvvK+RaTkOaoaFCfnLn
-	 d9Pa1a3PxZ4wXK10X50lHRXnK8JMHOXQTcyAC1RTnDkguUjf4vbm2/vfK6ny+K3EUh
-	 BupWUJAvuXUDZKd/bJKOCMQbWeZZ9Uo6+0rV51oU=
+	by mail.kernel.org (Postfix) with ESMTP id 271BC2467A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:19:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="NwOAavXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfLFIRO (ORCPT
+        id S1726553AbfLFITg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 03:17:14 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42548 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfLFIRN (ORCPT
+        Fri, 6 Dec 2019 03:19:36 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16768 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726088AbfLFITg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 03:17:13 -0500
-Received: by mail-wr1-f68.google.com with SMTP id a15so6713068wrf.9
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 00:17:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2ba4Nt9WY6yvIikHrTS1xoSBFk9RdJgbhCF3yF6te8s=;
-        b=cXX7XJq7GYMzUsdBShHgNw+YPvf53FNIEPxeEvePXmoIPXyvrwPyIl57wHSFeGyYBs
-         nJfSEGwQo6fjILIJ0E0WU2x7FFZiiqZ4DtSPdGYAXkIk5bdmHtJdXdV13161c7OySLdX
-         Xgx9Heej/6aJRIFkitK235s4lBmozNf+Xwkdkns1G9XXWufez7h1v2Wj0PfVcDXPzMWM
-         LLsQNZQvO853gDG/qgYwc5WopFxc6H4ClQ+EgflhMbz4zvbEkdMZVi4FkHwemaYAsjAg
-         Iz2uZoPBqBF4nLd0tO89yFOwy+DTieIIIv3m1CwL6DYMrtDeEodvTwyDT46LB5+0wsxs
-         vdDg==
-X-Gm-Message-State: APjAAAXSC0CCGTbU7/2Ln785BsKbSTruKkDDCBu7dUeg5t0gBpjkwkMz
-        OxRCAmQn/rkk8IUJe01gP2c=
-X-Google-Smtp-Source: APXvYqz7pdRuocMu/w2UUxNUvWadUbptDhdAP1Ezq/w2Mu1TsFypaAE46oXMVBQg8qHcIzOmid5Tng==
-X-Received: by 2002:adf:fc08:: with SMTP id i8mr2462382wrr.82.1575620231692;
-        Fri, 06 Dec 2019 00:17:11 -0800 (PST)
-Received: from localhost (ip-37-188-170-11.eurotel.cz. [37.188.170.11])
-        by smtp.gmail.com with ESMTPSA id v4sm3881781wml.2.2019.12.06.00.17.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 00:17:10 -0800 (PST)
-Date:   Fri, 6 Dec 2019 09:17:10 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] memcg: account security cred as well to kmemcg
-Message-ID: <20191206081710.GK28317@dhcp22.suse.cz>
-References: <20191205223721.40034-1-shakeelb@google.com>
+        Fri, 6 Dec 2019 03:19:36 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB68HKZ8029511;
+        Fri, 6 Dec 2019 09:19:16 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=6vcNVWFrHn/SvqVY9StBuo/jTuPFzfRjFOoFMP+jKUU=;
+ b=NwOAavXGFLkqdSgokTDPjp9XTHmJVfeSnH2AB/3N+M4tdXmreX35BQJjvk+22xXiibJN
+ T0KSl8UtuyEb7K10bXWiDDI16i/F5ZOADisRT4UXywZtU5N3KpzlqIy3NJVEy5WbcCOH
+ hxbrczOeUeNigf4ctd/E+5lOnLSzUPT+bQMiGjKwJ9y3KhZur9WZKqeYZHlAbiiZpgg3
+ 3LRKOKb9Zc7WyKfzZAeFjoEJ8eKK5IhU7E9dAsr1d88iydrVL7lJNOpvt4r8r/gXEyga
+ vKDZJRVqKWuXU3zmh53DqFbtQXG8tpGG8dcTTeg7qYhSw8xJoZRGQ1gTxPsQkY20v9o3 8w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wkf2y7a2x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Dec 2019 09:19:16 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3AFDB100034;
+        Fri,  6 Dec 2019 09:19:16 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1F14C2A68A1;
+        Fri,  6 Dec 2019 09:19:16 +0100 (CET)
+Received: from lmecxl0995.lme.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 6 Dec
+ 2019 09:19:15 +0100
+Subject: Re: [PATCH] rtc: stm32: add missed clk_disable_unprepare in error
+ path of resume
+To:     Chuhong Yuan <hslester96@gmail.com>
+CC:     <linux-rtc@vger.kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-kernel@vger.kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191205160655.32188-1-hslester96@gmail.com>
+From:   Amelie DELAUNAY <amelie.delaunay@st.com>
+Message-ID: <521207d1-4537-fda9-ca03-4f952b505d03@st.com>
+Date:   Fri, 6 Dec 2019 09:19:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191205223721.40034-1-shakeelb@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191205160655.32188-1-hslester96@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-06_01:2019-12-04,2019-12-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 05-12-19 14:37:21, Shakeel Butt wrote:
-> The cred_jar kmem_cache is already memcg accounted in the current
-> kernel but cred->security is not. Account cred->security to kmemcg.
+On 12/5/19 5:06 PM, Chuhong Yuan wrote:
+> The resume() forgets to call clk_disable_unprepare() when failed.
+> Add the missed call to fix it.
 > 
-> Recently we saw high root slab usage on our production and on further
-> inspection, we found a buggy application leaking processes. Though that
-> buggy application was contained within its memcg but we observe much
-> more system memory overhead, couple of GiBs, during that period. This
-> overhead can adversely impact the isolation on the system. One of source
-> of high overhead, we found was cred->secuity objects.
- 
-I am not familiar with this area much. What is the timelife of these
-objects? Do they go away with a task allocating them?
-
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
->
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 > ---
->  kernel/cred.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>   drivers/rtc/rtc-stm32.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/kernel/cred.c b/kernel/cred.c
-> index c0a4c12d38b2..9ed51b70ed80 100644
-> --- a/kernel/cred.c
-> +++ b/kernel/cred.c
-> @@ -223,7 +223,7 @@ struct cred *cred_alloc_blank(void)
->  	new->magic = CRED_MAGIC;
->  #endif
->  
-> -	if (security_cred_alloc_blank(new, GFP_KERNEL) < 0)
-> +	if (security_cred_alloc_blank(new, GFP_KERNEL_ACCOUNT) < 0)
->  		goto error;
->  
->  	return new;
-> @@ -282,7 +282,7 @@ struct cred *prepare_creds(void)
->  	new->security = NULL;
->  #endif
->  
-> -	if (security_prepare_creds(new, old, GFP_KERNEL) < 0)
-> +	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
->  		goto error;
->  	validate_creds(new);
->  	return new;
-> @@ -715,7 +715,7 @@ struct cred *prepare_kernel_cred(struct task_struct *daemon)
->  #ifdef CONFIG_SECURITY
->  	new->security = NULL;
->  #endif
-> -	if (security_prepare_creds(new, old, GFP_KERNEL) < 0)
-> +	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
->  		goto error;
->  
->  	put_cred(old);
-> -- 
-> 2.24.0.393.g34dc348eaf-goog
+> diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
+> index 781cabb2afca..d774aa18f57a 100644
+> --- a/drivers/rtc/rtc-stm32.c
+> +++ b/drivers/rtc/rtc-stm32.c
+> @@ -897,8 +897,11 @@ static int stm32_rtc_resume(struct device *dev)
+>   	}
+>   
+>   	ret = stm32_rtc_wait_sync(rtc);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		if (rtc->data->has_pclk)
+> +			clk_disable_unprepare(rtc->pclk);
+>   		return ret;
+> +	}
+>   
+>   	if (device_may_wakeup(dev))
+>   		return disable_irq_wake(rtc->irq_alarm);
 > 
 
--- 
-Michal Hocko
-SUSE Labs
+Reviewed-by: Amelie Delaunay <amelie.delaunay@st.com>
