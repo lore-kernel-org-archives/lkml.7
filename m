@@ -2,111 +2,133 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488ECC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E370AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 214E22467B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B099A20706
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:03:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GK/e2Q9A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfLFNyy (ORCPT
+        id S1726332AbfLFODy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 08:54:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:45118 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727030AbfLFNyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:54:52 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C797139F;
-        Fri,  6 Dec 2019 05:54:52 -0800 (PST)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0F983F718;
-        Fri,  6 Dec 2019 05:54:49 -0800 (PST)
-From:   Steven Price <steven.price@arm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: [PATCH v16 24/25] arm64: mm: Display non-present entries in ptdump
-Date:   Fri,  6 Dec 2019 13:53:15 +0000
-Message-Id: <20191206135316.47703-25-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191206135316.47703-1-steven.price@arm.com>
-References: <20191206135316.47703-1-steven.price@arm.com>
+        Fri, 6 Dec 2019 09:03:54 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:41293 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfLFODy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 09:03:54 -0500
+Received: by mail-pj1-f66.google.com with SMTP id ca19so2791139pjb.8;
+        Fri, 06 Dec 2019 06:03:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8wIrvhx8JUqZ1A5Y/qZAw3J3FP6nnjrOWQ5P/LuZL9M=;
+        b=GK/e2Q9AV7ulM8ubyjDOu23Kfo4nJwYsSVMncffTSorVKl7aRdeGiWeHx6Oa2Zorfd
+         GKGAr1ncvXwGbStpwGs/H4Fj28Kn1wOiy8dgRscKZjtwT/nmh6w4EQHRlzjSk94u1lmu
+         W55DfVsxejQJZnT9TSZYWBYGsV9+NZKtRipaVi0zdMwXJC9Jw4ziUHBuu+cCxZYULETt
+         iyM0JES4zX3gcCbS2IXBVZazLOGZHg1Q1S8hFXFXknRs0S8rhPuWmM4I0KcHq88dQ2zT
+         HnlqVZZ4baF9lXNUmMpqvqbDY0iZr1hrO2PqoBgBWz0pD13MnjAgVasWUa8XNrmyI+H3
+         bWrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8wIrvhx8JUqZ1A5Y/qZAw3J3FP6nnjrOWQ5P/LuZL9M=;
+        b=QDOZdj6tai3wtVvqus6jW/1UhPpI5u9civzq26tu/FLQhQLcPz4Bvl0eAUszjQcfTv
+         L9wZ/fsMc7F4nNt3oQ6T14I71KeRNTxCtkeLP8i/hPPPVIjRU8wVue+EslOrtDXc6yev
+         /lS0a6hlHLYHnEOkJKQHRHh7Y7vQi1t28CN1W3PuXl963ZQ1YiatHrubTMs75G4m2KHW
+         xhRHwTczRD4wY0Di/7ZvF1kUoDpj9PN/XAwm9ny/m4TwbBt8RVOHkQC4JdWqAdcTYtFo
+         JbrzGCcPw9w4ZG9kR7OgShMqFajCCCHjcFvMIlqRYJ3qkFXZFT8CCG/Yp07jYiEWb/FJ
+         XMOQ==
+X-Gm-Message-State: APjAAAUoU+IS1ytEfmBhHOHYkga1sQhAfh/D7z5pAN54ZstwmYOiXilj
+        HWpj9rFT7Nx25qTWIIOVqHUCOsVe
+X-Google-Smtp-Source: APXvYqxvKaJM6EDjuu/uqW8Ut6UxmtOSbcT1Y9insDdQ+O5F3RBBmvjvsJJLADCR00rQ/nwCHagfXw==
+X-Received: by 2002:a17:902:1:: with SMTP id 1mr14707267pla.108.1575641033225;
+        Fri, 06 Dec 2019 06:03:53 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l66sm15350513pga.30.2019.12.06.06.03.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 06:03:52 -0800 (PST)
+Subject: Re: [PATCH v6 10/18] sh/tlb: Convert SH to generic mmu_gather
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Will Deacon <will.deacon@arm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+References: <20190219103148.192029670@infradead.org>
+ <20190219103233.443069009@infradead.org>
+ <CAMuHMdW3nwckjA9Bt-_Dmf50B__sZH+9E5s0_ziK1U_y9onN=g@mail.gmail.com>
+ <20191204104733.GR2844@hirez.programming.kicks-ass.net>
+ <3c83eaec-8f33-1b90-1c70-9e7c1c8b1855@physik.fu-berlin.de>
+ <20191205225610.GB2532@roeck-us.net>
+ <a188f905-bb08-db98-0b8a-e31bec1dfa31@physik.fu-berlin.de>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <4f959f9b-9b8c-c880-0f55-172db732b783@roeck-us.net>
+Date:   Fri, 6 Dec 2019 06:03:50 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <a188f905-bb08-db98-0b8a-e31bec1dfa31@physik.fu-berlin.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously the /sys/kernel/debug/kernel_page_tables file would only show
-lines for entries present in the page tables. However it is useful to
-also show non-present entries as this makes the size and level of the
-holes more visible. This aligns the behaviour with x86 which also shows
-holes.
+On 12/6/19 5:38 AM, John Paul Adrian Glaubitz wrote:
+> Hi!
+> 
+> On 12/5/19 11:56 PM, Guenter Roeck wrote:
+>>> I have to admit, I have been very lazy with kernel updates. I have been
+>>> planning to upgrade to a much more recent release on my boards for a while
+>>> now, I have just been postponing it since the machines run very stable
+>>> with the current kernel I am using.
+>>>
+>>
+>> Hey, if you write a qemu emulation, I'll be happy to run it on a regular
+>> basis :-)
+> 
+> There is working SH emulation in QEMU. I have been wanting to prepare a
+> current Debian/sh4 test image for that purpose for a while now.
+> 
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- arch/arm64/mm/dump.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+I do run this emulation in my tests. It does not support the affected CPU,
+unfortunately.
 
-diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
-index 9d9b740a86d2..3203dd8e6d0a 100644
---- a/arch/arm64/mm/dump.c
-+++ b/arch/arm64/mm/dump.c
-@@ -269,21 +269,22 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
- 		if (st->current_prot) {
- 			note_prot_uxn(st, addr);
- 			note_prot_wx(st, addr);
--			pt_dump_seq_printf(st->seq, "0x%016lx-0x%016lx   ",
-+		}
-+
-+		pt_dump_seq_printf(st->seq, "0x%016lx-0x%016lx   ",
- 				   st->start_address, addr);
- 
--			delta = (addr - st->start_address) >> 10;
--			while (!(delta & 1023) && unit[1]) {
--				delta >>= 10;
--				unit++;
--			}
--			pt_dump_seq_printf(st->seq, "%9lu%c %s", delta, *unit,
--				   pg_level[st->level].name);
--			if (pg_level[st->level].bits)
--				dump_prot(st, pg_level[st->level].bits,
--					  pg_level[st->level].num);
--			pt_dump_seq_puts(st->seq, "\n");
-+		delta = (addr - st->start_address) >> 10;
-+		while (!(delta & 1023) && unit[1]) {
-+			delta >>= 10;
-+			unit++;
- 		}
-+		pt_dump_seq_printf(st->seq, "%9lu%c %s", delta, *unit,
-+				   pg_level[st->level].name);
-+		if (st->current_prot && pg_level[st->level].bits)
-+			dump_prot(st, pg_level[st->level].bits,
-+				  pg_level[st->level].num);
-+		pt_dump_seq_puts(st->seq, "\n");
- 
- 		if (addr >= st->marker[1].start_address) {
- 			st->marker++;
--- 
-2.20.1
+Guenter
+
+> For the time being, you can use the image by Aurelien Jarno:
+> 
+>> https://people.debian.org/~aurel32/qemu/sh4/
+> 
+>> Problem is really that the architecture doesn't get as much attention as
+>> it needs. The backtrace pointed to by Rob has been seen for a long time,
+>> but either there is no one with the knowledge to fix it, or they are all
+>> busy with other stuff.
+> 
+> I fully agree. I'm mostly busy with the userland stuff, i.e. Debian packages
+> for sh4 and not so much with the kernel.
+> 
+> Adrian
+> 
 
