@@ -2,119 +2,104 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E080AC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABABC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B723421835
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0138A21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:10:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="knuVRvKu"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Gl+qSlNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfLFLJY (ORCPT
+        id S1726347AbfLFLK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 06:09:24 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:33142 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbfLFLJY (ORCPT
+        Fri, 6 Dec 2019 06:10:27 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46412 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfLFLK1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 06:09:24 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB6B7KYf043909;
-        Fri, 6 Dec 2019 05:07:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575630440;
-        bh=43MIP2YvtyQu/1M9KI8G6euH8OqvsdbRq2rXQEnRmok=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=knuVRvKuQDjE3s9nYvvgOMREZYWNbUjRSPfExtHOZpisBBmwmOOjcszBBjQha9AYG
-         FTTUIdRMF62rKvJrz3+v75vQq4Guic5BUFeAr8NKaZ7xAI0svA86A0RZIFwfiDaVKz
-         7oLuXgy1uPsbhweAGJfuz6VO2arceAbez1W0T5gc=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB6B7KKp094692
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 6 Dec 2019 05:07:20 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 6 Dec
- 2019 05:07:20 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 6 Dec 2019 05:07:20 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB6B7HjZ112203;
-        Fri, 6 Dec 2019 05:07:18 -0600
-Subject: Re: [PATCH 2/2] arm: omap2plus_defconfig: enable NET_SWITCHDEV
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Randy Dunlap <rdunlap@infradead.org>, <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-References: <20191204174533.32207-1-grygorii.strashko@ti.com>
- <20191204174533.32207-3-grygorii.strashko@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <c8058866-2be9-831c-19f6-31d17decb6f1@ti.com>
-Date:   Fri, 6 Dec 2019 13:07:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 6 Dec 2019 06:10:27 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a124so5759870oii.13
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 03:10:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jLu8PQob6R7INQhNcyi5eV/VwuZ3ViZfX5Cr/XgalEQ=;
+        b=Gl+qSlNmaiBh0lNDEeK3wAVf56e6C5UDX83HhGX2mAZ0NU7ZMDBd5ZqrCdExodjS0m
+         Wu9uL2ysiXsTj5+0JMTAvsUZCoXiKc1DPnp3tGKgifxfZZKBSRR21SCkXTuzVdC4l7ET
+         PuOGIaoh+vqX5AjF6mwGN1EmWc/JfZ6nL4RIE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jLu8PQob6R7INQhNcyi5eV/VwuZ3ViZfX5Cr/XgalEQ=;
+        b=lbspyZ8EbY71YtAx2alNO1Jxt1VZpKVl2+brZikHf1uKzYG7AB/elqlTlVq09K/n82
+         6r7WGoZfzgWHTohIO62Q3YAa3w4s4SpC3U9qi35NQEc3xVO9yRsUxEt+f2Lkz9tdVgxs
+         /4smvdSixePKdowEFTL05rLLD9h51Mq5fqflGHvvUgC2bdRJStEgjO+mAHAnIiLy9q3i
+         IviyOAETQzw67GJqEfwZhcna/fwku9LGEnuaThlzo11NrG1qW4rgTgOutGRovXS9cM6s
+         7QmVpchjchz4PNpmIM2bBOw9f+ugDVYxzf3AKILKiM5T03Y/7DNbmz41ukFfhbHIDjq0
+         FhnQ==
+X-Gm-Message-State: APjAAAXvvGkc73XcRzCP45SkLfKCNHcAc9LBLciumKl4kRrRqPQ/rE7V
+        ID77TlJx/NV8NTFWNwm+OQkJPtxCapIWLXv+IYWtrg==
+X-Google-Smtp-Source: APXvYqwOneJdtD1ZXuC72wTUlo4WXxW+SIIYiQGT6fyPkbbuOUD9Np8+lzYh2iG8qelEE2FENTDJM+w77++vv8XFiOI=
+X-Received: by 2002:aca:d985:: with SMTP id q127mr11318982oig.132.1575630626520;
+ Fri, 06 Dec 2019 03:10:26 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191204174533.32207-3-grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191127092523.5620-1-kraxel@redhat.com> <20191127092523.5620-2-kraxel@redhat.com>
+ <20191128113930.yhckvneecpvfhlls@sirius.home.kraxel.org> <20191205221523.GN624164@phenom.ffwll.local>
+ <20191206100724.ukzdyaym3ltcyfaa@sirius.home.kraxel.org> <20191206102200.6osisct57n424ujn@sirius.home.kraxel.org>
+In-Reply-To: <20191206102200.6osisct57n424ujn@sirius.home.kraxel.org>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 6 Dec 2019 12:10:15 +0100
+Message-ID: <CAKMK7uF=wZ8snurJwftyjVD2ExutfzNUGGhy8=UVFYf3=sz7qQ@mail.gmail.com>
+Subject: Re: [Intel-gfx] [PATCH v3 1/2] drm: call drm_gem_object_funcs.mmap
+ with fake offset
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh@kernel.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+On Fri, Dec 6, 2019 at 11:22 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> On Fri, Dec 06, 2019 at 11:07:24AM +0100, Gerd Hoffmann wrote:
+> > On Thu, Dec 05, 2019 at 11:15:23PM +0100, Daniel Vetter wrote:
+> > > Looks like unrelated flukes, this happens occasionally. If you're paranoid
+> > > hit the retest button on patchwork to double-check.
+> > > -Daniel
+> >
+> > Guess you kicked CI?  Just got CI mails, now reporting success, without
+> > doing anything.  So I'll go push v3 to misc-next.
+>
+> Oops, spoke too soon.  Next mail arrived.  Fi.CI.BAT works, but
+> Fi.CI.IGT still fails.
+>
+> Where is the "test again" button?  Can I re-run the tests on v2?  Right
+> now I tend to commit v2 to have a fix committed, then go figure why v3
+> fails ...
 
-On 04/12/2019 19:45, Grygorii Strashko wrote:
-> The TI_CPSW_SWITCHDEV definition in Kconfig was changed from "select
-> NET_SWITCHDEV" to "depends on NET_SWITCHDEV", and therefore it is required
-> to explicitelly enable NET_SWITCHDEV config option in omap2plus_defconfig.
-> 
-> Fixes: 3727d259ddaf ("arm: omap2plus_defconfig: enable new cpsw switchdev driver")
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->   arch/arm/configs/omap2plus_defconfig | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-> index 89cce8d4bc6b..7bbef86a4e76 100644
-> --- a/arch/arm/configs/omap2plus_defconfig
-> +++ b/arch/arm/configs/omap2plus_defconfig
-> @@ -92,6 +92,7 @@ CONFIG_IP_PNP_BOOTP=y
->   CONFIG_IP_PNP_RARP=y
->   CONFIG_NETFILTER=y
->   CONFIG_PHONET=m
-> +CONFIG_NET_SWITCHDEV=y
->   CONFIG_CAN=m
->   CONFIG_CAN_C_CAN=m
->   CONFIG_CAN_C_CAN_PLATFORM=m
-> @@ -182,6 +183,7 @@ CONFIG_SMSC911X=y
->   # CONFIG_NET_VENDOR_STMICRO is not set
->   CONFIG_TI_DAVINCI_EMAC=y
->   CONFIG_TI_CPSW=y
-> +CONFIG_TI_CPSW_SWITCHDEV=y
->   CONFIG_TI_CPTS=y
->   # CONFIG_NET_VENDOR_VIA is not set
->   # CONFIG_NET_VENDOR_WIZNET is not set
-> @@ -554,4 +556,3 @@ CONFIG_DEBUG_INFO_DWARF4=y
->   CONFIG_MAGIC_SYSRQ=y
->   CONFIG_SCHEDSTATS=y
->   # CONFIG_DEBUG_BUGVERBOSE is not set
-> -CONFIG_TI_CPSW_SWITCHDEV=y
-> 
-
-Could it be applied as fix, as without it cpsw switch driver will not be built,
-so no networking on am571x-idk
-
+Top of the mail you get from CI is the link to the patchwork series.
+That contains all the same info like in the mail, plus the coveted
+button. If failures look similar then yes I guess v3 is somehow
+broken. But I've looked, looks like just 2x unrelated noise and you
+being unlucky, so imo totally fine to push v3. I'll give CI folks a
+heads-up (best done over irc usually).
+-Daniel
 -- 
-Best regards,
-grygorii
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
