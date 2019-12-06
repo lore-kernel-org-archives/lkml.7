@@ -2,98 +2,57 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32295C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA93DC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088B9206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575662464;
-	bh=79RvXak1dP5bCbsaEmGOMsdl02gOD69RYh+qUaJSG0E=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=sEiUsXwwRQTR7jhSp+ZkSrgA7vds1J3ax4pBZMXM5ao7sKswkIT0lXYVeQojcsI0n
-	 m0XHAIFL1A+6qYX+l2YCXKMK3cJUdbk3sxAmLtG5v2AHv9C2GGc6hVAVA5zG2EEOYj
-	 sSA16OsL7NyCkp7sYQ+6qGvyM7w8ed88gCYskyYg=
+	by mail.kernel.org (Postfix) with ESMTP id 90EA9206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:05:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfLFUBD (ORCPT
+        id S1726414AbfLFUFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 15:01:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbfLFUBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 15:01:02 -0500
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DDDF2245C;
-        Fri,  6 Dec 2019 19:51:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575661903;
-        bh=79RvXak1dP5bCbsaEmGOMsdl02gOD69RYh+qUaJSG0E=;
-        h=Date:From:To:Cc:Subject:From;
-        b=X/cgc1ZvXOhYRyVK3HYtCz3uTC+DCt8OUyz1130hFD7loo0n/81SfY6qJnvvMhh25
-         VUPHjlK4WOn6EzAdIwAmtcYkMDddghKzHNVG5h0/IC5napYD2Rm2e9E61fUi1yduEt
-         +KqGUNV3H/SmK3gvQz+sIUtcl9VGinrEKDxlDJM4=
-Date:   Fri, 6 Dec 2019 11:51:42 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: fixes for 5.5-rc1
-Message-ID: <20191206195142.GA9464@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 6 Dec 2019 15:05:20 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:60150 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfLFUFU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 15:05:20 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8A058150AE492;
+        Fri,  6 Dec 2019 12:05:19 -0800 (PST)
+Date:   Fri, 06 Dec 2019 12:05:18 -0800 (PST)
+Message-Id: <20191206.120518.480573416537037925.davem@davemloft.net>
+To:     hslester96@gmail.com
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] phy: mdio-thunder: add missed pci_release_regions in
+ remove
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191206075446.18469-1-hslester96@gmail.com>
+References: <20191206075446.18469-1-hslester96@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 06 Dec 2019 12:05:19 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Chuhong Yuan <hslester96@gmail.com>
+Date: Fri,  6 Dec 2019 15:54:46 +0800
 
-Please pull these bug fixes for 5.5-rc1, which fix a couple of resource
-management errors and a hang.
+> The driver forgets to call pci_release_regions() in remove like that
+> in probe failure.
+> Add the missed call to fix it.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-The branch has survived a couple of days of xfstests runs and merges
-cleanly with this morning's master.  Please let me know if anything
-strange happens.
-
---D
-
-The following changes since commit 8feb4732ff9f2732354b44c4418569974e2f949c:
-
-  xfs: allow parent directory scans to be interrupted with fatal signals (2019-11-27 08:23:14 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.5-merge-17
-
-for you to fetch changes up to 798a9cada4694ca8d970259f216cec47e675bfd5:
-
-  xfs: fix mount failure crash on invalid iclog memory access (2019-12-03 14:53:07 -0800)
-
-----------------------------------------------------------------
-Fixes for 5.5-rc1:
-- Fix a crash in the log setup code when log mounting fails
-- Fix a hang when allocating space on the realtime device
-- Fix a block leak when freeing space on the realtime device
-
-----------------------------------------------------------------
-Brian Foster (1):
-      xfs: fix mount failure crash on invalid iclog memory access
-
-Omar Sandoval (2):
-      xfs: fix realtime file data space leak
-      xfs: don't check for AG deadlock for realtime files in bunmapi
-
- fs/xfs/libxfs/xfs_bmap.c | 27 +++++++++++++++------------
- fs/xfs/xfs_log.c         |  2 ++
- 2 files changed, 17 insertions(+), 12 deletions(-)
+Applied.
