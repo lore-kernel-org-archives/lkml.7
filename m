@@ -2,244 +2,104 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682DDC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F0BC2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3634524659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF3524659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:16:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KCufpaE4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PVlSO2YV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbfLFPNk (ORCPT
+        id S1726321AbfLFPQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 10:13:40 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33372 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfLFPNj (ORCPT
+        Fri, 6 Dec 2019 10:16:56 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40508 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfLFPQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 10:13:39 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB6FDC3h046787;
-        Fri, 6 Dec 2019 09:13:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575645192;
-        bh=wWya3K6I8EFzGGNqXQjTcOmeLD3WYHW3qDVDi6nLJbM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KCufpaE4WIMA5BwrA97CtwnEFoA3jy7pfIPnJpQpjkhCh9s1Hxc+E0vpCORm60pOh
-         FfTRzQNkKDTDpkfpvF0YRxTHhc+sJoIpR+TyslFY5Zt+Wz2TJoq+4hnV23V12tzZw1
-         RY1xajLl1761LcF/9ricd29PclHqru9zh0JKjAn8=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB6FDCx9024589;
-        Fri, 6 Dec 2019 09:13:12 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 6 Dec
- 2019 09:13:12 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 6 Dec 2019 09:13:11 -0600
-Received: from [10.250.133.44] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB6FD5Th021803;
-        Fri, 6 Dec 2019 09:13:06 -0600
-Subject: Re: [PATCH v2] scsi: ufs: Update L4 attributes on manual hibern8 exit
- in Cadence UFS.
-To:     sheebab <sheebab@cadence.com>, <alim.akhtar@samsung.com>,
-        <avri.altman@wdc.com>, <pedrom.sousa@synopsys.com>,
-        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <stanley.chu@mediatek.com>, <beanhuo@micron.com>,
-        <yuehaibing@huawei.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <rafalc@cadence.com>, <mparab@cadence.com>
-References: <1575606303-10917-1-git-send-email-sheebab@cadence.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <849dfea6-a2ba-2d52-cb16-733c767dbbbe@ti.com>
-Date:   Fri, 6 Dec 2019 20:43:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <1575606303-10917-1-git-send-email-sheebab@cadence.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 6 Dec 2019 10:16:55 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k25so3447916pgt.7;
+        Fri, 06 Dec 2019 07:16:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6GWdj6y1nIV1eqL/pgj2JGP5rsvKIeTR5YWuhE4vOTY=;
+        b=PVlSO2YVN3FeJTHTFmDpe1abRzd3fIG/Wb/SlhKPEvqxWzPRmvzhmwRWJ2DroUirAe
+         R68I9pxVWm0rDrRh3snMBO/mf3UKsVQ7YbfY38rS1+BUogpEjp49LFzgc0p3dB1sGIkp
+         oL3oZpD48wqhyfh+gIvqhPUJ3BKi03PwX/BQRZLGt2K6o1UxgUfPKNJhx/yPHa6zF7Dw
+         xf6W1sQazT+ip4sj92f+SOnfPFsEy0VL2FApQVupSSrB8RREvhBpEWBtxj8Xaktef4qA
+         iwCeHBVsofPrSR64f4sg698v5gs8DmlY+41jQs9YubNvqfRjiLtqUgb7sNcBH9Gtju0e
+         IeNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6GWdj6y1nIV1eqL/pgj2JGP5rsvKIeTR5YWuhE4vOTY=;
+        b=uGzadxNB3O1V0HonD6kjpTlh6Y2dajeKDOmchfzI+mc8qPFKq8VAdQudm44T7X6Wl6
+         nuo3QtnEz1ogAnMF51vcjETbkhhr3FSuNNRzJCZZbPD8kf0T68kdE5Lp7a9uY6KV2zNi
+         5TXwraKVb1S4PsZjEPX9z9N99yA7PqIINPkWazOJICT39Umhe5sMWwMhkJ+NVk/6jKhM
+         RpT+SH0K572c6VdxHEGFx+4qtpykaslxfA/EThLoKxhbEZ6RxMnl24y7K9qPlwAhc7ap
+         N1dgHc4C4n1lX+vlwdundgm+3hOXnQ/tc5KUZf+V4nUEEKLvo0WHd1qzHjz1Pj6aVGCf
+         22bQ==
+X-Gm-Message-State: APjAAAWp6G+gb1mXJYjjwY5bpyjfnPIO40ucdxFh2MTVoHd29F45j9iz
+        BXeNHLAECTcoepT7NrpuRYj9vbWbzf4=
+X-Google-Smtp-Source: APXvYqzZ9KMg19p5ONeiAHEBTca+aoW7E5AL7NEeTSr5C0MAtK8IEDbyN5RDrBKtODwXj+GbqhyXUQ==
+X-Received: by 2002:a65:49ca:: with SMTP id t10mr4109186pgs.37.1575645414671;
+        Fri, 06 Dec 2019 07:16:54 -0800 (PST)
+Received: from localhost.localdomain ([2402:3a80:13a2:f129:b905:c312:4008:2416])
+        by smtp.gmail.com with ESMTPSA id o19sm5859347pjr.2.2019.12.06.07.16.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 07:16:54 -0800 (PST)
+From:   madhuparnabhowmik04@gmail.com
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        joel@joelfernandes.org
+Cc:     linux-nfs@vger.kernel.org, rcu@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
+Date:   Fri,  6 Dec 2019 20:46:40 +0530
+Message-Id: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-On 12/6/2019 9:55 AM, sheebab wrote:
-> Backup L4 attributes duirng manual hibern8 entry
-> and restore the L4 attributes on manual hibern8 exit as per JESD220C.
-> 
-> Signed-off-by: Sheeba B <sheebab@cadence.com>
-> 
-> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+This patch fixes the following errors:
+fs/nfs/dir.c:2353:14: error: incompatible types in comparison expression (different address spaces):
+fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
+fs/nfs/dir.c:2353:14:    struct list_head *
 
-Tested-by: Vignesh Raghavendra <vigneshr@ti.com>
+caused due to directly accessing the prev pointer of
+a RCU protected list.
+Accessing the pointer using the macro list_prev_rcu() fixes this error.
 
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+---
+ fs/nfs/dir.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards
-Vignesh
-> ---
-> v2:
-> Dropped patch 1/2 for this series and rebased to include only manual hibernation fixes
-> ---
->  drivers/scsi/ufs/cdns-pltfrm.c | 106 +++++++++++++++++++++++++++++++++
->  1 file changed, 106 insertions(+)
-> 
-> diff --git a/drivers/scsi/ufs/cdns-pltfrm.c b/drivers/scsi/ufs/cdns-pltfrm.c
-> index 6feeb0faf123..1c80f9633da6 100644
-> --- a/drivers/scsi/ufs/cdns-pltfrm.c
-> +++ b/drivers/scsi/ufs/cdns-pltfrm.c
-> @@ -19,6 +19,85 @@
->  
->  #define CDNS_UFS_REG_HCLKDIV	0xFC
->  #define CDNS_UFS_REG_PHY_XCFGD1	0x113C
-> +#define CDNS_UFS_MAX_L4_ATTRS 12
-> +
-> +struct cdns_ufs_host {
-> +	/**
-> +	 * cdns_ufs_dme_attr_val - for storing L4 attributes
-> +	 */
-> +	u32 cdns_ufs_dme_attr_val[CDNS_UFS_MAX_L4_ATTRS];
-> +};
-> +
-> +/**
-> + * cdns_ufs_get_l4_attr - get L4 attributes on local side
-> + * @hba: per adapter instance
-> + *
-> + */
-> +static void cdns_ufs_get_l4_attr(struct ufs_hba *hba)
-> +{
-> +	struct cdns_ufs_host *host = ufshcd_get_variant(hba);
-> +
-> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_PEERDEVICEID),
-> +		       &host->cdns_ufs_dme_attr_val[0]);
-> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_PEERCPORTID),
-> +		       &host->cdns_ufs_dme_attr_val[1]);
-> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_TRAFFICCLASS),
-> +		       &host->cdns_ufs_dme_attr_val[2]);
-> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_PROTOCOLID),
-> +		       &host->cdns_ufs_dme_attr_val[3]);
-> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_CPORTFLAGS),
-> +		       &host->cdns_ufs_dme_attr_val[4]);
-> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_TXTOKENVALUE),
-> +		       &host->cdns_ufs_dme_attr_val[5]);
-> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_RXTOKENVALUE),
-> +		       &host->cdns_ufs_dme_attr_val[6]);
-> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_LOCALBUFFERSPACE),
-> +		       &host->cdns_ufs_dme_attr_val[7]);
-> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_PEERBUFFERSPACE),
-> +		       &host->cdns_ufs_dme_attr_val[8]);
-> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_CREDITSTOSEND),
-> +		       &host->cdns_ufs_dme_attr_val[9]);
-> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_CPORTMODE),
-> +		       &host->cdns_ufs_dme_attr_val[10]);
-> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_CONNECTIONSTATE),
-> +		       &host->cdns_ufs_dme_attr_val[11]);
-> +}
-> +
-> +/**
-> + * cdns_ufs_set_l4_attr - set L4 attributes on local side
-> + * @hba: per adapter instance
-> + *
-> + */
-> +static void cdns_ufs_set_l4_attr(struct ufs_hba *hba)
-> +{
-> +	struct cdns_ufs_host *host = ufshcd_get_variant(hba);
-> +
-> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 0);
-> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERDEVICEID),
-> +		       host->cdns_ufs_dme_attr_val[0]);
-> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERCPORTID),
-> +		       host->cdns_ufs_dme_attr_val[1]);
-> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_TRAFFICCLASS),
-> +		       host->cdns_ufs_dme_attr_val[2]);
-> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_PROTOCOLID),
-> +		       host->cdns_ufs_dme_attr_val[3]);
-> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CPORTFLAGS),
-> +		       host->cdns_ufs_dme_attr_val[4]);
-> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_TXTOKENVALUE),
-> +		       host->cdns_ufs_dme_attr_val[5]);
-> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_RXTOKENVALUE),
-> +		       host->cdns_ufs_dme_attr_val[6]);
-> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_LOCALBUFFERSPACE),
-> +		       host->cdns_ufs_dme_attr_val[7]);
-> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERBUFFERSPACE),
-> +		       host->cdns_ufs_dme_attr_val[8]);
-> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CREDITSTOSEND),
-> +		       host->cdns_ufs_dme_attr_val[9]);
-> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CPORTMODE),
-> +		       host->cdns_ufs_dme_attr_val[10]);
-> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE),
-> +		       host->cdns_ufs_dme_attr_val[11]);
-> +}
->  
->  /**
->   * Sets HCLKDIV register value based on the core_clk
-> @@ -77,6 +156,22 @@ static int cdns_ufs_hce_enable_notify(struct ufs_hba *hba,
->  	return cdns_ufs_set_hclkdiv(hba);
->  }
->  
-> +/**
-> + * Called around hibern8 enter/exit.
-> + * @hba: host controller instance
-> + * @cmd: UIC Command
-> + * @status: notify stage (pre, post change)
-> + *
-> + */
-> +static void cdns_ufs_hibern8_notify(struct ufs_hba *hba, enum uic_cmd_dme cmd,
-> +				    enum ufs_notify_change_status status)
-> +{
-> +	if (status == PRE_CHANGE && cmd == UIC_CMD_DME_HIBER_ENTER)
-> +		cdns_ufs_get_l4_attr(hba);
-> +	if (status == POST_CHANGE && cmd == UIC_CMD_DME_HIBER_EXIT)
-> +		cdns_ufs_set_l4_attr(hba);
-> +}
-> +
->  /**
->   * Called before and after Link startup is carried out.
->   * @hba: host controller instance
-> @@ -117,6 +212,14 @@ static int cdns_ufs_link_startup_notify(struct ufs_hba *hba,
->  static int cdns_ufs_init(struct ufs_hba *hba)
->  {
->  	int status = 0;
-> +	struct cdns_ufs_host *host;
-> +	struct device *dev = hba->dev;
-> +
-> +	host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
-> +
-> +	if (!host)
-> +		return -ENOMEM;
-> +	ufshcd_set_variant(hba, host);
->  
->  	if (hba->vops && hba->vops->phy_initialization)
->  		status = hba->vops->phy_initialization(hba);
-> @@ -144,8 +247,10 @@ static int cdns_ufs_m31_16nm_phy_initialization(struct ufs_hba *hba)
->  
->  static const struct ufs_hba_variant_ops cdns_ufs_pltfm_hba_vops = {
->  	.name = "cdns-ufs-pltfm",
-> +	.init = cdns_ufs_init,
->  	.hce_enable_notify = cdns_ufs_hce_enable_notify,
->  	.link_startup_notify = cdns_ufs_link_startup_notify,
-> +	.hibern8_notify = cdns_ufs_hibern8_notify,
->  };
->  
->  static const struct ufs_hba_variant_ops cdns_ufs_m31_16nm_pltfm_hba_vops = {
-> @@ -154,6 +259,7 @@ static const struct ufs_hba_variant_ops cdns_ufs_m31_16nm_pltfm_hba_vops = {
->  	.hce_enable_notify = cdns_ufs_hce_enable_notify,
->  	.link_startup_notify = cdns_ufs_link_startup_notify,
->  	.phy_initialization = cdns_ufs_m31_16nm_phy_initialization,
-> +	.hibern8_notify = cdns_ufs_hibern8_notify,
->  };
->  
->  static const struct of_device_id cdns_ufs_of_match[] = {
-> 
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index e180033e35cf..2035254cc283 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -2350,7 +2350,7 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
+ 	rcu_read_lock();
+ 	if (nfsi->cache_validity & NFS_INO_INVALID_ACCESS)
+ 		goto out;
+-	lh = rcu_dereference(nfsi->access_cache_entry_lru.prev);
++	lh = rcu_dereference(list_prev_rcu(&nfsi->access_cache_entry_lru));
+ 	cache = list_entry(lh, struct nfs_access_entry, lru);
+ 	if (lh == &nfsi->access_cache_entry_lru ||
+ 	    cred != cache->cred)
+-- 
+2.17.1
+
