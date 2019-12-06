@@ -2,59 +2,99 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647E6C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7A5C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3526D20659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E7020659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfLFQ34 (ORCPT
+        id S1726395AbfLFQdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:29:56 -0500
-Received: from mga09.intel.com ([134.134.136.24]:29132 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbfLFQ3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:29:55 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Dec 2019 08:29:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,285,1571727600"; 
-   d="scan'208";a="294897302"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga001.jf.intel.com with ESMTP; 06 Dec 2019 08:29:40 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 31845300B57; Fri,  6 Dec 2019 08:29:40 -0800 (PST)
-Date:   Fri, 6 Dec 2019 08:29:40 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     acme@kernel.org, haiyanx.song@intel.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, kan.liang@linux.intel.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/pmu-events: Fix Kernel_Utilization metric
-Message-ID: <20191206162940.GC752382@tassilo.jf.intel.com>
-References: <20191204162121.29998-1-ravi.bangoria@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204162121.29998-1-ravi.bangoria@linux.ibm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Fri, 6 Dec 2019 11:33:05 -0500
+Received: from relmlor1.renesas.com ([210.160.252.171]:55948 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726258AbfLFQdF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 11:33:05 -0500
+X-IronPort-AV: E=Sophos;i="5.69,285,1571670000"; 
+   d="scan'208";a="33693100"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 07 Dec 2019 01:33:03 +0900
+Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id E6135400D4D7;
+        Sat,  7 Dec 2019 01:32:57 +0900 (JST)
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        ebiharaml@si-linux.co.jp
+Subject: [PATCH v4 0/7] Add dual-LVDS panel support to EK874
+Date:   Fri,  6 Dec 2019 16:32:47 +0000
+Message-Id: <1575649974-31472-1-git-send-email-fabrizio.castro@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 09:51:21PM +0530, Ravi Bangoria wrote:
-> Kernel Utilization should divide ref cycles spent in kernel with total
-> ref cycles.
+Dear All,
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+this series adds support for dual-LVDS panel IDK-2121WR
+from Advantech:
+https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
 
--Andi
+V4 incorporates most of the comments received from v3, making it significantly
+different from v3: patch "drm: rcar-du: lvds: Add dual-LVDS panels support"
+has been split in 4 patches, patches
+"dt-bindings: display: Add bindings for LVDS bus-timings" and
+"dt-bindings: display: Add idk-2121wr binding" have been merged together,
+and a few issues have been fixed.
+
+Thanks,
+Fab
+
+Fabrizio Castro (7):
+  drm: of: Add drm_of_lvds_get_dual_link_pixel_order
+  drm: rcar-du: lvds: Improve identification of panels
+  drm: rcar-du: lvds: Get dual link configuration from DT
+  drm: rcar-du: lvds: Allow for even and odd pixels swap
+  drm: rcar-du: lvds: Fix mode for companion encoder
+  dt-bindings: display: Add idk-2121wr binding
+  arm64: dts: renesas: Add EK874 board with idk-2121wr display support
+
+ .../display/panel/advantech,idk-2121wr.yaml        | 128 ++++++++++++++++++
+ arch/arm64/boot/dts/renesas/Makefile               |   3 +-
+ .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 116 +++++++++++++++++
+ drivers/gpu/drm/drm_of.c                           | 104 +++++++++++++++
+ drivers/gpu/drm/rcar-du/rcar_lvds.c                | 143 ++++++++++++++-------
+ include/drm/drm_of.h                               |  20 +++
+ 6 files changed, 468 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+
+-- 
+2.7.4
+
