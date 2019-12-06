@@ -2,95 +2,101 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A949BC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E75FEC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F3D20706
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1DF20706
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:39:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A8u6dFx7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8swaD0/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfLFOjZ (ORCPT
+        id S1726506AbfLFOjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:39:25 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40332 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726259AbfLFOjZ (ORCPT
+        Fri, 6 Dec 2019 09:39:45 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44742 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfLFOjp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 09:39:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575643163;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=t9EmvdK1AgBEeVtyIdQhFEC+nCx5dAL/M6REGeRF2KI=;
-        b=A8u6dFx7I3AQ9vPjpD4oHMpe5QOUPE3N36xPugfLKDuaA98+bb1h7mDn/rQXjtk0m8xxt7
-        I3Ug+bSW+15uBh2M0pUS4zhx+U12Klw/EVJOJn/Dnyy4AdnzqDZ8/L2ePuR/T35v4b3UFz
-        kceOEZ5bil4v/g+AhHRp6U7jQlu49nA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-111-vn1BWFynNbyWxKfbUzJhhg-1; Fri, 06 Dec 2019 09:39:20 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7F30F64A9B;
-        Fri,  6 Dec 2019 14:39:19 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-117-106.ams2.redhat.com [10.36.117.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ECF4D5C1C3;
-        Fri,  6 Dec 2019 14:39:12 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     virtualization@lists.linux-foundation.org
-Cc:     Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [PATCH] vhost/vsock: accept only packets with the right dst_cid
-Date:   Fri,  6 Dec 2019 15:39:12 +0100
-Message-Id: <20191206143912.153583-1-sgarzare@redhat.com>
+        Fri, 6 Dec 2019 09:39:45 -0500
+Received: by mail-pf1-f193.google.com with SMTP id d199so3432962pfd.11;
+        Fri, 06 Dec 2019 06:39:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=irYNqKPLHshq/aQvOEy9WqNzGmfWQrAlrNW/wTAkb1U=;
+        b=I8swaD0/efsTUzN0rwN5fqcT2d0qBUB+9t5phKehvb58plhMdhclYqff6QDdCqAknw
+         Co/U+RxCxpNkCZ+3u9MkhvYFF+xdatN2uIRygf8GFvra9yrIm+k//cKsYRdL4TFYPgLb
+         CmBXbvT9AzX2TPTlo8aVpCWJlC6iMPQL6KCKnbXWFCT6rbhtUVlkOTfeDM7ap/0Y0t10
+         ZmdChr0BqNX1XD78SQy2wBkwH7e9ZRs9sf2oLZD/ROPwOrv9ms5VwiMWIkYLsC/Mrh3P
+         eWRfEMtFmLV1QTxSlp9RT5QKqBDOvquXAFZGAvW/tFEWOsPUxx2qsMbsHmOP2PrlN+FW
+         YTQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=irYNqKPLHshq/aQvOEy9WqNzGmfWQrAlrNW/wTAkb1U=;
+        b=QKHHzg66JDzx5A1mivFi25+05XcRzMRzc5AYrdnO7S37G2Vjp9tS7Vw9JCmj5UIB/q
+         CN4RnBiWEpEbKcVwAKX4eVH7GFPd3Feg0rPXTD88D4SE+sSyfEMfyDve+uF5PPor09oE
+         F/WV+6I5yPM0V0UwIUghT+OjcUvHPPeL+vFfHO4ykhZXU0gf3BWXMkwtVTsBNXA5pd1A
+         0qusB10S/tbL4RLAZwT73zeS8ZFBvQe+WS/p5hi1T8agR9D/9c2Hkd8vzD1t/Qv3hhcL
+         bt50RDnI7oRDliTUHXIFwyVpUeHVbE2ArozZERrFv2JJJVOOllyHPcEbGlqpsCWS5GsR
+         9baQ==
+X-Gm-Message-State: APjAAAU5uQ3PaIv5hx3gfdLH65p0LurDoTdIQcVOQVfC5woXmSkWaUog
+        hSfqe7a+nZrgyO9dl71l58JC+xry
+X-Google-Smtp-Source: APXvYqzCiYipDLDiHc06A/YWriJlXA+sFvNuqJij2Yu0x2xReX9LY6An4j/v1bgWMkItMfwztVwhdw==
+X-Received: by 2002:a63:c207:: with SMTP id b7mr3853777pgd.422.1575643183855;
+        Fri, 06 Dec 2019 06:39:43 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e11sm15791532pgh.54.2019.12.06.06.39.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 06:39:43 -0800 (PST)
+Subject: Re: [PATCH v2 0/2] hwmon: Add UCD90320 power sequencer chip
+To:     Jim Wright <wrightj@linux.vnet.ibm.com>, jdelvare@suse.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191205232411.21492-1-wrightj@linux.vnet.ibm.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <955b4485-aaa4-a255-752e-5ae336e9130f@roeck-us.net>
+Date:   Fri, 6 Dec 2019 06:39:42 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: vn1BWFynNbyWxKfbUzJhhg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191205232411.21492-1-wrightj@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we receive a new packet from the guest, we check if the
-src_cid is correct, but we forgot to check the dst_cid.
+On 12/5/19 3:24 PM, Jim Wright wrote:
+> Add support for TI UCD90320 power sequencer chip.
+> 
+> Changes since v1:
+> - Device tree bindings text file replaced with YAML schema.
+> - Device driver files are unchanged.
+> 
+> Jim Wright (2):
+>    dt-bindings: hwmon/pmbus: Add ti,ucd90320 power sequencer
+>    hwmon: Add support for UCD90320 Power Sequencer
+> 
+>   .../bindings/hwmon/pmbus/ti,ucd90320.yaml     | 45 +++++++++++++++++++
+>   Documentation/hwmon/ucd9000.rst               | 12 ++++-
+>   drivers/hwmon/pmbus/Kconfig                   |  6 +--
+>   drivers/hwmon/pmbus/ucd9000.c                 | 39 +++++++++++-----
+>   4 files changed, 85 insertions(+), 17 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/ti,ucd90320.yaml
+> 
+Series applied to hwmon-next.
 
-The host should accept only packets where dst_cid is
-equal to the host CID.
-
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- drivers/vhost/vsock.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index 50de0642dea6..c2d7d57e98cf 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -480,7 +480,9 @@ static void vhost_vsock_handle_tx_kick(struct vhost_wor=
-k *work)
- =09=09virtio_transport_deliver_tap_pkt(pkt);
-=20
- =09=09/* Only accept correctly addressed packets */
--=09=09if (le64_to_cpu(pkt->hdr.src_cid) =3D=3D vsock->guest_cid)
-+=09=09if (le64_to_cpu(pkt->hdr.src_cid) =3D=3D vsock->guest_cid &&
-+=09=09    le64_to_cpu(pkt->hdr.dst_cid) =3D=3D
-+=09=09    vhost_transport_get_local_cid())
- =09=09=09virtio_transport_recv_pkt(&vhost_transport, pkt);
- =09=09else
- =09=09=09virtio_transport_free_pkt(pkt);
---=20
-2.23.0
+Thanks,
+Guenter
 
