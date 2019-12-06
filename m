@@ -2,93 +2,163 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4885C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA965C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8C72064B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0E62064B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:05:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R2d7BoAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfLFPET (ORCPT
+        id S1726427AbfLFPFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 10:04:19 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:45596 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726268AbfLFPET (ORCPT
+        Fri, 6 Dec 2019 10:05:06 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40886 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726246AbfLFPFG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 10:04:19 -0500
-Received: (qmail 1779 invoked by uid 2102); 6 Dec 2019 10:04:18 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 6 Dec 2019 10:04:18 -0500
-Date:   Fri, 6 Dec 2019 10:04:18 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Jayshri Pawar <jpawar@cadence.com>
-cc:     linux-usb@vger.kernel.org, <gregkh@linuxfoundation.org>,
-        <felipe.balbi@linux.intel.com>, <heikki.krogerus@linux.intel.com>,
-        <rogerq@ti.com>, <linux-kernel@vger.kernel.org>,
-        <jbergsagel@ti.com>, <nsekhar@ti.com>, <nm@ti.com>,
-        <peter.chen@nxp.com>, <kurahul@cadence.com>, <pawell@cadence.com>,
-        <sparmar@cadence.com>
-Subject: Re: [RFC PATCH v2] usb:gadget: Fixed issue with config_ep_by_speed
- function.
-In-Reply-To: <1575632539-13528-1-git-send-email-jpawar@cadence.com>
-Message-ID: <Pine.LNX.4.44L0.1912061001050.1618-100000@iolanthe.rowland.org>
+        Fri, 6 Dec 2019 10:05:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575644704;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nLbG7pN1NwRAqOGhYmpBkj1RZ3vObkivANCf2j5yoDI=;
+        b=R2d7BoAPl+JIkhIM6NTxIh/u4JpFGL6kUtRzFwELkIL/ZUFsCDulqzvkrgXfLeFx8DRKn4
+        lcKaLkKQ+Z+jNrrvvWTRxD7ktqYVmUCJHphOKw976m2Kbx4bHuzAMRfbzCMAAix+zbZ1Bs
+        uO0E19zeO5D0siyNHzI7Pq0TRorE/GU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-esLTOX-OPE61ujqBsgWrEw-1; Fri, 06 Dec 2019 10:05:01 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2263591222;
+        Fri,  6 Dec 2019 15:05:00 +0000 (UTC)
+Received: from krava (unknown [10.43.17.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA1FC10016EB;
+        Fri,  6 Dec 2019 15:04:57 +0000 (UTC)
+Date:   Fri, 6 Dec 2019 16:04:55 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL 0/6] perf/urgent fixes
+Message-ID: <20191206150455.GC31721@krava>
+References: <20191205193224.24629-1-acme@kernel.org>
+ <20191206075701.GA25384@gmail.com>
+ <20191206142516.GA31721@krava>
+ <20191206144354.GD30698@kernel.org>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <20191206144354.GD30698@kernel.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: esLTOX-OPE61ujqBsgWrEw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Dec 2019, Jayshri Pawar wrote:
+On Fri, Dec 06, 2019 at 11:43:54AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Dec 06, 2019 at 03:25:16PM +0100, Jiri Olsa escreveu:
+> > On Fri, Dec 06, 2019 at 08:57:01AM +0100, Ingo Molnar wrote:
+> >=20
+> > SNIP
+> >=20
+> > > >  tools/include/uapi/drm/drm.h      |   3 +-
+> > > >  tools/include/uapi/drm/i915_drm.h | 128 ++++++++++++++++++++++++++=
++++++++++++-
+> > > >  tools/perf/builtin-inject.c       |  13 +---
+> > > >  tools/perf/builtin-report.c       |   8 +++
+> > > >  tools/perf/util/sort.c            |  16 +++--
+> > > >  5 files changed, 147 insertions(+), 21 deletions(-)
+> > >=20
+> > > Pulled, thanks a lot Arnaldo!
+> > >=20
+> > > JFYI, on my system the default perf/urgent build still has this noise=
+=20
+> > > generated by util/parse-events.y and util/expr.y:
+> > >=20
+> > >   util/parse-events.y:1.1-12: warning: deprecated directive, use =E2=
+=80=98%define api.pure=E2=80=99 [-Wdeprecated]
+> > >       1 | %pure-parser
+> > >       | ^~~~~~~~~~~~
+> > >   util/parse-events.y: warning: fix-its can be applied.  Rerun with o=
+ption '--update'. [-Wother]
+> > >   util/expr.y:15.1-12: warning: deprecated directive, use =E2=80=98%d=
+efine api.pure=E2=80=99 [-Wdeprecated]
+> > >      15 | %pure-parser
+> > >       | ^~~~~~~~~~~~
+> > >   util/expr.y: warning: fix-its can be applied.  Rerun with option '-=
+-update'. [-Wother]
+> >=20
+> > just saw it in fedora 31 with new bison, change below
+> > should fix it, I'll post it with other fixes later
+>=20
+> As I explained to Ingo, this will make it fail with older systems, for
+> now this is just a warning, thus I've not been eager to get this merged,
+> Andi alredy submitted this, for instance.
+>=20
+> Is there some way to have some sort of ifdef based on bison's version so
+> that we can have both?
 
-> This patch adds additional parameter alt to config_ep_by_speed function.
-> This additional parameter allows to improve this function and
-> find proper usb_ss_ep_comp_descriptor.
-> 
-> Problem has appeared during testing f_tcm (BOT/UAS) driver function.
-> 
-> f_tcm function for SS use array of headers for both  BOT/UAS alternate
-> setting:
-> 
-> static struct usb_descriptor_header *uasp_ss_function_desc[] = {
->         (struct usb_descriptor_header *) &bot_intf_desc,
->         (struct usb_descriptor_header *) &uasp_ss_bi_desc,
->         (struct usb_descriptor_header *) &bot_bi_ep_comp_desc,
->         (struct usb_descriptor_header *) &uasp_ss_bo_desc,
->         (struct usb_descriptor_header *) &bot_bo_ep_comp_desc,
-> 
->         (struct usb_descriptor_header *) &uasp_intf_desc,
->         (struct usb_descriptor_header *) &uasp_ss_bi_desc,
->         (struct usb_descriptor_header *) &uasp_bi_ep_comp_desc,
->         (struct usb_descriptor_header *) &uasp_bi_pipe_desc,
->         (struct usb_descriptor_header *) &uasp_ss_bo_desc,
->         (struct usb_descriptor_header *) &uasp_bo_ep_comp_desc,
->         (struct usb_descriptor_header *) &uasp_bo_pipe_desc,
->         (struct usb_descriptor_header *) &uasp_ss_status_desc,
->         (struct usb_descriptor_header *) &uasp_status_in_ep_comp_desc,
->         (struct usb_descriptor_header *) &uasp_status_pipe_desc,
->         (struct usb_descriptor_header *) &uasp_ss_cmd_desc,
->         (struct usb_descriptor_header *) &uasp_cmd_comp_desc,
->         (struct usb_descriptor_header *) &uasp_cmd_pipe_desc,
->         NULL,
-> };
-> 
-> The first 5 descriptors are associated with BOT alternate setting,
-> and others are associated  with UAS.
+I see, I guess we could use one or another based on
+bison version with macro
 
-If the first 5 descriptors are really associated with the BOT alternate
-setting, why is the second descriptor named uasp_ss_bi_desc?  And why
-is the fourth descriptor named uasp_ss_bo_desc?  These names suggest
-they are associated with UAS.
+jirka
 
-If the same descriptors are used for both settings, the names should 
-reflect this.  For example, they could be called bot_uasp_ss_bi_desc 
-and bot_uasp_ss_bo_desc.
-
-Alan Stern
+>=20
+> At some point I'll just bite the bullet and stop testing on such older
+> systems, but while this is not strictly needed...
+>=20
+> - Arnaldo
+> =20
+> > jirka
+> >=20
+> > ---
+> > diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+> > index f9a20a39b64a..4ef801334b9d 100644
+> > --- a/tools/perf/util/expr.y
+> > +++ b/tools/perf/util/expr.y
+> > @@ -12,7 +12,7 @@
+> >  #define MAXIDLEN 256
+> >  %}
+> > =20
+> > -%pure-parser
+> > +%define api.pure
+> >  %parse-param { double *final_val }
+> >  %parse-param { struct parse_ctx *ctx }
+> >  %parse-param { const char **pp }
+> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-eve=
+nts.y
+> > index e2eea4e601b4..87a0d11676f0 100644
+> > --- a/tools/perf/util/parse-events.y
+> > +++ b/tools/perf/util/parse-events.y
+> > @@ -1,4 +1,4 @@
+> > -%pure-parser
+> > +%define api.pure
+> >  %parse-param {void *_parse_state}
+> >  %parse-param {void *scanner}
+> >  %lex-param {void* scanner}
+>=20
+> --=20
+>=20
+> - Arnaldo
+>=20
 
