@@ -2,141 +2,135 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FADEC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99E6C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2524E20659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:24:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575642266;
-	bh=ZZT369kA6Po8rzHTdXYEw5LXvSzYqDbFmh48D/9ldN8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VqN837a2WQTHSAc7DKu3gaLgYv2usie/xCQBBU5zA4BJQ0IPDb9ZWBS6kysK945he
-	 +mcWFeOVK/J+DBaO77Ae9aS1jZ9mUDh2WxdqWrt4Mbua4bhEY3p/1TG+W2N5pBJ1T5
-	 25dd5UJYfBuaPcvQPP8CaWrrp8ezvKdDfzwfLyVw=
+	by mail.kernel.org (Postfix) with ESMTP id ABEA520659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:25:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CkZXRf/b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfLFOYZ (ORCPT
+        id S1726444AbfLFOZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:24:25 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43131 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfLFOYW (ORCPT
+        Fri, 6 Dec 2019 09:25:27 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24122 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726214AbfLFOZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 09:24:22 -0500
-Received: by mail-wr1-f65.google.com with SMTP id d16so7917339wre.10
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 06:24:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=vc6cQnfCxKN0uDPrk49B3m1HkxNISZTqI0Pp7rQHqII=;
-        b=cGr7X6RF7ZcUqQsmj+Tx6kD94zVjwY7czhSIdCoTzdqJkhAcfNjeMCm0o3jK6YvgLU
-         syhv7pP7bcR7KlJHDbPtY5Qt7H4QNW8gAW23AfgowOlmzA4abOI6UbrnmV5FyZcQwj2D
-         MTJriYwtljz4NwzpKuVGQuAz+u/cTM5qcMynPAbospfZhyvdGoZ+gixmftRq+q+8TDGT
-         H12mGNkSXG3vIfHJItdcK/XiMuAXz0xY1pa7BAQxXKfALgjmk0NchKiy53dd3sYU1bZR
-         fkvpXmNXNWI4uQT2WteB3sb071v/Q1Ol5lN1Wm11uuTQcvHpnZAf8LMWAHaNJjSfUS6S
-         SjwQ==
-X-Gm-Message-State: APjAAAWPFkldamGlnIUc/es8chcg4pv3vSCtXpanDVGhiPvhMV1AocHK
-        vWFUKvPi68nWeIPn2LbH8QE=
-X-Google-Smtp-Source: APXvYqwwmMDnS2FZLfKG16pLce1tzYWbto9tStZ6peuTR2ohVxYhKW7GPLX8eCkxS/T2ph8KLjhUOw==
-X-Received: by 2002:adf:82e7:: with SMTP id 94mr16211867wrc.60.1575642260421;
-        Fri, 06 Dec 2019 06:24:20 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id z6sm17140998wrw.36.2019.12.06.06.24.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 06:24:19 -0800 (PST)
-Date:   Fri, 6 Dec 2019 15:24:18 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Thomas Hellstrom <thellstrom@vmware.com>
-Cc:     "thomas_os@shipmail.org" <thomas_os@shipmail.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Pv-drivers <Pv-drivers@vmware.com>,
-        "rcampbell@nvidia.com" <rcampbell@nvidia.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "jglisse@redhat.com" <jglisse@redhat.com>,
-        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>
-Subject: Re: [PATCH v3 2/2] mm, drm/ttm: Fix vm page protection handling
-Message-ID: <20191206142418.GP28317@dhcp22.suse.cz>
-References: <20191206082426.2958-1-thomas_os@shipmail.org>
- <20191206082426.2958-3-thomas_os@shipmail.org>
- <20191206103055.GO28317@dhcp22.suse.cz>
- <10c4835486275e87334058bc2f406609c55271eb.camel@vmware.com>
+        Fri, 6 Dec 2019 09:25:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575642325;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y5eMwjNSah3IFSsfBLmQpFEVvDHBPY0nuvKXJwIONiw=;
+        b=CkZXRf/bbvnTTx76TlpDpXrmhixwPAXBJMcvlamYHrNuzGS/2ZVAJJ6gHfqBQTtMYCplsp
+        sSLuUVcAPx4KtHJjfGPGlGqkzQ+74KEftmx6hNbdKPnk1q9e8RaRZyk1HwAdMmFbEeAqkm
+        3EoK7bqcKQd3lUTvceb1K0hmYGEDkEY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-81-n2FikzZKNyWz1gh8UutNAg-1; Fri, 06 Dec 2019 09:25:23 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2BD18188355F;
+        Fri,  6 Dec 2019 14:25:21 +0000 (UTC)
+Received: from krava (unknown [10.43.17.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0883310016E8;
+        Fri,  6 Dec 2019 14:25:18 +0000 (UTC)
+Date:   Fri, 6 Dec 2019 15:25:16 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL 0/6] perf/urgent fixes
+Message-ID: <20191206142516.GA31721@krava>
+References: <20191205193224.24629-1-acme@kernel.org>
+ <20191206075701.GA25384@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+In-Reply-To: <20191206075701.GA25384@gmail.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: n2FikzZKNyWz1gh8UutNAg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <10c4835486275e87334058bc2f406609c55271eb.camel@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 06-12-19 14:16:10, Thomas Hellstrom wrote:
-> Hi Michal,
-> 
-> On Fri, 2019-12-06 at 11:30 +0100, Michal Hocko wrote:
-> > On Fri 06-12-19 09:24:26, Thomas Hellström (VMware) wrote:
-> > [...]
-> > > @@ -283,11 +282,26 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct
-> > > vm_fault *vmf,
-> > >  			pfn = page_to_pfn(page);
-> > >  		}
-> > >  
-> > > +		/*
-> > > +		 * Note that the value of @prot at this point may
-> > > differ from
-> > > +		 * the value of @vma->vm_page_prot in the caching- and
-> > > +		 * encryption bits. This is because the exact location
-> > > of the
-> > > +		 * data may not be known at mmap() time and may also
-> > > change
-> > > +		 * at arbitrary times while the data is mmap'ed.
-> > > +		 * This is ok as long as @vma->vm_page_prot is not used
-> > > by
-> > > +		 * the core vm to set caching- and encryption bits.
-> > > +		 * This is ensured by core vm using pte_modify() to
-> > > modify
-> > > +		 * page table entry protection bits (that function
-> > > preserves
-> > > +		 * old caching- and encryption bits), and the @fault
-> > > +		 * callback being the only function that creates new
-> > > +		 * page table entries.
-> > > +		 */
-> > 
-> > While this is a very valuable piece of information I believe we need
-> > to
-> > document this in the generic code where everybody will find it.
-> > vmf_insert_mixed_prot sounds like a good place to me. So being
-> > explicit
-> > about VM_MIXEDMAP. Also a reference from vm_page_prot to this
-> > function
-> > would be really helpeful.
-> > 
-> > Thanks!
-> > 
-> 
-> Just to make sure I understand correctly. You'd prefer this (or
-> similar) text to be present at the vmf_insert_mixed_prot() and
-> vmf_insert_pfn_prot() definitions for MIXEDMAP and PFNMAP respectively,
-> and a pointer from vm_page_prot to that text. Is that correct?
+On Fri, Dec 06, 2019 at 08:57:01AM +0100, Ingo Molnar wrote:
 
-Yes. You can keep whatever is specific to TTM here but the rest should
-be somewhere visible to users of the interface and a note at
-vm_page_prot should help anybody touching the generic/core code to not
-break those expectations.
+SNIP
 
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+> >  tools/include/uapi/drm/drm.h      |   3 +-
+> >  tools/include/uapi/drm/i915_drm.h | 128 ++++++++++++++++++++++++++++++=
++++++++-
+> >  tools/perf/builtin-inject.c       |  13 +---
+> >  tools/perf/builtin-report.c       |   8 +++
+> >  tools/perf/util/sort.c            |  16 +++--
+> >  5 files changed, 147 insertions(+), 21 deletions(-)
+>=20
+> Pulled, thanks a lot Arnaldo!
+>=20
+> JFYI, on my system the default perf/urgent build still has this noise=20
+> generated by util/parse-events.y and util/expr.y:
+>=20
+>   util/parse-events.y:1.1-12: warning: deprecated directive, use =E2=80=
+=98%define api.pure=E2=80=99 [-Wdeprecated]
+>       1 | %pure-parser
+>       | ^~~~~~~~~~~~
+>   util/parse-events.y: warning: fix-its can be applied.  Rerun with optio=
+n '--update'. [-Wother]
+>   util/expr.y:15.1-12: warning: deprecated directive, use =E2=80=98%defin=
+e api.pure=E2=80=99 [-Wdeprecated]
+>      15 | %pure-parser
+>       | ^~~~~~~~~~~~
+>   util/expr.y: warning: fix-its can be applied.  Rerun with option '--upd=
+ate'. [-Wother]
+
+just saw it in fedora 31 with new bison, change below
+should fix it, I'll post it with other fixes later
+
+jirka
+
+---
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index f9a20a39b64a..4ef801334b9d 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -12,7 +12,7 @@
+ #define MAXIDLEN 256
+ %}
+=20
+-%pure-parser
++%define api.pure
+ %parse-param { double *final_val }
+ %parse-param { struct parse_ctx *ctx }
+ %parse-param { const char **pp }
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.=
+y
+index e2eea4e601b4..87a0d11676f0 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -1,4 +1,4 @@
+-%pure-parser
++%define api.pure
+ %parse-param {void *_parse_state}
+ %parse-param {void *scanner}
+ %lex-param {void* scanner}
+
