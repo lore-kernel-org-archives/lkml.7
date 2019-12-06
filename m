@@ -2,407 +2,216 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D63C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CBBC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C97B21823
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1EE2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:51:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfLFJtx (ORCPT
+        id S1726350AbfLFJv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 04:49:53 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:64947 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbfLFJtf (ORCPT
+        Fri, 6 Dec 2019 04:51:26 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:64283 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfLFJv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 04:49:35 -0500
-Received: from 79.184.254.100.ipv4.supernova.orange.pl (79.184.254.100) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id 5e25dbf83e0c0420; Fri, 6 Dec 2019 10:49:31 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>
-Subject: [RFC][PATCH 4/6] ACPI: processor: Export acpi_processor_evaluate_cst()
-Date:   Fri, 06 Dec 2019 10:37:12 +0100
-Message-ID: <1840912.Bc70b32FYA@kreacher>
-In-Reply-To: <2037014.bnAicLLH9b@kreacher>
-References: <2037014.bnAicLLH9b@kreacher>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Fri, 6 Dec 2019 04:51:26 -0500
+Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xB69p1nw022550;
+        Fri, 6 Dec 2019 18:51:01 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav403.sakura.ne.jp);
+ Fri, 06 Dec 2019 18:51:01 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav403.sakura.ne.jp)
+Received: from ccsecurity.localdomain (softbank126040062084.bbtec.net [126.40.62.84])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xB69ot1w022479
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 6 Dec 2019 18:51:01 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: [PATCH] kconfig: Add yes2modconfig and mod2yesconfig targets.
+Date:   Fri,  6 Dec 2019 18:50:47 +0900
+Message-Id: <1575625847-6384-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Since kernel configs provided by syzbot are close to "make allyesconfig",
+it takes long time to rebuild. This is especially waste of time when we
+need to rebuild for many times (e.g. doing manual printk() inspection,
+bisect operations).
 
-The intel_idle driver will be modified to use ACPI _CST subsequently
-and it will need to call acpi_processor_evaluate_cst(), so move that
-function to acpi_processor.c so that it is always present (which is
-required by intel_idle) and export it to modules to allow the ACPI
-processor driver (which is modular) to call it.
+We can save time if we can exclude modules which are irrelevant to each
+problem. But "make localmodconfig" cannot exclude modules which are built
+into vmlinux because /sbin/lsmod output is used as the source of modules.
 
-No intentional functional impact.
+Therefore, this patch adds "make yes2modconfig" which converts from =y
+to =m if possible. After confirming that the interested problem is still
+reproducible, we can try "make localmodconfig" (and/or manually tune
+based on "Modules linked in:" line) in order to exclude modules which are
+irrelevant to the interested problem. While we are at it, this patch also
+adds "make mod2yesconfig" target which converts from =m to =y in case
+someone wants to convert from =m to =y after "make localmodconfig".
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Dmitry Vyukov <dvyukov@google.com>
 ---
- drivers/acpi/acpi_processor.c |  154 ++++++++++++++++++++++++++++++++++++++++++
- drivers/acpi/processor_idle.c |  139 -------------------------------------
- include/linux/acpi.h          |    9 ++
- 3 files changed, 163 insertions(+), 139 deletions(-)
+ scripts/kconfig/Makefile   |  2 +-
+ scripts/kconfig/conf.c     | 17 +++++++++++++++++
+ scripts/kconfig/confdata.c | 26 ++++++++++++++++++++++++++
+ scripts/kconfig/lkc.h      |  3 +++
+ 4 files changed, 47 insertions(+), 1 deletion(-)
 
-Index: linux-pm/drivers/acpi/acpi_processor.c
-===================================================================
---- linux-pm.orig/drivers/acpi/acpi_processor.c
-+++ linux-pm/drivers/acpi/acpi_processor.c
-@@ -729,4 +729,161 @@ bool acpi_processor_claim_cst_control(vo
- 	return true;
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index 2f1a59fa5169..3516809255be 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -67,7 +67,7 @@ localyesconfig localmodconfig: $(obj)/conf
+ #  deprecated for external use
+ simple-targets := oldconfig allnoconfig allyesconfig allmodconfig \
+ 	alldefconfig randconfig listnewconfig olddefconfig syncconfig \
+-	helpnewconfig
++	helpnewconfig yes2modconfig mod2yesconfig
+ 
+ PHONY += $(simple-targets)
+ 
+diff --git a/scripts/kconfig/conf.c b/scripts/kconfig/conf.c
+index 1f89bf1558ce..ae9ddf88c64d 100644
+--- a/scripts/kconfig/conf.c
++++ b/scripts/kconfig/conf.c
+@@ -34,6 +34,8 @@ enum input_mode {
+ 	listnewconfig,
+ 	helpnewconfig,
+ 	olddefconfig,
++	yes2modconfig,
++	mod2yesconfig,
+ };
+ static enum input_mode input_mode = oldaskconfig;
+ 
+@@ -467,6 +469,8 @@ static struct option long_opts[] = {
+ 	{"listnewconfig",   no_argument,       NULL, listnewconfig},
+ 	{"helpnewconfig",   no_argument,       NULL, helpnewconfig},
+ 	{"olddefconfig",    no_argument,       NULL, olddefconfig},
++	{"yes2modconfig",   no_argument,       NULL, yes2modconfig},
++	{"mod2yesconfig",   no_argument,       NULL, mod2yesconfig},
+ 	{NULL, 0, NULL, 0}
+ };
+ 
+@@ -489,6 +493,8 @@ static void conf_usage(const char *progname)
+ 	printf("  --allmodconfig          New config where all options are answered with mod\n");
+ 	printf("  --alldefconfig          New config with all symbols set to default\n");
+ 	printf("  --randconfig            New config with random answer to all options\n");
++	printf("  --yes2modconfig         Change answers from yes to mod if possible\n");
++	printf("  --mod2yesconfig         Change answers from mod to yes\n");
  }
- EXPORT_SYMBOL_GPL(acpi_processor_claim_cst_control);
+ 
+ int main(int ac, char **av)
+@@ -553,6 +559,8 @@ int main(int ac, char **av)
+ 		case listnewconfig:
+ 		case helpnewconfig:
+ 		case olddefconfig:
++		case yes2modconfig:
++		case mod2yesconfig:
+ 			break;
+ 		case '?':
+ 			conf_usage(progname);
+@@ -587,6 +595,8 @@ int main(int ac, char **av)
+ 	case listnewconfig:
+ 	case helpnewconfig:
+ 	case olddefconfig:
++	case yes2modconfig:
++	case mod2yesconfig:
+ 		conf_read(NULL);
+ 		break;
+ 	case allnoconfig:
+@@ -638,6 +648,11 @@ int main(int ac, char **av)
+ 		}
+ 	}
+ 
++	if (input_mode == yes2modconfig)
++		conf_rewrite_mod_or_yes(def_y2m);
++	else if (input_mode == mod2yesconfig)
++		conf_rewrite_mod_or_yes(def_m2y);
 +
-+/**
-+ * acpi_processor_evaluate_cst - Evaluate the processor _CST control method.
-+ * @handle: ACPI handle of the processor object containing the _CST.
-+ * @cpu: The numeric ID of the target CPU.
-+ * @info: Object write the C-states information into.
-+ *
-+ * Extract the C-state information for the given CPU from the output of the _CST
-+ * control method under the corresponding ACPI processor object (or processor
-+ * device object) and populate @info with it.
-+ *
-+ * If any ACPI_ADR_SPACE_FIXED_HARDWARE C-states are found, invoke
-+ * acpi_processor_ffh_cstate_probe() to verify them and update the
-+ * cpu_cstate_entry data for @cpu.
-+ */
-+int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
-+				struct acpi_processor_power *info)
+ 	switch (input_mode) {
+ 	case allnoconfig:
+ 		conf_set_all_new_symbols(def_no);
+@@ -669,6 +684,8 @@ int main(int ac, char **av)
+ 	case listnewconfig:
+ 	case helpnewconfig:
+ 	case syncconfig:
++	case yes2modconfig:
++	case mod2yesconfig:
+ 		/* Update until a loop caused no more changes */
+ 		do {
+ 			conf_cnt = 0;
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index 3569d2dec37c..6832a04a1aa4 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -1362,3 +1362,29 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
+ 
+ 	return has_changed;
+ }
++
++bool conf_rewrite_mod_or_yes(enum conf_def_mode mode)
 +{
-+	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object *cst;
-+	acpi_status status;
-+	u64 count;
-+	int last_index = 0;
-+	int i, ret = 0;
++	struct symbol *sym;
++	int i;
++	bool has_changed = false;
 +
-+	status = acpi_evaluate_object(handle, "_CST", NULL, &buffer);
-+	if (ACPI_FAILURE(status)) {
-+		acpi_handle_debug(handle, "No _CST\n");
-+		return -ENODEV;
-+	}
-+
-+	cst = buffer.pointer;
-+
-+	/* There must be at least 2 elements. */
-+	if (!cst || cst->type != ACPI_TYPE_PACKAGE || cst->package.count < 2) {
-+		acpi_handle_warn(handle, "Invalid _CST output\n");
-+		ret = -EFAULT;
-+		goto end;
-+	}
-+
-+	count = cst->package.elements[0].integer.value;
-+
-+	/* Validate the number of C-states. */
-+	if (count < 1 || count != cst->package.count - 1) {
-+		acpi_handle_warn(handle, "Inconsistent _CST data\n");
-+		ret = -EFAULT;
-+		goto end;
-+	}
-+
-+	for (i = 1; i <= count; i++) {
-+		union acpi_object *element;
-+		union acpi_object *obj;
-+		struct acpi_power_register *reg;
-+		struct acpi_processor_cx cx;
-+
-+		/*
-+		 * If there is not enough space for all C-states, skip the
-+		 * excess ones and log a warning.
-+		 */
-+		if (last_index >= ACPI_PROCESSOR_MAX_POWER - 1) {
-+			acpi_handle_warn(handle,
-+					 "No room for more idle states (limit: %d)\n",
-+					 ACPI_PROCESSOR_MAX_POWER - 1);
-+			break;
-+		}
-+
-+		memset(&cx, 0, sizeof(cx));
-+
-+		element = &cst->package.elements[i];
-+		if (element->type != ACPI_TYPE_PACKAGE)
-+			continue;
-+
-+		if (element->package.count != 4)
-+			continue;
-+
-+		obj = &element->package.elements[0];
-+
-+		if (obj->type != ACPI_TYPE_BUFFER)
-+			continue;
-+
-+		reg = (struct acpi_power_register *)obj->buffer.pointer;
-+
-+		obj = &element->package.elements[1];
-+		if (obj->type != ACPI_TYPE_INTEGER)
-+			continue;
-+
-+		cx.type = obj->integer.value;
-+		/*
-+		 * There are known cases in which the _CST output does not
-+		 * contain C1, so if the type of the first state found is not
-+		 * C1, leave an empty slot for C1 to be filled in later.
-+		 */
-+		if (i == 1 && cx.type != ACPI_STATE_C1)
-+			last_index = 1;
-+
-+		cx.address = reg->address;
-+		cx.index = last_index + 1;
-+
-+		if (reg->space_id == ACPI_ADR_SPACE_FIXED_HARDWARE) {
-+			if (!acpi_processor_ffh_cstate_probe(cpu, &cx, reg)) {
-+				/*
-+				 * In the majority of cases _CST describes C1 as
-+				 * a FIXED_HARDWARE C-state, but if the command
-+				 * line forbids using MWAIT, use CSTATE_HALT for
-+				 * C1 regardless.
-+				 */
-+				if (cx.type == ACPI_STATE_C1 &&
-+				    boot_option_idle_override == IDLE_NOMWAIT) {
-+					cx.entry_method = ACPI_CSTATE_HALT;
-+					snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI HLT");
-+				} else {
-+					cx.entry_method = ACPI_CSTATE_FFH;
-+				}
-+			} else if (cx.type == ACPI_STATE_C1) {
-+				/*
-+				 * In the special case of C1, FIXED_HARDWARE can
-+				 * be handled by executing the HLT instruction.
-+				 */
-+				cx.entry_method = ACPI_CSTATE_HALT;
-+				snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI HLT");
-+			} else {
-+				continue;
++	if (mode == def_y2m) {
++		for_all_symbols(i, sym) {
++			if (sym_get_type(sym) == S_TRISTATE &&
++			    sym->def[S_DEF_USER].tri == yes) {
++				sym->def[S_DEF_USER].tri = mod;
++				has_changed = true;
 +			}
-+		} else if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
-+			cx.entry_method = ACPI_CSTATE_SYSTEMIO;
-+			snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI IOPORT 0x%x",
-+				 cx.address);
-+		} else {
-+			continue;
 +		}
-+
-+		if (cx.type == ACPI_STATE_C1)
-+			cx.valid = 1;
-+
-+		obj = &element->package.elements[2];
-+		if (obj->type != ACPI_TYPE_INTEGER)
-+			continue;
-+
-+		cx.latency = obj->integer.value;
-+
-+		obj = &element->package.elements[3];
-+		if (obj->type != ACPI_TYPE_INTEGER)
-+			continue;
-+
-+		memcpy(&info->states[++last_index], &cx, sizeof(cx));
++	} else if (mode == def_m2y) {
++		for_all_symbols(i, sym) {
++			if (sym_get_type(sym) == S_TRISTATE &&
++			    sym->def[S_DEF_USER].tri == mod) {
++				sym->def[S_DEF_USER].tri = yes;
++				has_changed = true;
++			}
++		}
 +	}
-+
-+	acpi_handle_info(handle, "Found %d idle states\n", last_index);
-+
-+	info->count = last_index;
-+
-+      end:
-+	kfree(buffer.pointer);
-+
-+	return ret;
++	return has_changed;
 +}
-+EXPORT_SYMBOL_GPL(acpi_processor_evaluate_cst);
- #endif /* CONFIG_ACPI_PROCESSOR_CSTATE */
-Index: linux-pm/include/linux/acpi.h
-===================================================================
---- linux-pm.orig/include/linux/acpi.h
-+++ linux-pm/include/linux/acpi.h
-@@ -280,10 +280,19 @@ static inline bool invalid_phys_cpuid(ph
- /* Validate the processor object's proc_id */
- bool acpi_duplicate_processor_id(int proc_id);
- /* Processor _CTS control */
-+struct acpi_processor_power;
-+
- #ifdef CONFIG_ACPI_PROCESSOR_CSTATE
- bool acpi_processor_claim_cst_control(void);
-+int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
-+				struct acpi_processor_power *info);
- #else
- static inline bool acpi_processor_claim_cst_control(void) { return false; }
-+static inline int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
-+					      struct acpi_processor_power *info)
-+{
-+	return -ENODEV;
-+}
- #endif
+diff --git a/scripts/kconfig/lkc.h b/scripts/kconfig/lkc.h
+index 4fb16f316626..e8f3238dcc70 100644
+--- a/scripts/kconfig/lkc.h
++++ b/scripts/kconfig/lkc.h
+@@ -34,6 +34,8 @@ enum conf_def_mode {
+ 	def_default,
+ 	def_yes,
+ 	def_mod,
++	def_y2m,
++	def_m2y,
+ 	def_no,
+ 	def_random
+ };
+@@ -52,6 +54,7 @@ const char *conf_get_configname(void);
+ void sym_set_change_count(int count);
+ void sym_add_change_count(int count);
+ bool conf_set_all_new_symbols(enum conf_def_mode mode);
++bool conf_rewrite_mod_or_yes(enum conf_def_mode mode);
+ void set_all_choice_values(struct symbol *csym);
  
- #ifdef CONFIG_ACPI_HOTPLUG_CPU
-Index: linux-pm/drivers/acpi/processor_idle.c
-===================================================================
---- linux-pm.orig/drivers/acpi/processor_idle.c
-+++ linux-pm/drivers/acpi/processor_idle.c
-@@ -297,148 +297,6 @@ static int acpi_processor_get_power_info
- 	return 0;
- }
- 
--static int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
--				       struct acpi_processor_power *info)
--{
--	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *cst;
--	acpi_status status;
--	u64 count;
--	int last_index = 0;
--	int i, ret = 0;
--
--	status = acpi_evaluate_object(handle, "_CST", NULL, &buffer);
--	if (ACPI_FAILURE(status)) {
--		acpi_handle_debug(handle, "No _CST\n");
--		return -ENODEV;
--	}
--
--	cst = buffer.pointer;
--
--	/* There must be at least 2 elements. */
--	if (!cst || cst->type != ACPI_TYPE_PACKAGE || cst->package.count < 2) {
--		acpi_handle_warn(handle, "Invalid _CST output\n");
--		ret = -EFAULT;
--		goto end;
--	}
--
--	count = cst->package.elements[0].integer.value;
--
--	/* Validate the number of C-states. */
--	if (count < 1 || count != cst->package.count - 1) {
--		acpi_handle_warn(handle, "Inconsistent _CST data\n");
--		ret = -EFAULT;
--		goto end;
--	}
--
--	for (i = 1; i <= count; i++) {
--		union acpi_object *element;
--		union acpi_object *obj;
--		struct acpi_power_register *reg;
--		struct acpi_processor_cx cx;
--
--		/*
--		 * If there is not enough space for all C-states, skip the
--		 * excess ones and log a warning.
--		 */
--		if (last_index >= ACPI_PROCESSOR_MAX_POWER - 1) {
--			acpi_handle_warn(handle,
--					 "No room for more idle states (limit: %d)\n",
--					 ACPI_PROCESSOR_MAX_POWER - 1);
--			break;
--		}
--
--		memset(&cx, 0, sizeof(cx));
--
--		element = &cst->package.elements[i];
--		if (element->type != ACPI_TYPE_PACKAGE)
--			continue;
--
--		if (element->package.count != 4)
--			continue;
--
--		obj = &element->package.elements[0];
--
--		if (obj->type != ACPI_TYPE_BUFFER)
--			continue;
--
--		reg = (struct acpi_power_register *)obj->buffer.pointer;
--
--		obj = &element->package.elements[1];
--		if (obj->type != ACPI_TYPE_INTEGER)
--			continue;
--
--		cx.type = obj->integer.value;
--		/*
--		 * There are known cases in which the _CST output does not
--		 * contain C1, so if the type of the first state found is not
--		 * C1, leave an empty slot for C1 to be filled in later.
--		 */
--		if (i == 1 && cx.type != ACPI_STATE_C1)
--			last_index = 1;
--
--		cx.address = reg->address;
--		cx.index = last_index + 1;
--
--		if (reg->space_id == ACPI_ADR_SPACE_FIXED_HARDWARE) {
--			if (!acpi_processor_ffh_cstate_probe(cpu, &cx, reg)) {
--				/*
--				 * In the majority of cases _CST describes C1 as
--				 * a FIXED_HARDWARE C-state, but if the command
--				 * line forbids using MWAIT, use CSTATE_HALT for
--				 * C1 regardless.
--				 */
--				if (cx.type == ACPI_STATE_C1 &&
--				    boot_option_idle_override == IDLE_NOMWAIT) {
--					cx.entry_method = ACPI_CSTATE_HALT;
--					snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI HLT");
--				} else {
--					cx.entry_method = ACPI_CSTATE_FFH;
--				}
--			} else if (cx.type == ACPI_STATE_C1) {
--				/*
--				 * In the special case of C1, FIXED_HARDWARE can
--				 * be handled by executing the HLT instruction.
--				 */
--				cx.entry_method = ACPI_CSTATE_HALT;
--				snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI HLT");
--			} else {
--				continue;
--			}
--		} else if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
--			cx.entry_method = ACPI_CSTATE_SYSTEMIO;
--			snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI IOPORT 0x%x",
--				 cx.address);
--		} else {
--			continue;
--		}
--
--		if (cx.type == ACPI_STATE_C1)
--			cx.valid = 1;
--
--		obj = &element->package.elements[2];
--		if (obj->type != ACPI_TYPE_INTEGER)
--			continue;
--
--		cx.latency = obj->integer.value;
--
--		obj = &element->package.elements[3];
--		if (obj->type != ACPI_TYPE_INTEGER)
--			continue;
--
--		memcpy(&info->states[++last_index], &cx, sizeof(cx));
--	}
--
--	acpi_handle_info(handle, "Found %d idle states\n", last_index);
--
--	info->count = last_index;
--
--      end:
--	kfree(buffer.pointer);
--
--	return ret;
--}
--
- static int acpi_processor_get_power_info_cst(struct acpi_processor *pr)
- {
- 	int ret;
-
-
-
+ /* confdata.c and expr.c */
+-- 
+2.16.5
