@@ -1,75 +1,106 @@
 Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D09C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B82C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211AD21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2427421835
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:45:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575636312;
+	bh=GHMiXwT065uPwUwIIqQU+AS8Kz5f4G24qOnNzLCcVR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XXVlliWcgL5I/q/veGZFV5Zk1ASZLuC7OKXxjdTMwELNhfldvbjmxW/asHu3c1CoR
+	 8xkJllz597IqMZQ68jsc6bKGLtEQdXiPcHkWzf9cmtAEVpIKNhaDRiUP8bj8JQSnPF
+	 ex+1eza144LChldD4n1h6OX+lLqZrZC/L0SBh4x4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfLFMnS (ORCPT
+        id S1726264AbfLFMpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:43:18 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7196 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726124AbfLFMnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:43:18 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 34E8698A8BE4491AEB20;
-        Fri,  6 Dec 2019 20:43:15 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Dec 2019
- 20:43:06 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>, <andrew@lunn.ch>
-CC:     <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] watchdog: tqmx86_wdt: Fix build error
-Date:   Fri, 6 Dec 2019 20:42:59 +0800
-Message-ID: <20191206124259.25880-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 6 Dec 2019 07:45:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbfLFMpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 07:45:11 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED01D205F4;
+        Fri,  6 Dec 2019 12:45:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575636310;
+        bh=GHMiXwT065uPwUwIIqQU+AS8Kz5f4G24qOnNzLCcVR8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M9gl0sSCJbv/ZU5qkoIHQlVe78vfB54tu/5RvIJNlSEZQtkeyvaQmDmwSUPODHIKE
+         IuuuoGKl3uaJ2EDiwtpNhJ0PznME4zlZefVzyVR0ZFIb3kvz3snk3mdk2/vjZ6P0Ao
+         JBjQwUoGO385uoxocK0605KJsvMdMdttKgJpGwPs=
+Date:   Fri, 6 Dec 2019 13:45:08 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc:     mpe@ellerman.id.au, mahesh@linux.vnet.ibm.com,
+        hbathini@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@ozlabs.org, corbet@lwn.net, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 3/6] powerpc/fadump: reorganize /sys/kernel/fadump_*
+ sysfs files
+Message-ID: <20191206124508.GA1360047@kroah.com>
+References: <20191206122434.29587-1-sourabhjain@linux.ibm.com>
+ <20191206122434.29587-4-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191206122434.29587-4-sourabhjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If TQMX86_WDT is y and WATCHDOG_CORE is m, building fails:
+On Fri, Dec 06, 2019 at 05:54:31PM +0530, Sourabh Jain wrote:
+> +static struct kobj_attribute release_attr = __ATTR(release_mem,
+>  						0200, NULL,
+>  						fadump_release_memory_store);
+> -static struct kobj_attribute fadump_attr = __ATTR(fadump_enabled,
+> +static struct kobj_attribute enable_attr = __ATTR(enabled,
+>  						0444, fadump_enabled_show,
+>  						NULL);
 
-drivers/watchdog/tqmx86_wdt.o: In function `tqmx86_wdt_probe':
-tqmx86_wdt.c:(.text+0x46e): undefined reference to `watchdog_init_timeout'
-tqmx86_wdt.c:(.text+0x4e0): undefined reference to `devm_watchdog_register_device'
+__ATTR_RO()?
 
-Select WATCHDOG_CORE to fix this.
+> -static struct kobj_attribute fadump_register_attr = __ATTR(fadump_registered,
+> +static struct kobj_attribute register_attr = __ATTR(registered,
+>  						0644, fadump_register_show,
+>  						fadump_register_store);
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e3c21e088f89 ("watchdog: tqmx86: Add watchdog driver for the IO controller")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/watchdog/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+__ATTR_RW()?
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 1679e0d..20bd967 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -1444,6 +1444,7 @@ config SMSC37B787_WDT
- config TQMX86_WDT
- 	tristate "TQ-Systems TQMX86 Watchdog Timer"
- 	depends on X86
-+	select WATCHDOG_CORE
- 	help
- 	This is the driver for the hardware watchdog timer in the TQMX86 IO
- 	controller found on some of their ComExpress Modules.
--- 
-2.7.4
+And then use an ATTRIBUTE_GROUP() macro to create a group so that you
+then can do:
 
+> @@ -1452,11 +1450,47 @@ static void fadump_init_files(void)
+>  		printk(KERN_ERR "fadump: unable to create debugfs file"
+>  				" fadump_region\n");
+>  
+> +	rc = sysfs_create_file(fadump_kobj, &enable_attr.attr);
+> +	if (rc)
+> +		pr_err("unable to create enabled sysfs file (%d)\n",
+> +		       rc);
+> +	rc = sysfs_create_file(fadump_kobj, &register_attr.attr);
+> +	if (rc)
+> +		pr_err("unable to create registered sysfs file (%d)\n",
+> +		       rc);
+> +	if (fw_dump.dump_active) {
+> +		rc = sysfs_create_file(fadump_kobj, &release_attr.attr);
+> +		if (rc)
+> +			pr_err("unable to create release_mem sysfs file (%d)\n",
+> +			       rc);
+> +	}
 
+a single call to sysfs_create_groups() here instead of trying to unwind
+the mess if something went wrong.
+
+thanks,
+
+greg k-h
