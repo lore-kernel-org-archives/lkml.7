@@ -2,112 +2,73 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0CAC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B54C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F374924659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66AC224659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbfLFMRQ (ORCPT
+        id S1726302AbfLFMRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:17:16 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:43255 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfLFMRP (ORCPT
+        Fri, 6 Dec 2019 07:17:25 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:17684 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbfLFMRZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:17:15 -0500
-Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=calabresa)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <cascardo@canonical.com>)
-        id 1idCXo-00079d-9v; Fri, 06 Dec 2019 12:17:12 +0000
-Date:   Fri, 6 Dec 2019 09:17:07 -0300
-From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        posk@google.com
-Subject: Re: [PATCH] selftests: net: ip_defrag: increase netdev_max_backlog
-Message-ID: <20191206121707.GC5083@calabresa>
-References: <20191204195321.406365-1-cascardo@canonical.com>
- <483097a3-92ec-aedd-60d9-ab7f58b9708d@gmail.com>
+        Fri, 6 Dec 2019 07:17:25 -0500
+Received: from localhost.localdomain (10.28.8.19) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 6 Dec 2019
+ 20:17:50 +0800
+From:   Qianggui Song <qianggui.song@amlogic.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+CC:     Qianggui Song <qianggui.song@amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH 0/4] irqchip/meson-gpio: Add support for Meson-A1 SoC
+Date:   Fri, 6 Dec 2019 20:17:09 +0800
+Message-ID: <20191206121714.14579-1-qianggui.song@amlogic.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <483097a3-92ec-aedd-60d9-ab7f58b9708d@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.28.8.19]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 12:03:57PM -0800, Eric Dumazet wrote:
-> 
-> 
-> On 12/4/19 11:53 AM, Thadeu Lima de Souza Cascardo wrote:
-> > When using fragments with size 8 and payload larger than 8000, the backlog
-> > might fill up and packets will be dropped, causing the test to fail. This
-> > happens often enough when conntrack is on during the IPv6 test.
-> > 
-> > As the larger payload in the test is 10000, using a backlog of 1250 allow
-> > the test to run repeatedly without failure. At least a 1000 runs were
-> > possible with no failures, when usually less than 50 runs were good enough
-> > for showing a failure.
-> > 
-> > As netdev_max_backlog is not a pernet setting, this sets the backlog to
-> > 1000 during exit to prevent disturbing following tests.
-> > 
-> 
-> Hmmm... I would prefer not changing a global setting like that.
-> This is going to be flaky since we often run tests in parallel (using different netns)
-> 
-> What about adding a small delay after each sent packet ?
-> 
-> diff --git a/tools/testing/selftests/net/ip_defrag.c b/tools/testing/selftests/net/ip_defrag.c
-> index c0c9ecb891e1d78585e0db95fd8783be31bc563a..24d0723d2e7e9b94c3e365ee2ee30e9445deafa8 100644
-> --- a/tools/testing/selftests/net/ip_defrag.c
-> +++ b/tools/testing/selftests/net/ip_defrag.c
-> @@ -198,6 +198,7 @@ static void send_fragment(int fd_raw, struct sockaddr *addr, socklen_t alen,
->                 error(1, 0, "send_fragment: %d vs %d", res, frag_len);
->  
->         frag_counter++;
-> +       usleep(1000);
->  }
->  
->  static void send_udp_frags(int fd_raw, struct sockaddr *addr,
-> 
+This patchset add support for GPIO interrupt controller of Meson-A1 SoC
+which use new reigster layout, two main things are done in the patchset
+1. rework current driver
+2. add a1 support
 
-That won't work because the issue only shows when we using conntrack, as the
-packet will be reassembled on output, then fragmented again. When this happens,
-the fragmentation code is transmitting the fragments in a tight loop, which
-floods the backlog.
+Qianggui Song (4):
+  dt-bindings: interrupt-controller: New binding for Meson-A1 SoCs
+  irqchip/meson-gpio: rework meson irqchip driver to support meson-A1
+    SoCs
+  irqchip/meson-gpio: Add support for meson a1 SoCs
+  arm64: dts: meson: a1: add gpio interrupt controller support
 
-One other option is limit the number of fragments to a 1000, like the following
-patch:
+ .../amlogic,meson-gpio-intc.txt               |   1 +
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |   9 ++
+ drivers/irqchip/irq-meson-gpio.c              | 126 +++++++++++++++---
+ 3 files changed, 117 insertions(+), 19 deletions(-)
 
-diff --git a/tools/testing/selftests/net/ip_defrag.c b/tools/testing/selftests/net/ip_defrag.c
-index c0c9ecb891e1..f4086ba9d16c 100644
---- a/tools/testing/selftests/net/ip_defrag.c
-+++ b/tools/testing/selftests/net/ip_defrag.c
-@@ -16,6 +16,9 @@
- #include <time.h>
- #include <unistd.h>
- 
-+#define ALIGN(x, sz) ((x + (sz-1)) & ~(sz-1))
-+#define MAX(a, b) ((a < b) ? b : a)
-+
- static bool		cfg_do_ipv4;
- static bool		cfg_do_ipv6;
- static bool		cfg_verbose;
-@@ -362,6 +365,7 @@ static void run_test(struct sockaddr *addr, socklen_t alen, bool ipv6)
- 
- 	for (payload_len = min_frag_len; payload_len < MSG_LEN_MAX;
- 			payload_len += (rand() % 4096)) {
-+		min_frag_len = MAX(8, ALIGN(payload_len / 1000, 8));
- 		if (cfg_verbose)
- 			printf("payload_len: %d\n", payload_len);
- 
+-- 
+2.24.0
+
