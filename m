@@ -1,96 +1,134 @@
-Return-Path: <SRS0=yQuH=Z3=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44FFC43603
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A93C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16EE24659
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Dec 2019 23:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575590331;
-	bh=ZNDu4VK5Jtefgms0Jd1Efu4AwuEVoVfnq6BelvpkNIM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=o6p8fRKFTs0tjlX6u4SrZfTVZFFrOwXcv4eChoHeZ9rvp66T2JEKwB/oM/MUdgLJY
-	 707WcmqS0GFPDxW1Cq5XCBOoE02emZ3FN4nVw6Zp/rIp4j6tUFo4brM9/eUGVSBFR3
-	 vbJtrPpHJ4t1ssgKzBggm2inn68gE8t7Z3k7kvkk=
+	by mail.kernel.org (Postfix) with ESMTP id C66512464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:04:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="e4500oBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbfLEX6u (ORCPT
+        id S1726124AbfLFAEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 18:58:50 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43635 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfLEX6u (ORCPT
+        Thu, 5 Dec 2019 19:04:11 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15992 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbfLFAEK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 18:58:50 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 9so3833684lfq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 15:58:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YOmvCcAfxENDt59JmszfSJIXz70mzbpvyp0lp8vems0=;
-        b=Ekqfj+O7irTIS0InDutPgmPnBQgrHSMkEmzAiT7Q5ixN8sawn5JY5nEfE6Oii4Oz21
-         eg8kbdw3ISdBN9bt9ycolPwJGycujLH+hx+x0SsfOArbXB3ywkfyL8hmA/Q4oD21fDZW
-         LbmSPC6Jzcv6AttAaWv0ZEvqDReE3MinNrjeI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YOmvCcAfxENDt59JmszfSJIXz70mzbpvyp0lp8vems0=;
-        b=JYSWsrR8D4wXyZgZdn9beegQNoS6YTPSYKRRjHe1xEIbBcN7VfoI8Bsx7HrHX3iysj
-         mG5YpIhFVqQP6DvrQuBNsS7ZwpqKmR5udJDIsRj+pvfGts3E6gAES+AFN5tl+gueoC33
-         9CZisIRW2AQ07viit4ASb54NEsgSmYIR5XFHuaLkaWyCgZN4rpfNHARrr3S6gS64Y0WU
-         k7mqONUxvcLrgU0OqKeGVWtkgRzKKdfbU8baNGoZ314mkezOF0zsItrjhQ7CvUg5q7hx
-         ItpcdIbeL+cTu6psaTXn+ig8tf6X8WYZHTO9N4S+MqJC4Y4pck6gRexOhZCicBz/stS/
-         JNQQ==
-X-Gm-Message-State: APjAAAWmAHRKvgfuEmMc7QjRUrJ5ntbcXTfj77cYLcdHU8Zp+7NUWj5p
-        80HtjiyXQKBz/65L/5MD8if9GP7YJaY=
-X-Google-Smtp-Source: APXvYqyi0RzfmmV0H5iMOKSU5RBWTiE1HjJIAdVFMTNC5D9FgzdODV3p1fWNh8lvE0WYQtDWUZOHSQ==
-X-Received: by 2002:a19:7401:: with SMTP id v1mr6459994lfe.129.1575590327814;
-        Thu, 05 Dec 2019 15:58:47 -0800 (PST)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id b190sm5636686lfd.39.2019.12.05.15.58.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 15:58:47 -0800 (PST)
-Received: by mail-lj1-f169.google.com with SMTP id e10so5613631ljj.6
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 15:58:46 -0800 (PST)
-X-Received: by 2002:a05:651c:239:: with SMTP id z25mr4684297ljn.48.1575590326630;
- Thu, 05 Dec 2019 15:58:46 -0800 (PST)
+        Thu, 5 Dec 2019 19:04:10 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de99afe0000>; Thu, 05 Dec 2019 16:04:14 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 05 Dec 2019 16:04:10 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 05 Dec 2019 16:04:10 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec
+ 2019 00:04:09 +0000
+Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec 2019
+ 00:04:09 +0000
+Subject: Re: [v3 PATCH] mm: move_pages: return valid node id in status if the
+ page is already on the target node
+To:     Qian Cai <cai@lca.pw>
+CC:     Yang Shi <yang.shi@linux.alibaba.com>, <fabecassis@nvidia.com>,
+        <mhocko@suse.com>, <cl@linux.com>, <vbabka@suse.cz>,
+        <mgorman@techsingularity.net>, <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <a7f354b7-d2f9-71c0-7311-97255933b9a2@nvidia.com>
+ <2139CED9-6C12-48A5-BF61-F36923EB948E@lca.pw>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <22b5bfde-45be-95bd-5c98-2ab13302c107@nvidia.com>
+Date:   Thu, 5 Dec 2019 16:04:09 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
- <157558503716.10278.17734879104574600890.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157558503716.10278.17734879104574600890.stgit@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 5 Dec 2019 15:58:30 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiy87EzKRXRa3VkgesGndrR02pizpX_TEzP+cPPJytpWg@mail.gmail.com>
-Message-ID: <CAHk-=wiy87EzKRXRa3VkgesGndrR02pizpX_TEzP+cPPJytpWg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pipe: Fix missing mask update after pipe_wait() [ver #2]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2139CED9-6C12-48A5-BF61-F36923EB948E@lca.pw>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575590654; bh=HDeKv827CiSQ8RzNL5TATYMtNjIBTbYkbw7NU4jWVmc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=e4500oBYXGcC8/koWSWB6iUl1ZFKQ4hL8OjrgxarlmjN3W3BViEVFRWaojft72r6L
+         hQ6AOW5/XOYcPNF5NN+IXSM8oiN5AW8G2lcmXuIVwVuYThty7VJnJH9Urj1pbrwJh+
+         KPUFCPxXk6/ydWrdWtKS/WxIPbTHPVdj8IAGRAt1m5sHpqe4/aeYquIJK4YctH2Kvf
+         WQ3wBtGo3e4IF6k09tVlTbaLO+9vY0vONgSfhnHIYykDP0w3kcfY+TnluubN9eov7b
+         2xpZkdqgepyjgEU2AilCc/axH7i+s6jq8CZvE2olsutb7UUchierqqoz6SkVlRiV6m
+         RJ6UWykhSVDMg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 2:30 PM David Howells <dhowells@redhat.com> wrote:
->
-> -               struct pipe_buffer *buf = &pipe->bufs[(head - 1) & mask];
-> +               struct pipe_buffer *buf =
-> +                       &pipe->bufs[(head - 1) & (pipe->ring_size - 1)];
+On 12/5/19 3:58 PM, Qian Cai wrote:
+>=20
+>=20
+>> On Dec 5, 2019, at 6:24 PM, John Hubbard <jhubbard@nvidia.com> wrote:
+>>
+>> Let's check in the fix that is clearly correct and non-controversial, in=
+ one
+>> patch. Then another patch can be created for the other case. This allows=
+ forward
+>> progress and quick resolution of the user's bug report, while still deal=
+ing
+>> with all the problems.
+>>
+>> If you try to fix too many problems in one patch (and remember, sometime=
+s ">1"
+>> is too many), then things bog down. It's always a judgment call, but wha=
+t's=20
+>> unfolding here is quite consistent with the usual judgment calls in this=
+ area.
+>>
+>> I don't think anyone is saying, "don't work on the second problem", it's=
+ just
+>> that it's less urgent, due to no reports from the field. If you are pass=
+ionate
+>> about fixing the second problem (and are ready and willing to handle the=
+ fallout
+>> from user space, if it occurs), then I'd encourage you to look into it.
+>>
+>> It could turn out to be one of those "cannot change this because user sp=
+ace expectations
+>> have baked and hardened, and changes would break user space" situations,=
+ just to
+>> warn you in advance, though.
+>=20
+> There is no need to paper over the underlying issue. One can think there =
+is only one problem. The way move_pages() deal with pages are already in th=
+e desired node. Then, I don=E2=80=99t see there is any controversy that it =
+was broken for so long and just restore it to according to the manpage. If =
+you worried about people has already depended on the broken behavior, it co=
+uld stay in linux-next for many releases to gather feedback. In any case, I=
+ don=E2=80=99t see it need to hurry to fix this until someone can show the =
+real world use case for it apart from some random test code.
+>=20
 
-I changed the two occurrences of this to use a local temporary "mask"
-variable, to avoid the long lines.
+Felix's code is not random test code. It's code he wrote and he expected it=
+ to work.
 
-It's no longer _caching_ the value, but it makes the code more legible.
+Anyway, I've explained what I want here, and done my best to explain it. So=
+ I'm=20
+dropping off now. :)
 
-              Linus
+thanks,
+--=20
+John Hubbard
+NVIDIA
