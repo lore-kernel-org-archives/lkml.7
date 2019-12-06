@@ -5,112 +5,191 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E96C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D647C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFCC206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64697206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:32:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CGqxsXJ1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IisY13CS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfLFTbu (ORCPT
+        id S1726461AbfLFTcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 14:31:50 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33095 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfLFTbu (ORCPT
+        Fri, 6 Dec 2019 14:32:43 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51284 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfLFTcm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 14:31:50 -0500
-Received: by mail-lj1-f194.google.com with SMTP id 21so8899535ljr.0;
-        Fri, 06 Dec 2019 11:31:48 -0800 (PST)
+        Fri, 6 Dec 2019 14:32:42 -0500
+Received: by mail-wm1-f68.google.com with SMTP id g206so8999002wme.1;
+        Fri, 06 Dec 2019 11:32:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=c0i7PQFXimXWpGVLkYYKBm4f7YSggydB6SsE85wLPz0=;
-        b=CGqxsXJ1NAkcws9QIo/5PmdAISTzNi1qBfMkvLLDNP52aJNNld2YyCheGY8hVccaCQ
-         nHq2UHGPRcxS+fdB2mY10PfOzpVhdmcsCg7uNxWsrN5LHjp3hXEwnTEX6EjMFq2GzpRE
-         FGSlObTNDSZEZLRKW2OZQGBUsN4r0gkqUvD5gLzNvR3Px1OMY314OaQmJGLmO+l8q3d8
-         jCk4VfSIp9iPF2db8IM/NeSGdDaVt3KcC3oOUtBjYwSfgIG5POjUsKR/HTy3c7bx/S6S
-         31WTMmPP5EgDt5svdCeZLTOkGDsjQJDPIYCnVM6sNMSnpancUVPQp+bnScpolg45mSym
-         kDdQ==
+        bh=vMdeye52yCnU5ERIaKF+U114ssIb2T9i0IRHv/eVpQo=;
+        b=IisY13CS2U4O3SjK3dXQ3yJ6vOvBlrkbottbpNnKr5pwlA42ZNWLxzBsFkQfs4OxAZ
+         rvqSua4fQRUFLQR1P8bfF0synE3mcty1y5PJR9llDj+n8CHqWLMGI9uSiIjZ4z6pjMIe
+         tKoHLNU304FX+P7LfFf3qhYr4vdAAKE9ys5h1nMQT2GY5cRcAxM7yjZiLt8RGLvrNMgq
+         SYdaihKCPdmBclwYgaOea49O24WSnfOL2w//lytDZjWC7pl1jWpmUGCeQTodJjVD5tG/
+         4IG1nj7qnlaNZsMILwqE6hyh3CiMYJcAaVCupdItJs8osL0GkBQ4tKmya0n8z3lXX0Bq
+         GdLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=c0i7PQFXimXWpGVLkYYKBm4f7YSggydB6SsE85wLPz0=;
-        b=e6Rv20xrsAbNmVzblr2VEK4hHPtPyn/Ry6qfrd7KZUeQhmxjWgWi3F5FCiFBnd021B
-         Oh0N+sKnbZJ5if6VmWYMQrZenMD2XM/SHTo/59a0DisHvhM9WRXKeOt+uivJulPDoknD
-         lkIa6aujw9tZHFXlRT2MI/ZKiD2MOr3p3UWqH4NfEwlBM+CqcFU7fegZV6dtGSMFqrw8
-         XdH1bmpxuaggA3Fm5niYEpaRm+qOVqG0qfoO+NYS0DuYqEVQbWDmJzzaErFHRl0BsNpP
-         6YYJ5ld/z04oHAMkxfAhxitWggqNv8HeyMybEpDNMvVK3DAh7SsjJRR4sUs+gfFg9t2T
-         K5uQ==
-X-Gm-Message-State: APjAAAVhjOQBwkLa0aaA0GTZ0Q+2lbwe33fIXWnOVVNnVY72R8Nx3VAc
-        H6DCxOMYBOJlRW8NsW0enilt8fZ1+9RROg5Uyhs=
-X-Google-Smtp-Source: APXvYqy64ysU6bQkPmBJYnQVN8J6Dx04EnlY29IwsfHNNDiNvdNu37U8eOIv5chOGy87VHdjwHl/keyJWALg1TEjMhk=
-X-Received: by 2002:a05:651c:102c:: with SMTP id w12mr9448372ljm.53.1575660707792;
- Fri, 06 Dec 2019 11:31:47 -0800 (PST)
+        bh=vMdeye52yCnU5ERIaKF+U114ssIb2T9i0IRHv/eVpQo=;
+        b=E+V5mNu6OI8U0KfLgvH5H7jP/bSVGFYtPpYW45YxibRx+/BOHKGfYr6py0OKAf1+XV
+         bHdjr1lnu9Dzlh3ia7osxnlCz84FY5NXUZ5/gdG46kI/+EQkcDmoZKD3ci4aGLJBsUY9
+         mj+lc12zB8FPi9W2NMkTR5jNNKRjY/dKl6g+AUIkyAQOWyKxRjgfq7IaBAi/hIR2qG6s
+         1awkkZCdGm7927Re5Z/Oo4WSJOOawrwyVJuKneGgjKrNuI1nRqsWZdxCxO7jzM/NecuH
+         6FIknrfw3jLxBG7OaxgNXlGtmjtKakMBIei564g9BA4O030WGYJGwchQb6meUsBiMMFQ
+         BdSw==
+X-Gm-Message-State: APjAAAU4U0DsET9TT/RLzL8JrpsX00e7GqypdnlWa1q00epgk/vWs/QI
+        G5XNw8EJ0tolOgG5AJ0RHUq4lQPiPltTJM11Zn8=
+X-Google-Smtp-Source: APXvYqzv+VXCGeJecYsDhUUuSMrK6oChGu8FCsguroHIRKZJZj5tQjLqnRtXu/0Jqjr3mg53G53OpGDUJnDg9cpSERg=
+X-Received: by 2002:a1c:c90e:: with SMTP id f14mr12006852wmb.47.1575660760432;
+ Fri, 06 Dec 2019 11:32:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20191202114221.827-1-sjpark@amazon.com>
-In-Reply-To: <20191202114221.827-1-sjpark@amazon.com>
-From:   SeongJae Park <sj38.park@gmail.com>
-Date:   Fri, 6 Dec 2019 20:31:21 +0100
-Message-ID: <CAEjAshq_nfY2MRuXwvN7hoX9jOxkO1C+g5AH1KJbDS=wxVSC5Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kselftest/runner: Print new line in print of timeout log
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
+References: <20191205100235.14195-1-alobakin@dlink.ru>
+In-Reply-To: <20191205100235.14195-1-alobakin@dlink.ru>
+From:   Rainer Sickinger <rainersickinger.official@gmail.com>
+Date:   Fri, 6 Dec 2019 20:32:29 +0100
+Message-ID: <CAD9cdQ68Ye8wuO5N_PZG04htFeqFPCMuNgYWJVRdnHw47fnqqA@mail.gmail.com>
+Subject: Re: [PATCH net] net: dsa: fix flow dissection on Tx path
+To:     Alexander Lobakin <alobakin@dlink.ru>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Muciri Gatimu <muciri@openmesh.com>,
+        Shashidhar Lakkavalli <shashidhar.lakkavalli@openmesh.com>,
+        John Crispin <john@phrozen.org>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Matteo Croce <mcroce@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        netdev@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Shuah,
+That is a really great improvement!
 
-
-May I ask your comments?
-
-
-Thanks,
-SeongJae Park
-
-On Mon, Dec 2, 2019 at 12:42 PM SeongJae Park <sjpark@amazon.com> wrote:
+Am Do., 5. Dez. 2019 um 11:04 Uhr schrieb Alexander Lobakin <alobakin@dlink.ru>:
 >
-> From: SeongJae Park <sjpark@amazon.de>
+> Commit 43e665287f93 ("net-next: dsa: fix flow dissection") added an
+> ability to override protocol and network offset during flow dissection
+> for DSA-enabled devices (i.e. controllers shipped as switch CPU ports)
+> in order to fix skb hashing for RPS on Rx path.
 >
-> If a timeout failure occurs, kselftest kills the test process and prints
-> the timeout log.  If the test process has killed while printing a log
-> that ends with new line, the timeout log can be printed in middle of the
-> test process output so that it can be seems like a comment, as below:
+> However, skb_hash() and added part of code can be invoked not only on
+> Rx, but also on Tx path if we have a multi-queued device and:
+>  - kernel is running on UP system or
+>  - XPS is not configured.
 >
->     # test_process_log  not ok 3 selftests: timers: nsleep-lat # TIMEOUT
+> The call stack in this two cases will be like: dev_queue_xmit() ->
+> __dev_queue_xmit() -> netdev_core_pick_tx() -> netdev_pick_tx() ->
+> skb_tx_hash() -> skb_get_hash().
 >
-> This commit avoids such problem by printing one more line before the
-> TIMEOUT failure log.
+> The problem is that skbs queued for Tx have both network offset and
+> correct protocol already set up even after inserting a CPU tag by DSA
+> tagger, so calling tag_ops->flow_dissect() on this path actually only
+> breaks flow dissection and hashing.
 >
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> This can be observed by adding debug prints just before and right after
+> tag_ops->flow_dissect() call to the related block of code:
+>
+> Before the patch:
+>
+> Rx path (RPS):
+>
+> [   19.240001] Rx: proto: 0x00f8, nhoff: 0      /* ETH_P_XDSA */
+> [   19.244271] tag_ops->flow_dissect()
+> [   19.247811] Rx: proto: 0x0800, nhoff: 8      /* ETH_P_IP */
+>
+> [   19.215435] Rx: proto: 0x00f8, nhoff: 0      /* ETH_P_XDSA */
+> [   19.219746] tag_ops->flow_dissect()
+> [   19.223241] Rx: proto: 0x0806, nhoff: 8      /* ETH_P_ARP */
+>
+> [   18.654057] Rx: proto: 0x00f8, nhoff: 0      /* ETH_P_XDSA */
+> [   18.658332] tag_ops->flow_dissect()
+> [   18.661826] Rx: proto: 0x8100, nhoff: 8      /* ETH_P_8021Q */
+>
+> Tx path (UP system):
+>
+> [   18.759560] Tx: proto: 0x0800, nhoff: 26     /* ETH_P_IP */
+> [   18.763933] tag_ops->flow_dissect()
+> [   18.767485] Tx: proto: 0x920b, nhoff: 34     /* junk */
+>
+> [   22.800020] Tx: proto: 0x0806, nhoff: 26     /* ETH_P_ARP */
+> [   22.804392] tag_ops->flow_dissect()
+> [   22.807921] Tx: proto: 0x920b, nhoff: 34     /* junk */
+>
+> [   16.898342] Tx: proto: 0x86dd, nhoff: 26     /* ETH_P_IPV6 */
+> [   16.902705] tag_ops->flow_dissect()
+> [   16.906227] Tx: proto: 0x920b, nhoff: 34     /* junk */
+>
+> After:
+>
+> Rx path (RPS):
+>
+> [   16.520993] Rx: proto: 0x00f8, nhoff: 0      /* ETH_P_XDSA */
+> [   16.525260] tag_ops->flow_dissect()
+> [   16.528808] Rx: proto: 0x0800, nhoff: 8      /* ETH_P_IP */
+>
+> [   15.484807] Rx: proto: 0x00f8, nhoff: 0      /* ETH_P_XDSA */
+> [   15.490417] tag_ops->flow_dissect()
+> [   15.495223] Rx: proto: 0x0806, nhoff: 8      /* ETH_P_ARP */
+>
+> [   17.134621] Rx: proto: 0x00f8, nhoff: 0      /* ETH_P_XDSA */
+> [   17.138895] tag_ops->flow_dissect()
+> [   17.142388] Rx: proto: 0x8100, nhoff: 8      /* ETH_P_8021Q */
+>
+> Tx path (UP system):
+>
+> [   15.499558] Tx: proto: 0x0800, nhoff: 26     /* ETH_P_IP */
+>
+> [   20.664689] Tx: proto: 0x0806, nhoff: 26     /* ETH_P_ARP */
+>
+> [   18.565782] Tx: proto: 0x86dd, nhoff: 26     /* ETH_P_IPV6 */
+>
+> In order to fix that we can add the check 'proto == htons(ETH_P_XDSA)'
+> to prevent code from calling tag_ops->flow_dissect() on Tx.
+> I also decided to initialize 'offset' variable so tagger callbacks can
+> now safely leave it untouched without provoking a chaos.
+>
+> Fixes: 43e665287f93 ("net-next: dsa: fix flow dissection")
+> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
 > ---
->  tools/testing/selftests/kselftest/runner.sh | 1 +
->  1 file changed, 1 insertion(+)
+>  net/core/flow_dissector.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-> index 84de7bc74f2c..a8d20cbb711c 100644
-> --- a/tools/testing/selftests/kselftest/runner.sh
-> +++ b/tools/testing/selftests/kselftest/runner.sh
-> @@ -79,6 +79,7 @@ run_one()
->                 if [ $rc -eq $skip_rc ]; then   \
->                         echo "not ok $test_num $TEST_HDR_MSG # SKIP"
->                 elif [ $rc -eq $timeout_rc ]; then \
-> +                       echo "#"
->                         echo "not ok $test_num $TEST_HDR_MSG # TIMEOUT"
->                 else
->                         echo "not ok $test_num $TEST_HDR_MSG # exit=$rc"
+> diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
+> index 69395b804709..d524a693e00f 100644
+> --- a/net/core/flow_dissector.c
+> +++ b/net/core/flow_dissector.c
+> @@ -969,9 +969,10 @@ bool __skb_flow_dissect(const struct net *net,
+>                 nhoff = skb_network_offset(skb);
+>                 hlen = skb_headlen(skb);
+>  #if IS_ENABLED(CONFIG_NET_DSA)
+> -               if (unlikely(skb->dev && netdev_uses_dsa(skb->dev))) {
+> +               if (unlikely(skb->dev && netdev_uses_dsa(skb->dev) &&
+> +                            proto == htons(ETH_P_XDSA))) {
+>                         const struct dsa_device_ops *ops;
+> -                       int offset;
+> +                       int offset = 0;
+>
+>                         ops = skb->dev->dsa_ptr->tag_ops;
+>                         if (ops->flow_dissect &&
 > --
-> 2.17.1
+> 2.24.0
 >
