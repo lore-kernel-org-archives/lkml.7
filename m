@@ -2,72 +2,107 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4F0C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89561C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C5B24679
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:15:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575670528;
-	bh=E8ISvmds41DFWEjClhfOxnciAGgZDAjp4K1H2UbEols=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=jM+dAI6KuwEDQEC0RL5oUNsnPlX8RFoAE9WD/0mb+VltX3RYDVt+GVqnNSJ7Juvl/
-	 1+InESKfo06+XgKY+eNBjskeHVIkCSsGhTAA00hwJdCtlT/7I8NiKEEnLjrboA2vRz
-	 /Z4UkErb4n6q3wx4MYDHhWX167RNaOHMtl0tFXP4=
+	by mail.kernel.org (Postfix) with ESMTP id 5D0DB206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:15:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AqbnNNeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfLFWP2 (ORCPT
+        id S1726925AbfLFWPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 17:15:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbfLFWPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 17:15:25 -0500
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-3 tag
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575670524;
-        bh=E8ISvmds41DFWEjClhfOxnciAGgZDAjp4K1H2UbEols=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=rf2L6mw7FLlNaKq5N1xuCKjmW8VP1MW4H7ArcU21isRzTCbpKccrot9Hi3jDj5my1
-         dwPgoDt9fS7Tz1CefW7K9wC29Xo6HEK9Eo6qyg60CSUxztkumgNyZliJ8uhZSTtOGw
-         LqpRWryhtnRvAtLYp+UJggG7a8CliBlQa0Fsk+K0=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <878snpei4i.fsf@mpe.ellerman.id.au>
-References: <878snpei4i.fsf@mpe.ellerman.id.au>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <878snpei4i.fsf@mpe.ellerman.id.au>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
- tags/powerpc-5.5-3
-X-PR-Tracked-Commit-Id: 249fad734a25889a4f23ed014d43634af6798063
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f89d416a8676fe36de8be0f7c2e1ac6cd51410a8
-Message-Id: <157567052459.8833.17428102493710399717.pr-tracker-bot@kernel.org>
-Date:   Fri, 06 Dec 2019 22:15:24 +0000
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        aneesh.kumar@linux.ibm.com, anju@linux.vnet.ibm.com,
-        ardb@kernel.org, christophe.leroy@c-s.fr, clg@kaod.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, skhan@linuxfoundation.org,
-        vincenzo.frascino@arm.com
+        Fri, 6 Dec 2019 17:15:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20282 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726506AbfLFWPk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 17:15:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575670539;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=g9gOFA8Uzj5LOu2YACenivVW4TbKyjqFDtKfEMeTYTE=;
+        b=AqbnNNeUxbQdifHBryi8cPZOIvWW31yuoy+7aQp89SnAb/eFavxkk3s69XsIw6MyYT8+jm
+        TqwOKKiGl7bNCpQmBBsqaUrdoXGO1gA3rSIbkopwFpqIi5hDfHb4gcuD6Bq5SbhOHdB1F2
+        nEYkE+GNiobAaOQBkEdNfT3XiL3ztb8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-68-k99QZ4kvNTaM6BA1lmAp5g-1; Fri, 06 Dec 2019 17:15:33 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2937A800EB5;
+        Fri,  6 Dec 2019 22:15:31 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-250.rdu2.redhat.com [10.10.120.250])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D7E221001902;
+        Fri,  6 Dec 2019 22:15:27 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20191206214725.GA2108@latitude>
+References: <20191206214725.GA2108@latitude> <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk> <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
+To:     Johannes Hirte <johannes.hirte@datenkhaos.de>
+Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring, not cursor and length [ver #2]
+MIME-Version: 1.0
+Content-ID: <21299.1575670527.1@warthog.procyon.org.uk>
+Date:   Fri, 06 Dec 2019 22:15:27 +0000
+Message-ID: <21300.1575670527@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: k99QZ4kvNTaM6BA1lmAp5g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 06 Dec 2019 23:46:53 +1100:
+Johannes Hirte <johannes.hirte@datenkhaos.de> wrote:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.5-3
+> > Convert pipes to use head and tail pointers for the buffer ring rather =
+than
+> > pointer and length as the latter requires two atomic ops to update (or =
+a
+> > combined op) whereas the former only requires one.
+>=20
+> This change breaks firefox on my system. I've noticed that some pages
+> doesn't load correctly anymore (e.g. facebook, spiegel.de). The pages
+> start loading and than stop. Looks like firefox is waiting for some
+> dynamic loading content. I've bisected to this commit, but can't revert
+> because of conflicts.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f89d416a8676fe36de8be0f7c2e1ac6cd51410a8
+There are a number of patches committed to upstream in the last couple of d=
+ays
+that might fix your problem.  See:
 
-Thank you!
+=09https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+and look for:
+
+=09pipe: Fix iteration end check in fuse_dev_splice_write()
+=09pipe: fix incorrect caching of pipe state over pipe_wait()
+=09pipe: Fix missing mask update after pipe_wait()
+=09pipe: Remove assertion from pipe_poll()
+
+David
+
