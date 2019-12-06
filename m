@@ -2,93 +2,107 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85828C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC74DC2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59DD62464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2DB42464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:17:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ay+tdUYq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FTpqPQZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfLFQRG (ORCPT
+        id S1726423AbfLFQRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:17:06 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51614 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726312AbfLFQRG (ORCPT
+        Fri, 6 Dec 2019 11:17:32 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:47240 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbfLFQRb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:17:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575649024;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=9FcmzKbZjToAadhOdw0aqboYZH5PpSClOXPEco7jAnA=;
-        b=Ay+tdUYqts4l+k2LF05M818KXfFehbDiAq4j9Y+iXZHIlDYFOay0DIQlapbVazcIa6ZSEz
-        Jt92SLwVgkxb1gfkRq1tejmOp0AraHa+nqr7wCdAE9CVZmWWV+RE6fSPxckywFln5Km5er
-        sbhwoSXEkjkxfLZmJ5rFQBhWvXA272I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-295-AMpQHCkJMmOxhJumF-3VZw-1; Fri, 06 Dec 2019 11:16:59 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5DFB11B18BDC;
-        Fri,  6 Dec 2019 16:16:58 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-5.gru2.redhat.com [10.97.112.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 206B886B80;
-        Fri,  6 Dec 2019 16:16:58 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id 56F5E1004E6;
-        Fri,  6 Dec 2019 13:07:45 -0200 (BRST)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id xB6F7fo9028164;
-        Fri, 6 Dec 2019 13:07:41 -0200
-Date:   Fri, 6 Dec 2019 13:07:41 -0200
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH] cpuidle: use first valid target residency as poll time
-Message-ID: <20191206150739.GA20167@amt.cnet>
+        Fri, 6 Dec 2019 11:17:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FfwzEcorkXbM8vzjX38dJsbMyLfJpA+SOA2PraA0uq4=; b=FTpqPQZKYGxlRzIKQK0d4SO9E
+        g7zWp7NZxc3HPWc7mrdYAdoZQV+kQS22TETVLcgTEx/IdM3R+LfXeaMKa8ZBzxXHTqrT886NySwqE
+        TMYwey2Fg5hvpowobL+LcMxg3BQ6HaSA4GZ4McLl1Si+jp5YG7ilVtkNJwCvhEmKkJs+LlZwDmQaP
+        sdLcb6QNThw72RD7AiTRW5rlE7/c4x4cx2vTPvahUcFWe0uoX1WTD7chUTwNoyPyFA/wKPxUgkYCE
+        XQNYdUkQsC2X4sB5zrkYK7J6guJnzMPcGK3xN4+IV4SEMDciCTjG3wVcqVVHCd/SavTMz3W5qtsZG
+        yc7D9IeHA==;
+Received: from [2601:1c0:6280:3f0::3deb]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1idGIN-00013t-5Y; Fri, 06 Dec 2019 16:17:31 +0000
+Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Btrfs <linux-btrfs@vger.kernel.org>
+References: <20191206135406.563336e7@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <cd4091e4-1c04-a880-f239-00bc053f46a2@infradead.org>
+Date:   Fri, 6 Dec 2019 08:17:30 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: AMpQHCkJMmOxhJumF-3VZw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191206135406.563336e7@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/5/19 6:54 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Please do not add any material for v5.6 to your linux-next included
+> trees until after v5.5-rc1 has been released.
+> 
+> Changes since 20191204:
+> 
 
-commit 259231a045616c4101d023a8f4dcc8379af265a6 changed, by mistake,
-the target residency from the first available sleep state to the last
-available sleep state (which should be longer).
+on x86_64:
 
-This might cause excessive polling.
+fs/btrfs/ctree.o: warning: objtool: btrfs_search_slot()+0x2d4: unreachable instruction
+fs/btrfs/extent-tree.o: warning: objtool: btrfs_get_extent_inline_ref_type()+0x161: unreachable instruction
+fs/btrfs/disk-io.o: warning: objtool: btrfs_init_fs_root()+0x1d9: unreachable instruction
+fs/btrfs/transaction.o: warning: objtool: btrfs_trans_release_metadata()+0x96: unreachable instruction
+fs/btrfs/inode.o: warning: objtool: btrfs_retry_endio()+0x77: unreachable instruction
+fs/btrfs/file.o: warning: objtool: __btrfs_drop_extents()+0x4aa: unreachable instruction
+fs/btrfs/extent_map.o: warning: objtool: mergable_maps()+0x100: unreachable instruction
+fs/btrfs/xattr.o: warning: objtool: btrfs_setxattr()+0x86: unreachable instruction
+fs/btrfs/extent_io.o: warning: objtool: __process_pages_contig()+0x1af: unreachable instruction
+fs/btrfs/volumes.o: warning: objtool: find_live_mirror.isra.23()+0x49: unreachable instruction
+fs/btrfs/ioctl.o: warning: objtool: btrfs_clone()+0xcc9: unreachable instruction
+fs/btrfs/free-space-cache.o: warning: objtool: search_bitmap()+0xca: unreachable instruction
+fs/btrfs/tree-log.o: warning: objtool: btrfs_log_all_xattrs()+0x204: unreachable instruction
+fs/btrfs/compression.o: warning: objtool: end_compressed_bio_read()+0xb6: unreachable instruction
+fs/btrfs/delayed-ref.o: warning: objtool: insert_delayed_ref.isra.6()+0x23e: unreachable instruction
+fs/btrfs/relocation.o: warning: objtool: add_tree_block.isra.26()+0x26e: unreachable instruction
+fs/btrfs/scrub.o: warning: objtool: scrub_find_csum()+0x1eb: unreachable instruction
+fs/btrfs/send.o: warning: objtool: inconsistent_snapshot_error()+0x53: unreachable instruction
+fs/btrfs/dev-replace.o: warning: objtool: btrfs_dev_replace_by_ioctl()+0x70e: unreachable instruction
+fs/btrfs/raid56.o: warning: objtool: raid56_parity_recover()+0x262: unreachable instruction
+fs/btrfs/free-space-tree.o: warning: objtool: btrfs_search_prev_slot.constprop.6()+0x2b: unreachable instruction
+fs/btrfs/block-group.o: warning: objtool: btrfs_start_trans_remove_block_group()+0x6a: unreachable instruction
+fs/btrfs/ref-verify.o: warning: objtool: add_tree_block()+0x15e: unreachable instruction
+samples/ftrace/ftrace-direct.o: warning: objtool: .text+0x0: unreachable instruction
+samples/ftrace/ftrace-direct-too.o: warning: objtool: .text+0x0: unreachable instruction
+samples/ftrace/ftrace-direct-modify.o: warning: objtool: .text+0x0: unreachable instruction
+kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x21: unreachable instruction
+kernel/cred.o: warning: objtool: prepare_creds()+0x2c3: unreachable instruction
+net/core/skbuff.o: warning: objtool: skb_push()+0x6d: unreachable instruction
+drivers/gpu/drm/ttm/ttm_bo.o: warning: objtool: ttm_bo_del_from_lru()+0xed: unreachable instruction
 
-Fixes: 259231a045616c4101d023a8f4dcc8379af265a6
 
-Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+gcc (SUSE Linux) 7.4.1 20190905 [gcc-7-branch revision 275407]
 
-diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-index 0005be5ea2b4..15877b431143 100644
---- a/drivers/cpuidle/cpuidle.c
-+++ b/drivers/cpuidle/cpuidle.c
-@@ -382,6 +382,7 @@ u64 cpuidle_poll_time(struct cpuidle_driver *drv,
- =09=09=09continue;
-=20
- =09=09limit_ns =3D (u64)drv->states[i].target_residency_ns;
-+=09=09break;
- =09}
-=20
- =09dev->poll_limit_ns =3D limit_ns;
-
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
