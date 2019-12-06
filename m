@@ -2,129 +2,171 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6AAC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 268D4C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BF424676
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:49:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cBmImDjj"
+	by mail.kernel.org (Postfix) with ESMTP id 009D224670
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfLFRt5 (ORCPT
+        id S1726403AbfLFRvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 12:49:57 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7881 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfLFRt4 (ORCPT
+        Fri, 6 Dec 2019 12:51:01 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:37399 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfLFRvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 12:49:56 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dea94be0000>; Fri, 06 Dec 2019 09:49:51 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 06 Dec 2019 09:49:55 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 06 Dec 2019 09:49:55 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec
- 2019 17:49:55 +0000
-Received: from [10.2.168.155] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec 2019
- 17:49:53 +0000
-Subject: Re: [PATCH v3 09/15] ASoC: tegra: Add fallback for audio mclk
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
-        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
-        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
-        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
-        <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
-References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-10-git-send-email-skomatineni@nvidia.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <e94e56bc-2b4c-5d95-002a-073c9272537d@nvidia.com>
-Date:   Fri, 6 Dec 2019 09:49:49 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 6 Dec 2019 12:51:00 -0500
+Received: from [192.168.1.155] ([95.117.69.190]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MnaY1-1hwYUP3VcD-00jWXk; Fri, 06 Dec 2019 18:50:56 +0100
+Subject: Re: [PATCH 0/8] gpiolib: add an ioctl() for monitoring line status
+ changes
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20191127133510.10614-1-brgl@bgdev.pl>
+ <CACRpkdZ6e0GaE9KBJ1-E+cS_KnPY-EKLNxJFqjArr28hYMQqOg@mail.gmail.com>
+ <CAMRc=McH6m3Lsvz8g1JSD_c-QNdb-Kh0+8BH5EKcEW2vM2VYJA@mail.gmail.com>
+ <0058e57c-5765-3944-3137-10b780985a36@metux.net>
+ <CACRpkda-nucsM-b=68t5N2gQ7910G_a5Hz1cEwSNgVHgvJhqLA@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <e642378f-11c2-9def-da75-4a03b5ef8f77@metux.net>
+Date:   Fri, 6 Dec 2019 18:50:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1575600535-26877-10-git-send-email-skomatineni@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CACRpkda-nucsM-b=68t5N2gQ7910G_a5Hz1cEwSNgVHgvJhqLA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575654591; bh=YAKMdzUBMPWAB8WxEd9kdEtmiQZK+fcXFtpn3WK3zFI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=cBmImDjj+dyCqtopez7WVPM/iJlu/l28OHqHjZChjD+Mp3OVTNm+RP4BLaBZxlohg
-         jFLvRr6hs8CbAP4rCu9sBsol/cIJ+dbyjva75W8ULSHpS/Rvjq5GzesL+Mkyv4naYx
-         kyfjyPy/qUh3C0V+QFgUfjGznstU32zWVzd63IucFk7Ur1IT6eBYp9mDP9u4hw8KP8
-         VZ3xpAjo5jE+VbRZYIm7dbXZ0Dd74f3QkSWOl74lw+OfiDrxBRHjVctdtn1Ci5s/pk
-         nJbKMH+1enbKMJpfYA9EsGB4KExgGuhOBCDBDNSX/4wJsj7F46XH41pBmMyIuTOlUm
-         fcDubePTSjzBA==
+X-Provags-ID: V03:K1:k+Cc2sODvJPuFhC9Uww1N2/vyzGbYzhZjQkxLf8X6RW99r2sP8o
+ 5y3WhOg7MBs1owGviMs/rS8ZAbWHIwri8TQmORs2OJ9SsrFAZiDWa2rc+TOCobGZHwaJfW8
+ CE8g3L0I7q1LmZluqR+5xnjTmsrbct9zcJu6j7bFTj5iIzqpac9DSUxG76nSKr/zW43iSg4
+ 4LYGLt8pTyNrJ/OR00zgQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OP82d5Glzrk=:sMnU0uCbD5H4SS7AeQ4p5J
+ U5T70kCIzrrTqgYN24tvwAvXmydsAVuc+I44F3/jzFGUZAft/7kIrco+my9gCHV4EtatDGBDP
+ 7Bp6xRjVTSSQdBhw72SuSJhv4TfN4N/qeWgOrTrtrEG7ojvKdo7Gmv70vVnTP/wr92bjQ/NmB
+ YhQnHw9cveizXN+Tm+3FJgrEAGqahKde+RWOdratDDUfm7CES3tFgXNxolMhXszMGogw9Suep
+ ZyyGQ5XFxqFB5q2bDD+4F1yeKGK2rNWKmbqLt6whatJmWB1OKYSTFrxstjnnmnPG1bo1jqwOQ
+ a8Xfz2V6RdUfEr45DrjiFFudDE7MZt87HLFN27YgXqv/gYZrE3dsj7wxVvnRPefo0XE8IZbXx
+ Pt/A/Wk3ho2Y8NNNeSkiUCucGmK0XL9b3PIlf6heDdw0xOe0Q3ZVpLEEPaeO/eorYZYhtLbKn
+ ztBqy+TMLIZz/Zg5wZxdPGi6WRrcJU58jsUuhRLntriDSP4foBcgVSfE5zpm6S15ZbOHtDgJU
+ zn0Q4v9ImNJZAmLStx3SGolyaILYDmnmDvYnS8At4NUoNZjD+22TIhri4tlKuxNmwwMpHJr7X
+ 3gDATneAJnVcPCepGtwvgAlsZq/2tawgyEa+mvM/zBo8QFsQFCAJAM0f5WBA9C3FguCn+wAXo
+ WKHHv5gVLNMitSNYMV7EfsuGZP8rgE/a5VMhc0d4NF9gyouSTmPHWhm8BG/bmwBx0ZF/PV+V7
+ 63q7ACC8LSWa2dTrEaMGmvb16Dl8tsi14cEAdnt/Z6vsEYBaHshsOyNF8cpsexlh7MzQg78QA
+ OpWn+51PxKShLHq8ugSP11nXao8xJ4GIsbXXVjHuwC9x4zpjlQjHf7Po2/wbJC1rUbhHPYCI6
+ n9J5R8Hyp8Tb3gORXwZg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Greg.
+On 06.12.19 16:44, Linus Walleij wrote:
 
-Sorry, Will send this patch separately (out of this series) with stable 
-tag to get this applied to stable kernels once review is done for this 
-series.
+> The main issue sysfs in its current form had to die was that it relied
+> on global GPIO numbers. An alternative to the character device
+> would be to use e.g. subdirs for each GPIO chip and export
+> local offset numbers from there,
 
-On 12/5/19 6:48 PM, Sowjanya Komatineni wrote:
-> mclk is from clk_out_1 which is part of Tegra PMC block and pmc clocks
-> are moved to Tegra PMC driver with pmc as clock provider and using pmc
-> clock ids.
->
-> New device tree uses clk_out_1 from pmc clock provider.
->
-> So, this patch adds fallback to extern1 in case of retrieving mclk fails
-> to be backward compatible of new device tree with older kernels.
->
-> Cc: stable@vger.kernel.org
->
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->   sound/soc/tegra/tegra_asoc_utils.c | 10 ++++++++--
->   1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/sound/soc/tegra/tegra_asoc_utils.c b/sound/soc/tegra/tegra_asoc_utils.c
-> index 8e3a3740df7c..f7408d5240c0 100644
-> --- a/sound/soc/tegra/tegra_asoc_utils.c
-> +++ b/sound/soc/tegra/tegra_asoc_utils.c
-> @@ -211,8 +211,14 @@ int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
->   	data->clk_cdev1 = clk_get(dev, "mclk");
->   	if (IS_ERR(data->clk_cdev1)) {
->   		dev_err(data->dev, "Can't retrieve clk cdev1\n");
-> -		ret = PTR_ERR(data->clk_cdev1);
-> -		goto err_put_pll_a_out0;
-> +		data->clk_cdev1 = clk_get_sys("clk_out_1", "extern1");
-> +		if (IS_ERR(data->clk_cdev1)) {
-> +			dev_err(data->dev, "Can't retrieve clk extern1\n");
-> +			ret = PTR_ERR(data->clk_cdev1);
-> +			goto err_put_pll_a_out0;
-> +		}
-> +
-> +		dev_err(data->dev, "Falling back to extern1\n");
->   	}
->   
->   	/*
+Yes, shouldn't be such a big deal. Maybe I'll find some time to fix
+this. Another nice feature would be supporting gpio names for export
+and unexport, as well as a file that lists all available gpios.
+
+> but well we reached a fork in the road with the chardev I'd say.
+
+Why can't we support both ? These two interfaces have different use
+cases, neither one can replace the other one completely. The cool
+thing w/ Linux is the configurability (once I've got some spare time,
+I'll create some patches to make the chardev optional :p).
+
+> The main problem solved with the chardev was that scripts that
+> died/crashed left the sysfs nodes explicitly exported and
+> populated and everything just in the general mess it was at the time
+> the application crashed.
+
+Yes, but this cleanup-on-close also could have been done in the old
+interface. OTOH, there are use cases where you do not want this,
+where sysfs interface is fine (eg. set up certain things in a boot
+script, etc)
+
+> Of course it is easy to pose things like that the application should
+> register crash handlers or whatnot, but it turns out people weren't
+> doing that and with a character device, then it cleans up automatically
+> if the application dies or get terminated by a signal for example,
+
+I don't question this usecase. Such automatic cleanup is indeed an
+important feature. (even though I never had a practical usecase myself,
+where I did go via raw gpios instead of binding some driver).
+
+My bad feelings about chardev comes from entirely different angles, eg:
+
+* not portable, not network transparent (needs special ioctl())
+* needs a lot of more code in application side (yes: I also count in
+  libraries :p)
+* no access control for individual lines
+* can't use filesystem (eg. symlinks) to assign application /
+  installation specific (path)names, which individual programs can
+  act on.
+
+> I see your stance, but it also makes it much easier to shoot
+> yourself in the foot.
+
+Yes, you have to care about state tracking (even in error cases) on your
+own. Typical issue for such lowlevel things. The optimal case would be
+having higher level drivers (eg. led, keys, ...) to bind to, but we're
+talking about use cases where that isn't an option.
+
+> Nobody should. The users of userspace GPIO are factory lines,
+> industrial control and automation, maker communities and odd
+> prototypes. Not deployed products like phones or computers.
+
+Unfortunately, the real-world is different :(
+
+I've had many cases where folks we using raw gpios (with insanely huge
+userland code around that) even for trivial things like leds, keys,
+serial control lines, etc.
+
+Okay, this isn't a technical, but an educational problem. Don't know
+a good solution, except for either trying educate folks or just
+ignoring them :o
+
+> The typical cases involves rigging a few relays and sensors
+> up in a lab to perform some automation, not dissimilar to e.g.
+> PLC (programmable logic controllers) and such. The world is
+> full of these one-offs, some in more expensive and intimidating
+> environments than others. Some are the lab bench of a few
+> select makers. Makers are not important to big capital and
+> big business (who are not talking to us) but they are important
+> to the community exactly because they are talking to us.
+
+Yeah, expected you'll be saying that ;-)
+
+That bad side here is, this stuff often is going into the field
+this way. Seen that many times.
+
+I believe the real problem is on a completely different layer: it's
+still too hard (for non-kernel-hackers) to configure things like
+platform devices. For DT-based systems we've got DT-overlays (already
+solves the kernel side here) - but for non-DT (eg. ACPI) world, it's
+ugly. And even worse: if things like gpios come in on probe'able
+bus'es like PCI or USB, it gets even more weird.
+
+So, IMHO; the actual topic we should concentrate on is dynamic
+multi-level device provisioning / binding. Yes, it's a big topic, but
+something I definitively have on my 2do list.
+
+
+--mtx
+
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
