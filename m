@@ -2,113 +2,112 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7594C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC25C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8D42173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:29:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="g6jomj8r"
+	by mail.kernel.org (Postfix) with ESMTP id 51A3E2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:31:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575628260;
+	bh=BFDhcVs07XxhlAcLug0w64ImfeksNTAlzdAXJjqPOt8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bAbPeeTOwWfmOnHl68T60ZQN45Fh3WJrPikYorQwHDUIVFVHqR09Wjh2fwlKwQ4OB
+	 X/O6y9R3Ir15xsoObDmDUh9TjRd2Z43xSZPnCmy2h6g5fTIzxQ1dBIeZl05qDUTUOF
+	 NNgka3NR5v5UPfmQ2HHwRERMFbIvPSQ+j5HCmz0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfLFK3n (ORCPT
+        id S1726237AbfLFKa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 05:29:43 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41073 "EHLO
+        Fri, 6 Dec 2019 05:30:59 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37529 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfLFK3m (ORCPT
+        with ESMTP id S1726070AbfLFKa6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 05:29:42 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c9so7168935wrw.8
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 02:29:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DgBRjaEd7n/ouF4jWFhOqcv4trFILLXjFYFdBdgSVGw=;
-        b=g6jomj8rLvrP0rEhFRuwikiUx+OhdsE2+p4tZ0twrtBpALCpG+vjZ3odJMNrtbcIpJ
-         MvgBiO5haw63vuE0gSgR2lWywOGt05S2Gmauw5/xbaNK0Se580TWKIAxdxINKU1d08NK
-         X0QJPqe+ieiApCc/pma2+seLDbygH5EupSdA0AwoqeGFWJcszeGRGaPW7YUCZmSy02QA
-         YndPftdh6I0jbsIGGbb/cwybpt3kjl5dRKohXwgPgOvaUB32v8WsMaFNebn39Ub4xuWC
-         M8ApnxBYlY4h9UqweaXLZU+UrlvtcElwCZwKQi2qBAUy+Pm48fUMHmD0Qoo/G186IE30
-         OtlQ==
+        Fri, 6 Dec 2019 05:30:58 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w15so7209354wru.4
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 02:30:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DgBRjaEd7n/ouF4jWFhOqcv4trFILLXjFYFdBdgSVGw=;
-        b=eT4t859VoBuC28tnZV/qbZjejJq2m/OVcvIEg+a3dtF+ycRL9cG7emgRZNe7u9ceij
-         N/NMbkM19S53WznBei8yNVr7FcbCPC16vXWlbPmoggHz6TePM/pQdddAIAHdZS6B3QZ5
-         4L2hYMqSUpbO97VVY+KDvUrIl7xBCEliAdp9b10hM16AmjEMxJr9Wv+f0cieLgw/EcvR
-         fqkMm8dOn9fA1zctgQWzroTQklSAkWH7IRapudYnhR8G64g22fqQS8bFp/uEPPd6WEwS
-         hk6czBGM8H+9QEqVu8+G3Y7DURbU7syB9sc4CpEv2v3l5rXdTMjcTFYJi7z708ljslkz
-         xgYw==
-X-Gm-Message-State: APjAAAWiMXdMN6XgEUdF0pvKUyevroR5C+XjpKlxXQ8Qd7tumd7MDgfV
-        2NxRhIp4WackxZzdIKjbysMUgg==
-X-Google-Smtp-Source: APXvYqyP1fC7xhtDfhxT5Yt2U1H+X14HenFJ5ybUOqf4/jrGxoax9KqbnJSb12bzIVJM0v3GTWn9AQ==
-X-Received: by 2002:adf:ef03:: with SMTP id e3mr15505384wro.216.1575628180708;
-        Fri, 06 Dec 2019 02:29:40 -0800 (PST)
-Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
-        by smtp.gmail.com with ESMTPSA id h2sm16186780wrt.45.2019.12.06.02.29.39
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=mhXoMaU1UVBlyQ18j97xc9RF9JW9UYyQB2n+rphqqfo=;
+        b=DN4U2kaQtORqL/JKeZy32W0nRZv7+u8FG41CfyvVT4u4uRHJ67Ccbd6P7HnUmmVVst
+         lcrzh5jOMLx2aeJeMeaYqmzDlaiOzHTAYMnMrhu4TYZOLtn0ccv8vg0/9k8xDiwolTrZ
+         5eOqy66nLA7071p+882v9RIgwAJq5e7r5ew2/IS3EeXbYGGLygXsEMGXfPgc4Q/E072o
+         nTaqjhdGC/rxIJjOB1sPskXcKZs5DdfnJuKByfpJlN/dvl5tyn9UoVzv1UPG5uElVlCy
+         vod7N9AUwnK/lzSsWrXXZnVRUwryiVVpNG4k7lUnnA1rcUc9CloyMnOPWY73VIqzb89z
+         0+pA==
+X-Gm-Message-State: APjAAAUtX1NqKsrL450T93Fcjde7K6RGCYn1323ffmVGD0cjqTW6avYN
+        NW/ZdVskVV2OP9IjnkvP2us=
+X-Google-Smtp-Source: APXvYqzrDFccK7X9H1o6iY59fBFIiglCFoyDGEbEf2g1TDhd0HxoZ/ezkIG+sW98yOq/zRmldKE/BA==
+X-Received: by 2002:adf:83c7:: with SMTP id 65mr14202364wre.368.1575628256938;
+        Fri, 06 Dec 2019 02:30:56 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id z13sm2983280wmi.18.2019.12.06.02.30.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 02:29:40 -0800 (PST)
-Date:   Fri, 6 Dec 2019 11:29:39 +0100
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        devicetree@vger.kernel.org, Rocky Liao <rjliao@codeaurora.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Harish Bandi <c-hbandi@codeaurora.org>,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: Re: [PATCH] dt-bindings: net: bluetooth: Add compatible string for
- WCN3991
-Message-ID: <20191206102938.GD27144@netronome.com>
-References: <20191205122241.1.I6c86a40ce133428b6fab21f24f6ff6fec7e74e62@changeid>
+        Fri, 06 Dec 2019 02:30:56 -0800 (PST)
+Date:   Fri, 6 Dec 2019 11:30:55 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, pv-drivers@vmware.com,
+        linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Subject: Re: [PATCH v3 2/2] mm, drm/ttm: Fix vm page protection handling
+Message-ID: <20191206103055.GO28317@dhcp22.suse.cz>
+References: <20191206082426.2958-1-thomas_os@shipmail.org>
+ <20191206082426.2958-3-thomas_os@shipmail.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191205122241.1.I6c86a40ce133428b6fab21f24f6ff6fec7e74e62@changeid>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191206082426.2958-3-thomas_os@shipmail.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 12:22:59PM -0800, Matthias Kaehlcke wrote:
-> Commit 7d250a062f75 ("Bluetooth: hci_qca: Add support for Qualcomm
-> Bluetooth SoC WCN3991") added the compatible string 'qcom,wcn3991-bt'
-> to the Qualcomm Bluetooth driver, however the string is not listed
-> in the binding. Add the 'qcom,wcn3991-bt' to the supported compatible
-> strings.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-
-> ---
-> 
->  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> index 68b67d9db63a3..999aceadb9853 100644
-> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> @@ -11,6 +11,7 @@ Required properties:
->   - compatible: should contain one of the following:
->     * "qcom,qca6174-bt"
->     * "qcom,wcn3990-bt"
-> +   * "qcom,wcn3991-bt"
->     * "qcom,wcn3998-bt"
+On Fri 06-12-19 09:24:26, Thomas Hellström (VMware) wrote:
+[...]
+> @@ -283,11 +282,26 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+>  			pfn = page_to_pfn(page);
+>  		}
 >  
->  Optional properties for compatible string qcom,qca6174-bt:
-> -- 
-> 2.24.0.393.g34dc348eaf-goog
-> 
+> +		/*
+> +		 * Note that the value of @prot at this point may differ from
+> +		 * the value of @vma->vm_page_prot in the caching- and
+> +		 * encryption bits. This is because the exact location of the
+> +		 * data may not be known at mmap() time and may also change
+> +		 * at arbitrary times while the data is mmap'ed.
+> +		 * This is ok as long as @vma->vm_page_prot is not used by
+> +		 * the core vm to set caching- and encryption bits.
+> +		 * This is ensured by core vm using pte_modify() to modify
+> +		 * page table entry protection bits (that function preserves
+> +		 * old caching- and encryption bits), and the @fault
+> +		 * callback being the only function that creates new
+> +		 * page table entries.
+> +		 */
+
+While this is a very valuable piece of information I believe we need to
+document this in the generic code where everybody will find it.
+vmf_insert_mixed_prot sounds like a good place to me. So being explicit
+about VM_MIXEDMAP. Also a reference from vm_page_prot to this function
+would be really helpeful.
+
+Thanks!
+
+-- 
+Michal Hocko
+SUSE Labs
