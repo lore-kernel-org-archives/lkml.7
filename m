@@ -2,75 +2,104 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AD1C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8ABC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE03521823
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182C02075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:38:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbfLFBfD (ORCPT
+        id S1726160AbfLFBiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 20:35:03 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:53825 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725959AbfLFBfD (ORCPT
+        Thu, 5 Dec 2019 20:38:22 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:52660 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfLFBiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 20:35:03 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Tk4jgLJ_1575596090;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk4jgLJ_1575596090)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 06 Dec 2019 09:34:57 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     mtk.manpages@gmail.com, cl@linux.com, jhubbard@nvidia.com,
-        mhocko@suse.com, cai@lca.pw, akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] move_pages.2: not return ENOENT if the page are already on the target nodes
-Date:   Fri,  6 Dec 2019 09:34:50 +0800
-Message-Id: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 5 Dec 2019 20:38:21 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1id2ZX-00028J-6s; Fri, 06 Dec 2019 01:38:19 +0000
+Date:   Fri, 6 Dec 2019 01:38:19 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Ritesh Harjani <riteshh@linux.ibm.com>
+Subject: [git pull] vfs.git d_inode/d_flags barriers
+Message-ID: <20191206013819.GL4203@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit e78bbfa82624 ("mm: stop returning -ENOENT
-from sys_move_pages() if nothing got migrated"), move_pages doesn't
-return -ENOENT anymore if the pages are already on the target nodes, but
-this change is never reflected in manpage.
+	More fallout from tree-wide audit for ->d_inode/->d_flags barriers
+use.  Basically, the problem is that negative pinned dentries require
+careful treatment - unless ->d_lock is locked or parent is held at least
+shared, another thread can make them positive right under us.
 
-Cc: Michael Kerrisk <mtk.manpages@gmail.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Qian Cai <cai@lca.pw>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- man2/move_pages.2 | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+	Most of the uses turned out to be safe - the main surprises as
+far as filesystems are concerned were
+	* race in dget_parent() fastpath, that might end up with the
+caller observing the returned dentry _negative_, due to insufficient
+barriers.  It is positive in memory, but we could end up seeing
+the wrong value of ->d_inode in CPU cache.  Fixed.
+	* manual checks that result of lookup_one_len_unlocked() is
+positive (and rejection of negatives).  Again, insufficient barriers
+(we might end up with inconsistent observed values of ->d_inode and
+->d_flags).  Fixed by switching to a new primitive that does the
+checks itself and returns ERR_PTR(-ENOENT) instead of a negative
+dentry.  That way we get rid of boilerplate converting negatives
+into ERR_PTR(-ENOENT) in the callers and have a single place to
+deal with the barrier-related mess - inside fs/namei.c rather than
+in every caller out there.
 
-diff --git a/man2/move_pages.2 b/man2/move_pages.2
-index 2d96468..2a2f3cd 100644
---- a/man2/move_pages.2
-+++ b/man2/move_pages.2
-@@ -192,9 +192,8 @@ was specified or an attempt was made to migrate pages of a kernel thread.
- One of the target nodes is not online.
- .TP
- .B ENOENT
--No pages were found that require moving.
--All pages are either already
--on the target node, not present, had an invalid address or could not be
-+No pages were found.
-+All pages are either not present, had an invalid address or could not be
- moved because they were mapped by multiple processes.
- .TP
- .B EPERM
--- 
-1.8.3.1
+	The guts of pathname resolution *do* need to be careful -
+the race found by Ritesh is real, as well as several similar
+races.  Fortunately, it turns out that we can take care of that
+with fairly local changes in there.
 
+	The tree-wide audit had not been fun, and I hate the idea of
+repeating it.  I think the right approach would be to annotate the
+places where we are _not_ guaranteed ->d_inode/->d_flags stability
+and have sparse catch regressions.  But I'm still not sure what would
+be the least invasive way of doing that and it's clearly the next
+cycle fodder.
+
+The following changes since commit 3e5aeec0e267d4422a4e740ce723549a3098a4d1:
+
+  cramfs: fix usage on non-MTD device (2019-11-23 21:44:49 -0500)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+
+for you to fetch changes up to 2fa6b1e01a9b1a54769c394f06cd72c3d12a2d48:
+
+  fs/namei.c: fix missing barriers when checking positivity (2019-11-15 13:49:04 -0500)
+
+----------------------------------------------------------------
+Al Viro (4):
+      fs/namei.c: pull positivity check into follow_managed()
+      new helper: lookup_positive_unlocked()
+      fix dget_parent() fastpath race
+      fs/namei.c: fix missing barriers when checking positivity
+
+ fs/cifs/cifsfs.c       |  7 +------
+ fs/dcache.c            |  6 ++++--
+ fs/debugfs/inode.c     |  6 +-----
+ fs/kernfs/mount.c      |  2 +-
+ fs/namei.c             | 56 ++++++++++++++++++++++++++++----------------------
+ fs/nfsd/nfs3xdr.c      |  4 +---
+ fs/nfsd/nfs4xdr.c      | 11 +---------
+ fs/overlayfs/namei.c   | 24 ++++++++--------------
+ fs/quota/dquot.c       |  7 +------
+ include/linux/dcache.h |  5 +++++
+ include/linux/namei.h  |  1 +
+ 11 files changed, 56 insertions(+), 73 deletions(-)
