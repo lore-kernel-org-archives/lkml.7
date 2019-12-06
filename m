@@ -2,158 +2,175 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A399C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF89C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5316F24679
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2684F206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="TCqZXZxH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TlYXT2Zs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfLFPku (ORCPT
+        id S1726336AbfLFPoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 10:40:50 -0500
-Received: from mail-eopbgr1410121.outbound.protection.outlook.com ([40.107.141.121]:24656
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726250AbfLFPku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 10:40:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=StTaUk5Ae8PD7UQ+rcxcq1EWW5705kLesMRDZ+eHm08gDze4C/cMzkx/jUYMmP+faL9vs815KMnTTztuanCEos1Lb9COERyS/Qm1YKstWt4Me0wAkYEX8LXI5p3rpDBzVLX+Vmv9u9wOVC2vTd5sSEGa9+HTpqPIqqMaCBdkdHPPk3Pz85v1x3Tpxja2XVe3w94KOMdGLFCCfTEYUEKVZvu/CiK75kdybuH2gkbuJCGikQurNy0B4eb9Lw0vF1y/y6JXm4pzrjYGid2FxVu2l+LsIzbCey3Q5p9ZeTjBzsr3hFDUYAj3nEosKmOwthg+4Dt/xy/MmWo+J0PtPQh/SQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=96lcQjVD08V7xowwvsFl6CgUYneWQh7nBDGOiVFu+sc=;
- b=V2y8elUxi7thSlC4nO2CUI2oC03WRiPjBEAM0sXbP3NTwi/gEcehkwr7mD1RtJByXNTatjcFVLiYXgnnrP4bD+S0RJ1aHLJJ2LgNJOLI4+DQizN/EuOgvplqiDGRAhEo+l7Uzey+YOSFh6XeNUJXQ4Bzu7OCft11/7ISS/Sn6S80WJyEbNJCZlYWXGJR7VaPwte//yqNppogA7unfdYZdVqbqVm07RZXysdMhxZGaZvFKcs5+jPt+n0wwejH0ZtOEb8fV7SpK3J7Und/yQ+LedYu5bFbJGVKJ6eptI3lbFi70Cvr2XZ5J9VrP3W3dyDtMT7SP6b+d4jfxMMtokxnkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+        Fri, 6 Dec 2019 10:44:16 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36127 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfLFPoP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 10:44:15 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n12so5626647lfe.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 07:44:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=96lcQjVD08V7xowwvsFl6CgUYneWQh7nBDGOiVFu+sc=;
- b=TCqZXZxHccNVnEynATCRBRUK/KQ/WgCCgOkUjofQ1doixia8uOz0idJjw+d0qsEqBrscjpxiX9TszAxBMpI20miKnV1RHR5mOC/Ym9LHtQk6vdVuDNWPQ0yEGEjfdDIqEdGQgEt/RmtGyzYCkOSQD4eRxdL6xsYroa4NoIXTH8w=
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
- TY1PR01MB1804.jpnprd01.prod.outlook.com (52.133.162.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.12; Fri, 6 Dec 2019 15:40:43 +0000
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::5166:5e51:90f5:3ee1]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::5166:5e51:90f5:3ee1%7]) with mapi id 15.20.2495.014; Fri, 6 Dec 2019
- 15:40:43 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        "sam@ravnborg.org" <sam@ravnborg.org>
-Subject: RE: [PATCH v3 7/8] [HACK] arm64: dts: renesas: draak: Enable LVDS
-Thread-Topic: [PATCH v3 7/8] [HACK] arm64: dts: renesas: draak: Enable LVDS
-Thread-Index: AQHVXc+ha8jAjgIJ6EiELjIW5u69iKeAj5WAgC1LZnA=
-Date:   Fri, 6 Dec 2019 15:40:42 +0000
-Message-ID: <TY1PR01MB17708785623D4B6747418A9EC05F0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1567017402-5895-8-git-send-email-fabrizio.castro@bp.renesas.com>
- <20191107195737.GL24983@pendragon.ideasonboard.com>
-In-Reply-To: <20191107195737.GL24983@pendragon.ideasonboard.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c8dbb26b-b35e-4cb0-6e83-08d77a62a77f
-x-ms-traffictypediagnostic: TY1PR01MB1804:|TY1PR01MB1804:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY1PR01MB18042CDFF12265F1CACB8FDFC05F0@TY1PR01MB1804.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0243E5FD68
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(136003)(376002)(39860400002)(396003)(199004)(189003)(52536014)(6916009)(305945005)(74316002)(53546011)(44832011)(7416002)(86362001)(8936002)(99286004)(81156014)(55016002)(76176011)(102836004)(6506007)(81166006)(8676002)(9686003)(4326008)(33656002)(26005)(316002)(186003)(229853002)(71200400001)(54906003)(5660300002)(7696005)(64756008)(966005)(66476007)(76116006)(66446008)(66556008)(66946007)(478600001)(2906002)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1804;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: G8wNLCrch4NhtaUTpjLmYOVqdENj2K5Jc0yR8sQp6AcCmy0oHBwXpbIMoMjISo5c16BdUcAv2IlW9EehhbYHOOcNCbxUPf0XO8jG9KkBo8y9sogZKVwgIJzPe8hYWNZh9xl1ENMi7Qoy+N0hzbft/WbXZeTLYHAs6VU/LRkAdyKR+b2BCWwv20z/ybpW/N0mJiw1w9sF2nJjFz6mDF2Zc9Y/zM+WNqMYziTz8JDC2RDdhlGp5oLIl1uZBmGhLxiu0iCg1694b5j1pEaSbqj2FtWm/0FzJkkpxRWRErVPWQcEwnNsYn6HPAid63i5f/izt81kYsTb9bBrvpVkIMH/TYfU5abBTHES3GailQ/nbc867FniEr70Zb8xXHJ2U7TfJFzBuYRvQKYg4NscDUg3RoeGxy3TVUA8Cr0YMQg4RG2QxwWlVrsULcjDvOUeOMre1cwXSFgdJkbvZfSf+OMnTfYHIGk6BDlK6cLvlwJ9CUQ=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h57nwXVnGdakt0m0372PTmhC009r6hwfebJAhfxmbqU=;
+        b=TlYXT2ZsM5l9LiRH7P9YhNeLIOEIYQcDLYaYG8W2vt9Cn5a9YnUjDE6DT157IlnpWJ
+         i2tusFchDH0yDCrKOPnCjAJ80Hne4qmeLP3D+ivQ9aevZm1OOaZjKJo5VJYozc5D5KPC
+         Sd00FNaCapeAHyP7WOKUBiXltxGEA/q36Wlw3NGWqZrP6Vzv1f/9CMEDpSVDc+KMxbx6
+         W9aCIm0ucBD70hPe8qPvtGHe1xmS1s7H65lrKZfw5hW1Vv//wXKmFj5r4maCl4bhJ+O/
+         jmTBpCm/xW+24ogzEJ2wTAFDFtiXPOOB0ryQ8AozDiqaSzB6JD//yGCEBdtSZO1NbIQu
+         Zt8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h57nwXVnGdakt0m0372PTmhC009r6hwfebJAhfxmbqU=;
+        b=buPFdy2E24OEf1TaYSNiLsjNrLLfI6Ycq8tE0it/gj3XPkGTt3luv2PmR6jlOZ/6jW
+         QKFLl9Rx+1y23s59C+epRjS0yQ+xlv2dtXwm7DCOh7vpkL/+Bq8PW0nMlA4onwVwdsQC
+         Fmx8lyQARiyjC9kC+hvYkWjKmJWXMapUTE708LC/jWAnpxbFDuhwSyqWwJMOwUilw8JA
+         OJlN8VOUbFlANwT3nC3MLeeJpxBCbVBtnt9NCftXhlrIx8iTgxgsiAPYvFhaK/ykjocN
+         +aFAAYBa/NY7aMg0Oql2LL6uPWi8cLxMsKuDKi9dErjBTx/9v5vCT9/H3/cgSJoRrLcO
+         TL2w==
+X-Gm-Message-State: APjAAAV+ESdvUf+cA7H/gnU0TdHGlKxxs4p7jEAfokXMD4gR1bo3pEHv
+        jAGpr/atKSpqKuGsU2d3+HuovXQjo4Wo+ByYRe2Dig==
+X-Google-Smtp-Source: APXvYqwhRo7fdzEzR5N/FRa9wALvkraOG9kEEr6VybUSbPNXGgO/qeLhw/JjTvz5aU7De9ZekqLGmNmiu22U7XHmN6o=
+X-Received: by 2002:a19:c84:: with SMTP id 126mr8505675lfm.5.1575647052245;
+ Fri, 06 Dec 2019 07:44:12 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8dbb26b-b35e-4cb0-6e83-08d77a62a77f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Dec 2019 15:40:43.0115
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aeNOfOvh0WTh6Wq8NQ2Z2aQnKceB2Nyf2E8AksziYz6bQS+gCjTf2wJYci0xh1L2LXNMTl3K4LlDAoFX3+4+fcK4tTNZeTr8OUB88BRt0NM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1804
+References: <20191127133510.10614-1-brgl@bgdev.pl> <CACRpkdZ6e0GaE9KBJ1-E+cS_KnPY-EKLNxJFqjArr28hYMQqOg@mail.gmail.com>
+ <CAMRc=McH6m3Lsvz8g1JSD_c-QNdb-Kh0+8BH5EKcEW2vM2VYJA@mail.gmail.com> <0058e57c-5765-3944-3137-10b780985a36@metux.net>
+In-Reply-To: <0058e57c-5765-3944-3137-10b780985a36@metux.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 6 Dec 2019 16:44:00 +0100
+Message-ID: <CACRpkda-nucsM-b=68t5N2gQ7910G_a5Hz1cEwSNgVHgvJhqLA@mail.gmail.com>
+Subject: Re: [PATCH 0/8] gpiolib: add an ioctl() for monitoring line status changes
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB0aGUgZmVlZGJhY2shDQoNCj4gRnJvbTog
-bGludXgtcmVuZXNhcy1zb2Mtb3duZXJAdmdlci5rZXJuZWwub3JnIDxsaW51eC1yZW5lc2FzLXNv
-Yy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFsZiBPZiBMYXVyZW50IFBpbmNoYXJ0DQo+
-IFNlbnQ6IDA3IE5vdmVtYmVyIDIwMTkgMTk6NTgNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyA3
-LzhdIFtIQUNLXSBhcm02NDogZHRzOiByZW5lc2FzOiBkcmFhazogRW5hYmxlIExWRFMNCj4gDQo+
-IEhpIEZhYnJpemlvLA0KPiANCj4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guDQo+IA0KPiBUaGUg
-c3ViamVjdCBpcyB3cm9uZywgaXQgc2hvdWxkIGJlDQo+IA0KPiBbSEFDS10gYXJtNjQ6IGR0czog
-cmVuZXNhczogZWJpc3U6IEVuYWJsZSBMVkRTIGR1YWwtbGluayBvcGVyYXRpb24NCg0KVGhpcyBz
-b3VuZHMgbGlrZSBhIGNvcHkgYW5kIHBhc3RlIGdvbmUgcmVhbGx5IHdyb25nIQ0KU29ycnkgYWJv
-dXQgdGhhdC4gSSdsbCBiZSBkcm9wcGluZyB0aGlzIHBhdGNoIGluIHY0Lg0KDQpUaGFua3MsDQpG
-YWINCg0KPiANCj4gT24gV2VkLCBBdWcgMjgsIDIwMTkgYXQgMDc6MzY6NDFQTSArMDEwMCwgRmFi
-cml6aW8gQ2FzdHJvIHdyb3RlOg0KPiA+IEVuYWJsZSBhbmQgY29ubmVjdCB0aGUgc2Vjb25kIExW
-RFMgZW5jb2RlciB0byB0aGUgc2Vjb25kIExWRFMgaW5wdXQgb2YNCj4gPiB0aGUgVEhDNjNMVkQx
-MDI0IGZvciBkdWFsLWxpbmsgTFZEUyBvcGVyYXRpb24uIFRoaXMgcmVxdWlyZXMgY2hhbmdpbmcN
-Cj4gPiB0aGUgZGVmYXVsdCBzZXR0aW5ncyBvZiBTVzQ1IGFuZCBTVzQ3IHRvIE9GRiBhbmQgT04g
-cmVzcGVjdGl2ZWx5Lg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBpcyBiYXNlZCBvbiBMYXVyZW50J3Mg
-ZHVhbC1MVkRTIHdvcms6DQo+ID4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8x
-MDk2NTA0NS8NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6
-aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPg0KPiA+IC0tLQ0KPiA+IHYyLT52MzoNCj4gPiAqIG5l
-dyBwYXRjaA0KPiA+DQo+ID4gR2VlcnQsDQo+ID4NCj4gPiBubyBuZWVkIHRvIHJldmlldyB0aGlz
-IHBhdGNoIHVubGVzcyB0aGV5IGxpa2UgdGhlIGlkZWEgYmVoaW5kIHRoaXMNCj4gPiBzZXJpZXMu
-DQo+ID4NCj4gPiBUaGFua3MsDQo+ID4gRmFiDQo+ID4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm02
-NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTkwLWViaXN1LmR0cyB8IDIxICsrKysrKysrKysrKysr
-KysrKystLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlv
-bnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMv
-cjhhNzc5OTAtZWJpc3UuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTkw
-LWViaXN1LmR0cw0KPiA+IGluZGV4IGIzOGY5ZDQuLjM4YjljNWEgMTAwNjQ0DQo+ID4gLS0tIGEv
-YXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTkwLWViaXN1LmR0cw0KPiA+ICsrKyBi
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk5MC1lYmlzdS5kdHMNCj4gPiBAQCAt
-ODcsMTEgKzg3LDIwIEBADQo+ID4NCj4gPiAgCQkJcG9ydEAwIHsNCj4gPiAgCQkJCXJlZyA9IDww
-PjsNCj4gPiAtCQkJCXRoYzYzbHZkMTAyNF9pbjogZW5kcG9pbnQgew0KPiA+ICsJCQkJZHVhbC1s
-dmRzLWV2ZW4tcGl4ZWxzOw0KPiA+ICsJCQkJdGhjNjNsdmQxMDI0X2luMDogZW5kcG9pbnQgew0K
-PiA+ICAJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbHZkczBfb3V0PjsNCj4gPiAgCQkJCX07DQo+
-ID4gIAkJCX07DQo+ID4NCj4gPiArCQkJcG9ydEAxIHsNCj4gPiArCQkJCXJlZyA9IDwxPjsNCj4g
-PiArCQkJCWR1YWwtbHZkcy1vZGQtcGl4ZWxzOw0KPiA+ICsJCQkJdGhjNjNsdmQxMDI0X2luMTog
-ZW5kcG9pbnQgew0KPiA+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbHZkczFfb3V0PjsNCj4g
-PiArCQkJCX07DQo+ID4gKwkJCX07DQo+ID4gKw0KPiA+ICAJCQlwb3J0QDIgew0KPiA+ICAJCQkJ
-cmVnID0gPDI+Ow0KPiA+ICAJCQkJdGhjNjNsdmQxMDI0X291dDogZW5kcG9pbnQgew0KPiA+IEBA
-IC00ODksNyArNDk4LDcgQEANCj4gPiAgCXBvcnRzIHsNCj4gPiAgCQlwb3J0QDEgew0KPiA+ICAJ
-CQlsdmRzMF9vdXQ6IGVuZHBvaW50IHsNCj4gPiAtCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdGhj
-NjNsdmQxMDI0X2luPjsNCj4gPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdGhjNjNsdmQxMDI0
-X2luMD47DQo+ID4gIAkJCX07DQo+ID4gIAkJfTsNCj4gPiAgCX07DQo+ID4gQEAgLTUwNyw2ICs1
-MTYsMTQgQEANCj4gPiAgCQkgPCZ4MTNfY2xrPiwNCj4gPiAgCQkgPCZleHRhbF9jbGs+Ow0KPiA+
-ICAJY2xvY2stbmFtZXMgPSAiZmNrIiwgImRjbGtpbi4wIiwgImV4dGFsIjsNCj4gPiArDQo+ID4g
-Kwlwb3J0cyB7DQo+ID4gKwkJcG9ydEAxIHsNCj4gPiArCQkJbHZkczFfb3V0OiBlbmRwb2ludCB7
-DQo+ID4gKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnRoYzYzbHZkMTAyNF9pbjE+Ow0KPiA+ICsJ
-CQl9Ow0KPiA+ICsJCX07DQo+ID4gKwl9Ow0KPiA+ICB9Ow0KPiA+DQo+ID4gICZvaGNpMCB7DQo+
-ID4gLS0NCj4gPiAyLjcuNA0KPiA+DQo+IA0KPiAtLQ0KPiBSZWdhcmRzLA0KPiANCj4gTGF1cmVu
-dCBQaW5jaGFydA0K
+On Wed, Dec 4, 2019 at 1:06 PM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+
+> Personally, I'm a really big friend of synthentic filesystems instead of
+> ioctl()s, because they're so simple to use (don't wanna repeat the whole
+> Plan9 literature here ;-)), so I'd do it in this way:
+>
+> * have a file in /sys/class/gpio/... holding the current gpio
+>   information, in some easily parsable format. (either one file
+>   globally or one per chip)
+
+The topology for the current solution is in /sys/bus/gpio actually,
+but I get what you mean.
+
+> * a) this file can be monitored via inotify (just one event when
+>      something had changed, or maybe have mtime reflect the time of
+>      last change)
+> * b) allow read after EOF, which is blocking, until something changes
+>
+> That way, userland implementation would be trivial enough to do it
+> in a simple shell script.
+
+The current (deprecated) sysfs pretty much does this.
+
+The main issue sysfs in its current form had to die was that it relied
+on global GPIO numbers. An alternative to the character device
+would be to use e.g. subdirs for each GPIO chip and export
+local offset numbers from there, but well we
+reached a fork in the road with the chardev I'd say.
+
+The main problem solved with the chardev was that scripts that
+died/crashed left the sysfs nodes explicitly exported and
+populated and everything just in the general mess it was at the time
+the application crashed.
+
+Of course it is easy to pose things like that the application should
+register crash handlers or whatnot, but it turns out people weren't
+doing that and with a character device, then it cleans up automatically
+if the application dies or get terminated by a signal for example,
+and the same application can just be relaunched without problems.
+
+> > But at
+> > the same time: user-space wants to use GPIOs and they're mostly doing
+> > it over sysfs. If you want people to switch over to the character
+> > device - we must make it at least as useful as sysfs.
+>
+> Personally, I don't see any practical reason, why I should use the
+> chardev at all - sysfs is much simpler.
+
+I see your stance, but it also makes it much easier to shoot
+yourself in the foot.
+
+> (actually, I rarely talk to gpios directly from userland - except for
+> some lowlevel debugging purposes).
+
+Nobody should. The users of userspace GPIO are factory lines,
+industrial control and automation, maker communities and odd
+prototypes. Not deployed products like phones or computers.
+
+> Do you have more detailed information on what these folks are really
+> up to, what their actual usecases are ?
+
+The typical cases involves rigging a few relays and sensors
+up in a lab to perform some automation, not dissimilar to e.g.
+PLC (programmable logic controllers) and such. The world is
+full of these one-offs, some in more expensive and intimidating
+environments than others. Some are the lab bench of a few
+select makers. Makers are not important to big capital and
+big business (who are not talking to us) but they are important
+to the community exactly because they are talking to us.
+
+> > Recognizing this fact, I implemented a proof-of-concept dbus daemon,
+> > but one thing that it could really
+> > benefit from is dynamic, event-based synchronization and this series
+> > tries to add just that (BTW please take a look at the discussion under
+> > patch 7/8 - the code in this series will probably change a lot).
+>
+> Oh, no, I've been afraid that this would be coming ... desktop bus in
+> embedded system is a real nightmare. (yes, some people are even insane
+> enough to put that thing on an public IP interface and so make critical
+> machinery like cards easily remote controllable by average school kids)
+>
+> Seriously, I've seen a lot of similar constructs in the field, all of
+> them have quickly turned out as complete crap - usually coming from
+> folks who need >50kLoc ontop of trivial cansocket with silly excuses
+> like formal certification :o). Please, don't give these kids a machine
+> gun, they will just hurt innocent people with it :P
+
+I don't think that argument by likeness (with something you don't
+like) is a very good one.
+
+What we are discussing is what is nowadays referred to as
+the "service layer" including D-Bus etc and systemd, whether
+it uses D-Bus or something else is irrelevant.
+
+OpenWrt has a service layer, it is called ubus, and it has a
+system layer daemon as well (similar to systemd). This is deployed
+in millions of routers as router manufacturers almost exclusively
+build on top of OpenWrt these days. It is not a lot of code.
+https://openwrt.org/docs/techref/ubus
+
+Yours,
+Linus Walleij
