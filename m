@@ -8,68 +8,64 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4FCC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11655C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEBB924680
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D84192467B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:52:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aC69QMes"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lG2d9ugx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfLFHwY (ORCPT
+        id S1726684AbfLFHwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 02:52:24 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44784 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbfLFHwY (ORCPT
+        Fri, 6 Dec 2019 02:52:55 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:32850 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbfLFHwy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 02:52:24 -0500
-Received: by mail-pl1-f195.google.com with SMTP id bh2so1253041plb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 23:52:24 -0800 (PST)
+        Fri, 6 Dec 2019 02:52:54 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r67so2410506pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 23:52:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=F/nVMSvIlBe6KxhL/GKB+x3grLOZijuR5eaAuvD4Z3g=;
-        b=aC69QMes8d8Y60ab+b/nr3pzwc2OcICzdEZglBU4tCczyIBnlwC8/SwivcCPU7/Uip
-         LeiwmwTcApgtDTxCZ9H3fNcVUu13E9gqNXArnFg2vUJ9j23Hi7Qq5Zq1nH++ujGKtffq
-         ST4kpRiBvj2umUUpHSvu0jBLwKgmZgCkjmlsed5wiZMk9xmLNr62LAFZkl3HgMzE5mCd
-         +Q7IYGw4vAU1WpdzK1RCdZCSoZZ3URWnBrZ8K+mACqQaoburreR/oswT0ldlenbZe0h1
-         VNl3U5hF/KG/FZmlsnkICnC115+m53L/3vwY4eorv/aIVL19fE4dim6omGwfH/UoA7HI
-         lUnA==
+        bh=2kAJkkEoeN3MEGLHwJYyylmkvJRvoWmMXbreTxA7D7g=;
+        b=lG2d9ugxobHRE41/kg5UWdt0/yE4MsppHo+FrDfzlbWQN240CcA9QpUdB3SQ3LGPIW
+         FHvT7uruy43ruGMQXKstaoy8ymSo8ryl7KSqDmRj29NpfpOXlKcQPZWrl6dt8ALkkOZ9
+         Zig5X8896xQgd+00Uoi/PyyvzDO08m+wsfWdIGLNg2+MAXX8sDplWJSkgGmADIRpEuPD
+         lUhfMkSw4+Rn7J680wUJySL2nPtRwwNabx3qXoaws0M2oA6UZCiiSdzakhdpFF05Zt9l
+         9/ms06dU6dNYtdFBV3TYOOo6NphX8GCXZRbW7xX025t/adrKwXjtamf1ErokL3M3h4w8
+         1vLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=F/nVMSvIlBe6KxhL/GKB+x3grLOZijuR5eaAuvD4Z3g=;
-        b=pZsAy3fvGvZBRQG5U8ikFSJf3maT7aDX4X3XKXLFWuYRlJjMN+alpSVabA98OWfAS8
-         h7CwFU6WoYybYaiW8TOGBZsp8+BhuG//6oU5BHJ/RAMxxkMsao2KUyFZa1REfzB55B1r
-         J12uMYNZV4sOKdcxIa0M+BUHyF6ls2t3eDP7XyTAtC4rSBfwBLmUz9/Xx0Jk6InA00oe
-         GhGb8QVrK+OOWaR10YCwmUKNT7DHlOlQhQbsNgLccA0gffL0yaU+oFdSFkRPYj9cyUOD
-         0ZexVHx6HL+X0bnAWENgSbi6KnO3Uco9kYw0JPE14g8KxH/Th39qdKgg7GKTh4p8aebv
-         TEiA==
-X-Gm-Message-State: APjAAAW+a6fprCuXZOLO2+b1QZvThX2VCG5UwHDDCK2Ua7x/8ZQPYY52
-        kxUy7fId81BPv4MojZtveBk=
-X-Google-Smtp-Source: APXvYqxMyuR+T1yV865sqEMXS9IDUST5vK00nDZONJTWjFfaGJUHCgtS3FvbuE1jXuMDmVFJd9xWcw==
-X-Received: by 2002:a17:902:fe03:: with SMTP id g3mr13652599plj.1.1575618744043;
-        Thu, 05 Dec 2019 23:52:24 -0800 (PST)
+        bh=2kAJkkEoeN3MEGLHwJYyylmkvJRvoWmMXbreTxA7D7g=;
+        b=lf8W1POGj/2BkS/iIG87ULA9gl21vroNReB3hgaHY74P5NS3vD3yekuwrNmSjmRb6W
+         ofz+wjYJ/R+EXLoGjRjDza3KS6AZGkR2/vF6hx7nbe6omlOsrdUAdUU28SWk9757HGf5
+         kerf0Ccn3UE4jVV8r8Jb+w0wG9KRjbYDrhOHY6YK78ofQ/PwQ718agBAzfsbodBeWoto
+         wUBYQD6+DTSaWasChahn1Wt/T6qqmOyrXVXVjlAAObEaXcwoNDjwciFRB2flZ8TnpslT
+         0lGpD/greLHhw5qBsR/VxSKEjjzRR1Y2YWRQS3K9di5It/GDweFV7YidRGtOOeevgQuv
+         wR2A==
+X-Gm-Message-State: APjAAAXTjp0rIx3KhEDURO3/sNv4ZmSuDRSSiZBFoKIJFjGnkhsKiJkR
+        Ig9HeLobxfJ3JMizHn/nEIA=
+X-Google-Smtp-Source: APXvYqw3qlredLsb+GwlZ2m05paSNQl2kY1qLzfGL5YtxkQXqv7xVIAc82ovW1wqhDwKFuUPyJENJw==
+X-Received: by 2002:a17:902:7084:: with SMTP id z4mr13014504plk.247.1575618774178;
+        Thu, 05 Dec 2019 23:52:54 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id y199sm16009412pfb.137.2019.12.05.23.52.17
+        by smtp.gmail.com with ESMTPSA id i16sm14491341pfo.12.2019.12.05.23.52.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 23:52:23 -0800 (PST)
+        Thu, 05 Dec 2019 23:52:53 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Brian Austin <brian.austin@cirrus.com>,
-        Paul Handrigan <Paul.Handrigan@cirrus.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        James Schulman <james.schulman@cirrus.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] ASoC: cs42l42: add missed regulator_bulk_disable in remove and fix probe failure
-Date:   Fri,  6 Dec 2019 15:52:09 +0800
-Message-Id: <20191206075209.18068-1-hslester96@gmail.com>
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] ASoC: tas2552: add missed regulator_bulk_disable in remove
+Date:   Fri,  6 Dec 2019 15:52:39 +0800
+Message-Id: <20191206075239.18125-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -81,66 +77,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The driver forgets to call regulator_bulk_disable() in remove like that
 in probe failure.
-Besides, some failed branches in probe do not handle failure correctly.
-Add the missed call and revise wrong direct returns to fix it.
+Add the missed call to fix it.
 
-Fixes: 2c394ca79604b ("ASoC: Add support for CS42L42 codec")
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- sound/soc/codecs/cs42l42.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ sound/soc/codecs/tas2552.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/soc/codecs/cs42l42.c b/sound/soc/codecs/cs42l42.c
-index 5125bb9b37b5..96b3cff50ce9 100644
---- a/sound/soc/codecs/cs42l42.c
-+++ b/sound/soc/codecs/cs42l42.c
-@@ -1796,8 +1796,10 @@ static int cs42l42_i2c_probe(struct i2c_client *i2c_client,
- 	/* Reset the Device */
- 	cs42l42->reset_gpio = devm_gpiod_get_optional(&i2c_client->dev,
- 		"reset", GPIOD_OUT_LOW);
--	if (IS_ERR(cs42l42->reset_gpio))
--		return PTR_ERR(cs42l42->reset_gpio);
-+	if (IS_ERR(cs42l42->reset_gpio)) {
-+		ret = PTR_ERR(cs42l42->reset_gpio);
-+		goto err_disable;
-+	}
+diff --git a/sound/soc/codecs/tas2552.c b/sound/soc/codecs/tas2552.c
+index 56671f21cfe5..0e19ec76aae0 100644
+--- a/sound/soc/codecs/tas2552.c
++++ b/sound/soc/codecs/tas2552.c
+@@ -616,6 +616,9 @@ static void tas2552_component_remove(struct snd_soc_component *component)
+ 	pm_runtime_put(component->dev);
  
- 	if (cs42l42->reset_gpio) {
- 		dev_dbg(&i2c_client->dev, "Found reset GPIO\n");
-@@ -1831,13 +1833,13 @@ static int cs42l42_i2c_probe(struct i2c_client *i2c_client,
- 		dev_err(&i2c_client->dev,
- 			"CS42L42 Device ID (%X). Expected %X\n",
- 			devid, CS42L42_CHIP_ID);
--		return ret;
-+		goto err_disable;
- 	}
+ 	gpiod_set_value(tas2552->enable_gpio, 0);
++
++	regulator_bulk_disable(ARRAY_SIZE(tas2552->supplies),
++					tas2552->supplies);
+ };
  
- 	ret = regmap_read(cs42l42->regmap, CS42L42_REVID, &reg);
- 	if (ret < 0) {
- 		dev_err(&i2c_client->dev, "Get Revision ID failed\n");
--		return ret;
-+		goto err_disable;
- 	}
- 
- 	dev_info(&i2c_client->dev,
-@@ -1863,7 +1865,7 @@ static int cs42l42_i2c_probe(struct i2c_client *i2c_client,
- 	if (i2c_client->dev.of_node) {
- 		ret = cs42l42_handle_device_data(i2c_client, cs42l42);
- 		if (ret != 0)
--			return ret;
-+			goto err_disable;
- 	}
- 
- 	/* Setup headset detection */
-@@ -1892,6 +1894,8 @@ static int cs42l42_i2c_remove(struct i2c_client *i2c_client)
- 	/* Hold down reset */
- 	gpiod_set_value_cansleep(cs42l42->reset_gpio, 0);
- 
-+	regulator_bulk_disable(ARRAY_SIZE(cs42l42->supplies),
-+				cs42l42->supplies);
- 	return 0;
- }
- 
+ #ifdef CONFIG_PM
 -- 
 2.24.0
 
