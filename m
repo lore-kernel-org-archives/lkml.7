@@ -2,121 +2,172 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F40C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726DDC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F4A24670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3980B24659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:06:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHT26K87"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="lHbMNkR+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfLFPGO (ORCPT
+        id S1726480AbfLFPG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 10:06:14 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41030 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbfLFPGO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 10:06:14 -0500
-Received: by mail-pf1-f194.google.com with SMTP id s18so3466541pfd.8;
-        Fri, 06 Dec 2019 07:06:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=NOYIo2oX0lmkpQ6gBhcLLsx1plLM1LrdnXjWaPnIOcs=;
-        b=MHT26K87lCwEl81XNb2/7lgyyJ+HGDXqay2wHsbsZ8dRm00ATs1ZlFFyv15xZPFJk9
-         nTFDr6hon+qm1IWzBdl2dwnu5BNv7BFEjw0SncsazwZgtHzfQfAFZ3GJgpPUu03DNPho
-         qdLUwi860CeukpEZCkpGJeE9Feim2dUf5l8uHmHwIDqJlB5Fr9NH/yBlaP6XE1BYVG6x
-         ACcn+2FDx82wMKJ4ZYOxKCxGHpg/Yt5CAOZSriNe6Eplo/gGLLAHWfyP1zfYcM7/q+y2
-         h5w4febplE5KwP7zNw9449T5Z6facbpeD8dG5QTIRaC2bYtPP5GyHzgSMB8Xoq/DEVnU
-         53aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=NOYIo2oX0lmkpQ6gBhcLLsx1plLM1LrdnXjWaPnIOcs=;
-        b=A+CY60Yx1Qe4WKYXMKjPPw+WAsX1uHsh772d/UFWJw9DgV0Yw+9VDJ4NK6uym6L+a3
-         kR/mcUBvxJCwNoLUTubLLKhYO9FsVKHB501OmxWj5gtbXL0qa5AtTu41JYhPQbFuPrHa
-         jaCebaJkNBW+OmJvPC5W72yWwCHXBguO0FKgNW/aPQx5z3DzfIN6Zil8ARC6ozrF7h0m
-         bbHGOLy/GiXduwjnAX6uXQNLlBmZ8k9N6ewGsuKV4CRcRenj93sBcfQ2bWE3BqZG2c10
-         YmPUdywsJuqEezoXak7DjRpiq3z+YQIm6Kguc2QTQZ+zZhP1uXKIEbqcF4Ftr05DGz7P
-         /CPQ==
-X-Gm-Message-State: APjAAAUvo/YZu6crFbWaWXCczxEM9R7S4975rLJnYm/gOS+ZOuOFlLuk
-        V/TbcGo35+IpVZi9hi2xjeU=
-X-Google-Smtp-Source: APXvYqy8tpPjWstvqzrovfQv2CmvACSWRIy2k1sQcTmQAbqG08s4QK1DYir2i89I4Ra0SG3Z6TPQYg==
-X-Received: by 2002:a63:d54f:: with SMTP id v15mr4100489pgi.64.1575644772732;
-        Fri, 06 Dec 2019 07:06:12 -0800 (PST)
-Received: from localhost.localdomain ([2402:3a80:13a2:f129:b905:c312:4008:2416])
-        by smtp.gmail.com with ESMTPSA id j28sm15861041pgb.36.2019.12.06.07.06.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 07:06:12 -0800 (PST)
-From:   madhuparnabhowmik04@gmail.com
-To:     paulmck@kernel.org, rostedt@goodmis.org, joel@joelfernandes.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: [PATCH] rculist: Add macro list_prev_rcu
-Date:   Fri,  6 Dec 2019 20:35:54 +0530
-Message-Id: <20191206150554.10479-1-madhuparnabhowmik04@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 6 Dec 2019 10:06:27 -0500
+Received: from fd.dlink.ru ([178.170.168.18]:43908 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726244AbfLFPG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 10:06:26 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 46DE61B214D6; Fri,  6 Dec 2019 18:06:22 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 46DE61B214D6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1575644783; bh=TNURWtYg5VbgmOVt3Zu3a5GrkMmxUJgdKkf+0OlgfLQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=lHbMNkR+fWnv0r2T339Yr8QNbkjw+56435jESnAW0VZswNTpRQnSVj+ZlsqIe6Qd2
+         HFxFiBh+Odu+eYudoZNs+eXtT3GqmfNsm5+yv+vgUEx//zGosjtjUPM2YGryvMuBxR
+         bXMODReAz4v6JrvN0JHsgxpD9ugyYCAPg4RyeQGQ=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id 00AD41B21308;
+        Fri,  6 Dec 2019 18:06:09 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 00AD41B21308
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 8D5981B20228;
+        Fri,  6 Dec 2019 18:06:09 +0300 (MSK)
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Fri,  6 Dec 2019 18:06:09 +0300 (MSK)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 06 Dec 2019 18:06:09 +0300
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Muciri Gatimu <muciri@openmesh.com>,
+        Shashidhar Lakkavalli <shashidhar.lakkavalli@openmesh.com>,
+        John Crispin <john@phrozen.org>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Matteo Croce <mcroce@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: dsa: fix flow dissection on Tx path
+In-Reply-To: <5d3d0907-4f99-ccda-82f4-12e514c5edb2@gmail.com>
+References: <20191205100235.14195-1-alobakin@dlink.ru>
+ <5d3d0907-4f99-ccda-82f4-12e514c5edb2@gmail.com>
+User-Agent: Roundcube Webmail/1.4.0
+Message-ID: <71305dd0f15bd065f9b1eedd4f61123e@dlink.ru>
+X-Sender: alobakin@dlink.ru
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Florian Fainelli wrote 06.12.2019 06:28:
+> On 12/5/2019 2:02 AM, Alexander Lobakin wrote:
+>> Commit 43e665287f93 ("net-next: dsa: fix flow dissection") added an
+>> ability to override protocol and network offset during flow dissection
+>> for DSA-enabled devices (i.e. controllers shipped as switch CPU ports)
+>> in order to fix skb hashing for RPS on Rx path.
+>> 
+>> However, skb_hash() and added part of code can be invoked not only on
+>> Rx, but also on Tx path if we have a multi-queued device and:
+>>  - kernel is running on UP system or
+>>  - XPS is not configured.
+>> 
+>> The call stack in this two cases will be like: dev_queue_xmit() ->
+>> __dev_queue_xmit() -> netdev_core_pick_tx() -> netdev_pick_tx() ->
+>> skb_tx_hash() -> skb_get_hash().
+>> 
+>> The problem is that skbs queued for Tx have both network offset and
+>> correct protocol already set up even after inserting a CPU tag by DSA
+>> tagger, so calling tag_ops->flow_dissect() on this path actually only
+>> breaks flow dissection and hashing.
+>> 
+>> This can be observed by adding debug prints just before and right 
+>> after
+>> tag_ops->flow_dissect() call to the related block of code:
+>> 
+>> Before the patch:
+>> 
+>> Rx path (RPS):
+>> 
+>> [   19.240001] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+>> [   19.244271] tag_ops->flow_dissect()
+>> [   19.247811] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
+>> 
+>> [   19.215435] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+>> [   19.219746] tag_ops->flow_dissect()
+>> [   19.223241] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
+>> 
+>> [   18.654057] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+>> [   18.658332] tag_ops->flow_dissect()
+>> [   18.661826] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
+>> 
+>> Tx path (UP system):
+>> 
+>> [   18.759560] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
+>> [   18.763933] tag_ops->flow_dissect()
+>> [   18.767485] Tx: proto: 0x920b, nhoff: 34	/* junk */
+>> 
+>> [   22.800020] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
+>> [   22.804392] tag_ops->flow_dissect()
+>> [   22.807921] Tx: proto: 0x920b, nhoff: 34	/* junk */
+>> 
+>> [   16.898342] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
+>> [   16.902705] tag_ops->flow_dissect()
+>> [   16.906227] Tx: proto: 0x920b, nhoff: 34	/* junk */
+>> 
+>> After:
+>> 
+>> Rx path (RPS):
+>> 
+>> [   16.520993] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+>> [   16.525260] tag_ops->flow_dissect()
+>> [   16.528808] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
+>> 
+>> [   15.484807] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+>> [   15.490417] tag_ops->flow_dissect()
+>> [   15.495223] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
+>> 
+>> [   17.134621] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+>> [   17.138895] tag_ops->flow_dissect()
+>> [   17.142388] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
+>> 
+>> Tx path (UP system):
+>> 
+>> [   15.499558] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
+>> 
+>> [   20.664689] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
+>> 
+>> [   18.565782] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
+>> 
+>> In order to fix that we can add the check 'proto == htons(ETH_P_XDSA)'
+>> to prevent code from calling tag_ops->flow_dissect() on Tx.
+>> I also decided to initialize 'offset' variable so tagger callbacks can
+>> now safely leave it untouched without provoking a chaos.
+>> 
+>> Fixes: 43e665287f93 ("net-next: dsa: fix flow dissection")
+>> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+> 
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-There are instances in the linux kernel where the prev pointer
-of a list is accessed.
-Unlike list_next_rcu, a similar macro for accessing the prev
-pointer was not present.
-Therefore, directly accessing the prev pointer was causing
-sparse errors.
-One such example is the sparse error in fs/nfs/dir.c
+So Dave, you can pick it up into your fixes tree if I understand
+correctly.
 
-error:
-fs/nfs/dir.c:2353:14: error: incompatible types in comparison expression (different address spaces):
-fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
-fs/nfs/dir.c:2353:14:    struct list_head *
+There will be further work on DSA Rx path, but it's a subject for
+next Linux release cycles essentially.
 
-The error is caused due to the following line:
-
-lh = rcu_dereference(nfsi->access_cache_entry_lru.prev);
-
-After adding the macro, this error can be fixed as follows:
-
-lh = rcu_dereference(list_prev_rcu(&nfsi->access_cache_entry_lru));
-
-Therefore, we think there is a need to add this macro to rculist.h.
-
-Suggested-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
----
- include/linux/rculist.h | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index 4b7ae1bf50b3..49eef8437753 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -40,6 +40,12 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
-  */
- #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
- 
-+/*
-+ * return the prev pointer of a list_head in an rcu safe
-+ * way, we must not access it directly
-+ */
-+#define list_prev_rcu(list)	(*((struct list_head __rcu **)(&(list)->prev)))
-+
- /*
-  * Check during list traversal that we are within an RCU reader
-  */
--- 
-2.17.1
-
+Regards,
+ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
