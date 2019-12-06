@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AFDC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9570C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2831620659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A7B24683
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfLFX6k (ORCPT
+        id S1727026AbfLFX6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 18:58:40 -0500
-Received: from mga07.intel.com ([134.134.136.100]:55585 "EHLO mga07.intel.com"
+        Fri, 6 Dec 2019 18:58:43 -0500
+Received: from mga07.intel.com ([134.134.136.100]:55586 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbfLFX5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726506AbfLFX5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Dec 2019 18:57:38 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Dec 2019 15:57:37 -0800
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Dec 2019 15:57:36 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,286,1571727600"; 
-   d="scan'208";a="219530340"
+   d="scan'208";a="219530337"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by fmsmga001.fm.intel.com with ESMTP; 06 Dec 2019 15:57:36 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -37,9 +37,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 06/16] KVM: x86/mmu: Refactor the per-slot level calculation in mapping_level()
-Date:   Fri,  6 Dec 2019 15:57:19 -0800
-Message-Id: <20191206235729.29263-7-sean.j.christopherson@intel.com>
+Subject: [PATCH 05/16] KVM: x86/mmu: Refactor handling of cache consistency with TDP
+Date:   Fri,  6 Dec 2019 15:57:18 -0800
+Message-Id: <20191206235729.29263-6-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191206235729.29263-1-sean.j.christopherson@intel.com>
 References: <20191206235729.29263-1-sean.j.christopherson@intel.com>
@@ -50,48 +50,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Invert the loop which adjusts the allowed page level based on what's
-compatible with the associated memslot to use a largest-to-smallest
-page size walk.  This paves the way for passing around a "max level"
-variable instead of having redundant checks and/or multiple booleans.
+Pre-calculate the max level for a TDP page with respect to MTRR cache
+consistency in preparation of replacing force_pt_level with max_level,
+and eventually combining the bulk of nonpaging_page_fault() and
+tdp_page_fault() into a common helper.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 30 ++++++++++++++----------------
+ 1 file changed, 14 insertions(+), 16 deletions(-)
 
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index e4a96236aa14..bd1711201181 100644
+index ef1b7663f6ea..e4a96236aa14 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -1326,7 +1326,7 @@ gfn_to_memslot_dirty_bitmap(struct kvm_vcpu *vcpu, gfn_t gfn,
- static int mapping_level(struct kvm_vcpu *vcpu, gfn_t large_gfn,
- 			 bool *force_pt_level)
- {
--	int host_level, level, max_level;
-+	int host_level, max_level;
- 	struct kvm_memory_slot *slot;
- 
- 	if (unlikely(*force_pt_level))
-@@ -1343,12 +1343,12 @@ static int mapping_level(struct kvm_vcpu *vcpu, gfn_t large_gfn,
- 		return host_level;
- 
- 	max_level = min(kvm_x86_ops->get_lpage_level(), host_level);
--
--	for (level = PT_DIRECTORY_LEVEL; level <= max_level; ++level)
--		if (__mmu_gfn_lpage_is_disallowed(large_gfn, level, slot))
-+	for ( ; max_level > PT_PAGE_TABLE_LEVEL; max_level--) {
-+		if (!__mmu_gfn_lpage_is_disallowed(large_gfn, max_level, slot))
- 			break;
-+	}
- 
--	return level - 1;
-+	return max_level;
+@@ -4267,16 +4267,6 @@ int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
  }
+ EXPORT_SYMBOL_GPL(kvm_handle_page_fault);
  
- /*
+-static bool
+-check_hugepage_cache_consistency(struct kvm_vcpu *vcpu, gfn_t gfn, int level)
+-{
+-	int page_num = KVM_PAGES_PER_HPAGE(level);
+-
+-	gfn &= ~(page_num - 1);
+-
+-	return kvm_mtrr_check_gfn_range_consistency(vcpu, gfn, page_num);
+-}
+-
+ static int tdp_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+ 			  bool prefault)
+ {
+@@ -4290,6 +4280,7 @@ static int tdp_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+ 	bool map_writable;
+ 	bool lpage_disallowed = (error_code & PFERR_FETCH_MASK) &&
+ 				is_nx_huge_page_enabled();
++	int max_level;
+ 
+ 	MMU_WARN_ON(!VALID_PAGE(vcpu->arch.mmu->root_hpa));
+ 
+@@ -4300,14 +4291,21 @@ static int tdp_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+ 	if (r)
+ 		return r;
+ 
+-	force_pt_level =
+-		lpage_disallowed ||
+-		!check_hugepage_cache_consistency(vcpu, gfn, PT_DIRECTORY_LEVEL);
++	for (max_level = PT_MAX_HUGEPAGE_LEVEL;
++	     max_level > PT_PAGE_TABLE_LEVEL;
++	     max_level--) {
++		int page_num = KVM_PAGES_PER_HPAGE(max_level);
++		gfn_t base = gfn & ~(page_num - 1);
++
++		if (kvm_mtrr_check_gfn_range_consistency(vcpu, base, page_num))
++			break;
++	}
++
++	force_pt_level = lpage_disallowed || max_level == PT_PAGE_TABLE_LEVEL;
+ 	level = mapping_level(vcpu, gfn, &force_pt_level);
+ 	if (likely(!force_pt_level)) {
+-		if (level > PT_DIRECTORY_LEVEL &&
+-		    !check_hugepage_cache_consistency(vcpu, gfn, level))
+-			level = PT_DIRECTORY_LEVEL;
++		if (level > max_level)
++			level = max_level;
+ 		gfn &= ~(KVM_PAGES_PER_HPAGE(level) - 1);
+ 	}
+ 
 -- 
 2.24.0
 
