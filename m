@@ -2,204 +2,88 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1058AC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA673C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0D921823
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A04F24659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 00:19:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="q1u3F8rY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OIfCWXxt"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IUAwBVG9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbfLFAND (ORCPT
+        id S1726134AbfLFATh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 19:13:03 -0500
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:51985 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725926AbfLFAND (ORCPT
+        Thu, 5 Dec 2019 19:19:37 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42621 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfLFATh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 19:13:03 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 02D8E86B;
-        Thu,  5 Dec 2019 19:12:59 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 05 Dec 2019 19:13:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=fz1pVXQGQqPw7fMZqdwqo5yGT8
-        GE1PKnAQW+yVWgJV0=; b=q1u3F8rYdcY9H5WwJeAzUeAIOnOQdgJnFD1/QsYJtl
-        RRe7oN6YkdxYmKhApiArgPy7VrHHnNarfFFCOPqr9xKBqICMtgwmbEfxs3wLRjXr
-        QTfKgBGkX02Ez1hBmUnoxwIdOMGv+b/h/t8NaACHxc8KGUBf76tNaNlNTV02gBDl
-        Wr7xLsaFMbmRG35K0//M1oVAPuNlLfPPU/JG1yRn6pVgRaFEIjGE0ovq8hxwTktU
-        UVrt6tqjzavkxgsLOfMVpv4huPgxd4nApRtpbMAsO9K1CBPyHfqIYIrIRGmYGHk0
-        ZOp+rn6byY2oyvPkYieaYEMfRFu1oKz7Xrp2P4/J47fg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=fz1pVXQGQqPw7fMZq
-        dwqo5yGT8GE1PKnAQW+yVWgJV0=; b=OIfCWXxtwLG8CHraktq8HVxWmHQ/5w+1b
-        4kDvQIpauZDx7PBkBB9uYhdg8zqh6Paw3VYzzoMJ9FbAErWjQ1qoG2TV/XrsY1Sb
-        ZmdCedq9BVr1NTiu2QzUhxVOD5jxp3vQItiF7M45IRot+4kgLbWu6wIKsWGAyhOD
-        tnUiQr7IOg7grDfNQLgfQFEExYiyKqs+7bah0WHMGSpbTdKop50A0Jgt89idoAJK
-        MvfZ0KOveVpyNVu8vyr0A/ZLbIdunfGhhEM3O8s5tY0c3cXQcbGDXMVUL12DLO5U
-        3s0WqSAnPcqupVXEbFvQ32JWDB7y7jsCkLfqxj26wUR+MmqGuf6wg==
-X-ME-Sender: <xms:Cp3pXSB3GFN0nGQV23psR1i7PmDGZfYp7d5-8qrsOq8SLrnjprrfNQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudekuddgudekfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhephf
-    fvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceougig
-    uhesugiguhhuuhdrgiihiieqnecukfhppeejfedrleefrddvgeejrddufeegnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiinecuvehluhhsthgvrhfu
-    ihiivgeptd
-X-ME-Proxy: <xmx:Cp3pXULxqOWGFrErZbggpanLYLVoGbBQ7vtjpUcFLIgZsiYnJI_bOQ>
-    <xmx:Cp3pXVwMUUxTaJXi0fbjUIAG_1RyldRUxwhtOCW4aPYzOP0RXXNNCQ>
-    <xmx:Cp3pXYzQLuNzgMnkwhVjbKqzeD058bielN2rtsqPA-STQ3x0vdiWVA>
-    <xmx:C53pXX7WjExU2RyRdGAcOCp3yy4rM2zesO_T3lICaLJGOzkjcPRvyRxrKg4>
-Received: from localhost.localdomain (c-73-93-247-134.hsd1.ca.comcast.net [73.93.247.134])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 12F6180065;
-        Thu,  5 Dec 2019 19:12:56 -0500 (EST)
-From:   Daniel Xu <dxu@dxuuu.xyz>
-To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, kafai@fb.com,
-        songliubraving@fb.com, andriin@fb.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     Daniel Xu <dxu@dxuuu.xyz>, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: [PATCH bpf] bpf: Add LBR data to BPF_PROG_TYPE_PERF_EVENT prog context
-Date:   Thu,  5 Dec 2019 16:12:26 -0800
-Message-Id: <20191206001226.67825-1-dxu@dxuuu.xyz>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 5 Dec 2019 19:19:37 -0500
+Received: by mail-qk1-f195.google.com with SMTP id a10so5001566qko.9
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 16:19:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=X5BKMDzhk9He6AKioqZn9xv6gd84tSO5DFO6xwMevYw=;
+        b=IUAwBVG9f6xINWXkadLp/j/jGbF/ANfoSF5zsqFLLy+AU1UlJCfRoRBOV7SJHs+dAv
+         f8q6V0G7bNoJxnZHoA24ySqhT0OUWno5vkNaOv3uvp3sUnz8MBtb+gk5hlz/jN2RWAfV
+         EITcumIBCswQfF99cv1YWBjwU334N2mUhl3o+WlxlN/839LS22tfvWElD1xQ3p5LAjkw
+         DlPUe9Ujy9r1lECzPLYQ92cfwynapmsImU5ATMzbsQvKD2UxCSCe6hIDYxFdymymGb6r
+         owoIhLdVxxQIlhAqVP7pS5nJ046IPuHfQbrXz/SW6b42gOKhqHg+xtqmyhlvchUJovkW
+         WJcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=X5BKMDzhk9He6AKioqZn9xv6gd84tSO5DFO6xwMevYw=;
+        b=VlU1yDJiAXvQ7DdMbzzcDCki1XreA3sxFk/algkgm8FOYQFHKh+K9PbQ3X74JBKbKc
+         aLxlF99xTb6eefu3zjiv9xeK2Rb2ZzIB/nQnJKbGgH49eRghcbhWFuYYk/MApDWri24J
+         1XE2MOZa+msXzIZyhuuO/iOMhpAr7VXrjadkuSNnvWjQm7v7tmLRz8/w6v9cTWlizyez
+         WL1WdZTgIaVJ/iUO6SF2cnNO+uePF6zK0KzvLyuCSWwAiXBzW5fT9HPZlH5K4HpHgxUV
+         j8BilaZ8SuSNDXmBajF3iZEA5oaoPvnwRljsowAdPdGQ6O2BUfeXpf7r8vjUpdl0sCDt
+         QdvQ==
+X-Gm-Message-State: APjAAAVEf+KAIfe56E5JOkj0NCIvE/CI+nhAfE7vXYQoRftpwxXh4oaG
+        TakYYNFzXgpKNH86ORjVQ2Z7Yw==
+X-Google-Smtp-Source: APXvYqyKOaKqD4naAnIv6vb0dV+7aph7vWmbuMsUb65qWebhgIw/D0smIg8+d1WU3nRWNxhsfUckdQ==
+X-Received: by 2002:a37:4b06:: with SMTP id y6mr4646884qka.14.1575591575819;
+        Thu, 05 Dec 2019 16:19:35 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 62sm5327116qkk.102.2019.12.05.16.19.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2019 16:19:35 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [v3 PATCH] mm: move_pages: return valid node id in status if the page is already on the target node
+Date:   Thu, 5 Dec 2019 19:19:34 -0500
+Message-Id: <D0A99204-A60F-428E-B77A-63DBCD7103F4@lca.pw>
+References: <22b5bfde-45be-95bd-5c98-2ab13302c107@nvidia.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, fabecassis@nvidia.com,
+        mhocko@suse.com, cl@linux.com, vbabka@suse.cz,
+        mgorman@techsingularity.net, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+In-Reply-To: <22b5bfde-45be-95bd-5c98-2ab13302c107@nvidia.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+X-Mailer: iPhone Mail (17B111)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Last-branch-record is an intel CPU feature that can be configured to
-record certain branches that are taken during code execution. This data
-is particularly interesting for profile guided optimizations. perf has
-had LBR support for a while but the data collection can be a bit coarse
-grained.
 
-We (Facebook) have recently run a lot of experiments with feeding
-filtered LBR data to various PGO pipelines. We've seen really good
-results (+2.5% throughput with lower cpu util and lower latency) by
-feeding high request latency LBR branches to the compiler on a
-request-oriented service. We used bpf to read a special request context
-ID (which is how we associate branches with latency) from a fixed
-userspace address. Reading from the fixed address is why bpf support is
-useful.
 
-Aside from this particular use case, having LBR data available to bpf
-progs can be useful to get stack traces out of userspace applications
-that omit frame pointers.
+> On Dec 5, 2019, at 7:04 PM, John Hubbard <jhubbard@nvidia.com> wrote:
+>=20
+> Felix's code is not random test code. It's code he wrote and he expected i=
+t to work.
 
-This patch adds support for LBR data to bpf perf progs.
-
-Some notes:
-* We use `__u64 entries[BPF_MAX_LBR_ENTRIES * 3]` instead of
-  `struct perf_branch_entry[BPF_MAX_LBR_ENTRIES]` because checkpatch.pl
-  warns about including a uapi header from another uapi header
-
-* We define BPF_MAX_LBR_ENTRIES as 32 (instead of using the value from
-  arch/x86/events/perf_events.h) because including arch specific headers
-  seems wrong and could introduce circular header includes.
-
-Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
----
- include/uapi/linux/bpf_perf_event.h |  5 ++++
- kernel/trace/bpf_trace.c            | 39 +++++++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
-
-diff --git a/include/uapi/linux/bpf_perf_event.h b/include/uapi/linux/bpf_perf_event.h
-index eb1b9d21250c..dc87e3d50390 100644
---- a/include/uapi/linux/bpf_perf_event.h
-+++ b/include/uapi/linux/bpf_perf_event.h
-@@ -10,10 +10,15 @@
- 
- #include <asm/bpf_perf_event.h>
- 
-+#define BPF_MAX_LBR_ENTRIES 32
-+
- struct bpf_perf_event_data {
- 	bpf_user_pt_regs_t regs;
- 	__u64 sample_period;
- 	__u64 addr;
-+	__u64 nr_lbr;
-+	/* Cast to struct perf_branch_entry* before using */
-+	__u64 entries[BPF_MAX_LBR_ENTRIES * 3];
- };
- 
- #endif /* _UAPI__LINUX_BPF_PERF_EVENT_H__ */
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index ffc91d4935ac..96ba7995b3d7 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1259,6 +1259,14 @@ static bool pe_prog_is_valid_access(int off, int size, enum bpf_access_type type
- 		if (!bpf_ctx_narrow_access_ok(off, size, size_u64))
- 			return false;
- 		break;
-+	case bpf_ctx_range(struct bpf_perf_event_data, nr_lbr):
-+		bpf_ctx_record_field_size(info, size_u64);
-+		if (!bpf_ctx_narrow_access_ok(off, size, size_u64))
-+			return false;
-+		break;
-+	case bpf_ctx_range(struct bpf_perf_event_data, entries):
-+		/* No narrow loads */
-+		break;
- 	default:
- 		if (size != sizeof(long))
- 			return false;
-@@ -1273,6 +1281,7 @@ static u32 pe_prog_convert_ctx_access(enum bpf_access_type type,
- 				      struct bpf_prog *prog, u32 *target_size)
- {
- 	struct bpf_insn *insn = insn_buf;
-+	int off;
- 
- 	switch (si->off) {
- 	case offsetof(struct bpf_perf_event_data, sample_period):
-@@ -1291,6 +1300,36 @@ static u32 pe_prog_convert_ctx_access(enum bpf_access_type type,
- 				      bpf_target_off(struct perf_sample_data, addr, 8,
- 						     target_size));
- 		break;
-+	case offsetof(struct bpf_perf_event_data, nr_lbr):
-+		/* Load struct perf_sample_data* */
-+		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct bpf_perf_event_data_kern,
-+						       data), si->dst_reg, si->src_reg,
-+				      offsetof(struct bpf_perf_event_data_kern, data));
-+		/* Load struct perf_branch_stack* */
-+		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct perf_sample_data, br_stack),
-+				      si->dst_reg, si->dst_reg,
-+				      offsetof(struct perf_sample_data, br_stack));
-+		/* Load nr */
-+		*insn++ = BPF_LDX_MEM(BPF_DW, si->dst_reg, si->dst_reg,
-+				      bpf_target_off(struct perf_branch_stack, nr, 8,
-+						     target_size));
-+		break;
-+	case bpf_ctx_range(struct bpf_perf_event_data, entries):
-+		off = si->off;
-+		off -= offsetof(struct bpf_perf_event_data, entries);
-+
-+		/* Load struct perf_sample_data* */
-+		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct bpf_perf_event_data_kern,
-+						       data), si->dst_reg, si->src_reg,
-+				      offsetof(struct bpf_perf_event_data_kern, data));
-+		/* Load struct perf_branch_stack* */
-+		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct perf_sample_data, br_stack),
-+				      si->dst_reg, si->dst_reg,
-+				      offsetof(struct perf_sample_data, br_stack));
-+		/* Load requested memory */
-+		*insn++ = BPF_LDX_MEM(BPF_SIZE(si->code), si->dst_reg, si->dst_reg,
-+				      offsetof(struct perf_branch_stack, entries) + off);
-+		break;
- 	default:
- 		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct bpf_perf_event_data_kern,
- 						       regs), si->dst_reg, si->src_reg,
--- 
-2.24.0
-
+Sure, but could he show a bit detail if the kernel will start to behavior as=
+ expected like what was written in the manpage to return ENOENT in this case=
+, why is it not acceptable? i.e., why is it important to depend on the broke=
+n behavior?=
