@@ -6,117 +6,125 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51521C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358F8C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22A7E20707
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED64C2077B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="mcohcs6I"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Jls1cMO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbfLFBIJ (ORCPT
+        id S1726134AbfLFBLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 20:08:09 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34351 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfLFBII (ORCPT
+        Thu, 5 Dec 2019 20:11:40 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44485 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfLFBLj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 20:08:08 -0500
-Received: by mail-pg1-f193.google.com with SMTP id r11so2429601pgf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 17:08:08 -0800 (PST)
+        Thu, 5 Dec 2019 20:11:39 -0500
+Received: by mail-pl1-f194.google.com with SMTP id bh2so849315plb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 17:11:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=6QNT5TPRX9LvCPG87QD5zupwCfbpXJ322naahbA3zsE=;
-        b=mcohcs6IvVzKE1WtjTt3SAAgCpPpyXT7KNl1cy4GGYGRNjcaD6CS5SbdB543e71BOd
-         oL0rhLUqg+P9u3sQS3kajx81HG2lBrDnMCcpOBqeHEbMvW12ttL+z9k6ZayGpKuFhJWZ
-         RMEa57xuCixXLoDIk6h3FLyjCzE/UlVMvHB6w=
+        bh=afFgdaPpYNHvy5QgCmSyg24Hm+ltvoWQsuROrBrCOAA=;
+        b=Jls1cMO18zwlNXp1RcxuRzsLNqRvDkKqZjbzo6ZngtVlM/X+QlWs13zMLYRwqXBRQo
+         kBChDfpJSztwtKn52szanSvW1WWT2SCtmedbAOjZ1g6DwlufiYLEbc4xAjaotwjB4/NN
+         N9zV3b+9CBxZXd52VTfe3/pWbW7+CyQeIN5q0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6QNT5TPRX9LvCPG87QD5zupwCfbpXJ322naahbA3zsE=;
-        b=UMSVMpSPRrThvwcsr8bnkGw6t0NVovPgdGjgQ6O+XOzlpfDm2J6Kf7gAR+VuF2rR4L
-         ICeWR+C0dW3i5SK7jE/CjjYOBYTcSX0vR/ASyhIM9cU1iRgE6VLU6FvPa5z0FrJAKbAw
-         u7ibTr9nk14r/f54i+5848WBSrc7G+xJpY6L668VNeSSG7ssVERqCGu98v1LFUN2IXHi
-         +WRTBsKkbN5WNlBnrU5eLcxfhqJr5LPys1xWCQdq9Tsl5r0wO+O8jfCTNi3ZtRDH+Ym5
-         pF+oNHxxLj+GKCDvyDAwlcqzBE+n0qeNFAW+ol3gbKssWXfk8VXZTy0QZSFnhKfc8JFM
-         SMjA==
-X-Gm-Message-State: APjAAAWRnT9i2nju1XPgaMd1Nn4d0mg8TgYah8lh5DHmCUcl2UMTp3U1
-        9LqB2paLJfVVL8iI/lMOeLv1zw==
-X-Google-Smtp-Source: APXvYqy7slV1vspesqiwQNeIaiovm3Q3/BPlms15Vf02v4G2S8j6tKfI0uxzWagh5nTrPJ2bHNG9kg==
-X-Received: by 2002:a62:1cd6:: with SMTP id c205mr11881014pfc.179.1575594487954;
-        Thu, 05 Dec 2019 17:08:07 -0800 (PST)
+        bh=afFgdaPpYNHvy5QgCmSyg24Hm+ltvoWQsuROrBrCOAA=;
+        b=GHpSY1wEv7jTrXktwP7AttXWKe2mJ/JDzgvRxwpxvTe4H8ogHCvhiOIsd7KKW2a/4E
+         8bY/kAlQULoP11AV0LvrAngV1CqkeLYvM6n7eX9X0z9AvCRyxCexniB+TE9KhfVpm3hs
+         sg2lUynwV5uRE3xvVeW8lDdbS9aerNMmBDLr+mCt8GLNqSPQQ27esqTysWJnBt5ckuUc
+         UgwZet3K1ZsloHf2zu6jKe0e459ROqT9fUUacgDyiK0xhwAo51aXBlD3RhjD+2R+dNN1
+         xw2C1YUMdvnH+xkAx1ys+8TGP0stxpu3OYYHL79AASlY6/TsDQP/dr6axmrJwOWnhjTl
+         eD/A==
+X-Gm-Message-State: APjAAAWFgbAPMIQidgUd/Nq8wqfVSa3hHbxlcofwNLUH6Cl+5glEbLua
+        lUyP6/DSD4QuIS2YDiaB+W9P4g==
+X-Google-Smtp-Source: APXvYqwnyB3hgGzxp6a/jdh6wC9AyEDlREjAgJs5KYIUY5ylBbAWt0nWAe28Thxa5y10mEBEjTnvXg==
+X-Received: by 2002:a17:90a:c01:: with SMTP id 1mr12729171pjs.37.1575594698986;
+        Thu, 05 Dec 2019 17:11:38 -0800 (PST)
 Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 143sm13650519pfz.67.2019.12.05.17.08.06
+        by smtp.gmail.com with ESMTPSA id b2sm14031169pff.6.2019.12.05.17.11.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 17:08:07 -0800 (PST)
-Date:   Thu, 5 Dec 2019 20:08:06 -0500
+        Thu, 05 Dec 2019 17:11:38 -0800 (PST)
+Date:   Thu, 5 Dec 2019 20:11:37 -0500
 From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Amol Grover <frextrite@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, rcu@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: Re: [PATCH] doc: listRCU: Add some more listRCU patterns in the
- kernel
-Message-ID: <20191206010806.GA142442@google.com>
-References: <20191203063941.6981-1-frextrite@gmail.com>
- <20191203064132.38d75348@lwn.net>
- <20191204082412.GA6959@workstation-kernel-dev>
- <20191204074833.44bcc079@lwn.net>
- <20191204153958.GA17404@google.com>
- <20191204084729.184480f3@lwn.net>
- <20191204163552.GE17404@google.com>
- <20191205151418.GA3424@workstation-kernel-dev>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -tip] kprobes: Lock rcu_read_lock() while searching kprobe
+Message-ID: <20191206011137.GB142442@google.com>
+References: <157527193358.11113.14859628506665612104.stgit@devnote2>
+ <20191202210854.GD17234@google.com>
+ <20191203071329.GC115767@gmail.com>
+ <20191203175712.GI2889@paulmck-ThinkPad-P72>
+ <20191204100549.GB114697@gmail.com>
+ <20191204161239.GL2889@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191205151418.GA3424@workstation-kernel-dev>
+In-Reply-To: <20191204161239.GL2889@paulmck-ThinkPad-P72>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 08:44:18PM +0530, Amol Grover wrote:
-> On Wed, Dec 04, 2019 at 11:35:52AM -0500, Joel Fernandes wrote:
-> > On Wed, Dec 04, 2019 at 08:47:29AM -0700, Jonathan Corbet wrote:
-> > > On Wed, 4 Dec 2019 10:39:58 -0500
-> > > Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > 
-> > > > Actually I had asked Amol privately to add the backticks. It appeared
-> > > > super weird in my browser when some function calls were rendered
-> > > > monospace while others weren't. Not all functions were successfully
-> > > > cross referenced for me. May be it is my kernel version?
-> > > 
-> > > If you have an example of a failure to cross-reference a function that
-> > > has kerneldoc comments *that are included in the toctree*, I'd like to see
-> > > it; that's a bug.
-> > > 
-> > > Changing the font on functions without anything to cross-reference to is
-> > > easy enough and should probably be done; I'll look into it when I get a
-> > > chance.
+On Wed, Dec 04, 2019 at 08:12:39AM -0800, Paul E. McKenney wrote:
+> On Wed, Dec 04, 2019 at 11:05:50AM +0100, Ingo Molnar wrote:
 > > 
-> > I tried on a different machine (my work machine) and the cross-referencing is
-> > working fine. So I am not sure if this could be something related to Sphinx
-> > version or I had used an older kernel tree before. This kernel tree is
-> > Linus's master.
+> > * Paul E. McKenney <paulmck@kernel.org> wrote:
 > > 
+> > > >  * This list-traversal primitive may safely run concurrently with
+> > > >  * the _rcu list-mutation primitives such as hlist_add_head_rcu()
+> > > >  * as long as the traversal is guarded by rcu_read_lock().
+> > > >  */
+> > > > #define hlist_for_each_entry_rcu(pos, head, member, cond...)            \
+> > > > 
+> > > > is actively harmful. Why is it there?
+> > > 
+> > > For cases where common code might be invoked both from the reader
+> > > (with RCU protection) and from the updater (protected by some
+> > > lock).  This common code can then use the optional argument to
+> > > hlist_for_each_entry_rcu() to truthfully tell lockdep that it might be
+> > > called with either form of protection in place.
+> > > 
+> > > This also combines with the __rcu tag used to mark RCU-protected
+> > > pointers, in which case sparse complains when a non-RCU API is applied
+> > > to these pointers, to get back to your earlier question about use of
+> > > hlist_for_each_entry_rcu() within the update-side lock.
+> > > 
+> > > But what are you seeing as actively harmful about all of this?
+> > > What should we be doing instead?
+> > 
+> > Yeah, so basically in the write-locked path hlist_for_each_entry() 
+> > generates (slightly) more efficient code than hlist_for_each_entry_rcu(), 
+> > correct?
 > 
-> This is great! I'll remove the "``" from function text and send in the
-> updated version. However, should I leave in the "``CONSTANTS``" and
-> "``variables``"? They dont' have any kernel docs to be cross-referenced
-> with and also make them distinguishable from the normal text.
+> Potentially yes, if the READ_ONCE() constrains the compiler.  Or not,
+> depending of course on the compiler and the surrounding code.
+> 
+> > Also, the principle of passing warning flags around is problematic - but 
+> > I can see the point in this specific case.
+> 
+> Would it help to add an hlist_for_each_entry_protected() that expected
+> RCU-protected pointers and write-side protection, analogous to
+> rcu_dereference_protected()?  Or would that expansion of the RCU API
+> outweigh any benefits?
 
-I think you should.
+Personally, I like keeping the same API and using the optional argument like
+we did thus preventing too many APIs / new APIs.
 
 thanks,
 
