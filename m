@@ -2,93 +2,128 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD072C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 05:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94A1C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 05:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE2E24676
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 05:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2D0A24676
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 05:59:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfLFF5s convert rfc822-to-8bit (ORCPT
+        id S1726237AbfLFF7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 00:57:48 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:35302 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfLFF5s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 00:57:48 -0500
-Received: from mail-pl1-f200.google.com ([209.85.214.200])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1id6cc-0005Q2-6E
-        for linux-kernel@vger.kernel.org; Fri, 06 Dec 2019 05:57:46 +0000
-Received: by mail-pl1-f200.google.com with SMTP id a11so2967018plp.21
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 21:57:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=6QtFl09nSid+JllEcjtMOengdLUy/DcEPJvF+2i249o=;
-        b=E3KeHHg3s436wydEhsgIPBBgibCz0QhdQUnq+nlBsuiZeHH5SR4zlQxyFoAMLeowZX
-         CpVHEZi6geJj8CTv4Ydssd8oJR8dG4YnQiQ+giY7TGpiq5tc0UL3m+Z+kajWBMBQXa0J
-         cIOqpCoJCzX/q0OBxCVMTNVjFTlZo4Kw2uHyTNE2NpoWPaRbc7X002Da9Ql1NDM1DcMZ
-         JhxbhAx/OEeO2au4w+Vl7qD0vS44tyuow13GmWoHTHSbdUxTNErpxwHmCQJBFZkVqqvu
-         3yjwJ4rCMz75kmYytsFjfFEtu5GDkxUVzs7gnuIteBkVvn5z3CswoCoNnZ5IB7KiUoO2
-         pMOw==
-X-Gm-Message-State: APjAAAWd2mlAGn20/VMl+qXKlPeoyQ1Fr9LRd7vV+a/nO4qTg+u+cHGV
-        pdu7b/N2MzuKumKGt27mx2rDTIpYvQBLpt72SFbm/mZZzYJ6FIaYvkWgKCK+bvjjuzPaiG9aEJO
-        ECyeq9XXzvFn3QSm2jn9SSGGbb5cKYKwqjeBpfYHpKA==
-X-Received: by 2002:a63:4f5c:: with SMTP id p28mr1595530pgl.409.1575611864630;
-        Thu, 05 Dec 2019 21:57:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxpwzCXZBTrYxhlnFEvhDqo8N995kvpUShDhO5qBE99rEBZ7AsxOo9MkgDPfLC5V9zwBYSYNg==
-X-Received: by 2002:a63:4f5c:: with SMTP id p28mr1595519pgl.409.1575611864341;
-        Thu, 05 Dec 2019 21:57:44 -0800 (PST)
-Received: from 2001-b011-380f-3c42-d14c-a8f0-9761-234f.dynamic-ip6.hinet.net (2001-b011-380f-3c42-d14c-a8f0-9761-234f.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:d14c:a8f0:9761:234f])
-        by smtp.gmail.com with ESMTPSA id s130sm13560628pgc.82.2019.12.05.21.57.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Dec 2019 21:57:43 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v2] iommu/amd: Disable IOMMU on Stoney Ridge systems
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20191202170011.GC30032@infradead.org>
-Date:   Fri, 6 Dec 2019 13:57:41 +0800
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        iommu@lists.linux-foundation.org,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <974A8EB3-70B6-4A33-B36C-CFF69464493C@canonical.com>
-References: <20191129142154.29658-1-kai.heng.feng@canonical.com>
- <20191202170011.GC30032@infradead.org>
-To:     Joerg Roedel <joro@8bytes.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Fri, 6 Dec 2019 00:59:09 -0500
+Received: from mga01.intel.com ([192.55.52.88]:56909 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbfLFF7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 00:59:09 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 21:59:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,283,1571727600"; 
+   d="scan'208";a="413229029"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
+  by fmsmga006.fm.intel.com with ESMTP; 05 Dec 2019 21:59:06 -0800
+Date:   Fri, 6 Dec 2019 00:50:57 -0500
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [RFC PATCH 3/9] vfio/pci: register a default migration region
+Message-ID: <20191206055057.GE31791@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20191205032419.29606-1-yan.y.zhao@intel.com>
+ <20191205032638.29747-1-yan.y.zhao@intel.com>
+ <20191205165515.3a9ac7b6@x1.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191205165515.3a9ac7b6@x1.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
-
-> On Dec 3, 2019, at 01:00, Christoph Hellwig <hch@infradead.org> wrote:
+On Fri, Dec 06, 2019 at 07:55:15AM +0800, Alex Williamson wrote:
+> On Wed,  4 Dec 2019 22:26:38 -0500
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
 > 
-> On Fri, Nov 29, 2019 at 10:21:54PM +0800, Kai-Heng Feng wrote:
->> Serious screen flickering when Stoney Ridge outputs to a 4K monitor.
->> 
->> According to Alex Deucher, IOMMU isn't enabled on Windows, so let's do
->> the same here to avoid screen flickering on 4K monitor.
+> > Vendor driver specifies when to support a migration region through cap
+> > VFIO_PCI_DEVICE_CAP_MIGRATION in vfio_pci_mediate_ops->open().
+> > 
+> > If vfio-pci detects this cap, it creates a default migration region on
+> > behalf of vendor driver with region len=0 and region->ops=null.
+> > Vendor driver should override this region's len, flags, rw, mmap in
+> > its vfio_pci_mediate_ops.
+> > 
+> > This migration region definition is aligned to QEMU vfio migration code v8:
+> > (https://lists.gnu.org/archive/html/qemu-devel/2019-08/msg05542.html)
+> > 
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > 
+> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > ---
+> >  drivers/vfio/pci/vfio_pci.c |  15 ++++
+> >  include/linux/vfio.h        |   1 +
+> >  include/uapi/linux/vfio.h   | 149 ++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 165 insertions(+)
+> > 
+> > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> > index f3730252ee82..059660328be2 100644
+> > --- a/drivers/vfio/pci/vfio_pci.c
+> > +++ b/drivers/vfio/pci/vfio_pci.c
+> > @@ -115,6 +115,18 @@ static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
+> >  	return (pdev->class >> 8) == PCI_CLASS_DISPLAY_VGA;
+> >  }
+> >  
+> > +/**
+> > + * init a region to hold migration ctl & data
+> > + */
+> > +void init_migration_region(struct vfio_pci_device *vdev)
+> > +{
+> > +	vfio_pci_register_dev_region(vdev, VFIO_REGION_TYPE_MIGRATION,
+> > +		VFIO_REGION_SUBTYPE_MIGRATION,
+> > +		NULL, 0,
+> > +		VFIO_REGION_INFO_FLAG_READ | VFIO_REGION_INFO_FLAG_WRITE,
+> > +		NULL);
+> > +}
+> > +
+> >  static void vfio_pci_probe_mmaps(struct vfio_pci_device *vdev)
+> >  {
+> >  	struct resource *res;
+> > @@ -523,6 +535,9 @@ static int vfio_pci_open(void *device_data)
+> >  				vdev->mediate_ops = mentry->ops;
+> >  				vdev->mediate_handle = handle;
+> >  
+> > +				if (caps & VFIO_PCI_DEVICE_CAP_MIGRATION)
+> > +					init_migration_region(vdev);
 > 
-> Disabling the IOMMU entirely seem pretty severe.  Isn't it enough to
-> identity map the GPU device?
+> No.  We're not going to add a cap flag for every region the mediation
+> driver wants to add.  The mediation driver should have the ability to
+> add regions and irqs to the device itself.  Thanks,
+> 
+> Alex
+>
+ok. got it. will do it.
 
-Ok, there's set_device_exclusion_range() to exclude the device from IOMMU.
-However I don't know how to generate range_start and range_length, which are read from ACPI.
+Thanks
+Yan
 
-Can you please give me some advice here?
-
-Kai-Henge
+> > +
+> >  				pr_info("vfio pci found mediate_ops %s, caps=%llx, handle=%x for %x:%x\n",
+> >  						vdev->mediate_ops->name, caps,
+> >  						handle, vdev->pdev->vendor,
+> 
