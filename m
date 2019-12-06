@@ -8,61 +8,62 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A479C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFD5C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B292467A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D9F24679
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:55:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XEyw3nr7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jjadsDBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfLFHzK (ORCPT
+        id S1726864AbfLFHzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 02:55:10 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33714 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfLFHzK (ORCPT
+        Fri, 6 Dec 2019 02:55:25 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:33091 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfLFHzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 02:55:10 -0500
-Received: by mail-pl1-f193.google.com with SMTP id c13so1757011pls.0;
-        Thu, 05 Dec 2019 23:55:10 -0800 (PST)
+        Fri, 6 Dec 2019 02:55:24 -0500
+Received: by mail-pj1-f66.google.com with SMTP id r67so2413416pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 23:55:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=N3AOgO5FZbXTW4qKGcd/lNa53gxwSbCk9qmuXzoNq/0=;
-        b=XEyw3nr7x7OH4i7E68PYtLJRHUOmkFtzxK1/Z1X+ix7PaR+Pcy3sTDPC9Wca9K0BXo
-         Yk+9z3qdvX4TbIIi452gFZCUDmSJG3gr265UxvJ6Phjk0K6Bf/h3qgO/9EmFQqRqENQ5
-         xpD14yWtzzWmOvXjHZR99pJ+IyP1yqoi/clmPEmqocrv/winrKmmOO0lNd2Yw4rurKPU
-         h8ENy2oHu+TZq/XXn8tAcZLBxl8fti7hUjzxNNAMMAkPVHqPGsFkTtE/tO1iUG7anj5J
-         sEb4sDGEXZJnD4KEvwG2mGb4hcvQ7mPt1MWVmrwTsbG11qqjULnjFWFhoVPYBoEGiZtO
-         HP4g==
+        bh=QaqU4ZZ/Urt5R21/nikc8rCEF6ts1fVjkR26xtBAyOA=;
+        b=jjadsDBNPS8OtHRSPNn6QtxEfvQBzpDZDLfkKU2DTOIaMvf03RP/kOkQ/D/LbYSgyH
+         x5nkPApqMZdMlAjPyQR/bXrWy1RRhxm3NGXvYJ5bjtMpV5bWtBOQA11CO1JLwESZN33v
+         ukIFxIOwWS7ZNyuIoSm7ELAPv4vFhGTDCHYeNNqHhRRmE5gEQyC7TU6BuGoRsI7Yj0HM
+         fncxDwvOewPurjd9a9E/A5kvOqzcme2NE/UPAwWFXbTvLz76qcbT0smbhefAHssfpSuf
+         LdI4h6HDmcvhWxYvGT0R+O9hvLozpSpvi7LZMc0dRePOQRR6QOqjuGBcGmIRrDv5p1Il
+         odSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=N3AOgO5FZbXTW4qKGcd/lNa53gxwSbCk9qmuXzoNq/0=;
-        b=jGRV4T1wtGlC6TpYyq2jnUnLC5yp3MCo/lxcJbK/veVBfgLW9Md84RoBgDRH9dnvyb
-         HgaJ1B01hVz/qYtSYdpyGmw1xfBgc6ffnSW4Hd1mmlGzImkj1XEg4SecoIR18vgyemvz
-         fo+QNkfW0n8o7Q0pXe00NedLWNIIGwMV/iFCLSTkYPFBTAbyZGJBKBhtwo07RTyg1vAj
-         AVzEV+LWZ7I5j8mB2NnUkBJOyvnRpdidnJJpbrY6mHndbH6/9FWI3ZLegtwZXu56u2+U
-         mQPCU4Xj3irokcWGyaHnEGH98FJjdKQiu5SJOAoIKPLfWBVbsNHtyWGJ4bzSEZl9A81Y
-         m1Jg==
-X-Gm-Message-State: APjAAAUjNs5bRzHW5HbHCoDsqXbW02cQbBQEr7Ot61uX+kxN5Zoh65Vx
-        8diyn/9h/lBgOW9Sxz7ZsUUgbgiWAXI=
-X-Google-Smtp-Source: APXvYqy9MGNiP8Uc3qTb5tfVkwG/Nvlkjd0rWayevjIn7KV2mmkbzTexJ+LkNiwHJ2h/Sg7e6WPLkw==
-X-Received: by 2002:a17:902:724a:: with SMTP id c10mr7029875pll.39.1575618909785;
-        Thu, 05 Dec 2019 23:55:09 -0800 (PST)
+        bh=QaqU4ZZ/Urt5R21/nikc8rCEF6ts1fVjkR26xtBAyOA=;
+        b=H+h/k7sCUKvXIx8Ym2U8vF+JNYqCIry+aiqoC672pUC+uSPZWuxHXAjqo03Qxe3oUl
+         rjlIcOZ/wN7NH6sYHCU4/2elc/OnHM3ywe6D6qcH+0MmCS7pDrvSNtsqAT+hw2XU9NCk
+         ABXvfRmOI0TnCZQjr12d3j3Xs5NWUj7ajln0gNpvpUUKoCg4Fw5VQO1EsR+U8o3OVOsJ
+         Q+dae6ucS3xujTZsFnFAblWZfmEOMLNtywzYteA2XG+9D5ZeUZviOjNKlrFE7c/mvV2Q
+         w2dG4LQGL8o6lq+7kpXQNSamtHwRIf5jpSF812TZ6CzH+vpgA0IcIHTDNM7ftftH5t9D
+         HbDQ==
+X-Gm-Message-State: APjAAAXQ6gGVCCCAi2mHh+3pTfeNypfHINK0jcv56k5YQcJNG/kbjZAt
+        9kBJtsoMAzRxCyaf7X/LhxA=
+X-Google-Smtp-Source: APXvYqzgg7fH/uj3wNC9qxJt7g/rdmxrFIo8YiaT1FrtCXHCjuwNzj4iChssf7KJ7/vc+FGiKEjkpA==
+X-Received: by 2002:a17:902:ba8e:: with SMTP id k14mr9867579pls.335.1575618924028;
+        Thu, 05 Dec 2019 23:55:24 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id o12sm2155209pjf.19.2019.12.05.23.55.05
+        by smtp.gmail.com with ESMTPSA id u2sm13894922pgc.19.2019.12.05.23.55.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 23:55:09 -0800 (PST)
+        Thu, 05 Dec 2019 23:55:23 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] spi: spi-cavium-thunderx: Add missing pci_release_regions()
-Date:   Fri,  6 Dec 2019 15:55:00 +0800
-Message-Id: <20191206075500.18525-1-hslester96@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] staging: rts5208: add missed pci_release_regions
+Date:   Fri,  6 Dec 2019 15:55:15 +0800
+Message-Id: <20191206075515.18581-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -78,29 +79,41 @@ Add the missed calls to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/spi/spi-cavium-thunderx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/rts5208/rtsx.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-cavium-thunderx.c b/drivers/spi/spi-cavium-thunderx.c
-index d12e149f1a41..fd6b9caffaf0 100644
---- a/drivers/spi/spi-cavium-thunderx.c
-+++ b/drivers/spi/spi-cavium-thunderx.c
-@@ -82,6 +82,7 @@ static int thunderx_spi_probe(struct pci_dev *pdev,
+diff --git a/drivers/staging/rts5208/rtsx.c b/drivers/staging/rts5208/rtsx.c
+index cb95ad6fa4f9..15fc96b42032 100644
+--- a/drivers/staging/rts5208/rtsx.c
++++ b/drivers/staging/rts5208/rtsx.c
+@@ -831,7 +831,8 @@ static int rtsx_probe(struct pci_dev *pci,
+ 	host = scsi_host_alloc(&rtsx_host_template, sizeof(*dev));
+ 	if (!host) {
+ 		dev_err(&pci->dev, "Unable to allocate the scsi host\n");
+-		return -ENOMEM;
++		err = -ENOMEM;
++		goto scsi_host_alloc_fail;
+ 	}
  
- error:
- 	clk_disable_unprepare(p->clk);
-+	pci_release_regions(pdev);
- 	spi_master_put(master);
- 	return ret;
+ 	dev = host_to_rtsx(host);
+@@ -971,7 +972,8 @@ static int rtsx_probe(struct pci_dev *pci,
+ 	kfree(dev->chip);
+ chip_alloc_fail:
+ 	dev_err(&pci->dev, "%s failed\n", __func__);
+-
++scsi_host_alloc_fail:
++	pci_release_regions(pci);
+ 	return err;
  }
-@@ -96,6 +97,7 @@ static void thunderx_spi_remove(struct pci_dev *pdev)
- 		return;
  
- 	clk_disable_unprepare(p->clk);
-+	pci_release_regions(pdev);
- 	/* Put everything in a known state. */
- 	writeq(0, p->register_base + OCTEON_SPI_CFG(p));
+@@ -983,6 +985,7 @@ static void rtsx_remove(struct pci_dev *pci)
+ 
+ 	quiesce_and_remove_host(dev);
+ 	release_everything(dev);
++	pci_release_regions(pci);
  }
+ 
+ /* PCI IDs */
 -- 
 2.24.0
 
