@@ -2,92 +2,70 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62923C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 21:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B259C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 21:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 086D920659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 21:35:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ISeeQhl8"
+	by mail.kernel.org (Postfix) with ESMTP id 134F020707
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 21:35:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575668127;
+	bh=K3Sn4rHiAUWbb5A9RdGLOW6rugqVcckxhtoK2wV8iSc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=oSvR5JnD3i3pp42RPAkVaE0leIkOgPq79TRtrP0cMK82Onge6JeflQHd/RuRvljDz
+	 ++zeTydKa8Hls7PsDzW3RHpMENBJDidLjPFEXF0m/L1R7BQ0DqKnTVx6pFx2kCr7/r
+	 YyP0sHFwfRuhmaxLWqW2D6+8gr2DqMUIzzqOu2v8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfLFVe7 (ORCPT
+        id S1726479AbfLFVfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 16:34:59 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45197 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726415AbfLFVe6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 16:34:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575668097;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=QqbyZYGZnYQCIEjuJv4K9a69RNYGOwglIe0OXAFPCN8=;
-        b=ISeeQhl8lxakJPPyDOyg05PkH6kvnFlGgTU/eWR+mg/1VUt7LNaT+kt/orHhjcKBg00jeA
-        lxaAtNTTIIV8qk/fhppL13JOU4pU2szLaGSyisL6rs46j3Szn1mEXFrcajy3cgdn37EmTl
-        EJsbNLAiPeTgnfSM3hSm62kgqTDdk9c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-t5RaSMnLND-Ukq0Qcfnapw-1; Fri, 06 Dec 2019 16:34:54 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1840C183B701;
-        Fri,  6 Dec 2019 21:34:53 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-250.rdu2.redhat.com [10.10.120.250])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0645360BF4;
-        Fri,  6 Dec 2019 21:34:51 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] pipe: Fix iteration end check in fuse_dev_splice_write()
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     miklos@szeredi.hu, dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 06 Dec 2019 21:34:51 +0000
-Message-ID: <157566809107.17007.16619855857308884231.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: t5RaSMnLND-Ukq0Qcfnapw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Fri, 6 Dec 2019 16:35:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbfLFVfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 16:35:25 -0500
+Subject: Re: [GIT PULL] sound updates #2 for 5.5-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575668125;
+        bh=K3Sn4rHiAUWbb5A9RdGLOW6rugqVcckxhtoK2wV8iSc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=sdNGRKYExSySl89BkoNsGCKFTbaziZEyBsDXkXS5TIIA+AwD89ZeYO6YpE4ZTxuu+
+         friNNufql8+sr/B6mfTz/XshPYoTTWzdI2iv/7heEe2Nq79ZLR7vxVAXAa2cTQQ+gZ
+         ggsq3sKsB34SC4boqfAH3Et7NvoM9ndmF+4u/PZA=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <s5h1rthio56.wl-tiwai@suse.de>
+References: <s5h1rthio56.wl-tiwai@suse.de>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <s5h1rthio56.wl-tiwai@suse.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+ tags/sound-fix-5.5-rc1
+X-PR-Tracked-Commit-Id: 4cc8d6505ab82db3357613d36e6c58a297f57f7c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3cf2890f29ab6fe491361761df558ef9191cb468
+Message-Id: <157566812494.4346.1907847064884449254.pr-tracker-bot@kernel.org>
+Date:   Fri, 06 Dec 2019 21:35:24 +0000
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the iteration end check in fuse_dev_splice_write().  The iterator
-position can only be compared with == or != since wrappage may be involved.
+The pull request you sent on Fri, 06 Dec 2019 14:23:17 +0100:
 
-Fixes: 8cefc107ca54 ("pipe: Use head and tail pointers for the ring, not cursor and length")
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-fix-5.5-rc1
 
- fs/fuse/dev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3cf2890f29ab6fe491361761df558ef9191cb468
 
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index d4e6691d2d92..8e02d76fe104 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -1965,7 +1965,7 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
- 
- 	nbuf = 0;
- 	rem = 0;
--	for (idx = tail; idx < head && rem < len; idx++)
-+	for (idx = tail; idx != head && rem < len; idx++)
- 		rem += pipe->bufs[idx & mask].len;
- 
- 	ret = -EINVAL;
+Thank you!
 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
