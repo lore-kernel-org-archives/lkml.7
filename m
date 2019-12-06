@@ -2,118 +2,73 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CBDC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDFDC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9392920659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CAAB21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:23:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HthA4Kw3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfLFJUL (ORCPT
+        id S1726271AbfLFJXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 04:20:11 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38772 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfLFJUL (ORCPT
+        Fri, 6 Dec 2019 04:23:38 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33618 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfLFJXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 04:20:11 -0500
-Received: from [IPv6:2800:810:439:4b9::1004] (unknown [IPv6:2800:810:439:4b9::1004])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ezequiel)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D24EB2925C4;
-        Fri,  6 Dec 2019 09:20:06 +0000 (GMT)
-Message-ID: <a9448f56a067ed82aa3ce29492a02eb03dff32d0.camel@collabora.com>
-Subject: Re: [PATCH] media: davinci/vpfe_capture.c: Avoid BUG_ON for
- register failure
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 06 Dec 2019 06:20:00 -0300
-In-Reply-To: <20191206010029.14265-1-pakki001@umn.edu>
-References: <20191206010029.14265-1-pakki001@umn.edu>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 6 Dec 2019 04:23:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=w6d0CZuvcMqu+wJfVHMmqWR4DRbXsscP/TEWag2t4Mo=; b=HthA4Kw32LMywhCYmP6wbAVUp
+        eGqRCpEBlOcj/Q5Nd11L2uk70TbDI4o+grqlibkdJa1RuOnQO0QkdLQZSb0ycRbf3Zgs3pbdoyRDZ
+        bpjO4AORYr3cMmBOtjmQXFBlKrNO6ylkXZarBFQG/mJA45MN2xX5grbfecXhExc+Vmmn8WQU6sura
+        /Ly6Bd0o3aQ4sqteiFhWVA5maHG2CR/ciIl3G4DQD7D41TlEAT5L4aspwK0CHIGuvQeWHdb5czTCI
+        /T1HBcC1LhXlwXsH2QiXwXfV956jCDUFrn1XhIUNY8M3aIMtl7FsxZKNai/IaPnRFZFLOHJHf8vfE
+        SdfUPctIw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1id9po-0004vJ-Px; Fri, 06 Dec 2019 09:23:36 +0000
+Date:   Fri, 6 Dec 2019 01:23:36 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Liang Chen <liangchen.linux@gmail.com>
+Cc:     colyli@suse.de, kent.overstreet@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bcache@vger.kernel.org
+Subject: Re: [PATCH 2/2] [PATCH] bcache: __write_super to handle page sizes
+ other than 4k
+Message-ID: <20191206092336.GA7650@infradead.org>
+References: <1575622543-22470-1-git-send-email-liangchen.linux@gmail.com>
+ <1575622543-22470-2-git-send-email-liangchen.linux@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575622543-22470-2-git-send-email-liangchen.linux@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Aditya,
-
-Thanks for the patch.
-
-On Thu, 2019-12-05 at 19:00 -0600, Aditya Pakki wrote:
-> In vpfe_register_ccdc_device(), failure to allocate dev->hw_ops
-> invokes calls to BUG_ON(). This patch returns the error to callers
-> instead of crashing.
+On Fri, Dec 06, 2019 at 04:55:43PM +0800, Liang Chen wrote:
+> __write_super assumes super block data starts at offset 0 of the page
+> read in with __bread from read_super, which is not true when page size
+> is not 4k. We encountered the issue on system with 64K page size - commonly
+>  seen on aarch64 architecture.
 > 
+> Instead of making any assumption on the offset of the data within the page,
+> this patch calls __bread again to locate the data. That should not introduce
+> an extra io since the page has been held when it's read in from read_super,
+> and __write_super is not on performance critical code path.
 
-I'm curious, are you actually getting this type of crash?
-
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
->  drivers/media/platform/davinci/vpfe_capture.c | 21 ++++++-------------
->  1 file changed, 6 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/media/platform/davinci/vpfe_capture.c b/drivers/media/platform/davinci/vpfe_capture.c
-> index 916ed743d716..6d394a006977 100644
-> --- a/drivers/media/platform/davinci/vpfe_capture.c
-> +++ b/drivers/media/platform/davinci/vpfe_capture.c
-> @@ -168,21 +168,11 @@ int vpfe_register_ccdc_device(const struct ccdc_hw_device *dev)
->  	int ret = 0;
->  	printk(KERN_NOTICE "vpfe_register_ccdc_device: %s\n", dev->name);
->  
-> -	BUG_ON(!dev->hw_ops.open);
-> -	BUG_ON(!dev->hw_ops.enable);
-> -	BUG_ON(!dev->hw_ops.set_hw_if_params);
-> -	BUG_ON(!dev->hw_ops.configure);
-> -	BUG_ON(!dev->hw_ops.set_buftype);
-> -	BUG_ON(!dev->hw_ops.get_buftype);
-> -	BUG_ON(!dev->hw_ops.enum_pix);
-> -	BUG_ON(!dev->hw_ops.set_frame_format);
-> -	BUG_ON(!dev->hw_ops.get_frame_format);
-> -	BUG_ON(!dev->hw_ops.get_pixel_format);
-> -	BUG_ON(!dev->hw_ops.set_pixel_format);
-> -	BUG_ON(!dev->hw_ops.set_image_window);
-> -	BUG_ON(!dev->hw_ops.get_image_window);
-> -	BUG_ON(!dev->hw_ops.get_line_length);
-> -	BUG_ON(!dev->hw_ops.getfid);
-> +	if (!dev->hw_ops) {
-> +		printk(KERN_ERR "could not allocate hw_ops\n");
-
-I'd drop this error message, as hw_ops is not really allocated here.
-
-> +		ret = -EINVAL;
-> +		goto rvalue;
-
-Instead of a goto to a return, just return -EINVAL here.
-
-> +	}
->  
->  	mutex_lock(&ccdc_lock);
->  	if (!ccdc_cfg) {
-> @@ -211,6 +201,7 @@ int vpfe_register_ccdc_device(const struct ccdc_hw_device *dev)
->  	ccdc_dev = dev;
->  unlock:
->  	mutex_unlock(&ccdc_lock);
-> +rvalue:
->  	return ret;
->  }
->  EXPORT_SYMBOL(vpfe_register_ccdc_device);
-
-With those changes, the patch looks good.
-
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
-
-Thanks,
-Ezequiel
-
+No need to use buffer heads here, you can just use offset_in_page
+to calculate the offset.  Similarly I think the read side shouldn't
+use buffer heads either (it is the only use of buffer heads in bcache!),
+a siple read_cache_page should be all that is needed.
