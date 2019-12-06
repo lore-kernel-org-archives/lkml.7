@@ -2,139 +2,180 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A951CC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AACC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5782464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D67624658
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OeVd+Fz9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i300ShWI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfLFKPp (ORCPT
+        id S1726347AbfLFKPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 05:15:45 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:55374 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfLFKPp (ORCPT
+        Fri, 6 Dec 2019 05:15:49 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:32899 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfLFKPs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 05:15:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TFa41b48XR9/6cW6c+SDj5gyFppU1I0WqfMcJwu81kY=; b=OeVd+Fz9z/LKcG5x9rY57ZaPL
-        m6FHesfGfs4Yg4kAsqYExhmxHpRrf9pfVebyLlhTlounCIRzD0Vn9rugOQVnbD2uOSNiPEOx+7Nmk
-        4bdyrbnlFXrSkjcALvUSrZtJnuCulNhgUx28UdEqOW57CSOTg41y+MzI/AblLveXxsZ1Zujqm+9nF
-        XT51s//fqz6I/3xUzcStTnEb7bhV+DrpS8j1zEZQTS2x6MWwFo/knqmcpu5n7O9UZtHNyBxzZgAV8
-        80qAkyK4qu1j+zx4/lhFbPau7S5D8kpaptNuDVNOu63bvc5WnJ2Hku9sWEmpnP8qZmj9b+6W2EgBy
-        9PsPMaRtw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1idAeF-0008Sj-SF; Fri, 06 Dec 2019 10:15:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 33390300DB7;
-        Fri,  6 Dec 2019 11:14:23 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B258A2006F795; Fri,  6 Dec 2019 11:15:40 +0100 (CET)
-Date:   Fri, 6 Dec 2019 11:15:40 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Running an Ivy Bridge cpu at fixed frequency
-Message-ID: <20191206101540.GB2844@hirez.programming.kicks-ass.net>
-References: <8eeee0695c664305ba6a56bce42a995f@AcuMS.aculab.com>
- <20191205094535.GF2810@hirez.programming.kicks-ass.net>
- <df5b67c5f51b48c391480358d6af53ca@AcuMS.aculab.com>
+        Fri, 6 Dec 2019 05:15:48 -0500
+Received: by mail-qt1-f194.google.com with SMTP id d5so6689309qto.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 02:15:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VU3mVyUkXK8D+5hcPVZwalL5AuDR8H2cjqY0VrfsIGs=;
+        b=i300ShWIGz7B69dphO/d6qYVCvhOcTJlYu0V2vvAYKjePCceV9peff0AoaANqUbv74
+         DqVEbA/siL/dTwELPyh7q5131eBoHuY7WVIJ32rXrEEa/hT3wYfv+zR5iMIXtfyZtWHF
+         ARCNZwG2+md5GSmY4V1hoJMYv0UJYHgj8bPkh9kyHjKrJdKjtZWyfQL2HG9HaViWZD/G
+         QT5vhIyhOBpy6btdS22c8PaSSbpDjfF2IbTFCRAou32sqphSmpIOGJ/VXNfHrCZybydL
+         CXZHJj0PVs4s26ODNoqedb7VD/FH+6skhC66zbnxoHf2Y1cPyDIZ+4QQAt8ncABiRx6D
+         5Tog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VU3mVyUkXK8D+5hcPVZwalL5AuDR8H2cjqY0VrfsIGs=;
+        b=cPbTliHO42+49POgCYwUXgFA3HGrJ++I7U1SZVjRRAuJSHDvrXYyRupmT2/ZawhZ/n
+         VmfRWiin49tCyABQX+nJizZd01ZXo1uj4I/7vqF/Ed7Ra3CqV5hV06CemXRBVV8u3TKu
+         C0QSAGkg6aippcG+ovdpV1UG6+cy5czSN3xw9onvqxr+TM25RycQVewoDVrCsB34wuW7
+         cHrkINuxW5/tZETwC3pSwtusXKjNbvL5cw8mae69hJZ4EJUxheybsi2q8+hQZj9Fxa9o
+         4S1CKmWXBeUyWzN7dBGZ+3zEVOeBolzQZ+iICJ2sUx8PYvuHiteaVCp3YW1VsJsJnQDw
+         5B0Q==
+X-Gm-Message-State: APjAAAX5xF/U4PhaGEt1Q2vnTZ+9mdFHAbALfkDblLs8801T1z+c0wza
+        PFZ8wK2A6GKfcVY3MV42wbm4n7Skq4s3C+7a0aE=
+X-Google-Smtp-Source: APXvYqxY9dcx2Z6byMD1F4fMuzUxiO7a38mr6r2HY6ouS9dDdbVJ2ZmnkjTwGDDJd483UzUblF2oNS+osC3VvPvUP9k=
+X-Received: by 2002:ac8:5548:: with SMTP id o8mr12269193qtr.338.1575627346187;
+ Fri, 06 Dec 2019 02:15:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <df5b67c5f51b48c391480358d6af53ca@AcuMS.aculab.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <201912060818.dgGGxpRK%lkp@intel.com> <CAK8P3a23_rWdmjyZNezd9k=-KL4VZyV+DCLvh-UgCQUQTsysyw@mail.gmail.com>
+ <CAEbi=3fN83s1sp6Yt2B6d5M-uJ+TGz_a7-mWTt2LAfrX8B3JmA@mail.gmail.com> <CAEbi=3cojt1shc84zH3tGtxK98rQ=PbGhkirWCe7C+JSj5jpFw@mail.gmail.com>
+In-Reply-To: <CAEbi=3cojt1shc84zH3tGtxK98rQ=PbGhkirWCe7C+JSj5jpFw@mail.gmail.com>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Fri, 6 Dec 2019 18:15:08 +0800
+Message-ID: <CAEbi=3fJM9B_UnkuVOKW2oD8AcdvOYh1ozheGi9pAGvm7MjtFw@mail.gmail.com>
+Subject: Re: drivers/scsi/.tmp_mc_st.s:3: Error: invalid operands (*UND* and
+ *UND* sections) for `^'
+To:     Arnd Bergmann <arnd@arndb.de>, Nickhu <nickhu@andestech.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Vincent Chen <deanbo422@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 03:53:55PM +0000, David Laight wrote:
-> From: Peter Zijlstra
-> > Sent: 05 December 2019 09:46
-> > As Andy already wrote, perf is really good for this.
-> > 
-> > Find attached, it probably is less shiny than what Andy handed you, but
-> > contains all the bits required to frob something.
-> 
-> You are in a maze of incomplete documentation all disjoint.
+Greentime Hu <green.hu@gmail.com> =E6=96=BC 2019=E5=B9=B412=E6=9C=886=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:38=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Greentime Hu <green.hu@gmail.com> =E6=96=BC 2019=E5=B9=B412=E6=9C=886=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:19=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > Arnd Bergmann <arnd@arndb.de> =E6=96=BC 2019=E5=B9=B412=E6=9C=886=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:00=E5=AF=AB=E9=81=93=EF=BC=9A
+> > >
+> > > On Fri, Dec 6, 2019 at 2:05 AM kbuild test robot <lkp@intel.com> wrot=
+e:
+> > > >
+> > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/li=
+nux.git master
+> > > > head:   2f13437b8917627119d163d62f73e7a78a92303a
+> > > > commit: 1207045da5a7c94344e0ea9a9e7495985eef499a compat_ioctl: move=
+ tape handling into drivers
+> > > > date:   6 weeks ago
+> > > > config: nds32-allyesconfig (attached as .config)
+> > > > compiler: nds32le-linux-gcc (GCC) 9.2.0
+> > > > reproduce:
+> > > >         wget https://raw.githubusercontent.com/intel/lkp-tests/mast=
+er/sbin/make.cross -O ~/bin/make.cross
+> > > >         chmod +x ~/bin/make.cross
+> > > >         git checkout 1207045da5a7c94344e0ea9a9e7495985eef499a
+> > > >         # save the attached .config to linux build tree
+> > > >         GCC_VERSION=3D9.2.0 make.cross ARCH=3Dnds32
+> > > >
+> > > > If you fix the issue, kindly add following tag
+> > > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > >
+> > > > All errors (new ones prefixed by >>):
+> > > >
+> > > >    drivers/scsi/.tmp_mc_st.s: Assembler messages:
+> > > > >> drivers/scsi/.tmp_mc_st.s:3: Error: invalid operands (*UND* and =
+*UND* sections) for `^'
+> > > >    drivers/scsi/.tmp_mc_st.s:4: Error: invalid operands (*UND* and =
+*UND* sections) for `^'
+> > > >    drivers/scsi/.tmp_mc_st.s:5: Error: invalid operands (*UND* and =
+*UND* sections) for `^'
+> > > >    drivers/scsi/.tmp_mc_st.s:6: Error: invalid operands (*UND* and =
+*UND* sections) for `^'
+> > > >    drivers/scsi/.tmp_mc_st.s:7: Error: invalid operands (*UND* and =
+*UND* sections) for `^'
+> > > >    drivers/scsi/.tmp_mc_st.s:8: Error: invalid operands (*UND* and =
+*UND* sections) for `^'
+> > > >    drivers/scsi/.tmp_mc_st.s:9: Error: invalid operands (*UND* and =
+*UND* sections) for `^'
+> > >
+> > > Adding nds32 maintainers to Cc:
+> > >
+> > > It looks like a regression caused by my patch, but I don't think it's=
+ something
+> > > I did wrong, but rather a toolchain bug being uncovered by the modifi=
+ed sources.
+> > >
+> > > Are you able to reproduce this?
+> >
+> > Hi Arnd,
+> >
+> > I am trying to reproduce this problem, but it happened to me.
+> >
+> > greentimeh@gamma07:/scratch/greentimeh/nds32/linux <(1207045da5a7...)>
+> > $ GCC_VERSION=3D9.2.0 make.cross ARCH=3Dnds32
+> > cd: received redirection to `https://download.01.org/0day-ci/cross-pack=
+age/'
+> > Cannot find nds32-linux under
+> > https://download.01.org/0day-ci/cross-package check
+> > /tmp/crosstool-files
+> >
+> > Can you reproduce it?
+>
+> I can reproduce it now by adding these 2 lines to make.cross.
+> 177                 nds32)
+> 178                         gcc_arch=3Dnds32le-linux
+>
+> It will be built failed with gcc-9.2.0-nolibc toolchain, but it can be
+> built pass with gcc-8.1.0-nolibc toolchain.
 
-I'm sure..
+It seems nds32le-linux-objdump -hdr xxx.o will generate different strings.
+For example:
+00000050 <.L2^B1>:
+This string is different when generated by 9.2 toolchain and 8.1 toolchain.
+"^B" is treated as 2 character in 9.2 toolchain
+"^B" is treated as 1 character in 8.1 toolchain
 
-> The x86 instruction set doc (eg 325462.pdf) defines the rdpmc instruction, tells you
-> how many counters each cpu type has, but doesn't even contain a reference
-> to how they are incremented.
+This causes ./scripts/recordmcount.pl to call `$cc -o $mcount_o -c
+$mcount_s`; failed to cause this issue.
+I have a quick patch to fix this build error, but I am not sure if it
+is a good solution.
+Maybe Nick could have a look at it?
 
-There's book 3, chapter 18, performance monitoring overview, that should
-explain how the counters work, and chapter 19 that lists many of the
-available events.
-
-TL;DR, they're (48bit) signed counters that increment and raise an
-interrupt when the sign flips. This means we set them to '-period' and
-then upon read (either early or on interrupt) compute the delta and
-accumulate elsewhere.
-
-> perf_event_open(2) tells you a few things, but doesn't actually what anything is.
-> It contains all but the last 'if' clause of this function, without really saying
-> what any of it does - or why you might do it this way.
-
-I don't actually know what's in that manpage. But it really shouldn't be
-too hard to understand.
-
-It's a seqcount protected set of value, there's the RDPMC counter index,
-and the counter offset. If the idx!=0 it means the counter is actually
-programmed and we must RDPMC, the result of which we must add to the
-offset.
-
-The whole counter scaling crud is just that, crud you can mostly forget
-about if you want to quickly hack something together. See
-mmap_read_pinned() for the simplified (and much faster version) that
-ignores all that.
-
-
-> AFAICT:
-> 1) The last clause is scaling the count up to allow for time when the hardware counter
->    couldn't be allocated.
->    I'm not convinced that is useful, better to ignore the entire measurement.
->    Half this got deleted from the man page, leaving strange 'set but unused' variables.
-
-Depending on the usecase, sure. I don't mave use for it either. I know
-other people find it useful.
-
-> 2) The hardware counters are disabled while the process is asleep.
->    On wake a different pmc counter might be used (maybe on a different cpu).
->    The new cpu might not even have a counter available.
-
-Right, but if this is all you're running that is unlikely to happen.
-
-> 3) If you don't want to scale up for missing periods it is probably enough to do:
-> 	do {
-> 		seq = pc->offset;
-> 		barrier();
-> 		idx = pc->index;
-> 		if (!index)
-> 			return -1;
-> 		count = pc->offset + rdpmc(idx - 1);
-> 	} while (seq != pc->seq);
-> 	return (unsigned int)count;
-
-You still need to do the rdpmc sign extent crud, but see
-mmap_read_pinned() that does just about that.
-
-As the name suggests it relies on using perf_event_attr::pinned = 1.
-
+diff --git a/scripts/recordmcount.pl b/scripts/recordmcount.pl
+index 3f77a5d695c1..807b61fc5f5d 100755
+--- a/scripts/recordmcount.pl
++++ b/scripts/recordmcount.pl
+@@ -551,7 +551,8 @@ while (<IN>) {
+        # if this is either a local function or a weak function
+        # keep looking for functions that are global that
+        # we can use safely.
+-       if (!defined($locals{$text}) && !defined($weak{$text})) {
++       if (!defined($locals{$text}) && !defined($weak{$text}) &&
++           $text !~ /^\.L/) {
+            $ref_func =3D $text;
+            $read_function =3D 0;
+            $offset =3D hex $1;
