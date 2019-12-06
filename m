@@ -2,166 +2,209 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3722C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F78C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B18DA21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:15:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R4THKPT9"
+	by mail.kernel.org (Postfix) with ESMTP id 466782464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:16:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfLFTPs (ORCPT
+        id S1726472AbfLFTQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 14:15:48 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43727 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfLFTPs (ORCPT
+        Fri, 6 Dec 2019 14:16:32 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33926 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726321AbfLFTQc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 14:15:48 -0500
-Received: by mail-pf1-f194.google.com with SMTP id h14so3799176pfe.10
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 11:15:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dWXpOimTwenaVBdKiG9dZ3FcmpYa3OZhkX/d4LqtYMY=;
-        b=R4THKPT9e2z0+N0yWZKPw/8yGeOLtcWd8zEIwU/WVcengfgiuqzJ7MVVnq2qw+Brji
-         +oo22CBINwDdoHamQKCVERZo0y5sc6U8L4nWLEzWFokuaSiy4I0u2RcbAg/twolkUK6m
-         +m4dB9uDgCh4IqOxVSOH+FHWpQQu6YwlwB+cg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dWXpOimTwenaVBdKiG9dZ3FcmpYa3OZhkX/d4LqtYMY=;
-        b=HwJnOCc+SvidvmD3G5N+BPTlgUBlTRMXiAwyM6XXfqKzWsyMAhSsDaXThmY2D2bXh5
-         YdlaV5B+IfFjBLSKE9atKn4JbeixUS7vU/Xun9vzC4YPqkYcsRXq+fa32sFeUxqWKHJF
-         N0p5keT66F3mwtAP133ZYTchBtXXKI5TuBxKPNeJz2MtECHm15bg136+ZnsGgmJfORCH
-         /dsWFGdfoztriq2nNixWmDu75x1w1qK3BeCDYnwlVAzbLloYPETf8Ws9hBBC/WV4nDPe
-         jfACxkN2tTGpAcinpyy3D6GbfvzgDBTilVsC388CW+S9zGDio7TmFQTHjRI7o68n+SLJ
-         jd0Q==
-X-Gm-Message-State: APjAAAV3f2HbRg7GY8lFhD21Sw91VQHKHBV5UEJ6hh+vle2LQmYaW9O2
-        aYIbKJLHpBZuNQxiJPxr3KLMk4lWR2E2uA==
-X-Google-Smtp-Source: APXvYqzIZtCOzPKJBrdfjSYj8H80B6OJE2Mxs7uyZAYFiCkW3Mzbwoiv6KnRBgy2hbm7XIvX1a7Z6g==
-X-Received: by 2002:a63:cf41:: with SMTP id b1mr5207454pgj.53.1575659747397;
-        Fri, 06 Dec 2019 11:15:47 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id u1sm16718126pfn.133.2019.12.06.11.15.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2019 11:15:46 -0800 (PST)
-Date:   Fri, 6 Dec 2019 11:15:45 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Wei Wang <wvw@google.com>
-Cc:     wei.vince.wang@gmail.com, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v3 3/3] thermal: create softlink by name for thermal_zone
- and cooling_device
-Message-ID: <20191206191545.GO228856@google.com>
-References: <20191205071953.121511-1-wvw@google.com>
- <20191205071953.121511-4-wvw@google.com>
+        Fri, 6 Dec 2019 14:16:32 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB6JC7lt101865
+        for <linux-kernel@vger.kernel.org>; Fri, 6 Dec 2019 14:16:30 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wq2t4br3w-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 14:16:30 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
+        Fri, 6 Dec 2019 19:16:28 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 6 Dec 2019 19:16:26 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB6JGPWr60489848
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 6 Dec 2019 19:16:25 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5111D42049;
+        Fri,  6 Dec 2019 19:16:25 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 902D14204B;
+        Fri,  6 Dec 2019 19:16:23 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.71.21])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  6 Dec 2019 19:16:23 +0000 (GMT)
+Subject: Re: [PATCH v4 4/6] powerpc/powernv: move core and
+ fadump_release_opalcore under new kobject
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     mpe@ellerman.id.au, mahesh@linux.vnet.ibm.com,
+        hbathini@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@ozlabs.org, corbet@lwn.net, linux-doc@vger.kernel.org
+References: <20191206122434.29587-1-sourabhjain@linux.ibm.com>
+ <20191206122434.29587-5-sourabhjain@linux.ibm.com>
+ <20191206124801.GD1360047@kroah.com>
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+Date:   Sat, 7 Dec 2019 00:46:22 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <20191206124801.GD1360047@kroah.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191205071953.121511-4-wvw@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120619-0008-0000-0000-0000033E5B01
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120619-0009-0000-0000-00004A5D8325
+Message-Id: <d22893e3-41e0-c8db-9262-670f90536816@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-06_06:2019-12-05,2019-12-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ priorityscore=1501 bulkscore=0 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=999 mlxscore=0 impostorscore=0 clxscore=1015 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912060154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 11:19:53PM -0800, Wei Wang wrote:
-> The paths thermal_zone%d and cooling_device%d are not intuitive and the
-> numbers are subject to change due to device tree change. This usually
-> leads to tree traversal in userspace code.
-> The patch creates `tz-by-name' and `cdev-by-name' for thermal zone and
-> cooling_device respectively.
 
-This is useful, especially for systems with plenty of thermal zones :)
 
-> Signed-off-by: Wei Wang <wvw@google.com>
-> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  drivers/thermal/thermal_core.c | 21 ++++++++++++++++++++-
->  1 file changed, 20 insertions(+), 1 deletion(-)
+On 12/6/19 6:18 PM, Greg KH wrote:
+> On Fri, Dec 06, 2019 at 05:54:32PM +0530, Sourabh Jain wrote:
+>> The /sys/firmware/opal/core and /sys/kernel/fadump_release_opalcore sysfs
+>> files are used to export and release the OPAL memory on PowerNV platform.
+>> let's organize them into a new kobject under /sys/firmware/opal/mpipl/
+>> directory.
+>>
+>> A symlink is added to maintain the backward compatibility for
+>> /sys/firmware/opal/core sysfs file.
+>>
+>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> ---
+>>  .../sysfs-kernel-fadump_release_opalcore      |  2 ++
+>>  .../powerpc/firmware-assisted-dump.rst        | 15 +++++----
+>>  arch/powerpc/platforms/powernv/opal-core.c    | 31 ++++++++++++++-----
+>>  3 files changed, 34 insertions(+), 14 deletions(-)
+>>  rename Documentation/ABI/{testing => removed}/sysfs-kernel-fadump_release_opalcore (82%)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore b/Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
+>> similarity index 82%
+>> rename from Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore
+>> rename to Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
+>> index 53313c1d4e7a..a8d46cd0f4e6 100644
+>> --- a/Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore
+>> +++ b/Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
+>> @@ -1,3 +1,5 @@
+>> +This ABI is moved to /sys/firmware/opal/mpipl/release_core.
+>> +
+>>  What:		/sys/kernel/fadump_release_opalcore
+>>  Date:		Sep 2019
+>>  Contact:	linuxppc-dev@lists.ozlabs.org
+>> diff --git a/Documentation/powerpc/firmware-assisted-dump.rst b/Documentation/powerpc/firmware-assisted-dump.rst
+>> index 0455a78486d5..345a3405206e 100644
+>> --- a/Documentation/powerpc/firmware-assisted-dump.rst
+>> +++ b/Documentation/powerpc/firmware-assisted-dump.rst
+>> @@ -112,13 +112,13 @@ to ensure that crash data is preserved to process later.
+>>  
+>>  -- On OPAL based machines (PowerNV), if the kernel is build with
+>>     CONFIG_OPAL_CORE=y, OPAL memory at the time of crash is also
+>> -   exported as /sys/firmware/opal/core file. This procfs file is
+>> +   exported as /sys/firmware/opal/mpipl/core file. This procfs file is
+>>     helpful in debugging OPAL crashes with GDB. The kernel memory
+>>     used for exporting this procfs file can be released by echo'ing
+>> -   '1' to /sys/kernel/fadump_release_opalcore node.
+>> +   '1' to /sys/firmware/opal/mpipl/release_core node.
+>>  
+>>     e.g.
+>> -     # echo 1 > /sys/kernel/fadump_release_opalcore
+>> +     # echo 1 > /sys/firmware/opal/mpipl/release_core
+>>  
+>>  Implementation details:
+>>  -----------------------
+>> @@ -283,14 +283,17 @@ Here is the list of files under kernel sysfs:
+>>      enhanced to use this interface to release the memory reserved for
+>>      dump and continue without 2nd reboot.
+>>  
+>> - /sys/kernel/fadump_release_opalcore
+>> +Note: /sys/kernel/fadump_release_opalcore sysfs has moved to
+>> +      /sys/firmware/opal/mpipl/release_core
+>> +
+>> + /sys/firmware/opal/mpipl/release_core
+>>  
+>>      This file is available only on OPAL based machines when FADump is
+>>      active during capture kernel. This is used to release the memory
+>> -    used by the kernel to export /sys/firmware/opal/core file. To
+>> +    used by the kernel to export /sys/firmware/opal/mpipl/core file. To
+>>      release this memory, echo '1' to it:
+>>  
+>> -    echo 1  > /sys/kernel/fadump_release_opalcore
+>> +    echo 1  > /sys/firmware/opal/mpipl/release_core
+>>  
+>>  Here is the list of files under powerpc debugfs:
+>>  (Assuming debugfs is mounted on /sys/kernel/debug directory.)
+>> diff --git a/arch/powerpc/platforms/powernv/opal-core.c b/arch/powerpc/platforms/powernv/opal-core.c
+>> index ed895d82c048..7fcc092d065e 100644
+>> --- a/arch/powerpc/platforms/powernv/opal-core.c
+>> +++ b/arch/powerpc/platforms/powernv/opal-core.c
+>> @@ -589,7 +589,8 @@ static ssize_t fadump_release_opalcore_store(struct kobject *kobj,
+>>  	return count;
+>>  }
+>>  
+>> -static struct kobj_attribute opalcore_rel_attr = __ATTR(fadump_release_opalcore,
+>> +struct kobject *mpipl_kobj;
+>> +static struct kobj_attribute opalcore_rel_attr = __ATTR(release_core,
+>>  						0200, NULL,
+>>  						fadump_release_opalcore_store);
 > 
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index 9db7f72e70f8..7872bd527f3f 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -22,6 +22,7 @@
->  #include <net/netlink.h>
->  #include <net/genetlink.h>
->  #include <linux/suspend.h>
-> +#include <linux/kobject.h>
->  
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/thermal.h>
-> @@ -46,6 +47,8 @@ static DEFINE_MUTEX(poweroff_lock);
->  
->  static atomic_t in_suspend;
->  static bool power_off_triggered;
-> +static struct kobject *cdev_link_kobj;
-> +static struct kobject *tz_link_kobj;
->  
->  static struct thermal_governor *def_governor;
->  
-> @@ -999,9 +1002,15 @@ __thermal_cooling_device_register(struct device_node *np,
->  		return ERR_PTR(result);
->  	}
->  
-> -	/* Add 'this' new cdev to the global cdev list */
-> +	/* Add 'this' new cdev to the global cdev list and create link*/
->  	mutex_lock(&thermal_list_lock);
->  	list_add(&cdev->node, &thermal_cdev_list);
-> +	if (!cdev_link_kobj)
-> +		cdev_link_kobj = kobject_create_and_add("cdev-by-name",
-> +						cdev->device.kobj.parent);
-> +	if (!cdev_link_kobj || sysfs_create_link(cdev_link_kobj,
-> +						&cdev->device.kobj, cdev->type))
-> +		dev_err(&cdev->device, "Failed to create cdev-by-name link\n");
->  	mutex_unlock(&thermal_list_lock);
->  
->  	/* Update binding information for 'this' new cdev */
-> @@ -1167,6 +1176,8 @@ void thermal_cooling_device_unregister(struct thermal_cooling_device *cdev)
->  			}
->  		}
->  	}
-> +	if (cdev_link_kobj)
-> +		sysfs_remove_link(cdev_link_kobj, cdev->type);
->  
->  	mutex_unlock(&thermal_list_lock);
->  
-> @@ -1354,6 +1365,12 @@ thermal_zone_device_register(const char *type, int trips, int mask,
->  
->  	mutex_lock(&thermal_list_lock);
->  	list_add_tail(&tz->node, &thermal_tz_list);
-> +	if (!tz_link_kobj)
-> +		tz_link_kobj = kobject_create_and_add("tz-by-name",
-> +						tz->device.kobj.parent);
-> +	if (!tz_link_kobj || sysfs_create_link(tz_link_kobj,
-> +						&tz->device.kobj, tz->type))
-> +		dev_err(&tz->device, "Failed to create tz-by-name link\n");
->  	mutex_unlock(&thermal_list_lock);
->  
->  	/* Bind cooling devices for this zone */
-> @@ -1425,6 +1442,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
->  			}
->  		}
->  	}
-> +	if (tz_link_kobj)
-> +		sysfs_remove_link(tz_link_kobj, tz->type);
->  
->  	mutex_unlock(&thermal_list_lock);
->  
+> __ATTR_WO()?
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Thanks :)
+> 
+>>  
+>> @@ -609,7 +610,7 @@ static int __init opalcore_init(void)
+>>  	 * then capture the dump.
+>>  	 */
+>>  	if (!(is_opalcore_usable())) {
+>> -		pr_err("Failed to export /sys/firmware/opal/core\n");
+>> +		pr_err("Failed to export /sys/firmware/opal/mpipl/core\n");
+>>  		opalcore_cleanup();
+>>  		return rc;
+>>  	}
+>> @@ -617,18 +618,32 @@ static int __init opalcore_init(void)
+>>  	/* Set OPAL core file size */
+>>  	opal_core_attr.size = oc_conf->opalcore_size;
+>>  
+>> +	mpipl_kobj = kobject_create_and_add("mpipl", opal_kobj);
+>> +	if (!mpipl_kobj) {
+>> +		pr_err("unable to create mpipl kobject\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>>  	/* Export OPAL core sysfs file */
+>> -	rc = sysfs_create_bin_file(opal_kobj, &opal_core_attr);
+>> +	rc = sysfs_create_bin_file(mpipl_kobj, &opal_core_attr);
+> 
+> Again, create an attribute group and add everything all at once, makes
+> it much simpler and your error cleanup logic will actually work :)
+
+Agree.
+
+Thanks,
+Sourabh Jain
 
