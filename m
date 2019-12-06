@@ -2,150 +2,148 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,PDS_BTC_ID,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73176C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CBAC2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4117D20659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:32:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L67Udo4k"
+	by mail.kernel.org (Postfix) with ESMTP id 36CC524659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfLFNcG (ORCPT
+        id S1726268AbfLFNif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 08:32:06 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36676 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbfLFNcG (ORCPT
+        Fri, 6 Dec 2019 08:38:35 -0500
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:45431 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726171AbfLFNie (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:32:06 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k3so2685687pgc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 05:32:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2S08e87qyOClIb15ji+5kVBV12PJ10Rg7yCvmuY9seI=;
-        b=L67Udo4kJZKk80cfaTAth0CgKYP/DsxHicSKHyNruf6i0ke+J/XqppX60g+cun9oq+
-         rU/KAZ8Vz2gnPIK0EecvN4/PgsuGXj2aZy8D9+I0AlhNnAKRRQfim9LG1cW1/j6X6wgu
-         DaOoDtVEjztCMMS3YDEMmhA5F7rTQRPMvvYVTM0f84Z0NAzd+AyuofKkyrBojGf2v+Ui
-         yd+UmL61srEGYH3zMaExIUzkvqRsJMuEYN/nmFRbo91eZxwz5AGpCitV+1ZGm7hGWCLH
-         NGyP9Au3P/xw+DkJAFZEiQVTLt+3Vgr90XMwdtcmH/wS+POClIxXnd2Xf9X3QvBM7SbU
-         iJIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2S08e87qyOClIb15ji+5kVBV12PJ10Rg7yCvmuY9seI=;
-        b=UZkn60G2w1j1ejss2cCGjujhwns1XqL6YSmC2ir+t76zz4Bee4MrVTNSJ5GUKX4czN
-         79ZDAVPGECwF0esFgw9nexTFY7eGV/gf8EZTjsFTMuYY+13weee6JmicxIZTuNyVTd0Z
-         xIRZggKI27OpkqCLcZeb5fK4xRBkhfpq2srSZtxbpKA8fcweFUq9uS57Uao9qmdtj5ex
-         CsYO5poJpmVUVA9yaTkAl8/mH8/vw4opBrLPgfjkBfCgSFIUv1CrckwuxvxLo2rbd5uJ
-         nzBNG9eyC7XxYwMsPLZ5QrGBWd2mNFdxKpCUTz+lou73rQs9oSKAEV8gXMu6jLC/uMHz
-         Jqaw==
-X-Gm-Message-State: APjAAAWFO61vI0xQMY5a4xBJcdMDEz3761Xbc0WCNuNvxcMrtUFGZRXy
-        ReK3xWlzeVt9AkrCcoBOld/5kZ4fU4c5zp+TVIiKzw==
-X-Google-Smtp-Source: APXvYqzGLszCKnNXCjDC648w2B2pW9Ym7h1x0WCYSF56kB12Pba7M4Ri36jHDVLBNr2t8h97l/8SAfP70geO0kxFXho=
-X-Received: by 2002:a65:678f:: with SMTP id e15mr3508678pgr.130.1575639125248;
- Fri, 06 Dec 2019 05:32:05 -0800 (PST)
+        Fri, 6 Dec 2019 08:38:34 -0500
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.85)
+          with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id <1idDoS-001ya1-0h>; Fri, 06 Dec 2019 14:38:28 +0100
+Received: from suse-laptop.physik.fu-berlin.de ([160.45.32.140])
+          by inpost2.zedat.fu-berlin.de (Exim 4.85)
+          with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id <1idDoR-001Gdu-Pm>; Fri, 06 Dec 2019 14:38:27 +0100
+Subject: Re: [PATCH v6 10/18] sh/tlb: Convert SH to generic mmu_gather
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Will Deacon <will.deacon@arm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+References: <20190219103148.192029670@infradead.org>
+ <20190219103233.443069009@infradead.org>
+ <CAMuHMdW3nwckjA9Bt-_Dmf50B__sZH+9E5s0_ziK1U_y9onN=g@mail.gmail.com>
+ <20191204104733.GR2844@hirez.programming.kicks-ass.net>
+ <3c83eaec-8f33-1b90-1c70-9e7c1c8b1855@physik.fu-berlin.de>
+ <20191205225610.GB2532@roeck-us.net>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <a188f905-bb08-db98-0b8a-e31bec1dfa31@physik.fu-berlin.de>
+Date:   Fri, 6 Dec 2019 14:38:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <46cee2a09d53921057cd4b87d1ed3796a2ab15bb.1575637022.git.andreyknvl@google.com>
- <CANpmjNPb988whEFQW+msYpdco=_=CXwG1mj+apy7U7ARJ3s0CQ@mail.gmail.com>
-In-Reply-To: <CANpmjNPb988whEFQW+msYpdco=_=CXwG1mj+apy7U7ARJ3s0CQ@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Fri, 6 Dec 2019 14:31:53 +0100
-Message-ID: <CAAeHK+w749YgJDXi-YnYn_K=OPLPGKNgEU47p6iEjb-BsXtCUQ@mail.gmail.com>
-Subject: Re: [PATCH] kcov: fix struct layout for kcov_remote_arg
-To:     Marco Elver <elver@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191205225610.GB2532@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: 160.45.32.140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 6, 2019 at 2:14 PM Marco Elver <elver@google.com> wrote:
->
-> On Fri, 6 Dec 2019 at 14:05, Andrey Konovalov <andreyknvl@google.com> wrote:
-> >
-> > Make the layout of kcov_remote_arg the same for 32-bit and 64-bit code.
-> > This makes it more convenient to write userspace apps that can be compiled
-> > into 32-bit or 64-bit binaries and still work with the same 64-bit kernel.
-> > Also use proper __u32 types in uapi headers instead of unsigned ints.
-> >
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > ---
-> >
-> > Hi Andrew,
-> >
-> > We've noticed failures on 32 bit syzbot instances when the kcov patches
-> > got merged into mainline. The reason is that the layout of kcov_remote_arg
-> > depends on the alignment rules, which are different for 32/64 bit code.
-> > We can deal with this issue in syzkaller [1], but I think it would be
-> > cleander to get this fixed in the kernel.
-> >
-> > I hope this patch is acceptable, since the change has just been merged and
-> > is not included into a release kernel version. The patch breaks the newly
-> > introduced kcov API for 32 bit apps.
-> >
-> > Sorry for not testing it with 32 bit code earlier.
-> >
-> > Thanks!
-> >
-> > [1] https://github.com/google/syzkaller/commit/ba97c611a36b7729d489ebca5f97183c2ba7a90a
-> >
-> >  Documentation/dev-tools/kcov.rst |  7 ++++---
-> >  include/uapi/linux/kcov.h        | 11 ++++++-----
-> >  2 files changed, 10 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/Documentation/dev-tools/kcov.rst b/Documentation/dev-tools/kcov.rst
-> > index 36890b026e77..744df2bae1ed 100644
-> > --- a/Documentation/dev-tools/kcov.rst
-> > +++ b/Documentation/dev-tools/kcov.rst
-> > @@ -251,9 +251,10 @@ selectively from different subsystems.
-> >  .. code-block:: c
-> >
-> >      struct kcov_remote_arg {
-> > -       unsigned        trace_mode;
-> > -       unsigned        area_size;
-> > -       unsigned        num_handles;
-> > +       uint32_t        trace_mode;
-> > +       uint32_t        area_size;
-> > +       uint32_t        num_handles;
-> > +       uint32_t        reserved;
-> >         uint64_t        common_handle;
-> >         uint64_t        handles[0];
-> >      };
-> > diff --git a/include/uapi/linux/kcov.h b/include/uapi/linux/kcov.h
-> > index 409d3ad1e6e2..53267f9f1665 100644
-> > --- a/include/uapi/linux/kcov.h
-> > +++ b/include/uapi/linux/kcov.h
-> > @@ -9,11 +9,12 @@
-> >   * and the comment before kcov_remote_start() for usage details.
-> >   */
-> >  struct kcov_remote_arg {
-> > -       unsigned int    trace_mode;     /* KCOV_TRACE_PC or KCOV_TRACE_CMP */
-> > -       unsigned int    area_size;      /* Length of coverage buffer in words */
-> > -       unsigned int    num_handles;    /* Size of handles array */
-> > -       __u64           common_handle;
-> > -       __u64           handles[0];
-> > +       __u32   trace_mode;     /* KCOV_TRACE_PC or KCOV_TRACE_CMP */
-> > +       __u32   area_size;      /* Length of coverage buffer in words */
-> > +       __u32   num_handles;    /* Size of handles array */
-> > +       __u32   reserved;
->
-> The kernel provides __aligned_u64 for this purpose (32/64 bit uapi
-> compatibility).
+Hi!
 
-Oh yes, this is much better, sent v2, thank you!
+On 12/5/19 11:56 PM, Guenter Roeck wrote:
+>> I have to admit, I have been very lazy with kernel updates. I have been
+>> planning to upgrade to a much more recent release on my boards for a while
+>> now, I have just been postponing it since the machines run very stable
+>> with the current kernel I am using.
+>>
+> 
+> Hey, if you write a qemu emulation, I'll be happy to run it on a regular
+> basis :-)
 
-> Is adding an explicit 'reserved' better here? If so,
-> it'd be good to document.
+There is working SH emulation in QEMU. I have been wanting to prepare a
+current Debian/sh4 test image for that purpose for a while now.
+
+For the time being, you can use the image by Aurelien Jarno:
+
+> https://people.debian.org/~aurel32/qemu/sh4/
+
+> Problem is really that the architecture doesn't get as much attention as
+> it needs. The backtrace pointed to by Rob has been seen for a long time,
+> but either there is no one with the knowledge to fix it, or they are all
+> busy with other stuff.
+
+I fully agree. I'm mostly busy with the userland stuff, i.e. Debian packages
+for sh4 and not so much with the kernel.
+
+Adrian
+
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
