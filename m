@@ -2,82 +2,96 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8670DC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 03:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BA8C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 03:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFF52173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 03:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F91724659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 03:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfLFDli (ORCPT
+        id S1726287AbfLFDom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 22:41:38 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:43370 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726097AbfLFDlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 22:41:37 -0500
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 59C5C27F401CBA088E90;
-        Fri,  6 Dec 2019 11:41:34 +0800 (CST)
-Received: from dggeme764-chm.china.huawei.com (10.3.19.110) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 6 Dec 2019 11:41:34 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme764-chm.china.huawei.com (10.3.19.110) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 6 Dec 2019 11:41:33 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Fri, 6 Dec 2019 11:41:33 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-CC:     Liran Alon <liran.alon@oracle.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH] KVM: vmx: remove unreachable statement in
- vmx_get_msr_feature()
-Thread-Topic: [PATCH] KVM: vmx: remove unreachable statement in
- vmx_get_msr_feature()
-Thread-Index: AdWr5U1VkRpYj0RCSySPadjbFxdshg==
-Date:   Fri, 6 Dec 2019 03:41:33 +0000
-Message-ID: <6c7423896f6f49f2a2b439afe809db08@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.184.189.20]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Thu, 5 Dec 2019 22:44:42 -0500
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:40554 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726076AbfLFDom (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 22:44:42 -0500
+Received: from mr6.cc.vt.edu (mr6.cc.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xB63ifpV014121
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Dec 2019 22:44:41 -0500
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xB63iark031843
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Dec 2019 22:44:41 -0500
+Received: by mail-qv1-f72.google.com with SMTP id g15so3439732qvk.11
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 19:44:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
+         :message-id;
+        bh=DehJaUHW45MnJcV0+BTcP6QTaImpm9lbPDDJke7Mmes=;
+        b=PUk7x4xuMzr+ZQpuwa5hZxAbALi0040akg+9Xx+8uZwLAjUWJ8I39KYJP4DF+Vnso4
+         XR2QyeY/LD6bE/Kz9LAHcPHIosEGjllSSC8FBQhKT3UNPkdrH7jBGvYUOXDx/1U2ghHt
+         DvmyFZKFMVza2WrYJumLlGaFaLoCPNEunw/XIG9W6WhbKUfxFAEPK5ow/t66pk/Nh4S/
+         RBmsUrfssuXnjj8vUBGWemdGliUVEbcw5sRAML3pHY7tvzjjCsoDM6qzhI0fiGFk1CDr
+         ippI3wxYSjfalzHpNDpFvkTrEjb/n9/qs3jrIsoFaLSr6Mq6olzJ8/fAFmTEKgRt9u96
+         mcuA==
+X-Gm-Message-State: APjAAAUOIh2zq9PWLyVgIvcm9sDPH+VOAd3GNOllLDjmT4PZZGBCzL+Z
+        Fh4CHvmLyydT/OkATKJKsaP0o0KK5PJ6a7W51DFjjimIgRUOU7ygPxAK+hXXKFzo7I9p6/NQ2Kk
+        B/D9xb+QogwmPkRm5Spn19PKdfgpopUvRmHQ=
+X-Received: by 2002:a37:4f10:: with SMTP id d16mr12112574qkb.80.1575603875630;
+        Thu, 05 Dec 2019 19:44:35 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx8XGusUbx5y68Z/nmGRJghzyRrtS2aNUezzfFJi1WAmDx72Pu5i2ZFoYlQeM/WmgDCvxxw6w==
+X-Received: by 2002:a37:4f10:: with SMTP id d16mr12112561qkb.80.1575603875329;
+        Thu, 05 Dec 2019 19:44:35 -0800 (PST)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id p35sm5817124qtd.12.2019.12.05.19.44.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 19:44:34 -0800 (PST)
+From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/microcode: make stub function static inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Date:   Thu, 05 Dec 2019 22:44:33 -0500
+Message-ID: <52170.1575603873@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2FucGVuZyBMaSA8a2VybmVsbHdwQGdtYWlsLmNvbT4gd3JvdGU6DQo+Pg0KPj4gPg0KPj4gPkkg
-cGVyc29uYWxseSBqdXN0IHByZWZlciB0byByZW1vdmUgdGhlIOKAnGRlZmF1bHTigJ0gY2FzZSBh
-bmQgY2hhbmdlIHRoaXMg4oCccmV0dXJuIDA74oCdIHRvIOKAnHJldHVybiAxO+KAnS4NCj4+ID5C
-dXQgaXTigJlzIGEgbWF0dGVyIG9mIHRhc3RlIG9mIGNvdXJzZS4NCj4+ID4NCj4+IFllcy4gQXMg
-d2hhdCAiIFR1cm5pcCBncmVlbnMsIGFsbCBoYXZlIGxvdmUgIiBzYWlkLiBeX14NCj4NCj5BY3R1
-YWxseSBpdCBpcyBhIGdyZWF0IGFwcHJlY2lhdGVkIHRvIGludHJvZHVjZSBzb21ldGhpbmcgbW9y
-ZSB1c2VmdWwgaW5zdGVhZCBvZiB0b25zIG9mIGNsZWFudXBzLCBJIHNhdyBndXlzIGRpZCBvbmUg
-Y2xlYW51cCBhbmQgY2FuIGluY3VyIHNldmVyYWwgYnVncyBiZWZvcmUuDQo+DQpJJ2QgbGlrZSB0
-byBpbnRyb2R1Y2Ugc29tZXRoaW5nIG1vcmUgdXNlZnVsLCBidXQgc2lkZSBjb3JuZXIgY2xlYW51
-cHMgbWF5IGJlIGhhcmQgdG8NCmZvdW5kIG91dCBzb21ldGhpbmcgdG8gaW50cm9kdWNlLiBBbmQg
-c3VjaCBjbGVhbnVwcyBjYW4gYWxzbyBiZSB2YWxpZGF0ZWQgYnkgY29kZSBpbnNwZWN0aW9uDQp0
-byBhdm9pZCBzb21ldGhpbmcgYmFkLiBNYW55IHRoYW5rcy4NCg0K
+When building with C=1 W=1, both sparse and gcc complain:
+
+  CHECK   arch/x86/kernel/cpu/microcode/core.c
+./arch/x86/include/asm/microcode_amd.h:56:6: warning: symbol 'reload_ucode_amd' was not declared. Should it be static?
+  CC      arch/x86/kernel/cpu/microcode/core.o
+In file included from arch/x86/kernel/cpu/microcode/core.c:36:
+./arch/x86/include/asm/microcode_amd.h:56:6: warning: no previous prototype for 'reload_ucode_amd' [-Wmissing-prototypes
+]
+   56 | void reload_ucode_amd(void) {}
+      |      ^~~~~~~~~~~~~~~~
+
+And they're right - that function can be a static inline like its brethren.
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+
+diff --git a/arch/x86/include/asm/microcode_amd.h b/arch/x86/include/asm/microcode_amd.h
+index 209492849566..6685e1218959 100644
+--- a/arch/x86/include/asm/microcode_amd.h
++++ b/arch/x86/include/asm/microcode_amd.h
+@@ -53,6 +53,6 @@ static inline void __init load_ucode_amd_bsp(unsigned int family) {}
+ static inline void load_ucode_amd_ap(unsigned int family) {}
+ static inline int __init
+ save_microcode_in_initrd_amd(unsigned int family) { return -EINVAL; }
+-void reload_ucode_amd(void) {}
++static inline void reload_ucode_amd(void) {}
+ #endif
+ #endif /* _ASM_X86_MICROCODE_AMD_H */
+
