@@ -2,131 +2,98 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D63C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13109C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E67821823
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:48:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dubeyko-com.20150623.gappssmtp.com header.i=@dubeyko-com.20150623.gappssmtp.com header.b="RMGuSUqj"
+	by mail.kernel.org (Postfix) with ESMTP id C64B021835
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575633230;
+	bh=9dfxQeUIWKCLYO37OMur2P4YKiihHcnaQFf5wznyix4=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=Cdxg3WYXwU8eEWX+1swAnOPU1oOQXOHBTQXn6KL93T/yZOHDZZ6WwQiMnSyXsBi/n
+	 kyXtnv9Kw/pQ7pfCIRhNh/zeKYSm+CDJvNNmcwPNSMHbQO8Fn26BDBbr1DNO7QqYxD
+	 3Do/2weihkRjPEiFqG0+y7lXQCArL+I7QbmKpWEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfLFLsB (ORCPT
+        id S1726250AbfLFLxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 06:48:01 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44584 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbfLFLsB (ORCPT
+        Fri, 6 Dec 2019 06:53:50 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:48713 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726116AbfLFLxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 06:48:01 -0500
-Received: by mail-lf1-f68.google.com with SMTP id v201so5001701lfa.11
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 03:47:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dubeyko-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Hhh6mle6wsMeItwQwyNxvjvSqox2y1Yqv8ZKxxJv+Iw=;
-        b=RMGuSUqj06dSTepAFuR1WkL9q19jLPZAoArLujv15uwTBIOtBi6sx8NTTykK9n2FOY
-         Zd6tT/GI5bj2rEMXqOm/sKug7mIXpF0zstb4O2nDCNQgHC0WRLK4gH6wXb8zAHkL++rb
-         oAGMaUCeXfvHbgH2hcAzGmI2+SPQ6uApwIdjUpAc+0tHE0YYzqlTC116wid7SWsQOfsa
-         Amy+9pCh4nXp8NwawglEBVLaAWz6u4wCFk6zV9TjQG+WGAkHCuxkdAne0jJ5dU16JLTS
-         SCc3vG+PBBoYk6AGIlTaBZZ4LXEL/bePW9RyD83peDaIvg5aMgv70iFqN//ghEdN3aj1
-         vwAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Hhh6mle6wsMeItwQwyNxvjvSqox2y1Yqv8ZKxxJv+Iw=;
-        b=Wzznt3s5XlpHOWHHT0ClptwSpJIG6/VQruw8+ffJMj3zgPhEw8t3F8LjwL1+7YAN94
-         hOZ6e1bJ8i+GEQKMFtWM7tCBmxHo+IOYUMCtOcpFHbQOzdVk9/VE/DUjHUmbAhZN2c/A
-         hLEDK6WPR0HttSDq1WfsygCOROu4hbxVdPfvQwKmxE5n2DWb++/uiUfUD5cce4wU2aSv
-         8BP9h3FWzn2+AIaw7R53LTRwzIrIKappD0+9a9v1S1YGDa4CR0SCezCeHhLPv+EhPSgJ
-         yQsobr4z/TrhGYN7IjUQQ8Y6i1SOv1TVkCYeKVIXUN5webn2fwH15Q65swfft1wSTxbZ
-         5V9Q==
-X-Gm-Message-State: APjAAAV3Ud4uP1X7kQbhAkm5c4y+amnDghnZF0J/7Qo9/difMwoTPmtl
-        WIZU85sDnhwQFgfnAnd7Q8shvw==
-X-Google-Smtp-Source: APXvYqwdyDdSV6H7InUMwrXsqETxr8BCo0cBubMkB4YL/A4l5qsksa/lNvUo3xTXRHSnLwl0uBVEgg==
-X-Received: by 2002:ac2:52a5:: with SMTP id r5mr7905464lfm.19.1575632878888;
-        Fri, 06 Dec 2019 03:47:58 -0800 (PST)
-Received: from msk1wst115n.omp.ru (mail.omprussia.ru. [5.134.221.218])
-        by smtp.gmail.com with ESMTPSA id z7sm5084034lfa.81.2019.12.06.03.47.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 06 Dec 2019 03:47:58 -0800 (PST)
-Message-ID: <37c9494c40998d23d0d68afaa5a7f942a23e8986.camel@dubeyko.com>
-Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
-From:   Vyacheslav Dubeyko <slava@dubeyko.com>
-To:     Daniel Phillips <daniel@phunq.net>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Date:   Fri, 06 Dec 2019 14:47:57 +0300
-In-Reply-To: <c61706fb-3534-72b9-c4ae-0f0972bc566b@phunq.net>
-References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
-         <20191127142508.GB5143@mit.edu>
-         <6b6242d9-f88b-824d-afe9-d42382a93b34@phunq.net>
-         <9ed62cfea37bfebfb76e378d482bd521c7403c1f.camel@dubeyko.com>
-         <c61706fb-3534-72b9-c4ae-0f0972bc566b@phunq.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        Fri, 6 Dec 2019 06:53:49 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1idCAz-00025P-1c; Fri, 06 Dec 2019 12:53:37 +0100
+To:     linmiaohe <linmiaohe@huawei.com>
+Subject: Re: [PATCH] KVM: vgic: Fix potential double free dist->spis in  =?UTF-8?Q?=5F=5Fkvm=5Fvgic=5Fdestroy=28=29?=
+X-PHP-Originating-Script: 0:main.inc
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 06 Dec 2019 11:53:36 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>, <james.morse@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
+        <christoffer.dall@arm.com>, <catalin.marinas@arm.com>,
+        <eric.auger@redhat.com>, <gregkh@linuxfoundation.org>,
+        <will@kernel.org>, <andre.przywara@arm.com>, <tglx@linutronix.de>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <kvm@vger.kernel.org>
+In-Reply-To: <1574923128-19956-1-git-send-email-linmiaohe@huawei.com>
+References: <1574923128-19956-1-git-send-email-linmiaohe@huawei.com>
+Message-ID: <c786fec1d39fc8beae4bc4fe4269add9@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: linmiaohe@huawei.com, pbonzini@redhat.com, rkrcmar@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, christoffer.dall@arm.com, catalin.marinas@arm.com, eric.auger@redhat.com, gregkh@linuxfoundation.org, will@kernel.org, andre.przywara@arm.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-12-05 at 01:46 -0800, Daniel Phillips wrote:
-> On 2019-12-04 7:55 a.m., Vyacheslav Dubeyko wrote:
-> > > 
+On 2019-11-28 06:38, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
+>
+> In kvm_vgic_dist_init() called from kvm_vgic_map_resources(), if
+> dist->vgic_model is invalid, dist->spis will be freed without set
+> dist->spis = NULL. And in vgicv2 resources clean up path,
+> __kvm_vgic_destroy() will be called to free allocated resources.
+> And dist->spis will be freed again in clean up chain because we
+> forget to set dist->spis = NULL in kvm_vgic_dist_init() failed
+> path. So double free would happen.
+>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  virt/kvm/arm/vgic/vgic-init.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/virt/kvm/arm/vgic/vgic-init.c 
+> b/virt/kvm/arm/vgic/vgic-init.c
+> index 53e3969dfb52..c17c29beeb72 100644
+> --- a/virt/kvm/arm/vgic/vgic-init.c
+> +++ b/virt/kvm/arm/vgic/vgic-init.c
+> @@ -171,6 +171,7 @@ static int kvm_vgic_dist_init(struct kvm *kvm,
+> unsigned int nr_spis)
+>  			break;
+>  		default:
+>  			kfree(dist->spis);
+> +			dist->spis = NULL;
+>  			return -EINVAL;
+>  		}
+>  	}
 
-<snipped and reoredered>
+Applied, thanks.
 
-> And here is a diagram of the Shardmap three level hashing scheme,
-> which ties everything together:
-> 
->    https://github.com/danielbot/Shardmap/wiki/Shardmap-hashing-scheme
-> 
-> This needs explanation. It is something new that you won't find in
-> any
-> textbook, this is the big reveal right here.
-> 
-
-This diagram is pretty good and provides the high-level view of the
-whole scheme. But, maybe, it makes sense to show the granularity of
-hash code. It looks like the low hash is the hash of a name. Am I
-correct? But how the mid- and high- parts of the hash code are defined?
-It looks like that cached shard stores LBAs of record entry blocks are
-associated with the low hash values. But what does it mean that shard
-is cached?
-
-Here is a diagram of the cache structures, very simple:
-> 
->    https://github.com/danielbot/Shardmap/wiki/Shardmap-cache-format
-> 
-
-This diagram is not easy to relate with the previous one. So, shard
-table and shard array are the same entities or not? Or do you mean that
-shard table is storeed on the volume but shard array is constructed in
-memory?
-
->There is a diagram here:
-> 
->    
-> 
-https://github.com/danielbot/Shardmap/wiki/Shardmap-record-block-format
-
-I am slightly confused here. Does header be located at the bottom of
-the record block? My understanding is that records grow from top of the
-block down to the header direction. Am I correct? Why header is not
-located at the top of the block with entry dictionary? Any special
-purpose here?
-
-Thanks,
-Viacheslav Dubeyko.
-
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
