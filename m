@@ -2,167 +2,244 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B505C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682DDC2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F7924659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3634524659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:13:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CewAFOPM"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KCufpaE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbfLFPLz (ORCPT
+        id S1726375AbfLFPNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 10:11:55 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:40838 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfLFPLy (ORCPT
+        Fri, 6 Dec 2019 10:13:40 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33372 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfLFPNj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 10:11:54 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB6F9fDU062108;
-        Fri, 6 Dec 2019 15:11:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=d+DB6BN3emid2okU8sMcrRNCC2hEHqkhI2naxlDywC8=;
- b=CewAFOPMBdGrtx2oENscdHUBHcpowWvSAmgLizlUDRCAHcjCuCi1q51qVa9w1+geDlTS
- hinsJ0eYvVHPqE/cCK46hDKTZ0OI9H3BCH16fq7df/7K4IhOkmqomHKOOB+jbt9S8YaH
- kxnmOHdk6KGPRg33dn4s0X3JTfic4q4XQwwoUGL4xEkoSdlyTAazk75N0l8A64ipy6Dh
- xsN9snuicWkB0hGZjeNWpgPQeMwgpWGhM2sP9hScYPWTwPgMkv64EliJWAvc3lOlpOJH
- WprWcSqUeGdaz+CpuxvZXxgn3gqmhRiL57AzcbfQAUlt4h10NfNO589XrkYZQ6cBSLen kQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2wkgcqvm56-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Dec 2019 15:11:46 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB6F9Z5Z191950;
-        Fri, 6 Dec 2019 15:11:45 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2wqbeqxstc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Dec 2019 15:11:45 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB6FBhRZ023796;
-        Fri, 6 Dec 2019 15:11:43 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 06 Dec 2019 07:11:43 -0800
-Subject: Re: [PATCH] xen/pciback: Prevent NULL pointer dereference in
- quirks_show
-To:     Stefan Nuernberger <snu@amazon.com>, linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Uwe Dannowski <uwed@amazon.de>,
-        Conny Seidel <consei@amazon.de>,
-        xen-devel@lists.xenproject.org, stable@vger.kernel.org
-References: <20191206134804.4537-1-snu@amazon.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <9917a357-12f6-107f-e08d-33e464036317@oracle.com>
-Date:   Fri, 6 Dec 2019 10:11:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 6 Dec 2019 10:13:39 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB6FDC3h046787;
+        Fri, 6 Dec 2019 09:13:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575645192;
+        bh=wWya3K6I8EFzGGNqXQjTcOmeLD3WYHW3qDVDi6nLJbM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=KCufpaE4WIMA5BwrA97CtwnEFoA3jy7pfIPnJpQpjkhCh9s1Hxc+E0vpCORm60pOh
+         FfTRzQNkKDTDpkfpvF0YRxTHhc+sJoIpR+TyslFY5Zt+Wz2TJoq+4hnV23V12tzZw1
+         RY1xajLl1761LcF/9ricd29PclHqru9zh0JKjAn8=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB6FDCx9024589;
+        Fri, 6 Dec 2019 09:13:12 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 6 Dec
+ 2019 09:13:12 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 6 Dec 2019 09:13:11 -0600
+Received: from [10.250.133.44] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB6FD5Th021803;
+        Fri, 6 Dec 2019 09:13:06 -0600
+Subject: Re: [PATCH v2] scsi: ufs: Update L4 attributes on manual hibern8 exit
+ in Cadence UFS.
+To:     sheebab <sheebab@cadence.com>, <alim.akhtar@samsung.com>,
+        <avri.altman@wdc.com>, <pedrom.sousa@synopsys.com>,
+        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <stanley.chu@mediatek.com>, <beanhuo@micron.com>,
+        <yuehaibing@huawei.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <rafalc@cadence.com>, <mparab@cadence.com>
+References: <1575606303-10917-1-git-send-email-sheebab@cadence.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <849dfea6-a2ba-2d52-cb16-733c767dbbbe@ti.com>
+Date:   Fri, 6 Dec 2019 20:43:04 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20191206134804.4537-1-snu@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1575606303-10917-1-git-send-email-sheebab@cadence.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9462 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912060129
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9462 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912060129
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/6/19 8:48 AM, Stefan Nuernberger wrote:
-> From: Uwe Dannowski <uwed@amazon.de>
->
-> Reading /sys/bus/pci/drivers/pciback/quirks while unbinding can result
-> in dereferencing a NULL pointer. Instead, skip printing information
-> about the dangling quirk.
->
-> Reported-by: Conny Seidel <consei@amazon.de>
-> Signed-off-by: Uwe Dannowski <uwed@amazon.de>
-> Signed-off-by: Stefan Nuernberger <snu@amazon.com>
->
-> Cc: xen-devel@lists.xenproject.org
-> Cc: stable@vger.kernel.org
+Hi,
+
+On 12/6/2019 9:55 AM, sheebab wrote:
+> Backup L4 attributes duirng manual hibern8 entry
+> and restore the L4 attributes on manual hibern8 exit as per JESD220C.
+> 
+> Signed-off-by: Sheeba B <sheebab@cadence.com>
+> 
+> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+
+Tested-by: Vignesh Raghavendra <vigneshr@ti.com>
+
+
+Regards
+Vignesh
 > ---
->  drivers/xen/xen-pciback/pci_stub.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
-> index 097410a7cdb7..da725e474294 100644
-> --- a/drivers/xen/xen-pciback/pci_stub.c
-> +++ b/drivers/xen/xen-pciback/pci_stub.c
-> @@ -1346,6 +1346,8 @@ static ssize_t quirks_show(struct device_driver *drv, char *buf)
->  				   quirk->devid.subdevice);
+> v2:
+> Dropped patch 1/2 for this series and rebased to include only manual hibernation fixes
+> ---
+>  drivers/scsi/ufs/cdns-pltfrm.c | 106 +++++++++++++++++++++++++++++++++
+>  1 file changed, 106 insertions(+)
+> 
+> diff --git a/drivers/scsi/ufs/cdns-pltfrm.c b/drivers/scsi/ufs/cdns-pltfrm.c
+> index 6feeb0faf123..1c80f9633da6 100644
+> --- a/drivers/scsi/ufs/cdns-pltfrm.c
+> +++ b/drivers/scsi/ufs/cdns-pltfrm.c
+> @@ -19,6 +19,85 @@
 >  
->  		dev_data = pci_get_drvdata(quirk->pdev);
-> +		if (!dev_data)
-> +			continue;
+>  #define CDNS_UFS_REG_HCLKDIV	0xFC
+>  #define CDNS_UFS_REG_PHY_XCFGD1	0x113C
+> +#define CDNS_UFS_MAX_L4_ATTRS 12
+> +
+> +struct cdns_ufs_host {
+> +	/**
+> +	 * cdns_ufs_dme_attr_val - for storing L4 attributes
+> +	 */
+> +	u32 cdns_ufs_dme_attr_val[CDNS_UFS_MAX_L4_ATTRS];
+> +};
+> +
+> +/**
+> + * cdns_ufs_get_l4_attr - get L4 attributes on local side
+> + * @hba: per adapter instance
+> + *
+> + */
+> +static void cdns_ufs_get_l4_attr(struct ufs_hba *hba)
+> +{
+> +	struct cdns_ufs_host *host = ufshcd_get_variant(hba);
+> +
+> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_PEERDEVICEID),
+> +		       &host->cdns_ufs_dme_attr_val[0]);
+> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_PEERCPORTID),
+> +		       &host->cdns_ufs_dme_attr_val[1]);
+> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_TRAFFICCLASS),
+> +		       &host->cdns_ufs_dme_attr_val[2]);
+> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_PROTOCOLID),
+> +		       &host->cdns_ufs_dme_attr_val[3]);
+> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_CPORTFLAGS),
+> +		       &host->cdns_ufs_dme_attr_val[4]);
+> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_TXTOKENVALUE),
+> +		       &host->cdns_ufs_dme_attr_val[5]);
+> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_RXTOKENVALUE),
+> +		       &host->cdns_ufs_dme_attr_val[6]);
+> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_LOCALBUFFERSPACE),
+> +		       &host->cdns_ufs_dme_attr_val[7]);
+> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_PEERBUFFERSPACE),
+> +		       &host->cdns_ufs_dme_attr_val[8]);
+> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_CREDITSTOSEND),
+> +		       &host->cdns_ufs_dme_attr_val[9]);
+> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_CPORTMODE),
+> +		       &host->cdns_ufs_dme_attr_val[10]);
+> +	ufshcd_dme_get(hba, UIC_ARG_MIB(T_CONNECTIONSTATE),
+> +		       &host->cdns_ufs_dme_attr_val[11]);
+> +}
+> +
+> +/**
+> + * cdns_ufs_set_l4_attr - set L4 attributes on local side
+> + * @hba: per adapter instance
+> + *
+> + */
+> +static void cdns_ufs_set_l4_attr(struct ufs_hba *hba)
+> +{
+> +	struct cdns_ufs_host *host = ufshcd_get_variant(hba);
+> +
+> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 0);
+> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERDEVICEID),
+> +		       host->cdns_ufs_dme_attr_val[0]);
+> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERCPORTID),
+> +		       host->cdns_ufs_dme_attr_val[1]);
+> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_TRAFFICCLASS),
+> +		       host->cdns_ufs_dme_attr_val[2]);
+> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_PROTOCOLID),
+> +		       host->cdns_ufs_dme_attr_val[3]);
+> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CPORTFLAGS),
+> +		       host->cdns_ufs_dme_attr_val[4]);
+> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_TXTOKENVALUE),
+> +		       host->cdns_ufs_dme_attr_val[5]);
+> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_RXTOKENVALUE),
+> +		       host->cdns_ufs_dme_attr_val[6]);
+> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_LOCALBUFFERSPACE),
+> +		       host->cdns_ufs_dme_attr_val[7]);
+> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERBUFFERSPACE),
+> +		       host->cdns_ufs_dme_attr_val[8]);
+> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CREDITSTOSEND),
+> +		       host->cdns_ufs_dme_attr_val[9]);
+> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CPORTMODE),
+> +		       host->cdns_ufs_dme_attr_val[10]);
+> +	ufshcd_dme_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE),
+> +		       host->cdns_ufs_dme_attr_val[11]);
+> +}
 >  
->  		list_for_each_entry(cfg_entry, &dev_data->config_fields, list) {
-
-Couldn't you have the same race here?
-
--boris
-
->  			field = cfg_entry->field;
-
+>  /**
+>   * Sets HCLKDIV register value based on the core_clk
+> @@ -77,6 +156,22 @@ static int cdns_ufs_hce_enable_notify(struct ufs_hba *hba,
+>  	return cdns_ufs_set_hclkdiv(hba);
+>  }
+>  
+> +/**
+> + * Called around hibern8 enter/exit.
+> + * @hba: host controller instance
+> + * @cmd: UIC Command
+> + * @status: notify stage (pre, post change)
+> + *
+> + */
+> +static void cdns_ufs_hibern8_notify(struct ufs_hba *hba, enum uic_cmd_dme cmd,
+> +				    enum ufs_notify_change_status status)
+> +{
+> +	if (status == PRE_CHANGE && cmd == UIC_CMD_DME_HIBER_ENTER)
+> +		cdns_ufs_get_l4_attr(hba);
+> +	if (status == POST_CHANGE && cmd == UIC_CMD_DME_HIBER_EXIT)
+> +		cdns_ufs_set_l4_attr(hba);
+> +}
+> +
+>  /**
+>   * Called before and after Link startup is carried out.
+>   * @hba: host controller instance
+> @@ -117,6 +212,14 @@ static int cdns_ufs_link_startup_notify(struct ufs_hba *hba,
+>  static int cdns_ufs_init(struct ufs_hba *hba)
+>  {
+>  	int status = 0;
+> +	struct cdns_ufs_host *host;
+> +	struct device *dev = hba->dev;
+> +
+> +	host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
+> +
+> +	if (!host)
+> +		return -ENOMEM;
+> +	ufshcd_set_variant(hba, host);
+>  
+>  	if (hba->vops && hba->vops->phy_initialization)
+>  		status = hba->vops->phy_initialization(hba);
+> @@ -144,8 +247,10 @@ static int cdns_ufs_m31_16nm_phy_initialization(struct ufs_hba *hba)
+>  
+>  static const struct ufs_hba_variant_ops cdns_ufs_pltfm_hba_vops = {
+>  	.name = "cdns-ufs-pltfm",
+> +	.init = cdns_ufs_init,
+>  	.hce_enable_notify = cdns_ufs_hce_enable_notify,
+>  	.link_startup_notify = cdns_ufs_link_startup_notify,
+> +	.hibern8_notify = cdns_ufs_hibern8_notify,
+>  };
+>  
+>  static const struct ufs_hba_variant_ops cdns_ufs_m31_16nm_pltfm_hba_vops = {
+> @@ -154,6 +259,7 @@ static const struct ufs_hba_variant_ops cdns_ufs_m31_16nm_pltfm_hba_vops = {
+>  	.hce_enable_notify = cdns_ufs_hce_enable_notify,
+>  	.link_startup_notify = cdns_ufs_link_startup_notify,
+>  	.phy_initialization = cdns_ufs_m31_16nm_phy_initialization,
+> +	.hibern8_notify = cdns_ufs_hibern8_notify,
+>  };
+>  
+>  static const struct of_device_id cdns_ufs_of_match[] = {
+> 
