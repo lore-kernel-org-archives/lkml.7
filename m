@@ -2,161 +2,159 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8C0C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2A6C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD0020707
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2E320707
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:32:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="J4+5j2tX";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="av8IuSlc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbfLFCbq (ORCPT
+        id S1726269AbfLFCcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 21:31:46 -0500
-Received: from emcscan.emc.com.tw ([192.72.220.5]:64185 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfLFCbp (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 21:31:45 -0500
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="33171812"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 06 Dec 2019 10:31:33 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(71513:0:AUTH_RELAY)
-        (envelope-from <dave.wang@emc.com.tw>); Fri, 06 Dec 2019 10:31:33 +0800 (CST)
-Received: from 192.168.33.57
-        by webmail.emc.com.tw with Mail2000 ESMTP Server V7.00(101176:2:AUTH_RELAY)
-        (envelope-from <dave.wang@emc.com.tw>); Fri, 06 Dec 2019 10:31:33 +0800 (CST)
-From:   "Dave.Wang" <dave.wang@emc.com.tw>
-To:     <Linux-kernel@vger.kernel.org>, <Linux-input@vger.kernel.org>,
-        "'Benjamin Tissoires'" <benjamin.tissoires@redhat.com>,
-        <Dmitry.torokhov@gmail.com>
-Cc:     "'Josh.Chen'" <josh.chen@emc.com.tw>, <jingle.wu@emc.com.tw>,
-        "'phoenix'" <phoenix@emc.com.tw>
-Subject: [PATCH 3/6] Input: elantech - Increace and correct device information for pattern 0,1,2
-Date:   Fri, 6 Dec 2019 10:31:32 +0800
-Message-ID: <000b01d5abdd$45ffece0$d1ffc6a0$@emc.com.tw>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AdWr3MrL7q4sCqxkTvGjETZLUp5TEw==
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDYxMjlcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy04Mzc4YTZhMC0xN2QwLTExZWEtYWExOS04OGQ3ZjY1NjczMzBcYW1lLXRlc3RcODM3OGE2YTItMTdkMC0xMWVhLWFhMTktODhkN2Y2NTY3MzMwYm9keS50eHQiIHN6PSIzNjAxIiB0PSIxMzIyMDA3MzA5MjQ1ODAxMjgiIGg9IlNWZWxGTTNyZ3pXYk8wZU42ZFhyRlByWkI3Yz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+        Thu, 5 Dec 2019 21:32:06 -0500
+Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:55848
+        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726160AbfLFCcF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 21:32:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575599524;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=dbpQ33z0+MU9P4fX+5DhPUfJ1DnpVxYrmcfpMV8MJaI=;
+        b=J4+5j2tXiA8fSOxzRwBXkhxhFSPJ7hFwa2L2jF63lKosOWWgoCCJMwHZj8dYHbd4
+        zSBRbhcxOQpMcXQ4iK2wF2m+Ht2uGSW3FxtvzHWFDNbqyPMrdaDsSV5uDRL9m0TjFPH
+        WHv/DhkjTY/gdEtdsa+HjEK3g6UKfniV1HZY1lok=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575599524;
+        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
+        bh=dbpQ33z0+MU9P4fX+5DhPUfJ1DnpVxYrmcfpMV8MJaI=;
+        b=av8IuSlcY46Zd9obFJpbpiy/vBakrI94qBLC/sy6rVV/9wDGeLqYl78Ax630M4bP
+        hJh7shrH7j32Quc3XwvSIzbdd+HFhmS0GkSYXRosO3bCmcblcLwssTkaekz/8h4gb7b
+        6XvNruGFtB6BJlZVdXxXdBDRxaPHSGMT8+Nocap0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 921A8C4479F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] scsi: ufs: Export query request interfaces
+Date:   Fri, 6 Dec 2019 02:32:04 +0000
+Message-ID: <0101016ed90ccaa9-28e4056b-b182-4739-80e0-c9f1dff0f257-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 1.9.1
+X-SES-Outgoing: 2019.12.06-54.240.27.11
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Get and correct the device informations including fw_checksum, iap_checksum,
-ic_body, iap_version from differnet pattern.
+Vendor drivers may need to send query requests in proprietary
+implementations. Hence, export the query request interfaces
+so that vendor drivers can use them.
 
-Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
----
- drivers/input/mouse/elantech.c | 47 +++++++++++++++++++++++++++++++++-
- drivers/input/mouse/elantech.h |  8 ++++++
- 2 files changed, 54 insertions(+), 1 deletion(-)
+Signed-off-by: Can Guo <cang@codeaurora.org>
 
-diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index afb87122b766..322b181d00e9 100644
---- a/drivers/input/mouse/elantech.c
-+++ b/drivers/input/mouse/elantech.c
-@@ -857,7 +857,8 @@ static int elantech_packet_check_v4(struct psmouse
-*psmouse)
- 	 */
- 	if (etd->info.crc_enabled)
- 		sanity_check = ((packet[3] & 0x08) == 0x00);
--	else if (ic_version == 7 && etd->info.samples[1] == 0x2A)
-+	else if (ic_version == 7 && etd->info.samples[1] == 0x2A &&
-+			etd->info.pattern == 0x00)
- 		sanity_check = ((packet[3] & 0x1c) == 0x10);
- 	else
- 		sanity_check = ((packet[0] & 0x08) == 0x00 &&
-@@ -1669,6 +1670,50 @@ static int elantech_query_info(struct psmouse
-*psmouse,
- 			     info->samples[2]);
- 	}
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index c449b68..0d1667d 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -2737,7 +2737,7 @@ static inline void ufshcd_init_query(struct ufs_hba *hba,
+ 	(*request)->upiu_req.selector = selector;
+ }
  
-+	if (elantech_read_reg_params(psmouse, ETP_FW_CHECKSUM_QUERY,
-+				info->fw_checksum)) {
-+		psmouse_err(psmouse, "failed to get fw checksum\n");
-+		return -EINVAL;
-+	}
-+	psmouse_info(psmouse,
-+			 "Elan fw checksum result %02x, %02x, %02x\n",
-+			 info->fw_checksum[0],
-+			 info->fw_checksum[1],
-+			 info->fw_checksum[2]);
-+
-+	if (elantech_read_reg_params(psmouse, ETP_IAP_CHECKSUM_QUERY,
-+				info->iap_checksum)) {
-+		psmouse_err(psmouse, "failed to get iap checksum\n");
-+		return -EINVAL;
-+	}
-+	psmouse_info(psmouse,
-+			 "Elan iap checksum result %02x, %02x, %02x\n",
-+			 info->iap_checksum[0],
-+			 info->iap_checksum[1],
-+			 info->iap_checksum[2]);
-+
-+	if (info->pattern > 0x00) {
-+		if (info->send_cmd(psmouse, ETP_ICBODY_QUERY,
-info->ic_body)) {
-+			psmouse_err(psmouse, "failed to query ic body\n");
-+			return -EINVAL;
-+		}
-+		psmouse_info(psmouse,
-+			     "Elan ic body : %02x%02x, fw version : %02x\n",
-+			     info->ic_body[0],
-+			     info->ic_body[1],
-+			     info->ic_body[2]);
-+
-+		if (info->send_cmd(psmouse, ETP_IAP_VERSION_QUERY,
-+					info->iap_version)) {
-+			psmouse_err(psmouse, "failed to query iap
-version\n");
-+			return -EINVAL;
-+		}
-+		psmouse_info(psmouse,
-+			     "Elan iap interface type : %02x, iap version :
-%02x\n",
-+			     info->iap_version[1],
-+			     info->iap_version[2]);
-+	}
-+
- 	if (info->samples[1] == 0x74 && info->hw_version == 0x03) {
- 		/*
- 		 * This module has a bug which makes absolute mode
-diff --git a/drivers/input/mouse/elantech.h b/drivers/input/mouse/elantech.h
-index 0aae6a9de8f0..a633ffa0eb07 100644
---- a/drivers/input/mouse/elantech.h
-+++ b/drivers/input/mouse/elantech.h
-@@ -18,6 +18,10 @@
- #define ETP_CAPABILITIES_QUERY		0x02
- #define ETP_SAMPLE_QUERY		0x03
- #define ETP_RESOLUTION_QUERY		0x04
-+#define ETP_ICBODY_QUERY		0x05
-+#define ETP_IAP_VERSION_QUERY		0x06
-+#define ETP_IAP_CHECKSUM_QUERY		0x0A
-+#define ETP_FW_CHECKSUM_QUERY		0xFE
+-static int ufshcd_query_flag_retry(struct ufs_hba *hba,
++int ufshcd_query_flag_retry(struct ufs_hba *hba,
+ 	enum query_opcode opcode, enum flag_idn idn, bool *flag_res)
+ {
+ 	int ret;
+@@ -2759,6 +2759,7 @@ static int ufshcd_query_flag_retry(struct ufs_hba *hba,
+ 			__func__, opcode, idn, ret, retries);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(ufshcd_query_flag_retry);
  
- /*
-  * Command values for register reading or writing
-@@ -138,6 +142,10 @@ struct finger_pos {
- struct elantech_device_info {
- 	unsigned char capabilities[3];
- 	unsigned char samples[3];
-+	unsigned char fw_checksum[3];
-+	unsigned char iap_checksum[3];
-+	unsigned char ic_body[3];
-+	unsigned char iap_version[3];
- 	unsigned char debug;
- 	unsigned char hw_version;
- 	unsigned char pattern;
+ /**
+  * ufshcd_query_flag() - API function for sending flag query requests
+@@ -2826,6 +2827,7 @@ int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
+ 	ufshcd_release(hba);
+ 	return err;
+ }
++EXPORT_SYMBOL_GPL(ufshcd_query_flag);
+ 
+ /**
+  * ufshcd_query_attr - API function for sending attribute requests
+@@ -2890,6 +2892,7 @@ int ufshcd_query_attr(struct ufs_hba *hba, enum query_opcode opcode,
+ 	ufshcd_release(hba);
+ 	return err;
+ }
++EXPORT_SYMBOL_GPL(ufshcd_query_attr);
+ 
+ /**
+  * ufshcd_query_attr_retry() - API function for sending query
+@@ -2904,7 +2907,7 @@ int ufshcd_query_attr(struct ufs_hba *hba, enum query_opcode opcode,
+  *
+  * Returns 0 for success, non-zero in case of failure
+ */
+-static int ufshcd_query_attr_retry(struct ufs_hba *hba,
++int ufshcd_query_attr_retry(struct ufs_hba *hba,
+ 	enum query_opcode opcode, enum attr_idn idn, u8 index, u8 selector,
+ 	u32 *attr_val)
+ {
+@@ -2927,6 +2930,7 @@ static int ufshcd_query_attr_retry(struct ufs_hba *hba,
+ 			__func__, idn, ret, QUERY_REQ_RETRIES);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(ufshcd_query_attr_retry);
+ 
+ static int __ufshcd_query_descriptor(struct ufs_hba *hba,
+ 			enum query_opcode opcode, enum desc_idn idn, u8 index,
+@@ -3024,6 +3028,7 @@ int ufshcd_query_descriptor_retry(struct ufs_hba *hba,
+ 
+ 	return err;
+ }
++EXPORT_SYMBOL_GPL(ufshcd_query_descriptor_retry);
+ 
+ /**
+  * ufshcd_read_desc_length - read the specified descriptor length from header
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index e0fe247..a1d27e6 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -923,8 +923,13 @@ int ufshcd_read_desc_param(struct ufs_hba *hba,
+ 			   u8 param_size);
+ int ufshcd_query_attr(struct ufs_hba *hba, enum query_opcode opcode,
+ 		      enum attr_idn idn, u8 index, u8 selector, u32 *attr_val);
++int ufshcd_query_attr_retry(struct ufs_hba *hba, enum query_opcode opcode,
++			    enum attr_idn idn, u8 index, u8 selector,
++			    u32 *attr_val);
+ int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
+ 	enum flag_idn idn, bool *flag_res);
++int ufshcd_query_flag_retry(struct ufs_hba *hba, enum query_opcode opcode,
++			    enum flag_idn idn, bool *flag_res);
+ 
+ #define SD_ASCII_STD true
+ #define SD_RAW false
 -- 
-2.17.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
