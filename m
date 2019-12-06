@@ -2,126 +2,105 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883A2C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CDFC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691BA24659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDE02464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:01:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CvCXNPNe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbfLFMAH (ORCPT
+        id S1726287AbfLFMBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:00:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:41226 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfLFMAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:00:06 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E36231B;
-        Fri,  6 Dec 2019 04:00:06 -0800 (PST)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 268B63F52E;
-        Fri,  6 Dec 2019 04:00:05 -0800 (PST)
-Subject: Re: [PATCH] sched/fair: Optimize select_idle_core
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-References: <20191205172316.8198-1-srikar@linux.vnet.ibm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <6242deaa-e570-3384-0737-e49abb0599dd@arm.com>
-Date:   Fri, 6 Dec 2019 12:00:00 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 6 Dec 2019 07:01:40 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:54232 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbfLFMBk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 07:01:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WDGe9NNIN+jrDK16NuyUHcFjeEvddlNCAaErz6+/soE=; b=CvCXNPNew8FBsA+FN+LYn7os6
+        S4tHptRoUEtk+BYeueBh2byPdWt0dwGvEZgXxeACiVl43DV1InEPPGoUg2SccqVlpEVUomRoak//C
+        SpxXlxFGoh8RoxbCSBIFmsgSFoI3fhb1jqLryQVl1Ifb96k1EjLmBnDaFoGtlFhpYiQDwNuSJtcBl
+        pBgQewubLX+wnBCf2G4z7svyAio8GgHoBETydrnolkYSz6xbAhLp2VYdi3sN+Oojie00IOjFeJNG3
+        gTLl8eCSQIsPrItbgjQ1H6sr+/TQPdMl4loFkKfLgV5/Aio2DHV/a46VvqDpHTTTS7ec5gLYic8IM
+        FLTmLo6ww==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1idCIg-00039F-NH; Fri, 06 Dec 2019 12:01:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7124E303F45;
+        Fri,  6 Dec 2019 13:00:14 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E270920B83957; Fri,  6 Dec 2019 13:01:31 +0100 (CET)
+Date:   Fri, 6 Dec 2019 13:01:31 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     liu.song11@zte.com.cn
+Cc:     fishland@aliyun.com, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, jiang.xuexin@zte.com.cn
+Subject: Re: [PATCH] psi: Only collect online cpu time in collect_percpu_times
+Message-ID: <20191206120131.GG2844@hirez.programming.kicks-ass.net>
+References: <20191205103329.GH2810@hirez.programming.kicks-ass.net>
+ <201912061229281310714@zte.com.cn>
 MIME-Version: 1.0
-In-Reply-To: <20191205172316.8198-1-srikar@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201912061229281310714@zte.com.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/12/2019 17:23, Srikar Dronamraju wrote:
-> Currently we loop through all threads of a core to evaluate if the core
-> is idle or not. This is unnecessary. If a thread of a core is not
-> idle, skip evaluating other threads of a core.
+On Fri, Dec 06, 2019 at 12:29:28PM +0800, liu.song11@zte.com.cn wrote:
+
+> >No, the value will not change, but it need not be 0.
 > 
-> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-> ---
->  kernel/sched/fair.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+> Hi,
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 69a81a5709ff..b9d628128cfc 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5872,10 +5872,12 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
->  		bool idle = true;
->  
->  		for_each_cpu(cpu, cpu_smt_mask(core)) {
-> -			__cpumask_clear_cpu(cpu, cpus);
-> -			if (!available_idle_cpu(cpu))
-> +			if (!available_idle_cpu(cpu)) {
->  				idle = false;
-> +				break;
-> +			}
->  		}
-> +		cpumask_andnot(cpus, cpus, cpu_smt_mask(core));
->  
+> Suppose there are 4 cpu online, then we take cpu 3 offline. In "collect_percpu_times",
+> because "for_each_possible_cpu", will still collect the time of cpu 3 which is offline.
 
-That looks sensible enough to me. I do have one random thought, however.
+Correct, someone needs to collect the last deltas.
 
+> However, it is clear that "nonidle" will remain at 0 until cpu 3 comes online again.
 
-Say you have a 4-core SMT2 system with the usual numbering scheme:
+How does it become 0?
 
-{0, 4}  {1, 5}  {2, 6}  {3, 7}
-CORE0   CORE1   CORE2   CORE3
+Consider
+
+	CPU2		CPU3
+
+			// runs crap, nonidle increases
+
+	// offline CPU3
+
+			// goes offline, nonidle is still >0
 
 
-Say 'target' is the prev_cpu, in that case let's pick 5. Because we do a
-for_each_cpu_wrap(), our iteration for 'core' would start with 
+At this point someone needs to collect the delta from CPU3 to make it 0.
+But if you only iterate online CPUs, that will not happen.
 
-  5, 6, 7, ...
+> And the value of "deltas[s]" will not change after collecting CPU 2. In "get_recent_times",
+> the value of "groupc->times_prev[aggregator][s]" corresponding to cpu 3 will not change.
 
-So say CORE2 is entirely idle and CORE1 isn't, we would go through the
-inner loop on CORE1 (with 'core' == 5), then go through CORE2 (with
-'core' == 6) and return 'core'. I find it a bit unusual that we wouldn't
-return the first CPU in the SMT mask, usually we try to fill sched_groups
-in cpumask order.
+They will not change after the first collection after hot-un-plug. You
+need at least one collection after it stops running crap.
 
+> This is only a case where one CPU goes offline. If there are multiple CPUs offline,
+> it will correspond to more meaningless operations. So here should be changed to
+> "for_each_online_cpu", the effect is exactly the same as "for_each_possible_cpu",
+> and the possible meaningless processes are excluded.
 
-If we could have 'cpus' start with only primary CPUs, that would simplify
-things methinks:
-
-  for_each_cpu_wrap(core, cpus, target) {
-	  bool idle = true;
-
-	  for_each_cpu(cpu, cpu_smt_mask(core)) {
-		  if (!available_idle_cpu(cpu)) {
-			  idle = false;
-			  break;
-		  }
-
-	  __cpumask_clear_cpu(core, cpus);
-
-	  if (idle)
-		  return core;
-
-
-Food for thought; your change itself looks fine as it is.
-
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-
-
->  		if (idle)
->  			return core;
-> 
+It is not. Or if it is, you failed to explain who collects on hotplug.
