@@ -2,107 +2,151 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC74DC2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F49C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2DB42464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C705B2054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:17:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FTpqPQZK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q/swt7CB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfLFQRc (ORCPT
+        id S1726469AbfLFQRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:17:32 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47240 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbfLFQRb (ORCPT
+        Fri, 6 Dec 2019 11:17:51 -0500
+Received: from mail-wr1-f54.google.com ([209.85.221.54]:45159 "EHLO
+        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbfLFQRv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:17:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FfwzEcorkXbM8vzjX38dJsbMyLfJpA+SOA2PraA0uq4=; b=FTpqPQZKYGxlRzIKQK0d4SO9E
-        g7zWp7NZxc3HPWc7mrdYAdoZQV+kQS22TETVLcgTEx/IdM3R+LfXeaMKa8ZBzxXHTqrT886NySwqE
-        TMYwey2Fg5hvpowobL+LcMxg3BQ6HaSA4GZ4McLl1Si+jp5YG7ilVtkNJwCvhEmKkJs+LlZwDmQaP
-        sdLcb6QNThw72RD7AiTRW5rlE7/c4x4cx2vTPvahUcFWe0uoX1WTD7chUTwNoyPyFA/wKPxUgkYCE
-        XQNYdUkQsC2X4sB5zrkYK7J6guJnzMPcGK3xN4+IV4SEMDciCTjG3wVcqVVHCd/SavTMz3W5qtsZG
-        yc7D9IeHA==;
-Received: from [2601:1c0:6280:3f0::3deb]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1idGIN-00013t-5Y; Fri, 06 Dec 2019 16:17:31 +0000
-Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>
-References: <20191206135406.563336e7@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <cd4091e4-1c04-a880-f239-00bc053f46a2@infradead.org>
-Date:   Fri, 6 Dec 2019 08:17:30 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191206135406.563336e7@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 6 Dec 2019 11:17:51 -0500
+Received: by mail-wr1-f54.google.com with SMTP id j42so8337342wrj.12
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 08:17:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=xPgiR07qhqZm5A9xM8+Iw1t/agTh+5S/g1k60Y08b7A=;
+        b=q/swt7CBHg5vD+QNabPF9s4lCOTP66BQ1LmyaXUAOX4/jQEBD4shBj95j7PPSdV2b2
+         KXMdsHxn/wZeKR+bhV901/AZIt03KBZd3ghVoJvO/sE/YGT1EVSYOB7MCddNGOIRNa1z
+         JN2mOvTlgAjVAp5dFBgthT6H2yog7RcQXY1N0pxvEeAUE8sG6oPAash4OC2SsqLmncp2
+         TUJbox7lbuYL30nJ8u6EQ8nuDhbKs4scs7SrNkfW+Sgt1dG3i26vskQ9lAVUaTt7LvuL
+         RSusecS6dxIsTdj6zy7icnbS8A5hx3SoC+tqhhIyerRhf5sYdpTW7/jtAjP3AcAPvasI
+         wvWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=xPgiR07qhqZm5A9xM8+Iw1t/agTh+5S/g1k60Y08b7A=;
+        b=qgCoMRwRi82N1Hd4mGTfwrILX++HLSYzGVbMDX0bEd5XHViiuJCnzV8L/KmLX2Rknb
+         f7LNB+KHeFYY03i4ldfKcygs7O+9WD+hlln4xiUHZZtecEoAG8GnUktVrVsOJioEq4+U
+         3SlkuxKldMy4Jj6Szyhy4dC/YWNfV17nHJMhrozB+IIvXyGyaKhv012Aasq1RD5SrHG1
+         wMsFcQ0cYTOgzhwOK2LkGDaNInWQWqE63wpZljV2OqZsHpRXyVrhHuO1PNR4nRTsFcxT
+         4JPxSA+9oS9UsDGOK4R5JDa+HSNQ1ofivm9wwf8rlAY6OdBEdoVv/Py24Sf9HhdqUTWX
+         uJuw==
+X-Gm-Message-State: APjAAAUO4YmhahVspO+m2mMykQBeFQ8ACHCwis/CW+a6x+odykaINyUC
+        9D020+eFukLckSS+EljFNsIBolpiJ7Q=
+X-Google-Smtp-Source: APXvYqzaeZEuz67KTTOQnA2npcQUl0F9ocyZi8VtH6jYME5Sp7wUkwlwgZhApAJ+QpK3B2gA3f3gVQ==
+X-Received: by 2002:adf:b64e:: with SMTP id i14mr16150392wre.332.1575649068315;
+        Fri, 06 Dec 2019 08:17:48 -0800 (PST)
+Received: from [192.168.0.102] (84-33-74-162.dyn.eolo.it. [84.33.74.162])
+        by smtp.gmail.com with ESMTPSA id i5sm6463500wrv.34.2019.12.06.08.17.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Dec 2019 08:17:47 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: Injecting delays into block layer
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <3D695D19-B226-4093-9C27-CE561ED08CB7@linaro.org>
+Date:   Fri, 6 Dec 2019 17:17:45 +0100
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        SIMONE RICHETTI <206161@studenti.unimore.it>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <942604AE-5A91-4E05-869F-74A7EAC5A247@linaro.org>
+References: <d7ee69fc368db16fa96a05643083674a@natalenko.name>
+ <3D695D19-B226-4093-9C27-CE561ED08CB7@linaro.org>
+To:     Oleksandr Natalenko <oleksandr@natalenko.name>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/5/19 6:54 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Please do not add any material for v5.6 to your linux-next included
-> trees until after v5.5-rc1 has been released.
-> 
-> Changes since 20191204:
-> 
-
-on x86_64:
-
-fs/btrfs/ctree.o: warning: objtool: btrfs_search_slot()+0x2d4: unreachable instruction
-fs/btrfs/extent-tree.o: warning: objtool: btrfs_get_extent_inline_ref_type()+0x161: unreachable instruction
-fs/btrfs/disk-io.o: warning: objtool: btrfs_init_fs_root()+0x1d9: unreachable instruction
-fs/btrfs/transaction.o: warning: objtool: btrfs_trans_release_metadata()+0x96: unreachable instruction
-fs/btrfs/inode.o: warning: objtool: btrfs_retry_endio()+0x77: unreachable instruction
-fs/btrfs/file.o: warning: objtool: __btrfs_drop_extents()+0x4aa: unreachable instruction
-fs/btrfs/extent_map.o: warning: objtool: mergable_maps()+0x100: unreachable instruction
-fs/btrfs/xattr.o: warning: objtool: btrfs_setxattr()+0x86: unreachable instruction
-fs/btrfs/extent_io.o: warning: objtool: __process_pages_contig()+0x1af: unreachable instruction
-fs/btrfs/volumes.o: warning: objtool: find_live_mirror.isra.23()+0x49: unreachable instruction
-fs/btrfs/ioctl.o: warning: objtool: btrfs_clone()+0xcc9: unreachable instruction
-fs/btrfs/free-space-cache.o: warning: objtool: search_bitmap()+0xca: unreachable instruction
-fs/btrfs/tree-log.o: warning: objtool: btrfs_log_all_xattrs()+0x204: unreachable instruction
-fs/btrfs/compression.o: warning: objtool: end_compressed_bio_read()+0xb6: unreachable instruction
-fs/btrfs/delayed-ref.o: warning: objtool: insert_delayed_ref.isra.6()+0x23e: unreachable instruction
-fs/btrfs/relocation.o: warning: objtool: add_tree_block.isra.26()+0x26e: unreachable instruction
-fs/btrfs/scrub.o: warning: objtool: scrub_find_csum()+0x1eb: unreachable instruction
-fs/btrfs/send.o: warning: objtool: inconsistent_snapshot_error()+0x53: unreachable instruction
-fs/btrfs/dev-replace.o: warning: objtool: btrfs_dev_replace_by_ioctl()+0x70e: unreachable instruction
-fs/btrfs/raid56.o: warning: objtool: raid56_parity_recover()+0x262: unreachable instruction
-fs/btrfs/free-space-tree.o: warning: objtool: btrfs_search_prev_slot.constprop.6()+0x2b: unreachable instruction
-fs/btrfs/block-group.o: warning: objtool: btrfs_start_trans_remove_block_group()+0x6a: unreachable instruction
-fs/btrfs/ref-verify.o: warning: objtool: add_tree_block()+0x15e: unreachable instruction
-samples/ftrace/ftrace-direct.o: warning: objtool: .text+0x0: unreachable instruction
-samples/ftrace/ftrace-direct-too.o: warning: objtool: .text+0x0: unreachable instruction
-samples/ftrace/ftrace-direct-modify.o: warning: objtool: .text+0x0: unreachable instruction
-kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x21: unreachable instruction
-kernel/cred.o: warning: objtool: prepare_creds()+0x2c3: unreachable instruction
-net/core/skbuff.o: warning: objtool: skb_push()+0x6d: unreachable instruction
-drivers/gpu/drm/ttm/ttm_bo.o: warning: objtool: ttm_bo_del_from_lru()+0xed: unreachable instruction
 
 
-gcc (SUSE Linux) 7.4.1 20190905 [gcc-7-branch revision 275407]
+> Il giorno 21 nov 2019, alle ore 09:00, Paolo Valente =
+<paolo.valente@linaro.org> ha scritto:
+>=20
+>=20
+>=20
+>> Il giorno 21 nov 2019, alle ore 08:13, Oleksandr Natalenko =
+<oleksandr@natalenko.name> ha scritto:
+>>=20
+>> Hi Paolo et al.
+>>=20
+>=20
+> Hi
+>=20
+>> I have a strong suspect that something is going wrong when the =
+underlying block device responds with a large delay. What makes me =
+thinking so is that I use a VM on some cloud provider, and they have =
+substantial block device latency resulting in permanently high (~20%) =
+iowait. It spikes occasionally when their cluster is overloaded, and =
+when that happens, the I/O in my VM may stop and never recover. This is =
+a rare occasion, but it really happens.
+>>=20
+>> What's worse, so far I've seen such a behaviour with BFQ only. I'm =
+still testing other schedulers though.
+>>=20
+>> Important note: I have no strict evidences that this is *the* case, =
+thus I'm asking for some suggestions. My idea is to fire up a local VM =
+and inject delays to a block device while performing some I/O from =
+within the VM.
+>>=20
+>> So the question is: how can those delays be injected? Using dm-delay? =
+Can those delays be random?
+>>=20
+>=20
+> So far I have used scsi_debug [1] for this kind of tests.  In my S
+> suite [2], it boils down to setting SCSI_DEBUG=3Dyes in the S config
+> file, and then launching any of the benchmarks.  Unfortunately, AFAIK
+> scsi_debug gives you only constant delays; but you can emulate delay
+> spikes very easily, by changing the delay parameter manually during
+> the test.
+>=20
+> If this option sounds reasonable to you, then I'm willing to help you
+> for every step.
+>=20
 
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Hi Oleksandr,
+Simone (in CC) and I have worked a little bit on reproducing the I/O
+freeze you report.  Simone made a small change in SCSI_debug, which
+makes the latter serve I/O with a highly varying random delay (100ms -
+1s), about twice a second.
+
+Then, to generate some fluctuating and heavy I/O, he ran the
+comm_startup_lat.sh script of my S suite with SCSI_debug a few times.
+Unfortunately, he didn't succeed in reproducing the problem.  If you
+want, we can send you a patch with his change for SCSI_debug.
+
+Any news on your side?
+
+Thanks,
+Simone
+
+> Thanks,
+> Paolo
+>=20
+> [1] http://sg.danny.cz/sg/sdebug26.html
+> [2] https://github.com/Algodev-github/S
+>=20
+>> Thanks in advance.
+>>=20
+>> --=20
+>> Oleksandr Natalenko (post-factum)
+
