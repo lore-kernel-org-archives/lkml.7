@@ -2,177 +2,553 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34242C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F46C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BE820659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:28:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ga6I0Lji"
+	by mail.kernel.org (Postfix) with ESMTP id 258F424659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbfLFO2A (ORCPT
+        id S1726366AbfLFOaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:28:00 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:41108 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfLFO17 (ORCPT
+        Fri, 6 Dec 2019 09:30:23 -0500
+Received: from mout-p-102.mailbox.org ([80.241.56.152]:11088 "EHLO
+        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfLFOaW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 09:27:59 -0500
-Received: by mail-ua1-f67.google.com with SMTP id f7so2876421uaa.8
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 06:27:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=B4JEnSRg87z0x0xPHWA6J8Y8Owk2lF1jg1xYqroy0QY=;
-        b=ga6I0LjiKLuM4hlv9oFWS0ZbjsC3E0cCZ62YwgRk9fuTnh3A3QqTsCTqYdNbPc98Fj
-         kKIiODy1Uo+AZr3v1nwJ+CUOSpuBE/RpXHeIk4MsIC9wbG46wClNQ8EatOkNYb5sDsKh
-         fohaPINQmRs5GUUTOoVbV51/n5+CmQbrsAt4A/vNsRoIAdJlmnlX49nBgJroo7ESgBLB
-         t5En7iyBOLXXEAjBWnJaD8m2JERh0gF9xTu8qLoRiNxoEq+JFlNur7v+vSTf0Dcnu9BT
-         S0+/lZrkeFn/FT2Npq94IdqmY6aCEEWy3Ae4R/5d6fO82cwx3nJzWNaXDCk+ph7JGe6h
-         jLwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=B4JEnSRg87z0x0xPHWA6J8Y8Owk2lF1jg1xYqroy0QY=;
-        b=EesjnWWsXHQ2OER7ibUUNKceuaGXtJRNeQqfmzpQ3tk6ac6LsBE5LMlE6jPrmidYRm
-         3nsPDeOoFka1SWcLpkXm9rbngUa91k7sO7uhLJdkTCRh/S3/pGGJVnyb89IHCs1UMF3V
-         BNwTBeCaZ9w3Zw7XHQXQh0HouNm42s9Kw2IJPv8SCkzJ/MEF7XibDdnMAZJzS64y9uhl
-         Vtealgmr4vdfQ6Wlslc+wiYEk1vajAq55No8+bvdaK51IeqGjxpiocBNIL/1GfavNNnb
-         bG9stUT8+RRAOzMTQhLswxIhsMSxyiwe7/zPsom47ugDGewJNhLjyjKSQckk/480mb0w
-         NxQA==
-X-Gm-Message-State: APjAAAVFdvqrdlcWNPBYiT5o83DSiQwgF/9A38b/TSZq77cIlkLnCwoD
-        Og84U/c8PYMUnOgtqXs7lW0=
-X-Google-Smtp-Source: APXvYqyRWZGnVGr/78Fczelk9IbN6JfdtoEazno2a5UbJp4H4s+czWgI/6N9OMro+TNnjCfbC7zBzg==
-X-Received: by 2002:ab0:7118:: with SMTP id x24mr12192841uan.29.1575642477940;
-        Fri, 06 Dec 2019 06:27:57 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id m63sm5952731uam.12.2019.12.06.06.27.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 06:27:56 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 37E4D40352; Fri,  6 Dec 2019 11:27:54 -0300 (-03)
-Date:   Fri, 6 Dec 2019 11:27:54 -0300
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH 1/3] libperf: Move libperf under tools/lib/perf
-Message-ID: <20191206142754.GC30698@kernel.org>
-References: <20191206135513.31586-1-jolsa@kernel.org>
- <20191206135513.31586-2-jolsa@kernel.org>
+        Fri, 6 Dec 2019 09:30:22 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 47Tw3Z61SlzKmMr;
+        Fri,  6 Dec 2019 15:30:18 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id YN4ygJRoLHAa; Fri,  6 Dec 2019 15:30:14 +0100 (CET)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Michael Kerrisk <mtk.manpages@gmail.com>
+Cc:     linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: [PATCH man-pages 1/2] openat2.2: document new openat2(2) syscall
+Date:   Sat,  7 Dec 2019 01:29:30 +1100
+Message-Id: <20191206142931.28138-1-cyphar@cyphar.com>
+In-Reply-To: <20191206141338.23338-1-cyphar@cyphar.com>
+References: <20191206141338.23338-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206135513.31586-2-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Dec 06, 2019 at 02:55:11PM +0100, Jiri Olsa escreveu:
-> Moving libperf from its current location under perf
-> to separate directory under tools/lib.
+Rather than trying to merge the new syscall documentation into open.2
+(which would probably result in the man-page being incomprehensible),
+instead the new syscall gets its own dedicated page with links between
+open(2) and openat2(2) to avoid duplicating information such as the list
+of O_* flags or common errors.
 
-Breaks the build/bisection:
+Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+---
+ man2/open.2    |  17 ++
+ man2/openat2.2 | 435 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 452 insertions(+)
+ create mode 100644 man2/openat2.2
 
-[acme@quaco perf]$ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ; make O=/tmp/build/perf  -C tools/perf install-bin
-make: Entering directory '/home/acme/git/perf/tools/perf'
-  BUILD:   Doing 'make -j8' parallel build
-  HOSTCC   /tmp/build/perf/fixdep.o
-  HOSTLD   /tmp/build/perf/fixdep-in.o
-  LINK     /tmp/build/perf/fixdep
+diff --git a/man2/open.2 b/man2/open.2
+index b0f485b41589..2a721c991a20 100644
+--- a/man2/open.2
++++ b/man2/open.2
+@@ -65,6 +65,10 @@ open, openat, creat \- open and possibly create a file
+ .BI "int openat(int " dirfd ", const char *" pathname ", int " flags );
+ .BI "int openat(int " dirfd ", const char *" pathname ", int " flags \
+ ", mode_t " mode );
++.PP
++/* Documented separately, in \fBopenat2\fP(2). */
++.BI "int openat2(int " dirfd ", const char *" pathname ", \
++const struct open_how *" how ", size_t " size ");
+ .fi
+ .PP
+ .in -4n
+@@ -933,6 +937,15 @@ If
+ is absolute, then
+ .I dirfd
+ is ignored.
++.SS openat2(2)
++The
++.BR openat2 (2)
++system call is an extension of
++.BR openat (),
++with a superset of features. To avoid making this man page too long, the
++description of
++.BR openat2 (2)
++and its features is documented in a separate man page.
+ .SH RETURN VALUE
+ .BR open (),
+ .BR openat (),
+@@ -1220,6 +1233,9 @@ SVr4, 4.3BSD, POSIX.1-2001, POSIX.1-2008.
+ .BR openat ():
+ POSIX.1-2008.
+ .PP
++.BR openat2 (2)
++is Linux-specific.
++.PP
+ The
+ .BR O_DIRECT ,
+ .BR O_NOATIME ,
+@@ -1778,6 +1794,7 @@ is ignored).
+ .BR mknod (2),
+ .BR mmap (2),
+ .BR mount (2),
++.BR openat2 (2),
+ .BR open_by_handle_at (2),
+ .BR read (2),
+ .BR socket (2),
+diff --git a/man2/openat2.2 b/man2/openat2.2
+new file mode 100644
+index 000000000000..8588f0018657
+--- /dev/null
++++ b/man2/openat2.2
+@@ -0,0 +1,435 @@
++.\" Copyright (C) 2019 Aleksa Sarai <cyphar@cyphar.com>
++.\"
++.\" %%%LICENSE_START(VERBATIM)
++.\" Permission is granted to make and distribute verbatim copies of this
++.\" manual provided the copyright notice and this permission notice are
++.\" preserved on all copies.
++.\"
++.\" Permission is granted to copy and distribute modified versions of this
++.\" manual under the conditions for verbatim copying, provided that the
++.\" entire resulting derived work is distributed under the terms of a
++.\" permission notice identical to this one.
++.\"
++.\" Since the Linux kernel and libraries are constantly changing, this
++.\" manual page may be incorrect or out-of-date.  The author(s) assume no
++.\" responsibility for errors or omissions, or for damages resulting from
++.\" the use of the information contained herein.  The author(s) may not
++.\" have taken the same level of care in the production of this manual,
++.\" which is licensed free of charge, as they might when working
++.\" professionally.
++.\"
++.\" Formatted or processed versions of this manual, if unaccompanied by
++.\" the source, must acknowledge the copyright and authors of this work.
++.\" %%%LICENSE_END
++.TH OPENAT2 2 2019-11-05 "Linux" "Linux Programmer's Manual"
++.SH NAME
++openat2 \- open and possibly create a file (extended)
++.SH SYNOPSIS
++.nf
++.B #include <sys/types.h>
++.B #include <sys/stat.h>
++.B #include <fcntl.h>
++.PP
++.BI "int openat2(int " dirfd ", const char *" pathname ", \
++struct open_how *" how ", size_t " size ");
++.fi
++.PP
++.IR Note :
++There is no glibc wrapper for this system call; see NOTES.
++.SH DESCRIPTION
++The
++.BR openat2 ()
++system call opens the file specified by
++.IR pathname .
++If the specified file does not exist, it may optionally (if
++.B O_CREAT
++is specified in
++.IR how.flags )
++be created by
++.BR openat2() .
++.PP
++As with
++.BR openat (2),
++if
++.I pathname
++is relative, then it is interpreted relative to the
++directory referred to by the file descriptor
++.I dirfd
++(or the current working directory of the calling process, if
++.I dirfd
++is the special value
++.BR AT_FDCWD .)
++If
++.I pathname
++is absolute, then
++.I dirfd
++is ignored (unless
++.I how.resolve
++contains
++.BR RESOLVE_IN_ROOT,
++in which case
++.I pathname
++is resolved relative to
++.IR dirfd .)
++.PP
++The
++.BR openat2 ()
++system call is an extension of
++.BR openat (2)
++and provides a superset of its functionality.
++Rather than taking a single
++.I flag
++argument, an extensible structure (\fIhow\fP) is passed instead to allow for
++future extensions.
++.I size
++must be set to
++.IR "sizeof(struct open_how)" ,
++to facilitate future extensions (see the "Extensibility" section of the
++.B NOTES
++for more detail on how extensions are handled.)
++
++.SS The open_how structure
++The following structure indicates how
++.I pathname
++should be opened, and acts as a superset of the
++.IR flag " and " mode
++arguments to
++.BR openat (2).
++.PP
++.in +4n
++.EX
++struct open_how {
++    __aligned_u64 flags;         /* O_* flags. */
++    __u16         mode;          /* Mode for O_{CREAT,TMPFILE}. */
++    __u16         __padding[3];  /* Must be zeroed. */
++    __aligned_u64 resolve;       /* RESOLVE_* flags. */
++};
++.EE
++.in
++.PP
++Any future extensions to
++.BR openat2 ()
++will be implemented as new fields appended to the above structure (or through
++reuse of pre-existing padding space), with the zero value of the new fields
++acting as though the extension were not present.
++.PP
++The meaning of each field is as follows:
++.RS
++
++.I flags
++.RS
++The file creation and status flags to use for this operation.
++All of the
++.B O_*
++flags defined for
++.BR openat (2)
++are valid
++.BR openat2 ()
++flag values.
++
++Unlike
++.BR openat (2),
++it is an error to provide
++.BR openat2 ()
++unknown or conflicting flags in
++.IR flags .
++.RE
++
++.IR mode
++.RS
++File mode for the new file, with identical semantics to the
++.I mode
++argument to
++.BR openat (2).
++However, unlike
++.BR openat (2),
++it is an error to provide
++.BR openat2 ()
++with a
++.I mode
++which contains bits other than
++.IR 0777 .
++
++It is an error to provide
++.BR openat2 ()
++a non-zero
++.IR mode " if " flags
++does not contain
++.BR O_CREAT " or " O_TMPFILE .
++.RE
++
++.I resolve
++.RS
++Change how the components of
++.I pathname
++will be resolved (see
++.BR path_resolution (7)
++for background information.)
++The primary use case for these flags is to allow trusted programs to restrict
++how untrusted paths (or paths inside untrusted directories) are resolved.
++The full list of
++.I resolve
++flags is given below.
++.TP
++.B RESOLVE_NO_XDEV
++Disallow traversal of mount points during path resolution (including all bind
++mounts).
++
++Users of this flag are encouraged to make its use configurable (unless it is
++used for a specific security purpose), as bind mounts are very widely used by
++end-users.
++Setting this flag indiscrimnately for all uses of
++.IR openat2 ()
++may result in spurious errors on previously-functional systems.
++.TP
++.B RESOLVE_NO_SYMLINKS
++Disallow resolution of symbolic links during path resolution.
++This option implies
++.BR RESOLVE_NO_MAGICLINKS .
++
++If the trailing component is a symbolic link, and
++.I flags
++contains both
++.BR O_PATH " and " O_NOFOLLOW ","
++then an
++.B O_PATH
++file descriptor referencing the symbolic link will be returned.
++
++Users of this flag are encouraged to make its use configurable (unless it is
++used for a specific security purpose), as symbolic links are very widely used
++by end-users.
++Setting this flag indiscrimnately for all uses of
++.IR openat2 ()
++may result in spurious errors on previously-functional systems.
++.TP
++.B RESOLVE_NO_MAGICLINKS
++Disallow all magic link resolution during path resolution.
++
++If the trailing component is a magic link, and
++.I flags
++contains both
++.BR O_PATH " and " O_NOFOLLOW ","
++then an
++.B O_PATH
++file descriptor referencing the magic link will be returned.
++
++Magic-links are symbolic link-like objects that are most notably found in
++.BR proc (5)
++(examples include
++.IR /proc/[pid]/exe " and " /proc/[pid]/fd/* .)
++Due to the potential danger of unknowingly opening these magic links, it may be
++preferable for users to disable their resolution entirely (see
++.BR symbolic link (7)
++for more details.)
++.TP
++.B RESOLVE_BENEATH
++Do not permit the path resolution to succeed if any component of the resolution
++is not a descendant of the directory indicated by
++.IR dirfd .
++This results in absolute symbolic links (and absolute values of
++.IR pathname )
++to be rejected.
++
++Currently, this flag also disables magic link resolution.
++However, this may change in the future.
++The caller should explicitly specify
++.B RESOLVE_NO_MAGICLINKS
++to ensure that magic links are not resolved.
++
++.TP
++.B RESOLVE_IN_ROOT
++Treat
++.I dirfd
++as the root directory while resolving
++.I pathname
++(as though the user called
++.BR chroot (2)
++with
++.IR dirfd
++as the argument.)
++Absolute symbolic links and ".." path components will be scoped to
++.IR dirfd .
++If
++.I pathname
++is an absolute path, it is also treated relative to
++.IR dirfd .
++
++However, unlike
++.BR chroot (2)
++(which changes the filesystem root permanently for a process),
++.B RESOLVE_IN_ROOT
++allows a program to efficiently restrict path resolution for only certain
++operations.
++It also has several hardening features (such detecting escape attempts during
++.I ".."
++resolution) which
++.BR chroot (2)
++does not.
++
++Currently, this flag also disables magic link resolution.
++However, this may change in the future.
++The caller should explicitly specify
++.B RESOLVE_NO_MAGICLINKS
++to ensure that magic links are not resolved.
++.PP
++It is an error to provide
++.BR openat2 ()
++unknown flags in
++.IR resolve .
++.RE
++.RE
++
++.SH RETURN VALUE
++On success, a new file descriptor is returned.
++On error, -1 is returned, and
++.I errno
++is set appropriately.
++
++.SH ERRORS
++The set of errors returned by
++.BR openat2 ()
++includes all of the errors returned by
++.BR openat (2),
++as well as the following additional errors:
++.TP
++.B EINVAL
++An unknown flag or invalid value was specified in
++.IR how .
++.TP
++.B EINVAL
++.I mode
++is non-zero, but
++.I flags
++does not contain
++.BR O_CREAT " or " O_TMPFILE .
++.TP
++.B EINVAL
++.I size
++was smaller than any known version of
++.IR "struct open_how" .
++.TP
++.B E2BIG
++An extension was specified in
++.IR how ,
++which the current kernel does not support (see the "Extensibility" section of
++the
++.B NOTES
++for more detail on how extensions are handled.)
++.TP
++.B EAGAIN
++.I resolve
++contains either
++.BR RESOLVE_IN_ROOT " or " RESOLVE_BENEATH ,
++and the kernel could not ensure that a ".." component didn't escape (due to a
++race condition or potential attack.)
++Callers may choose to retry the
++.BR openat2 ()
++call.
++.TP
++.B EXDEV
++.I resolve
++contains either
++.BR RESOLVE_IN_ROOT " or " RESOLVE_BENEATH ,
++and an escape from the root during path resolution was detected.
++
++.TP
++.B EXDEV
++.I resolve
++contains
++.BR RESOLVE_NO_XDEV ,
++and a path component attempted to cross a mount point.
++
++.TP
++.B ELOOP
++.I resolve
++contains
++.BR RESOLVE_NO_SYMLINKS ,
++and one of the path components was a symbolic link (or magic link).
++.TP
++.B ELOOP
++.I resolve
++contains
++.BR RESOLVE_NO_MAGICLINKS ,
++and one of the path components was a magic link.
++
++.SH VERSIONS
++.BR openat2 ()
++first appeared in Linux 5.6.
++
++.SH CONFORMING TO
++This system call is Linux-specific.
++
++The semantics of
++.B RESOLVE_BENEATH
++were modelled after FreeBSD's
++.BR O_BENEATH .
++
++.SH NOTES
++Glibc does not provide a wrapper for this system call; call it using
++.BR syscall (2).
++
++.SS Extensibility
++In order to allow for
++.I struct open_how
++to be extended in future kernel revisions,
++.BR openat2 ()
++requires userspace to specify the size of
++.I struct open_how
++structure they are passing.
++By providing this information, it is possible for
++.BR openat2 ()
++to provide both forwards- and backwards-compatibility \(em with
++.I size
++acting as an implicit version number (because new extension fields will always
++be appended, the size will always increase.)
++This extensibility design is very similar to other system calls such as
++.BR perf_setattr "(2), " perf_event_open "(2), and " clone (3).
++
++If we let
++.I usize
++be the size of the structure according to userspace and
++.I ksize
++be the size of the structure which the kernel supports, then there are only
++three cases to consider:
++
++.RS
++.IP * 3
++If
++.IR ksize " equals " usize ,
++then there is no version mismatch and
++.I how
++can be used verbatim.
++.IP *
++If
++.IR ksize " is larger than " usize ,
++then there are some extensions the kernel supports which the userspace program
++is unaware of.
++Because all extensions must have their zero values be a no-op, the kernel
++treats all of the extension fields not set by userspace to have zero values.
++This provides backwards-compatibility.
++.IP *
++If
++.IR ksize " is smaller than " usize ,
++then there are some extensions which the userspace program is aware of but the
++kernel does not support.
++Because all extensions must have their zero values be a no-op, the kernel can
++safely ignore the unsupported extension fields if they are all-zero.
++If any unsupported extension fields are non-zero, then -1 is returned and
++.I errno
++is set to
++.BR E2BIG .
++This provides forwards-compatibility.
++.RE
++
++Therefore, most userspace programs will not need to have any special handling
++of extensions.
++However, if a userspace program wishes to determine what extensions the running
++kernel supports, they may conduct a binary search on
++.IR size
++(to find the largest value which doesn't produce an error of
++.BR E2BIG .)
++
++.SH SEE ALSO
++.BR openat (2),
++.BR path_resolution (7),
++.BR symlink (7)
+-- 
+2.24.0
 
-Auto-detecting system features:
-...                         dwarf: [ on  ]
-...            dwarf_getlocations: [ on  ]
-...                         glibc: [ on  ]
-...                          gtk2: [ on  ]
-...                      libaudit: [ on  ]
-...                        libbfd: [ on  ]
-...                        libcap: [ on  ]
-...                        libelf: [ on  ]
-...                       libnuma: [ on  ]
-...        numa_num_possible_cpus: [ on  ]
-...                       libperl: [ on  ]
-...                     libpython: [ on  ]
-...                     libcrypto: [ on  ]
-...                     libunwind: [ on  ]
-...            libdw-dwarf-unwind: [ on  ]
-...                          zlib: [ on  ]
-...                          lzma: [ on  ]
-...                     get_cpuid: [ on  ]
-...                           bpf: [ on  ]
-...                        libaio: [ on  ]
-...                       libzstd: [ on  ]
-...        disassembler-four-args: [ on  ]
-
-  GEN      /tmp/build/perf/common-cmds.h
-make[3]: *** /home/acme/git/perf/tools/perf/lib/: No such file or directory.  Stop.
-make[2]: *** [Makefile.perf:785: /tmp/build/perf/libperf.a] Error 2
-make[2]: *** Waiting for unfinished jobs....
-  MKDIR    /tmp/build/perf/fd/
-  MKDIR    /tmp/build/perf/fs/
-  CC       /tmp/build/perf/exec-cmd.o
-  CC       /tmp/build/perf/fd/array.o
-  CC       /tmp/build/perf/fs/fs.o
-  CC       /tmp/build/perf/cpu.o
-  CC       /tmp/build/perf/help.o
-  LD       /tmp/build/perf/fd/libapi-in.o
-  CC       /tmp/build/perf/event-parse.o
-  CC       /tmp/build/perf/event-plugin.o
-  CC       /tmp/build/perf/pager.o
-  CC       /tmp/build/perf/debug.o
-  CC       /tmp/build/perf/str_error_r.o
-  CC       /tmp/build/perf/trace-seq.o
-  MKDIR    /tmp/build/perf/fs/
-  CC       /tmp/build/perf/parse-filter.o
-  CC       /tmp/build/perf/parse-options.o
-  MKDIR    /tmp/build/perf/staticobjs/
-  CC       /tmp/build/perf/fs/tracing_path.o
-  CC       /tmp/build/perf/run-command.o
-  CC       /tmp/build/perf/staticobjs/libbpf.o
-  CC       /tmp/build/perf/parse-utils.o
-  CC       /tmp/build/perf/kbuffer-parse.o
-  MKDIR    /tmp/build/perf/staticobjs/
-  CC       /tmp/build/perf/sigchain.o
-  LD       /tmp/build/perf/fs/libapi-in.o
-  CC       /tmp/build/perf/staticobjs/bpf.o
-  CC       /tmp/build/perf/subcmd-config.o
-  CC       /tmp/build/perf/staticobjs/nlattr.o
-  CC       /tmp/build/perf/tep_strerror.o
-  CC       /tmp/build/perf/event-parse-api.o
-  CC       /tmp/build/perf/staticobjs/btf.o
-  LD       /tmp/build/perf/libapi-in.o
-  LD       /tmp/build/perf/libsubcmd-in.o
-  CC       /tmp/build/perf/staticobjs/libbpf_errno.o
-  CC       /tmp/build/perf/staticobjs/str_error.o
-  CC       /tmp/build/perf/staticobjs/netlink.o
-  CC       /tmp/build/perf/staticobjs/bpf_prog_linfo.o
-  AR       /tmp/build/perf/libapi.a
-  LD       /tmp/build/perf/libtraceevent-in.o
-  CC       /tmp/build/perf/staticobjs/libbpf_probes.o
-  CC       /tmp/build/perf/staticobjs/xsk.o
-  AR       /tmp/build/perf/libsubcmd.a
-  CC       /tmp/build/perf/staticobjs/btf_dump.o
-  CC       /tmp/build/perf/staticobjs/hashmap.o
-  LINK     /tmp/build/perf/libtraceevent.a
-  LD       /tmp/build/perf/staticobjs/libbpf-in.o
-  LINK     /tmp/build/perf/libbpf.a
-  PERF_VERSION = 5.4.ge59599b355da
-make[1]: *** [Makefile.perf:225: sub-make] Error 2
-make: *** [Makefile:110: install-bin] Error 2
-make: Leaving directory '/home/acme/git/perf/tools/perf'
-[acme@quaco perf]$
