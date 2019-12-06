@@ -2,201 +2,121 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AA3C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03074C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9631724659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C842A24659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:41:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfLFHjb (ORCPT
+        id S1726527AbfLFHlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 02:39:31 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39537 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbfLFHjb (ORCPT
+        Fri, 6 Dec 2019 02:41:08 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:26913 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfLFHlI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 02:39:31 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1id8Ct-00024f-Ix; Fri, 06 Dec 2019 08:39:19 +0100
-Received: from [IPv6:2001:67c:670:202:c1c2:3766:121d:8496] (unknown [IPv6:2001:67c:670:202:c1c2:3766:121d:8496])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id B49B448A4E3;
-        Fri,  6 Dec 2019 07:39:15 +0000 (UTC)
-Subject: Re: [PATCH 0/2] can: m_can_platform: Bug fix of kernel panic for
-To:     Dan Murphy <dmurphy@ti.com>,
-        Pankaj Sharma <pankj.sharma@samsung.com>,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     wg@grandegger.com, davem@davemloft.net, rcsekar@samsung.com,
-        pankaj.dubey@samsung.com
-References: <CGME20191119102134epcas5p4d3c1b18203e2001c189b9fa7a0e3aab5@epcas5p4.samsung.com>
- <1574158838-4616-1-git-send-email-pankj.sharma@samsung.com>
- <f0550b0b-6681-75a3-c58a-28f5b7ca0821@ti.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a967e70e-456d-7855-6bb1-2e2285ce6f9b@pengutronix.de>
-Date:   Fri, 6 Dec 2019 08:39:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 6 Dec 2019 02:41:08 -0500
+Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 6 Dec 2019
+ 15:41:35 +0800
+From:   Jian Hu <jian.hu@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v4 0/6] add Amlogic A1 clock controller driver
+Date:   Fri, 6 Dec 2019 15:40:46 +0800
+Message-ID: <20191206074052.15557-1-jian.hu@amlogic.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <f0550b0b-6681-75a3-c58a-28f5b7ca0821@ti.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="J7PAfLCnD6GAAUfn5Afj7StQLBgIq7dkS"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.28.8.25]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---J7PAfLCnD6GAAUfn5Afj7StQLBgIq7dkS
-Content-Type: multipart/mixed; boundary="R6Lpc9rHMptUxg3wRCeFA8vNFLQfkt4PV";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Dan Murphy <dmurphy@ti.com>, Pankaj Sharma <pankj.sharma@samsung.com>,
- linux-can@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: wg@grandegger.com, davem@davemloft.net, rcsekar@samsung.com,
- pankaj.dubey@samsung.com
-Message-ID: <a967e70e-456d-7855-6bb1-2e2285ce6f9b@pengutronix.de>
-Subject: Re: [PATCH 0/2] can: m_can_platform: Bug fix of kernel panic for
-References: <CGME20191119102134epcas5p4d3c1b18203e2001c189b9fa7a0e3aab5@epcas5p4.samsung.com>
- <1574158838-4616-1-git-send-email-pankj.sharma@samsung.com>
- <f0550b0b-6681-75a3-c58a-28f5b7ca0821@ti.com>
-In-Reply-To: <f0550b0b-6681-75a3-c58a-28f5b7ca0821@ti.com>
+add support for Amlogic A1 clock driver, the clock includes 
+three parts: peripheral clocks, pll clocks, CPU clocks.
+sys pll and CPU clocks will be sent in next patch.
 
---R6Lpc9rHMptUxg3wRCeFA8vNFLQfkt4PV
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
+Changes since v3 at [3]:
+-fix reparenting orphan failed, it depends on jerome's patch [4]
+-fix changelist in v3 about reparenting orphan
+-remove the dts patch 
 
-On 12/5/19 9:57 PM, Dan Murphy wrote:
-> Pankaj
->=20
-> On 11/19/19 4:20 AM, Pankaj Sharma wrote:
->> The current code is failing while clock prepare enable because of not
->> getting proper clock from platform device.
->> A device driver for CAN controller hardware registers itself with the
->> Linux network layer as a network device. So, the driver data for m_can=
+Changes since v2 at [2]:
+-add probe function for A1
+-seperate the clock driver into two patch
+-change some clock flags and ops
+-add support for a1 PLL ops
+-add A1 clock node
+-fix reparenting orphan clock failed, registering xtal_fixpll
+ and xtal_hifipll after the provider registration, it is not
+ a best way.
 
->> should ideally be of type net_device.
->>
->> Further even when passing the proper net device in probe function the
->> code was hanging because of the function m_can_runtime_resume() gettin=
-g
->> recursively called from m_can_class_resume().
->>
->> Pankaj Sharma (2):
->>    can: m_can_platform: set net_device structure as driver data
->>    can: m_can_platform: remove unnecessary m_can_class_resume() call
->=20
-> Did you CC: linux-stable for these?=C2=A0 We are probably going to have=
-=20
-> customers picking up 5.4 LTS and would need these bug fixes.
+Changes since v1 at [1]:
+-place A1 config alphabetically
+-add actual reason for RO ops, CLK_IS_CRITICAL, CLK_IGNORE_UNUSED
+-separate the driver into two driver: peripheral and pll driver
+-delete CLK_IGNORE_UNUSED flag for pwm b/c/d/e/f clock, dsp clock
+-delete the change in Kconfig.platforms, address to Kevin alone
+-remove the useless comments
+-modify the meson pll driver to support A1 PLLs
 
-Both patches made it into the v5.4 release. So no need for stable.
+[1] https://lkml.kernel.org/r/1569411888-98116-1-git-send-email-jian.hu@amlogic.com
+[2] https://lkml.kernel.org/r/1571382865-41978-1-git-send-email-jian.hu@amlogic.com
+[3] https://lkml.kernel.org/r/20191129144605.182774-1-jian.hu@amlogic.com
+[4] https://lkml.kernel.org/r/20191203080805.104628-1-jbrunet@baylibre.com
 
-Marc
+Jian Hu (6):
+  dt-bindings: clock: meson: add A1 PLL clock controller bindings
+  clk: meson: add support for A1 PLL clock ops
+  clk: meson: eeclk: refactor eeclk common driver to support A1
+  clk: meson: a1: add support for Amlogic A1 PLL clock driver
+  dt-bindings: clock: meson: add A1 peripheral clock controller bindings
+  clk: meson: a1: add support for Amlogic A1 Peripheral clock driver
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+ .../bindings/clock/amlogic,a1-clkc.yaml       |   70 +
+ .../bindings/clock/amlogic,a1-pll-clkc.yaml   |   59 +
+ drivers/clk/meson/Kconfig                     |   20 +
+ drivers/clk/meson/Makefile                    |    2 +
+ drivers/clk/meson/a1-pll.c                    |  334 +++
+ drivers/clk/meson/a1-pll.h                    |   56 +
+ drivers/clk/meson/a1.c                        | 2246 +++++++++++++++++
+ drivers/clk/meson/a1.h                        |  120 +
+ drivers/clk/meson/clk-pll.c                   |   21 +
+ drivers/clk/meson/clk-pll.h                   |    1 +
+ drivers/clk/meson/meson-eeclk.c               |   59 +-
+ drivers/clk/meson/meson-eeclk.h               |    1 +
+ drivers/clk/meson/parm.h                      |    1 +
+ include/dt-bindings/clock/a1-clkc.h           |   98 +
+ include/dt-bindings/clock/a1-pll-clkc.h       |   16 +
+ 15 files changed, 3094 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+ create mode 100644 drivers/clk/meson/a1-pll.c
+ create mode 100644 drivers/clk/meson/a1-pll.h
+ create mode 100644 drivers/clk/meson/a1.c
+ create mode 100644 drivers/clk/meson/a1.h
+ create mode 100644 include/dt-bindings/clock/a1-clkc.h
+ create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
 
+-- 
+2.24.0
 
---R6Lpc9rHMptUxg3wRCeFA8vNFLQfkt4PV--
-
---J7PAfLCnD6GAAUfn5Afj7StQLBgIq7dkS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3qBZYACgkQWsYho5Hk
-nSAGuAgAp5+CFD1N0dWgqU7yjdFbAf6OalnacbP2rmsjsvwt/qyQZQbagbBkYOE6
-0feJAdi+qoOaWSwzWRR7C0C8iMui7BgoNxSVruj9sbuOU1EovwCleeGXOBGV/CJH
-8qO729v18hVFQeV/vT+f5ZrKVmxB/Uf2Ub6jb4E+vyaaLd/X3iMsYpmsaJTcISTA
-nZYSOBX2atcQsJizcr4eSnLNhvMof92L+swrtOcA5epMG7fXJ+cZxgLwT0xOlz6a
-fMzrfDkKi83duGa0R3N5WRaWrCCPyG5uy9C4JJ8uuyZKcI9hGe85V3WyN+c7yOL2
-w2rPULjEMM5EIRE+mK2ZhJAKoxHcgQ==
-=D87v
------END PGP SIGNATURE-----
-
---J7PAfLCnD6GAAUfn5Afj7StQLBgIq7dkS--
