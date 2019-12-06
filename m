@@ -2,91 +2,99 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6477C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768EDC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9814121835
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CBD221835
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575617721;
+	bh=rirNsA7CSRQwCul3vZaMI9Yukf6wTh66J86MboQx8Bg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FwHAQOBwVEYihEGXjB7TvGjoEZZJtR2ytOnZ3MmxGbVQ2tZnhnhgUz464AfYiOZ5O
+	 kUVyl8sUDBwCgVnwDEfwdxV2/EcBoHVfvsmZ6Zaflf0Lv3HUEbh9W2lr9KR4zBizvb
+	 cSDqAAs8evKeO38QP/viqCVXK0XQsLCoKIAhT/bM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfLFH2P (ORCPT
+        id S1726413AbfLFHfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 02:28:15 -0500
-Received: from mga17.intel.com ([192.55.52.151]:48024 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726472AbfLFH2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 02:28:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 23:28:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,283,1571727600"; 
-   d="scan'208";a="263519920"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Dec 2019 23:28:06 -0800
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com
-Cc:     gustavo.pimentel@synopsys.com, andrew.murray@arm.com,
-        robh@kernel.org, linux-kernel@vger.kernel.org,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v10 3/3] PCI: artpec6: Configure FTS with dwc helper function
-Date:   Fri,  6 Dec 2019 15:27:50 +0800
-Message-Id: <0cee553f18a8ec1ae84ee64cdffb6627e4c5bc02.1575612493.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1575612493.git.eswara.kota@linux.intel.com>
-References: <cover.1575612493.git.eswara.kota@linux.intel.com>
-In-Reply-To: <cover.1575612493.git.eswara.kota@linux.intel.com>
-References: <cover.1575612493.git.eswara.kota@linux.intel.com>
+        Fri, 6 Dec 2019 02:35:20 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50779 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbfLFHfT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 02:35:19 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so6747372wmg.0;
+        Thu, 05 Dec 2019 23:35:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TyEnM0ErjIPbJfUas4Rc8uwAWuUH9XQEwJswELT2XBM=;
+        b=a+kFwJP5liSG2np4IwwwWU2lewCtu4zvfDm/JS5H+b3V7A3axjM6rMfv4oJvf2VIDp
+         NMM+nb8Ml3KTFCmUnTYLrJORy7BpXKBTd58yjGWrZJlFuVUCDZiuh6T5EyxZyCDCur5h
+         mBpit7jrodl8vYrESeaIjxviC0PwIi2Gts7bMSkjfcMArn96eihs8vNCYwfvSBKYTzl8
+         tpHnXO1uOyQd6j1FVmlcYgthwfhUQqna7pJ7S8p/nP26JD5Pds90iAFYjqOjbS0Ptxvt
+         DQiaI0x4Up2kYiMJMIsl0vl84qts2L0+uUmiHkrcAfn2qBA+kaaXY27QDz7EVM1MQ8He
+         ASKA==
+X-Gm-Message-State: APjAAAUE2LaqxGmJ5c7GWHSWB01dtPrNkdgrqDgQIxtJAKr8s5FXsup2
+        /A4FNmB3CwWFZOeNYPsmYamGO0Le
+X-Google-Smtp-Source: APXvYqxMqJTdvmC8VrePF92jfpjNcRNRLwDaMoMIKM7+yrkmKV6C3nq+6QCBgOmZOdQ9wtQlW3Sf5Q==
+X-Received: by 2002:a1c:7914:: with SMTP id l20mr8727185wme.38.1575617717668;
+        Thu, 05 Dec 2019 23:35:17 -0800 (PST)
+Received: from localhost (ip-37-188-170-11.eurotel.cz. [37.188.170.11])
+        by smtp.gmail.com with ESMTPSA id e19sm2488431wme.6.2019.12.05.23.35.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 23:35:16 -0800 (PST)
+Date:   Fri, 6 Dec 2019 08:35:15 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, fabecassis@nvidia.com,
+        jhubbard@nvidia.com, vbabka@suse.cz, mgorman@techsingularity.net,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [v3 PATCH] mm: move_pages: return valid node id in status if the
+ page is already on the target node
+Message-ID: <20191206073515.GH28317@dhcp22.suse.cz>
+References: <1575572053-128363-1-git-send-email-yang.shi@linux.alibaba.com>
+ <alpine.DEB.2.21.1912051944030.10280@www.lameter.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1912051944030.10280@www.lameter.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use DesignWare helper functions to configure Fast Training
-Sequence. Drop the respective code in the driver.
+On Thu 05-12-19 19:45:49, Cristopher Lameter wrote:
+> On Fri, 6 Dec 2019, Yang Shi wrote:
+> 
+> > Felix Abecassis reports move_pages() would return random status if the
+> > pages are already on the target node by the below test program:
+> 
+> Looks ok.
+> 
+> Acked-by: Christoph Lameter <cl@linux.com>
+> 
+> Nitpicks:
+> 
+> > @@ -1553,7 +1555,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+> >  	if (PageHuge(page)) {
+> >  		if (PageHead(page)) {
+> >  			isolate_huge_page(page, pagelist);
+> > -			err = 0;
+> > +			err = 1;
+> 
+> Add a meaningful constant instead of 1?
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
----
-Changes on v10:
-	No change.
+Well 1 has a good meaning here actually. We have -errno or the number of
+queued pages.
 
- drivers/pci/controller/dwc/pcie-artpec6.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index d00252bd8fae..02d93b8c7942 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -51,9 +51,6 @@ static const struct of_device_id artpec6_pcie_of_match[];
- #define ACK_N_FTS_MASK			GENMASK(15, 8)
- #define ACK_N_FTS(x)			(((x) << 8) & ACK_N_FTS_MASK)
- 
--#define FAST_TRAINING_SEQ_MASK		GENMASK(7, 0)
--#define FAST_TRAINING_SEQ(x)		(((x) << 0) & FAST_TRAINING_SEQ_MASK)
--
- /* ARTPEC-6 specific registers */
- #define PCIECFG				0x18
- #define  PCIECFG_DBG_OEN		BIT(24)
-@@ -313,10 +310,7 @@ static void artpec6_pcie_set_nfts(struct artpec6_pcie *artpec6_pcie)
- 	 * Set the Number of Fast Training Sequences that the core
- 	 * advertises as its N_FTS during Gen2 or Gen3 link training.
- 	 */
--	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
--	val &= ~FAST_TRAINING_SEQ_MASK;
--	val |= FAST_TRAINING_SEQ(180);
--	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-+	dw_pcie_link_set_n_fts(pci, 180);
- }
- 
- static void artpec6_pcie_assert_core_reset(struct artpec6_pcie *artpec6_pcie)
 -- 
-2.11.0
-
+Michal Hocko
+SUSE Labs
