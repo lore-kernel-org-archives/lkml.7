@@ -2,113 +2,142 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561D9C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE75AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2F42075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:47:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="f6tCm1D/"
+	by mail.kernel.org (Postfix) with ESMTP id 798552075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbfLFBri (ORCPT
+        id S1726222AbfLFBse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 20:47:38 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:1493 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbfLFBrh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 20:47:37 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de9b33d0000>; Thu, 05 Dec 2019 17:47:41 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 05 Dec 2019 17:47:37 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 05 Dec 2019 17:47:37 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec
- 2019 01:47:36 +0000
-Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec 2019
- 01:47:36 +0000
-Subject: Re: [PATCH] move_pages.2: not return ENOENT if the page are already
- on the target nodes
-To:     Yang Shi <yang.shi@linux.alibaba.com>, <mtk.manpages@gmail.com>,
-        <cl@linux.com>, <mhocko@suse.com>, <cai@lca.pw>,
-        <akpm@linux-foundation.org>
-CC:     <linux-man@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-References: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <683f6cae-0e0c-d4e4-0929-7fd1a79a2266@nvidia.com>
-Date:   Thu, 5 Dec 2019 17:47:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 5 Dec 2019 20:48:34 -0500
+Received: from mga05.intel.com ([192.55.52.43]:46933 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbfLFBse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 20:48:34 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 17:48:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,282,1571727600"; 
+   d="scan'208";a="205970739"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga008.jf.intel.com with ESMTP; 05 Dec 2019 17:48:31 -0800
+Date:   Fri, 6 Dec 2019 09:48:25 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        n-horiguchi@ah.jp.nec.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm/memory-failure.c: not necessary to recalculate
+ hpage
+Message-ID: <20191206014825.GA3846@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20191118082003.26240-1-richardw.yang@linux.intel.com>
+ <20191118082003.26240-2-richardw.yang@linux.intel.com>
+ <fdba31c8-d0c0-83a8-62d1-c04c1e894218@redhat.com>
+ <20191202222827.isaelnqmuyn7zrns@master>
+ <37eedde2-05ab-e42e-7bcd-09090b090366@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575596861; bh=hHAqZuqTQkT4Jg75DDaPISOvw/O4fuowgbjbEnHGf64=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=f6tCm1D/suIescD8w+pxCD2rleaR43m1WcZ5BxpODtT57dOMzvFdKTb0ou58JXsBL
-         myUNvQvY77xa9Ds51TSoJjp78o/Ss96pAv4jnfqTGAmWpgdHE1pno3y9pCu365EnXl
-         UHwvY9vmfGltMN1M2EiH3Gn7ZksERB31c1jFtN/DkOOWVrD2zlBg2XBvoSLYH8YsYB
-         iy5jpU3sIw0Wr/mWb4yiyok+YlL/R2wvhRONVgj58Sp/gEFFD8vgj2pGtckc8prZxd
-         J2C0PMS1e6I1UT2M30e+Ytfc/FchC1kDISdWP67a0toIT7CyFw+uE1Y2939yHLoqit
-         xRO8aymsX2TCw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <37eedde2-05ab-e42e-7bcd-09090b090366@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/5/19 5:34 PM, Yang Shi wrote:
-...
-> 
-> diff --git a/man2/move_pages.2 b/man2/move_pages.2
-> index 2d96468..2a2f3cd 100644
-> --- a/man2/move_pages.2
-> +++ b/man2/move_pages.2
-> @@ -192,9 +192,8 @@ was specified or an attempt was made to migrate pages of a kernel thread.
->  One of the target nodes is not online.
->  .TP
->  .B ENOENT
-> -No pages were found that require moving.
-> -All pages are either already
-> -on the target node, not present, had an invalid address or could not be
-> +No pages were found.
-> +All pages are either not present, had an invalid address or could not be
->  moved because they were mapped by multiple processes.
+On Thu, Dec 05, 2019 at 04:06:20PM +0100, David Hildenbrand wrote:
+>On 02.12.19 23:28, Wei Yang wrote:
+>> On Wed, Nov 20, 2019 at 04:07:38PM +0100, David Hildenbrand wrote:
+>>> On 18.11.19 09:20, Wei Yang wrote:
+>>>> hpage is not changed.
+>>>>
+>>>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>>>> ---
+>>>>   mm/memory-failure.c | 1 -
+>>>>   1 file changed, 1 deletion(-)
+>>>>
+>>>> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+>>>> index 392ac277b17d..9784f4339ae7 100644
+>>>> --- a/mm/memory-failure.c
+>>>> +++ b/mm/memory-failure.c
+>>>> @@ -1319,7 +1319,6 @@ int memory_failure(unsigned long pfn, int flags)
+>>>>   		}
+>>>>   		unlock_page(p);
+>>>>   		VM_BUG_ON_PAGE(!page_count(p), p);
+>>>> -		hpage = compound_head(p);
+>>>>   	}
+>>>>   	/*
+>>>>
+>>>
+>>> I am *absolutely* no transparent huge page expert (sorry :) ), but won't the
+>>> split_huge_page(p) eventually split the compound page, such that
+>>> compound_head(p) will return something else after that call?
+>>>
+>> 
+>> Hi, David
+>> 
+>> Took sometime to look into the code and re-think about it. Found maybe we can
+>> simplify this in another way.
+>> 
+>> First, code touches here means split_huge_page() succeeds and "p" is now a PTE
+>> page. So compound_head(p) == p.
+>
+>While this would also be my intuition, I can't state that this is
+>guaranteed to be the case (IOW, I did not check the code/documentation) :)
+>
 
-How about this wording (ignoring man formatting for the moment):
+If my understanding is correct, split_huge_page() succeeds the THP would be
+tear down to normal page.
 
-No pages were moved, because all requested pages fell into one or more of
-the following cases:
+>> 
+>> Then let's look at who will use hpage in the following function. There are two
+>> uses in current upstream:
+>> 
+>>     * page_flags calculation
+>>     * hwpoison_user_mappings()
+>> 
+>> The first one would be removed in next patch since PageHuge is handled at the
+>> beginning.
+>> 
+>> And in the second place, comment says if split succeeds, hpage points to page
+>> "p".
+>> 
+>> After all, we don't need to re-calculate hpage after split, and just replace
+>> hpage in hwpoison_user_mappings() with p is enough.
+>
+>That assumption would only be true in case all compound pages at this
+>point are transparent huge pages, no? AFAIK that is not necessarily
+>true. Or am I missing something?
+>
 
-* Page not present.
-* Page has an invalid address.
-* Page is mapped by multiple processes.
+Function hwpoison_user_mappings() just handle user space mapping. If my
+understanding is correct, we just have three type of pages would be used in
+user space mapping:
 
-Reasoning: I don't like the "no pages were found" all by itself, because it
-blindly rewords the meaning of ENOENT. ENOENT is merely the closest
-symbol we have. So we use ENOENT and that's fine, but the descriptive text 
-should describe what really happened, which is "no pages were moved". If we had 
-an ENOPAGESMOVED then we'd use that. :)
+    * normal page
+    * THP
+    * hugetlb
 
-thanks,
+Since THP would be split or already returned and hugetlb is handled in another
+branch, this means for other pages hwpoison_user_mappings() would just return
+true.
+
+>
+>-- 
+>Thanks,
+>
+>David / dhildenb
+
 -- 
-John Hubbard
-NVIDIA
+Wei Yang
+Help you, Help me
