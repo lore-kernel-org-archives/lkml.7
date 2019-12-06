@@ -2,163 +2,106 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA965C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C126C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0E62064B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7105224670
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:05:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R2d7BoAP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bmH923cU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfLFPFG (ORCPT
+        id S1726460AbfLFPFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 10:05:06 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40886 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726246AbfLFPFG (ORCPT
+        Fri, 6 Dec 2019 10:05:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32685 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726271AbfLFPFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 10:05:06 -0500
+        Fri, 6 Dec 2019 10:05:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575644704;
+        s=mimecast20190719; t=1575644730;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nLbG7pN1NwRAqOGhYmpBkj1RZ3vObkivANCf2j5yoDI=;
-        b=R2d7BoAPl+JIkhIM6NTxIh/u4JpFGL6kUtRzFwELkIL/ZUFsCDulqzvkrgXfLeFx8DRKn4
-        lcKaLkKQ+Z+jNrrvvWTRxD7ktqYVmUCJHphOKw976m2Kbx4bHuzAMRfbzCMAAix+zbZ1Bs
-        uO0E19zeO5D0siyNHzI7Pq0TRorE/GU=
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=IT26lu0TFPeiz/SrRtHKqKnORA0j1r2gxVlANM2MQ98=;
+        b=bmH923cU7N3VTxpg+M+ADhwS4h9gw6zj8EsFDaN1RCACS3IwUNfbUTNJtwICJlq6Mti92B
+        nk7d6i8r6meBaTXDkEnm74UkkeuHYzG4/a0Gaf/lKMvUBzAlHSOpKs/c5J0edXwmSM02bn
+        hQPQfIIpIw5SUGtCavDAEcQHZ3gt9uI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-194-esLTOX-OPE61ujqBsgWrEw-1; Fri, 06 Dec 2019 10:05:01 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-36-3D439F-xND6WdlDV68c1NA-1; Fri, 06 Dec 2019 10:05:29 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2263591222;
-        Fri,  6 Dec 2019 15:05:00 +0000 (UTC)
-Received: from krava (unknown [10.43.17.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA1FC10016EB;
-        Fri,  6 Dec 2019 15:04:57 +0000 (UTC)
-Date:   Fri, 6 Dec 2019 16:04:55 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL 0/6] perf/urgent fixes
-Message-ID: <20191206150455.GC31721@krava>
-References: <20191205193224.24629-1-acme@kernel.org>
- <20191206075701.GA25384@gmail.com>
- <20191206142516.GA31721@krava>
- <20191206144354.GD30698@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20191206144354.GD30698@kernel.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: esLTOX-OPE61ujqBsgWrEw-1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E0F32800D41;
+        Fri,  6 Dec 2019 15:05:27 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-49.pek2.redhat.com [10.72.12.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B4F9B5D6C3;
+        Fri,  6 Dec 2019 15:05:25 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, jgross@suse.com, william.kucharski@oracle.com,
+        mingo@kernel.org, akpm@linux-foundation.org
+Subject: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
+Date:   Fri,  6 Dec 2019 23:05:24 +0800
+Message-Id: <20191206150524.14687-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: 3D439F-xND6WdlDV68c1NA-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 11:43:54AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Dec 06, 2019 at 03:25:16PM +0100, Jiri Olsa escreveu:
-> > On Fri, Dec 06, 2019 at 08:57:01AM +0100, Ingo Molnar wrote:
-> >=20
-> > SNIP
-> >=20
-> > > >  tools/include/uapi/drm/drm.h      |   3 +-
-> > > >  tools/include/uapi/drm/i915_drm.h | 128 ++++++++++++++++++++++++++=
-+++++++++++-
-> > > >  tools/perf/builtin-inject.c       |  13 +---
-> > > >  tools/perf/builtin-report.c       |   8 +++
-> > > >  tools/perf/util/sort.c            |  16 +++--
-> > > >  5 files changed, 147 insertions(+), 21 deletions(-)
-> > >=20
-> > > Pulled, thanks a lot Arnaldo!
-> > >=20
-> > > JFYI, on my system the default perf/urgent build still has this noise=
+In commit 357b4da50a62 ("x86: respect memory size limiting via mem=3D
+parameter") a global varialbe global max_mem_size is added to store
+the value which is parsed from 'mem=3D '. This truly stops those
+DIMM from being added into system memory during boot.
+
+However, it also limits the later memory hotplug functionality. Any
+memory board can't be hot added any more if its region is beyond the
+max_mem_size. System will print error like below:
+
+[  216.387164] acpi PNP0C80:02: add_memory failed
+[  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
+[  216.392187] acpi PNP0C80:02: Enumeration failure
+
+From document of 'mem =3D' parameter, it should be a restriction during
+boot, but not impact the system memory adding/removing after booting.
+
+  mem=3Dnn[KMG]     [KNL,BOOT] Force usage of a specific amount of memory
+
+So fix it by also checking if it's during SYSTEM_BOOTING stage when
+restrict memory adding. Otherwise, skip the restriction.
+
+Fixes: 357b4da50a62 ("x86: respect memory size limiting via mem=3D paramete=
+r")
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ mm/memory_hotplug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 55ac23ef11c1..5466a0a00901 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -105,7 +105,7 @@ static struct resource *register_memory_resource(u64 st=
+art, u64 size)
+ =09unsigned long flags =3D  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+ =09char *resource_name =3D "System RAM";
 =20
-> > > generated by util/parse-events.y and util/expr.y:
-> > >=20
-> > >   util/parse-events.y:1.1-12: warning: deprecated directive, use =E2=
-=80=98%define api.pure=E2=80=99 [-Wdeprecated]
-> > >       1 | %pure-parser
-> > >       | ^~~~~~~~~~~~
-> > >   util/parse-events.y: warning: fix-its can be applied.  Rerun with o=
-ption '--update'. [-Wother]
-> > >   util/expr.y:15.1-12: warning: deprecated directive, use =E2=80=98%d=
-efine api.pure=E2=80=99 [-Wdeprecated]
-> > >      15 | %pure-parser
-> > >       | ^~~~~~~~~~~~
-> > >   util/expr.y: warning: fix-its can be applied.  Rerun with option '-=
--update'. [-Wother]
-> >=20
-> > just saw it in fedora 31 with new bison, change below
-> > should fix it, I'll post it with other fixes later
->=20
-> As I explained to Ingo, this will make it fail with older systems, for
-> now this is just a warning, thus I've not been eager to get this merged,
-> Andi alredy submitted this, for instance.
->=20
-> Is there some way to have some sort of ifdef based on bison's version so
-> that we can have both?
-
-I see, I guess we could use one or another based on
-bison version with macro
-
-jirka
-
->=20
-> At some point I'll just bite the bullet and stop testing on such older
-> systems, but while this is not strictly needed...
->=20
-> - Arnaldo
-> =20
-> > jirka
-> >=20
-> > ---
-> > diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> > index f9a20a39b64a..4ef801334b9d 100644
-> > --- a/tools/perf/util/expr.y
-> > +++ b/tools/perf/util/expr.y
-> > @@ -12,7 +12,7 @@
-> >  #define MAXIDLEN 256
-> >  %}
-> > =20
-> > -%pure-parser
-> > +%define api.pure
-> >  %parse-param { double *final_val }
-> >  %parse-param { struct parse_ctx *ctx }
-> >  %parse-param { const char **pp }
-> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-eve=
-nts.y
-> > index e2eea4e601b4..87a0d11676f0 100644
-> > --- a/tools/perf/util/parse-events.y
-> > +++ b/tools/perf/util/parse-events.y
-> > @@ -1,4 +1,4 @@
-> > -%pure-parser
-> > +%define api.pure
-> >  %parse-param {void *_parse_state}
-> >  %parse-param {void *scanner}
-> >  %lex-param {void* scanner}
->=20
-> --=20
->=20
-> - Arnaldo
->=20
+-=09if (start + size > max_mem_size)
++=09if (start + size > max_mem_size && system_state =3D=3D SYSTEM_BOOTING)
+ =09=09return ERR_PTR(-E2BIG);
+=20
+ =09/*
+--=20
+2.17.2
 
