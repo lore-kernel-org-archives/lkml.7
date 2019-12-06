@@ -2,488 +2,297 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF708C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D2EC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D002173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0193E2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:46:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CyV1uIwc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xug22u2B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfLFTqv (ORCPT
+        id S1726418AbfLFTqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 14:46:51 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37117 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfLFTqu (ORCPT
+        Fri, 6 Dec 2019 14:46:55 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39980 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfLFTqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 14:46:50 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b15so6139201lfc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 11:46:47 -0800 (PST)
+        Fri, 6 Dec 2019 14:46:54 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g6so3130333plp.7
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 11:46:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O/LQ4L8VuEO4+xA/ntQYhKbgfXV6x1e+XKHSGIEqW4s=;
-        b=CyV1uIwcAoUPrGkOSuLKCHxlFN37vz2BkNOp5HI7dt9NNSt1LrOrpTev5VVyzbV4xU
-         FH2jJkub+Qpt4hflwQKX7Idxj3t1/HV5Q83AOp5mbcMnlbVjc/VcZJdwQ3lf4DDQj38l
-         IHnoRvP7I8My2wAlpBG5bqK1R5t1e8w/Vcszl0OqkKiflQie1CG1DyzuA8M+KjEDx9e/
-         T+m+sXdAWZAfttqdYfqYaNb1ReHuTRbro/3psDEqM+4yR2Z4ErshzeTGyH7nEOk0l7A1
-         xVDfrT8tjYJwBVwdS52A700QCOub6KHRer1KZulTD0Q3yMTs0CyOZH5vmrnmZVTbIqmw
-         uvSw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K+TIHDUl/gaSB2s++Av6uzUU3/05b++7i1oMNzp6aKg=;
+        b=Xug22u2ByNpfbmWXu+F5GupDZJI8WlM2+UMRTHOyDFG7uH+qv0nuIXZFpCuBP7eQPn
+         iAI5sPgNzJFKcvxzzzqRjI9uXhhuSKVuNoPABmYwmO+On6M3K/H63zIS+gG39IfMo22t
+         qRJEyPTcyzeflFn0RFEAuuKaem51se/m2IXWE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O/LQ4L8VuEO4+xA/ntQYhKbgfXV6x1e+XKHSGIEqW4s=;
-        b=AlSJ661dXrFz2vokwHXZ3hgIIWO7stO0BP8fOVJFQxMu64vM/ivGnNpJKPf0Y3Znbs
-         Aqg9kC4OCGPTgZoZlNt80bMNxI0FntM+waN0W/9iucfeaGn3Ddbno2XI4Ucbd3vCmABx
-         3A/Kq/yt0JSX4WGbqXffVp49zqSe1Wa7or6w2rlpSfUEKMvRTF1OrO3chxLjAlmUmPNT
-         88oL5ih69WVuMjjF7wBDAsNIQz+g9ONOoNGlf0XgP03fk8YYB7RueVPjkPMLkKoBxLCo
-         hJ3eUCqIvh+gqFi7UcuXlSJlJFP76VVolny5fx9Sw2Ipab46f4L4YCECHJ6u2TSUiTj+
-         eO4g==
-X-Gm-Message-State: APjAAAXDuXFStiIvH4u4pZ4iWgcptlzTFbodFd0BKRFmcXmDb88s33Nc
-        qtd9Ne53zRHmP9OVr/iZ3mtGOYEl8a9fUCS2viJfwA==
-X-Google-Smtp-Source: APXvYqzYxSrIJPXIqePuBovHZECl0nEK3vQt8nyvuss+818oMJLn+6EgRbZ+ZrLlsnOabrkR9KJXdCU3HUx2dU8NL8w=
-X-Received: by 2002:ac2:52a3:: with SMTP id r3mr9168366lfm.189.1575661606589;
- Fri, 06 Dec 2019 11:46:46 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K+TIHDUl/gaSB2s++Av6uzUU3/05b++7i1oMNzp6aKg=;
+        b=dYp2h70I9vZSp2w1ReaNQuEaIjYcwToeTI0WEE5+CicZBSAixmS1EjLojBKyEEtJNB
+         8tRPEFXZC1RaZdCN6Y5U9OXmASjOSJQ8jaEY+RaYNKAT3TfVcrFMJn7isT5IjCYsgJTW
+         BkvPuHKT1raNPvnRBButyzIR8BqLI8meslRWZ0lpNQNIF4JGXbs8O42upRXjtBmaMJNF
+         1MbaoEDKq/GbWJZIt1GloLAW1IOpWVbQtwyWmywBg4OBNzzJPGzo/TSsox/kS4g75Ow2
+         vL7wOPC6s0R4Q548A1ERomgMARb8XTSEEATX7p6/48ZNf5OaUC5s06uKl377VjK83DoG
+         0gJg==
+X-Gm-Message-State: APjAAAXObnie0JGwMFUDcxgSB4LCbCAjIlwFJIGpALiIjDeCl3bnboEi
+        1NStowj+oxFeTLIftlRRmE9T0g==
+X-Google-Smtp-Source: APXvYqx0vjxbEVrq9rmPk06CY73exM6rTXXflVrGzMGcSpyvWUK6ZAARiCXCGmEjsGYD/DZPbCTscw==
+X-Received: by 2002:a17:90a:1696:: with SMTP id o22mr17503179pja.78.1575661613283;
+        Fri, 06 Dec 2019 11:46:53 -0800 (PST)
+Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
+        by smtp.gmail.com with ESMTPSA id u18sm16316204pgi.44.2019.12.06.11.46.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 11:46:52 -0800 (PST)
+From:   Brian Norris <briannorris@chromium.org>
+To:     linux-wireless@vger.kernel.org
+Cc:     <linux-kernel@vger.kernel.org>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>, dan.carpenter@oracle.com,
+        solar@openwall.com, wangqize888888888@gmail.com,
+        Brian Norris <briannorris@chromium.org>
+Subject: [PATCH] mwifiex: drop most magic numbers from mwifiex_process_tdls_action_frame()
+Date:   Fri,  6 Dec 2019 11:45:35 -0800
+Message-Id: <20191206194535.150179-1-briannorris@chromium.org>
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
 MIME-Version: 1.0
-References: <1574780408-21282-1-git-send-email-okukatla@codeaurora.org> <0101016ea83b71b7-4a22a4a7-cab8-4047-a18a-c0327edbe707-000000@us-west-2.amazonses.com>
-In-Reply-To: <0101016ea83b71b7-4a22a4a7-cab8-4047-a18a-c0327edbe707-000000@us-west-2.amazonses.com>
-From:   Evan Green <evgreen@google.com>
-Date:   Fri, 6 Dec 2019 11:46:10 -0800
-Message-ID: <CAE=gft7n9m8fOrqgSeH_--jpuz9f9JHCA0+Y7MecfOZkugxkBA@mail.gmail.com>
-Subject: Re: [PATCH V1 2/2] interconnect: qcom: Add SC7180 interconnect
- provider driver
-To:     Odelu Kukatla <okukatla@codeaurora.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        David Dai <daidavid1@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>, sboyd@kernel.org,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-pm@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>,
-        Sean Sweeney <seansw@qti.qualcomm.com>,
-        Alex Elder <elder@linaro.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 7:01 AM Odelu Kukatla <okukatla@codeaurora.org> wrote:
->
-> Add driver for the Qualcomm interconnect buses found in SC7180 based
-> platforms. The topology consists of three NoCs that are controlled by
-> a remote processor that collects the aggregated bandwidth for each
-> master-slave pairs.
->
-> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
-> ---
->  drivers/interconnect/qcom/Kconfig  |  10 +
->  drivers/interconnect/qcom/Makefile |   2 +
->  drivers/interconnect/qcom/sc7180.c | 843 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 855 insertions(+)
->  create mode 100644 drivers/interconnect/qcom/sc7180.c
->
-...
-> diff --git a/drivers/interconnect/qcom/sc7180.c b/drivers/interconnect/qcom/sc7180.c
-> new file mode 100644
-> index 0000000..e14492e
-> --- /dev/null
-> +++ b/drivers/interconnect/qcom/sc7180.c
-> @@ -0,0 +1,843 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + *
-> + */
-> +
-> +#include <asm/div64.h>
-> +#include <dt-bindings/interconnect/qcom,sc7180.h>
-> +#include <linux/device.h>
-> +#include <linux/interconnect.h>
-> +#include <linux/interconnect-provider.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/sort.h>
-> +
-> +#include "icc-rpmh.h"
-> +#include "bcm-voter.h"
-> +
-> +DEFINE_QNODE(qhm_a1noc_cfg, MASTER_A1NOC_CFG, 1, 4, 1,
-> +               SLAVE_SERVICE_A1NOC);
-> +DEFINE_QNODE(qhm_qspi, MASTER_QSPI, 1, 4, 1,
-> +               SLAVE_A1NOC_SNOC);
-> +DEFINE_QNODE(qhm_qup_0, MASTER_QUP_0, 1, 4, 1,
-> +               SLAVE_A1NOC_SNOC);
-> +DEFINE_QNODE(xm_sdc2, MASTER_SDCC_2, 1, 8, 1,
-> +               SLAVE_A1NOC_SNOC);
-> +DEFINE_QNODE(xm_emmc, MASTER_EMMC, 1, 8, 1,
-> +               SLAVE_A1NOC_SNOC);
-> +DEFINE_QNODE(xm_ufs_mem, MASTER_UFS_MEM, 1, 8, 1,
-> +               SLAVE_A1NOC_SNOC);
-> +DEFINE_QNODE(qhm_a2noc_cfg, MASTER_A2NOC_CFG, 1, 4, 1,
-> +               SLAVE_SERVICE_A2NOC);
-> +DEFINE_QNODE(qhm_qdss_bam, MASTER_QDSS_BAM, 1, 4, 1,
-> +               SLAVE_A2NOC_SNOC);
-> +DEFINE_QNODE(qhm_qup_1, MASTER_QUP_1, 1, 4, 1,
-> +               SLAVE_A2NOC_SNOC);
-> +DEFINE_QNODE(qxm_crypto, MASTER_CRYPTO, 1, 8, 1,
-> +               SLAVE_A2NOC_SNOC);
-> +DEFINE_QNODE(qxm_ipa, MASTER_IPA, 1, 8, 1,
-> +               SLAVE_A2NOC_SNOC);
-> +DEFINE_QNODE(xm_qdss_etr, MASTER_QDSS_ETR, 1, 8, 1,
-> +               SLAVE_A2NOC_SNOC);
-> +DEFINE_QNODE(qhm_usb3, MASTER_USB3, 1, 8, 1,
-> +               SLAVE_A2NOC_SNOC);
-> +DEFINE_QNODE(qxm_camnoc_hf0_uncomp, MASTER_CAMNOC_HF0_UNCOMP, 1, 32, 1,
-> +               SLAVE_CAMNOC_UNCOMP);
-> +DEFINE_QNODE(qxm_camnoc_hf1_uncomp, MASTER_CAMNOC_HF1_UNCOMP, 1, 32, 1,
-> +               SLAVE_CAMNOC_UNCOMP);
-> +DEFINE_QNODE(qxm_camnoc_sf_uncomp, MASTER_CAMNOC_SF_UNCOMP, 1, 32, 1,
-> +               SLAVE_CAMNOC_UNCOMP);
-> +DEFINE_QNODE(qnm_npu, MASTER_NPU, 2, 32, 1,
-> +               SLAVE_CDSP_GEM_NOC);
-> +DEFINE_QNODE(qxm_npu_dsp, MASTER_NPU_PROC, 1, 8, 1,
-> +               SLAVE_CDSP_GEM_NOC);
-> +DEFINE_QNODE(qnm_snoc, MASTER_SNOC_CNOC, 1, 8, 51,
-> +               SLAVE_A1NOC_CFG, SLAVE_A2NOC_CFG,
-> +               SLAVE_AHB2PHY_SOUTH, SLAVE_AHB2PHY_CENTER,
-> +               SLAVE_AOP, SLAVE_AOSS,
-> +               SLAVE_BOOT_ROM, SLAVE_CAMERA_CFG,
-> +               SLAVE_CAMERA_NRT_THROTTLE_CFG, SLAVE_CAMERA_RT_THROTTLE_CFG,
-> +               SLAVE_CLK_CTL, SLAVE_RBCPR_CX_CFG,
-> +               SLAVE_RBCPR_MX_CFG, SLAVE_CRYPTO_0_CFG,
-> +               SLAVE_DCC_CFG, SLAVE_CNOC_DDRSS,
-> +               SLAVE_DISPLAY_CFG, SLAVE_DISPLAY_RT_THROTTLE_CFG,
-> +               SLAVE_DISPLAY_THROTTLE_CFG, SLAVE_EMMC_CFG,
-> +               SLAVE_GLM, SLAVE_GFX3D_CFG,
-> +               SLAVE_IMEM_CFG, SLAVE_IPA_CFG,
-> +               SLAVE_CNOC_MNOC_CFG, SLAVE_CNOC_MSS,
-> +               SLAVE_NPU_CFG, SLAVE_NPU_DMA_BWMON_CFG,
-> +               SLAVE_NPU_PROC_BWMON_CFG, SLAVE_PDM,
-> +               SLAVE_PIMEM_CFG, SLAVE_PRNG,
-> +               SLAVE_QDSS_CFG, SLAVE_QM_CFG,
-> +               SLAVE_QM_MPU_CFG, SLAVE_QSPI_0,
-> +               SLAVE_QUP_0, SLAVE_QUP_1,
-> +               SLAVE_SDCC_2, SLAVE_SECURITY,
-> +               SLAVE_SNOC_CFG, SLAVE_TCSR,
-> +               SLAVE_TLMM_WEST, SLAVE_TLMM_NORTH,
-> +               SLAVE_TLMM_SOUTH, SLAVE_UFS_MEM_CFG,
-> +               SLAVE_USB3, SLAVE_VENUS_CFG,
-> +               SLAVE_VENUS_THROTTLE_CFG, SLAVE_VSENSE_CTRL_CFG,
-> +               SLAVE_SERVICE_CNOC);
-> +DEFINE_QNODE(xm_qdss_dap, MASTER_QDSS_DAP, 1, 8, 51,
-> +               SLAVE_A1NOC_CFG, SLAVE_A2NOC_CFG,
-> +               SLAVE_AHB2PHY_SOUTH, SLAVE_AHB2PHY_CENTER,
-> +               SLAVE_AOP, SLAVE_AOSS,
-> +               SLAVE_BOOT_ROM, SLAVE_CAMERA_CFG,
-> +               SLAVE_CAMERA_NRT_THROTTLE_CFG, SLAVE_CAMERA_RT_THROTTLE_CFG,
-> +               SLAVE_CLK_CTL, SLAVE_RBCPR_CX_CFG,
-> +               SLAVE_RBCPR_MX_CFG, SLAVE_CRYPTO_0_CFG,
-> +               SLAVE_DCC_CFG, SLAVE_CNOC_DDRSS,
-> +               SLAVE_DISPLAY_CFG, SLAVE_DISPLAY_RT_THROTTLE_CFG,
-> +               SLAVE_DISPLAY_THROTTLE_CFG, SLAVE_EMMC_CFG,
-> +               SLAVE_GLM, SLAVE_GFX3D_CFG,
-> +               SLAVE_IMEM_CFG, SLAVE_IPA_CFG,
-> +               SLAVE_CNOC_MNOC_CFG, SLAVE_CNOC_MSS,
-> +               SLAVE_NPU_CFG, SLAVE_NPU_DMA_BWMON_CFG,
-> +               SLAVE_NPU_PROC_BWMON_CFG, SLAVE_PDM,
-> +               SLAVE_PIMEM_CFG, SLAVE_PRNG,
-> +               SLAVE_QDSS_CFG, SLAVE_QM_CFG,
-> +               SLAVE_QM_MPU_CFG, SLAVE_QSPI_0,
-> +               SLAVE_QUP_0, SLAVE_QUP_1,
-> +               SLAVE_SDCC_2, SLAVE_SECURITY,
-> +               SLAVE_SNOC_CFG, SLAVE_TCSR,
-> +               SLAVE_TLMM_WEST, SLAVE_TLMM_NORTH,
-> +               SLAVE_TLMM_SOUTH, SLAVE_UFS_MEM_CFG,
-> +               SLAVE_USB3, SLAVE_VENUS_CFG,
-> +               SLAVE_VENUS_THROTTLE_CFG, SLAVE_VSENSE_CTRL_CFG,
-> +               SLAVE_SERVICE_CNOC);
-> +DEFINE_QNODE(qhm_cnoc_dc_noc, MASTER_CNOC_DC_NOC, 1, 4, 2,
-> +               SLAVE_GEM_NOC_CFG, SLAVE_LLCC_CFG);
-> +DEFINE_QNODE(acm_apps0, MASTER_APPSS_PROC, 1, 16, 2,
-> +               SLAVE_GEM_NOC_SNOC, SLAVE_LLCC);
-> +DEFINE_QNODE(acm_sys_tcu, MASTER_SYS_TCU, 1, 8, 2,
-> +               SLAVE_GEM_NOC_SNOC, SLAVE_LLCC);
-> +DEFINE_QNODE(qhm_gemnoc_cfg, MASTER_GEM_NOC_CFG, 1, 4, 2,
-> +               SLAVE_MSS_PROC_MS_MPU_CFG, SLAVE_SERVICE_GEM_NOC);
-> +DEFINE_QNODE(qnm_cmpnoc, MASTER_COMPUTE_NOC, 1, 32, 2,
-> +               SLAVE_GEM_NOC_SNOC, SLAVE_LLCC);
-> +DEFINE_QNODE(qnm_mnoc_hf, MASTER_MNOC_HF_MEM_NOC, 1, 32, 1,
-> +               SLAVE_LLCC);
-> +DEFINE_QNODE(qnm_mnoc_sf, MASTER_MNOC_SF_MEM_NOC, 1, 32, 2,
-> +               SLAVE_GEM_NOC_SNOC, SLAVE_LLCC);
-> +DEFINE_QNODE(qnm_snoc_gc, MASTER_SNOC_GC_MEM_NOC, 1, 8, 1,
-> +               SLAVE_LLCC);
-> +DEFINE_QNODE(qnm_snoc_sf, MASTER_SNOC_SF_MEM_NOC, 1, 16, 1,
-> +               SLAVE_LLCC);
-> +DEFINE_QNODE(qxm_gpu, MASTER_GFX3D, 2, 32, 2,
-> +               SLAVE_GEM_NOC_SNOC, SLAVE_LLCC);
-> +DEFINE_QNODE(ipa_core_master, MASTER_IPA_CORE, 1, 8, 1,
-> +               SLAVE_IPA_CORE);
-> +DEFINE_QNODE(llcc_mc, MASTER_LLCC, 2, 4, 1,
-> +               SLAVE_EBI1);
-> +DEFINE_QNODE(qhm_mnoc_cfg, MASTER_CNOC_MNOC_CFG, 1, 4, 1,
+Before commit 1e58252e334d ("mwifiex: Fix heap overflow in
+mmwifiex_process_tdls_action_frame()"),
+mwifiex_process_tdls_action_frame() already had too many magic numbers.
+But this commit just added a ton more, in the name of checking for
+buffer overflows. That seems like a really bad idea.
 
-Why does this one have a name of mnoc_cfg but a define of CNOC_MNOC_CFG?
+Let's make these magic numbers a little less magic, by
+(a) factoring out 'pos[1]' as 'ie_len'
+(b) using 'sizeof' on the appropriate source or destination fields where
+    possible, instead of bare numbers
+(c) dropping redundant checks, per below.
 
-> +               SLAVE_SERVICE_MNOC);
-> +DEFINE_QNODE(qxm_camnoc_hf0, MASTER_CAMNOC_HF0, 2, 32, 1,
-> +               SLAVE_MNOC_HF_MEM_NOC);
-> +DEFINE_QNODE(qxm_camnoc_hf1, MASTER_CAMNOC_HF1, 2, 32, 1,
-> +               SLAVE_MNOC_HF_MEM_NOC);
-> +DEFINE_QNODE(qxm_camnoc_sf, MASTER_CAMNOC_SF, 1, 32, 1,
-> +               SLAVE_MNOC_SF_MEM_NOC);
-> +DEFINE_QNODE(qxm_mdp0, MASTER_MDP0, 1, 32, 1,
-> +               SLAVE_MNOC_HF_MEM_NOC);
-> +DEFINE_QNODE(qxm_rot, MASTER_ROTATOR, 1, 16, 1,
-> +               SLAVE_MNOC_SF_MEM_NOC);
-> +DEFINE_QNODE(qxm_venus0, MASTER_VIDEO_P0, 1, 32, 1,
-> +               SLAVE_MNOC_SF_MEM_NOC);
-> +DEFINE_QNODE(qxm_venus_arm9, MASTER_VIDEO_PROC, 1, 8, 1,
-> +               SLAVE_MNOC_SF_MEM_NOC);
-> +DEFINE_QNODE(amm_npu_sys, MASTER_NPU_SYS, 2, 32, 1,
-> +               SLAVE_NPU_COMPUTE_NOC);
-> +DEFINE_QNODE(qhm_npu_cfg, MASTER_NPU_NOC_CFG, 1, 4, 8,
-> +               SLAVE_NPU_CAL_DP0, SLAVE_NPU_CP,
-> +               SLAVE_NPU_INT_DMA_BWMON_CFG, SLAVE_NPU_DPM,
-> +               SLAVE_ISENSE_CFG, SLAVE_NPU_LLM_CFG,
-> +               SLAVE_NPU_TCM, SLAVE_SERVICE_NPU_NOC);
-> +DEFINE_QNODE(qup_core_master_1, MASTER_QUP_CORE_0, 1, 4, 1,
-> +               SLAVE_QUP_CORE_0);
-> +DEFINE_QNODE(qup_core_master_2, MASTER_QUP_CORE_1, 1, 4, 1,
-> +               SLAVE_QUP_CORE_1);
-> +DEFINE_QNODE(qhm_snoc_cfg, MASTER_SNOC_CFG, 1, 4, 1,
-> +               SLAVE_SERVICE_SNOC);
-> +DEFINE_QNODE(qnm_aggre1_noc, MASTER_A1NOC_SNOC, 1, 16, 6,
-> +               SLAVE_APPSS, SLAVE_SNOC_CNOC,
-> +               SLAVE_SNOC_GEM_NOC_SF, SLAVE_IMEM,
-> +               SLAVE_PIMEM, SLAVE_QDSS_STM);
-> +DEFINE_QNODE(qnm_aggre2_noc, MASTER_A2NOC_SNOC, 1, 16, 7,
-> +               SLAVE_APPSS, SLAVE_SNOC_CNOC,
-> +               SLAVE_SNOC_GEM_NOC_SF, SLAVE_IMEM,
-> +               SLAVE_PIMEM, SLAVE_QDSS_STM,
-> +               SLAVE_TCU);
-> +DEFINE_QNODE(qnm_gemnoc, MASTER_GEM_NOC_SNOC, 1, 8, 6,
-> +               SLAVE_APPSS, SLAVE_SNOC_CNOC,
-> +               SLAVE_IMEM, SLAVE_PIMEM,
-> +               SLAVE_QDSS_STM, SLAVE_TCU);
-> +DEFINE_QNODE(qxm_pimem, MASTER_PIMEM, 1, 8, 2,
-> +               SLAVE_SNOC_GEM_NOC_GC, SLAVE_IMEM);
-> +
-> +DEFINE_QNODE(qns_a1noc_snoc, SLAVE_A1NOC_SNOC, 1, 16, 1,
-> +               MASTER_A1NOC_SNOC);
-> +DEFINE_QNODE(srvc_aggre1_noc, SLAVE_SERVICE_A1NOC, 1, 4, 0);
-> +DEFINE_QNODE(qns_a2noc_snoc, SLAVE_A2NOC_SNOC, 1, 16, 1,
-> +               MASTER_A2NOC_SNOC);
-> +DEFINE_QNODE(srvc_aggre2_noc, SLAVE_SERVICE_A2NOC, 1, 4, 0);
-> +DEFINE_QNODE(qns_camnoc_uncomp, SLAVE_CAMNOC_UNCOMP, 1, 32, 0);
-> +DEFINE_QNODE(qns_cdsp_gemnoc, SLAVE_CDSP_GEM_NOC, 1, 32, 1,
-> +               MASTER_COMPUTE_NOC);
-> +DEFINE_QNODE(qhs_a1_noc_cfg, SLAVE_A1NOC_CFG, 1, 4, 1,
-> +               MASTER_A1NOC_CFG);
-> +DEFINE_QNODE(qhs_a2_noc_cfg, SLAVE_A2NOC_CFG, 1, 4, 1,
-> +               MASTER_A2NOC_CFG);
-> +DEFINE_QNODE(qhs_ahb2phy0, SLAVE_AHB2PHY_SOUTH, 1, 4, 0);
-> +DEFINE_QNODE(qhs_ahb2phy2, SLAVE_AHB2PHY_CENTER, 1, 4, 0);
-> +DEFINE_QNODE(qhs_aop, SLAVE_AOP, 1, 4, 0);
-> +DEFINE_QNODE(qhs_aoss, SLAVE_AOSS, 1, 4, 0);
-> +DEFINE_QNODE(qhs_boot_rom, SLAVE_BOOT_ROM, 1, 4, 0);
-> +DEFINE_QNODE(qhs_camera_cfg, SLAVE_CAMERA_CFG, 1, 4, 0);
-> +DEFINE_QNODE(qhs_camera_nrt_throttle_cfg,
-> +               SLAVE_CAMERA_NRT_THROTTLE_CFG, 1, 4, 0);
-> +DEFINE_QNODE(qhs_camera_rt_throttle_cfg,
-> +               SLAVE_CAMERA_RT_THROTTLE_CFG, 1, 4, 0);
-> +DEFINE_QNODE(qhs_clk_ctl, SLAVE_CLK_CTL, 1, 4, 0);
-> +DEFINE_QNODE(qhs_cpr_cx, SLAVE_RBCPR_CX_CFG, 1, 4, 0);
-> +DEFINE_QNODE(qhs_cpr_mx, SLAVE_RBCPR_MX_CFG, 1, 4, 0);
-> +DEFINE_QNODE(qhs_crypto0_cfg, SLAVE_CRYPTO_0_CFG, 1, 4, 0);
-> +DEFINE_QNODE(qhs_dcc_cfg, SLAVE_DCC_CFG, 1, 4, 0);
-> +DEFINE_QNODE(qhs_ddrss_cfg, SLAVE_CNOC_DDRSS, 1, 4, 1,
-> +               MASTER_CNOC_DC_NOC);
-> +DEFINE_QNODE(qhs_display_cfg, SLAVE_DISPLAY_CFG, 1, 4, 0);
-> +DEFINE_QNODE(qhs_display_rt_throttle_cfg,
-> +               SLAVE_DISPLAY_RT_THROTTLE_CFG, 1, 4, 0);
-> +DEFINE_QNODE(qhs_display_throttle_cfg, SLAVE_DISPLAY_THROTTLE_CFG, 1, 4, 0);
-> +DEFINE_QNODE(qhs_emmc_cfg, SLAVE_EMMC_CFG, 1, 4, 0);
-> +DEFINE_QNODE(qhs_glm, SLAVE_GLM, 1, 4, 0);
-> +DEFINE_QNODE(qhs_gpuss_cfg, SLAVE_GFX3D_CFG, 1, 8, 0);
-> +DEFINE_QNODE(qhs_imem_cfg, SLAVE_IMEM_CFG, 1, 4, 0);
-> +DEFINE_QNODE(qhs_ipa, SLAVE_IPA_CFG, 1, 4, 0);
-> +DEFINE_QNODE(qhs_mnoc_cfg, SLAVE_CNOC_MNOC_CFG, 1, 4, 1,
+Regarding redundant checks: the beginning of the loop has this:
 
-Another CNOC_MNOC... I guess it's intentional?
+                if (pos + 2 + pos[1] > end)
+                        break;
 
-<snip>
+but then individual 'case's include stuff like this:
 
-> +
-> +static int qnoc_probe(struct platform_device *pdev)
-> +{
-> +       const struct qcom_icc_desc *desc;
-> +       struct icc_onecell_data *data;
-> +       struct icc_provider *provider;
-> +       struct qcom_icc_node **qnodes;
-> +       struct qcom_icc_provider *qp;
-> +       struct icc_node *node;
-> +       size_t num_nodes, i;
-> +       int ret;
-> +
-> +       desc = of_device_get_match_data(&pdev->dev);
-> +       if (!desc)
-> +               return -EINVAL;
-> +
-> +       qnodes = desc->nodes;
-> +       num_nodes = desc->num_nodes;
-> +
-> +       qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
-> +       if (!qp)
-> +               return -ENOMEM;
-> +
-> +       data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       provider = &qp->provider;
-> +       provider->dev = &pdev->dev;
-> +       provider->set = qcom_icc_set;
-> +       provider->aggregate = qcom_icc_aggregate;
-> +       provider->xlate = of_icc_xlate_onecell;
-> +       INIT_LIST_HEAD(&provider->nodes);
-> +       provider->data = data;
-> +
-> +       qp->dev = &pdev->dev;
-> +       qp->bcms = desc->bcms;
-> +       qp->num_bcms = desc->num_bcms;
-> +
-> +       qp->voter = of_bcm_voter_get(qp->dev, NULL);
-> +       if (IS_ERR(qp->voter))
-> +               return PTR_ERR(qp->voter);
-> +
-> +       ret = icc_provider_add(provider);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "error adding interconnect provider\n");
-> +               return ret;
-> +       }
-> +
-> +       for (i = 0; i < num_nodes; i++) {
-> +               size_t j;
-> +
-> +               if (!qnodes[i])
-> +                       continue;
-> +
-> +               node = icc_node_create(qnodes[i]->id);
-> +               if (IS_ERR(node)) {
-> +                       ret = PTR_ERR(node);
-> +                       goto err;
-> +               }
-> +
-> +               node->name = qnodes[i]->name;
-> +               node->data = qnodes[i];
-> +               icc_node_add(node, provider);
-> +
-> +               dev_dbg(&pdev->dev, "registered node %pK %s %d\n", node,
-> +                       qnodes[i]->name, node->id);
-> +
-> +               /* populate links */
-> +               for (j = 0; j < qnodes[i]->num_links; j++)
-> +                       icc_link_create(node, qnodes[i]->links[j]);
-> +
-> +               data->nodes[i] = node;
-> +       }
-> +       data->num_nodes = num_nodes;
-> +
-> +       for (i = 0; i < qp->num_bcms; i++)
-> +               qcom_icc_bcm_init(qp->bcms[i], &pdev->dev);
-> +
-> +       platform_set_drvdata(pdev, qp);
-> +
-> +       dev_dbg(&pdev->dev, "Registered SC7180 ICC\n");
-> +
-> +       return ret;
-> +err:
-> +       list_for_each_entry(node, &provider->nodes, node_list) {
+ 			if (pos > end - 3)
+ 				return;
+ 			if (pos[1] != 1)
+				return;
 
-Here's an unsafe list iteration. We should use Georgi's new helper function.
+Note that the second 'return' (validating the length, pos[1]) combined
+with the above condition (ensuring 'pos + 2 + length' doesn't exceed
+'end'), makes the first 'return' (whose 'if' can be reworded as 'pos >
+end - pos[1] - 2') redundant. Rather than unwind the magic numbers
+there, just drop those conditions.
 
-> +               icc_node_del(node);
-> +               icc_node_destroy(node->id);
-> +       }
-> +
-> +       icc_provider_del(provider);
-> +       return ret;
-> +}
-> +
-> +static int qnoc_remove(struct platform_device *pdev)
-> +{
-> +       struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
-> +       struct icc_provider *provider = &qp->provider;
-> +       struct icc_node *n;
-> +
-> +       list_for_each_entry(n, &provider->nodes, node_list) {
-> +               icc_node_del(n);
-> +               icc_node_destroy(n->id);
-> +       }
+Fixes: 1e58252e334d ("mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
+AFAICT, the existing commit (1e58252e334d) isn't wrong, per se -- just
+very poorly styled -- so this probably doesn't need to go to -stable.
+Not sure if it's a candidate for wireless-drivers (where the original
+commit currently sites) vs. wireless-drivers-next.
 
-Use Georgi's cleanup helper here, too.
+ drivers/net/wireless/marvell/mwifiex/tdls.c | 75 ++++++++-------------
+ 1 file changed, 28 insertions(+), 47 deletions(-)
 
-> +
-> +       return icc_provider_del(provider);
-> +}
-> +static const struct of_device_id qnoc_of_match[] = {
-> +       { .compatible = "qcom,sc7180-aggre1-noc",
-> +         .data = &sc7180_aggre1_noc},
-> +       { .compatible = "qcom,sc7180-aggre2-noc",
-> +         .data = &sc7180_aggre2_noc},
-> +       { .compatible = "qcom,sc7180-camnoc-virt",
-> +         .data = &sc7180_camnoc_virt},
-> +       { .compatible = "qcom,sc7180-compute-noc",
-> +         .data = &sc7180_compute_noc},
-> +       { .compatible = "qcom,sc7180-config-noc",
-> +         .data = &sc7180_config_noc},
-> +       { .compatible = "qcom,sc7180-dc-noc",
-> +         .data = &sc7180_dc_noc},
-> +       { .compatible = "qcom,sc7180-gem-noc",
-> +         .data = &sc7180_gem_noc},
-> +       { .compatible = "qcom,sc7180-ipa-virt",
-> +         .data = &sc7180_ipa_virt},
-> +       { .compatible = "qcom,sc7180-mc-virt",
-> +         .data = &sc7180_mc_virt},
-> +       { .compatible = "qcom,sc7180-mmss-noc",
-> +         .data = &sc7180_mmss_noc},
-> +       { .compatible = "qcom,sc7180-npu-noc",
-> +         .data = &sc7180_npu_noc},
-> +       { .compatible = "qcom,sc7180-qup-virt",
-> +         .data = &sc7180_qup_virt},
-> +       { .compatible = "qcom,sc7180-system-noc",
-> +         .data = &sc7180_system_noc},
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(of, qnoc_of_match);
-> +
-> +static struct platform_driver qnoc_driver = {
-> +       .probe = qnoc_probe,
-> +       .remove = qnoc_remove,
-> +       .driver = {
-> +               .name = "qnoc-sc7180",
-> +               .of_match_table = qnoc_of_match,
-> +       },
-> +};
-> +module_platform_driver(qnoc_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm SC7180 NoC driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
+diff --git a/drivers/net/wireless/marvell/mwifiex/tdls.c b/drivers/net/wireless/marvell/mwifiex/tdls.c
+index 7caf1d26124a..f8f282ce39bd 100644
+--- a/drivers/net/wireless/marvell/mwifiex/tdls.c
++++ b/drivers/net/wireless/marvell/mwifiex/tdls.c
+@@ -894,7 +894,7 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
+ 	u8 *peer, *pos, *end;
+ 	u8 i, action, basic;
+ 	u16 cap = 0;
+-	int ie_len = 0;
++	int ies_len = 0;
+ 
+ 	if (len < (sizeof(struct ethhdr) + 3))
+ 		return;
+@@ -916,7 +916,7 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
+ 		pos = buf + sizeof(struct ethhdr) + 4;
+ 		/* payload 1+ category 1 + action 1 + dialog 1 */
+ 		cap = get_unaligned_le16(pos);
+-		ie_len = len - sizeof(struct ethhdr) - TDLS_REQ_FIX_LEN;
++		ies_len = len - sizeof(struct ethhdr) - TDLS_REQ_FIX_LEN;
+ 		pos += 2;
+ 		break;
+ 
+@@ -926,7 +926,7 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
+ 		/* payload 1+ category 1 + action 1 + dialog 1 + status code 2*/
+ 		pos = buf + sizeof(struct ethhdr) + 6;
+ 		cap = get_unaligned_le16(pos);
+-		ie_len = len - sizeof(struct ethhdr) - TDLS_RESP_FIX_LEN;
++		ies_len = len - sizeof(struct ethhdr) - TDLS_RESP_FIX_LEN;
+ 		pos += 2;
+ 		break;
+ 
+@@ -934,7 +934,7 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
+ 		if (len < (sizeof(struct ethhdr) + TDLS_CONFIRM_FIX_LEN))
+ 			return;
+ 		pos = buf + sizeof(struct ethhdr) + TDLS_CONFIRM_FIX_LEN;
+-		ie_len = len - sizeof(struct ethhdr) - TDLS_CONFIRM_FIX_LEN;
++		ies_len = len - sizeof(struct ethhdr) - TDLS_CONFIRM_FIX_LEN;
+ 		break;
+ 	default:
+ 		mwifiex_dbg(priv->adapter, ERROR, "Unknown TDLS frame type.\n");
+@@ -947,33 +947,33 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
+ 
+ 	sta_ptr->tdls_cap.capab = cpu_to_le16(cap);
+ 
+-	for (end = pos + ie_len; pos + 1 < end; pos += 2 + pos[1]) {
+-		if (pos + 2 + pos[1] > end)
++	for (end = pos + ies_len; pos + 1 < end; pos += 2 + pos[1]) {
++		u8 ie_len = pos[1];
++
++		if (pos + 2 + ie_len > end)
+ 			break;
+ 
+ 		switch (*pos) {
+ 		case WLAN_EID_SUPP_RATES:
+-			if (pos[1] > 32)
++			if (ie_len > sizeof(sta_ptr->tdls_cap.rates))
+ 				return;
+-			sta_ptr->tdls_cap.rates_len = pos[1];
+-			for (i = 0; i < pos[1]; i++)
++			sta_ptr->tdls_cap.rates_len = ie_len;
++			for (i = 0; i < ie_len; i++)
+ 				sta_ptr->tdls_cap.rates[i] = pos[i + 2];
+ 			break;
+ 
+ 		case WLAN_EID_EXT_SUPP_RATES:
+-			if (pos[1] > 32)
++			if (ie_len > sizeof(sta_ptr->tdls_cap.rates))
+ 				return;
+ 			basic = sta_ptr->tdls_cap.rates_len;
+-			if (pos[1] > 32 - basic)
++			if (ie_len > sizeof(sta_ptr->tdls_cap.rates) - basic)
+ 				return;
+-			for (i = 0; i < pos[1]; i++)
++			for (i = 0; i < ie_len; i++)
+ 				sta_ptr->tdls_cap.rates[basic + i] = pos[i + 2];
+-			sta_ptr->tdls_cap.rates_len += pos[1];
++			sta_ptr->tdls_cap.rates_len += ie_len;
+ 			break;
+ 		case WLAN_EID_HT_CAPABILITY:
+-			if (pos > end - sizeof(struct ieee80211_ht_cap) - 2)
+-				return;
+-			if (pos[1] != sizeof(struct ieee80211_ht_cap))
++			if (ie_len != sizeof(struct ieee80211_ht_cap))
+ 				return;
+ 			/* copy the ie's value into ht_capb*/
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos + 2,
+@@ -981,59 +981,45 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
+ 			sta_ptr->is_11n_enabled = 1;
+ 			break;
+ 		case WLAN_EID_HT_OPERATION:
+-			if (pos > end -
+-			    sizeof(struct ieee80211_ht_operation) - 2)
+-				return;
+-			if (pos[1] != sizeof(struct ieee80211_ht_operation))
++			if (ie_len != sizeof(struct ieee80211_ht_operation))
+ 				return;
+ 			/* copy the ie's value into ht_oper*/
+ 			memcpy(&sta_ptr->tdls_cap.ht_oper, pos + 2,
+ 			       sizeof(struct ieee80211_ht_operation));
+ 			break;
+ 		case WLAN_EID_BSS_COEX_2040:
+-			if (pos > end - 3)
+-				return;
+-			if (pos[1] != 1)
++			if (ie_len != sizeof(pos[2]))
+ 				return;
+ 			sta_ptr->tdls_cap.coex_2040 = pos[2];
+ 			break;
+ 		case WLAN_EID_EXT_CAPABILITY:
+-			if (pos > end - sizeof(struct ieee_types_header))
+-				return;
+-			if (pos[1] < sizeof(struct ieee_types_header))
++			if (ie_len < sizeof(struct ieee_types_header))
+ 				return;
+-			if (pos[1] > 8)
++			if (ie_len > 8)
+ 				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.extcap, pos,
+ 			       sizeof(struct ieee_types_header) +
+-			       min_t(u8, pos[1], 8));
++			       min_t(u8, ie_len, 8));
+ 			break;
+ 		case WLAN_EID_RSN:
+-			if (pos > end - sizeof(struct ieee_types_header))
++			if (ie_len < sizeof(struct ieee_types_header))
+ 				return;
+-			if (pos[1] < sizeof(struct ieee_types_header))
+-				return;
+-			if (pos[1] > IEEE_MAX_IE_SIZE -
++			if (ie_len > IEEE_MAX_IE_SIZE -
+ 			    sizeof(struct ieee_types_header))
+ 				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.rsn_ie, pos,
+ 			       sizeof(struct ieee_types_header) +
+-			       min_t(u8, pos[1], IEEE_MAX_IE_SIZE -
++			       min_t(u8, ie_len, IEEE_MAX_IE_SIZE -
+ 				     sizeof(struct ieee_types_header)));
+ 			break;
+ 		case WLAN_EID_QOS_CAPA:
+-			if (pos > end - 3)
+-				return;
+-			if (pos[1] != 1)
++			if (ie_len != sizeof(pos[2]))
+ 				return;
+ 			sta_ptr->tdls_cap.qos_info = pos[2];
+ 			break;
+ 		case WLAN_EID_VHT_OPERATION:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				if (pos > end -
+-				    sizeof(struct ieee80211_vht_operation) - 2)
+-					return;
+-				if (pos[1] !=
++				if (ie_len !=
+ 				    sizeof(struct ieee80211_vht_operation))
+ 					return;
+ 				/* copy the ie's value into vhtoper*/
+@@ -1043,10 +1029,7 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
+ 			break;
+ 		case WLAN_EID_VHT_CAPABILITY:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				if (pos > end -
+-				    sizeof(struct ieee80211_vht_cap) - 2)
+-					return;
+-				if (pos[1] != sizeof(struct ieee80211_vht_cap))
++				if (ie_len != sizeof(struct ieee80211_vht_cap))
+ 					return;
+ 				/* copy the ie's value into vhtcap*/
+ 				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos + 2,
+@@ -1056,9 +1039,7 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
+ 			break;
+ 		case WLAN_EID_AID:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				if (pos > end - 4)
+-					return;
+-				if (pos[1] != 2)
++				if (ie_len != sizeof(u16))
+ 					return;
+ 				sta_ptr->tdls_cap.aid =
+ 					get_unaligned_le16((pos + 2));
+-- 
+2.24.0.393.g34dc348eaf-goog
+
