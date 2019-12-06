@@ -2,135 +2,202 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 241A3C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936F0C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7C12467A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:54:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575622473;
-	bh=dv0R5z1AIe1zof1B1v1hNLk2V/WCDCEV8S/AfucskBY=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=YarIqsUtIJ/Y8ZRJ3vOPKj97QO/UfxgYjvGngn5XeilVqW9ihEBKFrCNER2yBocTi
-	 vvdeEx3XnK631KOqaI89dNPzWrNuGUAa90opLO5Pi8Hn2K2wI7qbSVo8Dlu1A6bd1A
-	 +gOPQ5hvO1UR9ZcQT8Emu6C4dsfTa8id7kNgiXCI=
+	by mail.kernel.org (Postfix) with ESMTP id 5EFE52467A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:54:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZ/H32HN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfLFIyc (ORCPT
+        id S1726271AbfLFIyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 03:54:32 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:60450 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725966AbfLFIyb (ORCPT
+        Fri, 6 Dec 2019 03:54:50 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42545 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfLFIyu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 03:54:31 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1id9Nb-0007nG-Q6; Fri, 06 Dec 2019 09:54:27 +0100
-To:     Gaurav Kohli <gkohli@codeaurora.org>
-Subject: Re: [PATCH v0] irqchip/gic-v3: Avoid check of lpi configuration for  non existent cpu
-X-PHP-Originating-Script: 0:main.inc
+        Fri, 6 Dec 2019 03:54:50 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y19so4647005lfl.9;
+        Fri, 06 Dec 2019 00:54:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=3gYEsWmy4JuBzTSatOZIC7YaHvzWd9GrO4iSAH/St48=;
+        b=mZ/H32HNjhBtmGVGVzYUoONZ3TdIjQkkOAdG0A6R0KbrKngB69GYZTX5vYNgqXTXkp
+         hrHG1sPKReq2zSTcEADqVOeSQentFypuxj7zP9QUAgdexgptroVnLqnrfil5byypjKs+
+         26vXMS+Ug/0jPkrtNyVV1/QSAbMs/0YbwrHiu5rEl2sT3G7brsWS9n6CV3sTxL2/temW
+         xDz5E+2Jl1D2fYm6ozZu2aSsrwtRBnaiOlExIwfYkJIgC+X0w13Cq8FNQHTc+z4r+z2e
+         1fbkKXx5NAf0LZxabslDnTrDJMw3ugiH5W1JB6XWjVCgFmjcv2tLYBmcTILz/DAjIrhU
+         dqxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=3gYEsWmy4JuBzTSatOZIC7YaHvzWd9GrO4iSAH/St48=;
+        b=XGdYgvWSiuTLnsZZ53IMgs0Gxevqm5He5MYAJCYWMf2VrVxco8Rh4M+xwvOpGzUCBB
+         8oAQ3hOeqztXRF7ZoyosAtc84Q6ggVlqd96Yu8KvYTJeO467cOThfVP393ZTFhK96pxj
+         +GTOsDhd+Bt1MlCCdh5l6RZABo+D+s/zav9qkUG1prNBrN6UzAF3fQTGaErce+O25KHp
+         bI5O75JV1s7VdVHkgurKEWjNTdxu19k1I6WH/4AJKp4zFMoJBpB8xcdNhN2RyVG/834A
+         s12tRBTECGXUGa9PAA9DJvQUnw8ZC0GcUOOKUZA6+FSgQy0aqO37H4Pj/nYbRbYjNTTx
+         fgYw==
+X-Gm-Message-State: APjAAAWZg0zmuqB7vDLOqF9jYwFlt9J0iRG5VDBHHjUZmrdDodkf3xoz
+        ewfI3tX52dD4EZG7w+f/jSoM3R8Z4WiBkpyGJjk=
+X-Google-Smtp-Source: APXvYqzJDNLegHkTWBLyYNdnUs5zFbKbLYmnQ8Kk67OLfKLg925XlaeADJQU7PgP1mVRAnZoso2rEHYtAEVS6jqPwJ4=
+X-Received: by 2002:ac2:4422:: with SMTP id w2mr7575453lfl.178.1575622486717;
+ Fri, 06 Dec 2019 00:54:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 06 Dec 2019 08:54:27 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-In-Reply-To: <cfec6054-0ebe-f70b-b1a8-6c7bd7fc4450@codeaurora.org>
-References: <1575543357-31892-1-git-send-email-gkohli@codeaurora.org>
- <60f61282c1b1e512ca6ce638b6dfca09@www.loen.fr>
- <209f30c6-c03a-daeb-1f01-e03c489f41d8@codeaurora.org>
- <18011d088d5202339048ac5e3c224bb5@www.loen.fr>
- <cfec6054-0ebe-f70b-b1a8-6c7bd7fc4450@codeaurora.org>
-Message-ID: <1aa42fe27092cd25a81b13030048510a@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: gkohli@codeaurora.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+References: <20191127203114.766709977@linuxfoundation.org> <20191127203119.676489279@linuxfoundation.org>
+ <CA+res+QKCAn8PsSgbkqXNAF0Ov5pOkj=732=M5seWj+-JFQOwQ@mail.gmail.com>
+ <20191204175033.smve4dleem2ht7st@xps.therub.org> <CA+res+SW7o4YpUtv4-UYXP4WSPm417tgow68YM7YjOEcZ5xO3w@mail.gmail.com>
+ <20191205205206.2mnr3dj2slamuhrl@xps.therub.org>
+In-Reply-To: <20191205205206.2mnr3dj2slamuhrl@xps.therub.org>
+From:   Jack Wang <jack.wang.usish@gmail.com>
+Date:   Fri, 6 Dec 2019 09:54:35 +0100
+Message-ID: <CA+res+RQbK2wCWtfV4bNBF3GKYqRjPOAPDfWa_+6Zjqi--p8aw@mail.gmail.com>
+Subject: Re: [PATCH 4.19 067/306] KVM: nVMX: move check_vmentry_postreqs()
+ call to nested_vmx_enter_non_root_mode()
+To:     Jack Wang <jack.wang.usish@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-06 08:44, Gaurav Kohli wrote:
-> On 12/5/2019 6:48 PM, Marc Zyngier wrote:
->> On 2019-12-05 13:01, Gaurav Kohli wrote:
->>> On 12/5/2019 6:17 PM, Marc Zyngier wrote:
->>>> Hi Gaurav,
->>>> On 2019-12-05 10:55, Gaurav Kohli wrote:
->>>>> As per GIC specification, we can configure gic for more no of 
->>>>> cpus
->>>>> then the available cpus in the soc, But this can cause mem abort
->>>>> while iterating lpi region for non existent cpu as we don't map
->>>> Which LPI region? We're talking about RDs, right... Or does LPI 
->>>> mean
->>>> something other than GIC LPIs for you?
->>>>
->>>
->>> Yes RDs only.
->>>>> redistrubutor region for non-existent cpu.
->>>>>
->>>>> To avoid this issue, put one more check of valid mpidr.
->>>> Sorry, but I'm not sure I grasp your problem. Let me try and 
->>>> rephrase it:
->>>> - Your GIC is configured for (let's say) 8 CPUs, and your SoC has 
->>>> only 4.
->>> Yes, suppose gic is configured for 8 cpus but soc has only 4 cpus.
->>> Then in this case gic_iterate will iterate till it get TYPER_LAST.
->> And that's what is expected from the architecture.
->>
->>>
->>> But as gic is configured for 8, So last bit sets in eight
->>> redistributor regions only.
->>>> - As part of the probing, the driver iterates on the RD regions 
->>>> and explodes
->>>>    because something isn't mapped?
->>>> That'd be a grave bug, but I believe the issue is somewhere else.
->>>
->>> There are 4 cpus present, that's why we have mapped 4 redistributor
->>> only, but during probe below function keeps iterating and give mem
->>> abort for 5th cpu.
->>>
->>> static void gic_update_vlpi_properties(void)
->>> {
->>>         gic_iterate_rdists(__gic_update_vlpi_properties);
->>>
->>> }
->>>
->>> We can solve this problem by mapping all eight redistributor in dt,
->>> but ideally code should also able to handle this and we can avoid
->>> mappin?
->> The whole point of DT is to describe the HW, all the HW, nothing but
->> the HW. This is what is expected by both the architecture and Linux.
->> So you have the solution already. Don't lie to the kernel, and 
->> everything
->> will be fine.
->>         M.
+Dan Rue <dan.rue@linaro.org> =E4=BA=8E2019=E5=B9=B412=E6=9C=885=E6=97=A5=E5=
+=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=889:52=E5=86=99=E9=81=93=EF=BC=9A
 >
-> HI Marc,
+> On Thu, Dec 05, 2019 at 10:51:18AM +0100, Jack Wang wrote:
+> > Dan Rue <dan.rue@linaro.org> =E4=BA=8E2019=E5=B9=B412=E6=9C=884=E6=97=
+=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=886:50=E5=86=99=E9=81=93=EF=BC=9A
+> > >
+> > > On Mon, Dec 02, 2019 at 03:40:04PM +0100, Jack Wang wrote:
+> > > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> =E4=BA=8E2019=E5=B9=
+=B411=E6=9C=8827=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=8810:30=E5=86=
+=99=E9=81=93=EF=BC=9A
+> > > > >
+> > > > > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > > >
+> > > > > [ Upstream commit 7671ce21b13b9596163a29f4712cb2451a9b97dc ]
+> > > > >
+> > > > > In preparation of supporting checkpoint/restore for nested state,
+> > > > > commit ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vm=
+x_run()")
+> > > > > modified check_vmentry_postreqs() to only perform the guest EFER
+> > > > > consistency checks when nested_run_pending is true.  But, in the
+> > > > > normal nested VMEntry flow, nested_run_pending is only set after
+> > > > > check_vmentry_postreqs(), i.e. the consistency check is being ski=
+pped.
+> > > > >
+> > > > > Alternatively, nested_run_pending could be set prior to calling
+> > > > > check_vmentry_postreqs() in nested_vmx_run(), but placing the
+> > > > > consistency checks in nested_vmx_enter_non_root_mode() allows us
+> > > > > to split prepare_vmcs02() and interleave the preparation with
+> > > > > the consistency checks without having to change the call sites
+> > > > > of nested_vmx_enter_non_root_mode().  In other words, the rest
+> > > > > of the consistency check code in nested_vmx_run() will be joining
+> > > > > the postreqs checks in future patches.
+> > > > >
+> > > > > Fixes: ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vm=
+x_run()")
+> > > > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.c=
+om>
+> > > > > Cc: Jim Mattson <jmattson@google.com>
+> > > > > Reviewed-by: Jim Mattson <jmattson@google.com>
+> > > > > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> > > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > > > > ---
+> > > > >  arch/x86/kvm/vmx.c | 10 +++-------
+> > > > >  1 file changed, 3 insertions(+), 7 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> > > > > index fe7fdd666f091..bdf019f322117 100644
+> > > > > --- a/arch/x86/kvm/vmx.c
+> > > > > +++ b/arch/x86/kvm/vmx.c
+> > > > > @@ -12694,6 +12694,9 @@ static int enter_vmx_non_root_mode(struct=
+ kvm_vcpu *vcpu, u32 *exit_qual)
+> > > > >         if (likely(!evaluate_pending_interrupts) && kvm_vcpu_apic=
+v_active(vcpu))
+> > > > >                 evaluate_pending_interrupts |=3D vmx_has_apicv_in=
+terrupt(vcpu);
+> > > > >
+> > > > > +       if (from_vmentry && check_vmentry_postreqs(vcpu, vmcs12, =
+exit_qual))
+> > > > > +               return EXIT_REASON_INVALID_STATE;
+> > > > > +
+> > > > >         enter_guest_mode(vcpu);
+> > > > >
+> > > > >         if (!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CON=
+TROLS))
+> > > > > @@ -12836,13 +12839,6 @@ static int nested_vmx_run(struct kvm_vcp=
+u *vcpu, bool launch)
+> > > > >          */
+> > > > >         skip_emulated_instruction(vcpu);
+> > > > >
+> > > > > -       ret =3D check_vmentry_postreqs(vcpu, vmcs12, &exit_qual);
+> > > > > -       if (ret) {
+> > > > > -               nested_vmx_entry_failure(vcpu, vmcs12,
+> > > > > -                                        EXIT_REASON_INVALID_STAT=
+E, exit_qual);
+> > > > > -               return 1;
+> > > > > -       }
+> > > > > -
+> > > > >         /*
+> > > > >          * We're finally done with prerequisite checking, and can=
+ start with
+> > > > >          * the nested entry.
+> > > > > --
+> > > > > 2.20.1
+> > > > >
+> > > > >
+> > > > >
+> > > > Hi all,
+> > > >
+> > > > This commit caused many kvm-unit-tests regression, cherry-pick
+> > > > following commits from 4.20 fix the regression:
+> > >
+> > > Hi Jack - can you be more specific about the failing tests? What type=
+ of
+> > > environment and which tests failed, which version of kvm-unit-tests? =
+Do
+> > > you have any logs available? I ask because we do run kvm-unit-tests o=
+n
+> > > x86 and arm64 but we did not see these regressions.
+> > >
+> > > Thanks,
+> > > Dan
+> > >
+> > Hi Dan,
+> >
+> > I'm running at kvm-unit-tests commit b1414c5f0142 ("x86: vmx: fix
+> > required alignment for posted interrupt descriptor")
+> >
+> > using "run_tests.sh -a -t -j8" with qemu-2.7.1
+> >
+> > Left side has only 78 tests ok, and right side has 112 tests ok.
 >
-> Thanks for detailed explanation, Yes we have mapped all 8
-> distributors now to resolve.
-> But my main concern is that last 4 redistributor is not connected to
-> core, as core is not present.
-> And as per gic driver it seems we are only
-> iterating and populating per cpu rd pointer.
+> Thanks - so we run it with "run_tests.sh -v" and only see 43 passes in
+> the best case. Besides missing -a, we see a skip for the vmx related
+> tests because vmx isn't enabled in our environment.
 >
-> So that would be fine correct, seems nothing wrong in this kind of
-> configuration?
+> We will fix those problems in LKFT so that we can catch regressions like
+> this before they are released.
+>
+> Dan
+Sounds good.
 
-There is nothing wrong with having more redistributors that CPUs,
-and that's what is anticipated by the architecture. This is also
-why the GIC driver works by having each CPU finding its own
-redistributor in the RD regions, rather than the other way around.
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Thanks,
+Jack
