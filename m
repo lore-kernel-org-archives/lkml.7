@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98770C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AA0C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FBB124673
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6DB52245C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YO1d6Pqj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gboq1hQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfLFXQL (ORCPT
+        id S1726884AbfLFXQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 18:16:11 -0500
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:43082 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfLFXQJ (ORCPT
+        Fri, 6 Dec 2019 18:16:15 -0500
+Received: from mail-yw1-f73.google.com ([209.85.161.73]:34995 "EHLO
+        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfLFXQL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 18:16:09 -0500
-Received: by mail-qk1-f202.google.com with SMTP id f22so3280205qka.10
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 15:16:08 -0800 (PST)
+        Fri, 6 Dec 2019 18:16:11 -0500
+Received: by mail-yw1-f73.google.com with SMTP id c68so6587349ywa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 15:16:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=xEi+vKgsmLlcT/1KoTX4fLPGiQtWGmGYsrHJ8zjnTqs=;
-        b=YO1d6PqjdVeEc1RKSNdzkJXwxvQl+MqVUA1A9f/XTslue/ktJqZ9t0zzsthheZu6D0
-         571cuE7ceFewaHuEysCCxXMu3pBkvFq9G8ST+OP4IN37MLkI/O3uxQH/39WKztM/M++7
-         Uk3bgnmx9ioEGQtP+/2R8i/7LlR+3tvv3BxRbSpS8Nx5Bple0I+d5lc5vRyPcfGoZFj0
-         a3e2xTmdNZFlDeGzoYKC0ncaZyPAu/sE1O9YFcdz8DtEX9dr294YlLZ3TmU9LPAUoOF9
-         uq9G2HFzkQE3WBRegzQ71ztn4G8SA/OMN6w4XBag3sAzo4Z2fzis4pnyJv0RMyvHc5aW
-         qYEg==
+        bh=wb+OKThbtJSICtKGbqaWde4wJBvL1Hfa7Pzncbz50Ck=;
+        b=gboq1hQCrlc0HFE2wptE4H66zZSkT4E2GdJjF/bfMGkLq9fxgBHdFdVTwqCmUfyFgx
+         GHi6dVCxFkiWuTStWkZfPGaTPPBze+seALYlxfBrl+j9+befxCLvxkIlHJndShiSUsdM
+         ZhuqxLgmDtU+8djX1M+Bska9ICvWisI8/2PL4AVFZkkvuoh5FC7BK1eOuZRIoc8eSA4+
+         hZWhERuUJgdy5gDjtRwiCf9ICWGhuk6hbJr63dVew9Ed+/X/NH9XaElwPfLrhBLygB0c
+         hIgaWuRh7SP439z23zL554Y6NX8QrTV0wh84XgqINBItAVzRYEdObixpY7Sfceod0dzu
+         H4mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=xEi+vKgsmLlcT/1KoTX4fLPGiQtWGmGYsrHJ8zjnTqs=;
-        b=YUNKUqKMulQkJmKDJ9OZhOdfwbtVfe4CZj6v0r/ng/63BghkcrP0M8Nz8V6yzkjgM1
-         XuICg3GB8yDuIQo0ELhdoM6s7+leU3VVl4EQIIqzbS/dIc8bCxqQtLBR/0WY1QdmvRn4
-         MUwQVmAqZeJjlN0Qua3dcGh4qD8knhToB3OH2jFK3yTLLYr2IbhKWLfwV0GHrvxAweX9
-         dc1DpCNQRWwOsJoI1kNXPXM3v6JoOOtRVULQ1/uUzqV1JDob/Seusg698RgbKacggivX
-         gOuUqoxv/t1oOYQJLLhjZApslt2/SNOUdziF/1pzXhteEgIRZrGWJYIp9j19Ghz3r0m+
-         Ja6Q==
-X-Gm-Message-State: APjAAAWMD5AYnyrpCDdPnEzfNosNZvsTnmRUx6pkilW07ed/t+XJfLu7
-        lFE9nIutGyTAjRzLjMa7/6MN8SkGsON/
-X-Google-Smtp-Source: APXvYqxRyq12f1VSdhpHsRfBPnJnzVRn90I1UhJMa27O9joJnKczg+VrmL2SF43FzCoRrooTdR4L66mA4j0d
-X-Received: by 2002:a0c:c28a:: with SMTP id b10mr15132736qvi.88.1575674167757;
- Fri, 06 Dec 2019 15:16:07 -0800 (PST)
-Date:   Fri,  6 Dec 2019 15:15:37 -0800
+        bh=wb+OKThbtJSICtKGbqaWde4wJBvL1Hfa7Pzncbz50Ck=;
+        b=TdJTHl0uqhFX3thaObldsrt/knrBHNhR13YvWeQXwihgle1iAB6LBfY8DcsWz/fpkr
+         Us7UKWqJfni4b8mS6nAmvbsH9R3abFJmdquss1GphPR2z5a6hH+XUc/u8d7zQhpodGfF
+         oZDsOXn0Aopqnax7jFzo+QrzbDQTcroEYfQd+o20AHjA0/kfIf9U53mf7jziJwpuXGrC
+         ZEMTiK+nrF+lbwDtI8Ae/pF4MxaRQLqvgTQeZplKTjGAc7eAa7fgUe8YZJkfGXQPvQNG
+         s58ZsgWszXGLQ7Kbu4U+EFJQb7ATU6eVzgE+mC1eKJrZ702+DZLoFmu6k15lNoEYdpkI
+         grtw==
+X-Gm-Message-State: APjAAAVy4+qrtDw2eD0t7Uje/wlYh4KBgf3Cb6XnifKnPH4odV3agKKZ
+        yOEmDLbp+00srhFpk75Z3wfbWVsUezE1
+X-Google-Smtp-Source: APXvYqxqyt7G125LkTKOPRmFM2J4oNiFQnGrKM2FAMF47G4qdMmoJZ77MCBAdGaG6FoPVAnGleKMeVXMX3yi
+X-Received: by 2002:a0d:d64d:: with SMTP id y74mr12602330ywd.386.1575674170377;
+ Fri, 06 Dec 2019 15:16:10 -0800 (PST)
+Date:   Fri,  6 Dec 2019 15:15:38 -0800
 In-Reply-To: <20191206231539.227585-1-irogers@google.com>
-Message-Id: <20191206231539.227585-9-irogers@google.com>
+Message-Id: <20191206231539.227585-10-irogers@google.com>
 Mime-Version: 1.0
 References: <20191116011845.177150-1-irogers@google.com> <20191206231539.227585-1-irogers@google.com>
 X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [PATCH v5 08/10] perf: cache perf_event_groups_first for cgroups
+Subject: [PATCH v5 09/10] perf: optimize event_filter_match during sched_in
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -92,180 +92,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a per-CPU cache of the pinned and flexible perf_event_groups_first
-value for a cgroup avoiding an O(log(#perf events)) searches during
-sched_in.
+The caller verified the CPU and cgroup so directly call
+pmu_filter_match.
 
-Based-on-work-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- include/linux/perf_event.h |  7 ++++
- kernel/events/core.c       | 84 ++++++++++++++++++++++++++++++++++----
- 2 files changed, 82 insertions(+), 9 deletions(-)
+ kernel/events/core.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index cd7d3b624655..a29a38df909e 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -892,6 +892,13 @@ struct perf_cgroup_info {
- struct perf_cgroup {
- 	struct cgroup_subsys_state	css;
- 	struct perf_cgroup_info	__percpu *info;
-+	/*
-+	 * A cache of the first event with the perf_cpu_context's
-+	 * perf_event_context for the first event in pinned_groups or
-+	 * flexible_groups. Avoids an rbtree search during sched_in.
-+	 */
-+	struct perf_event * __percpu    *pinned_event;
-+	struct perf_event * __percpu    *flexible_event;
- };
- 
- /*
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 3da9cc1ebc2d..5935d2474050 100644
+index 5935d2474050..bcaf100d8167 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -1638,6 +1638,27 @@ perf_event_groups_insert(struct perf_event_groups *groups,
- 
- 	rb_link_node(&event->group_node, parent, node);
- 	rb_insert_color(&event->group_node, &groups->tree);
-+#ifdef CONFIG_CGROUP_PERF
-+	if (is_cgroup_event(event)) {
-+		struct perf_event **cgrp_event;
-+
-+		if (event->attr.pinned) {
-+			cgrp_event = per_cpu_ptr(event->cgrp->pinned_event,
-+						event->cpu);
-+		} else {
-+			cgrp_event = per_cpu_ptr(event->cgrp->flexible_event,
-+						event->cpu);
-+		}
-+		/*
-+		 * Remember smallest, left-most, group index event. The
-+		 * less-than condition is only possible if the group_index
-+		 * overflows.
-+		 */
-+		if (!*cgrp_event ||
-+			event->group_index < (*cgrp_event)->group_index)
-+			*cgrp_event = event;
-+	}
-+#endif
- }
- 
- /*
-@@ -1652,6 +1673,9 @@ add_event_to_groups(struct perf_event *event, struct perf_event_context *ctx)
- 	perf_event_groups_insert(groups, event);
- }
- 
-+static struct perf_event *
-+perf_event_groups_next(struct perf_event *event);
-+
- /*
-  * Delete a group from a tree.
-  */
-@@ -1662,6 +1686,22 @@ perf_event_groups_delete(struct perf_event_groups *groups,
- 	WARN_ON_ONCE(RB_EMPTY_NODE(&event->group_node) ||
- 		     RB_EMPTY_ROOT(&groups->tree));
- 
-+#ifdef CONFIG_CGROUP_PERF
-+	if (is_cgroup_event(event)) {
-+		struct perf_event **cgrp_event;
-+
-+		if (event->attr.pinned) {
-+			cgrp_event = per_cpu_ptr(event->cgrp->pinned_event,
-+						event->cpu);
-+		} else {
-+			cgrp_event = per_cpu_ptr(event->cgrp->flexible_event,
-+						event->cpu);
-+		}
-+		if (*cgrp_event == event)
-+			*cgrp_event = perf_event_groups_next(event);
-+	}
-+#endif
-+
- 	rb_erase(&event->group_node, &groups->tree);
- 	init_event_group(event);
- }
-@@ -1679,7 +1719,8 @@ del_event_from_groups(struct perf_event *event, struct perf_event_context *ctx)
- }
- 
- /*
-- * Get the leftmost event in the cpu/cgroup subtree.
-+ * Get the leftmost event in the cpu subtree without a cgroup (ie task or
-+ * system-wide).
-  */
- static struct perf_event *
- perf_event_groups_first(struct perf_event_groups *groups, int cpu,
-@@ -3596,8 +3637,8 @@ static int ctx_groups_sched_in(struct perf_event_context *ctx,
- 			.cap = ARRAY_SIZE(itrs),
- 		};
- 		/* Events not within a CPU context may be on any CPU. */
--		__heap_add(&event_heap, perf_event_groups_first(groups, -1,
--									NULL));
-+		__heap_add(&event_heap,
-+			perf_event_groups_first(groups, -1, NULL));
- 	}
- 	evt = event_heap.data;
- 
-@@ -3605,8 +3646,16 @@ static int ctx_groups_sched_in(struct perf_event_context *ctx,
- 
- #ifdef CONFIG_CGROUP_PERF
- 	for (; css; css = css->parent) {
--		__heap_add(&event_heap, perf_event_groups_first(groups, cpu,
--								css->cgroup));
-+		struct perf_cgroup *cgrp;
-+
-+		/* root cgroup doesn't have events */
-+		if (css->id == 1)
-+			break;
-+
-+		cgrp = container_of(css, struct perf_cgroup, css);
-+		__heap_add(&event_heap, is_pinned
-+			? *per_cpu_ptr(cgrp->pinned_event, cpu)
-+			: *per_cpu_ptr(cgrp->flexible_event, cpu));
- 	}
- #endif
- 
-@@ -12672,18 +12721,35 @@ perf_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
- 		return ERR_PTR(-ENOMEM);
- 
- 	jc->info = alloc_percpu(struct perf_cgroup_info);
--	if (!jc->info) {
--		kfree(jc);
--		return ERR_PTR(-ENOMEM);
--	}
-+	if (!jc->info)
-+		goto free_jc;
-+
-+	jc->pinned_event = alloc_percpu(struct perf_event *);
-+	if (!jc->pinned_event)
-+		goto free_jc_info;
-+
-+	jc->flexible_event = alloc_percpu(struct perf_event *);
-+	if (!jc->flexible_event)
-+		goto free_jc_pinned;
- 
- 	return &jc->css;
-+
-+free_jc_pinned:
-+	free_percpu(jc->pinned_event);
-+free_jc_info:
-+	free_percpu(jc->info);
-+free_jc:
-+	kfree(jc);
-+
-+	return ERR_PTR(-ENOMEM);
- }
- 
- static void perf_cgroup_css_free(struct cgroup_subsys_state *css)
+@@ -2227,8 +2227,11 @@ static inline int pmu_filter_match(struct perf_event *event)
+ static inline int
+ event_filter_match(struct perf_event *event)
  {
- 	struct perf_cgroup *jc = container_of(css, struct perf_cgroup, css);
- 
-+	free_percpu(jc->pinned_event);
-+	free_percpu(jc->flexible_event);
- 	free_percpu(jc->info);
- 	kfree(jc);
+-	return (event->cpu == -1 || event->cpu == smp_processor_id()) &&
+-	       perf_cgroup_match(event) && pmu_filter_match(event);
++	if (event->cpu != -1 && event->cpu != smp_processor_id())
++		return 0;
++	if (!perf_cgroup_match(event))
++		return 0;
++	return pmu_filter_match(event);
  }
+ 
+ static void
+@@ -3577,7 +3580,11 @@ static int merge_sched_in(struct perf_event_context *ctx,
+ 	if (event->state <= PERF_EVENT_STATE_OFF)
+ 		return 0;
+ 
+-	if (!event_filter_match(event))
++	/*
++	 * Avoid full event_filter_match as the caller verified the CPU and
++	 * cgroup before calling.
++	 */
++	if (!pmu_filter_match(event))
+ 		return 0;
+ 
+ 	if (group_can_go_on(event, cpuctx, 1)) {
 -- 
 2.24.0.393.g34dc348eaf-goog
 
