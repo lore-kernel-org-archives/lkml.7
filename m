@@ -2,121 +2,127 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875C8C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D923CC2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FAFF20659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:36:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="TsZ6bc64"
+	by mail.kernel.org (Postfix) with ESMTP id B14C924659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575650220;
+	bh=2H3ziaS3wSxYN2KRy/3/wq9E68TWEGzBwD5gyjiUZKc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VAKO/6W4V+oakAbxkG+XBxm44K1TpW//kjRpvglVud3RwYCXUKTAwdHcQJ0AmVGSy
+	 NZtuS7ftPuJHQxECA4YZAtron4BiXNbUVrfrenxOJFMs4bO8V0E6GALR+kZ0LAyC8s
+	 og9HUwEyOwQvWlQtdR0HZd8bYZ7oE1dYaAZsr9DM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfLFQgW (ORCPT
+        id S1726505AbfLFQg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:36:22 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44666 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbfLFQgV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:36:21 -0500
-Received: by mail-lj1-f195.google.com with SMTP id c19so8251909lji.11
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 08:36:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Do9Ixinmx7DWrqug5u9w6tASXApuWJdCd8LeAbdsBIQ=;
-        b=TsZ6bc64rxzpqunpmQ9zZj07Ax4iRTEptSrLKQ+dpVUS7CBbthGk73RbR1sKm/ihVS
-         Eiu+u06rthCiI6Gi7wf98K8KH8EWHvaP55qYJ0K04+L5SVwB+3JbhhE3zfvQOBdm3lBQ
-         NJvk6wvXUxT1Wq8K6Re8tvnM9+Fq8zS+NOsTDH2SWIMDRPbfTbWoDpZVKislSid2cofB
-         3uFp3q8ehVxp+1Kolsh0EWEkVcd3Qvjw/RKIsL9kVkDaFj9yalOgX5VDEszCHN6R/g3F
-         uuNno5rQX5O07PJ3HvM0q5RCl3TYwMUHEfwXJJLchW8zq4VPmq+uqNeE1sCRKru0fuSL
-         ed4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Do9Ixinmx7DWrqug5u9w6tASXApuWJdCd8LeAbdsBIQ=;
-        b=OMTzhm/ion+q2kmqPNVMTDPPfCqRLOWOS6qsT/hK/4uc2GR3bsbWHOSCnKOCun8L7u
-         5Qplqq+jCt/JQtP6lVeVZSFrR5gT89L2zGxfV6aDpaNYtzrntXLbKR14gHXXLlmiw2yn
-         nq96PjMnEjYZDgET2vSXF9KY7NCbhQTZSz49n6UTn9gNUjo5XgVZn+2h+kOwzGC5hCj+
-         mPg5GeZ1MXkzIlg85Y4iY1gQjX1T4fflnBRLNwVP8XNpXFhJte5A5u6QQOZKN3cTNvPu
-         4Zpgl0eExQWQCamfgdeC/iEwTuIeC0valbXW2kTPdWcfHwkw+WD+nqz8IJiz48ptOY1Z
-         FWmg==
-X-Gm-Message-State: APjAAAV+4pktel8ZNLMFMSzcG3iO5O/IwvfBd0B6v4Z1PHl10OQGfSMJ
-        bB/0rHF5t/QLDE4d3nS9PAai8A==
-X-Google-Smtp-Source: APXvYqzFPZuwpYdyHCsG+D27+XkuBdXIZhP2CbCq8CsSbLiJU4568yp5Ua0bb5hzl4F2nEum2wccHg==
-X-Received: by 2002:a2e:9b52:: with SMTP id o18mr8955227ljj.205.1575650179665;
-        Fri, 06 Dec 2019 08:36:19 -0800 (PST)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id k5sm2572559lfd.86.2019.12.06.08.36.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 06 Dec 2019 08:36:18 -0800 (PST)
-Date:   Fri, 6 Dec 2019 08:29:19 -0800
-From:   Olof Johansson <olof@lixom.net>
-To:     Jens Wiklander <jens.wiklander@linaro.org>
-Cc:     arm-soc <arm@kernel.org>, soc@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [GIT PULL] tee subsys fixes for v5.4 (take two)
-Message-ID: <20191206162919.vilrybgbiewdl4d2@localhost>
-References: <20191115105353.GA26176@jax>
- <20191116234048.oas2rlfwxlz65jvp@localhost>
- <CAHUa44EQ-1SUd0dDBp43_EGPMPArq_g8=1hSKZ3EC0uELUKH_A@mail.gmail.com>
- <CAHUa44FaxiMrGwOLPrej_zMrVFyBExfPTqeHfYfocpc8x8LzLg@mail.gmail.com>
+        Fri, 6 Dec 2019 11:36:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726271AbfLFQg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 11:36:59 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FB7E2173E;
+        Fri,  6 Dec 2019 16:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575650219;
+        bh=2H3ziaS3wSxYN2KRy/3/wq9E68TWEGzBwD5gyjiUZKc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SMLxrM14iP7T5hwxwaGBH+jV7xzG2sSAxPyomobXXe93MRL/+gyC6rYj5zWawvMv7
+         wJ28xDTpb+r1h6LV3Miyk3tpgsq2DYLWo9Lp846xgWLWDtN0DutBNoO1eywkVV/iDA
+         LGFS8MoTVGdP6JZ1KT80jsnd12PZ2yP/wR6LJIzs=
+Date:   Fri, 6 Dec 2019 17:36:56 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Thomas Renninger <trenn@suse.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Felix Schnizlein <fschnizlein@suse.de>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org,
+        fschnitzlein@suse.de, Felix Schnizlein <fschnizlein@suse.com>,
+        Thomas Renninger <trenn@suse.com>
+Subject: Re: [PATCH 2/3] x86 cpuinfo: implement sysfs nodes for x86
+Message-ID: <20191206163656.GC86904@kroah.com>
+References: <20191206162421.15050-1-trenn@suse.de>
+ <20191206162421.15050-3-trenn@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHUa44FaxiMrGwOLPrej_zMrVFyBExfPTqeHfYfocpc8x8LzLg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191206162421.15050-3-trenn@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 10:57:47AM +0100, Jens Wiklander wrote:
-> Hi Olof,
+On Fri, Dec 06, 2019 at 05:24:20PM +0100, Thomas Renninger wrote:
+> From: Felix Schnizlein <fschnizlein@suse.de>
 > 
-> On Sun, Nov 17, 2019 at 3:22 PM Jens Wiklander
-> <jens.wiklander@linaro.org> wrote:
-> >
-> > On Sun, Nov 17, 2019 at 12:45 AM Olof Johansson <olof@lixom.net> wrote:
-> > >
-> > > On Fri, Nov 15, 2019 at 11:53:53AM +0100, Jens Wiklander wrote:
-> > > > Hello arm-soc maintainers,
-> > > >
-> > > > Please pull these OP-TEE driver fixes. There's one user-after-free issue if
-> > > > in the error handling path when the OP-TEE driver is initializing. There's
-> > > > also one fix to to register dynamically allocated shared memory needed by
-> > > > kernel clients communicating with secure world via memory references.
-> > > >
-> > > > "tee: optee: Fix dynamic shm pool allocations" is now from version 2 which
-> > > > includes a fix up with a small but vital dependency.
-> > > >
-> > > > If you think it's too late for v5.4 please queue this for v5.5 instead.
-> > >
-> > > Hi,
-> > >
-> > > I noticed you based this on -rc3 -- all our other branches are on -rc2 or
-> > > older.
-> >
-> > I'm sorry, I thought -rc3 was old enough. I'll stick to -rc2 or older
-> > in next time.
-> >
-> > >
-> > > Anyway, I brought this in to the fixes branch, it's the only thing we have
-> > > queued up at this time so I'll give it a few days in -next before I send it in.
+> Enable sysfs cpuinfo for x86 based cpus.
+> Export often used cpu information to sysfs:
+> stepping, flags, bugs, bogomips, family, vendor_id,
+> model, and model_name are exported.
 > 
-> It looks like the two patches in this pull request
-> (https://git.linaro.org/people/jens.wiklander/linux-tee.git/tag/?h=tee-fixes-for-v5.4)
-> are still in -next and haven't got any further. Is there anything
-> wrong? Something I should fix?
+> Sysfs documentation is updated to reflect changes.
+> 
+> Example (on a kvm instance running no an intel cpu):
+> /sys/devices/system/cpu/cpu1/info/:[0]# head *
+> ==> bogomips <==
+> 5187.72
+> 
+> ==> bugs <==
+> cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf mds swapgs itlb_multihit
+> 
+> ==> cpu_family <==
+> 6
+> 
+> ==> flags <==
+> fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm cpuid_fault invpcid_single pti ssbd ibrs ibpb fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt arat umip
 
-They were in our fixes branch and didn't go in yet, but will shortly.
+One file with all of that?  We are going to run into problems
+eventually, that should be split up.
 
+Just like bugs, that's going to just grow over time and eventually
+overflow PAGE_SIZE :(
 
--Olof
+Make this:
+  ├── flags
+  │   ├── fpu
+  │   ├── vme
+...
+
+Much simpler to parse, right?
+
+sysfs files need to be one-value-per-file, and that's a lot of different
+values in a single file.
+
+How did I miss that before?
+
+> @@ -0,0 +1,99 @@
+> +/*
+> + * Copyright (C) 2017 SUSE Linux GmbH
+> + * Written by: Felix Schnizlein <fschnizlein@suse.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License version
+> + * 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful, but
+> + * WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> + * General Public License for more details.
+
+Boilerplate and SPDX.
+
+You did run these through checkpatch.pl, right?  It should have
+complained about this.
+
+thanks,
+
+greg k-h
