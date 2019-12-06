@@ -2,102 +2,112 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4ABC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAEEC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E401B20706
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9514F2245C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:29:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cttvg7su"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Fc8OwaK3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfLFBYg (ORCPT
+        id S1726209AbfLFB3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 20:24:36 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45724 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfLFBYg (ORCPT
+        Thu, 5 Dec 2019 20:29:43 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:47348 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfLFB3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 20:24:36 -0500
-Received: by mail-pl1-f194.google.com with SMTP id w7so1976534plz.12;
-        Thu, 05 Dec 2019 17:24:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yEsrWVW0HwmOsVFJJw4nLhvKEtLDOtBM/LHp3eOGtHg=;
-        b=Cttvg7su4A6+PVhvW09cCHSYKvWVkwU9RVk0Q7zmD5/W746mWH8Ef5+i3gG1uJ/d60
-         umQFZ1vbS9Xuygej+dIzwLhbO/S0QDk/F7QIlbgrwNE7K+4j7athkWaEbQqiQZIrQ9Ms
-         NwsiZ/7hz7BvTltRqtfUphFuYDk6Uyw/FJDbkmpfx7qBRIXt+Kc0cSD/esMR5zAXW3DM
-         oqjss2BAJ14GKXpNXgnHechy3iklgT0QQaPYtTtVw7iZgIOK5bMuMzrZqVRQ2MVpsvoo
-         0P6SQxlBHykKrFba+VO273H23qLfVdlMbtFUkkUVK9OrZVmVJIm52Y1P//PFFXA/Pjsi
-         TaIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yEsrWVW0HwmOsVFJJw4nLhvKEtLDOtBM/LHp3eOGtHg=;
-        b=Cb8BIa6cpJyC3cPbPpSUgCO5E8GBklnk8KALxA8gB8GIQRFTGDdfuVnCcVxKXc3YyZ
-         JVFM1w/KyF+IRRQxDpOaE9rN2xrau3/1K1bhpkpsaqJZ6RPW4CYLOPNIHkl2A4CH5Qpt
-         /XP8WfuPQVRLoZnhQ9PrR5svdxBj6sfBQ32+7Wae3T5uJ7p+7ulUnSlmlNvKq/Cl6qOF
-         FcAviaovvj/ml/3iJxLbzw7vFZQSyS/CAIEcPZFp/cLo3nZnjH87wfxqZzJL11NenYE3
-         LN8BdSgDC+d2en9zRvuqqFlTCu/1gNdt5PUQiR3MQ5FJ5zb0wqnGD/BGpOG4hwT+MaxI
-         CHZg==
-X-Gm-Message-State: APjAAAV514z2pFYF5ESBnDDJ6xCBC3SgqDZQppzARbzlJRrTIaBgLeN7
-        vKPEThc9plrIg6/ClQOKPus=
-X-Google-Smtp-Source: APXvYqwRAjcAuD553Owy+TPa2K5/wy5j4g/ih8l5A6lrWw0Lfa17tJW9vcvEvoRUfp5G9jzouTfCjA==
-X-Received: by 2002:a17:90a:f0d6:: with SMTP id fa22mr12659929pjb.136.1575595475535;
-        Thu, 05 Dec 2019 17:24:35 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id c9sm13282596pfn.65.2019.12.05.17.24.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 17:24:34 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Parav Pandit <parav@mellanox.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] RDMA/cma: add missed unregister_pernet_subsys in init failure
-Date:   Fri,  6 Dec 2019 09:24:26 +0800
-Message-Id: <20191206012426.12744-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 5 Dec 2019 20:29:42 -0500
+Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id EE1F82010BBB;
+        Thu,  5 Dec 2019 17:29:41 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EE1F82010BBB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1575595782;
+        bh=KYKqmpyu2/KqQw/Kgh5Hw9D6cv4w2gT1WEMOUZ51dOU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Fc8OwaK3Uno1CtieRVB5j2+9/MR0KfBD4iqD6bdydfWV/06dTYbAc326ZmZNyCZ+P
+         HcjAxnPxr5RQNMuaI4YZxAttMv+WHChxbziMLS4o6DCd1lWdAPCPIVmIZE2vvMv51m
+         J1LE/HZBwRrty/aOxKrOlHHfaoALuSF+cPzqE+LM=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Subject: [PATCH v1 0/2] IMA: Deferred measurement of keys
+Date:   Thu,  5 Dec 2019 17:29:34 -0800
+Message-Id: <20191206012936.2814-1-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to call unregister_pernet_subsys() in the error path
-of cma_init().
-Add the missed call to fix it.
+This patchset extends the previous version[1] by adding support for
+deferred processing of keys.
 
-Fixes: 4be74b42a6d0 ("IB/cma: Separate port allocation to network namespaces")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Add fixes tag.
+With the patchset referenced above, the IMA subsystem supports
+measuring asymmetric keys when the key is created or updated.
+But keys created or updated before a custom IMA policy is loaded
+are currently not measured. This includes keys added to, for instance,
+.builtin_trusted_keys which happens early in the boot process.
 
- drivers/infiniband/core/cma.c | 1 +
- 1 file changed, 1 insertion(+)
+This change adds support for queuing keys created or updated before
+a custom IMA policy is loaded. The queued keys are processed when
+a custom policy is loaded. Keys created or updated after a custom policy
+is loaded are measured immediately (not queued).
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 25f2b70fd8ef..43a6f07e0afe 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -4763,6 +4763,7 @@ static int __init cma_init(void)
- err:
- 	unregister_netdevice_notifier(&cma_nb);
- 	ib_sa_unregister_client(&sa_client);
-+	unregister_pernet_subsys(&cma_pernet_operations);
- err_wq:
- 	destroy_workqueue(cma_wq);
- 	return ret;
+If the kernel is built with both CONFIG_IMA and
+CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE enabled then the IMA policy
+must be applied as a custom policy. Not providing a custom policy
+in the above configuration would result in asymmeteric keys being queued
+until a custom policy is loaded. This is by design.
+
+[1] https://lore.kernel.org/linux-integrity/20191204224131.3384-1-nramas@linux.microsoft.com/
+
+Testing performed:
+
+  * Booted the kernel with this change.
+  * Added .builtin_trusted_keys in "keyrings=" option in
+    the IMA policy and verified the keys added to this
+    keyring are measured.
+  * Specified only func=KEY_CHECK and not "keyrings=" option,
+    and verified the keys added to builtin_trusted_keys keyring
+    are processed.
+  * Added keys at runtime and verified they are measured
+    if the IMA policy permitted.
+      => For example, added keys to .ima keyring and verified.
+
+Changelog:
+
+  v1
+
+  => Code cleanup
+
+  v0
+
+  => Based changes on v5.4-rc8
+  => The following patchsets should be applied in that order
+     https://lore.kernel.org/linux-integrity/1572492694-6520-1-git-send-email-zohar@linux.ibm.com
+     https://lore.kernel.org/linux-integrity/20191204224131.3384-1-nramas@linux.microsoft.com/
+  => Added functions to queue and dequeue keys, and process
+     the queued keys when custom IMA policies are applied.
+
+Lakshmi Ramasubramanian (2):
+  IMA: Define workqueue for early boot "key" measurements
+  IMA: Call workqueue functions to measure queued keys
+
+ security/integrity/ima/ima.h                 |  15 +++
+ security/integrity/ima/ima_asymmetric_keys.c | 134 +++++++++++++++++++
+ security/integrity/ima/ima_policy.c          |   6 +
+ 3 files changed, 155 insertions(+)
+
 -- 
-2.24.0
+2.17.1
 
