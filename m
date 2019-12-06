@@ -4,89 +4,224 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A22C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA98C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A55F2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F304E2077B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 02:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbfLFCgR (ORCPT
+        id S1726287AbfLFChj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 21:36:17 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:44772 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726109AbfLFCgQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 21:36:16 -0500
-Received: from mr6.cc.vt.edu (mr6.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xB62aFZY013989
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Dec 2019 21:36:15 -0500
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xB62aAZx015423
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Dec 2019 21:36:15 -0500
-Received: by mail-qk1-f200.google.com with SMTP id b9so3554608qkl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 18:36:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=VNaCZVoj7p19TxD+DmPLrQHC5SpZdHhWhKjaLRQ5bLI=;
-        b=MoHhJ1/S5zUBpsCmS3atnQVNG/1R+gL8S9DjGIuPM0LC4vUO13Yu2Bf0jpwA70eple
-         LmcycjAnT64J3HRFvWQaU7+S4yRppoQ2DuFBQhHLlfufI8t7dhXJJbP9MxKgohD/1R6t
-         W786YC8f4EJNp0nYk3b4LpwsReCcMf1YsrX4aWZJNBvfOHutPmUvwOlHhJ9qKXHlUmdx
-         QiNSJJ2k6dDkIwSuM6KxqCSBktma1KGQ43INLYXZMRIql/Z3EXj7pqD34y8Ns+zepURl
-         hQjf/yEa7qXtBLr9xlLyBliwcIt2YFJkXfk8d7B4BnfMcz0KVxUgrwtiaP7Q3ArH9oam
-         HE5A==
-X-Gm-Message-State: APjAAAVuXcj1TVOtW15yx4q6dPKo68sRP2XoGYUeg0O2FUwljHfPRj+L
-        pexTFPJYCbkb+9Aw5KATUTnoz4fiDiYVSYwQ38fQrOj8lhjHW9Enk9Y98agLvfFmYoAiNW9rPc7
-        qAEeaFNPE8IN6ni6fRPwAFoJn+4jUA14S8ac=
-X-Received: by 2002:a05:620a:9cf:: with SMTP id y15mr11572549qky.483.1575599770466;
-        Thu, 05 Dec 2019 18:36:10 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx7akEUIduvr9jnHUq98NcXFKUomxTvqILuPNeCKfEgDWyKRtFo9PvsKMtfDzbhzLp0z9BB0w==
-X-Received: by 2002:a05:620a:9cf:: with SMTP id y15mr11572536qky.483.1575599770179;
-        Thu, 05 Dec 2019 18:36:10 -0800 (PST)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id v7sm5935692qtk.89.2019.12.05.18.36.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 18:36:08 -0800 (PST)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-cc:     x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/vdso: Provide missing include file
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Thu, 05 Dec 2019 21:36:07 -0500
-Message-ID: <36224.1575599767@turing-police>
+        Thu, 5 Dec 2019 21:37:39 -0500
+Received: from emcscan.emc.com.tw ([192.72.220.5]:54977 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfLFChi (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 21:37:38 -0500
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="33171897"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 06 Dec 2019 10:37:35 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(71503:0:AUTH_RELAY)
+        (envelope-from <dave.wang@emc.com.tw>); Fri, 06 Dec 2019 10:37:33 +0800 (CST)
+Received: from 192.168.33.57
+        by webmail.emc.com.tw with Mail2000 ESMTP Server V7.00(101173:0:AUTH_RELAY)
+        (envelope-from <dave.wang@emc.com.tw>); Fri, 06 Dec 2019 10:37:30 +0800 (CST)
+From:   "Dave.Wang" <dave.wang@emc.com.tw>
+To:     <Linux-kernel@vger.kernel.org>, <Linux-input@vger.kernel.org>,
+        "'Benjamin Tissoires'" <benjamin.tissoires@redhat.com>,
+        <Dmitry.torokhov@gmail.com>
+Cc:     "'Josh.Chen'" <josh.chen@emc.com.tw>, <jingle.wu@emc.com.tw>,
+        "'phoenix'" <phoenix@emc.com.tw>
+Subject: [PATCH 4/6] Input: elantech - High resolution report for new pattern 2
+Date:   Fri, 6 Dec 2019 10:37:30 +0800
+Message-ID: <000c01d5abde$1b1ea420$515bec60$@emc.com.tw>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AdWr3W/Gb0j8XLZdS+iEfKDoX6h4nw==
+Content-Language: zh-tw
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDYxMjlcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy01ODhiODlkMy0xN2QxLTExZWEtYWExOS04OGQ3ZjY1NjczMzBcYW1lLXRlc3RcNTg4Yjg5ZDQtMTdkMS0xMWVhLWFhMTktODhkN2Y2NTY3MzMwYm9keS50eHQiIHN6PSI1ODcyIiB0PSIxMzIyMDA3MzQ0OTk4MzM3MjAiIGg9IkpLM1NST0NLT2dLOU11YUtHZFpLMDM5ZXU0TT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with C=1, sparse issues a warning:
+Due to the higher resolution touchpad is produced, the former
+resolution bits were not enough. Extend the resolution bits
+from 12 to 14 bits and also remove the mk value for new pattern 2.
 
-  CHECK   arch/x86/entry/vdso/vdso32-setup.c
-arch/x86/entry/vdso/vdso32-setup.c:28:28: warning: symbol 'vdso32_enabled' was not declared. Should it be static?
+Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
+---
+ drivers/input/mouse/elantech.c | 66 +++++++++++++++++++++++++---------
+ 1 file changed, 49 insertions(+), 17 deletions(-)
 
-Provide the missing header file.
-
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-
-diff --git a/arch/x86/entry/vdso/vdso32-setup.c b/arch/x86/entry/vdso/vdso32-setup.c
-index 240626e7f55a..43842fade8fa 100644
---- a/arch/x86/entry/vdso/vdso32-setup.c
-+++ b/arch/x86/entry/vdso/vdso32-setup.c
-@@ -11,6 +11,7 @@
- #include <linux/smp.h>
- #include <linux/kernel.h>
- #include <linux/mm_types.h>
-+#include <linux/elf.h>
+diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
+index 322b181d00e9..53d7ff719d76 100644
+--- a/drivers/input/mouse/elantech.c
++++ b/drivers/input/mouse/elantech.c
+@@ -639,15 +639,21 @@ static void process_packet_head_v4(struct psmouse
+*psmouse)
+ 	struct elantech_data *etd = psmouse->private;
+ 	unsigned char *packet = psmouse->packet;
+ 	int id = ((packet[3] & 0xe0) >> 5) - 1;
+-	int pres, traces;
++	int pres, traces = 0;
  
- #include <asm/processor.h>
- #include <asm/vdso.h>
+ 	if (id < 0)
+ 		return;
+ 
+-	etd->mt[id].x = ((packet[1] & 0x0f) << 8) | packet[2];
+-	etd->mt[id].y = etd->y_max - (((packet[4] & 0x0f) << 8) |
+packet[5]);
+-	pres = (packet[1] & 0xf0) | ((packet[4] & 0xf0) >> 4);
+-	traces = (packet[0] & 0xf0) >> 4;
++	if (etd->info.pattern <= 0x01) {
++		etd->mt[id].x = ((packet[1] & 0x0f) << 8) | packet[2];
++		etd->mt[id].y = etd->y_max - (((packet[4] & 0x0f) << 8) |
+packet[5]);
++		pres = (packet[1] & 0xf0) | ((packet[4] & 0xf0) >> 4);
++		traces = (packet[0] & 0xf0) >> 4;
++	} else {
++		etd->mt[id].x = ((packet[1] & 0x3f) << 8) | packet[2];
++		etd->mt[id].y = etd->y_max - (((packet[4] & 0x3f) << 8) |
+packet[5]);
++		pres = (packet[4] & 0xc0) | ((packet[1] & 0xc0) >> 2) |
+((packet[0] & 0xf0) >> 4);
++	}
+ 
+ 	input_mt_slot(dev, id);
+ 	input_mt_report_slot_state(dev, MT_TOOL_FINGER, true);
+@@ -655,9 +661,11 @@ static void process_packet_head_v4(struct psmouse
+*psmouse)
+ 	input_report_abs(dev, ABS_MT_POSITION_X, etd->mt[id].x);
+ 	input_report_abs(dev, ABS_MT_POSITION_Y, etd->mt[id].y);
+ 	input_report_abs(dev, ABS_MT_PRESSURE, pres);
+-	input_report_abs(dev, ABS_MT_TOUCH_MAJOR, traces * etd->width);
+-	/* report this for backwards compatibility */
+-	input_report_abs(dev, ABS_TOOL_WIDTH, traces);
++	if (etd->info.pattern <= 0x01) {
++		input_report_abs(dev, ABS_MT_TOUCH_MAJOR, traces *
+etd->width);
++		/* report this for backwards compatibility */
++		input_report_abs(dev, ABS_TOOL_WIDTH, traces);
++	}
+ 
+ 	elantech_input_sync_v4(psmouse);
+ }
+@@ -1057,15 +1065,24 @@ static int elantech_set_absolute_mode(struct psmouse
+*psmouse)
+ }
+ 
+ /*
+- * (value from firmware) * 10 + 790 = dpi
++ * pattern <= 0x01:
++ *	(value from firmware) * 10 + 790 = dpi
++ * else
++ *	((value from firmware) + 3) * 100 = dpi
++ *
+  * we also have to convert dpi to dots/mm (*10/254 to avoid floating point)
+  */
+-static unsigned int elantech_convert_res(unsigned int val)
++static unsigned int elantech_convert_res(unsigned int val,
++					unsigned char pattern)
+ {
+-	return (val * 10 + 790) * 10 / 254;
++	if (pattern <= 0x01)
++		return (val * 10 + 790) * 10 / 254;
++	else
++		return ((val + 3) * 100) * 10 / 254;
+ }
+ 
+ static int elantech_get_resolution_v4(struct psmouse *psmouse,
++					  unsigned char pattern,
+ 				      unsigned int *x_res,
+ 				      unsigned int *y_res,
+ 				      unsigned int *bus)
+@@ -1075,8 +1092,8 @@ static int elantech_get_resolution_v4(struct psmouse
+*psmouse,
+ 	if (elantech_send_cmd(psmouse, ETP_RESOLUTION_QUERY, param))
+ 		return -1;
+ 
+-	*x_res = elantech_convert_res(param[1] & 0x0f);
+-	*y_res = elantech_convert_res((param[1] & 0xf0) >> 4);
++	*x_res = elantech_convert_res(param[1] & 0x0f, pattern);
++	*y_res = elantech_convert_res((param[1] & 0xf0) >> 4, pattern);
+ 	*bus = param[2];
+ 
+ 	return 0;
+@@ -1194,7 +1211,8 @@ static int elantech_set_input_params(struct psmouse
+*psmouse)
+ 		 */
+ 		input_set_abs_params(dev, ABS_PRESSURE, ETP_PMIN_V2,
+ 				     ETP_PMAX_V2, 0, 0);
+-		input_set_abs_params(dev, ABS_TOOL_WIDTH, ETP_WMIN_V2,
++		if (etd->info.pattern <= 0x01)
++			input_set_abs_params(dev, ABS_TOOL_WIDTH,
+ETP_WMIN_V2,
+ 				     ETP_WMAX_V2, 0, 0);
+ 		/* Multitouch capable pad, up to 5 fingers. */
+ 		input_mt_init_slots(dev, ETP_MAX_FINGERS, 0);
+@@ -1206,7 +1224,8 @@ static int elantech_set_input_params(struct psmouse
+*psmouse)
+ 		 * The firmware reports how many trace lines the finger
+spans,
+ 		 * convert to surface unit as Protocol-B requires.
+ 		 */
+-		input_set_abs_params(dev, ABS_MT_TOUCH_MAJOR, 0,
++		if (etd->info.pattern <= 0x01)
++			input_set_abs_params(dev, ABS_MT_TOUCH_MAJOR, 0,
+ 				     ETP_WMAX_V2 * width, 0, 0);
+ 		break;
+ 	}
+@@ -1628,6 +1647,7 @@ static int elantech_query_info(struct psmouse
+*psmouse,
+ {
+ 	unsigned char param[3];
+ 	unsigned char traces;
++	unsigned char y_max_l;
+ 
+ 	memset(info, 0, sizeof(*info));
+ 
+@@ -1732,6 +1752,7 @@ static int elantech_query_info(struct psmouse
+*psmouse,
+ 	info->y_res = 31;
+ 	if (info->hw_version == 4) {
+ 		if (elantech_get_resolution_v4(psmouse,
++							info->pattern,
+ 					       &info->x_res,
+ 					       &info->y_res,
+ 					       &info->bus)) {
+@@ -1800,8 +1821,19 @@ static int elantech_query_info(struct psmouse
+*psmouse,
+ 		if (info->send_cmd(psmouse, ETP_FW_ID_QUERY, param))
+ 			return -EINVAL;
+ 
+-		info->x_max = (0x0f & param[0]) << 8 | param[1];
+-		info->y_max = (0xf0 & param[0]) << 4 | param[2];
++		if (info->pattern <= 0x01) {
++			info->x_max = (0x0f & param[0]) << 8 | param[1];
++			info->y_max = (0xf0 & param[0]) << 4 | param[2];
++		} else {
++			info->x_max = (param[0] << 8) | param[1];
++			y_max_l = param[2];
++
++			if (info->send_cmd(psmouse, ETP_SAMPLE_QUERY,
+param))
++				return -1;
++
++			info->y_max = param[2] << 8 | y_max_l;
++		}
++
+ 		traces = info->capabilities[1];
+ 		if ((traces < 2) || (traces > info->x_max))
+ 			return -EINVAL;
+-- 
+2.17.1
+
 
