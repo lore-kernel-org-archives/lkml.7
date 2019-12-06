@@ -2,101 +2,131 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FF4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 21:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD325C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 21:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA6520867
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 21:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757E520867
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 21:59:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="SdYzh+WS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EzYr1iSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfLFV6B (ORCPT
+        id S1726420AbfLFV7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 16:58:01 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39894 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbfLFV6A (ORCPT
+        Fri, 6 Dec 2019 16:59:20 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39349 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbfLFV7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 16:58:00 -0500
-Received: by mail-qk1-f193.google.com with SMTP id d124so7786421qke.6
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 13:58:00 -0800 (PST)
+        Fri, 6 Dec 2019 16:59:20 -0500
+Received: by mail-pl1-f195.google.com with SMTP id o9so3278289plk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 13:59:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=d39qGeCsB4T9yCMwOh22rEPx7j2ZU+Ojm9VxaLz0ibQ=;
-        b=SdYzh+WSgVb+UAlrT82ud0JxMqc9Kvl4cFMITIP+eaCXAcdaJ4yq0fMWJk1wUaA0KC
-         aFhnoG2xYpNONhb8lucwmhPkCepfnnJNWG8rRO0IDppIJNDgt62M0F7egSn/zAYZexT8
-         3I3q7NnSV4x7CYCjMCFtWHAiVC/oRmDSC2wVzt/po8yJYZwUoldH3xbNxJXmxZeQ2odJ
-         PpFSR9acSpVoHqlnxgF0Kwo+kDC7el18CLU3MNqJFsvpFRP/O2w8NGOXAzND5FH4fMQn
-         ntJoiEwVQ1pfPUtaGEw/gnrTWKbVG/CP9vPMOUbf/z4WXywE8D+GHxoP+eTgapBxaLkr
-         3c3w==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QRBpOBKrG8bdYcDSxvL4Ncie9tUQ46zSSXSNCQ/ptww=;
+        b=EzYr1iSS/43KvcyAMRF5WxsPmvM4P1WVDXs7cB8RszXAhHNAjjyGHW/9wXHa9GPFQK
+         bDmsZ95dWgvAF9DuNC+7HmT/LvTWpQJgDVj/rXk7/pSR41xYMtdKzceoobvKuFhN6moE
+         NHMoCj5RV1oxu3FJSS20U1Pdlhq/Ofzn0iEL+5tlvNfpAS/fB87A+u8G3kNKSXqzjZ+f
+         TK0RKqxKzGLEtC03aNXRmB1O1lgd9pK6siizuiqBb8wNHcquEr/Z/cNaT8cKApRNNX7u
+         Si4FRbR12limo6gRjCIpIhFJ7v7F3W0uT6jkx0xWxxxLFUirLMeMiYrAgwVK1merHRKX
+         COzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=d39qGeCsB4T9yCMwOh22rEPx7j2ZU+Ojm9VxaLz0ibQ=;
-        b=dCYrEWUYKZCnirQ/H+ebRf/vCKnK+gMMTcDndr6Muv+QN7UuZsJC+HThQ38Tb3rO2j
-         IVNhI+4TduSywsUl6qQBgIj/Yjyvh8msoQOCmiAsFCvdiaL2SvqrAamJLhJ0r9VDVDZ0
-         829vCD8UAj+DRkyQHGkjz0esV4dV6ysMRuJhMDXoDxr6oOsMCj8sNDOInuUJRJSlxlPY
-         ALZgtW2Fg40PtN3oV1Ow5wV2HtwYciHiWfGSxEN+60Y3IT/hc8LZSHFeWeGXg6W+2HSU
-         1v5Svep88CjVwaSQfIv2YBPWItzU531ux7xFWw+DKqEGMJrTtQDl0QJxkPH8YKJaDSFG
-         bPuA==
-X-Gm-Message-State: APjAAAVHd40D4EJLET8I9BW5cBfQv+bTo5Tr6MfK8qRITFPCdm0lzeVi
-        aVSBnD9RFT+LR5lgh1C8QlHA5w==
-X-Google-Smtp-Source: APXvYqzH8Eo/GmMk2sk0tLQrh06wbKztQryZpegYYGstCKfUtNQvXS54OiLe/ItzwAMah8/sBlxczQ==
-X-Received: by 2002:a05:620a:144c:: with SMTP id i12mr275001qkl.439.1575669479724;
-        Fri, 06 Dec 2019 13:57:59 -0800 (PST)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id d143sm875770qke.123.2019.12.06.13.57.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Dec 2019 13:57:58 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [Patch v3 0/3] iommu: reduce spinlock contention on fast path
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20191206213803.12580-1-xiyou.wangcong@gmail.com>
-Date:   Fri, 6 Dec 2019 16:57:57 -0500
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <1CDA04A5-9EF1-4B6F-8461-37361D6460E2@lca.pw>
-References: <20191206213803.12580-1-xiyou.wangcong@gmail.com>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-X-Mailer: Apple Mail (2.3601.0.10)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QRBpOBKrG8bdYcDSxvL4Ncie9tUQ46zSSXSNCQ/ptww=;
+        b=q92lXEifEdPF0++dEOB1dr4+HJXZZVL7Bvpu0uE8EFJcUjAfXI/pAgU3yJUjN6Psr+
+         U7OvZ2hCC5C7h+qWoGIxpuq9UJvokuz0fVN4IYm1xxivTDUlHo/kEGNX9+ozKFSQxBnF
+         np4+YpX4kkMZpnrJv0vFYgbJfAMkK13Fg+xbi0diaF8sgTIVXmXcepuSpmvmlhd0kU9c
+         CxjBeWypn9hotXkDEJVQrK9j9BWVI6SWzqLPQh31muqU8Jpw/+nLWYzY+iCal4XJJDvP
+         rfhUnbshM1eZmIg3YZC/mSHHnw8UZWwdFk7nexYAc///9CEVrgv1XWGg7jfMBXC1z6+T
+         TzPw==
+X-Gm-Message-State: APjAAAXbB8iowBYJ7Ofg8RMqvc1rvbnHHvrfqG0DmmjnO0Z7r7hRmZdl
+        ehpl8b+P2DS676uudgL7kGknu458mOx8IbO122LVdA==
+X-Google-Smtp-Source: APXvYqwHYwaMTzN123flVCAXr3GzbWAtJi/KnOVS9rjd9DBDXsUkXHvlLkq8qqed8tGFJHZSrIRI79QQhFD4ssPrKxc=
+X-Received: by 2002:a17:902:9f91:: with SMTP id g17mr3377709plq.179.1575669559051;
+ Fri, 06 Dec 2019 13:59:19 -0800 (PST)
+MIME-Version: 1.0
+References: <20191024201240.49063-1-natechancellor@gmail.com> <20191105045907.26123-1-natechancellor@gmail.com>
+In-Reply-To: <20191105045907.26123-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 6 Dec 2019 13:59:07 -0800
+Message-ID: <CAKwvOdndvDuOFtPrdSuN=1nRpbc-T9qHKzQoVZ4JaAedKe9_SQ@mail.gmail.com>
+Subject: Re: [PATCH v2] media: v4l2-device.h: Explicitly compare grpmask to
+ zero in v4l2_device_mask_call_all
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Bumping for review.
 
-
-> On Dec 6, 2019, at 4:38 PM, Cong Wang <xiyou.wangcong@gmail.com> wrote:
-> 
-> This patchset contains three small optimizations for the global spinlock
-> contention in IOVA cache. Our memcache perf test shows this reduced its
-> p999 latency down by 45% on AMD when IOMMU is enabled.
-
-Can you at least have a changelog compared to previous versions?
-
-> 
-> Cong Wang (3):
->  iommu: avoid unnecessary magazine allocations
->  iommu: optimize iova_magazine_free_pfns()
->  iommu: avoid taking iova_rbtree_lock twice
+On Mon, Nov 4, 2019 at 9:00 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> When building with Clang + -Wtautological-constant-compare, several of
+> the ivtv drivers warn along the lines of:
+>
+>  drivers/media/pci/cx18/cx18-driver.c:1005:21: warning: converting the
+>  result of '<<' to a boolean always evaluates to true
+>  [-Wtautological-constant-compare]
+>                          cx18_call_hw(cx, CX18_HW_GPIO_RESET_CTRL,
+>                                          ^
+>  drivers/media/pci/cx18/cx18-cards.h:18:37: note: expanded from macro
+>  'CX18_HW_GPIO_RESET_CTRL'
+>  #define CX18_HW_GPIO_RESET_CTRL         (1 << 6)
+>                                            ^
+>  1 warning generated.
+>
+> This is because the shift operation is implicitly converted to a boolean
+> in v4l2_device_mask_call_all before being negated. This can be solved by
+> just comparing the mask result to 0 explicitly so that there is no
+> boolean conversion.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/752
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 > ---
-> drivers/iommu/iova.c | 75 ++++++++++++++++++++++++++------------------
-> 1 file changed, 45 insertions(+), 30 deletions(-)
-> 
-> -- 
-> 2.21.0
-> 
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>
+> v1 -> v2: https://lore.kernel.org/lkml/20191024201240.49063-1-natechancellor@gmail.com/
+>
+> * Fix typo in commit message
+> * Add Nick's Reviewed-by.
+>
+>  include/media/v4l2-device.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/media/v4l2-device.h b/include/media/v4l2-device.h
+> index e0b8f2602670..8564b3227887 100644
+> --- a/include/media/v4l2-device.h
+> +++ b/include/media/v4l2-device.h
+> @@ -431,8 +431,8 @@ static inline bool v4l2_device_supports_requests(struct v4l2_device *v4l2_dev)
+>                 struct v4l2_subdev *__sd;                               \
+>                                                                         \
+>                 __v4l2_device_call_subdevs_p(v4l2_dev, __sd,            \
+> -                       !(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,  \
+> -                       ##args);                                        \
+> +                       (grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,  \
+> +                       f , ##args);                                    \
+>         } while (0)
+>
+>  /**
+> --
+> 2.24.0
+>
 
+
+-- 
+Thanks,
+~Nick Desaulniers
