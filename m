@@ -2,111 +2,145 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E796C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D2FC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8A124676
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF79621835
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:20:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="p5R61v4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfLFHLX (ORCPT
+        id S1726400AbfLFHU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 02:11:23 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59762 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726283AbfLFHLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 02:11:22 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 322B63A77FAC6FC516EA;
-        Fri,  6 Dec 2019 15:11:21 +0800 (CST)
-Received: from [127.0.0.1] (10.184.52.56) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Dec 2019
- 15:11:11 +0800
-Subject: Re: [PATCH] tty: omap-serial: remove set but unused variable
-To:     Jiri Slaby <jslaby@suse.com>, Greg KH <gregkh@linuxfoundation.org>
-CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <huawei.libin@huawei.com>, <shubhrajyoti@ti.com>,
-        "balbi@ti.com >> Felipe Balbi" <balbi@ti.com>
-References: <1575547476-51996-1-git-send-email-wangxiongfeng2@huawei.com>
- <20191205121310.GA389695@kroah.com>
- <64810841-5e07-c346-01f3-dfd40a3f2df0@huawei.com>
- <0d5c4085-a6dc-ae06-34f2-7d4221baa5e9@suse.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <ad64f294-2d45-b65d-a861-f4c494909afe@huawei.com>
-Date:   Fri, 6 Dec 2019 15:11:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Fri, 6 Dec 2019 02:20:58 -0500
+Received: from mail.dlink.ru ([178.170.168.18]:39462 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725858AbfLFHU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 02:20:58 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 6F7E41B21545; Fri,  6 Dec 2019 10:20:53 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 6F7E41B21545
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1575616853; bh=YBcb2XIhpGvQl1++v0zJOJ1RxMw2N0RI5FMDXHCH0qA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=p5R61v4RR88Ijn3tXZdHEevK2Wg/cSQTyAZgPSNpcQ9ZAvQmfxseTgq5xYQXBhl40
+         TWLwSh4S8Y88vlPq2CK2Qi++JDSCaWwH6hp1WBL7rC6JP3CZ5KuyLLouRt/QBD2meU
+         GNSDYdNkkDLsOHOAAP7MeEF/Rp2uODW7Q4XXdYK0=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id 54F6E1B21308;
+        Fri,  6 Dec 2019 10:20:41 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 54F6E1B21308
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 0DBDB1B226AC;
+        Fri,  6 Dec 2019 10:20:41 +0300 (MSK)
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Fri,  6 Dec 2019 10:20:41 +0300 (MSK)
 MIME-Version: 1.0
-In-Reply-To: <0d5c4085-a6dc-ae06-34f2-7d4221baa5e9@suse.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.52.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 06 Dec 2019 10:20:40 +0300
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     Paul Burton <paulburton@kernel.org>
+Cc:     Paul Burton <paul.burton@mips.com>,
+        Hassan Naveed <hnaveed@wavecomp.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: MIPS eBPF JIT support on pre-32R2
+In-Reply-To: <20191205184450.lbrkenmursz4zpdm@lantea.localdomain>
+References: <09d713a59665d745e21d021deeaebe0a@dlink.ru>
+ <20191205184450.lbrkenmursz4zpdm@lantea.localdomain>
+User-Agent: Roundcube Webmail/1.4.0
+Message-ID: <647fa62c7111a27a2cc217cf06cbe355@dlink.ru>
+X-Sender: alobakin@dlink.ru
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Paul Burton wrote 05.12.2019 21:44:
+> Hi Alexander,
 
+Hi Paul!
 
-On 2019/12/5 20:39, Jiri Slaby wrote:
-> On 05. 12. 19, 13:30, Xiongfeng Wang wrote:
->>
->>
->> On 2019/12/5 20:13, Greg KH wrote:
->>> On Thu, Dec 05, 2019 at 08:04:36PM +0800, Xiongfeng Wang wrote:
->>>> Fix the following warning:
->>>> drivers/tty/serial/omap-serial.c: In function serial_omap_rlsi:
->>>> drivers/tty/serial/omap-serial.c:496:16: warning: variable ch set but not used [-Wunused-but-set-variable]
->>>>
->>>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>>> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
->>>> ---
->>>>  drivers/tty/serial/omap-serial.c | 3 +--
->>>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
->>>> index 6420ae5..54ee3ae 100644
->>>> --- a/drivers/tty/serial/omap-serial.c
->>>> +++ b/drivers/tty/serial/omap-serial.c
->>>> @@ -493,10 +493,9 @@ static unsigned int check_modem_status(struct uart_omap_port *up)
->>>>  static void serial_omap_rlsi(struct uart_omap_port *up, unsigned int lsr)
->>>>  {
->>>>  	unsigned int flag;
->>>> -	unsigned char ch = 0;
->>>>  
->>>>  	if (likely(lsr & UART_LSR_DR))
->>>> -		ch = serial_in(up, UART_RX);
->>>> +		serial_in(up, UART_RX);
->>>
->>> Shouldn't you be doing something with 'ch'?
->>
->> Sorry, my original thought is trying not to modify the existing logic.
->> I will look into the mechanism to see if I need to check 'ch'.
+> On Thu, Dec 05, 2019 at 03:45:27PM +0300, Alexander Lobakin wrote:
+>> Hey all,
+>> 
+>> I'm writing about lines arch/mips/net/ebpf_jit.c:1806-1807:
+>> 
+>> 	if (!prog->jit_requested || MIPS_ISA_REV < 2)
+>> 		return prog;
+>> 
+>> Do pre-32R2 architectures (32R1, maybe even R3000-like) actually 
+>> support
+>> this eBPF JIT code?
 > 
-> The change looks in fact correct, see:
-> commit 9a12fcf8b1543c99ffcec3d61db86f0dea52dc9d
-> Author: Shubhrajyoti D <shubhrajyoti@ti.com>
-> Date:   Fri Sep 21 20:07:19 2012 +0530
+> No, they don't; the eBPF JIT makes unconditional use of at least the
+> (d)ins & (d)ext instructions which were added in MIPSr2, so it would
+> result in reserved instruction exceptions & panics if enabled on
+> pre-MIPSr2 CPUs.
 > 
->     serial: omap: fix the reciever line error case
+>> If they do, then the condition 'MIPS_ISA_REV < 2'
+>> should be removed as it is always true for them and tells CC to remove
+>> JIT completely.
+>> 
+>> If they don't support instructions from this JIT, then the line
+>> arch/mips/Kconfig:50:
+>> 
+>> 	select HAVE_EBPF_JIT if (!CPU_MICROMIPS)
+>> 
+>> should be changed to something like:
+>> 
+>> 	select HAVE_EBPF_JIT if !CPU_MICROMIPS && TARGET_ISA_REV >= 2
+>> 
+>> (and then the mentioned 'if' condition would become redundant)
 > 
-> It also says: "This is recommended in the interrupt reset method in the
-> table 23-246 of the omap4 TRM."
+> Good spot; I agree entirely, this dependency should be reflected in
+> Kconfig.
 > 
-> The character read is erroneous and should be apparently dropped. But
-> you should add a comment about it, though.
+>> At the moment it is possible to build a kernel without both JIT and
+>> interpreter, but with CONFIG_BPF_SYSCALL=y (what should not be allowed
+>> I suppose?) within the following configuration:
+>> 
+>> - select any pre-32R2 CPU (e.g. CONFIG_CPU_MIPS32_R1);
+>> - enable CONFIG_BPF_JIT (CONFIG_MIPS_EBPF_JIT will be autoselected);
+>> - enable CONFIG_BPF_JIT_ALWAYS_ON (this removes BPF interpreter from
+>>   the system).
+>> 
+>> I may prepare a proper patch by myself if needed (after 
+>> clarification).
+> 
+> That would be great, thanks!
 
-Thanks a lot. I will add it in the comment and send another version.
+Great, I'll send it in about ~2-3 hours.
 
-Thanks,
-Xiongfeng
-
+> One thing to note is that I hope we'll restore the cBPF JIT with this
+> patch:
 > 
-> thanks,
+> https://lore.kernel.org/linux-mips/20191205182318.2761605-1-paulburton@kernel.org/T/#u
 > 
+> The cBPF JIT looks like it should work on older pre-MIPSr2 CPUs, so the
+> only way this is relevant is that your patch might have a minor
+> conflict. But I thought I'd mention it anyway :)
 
+Yes, I thought about this too. If pre-32R2 CPUs don't support our eBPF
+JIT, we'd better restore cBPF for them, so they could speed-up at least
+"classic" instructions. Glad you've decided to do that.
+
+> Thanks,
+>     Paul
+
+Regards,
+ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
