@@ -2,86 +2,108 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DF9C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 310BCC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62CD62077B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:57:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="E3Dz5oIG"
+	by mail.kernel.org (Postfix) with ESMTP id 0532721823
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbfLFB5P (ORCPT
+        id S1726198AbfLFB6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 20:57:15 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:14615 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725959AbfLFB5O (ORCPT
+        Thu, 5 Dec 2019 20:58:45 -0500
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:36522 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725959AbfLFB6p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 20:57:14 -0500
-X-UUID: d0df83131e124e1a8bb66abd19c8cad5-20191206
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Wi+5R0BXr2YmOXq7DcGeu+ejHYe1KpCMZpa0/9X6xfw=;
-        b=E3Dz5oIG8EXHkfoSqa9g8Hs73xTJOfPTZpjNNEGWUQv6pK1ah1qEXr/l+lQTzUbCqTwfwtlF6BlhTJO5EVorF2lQmmHsjlW0EmyHx55XNaKlygl5TYWI9yJ9KpGJatjSyJnIYHqXQ49NtsQR9HPsiFMixzlrth+c0PAun0hzwE8=;
-X-UUID: d0df83131e124e1a8bb66abd19c8cad5-20191206
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 271710576; Fri, 06 Dec 2019 09:57:08 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 6 Dec 2019 09:56:54 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 6 Dec 2019 09:56:53 +0800
-Message-ID: <1575597427.6328.3.camel@mtksdaap41>
-Subject: Re: [PATCH v4 4/7] drm/mediatek: disable all the planes in
- atomic_disable
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>
-Date:   Fri, 6 Dec 2019 09:57:07 +0800
-In-Reply-To: <20191205092749.4021-5-bibby.hsieh@mediatek.com>
-References: <20191205092749.4021-1-bibby.hsieh@mediatek.com>
-         <20191205092749.4021-5-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Thu, 5 Dec 2019 20:58:45 -0500
+Received: from mr4.cc.vt.edu (mr4.cc.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xB61whPp003418
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Dec 2019 20:58:43 -0500
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xB61wcY0001288
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Dec 2019 20:58:43 -0500
+Received: by mail-qk1-f197.google.com with SMTP id m13so3511754qka.9
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 17:58:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
+         :message-id;
+        bh=riisjDNipcQ6mLJDEmCllvpK43By0/4gxjSAOwUnCGE=;
+        b=o6oOGoYWVQHh6TcPitoVodbb69q5gUnseqBpDX239Bs//3a6JbRBLuIxHQOkNYuZBG
+         32KpqpswEBSzcW93gN7LpuPS4xWtBQki0PWv+oPa6laI0d+FLcycq/gF2guysRTiKy2D
+         cUgztbZvNgxu1c7HbG3OHzmAYBRVeNp4GNIHjGhDjnSJlz+gdYfwAcmz6H6mlsI2goOM
+         v+LzkhMggO+UBnxFZBluSiWeJC5Y+cGhlnma/guAd0gLw6GYorf+ywzMrN3yGlIXyEvp
+         almXyFiAH5Wh9A1wrWH0kjxfzuVRpZrPERyvk5EIgt5XtibdzxtoamePA1rwneG+3feG
+         2DQQ==
+X-Gm-Message-State: APjAAAXzPt5G7Kbp8rmzRitqITlP9a5asSCBCwVcmAPpr/IbWGgekp9P
+        TBjZvIlulnJBlVKYqYmUPUsbQwOGkwTeKhyZVHdKKxsbmlZkTrqbaaVlw8OQ2J5DZq5aknKOwsI
+        8CkHcIF7KFbLUotXnK6iixZPH1D/taBo+nJo=
+X-Received: by 2002:ad4:5048:: with SMTP id m8mr10600905qvq.248.1575597518226;
+        Thu, 05 Dec 2019 17:58:38 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz+hL+mxqoNyEf5t4NRcsy0o76gJWeMjINukcLLmS8cOPOszKGYjEUgXKeEbtYC4rxsCMRejQ==
+X-Received: by 2002:ad4:5048:: with SMTP id m8mr10600889qvq.248.1575597517909;
+        Thu, 05 Dec 2019 17:58:37 -0800 (PST)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id q34sm4750054qtc.33.2019.12.05.17.58.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 17:58:36 -0800 (PST)
+From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ard Biesheuvel <ardb@kernel.org>
+cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: chacha - fix warning message in header file
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Date:   Thu, 05 Dec 2019 20:58:36 -0500
+Message-ID: <31579.1575597516@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEyLTA1IGF0IDE3OjI3ICswODAwLCBCaWJieSBIc2llaCB3cm90ZToNCj4g
-VW5kZXIgc2hhZG93IHJlZ2lzdGVyIGNhc2UsIHdlIGRvIG5vdCBkaXNhYmxlIGFsbCB0aGUgcGxh
-bmUgYmVmb3JlDQo+IGRpc2FibGUgYWxsIHRoZSBoYXJkd2FyZXMuIEZpeCBpdC4NCg0KRXhjZXB0
-IHRoZSAnRml4ZXMnIHRhZywgSSBjb3VsZCBhZGQgaXQsDQoNClJldmlld2VkLWJ5OiBDSyBIdSA8
-Y2suaHVAbWVkaWF0ZWsuY29tPg0KDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBCaWJieSBIc2llaCA8
-YmliYnkuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfZHJtX2NydGMuYyB8IDEgKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
-KCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
-Y3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+IGluZGV4
-IGU4ODdhNjg3N2JjZC4uZTQwYzhjZjdkNzRmIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcm1fY3J0Yy5jDQo+IEBAIC01NTAsNiArNTUwLDcgQEAgc3RhdGljIHZvaWQgbXRr
-X2RybV9jcnRjX2F0b21pY19kaXNhYmxlKHN0cnVjdCBkcm1fY3J0YyAqY3J0YywNCj4gIAl9DQo+
-ICAJbXRrX2NydGMtPnBlbmRpbmdfcGxhbmVzID0gdHJ1ZTsNCj4gIA0KPiArCW10a19kcm1fY3J0
-Y19od19jb25maWcobXRrX2NydGMpOw0KPiAgCS8qIFdhaXQgZm9yIHBsYW5lcyB0byBiZSBkaXNh
-YmxlZCAqLw0KPiAgCWRybV9jcnRjX3dhaXRfb25lX3ZibGFuayhjcnRjKTsNCj4gIA0KDQo=
+Building with W=1 causes a warning:
+
+  CC [M]  arch/x86/crypto/chacha_glue.o
+In file included from arch/x86/crypto/chacha_glue.c:10:
+./include/crypto/internal/chacha.h:37:1: warning: 'inline' is not at beginning of declaration [-Wold-style-declaration]
+   37 | static int inline chacha12_setkey(struct crypto_skcipher *tfm, const u8 *key,
+      | ^~~~~~
+ 
+Straighten out the order to match the rest of the header file.
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+
+diff --git a/include/crypto/internal/chacha.h b/include/crypto/internal/chacha.h
+index aa5d4a16aac5..b085dc1ac151 100644
+--- a/include/crypto/internal/chacha.h
++++ b/include/crypto/internal/chacha.h
+@@ -34,7 +34,7 @@ static inline int chacha20_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 	return chacha_setkey(tfm, key, keysize, 20);
+ }
+ 
+-static int inline chacha12_setkey(struct crypto_skcipher *tfm, const u8 *key,
++static inline int chacha12_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 				  unsigned int keysize)
+ {
+ 	return chacha_setkey(tfm, key, keysize, 12);
+diff --git a/include/crypto/internal/chacha.h b/include/crypto/internal/chacha.h
+index aa5d4a16aac5..b085dc1ac151 100644
+--- a/include/crypto/internal/chacha.h
++++ b/include/crypto/internal/chacha.h
+@@ -34,7 +34,7 @@ static inline int chacha20_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 	return chacha_setkey(tfm, key, keysize, 20);
+ }
+ 
+-static int inline chacha12_setkey(struct crypto_skcipher *tfm, const u8 *key,
++static inline int chacha12_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 				  unsigned int keysize)
+ {
+ 	return chacha_setkey(tfm, key, keysize, 12);
 
