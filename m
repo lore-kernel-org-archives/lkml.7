@@ -6,136 +6,180 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B07C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657D8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9677521835
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 360B321835
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfLFMx0 (ORCPT
+        id S1726278AbfLFMxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:53:26 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53940 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726160AbfLFMx0 (ORCPT
+        Fri, 6 Dec 2019 07:53:31 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:47013 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbfLFMxa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:53:26 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB6ClbV6064006
-        for <linux-kernel@vger.kernel.org>; Fri, 6 Dec 2019 07:53:25 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wq55tfmrn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 07:53:24 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Fri, 6 Dec 2019 12:53:22 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 6 Dec 2019 12:53:20 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB6CrJSh61407486
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 Dec 2019 12:53:19 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 90BBB11C052;
-        Fri,  6 Dec 2019 12:53:19 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F11FA11C050;
-        Fri,  6 Dec 2019 12:53:17 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri,  6 Dec 2019 12:53:17 +0000 (GMT)
-Date:   Fri, 6 Dec 2019 18:23:17 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH] sched/fair: Optimize select_idle_core
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20191205172316.8198-1-srikar@linux.vnet.ibm.com>
- <6242deaa-e570-3384-0737-e49abb0599dd@arm.com>
+        Fri, 6 Dec 2019 07:53:30 -0500
+Received: from [192.168.1.155] ([95.117.69.190]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MBV6n-1iT3RS2059-00CzZl; Fri, 06 Dec 2019 13:53:25 +0100
+Subject: Re: [PATCH 0/8] gpiolib: add an ioctl() for monitoring line status
+ changes
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20191127133510.10614-1-brgl@bgdev.pl>
+ <CACRpkdZ6e0GaE9KBJ1-E+cS_KnPY-EKLNxJFqjArr28hYMQqOg@mail.gmail.com>
+ <CAMRc=McH6m3Lsvz8g1JSD_c-QNdb-Kh0+8BH5EKcEW2vM2VYJA@mail.gmail.com>
+ <0058e57c-5765-3944-3137-10b780985a36@metux.net>
+ <CAMRc=McHdtrvkLvT67ew1+88iPtRpd+MO1+5Tr3YsuLceQor1A@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <569d7017-fe19-2f4f-a402-a1f28b3c9e84@metux.net>
+Date:   Fri, 6 Dec 2019 13:52:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <6242deaa-e570-3384-0737-e49abb0599dd@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19120612-4275-0000-0000-0000038C63DA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120612-4276-0000-0000-000038A00C9D
-Message-Id: <20191206125317.GC22330@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-06_03:2019-12-05,2019-12-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 phishscore=0 priorityscore=1501 spamscore=0 malwarescore=0
- adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999 lowpriorityscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912060110
+In-Reply-To: <CAMRc=McHdtrvkLvT67ew1+88iPtRpd+MO1+5Tr3YsuLceQor1A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:XOjHc5F72uLN+OdFfxUbHj/j+76RvCQEynOfS+MfsmRnvCVBA3i
+ +1VvKp1HZRKNt679pZDDsDCWS7rvGf2f5HyJWMNaSRcdfatz/5v6C0dZ1M1sX3PVjsiTvPj
+ 8x6izIHdD0iTZzR/nwt+i6TKbZd3VjyxewVDKx47AH5gT422+VUQfgpKqmMIS/YhR9RPU/s
+ v0bJq5Frl/dRU/jCgplqQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:R4VpifeGNB4=:dHPCnyZCOjRuqA9ozNoCeZ
+ BdcwuL3uakQaQ7an/QLvrKiQE4tIVSiSPuHKFugqVFv7/d911kNKPk0gKVS/3sLyySACvImed
+ 4fGnP7psvLSwUMmsQwoFar2KKtHSSGexuehbosawR2UzPeZ0wRJf7tiToWCnpogL1k/YB37F+
+ /MnFvxzmbH5IfSV2FbcrtKtnjrJd5VjS/tC8oW3jGjb3Id5+ktcBNyoTSkeLErBljJdZY1cSH
+ mOYbgTW5UkWpUAGMLDaqnp3m91avGxSCkunfzrKUrlzFiVpUziGZ391RRXS3zhHtTpR4IRR4k
+ RNY4GaCRwn/R3u0GadwClfOQaUakXpgXASUM73dMChpOvrcx0Tg3Bd18Un0dTnCDfUFCOZa9n
+ TqzpCDR+fajdegMOCLFSOj7abodKXHHMRZzeUou0L/stTHTAJJgWMIV8FoFVQV+xF8c7ikW1E
+ wwV5chcachxNxG9OkJ3z6FZwKNgDOyLK+vT2bgm2L2lUcBHi14+Not/6qAS2xvWAxYa3Gjnkf
+ 8UqMFIeIiif/SXRvQtAvQSQrh3fhJ7hATkWVTPUc9XqhMu7qTUn53uuLkmJjwlFyXHl36gRqE
+ Nynphv5ggZjpTx6ICaBApKe68+sNwi8yCCNVqURXWaUrTZQK1S9/QRqeJfAPy0sqBuXIa4u2N
+ UKjbuCUT9Gv5sgryNdvo/A6DksWvkfrtx7uxaLtLWQN1cNOrPOsGm52tU5VVm6UDA6NXV8jmb
+ Avfha7mKdlXo923HAPd7jNcaULANAqjRsWjJgqqYOMB09Cg7bBmpi1CwS/+U41cGN0ACM99Rn
+ Yy+gIbb+pW+VZ0ioMCh8FjTeHG98SXRovtvVUODUcwBjny34kGz5sWcwZum3Or27aI3AyEq82
+ sL1xqhChnVQIFHhy2gfg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Valentin,
+Hi,
 
-> Say you have a 4-core SMT2 system with the usual numbering scheme:
+>> Oh, no, I've been afraid that this would be coming ... desktop bus in
+>> embedded system is a real nightmare. (yes, some people are even insane
+>> enough to put that thing on an public IP interface and so make critical
+>> machinery like cards easily remote controllable by average school kids)
 > 
-> {0, 4}  {1, 5}  {2, 6}  {3, 7}
-> CORE0   CORE1   CORE2   CORE3
-> 
-> 
-> Say 'target' is the prev_cpu, in that case let's pick 5. Because we do a
-> for_each_cpu_wrap(), our iteration for 'core' would start with 
-> 
->   5, 6, 7, ...
-> 
-> So say CORE2 is entirely idle and CORE1 isn't, we would go through the
-> inner loop on CORE1 (with 'core' == 5), then go through CORE2 (with
-> 'core' == 6) and return 'core'. I find it a bit unusual that we wouldn't
-> return the first CPU in the SMT mask, usually we try to fill sched_groups
-> in cpumask order.
-> 
-> 
-> If we could have 'cpus' start with only primary CPUs, that would simplify
-> things methinks:
-> 
+> Nah, you're overreacting, nobody is putting anything on the network.
 
-Its probably something to think over. I probably don't have an answer on why
-we are not choosing the starting cpu to be primary CPU.  Would we have to
-think of the case where the Primary CPUs are online / offline etc? I mean
-with target cpu, we know the CPU is online for sure.
+Maybe you've just missed that (maybe better for mental health ;-)), but
+people actually do put desktop bus on open networks. Chrysler/Harmann
+are an famous example (rendering the cars easily remote-controllable)
+I've had lots of similar cases w/ my clients. Whats going on in critical
+industries like automotive or medical often is a real nightmare. One of
+the reasons why I only buy old cars and do a careful inspection of
+physicians before allowing them to treat me or my family.
 
->   for_each_cpu_wrap(core, cpus, target) {
-> 	  bool idle = true;
-> 
-> 	  for_each_cpu(cpu, cpu_smt_mask(core)) {
-> 		  if (!available_idle_cpu(cpu)) {
-> 			  idle = false;
-> 			  break;
-> 		  }
-> 
-> 	  __cpumask_clear_cpu(core, cpus);
-> 
-> 	  if (idle)
-> 		  return core;
-> 
-> 
-> Food for thought; your change itself looks fine as it is.
-> 
-> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-> 
+IMHO, we should be careful about not encouraging folks out there to do
+silly things, just because they look so easy. (embedded development
+isn't entirely easy)
 
-Thanks for the review.
+> Most of my work isn't in upstream kernel development - it's actually
+> launching CE products. And it's been a long time since I've worked
+> with a client that could be convinced not to use systemd and dbus on
+> an embedded system. 
 
--- 
-Thanks and Regards
-Srikar Dronamraju
+Yeah, same problem here. But actually, it's easier than one might think:
+let them run into a scenario where that malware really does horrible
+things and let the client drive against the wall. Some will learn,
+others won't - just let evolution optimize that :p
 
+> This just makes things so easy for people writing
+> high-level application code that it's become de-facto standard -
+> whether we like it or not.
+
+Yeah, "hilevel" code, that completely ignores vital aspects of the
+machine it then runs on, eg. RT or memory constraints. Seen that so
+many times. Emperical experience tells: sooner or later it will go
+nuts and things go horribly wrong. The unplesant question just is: how
+many people have get hurt or killed in the process.
+
+Lennartware isn't the only problem here, but also ancient and completely
+unmaintained vendor kernels, patched-to-deah by rookies (eg. ublox).
+OTOH, the positive side, eg. if I really need to get a *new* car, I'd
+pick one where I can disable surveillance stuff like "ecall" easily :p
+
+In general, what those industries completely ignore is maintainability
+and stability. There, this only exists on the paper (cubic meters of
+papers that formally look nice, but don't really tell anything about
+the *actual* important facts) - formally proven bullshit.
+
+I've made the personal decision that I don't wanna become yet another
+Edward Teller, neither do I wanna allow some BSG-type scenario. That's
+the reason I'm spending so much time in this discussion.
+
+> This is just your personal anecdote. I could bring up several examples
+> of good implementations of event-based, dbus-oriented systems all
+> right. Bad programmers don't make tools they're using bad.
+
+Problem is: good programmers who can really deal with those concepts
+are hard to find. And those systems usually are hard to test. Desktop
+bus is magnitudes more complex than isolated FSMs.
+
+Within the last decades, I never had a single case where desktop bus had
+been the superior choice (actually, only few cases where purely event-
+driven architecture was a good idea).
+
+> I want to add this
+> new feature to allow for creating a central entity controlling GPIO
+> lines in the user-space. In case of sysfs - IT IS such a central
+> entity except that it lives in the kernel. It doesn't need to be
+> notified about changes in line properties.
+
+I'm still wondering why exactly one would want such an central entity
+in userspace and then letting it talk to others via desktop bus. At
+least in critical embedded systems, not talking about self-knittet
+hobby projects. Seems those ideas originate from people who don't know
+what the OS/Kernel is for :p
+
+Actually, I had a case where somebody attemted to do so (folks who tried
+linux embedded development from a windows machine :o). Fortunately,
+before they could write their planned "GPIO HAL" (several 10kLoc for
+just doing some trivial sysfs ops), I've configured the lines to the
+proper drivers in DT (basically, just some LEDs, inputs, rs485 signal
+lines, etc). Later on they started to write some "HAL" for LEDs,
+inputs, rs485 ... the manager of neighboring department on the other
+end of the room then ask me: "don't they know that they've got an
+operating system" ;-)
+
+Seriously, we shouldn't do everything that some strange folks are asking
+for, just to make them happy. We don't wanna desktop bus in the kernel,
+do we ? :p
+
+By the way: we *do* need some improvements for PLC-like applications:
+Highlevel provisioning of platform devices, eg. configure which devices
+are attached to certain interfaces in an specific installation, so the
+applications don't ever need any knowledge about that, but just talk
+to specific devices.
+
+Most of what's needed (on kernel side) is already there: DT overlays.
+Just yet have to get this working on non-DT (eg. ACPI platform).
+
+In fact that's already in my pipeline, also for other purposes, eg.
+replace simple board or mfd drivers by just a DT snippet. Yet lacked the
+time to work out a suitable way for mixing DT and ACPI and allowing DT
+to override ACPI. But that's a topic for a completely different thread.
+
+
+--mtx--
+
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
