@@ -2,147 +2,194 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F72C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 027FBC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B069D24677
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575656656;
-	bh=1adZ1AgCodi3yfl22ybU9XywdoW/YwynEVekYlf8iyg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=zcqncFYwqYVEwosuIrX/kxYjEKEIM+ZPx1UuAICT6HrHd0BWF0BmiwgQcUFkPVIBE
-	 HjMNlnOfXjA6XIZHlBKI3n+ylbVqcYmXTZGVkYj3eJYSj5uKtNJ7OlICfsuC/L2Ckg
-	 cJ3yOFStZ3QXgvsr08oOYfsKtG68NbaGxD0q3qFY=
+	by mail.kernel.org (Postfix) with ESMTP id C96EC2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:28:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfLFSYP (ORCPT
+        id S1726377AbfLFS2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 13:24:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbfLFSYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 13:24:15 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CEC02173E;
-        Fri,  6 Dec 2019 18:24:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575656654;
-        bh=1adZ1AgCodi3yfl22ybU9XywdoW/YwynEVekYlf8iyg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=bip68FgbFhzD7abAaLaKKwmZ/PlKrEsoPog/fOBXd3A8vVVSJLOwL3Z7hM5oDt28X
-         x5kk2JXh6nTEpwuKmeqQ8tRKqP41kLhRJm3X7IeKrf82/z9NeEQ/FhP+pgtJaVl8en
-         eFj15Rtqf0hFVJJ8Lrw1ZuQAtrha5zryvGXnkMkk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 662B035206AB; Fri,  6 Dec 2019 10:24:14 -0800 (PST)
-Date:   Fri, 6 Dec 2019 10:24:14 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "madhuparnabhowmik04@gmail.com" <madhuparnabhowmik04@gmail.com>,
-        "linux-kernel-mentees@lists.linuxfoundation.org" 
-        <linux-kernel-mentees@lists.linuxfoundation.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "joel@joelfernandes.org" <joel@joelfernandes.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
-Message-ID: <20191206182414.GH2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
- <20191206160238.GE2889@paulmck-ThinkPad-P72>
- <2ec21ec537144bb3c0d5fbdaf88ea022d07b7ff8.camel@hammerspace.com>
+        Fri, 6 Dec 2019 13:28:03 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50588 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726298AbfLFS2D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 13:28:03 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB6IIn68047455
+        for <linux-kernel@vger.kernel.org>; Fri, 6 Dec 2019 13:28:02 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wq9gr0cf7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 13:28:02 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
+        Fri, 6 Dec 2019 18:28:00 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 6 Dec 2019 18:27:57 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB6IRujK46203136
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 6 Dec 2019 18:27:56 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CED3552052;
+        Fri,  6 Dec 2019 18:27:56 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.33.202])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E5A8752050;
+        Fri,  6 Dec 2019 18:27:54 +0000 (GMT)
+Subject: Re: [PATCH v4 2/6] sysfs: wrap __compat_only_sysfs_link_entry_to_kobj
+ function to change the symlink name
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     mpe@ellerman.id.au, mahesh@linux.vnet.ibm.com,
+        hbathini@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@ozlabs.org, corbet@lwn.net, linux-doc@vger.kernel.org
+References: <20191206122434.29587-1-sourabhjain@linux.ibm.com>
+ <20191206122434.29587-3-sourabhjain@linux.ibm.com>
+ <20191206124642.GB1360047@kroah.com>
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+Date:   Fri, 6 Dec 2019 23:57:53 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ec21ec537144bb3c0d5fbdaf88ea022d07b7ff8.camel@hammerspace.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191206124642.GB1360047@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120618-0016-0000-0000-000002D25BFE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120618-0017-0000-0000-0000333467BE
+Message-Id: <3aabdf19-ccbf-e99a-c560-2b110e8b536a@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-06_06:2019-12-05,2019-12-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015
+ phishscore=0 spamscore=0 bulkscore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912060149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 05:52:10PM +0000, Trond Myklebust wrote:
-> Hi Paul,
-> 
-> On Fri, 2019-12-06 at 08:02 -0800, Paul E. McKenney wrote:
-> > On Fri, Dec 06, 2019 at 08:46:40PM +0530, 
-> > madhuparnabhowmik04@gmail.com wrote:
-> > > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> > > 
-> > > This patch fixes the following errors:
-> > > fs/nfs/dir.c:2353:14: error: incompatible types in comparison
-> > > expression (different address spaces):
-> > > fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
-> > > fs/nfs/dir.c:2353:14:    struct list_head *
-> > > 
-> > > caused due to directly accessing the prev pointer of
-> > > a RCU protected list.
-> > > Accessing the pointer using the macro list_prev_rcu() fixes this
-> > > error.
-> > > 
-> > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> > > ---
-> > >  fs/nfs/dir.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> > > index e180033e35cf..2035254cc283 100644
-> > > --- a/fs/nfs/dir.c
-> > > +++ b/fs/nfs/dir.c
-> > > @@ -2350,7 +2350,7 @@ static int nfs_access_get_cached_rcu(struct
-> > > inode *inode, const struct cred *cre
-> > >  	rcu_read_lock();
-> > >  	if (nfsi->cache_validity & NFS_INO_INVALID_ACCESS)
-> > >  		goto out;
-> > > -	lh = rcu_dereference(nfsi->access_cache_entry_lru.prev);
-> > > +	lh = rcu_dereference(list_prev_rcu(&nfsi-
-> > > >access_cache_entry_lru));
-> > 
-> > And as noted in the earlier email, what is preventing concurrent
-> > insertions into  and deletions from this list?
-> > 
-> > o	This use of list_move_tail() is OK because it does not poison.
-> > 	Though it isn't being all that friendly to lockless access to
-> > 	->prev -- no WRITE_ONCE() in list_move_tail().
-> > 
-> > o	The use of list_add_tail() is not safe with RCU readers, though
-> > 	they do at least partially compensate via use of smp_wmb()
-> > 	in nfs_access_add_cache() before calling
-> > nfs_access_add_rbtree().
-> > 
-> > o	The list_del() near the end of nfs_access_add_rbtree() will
-> > 	poison the ->prev pointer.  I don't see how this is safe given
-> > the
-> > 	possibility of a concurrent call to
-> > nfs_access_get_cached_rcu().
-> 
-> The pointer nfsi->access_cache_entry_lru is the head of the list, so it
-> won't get poisoned. Furthermore, the objects it points to are freed
-> using kfree_rcu(), so they will survive as long as we hold the rcu read
-> lock. The object's cred pointers also points to something that is freed
-> in an rcu-safe manner.
-> 
-> The problem here is rather that a racing list_del() can cause nfsi-
-> >access_cache_entry_lru to be empty, which is presumably why Neil added
-> that check plus the empty cred pointer check in the following line.
-> 
-> The barrier semantics may be suspect, although the spin unlock after
-> list_del() should presumably guarantee release semantics?
 
-Ah, OK, so you are only ever using ->prev only from the head of the list,
-and presumably never do list_del() on the head itself.  (Don't laugh,
-this does really happen as a way to remove the entire list, though
-perhaps with list_del_init() rather than list_del().)
 
-Maybe we should have a list_tail_rcu() that is only expected to work
-on the head of the list?
+On 12/6/19 6:16 PM, Greg KH wrote:
+> On Fri, Dec 06, 2019 at 05:54:30PM +0530, Sourabh Jain wrote:
+>> The __compat_only_sysfs_link_entry_to_kobj function creates a symlink to a
+>> kobject but doesn't provide an option to change the symlink file name.
+>>
+>> This patch adds a wrapper function create_sysfs_symlink_entry_to_kobj that
+>> extends the __compat_only_sysfs_link_entry_to_kobj functionality which
+>> allows function caller to customize the symlink name.
+>>
+>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> ---
+>>  fs/sysfs/group.c      | 28 +++++++++++++++++++++++++---
+>>  include/linux/sysfs.h | 12 ++++++++++++
+>>  2 files changed, 37 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+>> index d41c21fef138..5eb38145b957 100644
+>> --- a/fs/sysfs/group.c
+>> +++ b/fs/sysfs/group.c
+>> @@ -424,6 +424,25 @@ EXPORT_SYMBOL_GPL(sysfs_remove_link_from_group);
+>>  int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+>>  				      struct kobject *target_kobj,
+>>  				      const char *target_name)
+>> +{
+>> +	return create_sysfs_symlink_entry_to_kobj(kobj, target_kobj,
+>> +						target_name, NULL);
+>> +}
+>> +EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
+>> +
+>> +/**
+>> + * create_sysfs_symlink_entry_to_kobj - add a symlink to a kobject pointing
+>> + * to a group or an attribute
+>> + * @kobj:		The kobject containing the group.
+>> + * @target_kobj:	The target kobject.
+>> + * @target_name:	The name of the target group or attribute.
+>> + * @symlink_name:	The name of the symlink file (target_name will be
+>> + *			considered if symlink_name is NULL).
+>> + */
+>> +int create_sysfs_symlink_entry_to_kobj(struct kobject *kobj,
+>> +				       struct kobject *target_kobj,
+>> +				       const char *target_name,
+>> +				       const char *symlink_name)
+>>  {
+>>  	struct kernfs_node *target;
+>>  	struct kernfs_node *entry;
+>> @@ -448,12 +467,15 @@ int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+>>  		return -ENOENT;
+>>  	}
+>>  
+>> -	link = kernfs_create_link(kobj->sd, target_name, entry);
+>> +	if (!symlink_name)
+>> +		symlink_name = target_name;
+>> +
+>> +	link = kernfs_create_link(kobj->sd, symlink_name, entry);
+>>  	if (IS_ERR(link) && PTR_ERR(link) == -EEXIST)
+>> -		sysfs_warn_dup(kobj->sd, target_name);
+>> +		sysfs_warn_dup(kobj->sd, symlink_name);
+>>  
+>>  	kernfs_put(entry);
+>>  	kernfs_put(target);
+>>  	return PTR_ERR_OR_ZERO(link);
+>>  }
+>> -EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
+>> +EXPORT_SYMBOL_GPL(create_sysfs_symlink_entry_to_kobj);
+>> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+>> index 5420817ed317..123c6f10333a 100644
+>> --- a/include/linux/sysfs.h
+>> +++ b/include/linux/sysfs.h
+>> @@ -300,6 +300,10 @@ void sysfs_remove_link_from_group(struct kobject *kobj, const char *group_name,
+>>  int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+>>  				      struct kobject *target_kobj,
+>>  				      const char *target_name);
+>> +int create_sysfs_symlink_entry_to_kobj(struct kobject *kobj,
+>> +				       struct kobject *target_kobj,
+>> +				       const char *target_name,
+>> +				       const char *symlink_name);
+> 
+> sysfs_create_symlink_entry_to_kobj()?
+> 
+> I can't remember why we put __compat_only there, perhaps because we do
+> not want people to really use this unless you really really have to?
 
-							Thanx, Paul
+We don't have much option here. I tried replicating the sysfs files
+in older patch series but creating symlink at old location is much
+better approach.
+
+The __compat_only_sysfs_link_entry_to_kobj function is pretty generic,
+unable to understand the reason behind restricting its usage.
+
+> 
+> So then keep compat_only here as well?
+
+Sure, I will rename the wrapper function.
+
+But how about changing the function signature instead of creating
+a wrapper function?
+
+Considering the fact that there are only two places this function
+has called.
+
+> 
+> What breaks if you remove those undocumented sysfs files?  What
+> userspace tool do you have that will even notice?
+
+The scripts used in kdump service need those sysfs files to control
+the dump collection. So we can't just move the sysfs files to the
+new location.
+
+Thanks,
+Sourabh Jain
+
