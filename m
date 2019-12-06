@@ -2,150 +2,258 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0E0C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FE4C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE5EC21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E2E2075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:54:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C5WizO0U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfLFOuS (ORCPT
+        id S1726312AbfLFOyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:50:18 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:46572 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbfLFOuR (ORCPT
+        Fri, 6 Dec 2019 09:54:52 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39752 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfLFOyv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 09:50:17 -0500
-Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=calabresa)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <cascardo@canonical.com>)
-        id 1idEvu-00034D-OY; Fri, 06 Dec 2019 14:50:15 +0000
-Date:   Fri, 6 Dec 2019 11:50:10 -0300
-From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        posk@google.com
-Subject: Re: [PATCH] selftests: net: ip_defrag: increase netdev_max_backlog
-Message-ID: <20191206145010.GE5083@calabresa>
-References: <20191204195321.406365-1-cascardo@canonical.com>
- <483097a3-92ec-aedd-60d9-ab7f58b9708d@gmail.com>
- <20191206121707.GC5083@calabresa>
- <d2dddb34-f126-81f8-cbf7-04635f04795a@gmail.com>
+        Fri, 6 Dec 2019 09:54:51 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so8065261wrt.6;
+        Fri, 06 Dec 2019 06:54:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7azf65fJZQpsNwRde6shfCCLXfP6jWsDNlQBGqL907Y=;
+        b=C5WizO0UPxLG+5aIhH5boK7sw94FEXr7esKEzhc8vaNBdneY6Ecb6EnGinjwo88Hzk
+         GMOoOg8Tp68oAP068+yGA3JDph8D65voG+w1NxZeEmyhQWVm3McveslUoDEhMUNDqrOK
+         7RKuMWAWZbWT2Oyx8Hc2ZexkyHSnxaLJOrDNQ4sFI8FP91rUmY7u1gEj6kU7PzWP19ve
+         qNO7JmLP5iJKT7e6HcgaqiDWVVN0Kes8d91+UlXgmgKd/6xVwI18BdPFxfeGghsM2u2s
+         uIpqhuBJTwtQpXJf96eo14NdyvN808Gf1g4tJvWY1dA0AlcmnyjAXrkOxHPWXpNkcL4l
+         Oz8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7azf65fJZQpsNwRde6shfCCLXfP6jWsDNlQBGqL907Y=;
+        b=sMxAsw4xJzYLuEHXspQ55w1TCK8scXCxNHIV8RCrFecZC/SBVLAdF4OFbfCvU+5IDl
+         gV4JhZgoKTTgkEHtvrBajCGGJZQpNe0s2K1ucF8KHr4xgUanYxt0YTs8doJFVwCtqz+w
+         4O+EtJUWdM9yhYNFV68L2B+oftjmUo6PUmmLs1X7fDwPTpCz00OV6CFVQuySD+KGN28V
+         B28reY5qQM57f3TnnhIQaGel+5RWTwYgHzHB16X71qH3qPBmaPwEyv5IZGLi79M+G5eo
+         SuIz+EXOBynVXqQ+PD0tA6an4nAufUsHxYF4g2wJ5qIYddIY5ex454OVmO/vJ4A3Qu5L
+         V81w==
+X-Gm-Message-State: APjAAAVvue/LL+2tF3BaKY5z/L4Np5LA0MDl8JLJfNS9Ipd84sV18DxZ
+        d32eBj7Bshqf3+nuA6N9Hew=
+X-Google-Smtp-Source: APXvYqyJ8LEv74plxu/XSCxkGYT/lNOEagCnZ4hqONO61i3UJduQaOOhm34PyRDlXzpeFD63Ze4JJg==
+X-Received: by 2002:a5d:494b:: with SMTP id r11mr16441463wrs.184.1575644088215;
+        Fri, 06 Dec 2019 06:54:48 -0800 (PST)
+Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
+        by smtp.gmail.com with ESMTPSA id g74sm3482606wme.5.2019.12.06.06.54.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 06:54:46 -0800 (PST)
+Date:   Fri, 6 Dec 2019 15:54:45 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/18] phy: tegra: xusb: Add usb-role-switch support
+Message-ID: <20191206145445.GD2085684@ulmo>
+References: <1575629421-7039-1-git-send-email-nkristam@nvidia.com>
+ <1575629421-7039-4-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4zI0WCX1RcnW9Hbu"
 Content-Disposition: inline
-In-Reply-To: <d2dddb34-f126-81f8-cbf7-04635f04795a@gmail.com>
+In-Reply-To: <1575629421-7039-4-git-send-email-nkristam@nvidia.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 05:41:01AM -0800, Eric Dumazet wrote:
-> 
-> 
-> On 12/6/19 4:17 AM, Thadeu Lima de Souza Cascardo wrote:
-> > On Wed, Dec 04, 2019 at 12:03:57PM -0800, Eric Dumazet wrote:
-> >>
-> >>
-> >> On 12/4/19 11:53 AM, Thadeu Lima de Souza Cascardo wrote:
-> >>> When using fragments with size 8 and payload larger than 8000, the backlog
-> >>> might fill up and packets will be dropped, causing the test to fail. This
-> >>> happens often enough when conntrack is on during the IPv6 test.
-> >>>
-> >>> As the larger payload in the test is 10000, using a backlog of 1250 allow
-> >>> the test to run repeatedly without failure. At least a 1000 runs were
-> >>> possible with no failures, when usually less than 50 runs were good enough
-> >>> for showing a failure.
-> >>>
-> >>> As netdev_max_backlog is not a pernet setting, this sets the backlog to
-> >>> 1000 during exit to prevent disturbing following tests.
-> >>>
-> >>
-> >> Hmmm... I would prefer not changing a global setting like that.
-> >> This is going to be flaky since we often run tests in parallel (using different netns)
-> >>
-> >> What about adding a small delay after each sent packet ?
-> >>
-> >> diff --git a/tools/testing/selftests/net/ip_defrag.c b/tools/testing/selftests/net/ip_defrag.c
-> >> index c0c9ecb891e1d78585e0db95fd8783be31bc563a..24d0723d2e7e9b94c3e365ee2ee30e9445deafa8 100644
-> >> --- a/tools/testing/selftests/net/ip_defrag.c
-> >> +++ b/tools/testing/selftests/net/ip_defrag.c
-> >> @@ -198,6 +198,7 @@ static void send_fragment(int fd_raw, struct sockaddr *addr, socklen_t alen,
-> >>                 error(1, 0, "send_fragment: %d vs %d", res, frag_len);
-> >>  
-> >>         frag_counter++;
-> >> +       usleep(1000);
-> >>  }
-> >>  
-> >>  static void send_udp_frags(int fd_raw, struct sockaddr *addr,
-> >>
-> > 
-> > That won't work because the issue only shows when we using conntrack, as the
-> > packet will be reassembled on output, then fragmented again. When this happens,
-> > the fragmentation code is transmitting the fragments in a tight loop, which
-> > floods the backlog.
-> 
-> Interesting !
-> 
-> So it looks like the test is correct, and exposed a long standing problem in this code.
-> 
-> We should not adjust the test to some kernel-of-the-day-constraints, and instead fix the kernel bug ;)
-> 
-> Where is this tight loop exactly ?
-> 
-> If this is feeding/bursting ~1000 skbs via netif_rx() in a BH context, maybe we need to call a variant
-> that allows immediate processing instead of (ab)using the softnet backlog.
-> 
-> Thanks !
 
-This is the loopback interface, so its xmit calls netif_rx. I suppose we would
-have the same problem with veth, for example.
+--4zI0WCX1RcnW9Hbu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So net/ipv6/ip6_output.c:ip6_fragment has this:
+On Fri, Dec 06, 2019 at 04:20:06PM +0530, Nagarjuna Kristam wrote:
+> If usb-role-switch property is present in USB 2 port, register
+> usb-role-switch to receive usb role changes.
+>=20
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> ---
+>  drivers/phy/tegra/Kconfig |  1 +
+>  drivers/phy/tegra/xusb.c  | 40 ++++++++++++++++++++++++++++++++++++++++
+>  drivers/phy/tegra/xusb.h  |  3 +++
+>  3 files changed, 44 insertions(+)
+>=20
+> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+> index f9817c3..df07c4d 100644
+> --- a/drivers/phy/tegra/Kconfig
+> +++ b/drivers/phy/tegra/Kconfig
+> @@ -2,6 +2,7 @@
+>  config PHY_TEGRA_XUSB
+>  	tristate "NVIDIA Tegra XUSB pad controller driver"
+>  	depends on ARCH_TEGRA
+> +	select USB_CONN_GPIO
+>  	help
+>  	  Choose this option if you have an NVIDIA Tegra SoC.
+> =20
+> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+> index f98ec39..da60a63 100644
+> --- a/drivers/phy/tegra/xusb.c
+> +++ b/drivers/phy/tegra/xusb.c
+> @@ -523,6 +523,7 @@ static int tegra_xusb_port_init(struct tegra_xusb_por=
+t *port,
+>  	port->dev.type =3D &tegra_xusb_port_type;
+>  	port->dev.of_node =3D of_node_get(np);
+>  	port->dev.parent =3D padctl->dev;
+> +	port->dev.driver =3D padctl->dev->driver;
+> =20
+>  	err =3D dev_set_name(&port->dev, "%s-%u", name, index);
+>  	if (err < 0)
+> @@ -532,6 +533,7 @@ static int tegra_xusb_port_init(struct tegra_xusb_por=
+t *port,
+>  	if (err < 0)
+>  		goto unregister;
+> =20
+> +	dev_set_drvdata(&port->dev, port);
 
-		for (;;) {
-			/* Prepare header of the next frame,
-			 * before previous one went down. */
-			if (iter.frag)
-				ip6_fraglist_prepare(skb, &iter);
+You never seem to use dev_get_drvdata() to get at this. Also, you can
+get at it via container_of(), so this is only marginally useful to begin
+with.
 
-			skb->tstamp = tstamp;
-			err = output(net, sk, skb);
-			if (!err)
-				IP6_INC_STATS(net, ip6_dst_idev(&rt->dst),
-					      IPSTATS_MIB_FRAGCREATES);
+>  	return 0;
+> =20
+>  unregister:
+> @@ -541,6 +543,7 @@ static int tegra_xusb_port_init(struct tegra_xusb_por=
+t *port,
+> =20
+>  static void tegra_xusb_port_unregister(struct tegra_xusb_port *port)
+>  {
+> +	usb_role_switch_unregister(port->usb_role_sw);
+>  	device_unregister(&port->dev);
+>  }
+> =20
+> @@ -551,11 +554,39 @@ static const char *const modes[] =3D {
+>  	[USB_DR_MODE_OTG] =3D "otg",
+>  };
+> =20
+> +static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
+> +{
+> +	dev_dbg(dev, "%s calling notifier for role is %d\n", __func__, role);
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
+> +{
+> +	int err =3D 0;
+> +	struct usb_role_switch_desc role_sx_desc =3D {
+> +					.set =3D tegra_xusb_role_sw_set,
+> +					.fwnode =3D dev_fwnode(&port->dev),
+> +						   };
+> +
+> +	port->usb_role_sw =3D usb_role_switch_register(&port->dev,
+> +						&role_sx_desc);
+> +	if (IS_ERR(port->usb_role_sw)) {
+> +		err =3D PTR_ERR(port->usb_role_sw);
+> +		if (err !=3D EPROBE_DEFER)
+> +			dev_err(&port->dev, "Failed to register USB role SW: %d",
+> +				err);
+> +	}
+> +
+> +	return err;
+> +}
+> +
+>  static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *us=
+b2)
+>  {
+>  	struct tegra_xusb_port *port =3D &usb2->base;
+>  	struct device_node *np =3D port->dev.of_node;
+>  	const char *mode;
+> +	int err;
+> =20
+>  	usb2->internal =3D of_property_read_bool(np, "nvidia,internal");
+> =20
+> @@ -572,6 +603,15 @@ static int tegra_xusb_usb2_port_parse_dt(struct tegr=
+a_xusb_usb2_port *usb2)
+>  		usb2->mode =3D USB_DR_MODE_HOST;
+>  	}
+> =20
+> +	if (of_property_read_bool(np, "usb-role-switch")) {
+> +		/* populate connector entry */
+> +		of_platform_populate(np, NULL, NULL, &port->dev);
 
-			if (err || !iter.frag)
-				break;
+I think we want to clean this up on failure, don't we? Otherwise we
+might end up trying to register the same platform device multiple times.
+Also, do we want to depopulate when the port is removed again?
 
-			skb = ip6_fraglist_next(&iter);
-		}
+Have you tried unloading and loading the driver to see if that works?
 
-output is ip6_finish_output2, which will call neigh_output, which ends up
-calling dev_queue_xmit.
+Thierry
 
-In this case, ip6_fragment is being called probably from rawv6_send_hdrinc ->
-dst_output -> ip6_output -> ip6_finish_output -> __ip6_finish_output ->
-ip6_fragment.
+> +
+> +		err =3D tegra_xusb_setup_usb_role_switch(port);
+> +		if (err < 0)
+> +			return err;
+> +	}
+> +
+>  	usb2->supply =3D devm_regulator_get(&port->dev, "vbus");
+>  	return PTR_ERR_OR_ZERO(usb2->supply);
+>  }
+> diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
+> index da94fcc..9f27899 100644
+> --- a/drivers/phy/tegra/xusb.h
+> +++ b/drivers/phy/tegra/xusb.h
+> @@ -12,6 +12,7 @@
+>  #include <linux/workqueue.h>
+> =20
+>  #include <linux/usb/otg.h>
+> +#include <linux/usb/role.h>
+> =20
+>  /* legacy entry points for backwards-compatibility */
+>  int tegra_xusb_padctl_legacy_probe(struct platform_device *pdev);
+> @@ -266,6 +267,8 @@ struct tegra_xusb_port {
+>  	struct list_head list;
+>  	struct device dev;
+> =20
+> +	struct usb_role_switch *usb_role_sw;
+> +
+>  	const struct tegra_xusb_port_ops *ops;
+>  };
+> =20
+> --=20
+> 2.7.4
+>=20
 
-dst_output at rawv6_send_hdrinc is being called after netfilter
-NF_INET_LOCAL_OUT hook. That one is gathering the fragments and only accepting
-that last, reassembled skb, which causes ip6_fragment enter that loop.
+--4zI0WCX1RcnW9Hbu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-So, basically, the easiest way to reproduce this is using this test with
-loopback and netfilter doing the reassembly during conntrack. I see some BH
-locks here and there, but I think this is just filling up the backlog too fast
-to give any chance for softirq to kick in.
+-----BEGIN PGP SIGNATURE-----
 
-I will see if I can reproduce this using routed veths.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3qa7UACgkQ3SOs138+
+s6HVBg//RiQ8UZnpuBFOWZBD8QQTTsLsYbNlE0WN3pEp92yW4O6YCyXX81eDPhMc
+xboH8ABiiPX0rNfQJLnzYa7icZnVcLUhJr3Z6+oH27/BQt0kVaBLB9W0/jvfIy63
+r93Z2ygshzLA6fAOJKaUiOA8QcCciBVGUIHXw9JPgid78xKwXY+dWMy+8SJlXt2G
+jtkDKBo5+paZy8zhvH5k/nu+g/MkSnVWYs2sgIqIam1SQyk8espbj54Fj6yCXmQy
+rZ5xUUdOraCgTWr2tk8V9C9KQIpJ4OlbzW7ubHkG7LNJSaBxTaCCKl6US/Gcx8nk
+tAJbENGR+ataYGDQctncKsZDFRX6CE2jFVA7PscSNtoX+Bv7u6E4H9yLlI6wNDVu
+IGMiNQcbCegl7YsPeK8F8GAwcoFyKYOCez4VdMGtVxeILnbDD6/j1qPXjpwidFvr
+Hg2nv86ru6K07a3PdWjvDHeepphmHIgL1Vj1zjWmZ865rjPZae1kVGuhpVd73/hj
+v5UMYexAv+4JcRv7eogy+V464bMUZ9dFiWnxIB+FC6Cgict424S1FbIHys/zt6Ge
+KZozQCQ/oG6GmJp+n6vCu6WLGynF58GIJWDukvJCMg4iVX+ZVDrjfDojO+6aD9iK
+I8fPO9vbKL5dXNW9YLmcJQNr8W4ANI8Zr0dZ2YTnOACe/pU4LoY=
+=SkSc
+-----END PGP SIGNATURE-----
 
-Cascardo.
-
-Cascardo.
+--4zI0WCX1RcnW9Hbu--
