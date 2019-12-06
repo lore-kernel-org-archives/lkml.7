@@ -2,509 +2,638 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA14C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB38AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E70824681
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A272467A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:41:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfLFHlU (ORCPT
+        id S1726787AbfLFHlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 02:41:20 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:26913 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfLFHlR (ORCPT
+        Fri, 6 Dec 2019 02:41:23 -0500
+Received: from ivanoab7.miniserver.com ([37.128.132.42]:42562 "EHLO
+        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfLFHlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 02:41:17 -0500
-Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 6 Dec 2019
- 15:41:36 +0800
-From:   Jian Hu <jian.hu@amlogic.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 4/6] clk: meson: a1: add support for Amlogic A1 PLL clock driver
-Date:   Fri, 6 Dec 2019 15:40:50 +0800
-Message-ID: <20191206074052.15557-5-jian.hu@amlogic.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191206074052.15557-1-jian.hu@amlogic.com>
-References: <20191206074052.15557-1-jian.hu@amlogic.com>
+        Fri, 6 Dec 2019 02:41:20 -0500
+Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
+        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1id8El-0007HL-9g; Fri, 06 Dec 2019 07:41:15 +0000
+Received: from sleer.kot-begemot.co.uk ([192.168.3.72])
+        by jain.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1id8Ei-0005pz-MG; Fri, 06 Dec 2019 07:41:14 +0000
+Subject: Re: [RFC v1 2/2] uml: remove support for CONFIG_STATIC_LINK
+To:     Brendan Higgins <brendanhiggins@google.com>, jdike@addtoit.com,
+        richard@nod.at
+Cc:     johannes.berg@intel.com, linux-um@lists.infradead.org,
+        linux-kernel@vger.kernel.org, davidgow@google.com
+References: <20191206020153.228283-1-brendanhiggins@google.com>
+ <20191206020153.228283-3-brendanhiggins@google.com>
+From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Organization: Cambridge Greys
+Message-ID: <aa7b77aa-bf3a-6919-ed66-37af00d856d2@cambridgegreys.com>
+Date:   Fri, 6 Dec 2019 07:41:12 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.28.8.25]
+In-Reply-To: <20191206020153.228283-3-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Amlogic A1 clock includes three drivers:
-pll clocks, peripheral clocks, CPU clocks.
-sys pll and CPU clocks will be sent in next patch.
+On 06/12/2019 02:01, Brendan Higgins wrote:
+> CONFIG_STATIC_LINK appears to have been broken since before v4.20. It
+> doesn't play nice with CONFIG_UML_NET_VECTOR=y:
+> 
+> /usr/bin/ld: arch/um/drivers/vector_user.o: in function
+> `user_init_socket_fds': vector_user.c:(.text+0x430): warning: Using
+> 'getaddrinfo' in statically linked applications requires at runtime the
+> shared libraries from the glibc version used for linking
+> 
+> And it seems to break the ptrace check:
+> 
+> Checking that ptrace can change system call numbers...check_ptrace :
+> child exited with exitcode 6, while expecting 0; status 0x67f
+> [1]    126822 abort      ./linux mem=256M
+> 
+> Given the importance of ptrace in UML, CONFIG_STATIC_LINK seems totally
+> broken right now; remove it in order to fix allyesconfig for ARCH=um.
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+>   arch/um/Kconfig              |  23 +----
+>   arch/um/Makefile             |   3 +-
+>   arch/um/kernel/dyn.lds.S     | 170 ----------------------------------
+>   arch/um/kernel/uml.lds.S     | 115 -----------------------
+>   arch/um/kernel/vmlinux.lds.S | 175 ++++++++++++++++++++++++++++++++++-
+>   5 files changed, 172 insertions(+), 314 deletions(-)
+>   delete mode 100644 arch/um/kernel/dyn.lds.S
+>   delete mode 100644 arch/um/kernel/uml.lds.S
+> 
+> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+> index 2a6d04fcb3e91..00927fb7ce67a 100644
+> --- a/arch/um/Kconfig
+> +++ b/arch/um/Kconfig
+> @@ -19,6 +19,7 @@ config UML
+>   	select GENERIC_CLOCKEVENTS
+>   	select HAVE_GCC_PLUGINS
+>   	select TTY # Needed for line.c
+> +	select MODULE_REL_CRCS if MODVERSIONS
+>   
+>   config MMU
+>   	bool
+> @@ -61,28 +62,6 @@ config NR_CPUS
+>   
+>   source "arch/$(HEADER_ARCH)/um/Kconfig"
+>   
+> -config STATIC_LINK
+> -	bool "Force a static link"
+> -	default n
+> -	help
+> -	  This option gives you the ability to force a static link of UML.
+> -	  Normally, UML is linked as a shared binary.  This is inconvenient for
+> -	  use in a chroot jail.  So, if you intend to run UML inside a chroot,
+> -	  you probably want to say Y here.
+> -	  Additionally, this option enables using higher memory spaces (up to
+> -	  2.75G) for UML.
+> -
+> -config LD_SCRIPT_STATIC
+> -	bool
+> -	default y
+> -	depends on STATIC_LINK
+> -
+> -config LD_SCRIPT_DYN
+> -	bool
+> -	default y
+> -	depends on !LD_SCRIPT_STATIC
+> -	select MODULE_REL_CRCS if MODVERSIONS
+> -
+>   config HOSTFS
+>   	tristate "Host filesystem"
+>   	help
+> diff --git a/arch/um/Makefile b/arch/um/Makefile
+> index d2daa206872da..ec8af28daf051 100644
+> --- a/arch/um/Makefile
+> +++ b/arch/um/Makefile
+> @@ -117,8 +117,7 @@ archheaders:
+>   archprepare:
+>   	$(Q)$(MAKE) $(build)=$(HOST_DIR)/um include/generated/user_constants.h
+>   
+> -LINK-$(CONFIG_LD_SCRIPT_STATIC) += -static
+> -LINK-$(CONFIG_LD_SCRIPT_DYN) += -Wl,-rpath,/lib $(call cc-option, -no-pie)
+> +LINK-y += -Wl,-rpath,/lib $(call cc-option, -no-pie)
+>   
+>   CFLAGS_NO_HARDENING := $(call cc-option, -fno-PIC,) $(call cc-option, -fno-pic,) \
+>   	$(call cc-option, -fno-stack-protector,) \
+> diff --git a/arch/um/kernel/dyn.lds.S b/arch/um/kernel/dyn.lds.S
+> deleted file mode 100644
+> index c69d69ee96beb..0000000000000
+> --- a/arch/um/kernel/dyn.lds.S
+> +++ /dev/null
+> @@ -1,170 +0,0 @@
+> -#include <asm/vmlinux.lds.h>
+> -#include <asm/page.h>
+> -
+> -OUTPUT_FORMAT(ELF_FORMAT)
+> -OUTPUT_ARCH(ELF_ARCH)
+> -ENTRY(_start)
+> -jiffies = jiffies_64;
+> -
+> -SECTIONS
+> -{
+> -  PROVIDE (__executable_start = START);
+> -  . = START + SIZEOF_HEADERS;
+> -  .interp         : { *(.interp) }
+> -  __binary_start = .;
+> -  . = ALIGN(4096);		/* Init code and data */
+> -  _text = .;
+> -  INIT_TEXT_SECTION(PAGE_SIZE)
+> -
+> -  . = ALIGN(PAGE_SIZE);
+> -
+> -  /* Read-only sections, merged into text segment: */
+> -  .hash           : { *(.hash) }
+> -  .gnu.hash       : { *(.gnu.hash) }
+> -  .dynsym         : { *(.dynsym) }
+> -  .dynstr         : { *(.dynstr) }
+> -  .gnu.version    : { *(.gnu.version) }
+> -  .gnu.version_d  : { *(.gnu.version_d) }
+> -  .gnu.version_r  : { *(.gnu.version_r) }
+> -  .rel.init       : { *(.rel.init) }
+> -  .rela.init      : { *(.rela.init) }
+> -  .rel.text       : { *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*) }
+> -  .rela.text      : { *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*) }
+> -  .rel.fini       : { *(.rel.fini) }
+> -  .rela.fini      : { *(.rela.fini) }
+> -  .rel.rodata     : { *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*) }
+> -  .rela.rodata    : { *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*) }
+> -  .rel.data       : { *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*) }
+> -  .rela.data      : { *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*) }
+> -  .rel.tdata	  : { *(.rel.tdata .rel.tdata.* .rel.gnu.linkonce.td.*) }
+> -  .rela.tdata	  : { *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*) }
+> -  .rel.tbss	  : { *(.rel.tbss .rel.tbss.* .rel.gnu.linkonce.tb.*) }
+> -  .rela.tbss	  : { *(.rela.tbss .rela.tbss.* .rela.gnu.linkonce.tb.*) }
+> -  .rel.ctors      : { *(.rel.ctors) }
+> -  .rela.ctors     : { *(.rela.ctors) }
+> -  .rel.dtors      : { *(.rel.dtors) }
+> -  .rela.dtors     : { *(.rela.dtors) }
+> -  .rel.got        : { *(.rel.got) }
+> -  .rela.got       : { *(.rela.got) }
+> -  .rel.bss        : { *(.rel.bss .rel.bss.* .rel.gnu.linkonce.b.*) }
+> -  .rela.bss       : { *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*) }
+> -  .rel.plt : {
+> -	*(.rel.plt)
+> -	PROVIDE_HIDDEN(__rel_iplt_start = .);
+> -	*(.rel.iplt)
+> -	PROVIDE_HIDDEN(__rel_iplt_end = .);
+> -  }
+> -  .rela.plt : {
+> -	*(.rela.plt)
+> -	PROVIDE_HIDDEN(__rela_iplt_start = .);
+> -	*(.rela.iplt)
+> -	PROVIDE_HIDDEN(__rela_iplt_end = .);
+> -  }
+> -  .init           : {
+> -    KEEP (*(.init))
+> -  } =0x90909090
+> -  .plt            : { *(.plt) }
+> -  .text           : {
+> -    _stext = .;
+> -    TEXT_TEXT
+> -    SCHED_TEXT
+> -    CPUIDLE_TEXT
+> -    LOCK_TEXT
+> -    IRQENTRY_TEXT
+> -    SOFTIRQENTRY_TEXT
+> -    *(.fixup)
+> -    *(.stub .text.* .gnu.linkonce.t.*)
+> -    /* .gnu.warning sections are handled specially by elf32.em.  */
+> -    *(.gnu.warning)
+> -
+> -    . = ALIGN(PAGE_SIZE);
+> -  } =0x90909090
+> -  . = ALIGN(PAGE_SIZE);
+> -  .syscall_stub : {
+> -	__syscall_stub_start = .;
+> -	*(.__syscall_stub*)
+> -	__syscall_stub_end = .;
+> -  }
+> -  .fini           : {
+> -    KEEP (*(.fini))
+> -  } =0x90909090
+> -
+> -  .kstrtab : { *(.kstrtab) }
+> -
+> -  #include <asm/common.lds.S>
+> -
+> -  __init_begin = .;
+> -  init.data : { INIT_DATA }
+> -  __init_end = .;
+> -
+> -  /* Ensure the __preinit_array_start label is properly aligned.  We
+> -     could instead move the label definition inside the section, but
+> -     the linker would then create the section even if it turns out to
+> -     be empty, which isn't pretty.  */
+> -  . = ALIGN(32 / 8);
+> -  .preinit_array     : { *(.preinit_array) }
+> -  .fini_array     : { *(.fini_array) }
+> -  .data           : {
+> -    INIT_TASK_DATA(KERNEL_STACK_SIZE)
+> -    . = ALIGN(KERNEL_STACK_SIZE);
+> -    *(.data..init_irqstack)
+> -    DATA_DATA
+> -    *(.data.* .gnu.linkonce.d.*)
+> -    SORT(CONSTRUCTORS)
+> -  }
+> -  .data1          : { *(.data1) }
+> -  .tdata	  : { *(.tdata .tdata.* .gnu.linkonce.td.*) }
+> -  .tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) }
+> -  .eh_frame       : { KEEP (*(.eh_frame)) }
+> -  .gcc_except_table   : { *(.gcc_except_table) }
+> -  .dynamic        : { *(.dynamic) }
+> -  .ctors          : {
+> -    /* gcc uses crtbegin.o to find the start of
+> -       the constructors, so we make sure it is
+> -       first.  Because this is a wildcard, it
+> -       doesn't matter if the user does not
+> -       actually link against crtbegin.o; the
+> -       linker won't look for a file to match a
+> -       wildcard.  The wildcard also means that it
+> -       doesn't matter which directory crtbegin.o
+> -       is in.  */
+> -    KEEP (*crtbegin.o(.ctors))
+> -    /* We don't want to include the .ctor section from
+> -       from the crtend.o file until after the sorted ctors.
+> -       The .ctor section from the crtend file contains the
+> -       end of ctors marker and it must be last */
+> -    KEEP (*(EXCLUDE_FILE (*crtend.o ) .ctors))
+> -    KEEP (*(SORT(.ctors.*)))
+> -    KEEP (*(.ctors))
+> -  }
+> -  .dtors          : {
+> -    KEEP (*crtbegin.o(.dtors))
+> -    KEEP (*(EXCLUDE_FILE (*crtend.o ) .dtors))
+> -    KEEP (*(SORT(.dtors.*)))
+> -    KEEP (*(.dtors))
+> -  }
+> -  .jcr            : { KEEP (*(.jcr)) }
+> -  .got            : { *(.got.plt) *(.got) }
+> -  _edata = .;
+> -  PROVIDE (edata = .);
+> -  .bss            : {
+> -   __bss_start = .;
+> -   *(.dynbss)
+> -   *(.bss .bss.* .gnu.linkonce.b.*)
+> -   *(COMMON)
+> -   /* Align here to ensure that the .bss section occupies space up to
+> -      _end.  Align after .bss to ensure correct alignment even if the
+> -      .bss section disappears because there are no input sections.  */
+> -   . = ALIGN(32 / 8);
+> -  . = ALIGN(32 / 8);
+> -  }
+> -   __bss_stop = .;
+> -  _end = .;
+> -  PROVIDE (end = .);
+> -
+> -  STABS_DEBUG
+> -
+> -  DWARF_DEBUG
+> -
+> -  DISCARDS
+> -}
+> diff --git a/arch/um/kernel/uml.lds.S b/arch/um/kernel/uml.lds.S
+> deleted file mode 100644
+> index 9f21443be2c9e..0000000000000
+> --- a/arch/um/kernel/uml.lds.S
+> +++ /dev/null
+> @@ -1,115 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -#include <asm/vmlinux.lds.h>
+> -#include <asm/page.h>
+> -
+> -OUTPUT_FORMAT(ELF_FORMAT)
+> -OUTPUT_ARCH(ELF_ARCH)
+> -ENTRY(_start)
+> -jiffies = jiffies_64;
+> -
+> -SECTIONS
+> -{
+> -  /* This must contain the right address - not quite the default ELF one.*/
+> -  PROVIDE (__executable_start = START);
+> -  /* Static binaries stick stuff here, like the sigreturn trampoline,
+> -   * invisibly to objdump.  So, just make __binary_start equal to the very
+> -   * beginning of the executable, and if there are unmapped pages after this,
+> -   * they are forever unusable.
+> -   */
+> -  __binary_start = START;
+> -
+> -  . = START + SIZEOF_HEADERS;
+> -
+> -  _text = .;
+> -  INIT_TEXT_SECTION(0)
+> -  . = ALIGN(PAGE_SIZE);
+> -
+> -  .text      :
+> -  {
+> -    _stext = .;
+> -    TEXT_TEXT
+> -    SCHED_TEXT
+> -    CPUIDLE_TEXT
+> -    LOCK_TEXT
+> -    IRQENTRY_TEXT
+> -    SOFTIRQENTRY_TEXT
+> -    *(.fixup)
+> -    /* .gnu.warning sections are handled specially by elf32.em.  */
+> -    *(.gnu.warning)
+> -    *(.gnu.linkonce.t*)
+> -  }
+> -
+> -  . = ALIGN(PAGE_SIZE);
+> -  .syscall_stub : {
+> -	__syscall_stub_start = .;
+> -	*(.__syscall_stub*)
+> -	__syscall_stub_end = .;
+> -  }
+> -
+> -  /*
+> -   * These are needed even in a static link, even if they wind up being empty.
+> -   * Newer glibc needs these __rel{,a}_iplt_{start,end} symbols.
+> -   */
+> -  .rel.plt : {
+> -	*(.rel.plt)
+> -	PROVIDE_HIDDEN(__rel_iplt_start = .);
+> -	*(.rel.iplt)
+> -	PROVIDE_HIDDEN(__rel_iplt_end = .);
+> -  }
+> -  .rela.plt : {
+> -	*(.rela.plt)
+> -	PROVIDE_HIDDEN(__rela_iplt_start = .);
+> -	*(.rela.iplt)
+> -	PROVIDE_HIDDEN(__rela_iplt_end = .);
+> -  }
+> -
+> -  #include <asm/common.lds.S>
+> -
+> -  __init_begin = .;
+> -  init.data : { INIT_DATA }
+> -  __init_end = .;
+> -
+> -  .data    :
+> -  {
+> -    INIT_TASK_DATA(KERNEL_STACK_SIZE)
+> -    . = ALIGN(KERNEL_STACK_SIZE);
+> -    *(.data..init_irqstack)
+> -    DATA_DATA
+> -    *(.gnu.linkonce.d*)
+> -    CONSTRUCTORS
+> -  }
+> -  .data1   : { *(.data1) }
+> -  .ctors         :
+> -  {
+> -    *(.ctors)
+> -  }
+> -  .dtors         :
+> -  {
+> -    *(.dtors)
+> -  }
+> -
+> -  .got           : { *(.got.plt) *(.got) }
+> -  .dynamic       : { *(.dynamic) }
+> -  .tdata	  : { *(.tdata .tdata.* .gnu.linkonce.td.*) }
+> -  .tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) }
+> -  /* We want the small data sections together, so single-instruction offsets
+> -     can access them all, and initialized data all before uninitialized, so
+> -     we can shorten the on-disk segment size.  */
+> -  .sdata     : { *(.sdata) }
+> -  _edata  =  .;
+> -  PROVIDE (edata = .);
+> -  . = ALIGN(PAGE_SIZE);
+> -  __bss_start = .;
+> -  PROVIDE(_bss_start = .);
+> -  SBSS(0)
+> -  BSS(0)
+> -   __bss_stop = .;
+> -  _end = .;
+> -  PROVIDE (end = .);
+> -
+> -  STABS_DEBUG
+> -
+> -  DWARF_DEBUG
+> -
+> -  DISCARDS
+> -}
+> diff --git a/arch/um/kernel/vmlinux.lds.S b/arch/um/kernel/vmlinux.lds.S
+> index 16e49bfa2b426..f4b6114e54d62 100644
+> --- a/arch/um/kernel/vmlinux.lds.S
+> +++ b/arch/um/kernel/vmlinux.lds.S
+> @@ -1,8 +1,173 @@
+>   
+>   KERNEL_STACK_SIZE = 4096 * (1 << CONFIG_KERNEL_STACK_ORDER);
+>   
+> -#ifdef CONFIG_LD_SCRIPT_STATIC
+> -#include "uml.lds.S"
+> -#else
+> -#include "dyn.lds.S"
+> -#endif
+> +#include <asm/vmlinux.lds.h>
+> +#include <asm/page.h>
+> +
+> +OUTPUT_FORMAT(ELF_FORMAT)
+> +OUTPUT_ARCH(ELF_ARCH)
+> +ENTRY(_start)
+> +jiffies = jiffies_64;
+> +
+> +SECTIONS
+> +{
+> +  PROVIDE (__executable_start = START);
+> +  . = START + SIZEOF_HEADERS;
+> +  .interp         : { *(.interp) }
+> +  __binary_start = .;
+> +  . = ALIGN(4096);		/* Init code and data */
+> +  _text = .;
+> +  INIT_TEXT_SECTION(PAGE_SIZE)
+> +
+> +  . = ALIGN(PAGE_SIZE);
+> +
+> +  /* Read-only sections, merged into text segment: */
+> +  .hash           : { *(.hash) }
+> +  .gnu.hash       : { *(.gnu.hash) }
+> +  .dynsym         : { *(.dynsym) }
+> +  .dynstr         : { *(.dynstr) }
+> +  .gnu.version    : { *(.gnu.version) }
+> +  .gnu.version_d  : { *(.gnu.version_d) }
+> +  .gnu.version_r  : { *(.gnu.version_r) }
+> +  .rel.init       : { *(.rel.init) }
+> +  .rela.init      : { *(.rela.init) }
+> +  .rel.text       : { *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*) }
+> +  .rela.text      : { *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*) }
+> +  .rel.fini       : { *(.rel.fini) }
+> +  .rela.fini      : { *(.rela.fini) }
+> +  .rel.rodata     : { *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*) }
+> +  .rela.rodata    : { *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*) }
+> +  .rel.data       : { *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*) }
+> +  .rela.data      : { *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*) }
+> +  .rel.tdata	  : { *(.rel.tdata .rel.tdata.* .rel.gnu.linkonce.td.*) }
+> +  .rela.tdata	  : { *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*) }
+> +  .rel.tbss	  : { *(.rel.tbss .rel.tbss.* .rel.gnu.linkonce.tb.*) }
+> +  .rela.tbss	  : { *(.rela.tbss .rela.tbss.* .rela.gnu.linkonce.tb.*) }
+> +  .rel.ctors      : { *(.rel.ctors) }
+> +  .rela.ctors     : { *(.rela.ctors) }
+> +  .rel.dtors      : { *(.rel.dtors) }
+> +  .rela.dtors     : { *(.rela.dtors) }
+> +  .rel.got        : { *(.rel.got) }
+> +  .rela.got       : { *(.rela.got) }
+> +  .rel.bss        : { *(.rel.bss .rel.bss.* .rel.gnu.linkonce.b.*) }
+> +  .rela.bss       : { *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*) }
+> +  .rel.plt : {
+> +	*(.rel.plt)
+> +	PROVIDE_HIDDEN(__rel_iplt_start = .);
+> +	*(.rel.iplt)
+> +	PROVIDE_HIDDEN(__rel_iplt_end = .);
+> +  }
+> +  .rela.plt : {
+> +	*(.rela.plt)
+> +	PROVIDE_HIDDEN(__rela_iplt_start = .);
+> +	*(.rela.iplt)
+> +	PROVIDE_HIDDEN(__rela_iplt_end = .);
+> +  }
+> +  .init           : {
+> +    KEEP (*(.init))
+> +  } =0x90909090
+> +  .plt            : { *(.plt) }
+> +  .text           : {
+> +    _stext = .;
+> +    TEXT_TEXT
+> +    SCHED_TEXT
+> +    CPUIDLE_TEXT
+> +    LOCK_TEXT
+> +    IRQENTRY_TEXT
+> +    SOFTIRQENTRY_TEXT
+> +    *(.fixup)
+> +    *(.stub .text.* .gnu.linkonce.t.*)
+> +    /* .gnu.warning sections are handled specially by elf32.em.  */
+> +    *(.gnu.warning)
+> +
+> +    . = ALIGN(PAGE_SIZE);
+> +  } =0x90909090
+> +  . = ALIGN(PAGE_SIZE);
+> +  .syscall_stub : {
+> +	__syscall_stub_start = .;
+> +	*(.__syscall_stub*)
+> +	__syscall_stub_end = .;
+> +  }
+> +  .fini           : {
+> +    KEEP (*(.fini))
+> +  } =0x90909090
+> +
+> +  .kstrtab : { *(.kstrtab) }
+> +
+> +  #include <asm/common.lds.S>
+> +
+> +  __init_begin = .;
+> +  init.data : { INIT_DATA }
+> +  __init_end = .;
+> +
+> +  /* Ensure the __preinit_array_start label is properly aligned.  We
+> +     could instead move the label definition inside the section, but
+> +     the linker would then create the section even if it turns out to
+> +     be empty, which isn't pretty.  */
+> +  . = ALIGN(32 / 8);
+> +  .preinit_array     : { *(.preinit_array) }
+> +  .fini_array     : { *(.fini_array) }
+> +  .data           : {
+> +    INIT_TASK_DATA(KERNEL_STACK_SIZE)
+> +    . = ALIGN(KERNEL_STACK_SIZE);
+> +    *(.data..init_irqstack)
+> +    DATA_DATA
+> +    *(.data.* .gnu.linkonce.d.*)
+> +    SORT(CONSTRUCTORS)
+> +  }
+> +  .data1          : { *(.data1) }
+> +  .tdata	  : { *(.tdata .tdata.* .gnu.linkonce.td.*) }
+> +  .tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) }
+> +  .eh_frame       : { KEEP (*(.eh_frame)) }
+> +  .gcc_except_table   : { *(.gcc_except_table) }
+> +  .dynamic        : { *(.dynamic) }
+> +  .ctors          : {
+> +    /* gcc uses crtbegin.o to find the start of
+> +       the constructors, so we make sure it is
+> +       first.  Because this is a wildcard, it
+> +       doesn't matter if the user does not
+> +       actually link against crtbegin.o; the
+> +       linker won't look for a file to match a
+> +       wildcard.  The wildcard also means that it
+> +       doesn't matter which directory crtbegin.o
+> +       is in.  */
+> +    KEEP (*crtbegin.o(.ctors))
+> +    /* We don't want to include the .ctor section from
+> +       from the crtend.o file until after the sorted ctors.
+> +       The .ctor section from the crtend file contains the
+> +       end of ctors marker and it must be last */
+> +    KEEP (*(EXCLUDE_FILE (*crtend.o ) .ctors))
+> +    KEEP (*(SORT(.ctors.*)))
+> +    KEEP (*(.ctors))
+> +  }
+> +  .dtors          : {
+> +    KEEP (*crtbegin.o(.dtors))
+> +    KEEP (*(EXCLUDE_FILE (*crtend.o ) .dtors))
+> +    KEEP (*(SORT(.dtors.*)))
+> +    KEEP (*(.dtors))
+> +  }
+> +  .jcr            : { KEEP (*(.jcr)) }
+> +  .got            : { *(.got.plt) *(.got) }
+> +  _edata = .;
+> +  PROVIDE (edata = .);
+> +  .bss            : {
+> +   __bss_start = .;
+> +   *(.dynbss)
+> +   *(.bss .bss.* .gnu.linkonce.b.*)
+> +   *(COMMON)
+> +   /* Align here to ensure that the .bss section occupies space up to
+> +      _end.  Align after .bss to ensure correct alignment even if the
+> +      .bss section disappears because there are no input sections.  */
+> +   . = ALIGN(32 / 8);
+> +  . = ALIGN(32 / 8);
+> +  }
+> +   __bss_stop = .;
+> +  _end = .;
+> +  PROVIDE (end = .);
+> +
+> +  STABS_DEBUG
+> +
+> +  DWARF_DEBUG
+> +
+> +  DISCARDS
+> +}
+> 
 
-Unlike the previous series, there is no EE/AO domain
-in A1 CLK controllers.
+The ptrace check was discussed on the list this week - it is the enable 
+constructors commit in 5.3-rc1.
 
-Signed-off-by: Jian Hu <jian.hu@amlogic.com>
----
- drivers/clk/meson/Kconfig  |  10 ++
- drivers/clk/meson/Makefile |   1 +
- drivers/clk/meson/a1-pll.c | 334 +++++++++++++++++++++++++++++++++++++
- drivers/clk/meson/a1-pll.h |  56 +++++++
- 4 files changed, 401 insertions(+)
- create mode 100644 drivers/clk/meson/a1-pll.c
- create mode 100644 drivers/clk/meson/a1-pll.h
+A patch reverting it was submitted by Johannes yesterday.
 
-diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
-index dabeb435d067..14e7936ae18e 100644
---- a/drivers/clk/meson/Kconfig
-+++ b/drivers/clk/meson/Kconfig
-@@ -93,6 +93,16 @@ config COMMON_CLK_AXG_AUDIO
- 	  Support for the audio clock controller on AmLogic A113D devices,
- 	  aka axg, Say Y if you want audio subsystem to work.
- 
-+config COMMON_CLK_A1_PLL
-+	bool
-+	depends on ARCH_MESON
-+	select COMMON_CLK_MESON_EE_CLKC
-+	select COMMON_CLK_MESON_REGMAP
-+	select COMMON_CLK_MESON_PLL
-+	help
-+	  Support for the PLL clock controller on Amlogic A113L device,
-+	  aka a1. Say Y if you want PLL to work.
-+
- config COMMON_CLK_G12A
- 	bool
- 	depends on ARCH_MESON
-diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
-index 3939f218587a..71d3b8e6fb8a 100644
---- a/drivers/clk/meson/Makefile
-+++ b/drivers/clk/meson/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_COMMON_CLK_MESON_VID_PLL_DIV) += vid-pll-div.o
- 
- obj-$(CONFIG_COMMON_CLK_AXG) += axg.o axg-aoclk.o
- obj-$(CONFIG_COMMON_CLK_AXG_AUDIO) += axg-audio.o
-+obj-$(CONFIG_COMMON_CLK_A1_PLL) += a1-pll.o
- obj-$(CONFIG_COMMON_CLK_GXBB) += gxbb.o gxbb-aoclk.o
- obj-$(CONFIG_COMMON_CLK_G12A) += g12a.o g12a-aoclk.o
- obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
-diff --git a/drivers/clk/meson/a1-pll.c b/drivers/clk/meson/a1-pll.c
-new file mode 100644
-index 000000000000..b248ac81ddd8
---- /dev/null
-+++ b/drivers/clk/meson/a1-pll.c
-@@ -0,0 +1,334 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-+ * Author: Jian Hu <jian.hu@amlogic.com>
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include "a1-pll.h"
-+#include "clk-pll.h"
-+#include "meson-eeclk.h"
-+
-+static struct clk_regmap a1_fixed_pll_dco = {
-+	.data = &(struct meson_clk_pll_data){
-+		.en = {
-+			.reg_off = ANACTRL_FIXPLL_CTRL0,
-+			.shift   = 28,
-+			.width   = 1,
-+		},
-+		.m = {
-+			.reg_off = ANACTRL_FIXPLL_CTRL0,
-+			.shift   = 0,
-+			.width   = 8,
-+		},
-+		.n = {
-+			.reg_off = ANACTRL_FIXPLL_CTRL0,
-+			.shift   = 10,
-+			.width   = 5,
-+		},
-+		.frac = {
-+			.reg_off = ANACTRL_FIXPLL_CTRL1,
-+			.shift   = 0,
-+			.width   = 19,
-+		},
-+		.l = {
-+			.reg_off = ANACTRL_FIXPLL_CTRL0,
-+			.shift   = 31,
-+			.width   = 1,
-+		},
-+		.rst = {
-+			.reg_off = ANACTRL_FIXPLL_CTRL0,
-+			.shift   = 29,
-+			.width   = 1,
-+		},
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "fixed_pll_dco",
-+		.ops = &meson_clk_pll_ro_ops,
-+		.parent_data = &(const struct clk_parent_data){
-+			.fw_name = "xtal_fixpll",
-+		},
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap a1_fixed_pll = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = ANACTRL_FIXPLL_CTRL0,
-+		.bit_idx = 20,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "fixed_pll",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&a1_fixed_pll_dco.hw
-+		},
-+		.num_parents = 1,
-+		/*
-+		 * This clock is fclk_div2/3/5's parent,
-+		 * However, fclk_div2/3/5 feeds AXI/APB/DDR.
-+		 * It is required by the platform to operate correctly.
-+		 */
-+		.flags = CLK_IGNORE_UNUSED,
-+	},
-+};
-+
-+static const struct pll_mult_range a1_hifi_pll_mult_range = {
-+	.min = 32,
-+	.max = 64,
-+};
-+
-+static const struct reg_sequence a1_hifi_init_regs[] = {
-+	{ .reg = ANACTRL_HIFIPLL_CTRL1, .def = 0x01800000 },
-+	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001100 },
-+	{ .reg = ANACTRL_HIFIPLL_CTRL3, .def = 0x100a1100 },
-+	{ .reg = ANACTRL_HIFIPLL_CTRL4, .def = 0x00302000 },
-+	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x01f18440 },
-+};
-+
-+static struct clk_regmap a1_hifi_pll = {
-+	.data = &(struct meson_clk_pll_data){
-+		.en = {
-+			.reg_off = ANACTRL_HIFIPLL_CTRL0,
-+			.shift   = 28,
-+			.width   = 1,
-+		},
-+		.m = {
-+			.reg_off = ANACTRL_HIFIPLL_CTRL0,
-+			.shift   = 0,
-+			.width   = 8,
-+		},
-+		.n = {
-+			.reg_off = ANACTRL_HIFIPLL_CTRL0,
-+			.shift   = 10,
-+			.width   = 5,
-+		},
-+		.frac = {
-+			.reg_off = ANACTRL_HIFIPLL_CTRL1,
-+			.shift   = 0,
-+			.width   = 19,
-+		},
-+		.l = {
-+			.reg_off = ANACTRL_HIFIPLL_STS,
-+			.shift   = 31,
-+			.width   = 1,
-+		},
-+		.current_en = {
-+			.reg_off = ANACTRL_HIFIPLL_CTRL0,
-+			.shift   = 26,
-+			.width   = 1,
-+		},
-+		.rst = {
-+			.reg_off = ANACTRL_HIFIPLL_CTRL2,
-+			.shift   = 6,
-+			.width   = 1,
-+		},
-+		.range = &a1_hifi_pll_mult_range,
-+		.init_regs = a1_hifi_init_regs,
-+		.init_count = ARRAY_SIZE(a1_hifi_init_regs),
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "hifi_pll",
-+		.ops = &meson_clk_pll_ops,
-+		.parent_data = &(const struct clk_parent_data){
-+			.fw_name = "xtal_hifipll",
-+		},
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_fixed_factor a1_fclk_div2_div = {
-+	.mult = 1,
-+	.div = 2,
-+	.hw.init = &(struct clk_init_data){
-+		.name = "fclk_div2_div",
-+		.ops = &clk_fixed_factor_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&a1_fixed_pll.hw
-+		},
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap a1_fclk_div2 = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = ANACTRL_FIXPLL_CTRL0,
-+		.bit_idx = 21,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "fclk_div2",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&a1_fclk_div2_div.hw
-+		},
-+		.num_parents = 1,
-+		/*
-+		 * This clock is used by DDR clock in BL2 firmware
-+		 * and is required by the platform to operate correctly.
-+		 * Until the following condition are met, we need this clock to
-+		 * be marked as critical:
-+		 * a) Mark the clock used by a firmware resource, if possible
-+		 * b) CCF has a clock hand-off mechanism to make the sure the
-+		 *    clock stays on until the proper driver comes along
-+		 */
-+		.flags = CLK_IS_CRITICAL,
-+	},
-+};
-+
-+static struct clk_fixed_factor a1_fclk_div3_div = {
-+	.mult = 1,
-+	.div = 3,
-+	.hw.init = &(struct clk_init_data){
-+		.name = "fclk_div3_div",
-+		.ops = &clk_fixed_factor_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&a1_fixed_pll.hw
-+		},
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap a1_fclk_div3 = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = ANACTRL_FIXPLL_CTRL0,
-+		.bit_idx = 22,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "fclk_div3",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&a1_fclk_div3_div.hw
-+		},
-+		.num_parents = 1,
-+		/*
-+		 * This clock is used by APB bus which setted in Romcode
-+		 * and is required by the platform to operate correctly.
-+		 * Until the following condition are met, we need this clock to
-+		 * be marked as critical:
-+		 * a) Mark the clock used by a firmware resource, if possible
-+		 * b) CCF has a clock hand-off mechanism to make the sure the
-+		 *    clock stays on until the proper driver comes along
-+		 */
-+		.flags = CLK_IS_CRITICAL,
-+	},
-+};
-+
-+static struct clk_fixed_factor a1_fclk_div5_div = {
-+	.mult = 1,
-+	.div = 5,
-+	.hw.init = &(struct clk_init_data){
-+		.name = "fclk_div5_div",
-+		.ops = &clk_fixed_factor_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&a1_fixed_pll.hw
-+		},
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap a1_fclk_div5 = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = ANACTRL_FIXPLL_CTRL0,
-+		.bit_idx = 23,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "fclk_div5",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&a1_fclk_div5_div.hw
-+		},
-+		.num_parents = 1,
-+		/*
-+		 * This clock is used by AXI bus which setted in Romcode
-+		 * and is required by the platform to operate correctly.
-+		 * Until the following condition are met, we need this clock to
-+		 * be marked as critical:
-+		 * a) Mark the clock used by a firmware resource, if possible
-+		 * b) CCF has a clock hand-off mechanism to make the sure the
-+		 *    clock stays on until the proper driver comes along
-+		 */
-+		.flags = CLK_IS_CRITICAL,
-+	},
-+};
-+
-+static struct clk_fixed_factor a1_fclk_div7_div = {
-+	.mult = 1,
-+	.div = 7,
-+	.hw.init = &(struct clk_init_data){
-+		.name = "fclk_div7_div",
-+		.ops = &clk_fixed_factor_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&a1_fixed_pll.hw
-+		},
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap a1_fclk_div7 = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = ANACTRL_FIXPLL_CTRL0,
-+		.bit_idx = 24,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "fclk_div7",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&a1_fclk_div7_div.hw
-+		},
-+		.num_parents = 1,
-+	},
-+};
-+
-+/* Array of all clocks provided by this provider */
-+static struct clk_hw_onecell_data a1_pll_hw_onecell_data = {
-+	.hws = {
-+		[CLKID_FIXED_PLL_DCO]		= &a1_fixed_pll_dco.hw,
-+		[CLKID_FIXED_PLL]		= &a1_fixed_pll.hw,
-+		[CLKID_HIFI_PLL]		= &a1_hifi_pll.hw,
-+		[CLKID_FCLK_DIV2]		= &a1_fclk_div2.hw,
-+		[CLKID_FCLK_DIV3]		= &a1_fclk_div3.hw,
-+		[CLKID_FCLK_DIV5]		= &a1_fclk_div5.hw,
-+		[CLKID_FCLK_DIV7]		= &a1_fclk_div7.hw,
-+		[CLKID_FCLK_DIV2_DIV]		= &a1_fclk_div2_div.hw,
-+		[CLKID_FCLK_DIV3_DIV]		= &a1_fclk_div3_div.hw,
-+		[CLKID_FCLK_DIV5_DIV]		= &a1_fclk_div5_div.hw,
-+		[CLKID_FCLK_DIV7_DIV]		= &a1_fclk_div7_div.hw,
-+		[NR_PLL_CLKS]			= NULL,
-+	},
-+	.num = NR_PLL_CLKS,
-+};
-+
-+static struct clk_regmap *const a1_pll_regmaps[] = {
-+	&a1_fixed_pll_dco,
-+	&a1_fixed_pll,
-+	&a1_hifi_pll,
-+	&a1_fclk_div2,
-+	&a1_fclk_div3,
-+	&a1_fclk_div5,
-+	&a1_fclk_div7,
-+};
-+
-+static const struct meson_eeclkc_data a1_pll_data = {
-+		.regmap_clks = a1_pll_regmaps,
-+		.regmap_clk_num = ARRAY_SIZE(a1_pll_regmaps),
-+		.hw_onecell_data = &a1_pll_hw_onecell_data,
-+};
-+static const struct of_device_id clkc_match_table[] = {
-+	{
-+		.compatible = "amlogic,a1-pll-clkc",
-+		.data = &a1_pll_data
-+	},
-+	{}
-+};
-+
-+static struct platform_driver a1_pll_driver = {
-+	.probe		= meson_clkc_probe,
-+	.driver		= {
-+		.name	= "a1-pll-clkc",
-+		.of_match_table = clkc_match_table,
-+	},
-+};
-+
-+builtin_platform_driver(a1_pll_driver);
-diff --git a/drivers/clk/meson/a1-pll.h b/drivers/clk/meson/a1-pll.h
-new file mode 100644
-index 000000000000..8ded267061ad
---- /dev/null
-+++ b/drivers/clk/meson/a1-pll.h
-@@ -0,0 +1,56 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-+ */
-+
-+#ifndef __A1_PLL_H
-+#define __A1_PLL_H
-+
-+/* PLL register offset */
-+#define ANACTRL_FIXPLL_CTRL0		0x0
-+#define ANACTRL_FIXPLL_CTRL1		0x4
-+#define ANACTRL_FIXPLL_CTRL2		0x8
-+#define ANACTRL_FIXPLL_CTRL3		0xc
-+#define ANACTRL_FIXPLL_CTRL4		0x10
-+#define ANACTRL_FIXPLL_STS		0x14
-+#define ANACTRL_SYSPLL_CTRL0		0x80
-+#define ANACTRL_SYSPLL_CTRL1		0x84
-+#define ANACTRL_SYSPLL_CTRL2		0x88
-+#define ANACTRL_SYSPLL_CTRL3		0x8c
-+#define ANACTRL_SYSPLL_CTRL4		0x90
-+#define ANACTRL_SYSPLL_STS		0x94
-+#define ANACTRL_HIFIPLL_CTRL0		0xc0
-+#define ANACTRL_HIFIPLL_CTRL1		0xc4
-+#define ANACTRL_HIFIPLL_CTRL2		0xc8
-+#define ANACTRL_HIFIPLL_CTRL3		0xcc
-+#define ANACTRL_HIFIPLL_CTRL4		0xd0
-+#define ANACTRL_HIFIPLL_STS		0xd4
-+#define ANACTRL_AUDDDS_CTRL0		0x100
-+#define ANACTRL_AUDDDS_CTRL1		0x104
-+#define ANACTRL_AUDDDS_CTRL2		0x108
-+#define ANACTRL_AUDDDS_CTRL3		0x10c
-+#define ANACTRL_AUDDDS_CTRL4		0x110
-+#define ANACTRL_AUDDDS_STS		0x114
-+#define ANACTRL_MISCTOP_CTRL0		0x140
-+#define ANACTRL_POR_CNTL		0x188
-+
-+/*
-+ * CLKID index values
-+ *
-+ * These indices are entirely contrived and do not map onto the hardware.
-+ * It has now been decided to expose everything by default in the DT header:
-+ * include/dt-bindings/clock/a1-pll-clkc.h. Only the clocks ids we don't want
-+ * to expose, such as the internal muxes and dividers of composite clocks,
-+ * will remain defined here.
-+ */
-+#define CLKID_FIXED_PLL_DCO		0
-+#define CLKID_FCLK_DIV2_DIV		2
-+#define CLKID_FCLK_DIV3_DIV		3
-+#define CLKID_FCLK_DIV5_DIV		4
-+#define CLKID_FCLK_DIV7_DIV		5
-+#define NR_PLL_CLKS			11
-+
-+/* include the CLKIDs that have been made part of the DT binding */
-+#include <dt-bindings/clock/a1-pll-clkc.h>
-+
-+#endif /* __A1_PLL_H */
+I did not try disabling/enabling static link - good catch.
+
+Otherwise, I agree - static link should probably go.
+
+Adding PCAP throws even more warnings and the AF_XDP work I have in 
+progress generates a whole page of them. Considering that the resulting 
+executable is not really static there is no point keeping the option.
+
 -- 
-2.24.0
-
+Anton R. Ivanov
+Cambridgegreys Limited. Registered in England. Company Number 10273661
+https://www.cambridgegreys.com/
