@@ -2,155 +2,121 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F1BC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B37C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1DB92464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FFE2464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:45:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575625539;
+	bh=OHkhjQeo+FWv43HEQMiDwAdJHLKldnW6A09B4tAdW10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=loPETHApsIbCKd+ZclmLtQXvl5Jen6SEPx06WNSoIAiM/CwKjGVwxY+HpfteTPNKW
+	 XfPiBY8It80B+2A8wxhbxALC+UUURqLQ/OdRZwpM7WgW4Ld9thwEc1puArwsP5u1pC
+	 w3EWnqNjLY1jvlgtqXL8w6aKIbCgwjwchGJffzHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbfLFJox (ORCPT
+        id S1726322AbfLFJpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 04:44:53 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49250 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726070AbfLFJox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 04:44:53 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 13DF5AC3F;
-        Fri,  6 Dec 2019 09:44:51 +0000 (UTC)
-Subject: Re: [PATCH 2/2] [PATCH] bcache: __write_super to handle page sizes
- other than 4k
-To:     Liang Chen <liangchen.linux@gmail.com>
-Cc:     kent.overstreet@gmail.com, linux-kernel@vger.kernel.org,
-        linux-bcache@vger.kernel.org
-References: <1575622543-22470-1-git-send-email-liangchen.linux@gmail.com>
- <1575622543-22470-2-git-send-email-liangchen.linux@gmail.com>
-From:   Coly Li <colyli@suse.de>
-Organization: SUSE Labs
-Message-ID: <e44b8bd9-470d-08af-be7f-a0808504772e@suse.de>
-Date:   Fri, 6 Dec 2019 17:44:38 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.2.2
+        Fri, 6 Dec 2019 04:45:38 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51197 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfLFJpi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 04:45:38 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so7129521wmg.0;
+        Fri, 06 Dec 2019 01:45:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VgZXkaerCaq814dwnILX7vYtRFOjbm5DfD5NkTzjaTo=;
+        b=K6sdxfwvQPjEECZJH9PvcwUtZP8upA7qjYykUbYxv/o1AeRrnwqEpAUIHj+mcGSUni
+         gxVPuZGaG/1KJfRJCfr/EQNC/z6qwV7H+APlCjxBMvCvG2nxOjyZ6mu3CZsCxzie0mv6
+         uzeEQTRSC7+HnIxalFxtv9IGHHyzVEkWENSlB02oOlWtYKs5HlIEgoHUS9wFAQ0FbWIt
+         DExQCPJ/SfnUPB5NRBf0R7/Gy6U7wM38EvQLYpIZfUGmiNCaroo6J19KMJRs2tpDKIfy
+         O4PNOwlIlvz8tIzEr3nRPoNXYcyHz0IRnYOES7E8SjoATIEwl2bI8lfzJHqGQZT6mc0B
+         j2vg==
+X-Gm-Message-State: APjAAAWAUrQn3jejbOmWy7ROlgRHdFNNE0B5V8nMig43xmtS1Z0DOfkz
+        Em0ceBax8/jSaj1NVbjE65izXCkP
+X-Google-Smtp-Source: APXvYqxzG3UZEpVj2ra8UPftUD4jNLDT9c/lbi7vIZ4Au8QKO1FCp9GXKuu0+aBLhs5BYLTfzIZ2OA==
+X-Received: by 2002:a7b:c24c:: with SMTP id b12mr9616831wmj.16.1575625536360;
+        Fri, 06 Dec 2019 01:45:36 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id d186sm2986921wmf.7.2019.12.06.01.45.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 01:45:35 -0800 (PST)
+Date:   Fri, 6 Dec 2019 10:45:34 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, mtk.manpages@gmail.com,
+        cl@linux.com, cai@lca.pw, akpm@linux-foundation.org,
+        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] move_pages.2: not return ENOENT if the page are already
+ on the target nodes
+Message-ID: <20191206094534.GL28317@dhcp22.suse.cz>
+References: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
+ <0dc96e40-5f2b-a2fe-6e5f-b6f3d5e9ebde@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <1575622543-22470-2-git-send-email-liangchen.linux@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0dc96e40-5f2b-a2fe-6e5f-b6f3d5e9ebde@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/6 4:55 下午, Liang Chen wrote:
-> __write_super assumes super block data starts at offset 0 of the page
-> read in with __bread from read_super, which is not true when page size
-> is not 4k. We encountered the issue on system with 64K page size - commonly
->  seen on aarch64 architecture.
+On Fri 06-12-19 00:25:53, John Hubbard wrote:
+> On 12/5/19 5:34 PM, Yang Shi wrote:
+> > Since commit e78bbfa82624 ("mm: stop returning -ENOENT
+> > from sys_move_pages() if nothing got migrated"), move_pages doesn't
+> > return -ENOENT anymore if the pages are already on the target nodes, but
+> > this change is never reflected in manpage.
+> > 
+> > Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+> > Cc: Christoph Lameter <cl@linux.com>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: Michal Hocko <mhocko@suse.com>
+> > Cc: Qian Cai <cai@lca.pw>
+> > Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> > ---
+> >   man2/move_pages.2 | 5 ++---
+> >   1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/man2/move_pages.2 b/man2/move_pages.2
+> > index 2d96468..2a2f3cd 100644
+> > --- a/man2/move_pages.2
+> > +++ b/man2/move_pages.2
+> > @@ -192,9 +192,8 @@ was specified or an attempt was made to migrate pages of a kernel thread.
+> >   One of the target nodes is not online.
+> >   .TP
+> >   .B ENOENT
+> > -No pages were found that require moving.
+> > -All pages are either already
+> > -on the target node, not present, had an invalid address or could not be
+> > +No pages were found.
+> > +All pages are either not present, had an invalid address or could not be
+> >   moved because they were mapped by multiple processes.
+> >   .TP
+> >   .B EPERM
+> > 
 > 
-> Instead of making any assumption on the offset of the data within the page,
-> this patch calls __bread again to locate the data. That should not introduce
-> an extra io since the page has been held when it's read in from read_super,
-> and __write_super is not on performance critical code path.
-> 
-> Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
+> whoa, hold on. If I'm reading through the various error paths correctly, then this
+> code is *never* going to return ENOENT for the whole function. It can fill in that
+> value per-page, in the status array, but that's all. Did I get that right?
 
-In general the patch is good for me. Just two minor requests I add them
-in line the email.
+You are right. Both store_status and do_move_pages_to_node do overwrite
+the error code. So you are right that ENOENT return value is not
+possible. I haven't checked since when this is the case. This whole
+syscall is a disaster from the API and documentation POV.
 
-Thanks.
-
-> ---
->  drivers/md/bcache/super.c | 32 +++++++++++++++++++++++++++-----
->  1 file changed, 27 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> index a573ce1d85aa..a39450c9bc34 100644
-> --- a/drivers/md/bcache/super.c
-> +++ b/drivers/md/bcache/super.c
-> @@ -207,15 +207,27 @@ static void write_bdev_super_endio(struct bio *bio)
->  	closure_put(&dc->sb_write);
->  }
->  
-> -static void __write_super(struct cache_sb *sb, struct bio *bio)
-> +static int __write_super(struct cache_sb *sb, struct bio *bio,
-> +			 struct block_device *bdev)
->  {
-> -	struct cache_sb *out = page_address(bio_first_page_all(bio));
-> +	struct cache_sb *out;
->  	unsigned int i;
-> +	struct buffer_head *bh;
-> +
-> +	/*
-> +	 * The page is held since read_super, this __bread * should not
-> +	 * cause an extra io read.
-> +	 */
-> +	bh = __bread(bdev, 1, SB_SIZE);
-> +	if (!bh)
-> +		goto out_bh;
-> +
-> +	out = (struct cache_sb *) bh->b_data;
-
-This is quite tricky here. Could you please to move this code piece into
-an inline function and add code comments to explain why a read is
-necessary for a write.
-
-
->  
->  	bio->bi_iter.bi_sector	= SB_SECTOR;
->  	bio->bi_iter.bi_size	= SB_SIZE;
->  	bio_set_op_attrs(bio, REQ_OP_WRITE, REQ_SYNC|REQ_META);
-> -	bch_bio_map(bio, NULL);
-> +	bch_bio_map(bio, bh->b_data);
->  
->  	out->offset		= cpu_to_le64(sb->offset);
->  	out->version		= cpu_to_le64(sb->version);
-> @@ -239,7 +251,14 @@ static void __write_super(struct cache_sb *sb, struct bio *bio)
->  	pr_debug("ver %llu, flags %llu, seq %llu",
->  		 sb->version, sb->flags, sb->seq);
->  
-> +	/* The page will still be held without this bh.*/
-> +	put_bh(bh);
->  	submit_bio(bio);
-> +	return 0;
-> +
-> +out_bh:
-> +	pr_err("Couldn't read super block, __write_super failed");
-> +	return -1;
->  }
->  
->  static void bch_write_bdev_super_unlock(struct closure *cl)
-> @@ -264,7 +283,8 @@ void bch_write_bdev_super(struct cached_dev *dc, struct closure *parent)
->  
->  	closure_get(cl);
->  	/* I/O request sent to backing device */
-> -	__write_super(&dc->sb, bio);
-> +	if(__write_super(&dc->sb, bio, dc->bdev))
-> +		closure_put(cl);
->  
->  	closure_return_with_destructor(cl, bch_write_bdev_super_unlock);
->  }
-> @@ -312,7 +332,9 @@ void bcache_write_super(struct cache_set *c)
->  		bio->bi_private = ca;
->  
->  		closure_get(cl);
-> -		__write_super(&ca->sb, bio);
-> +		if(__write_super(&ca->sb, bio, ca->bdev))
-
-And here, please add code comments for why closure_put() is necessary here.
-
-> +			closure_put(cl);
-> +
->  	}
->  
->  	closure_return_with_destructor(cl, bcache_write_super_unlock);
-> 
-
-
+Btw. Page states error codes could see some refinements as well.
 -- 
-
-Coly Li
+Michal Hocko
+SUSE Labs
