@@ -2,109 +2,168 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B820C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB9EC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E02B2245C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B1424671
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 10:35:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="JGYVJCRK"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oZC+Mg3x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfLFKfv (ORCPT
+        id S1726332AbfLFKfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 05:35:51 -0500
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:55916 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726102AbfLFKfv (ORCPT
+        Fri, 6 Dec 2019 05:35:54 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43415 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfLFKfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 05:35:51 -0500
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB6AXb4K012056;
-        Fri, 6 Dec 2019 04:34:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=gODTI0lW1pdRgw8ARzPT2hG/hZAyqOBktg59aJ0itXo=;
- b=JGYVJCRKfWlj4U1CRVRaNLheVAXMN0UpKhO5wWhF1OVVjzTtLapt6rXwRwuiQLvvWYOq
- ZqzmENVuZie+QlP8jdkmkcrlsA5R9SKs49XH+Ko7CyKJQ0JfsWo9Lf6QfsVFpyHjcb+2
- 6dZ7LTkDPM7fgSDWDvPQnpMd7Wg9c710J3WXJXOceQJ/k9+wC+s++QSfLq0h7Hn/IrwK
- Y4Su51rR09YwwUzh7HxBBZDkJOSz8vCukobzSho6xbRMQq5jOvWbaK3GncRrWTZHS/Ez
- Sjll2JKiW8K73nM/LPN0bGnhFRucaro9iU4jq//KRCfM034+IKggAlYHpq8vvia8JsBW hQ== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([5.172.152.52])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2wqmq101fa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 06 Dec 2019 04:34:57 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 6 Dec
- 2019 10:34:53 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Fri, 6 Dec 2019 10:34:53 +0000
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id D991F2D1;
-        Fri,  6 Dec 2019 10:34:53 +0000 (UTC)
-Date:   Fri, 6 Dec 2019 10:34:53 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, <patches@opensource.cirrus.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: wm5100: add missed regulator_bulk_disable
-Message-ID: <20191206103453.GC10451@ediswmail.ad.cirrus.com>
-References: <20191206075300.18182-1-hslester96@gmail.com>
+        Fri, 6 Dec 2019 05:35:53 -0500
+Received: by mail-wr1-f65.google.com with SMTP id d16so7149482wre.10
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 02:35:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2P76kSoNDGNNbqOJn2kSGms/jkHQIG00/8B7zZ9IAWc=;
+        b=oZC+Mg3xodxXWHIkXMzl5MjCHXgHGP4BTZlEj8wbkkQKrb/xTAZz2TcgxnPz/8M8Ap
+         SEVGG0mDu5DnWf8GLyFVlv6oV5oWGyAdn89M1wQTHdjQ0aBd0UHL8VE6vlwJu9lIrQsI
+         IHEs5lBcbWtd66Zi1dpKu6KPBp8rTTQyW/0LSAUEUts5pg5tJQ3SJryqgWnpN0xxKaNY
+         8awbJssV2Vk6/v9/6qOjuAPxok8m1mCzS66eaw5hBVwaHJNYSnntdObS/5Op3AiyHbSu
+         4DPDUt5Bw+Dcqzr7sya9ODOXyLswtKpQIvCxPTS8lkAZfIPF5WWNJp9urxJbiuJRQGhS
+         q8hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2P76kSoNDGNNbqOJn2kSGms/jkHQIG00/8B7zZ9IAWc=;
+        b=DIkD6oJUqJJHBpLcSwsgdyzdIw0qLhmWMd9qKVVRGe04tPZ0DterK74j2OJeU7LC9n
+         xox+2+MTX4A7fHsrlGV5OZV5i2tuyDMIcK0G1m51t3d2NcoJSbkOAQs1zIeuuVynbhHY
+         g6av3N8z6nB8LVKv4EPlZNtcfbhSksAsTize2Eo+3W5RNrqSvfis8qpYeFvrP0bvqJGI
+         rcMQYU35/zksx/ptt9vy9S8Rhn/ibjbuwecYTItokiu309X8B+DjvbY26CVenbfkgdj+
+         P3HnpfhYeTg16cWX9HGxOkEEYICKZv8Fwsd+aR8IyfffWQLsTQnq4VD7ItpS2urPaWfo
+         cTAg==
+X-Gm-Message-State: APjAAAWm8SeY5tqKBLLIMEJHPsdEp0Blo/6KoioQ5rgiUxphkWnDbwH2
+        XoAQHQhw4FDd4NKa5FcZjT8eRw==
+X-Google-Smtp-Source: APXvYqzpCEq7FRqzkGxefVAfwg3KvzY5JopYcmnzxXZT1FNThv71oz7fGU1opXocQjbae72vvyU62Q==
+X-Received: by 2002:a5d:404b:: with SMTP id w11mr15822520wrp.171.1575628551056;
+        Fri, 06 Dec 2019 02:35:51 -0800 (PST)
+Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id n14sm2164013wmk.0.2019.12.06.02.35.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 02:35:50 -0800 (PST)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ASoC: hdmi-codec: re-introduce mutex locking again
+Date:   Fri,  6 Dec 2019 11:35:42 +0100
+Message-Id: <20191206103542.485224-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191206075300.18182-1-hslester96@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
- suspectscore=2 spamscore=0 priorityscore=1501 phishscore=0 clxscore=1015
- mlxscore=0 malwarescore=0 mlxlogscore=977 adultscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912060091
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 03:53:00PM +0800, Chuhong Yuan wrote:
-> The driver forgets to call regulator_bulk_disable() in remove like that
-> in probe failure.
-> Add the missed call to fix it.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  sound/soc/codecs/wm5100.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/sound/soc/codecs/wm5100.c b/sound/soc/codecs/wm5100.c
-> index 91cc63c5a51f..d985b2061169 100644
-> --- a/sound/soc/codecs/wm5100.c
-> +++ b/sound/soc/codecs/wm5100.c
-> @@ -2653,6 +2653,8 @@ static int wm5100_i2c_remove(struct i2c_client *i2c)
->  		gpio_set_value_cansleep(wm5100->pdata.ldo_ena, 0);
->  		gpio_free(wm5100->pdata.ldo_ena);
->  	}
-> +	regulator_bulk_disable(ARRAY_SIZE(wm5100->core_supplies),
-> +			       wm5100->core_supplies);
->  
+The dai codec needs to ensure that on one dai is used at any time.
+This is currently protected by bit atomic operation. With this change,
+it done with a mutex instead.
 
-This is a bit trickier than this since these regulators are being
-controlled by PM runtime, and it doesn't necessarily leave things
-in an enabled state when it is disabled.
+This change is not about functionality or efficiency. It is done with
+the hope that it help maintainability in the future.
 
-Thanks,
-Charles
+Suggested-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ sound/soc/codecs/hdmi-codec.c | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
+
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index f8b5b960e597..543363102d03 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -274,7 +274,8 @@ struct hdmi_codec_priv {
+ 	uint8_t eld[MAX_ELD_BYTES];
+ 	struct snd_pcm_chmap *chmap_info;
+ 	unsigned int chmap_idx;
+-	unsigned long busy;
++	struct mutex lock;
++	bool busy;
+ 	struct snd_soc_jack *jack;
+ 	unsigned int jack_status;
+ };
+@@ -390,9 +391,10 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
+ 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+ 	int ret = 0;
+ 
+-	ret = test_and_set_bit(0, &hcp->busy);
+-	if (ret) {
++	mutex_lock(&hcp->lock);
++	if (hcp->busy) {
+ 		dev_err(dai->dev, "Only one simultaneous stream supported!\n");
++		mutex_unlock(&hcp->lock);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -405,21 +407,21 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
+ 	if (hcp->hcd.ops->get_eld) {
+ 		ret = hcp->hcd.ops->get_eld(dai->dev->parent, hcp->hcd.data,
+ 					    hcp->eld, sizeof(hcp->eld));
++		if (ret)
++			goto err;
++
++		ret = snd_pcm_hw_constraint_eld(substream->runtime, hcp->eld);
++		if (ret)
++			goto err;
+ 
+-		if (!ret) {
+-			ret = snd_pcm_hw_constraint_eld(substream->runtime,
+-							hcp->eld);
+-			if (ret)
+-				goto err;
+-		}
+ 		/* Select chmap supported */
+ 		hdmi_codec_eld_chmap(hcp);
+ 	}
+-	return 0;
++
++	hcp->busy = true;
+ 
+ err:
+-	/* Release the exclusive lock on error */
+-	clear_bit(0, &hcp->busy);
++	mutex_unlock(&hcp->lock);
+ 	return ret;
+ }
+ 
+@@ -431,7 +433,9 @@ static void hdmi_codec_shutdown(struct snd_pcm_substream *substream,
+ 	hcp->chmap_idx = HDMI_CODEC_CHMAP_IDX_UNKNOWN;
+ 	hcp->hcd.ops->audio_shutdown(dai->dev->parent, hcp->hcd.data);
+ 
+-	clear_bit(0, &hcp->busy);
++	mutex_lock(&hcp->lock);
++	hcp->busy = false;
++	mutex_unlock(&hcp->lock);
+ }
+ 
+ static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
+@@ -811,6 +815,8 @@ static int hdmi_codec_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	hcp->hcd = *hcd;
++	mutex_init(&hcp->lock);
++
+ 	daidrv = devm_kcalloc(dev, dai_count, sizeof(*daidrv), GFP_KERNEL);
+ 	if (!daidrv)
+ 		return -ENOMEM;
+-- 
+2.23.0
+
