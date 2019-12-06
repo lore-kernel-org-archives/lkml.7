@@ -2,24 +2,24 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B54C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C0AC2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66AC224659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A1F24670
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfLFMRZ (ORCPT
+        id S1726332AbfLFMR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:17:25 -0500
+        Fri, 6 Dec 2019 07:17:28 -0500
 Received: from mail-sz.amlogic.com ([211.162.65.117]:17684 "EHLO
         mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfLFMRZ (ORCPT
+        with ESMTP id S1726312AbfLFMR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:17:25 -0500
+        Fri, 6 Dec 2019 07:17:27 -0500
 Received: from localhost.localdomain (10.28.8.19) by mail-sz.amlogic.com
  (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 6 Dec 2019
  20:17:50 +0800
@@ -39,10 +39,12 @@ CC:     Qianggui Song <qianggui.song@amlogic.com>,
         <linux-amlogic@lists.infradead.org>, <devicetree@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 0/4] irqchip/meson-gpio: Add support for Meson-A1 SoC
-Date:   Fri, 6 Dec 2019 20:17:09 +0800
-Message-ID: <20191206121714.14579-1-qianggui.song@amlogic.com>
+Subject: [PATCH 1/4] dt-bindings: interrupt-controller: New binding for Meson-A1 SoCs
+Date:   Fri, 6 Dec 2019 20:17:10 +0800
+Message-ID: <20191206121714.14579-2-qianggui.song@amlogic.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191206121714.14579-1-qianggui.song@amlogic.com>
+References: <20191206121714.14579-1-qianggui.song@amlogic.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -52,23 +54,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset add support for GPIO interrupt controller of Meson-A1 SoC
-which use new reigster layout, two main things are done in the patchset
-1. rework current driver
-2. add a1 support
+Update dt-binding document for GPIO interrupt controller of Meson-A1 SoCs
 
-Qianggui Song (4):
-  dt-bindings: interrupt-controller: New binding for Meson-A1 SoCs
-  irqchip/meson-gpio: rework meson irqchip driver to support meson-A1
-    SoCs
-  irqchip/meson-gpio: Add support for meson a1 SoCs
-  arm64: dts: meson: a1: add gpio interrupt controller support
+Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+---
+ .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt    | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../amlogic,meson-gpio-intc.txt               |   1 +
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |   9 ++
- drivers/irqchip/irq-meson-gpio.c              | 126 +++++++++++++++---
- 3 files changed, 117 insertions(+), 19 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+index 684bb1cd75ec..23b18b92c558 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+@@ -17,6 +17,7 @@ Required properties:
+     "amlogic,meson-axg-gpio-intc" for AXG SoCs (A113D, A113X)
+     "amlogic,meson-g12a-gpio-intc" for G12A SoCs (S905D2, S905X2, S905Y2)
+     "amlogic,meson-sm1-gpio-intc" for SM1 SoCs (S905D3, S905X3, S905Y3)
++    "amlogic,meson-a1-gpio-intc" for A1 SoCs (A113L)
+ - reg : Specifies base physical address and size of the registers.
+ - interrupt-controller : Identifies the node as an interrupt controller.
+ - #interrupt-cells : Specifies the number of cells needed to encode an
 -- 
 2.24.0
 
