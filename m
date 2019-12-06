@@ -2,167 +2,258 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82327C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC0DC2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5247A24676
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575657956;
-	bh=uI9EKANieQp4/2Z6MB2ZAs2MMN7vumj93kZAcBBUEt0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=NgH0lXT4HzJkvDQHQIZrFKTnaSQmzYaNbvYxUiYCYmso3UScSrvElWOed9TzX4Cf7
-	 bjx2UbDCrpj7Pw5MwdGvuHxjGms3pwja8/o10+Rm3F+5Hw5QotNpH1DUxTDi2qMFra
-	 tnk2nedhs5mZ3P14eZJtrse8dg5fu6mu5mvOa94A=
+	by mail.kernel.org (Postfix) with ESMTP id B693024670
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:46:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQsBqJKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfLFSpz (ORCPT
+        id S1726423AbfLFSqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 13:45:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726317AbfLFSpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 13:45:54 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3622024670;
-        Fri,  6 Dec 2019 18:45:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575657953;
-        bh=uI9EKANieQp4/2Z6MB2ZAs2MMN7vumj93kZAcBBUEt0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=1wiQHNi35PaEkG8c+sJQrPmvIkrOI/hWxm7imrIqmIQHlt1NZuKXhss6iRwGFU39D
-         bpjt5/DslssYZVyMiM8JtFzAxn6dtHXeIMXZ0Ir9xeC9GRGBAfnSA1UijLPVHmAkBm
-         g3CNDUixy30L8My/oZEi+y4wch3I/jeCaNGlu36g=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 0E73635206AB; Fri,  6 Dec 2019 10:45:53 -0800 (PST)
-Date:   Fri, 6 Dec 2019 10:45:53 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-kernel-mentees@lists.linuxfoundation.org" 
-        <linux-kernel-mentees@lists.linuxfoundation.org>,
-        "madhuparnabhowmik04@gmail.com" <madhuparnabhowmik04@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "joel@joelfernandes.org" <joel@joelfernandes.org>
-Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
-Message-ID: <20191206184553.GI2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
- <20191206160238.GE2889@paulmck-ThinkPad-P72>
- <2ec21ec537144bb3c0d5fbdaf88ea022d07b7ff8.camel@hammerspace.com>
- <20191206182414.GH2889@paulmck-ThinkPad-P72>
- <127792d6811173921733542052f061a18991f441.camel@hammerspace.com>
+        Fri, 6 Dec 2019 13:46:22 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:44277 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfLFSqV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 13:46:21 -0500
+Received: by mail-pj1-f66.google.com with SMTP id w5so3086999pjh.11;
+        Fri, 06 Dec 2019 10:46:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=B8pAzxJiWSzLWTkMhjf7LFuYSquj8IkeZocPiiwyPjA=;
+        b=KQsBqJKww9wIJwvFg/b3yL0EaiIZoK35YdLFO7U244cS+Zqo2uiiPnJNrKQZuw1dCG
+         TWo2Qtssjro+Z8Xr93ozkvK7Of5o+GkBtYoOfVZFLXvPGPLWeL+oo8SG6ZN25Cihu/pV
+         4EPiiMS+kxXDvLOX6V1Iheumcue78XEQ1iQfrn6YOC1VpzK3WxAUxRYDiKk6nZuyd28A
+         yg/q7eSgrgrVRKTdGf+lB8E1nED3Lki39mY3BwJZdgiy7Tc/Fu/9LgbtjoUFC7CIGp90
+         2ozw0jGqp7djMeTCzf7pFjhMgJCBRucJGhHv/Iqh+YsXuYrYY4BdKTX0/IBUd3iX6Mat
+         tBpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=B8pAzxJiWSzLWTkMhjf7LFuYSquj8IkeZocPiiwyPjA=;
+        b=GNJICdq+u7Zjqm7k585AzmboulNP9RsKgpRKkR47w4eWGqnstkF+8umqlRdpQF4t55
+         z5ZGlkgp7fzy4GnGIHlLG9QfELzgir6+Fyid3M7roT8qvqPlYCdKf3V61AlqtW6bUPrm
+         ROBOzd7+jxlORxHQyNHKUyinJlUV8Vi8hrpiDyQOJki9/9zPrNib1iFcDHeQOqdCV1YB
+         xJudcZZbQvcm6PBNL4wTVLDXOo0max30MjriIFPl4bIZ2qtgN5ogGLCD9cVTiOw/8dWf
+         sU0kpEUt0uBySAtzbAoh4pJYQ3neRpHAABp7mhq79JC5na6gDVgAkW+wfu42aOx47n2L
+         iW4w==
+X-Gm-Message-State: APjAAAV2tHsQ0Yq5srRbyHovrJKQDJ5/HFfesAUdlTBJAKHtoZ0Kz8o+
+        psQ+VqL/wUBoVEJUa4Ax55k=
+X-Google-Smtp-Source: APXvYqzZcLwMJtzwcSHxWJGWN6EAUVCNFcYOu++yCa37tyO+1b3rjKFjqxj1edX+4F/17amIegyK9A==
+X-Received: by 2002:a17:902:d708:: with SMTP id w8mr16244989ply.280.1575657980698;
+        Fri, 06 Dec 2019 10:46:20 -0800 (PST)
+Received: from localhost.localdomain ([103.51.73.190])
+        by smtp.gmail.com with ESMTPSA id p4sm16777039pfb.157.2019.12.06.10.46.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 10:46:20 -0800 (PST)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Daniel Schultz <d.schultz@phytec.de>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFCv1 1/8] mfd: rk808: Refactor shutdown functions
+Date:   Fri,  6 Dec 2019 18:45:29 +0000
+Message-Id: <20191206184536.2507-2-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191206184536.2507-1-linux.amoon@gmail.com>
+References: <20191206184536.2507-1-linux.amoon@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <127792d6811173921733542052f061a18991f441.camel@hammerspace.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 06:28:14PM +0000, Trond Myklebust wrote:
-> On Fri, 2019-12-06 at 10:24 -0800, Paul E. McKenney wrote:
-> > On Fri, Dec 06, 2019 at 05:52:10PM +0000, Trond Myklebust wrote:
-> > > Hi Paul,
-> > > 
-> > > On Fri, 2019-12-06 at 08:02 -0800, Paul E. McKenney wrote:
-> > > > On Fri, Dec 06, 2019 at 08:46:40PM +0530, 
-> > > > madhuparnabhowmik04@gmail.com wrote:
-> > > > > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> > > > > 
-> > > > > This patch fixes the following errors:
-> > > > > fs/nfs/dir.c:2353:14: error: incompatible types in comparison
-> > > > > expression (different address spaces):
-> > > > > fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
-> > > > > fs/nfs/dir.c:2353:14:    struct list_head *
-> > > > > 
-> > > > > caused due to directly accessing the prev pointer of
-> > > > > a RCU protected list.
-> > > > > Accessing the pointer using the macro list_prev_rcu() fixes
-> > > > > this
-> > > > > error.
-> > > > > 
-> > > > > Signed-off-by: Madhuparna Bhowmik <
-> > > > > madhuparnabhowmik04@gmail.com>
-> > > > > ---
-> > > > >  fs/nfs/dir.c | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> > > > > index e180033e35cf..2035254cc283 100644
-> > > > > --- a/fs/nfs/dir.c
-> > > > > +++ b/fs/nfs/dir.c
-> > > > > @@ -2350,7 +2350,7 @@ static int
-> > > > > nfs_access_get_cached_rcu(struct
-> > > > > inode *inode, const struct cred *cre
-> > > > >  	rcu_read_lock();
-> > > > >  	if (nfsi->cache_validity & NFS_INO_INVALID_ACCESS)
-> > > > >  		goto out;
-> > > > > -	lh = rcu_dereference(nfsi-
-> > > > > >access_cache_entry_lru.prev);
-> > > > > +	lh = rcu_dereference(list_prev_rcu(&nfsi-
-> > > > > > access_cache_entry_lru));
-> > > > 
-> > > > And as noted in the earlier email, what is preventing concurrent
-> > > > insertions into  and deletions from this list?
-> > > > 
-> > > > o	This use of list_move_tail() is OK because it does not poison.
-> > > > 	Though it isn't being all that friendly to lockless access to
-> > > > 	->prev -- no WRITE_ONCE() in list_move_tail().
-> > > > 
-> > > > o	The use of list_add_tail() is not safe with RCU readers, though
-> > > > 	they do at least partially compensate via use of smp_wmb()
-> > > > 	in nfs_access_add_cache() before calling
-> > > > nfs_access_add_rbtree().
-> > > > 
-> > > > o	The list_del() near the end of nfs_access_add_rbtree() will
-> > > > 	poison the ->prev pointer.  I don't see how this is safe given
-> > > > the
-> > > > 	possibility of a concurrent call to
-> > > > nfs_access_get_cached_rcu().
-> > > 
-> > > The pointer nfsi->access_cache_entry_lru is the head of the list,
-> > > so it
-> > > won't get poisoned. Furthermore, the objects it points to are freed
-> > > using kfree_rcu(), so they will survive as long as we hold the rcu
-> > > read
-> > > lock. The object's cred pointers also points to something that is
-> > > freed
-> > > in an rcu-safe manner.
-> > > 
-> > > The problem here is rather that a racing list_del() can cause nfsi-
-> > > > access_cache_entry_lru to be empty, which is presumably why Neil
-> > > > added
-> > > that check plus the empty cred pointer check in the following line.
-> > > 
-> > > The barrier semantics may be suspect, although the spin unlock
-> > > after
-> > > list_del() should presumably guarantee release semantics?
-> > 
-> > Ah, OK, so you are only ever using ->prev only from the head of the
-> > list,
-> > and presumably never do list_del() on the head itself.  (Don't laugh,
-> > this does really happen as a way to remove the entire list, though
-> > perhaps with list_del_init() rather than list_del().)
-> 
-> Correct.
-> 
-> > Maybe we should have a list_tail_rcu() that is only expected to work
-> > on the head of the list?
-> 
-> That might be the best way to resolve this, yes.
+From: Daniel Schultz <d.schultz@phytec.de>
 
-Madhuparna, would you be willing to do a patch series along these lines?
+Since all shutdown functions have almost the same code, all logic
+from the shutdown functions can be refactored to a new function
+"rk808_update_bits", which can update a register by a given address
+and bitmask and value.
 
-							Thanx, Paul
+link: https://lore.kernel.org/patchwork/patch/937404/
+Cc: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+[rebased on latest kernel]
+Modified the API to set the value.
+This changes were submited with below patch.
+[0] https://lore.kernel.org/patchwork/patch/937404/
+---
+ drivers/mfd/rk808.c | 87 ++++++++++++++-------------------------------
+ 1 file changed, 26 insertions(+), 61 deletions(-)
+
+diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+index a69a6742ecdc..e637f5bcc8bb 100644
+--- a/drivers/mfd/rk808.c
++++ b/drivers/mfd/rk808.c
+@@ -449,81 +449,52 @@ static const struct regmap_irq_chip rk818_irq_chip = {
+ 
+ static struct i2c_client *rk808_i2c_client;
+ 
+-static void rk805_device_shutdown(void)
++static void rk808_update_bits(unsigned int reg, unsigned int mask,
++		unsigned int value)
+ {
+-	int ret;
+ 	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
++	int ret;
+ 
+-	if (!rk808)
++	if (!rk808) {
++		dev_warn(&rk808_i2c_client->dev,
++			"have no rk805/rk808/rk817/rk818, so do nothing here\n");
+ 		return;
++	}
+ 
+-	ret = regmap_update_bits(rk808->regmap,
+-				 RK805_DEV_CTRL_REG,
+-				 DEV_OFF, DEV_OFF);
++	ret = regmap_update_bits(rk808->regmap,	reg, mask, value);
+ 	if (ret)
+-		dev_err(&rk808_i2c_client->dev, "Failed to shutdown device!\n");
++		dev_err(&rk808_i2c_client->dev,
++			"can't write to register 0x%x: %x!\n", reg, ret);
+ }
+ 
+-static void rk805_device_shutdown_prepare(void)
++static void rk805_device_shutdown(void)
+ {
+-	int ret;
+-	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+-
+-	if (!rk808)
+-		return;
++	rk808_update_bits(RK805_DEV_CTRL_REG, DEV_OFF, DEV_OFF);
++}
+ 
+-	ret = regmap_update_bits(rk808->regmap,
+-				 RK805_GPIO_IO_POL_REG,
+-				 SLP_SD_MSK, SHUTDOWN_FUN);
+-	if (ret)
+-		dev_err(&rk808_i2c_client->dev, "Failed to shutdown device!\n");
++static void rk805_device_shutdown_prepare(void)
++{
++	rk808_update_bits(RK805_GPIO_IO_POL_REG, SLP_SD_MSK, SHUTDOWN_FUN);
+ }
+ 
+ static void rk808_device_shutdown(void)
+ {
+-	int ret;
+-	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+-
+-	if (!rk808)
+-		return;
+-
+-	ret = regmap_update_bits(rk808->regmap,
+-				 RK808_DEVCTRL_REG,
+-				 DEV_OFF_RST, DEV_OFF_RST);
+-	if (ret)
+-		dev_err(&rk808_i2c_client->dev, "Failed to shutdown device!\n");
++	rk808_update_bits(RK808_DEVCTRL_REG, DEV_OFF_RST, DEV_OFF_RST);
+ }
+ 
+ static void rk818_device_shutdown(void)
+ {
+-	int ret;
+-	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+-
+-	if (!rk808)
+-		return;
+-
+-	ret = regmap_update_bits(rk808->regmap,
+-				 RK818_DEVCTRL_REG,
+-				 DEV_OFF, DEV_OFF);
+-	if (ret)
+-		dev_err(&rk808_i2c_client->dev, "Failed to shutdown device!\n");
++	rk808_update_bits(RK818_DEVCTRL_REG, DEV_OFF, DEV_OFF);
+ }
+ 
+ static void rk8xx_syscore_shutdown(void)
+ {
+ 	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+-	int ret;
+ 
+ 	if (system_state == SYSTEM_POWER_OFF &&
+ 	    (rk808->variant == RK809_ID || rk808->variant == RK817_ID)) {
+-		ret = regmap_update_bits(rk808->regmap,
+-					 RK817_SYS_CFG(3),
+-					 RK817_SLPPIN_FUNC_MSK,
+-					 SLPPIN_DN_FUN);
+-		if (ret) {
+-			dev_warn(&rk808_i2c_client->dev,
+-				 "Cannot switch to power down function\n");
+-		}
++		rk808_update_bits(RK817_SYS_CFG(3), RK817_SLPPIN_FUNC_MSK,
++				SLPPIN_DN_FUN);
+ 	}
+ }
+ 
+@@ -720,41 +691,35 @@ static int rk808_remove(struct i2c_client *client)
+ static int __maybe_unused rk8xx_suspend(struct device *dev)
+ {
+ 	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+-	int ret = 0;
+ 
+ 	switch (rk808->variant) {
+ 	case RK809_ID:
+ 	case RK817_ID:
+-		ret = regmap_update_bits(rk808->regmap,
+-					 RK817_SYS_CFG(3),
+-					 RK817_SLPPIN_FUNC_MSK,
+-					 SLPPIN_SLP_FUN);
++		rk808_update_bits(RK817_SYS_CFG(3), RK817_SLPPIN_FUNC_MSK,
++				SLPPIN_SLP_FUN);
+ 		break;
+ 	default:
+ 		break;
+ 	}
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int __maybe_unused rk8xx_resume(struct device *dev)
+ {
+ 	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+-	int ret = 0;
+ 
+ 	switch (rk808->variant) {
+ 	case RK809_ID:
+ 	case RK817_ID:
+-		ret = regmap_update_bits(rk808->regmap,
+-					 RK817_SYS_CFG(3),
+-					 RK817_SLPPIN_FUNC_MSK,
+-					 SLPPIN_NULL_FUN);
++		rk808_update_bits(RK817_SYS_CFG(3), RK817_SLPPIN_FUNC_MSK,
++				SLPPIN_NULL_FUN);
+ 		break;
+ 	default:
+ 		break;
+ 	}
+ 
+-	return ret;
++	return 0;
+ }
+ static SIMPLE_DEV_PM_OPS(rk8xx_pm_ops, rk8xx_suspend, rk8xx_resume);
+ 
+-- 
+2.24.0
+
