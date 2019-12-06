@@ -2,185 +2,104 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FE8C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D570C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39DBB24659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:37:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="rnQoWc4b"
+	by mail.kernel.org (Postfix) with ESMTP id EE5D62467B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 07:38:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfLFHhr (ORCPT
+        id S1726492AbfLFHiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 02:37:47 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:42090 "EHLO fd.dlink.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726184AbfLFHhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 02:37:46 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 050001B214D2; Fri,  6 Dec 2019 10:37:43 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 050001B214D2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1575617864; bh=Au2fc/AWkb3xBjkPZdnApOwUFi8kXkwwYCBQ06Wg7qc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=rnQoWc4b7+17JT9/ugB67EsYY1h3IRiasuPuddiWtUUMu9RZr94qT1E8BVtXe2jDs
-         ghjo1e4W2s9s1xhEQfNJvXRJLPDQed2FxPwwItF5YHdfghffojDCWMUZNuy9RPXbKi
-         8PFtvT0vYM70QRSQTb7SxEI/RkvjdIahLN1eRhzA=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 585151B20144;
-        Fri,  6 Dec 2019 10:37:27 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 585151B20144
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id CD9B41B22974;
-        Fri,  6 Dec 2019 10:37:26 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Fri,  6 Dec 2019 10:37:26 +0300 (MSK)
+        Fri, 6 Dec 2019 02:38:23 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46781 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfLFHiX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 02:38:23 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1id8Bx-0001yw-23; Fri, 06 Dec 2019 08:38:21 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1id8Bw-0007V9-1B; Fri, 06 Dec 2019 08:38:20 +0100
+Date:   Fri, 6 Dec 2019 08:38:20 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Biwen Li <biwen.li@nxp.com>, shawnguo@kernel.org,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        wsa@the-dreams.de, leoyang.li@nxp.com, aisheng.dong@nxp.com,
+        xiaoning.wang@nxp.com, xiaobo.xie@nxp.com,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        jiafei.pan@nxp.com, linux-arm-kernel@lists.infradead.org,
+        laurentiu.tudor@nxp.com
+Subject: Re: [v6] i2c: imx: support slave mode for imx I2C driver
+Message-ID: <20191206073819.lntjjxpcjm5yrb7y@pengutronix.de>
+References: <20191203114809.21226-1-biwen.li@nxp.com>
+ <20191204100005.r56huywxa7h3c6zr@pengutronix.de>
+ <9a1a00c1-e9fa-36a1-0e79-3492d9b98d9f@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 06 Dec 2019 10:37:26 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Muciri Gatimu <muciri@openmesh.com>,
-        Shashidhar Lakkavalli <shashidhar.lakkavalli@openmesh.com>,
-        John Crispin <john@phrozen.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Matteo Croce <mcroce@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: dsa: fix flow dissection on Tx path
-In-Reply-To: <3cc7a0c3-4eeb-52d5-1777-f646329a9303@gmail.com>
-References: <20191205100235.14195-1-alobakin@dlink.ru>
- <20191205125827.GA28269@lunn.ch> <2e03b82a8ec999fade26253ff35077c6@dlink.ru>
- <20191205140132.GD28269@lunn.ch> <72a21c5f03abdc3d2d1c1bb85fd4489d@dlink.ru>
- <3cc7a0c3-4eeb-52d5-1777-f646329a9303@gmail.com>
-User-Agent: Roundcube Webmail/1.4.0
-Message-ID: <5e108291220110b10fdf0c88f8894fdb@dlink.ru>
-X-Sender: alobakin@dlink.ru
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9a1a00c1-e9fa-36a1-0e79-3492d9b98d9f@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:32:55 up 151 days, 13:43, 140 users,  load average: 0.05, 0.13,
+ 0.13
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Florian Fainelli wrote 06.12.2019 06:32:
-> On 12/5/2019 6:58 AM, Alexander Lobakin wrote:
->> Andrew Lunn wrote 05.12.2019 17:01:
->>>> Hi,
->>>> 
->>>> > What i'm missing here is an explanation why the flow dissector is
->>>> > called here if the protocol is already set? It suggests there is a
->>>> > case when the protocol is not correctly set, and we do need to look
->>>> > into the frame?
->>>> 
->>>> If we have a device with multiple Tx queues, but XPS is not 
->>>> configured
->>>> or system is running on uniprocessor system, then networking core 
->>>> code
->>>> selects Tx queue depending on the flow to utilize as much Tx queues 
->>>> as
->>>> possible but without breaking frames order.
->>>> This selection happens in net/core/dev.c:skb_tx_hash() as:
->>>> 
->>>> reciprocal_scale(skb_get_hash(skb), qcount)
->>>> 
->>>> where 'qcount' is the total number of Tx queues on the network 
->>>> device.
->>>> 
->>>> If skb has not been hashed prior to this line, then skb_get_hash() 
->>>> will
->>>> call flow dissector to generate a new hash. That's why flow 
->>>> dissection
->>>> can occur on Tx path.
->>> 
->>> 
->>> Hi Alexander
->>> 
->>> So it looks like you are now skipping this hash. Which in your
->>> testing, give better results, because the protocol is already set
->>> correctly. But are there cases when the protocol is not set 
->>> correctly?
->>> We really do need to look into the frame?
->> 
->> Actually no, I'm not skipping the entire hashing, I'm only skipping
->> tag_ops->flow_dissect() (helper that only alters network offset and
->> replaces fake ETH_P_XDSA with the actual protocol) call on Tx path,
->> because this only breaks flow dissection logics. All skbs are still
->> processed and hashed by the generic code that goes after that call.
->> 
->>> How about when an outer header has just been removed? The frame was
->>> received on a GRE tunnel, the GRE header has just been removed, and
->>> now the frame is on its way out? Is the protocol still GRE, and we
->>> should look into the frame to determine if it is IPv4, ARP etc?
->>> 
->>> Your patch looks to improve things for the cases you have tested, but
->>> i'm wondering if there are other use cases where we really do need to
->>> look into the frame? In which case, your fix is doing the wrong 
->>> thing.
->>> Should we be extending the tagger to handle the TX case as well as 
->>> the
->>> RX case?
->> 
->> We really have two options: don't call tag_ops->flow_dissect() on Tx
->> (this patch), or extend tagger callbacks to handle Tx path too. I was
->> using both of this for several months each and couldn't detect cases
->> where the first one was worse than the second.
->> I mean, there _might_ be such cases in theory, and if they will appear
->> we should extend our taggers. But for now I don't see the necessity to
->> do this as generic flow dissection logics works as expected after this
->> patch and is completely broken without it.
->> And remember that we have the reverse logic on Tx and all skbs are
->> firstly queued on slave netdevice and only then on master/CPU port.
->> 
->> It would be nice to see what other people think about it anyways.
+On Thu, Dec 05, 2019 at 12:43:46PM +0100, Oleksij Rempel wrote:
+> Hi,
 > 
-> Your patch seems appropriate to me and quite frankly I am not sure why
-> flow dissection on RX is done at the DSA master device level, where we
-> have not parsed the DSA tag yet, instead of being done at the DSA slave
-> network device level. It seems to me that if the DSA master has N RX
-> queues, we should be creating the DSA slave devices with the same 
-> amount
-> of RX queues and perform RPS there against a standard Ethernet frame
-> (sans DSA tag).
+> On 04.12.19 11:00, Sascha Hauer wrote:
+> > Hi,
+> > 
+> > The patch looks ok to me now, but I still do not like the #ifdeffery
+> > around CONFIG_I2C_SLAVE. With the patch I just sent (You are on Cc:)
+> > we could apply the following on your patch which makes it more readable
+> > and increases compile coverage.
+> > 
+> > Wolfram, Biwen, what do you think?
 > 
-> For TX the story is a little different because we can have multiqueue
-> DSA slave network devices in order to steer traffic towards particular
-> switch queues and we could do XPS there that way.
 > 
-> What do you think?
+> RCAR depends on slave:
+> config I2C_RCAR
+> 
+>         tristate "Renesas R-Car I2C Controller"
+> 
+>         depends on ARCH_RENESAS || COMPILE_TEST
+> 
+>         select I2C_SLAVE
+> see:
+> drivers/i2c/busses/i2c-rcar.c
+> 
+> So, I would suggest to do the same in imx.
 
-Hi Florian,
+I suggested that to v1 of this patch. If we agree though that I2C slave
+support deserves an extra Kconfig option we should also make the drivers
+cope with that situation. Otherwise we would better make I2C slave
+support non optional.
 
-First of all, thank you for the "Reviewed-by"!
+Sascha
 
-I agree with you that all the network stack processing should be
-performed on standard frames without CPU tags and on corresponding
-slave netdevices. So I think we really should think about extending
-DSA core code to create slaves with at least as many Rx queues as
-master device have. With this done we could remove .flow_dissect()
-callback from DSA taggers entirely and simplify traffic flow.
-
-Also, if we get back to Tx processing, number of Tx queues on slaves
-should be equal to number of queues on switch inself in ideal case.
-Maybe we should then apply this rule to Rx queues too, i.e. create
-slaves with the number of Rx queues that switch has?
-
-(for example, I'm currently working with the switches that have 8 Rxqs
-and 8 Txqs, but their Ethernet controlers / CPU ports have only 4/4)
-
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
