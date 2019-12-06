@@ -2,145 +2,312 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF3CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69595C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 623C524670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336AB2466E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 15:31:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jmZyhgQ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfLFP3B (ORCPT
+        id S1726352AbfLFPbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 10:29:01 -0500
-Received: from mga04.intel.com ([192.55.52.120]:18302 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbfLFP3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 10:29:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Dec 2019 07:29:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,285,1571727600"; 
-   d="scan'208";a="214458286"
-Received: from architda-mobl.amr.corp.intel.com (HELO [10.251.25.104]) ([10.251.25.104])
-  by orsmga006.jf.intel.com with ESMTP; 06 Dec 2019 07:28:59 -0800
-Subject: Re: [PATCH] x86/fpu: Warn only when CPU-provided sizes less than
- struct declaration
-To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        jon.grimm@amd.com,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>
-References: <1575363688-36727-1-git-send-email-suravee.suthikulpanit@amd.com>
- <b63e2111-b0c6-a716-3d99-88f91ad64e1d@intel.com>
- <68bdd6f0-a229-433a-9234-303a3b02b092@amd.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <4b20cff5-6e16-3599-4fc1-4f51d7c18d1d@intel.com>
-Date:   Fri, 6 Dec 2019 07:28:58 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 6 Dec 2019 10:31:42 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:48868 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbfLFPbl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 10:31:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=E0hIDqtLWD/kwlFAt2EAbBJXjXgF73qWQFs1wfH1DG4=; b=jmZyhgQ54PNr4pTvmzYmflYKj
+        3VCM48Y2fu4DjgD90dbWk4f/tUJ1MD8ZViHh8HkDAhxPpmJ1fQhM+r9jS7HJOjGfKAMenE/mthp+l
+        zxlwKjwH1Iaq3gV+a8++FeO5uVwxQfflpmG/Ybgc7MzBP5O2oyNODRPXDnX+ng3J4fdmBHHjZQX+d
+        aSoR6lx+lIMMkw2V5bGJbBD4D97vkUF4/SJ2RdUa6Zn8Vo62dqx+s/pGz/0mELs3tsH3rKCPj4dBw
+        SFi/Va5YbATiovy+zmm9Ern24m5MDt9gihlbHMH5vrJkEugRl2osCv0CS0izLp/EbWb6P/D2cmIj0
+        yw5U49u9g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1idFZr-0000kw-TQ; Fri, 06 Dec 2019 15:31:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5549D30025A;
+        Fri,  6 Dec 2019 16:30:12 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D02192B275E69; Fri,  6 Dec 2019 16:31:29 +0100 (CET)
+Date:   Fri, 6 Dec 2019 16:31:29 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Malte Skarupke <malteskarupke@web.de>
+Cc:     tglx@linutronix.de, mingo@redhat.com, dvhart@infradead.org,
+        linux-kernel@vger.kernel.org, malteskarupke@fastmail.fm
+Subject: Re: [PATCH] futex: Support smaller futexes of one byte or two byte
+ size.
+Message-ID: <20191206153129.GI2844@hirez.programming.kicks-ass.net>
+References: <20191204235238.10764-1-malteskarupke@web.de>
 MIME-Version: 1.0
-In-Reply-To: <68bdd6f0-a229-433a-9234-303a3b02b092@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204235238.10764-1-malteskarupke@web.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/6/19 12:14 AM, Suravee Suthikulpanit wrote:
-> On 12/4/19 12:27 AM, Dave Hansen wrote:
->> On 12/3/19 1:01 AM, Suravee Suthikulpanit wrote:
->>> The current XCHECK_SZ macro warns if the XFEATURE size reported
->>> by CPUID does not match the size of kernel structure. However, depending
->>> on the hardware implementation, CPUID can report the XSAVE state size
->>> larger than the size of C structures defined for each of the XSAVE state
->>> due to padding.
->>
->> We have existing architecture for padding.  See xfeature_is_aligned(),
->> for instance.  Are you saying that there are implementations out there
->> that do padding which is not otherwise enumerated and that they do it
->> within the size of the enumerated stat
-> Yes, the implementation includes the padding size within the size of
-> the enumerated state. This results in the reported size larger than
-> the amount needed by the feature.
+On Wed, Dec 04, 2019 at 06:52:38PM -0500, Malte Skarupke wrote:
+> Two reasons for adding this:
+> 1. People often want small mutexes. Having mutexes that are only one byte
+> in size was the first reason WebKit mentioned for re-implementing futexes
+> in a library:
+> https://webkit.org/blog/6161/locking-in-webkit/
 
-I don't think we've ever had XSAVE state that differed in size between
-implementations.  This kind of thing ensures that we can't have any
-statically-defined inspection into the XSAVE state.
+They have the best locking namespace _ever_!! Most impressed with them
+for getting away with that.
 
-It also increases the amount of blind trust that we have in the CPU
-implementations.  However, those warnings were specifically added at
-Ingo's behest (IIRC) to reduce our blind trust in the CPU.
+> I had to change where we store two flags that were previously stored in
+> the low bits of the address, since the address can no longer be assumed
+> to be aligned on four bytes. Luckily the high bits were free as long as
+> PAGE_SIZE is never more than 1 gigabyte.
 
->>> Such case should be safe and should not need to generate warning
->>> message.
->>
->> I've seen these error messages trip before, but only on pre-production
->> processors with goofy microcode.  I'd be really suspicious that this is
->> just papering over a processor issue.  Or, that perhaps the compacted
->> form works but the standard form is broken somehow.
+For now it seems unlikely to run with 1G base pages :-)
+
+> The reason for only supporting u8 and u16 is that those were easy to
+> support with the existing interface. 64 bit futexes would require bigger
+> changes. 
+
+Might make sense to enumerate the issues you've found that stand in the
+way of 64bit futexes. But yes, I can think of a few.
+
+
+> @@ -467,7 +469,14 @@ static void drop_futex_key_refs(union futex_key *key)
 > 
-> I have verified with the HW folks and the have confirmed that this is
-> to be expected.
+>  enum futex_access {
 
-From a review perspective, I'd really appreciate being able to have a
-concrete discussion about exactly which state this is and exactly how
-much padding we are talking about and *why* the existing padding
-architecture can't be used.  I'd also want guarantees about this state
-not getting used for any real state, *ever*.
+I prefer FUTEX_NONE, to match PROT_NONE.
 
-I'm not sure how we can have those conversations without more details,
-though.  Would you be able, for instance, to have a private discussion
-with the x86 maintainers?  That discussion could, understandably,
-exclude folks from Intel.
+>  	FUTEX_READ,
+> -	FUTEX_WRITE
+> +	FUTEX_WRITE,
+> +	/*
+> +	 * for operations that only need the address and don't touch the
+> +	 * memory, like FUTEX_WAKE or FUTEX_REQUEUE. (not FUTEX_CMP_REQUEUE)
+> +	 * this will skip the size checks of the futex, allowing those
+> +	 * operations to be used with futexes of any size.
+> +	 */
+> +	FUTEX_NO_READ_WRITE
+>  };
+> 
+>  /**
+
+> @@ -520,25 +529,37 @@ futex_setup_timer(ktime_t *time, struct hrtimer_sleeper *timeout,
+>   * lock_page() might sleep, the caller should not hold a spinlock.
+>   */
+>  static int
+> -get_futex_key(u32 __user *uaddr, int fshared, union futex_key *key, enum futex_access rw)
+> +get_futex_key(u32 __user *uaddr, int flags, union futex_key *key, enum futex_access rw)
+>  {
+>  	unsigned long address = (unsigned long)uaddr;
+>  	struct mm_struct *mm = current->mm;
+>  	struct page *page, *tail;
+>  	struct address_space *mapping;
+> -	int err, ro = 0;
+> +	int err, fshared, ro = 0;
+> +
+> +	fshared = flags & FLAGS_SHARED;
+> 
+>  	/*
+>  	 * The futex address must be "naturally" aligned.
+>  	 */
+> +	if (flags & FLAGS_8_BITS || rw == FUTEX_NO_READ_WRITE) {
+> +		if (unlikely(!access_ok(uaddr, sizeof(u8))))
+> +			return -EFAULT;
+> +	} else if (flags & FLAGS_16_BITS) {
+> +		if (unlikely((address % sizeof(u16)) != 0))
+> +			return -EINVAL;
+> +		if (unlikely(!access_ok(uaddr, sizeof(u16))))
+> +			return -EFAULT;
+> +	} else {
+> +		if (unlikely((address % sizeof(u32)) != 0))
+> +			return -EINVAL;
+> +		if (unlikely(!access_ok(uaddr, sizeof(u32))))
+> +			return -EFAULT;
+> +	}
+
+That might be better written like:
+
+	if (rw != FUTEX_NONE)
+		size = futex_size(flags);
+	else
+		size = 1;
+
+	if (unlikely((address % size) != 0))
+		return -EINVAL;
+	if (unlikely(!access_ok(uaddr, size)))
+		return -EFAULT;
+
+
+> @@ -799,6 +820,48 @@ static int get_futex_value_locked(u32 *dest, u32 __user *from)
+>  	return ret ? -EFAULT : 0;
+>  }
+> 
+> +static int
+> +get_futex_value_locked_any_size(u32 *dest, u32 __user *from, int flags)
+> +{
+> +	int ret;
+> +	u8 dest_8_bits;
+> +	u16 dest_16_bits;
+> +
+> +	pagefault_disable();
+> +	if (flags & FLAGS_8_BITS) {
+> +		ret = __get_user(dest_8_bits, (u8 __user *)from);
+> +		*dest = dest_8_bits;
+> +	} else if (flags & FLAGS_16_BITS) {
+> +		ret = __get_user(dest_16_bits, (u16 __user *)from);
+> +		*dest = dest_16_bits;
+> +	} else {
+> +		ret = __get_user(*dest, from);
+> +	}
+> +	pagefault_enable();
+> +
+> +	return ret ? -EFAULT : 0;
+> +}
+> +
+> +static int get_futex_value_any_size(u32 *dest, u32 __user *from, int flags)
+> +{
+> +	int ret;
+> +	u8 uval_8_bits;
+> +	u16 uval_16_bits;
+> +
+> +	if (flags & FLAGS_8_BITS) {
+> +		ret = get_user(uval_8_bits, (u8 __user *)from);
+> +		if (ret == 0)
+> +			*dest = uval_8_bits;
+> +	} else if (flags & FLAGS_16_BITS) {
+> +		ret = get_user(uval_16_bits, (u16 __user *)from);
+> +		if (ret == 0)
+> +			*dest = uval_16_bits;
+> +	} else {
+> +		ret = get_user(*dest, from);
+> +	}
+> +	return ret;
+> +}
+
+Perhaps write that like:
+
+static inline int __get_futex_value(u32 *dest, u32 __user *from, int flags)
+{
+	u32 val = 0;
+	int ret;
+
+	switch (futex_size(flags)) {
+	case 1:
+		/*
+		 * afaict __get_user() doesn't care about the type of
+		 * the first argument
+		 */
+		ret = __get_user(val, (u8 __user *)from);
+		break;
+
+	case 2:
+		....
+
+	case 4:
+
+	}
+
+	if (!ret)
+		*dest = val;
+
+	return ret;
+}
+
+static inline int get_futex_value(...)
+{
+	do uaccess check
+	return __get_futex_value();
+}
+
+static inline int get_futex_value_locked(...)
+{
+	int ret;
+
+	pagefault_disable();
+	ret = __get_futex_value(...);
+	pagefault_enable();
+
+	return ret;
+}
+
+>  /*
+>   * PI code:
+
+> +	if (op & FUTEX_ALL_SIZE_BITS) {
+> +		switch (cmd) {
+> +		case FUTEX_CMP_REQUEUE:
+> +			/*
+> +			 * for cmp_requeue, only uaddr has to be of the size
+> +			 * passed in the flags. uaddr2 can be of any size
+> +			 */
+> +		case FUTEX_WAIT:
+> +		case FUTEX_WAIT_BITSET:
+> +			switch (op & FUTEX_ALL_SIZE_BITS) {
+> +			case FUTEX_SIZE_8_BITS:
+> +				flags |= FLAGS_8_BITS;
+> +				break;
+> +			case FUTEX_SIZE_16_BITS:
+> +				flags |= FLAGS_16_BITS;
+> +				break;
+> +			case FUTEX_SIZE_32_BITS:
+> +				break;
+> +			default:
+> +				/*
+> +				 * if both bits are set we could silently treat
+> +				 * that as a 32 bit futex, but we may want to
+> +				 * use this pattern in the future to indicate a
+> +				 * 64 bit futex or an arbitrarily sized futex.
+> +				 * so we don't want code relying on this yet.
+> +				 */
+> +				return -EINVAL;
+> +			}
+> +			break;
+> +		case FUTEX_WAKE:
+> +		case FUTEX_REQUEUE:
+> +			/*
+> +			 * these instructions work with sized mutexes, but you
+> +			 * don't need to pass the size. we could silently
+> +			 * ignore the size argument, but the code won't verify
+> +			 * that the correct size is used, so it's preferable
+> +			 * to make that clear to the caller.
+> +			 *
+> +			 * for requeue the meaning would also be ambiguous: do
+> +			 * both of them have to be the same size or not? they
+> +			 * don't, and that's clearer when you just don't pass
+> +			 * a size argument.
+> +			 */
+> +			return -EINVAL;
+
+Took me a while to figure out this relies on FUTEX_NONE to avoid the
+alignment tests.
+
+> +		default:
+> +			/*
+> +			 * all other cases are not supported yet
+> +			 */
+> +			return -EINVAL;
+> +		}
+> +	}
+> 
+>  	switch (cmd) {
+>  	case FUTEX_LOCK_PI:
+> --
+> 2.17.1
+> 
