@@ -2,128 +2,145 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EAEC2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C163C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1797224673
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:10:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="T+iQdzs3"
+	by mail.kernel.org (Postfix) with ESMTP id 05C3A24676
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575655855;
+	bh=OWgFhYdmZZYA9Z/mXIp73nDYXY6T6f4+haPDZ7UWdN0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=r3XoxcvEnvty/PNp8CYcSyF2murcCmruDiG7a9a8oW5wxoyFOy04iCs0jP+aUCzvL
+	 84J0uNXkfjMeeNKLFlv1wLh1jYqPgWM3i2I6oC9TAq24oByR4rSbw0hMJ4qEtfqCAY
+	 hPRaXSVlgsBqWo5jiniWFQRODoYA2Gibctr+lwpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfLFSKE (ORCPT
+        id S1726453AbfLFSKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 13:10:04 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:49332 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbfLFSKE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 13:10:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1575655803; x=1607191803;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:mime-version:
-   content-transfer-encoding;
-  bh=dFhaFDujFZfaC5uj3WUWdWQ8zfUQNHRGBKSseh0hxLQ=;
-  b=T+iQdzs3iQdZuUMR/mJh4xhjVQwYfgXEAXsdE/8NHe1Xz8OQz5enzhQB
-   9/NunzwtY68Ovvt6U5uecXO1nBjrk2IMzIRYQMT5RBOK+AzN0qkVybSsc
-   W63uwYe7I0/lADGsADCa2ksrJLXobKMM0LTA1eQHHfnvCV7dj1TuWokm/
-   U=;
-IronPort-SDR: tZqk2ZEjNYjIHwc9OpRYYG3dgq06CmpVOaANoh8yxuiHx7VmoZvgpJ0peZSt5NpXzIfoPFFNaj
- nOklWwq3B4RQ==
-X-IronPort-AV: E=Sophos;i="5.69,285,1571702400"; 
-   d="scan'208";a="12071804"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 06 Dec 2019 18:09:51 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id ABF27A2367;
-        Fri,  6 Dec 2019 18:09:49 +0000 (UTC)
-Received: from EX13D07EUB003.ant.amazon.com (10.43.166.173) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 6 Dec 2019 18:09:49 +0000
-Received: from EX13D07EUB004.ant.amazon.com (10.43.166.234) by
- EX13D07EUB003.ant.amazon.com (10.43.166.173) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 6 Dec 2019 18:09:48 +0000
-Received: from EX13D07EUB004.ant.amazon.com ([10.43.166.234]) by
- EX13D07EUB004.ant.amazon.com ([10.43.166.234]) with mapi id 15.00.1367.000;
- Fri, 6 Dec 2019 18:09:48 +0000
-From:   "Nuernberger, Stefan" <snu@amazon.de>
-To:     "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "Nuernberger, Stefan" <snu@amazon.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "Seidel, Conny" <consei@amazon.de>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "ross.lagerwall@citrix.com" <ross.lagerwall@citrix.com>,
-        "Dannowski, Uwe" <uwed@amazon.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] xen/pciback: Prevent NULL pointer dereference in
- quirks_show
-Thread-Topic: [PATCH] xen/pciback: Prevent NULL pointer dereference in
- quirks_show
-Thread-Index: AQHVrDvmewMicN/JcUO9mDMvMIw7UKetNk+AgAAx6YA=
-Date:   Fri, 6 Dec 2019 18:09:48 +0000
-Message-ID: <1575655787.7257.42.camel@amazon.de>
-References: <20191206134804.4537-1-snu@amazon.com>
-         <9917a357-12f6-107f-e08d-33e464036317@oracle.com>
-In-Reply-To: <9917a357-12f6-107f-e08d-33e464036317@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.160.109]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1B719AEC8F545740A90BC0053E29636F@amazon.com>
+        Fri, 6 Dec 2019 13:10:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726287AbfLFSKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 13:10:53 -0500
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74025206DF;
+        Fri,  6 Dec 2019 18:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575655852;
+        bh=OWgFhYdmZZYA9Z/mXIp73nDYXY6T6f4+haPDZ7UWdN0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qUZFjWIWKHPZoiK9Eu5agqQ7ZxSvezxZ6eAOBqcPJQ12RnGKnAtmez6TYsXyC2c3L
+         ry6QPPsH6Lbzx0HGrIfGPvmET/lxcfHii3hKEIdndmsd+UMtLW7NUdhlUFO+zxFI+t
+         CuyR21BKfKCTbGhL+EvtTy/7LeFhpwYU/Xe/ACtw=
+Date:   Fri, 6 Dec 2019 12:10:51 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     andrew.murray@arm.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
+        huawei.libin@huawei.com, guohanjun@huawei.com
+Subject: Re: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
+Message-ID: <20191206181051.GA121021@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575615705-30716-1-git-send-email-wangxiongfeng2@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTEyLTA2IGF0IDEwOjExIC0wNTAwLCBCb3JpcyBPc3Ryb3Zza3kgd3JvdGU6
-DQo+IE9uIDEyLzYvMTkgODo0OCBBTSwgU3RlZmFuIE51ZXJuYmVyZ2VyIHdyb3RlOg0KPiA+IA0K
-PiA+IEZyb206IFV3ZSBEYW5ub3dza2kgPHV3ZWRAYW1hem9uLmRlPg0KPiA+IA0KPiA+IFJlYWRp
-bmcgL3N5cy9idXMvcGNpL2RyaXZlcnMvcGNpYmFjay9xdWlya3Mgd2hpbGUgdW5iaW5kaW5nIGNh
-bg0KPiA+IHJlc3VsdA0KPiA+IGluIGRlcmVmZXJlbmNpbmcgYSBOVUxMIHBvaW50ZXIuIEluc3Rl
-YWQsIHNraXAgcHJpbnRpbmcgaW5mb3JtYXRpb24NCj4gPiBhYm91dCB0aGUgZGFuZ2xpbmcgcXVp
-cmsuDQo+ID4gDQo+ID4gUmVwb3J0ZWQtYnk6IENvbm55IFNlaWRlbCA8Y29uc2VpQGFtYXpvbi5k
-ZT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBVd2UgRGFubm93c2tpIDx1d2VkQGFtYXpvbi5kZT4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBTdGVmYW4gTnVlcm5iZXJnZXIgPHNudUBhbWF6b24uY29tPg0KPiA+
-IA0KPiA+IENjOiB4ZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcNCj4gPiBDYzogc3RhYmxl
-QHZnZXIua2VybmVsLm9yZw0KPiA+IC0tLQ0KPiA+IMKgZHJpdmVycy94ZW4veGVuLXBjaWJhY2sv
-cGNpX3N0dWIuYyB8IDIgKysNCj4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykN
-Cj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy94ZW4veGVuLXBjaWJhY2svcGNpX3N0dWIu
-YyBiL2RyaXZlcnMveGVuL3hlbi0NCj4gPiBwY2liYWNrL3BjaV9zdHViLmMNCj4gPiBpbmRleCAw
-OTc0MTBhN2NkYjcuLmRhNzI1ZTQ3NDI5NCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3hlbi94
-ZW4tcGNpYmFjay9wY2lfc3R1Yi5jDQo+ID4gKysrIGIvZHJpdmVycy94ZW4veGVuLXBjaWJhY2sv
-cGNpX3N0dWIuYw0KPiA+IEBAIC0xMzQ2LDYgKzEzNDYsOCBAQCBzdGF0aWMgc3NpemVfdCBxdWly
-a3Nfc2hvdyhzdHJ1Y3QNCj4gPiBkZXZpY2VfZHJpdmVyICpkcnYsIGNoYXIgKmJ1ZikNCj4gPiDC
-oAkJCQnCoMKgwqBxdWlyay0+ZGV2aWQuc3ViZGV2aWNlKTsNCj4gPiDCoA0KPiA+IMKgCQlkZXZf
-ZGF0YSA9IHBjaV9nZXRfZHJ2ZGF0YShxdWlyay0+cGRldik7DQo+ID4gKwkJaWYgKCFkZXZfZGF0
-YSkNCj4gPiArCQkJY29udGludWU7DQo+ID4gwqANCj4gPiDCoAkJbGlzdF9mb3JfZWFjaF9lbnRy
-eShjZmdfZW50cnksICZkZXZfZGF0YS0NCj4gPiA+Y29uZmlnX2ZpZWxkcywgbGlzdCkgew0KPiBD
-b3VsZG4ndCB5b3UgaGF2ZSB0aGUgc2FtZSByYWNlIGhlcmU/DQoNCk5vdCBxdWl0ZSB0aGUgc2Ft
-ZSwgYnV0IGl0IG1pZ2h0IG5vdCBiZSBlbnRpcmVseSBzYWZlIHlldC4gVGhlDQoncXVpcmtzX3No
-b3cnIHRha2VzIHRoZSAnZGV2aWNlX2lkc19sb2NrJyBhbmQgcmFjZXMgd2l0aCB1bmJpbmQgLw0K
-J3BjaXN0dWJfZGV2aWNlX3JlbGVhc2UnICJ3aGljaCB0YWtlcyBkZXZpY2VfbG9jayBtdXRleCIu
-IFNvIHRoaXMgbWlnaHQNCm5vdyBiZSBhIFVBRiByZWFkIGFjY2VzcyBpbnN0ZWFkIG9mIGEgTlVM
-TCBwb2ludGVyIGRlcmVmZXJlbmNlLiBXZSBoYXZlDQpub3Qgb2JzZXJ2ZWQgYWR2ZXJzYXJpYWwg
-ZWZmZWN0cyBpbiBvdXIgdGVzdGluZyAoY29tcGFyZWQgdG8gdGhlDQpvYnZpb3VzIGlzc3VlcyB3
-aXRoIE5VTEwgcG9pbnRlcikgYnV0IHRoYXQncyBub3QgYSBndWFyYW50ZWUgb2YgY291cnNlLg0K
-DQpTbyBzaG91bGQgcXVpcmtzX3Nob3cgYWN0dWFsbHkgYmUgcHJvdGVjdGVkIGJ5IHBjaXN0dWJf
-ZGV2aWNlc19sb2NrDQppbnN0ZWFkIGFzIGFyZSBvdGhlciBmdW5jdGlvbnMgdGhhdCBhY2Nlc3Mg
-ZGV2X2RhdGE/IERvZXMgaXQgbmVlZCBib3RoDQpsb2NrcyBpbiB0aGF0IGNhc2U/DQoNCi1TdGVm
-YW4NCg0KPiANCj4gLWJvcmlzDQo+IA0KPiA+IA0KPiA+IMKgCQkJZmllbGQgPSBjZmdfZW50cnkt
-PmZpZWxkOwoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIEdlcm1hbnkgR21iSApLcmF1c2Vu
-c3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhydW5nOiBDaHJpc3RpYW4gU2NobGFl
-Z2VyLCBSYWxmIEhlcmJyaWNoCkVpbmdldHJhZ2VuIGFtIEFtdHNnZXJpY2h0IENoYXJsb3R0ZW5i
-dXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6OiBCZXJsaW4KVXN0LUlEOiBERSAyODkgMjM3IDg3
-OQoKCg==
+On Fri, Dec 06, 2019 at 03:01:45PM +0800, Xiongfeng Wang wrote:
+> HiSilicon PCI Network Processor 5896 devices misreport the class type as
+> 'NOT_DEFINED', but it is actually a network device. Also the size of
+> BAR3 is reported as 265T, but this BAR is actually unused.
+> This patch modify the class type to 'CLASS_NETWORK' and disable the
+> unused BAR3.
 
+"NOT_DEFINED" is not the value in the Class Code register.  The commit
+message should include the actual value.
+
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> ---
+>  drivers/pci/quirks.c    | 29 +++++++++++++++++++++++++++++
+>  include/linux/pci_ids.h |  1 +
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 4937a08..b9adebb 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5431,3 +5431,32 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+>  			      PCI_CLASS_DISPLAY_VGA, 8,
+>  			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
+> +
+> +static void quirk_hisi_fixup_np_class(struct pci_dev *pdev)
+> +{
+> +	u32 class = pdev->class;
+> +
+> +	pdev->class = PCI_BASE_CLASS_NETWORK << 8;
+> +	pci_info(pdev, "PCI class overriden (%#08x -> %#08x)\n",
+> +		 class, pdev->class);
+> +}
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
+> +			quirk_hisi_fixup_np_class);
+> +
+> +/*
+> + * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
+> + * when assigning the resources. But this BAR is actually unused by the driver,
+> + * so let's disable it.
+
+The question is not whether the BAR is used by the driver; the
+question is whether the device responds to accesses to the region
+described by the BAR when PCI_COMMAND_MEMORY is turned on.
+
+> + */
+> +static void quirk_hisi_fixup_np_bar(struct pci_dev *pdev)
+> +{
+> +	struct resource *r = &pdev->resource[3];
+> +
+> +	r->start = 0;
+> +	r->end = 0;
+> +	r->flags = 0;
+> +
+> +	pci_info(pdev, "Disabling invalid BAR 3\n");
+
+This quirk clears the Linux *resource* related to the BAR, but it
+does nothing with the hardware register itself.  There is no way to
+disable an individual BAR; all we have is PCI_COMMAND_MEMORY, which
+enables/disables all memory BARs as a group.
+
+If this is a device defect, where the config register at 0x1c *looks*
+like a BAR, but it actually isn't a BAR and doesn't cause the device
+to decode any address space, a quirk like this might be OK.  But if
+the device does decode address space described by that BAR, we need
+more than this.
+
+Can you provide "sudo lspci -vvxxx" output for this device?
+
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
+> +			 quirk_hisi_fixup_np_bar);
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 2302d133..f21cd8b 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2558,6 +2558,7 @@
+>  #define PCI_DEVICE_ID_KORENIX_JETCARDF3	0x17ff
+>  
+>  #define PCI_VENDOR_ID_HUAWEI		0x19e5
+> +#define PCI_DEVICE_ID_HISI_5896        0x5896 /* HiSilicon NP 5896 devices */
+>  
+>  #define PCI_VENDOR_ID_NETRONOME		0x19ee
+>  #define PCI_DEVICE_ID_NETRONOME_NFP4000	0x4000
+> -- 
+> 1.7.12.4
+> 
