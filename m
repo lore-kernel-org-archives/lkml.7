@@ -2,117 +2,97 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBEDC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9C5C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6A82054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E454D21823
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 17:37:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZUYqVV8T"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b1L4ca+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfLFRdt (ORCPT
+        id S1726370AbfLFRhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 12:33:49 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38193 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfLFRdt (ORCPT
+        Fri, 6 Dec 2019 12:37:18 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:49522 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfLFRhR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 12:33:49 -0500
-Received: by mail-lj1-f194.google.com with SMTP id k8so8495160ljh.5;
-        Fri, 06 Dec 2019 09:33:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V8WsX+x8KU6gUIwy/1//w+CEj5HT779TaFh6Pmjbp38=;
-        b=ZUYqVV8T9JTpk4ry/AHYteosNs6QeOlQVc4u+lO5bk+9+39VJiKBP1yhGM5tvctPAx
-         mmPYQgX+VppiUnSb0CEOpYos0LjuiKAWWa0c6/TxoDkI7o0qvJRqn6nbwmVYmeN40TZ6
-         1lNAcscV/gJJYeBZKQfvW0Hi3NzIEZl+uO71/euytUUSPkp/+Ix/YZv6Qd6yA/Sw7Rk6
-         EUjG+HL/xXuGbeKBTatDVVw9zShAWFKRsCUafqCUGEMxDTPRRm7o7gp0JGLOMgLQoxmZ
-         TpVpSEz33ynfhIw3Z6m0WJIbfZoCd8x4oSgsdojvGGBJjSavtAD9YbWrlAJcrnvBnXXU
-         81ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V8WsX+x8KU6gUIwy/1//w+CEj5HT779TaFh6Pmjbp38=;
-        b=auiUuJI1xioEnaIvnlAmvw4CfRRxIiZid8j3qtTDcDvQE2G8gPCj+T7A7CvsO/Lb5C
-         gswT7lhsJqAgePxibw1N3PN6b3Q1GVQ65TgvswAM1mrm5Y/qvgQeniLW87NZL7CA+XYl
-         iJyolc7ipiocJ0IGtezBzaT5FRcc/9/E1uQUqNRgmwE2jASHXPu74wm6VfhVsaCMS9aQ
-         4XIse9O26OCpaN3BWh7dHn63nSY7ezFJXIC5FVnbtftcm90f5at06BA6Xx2jmQhjkRwq
-         TdFp8itqA33RtKHZtGuRb9FNaSxsrFaOKDVuIEYYtAn7zIXn+PAnky13ZsNxzeDmWqOK
-         jguA==
-X-Gm-Message-State: APjAAAUGxlVXfJeUfut3npuyuhJu5D5n3p/fvWXxSs6twvyknPANpmUh
-        GBd0HlL+1H41Rk4SioQHokkNDF1zVq2WGUaHkTs=
-X-Google-Smtp-Source: APXvYqzT0bK5X6/HGopFVV6NbSHSsmWK/d897bK7Uz5bhfSZNF5iE6Ic7eC4ol/IWQhbs4mTbE4shs4EsBamETVnMP0=
-X-Received: by 2002:a05:651c:1110:: with SMTP id d16mr9588383ljo.86.1575653627233;
- Fri, 06 Dec 2019 09:33:47 -0800 (PST)
+        Fri, 6 Dec 2019 12:37:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+6LYuatW9jF4wLm7eEprIcSEiB+UNxPWaadtEB0v6Vs=; b=b1L4ca+k8z4ucutXjW6JX13Ld
+        ZhbhHKosYAPZE3lcoT93IdnmVyiBex5NWwz0GzNZc2p+PRb7IfWCtHToMLvrfQrZtgXnWv0rRKUXJ
+        8YLO94hpplDVhQna+AOOwI+Bf3QcM1QGxL7bxzd25mbvbKgQx/t6kz7eyS+FT8jFZXN6OddtoLAoH
+        CyAfdv7iK51CSZ5uiYEFJpCbMTvmZuDyQ3iPzbj2nuIYTH7xR7R+dBBfOdLE1crZxNXCwf/OIUC22
+        Q/GOhFXMoOIaVI3Ky7p31kLbu2nVE8Tnub2vOuvbJ2qoXvhgzMqWoWt4vtqMj267b1tkESW2YtqEL
+        Nm2J/5y/w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1idHXR-000228-Dc; Fri, 06 Dec 2019 17:37:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4BBC7300DB7;
+        Fri,  6 Dec 2019 18:35:48 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CB3AE2B2763CD; Fri,  6 Dec 2019 18:37:05 +0100 (CET)
+Date:   Fri, 6 Dec 2019 18:37:05 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Malte Skarupke <malteskarupke@web.de>
+Cc:     tglx@linutronix.de, mingo@redhat.com, dvhart@infradead.org,
+        linux-kernel@vger.kernel.org, malteskarupke@fastmail.fm
+Subject: Re: [PATCH] futex: Support smaller futexes of one byte or two byte
+ size.
+Message-ID: <20191206173705.GE2871@hirez.programming.kicks-ass.net>
+References: <20191204235238.10764-1-malteskarupke@web.de>
+ <20191206153129.GI2844@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20191205215151.421926-1-jim.cromie@gmail.com> <20191205215151.421926-20-jim.cromie@gmail.com>
- <CAHp75VcSkm4M7VOuMWnNUOMAPbbvmodGfn9_Pu25H213pMuxFA@mail.gmail.com> <4e758f68-f1f3-432b-7bc0-2691012ec831@rasmusvillemoes.dk>
-In-Reply-To: <4e758f68-f1f3-432b-7bc0-2691012ec831@rasmusvillemoes.dk>
-From:   jim.cromie@gmail.com
-Date:   Fri, 6 Dec 2019 10:33:21 -0700
-Message-ID: <CAJfuBxy67e9wmOTCM2PY_Dwp2O4bWh1J2WLxrAbPO3tQCM56OQ@mail.gmail.com>
-Subject: Re: [PATCH 17/18] dyndbg: rename dynamic_debug to dyndbg
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Documentation List <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191206153129.GI2844@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 6, 2019 at 12:49 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> On 05/12/2019 23.24, Andy Shevchenko wrote:
-> > On Thu, Dec 5, 2019 at 11:54 PM Jim Cromie <jim.cromie@gmail.com> wrote:
-> >
-..
-> >> /sys/module/dyndbg/parameters/:
-> >
-> > Isn't this path a part of ABI?
->
-> Yeah, I think this is a somewhat dangerous change, and I don't really
-> see the point.
+On Fri, Dec 06, 2019 at 04:31:29PM +0100, Peter Zijlstra wrote:
+> > +		case FUTEX_WAKE:
+> > +		case FUTEX_REQUEUE:
+> > +			/*
+> > +			 * these instructions work with sized mutexes, but you
+> > +			 * don't need to pass the size. we could silently
+> > +			 * ignore the size argument, but the code won't verify
+> > +			 * that the correct size is used, so it's preferable
+> > +			 * to make that clear to the caller.
+> > +			 *
+> > +			 * for requeue the meaning would also be ambiguous: do
+> > +			 * both of them have to be the same size or not? they
+> > +			 * don't, and that's clearer when you just don't pass
+> > +			 * a size argument.
+> > +			 */
+> > +			return -EINVAL;
+> 
+> Took me a while to figure out this relies on FUTEX_NONE to avoid the
+> alignment tests.
 
-OK, I didnt realize this was ABI.
-I withdraw that patch, and will fix the following one.
+And thikning more on that, I really _realy_ hate this.
 
+You're basically saying WAKE is size-less, but that means we must
+consider what it means to have a u32 WAIT on @ptr, and a u8 WAKE on
+@ptr+1. If the wake really is size-less that should match.
 
->
-> Unrelated: Jim, if you want these patches picked up eventually, you have
-> to put akpm on the recipient list (he is on this one, but AFAICT not on
-> any of the others).
->
+I'd be much happier with requiring strict sizing. Because conversely,
+what happens if you have a u32-WAIT at @ptr paired with a u8-WAKE at
+@ptr? If we demand strict size we can say that should not match. This
+does however mean we should include the size in the hash-match function.
 
-Oof.
-GregKH has in the past picked up my dyndbg stuff, and Jason's too
-but that was 7 years ago
-
-
-> Rasmus
-
-thanks,
-JIm
+Your Changelog did not consider these implications at all.
