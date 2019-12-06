@@ -2,158 +2,147 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1419C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED3EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2D922173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9FF24676
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 23:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qTSxMpHc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K7oCluiI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfLFW7m (ORCPT
+        id S1726418AbfLFXDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 17:59:42 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:50434 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbfLFW7m (ORCPT
+        Fri, 6 Dec 2019 18:03:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56852 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726374AbfLFXDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 17:59:42 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB6MtA04038392;
-        Fri, 6 Dec 2019 22:59:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=W9YZ2rymUJpYEmDlZSgJzhgM8ZEHSIB+08WzqtebW+0=;
- b=qTSxMpHcOXv99EC5aFHowyfk/zDDTJXRnoeUBWjIsTca9NdP+PgDOYKOehxmb1V0gx5k
- Y7Vijl7pHdq7Wt6UKnWndZ5vzC4db0obCcL8Yk3I2XDcxdSBsw//kR1MsHvYmgXi2dn0
- XkZ6PPBSz5aUN+5VxIhlVm/Up4PYFz6Gf9fJb1Eohr7j54lquGvakRfc2CWHOCSOsF5G
- LtaGlUj7jkFl9E01vjQTP/HFRFGCxzWUSXGEfUY+sHw2MZ91gMOpnnXvnz412Mynit4X
- Q1ClveREjU8uoeLha/swpLbn0nxmvCa6XiaKaHBV2X6TbJFgLHXD4AOQewpLtncFo+j+ Nw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2wkgcqxqa1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Dec 2019 22:59:32 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB6MxGFp122666;
-        Fri, 6 Dec 2019 22:59:32 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2wqt45h15w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Dec 2019 22:59:31 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB6MxUwO023092;
-        Fri, 6 Dec 2019 22:59:30 GMT
-Received: from localhost.us.oracle.com (/10.147.27.2)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 06 Dec 2019 14:59:30 -0800
-From:   Eric Snowberg <eric.snowberg@oracle.com>
-To:     gregkh@linuxfoundation.org
-Cc:     rafael@kernel.org, dhowells@redhat.com, matthewgarrett@google.com,
-        jmorris@namei.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, eric.snowberg@oracle.com
-Subject: [PATCH] debugfs: Return -EPERM when locked down
-Date:   Fri,  6 Dec 2019 17:59:09 -0500
-Message-Id: <20191206225909.46721-1-eric.snowberg@oracle.com>
-X-Mailer: git-send-email 2.18.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9463 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912060182
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9463 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912060182
+        Fri, 6 Dec 2019 18:03:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575673381;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u6WTqIKjz3S325CCDp38W7Sg6rbkSpfGWJMYdV0cMT0=;
+        b=K7oCluiIXRY/sk25EjRl4Lo6y5IX3Bz0285jxCljhmzTxEAvOAbSA2wGxG3PWa8G2DKyNR
+        fFjuT0PKHXhqytXPLtkGU6GJjJb57hJi65UA9sC7eTHZIttmiTas8gXhxOp40xs8850rT9
+        9j7tv2YAPQEB36P75cQR2xPTpqKXQwQ=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-323-h1sGsidiNpSA5ZjJSSNxPg-1; Fri, 06 Dec 2019 18:02:59 -0500
+Received: by mail-pg1-f200.google.com with SMTP id o21so4615011pgm.11
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 15:02:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=9Ch5m35fVkEKG5wxtfGoZa8Wx0h7Ub5VYf9I4jeT7RE=;
+        b=RHFWYTCQdE+u+m5UMGrzPUTApjDWZWTNb1HiUDP9IE3RG7qpMhC47uWosXNq/NaCbi
+         /RdOf96Xmht/fVc0AWL+o2voWk7tEtU26q52Q9CPWtekkZ34vRBOIJ6XHmq8xCvMDTkf
+         h4m8Pu/+ZRMR0DyZMp2DJzB7f1xhcip+xTsFkpvx+d7sGgPbFJUMy3j9r+OsOZUrBnTe
+         BFxA2eSsdYbO/Pohwygq9Imr8hIN0qqM+VCJLuqkxZryE5jGeoDvG/yc+hnL0wZMvHaq
+         zpQWRw9SkKk6uAGonZuDkLop1MMUUVNb6fp228FsnIxOAZoUmx367JSVv0495LDrliwR
+         4ZjQ==
+X-Gm-Message-State: APjAAAVj2zmrmvywAl+8JgWNd4nUo8guapKUkVIsofji8B3uyKfrdSC5
+        EEEcTaDi36MMDUzlXfsoIBSQCGVW4PgLJJAKiJWHGiWraFH0I2GJtQK1LPmUsPl9FQZ5XU8gi24
+        3szFMyCNnC5+q2E6qUhh6P2RA
+X-Received: by 2002:a17:902:fe12:: with SMTP id g18mr17164259plj.20.1575673378486;
+        Fri, 06 Dec 2019 15:02:58 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwaH2k0aU5daJfRg60OkT59+hoEibc8Ok80QvecPXGnd9NYmO8bLlYzXX6tQ4naJPtMp1VAZQ==
+X-Received: by 2002:a17:902:fe12:: with SMTP id g18mr17164215plj.20.1575673377994;
+        Fri, 06 Dec 2019 15:02:57 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id m5sm4231286pjl.30.2019.12.06.15.02.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 15:02:57 -0800 (PST)
+Date:   Fri, 6 Dec 2019 16:02:55 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, James Morris <jmorris@namei.org>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [GIT PULL] tpmdd updates for Linux v5.4
+Message-ID: <20191206230255.mhinntfevp6vdlkj@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, James Morris <jmorris@namei.org>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>
+References: <20190902143121.pjnykevzlajlcrh6@linux.intel.com>
+ <CAA9_cmeLnHK4y+usQaWo72nUG3RNsripuZnS-koY4XTRC+mwJA@mail.gmail.com>
+ <20191127205800.GA14290@linux.intel.com>
+ <20191127205912.GB14290@linux.intel.com>
+ <20191128012055.f3a6gq7bjpvuierx@cantor>
+ <20191129235322.GB21546@linux.intel.com>
+ <20191130001253.rtovohtfbg25uifm@cantor>
+ <20191206211834.GD9971@linux.intel.com>
+MIME-Version: 1.0
+In-Reply-To: <20191206211834.GD9971@linux.intel.com>
+X-MC-Unique: h1sGsidiNpSA5ZjJSSNxPg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When lockdown is enabled, debugfs_is_locked_down returns 1. It will then
-trigger the following:
+On Fri Dec 06 19, Jarkko Sakkinen wrote:
+>On Fri, Nov 29, 2019 at 05:12:53PM -0700, Jerry Snitselaar wrote:
+>> On Sat Nov 30 19, Jarkko Sakkinen wrote:
+>> > On Wed, Nov 27, 2019 at 06:20:55PM -0700, Jerry Snitselaar wrote:
+>> > > There also was that other issue reported on the list about
+>> > > tpm_tis_core_init failing when calling tpm_get_timeouts due to the
+>> > > power gating changes.
+>> >
+>> > Please add a (lore.ko) link for reference to this thread.
+>> >
+>> > /Jarkko
+>> >
+>>
+>> https://lore.kernel.org/linux-integrity/a60dadce-3650-44ce-8785-2f737ab9=
+b993@www.fastmail.com/
+>
+>tpm_chip_stop() probably causes the issue. That is why tpm2_probe()
+>works and failure happens after that.
+>
+>tpm_chip_stop() should be called once at the end of the function.
+>
 
-WARNING: CPU: 48 PID: 3747
-CPU: 48 PID: 3743 Comm: bash Not tainted 5.4.0-1946.x86_64 #1
-Hardware name: Oracle Corporation ORACLE SERVER X7-2/ASM, MB, X7-2, BIOS 41060400 05/20/2019
-RIP: 0010:do_dentry_open+0x343/0x3a0
-Code: 00 40 08 00 45 31 ff 48 c7 43 28 40 5b e7 89 e9 02 ff ff ff 48 8b 53 28 4c 8b 72 70 4d 85 f6 0f 84 10 fe ff ff e9 f5 fd ff ff <0f> 0b 41 bf ea ff ff ff e9 3b ff ff ff 41 bf e6 ff ff ff e9 b4 fe
-RSP: 0018:ffffb8740dde7ca0 EFLAGS: 00010202
-RAX: ffffffff89e88a40 RBX: ffff928c8e6b6f00 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffff928dbfd97778 RDI: ffff9285cff685c0
-RBP: ffffb8740dde7cc8 R08: 0000000000000821 R09: 0000000000000030
-R10: 0000000000000057 R11: ffffb8740dde7a98 R12: ffff926ec781c900
-R13: ffff928c8e6b6f10 R14: ffffffff8936e190 R15: 0000000000000001
-FS:  00007f45f6777740(0000) GS:ffff928dbfd80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fff95e0d5d8 CR3: 0000001ece562006 CR4: 00000000007606e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- vfs_open+0x2d/0x30
- path_openat+0x2d4/0x1680
- ? tty_mode_ioctl+0x298/0x4c0
- do_filp_open+0x93/0x100
- ? strncpy_from_user+0x57/0x1b0
- ? __alloc_fd+0x46/0x150
- do_sys_open+0x182/0x230
- __x64_sys_openat+0x20/0x30
- do_syscall_64+0x60/0x1b0
- entry_SYSCALL_64_after_hwframe+0x170/0x1d5
-RIP: 0033:0x7f45f5e5ce02
-Code: 25 00 00 41 00 3d 00 00 41 00 74 4c 48 8d 05 25 59 2d 00 8b 00 85 c0 75 6d 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff ff 0f 05 <48> 3d 00 f0 ff ff 0f 87 a2 00 00 00 48 8b 4c 24 28 64 48 33 0c 25
-RSP: 002b:00007fff95e0d2e0 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 0000561178c069b0 RCX: 00007f45f5e5ce02
-RDX: 0000000000000241 RSI: 0000561178c08800 RDI: 00000000ffffff9c
-RBP: 00007fff95e0d3e0 R08: 0000000000000020 R09: 0000000000000005
-R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000003 R14: 0000000000000001 R15: 0000561178c08800
+The patch I posted that fixed the issue for him moved the
+tpm_chip_start() from the irq probing section right below there to
+before the tpm_get_timeouts call, but your idea is better.
 
-Change the return type to int and return -EPERM when lockdown is enabled
-to remove the warning above.
+Any thoughts on the irq issue? I need to go back and look at the older
+commits again, but before Stefan's patch enabling the irq flag I'm not
+sure the last time that testing code section in tpm_tis_send was
+actually used. I think prior to that it always just went straight to
+tpm_tis_send_main.
 
-Fixes: 5496197f9b08 ("debugfs: Restrict debugfs when the kernel is locked down")
-Signed-off-by: Eric Snowberg <eric.snowberg@oracle.com>
----
- fs/debugfs/file.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+570a36097f30 ("tpm: drop 'irq' from struct tpm_vendor_specific") adds
+the flag, and I can see where it disables and enables the flag in the
+testing code in tpm_tis_send, but I don't see where it enables the
+flag originally for it to ever get into the testing section of
+tpm_tis_send. That means since this commit tpm_tis hasn't been using
+interrupts, right?
 
-diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-index dede25247b81..f31698f9b586 100644
---- a/fs/debugfs/file.c
-+++ b/fs/debugfs/file.c
-@@ -142,7 +142,7 @@ EXPORT_SYMBOL_GPL(debugfs_file_put);
-  * We also need to exclude any file that has ways to write or alter it as root
-  * can bypass the permissions check.
-  */
--static bool debugfs_is_locked_down(struct inode *inode,
-+static int debugfs_is_locked_down(struct inode *inode,
- 				   struct file *filp,
- 				   const struct file_operations *real_fops)
- {
-@@ -151,9 +151,12 @@ static bool debugfs_is_locked_down(struct inode *inode,
- 	    !real_fops->unlocked_ioctl &&
- 	    !real_fops->compat_ioctl &&
- 	    !real_fops->mmap)
--		return false;
-+		return 0;
- 
--	return security_locked_down(LOCKDOWN_DEBUGFS);
-+	if (security_locked_down(LOCKDOWN_DEBUGFS))
-+		return -EPERM;
-+
-+	return 0;
- }
- 
- static int open_proxy_open(struct inode *inode, struct file *filp)
--- 
-2.18.1
+Regards,
+Jerry
+
+>/Jarkko
+>
 
