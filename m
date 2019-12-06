@@ -2,111 +2,152 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40B9C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11D4C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858362464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D063F20706
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 11:35:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbfLFLdw (ORCPT
+        id S1726287AbfLFLfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 06:33:52 -0500
-Received: from comms.puri.sm ([159.203.221.185]:46516 "EHLO comms.puri.sm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfLFLdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 06:33:52 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 360A0DFE25;
-        Fri,  6 Dec 2019 03:33:51 -0800 (PST)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8GWJpsWM_QVg; Fri,  6 Dec 2019 03:33:50 -0800 (PST)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-To:     daniel.lezcano@linaro.org, edubezval@gmail.com, rui.zhang@intel.com
-Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        viresh.kumar@linaro.org, amit.kucheria@linaro.org,
-        linux-kernel@vger.kernel.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: Re: [PATCH V4 4/4] thermal/drivers/cpu_cooling: Rename to cpufreq_cooling
-Date:   Fri,  6 Dec 2019 12:33:15 +0100
-Message-Id: <20191206113315.18954-1-martin.kepplinger@puri.sm>
-In-Reply-To: <20191204153930.9128-4-daniel.lezcano@linaro.org>
-References: <20191204153930.9128-4-daniel.lezcano@linaro.org>
-Content-Transfer-Encoding: 8bit
+        Fri, 6 Dec 2019 06:35:10 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:38273 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfLFLfJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 06:35:09 -0500
+Received: by mail-il1-f198.google.com with SMTP id o18so5029982ilb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 03:35:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=lnm0cl0FYyjfMVu1hmBtm3CNHH8DAMmn2e+a6NxkJN4=;
+        b=Gj6KrtkYkxgQjWZagESrxKX+NVsHqwICfir4pZ/9HGBVkCO0sEDZhCKEO1IEZPDxsO
+         f1WP6X3tsMSIA8hn1MI2X3JXt/Vj+Aivj+6nCilS51nNOoqKJn2L7ySENgrwWBgIxNM1
+         FraEOyNslLc0PdVZnBqjxp1425rO/ufH7xbhCXv0p3v1X7nySrD+nW/zPHD6GLeHeFCi
+         cgSYLTi2lCGkBSENKQQ25oWKEnY8IQniOCHB17oJuQkgARn4O1WC/Lqx5/gv+S583ZJ8
+         tIQB3tCGdU6kPJKtvyKBW1IWsDUUGSF6nNgBrIF7niBzTKHQWe3PYMBVBPG4JDDSrg3L
+         3+2A==
+X-Gm-Message-State: APjAAAVP2rGIQM+pdOJ4+98e4Xj3+0fpqeEPxFKHdiUoUVfsN6AKjwd3
+        w0Itd1me4fvMHZRgisG6hp9AV2l2IZMfpD70zWeCxwuqtU7q
+X-Google-Smtp-Source: APXvYqxMcB5yEJydF3g2Tam754dWo3xuQQzD58x8CYuFo2PAo4XKYT23eZZq784zK9sokEOnDWUTHd/B1pS2jYo94j+NpoCoTRxF
+MIME-Version: 1.0
+X-Received: by 2002:a6b:4402:: with SMTP id r2mr9836660ioa.119.1575632108657;
+ Fri, 06 Dec 2019 03:35:08 -0800 (PST)
+Date:   Fri, 06 Dec 2019 03:35:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002220b705990770d8@google.com>
+Subject: general protection fault in pegasus_probe
+From:   syzbot <syzbot+41b0e2cc7adc40d57974@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, petkan@nucleusys.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I tested this on the librem5-devkit and see the
-cooling devices in sysfs. I configure ARM_PSCI_CPUIDLE, not ARM_CPUIDLE and
-add the patch below in register the cooling device there. "psci_idle"
-is listed as the cpuidle_driver.
+Hello,
 
-That's what I'm running, in case you want to see it all:
-https://source.puri.sm/martin.kepplinger/linux-next/commits/next-20191205/librem5_cpuidle_mainline_atf
+syzbot found the following crash on:
 
-so I add a trip temperature description like this:
-https://source.puri.sm/martin.kepplinger/linux-next/commit/361f49f93ae2c477fd012790831cabd0ed976660
+HEAD commit:    1f22d15c usb: gadget: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=129ce77ae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8ccee2968018adcb
+dashboard link: https://syzkaller.appspot.com/bug?extid=41b0e2cc7adc40d57974
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-When I let the SoC heat up, cpuidle cooling won't kick it. In sysfs:
+Unfortunately, I don't have any reproducer for this crash yet.
 
-catting the relevant files in /sys/class/thermal after heating up,
-if that makes sense:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+41b0e2cc7adc40d57974@syzkaller.appspotmail.com
 
-87000
-85000
-85000
-thermal-cpufreq-0
-1
-thermal-idle-0
-0
-thermal-idle-1                                                                  
-0                                                                               
-thermal-idle-2
-0
-thermal-idle-3
-0
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN
+CPU: 1 PID: 3279 Comm: kworker/1:7 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:workqueue_sysfs_unregister kernel/workqueue.c:5689 [inline]
+RIP: 0010:destroy_workqueue+0x2e/0x6b0 kernel/workqueue.c:4349
+Code: 49 89 fe 41 55 41 54 55 53 48 83 ec 08 e8 1a 7e 23 00 49 8d be 08 01  
+00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+85 e0 05 00 00 49 8b 9e 08 01 00 00 48 85 db 74 19
+RSP: 0018:ffff8881aed87178 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000ec45000
+RDX: 0000000000000021 RSI: ffffffff811affe6 RDI: 0000000000000108
+RBP: ffff8881d16e0000 R08: ffff8881d34a3100 R09: fffffbfff11aeca6
+R10: fffffbfff11aeca5 R11: ffffffff88d7652f R12: ffff8881c6aa0000
+R13: 00000000fffffffb R14: 0000000000000000 R15: 0000000000000008
+FS:  0000000000000000(0000) GS:ffff8881db500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000207e0000 CR3: 00000001d9871000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  pegasus_dec_workqueue drivers/net/usb/pegasus.c:1130 [inline]
+  pegasus_dec_workqueue drivers/net/usb/pegasus.c:1126 [inline]
+  pegasus_probe+0x1071/0x15d0 drivers/net/usb/pegasus.c:1225
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0x1480/0x1c20 drivers/base/core.c:2487
+  usb_set_configuration+0xe67/0x1740 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0x1480/0x1c20 drivers/base/core.c:2487
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
+  hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+  port_event drivers/usb/core/hub.c:5470 [inline]
+  hub_event+0x1e59/0x3860 drivers/usb/core/hub.c:5552
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
+  process_scheduled_works kernel/workqueue.c:2326 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2412
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace b659e9aea6e4f6c5 ]---
+RIP: 0010:workqueue_sysfs_unregister kernel/workqueue.c:5689 [inline]
+RIP: 0010:destroy_workqueue+0x2e/0x6b0 kernel/workqueue.c:4349
+Code: 49 89 fe 41 55 41 54 55 53 48 83 ec 08 e8 1a 7e 23 00 49 8d be 08 01  
+00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+85 e0 05 00 00 49 8b 9e 08 01 00 00 48 85 db 74 19
+RSP: 0018:ffff8881aed87178 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000ec45000
+RDX: 0000000000000021 RSI: ffffffff811affe6 RDI: 0000000000000108
+RBP: ffff8881d16e0000 R08: ffff8881d34a3100 R09: fffffbfff11aeca6
+R10: fffffbfff11aeca5 R11: ffffffff88d7652f R12: ffff8881c6aa0000
+R13: 00000000fffffffb R14: 0000000000000000 R15: 0000000000000008
+FS:  0000000000000000(0000) GS:ffff8881db500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000207e0000 CR3: 00000001d9871000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-with ARM_CPUIDLE instead of ARM_PSCI_CPUIDLE (and registering the cooling dev
-during cpuidle-arm.c init) I won't have a cpuidle driver and thus no cpu-sleep
-state at all.
-
-Can you see where the problem here lies?
-
-thanks!
-
-                                    martin
 
 ---
- drivers/cpuidle/cpuidle-psci.c | 3 +++
- 1 file changed, 3 insertions(+)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
-index f3c1a2396f98..de6e7f444a66 100644
---- a/drivers/cpuidle/cpuidle-psci.c
-+++ b/drivers/cpuidle/cpuidle-psci.c
-@@ -8,6 +8,7 @@
- 
- #define pr_fmt(fmt) "CPUidle PSCI: " fmt
- 
-+#include <linux/cpu_cooling.h>
- #include <linux/cpuidle.h>
- #include <linux/cpumask.h>
- #include <linux/cpu_pm.h>
-@@ -195,6 +196,8 @@ static int __init psci_idle_init_cpu(int cpu)
- 	if (ret)
- 		goto out_kfree_drv;
- 
-+	cpuidle_cooling_register(drv);
-+
- 	return 0;
- 
- out_kfree_drv:
--- 
-2.20.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
