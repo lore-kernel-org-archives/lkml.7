@@ -2,111 +2,102 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A24AC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4ABC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3BF720706
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:23:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575595421;
-	bh=+snBBNFYQv8xmYqi1k67brmlOE46FSD3M+ydplTWD0k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=udExsehN4WXRfMB4jxqLqI8bzUX/mnNFZWhpcOl3hoZTNzdH8/vMDHk62LXMzRjaZ
-	 Klhrx95OgGp3L3eFguYPLFIWpcGWxuskH/sdXwDqYKnWvVZrzAaGcaBZqRVe2TWf6t
-	 /2fAnK8Zv3KvlrPLPk98MO1DyeeAZbrFovjscrsc=
+	by mail.kernel.org (Postfix) with ESMTP id E401B20706
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:24:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cttvg7su"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfLFBXk (ORCPT
+        id S1726359AbfLFBYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 20:23:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbfLFBXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 20:23:39 -0500
-Received: from devnote2 (unknown [180.22.253.92])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3B4020706;
-        Fri,  6 Dec 2019 01:23:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575595419;
-        bh=+snBBNFYQv8xmYqi1k67brmlOE46FSD3M+ydplTWD0k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=k8cjoOPvcX3iBd3/y/6lsJSEI91mBnpHgvQa8SMeOJplIiGkjdxAcKLes6qlLz08v
-         yD1iboa/DygvAy7yPkH4aU54IMmrAf/TFnFAnZuNNVi5y8BvKlvbJaDK2y96AMLR7o
-         h4pFnHjAHA2wgNAUsLjd6zN0L9HszCMEAZAhLx7A=
-Date:   Fri, 6 Dec 2019 10:23:34 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     shuah <shuah@kernel.org>
-Cc:     Micah Morton <mortonm@chromium.org>,
-        linux-kselftest@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        jaswinder.singh@linaro.org
-Subject: Re: [BUGFIX PATCH v2 0/3] selftests: safesetid: Fix some bugs in
- safesetid test
-Message-Id: <20191206102334.35f578b1e79e57740e56a5b8@kernel.org>
-In-Reply-To: <3bad79d5-eada-7e96-4210-c4888bfb710f@kernel.org>
-References: <157554844882.11018.13436399905210284553.stgit@devnote2>
-        <CAJ-EccNKk30b_wtvz=PUVmMVfF8YNagXMcy3Uhj53DzFbgmb6A@mail.gmail.com>
-        <3bad79d5-eada-7e96-4210-c4888bfb710f@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 5 Dec 2019 20:24:36 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45724 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfLFBYg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 20:24:36 -0500
+Received: by mail-pl1-f194.google.com with SMTP id w7so1976534plz.12;
+        Thu, 05 Dec 2019 17:24:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yEsrWVW0HwmOsVFJJw4nLhvKEtLDOtBM/LHp3eOGtHg=;
+        b=Cttvg7su4A6+PVhvW09cCHSYKvWVkwU9RVk0Q7zmD5/W746mWH8Ef5+i3gG1uJ/d60
+         umQFZ1vbS9Xuygej+dIzwLhbO/S0QDk/F7QIlbgrwNE7K+4j7athkWaEbQqiQZIrQ9Ms
+         NwsiZ/7hz7BvTltRqtfUphFuYDk6Uyw/FJDbkmpfx7qBRIXt+Kc0cSD/esMR5zAXW3DM
+         oqjss2BAJ14GKXpNXgnHechy3iklgT0QQaPYtTtVw7iZgIOK5bMuMzrZqVRQ2MVpsvoo
+         0P6SQxlBHykKrFba+VO273H23qLfVdlMbtFUkkUVK9OrZVmVJIm52Y1P//PFFXA/Pjsi
+         TaIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yEsrWVW0HwmOsVFJJw4nLhvKEtLDOtBM/LHp3eOGtHg=;
+        b=Cb8BIa6cpJyC3cPbPpSUgCO5E8GBklnk8KALxA8gB8GIQRFTGDdfuVnCcVxKXc3YyZ
+         JVFM1w/KyF+IRRQxDpOaE9rN2xrau3/1K1bhpkpsaqJZ6RPW4CYLOPNIHkl2A4CH5Qpt
+         /XP8WfuPQVRLoZnhQ9PrR5svdxBj6sfBQ32+7Wae3T5uJ7p+7ulUnSlmlNvKq/Cl6qOF
+         FcAviaovvj/ml/3iJxLbzw7vFZQSyS/CAIEcPZFp/cLo3nZnjH87wfxqZzJL11NenYE3
+         LN8BdSgDC+d2en9zRvuqqFlTCu/1gNdt5PUQiR3MQ5FJ5zb0wqnGD/BGpOG4hwT+MaxI
+         CHZg==
+X-Gm-Message-State: APjAAAV514z2pFYF5ESBnDDJ6xCBC3SgqDZQppzARbzlJRrTIaBgLeN7
+        vKPEThc9plrIg6/ClQOKPus=
+X-Google-Smtp-Source: APXvYqwRAjcAuD553Owy+TPa2K5/wy5j4g/ih8l5A6lrWw0Lfa17tJW9vcvEvoRUfp5G9jzouTfCjA==
+X-Received: by 2002:a17:90a:f0d6:: with SMTP id fa22mr12659929pjb.136.1575595475535;
+        Thu, 05 Dec 2019 17:24:35 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id c9sm13282596pfn.65.2019.12.05.17.24.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 17:24:34 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Parav Pandit <parav@mellanox.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] RDMA/cma: add missed unregister_pernet_subsys in init failure
+Date:   Fri,  6 Dec 2019 09:24:26 +0800
+Message-Id: <20191206012426.12744-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Dec 2019 09:44:52 -0700
-shuah <shuah@kernel.org> wrote:
+The driver forgets to call unregister_pernet_subsys() in the error path
+of cma_init().
+Add the missed call to fix it.
 
-> On 12/5/19 9:40 AM, Micah Morton wrote:
-> > On Thu, Dec 5, 2019 at 4:20 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >>
-> >> Hi,
-> >>
-> >> Here is the v2 series to fix build warnings and erorrs on
-> >> kselftest safesetid.
-> >> This version includes a fix for a runtime error.
-> >>
-> >> Thank you,
-> >>
-> >> ---
-> >>
-> >> Masami Hiramatsu (3):
-> >>        selftests: safesetid: Move link library to LDLIBS
-> >>        selftests: safesetid: Check the return value of setuid/setgid
-> >>        selftests: safesetid: Fix Makefile to set correct test program
-> > 
-> > These 3 fixes look good, thanks. Were you thinking they would go
-> > through my SafeSetID tree or is there a dedicated one for selftests? I
-> > guess if you're not sure someone else on here can chime in, or I can
-> > just take them through my tree if I don't hear anything.
-> > 
-> 
-> Yes. There is a linux-kselftest tree dedicated to selftests.
-> I can take them.
+Fixes: 4be74b42a6d0 ("IB/cma: Separate port allocation to network namespaces")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v2:
+  - Add fixes tag.
 
-Thanks Micah and Shuah!
+ drivers/infiniband/core/cma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> 
-> >>
-> >>
-> >>   tools/testing/selftests/safesetid/Makefile         |    5 +++--
-> >>   tools/testing/selftests/safesetid/safesetid-test.c |   15 ++++++++++-----
-> >>   2 files changed, 13 insertions(+), 7 deletions(-)
-> >>
-> >> --
-> 
-> thanks,
-> -- Shuah
-> 
-
-
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index 25f2b70fd8ef..43a6f07e0afe 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -4763,6 +4763,7 @@ static int __init cma_init(void)
+ err:
+ 	unregister_netdevice_notifier(&cma_nb);
+ 	ib_sa_unregister_client(&sa_client);
++	unregister_pernet_subsys(&cma_pernet_operations);
+ err_wq:
+ 	destroy_workqueue(cma_wq);
+ 	return ret;
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.24.0
+
