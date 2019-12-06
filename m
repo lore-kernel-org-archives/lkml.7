@@ -2,133 +2,110 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D3FC2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89FBC2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 817892464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:10:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqrWjRq7"
+	by mail.kernel.org (Postfix) with ESMTP id 9E3D8206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:12:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575648723;
+	bh=3R+PC8Ff3M5yx19vaH341IDsCcc0jMlrqtmK1IJiZAc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=M07RkBIOILPmV/xVu90J54NpSI/+5qd23H2ky4wUMFipNsIVSmBRr4Ix7erjMXCrf
+	 UEZuQPmHkRZcEkpnhimhJFB7J6O7E46JW+S+oY+3KxXa/GWsugRaZEp6QUcYPklJdo
+	 DGuX63e4POzCa84m7bK70+aQpYl3r+7VueBHmqo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfLFQKR (ORCPT
+        id S1726375AbfLFQMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:10:17 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37003 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbfLFQKR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:10:17 -0500
-Received: by mail-pl1-f195.google.com with SMTP id bb5so2901994plb.4;
-        Fri, 06 Dec 2019 08:10:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FW+xoM+XNZFXfI9u3US9PFT2FKkWvrVyiLqgVBMf4T4=;
-        b=NqrWjRq72uyLD5eSa13wzYR3I4iR0gzbri5rhbFtsYJ/5vd/scWgGsNyiJW1c1A2TD
-         rJOSYPQ/qXszecAFohYSlb92ok8SJM5WA5Cc9ah121CgeKraqv/fbuuU75gnQSnp8q2G
-         cl3S4wBxTFcQZsYn/o8GS+cpBzj8+T2zii6VuyeVKY2R+iRPcdBc9mLR46bKStnkLxF6
-         1CbIpWqMHual3oiooGX09PliisjWKCBOS9TJvmrCSsosHlLqEJu/Nn9BoNgZH2rNMoWf
-         Sw00iPVGdZgS9c+GjQA/YHaJgeG6wjwEm6D4hQirlSWTgfuYJ7DkyeW/IgO/iaZ1Pl5x
-         G1Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FW+xoM+XNZFXfI9u3US9PFT2FKkWvrVyiLqgVBMf4T4=;
-        b=j3q8IJ9jLuK4ck6D/gNgVs9+V8JGdyQVxgtV18q8mXZFHEPlnRjpJuCu57XB3KSywu
-         rMXORLUfbgVzXVGCIDc6IJY++KiCL7uRMbKO/caCKg3dXTcPMx13U+CbLrxqcghr8rOB
-         zNkVoAJaTIEaLqdu2jddazyez5RrnYeaXuHjslSE0muQqSIHZ5R6z8wakebgv/kio00c
-         8Ps9kFGPGcjbj/XvAYXQqcYTGH3KX1fWkW0s5TVvjLZQUOe/R/Bwhj9Q1BdR0Gts4egA
-         CYDCbpeucQHR0252c8stETa5B520I1XMoJ+jvT31/UqNrgN+Xqo90WfQPGjT6GqnCqhw
-         SZKQ==
-X-Gm-Message-State: APjAAAUmAtPK7bA2QZiZGGaeIxo5V6felmjzPk8xJtJc4I0+G8VVl2vp
-        WWDoky0ufUrZlMunSQm4/pNXY0I7
-X-Google-Smtp-Source: APXvYqwbbpq8kVzJk6y/sdlrcq1H+aFuZOHPXTbIWdYVfn8Cb2WMQQz9HYbDo9jaeZejghBcaq1nkg==
-X-Received: by 2002:a17:902:b095:: with SMTP id p21mr15109764plr.313.1575648615981;
-        Fri, 06 Dec 2019 08:10:15 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d22sm15739959pgg.52.2019.12.06.08.10.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2019 08:10:14 -0800 (PST)
-Subject: Re: [PATCH 4.14 000/209] 4.14.158-stable review
-To:     shuah <shuah@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191204175321.609072813@linuxfoundation.org>
- <1dac10cd-7183-9dfd-204c-05fae75bcd74@kernel.org>
- <20191206152823.GA75339@kroah.com>
- <785c9534-1eb2-ea9b-8c9b-6713fdefdd01@kernel.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <e04a233b-0854-2dd4-060e-47e1013879ee@roeck-us.net>
-Date:   Fri, 6 Dec 2019 08:10:12 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 6 Dec 2019 11:12:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbfLFQMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 11:12:02 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63349206DF;
+        Fri,  6 Dec 2019 16:12:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575648721;
+        bh=3R+PC8Ff3M5yx19vaH341IDsCcc0jMlrqtmK1IJiZAc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=2KY561JwdQ6U0gtI10EgrHS/V+IZj3bshbV5dB/HBR3ySMGIm6HWbbvYTEuBx8dFI
+         x/GqAF17JWtwmewJ76R82AKu0jZ1gLyLhcSaHc0BHvEqXJ7hG7orMrs3JovQys3+gc
+         0EHwNmuiae58NPAYHd88l9LkQszbRRUhjUjzywRM=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 3768835206AB; Fri,  6 Dec 2019 08:12:01 -0800 (PST)
+Date:   Fri, 6 Dec 2019 08:12:01 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     madhuparnabhowmik04@gmail.com, trond.myklebust@hammerspace.com,
+        anna.schumaker@netapp.com, linux-nfs@vger.kernel.org,
+        rcu@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
+Message-ID: <20191206161201.GF2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
+ <20191206160002.GB15547@google.com>
 MIME-Version: 1.0
-In-Reply-To: <785c9534-1eb2-ea9b-8c9b-6713fdefdd01@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191206160002.GB15547@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/6/19 7:35 AM, shuah wrote:
-> On 12/6/19 8:28 AM, Greg Kroah-Hartman wrote:
->> On Fri, Dec 06, 2019 at 08:24:36AM -0700, shuah wrote:
->>> On 12/4/19 10:53 AM, Greg Kroah-Hartman wrote:
->>>> This is the start of the stable review cycle for the 4.14.158 release.
->>>> There are 209 patches in this series, all will be posted as a response
->>>> to this one.  If anyone has any issues with these being applied, please
->>>> let me know.
->>>>
->>>> Responses should be made by Fri, 06 Dec 2019 17:50:10 +0000.
->>>> Anything received after that time might be too late.
->>>>
->>>> The whole patch series can be found in one patch at:
->>>>     https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.158-rc1.gz
->>>> or in the git tree and branch at:
->>>>     git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
->>>> and the diffstat can be found below.
->>>>
->>>> thanks,
->>>>
->>>> greg k-h
->>>>
->>>
->>> Starting with Linux 4.14.157, 4.9.204, and 4.4.204 stables stopped
->>> booting on my system. It can't find the root disk. No config changes
->>> in between.
->>>
->>> I have been bisecting 4.14 and 4.9 with no luck so far. I updated
->>> to Ubuntu 19.10 in between.
->>>
->>> The only other thing I see is CONFIG_GCC_VERSION which is supported
->>> starting 4.18. I don't this boot failing issue on 4.19 + up. I am
->>> also chasing any links between this config and scripts and tools
->>> that generate the initramfs.
->>
->> Did you also upgrade your version of gcc?  I know I build those older
->> kernels with the latest version of gcc for build tests, but I do not
->> boot them.  I think everyone who still uses them uses older versions of
->> gcc.
-> 
-> Yes. gcc version changed. That has been my strong suspect since I started poking around the CONFIG_GCC_VERSION.
-> 
+On Fri, Dec 06, 2019 at 11:00:02AM -0500, Joel Fernandes wrote:
+> +Paul, here is the dependent patch for the list_prev_rcu() patch Madhuparna
+> posted.
 
-What version of gcc are you using ? I currently use gcc 8.3.0 for all
-qemu boot tests (except for 3.16 which doesn't support it, or at least
-it didn't when I last checked), and have not observed any problems.
+Got it, thank you!
 
-Thanks,
-Guenter
+And however this turns out, it does illustrate the value of the sparse
+address-space checks!
+
+							Thanx, Paul
+
+> On Fri, Dec 06, 2019 at 08:46:40PM +0530, madhuparnabhowmik04@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> > 
+> > This patch fixes the following errors:
+> > fs/nfs/dir.c:2353:14: error: incompatible types in comparison expression (different address spaces):
+> > fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
+> > fs/nfs/dir.c:2353:14:    struct list_head *
+> > 
+> > caused due to directly accessing the prev pointer of
+> > a RCU protected list.
+> > Accessing the pointer using the macro list_prev_rcu() fixes this error.
+> > 
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> > ---
+> >  fs/nfs/dir.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> > index e180033e35cf..2035254cc283 100644
+> > --- a/fs/nfs/dir.c
+> > +++ b/fs/nfs/dir.c
+> > @@ -2350,7 +2350,7 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
+> >  	rcu_read_lock();
+> >  	if (nfsi->cache_validity & NFS_INO_INVALID_ACCESS)
+> >  		goto out;
+> > -	lh = rcu_dereference(nfsi->access_cache_entry_lru.prev);
+> > +	lh = rcu_dereference(list_prev_rcu(&nfsi->access_cache_entry_lru));
+> >  	cache = list_entry(lh, struct nfs_access_entry, lru);
+> >  	if (lh == &nfsi->access_cache_entry_lru ||
+> >  	    cred != cache->cred)
+> > -- 
+> > 2.17.1
+> > 
