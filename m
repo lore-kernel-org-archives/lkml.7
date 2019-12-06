@@ -2,85 +2,148 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2986C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20EFC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD4124659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEDEF21823
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:23:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fJ/65sIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfLFMRg (ORCPT
+        id S1726234AbfLFMXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:17:36 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:17684 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbfLFMRd (ORCPT
+        Fri, 6 Dec 2019 07:23:23 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27304 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726140AbfLFMXW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:17:33 -0500
-Received: from localhost.localdomain (10.28.8.19) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 6 Dec 2019
- 20:17:51 +0800
-From:   Qianggui Song <qianggui.song@amlogic.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-CC:     Qianggui Song <qianggui.song@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 4/4] arm64: dts: meson: a1: add gpio interrupt controller support
-Date:   Fri, 6 Dec 2019 20:17:13 +0800
-Message-ID: <20191206121714.14579-5-qianggui.song@amlogic.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191206121714.14579-1-qianggui.song@amlogic.com>
-References: <20191206121714.14579-1-qianggui.song@amlogic.com>
+        Fri, 6 Dec 2019 07:23:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575635001;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7Qqh0TAEbm3CujH7YteZT0zbdmoeyevvShd6mToTqps=;
+        b=fJ/65sIbUtFwp04tW9LogA2UxV5gX4IwHGmM/bsc7AeVbKeGjGzXU6mkSy1/wuJKSltQ1o
+        6Emeq/w0kmyfwRE6kKZnPeeX5bd87B+V7FkOuerb5d+loZQ8lD0umIYYq6khqsuUnowAqY
+        2/0/jLAQ3rqY3d7iZI5WaBV1Asy0FAc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-188-vaddTg2kPsutelJz7_iIYA-1; Fri, 06 Dec 2019 07:23:17 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09F15107ACC9;
+        Fri,  6 Dec 2019 12:23:16 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 510A610018FF;
+        Fri,  6 Dec 2019 12:23:14 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri,  6 Dec 2019 13:23:13 +0100 (CET)
+Date:   Fri, 6 Dec 2019 13:23:11 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Sargun Dhillon <sargun@sargun.me>, linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        tycho@tycho.ws
+Subject: Re: [RFC PATCH] ptrace: add PTRACE_GETFD request
+Message-ID: <20191206122311.GA820@redhat.com>
+References: <20191205234450.GA26369@ircssh-2.c.rugged-nimbus-611.internal>
+ <20191206082539.gmefytwu3ylixj5d@wittgenstein>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.28.8.19]
+In-Reply-To: <20191206082539.gmefytwu3ylixj5d@wittgenstein>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: vaddTg2kPsutelJz7_iIYA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add gpio interrupt controller node to a1 SoC
+> On Thu, Dec 05, 2019 at 11:44:53PM +0000, Sargun Dhillon wrote:
+>
+> > +static int ptrace_getfd(struct task_struct *child, unsigned long fd)
+> > +{
+> > +=09struct files_struct *files;
+> > +=09struct file *file;
+> > +=09int ret =3D 0;
+> > +
+> > +=09files =3D get_files_struct(child);
+> > +=09if (!files)
+> > +=09=09return -ENOENT;
+> > +
+> > +=09spin_lock(&files->file_lock);
+> > +=09file =3D fcheck_files(files, fd);
+> > +=09if (!file)
+> > +=09=09ret =3D -EBADF;
+> > +=09else
+> > +=09=09get_file(file);
+> > +=09spin_unlock(&files->file_lock);
+> > +=09put_files_struct(files);
 
-Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+may be someone can finally create a helper for this, it can have more users=
+.
+say,
+=09struct file *get_task_file(task, fd)
+=09{
+=09=09struct file *file =3D NULL;
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index 0965259af869..6d52350a5652 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -92,6 +92,15 @@ gpio: bank@0400 {
- 
- 			};
- 
-+			gpio_intc: interrupt-controller@0440 {
-+				compatible = "amlogic,meson-gpio-intc",
-+					     "amlogic,meson-a1-gpio-intc";
-+				reg = <0x0 0x0440 0x0 0x14>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				amlogic,channel-interrupts = <49 50 51 52 53 54 55 56>;
-+			};
-+
- 			uart_AO: serial@1c00 {
- 				compatible = "amlogic,meson-gx-uart",
- 					     "amlogic,meson-ao-uart";
--- 
-2.24.0
+=09=09task_lock(task);
+=09=09rcu_read_lock();
+=09=09if (task->files) {
+=09=09=09file =3D fcheck_files(task->files, fd);
+=09=09=09if (file)
+=09=09=09=09get_file(file);
+=09=09}
+=09=09rcu_read_unlock();
+=09=09task_unlock(task);
+
+=09=09return file;
+=09}
+
+
+no need to get/put files_struct, no need to take ->file_lock.
+
+> > +
+> > +=09if (ret)
+> > +=09=09goto out;
+> > +
+> > +=09ret =3D get_unused_fd_flags(0);
+> > +=09if (ret >=3D 0)
+> > +=09=09fd_install(ret, file);
+> > +
+> > +=09fput(file);
+
+this looks wrong or I am totally confused...
+
+=09if (ret >=3D 0)
+=09=09fd_install(file);
+=09else
+=09=09fput(file);
+
+?
+
+> > @@ -1265,7 +1299,8 @@ SYSCALL_DEFINE4(ptrace, long, request, long, pid,=
+ unsigned long, addr,
+> >  =09}
+> > =20
+> >  =09ret =3D ptrace_check_attach(child, request =3D=3D PTRACE_KILL ||
+> > -=09=09=09=09  request =3D=3D PTRACE_INTERRUPT);
+> > +=09=09=09=09  request =3D=3D PTRACE_INTERRUPT ||
+> > +=09=09=09=09  request =3D=3D PTRACE_GETFD);
+
+Hmm. not sure why do you want this... But OK, we do not need to stop the tr=
+acee.
+
+Oleg.
 
