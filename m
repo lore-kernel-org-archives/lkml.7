@@ -2,121 +2,113 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB2DC47409
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA356C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF56124682
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:28:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ru2aIusP"
+	by mail.kernel.org (Postfix) with ESMTP id C77CB24677
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 08:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfLFI2o (ORCPT
+        id S1726621AbfLFI3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 03:28:44 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11643 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfLFI2n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 03:28:43 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dea11290001>; Fri, 06 Dec 2019 00:28:25 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 06 Dec 2019 00:28:42 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 06 Dec 2019 00:28:42 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec
- 2019 08:28:42 +0000
-Received: from [10.2.163.87] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec 2019
- 08:28:41 +0000
-Subject: Re: [PATCH] move_pages.2: not return ENOENT if the page are already
- on the target nodes
-To:     Yang Shi <yang.shi@linux.alibaba.com>, <mtk.manpages@gmail.com>,
-        <cl@linux.com>, <mhocko@suse.com>, <cai@lca.pw>,
-        <akpm@linux-foundation.org>
-CC:     <linux-man@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-References: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <0dc96e40-5f2b-a2fe-6e5f-b6f3d5e9ebde@nvidia.com>
-Date:   Fri, 6 Dec 2019 00:25:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 6 Dec 2019 03:29:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:35650 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726088AbfLFI3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 03:29:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94BCC31B;
+        Fri,  6 Dec 2019 00:29:08 -0800 (PST)
+Received: from localhost (e113682-lin.copenhagen.arm.com [10.32.145.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76F653F718;
+        Fri,  6 Dec 2019 00:32:18 -0800 (PST)
+Date:   Fri, 6 Dec 2019 09:29:06 +0100
+From:   Christoffer Dall <christoffer.dall@arm.com>
+To:     Jia He <justin.he@arm.com>
+Cc:     Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH] KVM: arm: remove excessive permission check in
+ kvm_arch_prepare_memory_region
+Message-ID: <20191206082906.GA2749@e113682-lin.lund.arm.com>
+References: <20191206020802.196108-1-justin.he@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575620906; bh=1U4N9I7Sc9y0IjpHHe/ILL0my6L0bvlv/3soA/LZXBQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ru2aIusPL9M9jcFeBHIHwJL3XtTEuuYrZjBbbQ3J7Cbg8Ami0xgtltwuvHSHLAYnj
-         ufrGfv8+HhxpcBAqWuj+1diQqpDKAt6+G0arLN5UFadEBm5m3sv0FD1X3slEkcOrZC
-         exXvz6mIgaxUz6oK/oBsVvNU4BmwWeuo6IA1/1qyCTtgtSj48AAE/T9A2raC+/quM/
-         Hs7+SMLGPgIjxjs6IlK58OmrEkie+Jb/C5Z5YBpdQe7YWrwmqkOdmpPaIXCUbrYcIK
-         NKygTVKq1TqzibJgX8z16/XaOlsI8p1DHz4dWRBxr7Q3OxT2rqJoALrdAwOY0LfxFQ
-         H2vFanrsahMdQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191206020802.196108-1-justin.he@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/5/19 5:34 PM, Yang Shi wrote:
-> Since commit e78bbfa82624 ("mm: stop returning -ENOENT
-> from sys_move_pages() if nothing got migrated"), move_pages doesn't
-> return -ENOENT anymore if the pages are already on the target nodes, but
-> this change is never reflected in manpage.
+On Fri, Dec 06, 2019 at 10:08:02AM +0800, Jia He wrote:
+> In kvm_arch_prepare_memory_region, arm kvm regards the memory region as
+> writable if the flag has no KVM_MEM_READONLY, and the vm is readonly if
+> !VM_WRITE.
 > 
-> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Qian Cai <cai@lca.pw>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> But there is common usage for setting kvm memory region as follows:
+> e.g. qemu side (see the PROT_NONE flag)
+> 1. mmap(NULL, size, PROT_NONE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+>    memory_region_init_ram_ptr()
+> 2. re mmap the above area with read/write authority.
+> 
+> Such example is used in virtio-fs qemu codes which hasn't been upstreamed
+> [1]. But seems we can't forbid this example.
+> 
+> Without this patch, it will cause an EPERM during kvm_set_memory_region()
+> and cause qemu boot crash.
+> 
+> As told by Ard, "the underlying assumption is incorrect, i.e., that the
+> value of vm_flags at this point in time defines how the VMA is used
+> during its lifetime. There may be other cases where a VMA is created
+> with VM_READ vm_flags that are changed to VM_READ|VM_WRITE later, and
+> we are currently rejecting this use case as well."
+> 
+> [1] https://gitlab.com/virtio-fs/qemu/blob/5a356e/hw/virtio/vhost-user-fs.c#L488
+
+Reviewed-by: Christoffer Dall <christoffer.dall@arm.com>
+
+> 
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Signed-off-by: Jia He <justin.he@arm.com>
 > ---
->   man2/move_pages.2 | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
+>  virt/kvm/arm/mmu.c | 9 ---------
+>  1 file changed, 9 deletions(-)
 > 
-> diff --git a/man2/move_pages.2 b/man2/move_pages.2
-> index 2d96468..2a2f3cd 100644
-> --- a/man2/move_pages.2
-> +++ b/man2/move_pages.2
-> @@ -192,9 +192,8 @@ was specified or an attempt was made to migrate pages of a kernel thread.
->   One of the target nodes is not online.
->   .TP
->   .B ENOENT
-> -No pages were found that require moving.
-> -All pages are either already
-> -on the target node, not present, had an invalid address or could not be
-> +No pages were found.
-> +All pages are either not present, had an invalid address or could not be
->   moved because they were mapped by multiple processes.
->   .TP
->   .B EPERM
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index 38b4c910b6c3..a48994af70b8 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -2301,15 +2301,6 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+>  		if (!vma || vma->vm_start >= reg_end)
+>  			break;
+>  
+> -		/*
+> -		 * Mapping a read-only VMA is only allowed if the
+> -		 * memory region is configured as read-only.
+> -		 */
+> -		if (writable && !(vma->vm_flags & VM_WRITE)) {
+> -			ret = -EPERM;
+> -			break;
+> -		}
+> -
+>  		/*
+>  		 * Take the intersection of this VMA with the memory region
+>  		 */
+> -- 
+> 2.17.1
 > 
-
-whoa, hold on. If I'm reading through the various error paths correctly, then this
-code is *never* going to return ENOENT for the whole function. It can fill in that
-value per-page, in the status array, but that's all. Did I get that right?
-
-If so, we need to redo this part of the man page.
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
