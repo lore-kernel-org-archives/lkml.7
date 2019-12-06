@@ -2,116 +2,101 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B510C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533A1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40DA524686
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ABF824673
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 18:58:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ExSOppud"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="qVvSJYj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfLFSxH (ORCPT
+        id S1726400AbfLFS6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 13:53:07 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40736 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfLFSxH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 13:53:07 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k25so3731584pgt.7
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 10:53:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=K3ULS82TM5X3oy+N7bLM5wCXYGvU66vvX1ioV7TywQA=;
-        b=ExSOppud6x7oyh7jQafYUvPvNOXeUGL6Tfs3axjJWXXEm7+DGmcpWm8uUuwQWjiKsw
-         4DjGbjcvL1SBYWbmQpIom/13VK14MV/ANsxs/0s4iCCkZ76s1Sl18Vhfhtn8LX/WPqJ+
-         n+fTieTyvg5PXprzNJYdOguIF8yOjsAf0CpvuVnXL7DPDYJDdxZ8a/exvEKNp86KhrhZ
-         IIa6KnJ9KuGTdQ/XUGYiALS0YPjRRMxY8uRhKCjTf8aVs+sP4Kvk4gqza6tXGgtLX9tq
-         esQx6v+KQw0qrhBwJb66uhgu1RgYTqWUK1wlICYCm3tCe3rBwm1OGllhwXUh9AcrGXA3
-         7eyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K3ULS82TM5X3oy+N7bLM5wCXYGvU66vvX1ioV7TywQA=;
-        b=aEZvftYU1FI1bo9XOIdOdB92hVYxY/c35TAKxSJYfY3IssMcEDVrCBY2w6nI4HfJsi
-         L/Sn5nAUrTuTU5suEIkl3qUTYRzM2ythu2crmQKjTParR3fOsDVIjUsN43zU8GJtDPBQ
-         qGdg414t3mJnJFlxv+S7SRzsDEYy4kXAWCI0elCv34cnK2cro4+V5O+DBtZyFBPkbz9M
-         7wEz3QSuYP1Y6QYL21jo2PD1GeCCTOBLfMfJ0acmEpgWMwg51N8RaChq+vj4dmMVVTq/
-         ut35x/8w7WOInRiYVWqMvFr9lIySkCPBUfnY35mkyHwrFCRhjoViVilAic4jBmyaoXzf
-         jsvw==
-X-Gm-Message-State: APjAAAXt+3CACLNc7M3B955QdYe97SnrPQ34KWK9vUs2kYcTyo279Wzp
-        kzU0A6cJ39VpKCWNAR3GocRdpU7tWBY=
-X-Google-Smtp-Source: APXvYqxmgKQUom0IC5pFsT4lzSuFsQPzwlPTXfnMVHpgbstIu3U8KPunAzMuP13hE8dxBSRjmv7kqw==
-X-Received: by 2002:a63:c12:: with SMTP id b18mr5041685pgl.156.1575658386217;
-        Fri, 06 Dec 2019 10:53:06 -0800 (PST)
-Received: from google.com ([2620:15c:100:202:d78:d09d:ec00:5fa7])
-        by smtp.gmail.com with ESMTPSA id h14sm10333962pfn.174.2019.12.06.10.53.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 10:53:05 -0800 (PST)
-Date:   Fri, 6 Dec 2019 10:53:01 -0800
-From:   Oliver Upton <oupton@google.com>
-To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH] KVM: nVMX: expose "load IA32_PERF_GLOBAL_CTRL" controls
-Message-ID: <20191206185301.GA93531@google.com>
-References: <1574346557-18344-1-git-send-email-pbonzini@redhat.com>
- <7fea1f06-9abb-cdd1-9cb9-8655fe207e96@oracle.com>
+        Fri, 6 Dec 2019 13:58:10 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:51602 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726321AbfLFS6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 13:58:09 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47V1xd4KSvz3c;
+        Fri,  6 Dec 2019 19:55:33 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1575658536; bh=ezWxskmwxI8C/8lBttgiFOBWumB5XqgQX2Lyv35wtXs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qVvSJYj9YFwdhcAJDhCbE27sYYMUvgdTONxp+WWKd+z5M7iiAI5MehkQT3K2RazLO
+         Fd9fJReH4fmO4JIbPH7vvAG5OF2f+k2n+Ld1c3N3PX5ld+hkdoJQ2IFzQMJIwLVZc3
+         677oFRZnpUv7WC+skB2A72eXwr/NiceO2d59iHAuZSWyiZ9j4ZIfNR224I4LEuylT/
+         OgQXR2R6mep2NizcYogzTvDzpSM7LavHwjNn8x1geUwhPTgKNZ4p0HkFQKk3rbFUkn
+         D2t6f0Opeh7KPGs9oDBi617XDzVFR99l7Pg+gcwf5VVg4jPbwVWPMzXiXjjzcViHtW
+         OGnWhmW29zmJQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Fri, 6 Dec 2019 19:58:00 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, digetx@gmail.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, tglx@linutronix.de, robh-dt@kernel.org,
+        mark.rutland@arm.com, allison@lohutok.net, pdeschrijver@nvidia.com,
+        pgaikwad@nvidia.com, mturquette@baylibre.com,
+        horms-renesas@verge.net.au, Jisheng.Zhang@synaptics.com,
+        krzk@kernel.org, arnd@arndb.de, spujar@nvidia.com,
+        josephl@nvidia.com, vidyas@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alexios.zavras@intel.com,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH v3 01/15] dt-bindings: soc: tegra-pmc: Add Tegra PMC
+ clock bindings
+Message-ID: <20191206185800.GB20259@qmqm.qmqm.pl>
+References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
+ <1575600535-26877-2-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-2
 Content-Disposition: inline
-In-Reply-To: <7fea1f06-9abb-cdd1-9cb9-8655fe207e96@oracle.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1575600535-26877-2-git-send-email-skomatineni@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
+On Thu, Dec 05, 2019 at 06:48:41PM -0800, Sowjanya Komatineni wrote:
+> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 clocks and each of
+> these clocks has mux and a gate as a part of PMC controller.
+[...]
+> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+[...]
+> +Clock consumer example:
+> +	host1x@50000000 {
+> +		...
+> +		vi@54080000 {
+> +			...
+> +			assigned-clocks = <&pmc TEGRA_PMC_CLK_OUT_3_MUX>;
+> +			assigned-clock-parents = <&tegra_car TEGRA210_CLK_EXTERN3>;
+> +		};
+> +		...
+> +	};
+> +	...
+> +	i2c@7000c500 {
+> +		cam_sensor {
+> +			...
+> +			clocks = <&pmc TEGRA_PMC_CLK_OUT_3>;
+> +			clock-names = "mclk";
+> +			...
+> +		};
+> +	};
 
-Sorry I didn't see this earlier. Thank you for addressing this!
+The assigned-clocks should be in the cam_sensor node, unless vi device
+also uses the clock.
 
-On Thu, Nov 21, 2019 at 10:42:18AM -0800, Krish Sadhukhan wrote:
-> 
-> On 11/21/19 6:29 AM, Paolo Bonzini wrote:
-> > These controls were added by the recent commit 03a8871add95 ("KVM:
-> > nVMX: Expose load IA32_PERF_GLOBAL_CTRL VM-{Entry,Exit} control",
-> > 2019-11-13), so we should advertise them to userspace from
-> > KVM_GET_MSR_FEATURE_INDEX_LIST, as well.
-> > 
-> > Cc: Oliver Upton <oupton@google.com>
-> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> > ---
-> >   arch/x86/kvm/vmx/nested.c | 2 ++
-> >   1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > index 4aea7d304beb..4b4ce6a804ff 100644
-> > --- a/arch/x86/kvm/vmx/nested.c
-> > +++ b/arch/x86/kvm/vmx/nested.c
-> > @@ -5982,6 +5982,7 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
-> >   #ifdef CONFIG_X86_64
-> >   		VM_EXIT_HOST_ADDR_SPACE_SIZE |
-> >   #endif
-> > +		VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
-> >   		VM_EXIT_LOAD_IA32_PAT | VM_EXIT_SAVE_IA32_PAT;
-> >   	msrs->exit_ctls_high |=
-> >   		VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR |
-> > @@ -6001,6 +6002,7 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
-> >   #ifdef CONFIG_X86_64
-> >   		VM_ENTRY_IA32E_MODE |
-> >   #endif
-> > +		VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL |
-> >   		VM_ENTRY_LOAD_IA32_PAT;
-> >   	msrs->entry_ctls_high |=
-> >   		(VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR | VM_ENTRY_LOAD_IA32_EFER);
-> Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Reviewed-by: Oliver Upton <oupton@google.com>
+Best Regards,
+Micha³ Miros³aw
