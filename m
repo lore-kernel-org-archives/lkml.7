@@ -2,123 +2,114 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166D2C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 03:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D190C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 03:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A3122525
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 03:11:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575601914;
-	bh=ygisAbywNNJp+p3FW0CP0VYzP7nARfH6UtkN6FtRDHg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=PpsyHNNkXYZ6MfzOjrfcOJ1nRXYxSDzzoklFPtz5dF5Z3xxRCTJwSUuc6r7lpBqXy
-	 1rIbzNlu072wYQ5+5wkFzITed9/EeNrbGiHNMxrmmn+8FPQ1OQwtchlYbt1PRA2Ab/
-	 Dt5IkN+Yq1QaJYijOCukScP7jD3GEbdRq02PqReI=
+	by mail.kernel.org (Postfix) with ESMTP id E7B0A21823
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 03:17:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="KMdtSzxm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfLFDLx (ORCPT
+        id S1726243AbfLFDRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 22:11:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32996 "EHLO mail.kernel.org"
+        Thu, 5 Dec 2019 22:17:50 -0500
+Received: from ozlabs.org ([203.11.71.1]:59545 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbfLFDLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 22:11:53 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D214E22525;
-        Fri,  6 Dec 2019 03:11:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575601911;
-        bh=ygisAbywNNJp+p3FW0CP0VYzP7nARfH6UtkN6FtRDHg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=mZkV+FO1I33/YSDut2aEfBwRscQ9rLY/yoZ+dCXwUFdZ43/ofZohFbOzUBFlIwfQq
-         jAiSa3MDBQgZijLH0gfg+nTIbQ18wjBEfKS7yilNHKkP5/sj4c8dNKjW9EoK6JMnn1
-         diLcoxHU2yGnmt0jLJiURRcazar2Q7SX1yNhGlhE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A18573522782; Thu,  5 Dec 2019 19:11:51 -0800 (PST)
-Date:   Thu, 5 Dec 2019 19:11:51 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -tip] kprobes: Lock rcu_read_lock() while searching kprobe
-Message-ID: <20191206031151.GY2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <157527193358.11113.14859628506665612104.stgit@devnote2>
- <20191202210854.GD17234@google.com>
- <20191203071329.GC115767@gmail.com>
- <20191203175712.GI2889@paulmck-ThinkPad-P72>
- <20191204100549.GB114697@gmail.com>
- <20191204161239.GL2889@paulmck-ThinkPad-P72>
- <20191206011137.GB142442@google.com>
+        id S1726076AbfLFDRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 22:17:49 -0500
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 47Td7b02k6z9sPV; Fri,  6 Dec 2019 14:17:46 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1575602267;
+        bh=zVhnYe3N8hue/+LbI+X1XqJYlxmNifUh7vkS/DHm2wo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KMdtSzxm8RzEsLRq4cXQcjZ817K0nGpBpsyVoJ6V+0YCxMp9KeaqwjN5VgKdG3yzl
+         i9VRuShuQ6bPdil27QbLN7tot/8eBPEyFARVY+ZpxU4CNpEV/Joskq5LTIy9e2D7PQ
+         Es3VQmhlSdTnBTCQGhmTm6cUNf0+bBwUnd6K7KNdLqVBIEfSB34KxdjqixoOS1gkOA
+         5Bj4GtlPlFfgnb1AJNE0igL1N7pqmS0J4xeVDil8gXl3lsTYaYkAJfHM8Kd4I0CdTO
+         Y4nJA4bTD2ONIxupskXZ+0tV92ggZYNuihBSYzn9T5ElGB5Eotqr4jqVuVFNbCinrJ
+         F38lVixzilF5A==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     shuahkh@osg.samsung.com
+Cc:     linux-kselftest@vger.kernel.org, keescook@chromium.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: Fix dangling documentation references to kselftest_module.sh
+Date:   Fri,  6 Dec 2019 14:17:38 +1100
+Message-Id: <20191206031738.29641-1-mpe@ellerman.id.au>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206011137.GB142442@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 08:11:37PM -0500, Joel Fernandes wrote:
-> On Wed, Dec 04, 2019 at 08:12:39AM -0800, Paul E. McKenney wrote:
-> > On Wed, Dec 04, 2019 at 11:05:50AM +0100, Ingo Molnar wrote:
-> > > 
-> > > * Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > 
-> > > > >  * This list-traversal primitive may safely run concurrently with
-> > > > >  * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-> > > > >  * as long as the traversal is guarded by rcu_read_lock().
-> > > > >  */
-> > > > > #define hlist_for_each_entry_rcu(pos, head, member, cond...)            \
-> > > > > 
-> > > > > is actively harmful. Why is it there?
-> > > > 
-> > > > For cases where common code might be invoked both from the reader
-> > > > (with RCU protection) and from the updater (protected by some
-> > > > lock).  This common code can then use the optional argument to
-> > > > hlist_for_each_entry_rcu() to truthfully tell lockdep that it might be
-> > > > called with either form of protection in place.
-> > > > 
-> > > > This also combines with the __rcu tag used to mark RCU-protected
-> > > > pointers, in which case sparse complains when a non-RCU API is applied
-> > > > to these pointers, to get back to your earlier question about use of
-> > > > hlist_for_each_entry_rcu() within the update-side lock.
-> > > > 
-> > > > But what are you seeing as actively harmful about all of this?
-> > > > What should we be doing instead?
-> > > 
-> > > Yeah, so basically in the write-locked path hlist_for_each_entry() 
-> > > generates (slightly) more efficient code than hlist_for_each_entry_rcu(), 
-> > > correct?
-> > 
-> > Potentially yes, if the READ_ONCE() constrains the compiler.  Or not,
-> > depending of course on the compiler and the surrounding code.
-> > 
-> > > Also, the principle of passing warning flags around is problematic - but 
-> > > I can see the point in this specific case.
-> > 
-> > Would it help to add an hlist_for_each_entry_protected() that expected
-> > RCU-protected pointers and write-side protection, analogous to
-> > rcu_dereference_protected()?  Or would that expansion of the RCU API
-> > outweigh any benefits?
-> 
-> Personally, I like keeping the same API and using the optional argument like
-> we did thus preventing too many APIs / new APIs.
+Commit c78fd76f2b67 ("selftests: Move kselftest_module.sh into
+kselftest/") moved kselftest_module.sh but missed updating a few
+references to the path in documentation.
 
-Would you be willing to put together a prototype patch so that people
-can see exactly how it would look?
+Fixes: c78fd76f2b67 ("selftests: Move kselftest_module.sh into kselftest/")
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+---
+ Documentation/dev-tools/kselftest.rst       | 8 ++++----
+ tools/testing/selftests/kselftest/module.sh | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-							Thanx, Paul
+diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
+index ecdfdc9d4b03..61ae13c44f91 100644
+--- a/Documentation/dev-tools/kselftest.rst
++++ b/Documentation/dev-tools/kselftest.rst
+@@ -203,12 +203,12 @@ Test Module
+ Kselftest tests the kernel from userspace.  Sometimes things need
+ testing from within the kernel, one method of doing this is to create a
+ test module.  We can tie the module into the kselftest framework by
+-using a shell script test runner.  ``kselftest_module.sh`` is designed
++using a shell script test runner.  ``kselftest/module.sh`` is designed
+ to facilitate this process.  There is also a header file provided to
+ assist writing kernel modules that are for use with kselftest:
+ 
+ - ``tools/testing/kselftest/kselftest_module.h``
+-- ``tools/testing/kselftest/kselftest_module.sh``
++- ``tools/testing/kselftest/kselftest/module.sh``
+ 
+ How to use
+ ----------
+@@ -247,7 +247,7 @@ Example Module
+ 
+    #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+-   #include "../tools/testing/selftests/kselftest_module.h"
++   #include "../tools/testing/selftests/kselftest/module.h"
+ 
+    KSTM_MODULE_GLOBALS();
+ 
+@@ -276,7 +276,7 @@ Example test script
+ 
+     #!/bin/bash
+     # SPDX-License-Identifier: GPL-2.0+
+-    $(dirname $0)/../kselftest_module.sh "foo" test_foo
++    $(dirname $0)/../kselftest/module.sh "foo" test_foo
+ 
+ 
+ Test Harness
+diff --git a/tools/testing/selftests/kselftest/module.sh b/tools/testing/selftests/kselftest/module.sh
+index 18e1c7992d30..fb4733faff12 100755
+--- a/tools/testing/selftests/kselftest/module.sh
++++ b/tools/testing/selftests/kselftest/module.sh
+@@ -9,7 +9,7 @@
+ #
+ #   #!/bin/sh
+ #   SPDX-License-Identifier: GPL-2.0+
+-#   $(dirname $0)/../kselftest_module.sh "description" module_name
++#   $(dirname $0)/../kselftest/module.sh "description" module_name
+ #
+ # Example: tools/testing/selftests/lib/printf.sh
+ 
+-- 
+2.21.0
+
