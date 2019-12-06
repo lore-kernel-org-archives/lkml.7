@@ -2,196 +2,146 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5281FC2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B39AFC43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 190192075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:16:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kub5IABH"
+	by mail.kernel.org (Postfix) with ESMTP id 75DBE21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575664108;
+	bh=/mY6Gf87yii0N26MJCZahA8y7dAmKChy7AcGqhinDfs=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
+	b=XcXsCCj8bcZA8N/dY5v1+7zNTZZ5MxOOKz/gPoq5FatQzp0aX0sxhA1bNH9dgPtyo
+	 ipg8L02xByemmb22NIDp5oK9PWUkD+EoWDqIe934f/U6JAurpaSjCeBQJ1Ix9KEXqY
+	 u3x6wqtyGkU+pk49ECg5WfabLbe5v5LPLVDOAX8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfLFUQa (ORCPT
+        id S1726403AbfLFU21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 15:16:30 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:38036 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfLFUQ3 (ORCPT
+        Fri, 6 Dec 2019 15:28:27 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33971 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbfLFU20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 15:16:29 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB6KEWgG114752;
-        Fri, 6 Dec 2019 20:16:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=p/YTvvom34GtZZcvXS0gonfPUVStG0D6uk5Y6bPRAes=;
- b=kub5IABHD+tSbALFLNrsiqhjdr1mi4Msoy8ONy7ep/SwgEG+Re0vXFbmngyYj2/tF1i+
- hl1+7w/UmSEoZMun820740k6ixBjWH0GBm84WE6hHWYzSsOhUh+pbq1yg7pUtxpjALNW
- RSxTesMn5RMu/XHHKLQL9um024uBvensBIKgtjJqSUKs6aRm7guJH/+7VBPll/IVd9FR
- LyL2qBVdGfQC3wf5ohJdY2YU3yZZ7Ql05G/uFKznm0JIWvnn99BUviNtVoUnzIRo77Gk
- uaFbIFIVcDE6KykJp+C6zbmIOWu4T6htrBQkbXz3027YDwsrjsZj6cfMWWBQDfb+auHz WA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2wkh2rx3rv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Dec 2019 20:16:21 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB6K9O0n145755;
-        Fri, 6 Dec 2019 20:16:21 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2wqt45atmg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Dec 2019 20:16:20 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB6KGJPs030735;
-        Fri, 6 Dec 2019 20:16:19 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 06 Dec 2019 12:16:19 -0800
-Subject: Re: [PATCH] xen/pciback: Prevent NULL pointer dereference in
- quirks_show
-To:     "Nuernberger, Stefan" <snu@amazon.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "Seidel, Conny" <consei@amazon.de>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "ross.lagerwall@citrix.com" <ross.lagerwall@citrix.com>,
-        "Dannowski, Uwe" <uwed@amazon.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20191206134804.4537-1-snu@amazon.com>
- <9917a357-12f6-107f-e08d-33e464036317@oracle.com>
- <1575655787.7257.42.camel@amazon.de>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <4bc83b82-427f-2215-3161-5776867675a1@oracle.com>
-Date:   Fri, 6 Dec 2019 15:15:44 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 6 Dec 2019 15:28:26 -0500
+Received: by mail-lj1-f193.google.com with SMTP id m6so9047614ljc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 12:28:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=D7AuzC7KPUuG+16rwarCAF7khGQqEuNHk2heBfehumM=;
+        b=g8Wqm1UmJpiH9XsG7+mZgytZn6KAUz++mHOwaddVEx2NVcxiPW1xU5oMTujibpzGt1
+         vA9Ahc4HGx1rvG4yaU+qIwSsmJrUqOaUYXaZB3Qxd428SSA5oPrNmN3i/iWippFABM3e
+         SQvl5CWEZqP7WerH4SEuBDeTCnoSRwNi7YXJU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=D7AuzC7KPUuG+16rwarCAF7khGQqEuNHk2heBfehumM=;
+        b=HYLGhWL4JEjkAgt4kR3JMV9GDMKIWxLGdrCDG3TTvpYla2IxAvu7+KP6bOGgWtF3L9
+         7UR3kRapFODZF04/AxpccS4Znf2a0/U8WUhHQRsi51HHJ/fqMnImjxxK89w9tL/B4TS7
+         NTpWrYhXqtkWPhOD8reBGRlSn2r4SQGpXiYQHnOGe5rO9It37AOgiyPITfVTwumtI+2e
+         58G8eKzgvtq8RPqEjTYNVlekiu09l0x5HE1qeUD5AkVnBwCmGhkryCxJedKTvlfXun44
+         N5YDJutLgtrWODdqHfvXclz9qsld2V65W2Mx1Lq/5VnfViuHs2IEe1t9qa9HiOyLBF+N
+         tk1g==
+X-Gm-Message-State: APjAAAUXKs37IIvWsNMgQAGkpw4wMNSYjyxMaaxWlccQ317ownWRo5os
+        53j+NHzRbFuJtbuA2QN4rADSHHO8o74=
+X-Google-Smtp-Source: APXvYqz+5qGKoOynTIDcLCrkU65EvYrhHuYGwOYREzOfk7KUB/MsLaP7caCGb39w2d6DOYiB3TpuGQ==
+X-Received: by 2002:a2e:8606:: with SMTP id a6mr9670828lji.119.1575664104320;
+        Fri, 06 Dec 2019 12:28:24 -0800 (PST)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id b17sm6990427lfp.15.2019.12.06.12.28.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 12:28:23 -0800 (PST)
+Received: by mail-lj1-f174.google.com with SMTP id c19so8954050lji.11
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 12:28:22 -0800 (PST)
+X-Received: by 2002:a2e:99d0:: with SMTP id l16mr9946818ljj.1.1575664102180;
+ Fri, 06 Dec 2019 12:28:22 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1575655787.7257.42.camel@amazon.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9463 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912060161
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9463 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912060162
+References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
+ <20191206135604.GB2734@twin.jikos.cz>
+In-Reply-To: <20191206135604.GB2734@twin.jikos.cz>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 6 Dec 2019 12:28:06 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
+Message-ID: <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
+To:     David Sterba <dsterba@suse.cz>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/6/19 1:09 PM, Nuernberger, Stefan wrote:
-> On Fri, 2019-12-06 at 10:11 -0500, Boris Ostrovsky wrote:
->> On 12/6/19 8:48 AM, Stefan Nuernberger wrote:
->>> From: Uwe Dannowski <uwed@amazon.de>
->>>
->>> Reading /sys/bus/pci/drivers/pciback/quirks while unbinding can
->>> result
->>> in dereferencing a NULL pointer. Instead, skip printing information
->>> about the dangling quirk.
->>>
->>> Reported-by: Conny Seidel <consei@amazon.de>
->>> Signed-off-by: Uwe Dannowski <uwed@amazon.de>
->>> Signed-off-by: Stefan Nuernberger <snu@amazon.com>
->>>
->>> Cc: xen-devel@lists.xenproject.org
->>> Cc: stable@vger.kernel.org
->>> ---
->>>  drivers/xen/xen-pciback/pci_stub.c | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-
->>> pciback/pci_stub.c
->>> index 097410a7cdb7..da725e474294 100644
->>> --- a/drivers/xen/xen-pciback/pci_stub.c
->>> +++ b/drivers/xen/xen-pciback/pci_stub.c
->>> @@ -1346,6 +1346,8 @@ static ssize_t quirks_show(struct
->>> device_driver *drv, char *buf)
->>>  				   quirk->devid.subdevice);
->>>  
->>>  		dev_data = pci_get_drvdata(quirk->pdev);
->>> +		if (!dev_data)
->>> +			continue;
->>>  
->>>  		list_for_each_entry(cfg_entry, &dev_data-
->>>> config_fields, list) {
->> Couldn't you have the same race here?
-> Not quite the same, but it might not be entirely safe yet. The
-> 'quirks_show' takes the 'device_ids_lock' and races with unbind /
-> 'pcistub_device_release' "which takes device_lock mutex". So this might
-> now be a UAF read access instead of a NULL pointer dereference.
-
-Yes, that's what I meant (although I don't see much difference in this
-context).
-
->  We have
-> not observed adversarial effects in our testing (compared to the
-> obvious issues with NULL pointer) but that's not a guarantee of course.
+On Fri, Dec 6, 2019 at 5:56 AM David Sterba <dsterba@suse.cz> wrote:
 >
-> So should quirks_show actually be protected by pcistub_devices_lock
-> instead as are other functions that access dev_data? Does it need both
-> locks in that case?
+> For reference, I've retested current master (b0d4beaa5a4b7d), that
+> incldes the 2 pipe fixes, the test still hangs.
 
-device_ids_lock protects device_ids list, which is not what you are
-trying to access, so that doesn't look like right lock to hold. And
-AFAICT pcistub_devices_lock is not held when device data is cleared in
-pcistub_device_release() (which I think is where we are racing).
+I think I found it.
 
--boris
+TOTALLY UNTESTED patch appended. It's whitespace-damaged and may be
+completely wrong. And might not fix it.
 
+The first hunk is purely syntactic sugar - use the normal head/tail
+order. The second/third hunk is what I think fixes the problem:
+iter_file_splice_write() had the same buggy "let's cache
+head/tail/mask" pattern as pipe_write() had.
 
+You can't cache them over  a 'pipe_wait()' that drops the pipe lock,
+and there's one in splice_from_pipe_next().
 
+        Linus
+
+--- snip snip --
+
+diff --git a/fs/splice.c b/fs/splice.c
+index f2400ce7d528..fa1f3773c8cd 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -495,7 +495,7 @@ static int splice_from_pipe_feed(struct
+pipe_inode_info *pipe, struct splice_des
+        unsigned int mask = pipe->ring_size - 1;
+        int ret;
+
+-       while (!pipe_empty(tail, head)) {
++       while (!pipe_empty(head, tail)) {
+                struct pipe_buffer *buf = &pipe->bufs[tail & mask];
+
+                sd->len = buf->len;
+@@ -711,9 +711,7 @@ iter_file_splice_write(struct pipe_inode_info
+*pipe, struct file *out,
+        splice_from_pipe_begin(&sd);
+        while (sd.total_len) {
+                struct iov_iter from;
+-               unsigned int head = pipe->head;
+-               unsigned int tail = pipe->tail;
+-               unsigned int mask = pipe->ring_size - 1;
++               unsigned int head, tail, mask;
+                size_t left;
+                int n;
+
+@@ -732,6 +730,10 @@ iter_file_splice_write(struct pipe_inode_info
+*pipe, struct file *out,
+                        }
+                }
+
++               head = pipe->head;
++               tail = pipe->tail;
++               mask = pipe->ring_size - 1;
++
+                /* build the vector */
+                left = sd.total_len;
+                for (n = 0; !pipe_empty(head, tail) && left && n <
+nbufs; tail++, n++) {
