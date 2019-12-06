@@ -2,158 +2,102 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8DEC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE49BC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD16624659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94FAB24659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:39:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="B6KAo2NN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfLFNji convert rfc822-to-8bit (ORCPT
+        id S1726491AbfLFNi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 08:39:38 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:42808 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726195AbfLFNji (ORCPT
+        Fri, 6 Dec 2019 08:38:59 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:36606 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726171AbfLFNip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:39:38 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-16-t457RrF7MGGa9WB2Ppc0Xw-1; Fri, 06 Dec 2019 13:39:35 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 6 Dec 2019 13:39:35 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 6 Dec 2019 13:39:35 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     network dev <netdev@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
-Thread-Topic: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
-Thread-Index: AdWsNynavvs+VRwOQ6mSStk+IzVA6A==
-Date:   Fri, 6 Dec 2019 13:39:35 +0000
-Message-ID: <23db23416d3148fa86e54dccc6152266@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 6 Dec 2019 08:38:45 -0500
+X-UUID: 3ecede6cc3874dbaba6d6d1575d84703-20191206
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=sNkHpXF8izKZUF7qsuSvErydtyfam/Pb0hpHXYo69zY=;
+        b=B6KAo2NN/FgWDCDGNkWGauDHVajdm3UmRlJKU3HeFSQm9THocrkiG3nWEvhaAmhTgArkSmwYrJh3z36krayP1cgWqFQjhiKJYu5uuP0Ty1D/4cmCbBhYkr8ohFPihbvakiUHRcRM7m0199fXxXfYlSghlFVkPE5Vye4L6e79N5A=;
+X-UUID: 3ecede6cc3874dbaba6d6d1575d84703-20191206
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 181493175; Fri, 06 Dec 2019 21:38:41 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 6 Dec 2019 21:38:20 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 6 Dec 2019 21:38:00 +0800
+From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Subject: [PATCH v6 2/6] dt-bindings: mfd: Add compatible for the MediaTek MT6358 PMIC
+Date:   Fri, 6 Dec 2019 21:32:59 +0800
+Message-ID: <1575639183-17606-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Mailer: git-send-email 2.6.4
+In-Reply-To: <1575639183-17606-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <1575639183-17606-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-X-MC-Unique: t457RrF7MGGa9WB2Ppc0Xw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-TM-SNTS-SMTP: A960AAB851E0F3AB78D124C4B94C52CE2F2DB9E07FD6C8593C1F7B2CF3FA17722000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some tests I've done seem to show that recvmsg() is much slower that recvfrom()
-even though most of what they do is the same.
-One thought is that the difference is all the extra copy_from_user() needed by
-recvmsg. CONFIG_HARDENED_USERCOPY can add a significant cost.
-
-I've built rebuilt my 5.4-rc7 kernel with all the copy_to/from_user() in net/socket.c
-replaced with the '_' prefixed versions (that don't call check_object()).
-And also changed rw_copy_check_uvector() in fs/read_write.c.
-
-Schedviz then showed the time spent by the application thread that calls
-recvmsg() (about) 225 times being reduced from 0.9ms to 0.75ms.
-
-I've now instrumented the actual recv calls. It show some differences,
-but now enough to explain the 20% difference above.
-(This is all made more difficult because my Ivy Bridge i7-3770 refuses
-to run at a fixed frequency.)
-
-Anyway using PERF_COUNT_HW_CPU_CYCLES I've got the following
-histograms for the number of cycles in each recv call.
-There are about the same number (2.8M) in each column over
-an elapsed time of 20 seconds.
-There are 450 active UDP sockets, each receives 1 message every 20ms.
-Every 10ms a RT thread that is pinned to a cpu reads all the pending messages.
-This is a 4 core hyperthreading (8 cpu) system.
-During these tests 5 other threads are also busy.
-There are no sends (on those sockets).
-
-         |       recvfrom      |       recvmsg
- cycles  |   unhard  |    hard |   unhard  |    hard
------------------------------------------------------
-   1472:         29          1          0          0
-   1600:       8980       4887          3          0
-   1728:     112540     159518       5393       2895
-   1856:     174555     270148     119054     111230
-   1984:     126007     168383     152310     195288
-   2112:      80249      87045     118941     168801
-   2240:      61570      54790      81847     110561
-   2368:      95088      61796      57496      71732
-   2496:     193633     155870      54020      54801
-   2624:     274997     284921     102465      74626
-   2752:     276661     295715     160492     119498
-   2880:     248751     264174     206327     186028
-   3008:     207532     213067     230704     229232
-   3136:     167976     164804     226493     238555
-   3264:     133708     124857     202639     220574
-   3392:     107859      95696     172949     189475
-   3520:      88599      75943     141056     153524
-   3648:      74290      61586     115873     120994
-   3776:      62253      50891      96061      95040
-   3904:      52213      42482      81113      76577
-   4032:      42920      34632      69077      63131
-   4160:      35472      28327      60074      53631
-   4288:      28787      22603      51345      46620
-   4416:      24072      18496      44006      40325
-   4544:      20107      14886      37185      34516
-   4672:      16759      12206      31408      29031
-   4800:      14195       9991      26843      24396
-   4928:      12356       8167      22775      20165
-   5056:      10387       6931      19404      16591
-   5184:       9284       5916      16817      13743
-   5312:       7994       5116      14737      11452
-   5440:       7152       4495      12592       9607
-   5568:       6300       3969      11117       8592
-   5696:       5445       3421       9988       7237
-   5824:       4683       2829       8839       6368
-   5952:       3959       2643       7652       5652
-   6080:       3454       2377       6442       4814
-   6208:       3041       2219       5735       4170
-   6336:       2840       2060       5059       3615
-   6464:       2428       1975       4433       3201
-   6592:       2109       1794       4078       2823
-   6720:       1871       1382       3549       2558
-   6848:       1706       1262       3110       2328
-   6976:       1567       1001       2733       1991
-   7104:       1436        873       2436       1819
-   7232:       1417        860       2102       1652
-   7360:       1414        741       1823       1429
-   7488:       1372        814       1663       1239
-   7616:       1201        896       1430       1152
-   7744:       1275       1008       1364       1049
-   7872:       1382       1120       1367        925
-   8000:       1316       1282       1253        815
-   8128:       1264       1266       1313        792
-  8256+:      19252      19450      34703      30228
-----------------------------------------------------
-  Total:    2847707    2863582    2853688    2877088
-
-This does show a few interesting things:
-1) The 'hardened' kernel is slower, especially for recvmsg.
-2) The difference for recvfrom isn't enough for the 20% reduction I saw.
-3) There are two peaks at the top a 'not insubstantial' number are a lot
-   faster than the main peak.
-4) There is second peak way down at 8000 cycles.
-   This is repeatable.
-
-Any idea what is actually going on??
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+VGhpcyBhZGRzIGNvbXBhdGlibGUgZm9yIHRoZSBNZWRpYVRlayBNVDYzNTggUE1JQy4NCg0KQWNr
+ZWQtZm9yLW1mZC1ieTogTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz4NClJldmlld2Vk
+LWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KU2lnbmVkLW9mZi1ieTogSHNpbi1I
+c2l1bmcgV2FuZyA8aHNpbi1oc2l1bmcud2FuZ0BtZWRpYXRlay5jb20+DQotLS0NCiBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL210NjM5Ny50eHQgfCAxNCArKysrKysrKysr
+LS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0K
+DQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9tdDYz
+OTcudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9tdDYzOTcudHh0
+DQppbmRleCBhOWIxMDVhLi4wZGY0MzgyIDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL21mZC9tdDYzOTcudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbWZkL210NjM5Ny50eHQNCkBAIC0xOCwyNCArMTgsMzAgQEAgU2VlIHRo
+ZSBmb2xsb3dpbmcgZm9yIHB3YXJwIG5vZGUgZGVmaW5pdGlvbnM6DQogVGhpcyBkb2N1bWVudCBk
+ZXNjcmliZXMgdGhlIGJpbmRpbmcgZm9yIE1GRCBkZXZpY2UgYW5kIGl0cyBzdWIgbW9kdWxlLg0K
+IA0KIFJlcXVpcmVkIHByb3BlcnRpZXM6DQotY29tcGF0aWJsZTogIm1lZGlhdGVrLG10NjM5NyIg
+b3IgIm1lZGlhdGVrLG10NjMyMyINCitjb21wYXRpYmxlOg0KKwkibWVkaWF0ZWssbXQ2MzIzIiBm
+b3IgUE1JQyBNVDYzMjMNCisJIm1lZGlhdGVrLG10NjM1OCIgZm9yIFBNSUMgTVQ2MzU4DQorCSJt
+ZWRpYXRlayxtdDYzOTciIGZvciBQTUlDIE1UNjM5Nw0KIA0KIE9wdGlvbmFsIHN1Ym5vZGVzOg0K
+IA0KIC0gcnRjDQogCVJlcXVpcmVkIHByb3BlcnRpZXM6IFNob3VsZCBiZSBvbmUgb2YgZm9sbG93
+cw0KIAkJLSBjb21wYXRpYmxlOiAibWVkaWF0ZWssbXQ2MzIzLXJ0YyINCisJCS0gY29tcGF0aWJs
+ZTogIm1lZGlhdGVrLG10NjM1OC1ydGMiDQogCQktIGNvbXBhdGlibGU6ICJtZWRpYXRlayxtdDYz
+OTctcnRjIg0KIAlGb3IgZGV0YWlscywgc2VlIC4uL3J0Yy9ydGMtbXQ2Mzk3LnR4dA0KIC0gcmVn
+dWxhdG9ycw0KIAlSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KLQkJLSBjb21wYXRpYmxlOiAibWVkaWF0
+ZWssbXQ2Mzk3LXJlZ3VsYXRvciINCi0Jc2VlIC4uL3JlZ3VsYXRvci9tdDYzOTctcmVndWxhdG9y
+LnR4dA0KIAkJLSBjb21wYXRpYmxlOiAibWVkaWF0ZWssbXQ2MzIzLXJlZ3VsYXRvciINCiAJc2Vl
+IC4uL3JlZ3VsYXRvci9tdDYzMjMtcmVndWxhdG9yLnR4dA0KKwkJLSBjb21wYXRpYmxlOiAibWVk
+aWF0ZWssbXQ2MzU4LXJlZ3VsYXRvciINCisJc2VlIC4uL3JlZ3VsYXRvci9tdDYzNTgtcmVndWxh
+dG9yLnR4dA0KKwkJLSBjb21wYXRpYmxlOiAibWVkaWF0ZWssbXQ2Mzk3LXJlZ3VsYXRvciINCisJ
+c2VlIC4uL3JlZ3VsYXRvci9tdDYzOTctcmVndWxhdG9yLnR4dA0KIC0gY29kZWMNCiAJUmVxdWly
+ZWQgcHJvcGVydGllczoNCi0JCS0gY29tcGF0aWJsZTogIm1lZGlhdGVrLG10NjM5Ny1jb2RlYyIN
+CisJCS0gY29tcGF0aWJsZTogIm1lZGlhdGVrLG10NjM5Ny1jb2RlYyIgb3IgIm1lZGlhdGVrLG10
+NjM1OC1zb3VuZCINCiAtIGNsaw0KIAlSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIAkJLSBjb21wYXRp
+YmxlOiAibWVkaWF0ZWssbXQ2Mzk3LWNsayINCi0tIA0KMi42LjQNCg==
 
