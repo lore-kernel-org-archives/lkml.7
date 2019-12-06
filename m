@@ -2,81 +2,86 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76271C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB84C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525F924659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEDD824671
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:14:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575634459;
+	bh=o9F0FuHOka2xZ0DmTCxH9WxB/cnnsDObFTkSmj9uGn4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z27u+/Gb8gGa91/vrbQbFx7mBzMw4772pF/dQWrZbwEgDb+CJh3LBmAyy5wnpq/CZ
+	 YyQwCMmPgBSDK2xO7aoBQ9dWi1fvaeErIiYxwaXfcgjZLSWao4jdacw77+aEdgCnp9
+	 uoMmyXtZBZtFyrzYgEuq7TDZpNlPIqPb5O5+t3PU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfLFMKo (ORCPT
+        id S1726258AbfLFMOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:10:44 -0500
-Received: from lgeamrelo12.lge.com ([156.147.23.52]:42553 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726124AbfLFMKn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:10:43 -0500
-X-Greylist: delayed 1798 seconds by postgrey-1.27 at vger.kernel.org; Fri, 06 Dec 2019 07:10:43 EST
-Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
-        by 156.147.23.52 with ESMTP; 6 Dec 2019 20:40:41 +0900
-X-Original-SENDERIP: 156.147.1.121
-X-Original-MAILFROM: neidhard.kim@lge.com
-Received: from unknown (HELO localhost.localdomain) (10.178.32.48)
-        by 156.147.1.121 with ESMTP; 6 Dec 2019 20:40:41 +0900
-X-Original-SENDERIP: 10.178.32.48
-X-Original-MAILFROM: neidhard.kim@lge.com
-From:   Jongsung Kim <neidhard.kim@lge.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        mcoquelin.stm32@gmail.com, davem@davemloft.net,
-        joabreu@synopsys.com, alexandre.torgue@st.com,
-        peppe.cavallaro@st.com, Jongsung Kim <neidhard.kim@lge.com>
-Subject: [PATCH] net: stmmac: reset Tx desc base address before restarting Tx
-Date:   Fri,  6 Dec 2019 20:40:00 +0900
-Message-Id: <20191206114000.27283-1-neidhard.kim@lge.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 6 Dec 2019 07:14:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbfLFMOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 07:14:18 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1060C24659;
+        Fri,  6 Dec 2019 12:14:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575634457;
+        bh=o9F0FuHOka2xZ0DmTCxH9WxB/cnnsDObFTkSmj9uGn4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=n4V/NNwpig9+WVhOViCP9jYRxmz4yhy2Qed2W6VvichITokR4w5POCyM+QIBRPOjJ
+         AEFIEm7KySg7SrSUydZi0VDehdLQDHN31QYpE3zreqyWVSzq/H2LEC1CCUDZiyIzX3
+         uLaaOjwdvHoBIPeY3erxearcvRIu7REdPNQ58kcA=
+Date:   Fri, 6 Dec 2019 07:14:16 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Lyude Paul <lyude@redhat.com>, linux-input@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 24/25] Input: synaptics - enable RMI mode
+ for X1 Extreme 2nd Generation
+Message-ID: <20191206121415.GV5861@sasha-vm>
+References: <20191122194859.24508-1-sashal@kernel.org>
+ <20191122194859.24508-24-sashal@kernel.org>
+ <20191122195532.GB248138@dtor-ws>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191122195532.GB248138@dtor-ws>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refer to the databook of DesignWare Cores Ethernet MAC Universal:
+On Fri, Nov 22, 2019 at 11:55:32AM -0800, Dmitry Torokhov wrote:
+>Hi Sasha,
+>
+>On Fri, Nov 22, 2019 at 02:48:57PM -0500, Sasha Levin wrote:
+>> From: Lyude Paul <lyude@redhat.com>
+>>
+>> [ Upstream commit 768ea88bcb235ac3a92754bf82afcd3f12200bcc ]
+>>
+>> Just got one of these for debugging some unrelated issues, and noticed
+>> that Lenovo seems to have gone back to using RMI4 over smbus with
+>> Synaptics touchpads on some of their new systems, particularly this one.
+>> So, let's enable RMI mode for the X1 Extreme 2nd Generation.
+>>
+>> Signed-off-by: Lyude Paul <lyude@redhat.com>
+>> Link: https://lore.kernel.org/r/20191115221814.31903-1-lyude@redhat.com
+>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>This will be reverted, do not pick up for stable.
 
-6.2.1.5 Register 4 (Transmit Descriptor List Address Register
+I've dropped it, thanks!
 
-If this register is not changed when the ST bit is set to 0, then
-the DMA takes the descriptor address where it was stopped earlier.
-
-The stmmac_tx_err() does zero indices to Tx descriptors, but does
-not reset HW current Tx descriptor address. To fix inconsistency,
-the base address of the Tx descriptors should be rewritten before
-restarting Tx.
-
-Signed-off-by: Jongsung Kim <neidhard.kim@lge.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 644cb5d1fd4f..bbc65bd332a8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2009,6 +2009,8 @@ static void stmmac_tx_err(struct stmmac_priv *priv, u32 chan)
- 	tx_q->cur_tx = 0;
- 	tx_q->mss = 0;
- 	netdev_tx_reset_queue(netdev_get_tx_queue(priv->dev, chan));
-+	stmmac_init_tx_chan(priv, priv->ioaddr, priv->plat->dma_cfg,
-+			    tx_q->dma_tx_phy, chan);
- 	stmmac_start_tx_dma(priv, chan);
- 
- 	priv->dev->stats.tx_errors++;
 -- 
-2.20.1
-
+Thanks,
+Sasha
