@@ -2,145 +2,86 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=BITCOIN_SPAM_02,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22CFC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 04:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A30C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 04:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E72822525
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 04:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E74624659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 04:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V7Y36+AZ"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="je2GzQ3w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfLFECC (ORCPT
+        id S1726589AbfLFECz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 23:02:02 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:37812 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfLFECC (ORCPT
+        Thu, 5 Dec 2019 23:02:55 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:25935 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726076AbfLFECy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 23:02:02 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB63xHVP090189;
-        Fri, 6 Dec 2019 04:01:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=QjnQE19WTon+84la9HnCRqMJCeiE7umqQsEPFc6WIaM=;
- b=V7Y36+AZUhKtJ2NqSVT07k0Uhsox2rlco1eouttc3CTSixPb35xcN8rEyWKk0HzOBWtF
- smGhbcmny6vwDcuH0WXzr/7V7gAu34ZP1hGKBgA47kWSvQS1LHDirKlzAIa2+1yfd+Iw
- lffibD960L0LHSfU9Bct/1OEqVYUDohC55EBk8e9qn1Rg1namAnz1a360vCjjaDy0oHT
- Ca/2malY//LJjPwrm+7UWLdb0BEG+B0kTfmNutbkeu5w4n76iYYgzNTIzRVI4E+3N+Vn
- spC+/mRYUP2i6jk0t2uwROBl+vYrZdNzNpThquiXic68DSbWeZT23mIUd9rrIXOsPe/9 wQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2wkh2rs7qk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Dec 2019 04:01:24 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB63wKja136302;
-        Fri, 6 Dec 2019 04:01:24 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2wqer9stgp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Dec 2019 04:01:24 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB641FNr008814;
-        Fri, 6 Dec 2019 04:01:19 GMT
-Received: from [10.159.153.56] (/10.159.153.56)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Dec 2019 20:01:15 -0800
-Subject: Re: [PATCH RFC] KVM: x86: tell guests if the exposed SMT topology is
- trustworthy
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-References: <20191105161737.21395-1-vkuznets@redhat.com>
- <de3cade3-c069-dc6b-1d2d-aa10abe365b8@redhat.com>
-From:   Ankur Arora <ankur.a.arora@oracle.com>
-Message-ID: <4f835a11-1528-a04e-9e06-1b8cdb97a04d@oracle.com>
-Date:   Thu, 5 Dec 2019 20:01:13 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 5 Dec 2019 23:02:54 -0500
+X-UUID: 8487336daf2a4aed89f6773565c8ce34-20191206
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=xM1L7Jfwq/gv/BGLE5pId5BVEEmzAIvJRnTMFQtcXVo=;
+        b=je2GzQ3w3wIwOGnb46+d1zPcyyvWnRWZMqZfYDE8fPemc+HUV6fCuras15LohSMUMJncbRVFqO7f28eTDB2OLKvZabOlwoT2Rh0mvtOEqPn/fwwIOfBSpRsgkaG8nk88xB4jr2DyGptKNOxZuHFYexnGYp757QUS91gCIlYQFzI=;
+X-UUID: 8487336daf2a4aed89f6773565c8ce34-20191206
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1295145907; Fri, 06 Dec 2019 12:02:47 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 6 Dec 2019 12:02:33 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 6 Dec 2019 12:02:32 +0800
+Message-ID: <1575604966.6151.1.camel@mtksdaap41>
+Subject: Re: [PATCH v2 06/14] soc: mediatek: cmdq: return send msg error code
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 6 Dec 2019 12:02:46 +0800
+In-Reply-To: <1574819937-6246-8-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574819937-6246-8-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <de3cade3-c069-dc6b-1d2d-aa10abe365b8@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9462 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912060032
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9462 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912060033
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-05 3:56 p.m., Paolo Bonzini wrote:
-> On 05/11/19 17:17, Vitaly Kuznetsov wrote:
->> There is also one additional piece of the information missing. A VM can be
->> sharing physical cores with other VMs (or other userspace tasks on the
->> host) so does KVM_FEATURE_TRUSTWORTHY_SMT imply that it's not the case or
->> not? It is unclear if this changes anything and can probably be left out
->> of scope (just don't do that).
->>
->> Similar to the already existent 'NoNonArchitecturalCoreSharing' Hyper-V
->> enlightenment, the default value of KVM_HINTS_TRUSTWORTHY_SMT is set to
->> !cpu_smt_possible(). KVM userspace is thus supposed to pass it to guest's
->> CPUIDs in case it is '1' (meaning no SMT on the host at all) or do some
->> extra work (like CPU pinning and exposing the correct topology) before
->> passing '1' to the guest.
->>
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>   Documentation/virt/kvm/cpuid.rst     | 27 +++++++++++++++++++--------
->>   arch/x86/include/uapi/asm/kvm_para.h |  2 ++
->>   arch/x86/kvm/cpuid.c                 |  7 ++++++-
->>   3 files changed, 27 insertions(+), 9 deletions(-)
->>
->> diff --git a/Documentation/virt/kvm/cpuid.rst b/Documentation/virt/kvm/cpuid.rst
->> index 01b081f6e7ea..64b94103fc90 100644
->> --- a/Documentation/virt/kvm/cpuid.rst
->> +++ b/Documentation/virt/kvm/cpuid.rst
->> @@ -86,6 +86,10 @@ KVM_FEATURE_PV_SCHED_YIELD        13          guest checks this feature bit
->>                                                 before using paravirtualized
->>                                                 sched yield.
->>   
->> +KVM_FEATURE_TRUSTWORTHY_SMT       14          set when host supports 'SMT
->> +                                              topology is trustworthy' hint
->> +                                              (KVM_HINTS_TRUSTWORTHY_SMT).
->> +
-> 
-> Instead of defining a one-off bit, can we make:
-> 
-> ecx = the set of known "hints" (defaults to edx if zero)
-> 
-> edx = the set of hints that apply to the virtual machine
-Just to resurrect this thread, the guest could explicitly ACK
-a KVM_FEATURE_DYNAMIC_HINT at init. This would allow the host
-to change the hints whenever with the guest not needing to separately
-ACK the changed hints.
+T24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMgWUMgSHNpZWggd3JvdGU6
+DQo+IFJldHVybiBlcnJvciBjb2RlIHRvIGNsaWVudCBpZiBzZW5kIG1lc3NhZ2UgZmFpbCwNCj4g
+c28gdGhhdCBjbGllbnQgaGFzIGNoYW5jZSB0byBlcnJvciBoYW5kbGluZy4NCj4gDQpUaGlzIHBh
+dGNoZXMgc2VlbXMgbGlrZSBhIGZpeCBwYXRjaC4NClBsZWFzZSBhZGQgZml4ZXMsIHRoYW5rcy4N
+Cg0KQmliYnkNCj4gU2lnbmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNp
+ZWhAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRx
+LWhlbHBlci5jIHwgNCArKy0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAy
+IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210
+ay1jbWRxLWhlbHBlci5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMN
+Cj4gaW5kZXggMjc0ZjZmMzExZDA1Li44NDIxYjQwOTAzMDQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZl
+cnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ICsrKyBiL2RyaXZlcnMvc29jL21l
+ZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IEBAIC0zNTMsMTEgKzM1MywxMSBAQCBpbnQgY21k
+cV9wa3RfZmx1c2hfYXN5bmMoc3RydWN0IGNtZHFfcGt0ICpwa3QsIGNtZHFfYXN5bmNfZmx1c2hf
+Y2IgY2IsDQo+ICAJCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmNsaWVudC0+bG9jaywgZmxhZ3Mp
+Ow0KPiAgCX0NCj4gIA0KPiAtCW1ib3hfc2VuZF9tZXNzYWdlKGNsaWVudC0+Y2hhbiwgcGt0KTsN
+Cj4gKwllcnIgPSBtYm94X3NlbmRfbWVzc2FnZShjbGllbnQtPmNoYW4sIHBrdCk7DQo+ICAJLyog
+V2UgY2FuIHNlbmQgbmV4dCBwYWNrZXQgaW1tZWRpYXRlbHksIHNvIGp1c3QgY2FsbCB0eGRvbmUu
+ICovDQo+ICAJbWJveF9jbGllbnRfdHhkb25lKGNsaWVudC0+Y2hhbiwgMCk7DQo+ICANCj4gLQly
+ZXR1cm4gMDsNCj4gKwlyZXR1cm4gZXJyOw0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJPTChjbWRxX3Br
+dF9mbHVzaF9hc3luYyk7DQo+ICANCg0K
 
-
-Ankur
-
-> 
-> Paolo
-> 
-6
