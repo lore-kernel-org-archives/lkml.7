@@ -2,173 +2,150 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD55C2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0E0C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6296921835
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:49:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rLyIHoRd"
+	by mail.kernel.org (Postfix) with ESMTP id BE5EC21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:50:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfLFOtK (ORCPT
+        id S1726374AbfLFOuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:49:10 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35928 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfLFOtK (ORCPT
+        Fri, 6 Dec 2019 09:50:18 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:46572 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfLFOuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 09:49:10 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z3so8088968wru.3;
-        Fri, 06 Dec 2019 06:49:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2aalaEaVKfHAlKY2p1rpxj3inrK0861vRpI8dmURXSc=;
-        b=rLyIHoRdLAQgJnQCNdtN19CAAB7uTqFw0HldC/x0BVmwK7qtcDk80++dmEgLc7Fthv
-         Tt+XwIDLmwWby6E5+g+CwdkC4XdFHNnTRsW7eqhvDRuJxviTIVSxb+3i1Cev5AaU4Ddq
-         0JRD7cvyIDqM0t6CxHHfPLUsJ7jfM7n2qvNj5BylEmCVRidLUXhsg/daO/Q/ab5HHx5A
-         leH+yBJKx8Vmstr8p4b1XfUM5zb1/f5dZkGaRcBuFARyPoTqV3YPctQug6m9TKc1pNLc
-         1nILLMG62vp1U4YUsBWlVADAGfFPL9SGtYm1CexXqGxWalpotLbwa8V/FV1GPyPnMkUZ
-         deCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2aalaEaVKfHAlKY2p1rpxj3inrK0861vRpI8dmURXSc=;
-        b=pzPjV3iWCEPwc61COOO2cfnxmNuLsxb+GOVRyfEJjsc2cVbMwpLVUM5WilcEYuIA5g
-         p5a3BzFIYVX96p830cYMG41Tu+6rf59dPoMMo3zg9cujsqQ69GPCwPe4Qw5UiEchueW8
-         xX1vJv7e9PqPWAXW8fue6BAbMWgz9CTqXD/ZGf2uyzCnzULQa4wabm8Rv1Z6hMbfnFcL
-         hYEq5cwVvd/RCOj1CRFnLA/WCBBmEiyXm1jAWAHzGqLh+ou00QBo3huNXEO5gUClelRb
-         iLt6x6a2c6d8IScehDA+V++JYbRrE7J2eA/DQKFZ7iwWHuG25VukGzEMgNlE/btzT7+N
-         gNJw==
-X-Gm-Message-State: APjAAAWSkX8LRlOzFsFGXmiJz4gGCBYQr+RSLM27+6lPtzSVGWfzq3wj
-        UpBDXNJZI7QvH3JT/6tlPNA=
-X-Google-Smtp-Source: APXvYqySmeMk3VIYBGLIgJSqtRCYSHhZfeUzyl/1OUtAsXT8QOiFDgrU+AcvwlGN+zgjD8qSDflJeQ==
-X-Received: by 2002:a05:6000:160d:: with SMTP id u13mr16759890wrb.22.1575643747476;
-        Fri, 06 Dec 2019 06:49:07 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id 5sm16841135wrh.5.2019.12.06.06.49.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 06:49:06 -0800 (PST)
-Date:   Fri, 6 Dec 2019 15:49:05 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/18] dt-bindings: phy: tegra-xusb: Add usb-role-switch
-Message-ID: <20191206144905.GC2085684@ulmo>
-References: <1575629421-7039-1-git-send-email-nkristam@nvidia.com>
- <1575629421-7039-2-git-send-email-nkristam@nvidia.com>
+        Fri, 6 Dec 2019 09:50:17 -0500
+Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=calabresa)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <cascardo@canonical.com>)
+        id 1idEvu-00034D-OY; Fri, 06 Dec 2019 14:50:15 +0000
+Date:   Fri, 6 Dec 2019 11:50:10 -0300
+From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        posk@google.com
+Subject: Re: [PATCH] selftests: net: ip_defrag: increase netdev_max_backlog
+Message-ID: <20191206145010.GE5083@calabresa>
+References: <20191204195321.406365-1-cascardo@canonical.com>
+ <483097a3-92ec-aedd-60d9-ab7f58b9708d@gmail.com>
+ <20191206121707.GC5083@calabresa>
+ <d2dddb34-f126-81f8-cbf7-04635f04795a@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5QAgd0e35j3NYeGe"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575629421-7039-2-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <d2dddb34-f126-81f8-cbf7-04635f04795a@gmail.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Dec 06, 2019 at 05:41:01AM -0800, Eric Dumazet wrote:
+> 
+> 
+> On 12/6/19 4:17 AM, Thadeu Lima de Souza Cascardo wrote:
+> > On Wed, Dec 04, 2019 at 12:03:57PM -0800, Eric Dumazet wrote:
+> >>
+> >>
+> >> On 12/4/19 11:53 AM, Thadeu Lima de Souza Cascardo wrote:
+> >>> When using fragments with size 8 and payload larger than 8000, the backlog
+> >>> might fill up and packets will be dropped, causing the test to fail. This
+> >>> happens often enough when conntrack is on during the IPv6 test.
+> >>>
+> >>> As the larger payload in the test is 10000, using a backlog of 1250 allow
+> >>> the test to run repeatedly without failure. At least a 1000 runs were
+> >>> possible with no failures, when usually less than 50 runs were good enough
+> >>> for showing a failure.
+> >>>
+> >>> As netdev_max_backlog is not a pernet setting, this sets the backlog to
+> >>> 1000 during exit to prevent disturbing following tests.
+> >>>
+> >>
+> >> Hmmm... I would prefer not changing a global setting like that.
+> >> This is going to be flaky since we often run tests in parallel (using different netns)
+> >>
+> >> What about adding a small delay after each sent packet ?
+> >>
+> >> diff --git a/tools/testing/selftests/net/ip_defrag.c b/tools/testing/selftests/net/ip_defrag.c
+> >> index c0c9ecb891e1d78585e0db95fd8783be31bc563a..24d0723d2e7e9b94c3e365ee2ee30e9445deafa8 100644
+> >> --- a/tools/testing/selftests/net/ip_defrag.c
+> >> +++ b/tools/testing/selftests/net/ip_defrag.c
+> >> @@ -198,6 +198,7 @@ static void send_fragment(int fd_raw, struct sockaddr *addr, socklen_t alen,
+> >>                 error(1, 0, "send_fragment: %d vs %d", res, frag_len);
+> >>  
+> >>         frag_counter++;
+> >> +       usleep(1000);
+> >>  }
+> >>  
+> >>  static void send_udp_frags(int fd_raw, struct sockaddr *addr,
+> >>
+> > 
+> > That won't work because the issue only shows when we using conntrack, as the
+> > packet will be reassembled on output, then fragmented again. When this happens,
+> > the fragmentation code is transmitting the fragments in a tight loop, which
+> > floods the backlog.
+> 
+> Interesting !
+> 
+> So it looks like the test is correct, and exposed a long standing problem in this code.
+> 
+> We should not adjust the test to some kernel-of-the-day-constraints, and instead fix the kernel bug ;)
+> 
+> Where is this tight loop exactly ?
+> 
+> If this is feeding/bursting ~1000 skbs via netif_rx() in a BH context, maybe we need to call a variant
+> that allows immediate processing instead of (ab)using the softnet backlog.
+> 
+> Thanks !
 
---5QAgd0e35j3NYeGe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is the loopback interface, so its xmit calls netif_rx. I suppose we would
+have the same problem with veth, for example.
 
-On Fri, Dec 06, 2019 at 04:20:04PM +0530, Nagarjuna Kristam wrote:
-> Add usb-role-switch property for Tegra210 and Tegra186 platforms. This
-> entry is used by XUSB pad controller driver to register for role changes
-> for OTG/Peripheral capable USB 2 ports.
->=20
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt | =
-4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-p=
-adctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padc=
-tl.txt
-> index 9fb682e..0f19ed6 100644
-> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.t=
-xt
-> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.t=
-xt
-> @@ -179,6 +179,10 @@ Optional properties:
->    is internal. In the absence of this property the port is considered to=
- be
->    external.
->  - vbus-supply: phandle to a regulator supplying the VBUS voltage.
-> +- usb-role-switch: boolean property to indicate use of USB Role Switch.
+So net/ipv6/ip6_output.c:ip6_fragment has this:
 
-That first sentence here seems a bit useless and vague. It doesn't
-really convey anything other than the name already does. Perhaps
-something like:
+		for (;;) {
+			/* Prepare header of the next frame,
+			 * before previous one went down. */
+			if (iter.frag)
+				ip6_fraglist_prepare(skb, &iter);
 
-	Boolean property to indicate that the port support OTG. If
-	present, the port supports switching between USB host and
-	peripheral roles.
+			skb->tstamp = tstamp;
+			err = output(net, sk, skb);
+			if (!err)
+				IP6_INC_STATS(net, ip6_dst_idev(&rt->dst),
+					      IPSTATS_MIB_FRAGCREATES);
 
-> +  This property is MUST for OTG,Peripheral capable USB 2 ports. Connector
+			if (err || !iter.frag)
+				break;
 
-If this is mandatory, why not add it to the list of required properties?
-I guess since it's only mandatory for ports that support OTG, perhaps we
-could add a section "Required properties for OTG capable ports:" or
-something like that? Then you can also omit the second sentence in the
-description.
+			skb = ip6_fraglist_next(&iter);
+		}
 
-> +  should be added as subnode, see connector.txt. vbus-gpio in connector =
-is
+output is ip6_finish_output2, which will call neigh_output, which ends up
+calling dev_queue_xmit.
 
-There's no file called "connector.txt". Are you referring to
+In this case, ip6_fragment is being called probably from rawv6_send_hdrinc ->
+dst_output -> ip6_output -> ip6_finish_output -> __ip6_finish_output ->
+ip6_fragment.
 
-	Documentation/devicetree/bindings/connector/usb-connector.txt
+dst_output at rawv6_send_hdrinc is being called after netfilter
+NF_INET_LOCAL_OUT hook. That one is gathering the fragments and only accepting
+that last, reassembled skb, which causes ip6_fragment enter that loop.
 
-? Also, that file calls the property "vbus-gpios" and lists it as
-optional. What would happen if we don't specify it? Doesn't that just
-mean that we can't support role detection?
+So, basically, the easiest way to reproduce this is using this test with
+loopback and netfilter doing the reassembly during conntrack. I see some BH
+locks here and there, but I think this is just filling up the backlog too fast
+to give any chance for softirq to kick in.
 
-> +  Mandatory.
+I will see if I can reproduce this using routed veths.
 
-"mandatory"
+Cascardo.
 
-Thierry
-
-> =20
->  ULPI ports:
->  -----------
-> --=20
-> 2.7.4
->=20
-
---5QAgd0e35j3NYeGe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3qal8ACgkQ3SOs138+
-s6FCvw//W+tif2kSJJtiPRCRw6jpSoXUwVAjU7ZwbXXADIhJu5fnxdzio29NFIsp
-BAe7QcXP8emgeUdOvZuRedDX5RX1KZkSz8i3JV2o6kMHa1u2Jnu+pQFv1nQz2HnE
-ATTUej+WAX8pPy/EVkW3UX0dqUWw8/agZzJckfuoQpXhjgZB5to7ZAAb0eN8Oxwb
-uNqYVxunX+A4mRcyHNCZlAsdH5K8qv4ueZezgChS5zmK9nou7pV3vjS5SK2KPrZp
-aHwXhtM98CcLto2nOs4S84GDMUMgECxIM9LCLETt6oLNjs+J6UVmJrh2yJ+xqQTG
-BKp6mwp53p3KMMT+7nUG7WsRElFP/w9QPcLbxBXCfqUzlA57/yj/DVWqitJbaSkS
-U+bEAhxg/n7NJVDFF0JR06YABn/fYE2uRX8otXE18DtrVFaQgRV9jx2sFWrOh1gv
-6a5Je+nXSQvx4j3/0otBIuoPqDli85rDHwpWamqW3PmBCyqJF3eg1kepOcwFnB1V
-lZ4Y9bsGy/yKsQjrfLpe0AEC3Jo+OxIBrwrSz3VATz0LLnXUH+tbt7bTrJetE29a
-qiXlTtdWLsnYMGvnmYts+bKw7FaEuKqz9b/Yd/iw4LO47xo4r/Pfx5tXMng+KiG0
-Ve+Bp9KBju8Llg/5nojd9FVQtlV4n+uY+XnibgICSsjJdhMyQfQ=
-=Ud+/
------END PGP SIGNATURE-----
-
---5QAgd0e35j3NYeGe--
+Cascardo.
