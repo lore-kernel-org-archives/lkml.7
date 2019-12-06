@@ -2,43 +2,43 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39F8C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C81BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FEDE24670
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C98524676
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575651363;
-	bh=o08uCHzgAHGv+tapdz95ce96zQ+FlVUziNFbIeIlGG8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=wk2rDEkONO8Cylv4j7YzLxqqSaLNOHReLTJweWQ/Jt5WNT21UbkoV/p7vQYOEPg2W
-	 YKHdR1tOnoUrMnPiOrvYIz0ehymSrJJxt93X39gO3BU1bVWoLCVPd7EJAihEkisMDs
-	 g692MA25lCusuk79/Fq1Tm2opY472m76AZZLR8uw=
+	s=default; t=1575651367;
+	bh=PReHa2l/5slFJUHYxmKO7wTlOyr/DkZ+YiOdHmPh9es=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BeOfURwSrgST9rL8/cPrtKuCs+rtydWFVbDe7cou7VVCvBAvJ/0h+VcykkDc4sWPm
+	 Bfm4zClBJToRGFb7WT9a4MtC58FEIqwBHpNjoeqGQF8vb26Q1XVoxm0XkuBWYN7ps8
+	 sDUFoPtoIyTFyQqFx85bJYb4DJa1ed2Fpy+tdmyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbfLFQ4C (ORCPT
+        id S1726552AbfLFQ4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:56:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50710 "EHLO mail.kernel.org"
+        Fri, 6 Dec 2019 11:56:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbfLFQ4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:56:01 -0500
+        id S1726460AbfLFQ4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 11:56:05 -0500
 Received: from e123331-lin.cambridge.arm.com (fw-tnat-cam5.arm.com [217.140.106.53])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB09B2064B;
-        Fri,  6 Dec 2019 16:55:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7339E2466E;
+        Fri,  6 Dec 2019 16:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575651361;
-        bh=o08uCHzgAHGv+tapdz95ce96zQ+FlVUziNFbIeIlGG8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eJiMK/+1U/GKSOob7WKgQlOsLEXxBiMLINK5xYp/UVPpZbKvAdONSfwup3A233imk
-         U8vm5qRsQK0zPL4Bl55k/W8+4BR1Vx2iZRCCCrrIp2tDzFAeO5FOzGr9R0M0gKQ2TW
-         q22dbJxVRTVBS0cPhp87d/Cxj7PJ+Dum1uvbpvVM=
+        s=default; t=1575651364;
+        bh=PReHa2l/5slFJUHYxmKO7wTlOyr/DkZ+YiOdHmPh9es=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hEdhvXn3PgBXlWSIWEla/gAFvEI56jbplkOPFOg0YvHeYiGIbiC3q349DLy0sEnpJ
+         osvzYoq9mQBnpFvu9TvAJwVgutKoeBDzxQPO41rWPIsmKp+8nUsNsXrHfoMUpbNFaR
+         6lfyF10R/kQPjy31yRvk7R538W7E9mp6NoSTFi6A=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,51 +47,91 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Arvind Sankar <nivedita@alum.mit.edu>,
         Bhupesh Sharma <bhsharma@redhat.com>,
         Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-Subject: [GIT PULL 0/6] EFI fixes for v5.5
-Date:   Fri,  6 Dec 2019 16:55:36 +0000
-Message-Id: <20191206165542.31469-1-ardb@kernel.org>
+Subject: [PATCH 2/6] efi/gop: Return EFI_NOT_FOUND if there are no usable GOPs
+Date:   Fri,  6 Dec 2019 16:55:38 +0000
+Message-Id: <20191206165542.31469-3-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191206165542.31469-1-ardb@kernel.org>
+References: <20191206165542.31469-1-ardb@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 2f13437b8917627119d163d62f73e7a78a92303a:
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-  Merge tag 'trace-v5.5-2' of git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace (2019-12-04 19:13:52 -0800)
+If we don't find a usable instance of the Graphics Output Protocol
+(GOP) because none of them have a framebuffer (i.e. they were all
+PIXEL_BLT_ONLY), but all the efi calls succeeded, we will return
+EFI_SUCCESS even though we didn't find a usable GOP.
 
-are available in the Git repository at:
+Fix this by explicitly returning EFI_NOT_FOUND if no usable GOPs are
+found, allowing the caller to probe for UGA instead.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-urgent
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ drivers/firmware/efi/libstub/gop.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-for you to fetch changes up to f74622f872e9cb59cabd89cd908ade976e2269b9:
+diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
+index 0101ca4c13b1..08f3c1a2fb48 100644
+--- a/drivers/firmware/efi/libstub/gop.c
++++ b/drivers/firmware/efi/libstub/gop.c
+@@ -119,7 +119,7 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 	u64 fb_base;
+ 	struct efi_pixel_bitmask pixel_info;
+ 	int pixel_format;
+-	efi_status_t status = EFI_NOT_FOUND;
++	efi_status_t status;
+ 	u32 *handles = (u32 *)(unsigned long)gop_handle;
+ 	int i;
+ 
+@@ -175,7 +175,7 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 
+ 	/* Did we find any GOPs? */
+ 	if (!first_gop)
+-		goto out;
++		return EFI_NOT_FOUND;
+ 
+ 	/* EFI framebuffer */
+ 	si->orig_video_isVGA = VIDEO_TYPE_EFI;
+@@ -197,7 +197,7 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 	si->lfb_size = si->lfb_linelength * si->lfb_height;
+ 
+ 	si->capabilities |= VIDEO_CAPABILITY_SKIP_QUIRKS;
+-out:
++
+ 	return status;
+ }
+ 
+@@ -237,7 +237,7 @@ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 	u64 fb_base;
+ 	struct efi_pixel_bitmask pixel_info;
+ 	int pixel_format;
+-	efi_status_t status = EFI_NOT_FOUND;
++	efi_status_t status;
+ 	u64 *handles = (u64 *)(unsigned long)gop_handle;
+ 	int i;
+ 
+@@ -293,7 +293,7 @@ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 
+ 	/* Did we find any GOPs? */
+ 	if (!first_gop)
+-		goto out;
++		return EFI_NOT_FOUND;
+ 
+ 	/* EFI framebuffer */
+ 	si->orig_video_isVGA = VIDEO_TYPE_EFI;
+@@ -315,7 +315,7 @@ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 	si->lfb_size = si->lfb_linelength * si->lfb_height;
+ 
+ 	si->capabilities |= VIDEO_CAPABILITY_SKIP_QUIRKS;
+-out:
++
+ 	return status;
+ }
+ 
+-- 
+2.17.1
 
-  efi/earlycon: Remap entire framebuffer after page initialization (2019-12-05 16:40:06 +0000)
-
-----------------------------------------------------------------
-Some EFI fixes for the v5.5 cycle:
-- Ensure that EFI persistent memory reservations are safe from being
-  clobbered by the kexec userland tools by listing them in /proc/iomem
-- Reinstate a EFIFB earlycon optimization that got lost when moving the
-  code from x86 earlyprintk
-- Various fixes for logic bugs in the handling of graphics output by
-  the EFI stub.
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      efi/earlycon: Remap entire framebuffer after page initialization
-
-Ard Biesheuvel (1):
-      efi/memreserve: register reservations as 'reserved' in /proc/iomem
-
-Arvind Sankar (4):
-      efi/gop: Return EFI_NOT_FOUND if there are no usable GOPs
-      efi/gop: Return EFI_SUCCESS if a usable GOP was found
-      efi/gop: Fix memory leak from __gop_query32/64
-      efi: fix type of unload field in efi_loaded_image_t
-
- drivers/firmware/efi/earlycon.c    | 40 +++++++++++++++++++
- drivers/firmware/efi/efi.c         | 28 ++++++++++++-
- drivers/firmware/efi/libstub/gop.c | 80 +++++++++-----------------------------
- include/linux/efi.h                | 10 ++---
- 4 files changed, 90 insertions(+), 68 deletions(-)
