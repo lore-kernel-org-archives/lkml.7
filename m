@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D009C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA237C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3236206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB52F2245C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JUnATL/q"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ndn1mcgg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfLFWOK (ORCPT
+        id S1726901AbfLFWOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 17:14:10 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:38480 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbfLFWOH (ORCPT
+        Fri, 6 Dec 2019 17:14:49 -0500
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:36290 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfLFWOR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 17:14:07 -0500
-Received: by mail-pg1-f201.google.com with SMTP id l13so4558951pgt.5
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 14:14:06 -0800 (PST)
+        Fri, 6 Dec 2019 17:14:17 -0500
+Received: by mail-pf1-f201.google.com with SMTP id y127so4827584pfg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 14:14:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=XVGcsXtiiPVE9a9TFllXGgGHEKcXDxSx20NO6hJScDc=;
-        b=JUnATL/qYc1oxv8iBdTskfQzu3dUUjyggOYJEMcIQnnUL/Y0NRoC+SEMllJtcFOWiS
-         N/ulKnmZgrhoasRLRMaSLDH6091pEOUYgXXuTdPJyA/+/zT+NjML18Xbk0q7JQJZlyWp
-         6rTkEVNH+fLD7+o9KvYuKvTopFNc6WKI4uib8O/Vx3iw4Shp3SUt/TKbmahphI0HKiU4
-         BPRPCXf6h87GZeFyHIHYFqSn3p3Rv69hjOpYO3XFPBCkg3Q3z4MrJ2EA56qijI8w4jiX
-         NQZtE0UhN3gJbyVa0+qGFUMyTZbRuK6Bc5RytwdbEZTnrQcmzPqvaU68OoqewWa4Q8Up
-         87AQ==
+        bh=l4zxu+Ve1HL3tnwJkQPbvyP6wBLrUpssPL9/jgnN43M=;
+        b=Ndn1mcggyHBtKAX2XvpEyO1cvzn5t5Rt5EL74f5oQNI8xON9HZdOIOpGfCHheh4ROb
+         ZMN247KbIgaMPUDc6e3RJ7DYNG8PST7u+oWWP+k1N+jSEe2J/d2Hj+oq/JPjyElDDN0s
+         1bajoDV+ePEiqhlZBkx0JT+WTHRbNVJ9xUb/RgEkuqCSSWGQ87CELue3gJUsVkVLLj1/
+         jMc9JOE96jedSwbK6Jh+owxavogPTbBQc3Lm1+HVnkCfDUu1/SEqZVkaAo5gGN3APpx7
+         /ziJCrqylxkp6ltt8RGxlVAjAuQ46tyN3U7+ZPVlmKLcHn2gKg0ggIkQts840wwlTABV
+         1Rpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=XVGcsXtiiPVE9a9TFllXGgGHEKcXDxSx20NO6hJScDc=;
-        b=T7qqYmA8vquPRJiAb8xbeIaqQaA1p/1Lw8OC4/Yj9CJunnuazlww/9kX9tytfknRzm
-         KAZoZwQ/KQHs20awWTuyxZKRHbf/JN9Ov0I2hlmaW5NrdaNRCIrSl1H9S25KEo8pSK6D
-         z/vnCI2UhxfNMPY5Xrq4abqKw2dfM+TX4OvwxZQpbcXixWYXnbycmQcdwEsfE0rSGLUM
-         vZvbXGkw4BH5b1Szm3c3NdAayOXoIBo2+Et2xfKuvuPN9b0cvuM+xJ2frqxC8Z/voPpP
-         1SskbNfc8/WkJLaR+IX5BDd3htK9dX3PSGpYtBbI8a8Y17rorCYOkIu+lL6RDvxSyjmb
-         Cy0A==
-X-Gm-Message-State: APjAAAWALJ9ALcZ94cyyiXx81o4jgRja+8w5bDRnIL1ktMHgho4B6XhI
-        MzQnk/omO+Rc1QJL6vlDMsNxHAVa+R5+C/NekN0=
-X-Google-Smtp-Source: APXvYqzpc2h9jpUCodzOkaKdDJjjZM8itrSvWPNDKAcJvhYbUWMf4zn2+0r1408XQPHyy98KZt3TkfsfH2+NYjTL2w4=
-X-Received: by 2002:a63:1c66:: with SMTP id c38mr5983922pgm.368.1575670446054;
- Fri, 06 Dec 2019 14:14:06 -0800 (PST)
-Date:   Fri,  6 Dec 2019 14:13:40 -0800
+        bh=l4zxu+Ve1HL3tnwJkQPbvyP6wBLrUpssPL9/jgnN43M=;
+        b=ID3532JPXsuA/KNoL3CJDniYUvvKcXziSN/OKn80tzn2JKOY1WvRSNq0E5OZR5i1/N
+         xyZBiXp/CVPXaQH6mqzKqk0Epz4EZ9seuWn+N6a6utfmNHsHKB/1VX13hMLDWM2cy1OP
+         YFysIU07L4ncq6oh69W7s5mIKQhSe8ne3HN9ViM4lFXaVld3mmAwm1Iukywdu8ARyFQm
+         b5IiBrWT0rlFROG7rzkPht1A0VEwlU9bEId4bTMVTaR9pDV0DCR50MVtqtdmI9mQCn8+
+         ahRB57QCso9Z/1hZulPQ8IBHXCzbR1PrFLv2qtk+nvqzSQROieXvgR/eOf6+wyGGjYNk
+         9VqA==
+X-Gm-Message-State: APjAAAXWSkrBxbYhfUAJQ3OUblZRmwi+mbXyai9UICQjoNll6b3xBe78
+        iJ+OqRHtAWdB6+x0BiwCh+EIf67i75M38o2+eAE=
+X-Google-Smtp-Source: APXvYqxNGRCIoJl/pi6uCzgUEQ/oTKWPk8JXk9O2ag4WW88WJwvi2rvTurqocnD02MdVkQxGa8htdlPNVJwyO2G3YuU=
+X-Received: by 2002:a65:4345:: with SMTP id k5mr6095564pgq.252.1575670456528;
+ Fri, 06 Dec 2019 14:14:16 -0800 (PST)
+Date:   Fri,  6 Dec 2019 14:13:44 -0800
 In-Reply-To: <20191206221351.38241-1-samitolvanen@google.com>
-Message-Id: <20191206221351.38241-5-samitolvanen@google.com>
+Message-Id: <20191206221351.38241-9-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20191206221351.38241-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [PATCH v6 04/15] arm64: kernel: avoid x18 in __cpu_soft_restart
+Subject: [PATCH v6 08/15] arm64: disable function graph tracing with SCS
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -84,39 +84,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+The graph tracer hooks returns by modifying frame records on the
+(regular) stack, but with SCS the return address is taken from the
+shadow stack, and the value in the frame record has no effect. As we
+don't currently have a mechanism to determine the corresponding slot
+on the shadow stack (and to pass this through the ftrace
+infrastructure), for now let's disable the graph tracer when SCS is
+enabled.
 
-The code in __cpu_soft_restart() uses x18 as an arbitrary temp register,
-which will shortly be disallowed. So use x8 instead.
-
-Link: https://patchwork.kernel.org/patch/9836877/
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-[Sami: updated commit message]
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 ---
- arch/arm64/kernel/cpu-reset.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
-index 6ea337d464c4..32c7bf858dd9 100644
---- a/arch/arm64/kernel/cpu-reset.S
-+++ b/arch/arm64/kernel/cpu-reset.S
-@@ -42,11 +42,11 @@ ENTRY(__cpu_soft_restart)
- 	mov	x0, #HVC_SOFT_RESTART
- 	hvc	#0				// no return
- 
--1:	mov	x18, x1				// entry
-+1:	mov	x8, x1				// entry
- 	mov	x0, x2				// arg0
- 	mov	x1, x3				// arg1
- 	mov	x2, x4				// arg2
--	br	x18
-+	br	x8
- ENDPROC(__cpu_soft_restart)
- 
- .popsection
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index b1b4476ddb83..49e5f94ff4af 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -149,7 +149,7 @@ config ARM64
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_TRACER
+ 	select HAVE_FUNCTION_ERROR_INJECTION
+-	select HAVE_FUNCTION_GRAPH_TRACER
++	select HAVE_FUNCTION_GRAPH_TRACER if !SHADOW_CALL_STACK
+ 	select HAVE_GCC_PLUGINS
+ 	select HAVE_HW_BREAKPOINT if PERF_EVENTS
+ 	select HAVE_IRQ_TIME_ACCOUNTING
 -- 
 2.24.0.393.g34dc348eaf-goog
 
