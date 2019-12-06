@@ -4,141 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6348C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C11C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 838572464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E43205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 13:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbfLFNTt (ORCPT
+        id S1726264AbfLFNWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 08:19:49 -0500
-Received: from michel.telenet-ops.be ([195.130.137.88]:37688 "EHLO
+        Fri, 6 Dec 2019 08:22:23 -0500
+Received: from michel.telenet-ops.be ([195.130.137.88]:43580 "EHLO
         michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfLFNTs (ORCPT
+        with ESMTP id S1726128AbfLFNWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:19:48 -0500
+        Fri, 6 Dec 2019 08:22:22 -0500
 Received: from ramsan ([84.195.182.253])
         by michel.telenet-ops.be with bizsmtp
-        id adKm210035USYZQ06dKmN3; Fri, 06 Dec 2019 14:19:46 +0100
+        id adNL2100i5USYZQ06dNLw0; Fri, 06 Dec 2019 14:22:21 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1idDWL-00069B-UC; Fri, 06 Dec 2019 14:19:45 +0100
+        id 1idDYq-0006Bo-Rm; Fri, 06 Dec 2019 14:22:20 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1idDWL-0007Tm-RC; Fri, 06 Dec 2019 14:19:45 +0100
+        id 1idDYq-0007X1-QC; Fri, 06 Dec 2019 14:22:20 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3] iio: adc: max9611: Fix too short conversion time delay
-Date:   Fri,  6 Dec 2019 14:19:44 +0100
-Message-Id: <20191206131944.28707-1-geert+renesas@glider.be>
+Subject: [PATCH v2] driver core: Print device when resources present in really_probe()
+Date:   Fri,  6 Dec 2019 14:22:19 +0100
+Message-Id: <20191206132219.28908-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
-reading in probe"), max9611 initialization sometimes fails on the
-Salvator-X(S) development board with:
+If a device already has devres items attached before probing, a warning
+backtrace is printed.  However, this backtrace does not reveal the
+offending device, leaving the user uninformed.  Furthermore, using
+WARN_ON() causes systems with panic-on-warn to reboot.
 
-    max9611 4-007f: Invalid value received from ADC 0x8000: aborting
-    max9611: probe of 4-007f failed with error -5
+Fix this by replacing the WARN_ON() by a dev_crit() message.
+Abort probing the device, to prevent doing more damage to the device's
+resources.
 
-The max9611 driver tests communications with the chip by reading the die
-temperature during the probe function, which returns an invalid value.
-
-According to the datasheet, the typical ADC conversion time is 2 ms, but
-no minimum or maximum values are provided.  Maxim Technical Support
-confirmed this was tested with temperature Ta=25 degreeC, and promised
-to inform me if a maximum/minimum value is available (they didn't get
-back to me, so I assume it is not).
-
-However, the driver assumes a 1 ms conversion time.  Usually the
-usleep_range() call returns after more than 1.8 ms, hence it succeeds.
-When it returns earlier, the data register may be read too early, and
-the previous measurement value will be returned.  After boot, this is
-the temperature POR (power-on reset) value, causing the failure above.
-
-Fix this by increasing the delay from 1000-2000 µs to 3000-3300 µs.
-
-Note that this issue has always been present, but it was exposed by the
-aformentioned commit.
-
-Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
-After this patch, probing of the two max9611 sensors succeeded during
-ca. 3000 boot cycles on Salvator-X(S) boards, equipped with various
-R-Car H3/M3-W/M3-N SoCs.
-
-v3:
-  - Add Reviewed-by,
-  - Join split comment line,
-
 v2:
-  - Add Reviewed-by,
-  - Add feedback from Maxim Technical Support,
-  - Increase delay from 2000-2200 µs to 3000-3300 µs to play safe.
+  - Use dev_crit() instead of dev_WARN_ON(),
+  - Abort probing, as this is a critical situation.
 ---
- drivers/iio/adc/max9611.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/base/dd.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-index bf76dfb3f2c9530b..6250d4bf46dc9642 100644
---- a/drivers/iio/adc/max9611.c
-+++ b/drivers/iio/adc/max9611.c
-@@ -89,6 +89,12 @@
- #define MAX9611_TEMP_SCALE_NUM		1000000
- #define MAX9611_TEMP_SCALE_DIV		2083
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index d811e60610d33ae9..b25bcab2a26bd2ad 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -516,7 +516,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+ 	atomic_inc(&probe_count);
+ 	pr_debug("bus: '%s': %s: probing driver %s with device %s\n",
+ 		 drv->bus->name, __func__, drv->name, dev_name(dev));
+-	WARN_ON(!list_empty(&dev->devres_head));
++	if (!list_empty(&dev->devres_head)) {
++		dev_crit(dev, "Resources present before probing\n");
++		return -EBUSY;
++	}
  
-+/*
-+ * Conversion time is 2 ms (typically) at Ta=25 degreeC
-+ * No maximum value is known, so play it safe
-+ */
-+#define MAX9611_CONV_TIME_US_RANGE	3000, 3300
-+
- struct max9611_dev {
- 	struct device *dev;
- 	struct i2c_client *i2c_client;
-@@ -223,10 +229,9 @@ static int max9611_read_single(struct max9611_dev *max9611,
- 	}
- 
- 	/*
--	 * need a delay here to make register configuration
--	 * stabilize. 1 msec at least, from empirical testing.
-+	 * need a delay here to make register configuration stabilize.
- 	 */
--	usleep_range(1000, 2000);
-+	usleep_range(MAX9611_CONV_TIME_US_RANGE);
- 
- 	ret = i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
- 	if (ret < 0) {
-@@ -493,7 +498,7 @@ static int max9611_init(struct max9611_dev *max9611)
- 			MAX9611_REG_CTRL2, 0);
- 		return ret;
- 	}
--	usleep_range(1000, 2000);
-+	usleep_range(MAX9611_CONV_TIME_US_RANGE);
- 
- 	return 0;
- }
+ re_probe:
+ 	dev->driver = drv;
 -- 
 2.17.1
 
