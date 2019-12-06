@@ -2,147 +2,158 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE5DC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1419C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B502173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2D922173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 22:59:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="hbilOdCb"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qTSxMpHc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfLFW6o (ORCPT
+        id S1726479AbfLFW7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 17:58:44 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54215 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfLFW6o (ORCPT
+        Fri, 6 Dec 2019 17:59:42 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:50434 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbfLFW7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 17:58:44 -0500
-Received: by mail-wm1-f65.google.com with SMTP id n9so8922643wmd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 14:58:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxtx.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fQyTyi81sNSurDVNaGanlJRmf47w9kd4qd/eAEXU8Mg=;
-        b=hbilOdCblw8Nr9SIw2Ydv9XSVrj0A0s6nuhmiXHi70770wcJUhqKbJLMugwuEgdrcL
-         LdHm8bYtVwkqees3QE/NPkey+hKUC8rAsKKxTS70F1Ssvuc/A5IIOw2GNSkzj7FfMIdh
-         bgt2XDFM4QE7f497OpxO/HZ0oLXCXTLqx84fU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fQyTyi81sNSurDVNaGanlJRmf47w9kd4qd/eAEXU8Mg=;
-        b=SpxpfDgSaXDqVTZSEPmD5Q9Ovt/MrrVUUXffzS5jziWYBiMnecVkhKcjRwvGUsXNI1
-         GOWmp9B+xbYimYG7fg72AGEIwPaWqxdXgQyaeVAon5qzRR4WiL6JWRZyOR0m79td41eR
-         XHLpXQ1BNaeqydZnT7rykdtgN8cgkn9pmW1xislsm+hfs/UU8F14uDemidoAhMEywj3A
-         Y9Hd/RCoz6m/8LwOsdCVCGGuhvnGh+SaV/bSwZu6mfEy8RXH9/fIlB2KtRuySzWDjYdw
-         qGm7vKIQiOPlayRKl42/qFSFalTO1yS95WMiy/u//8fbDInTHzElRDBni0yo1n9qMIB9
-         jeqA==
-X-Gm-Message-State: APjAAAXgYbAm00A/Aj5ZAGo/cFiWFk5GYgDGR4IKLGH26ar88NVN5uqE
-        EIrOpV1yzZANtIU/VsY0qRDzUfS/SCp44x+aFRi6Jg==
-X-Google-Smtp-Source: APXvYqxDoDwoU4SeO/Mh/qR20XP3FrNBHYS6CYnTkK0xT0ow24f8fr3bvnM7N97dWNb232sOnDwxgpfdDsA3YFRZdxI=
-X-Received: by 2002:a1c:3941:: with SMTP id g62mr12268370wma.165.1575673121680;
- Fri, 06 Dec 2019 14:58:41 -0800 (PST)
-MIME-Version: 1.0
-References: <20191203160345.24743-1-labbott@redhat.com> <20191203170114.GB377782@localhost.localdomain>
- <9bc4b04b-a3cc-4e58-4c73-1d77b7ed05da@redhat.com>
-In-Reply-To: <9bc4b04b-a3cc-4e58-4c73-1d77b7ed05da@redhat.com>
-From:   Justin Forbes <jmforbes@linuxtx.org>
-Date:   Fri, 6 Dec 2019 16:58:30 -0600
-Message-ID: <CAFxkdAraVz6mbQ3OFRGF3DmfWMDNzuXd+HJ14ypex6bMm-oCGw@mail.gmail.com>
-Subject: Re: [PATCH] netfilter: nf_flow_table_offload: Correct memcpy size for flow_overload_mangle
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 6 Dec 2019 17:59:42 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB6MtA04038392;
+        Fri, 6 Dec 2019 22:59:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=W9YZ2rymUJpYEmDlZSgJzhgM8ZEHSIB+08WzqtebW+0=;
+ b=qTSxMpHcOXv99EC5aFHowyfk/zDDTJXRnoeUBWjIsTca9NdP+PgDOYKOehxmb1V0gx5k
+ Y7Vijl7pHdq7Wt6UKnWndZ5vzC4db0obCcL8Yk3I2XDcxdSBsw//kR1MsHvYmgXi2dn0
+ XkZ6PPBSz5aUN+5VxIhlVm/Up4PYFz6Gf9fJb1Eohr7j54lquGvakRfc2CWHOCSOsF5G
+ LtaGlUj7jkFl9E01vjQTP/HFRFGCxzWUSXGEfUY+sHw2MZ91gMOpnnXvnz412Mynit4X
+ Q1ClveREjU8uoeLha/swpLbn0nxmvCa6XiaKaHBV2X6TbJFgLHXD4AOQewpLtncFo+j+ Nw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2wkgcqxqa1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Dec 2019 22:59:32 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB6MxGFp122666;
+        Fri, 6 Dec 2019 22:59:32 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2wqt45h15w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Dec 2019 22:59:31 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB6MxUwO023092;
+        Fri, 6 Dec 2019 22:59:30 GMT
+Received: from localhost.us.oracle.com (/10.147.27.2)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 06 Dec 2019 14:59:30 -0800
+From:   Eric Snowberg <eric.snowberg@oracle.com>
+To:     gregkh@linuxfoundation.org
+Cc:     rafael@kernel.org, dhowells@redhat.com, matthewgarrett@google.com,
+        jmorris@namei.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, eric.snowberg@oracle.com
+Subject: [PATCH] debugfs: Return -EPERM when locked down
+Date:   Fri,  6 Dec 2019 17:59:09 -0500
+Message-Id: <20191206225909.46721-1-eric.snowberg@oracle.com>
+X-Mailer: git-send-email 2.18.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9463 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912060182
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9463 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912060182
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 2:50 PM Laura Abbott <labbott@redhat.com> wrote:
->
-> On 12/3/19 12:01 PM, Marcelo Ricardo Leitner wrote:
-> > On Tue, Dec 03, 2019 at 11:03:45AM -0500, Laura Abbott wrote:
-> >> The sizes for memcpy in flow_offload_mangle don't match
-> >> the source variables, leading to overflow errors on some
-> >> build configurations:
-> >>
-> >> In function 'memcpy',
-> >>      inlined from 'flow_offload_mangle' at net/netfilter/nf_flow_table_offload.c:112:2,
-> >>      inlined from 'flow_offload_port_dnat' at net/netfilter/nf_flow_table_offload.c:373:2,
-> >>      inlined from 'nf_flow_rule_route_ipv4' at net/netfilter/nf_flow_table_offload.c:424:3:
-> >> ./include/linux/string.h:376:4: error: call to '__read_overflow2' declared with attribute error: detected read beyond size of object passed as 2nd parameter
-> >>    376 |    __read_overflow2();
-> >>        |    ^~~~~~~~~~~~~~~~~~
-> >> make[2]: *** [scripts/Makefile.build:266: net/netfilter/nf_flow_table_offload.o] Error 1
-> >>
-> >> Fix this by using the corresponding type.
-> >>
-> >> Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
-> >> Signed-off-by: Laura Abbott <labbott@redhat.com>
-> >> ---
-> >> Seen on a Fedora powerpc little endian build with -O3 but it looks like
-> >> it is correctly catching an error with doing a memcpy outside the source
-> >> variable.
-> >
-> > Hi,
-> >
-> > It is right but the fix is not. In that call trace:
-> >
-> > flow_offload_port_dnat() {
-> > ...
-> >          u32 mask = ~htonl(0xffff);
-> >          __be16 port;
-> > ...
-> >          flow_offload_mangle(entry, flow_offload_l4proto(flow), offset,
-> >                                   (u8 *)&port, (u8 *)&mask);
-> > }
-> >
-> > port should have a 32b storage as well, and aligned with the mask.
-> >
-> >> ---
-> >>   net/netfilter/nf_flow_table_offload.c | 4 ++--
-> >>   1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/net/netfilter/nf_flow_table_offload.c b/net/netfilter/nf_flow_table_offload.c
-> >> index c54c9a6cc981..526f894d0bdb 100644
-> >> --- a/net/netfilter/nf_flow_table_offload.c
-> >> +++ b/net/netfilter/nf_flow_table_offload.c
-> >> @@ -108,8 +108,8 @@ static void flow_offload_mangle(struct flow_action_entry *entry,
-> >>      entry->id = FLOW_ACTION_MANGLE;
-> >>      entry->mangle.htype = htype;
-> >>      entry->mangle.offset = offset;
-> >> -    memcpy(&entry->mangle.mask, mask, sizeof(u32));
-> >> -    memcpy(&entry->mangle.val, value, sizeof(u32));
-> >                                     ^^^^^         ^^^ which is &port in the call above
-> >> +    memcpy(&entry->mangle.mask, mask, sizeof(u8));
-> >> +    memcpy(&entry->mangle.val, value, sizeof(u8));
-> >
-> > This fix would cause it to copy only the first byte, which is not the
-> > intention.
-> >
->
-> Thanks for the review. I took another look at fixing this and I
-> think it might be better for the maintainer or someone who is more
-> familiar with the code to fix this. I ended up down a rabbit
-> hole trying to get the types to work and I wasn't confident about
-> the casting.
->
+When lockdown is enabled, debugfs_is_locked_down returns 1. It will then
+trigger the following:
 
-Any update on this? It is definitely a problem on PPC LE.
+WARNING: CPU: 48 PID: 3747
+CPU: 48 PID: 3743 Comm: bash Not tainted 5.4.0-1946.x86_64 #1
+Hardware name: Oracle Corporation ORACLE SERVER X7-2/ASM, MB, X7-2, BIOS 41060400 05/20/2019
+RIP: 0010:do_dentry_open+0x343/0x3a0
+Code: 00 40 08 00 45 31 ff 48 c7 43 28 40 5b e7 89 e9 02 ff ff ff 48 8b 53 28 4c 8b 72 70 4d 85 f6 0f 84 10 fe ff ff e9 f5 fd ff ff <0f> 0b 41 bf ea ff ff ff e9 3b ff ff ff 41 bf e6 ff ff ff e9 b4 fe
+RSP: 0018:ffffb8740dde7ca0 EFLAGS: 00010202
+RAX: ffffffff89e88a40 RBX: ffff928c8e6b6f00 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffff928dbfd97778 RDI: ffff9285cff685c0
+RBP: ffffb8740dde7cc8 R08: 0000000000000821 R09: 0000000000000030
+R10: 0000000000000057 R11: ffffb8740dde7a98 R12: ffff926ec781c900
+R13: ffff928c8e6b6f10 R14: ffffffff8936e190 R15: 0000000000000001
+FS:  00007f45f6777740(0000) GS:ffff928dbfd80000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fff95e0d5d8 CR3: 0000001ece562006 CR4: 00000000007606e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ vfs_open+0x2d/0x30
+ path_openat+0x2d4/0x1680
+ ? tty_mode_ioctl+0x298/0x4c0
+ do_filp_open+0x93/0x100
+ ? strncpy_from_user+0x57/0x1b0
+ ? __alloc_fd+0x46/0x150
+ do_sys_open+0x182/0x230
+ __x64_sys_openat+0x20/0x30
+ do_syscall_64+0x60/0x1b0
+ entry_SYSCALL_64_after_hwframe+0x170/0x1d5
+RIP: 0033:0x7f45f5e5ce02
+Code: 25 00 00 41 00 3d 00 00 41 00 74 4c 48 8d 05 25 59 2d 00 8b 00 85 c0 75 6d 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff ff 0f 05 <48> 3d 00 f0 ff ff 0f 87 a2 00 00 00 48 8b 4c 24 28 64 48 33 0c 25
+RSP: 002b:00007fff95e0d2e0 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000561178c069b0 RCX: 00007f45f5e5ce02
+RDX: 0000000000000241 RSI: 0000561178c08800 RDI: 00000000ffffff9c
+RBP: 00007fff95e0d3e0 R08: 0000000000000020 R09: 0000000000000005
+R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000003 R14: 0000000000000001 R15: 0000561178c08800
 
-Thanks,
-Justin
+Change the return type to int and return -EPERM when lockdown is enabled
+to remove the warning above.
+
+Fixes: 5496197f9b08 ("debugfs: Restrict debugfs when the kernel is locked down")
+Signed-off-by: Eric Snowberg <eric.snowberg@oracle.com>
+---
+ fs/debugfs/file.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+index dede25247b81..f31698f9b586 100644
+--- a/fs/debugfs/file.c
++++ b/fs/debugfs/file.c
+@@ -142,7 +142,7 @@ EXPORT_SYMBOL_GPL(debugfs_file_put);
+  * We also need to exclude any file that has ways to write or alter it as root
+  * can bypass the permissions check.
+  */
+-static bool debugfs_is_locked_down(struct inode *inode,
++static int debugfs_is_locked_down(struct inode *inode,
+ 				   struct file *filp,
+ 				   const struct file_operations *real_fops)
+ {
+@@ -151,9 +151,12 @@ static bool debugfs_is_locked_down(struct inode *inode,
+ 	    !real_fops->unlocked_ioctl &&
+ 	    !real_fops->compat_ioctl &&
+ 	    !real_fops->mmap)
+-		return false;
++		return 0;
+ 
+-	return security_locked_down(LOCKDOWN_DEBUGFS);
++	if (security_locked_down(LOCKDOWN_DEBUGFS))
++		return -EPERM;
++
++	return 0;
+ }
+ 
+ static int open_proxy_open(struct inode *inode, struct file *filp)
+-- 
+2.18.1
+
