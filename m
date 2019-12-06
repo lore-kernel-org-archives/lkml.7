@@ -2,115 +2,182 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2399AC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01D4C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7B924659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:17:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iS/qPmuc"
+	by mail.kernel.org (Postfix) with ESMTP id CFAEC24677
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfLFORD (ORCPT
+        id S1726796AbfLFORK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:17:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37816 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726214AbfLFORD (ORCPT
+        Fri, 6 Dec 2019 09:17:10 -0500
+Received: from mout-p-101.mailbox.org ([80.241.56.151]:22066 "EHLO
+        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbfLFORI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 09:17:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575641821;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AZIJx8+mn7hsmuKsrvwqAWlAV7JzTrtDo1L8YffDmDY=;
-        b=iS/qPmuc+Pz+5nqRceBzKVp+hhjelEMFphYs+E1csNMCKp0DCJWLqWYBF2GdKwaXuiRP/X
-        qPIaUkCIFrvBUbbJsmgEk+Kg2BDG9vAro69B3vlTo8JqSq1N6jdbTSKoBoHzJwVDmGlPRr
-        fnaN+9QaI7pcBcKJYsXk3zImdmvOKz8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-vhicXEh8O6CvUvqBmFTRSw-1; Fri, 06 Dec 2019 09:16:58 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 6 Dec 2019 09:17:08 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3256C800D5B;
-        Fri,  6 Dec 2019 14:16:56 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4F86960BF4;
-        Fri,  6 Dec 2019 14:16:54 +0000 (UTC)
-From:   Prarit Bhargava <prarit@redhat.com>
-To:     prarit@redhat.com
-Cc:     andrea.parri@amarulasolutions.com, brendanhiggins@google.com,
-        gregkh@linuxfoundation.org, john.ogness@linutronix.de,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, pmladek@suse.com, rostedt@goodmis.org,
-        sergey.senozhatsky@gmail.com, sergey.senozhatsky.work@gmail.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org
-Subject: Re: [RFC PATCH v5 0/3] printk: new ringbuffer implementation
-Date:   Fri,  6 Dec 2019 09:16:53 -0500
-Message-Id: <20191206141653.1199-1-prarit@redhat.com>
-In-Reply-To: <87zhg6zx31.fsf@linutronix.de>
-References: <87zhg6zx31.fsf@linutronix.de>
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 47TvmG50qQzKmcK;
+        Fri,  6 Dec 2019 15:17:02 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id AiwRY208Az-u; Fri,  6 Dec 2019 15:16:57 +0100 (CET)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>, dev@opencontainers.org,
+        containers@lists.linux-foundation.org, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        sparclinux@vger.kernel.org
+Subject: [PATCH v18 06/13] namei: LOOKUP_NO_MAGICLINKS: block magic-link resolution
+Date:   Sat,  7 Dec 2019 01:13:31 +1100
+Message-Id: <20191206141338.23338-7-cyphar@cyphar.com>
+In-Reply-To: <20191206141338.23338-1-cyphar@cyphar.com>
+References: <20191206141338.23338-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: vhicXEh8O6CvUvqBmFTRSw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  John Ogness <john.ogness@linutronix.de> wrote:
-> Hi Prarit,
->=20
-> On 2019-12-05, Prarit Bhargava <prarit@redhat.com> wrote:
-> > Based on the comments there is going to be a v6 but in any case I am
-> > starting testing of this patchset on several large core systems across
-> > multiple architectures (x86_64, ARM64, s390, ppc64le).  Some of those
-> > systems are known to fail boot due to the large amount of printk output=
- so
-> > it will be good to see if these changes resolve those issues.
->=20
-> Right now the patches only include the ringbuffer as a separate entity
-> with a test module. So they do not yet have any effect on printk.
->=20
-> If you apply the patches and then build the "modules" target, you will
-> have a new test_prb.ko module. Loading that module will start some heavy
-> testing of the ringbuffer. As long as the testing is successful, the
-> module will keep testing. During this time the machine will be very
-> slow, but should still respond.
->=20
-> The test can be stopped by unloading the module. If the test stops on
-> its own, then a problem was found. The output of the test is put into
-> the ftrace buffer.
->=20
-> It would be nice if you could run the test module on some fat machines,
-> at least for a few minutes to see if anything explodes. ARM64 and
-> ppc64le will probably be the most interesting, due to memory barrier
-> testing.
->=20
+/* Background. */
+There has always been a special class of symlink-like objects in procfs
+(and a few other pseudo-filesystems) which allow for non-lexical
+resolution of paths using nd_jump_link(). These "magic-links" do not
+follow traditional mount namespace boundaries, and have been used
+consistently in container escape attacks because they can be used to
+trick unsuspecting privileged processes into resolving unexpected paths.
 
-I've run the module overnight on all 4 arches I mentioned above.  I didn't
-see any failures but IIUC the module test runs at max.  I'm going to put a
-load test on these systems that introduces a variable load to interfere
-with the prbtest module to see if that kicks anything.
+It is also non-trivial for userspace to unambiguously avoid resolving
+magic-links, because they do not have a reliable indication that they
+are a magic-link (in order to verify them you'd have to manually open
+the path given by readlink(2) and then verify that the two file
+descriptors reference the same underlying file, which is plagued with
+possible race conditions or supplementary attack scenarios).
 
-> Otherwise I will definitely be reaching out to you when we are ready to
-> perform actual printk testing with the newly agreed up semantics
-> (lockless, per-console printing threads, synchronous panic
-> consoles). Thanks for your help with this.
->
+It would therefore be very helpful for userspace to be able to avoid
+these symlinks easily, thus hopefully removing a tool from attackers'
+toolboxes.
 
-np :) but I should be the one thanking you ;)
+This is part of a refresh of Al's AT_NO_JUMPS patchset[1] (which was a
+variation on David Drysdale's O_BENEATH patchset[2], which in turn was
+based on the Capsicum project[3]).
 
-P.
+/* Userspace API. */
+LOOKUP_NO_MAGICLINKS will be exposed to userspace through openat2(2).
 
-> John Ogness
+/* Semantics. */
+Unlike most other LOOKUP flags (most notably LOOKUP_FOLLOW),
+LOOKUP_NO_MAGICLINKS applies to all components of the path.
+
+With LOOKUP_NO_MAGICLINKS, any magic-link path component encountered
+during path resolution will yield -ELOOP. The handling of ~LOOKUP_FOLLOW
+for a trailing magic-link is identical to LOOKUP_NO_SYMLINKS.
+
+LOOKUP_NO_SYMLINKS implies LOOKUP_NO_MAGICLINKS.
+
+/* Testing. */
+LOOKUP_NO_MAGICLINKS is tested as part of the openat2(2) selftests.
+
+[1]: https://lore.kernel.org/lkml/20170429220414.GT29622@ZenIV.linux.org.uk/
+[2]: https://lore.kernel.org/lkml/1415094884-18349-1-git-send-email-drysdale@google.com/
+[3]: https://lore.kernel.org/lkml/1404124096-21445-1-git-send-email-drysdale@google.com/
+
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Suggested-by: David Drysdale <drysdale@google.com>
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+---
+ fs/namei.c            | 10 +++++++++-
+ include/linux/namei.h |  1 +
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/fs/namei.c b/fs/namei.c
+index 303731935eb2..415a897729c8 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -867,13 +867,21 @@ static int nd_jump_root(struct nameidata *nd)
+  */
+ int nd_jump_link(struct path *path)
+ {
++	int error = -ELOOP;
+ 	struct nameidata *nd = current->nameidata;
+-	path_put(&nd->path);
+ 
++	if (unlikely(nd->flags & LOOKUP_NO_MAGICLINKS))
++		goto err;
++
++	path_put(&nd->path);
+ 	nd->path = *path;
+ 	nd->inode = nd->path.dentry->d_inode;
+ 	nd->flags |= LOOKUP_JUMPED;
+ 	return 0;
++
++err:
++	path_put(path);
++	return error;
+ }
+ 
+ static inline void put_link(struct nameidata *nd)
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index 0d86e75c04a7..1573b8493d98 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -41,6 +41,7 @@ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT, LAST_BIND};
+ 
+ /* Scoping flags for lookup. */
+ #define LOOKUP_NO_SYMLINKS	0x010000 /* No symlink crossing. */
++#define LOOKUP_NO_MAGICLINKS	0x020000 /* No nd_jump_link() crossing. */
+ 
+ extern int path_pts(struct path *path);
+ 
+-- 
+2.24.0
 
