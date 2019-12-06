@@ -2,60 +2,78 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA81FC2BD09
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A72C2BD09
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8764C2464E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E9024670
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 20:50:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b="R+dtclcH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfLFUrt (ORCPT
+        id S1726413AbfLFUua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 15:47:49 -0500
-Received: from mga03.intel.com ([134.134.136.65]:60664 "EHLO mga03.intel.com"
+        Fri, 6 Dec 2019 15:50:30 -0500
+Received: from mail.kapsi.fi ([91.232.154.25]:47563 "EHLO mail.kapsi.fi"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726353AbfLFUrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 15:47:49 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Dec 2019 12:47:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,286,1571727600"; 
-   d="scan'208";a="209535429"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Dec 2019 12:47:47 -0800
-Date:   Fri, 6 Dec 2019 12:47:47 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 0/3] Reanme the definitions of INTERRUPT_PENDING,
- NMI_PENDING and TSC_OFFSETING
-Message-ID: <20191206204747.GD5433@linux.intel.com>
-References: <20191206084526.131861-1-xiaoyao.li@intel.com>
+        id S1726330AbfLFUu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 15:50:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
+         s=20161220; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=ss6UfLsoQmlcXA1yqDJIpAvJTqCrLBwtxtjz5VAGhuQ=; b=R+dtclcHRqeov4Dce1CQnJ7hJM
+        759RwUrjteFz+C/iud8n8WNcHrFmOzlFtcRcdVfZex3QqnAVio+yYaEsGLNDrqjNmuiUJLj8AShGT
+        F8Wk7bztimAtWvqV8R4uNA6hO795Spj+7alT0yhYzhu8A9hflbH/r/no7IMrO2i1ob+v9WO/gcNbs
+        kw1I0d+n06BGfLrGqJI4FIaU7uYEoPo23OPfuQSlyp9LGJRxMo2Moyi1y4vM8bzyjgxrmwfdc0Skr
+        Mvry3gUnqUJyZNglmfm5w7w4f8WS5r2RfcVj0ez6lNcoRi41QrAmHTiwsG3ut84LcCL0UYXT87QIE
+        28rEDEsw==;
+Received: from 91-154-92-5.elisa-laajakaista.fi ([91.154.92.5] helo=localhost)
+        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <jarkko.sakkinen@linux.intel.com>)
+        id 1idKYO-0002PB-SQ; Fri, 06 Dec 2019 22:50:20 +0200
+Date:   Fri, 6 Dec 2019 22:50:20 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, James Morris <jmorris@namei.org>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [GIT PULL] tpmdd updates for Linux v5.4
+Message-ID: <20191206205020.GB9971@linux.intel.com>
+References: <20190902143121.pjnykevzlajlcrh6@linux.intel.com>
+ <CAA9_cmeLnHK4y+usQaWo72nUG3RNsripuZnS-koY4XTRC+mwJA@mail.gmail.com>
+ <20191122161836.ry3cbon2iy22ftoc@cantor>
+ <20191129210400.GB12055@linux.intel.com>
+ <20191129232249.bgj25rlwrcg3afj5@cantor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191206084526.131861-1-xiaoyao.li@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191129232249.bgj25rlwrcg3afj5@cantor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 91.154.92.5
+X-SA-Exim-Mail-From: jarkko.sakkinen@linux.intel.com
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 04:45:23PM +0800, Xiaoyao Li wrote:
-> When reading the codes, I find the definitions of interrupt-window exiting
-> and nmi-window exiting don't match the names in latest intel SDM.
+On Fri, Nov 29, 2019 at 04:22:49PM -0700, Jerry Snitselaar wrote:
+> I still don't have access to one of the laptops, but looking online
+> they should have one of the following: i5-8265U, i5-8365U, i7-8565U,
+> or i7-8665U. The tpm is discrete, so I don't know that the cpu will
+> matter. Looking at a log, in the t490s case it is an STMicroelectronics
+> chip. So both Infineon and STM so far.
 
-I prefer KVM's names even though they diverge from the SDM.  The "window
-exiting" terminology is very literal, which is desirable for the SDM
-because it doesn't leave any wiggle room.  But for software, IMO the
-"event pending" terminology is preferable as it's more descriptive of the
-intended use of the control, e.g. KVM sets VIRTUAL_{INTR,NMI}_PENDING when
-it has a virtual event to inject and clears it after injecting said event.
+Still also seeking a local system.
+
+/Jarkko
