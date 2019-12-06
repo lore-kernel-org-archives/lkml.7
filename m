@@ -2,309 +2,266 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB138C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27305C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8752121823
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:32:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575624776;
-	bh=kSyRMi68SgBDafODQr22pNfggBMhQgkSpnzQIYbg1R8=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=0Yj4b3G2zn/V4R312N+/e9JR2TVtkji6RO9/ufXBT7QTd+HyFQ/Vh7t5fLXB8kiEL
-	 Pm174x273Lr8DZyMw7xf+TF6AZISKVvO9qeB53CwjNj0gOg6qCevgLpYhQecWacPDb
-	 t75YidH+va9FMA95PC8DphuCDa0X8AuDJdsVfGYw=
+	by mail.kernel.org (Postfix) with ESMTP id D740921823
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 09:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfLFJcz (ORCPT
+        id S1726193AbfLFJfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 04:32:55 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:50177 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726065AbfLFJcy (ORCPT
+        Fri, 6 Dec 2019 04:35:10 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:52796 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfLFJfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 04:32:54 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1id9yl-0008Mk-IS; Fri, 06 Dec 2019 10:32:51 +0100
-To:     Atish Patra <atish.patra@wdc.com>
-Subject: Re: [PATCH] irqchip/sifive-plic: Add support for multiple PLICs
-X-PHP-Originating-Script: 0:main.inc
+        Fri, 6 Dec 2019 04:35:10 -0500
+Received: by mail-io1-f72.google.com with SMTP id e124so4405814iof.19
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 01:35:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=1M7kkxJiaPihCnJ43F4oWX8v2NNv/A9GhMtoRhF2bZk=;
+        b=ocT0bmRQpui0EisBv5AsowmFqaFTqQYabqmhHtXHFJgjw3Iu/ctxnxfv3mpQjTqiHz
+         0jiAUfYGCd6EVDg9O8SvOClBRru1r36HVXFEEuef7Sej3kjoSx8F8Sb0Rc7sX+ZGFImx
+         LPrFfny4pMO1+DZ7yuUPBJQMT4m6RlvNmdR46DIsK1kForIkmn2riS0v9Zvjq8cZdulM
+         /FQ1Zkr/mGeyk+D21e1rkjpxFS5gLcREIIXWQerdwwmZHscAcnnwsLarXK/ET6rnDlfU
+         j8j3T9D/fqTCJ4LZ6fEXPsa2vlQ5CfURqBn4MLcgoNHgAz/j3tmi+GMRn8UcbuEYct0a
+         Me0Q==
+X-Gm-Message-State: APjAAAVOysYZ9sa38aFCX8tuL4bewBt7XUbSzmQVa/KVv1trN9MINhMS
+        sgKcIuhINQaad0zPBldKL0bM6JGjcLytzH5MVlf0TDt3de06
+X-Google-Smtp-Source: APXvYqysOHVqt4rehXIykLvUMMAZs7COs/8tM3Rt3cgpfrzj5Iw3slLUqEVzZCaCccnETh9G/N4A/wOqIJ+Rz78Q9XXeRiipAwgn
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 06 Dec 2019 09:32:51 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <linux-kernel@vger.kernel.org>, Anup Patel <anup.patel@wdc.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-In-Reply-To: <20191206023156.24732-1-atish.patra@wdc.com>
-References: <20191206023156.24732-1-atish.patra@wdc.com>
-Message-ID: <1839bf9ef91de2358a7e8ecade361f7a@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: atish.patra@wdc.com, linux-kernel@vger.kernel.org, anup.patel@wdc.com, jason@lakedaemon.net, linux-riscv@lists.infradead.org, palmer@dabbelt.com, paul.walmsley@sifive.com, tglx@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+X-Received: by 2002:a05:6602:280e:: with SMTP id d14mr9383723ioe.249.1575624908890;
+ Fri, 06 Dec 2019 01:35:08 -0800 (PST)
+Date:   Fri, 06 Dec 2019 01:35:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fe6c39059905c289@google.com>
+Subject: INFO: task hung in flush_to_ldisc
+From:   syzbot <syzbot+e199b43b49192126ff69@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Fixing Palmer's email address]
+Hello,
 
-On 2019-12-06 02:31, Atish Patra wrote:
-> Current, PLIC driver can support only 1 PLIC on the board. However,
-> there can be multiple PLICs present on a two socket systems in 
-> RISC-V.
->
-> Modify the driver so that each PLIC handler can have a information
-> about individual PLIC registers and an irqdomain associated with it.
->
-> Tested on two socket RISC-V system based on VCU118 FPGA connected via
-> OmniXtend protocol.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+syzbot found the following crash on:
 
-There seem to be some confusion here about who the author of the patch 
-is.
-If this is a co-development, please use the appropriate tag.
+HEAD commit:    63de3747 Merge tag 'tag-chrome-platform-for-v5.5' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10e7d59ce00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1d189d07c6717979
+dashboard link: https://syzkaller.appspot.com/bug?extid=e199b43b49192126ff69
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-> ---
->  drivers/irqchip/irq-sifive-plic.c | 81 
-> +++++++++++++++++++------------
->  1 file changed, 51 insertions(+), 30 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-sifive-plic.c
-> b/drivers/irqchip/irq-sifive-plic.c
-> index c72c036aea76..aea1f2f0f0d5 100644
-> --- a/drivers/irqchip/irq-sifive-plic.c
-> +++ b/drivers/irqchip/irq-sifive-plic.c
-> @@ -55,7 +55,11 @@
->  #define     CONTEXT_THRESHOLD		0x00
->  #define     CONTEXT_CLAIM		0x04
->
-> -static void __iomem *plic_regs;
-> +struct plic_hw {
-> +	struct cpumask lmask;
-> +	struct irq_domain *irqdomain;
-> +	void __iomem *regs;
-> +};
+Unfortunately, I don't have any reproducer for this crash yet.
 
-The '_hw' suffix is a bit unfortunate, as there is mostly SW constructs
-in this structure. Maybe something more general like 'context' would
-be more appropriate.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e199b43b49192126ff69@syzkaller.appspotmail.com
 
->
->  struct plic_handler {
->  	bool			present;
-> @@ -66,6 +70,7 @@ struct plic_handler {
->  	 */
->  	raw_spinlock_t		enable_lock;
->  	void __iomem		*enable_base;
-> +	struct plic_hw		*hw;
->  };
->  static DEFINE_PER_CPU(struct plic_handler, plic_handlers);
->
-> @@ -84,31 +89,40 @@ static inline void plic_toggle(struct
-> plic_handler *handler,
->  }
->
->  static inline void plic_irq_toggle(const struct cpumask *mask,
-> -				   int hwirq, int enable)
-> +				   struct irq_data *d, int enable)
->  {
->  	int cpu;
-> +	struct plic_hw *hw = d->domain->host_data;
+INFO: task kworker/u4:0:7 blocked for more than 143 seconds.
+       Not tainted 5.4.0-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+kworker/u4:0    D24280     7      2 0x80004000
+Workqueue: events_unbound flush_to_ldisc
+Call Trace:
+  context_switch kernel/sched/core.c:3385 [inline]
+  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
+  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
+  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4214
+  __mutex_lock_common kernel/locking/mutex.c:1036 [inline]
+  __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1106
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1121
+  flush_to_ldisc+0x3d/0x390 drivers/tty/tty_buffer.c:505
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+INFO: task login:9555 blocked for more than 143 seconds.
+       Not tainted 5.4.0-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+login           D23224  9555      1 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:3385 [inline]
+  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
+  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
+  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
+  do_wait_for_common kernel/sched/completion.c:83 [inline]
+  __wait_for_common kernel/sched/completion.c:104 [inline]
+  wait_for_common kernel/sched/completion.c:115 [inline]
+  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+  __flush_work+0x4fe/0xa50 kernel/workqueue.c:3041
+  flush_work+0x18/0x20 kernel/workqueue.c:3062
+  tty_buffer_flush_work+0x16/0x20 drivers/tty/tty_buffer.c:618
+  n_tty_read+0xb1c/0x1c10 drivers/tty/n_tty.c:2199
+  tty_read+0x1a0/0x2a0 drivers/tty/tty_io.c:869
+  __vfs_read+0x8a/0x110 fs/read_write.c:425
+  vfs_read+0x1f0/0x440 fs/read_write.c:461
+  ksys_read+0x14f/0x290 fs/read_write.c:587
+  __do_sys_read fs/read_write.c:597 [inline]
+  __se_sys_read fs/read_write.c:595 [inline]
+  __x64_sys_read+0x73/0xb0 fs/read_write.c:595
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f9a079ec310
+Code: Bad RIP value.
+RSP: 002b:00007ffd2af2dca8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f9a079ec310
+RDX: 00000000000001ff RSI: 00007ffd2af2df10 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 00007f9a082cf700 R09: 0000000000000000
+R10: 00007ffd2af2dc60 R11: 0000000000000246 R12: 00007ffd2af2df10
+R13: 0000000000000000 R14: 0000000000000001 R15: 000000000060b798
 
-The usual construct is to transfer the domain->host_data pointer to
-the irq_data->chip_data pointer at map() time, using 
-irq_set_chip_data().
+Showing all locks held in the system:
+3 locks held by kworker/u4:0/7:
+  #0: ffff8880aa433928 ((wq_completion)events_unbound){+.+.}, at:  
+__write_once_size include/linux/compiler.h:226 [inline]
+  #0: ffff8880aa433928 ((wq_completion)events_unbound){+.+.}, at:  
+arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+  #0: ffff8880aa433928 ((wq_completion)events_unbound){+.+.}, at:  
+atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
+  #0: ffff8880aa433928 ((wq_completion)events_unbound){+.+.}, at:  
+atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
+  #0: ffff8880aa433928 ((wq_completion)events_unbound){+.+.}, at:  
+set_work_data kernel/workqueue.c:615 [inline]
+  #0: ffff8880aa433928 ((wq_completion)events_unbound){+.+.}, at:  
+set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
+  #0: ffff8880aa433928 ((wq_completion)events_unbound){+.+.}, at:  
+process_one_work+0x88b/0x1740 kernel/workqueue.c:2235
+  #1: ffffc90000cdfdc0 ((work_completion)(&buf->work)){+.+.}, at:  
+process_one_work+0x8c1/0x1740 kernel/workqueue.c:2239
+  #2: ffff8880aa5bc0a8 (&buf->lock){+.+.}, at: flush_to_ldisc+0x3d/0x390  
+drivers/tty/tty_buffer.c:505
+1 lock held by khungtaskd/1115:
+  #0: ffffffff897a4080 (rcu_read_lock){....}, at:  
+debug_show_all_locks+0x5f/0x279 kernel/locking/lockdep.c:5334
+1 lock held by rsyslogd/9433:
+  #0: ffff8880a36c8620 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+fs/file.c:801
+2 locks held by login/9555:
+  #0: ffff8880a0baa090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900018a32e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+2 locks held by getty/9556:
+  #0: ffff8880a6ce8090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900019032e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+2 locks held by getty/9558:
+  #0: ffff8880a3bc9090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900018f32e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+2 locks held by getty/9559:
+  #0: ffff8880949a6090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900019132e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+2 locks held by getty/9560:
+  #0: ffff88809f429090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900018e32e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+2 locks held by getty/9561:
+  #0: ffff888096165090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900018632e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+2 locks held by syz-executor.3/16730:
+  #0: ffff8880a0baa090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffff8880aa5bc0a8 (&buf->lock){+.+.}, at:  
+tty_buffer_lock_exclusive+0x30/0x40 drivers/tty/tty_buffer.c:61
+2 locks held by getty/17086:
+  #0: ffff8880a8418090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90002c9b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
 
-You can then retrieve the pointer with irq_get_chip_data(), and save
-yourselves some pointer chasing.
+=============================================
 
->
-> -	writel(enable, plic_regs + PRIORITY_BASE + hwirq * 
-> PRIORITY_PER_ID);
-> +	writel(enable, hw->regs + PRIORITY_BASE + d->hwirq * 
-> PRIORITY_PER_ID);
->  	for_each_cpu(cpu, mask) {
->  		struct plic_handler *handler = per_cpu_ptr(&plic_handlers, cpu);
->
-> -		if (handler->present)
-> -			plic_toggle(handler, hwirq, enable);
-> +		if (handler->present &&
-> +		    cpumask_test_cpu(cpu, &handler->hw->lmask))
-> +			plic_toggle(handler, d->hwirq, enable);
->  	}
->  }
->
->  static void plic_irq_enable(struct irq_data *d)
->  {
-> -	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
-> -					   cpu_online_mask);
-> +	struct cpumask amask;
-> +	unsigned int cpu;
-> +	struct plic_hw *hw = d->domain->host_data;
-> +
-> +	cpumask_and(&amask, &hw->lmask, cpu_online_mask);
-> +	cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
-> +					   &amask);
->  	if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
->  		return;
-> -	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
-> +	plic_irq_toggle(cpumask_of(cpu), d, 1);
->  }
->
->  static void plic_irq_disable(struct irq_data *d)
->  {
-> -	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
-> +	struct plic_hw *hw = d->domain->host_data;
-> +
-> +	plic_irq_toggle(&hw->lmask, d, 0);
->  }
->
->  #ifdef CONFIG_SMP
-> @@ -116,18 +130,22 @@ static int plic_set_affinity(struct irq_data 
-> *d,
->  			     const struct cpumask *mask_val, bool force)
->  {
->  	unsigned int cpu;
-> +	struct cpumask amask;
-> +	struct plic_hw *hw = d->domain->host_data;
-> +
-> +	cpumask_and(&amask, &hw->lmask, mask_val);
+NMI backtrace for cpu 0
+CPU: 0 PID: 1115 Comm: khungtaskd Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+  watchdog+0xb11/0x10c0 kernel/hung_task.c:289
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 PID: 16730 Comm: syz-executor.3 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:lock_is_held_type+0x220/0x320 kernel/locking/lockdep.c:4523
+Code: e0 03 3b 45 cc 41 0f 94 c4 65 48 8b 1c 25 c0 1e 02 00 48 8d bb 94 08  
+00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48  
+89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 d3
+RSP: 0018:ffffc90002b5f6a8 EFLAGS: 00000807
+RAX: dffffc0000000000 RBX: ffff888057b10300 RCX: ffff888057b10b98
+RDX: 1ffff1100af62172 RSI: ffff8880ae937398 RDI: ffff888057b10b94
+RBP: ffffc90002b5f6f0 R08: 1ffff1100af62060 R09: ffffed100af62061
+R10: ffffed100af62060 R11: ffff888057b10307 R12: 0000000000000001
+R13: ffff888057b10be8 R14: ffff8880ae937398 R15: 0000000000000002
+FS:  00007fd84687b700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000c43a311010 CR3: 0000000094d79000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  lock_is_held include/linux/lockdep.h:361 [inline]
+  rq_clock_task kernel/sched/sched.h:1104 [inline]
+  update_curr+0x296/0x8d0 kernel/sched/fair.c:835
+  pick_next_task_fair+0x221/0xc70 kernel/sched/fair.c:6680
+  pick_next_task kernel/sched/core.c:3921 [inline]
+  __schedule+0x375/0x1f90 kernel/sched/core.c:4051
+  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
+  paste_selection+0x2f5/0x460 drivers/tty/vt/selection.c:367
+  tioclinux+0x133/0x480 drivers/tty/vt/vt.c:3044
+  vt_ioctl+0x1a41/0x26d0 drivers/tty/vt/vt_ioctl.c:364
+  tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a679
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fd84687ac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a679
+RDX: 0000000020000000 RSI: 000000000000541c RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fd84687b6d4
+R13: 00000000004c5962 R14: 00000000004dbb78 R15: 00000000ffffffff
 
-So this means that an interrupt cannot move between sockets?
-How is that going to work with CPU hotplug? This seems like
-a pretty bad restriction for anything but the most basic
-experimental platform.
 
->
->  	if (force)
-> -		cpu = cpumask_first(mask_val);
-> +		cpu = cpumask_first(&amask);
->  	else
-> -		cpu = cpumask_any_and(mask_val, cpu_online_mask);
-> +		cpu = cpumask_any_and(&amask, cpu_online_mask);
->
->  	if (cpu >= nr_cpu_ids)
->  		return -EINVAL;
->
->  	if (!irqd_irq_disabled(d)) {
-> -		plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
-> -		plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
-> +		plic_irq_toggle(&hw->lmask, d, 0);
-> +		plic_irq_toggle(cpumask_of(cpu), d, 1);
->  	}
->
->  	irq_data_update_effective_affinity(d, cpumask_of(cpu));
-> @@ -163,8 +181,6 @@ static const struct irq_domain_ops 
-> plic_irqdomain_ops = {
->  	.xlate		= irq_domain_xlate_onecell,
->  };
->
-> -static struct irq_domain *plic_irqdomain;
-> -
->  /*
->   * Handling an interrupt is a two-step process: first you claim the
-> interrupt
->   * by reading the claim register, then you complete the interrupt by 
-> writing
-> @@ -181,7 +197,7 @@ static void plic_handle_irq(struct pt_regs *regs)
->
->  	csr_clear(sie, SIE_SEIE);
->  	while ((hwirq = readl(claim))) {
-> -		int irq = irq_find_mapping(plic_irqdomain, hwirq);
-> +		int irq = irq_find_mapping(handler->hw->irqdomain, hwirq);
->
->  		if (unlikely(irq <= 0))
->  			pr_warn_ratelimited("can't find mapping for hwirq %lu\n",
-> @@ -212,15 +228,17 @@ static int __init plic_init(struct device_node 
-> *node,
->  {
->  	int error = 0, nr_contexts, nr_handlers = 0, i;
->  	u32 nr_irqs;
-> +	struct plic_hw *hw;
->
-> -	if (plic_regs) {
-> -		pr_warn("PLIC already present.\n");
-> -		return -ENXIO;
-> -	}
-> +	hw = kzalloc(sizeof(*hw), GFP_KERNEL);
-> +	if (!hw)
-> +		return -ENOMEM;
->
-> -	plic_regs = of_iomap(node, 0);
-> -	if (WARN_ON(!plic_regs))
-> -		return -EIO;
-> +	hw->regs = of_iomap(node, 0);
-> +	if (WARN_ON(!hw->regs)) {
-> +		error = -EIO;
-> +		goto out_freehw;
-> +	}
->
->  	error = -EINVAL;
->  	of_property_read_u32(node, "riscv,ndev", &nr_irqs);
-> @@ -234,9 +252,9 @@ static int __init plic_init(struct device_node 
-> *node,
->  		goto out_iounmap;
->
->  	error = -ENOMEM;
-> -	plic_irqdomain = irq_domain_add_linear(node, nr_irqs + 1,
-> -			&plic_irqdomain_ops, NULL);
-> -	if (WARN_ON(!plic_irqdomain))
-> +	hw->irqdomain = irq_domain_add_linear(node, nr_irqs + 1,
-> +			&plic_irqdomain_ops, hw);
-> +	if (WARN_ON(!hw->irqdomain))
->  		goto out_iounmap;
->
->  	for (i = 0; i < nr_contexts; i++) {
-> @@ -279,13 +297,14 @@ static int __init plic_init(struct device_node 
-> *node,
->  			goto done;
->  		}
->
-> +		cpumask_set_cpu(cpu, &hw->lmask);
->  		handler->present = true;
->  		handler->hart_base =
-> -			plic_regs + CONTEXT_BASE + i * CONTEXT_PER_HART;
-> +			hw->regs + CONTEXT_BASE + i * CONTEXT_PER_HART;
->  		raw_spin_lock_init(&handler->enable_lock);
->  		handler->enable_base =
-> -			plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
-> -
-> +			hw->regs + ENABLE_BASE + i * ENABLE_PER_HART;
-> +		handler->hw = hw;
->  done:
->  		/* priority must be > threshold to trigger an interrupt */
->  		writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
-> @@ -300,7 +319,9 @@ static int __init plic_init(struct device_node 
-> *node,
->  	return 0;
->
->  out_iounmap:
-> -	iounmap(plic_regs);
-> +	iounmap(hw->regs);
-> +out_freehw:
-> +	kfree(hw);
->  	return error;
->  }
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-This otherwise seems like a very straightforward change.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
