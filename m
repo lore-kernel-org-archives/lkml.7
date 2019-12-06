@@ -2,178 +2,111 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CFEC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A24AC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C65EC20706
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:23:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="o4qCVfP0"
+	by mail.kernel.org (Postfix) with ESMTP id F3BF720706
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575595421;
+	bh=+snBBNFYQv8xmYqi1k67brmlOE46FSD3M+ydplTWD0k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=udExsehN4WXRfMB4jxqLqI8bzUX/mnNFZWhpcOl3hoZTNzdH8/vMDHk62LXMzRjaZ
+	 Klhrx95OgGp3L3eFguYPLFIWpcGWxuskH/sdXwDqYKnWvVZrzAaGcaBZqRVe2TWf6t
+	 /2fAnK8Zv3KvlrPLPk98MO1DyeeAZbrFovjscrsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfLFBXe (ORCPT
+        id S1726287AbfLFBXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 20:23:34 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:47939 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfLFBXe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 20:23:34 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        Thu, 5 Dec 2019 20:23:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbfLFBXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Dec 2019 20:23:39 -0500
+Received: from devnote2 (unknown [180.22.253.92])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id EBFE422F2E;
-        Fri,  6 Dec 2019 02:23:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1575595412;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7IzjyfROkcHZFtBAIimy3ELelZ7D2yFO3GY3Enthhl4=;
-        b=o4qCVfP0gs/qAM28R/XS14hlLwPzvDPl/V0/z1hNmpufNjTnR5Ey061alP7a41G7XRYsF6
-        EGJWWty6GTBOS+awMn81d0XP3bNxKLXJ9qPYnT/7JkPKD4xG9MXcIj8PvFtDTeWN2Dh39a
-        3VpVZBatCFAX65koc5SCFun/B3xXIAQ=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        by mail.kernel.org (Postfix) with ESMTPSA id B3B4020706;
+        Fri,  6 Dec 2019 01:23:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575595419;
+        bh=+snBBNFYQv8xmYqi1k67brmlOE46FSD3M+ydplTWD0k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=k8cjoOPvcX3iBd3/y/6lsJSEI91mBnpHgvQa8SMeOJplIiGkjdxAcKLes6qlLz08v
+         yD1iboa/DygvAy7yPkH4aU54IMmrAf/TFnFAnZuNNVi5y8BvKlvbJaDK2y96AMLR7o
+         h4pFnHjAHA2wgNAUsLjd6zN0L9HszCMEAZAhLx7A=
+Date:   Fri, 6 Dec 2019 10:23:34 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     shuah <shuah@kernel.org>
+Cc:     Micah Morton <mortonm@chromium.org>,
+        linux-kselftest@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        jaswinder.singh@linaro.org
+Subject: Re: [BUGFIX PATCH v2 0/3] selftests: safesetid: Fix some bugs in
+ safesetid test
+Message-Id: <20191206102334.35f578b1e79e57740e56a5b8@kernel.org>
+In-Reply-To: <3bad79d5-eada-7e96-4210-c4888bfb710f@kernel.org>
+References: <157554844882.11018.13436399905210284553.stgit@devnote2>
+        <CAJ-EccNKk30b_wtvz=PUVmMVfF8YNagXMcy3Uhj53DzFbgmb6A@mail.gmail.com>
+        <3bad79d5-eada-7e96-4210-c4888bfb710f@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 06 Dec 2019 02:23:31 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] dt-bindings: clock: document the fsl-sai driver
-In-Reply-To: <20191205151648.GA5680@bogus>
-References: <20191122235622.8818-1-michael@walle.cc>
- <20191205151648.GA5680@bogus>
-Message-ID: <e28881421014b641c37fc2cacdf6c43e@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.8
-X-Spamd-Bar: /
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: EBFE422F2E
-X-Spamd-Result: default: False [-0.10 / 15.00];
-         TO_DN_SOME(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[7];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         NEURAL_HAM(-0.00)[-0.795]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2019-12-05 16:16, schrieb Rob Herring:
-> On Sat, Nov 23, 2019 at 12:56:21AM +0100, Michael Walle wrote:
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->>  .../bindings/clock/fsl,sai-clock.yaml         | 48 
->> +++++++++++++++++++
->>  1 file changed, 48 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml 
->> b/Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
->> new file mode 100644
->> index 000000000000..7116c8bc24d3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
->> @@ -0,0 +1,48 @@
->> +# SPDX-License-Identifier: GPL-2.0
+On Thu, 5 Dec 2019 09:44:52 -0700
+shuah <shuah@kernel.org> wrote:
+
+> On 12/5/19 9:40 AM, Micah Morton wrote:
+> > On Thu, Dec 5, 2019 at 4:20 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >>
+> >> Hi,
+> >>
+> >> Here is the v2 series to fix build warnings and erorrs on
+> >> kselftest safesetid.
+> >> This version includes a fix for a runtime error.
+> >>
+> >> Thank you,
+> >>
+> >> ---
+> >>
+> >> Masami Hiramatsu (3):
+> >>        selftests: safesetid: Move link library to LDLIBS
+> >>        selftests: safesetid: Check the return value of setuid/setgid
+> >>        selftests: safesetid: Fix Makefile to set correct test program
+> > 
+> > These 3 fixes look good, thanks. Were you thinking they would go
+> > through my SafeSetID tree or is there a dedicated one for selftests? I
+> > guess if you're not sure someone else on here can chime in, or I can
+> > just take them through my tree if I don't hear anything.
+> > 
 > 
-> Dual license new bindings please: (GPL-2.0-only OR BSD-2-Clause)
+> Yes. There is a linux-kselftest tree dedicated to selftests.
+> I can take them.
 
-sure.
-
-> 
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/bindings/clock/fsl,sai-clock.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Freescale SAI bitclock-as-a-clock binding
->> +
->> +maintainers:
->> +  - Michael Walle <michael@walle.cc>
->> +
->> +description: |
->> +  It is possible to use the BCLK pin of a SAI module as a generic 
->> clock
->> +  output. Some SoC are very constrained in their pin multiplexer
->> +  configuration. Eg. pins can only be changed groups. For example, on 
->> the
->> +  LS1028A SoC you can only enable SAIs in pairs. If you use only one 
->> SAI,
->> +  the second pins are wasted. Using this binding it is possible to 
->> use the
->> +  clock of the second SAI as a MCLK clock for an audio codec, for 
->> example.
->> +
->> +  This is a composite of a gated clock and a divider clock.
->> +
->> +properties:
->> +  compatible:
->> +    const: fsl,vf610-sai-clock
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  '#clock-cells':
->> +    const: 0
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - '#clock-cells'
->> +
-> 
-> Add:
-> 
-> additionalProperties: false
-
-ok.
-
->> +examples:
->> +  - |
->> +    mclk: clock-mclk@f130080 {
->> +        compatible = "fsl,vf610-sai-clock";
->> +        reg = <0x0 0xf130080 0x0 0x80>;
-> 
-> Examples are built now and this will fail because the default
-> #address-cells and #size-cells are 1.
-
-Mh, I've run the make dt_binding_check on this. It wasn't flagged,
-but I guess thats because its interpreted as two resources.
-
-I haven't found anything how you can change the default. Or do you
-mean I should change the example to just use one address cell and
-one size cell? But then how would that work for examples (on other
-bindings) where there should be size-cells = <0> for example.
+Thanks Micah and Shuah!
 
 > 
->> +        #clock-cells = <0>;
->> +        clocks = <&parentclk>;
->> +    };
->> --
->> 2.20.1
->> 
+> 
+> >>
+> >>
+> >>   tools/testing/selftests/safesetid/Makefile         |    5 +++--
+> >>   tools/testing/selftests/safesetid/safesetid-test.c |   15 ++++++++++-----
+> >>   2 files changed, 13 insertions(+), 7 deletions(-)
+> >>
+> >> --
+> 
+> thanks,
+> -- Shuah
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
