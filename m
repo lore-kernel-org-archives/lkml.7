@@ -7,292 +7,130 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D2EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26779C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0193E2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEAEB2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 19:48:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xug22u2B"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zRfUEREd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfLFTqz (ORCPT
+        id S1726455AbfLFTsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 14:46:55 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39980 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfLFTqy (ORCPT
+        Fri, 6 Dec 2019 14:48:15 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36424 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfLFTsP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 14:46:54 -0500
-Received: by mail-pl1-f194.google.com with SMTP id g6so3130333plp.7
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 11:46:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=K+TIHDUl/gaSB2s++Av6uzUU3/05b++7i1oMNzp6aKg=;
-        b=Xug22u2ByNpfbmWXu+F5GupDZJI8WlM2+UMRTHOyDFG7uH+qv0nuIXZFpCuBP7eQPn
-         iAI5sPgNzJFKcvxzzzqRjI9uXhhuSKVuNoPABmYwmO+On6M3K/H63zIS+gG39IfMo22t
-         qRJEyPTcyzeflFn0RFEAuuKaem51se/m2IXWE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=K+TIHDUl/gaSB2s++Av6uzUU3/05b++7i1oMNzp6aKg=;
-        b=dYp2h70I9vZSp2w1ReaNQuEaIjYcwToeTI0WEE5+CicZBSAixmS1EjLojBKyEEtJNB
-         8tRPEFXZC1RaZdCN6Y5U9OXmASjOSJQ8jaEY+RaYNKAT3TfVcrFMJn7isT5IjCYsgJTW
-         BkvPuHKT1raNPvnRBButyzIR8BqLI8meslRWZ0lpNQNIF4JGXbs8O42upRXjtBmaMJNF
-         1MbaoEDKq/GbWJZIt1GloLAW1IOpWVbQtwyWmywBg4OBNzzJPGzo/TSsox/kS4g75Ow2
-         vL7wOPC6s0R4Q548A1ERomgMARb8XTSEEATX7p6/48ZNf5OaUC5s06uKl377VjK83DoG
-         0gJg==
-X-Gm-Message-State: APjAAAXObnie0JGwMFUDcxgSB4LCbCAjIlwFJIGpALiIjDeCl3bnboEi
-        1NStowj+oxFeTLIftlRRmE9T0g==
-X-Google-Smtp-Source: APXvYqx0vjxbEVrq9rmPk06CY73exM6rTXXflVrGzMGcSpyvWUK6ZAARiCXCGmEjsGYD/DZPbCTscw==
-X-Received: by 2002:a17:90a:1696:: with SMTP id o22mr17503179pja.78.1575661613283;
-        Fri, 06 Dec 2019 11:46:53 -0800 (PST)
-Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
-        by smtp.gmail.com with ESMTPSA id u18sm16316204pgi.44.2019.12.06.11.46.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 11:46:52 -0800 (PST)
-From:   Brian Norris <briannorris@chromium.org>
-To:     linux-wireless@vger.kernel.org
-Cc:     <linux-kernel@vger.kernel.org>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>, dan.carpenter@oracle.com,
-        solar@openwall.com, wangqize888888888@gmail.com,
-        Brian Norris <briannorris@chromium.org>
-Subject: [PATCH] mwifiex: drop most magic numbers from mwifiex_process_tdls_action_frame()
-Date:   Fri,  6 Dec 2019 11:45:35 -0800
-Message-Id: <20191206194535.150179-1-briannorris@chromium.org>
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+        Fri, 6 Dec 2019 14:48:15 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB6JmETd124305;
+        Fri, 6 Dec 2019 13:48:14 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575661694;
+        bh=1LvDPvxelfaYR9ZfukstyYBPhz1WxGviRUoVT3QbgCk=;
+        h=From:To:CC:Subject:Date;
+        b=zRfUEREd7mDzvO1zZNCOhyTH5Z28n3bc++1GzoV0JelWEg+uZ9pCjza9JDnjrw0U3
+         +FOtAVxdHJv04rWJNe9pa4kg8jctAdjBWapyySx+pW73bkNZy4Fc13QOcYqH5uIhdx
+         HCFaijAAPrFAsXn/bjWuTGW16jQgBYKMOcyESSNc=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB6JmETO048020
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 6 Dec 2019 13:48:14 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 6 Dec
+ 2019 13:48:12 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 6 Dec 2019 13:48:12 -0600
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB6JmCKs008244;
+        Fri, 6 Dec 2019 13:48:12 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benoit Parrot <bparrot@ti.com>
+Subject: [Patch] media: ti-vpe: csc: fix single vs multiplanar format handling
+Date:   Fri, 6 Dec 2019 13:51:32 -0600
+Message-ID: <20191206195132.21482-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before commit 1e58252e334d ("mwifiex: Fix heap overflow in
-mmwifiex_process_tdls_action_frame()"),
-mwifiex_process_tdls_action_frame() already had too many magic numbers.
-But this commit just added a ton more, in the name of checking for
-buffer overflows. That seems like a really bad idea.
+In csc_set_coeff() we were previously checking if the format type was
+V4L2_BUF_TYPE_VIDEO_OUTPUT or V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE as a
+mean to figure out if the format was multiplanar or not. This was not
+entirely accurate as the format type could also be a CAPTURE type
+instead.
 
-Let's make these magic numbers a little less magic, by
-(a) factoring out 'pos[1]' as 'ie_len'
-(b) using 'sizeof' on the appropriate source or destination fields where
-    possible, instead of bare numbers
-(c) dropping redundant checks, per below.
+Fix this by removing the 'switch' construct and replacing them with
+"if (V4L2_TYPE_IS_MULTIPLANAR(type))" instead.
 
-Regarding redundant checks: the beginning of the loop has this:
-
-                if (pos + 2 + pos[1] > end)
-                        break;
-
-but then individual 'case's include stuff like this:
-
- 			if (pos > end - 3)
- 				return;
- 			if (pos[1] != 1)
-				return;
-
-Note that the second 'return' (validating the length, pos[1]) combined
-with the above condition (ensuring 'pos + 2 + length' doesn't exceed
-'end'), makes the first 'return' (whose 'if' can be reworded as 'pos >
-end - pos[1] - 2') redundant. Rather than unwind the magic numbers
-there, just drop those conditions.
-
-Fixes: 1e58252e334d ("mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()")
-Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
-AFAICT, the existing commit (1e58252e334d) isn't wrong, per se -- just
-very poorly styled -- so this probably doesn't need to go to -stable.
-Not sure if it's a candidate for wireless-drivers (where the original
-commit currently sites) vs. wireless-drivers-next.
+ drivers/media/platform/ti-vpe/csc.c | 32 +++++++++++------------------
+ 1 file changed, 12 insertions(+), 20 deletions(-)
 
- drivers/net/wireless/marvell/mwifiex/tdls.c | 75 ++++++++-------------
- 1 file changed, 28 insertions(+), 47 deletions(-)
-
-diff --git a/drivers/net/wireless/marvell/mwifiex/tdls.c b/drivers/net/wireless/marvell/mwifiex/tdls.c
-index 7caf1d26124a..f8f282ce39bd 100644
---- a/drivers/net/wireless/marvell/mwifiex/tdls.c
-+++ b/drivers/net/wireless/marvell/mwifiex/tdls.c
-@@ -894,7 +894,7 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
- 	u8 *peer, *pos, *end;
- 	u8 i, action, basic;
- 	u16 cap = 0;
--	int ie_len = 0;
-+	int ies_len = 0;
+diff --git a/drivers/media/platform/ti-vpe/csc.c b/drivers/media/platform/ti-vpe/csc.c
+index 834114a4eebe..f4e0cf72d1cf 100644
+--- a/drivers/media/platform/ti-vpe/csc.c
++++ b/drivers/media/platform/ti-vpe/csc.c
+@@ -149,36 +149,28 @@ void csc_set_coeff(struct csc_data *csc, u32 *csc_reg0,
+ 	enum v4l2_quantization src_quantization, dst_quantization;
+ 	u32 src_pixelformat, dst_pixelformat;
  
- 	if (len < (sizeof(struct ethhdr) + 3))
- 		return;
-@@ -916,7 +916,7 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
- 		pos = buf + sizeof(struct ethhdr) + 4;
- 		/* payload 1+ category 1 + action 1 + dialog 1 */
- 		cap = get_unaligned_le16(pos);
--		ie_len = len - sizeof(struct ethhdr) - TDLS_REQ_FIX_LEN;
-+		ies_len = len - sizeof(struct ethhdr) - TDLS_REQ_FIX_LEN;
- 		pos += 2;
- 		break;
+-	switch (src_fmt->type) {
+-	case V4L2_BUF_TYPE_VIDEO_OUTPUT:
+-		pix = &src_fmt->fmt.pix;
+-		src_pixelformat = pix->pixelformat;
+-		src_ycbcr_enc = pix->ycbcr_enc;
+-		src_quantization = pix->quantization;
+-		break;
+-	case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
+-	default:
++	if (V4L2_TYPE_IS_MULTIPLANAR(src_fmt->type)) {
+ 		mp = &src_fmt->fmt.pix_mp;
+ 		src_pixelformat = mp->pixelformat;
+ 		src_ycbcr_enc = mp->ycbcr_enc;
+ 		src_quantization = mp->quantization;
+-		break;
++	} else {
++		pix = &src_fmt->fmt.pix;
++		src_pixelformat = pix->pixelformat;
++		src_ycbcr_enc = pix->ycbcr_enc;
++		src_quantization = pix->quantization;
+ 	}
  
-@@ -926,7 +926,7 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
- 		/* payload 1+ category 1 + action 1 + dialog 1 + status code 2*/
- 		pos = buf + sizeof(struct ethhdr) + 6;
- 		cap = get_unaligned_le16(pos);
--		ie_len = len - sizeof(struct ethhdr) - TDLS_RESP_FIX_LEN;
-+		ies_len = len - sizeof(struct ethhdr) - TDLS_RESP_FIX_LEN;
- 		pos += 2;
- 		break;
+-	switch (dst_fmt->type) {
+-	case V4L2_BUF_TYPE_VIDEO_OUTPUT:
+-		pix = &dst_fmt->fmt.pix;
+-		dst_pixelformat = pix->pixelformat;
+-		dst_ycbcr_enc = pix->ycbcr_enc;
+-		dst_quantization = pix->quantization;
+-		break;
+-	case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
+-	default:
++	if (V4L2_TYPE_IS_MULTIPLANAR(dst_fmt->type)) {
+ 		mp = &dst_fmt->fmt.pix_mp;
+ 		dst_pixelformat = mp->pixelformat;
+ 		dst_ycbcr_enc = mp->ycbcr_enc;
+ 		dst_quantization = mp->quantization;
+-		break;
++	} else {
++		pix = &dst_fmt->fmt.pix;
++		dst_pixelformat = pix->pixelformat;
++		dst_ycbcr_enc = pix->ycbcr_enc;
++		dst_quantization = pix->quantization;
+ 	}
  
-@@ -934,7 +934,7 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
- 		if (len < (sizeof(struct ethhdr) + TDLS_CONFIRM_FIX_LEN))
- 			return;
- 		pos = buf + sizeof(struct ethhdr) + TDLS_CONFIRM_FIX_LEN;
--		ie_len = len - sizeof(struct ethhdr) - TDLS_CONFIRM_FIX_LEN;
-+		ies_len = len - sizeof(struct ethhdr) - TDLS_CONFIRM_FIX_LEN;
- 		break;
- 	default:
- 		mwifiex_dbg(priv->adapter, ERROR, "Unknown TDLS frame type.\n");
-@@ -947,33 +947,33 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
- 
- 	sta_ptr->tdls_cap.capab = cpu_to_le16(cap);
- 
--	for (end = pos + ie_len; pos + 1 < end; pos += 2 + pos[1]) {
--		if (pos + 2 + pos[1] > end)
-+	for (end = pos + ies_len; pos + 1 < end; pos += 2 + pos[1]) {
-+		u8 ie_len = pos[1];
-+
-+		if (pos + 2 + ie_len > end)
- 			break;
- 
- 		switch (*pos) {
- 		case WLAN_EID_SUPP_RATES:
--			if (pos[1] > 32)
-+			if (ie_len > sizeof(sta_ptr->tdls_cap.rates))
- 				return;
--			sta_ptr->tdls_cap.rates_len = pos[1];
--			for (i = 0; i < pos[1]; i++)
-+			sta_ptr->tdls_cap.rates_len = ie_len;
-+			for (i = 0; i < ie_len; i++)
- 				sta_ptr->tdls_cap.rates[i] = pos[i + 2];
- 			break;
- 
- 		case WLAN_EID_EXT_SUPP_RATES:
--			if (pos[1] > 32)
-+			if (ie_len > sizeof(sta_ptr->tdls_cap.rates))
- 				return;
- 			basic = sta_ptr->tdls_cap.rates_len;
--			if (pos[1] > 32 - basic)
-+			if (ie_len > sizeof(sta_ptr->tdls_cap.rates) - basic)
- 				return;
--			for (i = 0; i < pos[1]; i++)
-+			for (i = 0; i < ie_len; i++)
- 				sta_ptr->tdls_cap.rates[basic + i] = pos[i + 2];
--			sta_ptr->tdls_cap.rates_len += pos[1];
-+			sta_ptr->tdls_cap.rates_len += ie_len;
- 			break;
- 		case WLAN_EID_HT_CAPABILITY:
--			if (pos > end - sizeof(struct ieee80211_ht_cap) - 2)
--				return;
--			if (pos[1] != sizeof(struct ieee80211_ht_cap))
-+			if (ie_len != sizeof(struct ieee80211_ht_cap))
- 				return;
- 			/* copy the ie's value into ht_capb*/
- 			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos + 2,
-@@ -981,59 +981,45 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
- 			sta_ptr->is_11n_enabled = 1;
- 			break;
- 		case WLAN_EID_HT_OPERATION:
--			if (pos > end -
--			    sizeof(struct ieee80211_ht_operation) - 2)
--				return;
--			if (pos[1] != sizeof(struct ieee80211_ht_operation))
-+			if (ie_len != sizeof(struct ieee80211_ht_operation))
- 				return;
- 			/* copy the ie's value into ht_oper*/
- 			memcpy(&sta_ptr->tdls_cap.ht_oper, pos + 2,
- 			       sizeof(struct ieee80211_ht_operation));
- 			break;
- 		case WLAN_EID_BSS_COEX_2040:
--			if (pos > end - 3)
--				return;
--			if (pos[1] != 1)
-+			if (ie_len != sizeof(pos[2]))
- 				return;
- 			sta_ptr->tdls_cap.coex_2040 = pos[2];
- 			break;
- 		case WLAN_EID_EXT_CAPABILITY:
--			if (pos > end - sizeof(struct ieee_types_header))
--				return;
--			if (pos[1] < sizeof(struct ieee_types_header))
-+			if (ie_len < sizeof(struct ieee_types_header))
- 				return;
--			if (pos[1] > 8)
-+			if (ie_len > 8)
- 				return;
- 			memcpy((u8 *)&sta_ptr->tdls_cap.extcap, pos,
- 			       sizeof(struct ieee_types_header) +
--			       min_t(u8, pos[1], 8));
-+			       min_t(u8, ie_len, 8));
- 			break;
- 		case WLAN_EID_RSN:
--			if (pos > end - sizeof(struct ieee_types_header))
-+			if (ie_len < sizeof(struct ieee_types_header))
- 				return;
--			if (pos[1] < sizeof(struct ieee_types_header))
--				return;
--			if (pos[1] > IEEE_MAX_IE_SIZE -
-+			if (ie_len > IEEE_MAX_IE_SIZE -
- 			    sizeof(struct ieee_types_header))
- 				return;
- 			memcpy((u8 *)&sta_ptr->tdls_cap.rsn_ie, pos,
- 			       sizeof(struct ieee_types_header) +
--			       min_t(u8, pos[1], IEEE_MAX_IE_SIZE -
-+			       min_t(u8, ie_len, IEEE_MAX_IE_SIZE -
- 				     sizeof(struct ieee_types_header)));
- 			break;
- 		case WLAN_EID_QOS_CAPA:
--			if (pos > end - 3)
--				return;
--			if (pos[1] != 1)
-+			if (ie_len != sizeof(pos[2]))
- 				return;
- 			sta_ptr->tdls_cap.qos_info = pos[2];
- 			break;
- 		case WLAN_EID_VHT_OPERATION:
- 			if (priv->adapter->is_hw_11ac_capable) {
--				if (pos > end -
--				    sizeof(struct ieee80211_vht_operation) - 2)
--					return;
--				if (pos[1] !=
-+				if (ie_len !=
- 				    sizeof(struct ieee80211_vht_operation))
- 					return;
- 				/* copy the ie's value into vhtoper*/
-@@ -1043,10 +1029,7 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
- 			break;
- 		case WLAN_EID_VHT_CAPABILITY:
- 			if (priv->adapter->is_hw_11ac_capable) {
--				if (pos > end -
--				    sizeof(struct ieee80211_vht_cap) - 2)
--					return;
--				if (pos[1] != sizeof(struct ieee80211_vht_cap))
-+				if (ie_len != sizeof(struct ieee80211_vht_cap))
- 					return;
- 				/* copy the ie's value into vhtcap*/
- 				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos + 2,
-@@ -1056,9 +1039,7 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
- 			break;
- 		case WLAN_EID_AID:
- 			if (priv->adapter->is_hw_11ac_capable) {
--				if (pos > end - 4)
--					return;
--				if (pos[1] != 2)
-+				if (ie_len != sizeof(u16))
- 					return;
- 				sta_ptr->tdls_cap.aid =
- 					get_unaligned_le16((pos + 2));
+ 	src_finfo = v4l2_format_info(src_pixelformat);
 -- 
-2.24.0.393.g34dc348eaf-goog
+2.17.1
 
