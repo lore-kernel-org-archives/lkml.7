@@ -2,121 +2,93 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9A9C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD008C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2892C2077B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A922D20707
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbfLFBMF (ORCPT
+        id S1726183AbfLFBQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 20:12:05 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:58155 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725959AbfLFBMF (ORCPT
+        Thu, 5 Dec 2019 20:16:48 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:58365 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725959AbfLFBQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 20:12:05 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Tk4mbZG_1575594719;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk4mbZG_1575594719)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 06 Dec 2019 09:12:02 +0800
-Subject: Re: [v3 PATCH] mm: move_pages: return valid node id in status if the
- page is already on the target node
-To:     Qian Cai <cai@lca.pw>, John Hubbard <jhubbard@nvidia.com>
-Cc:     fabecassis@nvidia.com, mhocko@suse.com, cl@linux.com,
-        vbabka@suse.cz, mgorman@techsingularity.net,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <22b5bfde-45be-95bd-5c98-2ab13302c107@nvidia.com>
- <D0A99204-A60F-428E-B77A-63DBCD7103F4@lca.pw>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <9588b886-7ced-6502-67f0-0eb623045903@linux.alibaba.com>
-Date:   Thu, 5 Dec 2019 17:11:58 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 5 Dec 2019 20:16:48 -0500
+Received: from dread.disaster.area (pa49-179-150-192.pa.nsw.optusnet.com.au [49.179.150.192])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id C329D3A2755;
+        Fri,  6 Dec 2019 12:16:42 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1id2Eb-0007KL-00; Fri, 06 Dec 2019 12:16:41 +1100
+Date:   Fri, 6 Dec 2019 12:16:40 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Andreas Dilger <adilger@dilger.ca>,
+        Daniel Phillips <daniel@phunq.net>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: [RFC] Thing 1: Shardmap fox Ext4
+Message-ID: <20191206011640.GQ2695@dread.disaster.area>
+References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
+ <20191127142508.GB5143@mit.edu>
+ <c3636a43-6ae9-25d4-9483-34770b6929d0@phunq.net>
+ <20191128022817.GE22921@mit.edu>
+ <3b5f28e5-2b88-47bb-1b32-5c2fed989f0b@phunq.net>
+ <20191130175046.GA6655@mit.edu>
+ <76ddbdba-55ba-3426-2e29-0fa17db9b6d8@phunq.net>
+ <23F33101-065E-445A-AE5C-D05E35E2B78B@dilger.ca>
+ <20191204234106.GC5641@mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <D0A99204-A60F-428E-B77A-63DBCD7103F4@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204234106.GC5641@mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=ZXpxJgW8/q3NVgupyyvOCQ==:117 a=ZXpxJgW8/q3NVgupyyvOCQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
+        a=ySfo2T4IAAAA:8 a=7-415B0cAAAA:8 a=M2SG4f-PYqfBwsbvji4A:9
+        a=CjuIK1q_8ugA:10 a=ZUkhVnNHqyo2at-WnAgH:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 04, 2019 at 06:41:06PM -0500, Theodore Y. Ts'o wrote:
+> On Wed, Dec 04, 2019 at 11:31:50AM -0700, Andreas Dilger wrote:
+> > One important use case that we have for Lustre that is not yet in the
+> > upstream ext4[*] is the ability to do parallel directory operations.
+> > This means we can create, lookup, and/or unlink entries in the same
+> > directory concurrently, to increase parallelism for large directories.
+> > 
+> > 
+> > [*] we've tried to submit the pdirops patch a couple of times, but the
+> > main blocker is that the VFS has a single directory mutex and couldn't
+> > use the added functionality without significant VFS changes.
+> > Patch at https://git.whamcloud.com/?p=fs/lustre-release.git;f=ldiskfs/kernel_patches/patches/rhel8/ext4-pdirop.patch;hb=HEAD
+> >
+> 
+> The XFS folks recently added support for parallel directory operations
+> into the VFS, for the benefit of XFS has this feature.
 
+The use of shared i_rwsem locking on the directory inode during
+lookup/pathwalk allows for concurrent lookup/readdir operations on
+a single directory. However, the parent dir i_rwsem is still held
+exclusive for directory modifications like create, unlink, etc.
 
-On 12/5/19 4:19 PM, Qian Cai wrote:
->
->> On Dec 5, 2019, at 7:04 PM, John Hubbard <jhubbard@nvidia.com> wrote:
->>
->> Felix's code is not random test code. It's code he wrote and he expected it to work.
-> Sure, but could he show a bit detail if the kernel will start to behavior as expected like what was written in the manpage to return ENOENT in this case, why is it not acceptable? i.e., why is it important to depend on the broken behavior?
+IOWs, the VFS doesn't allow for concurrent directory modification
+right now, and that's going to be the limiting factor no matter what
+you do with internal filesystem locking.
 
+Cheers,
 
-I think I found the root cause. It did return -ENOENT when the syscall 
-was introduced (my first impression was wrong), but the behavior was 
-changed since 2.6.28 by commit e78bbfa82624 ("mm: stop returning -ENOENT 
-from sys_move_pages() if nothing got migrated"). The full commit log is 
-as below:
-
-Author: Brice Goglin <Brice.Goglin@inria.fr>
-Date:   Sat Oct 18 20:27:15 2008 -0700
-
-     mm: stop returning -ENOENT from sys_move_pages() if nothing got 
-migrated
-
-     A patchset reworking sys_move_pages().  It removes the possibly large
-     vmalloc by using multiple chunks when migrating large buffers. It also
-     dramatically increases the throughput for large buffers since the 
-lookup
-     in new_page_node() is now limited to a single chunk, causing the 
-quadratic
-     complexity to have a much slower impact.  There is no need to use any
-     radix-tree-like structure to improve this lookup.
-
-     sys_move_pages() duration on a 4-quadcore-opteron 2347HE (1.9Gz),
-     migrating between nodes #2 and #3:
-
-             length          move_pages (us)         move_pages+patch (us)
-             4kB             126                     98
-             40kB            198                     168
-             400kB           963                     937
-             4MB             12503                   11930
-             40MB            246867                  11848
-
-     Patches #1 and #4 are the important ones:
-     1) stop returning -ENOENT from sys_move_pages() if nothing got migrated
-     2) don't vmalloc a huge page_to_node array for do_pages_stat()
-     3) extract do_pages_move() out of sys_move_pages()
-     4) rework do_pages_move() to work on page_sized chunks
-     5) move_pages: no need to set pp->page to ZERO_PAGE(0) by default
-
-     This patch:
-
-     There is no point in returning -ENOENT from sys_move_pages() if all 
-pages
-     were already on the right node, while we return 0 if only 1 page 
-was not.
-     Most application don't know where their pages are allocated, so 
-it's not
-     an error to try to migrate them anyway.
-
-     Just return 0 and let the status array in user-space be checked if the
-     application needs details.
-
-     It will make the upcoming chunked-move_pages() support much easier.
-
-     Signed-off-by: Brice Goglin <Brice.Goglin@inria.fr>
-     Acked-by: Christoph Lameter <cl@linux-foundation.org>
-     Cc: Nick Piggin <nickpiggin@yahoo.com.au>
-     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-     Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-
-
-So the behavior was changed in kernel intentionally but never reflected 
-in the manpage. I will propose a patch to fix the document.
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
