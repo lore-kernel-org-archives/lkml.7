@@ -2,98 +2,81 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CC8C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76271C43603
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 956C124659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:07:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kseXJg08"
+	by mail.kernel.org (Postfix) with ESMTP id 525F924659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 12:10:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbfLFMHq (ORCPT
+        id S1726246AbfLFMKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 07:07:46 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45410 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfLFMHq (ORCPT
+        Fri, 6 Dec 2019 07:10:44 -0500
+Received: from lgeamrelo12.lge.com ([156.147.23.52]:42553 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726124AbfLFMKn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 07:07:46 -0500
-Received: by mail-pl1-f195.google.com with SMTP id w7so2649208plz.12;
-        Fri, 06 Dec 2019 04:07:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RUi+772OFh0+aMi235GUKCqF36iP78kIVRkHfrv5Nvw=;
-        b=kseXJg08ZQh8rMo47swpsu0wTLe2Ee3FuQ5CtSlQjo2doT2Adj3aUu/cFodGwyFoDb
-         O58GpssUT0KQZVQIK3Wap5SO1EO4v/ogxHLsf8BdJ51vAazKrkX1VBBLNcqZuohwLIyS
-         C/edxu4lGJ6SyzIj+w/AAEj5TQ/kUeVq8fL48H0o81bSA8GiIui76DScsZNbZ4tntiJv
-         Fue6dXTTBKb+cuy0vXMePBWX2JRVxnHttgS8U9IPrlMw5ot3HsM9o90RQT0U+dJfIqTV
-         koCCiSu1qZ42yaWKxMjWbpSc+RFBNipRNH5s/vw+yJOEaxmagy7USVi8yL2wDTKVjqjb
-         NBQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RUi+772OFh0+aMi235GUKCqF36iP78kIVRkHfrv5Nvw=;
-        b=tJOvfFG8O0UH/57W9x1LHRaYC0Z1DM/D6TIGgTivGl8dyfZe7O2EZ6MvCFemypjJin
-         EN4fwFpme6ooOTkU1kFUMLbWzML+7lk+3x0H8aDn9PCMgkKCHhoJj7TKYnO3lXWtTPds
-         6uFoBgk3iXgpaJiXERs2ovznnmN2p6R35pHbLlWrqpqJKMf5taEiPb5wWV0lsRoZ2YZl
-         /iM39McPuaCGI6EvGBI5fhFEdEkhr0MFmZD5ZEkj/JALfY3V5YazetQNBBjHVJjjDFp7
-         2QiRYP1UeaENfLBms8fpXuhHzE0yVl9HCpEnUhXXjSPp1CS9+bW8/bPTRci7yPzmM4PR
-         KAqw==
-X-Gm-Message-State: APjAAAVCPBH2gXdGpKvrYfrmtvVxPE/8t6Qdf0ooxAuNulzNHA2HVxqt
-        ah0S6AiLbQ+ZzvxrXNwMtE8=
-X-Google-Smtp-Source: APXvYqzNGd9adTgKkpZqoWzOHPwlLCxP3jynWBkNyuvvFRQFwm7VSFLmIN1m6XlJ+vpkxiNyD2IpYg==
-X-Received: by 2002:a17:90a:6484:: with SMTP id h4mr12443621pjj.84.1575634065578;
-        Fri, 06 Dec 2019 04:07:45 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id c8sm16855843pfj.106.2019.12.06.04.07.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 04:07:44 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] media: go7007: fix a miss of snd_card_free
-Date:   Fri,  6 Dec 2019 20:07:35 +0800
-Message-Id: <20191206120735.21873-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Fri, 6 Dec 2019 07:10:43 -0500
+X-Greylist: delayed 1798 seconds by postgrey-1.27 at vger.kernel.org; Fri, 06 Dec 2019 07:10:43 EST
+Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
+        by 156.147.23.52 with ESMTP; 6 Dec 2019 20:40:41 +0900
+X-Original-SENDERIP: 156.147.1.121
+X-Original-MAILFROM: neidhard.kim@lge.com
+Received: from unknown (HELO localhost.localdomain) (10.178.32.48)
+        by 156.147.1.121 with ESMTP; 6 Dec 2019 20:40:41 +0900
+X-Original-SENDERIP: 10.178.32.48
+X-Original-MAILFROM: neidhard.kim@lge.com
+From:   Jongsung Kim <neidhard.kim@lge.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        mcoquelin.stm32@gmail.com, davem@davemloft.net,
+        joabreu@synopsys.com, alexandre.torgue@st.com,
+        peppe.cavallaro@st.com, Jongsung Kim <neidhard.kim@lge.com>
+Subject: [PATCH] net: stmmac: reset Tx desc base address before restarting Tx
+Date:   Fri,  6 Dec 2019 20:40:00 +0900
+Message-Id: <20191206114000.27283-1-neidhard.kim@lge.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-go7007_snd_init() misses a snd_card_free() in an error path.
-Add the missed call to fix it.
+Refer to the databook of DesignWare Cores Ethernet MAC Universal:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+6.2.1.5 Register 4 (Transmit Descriptor List Address Register
+
+If this register is not changed when the ST bit is set to 0, then
+the DMA takes the descriptor address where it was stopped earlier.
+
+The stmmac_tx_err() does zero indices to Tx descriptors, but does
+not reset HW current Tx descriptor address. To fix inconsistency,
+the base address of the Tx descriptors should be rewritten before
+restarting Tx.
+
+Signed-off-by: Jongsung Kim <neidhard.kim@lge.com>
 ---
- drivers/media/usb/go7007/snd-go7007.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/usb/go7007/snd-go7007.c b/drivers/media/usb/go7007/snd-go7007.c
-index b05fa227ffb2..dced8c019514 100644
---- a/drivers/media/usb/go7007/snd-go7007.c
-+++ b/drivers/media/usb/go7007/snd-go7007.c
-@@ -243,6 +243,7 @@ int go7007_snd_init(struct go7007 *go)
- 	ret = snd_device_new(gosnd->card, SNDRV_DEV_LOWLEVEL, go,
- 			&go7007_snd_device_ops);
- 	if (ret < 0) {
-+		snd_card_free(gosnd->card);
- 		kfree(gosnd);
- 		return ret;
- 	}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 644cb5d1fd4f..bbc65bd332a8 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2009,6 +2009,8 @@ static void stmmac_tx_err(struct stmmac_priv *priv, u32 chan)
+ 	tx_q->cur_tx = 0;
+ 	tx_q->mss = 0;
+ 	netdev_tx_reset_queue(netdev_get_tx_queue(priv->dev, chan));
++	stmmac_init_tx_chan(priv, priv->ioaddr, priv->plat->dma_cfg,
++			    tx_q->dma_tx_phy, chan);
+ 	stmmac_start_tx_dma(priv, chan);
+ 
+ 	priv->dev->stats.tx_errors++;
 -- 
-2.24.0
+2.20.1
 
