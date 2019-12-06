@@ -2,131 +2,121 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358F8C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9A9C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED64C2077B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:11:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Jls1cMO1"
+	by mail.kernel.org (Postfix) with ESMTP id 2892C2077B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 01:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbfLFBLk (ORCPT
+        id S1726233AbfLFBMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Dec 2019 20:11:40 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44485 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfLFBLj (ORCPT
+        Thu, 5 Dec 2019 20:12:05 -0500
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:58155 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725959AbfLFBMF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Dec 2019 20:11:39 -0500
-Received: by mail-pl1-f194.google.com with SMTP id bh2so849315plb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Dec 2019 17:11:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=afFgdaPpYNHvy5QgCmSyg24Hm+ltvoWQsuROrBrCOAA=;
-        b=Jls1cMO18zwlNXp1RcxuRzsLNqRvDkKqZjbzo6ZngtVlM/X+QlWs13zMLYRwqXBRQo
-         kBChDfpJSztwtKn52szanSvW1WWT2SCtmedbAOjZ1g6DwlufiYLEbc4xAjaotwjB4/NN
-         N9zV3b+9CBxZXd52VTfe3/pWbW7+CyQeIN5q0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=afFgdaPpYNHvy5QgCmSyg24Hm+ltvoWQsuROrBrCOAA=;
-        b=GHpSY1wEv7jTrXktwP7AttXWKe2mJ/JDzgvRxwpxvTe4H8ogHCvhiOIsd7KKW2a/4E
-         8bY/kAlQULoP11AV0LvrAngV1CqkeLYvM6n7eX9X0z9AvCRyxCexniB+TE9KhfVpm3hs
-         sg2lUynwV5uRE3xvVeW8lDdbS9aerNMmBDLr+mCt8GLNqSPQQ27esqTysWJnBt5ckuUc
-         UgwZet3K1ZsloHf2zu6jKe0e459ROqT9fUUacgDyiK0xhwAo51aXBlD3RhjD+2R+dNN1
-         xw2C1YUMdvnH+xkAx1ys+8TGP0stxpu3OYYHL79AASlY6/TsDQP/dr6axmrJwOWnhjTl
-         eD/A==
-X-Gm-Message-State: APjAAAWFgbAPMIQidgUd/Nq8wqfVSa3hHbxlcofwNLUH6Cl+5glEbLua
-        lUyP6/DSD4QuIS2YDiaB+W9P4g==
-X-Google-Smtp-Source: APXvYqwnyB3hgGzxp6a/jdh6wC9AyEDlREjAgJs5KYIUY5ylBbAWt0nWAe28Thxa5y10mEBEjTnvXg==
-X-Received: by 2002:a17:90a:c01:: with SMTP id 1mr12729171pjs.37.1575594698986;
-        Thu, 05 Dec 2019 17:11:38 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id b2sm14031169pff.6.2019.12.05.17.11.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 17:11:38 -0800 (PST)
-Date:   Thu, 5 Dec 2019 20:11:37 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -tip] kprobes: Lock rcu_read_lock() while searching kprobe
-Message-ID: <20191206011137.GB142442@google.com>
-References: <157527193358.11113.14859628506665612104.stgit@devnote2>
- <20191202210854.GD17234@google.com>
- <20191203071329.GC115767@gmail.com>
- <20191203175712.GI2889@paulmck-ThinkPad-P72>
- <20191204100549.GB114697@gmail.com>
- <20191204161239.GL2889@paulmck-ThinkPad-P72>
+        Thu, 5 Dec 2019 20:12:05 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Tk4mbZG_1575594719;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tk4mbZG_1575594719)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 06 Dec 2019 09:12:02 +0800
+Subject: Re: [v3 PATCH] mm: move_pages: return valid node id in status if the
+ page is already on the target node
+To:     Qian Cai <cai@lca.pw>, John Hubbard <jhubbard@nvidia.com>
+Cc:     fabecassis@nvidia.com, mhocko@suse.com, cl@linux.com,
+        vbabka@suse.cz, mgorman@techsingularity.net,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <22b5bfde-45be-95bd-5c98-2ab13302c107@nvidia.com>
+ <D0A99204-A60F-428E-B77A-63DBCD7103F4@lca.pw>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <9588b886-7ced-6502-67f0-0eb623045903@linux.alibaba.com>
+Date:   Thu, 5 Dec 2019 17:11:58 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204161239.GL2889@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <D0A99204-A60F-428E-B77A-63DBCD7103F4@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 08:12:39AM -0800, Paul E. McKenney wrote:
-> On Wed, Dec 04, 2019 at 11:05:50AM +0100, Ingo Molnar wrote:
-> > 
-> > * Paul E. McKenney <paulmck@kernel.org> wrote:
-> > 
-> > > >  * This list-traversal primitive may safely run concurrently with
-> > > >  * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-> > > >  * as long as the traversal is guarded by rcu_read_lock().
-> > > >  */
-> > > > #define hlist_for_each_entry_rcu(pos, head, member, cond...)            \
-> > > > 
-> > > > is actively harmful. Why is it there?
-> > > 
-> > > For cases where common code might be invoked both from the reader
-> > > (with RCU protection) and from the updater (protected by some
-> > > lock).  This common code can then use the optional argument to
-> > > hlist_for_each_entry_rcu() to truthfully tell lockdep that it might be
-> > > called with either form of protection in place.
-> > > 
-> > > This also combines with the __rcu tag used to mark RCU-protected
-> > > pointers, in which case sparse complains when a non-RCU API is applied
-> > > to these pointers, to get back to your earlier question about use of
-> > > hlist_for_each_entry_rcu() within the update-side lock.
-> > > 
-> > > But what are you seeing as actively harmful about all of this?
-> > > What should we be doing instead?
-> > 
-> > Yeah, so basically in the write-locked path hlist_for_each_entry() 
-> > generates (slightly) more efficient code than hlist_for_each_entry_rcu(), 
-> > correct?
-> 
-> Potentially yes, if the READ_ONCE() constrains the compiler.  Or not,
-> depending of course on the compiler and the surrounding code.
-> 
-> > Also, the principle of passing warning flags around is problematic - but 
-> > I can see the point in this specific case.
-> 
-> Would it help to add an hlist_for_each_entry_protected() that expected
-> RCU-protected pointers and write-side protection, analogous to
-> rcu_dereference_protected()?  Or would that expansion of the RCU API
-> outweigh any benefits?
 
-Personally, I like keeping the same API and using the optional argument like
-we did thus preventing too many APIs / new APIs.
 
-thanks,
+On 12/5/19 4:19 PM, Qian Cai wrote:
+>
+>> On Dec 5, 2019, at 7:04 PM, John Hubbard <jhubbard@nvidia.com> wrote:
+>>
+>> Felix's code is not random test code. It's code he wrote and he expected it to work.
+> Sure, but could he show a bit detail if the kernel will start to behavior as expected like what was written in the manpage to return ENOENT in this case, why is it not acceptable? i.e., why is it important to depend on the broken behavior?
 
- - Joel
 
+I think I found the root cause. It did return -ENOENT when the syscall 
+was introduced (my first impression was wrong), but the behavior was 
+changed since 2.6.28 by commit e78bbfa82624 ("mm: stop returning -ENOENT 
+from sys_move_pages() if nothing got migrated"). The full commit log is 
+as below:
+
+Author: Brice Goglin <Brice.Goglin@inria.fr>
+Date:   Sat Oct 18 20:27:15 2008 -0700
+
+     mm: stop returning -ENOENT from sys_move_pages() if nothing got 
+migrated
+
+     A patchset reworking sys_move_pages().  It removes the possibly large
+     vmalloc by using multiple chunks when migrating large buffers. It also
+     dramatically increases the throughput for large buffers since the 
+lookup
+     in new_page_node() is now limited to a single chunk, causing the 
+quadratic
+     complexity to have a much slower impact.  There is no need to use any
+     radix-tree-like structure to improve this lookup.
+
+     sys_move_pages() duration on a 4-quadcore-opteron 2347HE (1.9Gz),
+     migrating between nodes #2 and #3:
+
+             length          move_pages (us)         move_pages+patch (us)
+             4kB             126                     98
+             40kB            198                     168
+             400kB           963                     937
+             4MB             12503                   11930
+             40MB            246867                  11848
+
+     Patches #1 and #4 are the important ones:
+     1) stop returning -ENOENT from sys_move_pages() if nothing got migrated
+     2) don't vmalloc a huge page_to_node array for do_pages_stat()
+     3) extract do_pages_move() out of sys_move_pages()
+     4) rework do_pages_move() to work on page_sized chunks
+     5) move_pages: no need to set pp->page to ZERO_PAGE(0) by default
+
+     This patch:
+
+     There is no point in returning -ENOENT from sys_move_pages() if all 
+pages
+     were already on the right node, while we return 0 if only 1 page 
+was not.
+     Most application don't know where their pages are allocated, so 
+it's not
+     an error to try to migrate them anyway.
+
+     Just return 0 and let the status array in user-space be checked if the
+     application needs details.
+
+     It will make the upcoming chunked-move_pages() support much easier.
+
+     Signed-off-by: Brice Goglin <Brice.Goglin@inria.fr>
+     Acked-by: Christoph Lameter <cl@linux-foundation.org>
+     Cc: Nick Piggin <nickpiggin@yahoo.com.au>
+     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+     Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+
+So the behavior was changed in kernel intentionally but never reflected 
+in the manpage. I will propose a patch to fix the document.
