@@ -2,95 +2,144 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26880C43603
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D05C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDCE1206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:56:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ighuK9mu"
+	by mail.kernel.org (Postfix) with ESMTP id 68A09206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 16:56:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575651391;
+	bh=IVLdhYRWY5tYVVwLJ4OV2x+arjj3+DxKN+oVeExsJ6w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bR3CgJpnFZalEcHdHbDM1ZkDJY7Wo2N3g9rSgPrZZJtQoGDib4Lc3BPQbTa9J+u05
+	 o4Dnk9hGFO5gg/YzPfaVPmTtj65oCSu+TiHr1Fkz4hUbtdbNV6M8KBNH3KbFBunG79
+	 q0o7GhjZPvKErNGrVwYKWTG8Uiqdhfvh5xf/T9Xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfLFQ42 (ORCPT
+        id S1726484AbfLFQ4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:56:28 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:45040 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfLFQ4K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 11:56:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=l4A/o2+wyjx84ZFaPlMMEV4MACdBKMwfmSyM67ZwjiM=; b=ighuK9muOzPxJYFwUwOg0PO8+
-        +JGaeuWGo7vCnedvc0p9ldjmojIcrlB1/qkhQ7mfkR8vsXOmmCsJ6UEwMhCEG6ctJ3vspq6b48DTi
-        YQvzm4SDgmQNa9PZy4Hz8JDvGZ80dFBSKbwKpXl+k/PDptFyzmGaPMFpBuioTZ7M61kCwbdilhDKd
-        9zimj0UIoPHPBwuK1LRzffeoIsu1uuG2Cm9lbJwCCELh6XynoAML+OMJUAq+mOVqA/1G4EY+cZcnL
-        Mg/v5XY7TbPTnRMiguDWsDua+z2b3z+pD4T0fhB8h2LGKBI1iidIVPI6goTDAcnrWw8UO4gv6xK/X
-        lEIZVtoJw==;
-Received: from [2601:1c0:6280:3f0::3deb]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1idGtf-0001K3-PA; Fri, 06 Dec 2019 16:56:03 +0000
-Subject: Re: [PATCH 1/3] cpuinfo: add sysfs based arch independent cpuinfo
- framework
-To:     Thomas Renninger <trenn@suse.de>, linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, Felix Schnizlein <fschnizlein@suse.de>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org,
-        fschnitzlein@suse.de, Felix Schnizlein <fschnizlein@suse.com>
-References: <20191206162421.15050-1-trenn@suse.de>
- <20191206162421.15050-2-trenn@suse.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <65a20b22-8cc9-4492-25d5-4f03727086e8@infradead.org>
-Date:   Fri, 6 Dec 2019 08:56:02 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191206162421.15050-2-trenn@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 6 Dec 2019 11:56:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbfLFQ4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 11:56:04 -0500
+Received: from e123331-lin.cambridge.arm.com (fw-tnat-cam5.arm.com [217.140.106.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99E522464E;
+        Fri,  6 Dec 2019 16:56:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575651363;
+        bh=IVLdhYRWY5tYVVwLJ4OV2x+arjj3+DxKN+oVeExsJ6w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wFzY0gVExciXHZItBHvEX68e1G9KixiDq0uedyXFBTHNJIN0p+mlcB+dvE4ggLB0K
+         De1UD0d4YHZxZlaqQi2afjihkfzITku9DBji9PN0Nqy6xwaVVDLaSBs7MdB8WxhsYc
+         VMB4/DGO1DVNbS/xZ99gvWmJ2isXli8Cxis3Bd4c=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Subject: [PATCH 1/6] efi/memreserve: register reservations as 'reserved' in /proc/iomem
+Date:   Fri,  6 Dec 2019 16:55:37 +0000
+Message-Id: <20191206165542.31469-2-ardb@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191206165542.31469-1-ardb@kernel.org>
+References: <20191206165542.31469-1-ardb@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/6/19 8:24 AM, Thomas Renninger wrote:
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 48b5e103bdb0..39015570b1ca 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -882,6 +882,17 @@ config STRICT_MODULE_RWX
->  	  and non-text memory will be made non-executable. This provides
->  	  protection against certain security exploits (e.g. writing to text)
->  
-> +config CPUINFO_SYSFS
-> +	bool "Provides processor information in sysfs. Successor of /proc/cpuinfo"
+Memory regions that are reserved using efi_mem_reserve_persistent()
+are recorded in a special EFI config table which survives kexec,
+allowing the incoming kernel to honour them as well. However,
+such reservations are not visible in /proc/iomem, and so the kexec
+tools that load the incoming kernel and its initrd into memory may
+overwrite these reserved regions before the incoming kernel has a
+chance to reserve them from further use.
 
-	      Provide
+Address this problem by adding these reservations to /proc/iomem as
+they are created. Note that reservations that are inherited from a
+previous kernel are memblock_reserve()'d early on, so they are already
+visible in /proc/iomem.
 
-> +	def_bool y
-> +	depends on HAVE_CPUINFO_SYSFS
-> +	help
-> +	  Provides architecture specific processor information in /sys/devices/system/cpu/info> +	  Use this instead of /proc/cpuinfo
+Tested-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
+Reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: <stable@vger.kernel.org> # v5.4+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ drivers/firmware/efi/efi.c | 28 ++++++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
 
-End those 2 sentences with periods (full stop), please.
-
-> +
-> +config HAVE_CPUINFO_SYSFS
-> +	bool
-> +
->  # select if the architecture provides an asm/dma-direct.h header
->  config ARCH_HAS_PHYS_TO_DMA
->  	bool
-
-
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index d101f072c8f8..b0961950d918 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -979,6 +979,24 @@ static int __init efi_memreserve_map_root(void)
+ 	return 0;
+ }
+ 
++static int efi_mem_reserve_iomem(phys_addr_t addr, u64 size)
++{
++	struct resource *res, *parent;
++
++	res = kzalloc(sizeof(struct resource), GFP_ATOMIC);
++	if (!res)
++		return -ENOMEM;
++
++	res->name	= "reserved";
++	res->flags	= IORESOURCE_MEM;
++	res->start	= addr;
++	res->end	= addr + size - 1;
++
++	/* we expect a conflict with a 'System RAM' region */
++	parent = request_resource_conflict(&iomem_resource, res);
++	return parent ? request_resource(parent, res) : 0;
++}
++
+ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
+ {
+ 	struct linux_efi_memreserve *rsv;
+@@ -1003,7 +1021,7 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
+ 			rsv->entry[index].size = size;
+ 
+ 			memunmap(rsv);
+-			return 0;
++			return efi_mem_reserve_iomem(addr, size);
+ 		}
+ 		memunmap(rsv);
+ 	}
+@@ -1013,6 +1031,12 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
+ 	if (!rsv)
+ 		return -ENOMEM;
+ 
++	rc = efi_mem_reserve_iomem(__pa(rsv), SZ_4K);
++	if (rc) {
++		free_page((unsigned long)rsv);
++		return rc;
++	}
++
+ 	/*
+ 	 * The memremap() call above assumes that a linux_efi_memreserve entry
+ 	 * never crosses a page boundary, so let's ensure that this remains true
+@@ -1029,7 +1053,7 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
+ 	efi_memreserve_root->next = __pa(rsv);
+ 	spin_unlock(&efi_mem_reserve_persistent_lock);
+ 
+-	return 0;
++	return efi_mem_reserve_iomem(addr, size);
+ }
+ 
+ static int __init efi_memreserve_root_init(void)
 -- 
-~Randy
+2.17.1
 
