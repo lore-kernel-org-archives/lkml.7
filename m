@@ -2,135 +2,177 @@ Return-Path: <SRS0=xBSd=Z4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99E6C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34242C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABEA520659
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08BE820659
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Dec 2019 14:28:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CkZXRf/b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ga6I0Lji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfLFOZ1 (ORCPT
+        id S1726365AbfLFO2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:25:27 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24122 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726214AbfLFOZ1 (ORCPT
+        Fri, 6 Dec 2019 09:28:00 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:41108 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfLFO17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 09:25:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575642325;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y5eMwjNSah3IFSsfBLmQpFEVvDHBPY0nuvKXJwIONiw=;
-        b=CkZXRf/bbvnTTx76TlpDpXrmhixwPAXBJMcvlamYHrNuzGS/2ZVAJJ6gHfqBQTtMYCplsp
-        sSLuUVcAPx4KtHJjfGPGlGqkzQ+74KEftmx6hNbdKPnk1q9e8RaRZyk1HwAdMmFbEeAqkm
-        3EoK7bqcKQd3lUTvceb1K0hmYGEDkEY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-81-n2FikzZKNyWz1gh8UutNAg-1; Fri, 06 Dec 2019 09:25:23 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2BD18188355F;
-        Fri,  6 Dec 2019 14:25:21 +0000 (UTC)
-Received: from krava (unknown [10.43.17.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0883310016E8;
-        Fri,  6 Dec 2019 14:25:18 +0000 (UTC)
-Date:   Fri, 6 Dec 2019 15:25:16 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Fri, 6 Dec 2019 09:27:59 -0500
+Received: by mail-ua1-f67.google.com with SMTP id f7so2876421uaa.8
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 06:27:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=B4JEnSRg87z0x0xPHWA6J8Y8Owk2lF1jg1xYqroy0QY=;
+        b=ga6I0LjiKLuM4hlv9oFWS0ZbjsC3E0cCZ62YwgRk9fuTnh3A3QqTsCTqYdNbPc98Fj
+         kKIiODy1Uo+AZr3v1nwJ+CUOSpuBE/RpXHeIk4MsIC9wbG46wClNQ8EatOkNYb5sDsKh
+         fohaPINQmRs5GUUTOoVbV51/n5+CmQbrsAt4A/vNsRoIAdJlmnlX49nBgJroo7ESgBLB
+         t5En7iyBOLXXEAjBWnJaD8m2JERh0gF9xTu8qLoRiNxoEq+JFlNur7v+vSTf0Dcnu9BT
+         S0+/lZrkeFn/FT2Npq94IdqmY6aCEEWy3Ae4R/5d6fO82cwx3nJzWNaXDCk+ph7JGe6h
+         jLwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B4JEnSRg87z0x0xPHWA6J8Y8Owk2lF1jg1xYqroy0QY=;
+        b=EesjnWWsXHQ2OER7ibUUNKceuaGXtJRNeQqfmzpQ3tk6ac6LsBE5LMlE6jPrmidYRm
+         3nsPDeOoFka1SWcLpkXm9rbngUa91k7sO7uhLJdkTCRh/S3/pGGJVnyb89IHCs1UMF3V
+         BNwTBeCaZ9w3Zw7XHQXQh0HouNm42s9Kw2IJPv8SCkzJ/MEF7XibDdnMAZJzS64y9uhl
+         Vtealgmr4vdfQ6Wlslc+wiYEk1vajAq55No8+bvdaK51IeqGjxpiocBNIL/1GfavNNnb
+         bG9stUT8+RRAOzMTQhLswxIhsMSxyiwe7/zPsom47ugDGewJNhLjyjKSQckk/480mb0w
+         NxQA==
+X-Gm-Message-State: APjAAAVFdvqrdlcWNPBYiT5o83DSiQwgF/9A38b/TSZq77cIlkLnCwoD
+        Og84U/c8PYMUnOgtqXs7lW0=
+X-Google-Smtp-Source: APXvYqyRWZGnVGr/78Fczelk9IbN6JfdtoEazno2a5UbJp4H4s+czWgI/6N9OMro+TNnjCfbC7zBzg==
+X-Received: by 2002:ab0:7118:: with SMTP id x24mr12192841uan.29.1575642477940;
+        Fri, 06 Dec 2019 06:27:57 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id m63sm5952731uam.12.2019.12.06.06.27.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 06:27:56 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 37E4D40352; Fri,  6 Dec 2019 11:27:54 -0300 (-03)
+Date:   Fri, 6 Dec 2019 11:27:54 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL 0/6] perf/urgent fixes
-Message-ID: <20191206142516.GA31721@krava>
-References: <20191205193224.24629-1-acme@kernel.org>
- <20191206075701.GA25384@gmail.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 1/3] libperf: Move libperf under tools/lib/perf
+Message-ID: <20191206142754.GC30698@kernel.org>
+References: <20191206135513.31586-1-jolsa@kernel.org>
+ <20191206135513.31586-2-jolsa@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191206075701.GA25384@gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: n2FikzZKNyWz1gh8UutNAg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191206135513.31586-2-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 08:57:01AM +0100, Ingo Molnar wrote:
+Em Fri, Dec 06, 2019 at 02:55:11PM +0100, Jiri Olsa escreveu:
+> Moving libperf from its current location under perf
+> to separate directory under tools/lib.
 
-SNIP
+Breaks the build/bisection:
 
-> >  tools/include/uapi/drm/drm.h      |   3 +-
-> >  tools/include/uapi/drm/i915_drm.h | 128 ++++++++++++++++++++++++++++++=
-+++++++-
-> >  tools/perf/builtin-inject.c       |  13 +---
-> >  tools/perf/builtin-report.c       |   8 +++
-> >  tools/perf/util/sort.c            |  16 +++--
-> >  5 files changed, 147 insertions(+), 21 deletions(-)
->=20
-> Pulled, thanks a lot Arnaldo!
->=20
-> JFYI, on my system the default perf/urgent build still has this noise=20
-> generated by util/parse-events.y and util/expr.y:
->=20
->   util/parse-events.y:1.1-12: warning: deprecated directive, use =E2=80=
-=98%define api.pure=E2=80=99 [-Wdeprecated]
->       1 | %pure-parser
->       | ^~~~~~~~~~~~
->   util/parse-events.y: warning: fix-its can be applied.  Rerun with optio=
-n '--update'. [-Wother]
->   util/expr.y:15.1-12: warning: deprecated directive, use =E2=80=98%defin=
-e api.pure=E2=80=99 [-Wdeprecated]
->      15 | %pure-parser
->       | ^~~~~~~~~~~~
->   util/expr.y: warning: fix-its can be applied.  Rerun with option '--upd=
-ate'. [-Wother]
+[acme@quaco perf]$ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ; make O=/tmp/build/perf  -C tools/perf install-bin
+make: Entering directory '/home/acme/git/perf/tools/perf'
+  BUILD:   Doing 'make -j8' parallel build
+  HOSTCC   /tmp/build/perf/fixdep.o
+  HOSTLD   /tmp/build/perf/fixdep-in.o
+  LINK     /tmp/build/perf/fixdep
 
-just saw it in fedora 31 with new bison, change below
-should fix it, I'll post it with other fixes later
+Auto-detecting system features:
+...                         dwarf: [ on  ]
+...            dwarf_getlocations: [ on  ]
+...                         glibc: [ on  ]
+...                          gtk2: [ on  ]
+...                      libaudit: [ on  ]
+...                        libbfd: [ on  ]
+...                        libcap: [ on  ]
+...                        libelf: [ on  ]
+...                       libnuma: [ on  ]
+...        numa_num_possible_cpus: [ on  ]
+...                       libperl: [ on  ]
+...                     libpython: [ on  ]
+...                     libcrypto: [ on  ]
+...                     libunwind: [ on  ]
+...            libdw-dwarf-unwind: [ on  ]
+...                          zlib: [ on  ]
+...                          lzma: [ on  ]
+...                     get_cpuid: [ on  ]
+...                           bpf: [ on  ]
+...                        libaio: [ on  ]
+...                       libzstd: [ on  ]
+...        disassembler-four-args: [ on  ]
 
-jirka
-
----
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index f9a20a39b64a..4ef801334b9d 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -12,7 +12,7 @@
- #define MAXIDLEN 256
- %}
-=20
--%pure-parser
-+%define api.pure
- %parse-param { double *final_val }
- %parse-param { struct parse_ctx *ctx }
- %parse-param { const char **pp }
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.=
-y
-index e2eea4e601b4..87a0d11676f0 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -1,4 +1,4 @@
--%pure-parser
-+%define api.pure
- %parse-param {void *_parse_state}
- %parse-param {void *scanner}
- %lex-param {void* scanner}
-
+  GEN      /tmp/build/perf/common-cmds.h
+make[3]: *** /home/acme/git/perf/tools/perf/lib/: No such file or directory.  Stop.
+make[2]: *** [Makefile.perf:785: /tmp/build/perf/libperf.a] Error 2
+make[2]: *** Waiting for unfinished jobs....
+  MKDIR    /tmp/build/perf/fd/
+  MKDIR    /tmp/build/perf/fs/
+  CC       /tmp/build/perf/exec-cmd.o
+  CC       /tmp/build/perf/fd/array.o
+  CC       /tmp/build/perf/fs/fs.o
+  CC       /tmp/build/perf/cpu.o
+  CC       /tmp/build/perf/help.o
+  LD       /tmp/build/perf/fd/libapi-in.o
+  CC       /tmp/build/perf/event-parse.o
+  CC       /tmp/build/perf/event-plugin.o
+  CC       /tmp/build/perf/pager.o
+  CC       /tmp/build/perf/debug.o
+  CC       /tmp/build/perf/str_error_r.o
+  CC       /tmp/build/perf/trace-seq.o
+  MKDIR    /tmp/build/perf/fs/
+  CC       /tmp/build/perf/parse-filter.o
+  CC       /tmp/build/perf/parse-options.o
+  MKDIR    /tmp/build/perf/staticobjs/
+  CC       /tmp/build/perf/fs/tracing_path.o
+  CC       /tmp/build/perf/run-command.o
+  CC       /tmp/build/perf/staticobjs/libbpf.o
+  CC       /tmp/build/perf/parse-utils.o
+  CC       /tmp/build/perf/kbuffer-parse.o
+  MKDIR    /tmp/build/perf/staticobjs/
+  CC       /tmp/build/perf/sigchain.o
+  LD       /tmp/build/perf/fs/libapi-in.o
+  CC       /tmp/build/perf/staticobjs/bpf.o
+  CC       /tmp/build/perf/subcmd-config.o
+  CC       /tmp/build/perf/staticobjs/nlattr.o
+  CC       /tmp/build/perf/tep_strerror.o
+  CC       /tmp/build/perf/event-parse-api.o
+  CC       /tmp/build/perf/staticobjs/btf.o
+  LD       /tmp/build/perf/libapi-in.o
+  LD       /tmp/build/perf/libsubcmd-in.o
+  CC       /tmp/build/perf/staticobjs/libbpf_errno.o
+  CC       /tmp/build/perf/staticobjs/str_error.o
+  CC       /tmp/build/perf/staticobjs/netlink.o
+  CC       /tmp/build/perf/staticobjs/bpf_prog_linfo.o
+  AR       /tmp/build/perf/libapi.a
+  LD       /tmp/build/perf/libtraceevent-in.o
+  CC       /tmp/build/perf/staticobjs/libbpf_probes.o
+  CC       /tmp/build/perf/staticobjs/xsk.o
+  AR       /tmp/build/perf/libsubcmd.a
+  CC       /tmp/build/perf/staticobjs/btf_dump.o
+  CC       /tmp/build/perf/staticobjs/hashmap.o
+  LINK     /tmp/build/perf/libtraceevent.a
+  LD       /tmp/build/perf/staticobjs/libbpf-in.o
+  LINK     /tmp/build/perf/libbpf.a
+  PERF_VERSION = 5.4.ge59599b355da
+make[1]: *** [Makefile.perf:225: sub-make] Error 2
+make: *** [Makefile:110: install-bin] Error 2
+make: Leaving directory '/home/acme/git/perf/tools/perf'
+[acme@quaco perf]$
