@@ -2,162 +2,110 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4DAC43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C34C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837612064B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:09:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="erVUUFtB"
+	by mail.kernel.org (Postfix) with ESMTP id 11BBA2064B
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:11:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575681068;
+	bh=FXf6f0LodJ3g4NUoj/Ba5RlgD5YItBl5ZUrjmyza25k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=G5zrwTfcPQpGc8zuidjyHwoEwMu8MrmdILg8MHX+iUSZfSx89MY1/ggrIpqcYY22L
+	 pHdG9f79MSRFZXPOL+n1d6kcB9wkOpcD6y4WuhS2+3ZHPkRACoBoDALfZSnaa0eZlh
+	 in8Jx2MvZe8wW5ZJxDkFof5IS1gGhfNgv26Kzr9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfLGBJn (ORCPT
+        id S1726479AbfLGBLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 20:09:43 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38291 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbfLGBJn (ORCPT
+        Fri, 6 Dec 2019 20:11:07 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40355 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfLGBLG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 20:09:43 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so9105260wmi.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 17:09:41 -0800 (PST)
+        Fri, 6 Dec 2019 20:11:06 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y5so6611465lfy.7
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 17:11:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yD+Kc1w68swJeTB/Vxg8esU+QpTKf/Y2rxrM02hsM8E=;
-        b=erVUUFtB6mpxaavF/Ysp04B0vSbTaHZdphEw6PTLPxx4Jh1Lr2T0Jk8GcojtMGgxI3
-         DBrW0+V6iZJe3f8YfhDCKupEhidu6nFRAn3EgPh/iKNjplr7NjNrVYW9yeieGHE8n8B6
-         82lbOmdaJ/+WYpSO8E560+uoe6p3ly2WEZ9B4=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xp39wpo5AR+pbRP/tZoeRSZICS3SHzWRMfhJEvbxIGA=;
+        b=F9QgFlzOLVDvV/NH9kO5C38Tw6X+Hr1zV9nvDrPtaW9IdmdHU1TNQTmWgtmr08QLWs
+         m/LzPoUZk/NRRXSGyCni67pyjPAjI1csctIc4AcmS9vEoOX/8bco5LDaWzkI+5Pvvxsm
+         tA5h/kF2wpsxbPSmFh84K3eYpHR4dbqT6qkZM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yD+Kc1w68swJeTB/Vxg8esU+QpTKf/Y2rxrM02hsM8E=;
-        b=S8Vv1Mq8PY5HQH14pizmxANC2VdKix08Wub6I2Ye//727HPJlYeOnsA7PLn7Qq7YBl
-         Fez8SpeK9J82yfqGBxQ8bnneht08RBoVAwHDOH+p/GQtIfrORl6ChSMnGAAjTZvtnSxl
-         pwcZW9Vm5Ev7332q3nSGdyJ6p8agoPNLf9wzV+iSEZ1FCDony99w+Ti5XqqFjkU4Y2Qi
-         hLCL0LPOqbjGjJudRYR0SnEUR6i5laOrQTx+isjPVv6KGdNqLHtaCCHsa0xa235HaSqH
-         FQMe6fq7iTjjxVrmH5GYRtA2QMj1fUWsNGSSdlosRXz7ZGmASSxtHUzBRrAJPpHy2KcK
-         7iOA==
-X-Gm-Message-State: APjAAAW5f8k6j8n2XgUDCdKBQT0hOxDNizkWsbTtNGWAS8xSmqd0YJMN
-        GPXU3JZoh5Cg3HjG4nkW6Pz6RA==
-X-Google-Smtp-Source: APXvYqxObGo3CZK1oMZD8K04TAdbPkiFZl31iS0EfNlkm/zzbTK+0LJdmEc/w156VyiqFzklzdlVMA==
-X-Received: by 2002:a7b:cbc4:: with SMTP id n4mr12296535wmi.118.1575680980554;
-        Fri, 06 Dec 2019 17:09:40 -0800 (PST)
-Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id d14sm18881353wru.9.2019.12.06.17.09.37
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xp39wpo5AR+pbRP/tZoeRSZICS3SHzWRMfhJEvbxIGA=;
+        b=YWYwj70CJOFyxtYhS+ZirIEDoURs8mfevWfhrtvsbDnugmx7gaEF8f/qOMX96osNHs
+         DVqtkrWOHW3IXUJ85b5AP1mIhoEjAsq/jztuntqJr/vtZsyuElrPMm9A6c9bKzUTSBN8
+         D9hsjIrBGUQBG5FmkmMOui0VEBG1K8KR6z8DFwggXxgYP4Cwv5ahq8ZltmQ16vfhVs+b
+         JyyfMy++bIhhhM4bzrHlZyGxjWX9dJL7zcHtU3gzSijShMZTAKm4Kft4gOWfmnk5tvH8
+         5GnOXlKBMeWihPVavwQ2yv7Vk+NYxT5Ja7qfvgfSq6GbPSi8Uz8RptNVSDx/pmwV+w/e
+         62Bg==
+X-Gm-Message-State: APjAAAXzJyANT3+JVx/f1oCFsKsxeRhvK7m8GIwO9iLFauxzMDImXQjf
+        4VyGOMDyCv+43p6VBsBg5ku0ehkR5Lc=
+X-Google-Smtp-Source: APXvYqwzW9+QGbgqtTK8dyBglEsOMB/W7PYsPEqrIugTZ0WJZnnLBBv4qlhfpd8XEYEDuwH64qQhEw==
+X-Received: by 2002:a19:c205:: with SMTP id l5mr9348330lfc.159.1575681064502;
+        Fri, 06 Dec 2019 17:11:04 -0800 (PST)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id q12sm7289078ljc.74.2019.12.06.17.11.03
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2019 17:09:39 -0800 (PST)
-Subject: Re: [PATCH 1/2] dt-bindings: soc: Add binding doc for iProc IDM
- device
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-References: <20191202233127.31160-1-ray.jui@broadcom.com>
- <20191202233127.31160-2-ray.jui@broadcom.com>
- <62254bbb-168e-c0ad-a72d-bd659a2c23fa@gmail.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <0f0e965b-2e57-8b6b-0c72-1a1008497793@broadcom.com>
-Date:   Fri, 6 Dec 2019 17:09:34 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 06 Dec 2019 17:11:04 -0800 (PST)
+Received: by mail-lf1-f54.google.com with SMTP id r14so6618181lfm.5
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 17:11:03 -0800 (PST)
+X-Received: by 2002:ac2:555c:: with SMTP id l28mr9400181lfk.52.1575680636244;
+ Fri, 06 Dec 2019 17:03:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <62254bbb-168e-c0ad-a72d-bd659a2c23fa@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
+ <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
+ <20191206214725.GA2108@latitude> <CAHk-=wga0MPEH5hsesi4Cy+fgaaKENMYpbg2kK8UA0qE3iupgw@mail.gmail.com>
+ <20191207000015.GA1757@latitude>
+In-Reply-To: <20191207000015.GA1757@latitude>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 6 Dec 2019 17:03:40 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjEa5oNcQ9+9fai1Awqktf+hzz_HZmChi8HZJWcL62+Cw@mail.gmail.com>
+Message-ID: <CAHk-=wjEa5oNcQ9+9fai1Awqktf+hzz_HZmChi8HZJWcL62+Cw@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
+ not cursor and length [ver #2]
+To:     Johannes Hirte <johannes.hirte@datenkhaos.de>
+Cc:     David Howells <dhowells@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Dec 6, 2019 at 4:00 PM Johannes Hirte
+<johannes.hirte@datenkhaos.de> wrote:
+>
+> Tested with 5.4.0-11505-g347f56fb3890 and still the same wrong behavior.
 
+Ok, we'll continue looking.
 
-On 12/5/19 4:09 PM, Florian Fainelli wrote:
-> On 12/2/19 3:31 PM, Ray Jui wrote:
->> Add binding document for iProc based IDM devices.
->>
->> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> 
-> Looks good to me, it's 2019, nearly 2020, maybe make this a YAML
-> compatible binding since it is a new one?
-> 
+That said, your version string is strange.
 
-Sorry I am not aware of this YAML requirement until now.
+Commit 347f56fb3890 should be  "v5.4.0-13174-g347f56fb3890", the fact
+that you have "11505" confuses me.
 
-Is this a new requirement that new DT binding document should be made 
-with YAML format?
+The hash is what matters, but I wonder what is going on that you have
+the commit count in that version string so wrong.
 
-Thanks,
-
-Ray
-
-
->> ---
->>   .../bindings/soc/bcm/brcm,iproc-idm.txt       | 44 +++++++++++++++++++
->>   1 file changed, 44 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
->>
->> diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
->> new file mode 100644
->> index 000000000000..388c6b036d7e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
->> @@ -0,0 +1,44 @@
->> +Broadcom iProc Interconnect Device Management (IDM) device
->> +
->> +The Broadcom iProc IDM device allows control and monitoring of ASIC internal
->> +bus transactions. Most importantly, it can be configured to detect bus
->> +transaction timeout. In such case, critical information such as transaction
->> +address that caused the error, bus master ID of the transaction that caused
->> +the error, and etc., are made available from the IDM device.
->> +
->> +-------------------------------------------------------------------------------
->> +
->> +Required properties for IDM device node:
->> +- compatible: must be "brcm,iproc-idm"
->> +- reg: base address and length of the IDM register space
->> +- interrupt: IDM interrupt number
->> +- brcm,iproc-idm-bus: IDM bus string
->> +
->> +Optional properties for IDM device node:
->> +- brcm,iproc-idm-elog: phandle to the device node of the IDM logging device
->> +
->> +-------------------------------------------------------------------------------
->> +
->> +Required properties for IDM error logging device node:
->> +- compatible: must be "brcm,iproc-idm-elog";
->> +- reg: base address and length of reserved memory location where IDM error
->> +  events can be saved
->> +
->> +-------------------------------------------------------------------------------
->> +
->> +Example:
->> +
->> +idm {
->> +	idm-elog {
->> +		compatible = "brcm,iproc-idm-elog";
->> +		reg = <0x8f221000 0x1000>;
->> +	};
->> +
->> +	idm-mhb-paxc-axi {
->> +		compatible = "brcm,iproc-idm";
->> +		reg = <0x60406900 0x200>;
->> +		interrupt = <GIC_SPI 516 IRQ_TYPE_LEVEL_HIGH>;
->> +		brcm,iproc-idm-bus = "idm-mhb-paxc-axi";
->> +		brcm,iproc-idm-elog = <&idm-elog>;
->> +	};
->> +};
->>
-> 
-> 
+                   Linus
