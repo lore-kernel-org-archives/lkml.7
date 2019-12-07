@@ -2,146 +2,184 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8428C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 09:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDCFC43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 10:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAFCA2173E
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 09:42:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="B4Ep/8ml"
+	by mail.kernel.org (Postfix) with ESMTP id CCEB324670
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 10:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfLGJmc (ORCPT
+        id S1726399AbfLGKFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 04:42:32 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:35778 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbfLGJmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 04:42:32 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47VPd03HwBz9vBLg;
-        Sat,  7 Dec 2019 10:42:28 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=B4Ep/8ml; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id d_3RGbKnWPcz; Sat,  7 Dec 2019 10:42:28 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47VPd027Lcz9vBLf;
-        Sat,  7 Dec 2019 10:42:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1575711748; bh=XekAfQfjCrsOIBBGQUXM3t/8DTqHJcf7rK4qwVwGkME=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=B4Ep/8mlsCxcmhyeUXCBLWwGr/ZSEuYoZufAfYBtWK91vaLbzrErBJKrSIGB1GH1e
-         gfQSjzg7/jS3+wyCwaBq84lZBp7c2YhrS0E2bKy6E0buonXdXdnpSRr6LGV4ni82lC
-         atAYAwGRwE+R3pE8rTxveWeJWFU+dmhQZCXpgLeo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 62C398B797;
-        Sat,  7 Dec 2019 10:42:29 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 2Q_804NQ_ZmY; Sat,  7 Dec 2019 10:42:29 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9E3688B772;
-        Sat,  7 Dec 2019 10:42:28 +0100 (CET)
-Subject: Re: [PATCH v4 2/2] powerpc/irq: inline call_do_irq() and
- call_do_softirq()
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <5ca6639b7c1c21ee4b4138b7cfb31d6245c4195c.1570684298.git.christophe.leroy@c-s.fr>
- <877e3tbvsa.fsf@mpe.ellerman.id.au>
- <20191121101552.GR16031@gate.crashing.org>
- <87y2w49rgo.fsf@mpe.ellerman.id.au> <20191125142556.GU9491@gate.crashing.org>
- <5fdb1c92-8bf4-01ca-f81c-214870c33be3@c-s.fr>
- <20191127145958.GG9491@gate.crashing.org>
- <2072e066-1ffb-867e-60ec-04a6bb9075c1@c-s.fr>
- <20191129184658.GR9491@gate.crashing.org>
- <ebc67964-e5a9-acd0-0011-61ba23692f7e@c-s.fr>
- <20191206205953.GQ3152@gate.crashing.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <2a22feca-d6d6-6cb0-6c76-035234fa8742@c-s.fr>
-Date:   Sat, 7 Dec 2019 10:42:28 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Sat, 7 Dec 2019 05:05:10 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:50417 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfLGKFJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 05:05:09 -0500
+Received: by mail-io1-f71.google.com with SMTP id t193so6686680iof.17
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 02:05:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=JpYQV+AWM+mnMWgwQ0nH4DdPd34Sic4MN/MkWFQj1ok=;
+        b=O9G2WChemwWe+S8XvX7HjJE/BQFoDu2QWEK9QOMlfnSLPH92v+IYx+RhQfjH7W7hzd
+         WClA4NBS/JR8CFkSaunELNLCa7EkM0dbvO3jUPwCAzoq4sECM4tLes5oRSLv236YcRe4
+         FlZPm9JEgPUuyP8OcZ94kfynUlpP5noY7TIMz7q6HDzpv3IMjkfwSBEMx4S+9fYBi60y
+         w3xHmOlr3lHMhMxwjKfGnwHsF6RnnnhdTR6UTv8OzxzE+nTKAfQMXo9oEIWIAYGvH3Dj
+         rdEDrQUadLIWpQZN3+LxTKG7tom9tIraysjf1WVvAFU9l3rmDZ4v4IAriAhSdDVyufTE
+         Dc5w==
+X-Gm-Message-State: APjAAAVoaIy4JS+3/vMmQPLZXx4yTqebXFj+6nWmWsYAnAbrF2HoblZ+
+        VKvwcyS/PpIHncIDhfR0fLkOJmb7mjnwxZoTR5D1mUzl5G91
+X-Google-Smtp-Source: APXvYqzeipCOGfynVdwRuYHS6CTvxr6M3Ja8bZMTy9Vq6/49j8ukhkZLP3HZ6Ggn5Cp+1VYLq4VkY96VIrax3nB3P+iXJjEPkjMx
 MIME-Version: 1.0
-In-Reply-To: <20191206205953.GQ3152@gate.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a5d:8cda:: with SMTP id k26mr14417470iot.26.1575713108600;
+ Sat, 07 Dec 2019 02:05:08 -0800 (PST)
+Date:   Sat, 07 Dec 2019 02:05:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001b2f4605991a4cc0@google.com>
+Subject: KASAN: use-after-free Read in fb_mode_is_equal
+From:   syzbot <syzbot+f11cda116c57db68c227@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mojha@codeaurora.org,
+        shile.zhang@linux.alibaba.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    7ada90eb Merge tag 'drm-next-2019-12-06' of git://anongit...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16997c82e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f07a23020fd7d21a
+dashboard link: https://syzkaller.appspot.com/bug?extid=f11cda116c57db68c227
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f11cda116c57db68c227@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in fb_mode_is_equal+0x297/0x300  
+drivers/video/fbdev/core/modedb.c:924
+Read of size 4 at addr ffff8880992d5d9c by task syz-executor.0/32283
+
+CPU: 0 PID: 32283 Comm: syz-executor.0 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:639
+  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:134
+  fb_mode_is_equal+0x297/0x300 drivers/video/fbdev/core/modedb.c:924
+  fbcon_mode_deleted+0x12c/0x190 drivers/video/fbdev/core/fbcon.c:3060
+  fb_set_var+0xab9/0xdd0 drivers/video/fbdev/core/fbmem.c:971
+  do_fb_ioctl+0x390/0x7d0 drivers/video/fbdev/core/fbmem.c:1104
+  fb_ioctl+0xe6/0x130 drivers/video/fbdev/core/fbmem.c:1180
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a6f9
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f7aefd54c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a6f9
+RDX: 0000000020000000 RSI: 0000000000004601 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7aefd556d4
+R13: 00000000004c2ef7 R14: 00000000004d8138 R15: 00000000ffffffff
+
+Allocated by task 9205:
+  save_stack+0x23/0x90 mm/kasan/common.c:72
+  set_track mm/kasan/common.c:80 [inline]
+  __kasan_kmalloc mm/kasan/common.c:513 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
+  kmalloc include/linux/slab.h:556 [inline]
+  fb_add_videomode drivers/video/fbdev/core/modedb.c:1073 [inline]
+  fb_add_videomode+0x2fb/0x610 drivers/video/fbdev/core/modedb.c:1057
+  fb_set_var+0x5ef/0xdd0 drivers/video/fbdev/core/fbmem.c:1041
+  do_fb_ioctl+0x390/0x7d0 drivers/video/fbdev/core/fbmem.c:1104
+  fb_ioctl+0xe6/0x130 drivers/video/fbdev/core/fbmem.c:1180
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 32276:
+  save_stack+0x23/0x90 mm/kasan/common.c:72
+  set_track mm/kasan/common.c:80 [inline]
+  kasan_set_free_info mm/kasan/common.c:335 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
+  __cache_free mm/slab.c:3426 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3757
+  fb_delete_videomode+0x3fa/0x540 drivers/video/fbdev/core/modedb.c:1104
+  fb_set_var+0xac8/0xdd0 drivers/video/fbdev/core/fbmem.c:974
+  do_fb_ioctl+0x390/0x7d0 drivers/video/fbdev/core/fbmem.c:1104
+  fb_ioctl+0xe6/0x130 drivers/video/fbdev/core/fbmem.c:1180
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880992d5d80
+  which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 28 bytes inside of
+  96-byte region [ffff8880992d5d80, ffff8880992d5de0)
+The buggy address belongs to the page:
+page:ffffea000264b540 refcount:1 mapcount:0 mapping:ffff8880aa400540  
+index:0x0
+raw: 00fffe0000000200 ffffea00025470c8 ffffea0002992508 ffff8880aa400540
+raw: 0000000000000000 ffff8880992d5000 0000000100000020 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880992d5c80: 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc
+  ffff8880992d5d00: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+> ffff8880992d5d80: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                             ^
+  ffff8880992d5e00: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+  ffff8880992d5e80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+==================================================================
 
 
-Le 06/12/2019 à 21:59, Segher Boessenkool a écrit :
-> On Wed, Dec 04, 2019 at 05:32:54AM +0100, Christophe Leroy wrote:
->> Le 29/11/2019 à 19:46, Segher Boessenkool a écrit :
->>> The existing call_do_irq isn't C code.  It doesn't do anything with r2,
->>> as far as I can see; __do_irq just gets whatever the caller of call_do_irq
->>> has.
->>>
->>> So I guess all the callers of call_do_irq have the correct r2 value always
->>> already?  In that case everything Just Works.
->>
->> Indeed, there is only one caller for call_do_irq() which is do_IRQ().
->> And do_IRQ() is also calling __do_irq() directly (when the stack pointer
->> is already set to IRQ stack). do_IRQ() and __do_irq() are both in
->> arch/powerpc/kernel/irq.c
->>
->> As far as I can see when replacing the call to call_do_irq() by a call
->> to __do_irq(), the compiler doesn't do anything special with r2, and
->> doesn't add any nop after the bl either, whereas for all calls outside
->> irq.c, there is a nop added. So I guess that's ok ?
-> 
-> If the compiler can see the callee wants the same TOC as the caller has,
-> it does not arrange to set (and restore) it, no.  If it sees it may be
-> different, it does arrange for that (and the linker then will check if
-> it actually needs to do anything, and do that if needed).
-> 
-> In this case, the compiler cannot know the callee wants the same TOC,
-> which complicates thing a lot -- but it all works out.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Do we have a way to make sure which TOC the functions are using ? Is 
-there several TOC at all in kernel code ?
-
-> 
->> Now that call_do_irq() is inlined, we can even define __do_irq() as static.
->>
->> And that's the same for do_softirq_own_stack(), it is only called from
->> do_softirq() which is defined in the same file as __do_softirq()
->> (kernel/softirq.c)
-> 
-> I think things can still go wrong if any of this is inlined into a kernel
-> module?  Is there anything that prevents this / can this not happen for
-> some fundamental reason I don't see?
-
-This can't happen can it ?
-do_softirq_own_stack() is an outline function, defined in powerpc irq.c
-Its only caller is do_softirq() which is an outline function defined in 
-kernel/softirq.c
-
-That prevents inlining, doesn't it ?
-
-
-Anyway, until we clarify all this I'll limit my patch to PPC32 which is 
-where the real benefit is I guess.
-
-At the end, maybe the solution should be to switch to IRQ stack 
-immediately in the exception entry as x86_64 do ?
-
-And do_softirq_own_stack() could be entirely written in assembly like 
-x86_64 as well ?
-
-Christophe
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
