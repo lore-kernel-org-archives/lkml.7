@@ -2,103 +2,84 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F252C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CE8C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCA582082E
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7431F206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="ufHC+NWg"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="TNFH8TRJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbfLGVmq (ORCPT
+        id S1726511AbfLGVwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 16:42:46 -0500
-Received: from mail-qt1-f172.google.com ([209.85.160.172]:41329 "EHLO
-        mail-qt1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbfLGVmp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 16:42:45 -0500
-Received: by mail-qt1-f172.google.com with SMTP id v2so11159585qtv.8
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 13:42:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=/FNfGO9/5GkHxo/iV/FuELwfPIwUxQkTsttLHMUCdbo=;
-        b=ufHC+NWgPQcA2g/btN2kB+PByWguxVleFvIZiUlRmw6GIP22cFeN3c+aU2oVmCvogt
-         imkdcDZovBQlApzt7H9lN1OyPJijxLcqAK54c+hMuNeUK5c60WBaJsAvD8U9KYGOt+k9
-         1xBFKq3TuudPtaI3TSnZVnfhS6YmEzMddwFEVDWQBWEEVwbP3AJfZTFWcCMfnVf+git5
-         sjnpB/chpcXxgdxng2zrvAd3G+da2BdREARkN5FdsoyPYEaQ6RJijuGg0dL7d9qbkUjo
-         zz2BDmYzqljc+I9RXlvRz/bmwpBK7dS9ii8k60Y5cRfzc0EkgM/AceY1S1ZhtWmJcQsJ
-         4mBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=/FNfGO9/5GkHxo/iV/FuELwfPIwUxQkTsttLHMUCdbo=;
-        b=b240cLvZaMlG9xwvFfAiTmbmCp7qsSJQ1saA/tgeYDbEk9GNTkMu8fouUzoL4FA+ms
-         liJ5R2lvf3n85XMMioHcE276VbKrbUCORSrVri5jMiG5scKf3nTi7UMBH4WNMLF7vkXm
-         gPE+QHzLUE9UHzPuK/32whCk48Cqor7aLtrscIaQZRqA/UPrcYTnmu9q36dQHSBhVfCG
-         zaRj/wpoWtlY4vnyfe7ZLHqRdQxmHHlyW2EOjQnsf5LU3/YOb8v/JQZx6aMED9t4V5pk
-         E95/UxOM9/rfktXKIRr3t/wyi3jMRqrzspJlCMaqRACgPbxr6vlou+mMPWuBz/f4Uz2k
-         /41A==
-X-Gm-Message-State: APjAAAWF5uzt6waO5E2Ee0czHMS+Jas8Ar9UNjn2D26YwodDlafHOQ9q
-        iKYnd1VnWeAAWOl6T6voEObUsw==
-X-Google-Smtp-Source: APXvYqyqWbVZVl3ZatBZIJBHPtw4zSg1SbABppPAlSfIsIWgizMI+kTg54QHwvQhw/DRuvWTnSOZjQ==
-X-Received: by 2002:aed:376a:: with SMTP id i97mr19224853qtb.44.1575754964477;
-        Sat, 07 Dec 2019 13:42:44 -0800 (PST)
-Received: from graymalkin ([2605:a601:a609:c200:eb24:d1e6:7c8f:65d0])
-        by smtp.gmail.com with ESMTPSA id m6sm7368023qke.80.2019.12.07.13.42.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 13:42:44 -0800 (PST)
-From:   Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jdm@graymalkin>
-Received: by graymalkin (sSMTP sendmail emulation); Sat, 07 Dec 2019 16:42:42 -0500
-Date:   Sat, 7 Dec 2019 16:42:42 -0500
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com
-Subject: [GIT PULL] NTB patches for v5.5
-Message-ID: <20191207214242.GA22441@graymalkin>
+        Sat, 7 Dec 2019 16:52:22 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:15804 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725847AbfLGVwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 16:52:22 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47VjmD01Rsz89;
+        Sat,  7 Dec 2019 22:49:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1575755388; bh=4v0wpT6dtqU/uUD/0zE8+Yea3Nw5xFqroZs3stOp/QI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TNFH8TRJtUGxCh1QAlDTVjWSaKM0m6227wf5QVKMl/dWZ6HLZrMYz8jFYeawxz5He
+         s1mHbWRkuit43M/boUbRaLnKFzF39geVnq7zIjnnEQJXZANvomqJmiVkID/dtgvxHI
+         /rOG+uhgdhV2iRWG4zNGK6uqCpflF5KIpHhBeLD9zRghbvDuVnfKo1n7tYj0WsQB9y
+         pqL7lunTqjmw9MX7spO987RcHfvom08bGkmb/w00/q7a8n2fAl4HDHHkqB7iGbc6+g
+         jjNWcmGIw6Vr3+3BD4+TOx7wHRGqo+yohQM6Zob3iYNvVEAQ2/A98YEto3UEP6V0bi
+         pBky2P/UYirHQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Sat, 7 Dec 2019 22:52:16 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 00/19] Consolidate and improve NVIDIA Tegra CPUIDLE
+ driver(s)
+Message-ID: <20191207215216.GA9561@qmqm.qmqm.pl>
+References: <20191203004116.11771-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-2
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191203004116.11771-1-digetx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
-Here is the NTB pull request for v5.5.  It only contains a simple patch to add a new NTB Device ID.  Please consider pulling it.
+On Tue, Dec 03, 2019 at 03:40:57AM +0300, Dmitry Osipenko wrote:
+> Hello,
+> 
+> This series does the following:
+> 
+>   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
+>      into common drivers/cpuidle/ directory.
+> 
+>   2. Enables CPU cluster power-down idling state on Tegra30.
+> 
+> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
+> and of the Tegra's arch code in general. Please review, thanks!
 
-Thanks,
-Jon
+I did a quick smoke test for this series on top of Linus' master:
+ - rebuilding with the patches applied, CONFIG_ARM_TEGRA_CPUIDLE=n - works
+ - building with CONFIG_ARM_TEGRA_CPUIDLE=y - doesn't boot
 
+The hang is somewhere early in the boot process, before simplefb can
+take the console and show any logs. If I get BOOTFB to work again I might
+be able to get some more info.
 
-
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
-
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-  git://github.com/jonmason/ntb tags/ntb-5.5
-
-for you to fetch changes up to 9b5b99a89f641555d9d00452afb0a8aea4471eba:
-
-  NTB: Add Hygon Device ID (2019-12-07 16:29:44 -0500)
-
-----------------------------------------------------------------
-Add Hygon Device ID to the AMD NTB device driver
-
-----------------------------------------------------------------
-Jiasen Lin (1):
-      NTB: Add Hygon Device ID
-
- drivers/ntb/hw/amd/ntb_hw_amd.c | 1 +
- 1 file changed, 1 insertion(+)
+Best Regards,
+Micha³ Miros³aw
