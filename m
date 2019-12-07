@@ -2,91 +2,126 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E86C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82CFC43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE56217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA0F9217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="LG7Q8Mzt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m23WEjs0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfLGSV7 (ORCPT
+        id S1726643AbfLGS1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 13:21:59 -0500
-Received: from mail-pl1-f178.google.com ([209.85.214.178]:44738 "EHLO
-        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfLGSV6 (ORCPT
+        Sat, 7 Dec 2019 13:27:17 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:32855 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfLGS1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 13:21:58 -0500
-Received: by mail-pl1-f178.google.com with SMTP id bh2so2941917plb.11
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 10:21:58 -0800 (PST)
+        Sat, 7 Dec 2019 13:27:17 -0500
+Received: by mail-wr1-f66.google.com with SMTP id b6so11446769wrq.0;
+        Sat, 07 Dec 2019 10:27:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=rYZBBRiANlnOnFi8ovHE2DcSrsXS2fMjDZoBxr32+zA=;
-        b=LG7Q8Mzt++H1r7POjXW1vG6DbiR9S7FNET3iDS1KAXERZ+8citglJyzcXQkNyLneWv
-         5kTpn2FaJjjGICZ9n9Gc8K1c7xp+fSYlzglaXGvzNIwjg/LubEtKo1MUD7Id6GqkT3WV
-         5ElLslm4TU5iijSUOEhoO0aLC+ZXIg6ej7C4t+v8t7sq0ovx1zMuOOZVGjze/wbGc0Bo
-         61WjoZQrVMRt5O5ecSNcsvqnmUQ2ZgxwhnFWwFYVqBg/UbA4oaScGj2UUCn9+hsIhjbs
-         rnbsjCxgqZRkhCcz2OU77jC+dFO3Dp8t9Hv7N11D2B2+4mfu99RO2n9f9qpe3yfEeY8g
-         7ZMA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aa6l8+iIij3OJFvZOZzXN4zGANQjDpNH8fStlTqEIWk=;
+        b=m23WEjs0SI70EvQEPOu18sGGkvPE9oMetHFPvr71mG0HhwqWWg1Xm9y1GXtEVzJNJd
+         BHf5MPhhohaz4IHbrClTTK8LdIUevdwQbQC2OSweI+AOYmh/myE05PoWRN4RSjhqkBym
+         ixH1aJAQIsErfRPSCTvb42XQDtaokqcHJ0lYreCWdpEGZpYjCpvWDf6eMXGxCluS23zX
+         DFJnIZpad5T/sgRBlaMtTPT2gzaF2J0ohz6fFpSjhAKh7MDIpX5flD3r0mWvlmCwYPtK
+         siblTOSWp/FcbvzSvOGSKdiXV6e+eMDm4dhUqUhod6aNvpR7H894BjB5rNf2qhqKQpk2
+         FgHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=rYZBBRiANlnOnFi8ovHE2DcSrsXS2fMjDZoBxr32+zA=;
-        b=DuE//lhY+9W1i9Ef4IEmXnrpa/gNTuaU6tHeT3G4/Hi8BFyALGG2EKuH3Ne7jPjQ6A
-         sz8VsuyCtx+Rnok1ZzBqCt3RHGFp7qbUAV6umGZcNLjIXWKbolD79xKKfVVhvCS6qqWA
-         qjs4QKtM2lS36ddszhi7cswMTzn0gTeuk9pTg6rboks5tjHeYvUHqhH0Jl8Ouc1/A/Xp
-         Z8xU+wddPv+qAya/WTRFONNLPdoARqcrp2vFKUtjscH78cmwg0ImuY+tHEy8fahjC0yJ
-         9DwtsJq1iCpWoG0fczcXOO6Oy2jXEUAk1f0b2tUqBuATxbhbOvnKsX4JZK9WfDEyRLWz
-         b/ig==
-X-Gm-Message-State: APjAAAU8k0fhDdwODnFQW1uBohjTLTFyYQD0W5JVx08NaSsD9cCUYVQk
-        o3jKNjLwLM7oi/AxUjYGGz7tTQ==
-X-Google-Smtp-Source: APXvYqzlnpKdCEFNMwYy41hXu1QvTa2f2xrCR5pEJOV/WkRY/DzdFlPH7zeB1jU7XQ1eH3uElyOmjA==
-X-Received: by 2002:a17:90a:7bc3:: with SMTP id d3mr23367973pjl.86.1575742918122;
-        Sat, 07 Dec 2019 10:21:58 -0800 (PST)
-Received: from debian ([122.164.203.149])
-        by smtp.gmail.com with ESMTPSA id r4sm6993968pji.11.2019.12.07.10.21.56
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aa6l8+iIij3OJFvZOZzXN4zGANQjDpNH8fStlTqEIWk=;
+        b=TWMpSGIz7Axec7bPolCdBduTHAhsuXbG4XsWPiKpxCaRqqvBrcKn6KV6wPdPs72DGu
+         EvLyUHNbRi7agP88ltmitbR0ZR2JW1FA9yy7TMa/afCvZ7KNRhWu9O8ST/b1uwafM0wK
+         MtSQbF7p7voLJ8QaE/JGnF5/AzCLNNoLpnTON+MQtyb6pHDOxY5RsDMDqK1KUMyGj2pQ
+         IUY0vacJoFC3+wz27l0JjWwqDjtPZsKzl7ov/9EhocrTPfuOLRv8u5YYUvK//wa2NK9F
+         MvlJcOTecbqbYjr/gx7WIYvjzI3yjdUzkQjTf5H8Jon5IJGmn1pp7aAsRSpCsyEfvJXa
+         CUDQ==
+X-Gm-Message-State: APjAAAV7rlW+EqNVRUpdmG9Qd+Ta56dl9QHuWGAmZmFwYh7xA2I707+h
+        p/XU8SrDGxh3F9eCXk+PC34=
+X-Google-Smtp-Source: APXvYqwICamRNwt4rbMxw0f4GqN/RQjHGDcbcmSc52vaTC1Hr+sao7Nrm8Lq4bV60Q8319T2gQzRLA==
+X-Received: by 2002:adf:e6c6:: with SMTP id y6mr22131117wrm.284.1575743234887;
+        Sat, 07 Dec 2019 10:27:14 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2d4f:f100:30e3:988a:bff1:5a99])
+        by smtp.gmail.com with ESMTPSA id a127sm7916125wmh.43.2019.12.07.10.27.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 10:21:57 -0800 (PST)
-Date:   Sat, 7 Dec 2019 23:51:52 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     laurent.pinchart@ideasonboard.com, mchehab@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PROBLEM] uvcvideo: Failed to query (GET_INFO) UVC control
-Message-ID: <20191207182152.GB5280@debian>
+        Sat, 07 Dec 2019 10:27:14 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Przemyslaw Gaj <pgaj@cadence.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-i3c@lists.infradead.org, kernel-janitors@vger.kernel.org,
+        agolec@cadence.com, rafalc@cadence.com, vitor.soares@synopsys.com,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: fix style in CADENCE I3C MASTER IP entry
+Date:   Sat,  7 Dec 2019 19:27:03 +0100
+Message-Id: <20191207182703.14102-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hello,
+Commit ae24f2b6f828 ("MAINTAINERS: add myself as maintainer of Cadence I3C
+master controller driver") slips in some formatting with spaces instead of
+tabs, which ./scripts/checkpatch.pl -f MAINTAINERS complains about:
 
-i get this  output piece from "dmesg -l err" of kernel 5.4.2
+  #7838: FILE: MAINTAINERS:7838:
+  M:      Przemysław Gaj <pgaj@cadence.com>
 
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #7839: FILE: MAINTAINERS:7839:
+  S:      Maintained
 
--------------------x---------------------------x------------------
-uvcvideo: Failed to query (GET_INFO) UVC control 6 on unit 1: -32 (exp. 1).
-uvcvideo: Failed to query (GET_INFO) UVC control 7 on unit 1: -32 (exp. 1).
--------------------x----------------------------x-----------------
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #7840: FILE: MAINTAINERS:7840:
+  F:      Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
 
-Additional information:
-Linux debian 5.4.2 #17 SMP Sat Dec 7 01:39:12 IST 2019 x86_64 GNU/Linux
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #7841: FILE: MAINTAINERS:7841:
+  F:      drivers/i3c/master/i3c-master-cdns.c
 
-Relevant file:
-drivers/media/usb/uvc/uvc_video.c
+Fixes: ae24f2b6f828 ("MAINTAINERS: add myself as maintainer of Cadence I3C master controller driver")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+applies cleanly on current master (eea2d5da29e3) and next-20191207
 
+ MAINTAINERS | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---
-software engineer
-rajagiri school of engineering and technology
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0fd82e674cf4..59d4cb7b2981 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7835,10 +7835,10 @@ F:	Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
+ F:	drivers/i3c/master/dw*
+ 
+ I3C DRIVER FOR CADENCE I3C MASTER IP
+-M:      Przemysław Gaj <pgaj@cadence.com>
+-S:      Maintained
+-F:      Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
+-F:      drivers/i3c/master/i3c-master-cdns.c
++M:	Przemysław Gaj <pgaj@cadence.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
++F:	drivers/i3c/master/i3c-master-cdns.c
+ 
+ IA64 (Itanium) PLATFORM
+ M:	Tony Luck <tony.luck@intel.com>
+-- 
+2.17.1
+
