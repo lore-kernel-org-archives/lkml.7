@@ -2,211 +2,109 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60ED7C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 03:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41C2C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 03:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 339EE217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 03:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91493217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 03:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfLGDWK (ORCPT
+        id S1726527AbfLGDXA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 22:22:10 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16130 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726375AbfLGDWJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 22:22:09 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB737Gqd108761
-        for <linux-kernel@vger.kernel.org>; Fri, 6 Dec 2019 22:22:08 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wq9mhqhp1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 22:22:08 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
-        Sat, 7 Dec 2019 03:22:06 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 7 Dec 2019 03:22:02 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB73M1vt47448568
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 7 Dec 2019 03:22:01 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63BE9AE04D;
-        Sat,  7 Dec 2019 03:22:01 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B91A8AE045;
-        Sat,  7 Dec 2019 03:21:59 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.92.151])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sat,  7 Dec 2019 03:21:59 +0000 (GMT)
-Subject: Re: [PATCH v4 2/6] sysfs: wrap __compat_only_sysfs_link_entry_to_kobj
- function to change the symlink name
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mahesh@linux.vnet.ibm.com, hbathini@linux.ibm.com
-References: <20191206122434.29587-1-sourabhjain@linux.ibm.com>
- <20191206122434.29587-3-sourabhjain@linux.ibm.com>
- <20191206124642.GB1360047@kroah.com>
- <3aabdf19-ccbf-e99a-c560-2b110e8b536a@linux.ibm.com>
- <20191206191420.GA192422@kroah.com>
-From:   Sourabh Jain <sourabhjain@linux.ibm.com>
-Date:   Sat, 7 Dec 2019 08:51:58 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 6 Dec 2019 22:23:00 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:51206 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726375AbfLGDXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 22:23:00 -0500
+Received: from DGGEML402-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id ED74ECD816885C6273E8;
+        Sat,  7 Dec 2019 11:22:57 +0800 (CST)
+Received: from DGGEML525-MBS.china.huawei.com ([169.254.4.251]) by
+ DGGEML402-HUB.china.huawei.com ([fe80::fca6:7568:4ee3:c776%31]) with mapi id
+ 14.03.0439.000; Sat, 7 Dec 2019 11:22:47 +0800
+From:   "wubo (T)" <wubo40@huawei.com>
+To:     "james.smart@broadcom.com" <james.smart@broadcom.com>,
+        "dick.kennedy@broadcom.com" <dick.kennedy@broadcom.com>,
+        "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>
+Subject: [PATCH] scsi:lpfc:Fix memory leak on lpfc_bsg_write_ebuf_set func
+Thread-Topic: [PATCH] scsi:lpfc:Fix memory leak on lpfc_bsg_write_ebuf_set
+ func
+Thread-Index: AdWsrSWHywN8OEO0QwWyn3DtmiXZsw==
+Date:   Sat, 7 Dec 2019 03:22:46 +0000
+Message-ID: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E7A966@DGGEML525-MBS.china.huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.252]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20191206191420.GA192422@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120703-0008-0000-0000-0000033E70F5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120703-0009-0000-0000-00004A5D99AB
-Message-Id: <51893cad-e8df-a240-bc60-db245420d811@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-06_08:2019-12-05,2019-12-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 mlxscore=0 bulkscore=0 clxscore=1015 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
- priorityscore=1501 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912070022
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When phba->mbox_ext_buf_ctx.seqNum != phba->mbox_ext_buf_ctx.numBuf, 
+dd_data should be freed before return SLI_CONFIG_HANDLED.
+
+When lpfc_sli_issue_mbox func return fails, pmboxq should be also freed in job_error tag.
 
 
-On 12/7/19 12:44 AM, Greg KH wrote:
-> On Fri, Dec 06, 2019 at 11:57:53PM +0530, Sourabh Jain wrote:
->>
->>
->> On 12/6/19 6:16 PM, Greg KH wrote:
->>> On Fri, Dec 06, 2019 at 05:54:30PM +0530, Sourabh Jain wrote:
->>>> The __compat_only_sysfs_link_entry_to_kobj function creates a symlink to a
->>>> kobject but doesn't provide an option to change the symlink file name.
->>>>
->>>> This patch adds a wrapper function create_sysfs_symlink_entry_to_kobj that
->>>> extends the __compat_only_sysfs_link_entry_to_kobj functionality which
->>>> allows function caller to customize the symlink name.
->>>>
->>>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->>>> ---
->>>>  fs/sysfs/group.c      | 28 +++++++++++++++++++++++++---
->>>>  include/linux/sysfs.h | 12 ++++++++++++
->>>>  2 files changed, 37 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
->>>> index d41c21fef138..5eb38145b957 100644
->>>> --- a/fs/sysfs/group.c
->>>> +++ b/fs/sysfs/group.c
->>>> @@ -424,6 +424,25 @@ EXPORT_SYMBOL_GPL(sysfs_remove_link_from_group);
->>>>  int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
->>>>  				      struct kobject *target_kobj,
->>>>  				      const char *target_name)
->>>> +{
->>>> +	return create_sysfs_symlink_entry_to_kobj(kobj, target_kobj,
->>>> +						target_name, NULL);
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
->>>> +
->>>> +/**
->>>> + * create_sysfs_symlink_entry_to_kobj - add a symlink to a kobject pointing
->>>> + * to a group or an attribute
->>>> + * @kobj:		The kobject containing the group.
->>>> + * @target_kobj:	The target kobject.
->>>> + * @target_name:	The name of the target group or attribute.
->>>> + * @symlink_name:	The name of the symlink file (target_name will be
->>>> + *			considered if symlink_name is NULL).
->>>> + */
->>>> +int create_sysfs_symlink_entry_to_kobj(struct kobject *kobj,
->>>> +				       struct kobject *target_kobj,
->>>> +				       const char *target_name,
->>>> +				       const char *symlink_name)
->>>>  {
->>>>  	struct kernfs_node *target;
->>>>  	struct kernfs_node *entry;
->>>> @@ -448,12 +467,15 @@ int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
->>>>  		return -ENOENT;
->>>>  	}
->>>>  
->>>> -	link = kernfs_create_link(kobj->sd, target_name, entry);
->>>> +	if (!symlink_name)
->>>> +		symlink_name = target_name;
->>>> +
->>>> +	link = kernfs_create_link(kobj->sd, symlink_name, entry);
->>>>  	if (IS_ERR(link) && PTR_ERR(link) == -EEXIST)
->>>> -		sysfs_warn_dup(kobj->sd, target_name);
->>>> +		sysfs_warn_dup(kobj->sd, symlink_name);
->>>>  
->>>>  	kernfs_put(entry);
->>>>  	kernfs_put(target);
->>>>  	return PTR_ERR_OR_ZERO(link);
->>>>  }
->>>> -EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
->>>> +EXPORT_SYMBOL_GPL(create_sysfs_symlink_entry_to_kobj);
->>>> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
->>>> index 5420817ed317..123c6f10333a 100644
->>>> --- a/include/linux/sysfs.h
->>>> +++ b/include/linux/sysfs.h
->>>> @@ -300,6 +300,10 @@ void sysfs_remove_link_from_group(struct kobject *kobj, const char *group_name,
->>>>  int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
->>>>  				      struct kobject *target_kobj,
->>>>  				      const char *target_name);
->>>> +int create_sysfs_symlink_entry_to_kobj(struct kobject *kobj,
->>>> +				       struct kobject *target_kobj,
->>>> +				       const char *target_name,
->>>> +				       const char *symlink_name);
->>>
->>> sysfs_create_symlink_entry_to_kobj()?
->>>
->>> I can't remember why we put __compat_only there, perhaps because we do
->>> not want people to really use this unless you really really have to?
->>
->> We don't have much option here. I tried replicating the sysfs files
->> in older patch series but creating symlink at old location is much
->> better approach.
->>
->> The __compat_only_sysfs_link_entry_to_kobj function is pretty generic,
->> unable to understand the reason behind restricting its usage.
->>
->>>
->>> So then keep compat_only here as well?
->>
->> Sure, I will rename the wrapper function.
->>
->> But how about changing the function signature instead of creating
->> a wrapper function?
->>
->> Considering the fact that there are only two places this function
->> has called.
->>
->>>
->>> What breaks if you remove those undocumented sysfs files?  What
->>> userspace tool do you have that will even notice?
->>
->> The scripts used in kdump service need those sysfs files to control
->> the dump collection. So we can't just move the sysfs files to the
->> new location.
-> 
-> If you can not change them, then just document them and live with it.
-> Why do this extra work to create a symlink for something you will never
-> use?
+Signed-off-by:Bo wu <wubo40@huawei.com>
+Reviewed-by:Zhiqiang Liu <liuzhiqiang26@huawei.com>
+---
+ drivers/scsi/lpfc/lpfc_bsg.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-Eventually the scripts will change but I think it is better to have some
-overlap time to avoid breaking those scripts.
-
-
-Thanks,
-Sourabh Jain
-
+diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
+index 39a736b887b1..6c2b03415a2c 100644
+--- a/drivers/scsi/lpfc/lpfc_bsg.c
++++ b/drivers/scsi/lpfc/lpfc_bsg.c
+@@ -4489,12 +4489,6 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 	phba->mbox_ext_buf_ctx.seqNum++;
+ 	nemb_tp = phba->mbox_ext_buf_ctx.nembType;
+ 
+-	dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
+-	if (!dd_data) {
+-		rc = -ENOMEM;
+-		goto job_error;
+-	}
+-
+ 	pbuf = (uint8_t *)dmabuf->virt;
+ 	size = job->request_payload.payload_len;
+ 	sg_copy_to_buffer(job->request_payload.sg_list,
+@@ -4531,6 +4525,13 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 				"2968 SLI_CONFIG ext-buffer wr all %d "
+ 				"ebuffers received\n",
+ 				phba->mbox_ext_buf_ctx.numBuf);
++
++		dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
++		if (!dd_data) {
++			rc = -ENOMEM;
++			goto job_error;
++		}
++
+ 		/* mailbox command structure for base driver */
+ 		pmboxq = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 		if (!pmboxq) {
+@@ -4579,6 +4580,8 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 	return SLI_CONFIG_HANDLED;
+ 
+ job_error:
++	if (pmboxq)
++		mempool_free(pmboxq, phba->mbox_mem_pool);
+ 	lpfc_bsg_dma_page_free(phba, dmabuf);
+ 	kfree(dd_data);
+ 
+-- 
+2.19.1
