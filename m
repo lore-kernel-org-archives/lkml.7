@@ -2,43 +2,42 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E101CC43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 22:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533BAC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 22:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B266A2467B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 22:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A3E2467C
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 22:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575758933;
-	bh=3FbY01Yo8wuTVmQw8dJE0UXjIQE+PrPmANVZvznNVUY=;
+	s=default; t=1575758938;
+	bh=q7YR4HMuFuPvR0RHWH0ycHC5MCSJKPZtTtyErowzU74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mDnprNjvDZdcIpfC8jbLsRVRgtk6MeA5Li34GP9Sp1glnIMWcOXsGPK65wGnYHr5z
-	 BVig55njzCs2lKxCfoRck94iVxbhQmcy/fGzP6UqRinMmoCd/+GTPil984tMqO1M6j
-	 Op/el0wSarQ5kCX1hN5mk6UX2EDDNlh/OgEdUlUY=
+	b=MFbweawtI/UEzY7DHoSFiwUpzK0Gx7rkGlyj9VTE3s6Z6bT78UpU5jpfHMLOOdw1u
+	 5FLXDzOebQ2pAmLoTv7SB18khdRI46JrMwCoBdR+Pc4jEyMnkE9xoSXcoPpdoFc+bn
+	 JyBq4cUmMCnJKJ6pdp4c9hVuOGnw3ipAKD19uByg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfLGWsw (ORCPT
+        id S1727142AbfLGWs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 17:48:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44320 "EHLO mail.kernel.org"
+        Sat, 7 Dec 2019 17:48:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfLGWst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 17:48:49 -0500
+        id S1726421AbfLGWsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 17:48:55 -0500
 Received: from ziggy.de (unknown [95.169.229.25])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA4EB24679;
-        Sat,  7 Dec 2019 22:48:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D135D2468A;
+        Sat,  7 Dec 2019 22:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575758928;
-        bh=3FbY01Yo8wuTVmQw8dJE0UXjIQE+PrPmANVZvznNVUY=;
+        s=default; t=1575758933;
+        bh=q7YR4HMuFuPvR0RHWH0ycHC5MCSJKPZtTtyErowzU74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FHzctaPDg7dmplUogi7XCryhwqRMNZFXIBlR7oUmI2XAavnPHKo+bUlcIw4ffAhRL
-         SSbhYLgM5RvNv3cYTgPLykvDmvIsjb+G+Wy4Z4mEQ7Upw/9o/g2hp/MD/IjGayc4Qd
-         LCyQ/IyloH7OqNCHkU87vJ1ntXqRV2lf8ahzp3NE=
+        b=jjVhabiq5brjkXPtlfKpNn+Pv/taopT44dLHbECn1UshIFIcbKOqFPwQmPhtygB6A
+         LWhs/wDoBPGZogHkKlxethOlTlNcznnOdf97PySFw3HgeX2MTWO88YF5Dl1coxV3Cx
+         pLMRp+ngUMV1yO8TJ/7kS/UpeRDGnZqZsif5+MAw=
 From:   matthias.bgg@kernel.org
 To:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
         p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
@@ -52,9 +51,9 @@ Cc:     sean.wang@mediatek.com, sean.wang@kernel.org,
         linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, mbrugger@suse.com,
         matthias.bgg@kernel.org
-Subject: [resend PATCH v6 09/12] clk: mediatek: mt6797: switch to platform device probing
-Date:   Sat,  7 Dec 2019 23:47:37 +0100
-Message-Id: <20191207224740.24536-10-matthias.bgg@kernel.org>
+Subject: [resend PATCH v6 10/12] clk: mediatek: mt8183: switch mmsys to platform device probing
+Date:   Sat,  7 Dec 2019 23:47:38 +0100
+Message-Id: <20191207224740.24536-11-matthias.bgg@kernel.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191207224740.24536-1-matthias.bgg@kernel.org>
 References: <20191207224740.24536-1-matthias.bgg@kernel.org>
@@ -70,95 +69,86 @@ From: Matthias Brugger <mbrugger@suse.com>
 Switch probing for the MMSYS to support invocation to a
 plain paltform device. The driver will be probed by the DRM subsystem.
 
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+Singed-off-by: Matthias Brugger <mbrugger@suse.com>
 ---
- drivers/clk/mediatek/clk-mt6797-mm.c | 43 +++++++++++++++++++---------
- 1 file changed, 29 insertions(+), 14 deletions(-)
+ drivers/clk/mediatek/clk-mt8183-mm.c | 39 +++++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/clk/mediatek/clk-mt6797-mm.c b/drivers/clk/mediatek/clk-mt6797-mm.c
-index 8f05653b387d..1aea4f8d5a9d 100644
---- a/drivers/clk/mediatek/clk-mt6797-mm.c
-+++ b/drivers/clk/mediatek/clk-mt6797-mm.c
-@@ -4,13 +4,19 @@
-  * Author: Kevin Chen <kevin-cw.chen@mediatek.com>
-  */
+diff --git a/drivers/clk/mediatek/clk-mt8183-mm.c b/drivers/clk/mediatek/clk-mt8183-mm.c
+index 720c696b506d..e6dcad18d81a 100644
+--- a/drivers/clk/mediatek/clk-mt8183-mm.c
++++ b/drivers/clk/mediatek/clk-mt8183-mm.c
+@@ -3,14 +3,20 @@
+ // Copyright (c) 2018 MediaTek Inc.
+ // Author: Weiyi Lu <weiyi.lu@mediatek.com>
  
 +#include <linux/module.h>
  #include <linux/clk-provider.h>
  #include <linux/platform_device.h>
 +#include <linux/slab.h>
- #include <dt-bindings/clock/mt6797-clk.h>
  
  #include "clk-mtk.h"
  #include "clk-gate.h"
  
-+struct clk_mt6797_mm_priv {
+ #include <dt-bindings/clock/mt8183-clk.h>
+ 
++struct clk_mt8183_mm_priv {
 +	struct clk_onecell_data *clk_data;
 +};
 +
  static const struct mtk_gate_regs mm0_cg_regs = {
- 	.set_ofs = 0x0104,
- 	.clr_ofs = 0x0108,
-@@ -92,23 +98,24 @@ static const struct mtk_gate mm_clks[] = {
- 		 "clk26m", 3),
- };
+ 	.set_ofs = 0x104,
+ 	.clr_ofs = 0x108,
+@@ -84,28 +90,37 @@ static const struct mtk_gate mm_clks[] = {
  
--static const struct of_device_id of_match_clk_mt6797_mm[] = {
--	{ .compatible = "mediatek,mt6797-mmsys", },
--	{}
--};
--
- static int clk_mt6797_mm_probe(struct platform_device *pdev)
+ static int clk_mt8183_mm_probe(struct platform_device *pdev)
  {
 -	struct clk_onecell_data *clk_data;
-+	struct clk_mt6797_mm_priv *private;
- 	int r;
 -	struct device_node *node = pdev->dev.of_node;
-+	struct device *parent = pdev->dev.parent;
++	struct clk_mt8183_mm_priv *private;
++	struct device_node *node = pdev->dev.parent->of_node;
 +
 +	private = devm_kzalloc(&pdev->dev, sizeof(*private), GFP_KERNEL);
 +	if (!private)
 +		return -ENOMEM;
  
--	clk_data = mtk_alloc_clk_data(CLK_MM_NR);
-+	private->clk_data = mtk_alloc_clk_data(CLK_MM_NR);
+-	clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
++	private->clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
 +	platform_set_drvdata(pdev, private);
  
--	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
--			       clk_data);
-+	mtk_clk_register_gates(parent->of_node, mm_clks, ARRAY_SIZE(mm_clks),
-+			       private->clk_data);
- 
--	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	r = of_clk_add_provider(parent->of_node, of_clk_src_onecell_get,
+ 	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
+-			clk_data);
 +			private->clk_data);
- 	if (r)
- 		dev_err(&pdev->dev,
- 			"could not register clock provider: %s: %d\n",
-@@ -117,12 +124,20 @@ static int clk_mt6797_mm_probe(struct platform_device *pdev)
- 	return r;
+ 
+-	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
++	return of_clk_add_provider(node, of_clk_src_onecell_get,
++			private->clk_data);
  }
  
-+static int clk_mt6797_mm_remove(struct platform_device *pdev)
+-static const struct of_device_id of_match_clk_mt8183_mm[] = {
+-	{ .compatible = "mediatek,mt8183-mmsys", },
+-	{}
+-};
++static int clk_mt8183_mm_remove(struct platform_device *pdev)
 +{
-+	struct clk_mt6797_mm_priv *private = platform_get_drvdata(pdev);
++	struct clk_mt8183_mm_priv *private = platform_get_drvdata(pdev);
 +
 +	kfree(private->clk_data);
 +
 +	return 0;
 +}
-+
- static struct platform_driver clk_mt6797_mm_drv = {
- 	.probe = clk_mt6797_mm_probe,
-+	.remove = clk_mt6797_mm_remove,
+ 
+ static struct platform_driver clk_mt8183_mm_drv = {
+ 	.probe = clk_mt8183_mm_probe,
++	.remove = clk_mt8183_mm_remove,
  	.driver = {
- 		.name = "clk-mt6797-mm",
--		.of_match_table = of_match_clk_mt6797_mm,
+ 		.name = "clk-mt8183-mm",
+-		.of_match_table = of_match_clk_mt8183_mm,
  	},
  };
 -
--builtin_platform_driver(clk_mt6797_mm_drv);
-+module_platform_driver(clk_mt6797_mm_drv);
+-builtin_platform_driver(clk_mt8183_mm_drv);
++module_platform_driver(clk_mt8183_mm_drv);
 -- 
 2.24.0
 
