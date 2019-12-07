@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9FEC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 09:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014A3C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 09:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8348E2467B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 09:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D22E821835
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 09:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfLGJZr (ORCPT
+        id S1726599AbfLGJZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 04:25:47 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44666 "EHLO huawei.com"
+        Sat, 7 Dec 2019 04:25:56 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59274 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726263AbfLGJZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 04:25:46 -0500
+        id S1726000AbfLGJZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 04:25:53 -0500
 Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DEFC41FF1843BB005282;
-        Sat,  7 Dec 2019 17:25:41 +0800 (CST)
+        by Forcepoint Email with ESMTP id 05F8A166F9C2EF584C38;
+        Sat,  7 Dec 2019 17:25:47 +0800 (CST)
 Received: from huawei.com (10.175.105.18) by DGGEMS409-HUB.china.huawei.com
  (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sat, 7 Dec 2019
- 17:25:34 +0800
+ 17:25:36 +0800
 From:   linmiaohe <linmiaohe@huawei.com>
 To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
         <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
@@ -33,9 +33,9 @@ To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
         <hpa@zytor.com>
 CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH 3/6] KVM: x86: remove always equal to 0 return val of kvm_vm_ioctl_get_pit2()
-Date:   Sat, 7 Dec 2019 17:25:20 +0800
-Message-ID: <1575710723-32094-4-git-send-email-linmiaohe@huawei.com>
+Subject: [PATCH 5/6] KVM: x86: check kvm_pit outside kvm_vm_ioctl_reinject()
+Date:   Sat, 7 Dec 2019 17:25:22 +0800
+Message-ID: <1575710723-32094-6-git-send-email-linmiaohe@huawei.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1575710723-32094-1-git-send-email-linmiaohe@huawei.com>
 References: <1575710723-32094-1-git-send-email-linmiaohe@huawei.com>
@@ -50,51 +50,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Miaohe Lin <linmiaohe@huawei.com>
 
-The return val of kvm_vm_ioctl_get_pit2() is always equal to 0, which means
-there is no way to failed with this function. So remove the return val as
-it's unnecessary to check against it.
-Also add BUILD_BUG_ON to guard against channels size changed unexpectly.
+check kvm_pit outside kvm_vm_ioctl_reinject() to keep codestyle consistent
+with other kvm_pit func and prepare for futher cleanups.
 
 Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- arch/x86/kvm/x86.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/kvm/x86.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 5628dceb9fa5..637d5c6b92be 100644
+index 2d4e3a2dfec6..00b5d4ace383 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -4621,15 +4621,17 @@ static void kvm_vm_ioctl_set_pit(struct kvm *kvm, struct kvm_pit_state *ps)
- 	mutex_unlock(&pit->pit_state.lock);
- }
- 
--static int kvm_vm_ioctl_get_pit2(struct kvm *kvm, struct kvm_pit_state2 *ps)
-+static void kvm_vm_ioctl_get_pit2(struct kvm *kvm, struct kvm_pit_state2 *ps)
+@@ -4662,9 +4662,6 @@ static int kvm_vm_ioctl_reinject(struct kvm *kvm,
  {
-+	BUILD_BUG_ON(sizeof(ps->channels) !=
-+		     sizeof(kvm->arch.vpit->pit_state.channels));
-+
- 	mutex_lock(&kvm->arch.vpit->pit_state.lock);
- 	memcpy(ps->channels, &kvm->arch.vpit->pit_state.channels,
- 		sizeof(ps->channels));
- 	ps->flags = kvm->arch.vpit->pit_state.flags;
- 	mutex_unlock(&kvm->arch.vpit->pit_state.lock);
- 	memset(&ps->reserved, 0, sizeof(ps->reserved));
--	return 0;
- }
+ 	struct kvm_pit *pit = kvm->arch.vpit;
  
- static int kvm_vm_ioctl_set_pit2(struct kvm *kvm, struct kvm_pit_state2 *ps)
-@@ -5003,9 +5005,7 @@ long kvm_arch_vm_ioctl(struct file *filp,
- 		r = -ENXIO;
- 		if (!kvm->arch.vpit)
+-	if (!pit)
+-		return -ENXIO;
+-
+ 	/* pit->pit_state.lock was overloaded to prevent userspace from getting
+ 	 * an inconsistent state after running multiple KVM_REINJECT_CONTROL
+ 	 * ioctls in parallel.  Use a separate lock if that ioctl isn't rare.
+@@ -5029,6 +5026,9 @@ long kvm_arch_vm_ioctl(struct file *filp,
+ 		r =  -EFAULT;
+ 		if (copy_from_user(&control, argp, sizeof(control)))
  			goto out;
--		r = kvm_vm_ioctl_get_pit2(kvm, &u.ps2);
--		if (r)
--			goto out;
-+		kvm_vm_ioctl_get_pit2(kvm, &u.ps2);
- 		r = -EFAULT;
- 		if (copy_to_user(argp, &u.ps2, sizeof(u.ps2)))
- 			goto out;
++		r = -ENXIO;
++		if (!kvm->arch.vpit)
++			goto out;
+ 		r = kvm_vm_ioctl_reinject(kvm, &control);
+ 		break;
+ 	}
 -- 
 2.19.1
 
