@@ -2,184 +2,161 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C976C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 06:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB283C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 06:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5494121835
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 06:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FA82173E
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 06:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfLGGUQ (ORCPT
+        id S1726427AbfLGGZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 01:20:16 -0500
-Received: from mga18.intel.com ([134.134.136.126]:55242 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbfLGGUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 01:20:16 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Dec 2019 22:20:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,286,1571727600"; 
-   d="gz'50?scan'50,208,50";a="263774259"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Dec 2019 22:20:12 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1idTRr-0009qV-Rl; Sat, 07 Dec 2019 14:20:11 +0800
-Date:   Sat, 7 Dec 2019 14:19:57 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
-Subject: undefined reference to `compat_sys_setitimer'
-Message-ID: <201912071456.kxVAUCA7%lkp@intel.com>
+        Sat, 7 Dec 2019 01:25:10 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:54835 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfLGGZJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 01:25:09 -0500
+Received: by mail-io1-f70.google.com with SMTP id h10so4918638iov.21
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 22:25:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=j9m3lrvCXCpzSxM+tW4QOf6zVSZBLzxbD4R9FIlfwe8=;
+        b=Vzxsu+UGSFLOx1UwJA+fOum6ypYh2I/g0C0Eb838ELyZ6hPcT2k2c7VOvGhea9WVc0
+         5m/nME3jtaW+65Fjx9n1KWraUNIk1foSKZCUm2Ds6Qg1ZXSJjchKxfPGU1n9HC1Zdsj7
+         Ef7iSym/0t3kWjpjLbbyd4hsCgdY9YhHiWGryfMyKWf1aMG8TNRTDHa+EhHmDDbZiEX7
+         4qp45p8VvL/GdxDyX5MJ8yoNl46QnzunbojKG4o0izjQdsyKq0GgB03maPIoefZysciz
+         4tYaDMso01IwR5tSMvgC0Oo5RBZvIKbGixcEhf35UZY69rMYvyHvMNc5yUkMF7pv8Dgt
+         nENQ==
+X-Gm-Message-State: APjAAAVlgALUXN1I+33uOHDaQndvqn9fnWKmBFIEtW5RqslQBm1KfDru
+        xTxvNhQONbu+K7/YtQP1SVdiSaA5B4UWN8OJGjauN+OMfKpn
+X-Google-Smtp-Source: APXvYqzcbP1i5iXtWa0x3COTXPqct38u54GHio/056rYZdiiYwd85nUttqGVNSnG+wxuaygr4c8dTn2O91+AImlAt7jLwipkZ4GK
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="wmtzcl4pnelndvoa"
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-Received: by 2002:a05:6638:a2c:: with SMTP id 12mr17810458jao.60.1575699908609;
+ Fri, 06 Dec 2019 22:25:08 -0800 (PST)
+Date:   Fri, 06 Dec 2019 22:25:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000053539a0599173973@google.com>
+Subject: BUG: unable to handle kernel NULL pointer dereference in mem_serial_out
+From:   syzbot <syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com>
+To:     andriy.shevchenko@linux.intel.com, asierra@xes-inc.com,
+        ext-kimmo.rautkoski@vaisala.com, gregkh@linuxfoundation.org,
+        jslaby@suse.com, kai.heng.feng@canonical.com,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        mika.westerberg@linux.intel.com, o.barta89@gmail.com,
+        paulburton@kernel.org, sr@denx.de, syzkaller-bugs@googlegroups.com,
+        yegorslists@googlemail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---wmtzcl4pnelndvoa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+syzbot found the following crash on:
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   eea2d5da29e396b6cc1fb35e36bcbf5f57731015
-commit: 4c22ea2b91203564fdf392b3d3cae249b652a8ae y2038: use compat_{get,set}_itimer on alpha
-date:   3 weeks ago
-config: alpha-allnoconfig (attached as .config)
-compiler: alpha-linux-gcc (GCC) 7.5.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git checkout 4c22ea2b91203564fdf392b3d3cae249b652a8ae
-        # save the attached .config to linux build tree
-        GCC_VERSION=7.5.0 make.cross ARCH=alpha 
+HEAD commit:    7ada90eb Merge tag 'drm-next-2019-12-06' of git://anongit...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=123ec282e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f07a23020fd7d21a
+dashboard link: https://syzkaller.appspot.com/bug?extid=f4f1e871965064ae689e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ab090ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f127f2e00000
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com
 
-All errors (new ones prefixed by >>):
+BUG: kernel NULL pointer dereference, address: 0000000000000002
+#PF: supervisor write access in kernel mode
+#PF: error_code(0x0002) - not-present page
+PGD 9764a067 P4D 9764a067 PUD 9f995067 PMD 0
+Oops: 0002 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9687 Comm: syz-executor433 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:writeb arch/x86/include/asm/io.h:65 [inline]
+RIP: 0010:mem_serial_out+0x70/0x90 drivers/tty/serial/8250/8250_port.c:408
+Code: e9 00 00 00 49 8d 7c 24 40 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48  
+c1 ea 03 d3 e3 80 3c 02 00 75 19 48 63 db 49 03 5c 24 40 <44> 88 2b 5b 41  
+5c 41 5d 5d c3 e8 81 ed cf fd eb c0 e8 da ed cf fd
+RSP: 0018:ffffc90001de78e8 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000002 RCX: 0000000000000000
+RDX: 1ffffffff181f40e RSI: ffffffff83e28776 RDI: ffffffff8c0fa070
+RBP: ffffc90001de7900 R08: ffff8880919dc340 R09: ffffed10431ee1c6
+R10: ffffed10431ee1c5 R11: ffff888218f70e2b R12: ffffffff8c0fa030
+R13: 0000000000000001 R14: ffffc90001de7a40 R15: ffffffff8c0fa188
+FS:  0000000001060880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000002 CR3: 000000009e6b8000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  serial_out drivers/tty/serial/8250/8250.h:118 [inline]
+  serial8250_clear_fifos.part.0+0x3a/0xb0  
+drivers/tty/serial/8250/8250_port.c:557
+  serial8250_clear_fifos drivers/tty/serial/8250/8250_port.c:556 [inline]
+  serial8250_do_startup+0x426/0x1cf0 drivers/tty/serial/8250/8250_port.c:2121
+  serial8250_startup+0x62/0x80 drivers/tty/serial/8250/8250_port.c:2329
+  uart_port_startup drivers/tty/serial/serial_core.c:219 [inline]
+  uart_startup drivers/tty/serial/serial_core.c:258 [inline]
+  uart_startup+0x452/0x980 drivers/tty/serial/serial_core.c:249
+  uart_set_info drivers/tty/serial/serial_core.c:998 [inline]
+  uart_set_info_user+0x13b4/0x1cf0 drivers/tty/serial/serial_core.c:1023
+  tty_tiocsserial drivers/tty/tty_io.c:2506 [inline]
+  tty_ioctl+0xf60/0x14f0 drivers/tty/tty_io.c:2648
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440219
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffced648c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440219
+RDX: 0000000020000240 RSI: 000000000000541f RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000401b30 R11: 0000000000000246 R12: 0000000000401aa0
+R13: 0000000000401b30 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+CR2: 0000000000000002
+---[ end trace eaa11ffe82f3a763 ]---
+RIP: 0010:writeb arch/x86/include/asm/io.h:65 [inline]
+RIP: 0010:mem_serial_out+0x70/0x90 drivers/tty/serial/8250/8250_port.c:408
+Code: e9 00 00 00 49 8d 7c 24 40 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48  
+c1 ea 03 d3 e3 80 3c 02 00 75 19 48 63 db 49 03 5c 24 40 <44> 88 2b 5b 41  
+5c 41 5d 5d c3 e8 81 ed cf fd eb c0 e8 da ed cf fd
+RSP: 0018:ffffc90001de78e8 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000002 RCX: 0000000000000000
+RDX: 1ffffffff181f40e RSI: ffffffff83e28776 RDI: ffffffff8c0fa070
+RBP: ffffc90001de7900 R08: ffff8880919dc340 R09: ffffed10431ee1c6
+R10: ffffed10431ee1c5 R11: ffff888218f70e2b R12: ffffffff8c0fa030
+R13: 0000000000000001 R14: ffffc90001de7a40 R15: ffffffff8c0fa188
+FS:  0000000001060880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000002 CR3: 000000009e6b8000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-   arch/alpha/kernel/systbls.o: In function `sys_call_table':
->> (.data+0x298): undefined reference to `compat_sys_setitimer'
->> (.data+0x2b0): undefined reference to `compat_sys_getitimer'
 
 ---
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
---wmtzcl4pnelndvoa
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-nXQY1xnk+L91cMwqfUoAAA==
-
---wmtzcl4pnelndvoa--
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
