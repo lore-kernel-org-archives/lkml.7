@@ -2,136 +2,330 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDF8C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152E6C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC1332082E
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:22:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="g7rkzGd+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MWBOFl9n"
+	by mail.kernel.org (Postfix) with ESMTP id D580324676
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575717991;
+	bh=Zm08PD4zdOSomqsRlTsW/jt8Y78oLu7fBwAGsb+5Bm4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RYmKbrdeRQmmnyrGyXbFSt1GQ9ndMbLx/XdRyETvlaihXp7CO7hzrFQo+GI5U4i7R
+	 rjV+f2FXLOORsVKj7bLjHfNL68rjAUSmEXLTOmLlliwNFhBGun6fQrLCfdTrNTjDIW
+	 9ApIilwDAVUJWwK4zNauTH4FmDO35fIwHRbYElnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfLGLWT (ORCPT
+        id S1726416AbfLGL0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 06:22:19 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:51015 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726025AbfLGLWS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 06:22:18 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 4A7ED22774;
-        Sat,  7 Dec 2019 06:22:17 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Sat, 07 Dec 2019 06:22:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=6albwC4s9Bq4fRNcrY4NJXtd+Ak
-        t1Cjqb8IYCWggpPI=; b=g7rkzGd+uvijOH10GeQDc6EvJrOQZL8GiCSRf9BuuhG
-        tpNlofNtQM1c5toBrfrD5VL4XY5PBNFqUsmRMTBW3sBEu0+VopzkiGjtQKXuFYSc
-        TeHOTYBkqam/G8BlqgLC6Fq3lN02OaTkYzUnlK954o9GF/GyBjCNHKPmPNfguaFi
-        kvTaQbu80wuKBXVp5BW+jwoMY85mOCN7qgtZhK4OYUYEcBXAVKEARh9e9ikYerE7
-        FoDC3yxuGB23PZljYTcheOUQpoFRG9ZtXTwMfFXfueQYPM2ERhvaczVfalv+Cn86
-        HPiOEeCpcYhraI3D1F/EG7sOSog0HNOY7I0Ito0ZPTA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=6albwC
-        4s9Bq4fRNcrY4NJXtd+Akt1Cjqb8IYCWggpPI=; b=MWBOFl9nqgEWAAvr9FUR9i
-        GdlewfG+wwSnqY7gRrs3jwy9b1XnXMnoGOaRfjSosLixCk0654nf2DuoIpguqEuE
-        3Bn/pBCPuV2WV7uP1CMTPfspAsaeEbgvFTw9YzrYweg5ChBOBVysy+f6iJV7g6Uo
-        U2tmWmcvIRa+HOUdCd2murJE9hu/xhC0NslcCZdbZ0ZPUqlEvNoskKBBB0opE33W
-        HYxkP3UDzN8oo1eBhYkLhvAM/gOr4H9pZhur1iQZIVRfmYO39jFFumAPe+ZgXisO
-        WAeqcnOlR+k9M3NxvotGgRuZxGGYYOwloHvTRLP6GuFb98jCosMLKHV4ZNqPxjVw
-        ==
-X-ME-Sender: <xms:aIvrXRLQqM5gZMTWiLMhKRFxNBR2HYRrs9JAQiTlkKBeTviuvlhd-Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudekhedgvdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesthdtre
-    dttddtvdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
-    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:aIvrXZCWTQyrDpodGo70_06vbD2z-FdWJaD6UWvkras_76Mzs8iQrw>
-    <xmx:aIvrXWuW2W42kIjeQWvd5P7TUdZBe26wKWjK2hhA49jmoXgM6sX2Cw>
-    <xmx:aIvrXXSYnuHi3kdzdE7WdSWEjt33W0sPl3Et0h051VBWeicIz715MA>
-    <xmx:aYvrXUa5Kt95GQVcDJBgdKPMMZQJMD04uk14Q8fXyA3f7U19Zr4wJA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A9EA930603A8;
-        Sat,  7 Dec 2019 06:22:16 -0500 (EST)
-Date:   Sat, 7 Dec 2019 12:22:14 +0100
-From:   Greg KH <greg@kroah.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     swise@opengridcomputing.com, stable-commits@vger.kernel.org
-Subject: Re: Patch "iw_cxgb4: only reconnect with MPAv1 if the peer aborts"
- has been added to the 4.4-stable tree
-Message-ID: <20191207112214.GA280629@kroah.com>
-References: <20191206212436.2628724670@mail.kernel.org>
+        Sat, 7 Dec 2019 06:26:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbfLGL03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 06:26:29 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8130B217BA;
+        Sat,  7 Dec 2019 11:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575717988;
+        bh=Zm08PD4zdOSomqsRlTsW/jt8Y78oLu7fBwAGsb+5Bm4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gcqsYWjODQ5R296fq+SyTaK533l4ZwNZw7UxQFB5GiX8rxmFyy64VQGTI4R6d0apQ
+         /mCUi5HdwJNvXZAcDlgFWGUPzWrZVgfu8AVkRQkyqLsKmxK3go6VktgIc3FI9jiRGh
+         +FPviYaZEEuKQYspUaKj63N4dLANhVtzRiVcvRL8=
+Date:   Sat, 7 Dec 2019 11:26:23 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Daniel Junho <djunho@gmail.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Subject: Re: [PATCH] iio:adc:ad7923: Add support for the
+ ad7908/ad7918/ad7928
+Message-ID: <20191207112623.31ac5288@archlinux>
+In-Reply-To: <20191205155821.7441-1-djunho@gmail.com>
+References: <20191205155821.7441-1-djunho@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206212436.2628724670@mail.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 04:24:35PM -0500, Sasha Levin wrote:
-> This is a note to let you know that I've just added the patch titled
-> 
->     iw_cxgb4: only reconnect with MPAv1 if the peer aborts
-> 
-> to the 4.4-stable tree which can be found at:
->     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-> 
-> The filename of the patch is:
->      iw_cxgb4-only-reconnect-with-mpav1-if-the-peer-abort.patch
-> and it can be found in the queue-4.4 subdirectory.
-> 
-> If you, or anyone else, feels it should not be added to the stable tree,
-> please let <stable@vger.kernel.org> know about it.
-> 
-> 
-> 
-> commit 0259a468e2383fc41f8bf84b9a7548727874c03c
-> Author: Steve Wise <swise@opengridcomputing.com>
-> Date:   Sat Nov 10 05:27:39 2018 -0800
-> 
->     iw_cxgb4: only reconnect with MPAv1 if the peer aborts
->     
->     [ Upstream commit 9828ca654b52848e7eb7dcc9b0994ff130dd4546 ]
->     
->     Only retry connection setup with MPAv1 if the peer actually aborted the
->     connection upon receiving the MPAv2 start message.  This avoids retrying
->     with MPAv1 in the case where the connection was aborted due to retransmit
->     timeouts.
->     
->     Fixes: d2fe99e86bb2 ("RDMA/cxgb4: Add support for MPAv2 Enhanced RDMA Negotiation")
->     Signed-off-by: Steve Wise <swise@opengridcomputing.com>
->     Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
->     Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-> index 54fd4d81a3f1f..0d13d369fea91 100644
-> --- a/drivers/infiniband/hw/cxgb4/cm.c
-> +++ b/drivers/infiniband/hw/cxgb4/cm.c
-> @@ -2691,7 +2691,8 @@ static int peer_abort(struct c4iw_dev *dev, struct sk_buff *skb)
->  		break;
->  	case MPA_REQ_SENT:
->  		(void)stop_ep_timer(ep);
-> -		if (mpa_rev == 1 || (mpa_rev == 2 && ep->tried_with_mpa_v1))
-> +		if (status != CPL_ERR_CONN_RESET || mpa_rev == 1 ||
-> +		    (mpa_rev == 2 && ep->tried_with_mpa_v1))
->  			connect_reply_upcall(ep, -ECONNRESET);
->  		else {
->  			/*
+On Thu,  5 Dec 2019 12:58:21 -0300
+Daniel Junho <djunho@gmail.com> wrote:
 
-This breaks the build here and in 4.9.y and 4.14.y so I'm dropping it
-from all of these queues :(
+> The ad7928 is software compatible with the ad7923. The ad7908 and ad7918 are the
+> 8 and 10 bit version of the ad7928.
+> 
+> Signed-off-by: Daniel Junho <djunho@gmail.com>
+Hi Daniel,
 
-greg k-h
+Code itself looks good to me, but please be very careful to separate out 
+non function cleanup from a patch adding something new.  It makes
+reviewing harder.  We'd much rather see a series with the cleanup all clearly
+marked as such (and getting a most a few seconds review) and the real code
+being just that.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/Kconfig  |  3 +-
+>  drivers/iio/adc/ad7923.c | 96 +++++++++++++++++++++++++++++++---------
+>  2 files changed, 78 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 976567d4dbef..40aa05fbf85e 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -205,7 +205,8 @@ config AD7923
+>  	select IIO_TRIGGERED_BUFFER
+>  	help
+>  	  Say yes here to build support for Analog Devices
+> -	  AD7904, AD7914, AD7923, AD7924 4 Channel ADCs.
+> +	  AD7904, AD7914, AD7923, AD7924 4 Channel ADCs, and
+> +	  AD7908, AD7918, AD7928 8 Channels ADCs.
+>  
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called ad7923.
+> diff --git a/drivers/iio/adc/ad7923.c b/drivers/iio/adc/ad7923.c
+> index 3212eb4c0f25..f08a5218dad1 100644
+> --- a/drivers/iio/adc/ad7923.c
+> +++ b/drivers/iio/adc/ad7923.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /*
+> - * AD7904/AD7914/AD7923/AD7924 SPI ADC driver
+> + * AD7904/AD7914/AD7923/AD7924/AD7908/AD7918/AD7928 SPI ADC driver
+>   *
+>   * Copyright 2011 Analog Devices Inc (from AD7923 Driver)
+>   * Copyright 2012 CS Systemes d'Information
+> @@ -26,23 +26,32 @@
+>  #define AD7923_WRITE_CR		BIT(11)		/* write control register */
+>  #define AD7923_RANGE		BIT(1)		/* range to REFin */
+>  #define AD7923_CODING		BIT(0)		/* coding is straight binary */
+> +
+
+No white space changes in a patch doing real changes to the driver.
+
+>  #define AD7923_PM_MODE_AS	(1)		/* auto shutdown */
+>  #define AD7923_PM_MODE_FS	(2)		/* full shutdown */
+>  #define AD7923_PM_MODE_OPS	(3)		/* normal operation */
+> +
+>  #define AD7923_CHANNEL_0	(0)		/* analog input 0 */
+>  #define AD7923_CHANNEL_1	(1)		/* analog input 1 */
+>  #define AD7923_CHANNEL_2	(2)		/* analog input 2 */
+>  #define AD7923_CHANNEL_3	(3)		/* analog input 3 */
+> -#define AD7923_SEQUENCE_OFF	(0)		/* no sequence fonction */
+> -#define AD7923_SEQUENCE_PROTECT	(2)		/* no interrupt write cycle */
+> -#define AD7923_SEQUENCE_ON	(3)		/* continuous sequence */
+> -
+> -#define AD7923_MAX_CHAN		4
+> +#define AD7923_CHANNEL_4	(4)		/* analog input 4 */
+> +#define AD7923_CHANNEL_5	(5)		/* analog input 5 */
+> +#define AD7923_CHANNEL_6	(6)		/* analog input 6 */
+> +#define AD7923_CHANNEL_7	(7)		/* analog input 7 */
+These made me wonder.  Seems they aren't actually used in the driver anyway.
+Ideally add a precursor to your main patch just dropping these particular
+defines entirely.
+
+
+> +
+> +#define AD7923_SEQUENCE_OFF	(0x00)		/* no sequence function */
+> +#define AD7923_SEQUENCE_SHADOW	(0x01)		/* use the shadow register
+> +						 * for programming
+> +						 * (only AD7908/7918/7928)
+> +						 */
+> +#define AD7923_SEQUENCE_PROTECT	(0x10)		/* no interrupt write cycle */
+> +#define AD7923_SEQUENCE_ON	(0x11)		/* continuous sequence */
+>  
+>  #define AD7923_PM_MODE_WRITE(mode)	((mode) << 4)	 /* write mode */
+>  #define AD7923_CHANNEL_WRITE(channel)	((channel) << 6) /* write channel */
+> -#define AD7923_SEQUENCE_WRITE(sequence)	((((sequence) & 1) << 3) \
+> -					+ (((sequence) & 2) << 9))
+> +#define AD7923_SEQUENCE_WRITE(sequence)	((((sequence) & 0x01) << 3) \
+> +					+ (((sequence) & 0x10) << 9))
+
+This change is interesting.  Was original code just buggy? we were masking
+against 2nd bit, and now we are masking against the 4th?
+
+>  						/* write sequence fonction */
+>  /* left shift for CR : bit 11 transmit in first */
+>  #define AD7923_SHIFT_REGISTER	4
+> @@ -78,6 +87,9 @@ enum ad7923_id {
+>  	AD7904,
+>  	AD7914,
+>  	AD7924,
+> +	AD7908,
+> +	AD7918,
+> +	AD7928
+>  };
+>  
+>  #define AD7923_V_CHAN(index, bits)					\
+> @@ -97,7 +109,7 @@ enum ad7923_id {
+>  		},							\
+>  	}
+>  
+> -#define DECLARE_AD7923_CHANNELS(name, bits) \
+> +#define DECLARE_AD7923_4CHANNELS(name, bits) \
+>  const struct iio_chan_spec name ## _channels[] = { \
+>  	AD7923_V_CHAN(0, bits), \
+>  	AD7923_V_CHAN(1, bits), \
+> @@ -106,9 +118,25 @@ const struct iio_chan_spec name ## _channels[] = { \
+>  	IIO_CHAN_SOFT_TIMESTAMP(4), \
+>  }
+>  
+> -static DECLARE_AD7923_CHANNELS(ad7904, 8);
+> -static DECLARE_AD7923_CHANNELS(ad7914, 10);
+> -static DECLARE_AD7923_CHANNELS(ad7924, 12);
+> +#define DECLARE_AD7923_8CHANNELS(name, bits) \
+> +const struct iio_chan_spec name ## _channels[] = { \
+> +	AD7923_V_CHAN(0, bits), \
+> +	AD7923_V_CHAN(1, bits), \
+> +	AD7923_V_CHAN(2, bits), \
+> +	AD7923_V_CHAN(3, bits), \
+> +	AD7923_V_CHAN(4, bits), \
+> +	AD7923_V_CHAN(5, bits), \
+> +	AD7923_V_CHAN(6, bits), \
+> +	AD7923_V_CHAN(7, bits), \
+> +	IIO_CHAN_SOFT_TIMESTAMP(8), \
+> +}
+> +
+> +static DECLARE_AD7923_4CHANNELS(ad7904, 8);
+> +static DECLARE_AD7923_4CHANNELS(ad7914, 10);
+> +static DECLARE_AD7923_4CHANNELS(ad7924, 12);
+> +static DECLARE_AD7923_8CHANNELS(ad7908, 8);
+> +static DECLARE_AD7923_8CHANNELS(ad7918, 10);
+> +static DECLARE_AD7923_8CHANNELS(ad7928, 12);
+>  
+>  static const struct ad7923_chip_info ad7923_chip_info[] = {
+>  	[AD7904] = {
+> @@ -123,6 +151,18 @@ static const struct ad7923_chip_info ad7923_chip_info[] = {
+>  		.channels = ad7924_channels,
+>  		.num_channels = ARRAY_SIZE(ad7924_channels),
+>  	},
+> +	[AD7908] = {
+> +		.channels = ad7908_channels,
+> +		.num_channels = ARRAY_SIZE(ad7908_channels),
+> +	},
+> +	[AD7918] = {
+> +		.channels = ad7918_channels,
+> +		.num_channels = ARRAY_SIZE(ad7918_channels),
+> +	},
+> +	[AD7928] = {
+> +		.channels = ad7928_channels,
+> +		.num_channels = ARRAY_SIZE(ad7928_channels),
+> +	},
+>  };
+>  
+>  /**
+> @@ -135,10 +175,10 @@ static int ad7923_update_scan_mode(struct iio_dev *indio_dev,
+>  	int i, cmd, len;
+>  
+>  	len = 0;
+> -	for_each_set_bit(i, active_scan_mask, AD7923_MAX_CHAN) {
+> +	for_each_set_bit(i, active_scan_mask, indio_dev->num_channels - 1) {
+>  		cmd = AD7923_WRITE_CR | AD7923_CHANNEL_WRITE(i) |
+> -			AD7923_SEQUENCE_WRITE(AD7923_SEQUENCE_OFF) |
+> -			st->settings;
+> +		      AD7923_SEQUENCE_WRITE(AD7923_SEQUENCE_OFF) |
+> +		      st->settings;
+>  		cmd <<= AD7923_SHIFT_REGISTER;
+>  		st->tx_buf[len++] = cpu_to_be16(cmd);
+>  	}
+> @@ -188,13 +228,13 @@ static irqreturn_t ad7923_trigger_handler(int irq, void *p)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> -static int ad7923_scan_direct(struct ad7923_state *st, unsigned ch)
+> +static int ad7923_scan_direct(struct ad7923_state *st, unsigned int ch)
+
+Should be in a precursor patch tidying this up.   Never mix new features
+with cleanup as it's harder to review.
+
+>  {
+>  	int ret, cmd;
+>  
+>  	cmd = AD7923_WRITE_CR | AD7923_CHANNEL_WRITE(ch) |
+> -		AD7923_SEQUENCE_WRITE(AD7923_SEQUENCE_OFF) |
+> -		st->settings;
+> +	      AD7923_SEQUENCE_WRITE(AD7923_SEQUENCE_OFF) |
+> +	      st->settings;
+
+Clean out this noise from the patch.  We just want to see
+the new stuff rather than stare at a line to figure if it
+is just whitespace, or if there is a real change ;)
+
+>  	cmd <<= AD7923_SHIFT_REGISTER;
+>  	st->tx_buf[0] = cpu_to_be16(cmd);
+>  
+> @@ -280,7 +320,7 @@ static int ad7923_probe(struct spi_device *spi)
+>  
+>  	st->spi = spi;
+>  	st->settings = AD7923_CODING | AD7923_RANGE |
+> -			AD7923_PM_MODE_WRITE(AD7923_PM_MODE_OPS);
+> +		       AD7923_PM_MODE_WRITE(AD7923_PM_MODE_OPS);
+
+Please clean out an noise like this bit of realignment.
+
+>  
+>  	info = &ad7923_chip_info[spi_get_device_id(spi)->driver_data];
+>  
+> @@ -348,13 +388,29 @@ static const struct spi_device_id ad7923_id[] = {
+>  	{"ad7914", AD7914},
+>  	{"ad7923", AD7924},
+>  	{"ad7924", AD7924},
+> +	{"ad7908", AD7908},
+> +	{"ad7918", AD7918},
+> +	{"ad7928", AD7928},
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(spi, ad7923_id);
+>  
+> +static const struct of_device_id ad7923_of_match[] = {
+> +	{ .compatible = "adi,ad7904", },
+> +	{ .compatible = "adi,ad7914", },
+> +	{ .compatible = "adi,ad7923", },
+> +	{ .compatible = "adi,ad7924", },
+> +	{ .compatible = "adi,ad7908", },
+> +	{ .compatible = "adi,ad7918", },
+> +	{ .compatible = "adi,ad7928", },
+> +	{ },
+Really minor but I would have preferred a precursor patch
+adding the of_device_id table for existing parts.
+
+Makes a clear separation between new device support and tidying
+up the fact that table should be there to allow the specific
+adi,* matching.
+
+> +};
+> +MODULE_DEVICE_TABLE(of, ad7923_of_match);
+> +
+>  static struct spi_driver ad7923_driver = {
+>  	.driver = {
+>  		.name	= "ad7923",
+> +		.of_match_table = ad7923_of_match,
+>  	},
+>  	.probe		= ad7923_probe,
+>  	.remove		= ad7923_remove,
+> @@ -364,5 +420,5 @@ module_spi_driver(ad7923_driver);
+>  
+>  MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
+>  MODULE_AUTHOR("Patrick Vasseur <patrick.vasseur@c-s.fr>");
+> -MODULE_DESCRIPTION("Analog Devices AD7904/AD7914/AD7923/AD7924 ADC");
+> +MODULE_DESCRIPTION("Analog Devices AD7904/AD7914/AD7923/AD7924/AD7908/AD7918/AD7928 ADC");
+>  MODULE_LICENSE("GPL v2");
+
