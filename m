@@ -2,216 +2,191 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5806FC43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 12:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF094C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 12:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0BB2053B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 12:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8831421835
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 12:13:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ytbBU3WG"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="uMfC4y2c";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IwLMZwVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfLGMCp (ORCPT
+        id S1726442AbfLGMNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 07:02:45 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44393 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbfLGMCp (ORCPT
+        Sat, 7 Dec 2019 07:13:54 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:58179 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726196AbfLGMNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 07:02:45 -0500
-Received: by mail-lf1-f66.google.com with SMTP id v201so7243021lfa.11
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 04:02:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WCHftxVyszB2Wm7Mx9nwVJT5KwAoHKsTgufbG3ZvSE0=;
-        b=ytbBU3WGJ0ZQjaUeGfDOGl3u4A5i8tgrxA0IewP25ocFnCwA1+3oTAyMV69GqIGkXL
-         NGotBHGibozbI7wv7KFb5d9JbZux3LyufzbW1NznboOPwhfW7JdKsPCsvOURwBmZHK5h
-         cV1xLr8ML2hyWZ4bsH8RrKbCOUaTWijO3wL+MJHl8bXJx35eFwBAC4uMgLcvVwz/TwkH
-         WIhaRgR5+9aXLw3VJ1XU5hzQbE8F3/mwTTVkTFB+0EdX7PAp8BlG/47YvSLdEg7WS8TU
-         EpLGTMe03jOVW9kRiKaFsGWNfu4UR5aoauIt1FIrN4d+U24nlQRb4G5+LFkvlcT/sqi7
-         KXrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WCHftxVyszB2Wm7Mx9nwVJT5KwAoHKsTgufbG3ZvSE0=;
-        b=lMoI1//7QxceV3bcKNGfLaon8OYV8z44UoF6W8Dxkxvobs7QZiahGxMG1adqwtoFb+
-         K6zkc3qA63mvNQI5MYQZQ0CgvLreBBehREuYqAl7M+RauLh3Z/RfN6FpE8xGHtAK54Ox
-         TYyI7GNicAbfXLqM3H/xq9Z4P4VRfFdwOYbChGWE42sPctKkuGasHGZrfFx2nUZEqADA
-         CALDGvc5xeoNAvfEm1qvSZiyZAVPN9cRZPXX8VDqInCnXz0jQ+alxS4x5lySBb3b4n1J
-         1Ana1nrQ6c94sbqHlHOSjQkDFxpMr1W49RmCBIdmldKEPpZRxKmzwrJi1xIRy3HzgD9p
-         zsSg==
-X-Gm-Message-State: APjAAAXXwt3L2CTfrrm/1g6GCJxvM1TX9fX3lLrYcBLOAILbuPzkqygy
-        Rc3m/0Bb2/Ce9tz5GiRlUZXTAw==
-X-Google-Smtp-Source: APXvYqwOD/d+/DkXfUkGc3KyoTi79Bdx7cgJRxrgmIbl7SG4d3y3GDgiWqZvNP75SSDTmNeFCYLtmw==
-X-Received: by 2002:ac2:4c2b:: with SMTP id u11mr10809676lfq.46.1575720162331;
-        Sat, 07 Dec 2019 04:02:42 -0800 (PST)
-Received: from khorivan (57-201-94-178.pool.ukrtel.net. [178.94.201.57])
-        by smtp.gmail.com with ESMTPSA id p12sm2553575lfc.43.2019.12.07.04.02.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 04:02:41 -0800 (PST)
-Date:   Sat, 7 Dec 2019 14:02:39 +0200
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        nsekhar@ti.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: ethernet: ti: davinci_cpdma: fix warning "device
- driver frees DMA memory with different size"
-Message-ID: <20191207120238.GB2798@khorivan>
-Mail-Followup-To: Grygorii Strashko <grygorii.strashko@ti.com>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        nsekhar@ti.com, linux-kernel@vger.kernel.org
-References: <20191204165029.9264-1-grygorii.strashko@ti.com>
- <20191204.123718.1152659362924451799.davem@davemloft.net>
- <0c6b88b2-31b1-11f0-7baa-1ecd5f4b6644@ti.com>
- <20191207114419.GA2798@khorivan>
+        Sat, 7 Dec 2019 07:13:54 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1ACF4227E5;
+        Sat,  7 Dec 2019 07:13:53 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Sat, 07 Dec 2019 07:13:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=mcGrWRJUFj7ehQYFYco7tPNn8Y8
+        5s4FRf3fEKKPX6jk=; b=uMfC4y2c1+D2Q7jewrjlO/6sfqi84q9+qqYVMvHOzsY
+        /eogmi8hWGyr9yk/DHHg3WJ4UNWMEunm+luyDUV/+BT7krW+F7ENQgI6Yh/I40NX
+        CRXOXmXu4wwqxIvOzpBQ1SrOeFofGKdpte9P9R+8/K6fOYX9AA8BomFdPMv4szL+
+        /BbeJVA7KxlPk//UrrwNilRtGJykFQQqcwGqAMwc4TC7FNnj/sbH2fRHeuB8nwr1
+        ApcpewUaC3NjRriA8jd9MRKrszDqEP7b8DqzFWi20azeTJaWY0CGVlJ/MktCQ47M
+        bHblmvCl6cW0TjOL29SQoibN1QbImDNxUwqnkGtCLLQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=mcGrWR
+        JUFj7ehQYFYco7tPNn8Y85s4FRf3fEKKPX6jk=; b=IwLMZwVMajyG/imqlC6Kb2
+        r4c7Sd1N8ECVTleusQDPttHqb45pI2ry9HHDmqKXQ4QqxJ1mLCTClVefPSwNeEin
+        8uQZy+IolyHqc6+RhXXd4G3Nj/7kKNHijSfO8r8/l/VT9Fy2TGM313fhU5+H/PVn
+        kwc77aWF3d96Eo5fF6VkkrB1OVsMUa2nPmYqEbt36rrZG5yq/nnhOSGjqFHoxyi6
+        D1kI2W/tgLyeXfXTCchCZMqPDByzyUQ7RyEIRMdiRquyjHAgBVR44rm8j7ksTrvi
+        rps2ySgUCuiK2iNZTRQ9YiJFsTedyz3maodRpfnkpXFbQwJqZ968wOMelOTLhj7w
+        ==
+X-ME-Sender: <xms:gJfrXc6-kBs9FX35yWW9kurUKIb8WK0x8zJsflyk21G4WvP4S9thPg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudekhedggedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesthdtre
+    dttddtvdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:gJfrXZq7eGxxS0Fpu9E1CQavE7dDvRx55TLth03cBxeGVm4ghEvxYg>
+    <xmx:gJfrXUC8GiazWL3Zak_Cx8DV8EdPMEcA1cgDx4e-ZbPJf1AqdpCAOA>
+    <xmx:gJfrXSTdEUb_jwjSdgYRCcS4L_k4uBHJ390dx2AD9XTrw7DvHWFCKw>
+    <xmx:gZfrXaVtvU3XOekaUVLjhkuDAsq94Q8GJG_d7iKAKv_J3Q2NygHylQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6EFD48005C;
+        Sat,  7 Dec 2019 07:13:52 -0500 (EST)
+Date:   Sat, 7 Dec 2019 13:13:50 +0100
+From:   Greg KH <greg@kroah.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     bfields@redhat.com, stable-commits@vger.kernel.org
+Subject: Re: Patch "lockd: fix decoding of TEST results" has been added to
+ the 4.4-stable tree
+Message-ID: <20191207121350.GA375536@kroah.com>
+References: <20191206212455.ADA2E2467A@mail.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191207114419.GA2798@khorivan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191206212455.ADA2E2467A@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 07, 2019 at 01:44:20PM +0200, Ivan Khoronzhuk wrote:
->On Thu, Dec 05, 2019 at 12:48:46PM +0200, Grygorii Strashko wrote:
->>
->>
->>On 04/12/2019 22:37, David Miller wrote:
->>>From: Grygorii Strashko <grygorii.strashko@ti.com>
->>>Date: Wed, 4 Dec 2019 18:50:29 +0200
->>>
->>>>@@ -1018,7 +1018,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
->>>> 	struct cpdma_chan		*chan = si->chan;
->>>> 	struct cpdma_ctlr		*ctlr = chan->ctlr;
->>>> 	int				len = si->len;
->>>>-	int				swlen = len;
->>>>+	int				swlen;
->>>> 	struct cpdma_desc __iomem	*desc;
->>>> 	dma_addr_t			buffer;
->>>> 	u32				mode;
->>>>@@ -1040,6 +1040,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
->>>> 		chan->stats.runt_transmit_buff++;
->>>> 	}
->>>>+	swlen = len;
->>>> 	mode = CPDMA_DESC_OWNER | CPDMA_DESC_SOP | CPDMA_DESC_EOP;
->>>> 	cpdma_desc_to_port(chan, mode, si->directed);
->>>>-- 
->>>>2.17.1
->>>>
->>>
->>>Now there is no reason to keep a separate swlen variable.
->>>
->>>The integral value is always consumed as the length before the descriptor bits
->>>are added to it.
->>>
->>>Therefore you can just use 'len' everywhere in this function now.
->>>
->>
->>Sry, but seems i can't, at least i can't just drop swlen.
->>
->>Below in this function:
->>	writel_relaxed(0, &desc->hw_next);
->>	writel_relaxed(buffer, &desc->hw_buffer);
->>	writel_relaxed(len, &desc->hw_len);
->>	writel_relaxed(mode | len, &desc->hw_mode);
->>^^ here the "len" should be use
->>
->>	writel_relaxed((uintptr_t)si->token, &desc->sw_token);
->>	writel_relaxed(buffer, &desc->sw_buffer);
->>	writel_relaxed(swlen, &desc->sw_len);
->>^^ and here "len"|CPDMA_DMA_EXT_MAP if (si->data_dma) [1]
->>
->>	desc_read(desc, sw_len);
->>
->>so additional if statement has to be added at [1] if "swlen" is dropped
->>
->>-- 
->>Best regards,
->>grygorii
->
->Seems like yes,
->
->And the "swlen" can be avoided like this:
->
->--- a/drivers/net/ethernet/ti/davinci_cpdma.c
->+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
->@@ -1018,7 +1018,6 @@ static int cpdma_chan_submit_si(struct submit_info *si)
->       struct cpdma_chan               *chan = si->chan;
->       struct cpdma_ctlr               *ctlr = chan->ctlr;
->       int                             len = si->len;
->-       int                             swlen = len;
->       struct cpdma_desc __iomem       *desc;
->       dma_addr_t                      buffer;
->       u32                             mode;
->@@ -1046,7 +1045,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
->       if (si->data_dma) {
->               buffer = si->data_dma;
->               dma_sync_single_for_device(ctlr->dev, buffer, len, chan->dir);
->-               swlen |= CPDMA_DMA_EXT_MAP;
->+               writel_relaxed(len | CPDMA_DMA_EXT_MAP, &desc->sw_len);
->       } else {
->               buffer = dma_map_single(ctlr->dev, si->data_virt, len, chan->dir);
->               ret = dma_mapping_error(ctlr->dev, buffer);
->@@ -1054,6 +1053,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
->                       cpdma_desc_free(ctlr->pool, desc, 1);
->                       return -EINVAL;
->               }
->+               writel_relaxed(len, &desc->sw_len);
->       }
->
->       /* Relaxed IO accessors can be used here as there is read barrier
->@@ -1065,7 +1065,6 @@ static int cpdma_chan_submit_si(struct submit_info *si)
->       writel_relaxed(mode | len, &desc->hw_mode);
->       writel_relaxed((uintptr_t)si->token, &desc->sw_token);
->       writel_relaxed(buffer, &desc->sw_buffer);
->-       writel_relaxed(swlen, &desc->sw_len);
->       desc_read(desc, sw_len);
->
->       __cpdma_chan_submit(chan, desc);
->
->But not sure what is better.
->
+On Fri, Dec 06, 2019 at 04:24:54PM -0500, Sasha Levin wrote:
+> This is a note to let you know that I've just added the patch titled
+> 
+>     lockd: fix decoding of TEST results
+> 
+> to the 4.4-stable tree which can be found at:
+>     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+> 
+> The filename of the patch is:
+>      lockd-fix-decoding-of-test-results.patch
+> and it can be found in the queue-4.4 subdirectory.
+> 
+> If you, or anyone else, feels it should not be added to the stable tree,
+> please let <stable@vger.kernel.org> know about it.
+> 
+> 
+> 
+> commit 66c45912a1133ed5483e1559bad8a5d6bd2f4275
+> Author: J. Bruce Fields <bfields@redhat.com>
+> Date:   Mon Nov 26 11:36:52 2018 -0500
+> 
+>     lockd: fix decoding of TEST results
+>     
+>     [ Upstream commit b8db159239b3f51e2b909859935cc25cb3ff3eed ]
+>     
+>     We fail to advance the read pointer when reading the stat.oh field that
+>     identifies the lock-holder in a TEST result.
+>     
+>     This turns out not to matter if the server is knfsd, which always
+>     returns a zero-length field.  But other servers (Ganesha is an example)
+>     may not do this.  The result is bad values in fcntl F_GETLK results.
+>     
+>     Fix this.
+>     
+>     Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+>     Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> diff --git a/fs/lockd/clnt4xdr.c b/fs/lockd/clnt4xdr.c
+> index d3e40db289302..4fdf8dae0db28 100644
+> --- a/fs/lockd/clnt4xdr.c
+> +++ b/fs/lockd/clnt4xdr.c
+> @@ -127,24 +127,14 @@ static void encode_netobj(struct xdr_stream *xdr,
+>  static int decode_netobj(struct xdr_stream *xdr,
+>  			 struct xdr_netobj *obj)
+>  {
+> -	u32 length;
+> -	__be32 *p;
+> +	ssize_t ret;
+>  
+> -	p = xdr_inline_decode(xdr, 4);
+> -	if (unlikely(p == NULL))
+> -		goto out_overflow;
+> -	length = be32_to_cpup(p++);
+> -	if (unlikely(length > XDR_MAX_NETOBJ))
+> -		goto out_size;
+> -	obj->len = length;
+> -	obj->data = (u8 *)p;
+> +	ret = xdr_stream_decode_opaque_inline(xdr, (void *)&obj->data,
+> +						XDR_MAX_NETOBJ);
+> +	if (unlikely(ret < 0))
+> +		return -EIO;
+> +	obj->len = ret;
+>  	return 0;
+> -out_size:
+> -	dprintk("NFS: returned netobj was too long: %u\n", length);
+> -	return -EIO;
+> -out_overflow:
+> -	print_overflow_msg(__func__, xdr);
+> -	return -EIO;
+>  }
+>  
+>  /*
+> diff --git a/fs/lockd/clntxdr.c b/fs/lockd/clntxdr.c
+> index 3e9f7874b9755..29392d66473c8 100644
+> --- a/fs/lockd/clntxdr.c
+> +++ b/fs/lockd/clntxdr.c
+> @@ -124,24 +124,14 @@ static void encode_netobj(struct xdr_stream *xdr,
+>  static int decode_netobj(struct xdr_stream *xdr,
+>  			 struct xdr_netobj *obj)
+>  {
+> -	u32 length;
+> -	__be32 *p;
+> +	ssize_t ret;
+>  
+> -	p = xdr_inline_decode(xdr, 4);
+> -	if (unlikely(p == NULL))
+> -		goto out_overflow;
+> -	length = be32_to_cpup(p++);
+> -	if (unlikely(length > XDR_MAX_NETOBJ))
+> -		goto out_size;
+> -	obj->len = length;
+> -	obj->data = (u8 *)p;
+> +	ret = xdr_stream_decode_opaque_inline(xdr, (void *)&obj->data,
+> +			XDR_MAX_NETOBJ);
+> +	if (unlikely(ret < 0))
+> +		return -EIO;
+> +	obj->len = ret;
+>  	return 0;
+> -out_size:
+> -	dprintk("NFS: returned netobj was too long: %u\n", length);
+> -	return -EIO;
+> -out_overflow:
+> -	print_overflow_msg(__func__, xdr);
+> -	return -EIO;
+>  }
+>  
+>  /*
 
-Or like this:
-
---- a/drivers/net/ethernet/ti/davinci_cpdma.c
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -1018,7 +1018,6 @@ static int cpdma_chan_submit_si(struct submit_info *si)
-        struct cpdma_chan               *chan = si->chan;
-        struct cpdma_ctlr               *ctlr = chan->ctlr;
-        int                             len = si->len;
--       int                             swlen = len;
-        struct cpdma_desc __iomem       *desc;
-        dma_addr_t                      buffer;
-        u32                             mode;
-@@ -1046,7 +1045,6 @@ static int cpdma_chan_submit_si(struct submit_info *si)
-        if (si->data_dma) {
-                buffer = si->data_dma;
-                dma_sync_single_for_device(ctlr->dev, buffer, len, chan->dir);
--               swlen |= CPDMA_DMA_EXT_MAP;
-        } else {
-                buffer = dma_map_single(ctlr->dev, si->data_virt, len, chan->dir);
-                ret = dma_mapping_error(ctlr->dev, buffer);
-@@ -1065,7 +1063,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
-        writel_relaxed(mode | len, &desc->hw_mode);
-        writel_relaxed((uintptr_t)si->token, &desc->sw_token);
-        writel_relaxed(buffer, &desc->sw_buffer);
--       writel_relaxed(swlen, &desc->sw_len);
-+       writel_relaxed(si->data_dma ? len | CPDMA_DMA_EXT_MAP : len, &desc->sw_len);
-        desc_read(desc, sw_len);
-
-        __cpdma_chan_submit(chan, desc);
-
-But it's branched twice then.
-
--- 
-Regards,
-Ivan Khoronzhuk
+Breaks the build on 4.4, so I'm dropping it from there :(
