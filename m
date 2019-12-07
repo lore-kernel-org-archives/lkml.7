@@ -2,170 +2,75 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76C2C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 03:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2035C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 03:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869F02464E
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 03:47:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575690447;
-	bh=50Udh4adKV8I9YKDKPNTiQTkFH0xxlkJSgD7ELObhwQ=;
-	h=Date:From:To:Subject:In-Reply-To:List-ID:From;
-	b=TT/ZflO+/UFwVhpIHOHB5s+b83Evm61G+3+WOp8xcHsbYK66WZb4bVcnDmf5Z30s7
-	 4BXx9vXijJhnPIWp2FesJUEEWzgecTILowVwtIW/s0YoKZz3dSk4ebzfCYaUD3bUQR
-	 WAIqy+7aWUltY9ssjSlkYfGUyDigSQa2firAAKKM=
+	by mail.kernel.org (Postfix) with ESMTP id 7E7B920637
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 03:47:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfLGDr0 (ORCPT
+        id S1726552AbfLGDrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 22:47:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726371AbfLGDr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 22:47:26 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DCA820637;
-        Sat,  7 Dec 2019 03:47:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575690444;
-        bh=50Udh4adKV8I9YKDKPNTiQTkFH0xxlkJSgD7ELObhwQ=;
-        h=Date:From:To:Subject:In-Reply-To:From;
-        b=I36LUghQAY0MVvRC2SKNUFCGcJPJPAHaQpvMxY4kjdoDtJJ8440wDCdFoH2Ev/Wwr
-         y+aAFl7LnYI8Yp2vez6zM2qnZEDv3MlgGFghjVTBB0+IXdJyadeJ9az3do51QEoh/r
-         qBB2mXts+VeC1E/olfLdoPN5VGizqQZqVtJS0SWI=
-Date:   Fri, 06 Dec 2019 19:47:23 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
-Subject:  mmotm 2019-12-06-19-46 uploaded
-Message-ID: <20191207034723.OPvz2A9wZ%akpm@linux-foundation.org>
-In-Reply-To: <20191206170123.cb3ad1f76af2b48505fabb33@linux-foundation.org>
-User-Agent: s-nail v14.8.16
+        Fri, 6 Dec 2019 22:47:47 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34376 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726371AbfLGDrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 22:47:47 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 96279676AA260FA1F035;
+        Sat,  7 Dec 2019 11:47:44 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sat, 7 Dec 2019
+ 11:46:38 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <rostedt@goodmis.org>, <mingo@redhat.com>,
+        <xiyou.wangcong@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] tracing: remove set but not used variable 'buffer'
+Date:   Sat, 7 Dec 2019 11:44:09 +0800
+Message-ID: <20191207034409.25668-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mm-of-the-moment snapshot 2019-12-06-19-46 has been uploaded to
+kernel/trace/trace_events_inject.c: In function trace_inject_entry:
+kernel/trace/trace_events_inject.c:20:22: warning: variable buffer set but not used [-Wunused-but-set-variable]
 
-   http://www.ozlabs.org/~akpm/mmotm/
+It is never used, so remove it.
 
-mmotm-readme.txt says
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ kernel/trace/trace_events_inject.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-README for mm-of-the-moment:
-
-http://www.ozlabs.org/~akpm/mmotm/
-
-This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-more than once a week.
-
-You will need quilt to apply these patches to the latest Linus release (5.x
-or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-http://ozlabs.org/~akpm/mmotm/series
-
-The file broken-out.tar.gz contains two datestamp files: .DATE and
-.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-followed by the base kernel version against which this patch series is to
-be applied.
-
-This tree is partially included in linux-next.  To see which patches are
-included in linux-next, consult the `series' file.  Only the patches
-within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-linux-next.
-
-
-A full copy of the full kernel tree with the linux-next and mmotm patches
-already applied is available through git within an hour of the mmotm
-release.  Individual mmotm releases are tagged.  The master branch always
-points to the latest release, so it's constantly rebasing.
-
-	https://github.com/hnaz/linux-mm
-
-The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-contains daily snapshots of the -mm tree.  It is updated more frequently
-than mmotm, and is untested.
-
-A git copy of this tree is also available at
-
-	https://github.com/hnaz/linux-mm
+diff --git a/kernel/trace/trace_events_inject.c b/kernel/trace/trace_events_inject.c
+index d437107..d45079e 100644
+--- a/kernel/trace/trace_events_inject.c
++++ b/kernel/trace/trace_events_inject.c
+@@ -17,12 +17,10 @@ static int
+ trace_inject_entry(struct trace_event_file *file, void *rec, int len)
+ {
+ 	struct trace_event_buffer fbuffer;
+-	struct ring_buffer *buffer;
+ 	int written = 0;
+ 	void *entry;
+ 
+ 	rcu_read_lock_sched();
+-	buffer = file->tr->trace_buffer.buffer;
+ 	entry = trace_event_buffer_reserve(&fbuffer, file, len);
+ 	if (entry) {
+ 		memcpy(entry, rec, len);
+-- 
+2.7.4
 
 
-
-This mmotm tree contains the following patches against 5.4:
-(patches marked "*" will be included in linux-next)
-
-  origin.patch
-* hacking-group-sysrq-kgdb-ubsan-into-generic-kernel-debugging-instruments.patch
-* hacking-create-submenu-for-arch-special-debugging-options.patch
-* hacking-group-kernel-data-structures-debugging-together.patch
-* hacking-move-kernel-testing-and-coverage-options-to-same-submenu.patch
-* hacking-move-oops-into-lockups-and-hangs.patch
-* hacking-move-sched_stack_end_check-after-debug_stack_usage.patch
-* hacking-create-a-submenu-for-scheduler-debugging-options.patch
-* hacking-move-debug_bugverbose-to-printk-and-dmesg-options.patch
-* hacking-move-debug_fs-to-generic-kernel-debugging-instruments.patch
-* lib-fix-kconfig-indentation.patch
-* kasan-fix-crashes-on-access-to-memory-mapped-by-vm_map_ram.patch
-* kasan-fix-crashes-on-access-to-memory-mapped-by-vm_map_ram-v2.patch
-* mm-add-apply_to_existing_pages-helper.patch
-* mm-add-apply_to_existing_pages-helper-fix.patch
-* mm-add-apply_to_existing_pages-helper-fix-fix.patch
-* kasan-use-apply_to_existing_pages-for-releasing-vmalloc-shadow.patch
-* kasan-use-apply_to_existing_pages-for-releasing-vmalloc-shadow-fix.patch
-* kasan-dont-assume-percpu-shadow-allocations-will-succeed.patch
-* mm-vmscan-protect-shrinker-idr-replace-with-config_memcg.patch
-* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
-* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
-* mm-zsmallocc-fix-the-migrated-zspage-statistics.patch
-* mm-thp-tweak-reclaim-compaction-effort-of-local-only-and-all-node-allocations.patch
-* x86-mm-split-vmalloc_sync_all.patch
-* kcov-fix-struct-layout-for-kcov_remote_arg.patch
-* memcg-account-security-cred-as-well-to-kmemcg.patch
-* mm-move_pages-return-valid-node-id-in-status-if-the-page-is-already-on-the-target-node.patch
-* ramfs-support-o_tmpfile.patch
-  mm.patch
-* mm-avoid-slub-allocation-while-holding-list_lock.patch
-* mm-vmscan-expose-cgroup_ino-for-memcg-reclaim-tracepoints.patch
-* mm-pgmap-use-correct-alignment-when-looking-at-first-pfn-from-a-region.patch
-* mm-mmap-fix-the-adjusted-length-error.patch
-* mm-memmap_init-update-variable-name-in-memmap_init_zone.patch
-* mm-memory_hotplug-shrink-zones-when-offlining-memory.patch
-* mm-memory_hotplug-poison-memmap-in-remove_pfn_range_from_zone.patch
-* mm-memory_hotplug-we-always-have-a-zone-in-find_smallestbiggest_section_pfn.patch
-* mm-memory_hotplug-dont-check-for-all-holes-in-shrink_zone_span.patch
-* mm-memory_hotplug-drop-local-variables-in-shrink_zone_span.patch
-* mm-memory_hotplug-cleanup-__remove_pages.patch
-* mm-oom-avoid-printk-iteration-under-rcu.patch
-* mm-oom-avoid-printk-iteration-under-rcu-fix.patch
-* info-task-hung-in-generic_file_write_iter.patch
-* info-task-hung-in-generic_file_write-fix.patch
-* kernel-hung_taskc-monitor-killed-tasks.patch
-* string-add-stracpy-and-stracpy_pad-mechanisms.patch
-* documentation-checkpatch-prefer-stracpy-strscpy-over-strcpy-strlcpy-strncpy.patch
-* aio-simplify-read_events.patch
-* smp_mb__beforeafter_atomic-update-documentation.patch
-* ipc-mqueuec-remove-duplicated-code.patch
-* ipc-mqueuec-update-document-memory-barriers.patch
-* ipc-msgc-update-and-document-memory-barriers.patch
-* ipc-semc-document-and-update-memory-barriers.patch
-* ipc-consolidate-all-xxxctl_down-functions.patch
-  linux-next.patch
-  linux-next-git-rejects.patch
-* drivers-block-null_blk_mainc-fix-layout.patch
-* drivers-block-null_blk_mainc-fix-uninitialized-var-warnings.patch
-* pinctrl-fix-pxa2xxc-build-warnings.patch
-* drivers-tty-serial-sh-scic-suppress-warning.patch
-* fix-read-buffer-overflow-in-delta-ipc.patch
-  make-sure-nobodys-leaking-resources.patch
-  releasing-resources-with-children.patch
-  mutex-subsystem-synchro-test-module.patch
-  kernel-forkc-export-kernel_thread-to-modules.patch
-  workaround-for-a-pci-restoring-bug.patch
