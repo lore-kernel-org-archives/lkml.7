@@ -2,110 +2,117 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C34C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 310C4C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11BBA2064B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:11:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575681068;
-	bh=FXf6f0LodJ3g4NUoj/Ba5RlgD5YItBl5ZUrjmyza25k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=G5zrwTfcPQpGc8zuidjyHwoEwMu8MrmdILg8MHX+iUSZfSx89MY1/ggrIpqcYY22L
-	 pHdG9f79MSRFZXPOL+n1d6kcB9wkOpcD6y4WuhS2+3ZHPkRACoBoDALfZSnaa0eZlh
-	 in8Jx2MvZe8wW5ZJxDkFof5IS1gGhfNgv26Kzr9M=
+	by mail.kernel.org (Postfix) with ESMTP id 030002173E
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfLGBLH (ORCPT
+        id S1726464AbfLGBNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 20:11:07 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40355 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbfLGBLG (ORCPT
+        Fri, 6 Dec 2019 20:13:09 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28666 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726371AbfLGBNI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 20:11:06 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y5so6611465lfy.7
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 17:11:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xp39wpo5AR+pbRP/tZoeRSZICS3SHzWRMfhJEvbxIGA=;
-        b=F9QgFlzOLVDvV/NH9kO5C38Tw6X+Hr1zV9nvDrPtaW9IdmdHU1TNQTmWgtmr08QLWs
-         m/LzPoUZk/NRRXSGyCni67pyjPAjI1csctIc4AcmS9vEoOX/8bco5LDaWzkI+5Pvvxsm
-         tA5h/kF2wpsxbPSmFh84K3eYpHR4dbqT6qkZM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xp39wpo5AR+pbRP/tZoeRSZICS3SHzWRMfhJEvbxIGA=;
-        b=YWYwj70CJOFyxtYhS+ZirIEDoURs8mfevWfhrtvsbDnugmx7gaEF8f/qOMX96osNHs
-         DVqtkrWOHW3IXUJ85b5AP1mIhoEjAsq/jztuntqJr/vtZsyuElrPMm9A6c9bKzUTSBN8
-         D9hsjIrBGUQBG5FmkmMOui0VEBG1K8KR6z8DFwggXxgYP4Cwv5ahq8ZltmQ16vfhVs+b
-         JyyfMy++bIhhhM4bzrHlZyGxjWX9dJL7zcHtU3gzSijShMZTAKm4Kft4gOWfmnk5tvH8
-         5GnOXlKBMeWihPVavwQ2yv7Vk+NYxT5Ja7qfvgfSq6GbPSi8Uz8RptNVSDx/pmwV+w/e
-         62Bg==
-X-Gm-Message-State: APjAAAXzJyANT3+JVx/f1oCFsKsxeRhvK7m8GIwO9iLFauxzMDImXQjf
-        4VyGOMDyCv+43p6VBsBg5ku0ehkR5Lc=
-X-Google-Smtp-Source: APXvYqwzW9+QGbgqtTK8dyBglEsOMB/W7PYsPEqrIugTZ0WJZnnLBBv4qlhfpd8XEYEDuwH64qQhEw==
-X-Received: by 2002:a19:c205:: with SMTP id l5mr9348330lfc.159.1575681064502;
-        Fri, 06 Dec 2019 17:11:04 -0800 (PST)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id q12sm7289078ljc.74.2019.12.06.17.11.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2019 17:11:04 -0800 (PST)
-Received: by mail-lf1-f54.google.com with SMTP id r14so6618181lfm.5
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 17:11:03 -0800 (PST)
-X-Received: by 2002:ac2:555c:: with SMTP id l28mr9400181lfk.52.1575680636244;
- Fri, 06 Dec 2019 17:03:56 -0800 (PST)
-MIME-Version: 1.0
-References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
- <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
- <20191206214725.GA2108@latitude> <CAHk-=wga0MPEH5hsesi4Cy+fgaaKENMYpbg2kK8UA0qE3iupgw@mail.gmail.com>
- <20191207000015.GA1757@latitude>
-In-Reply-To: <20191207000015.GA1757@latitude>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 6 Dec 2019 17:03:40 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjEa5oNcQ9+9fai1Awqktf+hzz_HZmChi8HZJWcL62+Cw@mail.gmail.com>
-Message-ID: <CAHk-=wjEa5oNcQ9+9fai1Awqktf+hzz_HZmChi8HZJWcL62+Cw@mail.gmail.com>
-Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
- not cursor and length [ver #2]
-To:     Johannes Hirte <johannes.hirte@datenkhaos.de>
-Cc:     David Howells <dhowells@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 6 Dec 2019 20:13:08 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB71CQwF124511
+        for <linux-kernel@vger.kernel.org>; Fri, 6 Dec 2019 20:13:05 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wq9hph2ww-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 20:13:05 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Sat, 7 Dec 2019 01:13:04 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 7 Dec 2019 01:12:59 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB71CwdX2032102
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 7 Dec 2019 01:12:58 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3AD7F4C04A;
+        Sat,  7 Dec 2019 01:12:58 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 217724C040;
+        Sat,  7 Dec 2019 01:12:54 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.80.215.155])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat,  7 Dec 2019 01:12:53 +0000 (GMT)
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
+        david@gibson.dropbear.id.au, paulus@ozlabs.org,
+        mdroth@linux.vnet.ibm.com, hch@lst.de, linuxram@us.ibm.com,
+        andmike@us.ibm.com, sukadev@linux.vnet.ibm.com, mst@redhat.com,
+        ram.n.pai@gmail.com, aik@ozlabs.ru, cai@lca.pw, tglx@linutronix.de,
+        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org,
+        leonardo@linux.ibm.com
+Subject: [PATCH v5 0/2] Enable IOMMU support for pseries Secure VMs
+Date:   Fri,  6 Dec 2019 17:12:37 -0800
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19120701-0028-0000-0000-000003C62762
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120701-0029-0000-0000-000024894E8C
+Message-Id: <1575681159-30356-1-git-send-email-linuxram@us.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-06_08:2019-12-05,2019-12-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ mlxlogscore=620 suspectscore=1 malwarescore=0 lowpriorityscore=0
+ adultscore=0 spamscore=0 bulkscore=0 priorityscore=1501 clxscore=1015
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912070004
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 6, 2019 at 4:00 PM Johannes Hirte
-<johannes.hirte@datenkhaos.de> wrote:
->
-> Tested with 5.4.0-11505-g347f56fb3890 and still the same wrong behavior.
+This patch series enables IOMMU support for pseries Secure VMs.
 
-Ok, we'll continue looking.
+Tested using QEMU command line option:
 
-That said, your version string is strange.
+	"-device virtio-scsi-pci,id=scsi0,bus=pci.0,addr=0x4,
+	iommu_platform=on,disable-modern=off,disable-legacy=on"
 
-Commit 347f56fb3890 should be  "v5.4.0-13174-g347f56fb3890", the fact
-that you have "11505" confuses me.
+	and
 
-The hash is what matters, but I wonder what is going on that you have
-the commit count in that version string so wrong.
+	"-device virtio-blk-pci,scsi=off,bus=pci.0,
+	addr=0x5,drive=drive-virtio-disk0,id=virtio-disk0,
+	iommu_platform=on,disable-modern=off,disable-legacy=on"
 
-                   Linus
+changelog:
+	v5: unshare the page used in H_PUT_TCE_INDIRECT hcall to
+       	    communicate the TCE entries with the hypervisor.
+	    Concern raised by Alexey. This minimizes the number
+	    of pages shared with the hypervisor.
+
+	v4: Corrected the Subject, to include the keyword 'PATCH'.
+		No other changes.
+
+	v3: Better description of 2/2 patch.
+		Suggested by David Gibson.
+
+	v2: added comments describing the changes.
+		Suggested by Alexey and Michael Ellermen.
+
+
+Ram Pai (2):
+  powerpc/pseries/iommu: Share the per-cpu TCE page with the hypervisor.
+  powerpc/pseries/iommu: Use dma_iommu_ops for Secure VM.
+
+ arch/powerpc/platforms/pseries/iommu.c | 43 ++++++++++++++++++++++++----------
+ 1 file changed, 30 insertions(+), 13 deletions(-)
+
+-- 
+1.8.3.1
+
