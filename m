@@ -2,129 +2,144 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A12C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D85C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65992206DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6E4206DB
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:33:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kAquxP+2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WTVbDqKW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfLGU1h (ORCPT
+        id S1726777AbfLGUdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 15:27:37 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38933 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbfLGU1h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 15:27:37 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 2so5138004pfx.6;
-        Sat, 07 Dec 2019 12:27:37 -0800 (PST)
+        Sat, 7 Dec 2019 15:33:22 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42574 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfLGUdV (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 15:33:21 -0500
+Received: by mail-pg1-f195.google.com with SMTP id i5so5065190pgj.9;
+        Sat, 07 Dec 2019 12:33:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=XabE5lQi0lfexRxjhjTFp9jh3B5J0P8LlZsENCaNuxI=;
-        b=kAquxP+2auD8JHmId/kfArHpzAqeX/KOw2Ur7gLwRUpSKWw7w9p9miy4iHAqxqkSi2
-         dij7UJ4qmWFlUG0ImqmT3kUuLu9z7+jYX5o9c/BXI+ts5eqd+MKYRO5AcR1zI6Z99OSz
-         EXY5ECeE2vS55cEuCns2nV5J5qd3iDS5NQ84iySG6I6ONl5erWPy+jvq0jFBLar1DCZ3
-         Te/FPYdb8PZaKVVbdIXxraIrupGIiGA68QAHYiQbaGXVHPhnzsmaHgSakNjGDFzA6XeD
-         m4bahpLR9D02Ggapu7970gtTGFcrfgC4C28NRIZf+A1vxi2ihnCxLs/2AQwWJY+iW0w0
-         wIsA==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SSICCxMKpl+JKm7rALii5MzV3zKZnjOifrusG4t7hjE=;
+        b=WTVbDqKWHLJYH8D4DY5H7+gbxExUgvDgcu01y+aBFNoWL1GQEEgo6H1MBD6rw5g/qC
+         +9g0/j5l6sFjrOiTSSrUubdVVXxuDgdU7rq5xfKjNUjyfKyUOxzhOwafcVyMcCNVY7vB
+         WPVTym3IEapcsPMn98Ldd6j+vM0cAvwn3XdEqFFc/gyocjaxqpJbULcXjypqRFhNcAFh
+         ZRXm85IZ73SIpomAfzPHj5yYNpw3sV2lx48Usnv5r0S69Qj20gftkXA6iEqa3kVLcGdz
+         VqiEg8vsrUgU0RJ3U7G3itFHiuJKyXOL5zJyh8bD2/twpiIbhB/R1oOdKdi3uCs8Xdg0
+         vt7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=XabE5lQi0lfexRxjhjTFp9jh3B5J0P8LlZsENCaNuxI=;
-        b=dxaLBzJu1YOBENnIjBaGF8GPzYOyUOFJ5zbcKQ+KWVkASDoTmwjQaI7bnm/yuR/rRs
-         e+60PgTt1eZLcbGtghzPhLsURBDNbinuDL2Gjh3E58dG3HVI0Qqz6qdaAKFfIvkNXGOc
-         Cxkk6BmU4Z0scM1PEK5+Ql5OQE6uDweL4Ry+bXlDDKA2M6YlTaUf9VD+hZJrLCvow3qK
-         y+BlOKh1bX+85pbwdfJiDKCdpZjq00WuE+EkLB1RWeiWoTUwgyf4tcRFPMvrSp6CUA5H
-         25svoBjpXu/f9uObw93szunHIZWI0OtcRMeErgkmaGPfNtbUaMTyQsp70n+da90EkHWA
-         h3pA==
-X-Gm-Message-State: APjAAAWvJFKWMupcY/zesVKlFpbdWDEsyVMbBxmhtyRWlP4+Lr/gaf/K
-        IJcmfHjn0efejcHZZQX2Pft9uXxG
-X-Google-Smtp-Source: APXvYqwuDA2iMIw90trgnAiZ05U1e/FcVtXusIogfY6+jqZUhIVEfvTn51iRnEzHi9Ax9q3e9lQcWw==
-X-Received: by 2002:aa7:989d:: with SMTP id r29mr22057352pfl.142.1575750456375;
-        Sat, 07 Dec 2019 12:27:36 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SSICCxMKpl+JKm7rALii5MzV3zKZnjOifrusG4t7hjE=;
+        b=SAU3qfzv6zHmYi9RQ6jPvOAmQ2klNrXGiF+Z7wu0MSmDdDeBVdQcrwOF89PyqjGy7d
+         UW1gOGNZr1XICeuv9khe0sF4UyulfW8s8dLkKn4sxXBpX7TwFEA8UO9HqDyQM4/Gq3UL
+         Z07xF5qngMj2Y0lqKfnSOPKnF7FxNeoMAvB+vAoI49b7UE642L/aOnqxRNsW5EX4ajZq
+         X0S3SJw9nPTrd+DPCBc/0mKH8M2e09bsNuFkBdkYDKzEn46W7UqL2G19pT+S6WbqjghA
+         nfE7OrPOLGcjejaW86uuPSAuAYSwTYa6J+ik8+IGusETvT2JA9WZcbbVFAnUQFc+d7EN
+         Ua0g==
+X-Gm-Message-State: APjAAAWHwkx6QnMRXJQMTCz/nor3hnVvEUFloaZBS2TciCktOI7G5HJq
+        FDMK7cd3A7LuQKu/axnzJIPMekli
+X-Google-Smtp-Source: APXvYqyXYIe8pIikK+9XAVjHrHQJ/Cyw2cslJNmKp77dR5WvXV2+kLsEVr0paXf5GhiRuipy0sHCBQ==
+X-Received: by 2002:a62:7b86:: with SMTP id w128mr21910246pfc.189.1575750800779;
+        Sat, 07 Dec 2019 12:33:20 -0800 (PST)
 Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id p4sm20842782pfb.157.2019.12.07.12.27.35
+        by smtp.gmail.com with ESMTPSA id s18sm21701400pfs.20.2019.12.07.12.33.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 12:27:35 -0800 (PST)
-Date:   Sat, 7 Dec 2019 12:27:33 -0800
+        Sat, 07 Dec 2019 12:33:19 -0800 (PST)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [git pull] Input updates for v5.5-rc0
-Message-ID: <20191207202733.GA153817@dtor-ws>
+X-Google-Original-From: Dmitry Torokhov <Dmitry.torokhov@gmail.com>
+Date:   Sat, 7 Dec 2019 12:33:17 -0800
+To:     "Dave.Wang" <dave.wang@emc.com.tw>
+Cc:     Linux-kernel@vger.kernel.org, Linux-input@vger.kernel.org,
+        'Benjamin Tissoires' <benjamin.tissoires@redhat.com>,
+        "'Josh.Chen'" <josh.chen@emc.com.tw>, jingle.wu@emc.com.tw,
+        'phoenix' <phoenix@emc.com.tw>
+Subject: Re: [PATCH 1/6] Input: elantech - Add the pattern for firmware into
+ elantech_device_info structure
+Message-ID: <20191207203317.GS50317@dtor-ws>
+References: <000101d5abdc$61acff60$2506fe20$@emc.com.tw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <000101d5abdc$61acff60$2506fe20$@emc.com.tw>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Dave,
 
-Please pull from:
+On Fri, Dec 06, 2019 at 10:25:09AM +0800, Dave.Wang wrote:
+> Add the conditional expression to distinguish different patterns regarding
+> 0, 1, 2. Different pattern has its own location for device information.
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+Your patches came in as line-wrapped by your mailer. Could you try
+resending with "git send-email" please?
 
-to receive second round of updates for the input subsystem. You will
-get:
+And could you please also add Kai-Heng Feng
+<kai.heng.feng@canonical.com> to the CC as they were looking at the
+bunch of laptops with Elan parts.
 
-- fixups for Synaptics RMI4 driver
-- a quirk for Goodinx touchscreen on Teclast tablet
-- a new keycode definition for activating privacy screen feature found
-  on a few "enterprise" laptops
-- updates to snvs_pwrkey driver
-- one can now poll uinput device for writing (which is always allowed)
+Thanks!
 
-Changelog:
----------
-
-Dmitry Torokhov (1):
-      Input: snvs_pwrkey - remove gratuitous NULL initializers
-
-Hans Verkuil (1):
-      Input: synaptics-rmi4 - don't increment rmiaddr for SMBus transfers
-
-Hans de Goede (1):
-      Input: goodix - add upside-down quirk for Teclast X89 tablet
-
-Lucas Stach (1):
-      Input: synaptics-rmi4 - re-enable IRQs in f34v7_do_reflash
-
-Marcel Holtmann (1):
-      Input: uinput - fix returning EPOLLOUT from uinput_poll
-
-Mathew King (1):
-      Input: add privacy screen toggle keycode
-
-Robin van der Gracht (1):
-      Input: snvs_pwrkey - send key events for i.MX6 S, DL and Q
-
-Diffstat:
---------
-
- drivers/input/keyboard/Kconfig         |  2 +-
- drivers/input/keyboard/snvs_pwrkey.c   | 48 +++++++++++++++++++++++++---------
- drivers/input/misc/uinput.c            |  2 +-
- drivers/input/rmi4/rmi_f34v7.c         |  3 +++
- drivers/input/rmi4/rmi_smbus.c         |  2 --
- drivers/input/touchscreen/goodix.c     |  9 +++++++
- include/uapi/linux/input-event-codes.h |  2 ++
- 7 files changed, 51 insertions(+), 17 deletions(-)
-
-Thanks.
+> 
+> Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
+> ---
+>  drivers/input/mouse/elantech.c | 11 +++++++++++
+> drivers/input/mouse/elantech.h |  1 +
+>  2 files changed, 12 insertions(+)
+> 
+> diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
+> index 2d8434b7b623..1f0d914acd78 100644
+> --- a/drivers/input/mouse/elantech.c
+> +++ b/drivers/input/mouse/elantech.c
+> @@ -1557,6 +1557,17 @@ static int elantech_set_properties(struct
+> elantech_device_info *info)
+>  		}
+>  	}
+>  
+> +	/* Get information pattern for hw_version 4 */
+> +	if (ver == 15) {
+> +		if ((info->fw_version & 0x0000ff) == 0x01)
+> +			info->pattern = 0x01;
+> +		else if ((info->fw_version & 0x0000ff) == 0x02)
+> +			info->pattern = 0x02;
+> +		else
+> +			info->pattern = 0x00;
+> +	} else
+> +		info->pattern = 0x00;
+> +
+>  	/* decide which send_cmd we're gonna use early */
+>  	info->send_cmd = info->hw_version >= 3 ? elantech_send_cmd :
+>  						 synaptics_send_cmd;
+> diff --git a/drivers/input/mouse/elantech.h b/drivers/input/mouse/elantech.h
+> index e0a3e59d4f1b..0aae6a9de8f0 100644
+> --- a/drivers/input/mouse/elantech.h
+> +++ b/drivers/input/mouse/elantech.h
+> @@ -140,6 +140,7 @@ struct elantech_device_info {
+>  	unsigned char samples[3];
+>  	unsigned char debug;
+>  	unsigned char hw_version;
+> +	unsigned char pattern;
+>  	unsigned int fw_version;
+>  	unsigned int x_min;
+>  	unsigned int y_min;
+> --
+> 2.17.1
+> 
+> 
 
 -- 
 Dmitry
