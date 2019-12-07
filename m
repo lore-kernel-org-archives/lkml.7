@@ -2,330 +2,230 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152E6C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5334C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D580324676
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575717991;
-	bh=Zm08PD4zdOSomqsRlTsW/jt8Y78oLu7fBwAGsb+5Bm4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RYmKbrdeRQmmnyrGyXbFSt1GQ9ndMbLx/XdRyETvlaihXp7CO7hzrFQo+GI5U4i7R
-	 rjV+f2FXLOORsVKj7bLjHfNL68rjAUSmEXLTOmLlliwNFhBGun6fQrLCfdTrNTjDIW
-	 9ApIilwDAVUJWwK4zNauTH4FmDO35fIwHRbYElnY=
+	by mail.kernel.org (Postfix) with ESMTP id C6AC1217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfLGL0a (ORCPT
+        id S1726421AbfLGLga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 06:26:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbfLGL03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 06:26:29 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8130B217BA;
-        Sat,  7 Dec 2019 11:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575717988;
-        bh=Zm08PD4zdOSomqsRlTsW/jt8Y78oLu7fBwAGsb+5Bm4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gcqsYWjODQ5R296fq+SyTaK533l4ZwNZw7UxQFB5GiX8rxmFyy64VQGTI4R6d0apQ
-         /mCUi5HdwJNvXZAcDlgFWGUPzWrZVgfu8AVkRQkyqLsKmxK3go6VktgIc3FI9jiRGh
-         +FPviYaZEEuKQYspUaKj63N4dLANhVtzRiVcvRL8=
-Date:   Sat, 7 Dec 2019 11:26:23 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Daniel Junho <djunho@gmail.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-Subject: Re: [PATCH] iio:adc:ad7923: Add support for the
- ad7908/ad7918/ad7928
-Message-ID: <20191207112623.31ac5288@archlinux>
-In-Reply-To: <20191205155821.7441-1-djunho@gmail.com>
-References: <20191205155821.7441-1-djunho@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 7 Dec 2019 06:36:30 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:37774 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726025AbfLGLga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 06:36:30 -0500
+Received: from linux.localdomain (unknown [123.138.236.242])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_xajjutdTiUIAA--.95S2;
+        Sat, 07 Dec 2019 19:36:04 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Tyler Hicks <tyhicks@canonical.com>
+Cc:     linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] fs: introduce is_dot_dotdot helper for cleanup
+Date:   Sat,  7 Dec 2019 19:35:48 +0800
+Message-Id: <1575718548-19017-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dx_xajjutdTiUIAA--.95S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxur15ZF45Ww47Jry3KF47XFb_yoW7JrW7pF
+        sxAFyxtrs7Gry5ur95tr1ruw1Yv3s7Wr17JrZxKa40yryaqrn5XrWIyw109wn3JFWDuFn0
+        gFZ8G34rCry5JFJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvCb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+        Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJV
+        W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka
+        0xkIwI1lc2xSY4AK67AK6r4kMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAI
+        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+        nxnUUI43ZEXa7IU5D3vUUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  5 Dec 2019 12:58:21 -0300
-Daniel Junho <djunho@gmail.com> wrote:
+There exists many similar and duplicate codes to check "." and "..",
+so introduce is_dot_dotdot helper to make the code more clean.
 
-> The ad7928 is software compatible with the ad7923. The ad7908 and ad7918 are the
-> 8 and 10 bit version of the ad7928.
-> 
-> Signed-off-by: Daniel Junho <djunho@gmail.com>
-Hi Daniel,
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
-Code itself looks good to me, but please be very careful to separate out 
-non function cleanup from a patch adding something new.  It makes
-reviewing harder.  We'd much rather see a series with the cleanup all clearly
-marked as such (and getting a most a few seconds review) and the real code
-being just that.
+v3:
+  - use "name" and "len" as arguments instead of qstr
+  - move is_dot_dotdot() to include/linux/namei.h
 
-Thanks,
+v2:
+  - use the better performance implementation of is_dot_dotdot
+  - make it static inline and move it to include/linux/fs.h
 
-Jonathan
+ fs/crypto/fname.c     | 16 +++-------------
+ fs/ecryptfs/crypto.c  | 10 ----------
+ fs/f2fs/f2fs.h        | 11 -----------
+ fs/f2fs/hash.c        |  3 ++-
+ fs/namei.c            |  6 ++----
+ include/linux/namei.h | 10 ++++++++++
+ 6 files changed, 17 insertions(+), 39 deletions(-)
 
-> ---
->  drivers/iio/adc/Kconfig  |  3 +-
->  drivers/iio/adc/ad7923.c | 96 +++++++++++++++++++++++++++++++---------
->  2 files changed, 78 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 976567d4dbef..40aa05fbf85e 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -205,7 +205,8 @@ config AD7923
->  	select IIO_TRIGGERED_BUFFER
->  	help
->  	  Say yes here to build support for Analog Devices
-> -	  AD7904, AD7914, AD7923, AD7924 4 Channel ADCs.
-> +	  AD7904, AD7914, AD7923, AD7924 4 Channel ADCs, and
-> +	  AD7908, AD7918, AD7928 8 Channels ADCs.
->  
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called ad7923.
-> diff --git a/drivers/iio/adc/ad7923.c b/drivers/iio/adc/ad7923.c
-> index 3212eb4c0f25..f08a5218dad1 100644
-> --- a/drivers/iio/adc/ad7923.c
-> +++ b/drivers/iio/adc/ad7923.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /*
-> - * AD7904/AD7914/AD7923/AD7924 SPI ADC driver
-> + * AD7904/AD7914/AD7923/AD7924/AD7908/AD7918/AD7928 SPI ADC driver
->   *
->   * Copyright 2011 Analog Devices Inc (from AD7923 Driver)
->   * Copyright 2012 CS Systemes d'Information
-> @@ -26,23 +26,32 @@
->  #define AD7923_WRITE_CR		BIT(11)		/* write control register */
->  #define AD7923_RANGE		BIT(1)		/* range to REFin */
->  #define AD7923_CODING		BIT(0)		/* coding is straight binary */
-> +
-
-No white space changes in a patch doing real changes to the driver.
-
->  #define AD7923_PM_MODE_AS	(1)		/* auto shutdown */
->  #define AD7923_PM_MODE_FS	(2)		/* full shutdown */
->  #define AD7923_PM_MODE_OPS	(3)		/* normal operation */
-> +
->  #define AD7923_CHANNEL_0	(0)		/* analog input 0 */
->  #define AD7923_CHANNEL_1	(1)		/* analog input 1 */
->  #define AD7923_CHANNEL_2	(2)		/* analog input 2 */
->  #define AD7923_CHANNEL_3	(3)		/* analog input 3 */
-> -#define AD7923_SEQUENCE_OFF	(0)		/* no sequence fonction */
-> -#define AD7923_SEQUENCE_PROTECT	(2)		/* no interrupt write cycle */
-> -#define AD7923_SEQUENCE_ON	(3)		/* continuous sequence */
-> -
-> -#define AD7923_MAX_CHAN		4
-> +#define AD7923_CHANNEL_4	(4)		/* analog input 4 */
-> +#define AD7923_CHANNEL_5	(5)		/* analog input 5 */
-> +#define AD7923_CHANNEL_6	(6)		/* analog input 6 */
-> +#define AD7923_CHANNEL_7	(7)		/* analog input 7 */
-These made me wonder.  Seems they aren't actually used in the driver anyway.
-Ideally add a precursor to your main patch just dropping these particular
-defines entirely.
-
-
-> +
-> +#define AD7923_SEQUENCE_OFF	(0x00)		/* no sequence function */
-> +#define AD7923_SEQUENCE_SHADOW	(0x01)		/* use the shadow register
-> +						 * for programming
-> +						 * (only AD7908/7918/7928)
-> +						 */
-> +#define AD7923_SEQUENCE_PROTECT	(0x10)		/* no interrupt write cycle */
-> +#define AD7923_SEQUENCE_ON	(0x11)		/* continuous sequence */
->  
->  #define AD7923_PM_MODE_WRITE(mode)	((mode) << 4)	 /* write mode */
->  #define AD7923_CHANNEL_WRITE(channel)	((channel) << 6) /* write channel */
-> -#define AD7923_SEQUENCE_WRITE(sequence)	((((sequence) & 1) << 3) \
-> -					+ (((sequence) & 2) << 9))
-> +#define AD7923_SEQUENCE_WRITE(sequence)	((((sequence) & 0x01) << 3) \
-> +					+ (((sequence) & 0x10) << 9))
-
-This change is interesting.  Was original code just buggy? we were masking
-against 2nd bit, and now we are masking against the 4th?
-
->  						/* write sequence fonction */
->  /* left shift for CR : bit 11 transmit in first */
->  #define AD7923_SHIFT_REGISTER	4
-> @@ -78,6 +87,9 @@ enum ad7923_id {
->  	AD7904,
->  	AD7914,
->  	AD7924,
-> +	AD7908,
-> +	AD7918,
-> +	AD7928
->  };
->  
->  #define AD7923_V_CHAN(index, bits)					\
-> @@ -97,7 +109,7 @@ enum ad7923_id {
->  		},							\
->  	}
->  
-> -#define DECLARE_AD7923_CHANNELS(name, bits) \
-> +#define DECLARE_AD7923_4CHANNELS(name, bits) \
->  const struct iio_chan_spec name ## _channels[] = { \
->  	AD7923_V_CHAN(0, bits), \
->  	AD7923_V_CHAN(1, bits), \
-> @@ -106,9 +118,25 @@ const struct iio_chan_spec name ## _channels[] = { \
->  	IIO_CHAN_SOFT_TIMESTAMP(4), \
->  }
->  
-> -static DECLARE_AD7923_CHANNELS(ad7904, 8);
-> -static DECLARE_AD7923_CHANNELS(ad7914, 10);
-> -static DECLARE_AD7923_CHANNELS(ad7924, 12);
-> +#define DECLARE_AD7923_8CHANNELS(name, bits) \
-> +const struct iio_chan_spec name ## _channels[] = { \
-> +	AD7923_V_CHAN(0, bits), \
-> +	AD7923_V_CHAN(1, bits), \
-> +	AD7923_V_CHAN(2, bits), \
-> +	AD7923_V_CHAN(3, bits), \
-> +	AD7923_V_CHAN(4, bits), \
-> +	AD7923_V_CHAN(5, bits), \
-> +	AD7923_V_CHAN(6, bits), \
-> +	AD7923_V_CHAN(7, bits), \
-> +	IIO_CHAN_SOFT_TIMESTAMP(8), \
-> +}
-> +
-> +static DECLARE_AD7923_4CHANNELS(ad7904, 8);
-> +static DECLARE_AD7923_4CHANNELS(ad7914, 10);
-> +static DECLARE_AD7923_4CHANNELS(ad7924, 12);
-> +static DECLARE_AD7923_8CHANNELS(ad7908, 8);
-> +static DECLARE_AD7923_8CHANNELS(ad7918, 10);
-> +static DECLARE_AD7923_8CHANNELS(ad7928, 12);
->  
->  static const struct ad7923_chip_info ad7923_chip_info[] = {
->  	[AD7904] = {
-> @@ -123,6 +151,18 @@ static const struct ad7923_chip_info ad7923_chip_info[] = {
->  		.channels = ad7924_channels,
->  		.num_channels = ARRAY_SIZE(ad7924_channels),
->  	},
-> +	[AD7908] = {
-> +		.channels = ad7908_channels,
-> +		.num_channels = ARRAY_SIZE(ad7908_channels),
-> +	},
-> +	[AD7918] = {
-> +		.channels = ad7918_channels,
-> +		.num_channels = ARRAY_SIZE(ad7918_channels),
-> +	},
-> +	[AD7928] = {
-> +		.channels = ad7928_channels,
-> +		.num_channels = ARRAY_SIZE(ad7928_channels),
-> +	},
->  };
->  
->  /**
-> @@ -135,10 +175,10 @@ static int ad7923_update_scan_mode(struct iio_dev *indio_dev,
->  	int i, cmd, len;
->  
->  	len = 0;
-> -	for_each_set_bit(i, active_scan_mask, AD7923_MAX_CHAN) {
-> +	for_each_set_bit(i, active_scan_mask, indio_dev->num_channels - 1) {
->  		cmd = AD7923_WRITE_CR | AD7923_CHANNEL_WRITE(i) |
-> -			AD7923_SEQUENCE_WRITE(AD7923_SEQUENCE_OFF) |
-> -			st->settings;
-> +		      AD7923_SEQUENCE_WRITE(AD7923_SEQUENCE_OFF) |
-> +		      st->settings;
->  		cmd <<= AD7923_SHIFT_REGISTER;
->  		st->tx_buf[len++] = cpu_to_be16(cmd);
->  	}
-> @@ -188,13 +228,13 @@ static irqreturn_t ad7923_trigger_handler(int irq, void *p)
->  	return IRQ_HANDLED;
->  }
->  
-> -static int ad7923_scan_direct(struct ad7923_state *st, unsigned ch)
-> +static int ad7923_scan_direct(struct ad7923_state *st, unsigned int ch)
-
-Should be in a precursor patch tidying this up.   Never mix new features
-with cleanup as it's harder to review.
-
->  {
->  	int ret, cmd;
->  
->  	cmd = AD7923_WRITE_CR | AD7923_CHANNEL_WRITE(ch) |
-> -		AD7923_SEQUENCE_WRITE(AD7923_SEQUENCE_OFF) |
-> -		st->settings;
-> +	      AD7923_SEQUENCE_WRITE(AD7923_SEQUENCE_OFF) |
-> +	      st->settings;
-
-Clean out this noise from the patch.  We just want to see
-the new stuff rather than stare at a line to figure if it
-is just whitespace, or if there is a real change ;)
-
->  	cmd <<= AD7923_SHIFT_REGISTER;
->  	st->tx_buf[0] = cpu_to_be16(cmd);
->  
-> @@ -280,7 +320,7 @@ static int ad7923_probe(struct spi_device *spi)
->  
->  	st->spi = spi;
->  	st->settings = AD7923_CODING | AD7923_RANGE |
-> -			AD7923_PM_MODE_WRITE(AD7923_PM_MODE_OPS);
-> +		       AD7923_PM_MODE_WRITE(AD7923_PM_MODE_OPS);
-
-Please clean out an noise like this bit of realignment.
-
->  
->  	info = &ad7923_chip_info[spi_get_device_id(spi)->driver_data];
->  
-> @@ -348,13 +388,29 @@ static const struct spi_device_id ad7923_id[] = {
->  	{"ad7914", AD7914},
->  	{"ad7923", AD7924},
->  	{"ad7924", AD7924},
-> +	{"ad7908", AD7908},
-> +	{"ad7918", AD7918},
-> +	{"ad7928", AD7928},
->  	{}
->  };
->  MODULE_DEVICE_TABLE(spi, ad7923_id);
->  
-> +static const struct of_device_id ad7923_of_match[] = {
-> +	{ .compatible = "adi,ad7904", },
-> +	{ .compatible = "adi,ad7914", },
-> +	{ .compatible = "adi,ad7923", },
-> +	{ .compatible = "adi,ad7924", },
-> +	{ .compatible = "adi,ad7908", },
-> +	{ .compatible = "adi,ad7918", },
-> +	{ .compatible = "adi,ad7928", },
-> +	{ },
-Really minor but I would have preferred a precursor patch
-adding the of_device_id table for existing parts.
-
-Makes a clear separation between new device support and tidying
-up the fact that table should be there to allow the specific
-adi,* matching.
-
-> +};
-> +MODULE_DEVICE_TABLE(of, ad7923_of_match);
-> +
->  static struct spi_driver ad7923_driver = {
->  	.driver = {
->  		.name	= "ad7923",
-> +		.of_match_table = ad7923_of_match,
->  	},
->  	.probe		= ad7923_probe,
->  	.remove		= ad7923_remove,
-> @@ -364,5 +420,5 @@ module_spi_driver(ad7923_driver);
->  
->  MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
->  MODULE_AUTHOR("Patrick Vasseur <patrick.vasseur@c-s.fr>");
-> -MODULE_DESCRIPTION("Analog Devices AD7904/AD7914/AD7923/AD7924 ADC");
-> +MODULE_DESCRIPTION("Analog Devices AD7904/AD7914/AD7923/AD7924/AD7908/AD7918/AD7928 ADC");
->  MODULE_LICENSE("GPL v2");
+diff --git a/fs/crypto/fname.c b/fs/crypto/fname.c
+index 3da3707..ed1d7c5 100644
+--- a/fs/crypto/fname.c
++++ b/fs/crypto/fname.c
+@@ -11,21 +11,11 @@
+  * This has not yet undergone a rigorous security audit.
+  */
+ 
++#include <linux/namei.h>
+ #include <linux/scatterlist.h>
+ #include <crypto/skcipher.h>
+ #include "fscrypt_private.h"
+ 
+-static inline bool fscrypt_is_dot_dotdot(const struct qstr *str)
+-{
+-	if (str->len == 1 && str->name[0] == '.')
+-		return true;
+-
+-	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
+-		return true;
+-
+-	return false;
+-}
+-
+ /**
+  * fname_encrypt() - encrypt a filename
+  *
+@@ -255,7 +245,7 @@ int fscrypt_fname_disk_to_usr(struct inode *inode,
+ 	const struct qstr qname = FSTR_TO_QSTR(iname);
+ 	struct fscrypt_digested_name digested_name;
+ 
+-	if (fscrypt_is_dot_dotdot(&qname)) {
++	if (is_dot_dotdot(qname.name, qname.len)) {
+ 		oname->name[0] = '.';
+ 		oname->name[iname->len - 1] = '.';
+ 		oname->len = iname->len;
+@@ -323,7 +313,7 @@ int fscrypt_setup_filename(struct inode *dir, const struct qstr *iname,
+ 	memset(fname, 0, sizeof(struct fscrypt_name));
+ 	fname->usr_fname = iname;
+ 
+-	if (!IS_ENCRYPTED(dir) || fscrypt_is_dot_dotdot(iname)) {
++	if (!IS_ENCRYPTED(dir) || is_dot_dotdot(iname->name, iname->len)) {
+ 		fname->disk_name.name = (unsigned char *)iname->name;
+ 		fname->disk_name.len = iname->len;
+ 		return 0;
+diff --git a/fs/ecryptfs/crypto.c b/fs/ecryptfs/crypto.c
+index f91db24..2014f8f 100644
+--- a/fs/ecryptfs/crypto.c
++++ b/fs/ecryptfs/crypto.c
+@@ -1991,16 +1991,6 @@ int ecryptfs_encrypt_and_encode_filename(
+ 	return rc;
+ }
+ 
+-static bool is_dot_dotdot(const char *name, size_t name_size)
+-{
+-	if (name_size == 1 && name[0] == '.')
+-		return true;
+-	else if (name_size == 2 && name[0] == '.' && name[1] == '.')
+-		return true;
+-
+-	return false;
+-}
+-
+ /**
+  * ecryptfs_decode_and_decrypt_filename - converts the encoded cipher text name to decoded plaintext
+  * @plaintext_name: The plaintext name
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 5a888a0..3d5e684 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2767,17 +2767,6 @@ static inline bool f2fs_cp_error(struct f2fs_sb_info *sbi)
+ 	return is_set_ckpt_flags(sbi, CP_ERROR_FLAG);
+ }
+ 
+-static inline bool is_dot_dotdot(const struct qstr *str)
+-{
+-	if (str->len == 1 && str->name[0] == '.')
+-		return true;
+-
+-	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
+-		return true;
+-
+-	return false;
+-}
+-
+ static inline bool f2fs_may_extent_tree(struct inode *inode)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+diff --git a/fs/f2fs/hash.c b/fs/f2fs/hash.c
+index 5bc4dcd..b8e123f 100644
+--- a/fs/f2fs/hash.c
++++ b/fs/f2fs/hash.c
+@@ -15,6 +15,7 @@
+ #include <linux/cryptohash.h>
+ #include <linux/pagemap.h>
+ #include <linux/unicode.h>
++#include <linux/namei.h>
+ 
+ #include "f2fs.h"
+ 
+@@ -82,7 +83,7 @@ static f2fs_hash_t __f2fs_dentry_hash(const struct qstr *name_info,
+ 	if (fname && !fname->disk_name.name)
+ 		return cpu_to_le32(fname->hash);
+ 
+-	if (is_dot_dotdot(name_info))
++	if (is_dot_dotdot(name, len))
+ 		return 0;
+ 
+ 	/* Initialize the default seed for the hash checksum functions */
+diff --git a/fs/namei.c b/fs/namei.c
+index d6c91d1..acbfbe4 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2451,10 +2451,8 @@ static int lookup_one_len_common(const char *name, struct dentry *base,
+ 	if (!len)
+ 		return -EACCES;
+ 
+-	if (unlikely(name[0] == '.')) {
+-		if (len < 2 || (len == 2 && name[1] == '.'))
+-			return -EACCES;
+-	}
++	if (is_dot_dotdot(name, len))
++		return -EACCES;
+ 
+ 	while (len--) {
+ 		unsigned int c = *(const unsigned char *)name++;
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index 7fe7b87..8254486 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -92,4 +92,14 @@ retry_estale(const long error, const unsigned int flags)
+ 	return error == -ESTALE && !(flags & LOOKUP_REVAL);
+ }
+ 
++static inline bool is_dot_dotdot(const unsigned char *name, size_t len)
++{
++	if (unlikely(name[0] == '.')) {
++		if (len < 2 || (len == 2 && name[1] == '.'))
++			return true;
++	}
++
++	return false;
++}
++
+ #endif /* _LINUX_NAMEI_H */
+-- 
+2.1.0
 
