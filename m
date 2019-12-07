@@ -2,153 +2,127 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B428C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 07:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA8EC43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 07:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC20F206DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 07:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA142173E
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 07:17:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQQvBIpX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfLGHPK (ORCPT
+        id S1726371AbfLGHRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 02:15:10 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:35166 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbfLGHPJ (ORCPT
+        Sat, 7 Dec 2019 02:17:54 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37252 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfLGHRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 02:15:09 -0500
-Received: by mail-il1-f198.google.com with SMTP id t15so7136018ilh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 23:15:09 -0800 (PST)
+        Sat, 7 Dec 2019 02:17:54 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f129so9567549wmf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 23:17:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Oa74tX0rrToiDTjsb0l5w1iPUstS1fPMTJqaqMvhiuQ=;
+        b=SQQvBIpX68h8tU+m7gVvNlf1h/MEoIiZEC4Vghaj1EOyHJKD7K6VWydfZ6qqdfs190
+         4VAAOB/X+9PQDfa1TMS48/zG9Dvus5dy86jdOCRzLeRHT2IeLV6Zgcj+aJf1lwKjT43d
+         J3UwcgD0TND2dOnV3h3gzPUPtZmZ2rGm0NQXLFnJZQMSszPzl31tg5f/YohnUzwLBgk3
+         vNF3moOGD7Funui40j6eRu7HG16Rgr4Ro5B+luatZzpb0hAO+2ylEbV+DeDXUKCX4BOc
+         jg0cAKoA/f3QbbLUzqH1/wCObFKidPQsRDMt+DP83GB34oftgass2jykNKf2jLSRGtr8
+         gKUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=vbpExfUjnTG9aVNCGlbCdm6W2vaByL7mQ2ZMHuqk2KI=;
-        b=NaH18wgAR8i7gpClxVF+kAFyHMGFIOVv7r/gNPukJfW9q7mqvDXlcqJat0EkJB7GGZ
-         9V1fdhlEquRDNK5ewidmmLl2wy5E1cyQ1MfLOI1lniz0sAJ3Cm/83qJWQPobtMeC5Gm1
-         jyTot37u0ujDQM6mQWQltDu44Px9GUgPLqSTb/KLvQfe2hLu7v4Dhq/zw/nK6vuvoNEC
-         JhXsR51bkTYs75fq7wtQBF++nxk0uLst/0v2m6cTUuc3jWwp6BBCBrWu5G2N3aBy2afU
-         YNM3rRIFd9GTa07tz6Sy3Yc63b4m43WKsows+d6Gc5dZvk+Wa9gPngwfZ5KtzVd7sot5
-         ZiKA==
-X-Gm-Message-State: APjAAAU5y3m+M8hh9vvcFZTdQipPRcLeulRzh102EKMmdnKE+nb8mwxc
-        noKE9/tIf8tNgsfCmWM8pCZVf2PA7/6T+QFu3wzPmHE46eJP
-X-Google-Smtp-Source: APXvYqw3PUcnBXQS+L+/OjlD87mrU7sA3J3K9/YEGET/p9evThEIsDDqfHWZBghgYVMAFbxXgQaWcZtlo10knNcmjl5JY/0SEdBR
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Oa74tX0rrToiDTjsb0l5w1iPUstS1fPMTJqaqMvhiuQ=;
+        b=cmW6iHqSK9EkDUruK8EmmW2iBbW3sC9TYfhHRu7LO5ueC7VkQRMNQ3EMzAblGftmMK
+         zxGLVab6fekNKcL6errQ9H0tyF0j8h6mE2ClYaOAmZjeVkdbXaVhM4un4f/Tyz6WWPok
+         8bYFvBN7qWBgx/HPNsZC0Cao5aZXfmumsF70Oh6PKkdBgH/YgQABb7fwKNyVsd0c4Lu4
+         oZ7MnFp+S3e2TLI4Z4EQnf/bYuX2HiIDnSsZ1m4MhYfVtlAD/O0WYlvoGalnyWXnLShB
+         PedeamQoV9AVNQqvou1oQYRHVERzLYTFJvdtbu8dHOwE18UUFyxSvc0WYz+uD/3cdwdB
+         X60Q==
+X-Gm-Message-State: APjAAAWJ5C/QAerxLsMgh2urAHfNuUHLE/6WP4Nnik6iHuYicrDfnhK6
+        ob7kk/9wklhyuah6zztRwK4=
+X-Google-Smtp-Source: APXvYqyQvteTIQ3cPD+8RNWe/5PdLo4Q/p8Mmqfp/1+YN8Fhy26mEqQfeHbsnedoqE1nJCNCzIrdZw==
+X-Received: by 2002:a1c:4454:: with SMTP id r81mr14417227wma.143.1575703071843;
+        Fri, 06 Dec 2019 23:17:51 -0800 (PST)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id f1sm19114557wrp.93.2019.12.06.23.17.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 06 Dec 2019 23:17:51 -0800 (PST)
+Date:   Sat, 7 Dec 2019 07:17:50 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>, kbuild-all@lists.01.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        richard.weiyang@gmail.com, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.or, tglx@linutronix.de
+Subject: Re: [Patch v2 5/6] x86/mm: Use address directly in split_mem_range()
+Message-ID: <20191207071750.5wxy2o5ozqxwpbix@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20191205021403.25606-6-richardw.yang@linux.intel.com>
+ <201912071155.JJoAya4K%lkp@intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7310:: with SMTP id e16mr13806023ioh.107.1575702908343;
- Fri, 06 Dec 2019 23:15:08 -0800 (PST)
-Date:   Fri, 06 Dec 2019 23:15:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001f9f5f059917ec2e@google.com>
-Subject: BUG: unable to handle kernel NULL pointer dereference in x25_connect
-From:   syzbot <syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, andrew.hendry@gmail.com, arnd@arndb.de,
-        davem@davemloft.net, edumazet@google.com,
-        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        willemb@google.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201912071155.JJoAya4K%lkp@intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sat, Dec 07, 2019 at 11:36:10AM +0800, kbuild test robot wrote:
+>Hi Wei,
+>
+>Thank you for the patch! Yet something to improve:
+>
+>[auto build test ERROR on tip/x86/mm]
+>[also build test ERROR on tip/auto-latest linus/master v5.4 next-20191206]
+>[if your patch is applied to the wrong git tree, please drop us a note to help
+>improve the system. BTW, we also suggest to use '--base' option to specify the
+>base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+>
+>url:    https://github.com/0day-ci/linux/commits/Wei-Yang/x86-mm-Remove-second-argument-of-split_mem_range/20191207-061345
+>base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 7f264dab5b60343358e788d4c939c166c22ea4a2
+>config: i386-tinyconfig (attached as .config)
+>compiler: gcc-7 (Debian 7.5.0-1) 7.5.0
+>reproduce:
+>        # save the attached .config to linux build tree
+>        make ARCH=i386 
+>
+>If you fix the issue, kindly add following tag
+>Reported-by: kbuild test robot <lkp@intel.com>
+>
+>Note: the linux-review/Wei-Yang/x86-mm-Remove-second-argument-of-split_mem_range/20191207-061345 HEAD 7f535395f79354bfa29cca182dd203525bcb4237 builds fine.
+>      It only hurts bisectibility.
+>
+>All errors (new ones prefixed by >>):
+>
+>   arch/x86/mm/init.c: In function 'save_mr':
+>>> arch/x86/mm/init.c:265:6: error: 'start_pfn' undeclared (first use in this function); did you mean 'start'?
+>     if (start_pfn < end_pfn) {
+>         ^~~~~~~~~
+>         start
+>   arch/x86/mm/init.c:265:6: note: each undeclared identifier is reported only once for each function it appears in
+>>> arch/x86/mm/init.c:265:18: error: 'end_pfn' undeclared (first use in this function); did you mean 'pgd_pfn'?
+>     if (start_pfn < end_pfn) {
+>                     ^~~~~~~
+>                     pgd_pfn
+>
 
-syzbot found the following crash on:
+Oops, introduced an error after resolving a conflict. Should be start and end.
 
-HEAD commit:    a350d2e7 net: thunderx: start phy before starting autonego..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=10217c82e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=da7be58727ceb6f7
-dashboard link: https://syzkaller.appspot.com/bug?extid=eec0c87f31a7c3b66f7b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com
-
-BUG: kernel NULL pointer dereference, address: 00000000000000c8
-#PF: supervisor write access in kernel mode
-#PF: error_code(0x0002) - not-present page
-PGD 97b39067 P4D 97b39067 PUD a2fba067 PMD 0
-Oops: 0002 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 28617 Comm: syz-executor.4 Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:arch_atomic_fetch_sub arch/x86/include/asm/atomic.h:189 [inline]
-RIP: 0010:atomic_fetch_sub include/asm-generic/atomic-instrumented.h:200  
-[inline]
-RIP: 0010:refcount_sub_and_test include/linux/refcount.h:253 [inline]
-RIP: 0010:refcount_dec_and_test include/linux/refcount.h:281 [inline]
-RIP: 0010:x25_neigh_put include/net/x25.h:252 [inline]
-RIP: 0010:x25_connect+0x974/0x1020 net/x25/af_x25.c:820
-Code: 3c 02 00 0f 85 e4 05 00 00 4d 8b b4 24 98 04 00 00 be 04 00 00 00 bb  
-ff ff ff ff 4d 8d be c8 00 00 00 4c 89 ff e8 6c e4 ca fa <f0> 41 0f c1 9e  
-c8 00 00 00 bf 01 00 00 00 89 de e8 97 a0 8d fa 83
-RSP: 0018:ffffc90001927c78 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 00000000ffffffff RCX: ffffffff86e75b54
-RDX: 0000000000000001 RSI: 0000000000000004 RDI: 00000000000000c8
-RBP: ffffc90001927d90 R08: 1ffffffff1476954 R09: fffffbfff1476955
-R10: fffffbfff1476954 R11: ffffffff8a3b4aa3 R12: ffff888063f60000
-R13: 00000000fffffe00 R14: 0000000000000000 R15: 00000000000000c8
-FS:  00007f117ef4c700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000000000c8 CR3: 0000000064f3b000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  __sys_connect_file+0x25d/0x2e0 net/socket.c:1848
-  __sys_connect+0x51/0x90 net/socket.c:1861
-  __do_sys_connect net/socket.c:1872 [inline]
-  __se_sys_connect net/socket.c:1869 [inline]
-  __x64_sys_connect+0x73/0xb0 net/socket.c:1869
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a679
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f117ef4bc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a679
-RDX: 0000000000000012 RSI: 0000000020000080 RDI: 0000000000000004
-RBP: 000000000075c118 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f117ef4c6d4
-R13: 00000000004c0f1c R14: 00000000004d4c48 R15: 00000000ffffffff
-Modules linked in:
-CR2: 00000000000000c8
----[ end trace 20e51d278d7d0fc8 ]---
-RIP: 0010:arch_atomic_fetch_sub arch/x86/include/asm/atomic.h:189 [inline]
-RIP: 0010:atomic_fetch_sub include/asm-generic/atomic-instrumented.h:200  
-[inline]
-RIP: 0010:refcount_sub_and_test include/linux/refcount.h:253 [inline]
-RIP: 0010:refcount_dec_and_test include/linux/refcount.h:281 [inline]
-RIP: 0010:x25_neigh_put include/net/x25.h:252 [inline]
-RIP: 0010:x25_connect+0x974/0x1020 net/x25/af_x25.c:820
-Code: 3c 02 00 0f 85 e4 05 00 00 4d 8b b4 24 98 04 00 00 be 04 00 00 00 bb  
-ff ff ff ff 4d 8d be c8 00 00 00 4c 89 ff e8 6c e4 ca fa <f0> 41 0f c1 9e  
-c8 00 00 00 bf 01 00 00 00 89 de e8 97 a0 8d fa 83
-RSP: 0018:ffffc90001927c78 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 00000000ffffffff RCX: ffffffff86e75b54
-RDX: 0000000000000001 RSI: 0000000000000004 RDI: 00000000000000c8
-RBP: ffffc90001927d90 R08: 1ffffffff1476954 R09: fffffbfff1476955
-R10: fffffbfff1476954 R11: ffffffff8a3b4aa3 R12: ffff888063f60000
-R13: 00000000fffffe00 R14: 0000000000000000 R15: 00000000000000c8
-FS:  00007f117ef4c700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000000000c8 CR3: 0000000064f3b000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Will correct it in next version.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+Wei Yang
+Help you, Help me
