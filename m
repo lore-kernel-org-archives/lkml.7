@@ -2,114 +2,107 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1789C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6E9C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A522F2176D
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:48:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kDanjmi2"
+	by mail.kernel.org (Postfix) with ESMTP id 1BDE821835
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575744981;
+	bh=ShFDiL6InTioPpsLyZuCkPwSRo+d/EbTQA/+LNaK8zI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PL1xxdqtZgVKbUFlmrFoDxuSoOGTMng9uLk13mUospqkAKmuXzOCL8bb93izAgB2s
+	 pJ3YJjDlT1qmneYOWJry/TjGGz4jxQXvo92GAs7z8wd6HylD4MC/mZ1b6eGzFoikqL
+	 fEzWyaMDcajkPQ5HJkh6x7LL8vkOVn36nd9JOExE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfLGSsC (ORCPT
+        id S1726626AbfLGS4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 13:48:02 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38323 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfLGSsC (ORCPT
+        Sat, 7 Dec 2019 13:56:20 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40054 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfLGS4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 13:48:02 -0500
-Received: by mail-pl1-f193.google.com with SMTP id o8so4087985pls.5
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 10:48:02 -0800 (PST)
+        Sat, 7 Dec 2019 13:56:18 -0500
+Received: by mail-lj1-f196.google.com with SMTP id s22so11179359ljs.7
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 10:56:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gIYTvT9Yg0a3HYHkSd1eqhNX0DVUa1na6x4qIySAj/s=;
-        b=kDanjmi2KTqwcxU+vWAA6MY44bNeH/m6+LJ+PXBtyz8m0/IEd5Id3ctmrutsjQlWol
-         nzRhS9ee3BeqtPgZQwsptPbKTwka3iyzO+GMbTS5U45YPei2BeQ4m1/Obijuy1h6PjDR
-         Fs/96o+Lq/d1RGFXUVbM7TUzvcWvzYHi/YCHc=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WUXh/vHN4dqMclBZKIZwccZppvH5dwFkBq5Smb/jrgY=;
+        b=Nc8nLEaa21HMhDezUfC5lwyjSyFBJ42cIMjyfxscr5tJULO4xWqy7VX3NTn0yd7MPw
+         AxL9SBfD+nf5uAWF8oNP4r637mLmZVHo5Kvw9kCQuNoP3Y1qMV4sk2WoySQIvJIJtEOP
+         b7tn0U1BFu5ErXk60MXKMLaTf5LMPt6v1kug4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gIYTvT9Yg0a3HYHkSd1eqhNX0DVUa1na6x4qIySAj/s=;
-        b=LNJWl/LG1u5TMFsAZUZMW8ChHFPj7nlpYzLeGTYj8/ki9l2IaNJ7/oDB2wplZpHU4b
-         qXQzb99+IZOsebe/dHyKA89FSotK1zwRgvT/xH1OXpVKBYAQnHuW5E22JqZgsTYcno/P
-         XIORo2Oko4KeJO0gynBye9NtAMNZJLm2Szhx82DsryB+TdfPo2zVw0d533/H+Jl5WlF0
-         rn8F8+XvTpdQWksFXCHyi0eAANPbD77/EryeDip0NnnVpkrbC0m5VeURCwyjVxjCoXuD
-         /zFJwhRrB65wm5z4nidtf1Kdpms+NX1OE+74sSLApjeoB9oSi2/QaKNDtu986IZjdGDC
-         zZ0g==
-X-Gm-Message-State: APjAAAXElAixDuL40U9IlV27Isr/2PukMyw4PI37aaaPWszF5ONCa/Ai
-        746pRbR224kk6UbwnyKvl8LgXyTqvfA=
-X-Google-Smtp-Source: APXvYqx3yu/c68zUTI1LPwAt2andskVpfvUBqNZ+i7uTa0sh9iba5RR78nUbCHT0uaN7c89V1ukSBw==
-X-Received: by 2002:a17:90a:e291:: with SMTP id d17mr23575494pjz.116.1575744481553;
-        Sat, 07 Dec 2019 10:48:01 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 3sm18140868pfi.13.2019.12.07.10.48.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 10:48:00 -0800 (PST)
-Date:   Sat, 7 Dec 2019 10:47:59 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     shuah@kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sj38.park@gmail.com,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: [PATCH 2/2] kselftest: Support old perl versions
-Message-ID: <201912071047.D7BDF3DD9F@keescook>
-References: <20191202114221.827-1-sjpark@amazon.com>
- <20191202114221.827-2-sjpark@amazon.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WUXh/vHN4dqMclBZKIZwccZppvH5dwFkBq5Smb/jrgY=;
+        b=YdZBdjSFvDcogAPUKbpXUJytFqzW9EimykVs/sDgTQe7nXNKGIHOXK1hUPkEvcfK9J
+         1prV61Z47uVur4GswKWq0vf8ygvbiz7+HLd7a5/YPWx3Fl8KMQq4jmnt42gGD2ZlI2TA
+         fe+FTErmnz+wAGugqrwwHbaV8j4UrXbkPoPmCfy8J1yfN9fSvVfdGxEHNqA5iggMOZyg
+         96CZVoLtPOj8p4UphLBr3uGrdU+wucZ23p3CoLo1LsJ7tD4gWJRxU5amKrAT7Ps36dTT
+         pDK0K/mbfZjpxnGeBehpBM/8NZDvAHvpNMZtF+ie5NyDMZHpUdgDqU7ozeii+TdOwbe3
+         qyrw==
+X-Gm-Message-State: APjAAAWUZM2IhsgXWUT7A/ql7kmVsAB8OTfxQF/WCMobA/VJMxJmTKDo
+        M/OHrwtw5wJlkCEAcFVoJ6/ewBdrtjU=
+X-Google-Smtp-Source: APXvYqzQdUAu8W5hvXFW7X5JLjNJVpqC6OODkIo0uuskdhi13MCHW1PuRK2EhImgNFHMmE+O6/sy/Q==
+X-Received: by 2002:a05:651c:153:: with SMTP id c19mr12499994ljd.237.1575744975949;
+        Sat, 07 Dec 2019 10:56:15 -0800 (PST)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id n3sm8408473lfk.61.2019.12.07.10.56.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 Dec 2019 10:56:15 -0800 (PST)
+Received: by mail-lj1-f177.google.com with SMTP id k8so11172219ljh.5
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 10:56:14 -0800 (PST)
+X-Received: by 2002:a2e:86c4:: with SMTP id n4mr7607919ljj.97.1575744973488;
+ Sat, 07 Dec 2019 10:56:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202114221.827-2-sjpark@amazon.com>
+References: <157566809107.17007.16619855857308884231.stgit@warthog.procyon.org.uk>
+ <CAJTyqKNuv+5x7zUTT_O56h7cGOVSEergF+QDXGHCpxXygVG_CA@mail.gmail.com>
+In-Reply-To: <CAJTyqKNuv+5x7zUTT_O56h7cGOVSEergF+QDXGHCpxXygVG_CA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 7 Dec 2019 10:55:57 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiamjvQAw1y2ymstHbato_XtrkBeWYf1xbi1=94Zft2NA@mail.gmail.com>
+Message-ID: <CAHk-=wiamjvQAw1y2ymstHbato_XtrkBeWYf1xbi1=94Zft2NA@mail.gmail.com>
+Subject: Re: [PATCH] pipe: Fix iteration end check in fuse_dev_splice_write()
+To:     mceier@gmail.com
+Cc:     David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 12:42:21PM +0100, SeongJae Park wrote:
-> From: SeongJae Park <sjpark@amazon.de>
-> 
-> On an old perl such as v5.10.1, `kselftest/prefix.pl` gives below error
-> message:
-> 
->     Can't locate object method "autoflush" via package "IO::Handle" at kselftest/prefix.pl line 10.
-> 
-> This commit fixes the error by explicitly specifying the use of the
-> `IO::Handle` package.
-> 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+On Sat, Dec 7, 2019 at 10:30 AM Mariusz Ceier <mceier@gmail.com> wrote:
+>
+> I believe it's still not complete fix for 8cefc107ca54. Loading videos
+> (or streams) on youtube, twitch in firefox (71 or nightly) on kernel
+> eea2d5da29e396b6cc1fb35e36bcbf5f57731015 still results in page
+> rendering getting stuck (switching between tabs shows spinner instead
+> of page content).
 
-Good catch!
+Ok, so youtube (unlike facebook), I can test in firefox. Although it's
+70, not 71 or nightly. And it doesn't seem to fail for me.
 
-Acked-by: Kees Cook <keescook@chromium.org>
+Of course, maybe the reason it doesn't fail for me is that I have a
+patch in my tree that may be the fix. It's a very small race in
+select()/poll(), and it's small enough that I wonder if it's really
+the fix for this, but hey, it might be.
 
--Kees
+It also might be that your version of firefox is different, or just
+that you're hitting something else that I'm just not hitting.
 
-> ---
->  tools/testing/selftests/kselftest/prefix.pl | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/testing/selftests/kselftest/prefix.pl b/tools/testing/selftests/kselftest/prefix.pl
-> index ec7e48118183..31f7c2a0a8bd 100755
-> --- a/tools/testing/selftests/kselftest/prefix.pl
-> +++ b/tools/testing/selftests/kselftest/prefix.pl
-> @@ -3,6 +3,7 @@
->  # Prefix all lines with "# ", unbuffered. Command being piped in may need
->  # to have unbuffering forced with "stdbuf -i0 -o0 -e0 $cmd".
->  use strict;
-> +use IO::Handle;
->  
->  binmode STDIN;
->  binmode STDOUT;
-> -- 
-> 2.17.1
-> 
+But I committed my patch and pushed it out, so that you could see if
+that fixes it for you.
 
--- 
-Kees Cook
+                Linus
