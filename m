@@ -2,135 +2,156 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88842C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 785CAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565D721835
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:16:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCPL97fk"
+	by mail.kernel.org (Postfix) with ESMTP id 57F63206D6
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfLGRQX (ORCPT
+        id S1726598AbfLGRSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 12:16:23 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:46213 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbfLGRQX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 12:16:23 -0500
-Received: by mail-vs1-f65.google.com with SMTP id t12so7350923vso.13;
-        Sat, 07 Dec 2019 09:16:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=fv2VocPZa+NTPGDaoTSLQUtwO0St7yGYFGMsw/ZDHX8=;
-        b=UCPL97fki2BRqCTclNHm7WJ1MCOgYnD3qF+O/qPNrN8hbd8UUH+TanuK8fnkbXUVLL
-         NFJ+u1JUbklRYI0mzyDogNRpbF2DSuW3N0LPwD4o79IkN3h3ir202qs+Aqw8RRDJ7a5L
-         tGXglbbJbjd8dMsCa2+lWDieZOfTaNfqG6LNjDn0VSsBvZWfiTkkNTw7h29Gyeqe4mpR
-         75FDxrvLfo74ybLifBaR+DAoe6V0xuJKjX8DORl0dMekfvGHEUgY4QuVIo1CyK9nxSz+
-         /HnbMB6w9xB6laDs6QkAHIl9H2vVFDAYY3hEdj1xWXjj4LxpLZ45lIKNoWzAqw8rsR9V
-         FckA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=fv2VocPZa+NTPGDaoTSLQUtwO0St7yGYFGMsw/ZDHX8=;
-        b=ghPHEZk7LJY0rUJbG54F+dYxE6dE/Afx7RcGChERwp9X8R+jl10SY7J5C7Ga6QVAII
-         M+CVNVR25MwoUQ6XO9MoQlbvNIpjVYbrfup/tqmbcQxzouOoYKHTAZqLN7pMULFhh2Ap
-         67+IjAwVdjW8hQxGstYZ7kNW/YT386YPnNFXwAVrLAdko4P6oQMNf2utBCCEW9Pea1qD
-         XKxgXDu2z/OzCtYXScSkfBc8U4F9PeaMGNIVtOaKy4jy5EiuNjAjnTtVxVHCPHRpNx9e
-         TL/FCtncn2fisqmG40XU844lcy3+Wi8u7hGPhdvsj6mwfCyGssu5pZQM/54TpaUnWQhp
-         Zk7w==
-X-Gm-Message-State: APjAAAVMm5eY/IK307jL5lB8O1ffO1UjHxRpbnIxXaTOn6suATKXAqhg
-        n8qBYNPBb3JlJZ3WywAaR98coiQQ9YrCQ45jsNM=
-X-Google-Smtp-Source: APXvYqy78Bz6j/LjqlaXz7HF8BhLRlmuB2RInRa+D3etpDSbE/UBNdTUsRu3qDinxD1lJ7AETehudMylEAtfTeskuN0=
-X-Received: by 2002:a67:8010:: with SMTP id b16mr14115611vsd.90.1575738981848;
- Sat, 07 Dec 2019 09:16:21 -0800 (PST)
+        Sat, 7 Dec 2019 12:18:33 -0500
+Received: from fieldses.org ([173.255.197.46]:55114 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbfLGRSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 12:18:32 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 0A7DC1C95; Sat,  7 Dec 2019 12:18:32 -0500 (EST)
+Date:   Sat, 7 Dec 2019 12:18:32 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [GIT PULL] nfsd change for 5.5
+Message-ID: <20191207171832.GB24017@fieldses.org>
+References: <20191207171402.GA24017@fieldses.org>
 MIME-Version: 1.0
-References: <20191207144126.14320-1-dinghao.liu@zju.edu.cn>
-In-Reply-To: <20191207144126.14320-1-dinghao.liu@zju.edu.cn>
-Reply-To: fdmanana@gmail.com
-From:   Filipe Manana <fdmanana@gmail.com>
-Date:   Sat, 7 Dec 2019 17:16:10 +0000
-Message-ID: <CAL3q7H48ObWGwY=C=L45CKkC4D1nLUr0s3_YUwHPSCmirKmidA@mail.gmail.com>
-Subject: Re: [PATCH] fs: Fix a missing check bug
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, pakki001@umn.edu, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191207171402.GA24017@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 7, 2019 at 3:03 PM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
->
-> The return value of link_free_space(ctl, info) is checked out-sync. Only =
-one branch of an if statement checks this return value after WARN_ON(ret).
->
-> Since this path pair is similar in semantic, there might be a missing che=
-ck bug.
->
-> Fix this by simply adding a check on ret.
->
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  fs/btrfs/free-space-cache.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/fs/btrfs/free-space-cache.c b/fs/btrfs/free-space-cache.c
-> index 3283da419200..acbb3a59d344 100644
-> --- a/fs/btrfs/free-space-cache.c
-> +++ b/fs/btrfs/free-space-cache.c
-> @@ -2437,6 +2437,8 @@ int btrfs_remove_free_space(struct btrfs_block_grou=
-p *block_group,
->                         if (info->bytes) {
->                                 ret =3D link_free_space(ctl, info);
->                                 WARN_ON(ret);
-> +                               if (ret)
+On Sat, Dec 07, 2019 at 12:14:02PM -0500, bfields wrote:
+> Please pull
+> 
+>   git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.5
+> 
+> for nfsd changes for 5.5.
+> 
+> This is a relatively quiet cycle for nfsd, mainly various bugfixes.
+> 
+> Possibly most interesting is Trond's fixes for some callback races that
+> were due to my incomplete understanding of rpc client shutdown.
+> Unfortunately at the last minute I've started noticing a new
+> intermittent failure to send callbacks.  As the logic seems basically
+> correct, I'm leaving Trond's patches in for now, and hope to find a fix
+> in the next week so I don't have to revert those patches.
 
-I think the WARN_ON() can go away as well.
-The only possible error is -EEXIST, coming from tree_insert_offset().
-When that happens tree_insert_offset() already emits a warning.
+Oh, also, not included: server-to-server copy offload.  I think it's
+more or less ready, but due to some miscommunication (at least partly my
+fault), I didn't get them in my nfsd-next branch till this week.  And
+the client side (which it builds on) isn't merged yet last I checked.
+So, it seemed more prudent to back them out and wait till next time.
 
-Also, the free space entry needs to be freed, otherwise we leak
-memory. So it should be something like this:
+--b.
 
-if (ret) {
-    kmem_cache_free(btrfs_free_space_cachep, info);
-    goto out_unlock;
-}
-
-Further the subject should be prefixed with "btrfs: " and not "fs: ",
-since this is a btrfs specific patch.
-Something like the following for example:
-
-"btrfs: add missing error handling when removing free space"
-
-Thanks.
-
-> +                                       goto out_lock;
->                         } else {
->                                 kmem_cache_free(btrfs_free_space_cachep, =
-info);
->                         }
-> --
-> 2.21.0 (Apple Git-122)
->
-
-
---=20
-Filipe David Manana,
-
-=E2=80=9CWhether you think you can, or you think you can't =E2=80=94 you're=
- right.=E2=80=9D
+> 
+> --b.
+> 
+> Al Viro (1):
+>       race in exportfs_decode_fh()
+> 
+> Andy Shevchenko (1):
+>       nfsd: remove private bin2hex implementation
+> 
+> Christoph Hellwig (2):
+>       sunrpc: remove __KERNEL__ ifdefs
+>       lockd: remove __KERNEL__ ifdefs
+> 
+> Chuck Lever (4):
+>       svcrdma: Improve DMA mapping trace points
+>       SUNRPC: Trace gssproxy upcall results
+>       SUNRPC: Fix svcauth_gss_proxy_init()
+>       SUNRPC: Fix backchannel latency metrics
+> 
+> J. Bruce Fields (4):
+>       nfsd: "\%s" should be "%s"
+>       nfsd: mark cb path down on unknown errors
+>       nfsd: document callback_wq serialization of callback code
+>       nfsd: restore NFSv3 ACL support
+> 
+> Mao Wenan (1):
+>       nfsd: Drop LIST_HEAD where the variable it declares is never used.
+> 
+> NeilBrown (1):
+>       nfsd: check for EBUSY from vfs_rmdir/vfs_unink.
+> 
+> Olga Kornievskaia (1):
+>       NFSD fixing possible null pointer derefering in copy offload
+> 
+> Patrick Steinhardt (1):
+>       nfsd: depend on CRYPTO_MD5 for legacy client tracking
+> 
+> Pavel Tikhomirov (1):
+>       sunrpc: fix crash when cache_head become valid before update
+> 
+> Scott Mayhew (3):
+>       nfsd4: fix up replay_matches_cache()
+>       nfsd: Fix cld_net->cn_tfm initialization
+>       nfsd: v4 support requires CRYPTO_SHA256
+> 
+> Trond Myklebust (3):
+>       nfsd: minor 4.1 callback cleanup
+>       nfsd: Fix races between nfsd4_cb_release() and nfsd4_shutdown_callback()
+>       nfsd: Ensure CLONE persists data and metadata changes to the target file
+> 
+> YueHaibing (1):
+>       nfsd: remove set but not used variable 'len'
+> 
+>  fs/exportfs/expfs.c                        |  31 +++++----
+>  fs/nfsd/Kconfig                            |   3 +-
+>  fs/nfsd/filecache.c                        |   2 -
+>  fs/nfsd/nfs4callback.c                     | 104 +++++++++++++++++++++++------
+>  fs/nfsd/nfs4proc.c                         |   6 +-
+>  fs/nfsd/nfs4recover.c                      |  23 +++----
+>  fs/nfsd/nfs4state.c                        |  19 ++++--
+>  fs/nfsd/nfs4xdr.c                          |   2 -
+>  fs/nfsd/nfsd.h                             |   3 +-
+>  fs/nfsd/nfssvc.c                           |   3 +-
+>  fs/nfsd/state.h                            |   1 +
+>  fs/nfsd/vfs.c                              |  20 +++++-
+>  fs/nfsd/vfs.h                              |   2 +-
+>  include/linux/lockd/debug.h                |   4 --
+>  include/linux/lockd/lockd.h                |   4 --
+>  include/linux/sunrpc/auth.h                |   3 -
+>  include/linux/sunrpc/auth_gss.h            |   2 -
+>  include/linux/sunrpc/clnt.h                |   3 -
+>  include/linux/sunrpc/gss_api.h             |   2 -
+>  include/linux/sunrpc/gss_err.h             |   3 -
+>  include/linux/sunrpc/msg_prot.h            |   3 -
+>  include/linux/sunrpc/rpc_pipe_fs.h         |   3 -
+>  include/linux/sunrpc/svcauth.h             |   4 --
+>  include/linux/sunrpc/svcauth_gss.h         |   2 -
+>  include/linux/sunrpc/xdr.h                 |   3 -
+>  include/linux/sunrpc/xprt.h                |   4 --
+>  include/linux/sunrpc/xprtsock.h            |   4 --
+>  include/trace/events/rpcgss.h              |  45 +++++++++++++
+>  include/trace/events/rpcrdma.h             |  30 +++++++--
+>  include/trace/events/sunrpc.h              |  55 +++++++++++++++
+>  net/sunrpc/auth_gss/gss_mech_switch.c      |   4 +-
+>  net/sunrpc/auth_gss/svcauth_gss.c          |  92 ++++++++++++++++++-------
+>  net/sunrpc/cache.c                         |   6 --
+>  net/sunrpc/svc.c                           |   2 +
+>  net/sunrpc/svcauth.c                       |   2 +
+>  net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   1 +
+>  net/sunrpc/xprtrdma/svc_rdma_sendto.c      |   8 ++-
+>  net/sunrpc/xprtsock.c                      |   3 +-
+>  38 files changed, 362 insertions(+), 149 deletions(-)
