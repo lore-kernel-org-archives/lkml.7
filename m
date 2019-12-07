@@ -2,162 +2,136 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF71C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D45C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C1824676
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575717125;
-	bh=WI+LemDcpYVITCWDtrnmlI0yhoN0fnrcBkkObYh83kQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wr16uC4Zf4Upj40jtJeadFt3/3SsS1tJGftvnnjX4E1b+OfIEAkWKo847KPLHhuT+
-	 nDj6cSjImEjq15qoTLOPdZ8KUAvaR1YxH8gRVbzo99S4ofUhbLme/Ah3DDeDlKlQW1
-	 HTrz87lKzOaIYIqBTKfnhBF9TYJnIoGqWW81AhN4=
+	by mail.kernel.org (Postfix) with ESMTP id BB1A024673
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:14:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZYbzzXN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfLGLMD (ORCPT
+        id S1726421AbfLGLOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 06:12:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfLGLMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 06:12:02 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE3C524673;
-        Sat,  7 Dec 2019 11:11:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575717121;
-        bh=WI+LemDcpYVITCWDtrnmlI0yhoN0fnrcBkkObYh83kQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=v80aqitChL36LevYdO7d+JONlcxEKJPjcmWF0Cjc0C9sXcZbAZAhfcP1FLz791ha6
-         hYPVBOpBpEMX5eUfuD10pg5oUoN90523xjSdVPxOCgb6a1oGbhAs0M9oOBEWTOHJzN
-         MW4KsiF/ojmy63bpbCiq71N0ZbVA5LCf8dvwnXcY=
-Date:   Sat, 7 Dec 2019 11:11:56 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] iio: adc: max9611: Fix too short conversion time
- delay
-Message-ID: <20191207111156.7e5139f0@archlinux>
-In-Reply-To: <20191206131944.28707-1-geert+renesas@glider.be>
-References: <20191206131944.28707-1-geert+renesas@glider.be>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Sat, 7 Dec 2019 06:14:47 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35785 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfLGLOq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 06:14:46 -0500
+Received: by mail-wm1-f68.google.com with SMTP id c20so8449018wmb.0;
+        Sat, 07 Dec 2019 03:14:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HUdFIVx2th3a0bTzer3FVDj/Iewx06i7IgtcXEeOoiY=;
+        b=bZYbzzXNc0ZgUJb7ev3S0jNCENJThXwsNWeZ3cJ3Z5ek1jlJAJzw6lnS+8PuWM4BRy
+         kg6r05GuR2GuN189FPLXkZh6Y4klKyux4jzk8XQyZYbRyYKwzi8ub1LFfzH1lM4rkN71
+         UxAadc+q/eiOfEjn2g/CCMHi7x6evvnSKGy8+nFyt3imB+a95F/j/PfA5wivYaH826ju
+         G+V/AfKZDKi0WK+s3xKINSbWqwZl2Fxw95+ahbYYZGt6sH0k9h/YK98cHQQ/0V49hiJr
+         aw9Ax4ILP3E8fmf8JCz0tmztxPRm9hcXuvUunmKfbnI91Wsf2/R8pH6QsKS3rYDNfsVj
+         pscg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HUdFIVx2th3a0bTzer3FVDj/Iewx06i7IgtcXEeOoiY=;
+        b=KcBABSCf9NmyvggCQFM96dSnRr7fjTzmbojrT7WIw/L8EVOJbSCqm0agLnvpoSm0so
+         zw8xDQXJa+EN97lGesDhsKo9fPX4VVJK0/iWljshmMfST8AUi+kn008jwuAFWXfPKPBA
+         pXERhU808F2hErqpP0HsVqL+s44ZPMOqPw+kgL7gN4GfKljX7T9mkbOb7/aKz8eN44I2
+         b3F/SEcU1Kf77GpLJ2wpvZIYVUm8YhVGR9pPOzvZTHX3ONxl2HI74iPvmJzlY+CJohuG
+         xxqc24LzYvREdnsodoxp0s5gIKjwIVQ1aG9uTt36HKBGOrRbNBFhXlx4dHctVkDbMhw7
+         U/BQ==
+X-Gm-Message-State: APjAAAULPm5Ubd899p+F+Dby8+ridZJK4Eb1TH1zGr0/TEzCslrYYrFo
+        GDNbnvBoRub0nKvhhQgLZFU=
+X-Google-Smtp-Source: APXvYqzk5XwcKSTUFMdpM/DSCrwTnN0PBPDDfRT+RlJDRdJ2zKgB/mlUT2CDg8zLmXxkZz9ZOmSwEg==
+X-Received: by 2002:a7b:c764:: with SMTP id x4mr15321560wmk.113.1575717284044;
+        Sat, 07 Dec 2019 03:14:44 -0800 (PST)
+Received: from debian.office.codethink.co.uk. ([78.40.148.180])
+        by smtp.gmail.com with ESMTPSA id a20sm6617475wmd.19.2019.12.07.03.14.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 07 Dec 2019 03:14:43 -0800 (PST)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>, rostedt@goodmis.org,
+        arnaldo.melo@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH] libtraceevent: allow custom libdir path
+Date:   Sat,  7 Dec 2019 11:14:40 +0000
+Message-Id: <20191207111440.6574-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  6 Dec 2019 14:19:44 +0100
-Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+When I use prefix=/usr and try to install libtraceevent in my laptop it
+tries to install in /usr/lib64. I am not having any folder as /usr/lib64
+and also the debian policy doesnot allow installing in /usr/lib64. It
+should be in /usr/lib/x86_64-linux-gnu/.
 
-> As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
-> reading in probe"), max9611 initialization sometimes fails on the
-> Salvator-X(S) development board with:
->=20
->     max9611 4-007f: Invalid value received from ADC 0x8000: aborting
->     max9611: probe of 4-007f failed with error -5
->=20
-> The max9611 driver tests communications with the chip by reading the die
-> temperature during the probe function, which returns an invalid value.
->=20
-> According to the datasheet, the typical ADC conversion time is 2 ms, but
-> no minimum or maximum values are provided.  Maxim Technical Support
-> confirmed this was tested with temperature Ta=3D25 degreeC, and promised
-> to inform me if a maximum/minimum value is available (they didn't get
-> back to me, so I assume it is not).
->=20
-> However, the driver assumes a 1 ms conversion time.  Usually the
-> usleep_range() call returns after more than 1.8 ms, hence it succeeds.
-> When it returns earlier, the data register may be read too early, and
-> the previous measurement value will be returned.  After boot, this is
-> the temperature POR (power-on reset) value, causing the failure above.
->=20
-> Fix this by increasing the delay from 1000-2000 =C2=B5s to 3000-3300 =C2=
-=B5s.
->=20
-> Note that this issue has always been present, but it was exposed by the
-> aformentioned commit.
->=20
-> Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Ah. I picked up v2 and did the tidy up.  Oh well, same result ;)
+Quote: No package for a 64 bit architecture may install files in
+	/usr/lib64/ or in a subdirectory of it.
+ref: https://www.debian.org/doc/debian-policy/ch-opersys.html
 
-Jonathan
+Make it more flexible by allowing to mention libdir_relative while
+installing so that distros can mention the path according to their policy
+or use the default one.
 
-> ---
-> After this patch, probing of the two max9611 sensors succeeded during
-> ca. 3000 boot cycles on Salvator-X(S) boards, equipped with various
-> R-Car H3/M3-W/M3-N SoCs.
->=20
-> v3:
->   - Add Reviewed-by,
->   - Join split comment line,
->=20
-> v2:
->   - Add Reviewed-by,
->   - Add feedback from Maxim Technical Support,
->   - Increase delay from 2000-2200 =C2=B5s to 3000-3300 =C2=B5s to play sa=
-fe.
-> ---
->  drivers/iio/adc/max9611.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-> index bf76dfb3f2c9530b..6250d4bf46dc9642 100644
-> --- a/drivers/iio/adc/max9611.c
-> +++ b/drivers/iio/adc/max9611.c
-> @@ -89,6 +89,12 @@
->  #define MAX9611_TEMP_SCALE_NUM		1000000
->  #define MAX9611_TEMP_SCALE_DIV		2083
-> =20
-> +/*
-> + * Conversion time is 2 ms (typically) at Ta=3D25 degreeC
-> + * No maximum value is known, so play it safe
-> + */
-> +#define MAX9611_CONV_TIME_US_RANGE	3000, 3300
-> +
->  struct max9611_dev {
->  	struct device *dev;
->  	struct i2c_client *i2c_client;
-> @@ -223,10 +229,9 @@ static int max9611_read_single(struct max9611_dev *m=
-ax9611,
->  	}
-> =20
->  	/*
-> -	 * need a delay here to make register configuration
-> -	 * stabilize. 1 msec at least, from empirical testing.
-> +	 * need a delay here to make register configuration stabilize.
->  	 */
-> -	usleep_range(1000, 2000);
-> +	usleep_range(MAX9611_CONV_TIME_US_RANGE);
-> =20
->  	ret =3D i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
->  	if (ret < 0) {
-> @@ -493,7 +498,7 @@ static int max9611_init(struct max9611_dev *max9611)
->  			MAX9611_REG_CTRL2, 0);
->  		return ret;
->  	}
-> -	usleep_range(1000, 2000);
-> +	usleep_range(MAX9611_CONV_TIME_US_RANGE);
-> =20
->  	return 0;
->  }
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
+
+Hi Steve,
+
+And yet another one (hopefully the final one for now). I know I missed
+the merge window, but your Ack should be ok.
+
+ tools/lib/traceevent/Makefile         | 5 +++--
+ tools/lib/traceevent/plugins/Makefile | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index c5a03356a999..7e2450ddd7e1 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -39,11 +39,12 @@ DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
+ 
+ LP64 := $(shell echo __LP64__ | ${CC} ${CFLAGS} -E -x c - | tail -n 1)
+ ifeq ($(LP64), 1)
+-  libdir_relative = lib64
++  libdir_relative_temp = lib64
+ else
+-  libdir_relative = lib
++  libdir_relative_temp = lib
+ endif
+ 
++libdir_relative ?= $(libdir_relative_temp)
+ prefix ?= /usr/local
+ libdir = $(prefix)/$(libdir_relative)
+ man_dir = $(prefix)/share/man
+diff --git a/tools/lib/traceevent/plugins/Makefile b/tools/lib/traceevent/plugins/Makefile
+index f440989fa55e..edb046151305 100644
+--- a/tools/lib/traceevent/plugins/Makefile
++++ b/tools/lib/traceevent/plugins/Makefile
+@@ -32,11 +32,12 @@ DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
+ 
+ LP64 := $(shell echo __LP64__ | ${CC} ${CFLAGS} -E -x c - | tail -n 1)
+ ifeq ($(LP64), 1)
+-  libdir_relative = lib64
++  libdir_relative_tmp = lib64
+ else
+-  libdir_relative = lib
++  libdir_relative_tmp = lib
+ endif
+ 
++libdir_relative ?= $(libdir_relative_tmp)
+ prefix ?= /usr/local
+ libdir = $(prefix)/$(libdir_relative)
+ 
+-- 
+2.11.0
 
