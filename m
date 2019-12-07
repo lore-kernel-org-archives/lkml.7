@@ -2,42 +2,61 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8D8C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 10:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD87FC2BBE2
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 10:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A445824673
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 10:29:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="XI4L8s3G"
+	by mail.kernel.org (Postfix) with ESMTP id 93B7A24676
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 10:33:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575714835;
+	bh=SuakieLmzH/APRkH24GmeiDVGJkhpgM0p3HYv5+YVNc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LlTTPpT+jqURadeGiuByh4Ckues0jmaS1uGTwYsFiBwwEblpkbgz7sD53qoOUwECg
+	 z/TV+6VY/n/SBG8rovZmIS/yu8E/5wcxbtBIdB3puKTwOtT0uXecSLLZNgJQCGfHWz
+	 mAKwl/FT464C/lfVxXW0go1UhwSfFzTJJNO/7gIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfLGK3Y (ORCPT
+        id S1726423AbfLGKdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 05:29:24 -0500
-Received: from mail-40131.protonmail.ch ([185.70.40.131]:46028 "EHLO
-        mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfLGK3Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 05:29:24 -0500
-X-Greylist: delayed 600 seconds by postgrey-1.27 at vger.kernel.org; Sat, 07 Dec 2019 05:29:22 EST
-Date:   Sat, 07 Dec 2019 10:11:30 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1575713498;
-        bh=KZ1JKKkdskuezXb+TZDywYl5zr9f3e9uvmv1wiY0Gdg=;
-        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
-        b=XI4L8s3GUP6EYA1rhQEwJpIGyhJ2sWqYCj0Q2wGpUwjNNU1IHUTVAVJvPwoLdtwEv
-         x+spc7Uuy2lvBJezGXyIlq34i22y4ksJFfvsuBbJykpIhPIvd3vYXLs5/vxZBVkEwa
-         YGuCF4CXRnOagX1dtmdUX946kdwBkagTcc83q8qg=
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
-Reply-To: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
-Subject: Re: was: Fair Pay - Libra Netcurrency?
-Message-ID: <LEsGDmhLKTf0ejikBRznWzqeOfRe7RLkUwJJbvcpmMcLxn4Pwbyf6vxu9wBO2OmcqQK0d_hqVxTF9PE8uRnGpScxMLrLxDx3Nr9D7NtK0Vc=@protonmail.com>
-Feedback-ID: jE8CP55NmWCGfbi9g5qzrOGkxuwuSXpchSI6fmYzjd5UEveHXeJrmiWc0_sgJdqIHM8YAKf9EEyPwffaRmhZ0A==:Ext:ProtonMail
+        Sat, 7 Dec 2019 05:33:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbfLGKdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 05:33:53 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01E3424673;
+        Sat,  7 Dec 2019 10:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575714832;
+        bh=SuakieLmzH/APRkH24GmeiDVGJkhpgM0p3HYv5+YVNc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IDF+m0ScfxXqIXX35QX4SQRSrqb7oX3ILXORqiFbrHXbogC6e4NSV+ypIJiSM8iOd
+         bIFoKctSRG1XWFJ0PrA/hPfvxbipFd3/BFCY2k392XDZqo8/Vz0PRkeyiuog7DZ+xJ
+         BnAdWSMHDzl7WPZyrYA14DuHXcsitfLdHbHVfC08=
+Date:   Sat, 7 Dec 2019 10:33:48 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: adc: max9611: Fix too short conversion time
+ delay
+Message-ID: <20191207103348.58df9cd5@archlinux>
+In-Reply-To: <20191202092328.GE1266@kunai>
+References: <20191202085546.21655-1-geert+renesas@glider.be>
+        <20191202092328.GE1266@kunai>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
@@ -46,48 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the development of an optimal Interface System, we see considerations to=
- culture, became relevant, and a universalization of paradigm, finding the =
-three letter paradigm to be too narrow.
+On Mon, 2 Dec 2019 10:23:29 +0100
+Wolfram Sang <wsa@the-dreams.de> wrote:
 
-Particulary the error margin of a culture, goes to the club, where it gets =
-its outlet in sex.
+> On Mon, Dec 02, 2019 at 09:55:46AM +0100, Geert Uytterhoeven wrote:
+> > As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
+> > reading in probe"), max9611 initialization sometimes fails on the
+> > Salvator-X(S) development board with:
+> >=20
+> >     max9611 4-007f: Invalid value received from ADC 0x8000: aborting
+> >     max9611: probe of 4-007f failed with error -5
+> >=20
+> > The max9611 driver tests communications with the chip by reading the die
+> > temperature during the probe function, which returns an invalid value.
+> >=20
+> > According to the datasheet, the typical ADC conversion time is 2 ms, but
+> > no minimum or maximum values are provided.  Maxim Technical Support
+> > confirmed this was tested with temperature Ta=3D25 degreeC, and promised
+> > to inform me if a maximum/minimum value is available (they didn't get
+> > back to me, so I assume it is not).
+> >=20
+> > However, the driver assumes a 1 ms conversion time.  Usually the
+> > usleep_range() call returns after more than 1.8 ms, hence it succeeds.
+> > When it returns earlier, the data register may be read too early, and
+> > the previous measurement value will be returned.  After boot, this is
+> > the temperature POR (power-on reset) value, causing the failure above.
+> >=20
+> > Fix this by increasing the delay from 1000-2000 =C2=B5s to 3000-3300 =
+=C2=B5s.
+> >=20
+> > Note that this issue has always been present, but it was exposed by the
+> > aformentioned commit.
+> >=20
+> > Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org> =20
+>=20
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>=20
+> One minor nit, though:
+>=20
+> >  	/*
+> >  	 * need a delay here to make register configuration
+> > -	 * stabilize. 1 msec at least, from empirical testing.
+> > +	 * stabilize. =20
+>=20
+> This could be a one line comment now?
+>=20
 
-The question becomes how much can one improve it? Or really what can one do=
- with the schizophrenia of psychiatry vs club, that itself states sex on th=
-e city is ok.
+Applied to the fixes-togreg branch of iio.git and tidied up.
 
-It will never resolve.
+Thanks,
 
-If one analyses history, gods of the club kind, often were gay, until they =
-found the holy grail, that for sexual purposes, reduced the mushromm god, t=
-o minimal, so that it was not gay, in the club itself.
-
-Making weekdays macho, and the weekend gardenly.Which is what many people s=
-till believe, - The three-letter paradigm of most societies.
-
-Which basically a good O.S. must escape. Or I.S. really Interface System, a=
-s we deal really only with interfacing between software and hardware.
-
-Because where I grew up this three-letter paradigm was so fixed, that basic=
-ally a drunk O.S. like Microsoft just could happen.
-
-I am trying the name Z-IS, for the moment, trying to escape this paradigm, =
-as much as possible, giving the club to those who want, and really have not=
-hing to do with it myself. I just want an optimal economy for myself, and m=
-y society.
-
-And so comes the question, what netcurrency should one support? The same co=
-nsiderations goes to this ofcourse.
-
-Libra seems to be GNU related. So even Facebook tries to do this in GNU spa=
-ce.
-
-Any thoughts on this? (sane please)
-
-
---
-Ywe
-Fair Pay Project.
-https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
-
+Jonathan
