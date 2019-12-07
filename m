@@ -2,61 +2,61 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5FEC47409
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8D6C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AEC524677
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6023A24673
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:36:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1ah2Jgj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fejbPTGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfLGUgL (ORCPT
+        id S1726879AbfLGUgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 15:36:11 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46486 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbfLGUgK (ORCPT
+        Sat, 7 Dec 2019 15:36:16 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:32931 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfLGUgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 15:36:10 -0500
-Received: by mail-pf1-f194.google.com with SMTP id y14so5131305pfm.13;
-        Sat, 07 Dec 2019 12:36:10 -0800 (PST)
+        Sat, 7 Dec 2019 15:36:15 -0500
+Received: by mail-pj1-f66.google.com with SMTP id r67so4185769pjb.0;
+        Sat, 07 Dec 2019 12:36:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2kMIJY/eOkF08UFC83+z2Yvw2OEsP0PRB4nAXO2fCAU=;
-        b=L1ah2JgjYkVbYTJrHXreZ/M03kKDjwenY8BAjQ9xJEx0gbKashe1+23y3HRp0Xx+WC
-         Ou2IQzV+8QXgBlKXvhkEtaCLdSQlIFo+qkXefce0BZdNG5kYKpv3JpAoWpMuy2Lnzwu1
-         C5J6apBOhbPYAqsgiW5bhXn3gix9FaHZ83rezWyEV1Za4Jt7ulew6i1DNB5bkjQK02oY
-         AzRWp4LLJR/ml+NOxujgBGeSnJuNQbye7c2/YNqS7a8ZU6zfZYHpcI7skbX6dyLODERj
-         T4J7zxloGX09YN0DMYOZYbEmtWXI+va/wJdXFZd3GaR71EWPoJJv2wwzxMOu77Q2F70I
-         7G8g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=kPGabNCq4wvn/E6P0guB04MXnY7RQzJiTE6DO4F+/5c=;
+        b=fejbPTGExleKnqhKzbTJe2QRYYJ83L/AsFX3Orxh9feE9NIPyYEMNxKFqkGDyMQ6rF
+         FQyuovSyMWmvs5v8uI/3n6B8gT2FfXog5EEwnuGRcXfFF3VgFC/y3+TJGx6OliZQNop7
+         7RAXHmpNEiHg/m+Ma7H5ShJYS5Ylv/fe1oP6AgocW9BFyh3cMzHolHB7tJw9wAIaKUQ6
+         noB5rFM8gDPsi9qrnkgW9kWd/+5WjBumhgyIVxw5HqzWHuvW5wvWnnIvZWM5TX+RId5m
+         Kc2kn5vZLQW5z9rpfRdzfle2qQaUw9U/KQ8ORcog3GiP0gd3937HnI0FgaXikkWiBjGW
+         PxqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2kMIJY/eOkF08UFC83+z2Yvw2OEsP0PRB4nAXO2fCAU=;
-        b=K6h4yRGw5uWox67kFymH0ajVt4RiTLH+5xeGxxyxSDmNJIOpBxivyzq515piFlL6t/
-         RUe2ksGW5Hec1JC1memiWXLu0JMRCRvv59QFAP4d+BoUzPZGF/lb84fztjnPOwpBCPEP
-         R9IXO30VkHNxbgmlNDb1jOhJ2+56EDkEPSRn5oGpcMyoEo60ZN/FamiAaYtZ/yQKa+1p
-         UfdAKaVtWqp2kvYSZqFm7G1N1sS9yBusctiQl9UpVpyjYAg1LqWwtFW6/IYJbTyc1Rqg
-         9vFw4siazumvbKdC2h9f9htrHJ02fuueOpIcTqh/DvWd4Zu0OHEQO37889ljNwSWY+6H
-         JbsA==
-X-Gm-Message-State: APjAAAVBJEF81vcQXBeyqeUh821lllHhZlRjUQMFyklLfbPtP0MzXP9f
-        T2MN+HLKYLSWweESFng4oY8=
-X-Google-Smtp-Source: APXvYqyHsn0JRBAztc8gkWedID4H+F1dMmOijtBZeWWN976EbUglK6Cd/j6zKuX60a2hGwZ5Nhn3NA==
-X-Received: by 2002:a63:d958:: with SMTP id e24mr10614053pgj.31.1575750969811;
-        Sat, 07 Dec 2019 12:36:09 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=kPGabNCq4wvn/E6P0guB04MXnY7RQzJiTE6DO4F+/5c=;
+        b=QyJiYQFZUin/6nj1I5wGWnoKJAD/lyX0c70nl3lvIvt+apxUeRwupcKwLQatmpddkc
+         lh2zwQyCA4rh9XDgjY6+7Ghkm3ztX8Ho+GL6YWWIw9aPlR+bqYxb/uKNhW6XPOZEqQQE
+         7Cfc7SVD5TxOjc7ngw0JuMUV3bPBGU24T7MhdCWig2GvBgsiZLda4micozZ5tBgQXRUE
+         WkqtXEnfitLPL65T8xHBruLsTOcQtAMYdJN5k/3Z+B3mJ+PX6goBb6T/TeTYrmoA3JBB
+         kLE1LHXPmaVV5kds6EBtqJ44/NkOhsTTjXO8WRsIxyDIRkI2CxPIlGyChuZ6HgJDzjaV
+         OhFg==
+X-Gm-Message-State: APjAAAUtQFTR/vSJ+zv1e/SEzx6tkO1u/Z7msSUYX48zzmLhR4Jjsg+R
+        g+a82jIMXzBBSwXFKCeLkGc=
+X-Google-Smtp-Source: APXvYqzDfayEIq2IU2ZF76xRpq1YVP/uNxKHNPyI6TREpRcqY3KTtpmPIdU+GsItMQeh+jnuG7UijA==
+X-Received: by 2002:a17:90b:3cc:: with SMTP id go12mr23177882pjb.89.1575750974098;
+        Sat, 07 Dec 2019 12:36:14 -0800 (PST)
 Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id d24sm22327447pfq.75.2019.12.07.12.36.08
+        by smtp.gmail.com with ESMTPSA id 133sm20887100pfy.14.2019.12.07.12.36.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 12:36:09 -0800 (PST)
+        Sat, 07 Dec 2019 12:36:13 -0800 (PST)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         aarch64-laptops@lists.linaro.org
@@ -65,15 +65,17 @@ Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Jeffrey Hugo <jhugo@codeaurora.org>,
         Rob Clark <robdclark@chromium.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-kernel@vger.kernel.org (open list),
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH 0/4] drm+dt: multi panel selection and yoga c630 display
-Date:   Sat,  7 Dec 2019 12:35:49 -0800
-Message-Id: <20191207203553.286017-1-robdclark@gmail.com>
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/4] drm/of: add support to find any enabled endpoint
+Date:   Sat,  7 Dec 2019 12:35:51 -0800
+Message-Id: <20191207203553.286017-3-robdclark@gmail.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191207203553.286017-1-robdclark@gmail.com>
+References: <20191207203553.286017-1-robdclark@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,109 +85,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rob Clark <robdclark@chromium.org>
 
-It is not uncommon for devices to use one of several possible panels.
-The Lenovo Yoga C630 laptop is one such device.  This patchset
-introduces an optional "panel-id" property which can be used by the
-firmware to find the correct panel node to enable.  The second patch
-adds support in drm/of to automatically pick the enabled endpoint, to
-avoid adding the same logic in multiple bridges/drivers.  The last
-patch uses this mechanism to enable display support for the Yoga C630.
+To handle the case where there are multiple panel endpoints, only one of
+which is enabled/installed, add support for a wildcard endpoint value to
+request finding whichever endpoint is enabled.
 
-An example usage:
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/drm_of.c | 41 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
-  boe_panel {
-      compatible = "boe,nv133fhm-n61";
-      panel-id = <0xc4>;
-      /* fw will change status to "Ok" if this panel is installed */
-      status = "disabled";
-
-      ports {
-          port {
-              boe_panel_in_edp: endpoint {
-                  remote-endpoint = <&sn65dsi86_out_boe>;
-              };
-          };
-      };
-  };
-
-  ivo_panel {
-      compatible = "ivo,m133nwf4-r0";
-      panel-id = <0xc5>;
-      /* fw will change status to "Ok" if this panel is installed */
-      status = "disabled";
-
-      ports {
-          port {
-              ivo_panel_in_edp: endpoint {
-                  remote-endpoint = <&sn65dsi86_out_ivo>;
-              };
-          };
-      };
-  };
-
-  sn65dsi86: bridge@2c {
-      compatible = "ti,sn65dsi86";
-
-      ports {
-          #address-cells = <1>;
-          #size-cells = <0>;
-
-          port@0 {
-              reg = <0>;
-              sn65dsi86_in_a: endpoint {
-                  remote-endpoint = <&dsi0_out>;
-              };
-          };
-
-          port@1 {
-              reg = <1>;
-
-              sn65dsi86_out_boe: endpoint@c4 {
-                  remote-endpoint = <&boe_panel_in_edp>;
-              };
-
-              sn65dsi86_out_ivo: endpoint@c5 {
-                  remote-endpoint = <&ivo_panel_in_edp>;
-              };
-          };
-      };
-  };
-
-This replaces an earlier proposal[1] to use chosen/panel-id to select the
-installed panel, in favor of adding support[2] to an EFI driver module
-(DtbLoader.efi) to find the installed panel, locate it in dtb via the
-'panel-id' property, and update it's status to "Ok".
-
-[1] https://patchwork.kernel.org/cover/11024613/
-[2] https://github.com/robclark/edk2/commits/dtbloader
-
-In this case, DtbLoader, which is somewhat generic (ie. this mechanism
-applies to all snapdragon based devices which orignally ship with
-windows), determines the panel-id of the installed panel from the
-UEFIDisplayInfo variable.
-
-As I understand, a similar situation exists with the pine64 laptops.  A
-similar scheme could be used to support this, by loading the panel-id
-from a u-boot variable.
-
-In other cases (phones), a more device specific shim would be needed to
-determine the panel-id by reading some GPIOs, or some other more device-
-specific mechanism.
-
-Bjorn Andersson (1):
-  arm64: dts: qcom: c630: Enable display
-
-Rob Clark (3):
-  dt-bindings: display: panel: document panel-id
-  drm/of: add support to find any enabled endpoint
-  drm/bridge: ti-sn65dsi86: find any enabled endpoint
-
- .../bindings/display/panel/panel-common.yaml  |  26 +++
- .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 165 ++++++++++++++++++
- drivers/gpu/drm/bridge/ti-sn65dsi86.c         |   2 +-
- drivers/gpu/drm/drm_of.c                      |  41 ++++-
- 4 files changed, 232 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
+index 0ca58803ba46..2baf44e401b8 100644
+--- a/drivers/gpu/drm/drm_of.c
++++ b/drivers/gpu/drm/drm_of.c
+@@ -219,11 +219,44 @@ int drm_of_encoder_active_endpoint(struct device_node *node,
+ }
+ EXPORT_SYMBOL_GPL(drm_of_encoder_active_endpoint);
+ 
++static int find_enabled_endpoint(const struct device_node *node, u32 port)
++{
++	struct device_node *endpoint_node, *remote;
++	u32 endpoint = 0;
++
++	for (endpoint = 0; ; endpoint++) {
++		endpoint_node = of_graph_get_endpoint_by_regs(node, port, endpoint);
++		if (!endpoint_node) {
++			pr_debug("No more endpoints!\n");
++			return -ENODEV;
++		}
++
++		remote = of_graph_get_remote_port_parent(endpoint_node);
++		of_node_put(endpoint_node);
++		if (!remote) {
++			pr_debug("no valid remote node\n");
++			continue;
++		}
++
++		if (!of_device_is_available(remote)) {
++			pr_debug("not available for remote node\n");
++			of_node_put(remote);
++			continue;
++		}
++
++		pr_debug("found enabled endpoint %d for %s\n", endpoint, remote->name);
++		of_node_put(remote);
++		return endpoint;
++	}
++
++	return -ENODEV;
++}
++
+ /**
+  * drm_of_find_panel_or_bridge - return connected panel or bridge device
+  * @np: device tree node containing encoder output ports
+  * @port: port in the device tree node
+- * @endpoint: endpoint in the device tree node
++ * @endpoint: endpoint in the device tree node, or -1 to find an enabled endpoint
+  * @panel: pointer to hold returned drm_panel
+  * @bridge: pointer to hold returned drm_bridge
+  *
+@@ -246,6 +279,12 @@ int drm_of_find_panel_or_bridge(const struct device_node *np,
+ 	if (panel)
+ 		*panel = NULL;
+ 
++	if (endpoint == -1) {
++		endpoint = find_enabled_endpoint(np, port);
++		if (endpoint < 0)
++			return endpoint;
++	}
++
+ 	remote = of_graph_get_remote_node(np, port, endpoint);
+ 	if (!remote)
+ 		return -ENODEV;
 -- 
 2.23.0
 
