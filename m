@@ -2,167 +2,211 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF6DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 02:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60ED7C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 03:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB5A2245C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 02:55:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="ixek0n5K"
+	by mail.kernel.org (Postfix) with ESMTP id 339EE217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 03:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbfLGCz1 (ORCPT
+        id S1726472AbfLGDWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 21:55:27 -0500
-Received: from sonic306-21.consmr.mail.gq1.yahoo.com ([98.137.68.84]:42508
-        "EHLO sonic306-21.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726395AbfLGCz1 (ORCPT
+        Fri, 6 Dec 2019 22:22:10 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16130 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726375AbfLGDWJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 21:55:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1575687325; bh=fnUCfRD5mVXcUGhv6/aWxu50QM2W69ZxDy9DcMMOV2k=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject; b=ixek0n5KeJzh5UAc+SLd+mznYZAfoqdZZM33wtIvcC2DYeBC6InbfgiMX93RYEsYWoczHdf6CY7fzZJnep2jBQotg3s7Jy6rbaHk2sQGsVdWICO5B4rhPePjhsrePQ4ah58pyotMqIqIPAVGG4NQquzxUH13xkbA3SwqCH007Tm/LrdMaVyw3HgN/4QBpfBtoAw1coIihuOrXNHup3DC569xtZ2+rqFIqlREVTW1UEL/bZMMxrmk8Cv7x84MTXDk9d3v6dAKQloZjEQaaSrgrwKGn1Gkj7Q9L8GpBZxL46NB7ewVPvmwFti/B5DMFHpJ9E5ipcTNbArCeffK+T9cpA==
-X-YMail-OSG: OnijvzAVM1mCIHcj2U.Ap9QvIggy1hepCdbynRqBQGOf1kME.7hUyGdC_2eP7Yg
- rCjF8O8e785m8dfSrs77lovyvxQYCA4sqJhUNikZMsng0ZCw4fA9FsQL.GqPfQl5Iy.o2ETO.Pg0
- 1zH3VLThioe.BsnOZ7SgvJPKwcTiWFLJBPFVQckab3Ok1fTwFUlqAreIvVF8W0dnUwA0FocuO7_s
- 9njN4py2z3hn87AIjZww_8fro745LOotcJ1saVFTNC6JSU.RiXFxdiMuKiEnbcARTwrt4w3Ib1tv
- hAL3__WcPRYtNc_aRYrZTqn8VqjxzJzqjJEf5vemDb1qh24uXtMHYUf8CpFm0hjsoXKud8LF_kBp
- zB8sa.UzWF2O6lYkCMu8cWaM8AxHDZUjc0Cz6YML9Nxkx6roF3mEQRIxBaryWqFqEKLLmgMVEC9G
- tF8P2CpLy7RtjMtQHZQxgN74IO_yvgrbK3x7fVWM9gWgvTr68hP4vocuD6otguVVa0aRs3fNOTu1
- 325tQs4IvwsaurwUZbg32xTSzibPyBcS8lklaVBteEio8eQoc0RMlf2kRDB0J0KuBOGtox3pJdAa
- T0vMeSWLU4HQ1C6fkvwKXHYOaBD93jenwHxpyh2URT1wlo4vSNIj01LwCyIT0XonbJ5oTaxqNn8J
- Hd.wo2bYsKDIQuzzSWcmo6plp40IbdEdNFl4515gXDtYZK8PmKs76RI7kbTVmOnlQ9M0aHxR_Aw0
- IUaFhdpue6Ul4bB6qa6ooot4iDprGbpkyDS8foDEaByFykLc7pwveRXwKqPirjsXrOw_atYMBapD
- VuOH0swjbVWdH.Rm1PtvDyUxQ.UHfPKy3CqqyqgGP0XFX6kjY.wBhJCpBr4S6H_.8Kl38KPTycJe
- nucqeZDQ67y3NO6HuHVVvBNI9u7rdDDjMVsqzq3t5t8oJQEnRd1XXd3egaxI_cHzFgloCRN8XxBy
- gKnv_SiNzEVY8LESNlBAmq8z_3KubTc56qtTfZ34HVOnpCHAPUTxqjK2EJvMFI0CibA6eMTQK4uy
- pMVyw7fOaPrfzqbtuyFe38w2BLsdJFeQbz_fi76qUfv2S2uduHzRjwNTymtSCDC7iIwNtFV0iu9B
- Ap1QvprEc_nsb_ckWhYcwfNbeYm7Ql5kv._Q5OxDWXZgPFha7leXJYZ14Gx1BRfXD7SD9L5gzoSg
- 0j7AIUurlFXO.tR7NAaiLz0ejhwqjEF1Gytm0EI2bZ35aviDz7LiBSdQed._RmPpe9moPczBQHh2
- zOmu.DvYLJ2Y.wKTBYqsFe_ffJ71V6RQN.qJlgJ1v9.MqF1jyjRFCzNNGPveH_O7RIdppusdyuAh
- 8oPP0uCAXo1OlAh1JvevYm2pwgvjQUovFUxOv9jq6sXFiYAoTL5DT4NBfP.6q8Iw0bfAy4H5OqeQ
- u9AA-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.gq1.yahoo.com with HTTP; Sat, 7 Dec 2019 02:55:25 +0000
-Received: by smtp432.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 2399de470237d8d6426da1f13fa9f534;
-          Sat, 07 Dec 2019 02:55:21 +0000 (UTC)
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Chao Yu <chao@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-erofs@lists.ozlabs.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v2] erofs: update documentation
-Date:   Sat,  7 Dec 2019 10:55:09 +0800
-Message-Id: <20191207025509.6614-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191207023726.5359-1-hsiangkao@aol.com>
-References: <20191207023726.5359-1-hsiangkao@aol.com>
+        Fri, 6 Dec 2019 22:22:09 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB737Gqd108761
+        for <linux-kernel@vger.kernel.org>; Fri, 6 Dec 2019 22:22:08 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wq9mhqhp1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 22:22:08 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
+        Sat, 7 Dec 2019 03:22:06 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 7 Dec 2019 03:22:02 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB73M1vt47448568
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 7 Dec 2019 03:22:01 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 63BE9AE04D;
+        Sat,  7 Dec 2019 03:22:01 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B91A8AE045;
+        Sat,  7 Dec 2019 03:21:59 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.92.151])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat,  7 Dec 2019 03:21:59 +0000 (GMT)
+Subject: Re: [PATCH v4 2/6] sysfs: wrap __compat_only_sysfs_link_entry_to_kobj
+ function to change the symlink name
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        mahesh@linux.vnet.ibm.com, hbathini@linux.ibm.com
+References: <20191206122434.29587-1-sourabhjain@linux.ibm.com>
+ <20191206122434.29587-3-sourabhjain@linux.ibm.com>
+ <20191206124642.GB1360047@kroah.com>
+ <3aabdf19-ccbf-e99a-c560-2b110e8b536a@linux.ibm.com>
+ <20191206191420.GA192422@kroah.com>
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+Date:   Sat, 7 Dec 2019 08:51:58 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191206191420.GA192422@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120703-0008-0000-0000-0000033E70F5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120703-0009-0000-0000-00004A5D99AB
+Message-Id: <51893cad-e8df-a240-bc60-db245420d811@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-06_08:2019-12-05,2019-12-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 mlxscore=0 bulkscore=0 clxscore=1015 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ priorityscore=1501 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1912070022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gao Xiang <gaoxiang25@huawei.com>
 
-Some on-disk structures, fields have been renamed in v5.4,
-the corresponding document should be updated as well.
 
-Also fix misrespresentation of file time and words about
-fixed-sized output compression, data inline, etc.
+On 12/7/19 12:44 AM, Greg KH wrote:
+> On Fri, Dec 06, 2019 at 11:57:53PM +0530, Sourabh Jain wrote:
+>>
+>>
+>> On 12/6/19 6:16 PM, Greg KH wrote:
+>>> On Fri, Dec 06, 2019 at 05:54:30PM +0530, Sourabh Jain wrote:
+>>>> The __compat_only_sysfs_link_entry_to_kobj function creates a symlink to a
+>>>> kobject but doesn't provide an option to change the symlink file name.
+>>>>
+>>>> This patch adds a wrapper function create_sysfs_symlink_entry_to_kobj that
+>>>> extends the __compat_only_sysfs_link_entry_to_kobj functionality which
+>>>> allows function caller to customize the symlink name.
+>>>>
+>>>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>>>> ---
+>>>>  fs/sysfs/group.c      | 28 +++++++++++++++++++++++++---
+>>>>  include/linux/sysfs.h | 12 ++++++++++++
+>>>>  2 files changed, 37 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+>>>> index d41c21fef138..5eb38145b957 100644
+>>>> --- a/fs/sysfs/group.c
+>>>> +++ b/fs/sysfs/group.c
+>>>> @@ -424,6 +424,25 @@ EXPORT_SYMBOL_GPL(sysfs_remove_link_from_group);
+>>>>  int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+>>>>  				      struct kobject *target_kobj,
+>>>>  				      const char *target_name)
+>>>> +{
+>>>> +	return create_sysfs_symlink_entry_to_kobj(kobj, target_kobj,
+>>>> +						target_name, NULL);
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
+>>>> +
+>>>> +/**
+>>>> + * create_sysfs_symlink_entry_to_kobj - add a symlink to a kobject pointing
+>>>> + * to a group or an attribute
+>>>> + * @kobj:		The kobject containing the group.
+>>>> + * @target_kobj:	The target kobject.
+>>>> + * @target_name:	The name of the target group or attribute.
+>>>> + * @symlink_name:	The name of the symlink file (target_name will be
+>>>> + *			considered if symlink_name is NULL).
+>>>> + */
+>>>> +int create_sysfs_symlink_entry_to_kobj(struct kobject *kobj,
+>>>> +				       struct kobject *target_kobj,
+>>>> +				       const char *target_name,
+>>>> +				       const char *symlink_name)
+>>>>  {
+>>>>  	struct kernfs_node *target;
+>>>>  	struct kernfs_node *entry;
+>>>> @@ -448,12 +467,15 @@ int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+>>>>  		return -ENOENT;
+>>>>  	}
+>>>>  
+>>>> -	link = kernfs_create_link(kobj->sd, target_name, entry);
+>>>> +	if (!symlink_name)
+>>>> +		symlink_name = target_name;
+>>>> +
+>>>> +	link = kernfs_create_link(kobj->sd, symlink_name, entry);
+>>>>  	if (IS_ERR(link) && PTR_ERR(link) == -EEXIST)
+>>>> -		sysfs_warn_dup(kobj->sd, target_name);
+>>>> +		sysfs_warn_dup(kobj->sd, symlink_name);
+>>>>  
+>>>>  	kernfs_put(entry);
+>>>>  	kernfs_put(target);
+>>>>  	return PTR_ERR_OR_ZERO(link);
+>>>>  }
+>>>> -EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
+>>>> +EXPORT_SYMBOL_GPL(create_sysfs_symlink_entry_to_kobj);
+>>>> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+>>>> index 5420817ed317..123c6f10333a 100644
+>>>> --- a/include/linux/sysfs.h
+>>>> +++ b/include/linux/sysfs.h
+>>>> @@ -300,6 +300,10 @@ void sysfs_remove_link_from_group(struct kobject *kobj, const char *group_name,
+>>>>  int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+>>>>  				      struct kobject *target_kobj,
+>>>>  				      const char *target_name);
+>>>> +int create_sysfs_symlink_entry_to_kobj(struct kobject *kobj,
+>>>> +				       struct kobject *target_kobj,
+>>>> +				       const char *target_name,
+>>>> +				       const char *symlink_name);
+>>>
+>>> sysfs_create_symlink_entry_to_kobj()?
+>>>
+>>> I can't remember why we put __compat_only there, perhaps because we do
+>>> not want people to really use this unless you really really have to?
+>>
+>> We don't have much option here. I tried replicating the sysfs files
+>> in older patch series but creating symlink at old location is much
+>> better approach.
+>>
+>> The __compat_only_sysfs_link_entry_to_kobj function is pretty generic,
+>> unable to understand the reason behind restricting its usage.
+>>
+>>>
+>>> So then keep compat_only here as well?
+>>
+>> Sure, I will rename the wrapper function.
+>>
+>> But how about changing the function signature instead of creating
+>> a wrapper function?
+>>
+>> Considering the fact that there are only two places this function
+>> has called.
+>>
+>>>
+>>> What breaks if you remove those undocumented sysfs files?  What
+>>> userspace tool do you have that will even notice?
+>>
+>> The scripts used in kdump service need those sysfs files to control
+>> the dump collection. So we can't just move the sysfs files to the
+>> new location.
+> 
+> If you can not change them, then just document them and live with it.
+> Why do this extra work to create a symlink for something you will never
+> use?
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
-changes since v1:
- - mark that "fixed-sized output compression (with compacted indexes)"
-   was firstly introduced in v5.3 in order to minimumize metadata;
- - reduce whitespace between on-disk values and words about data mapping
-   details;
+Eventually the scripts will change but I think it is better to have some
+overlap time to avoid breaking those scripts.
 
- Documentation/filesystems/erofs.txt | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/filesystems/erofs.txt b/Documentation/filesystems/erofs.txt
-index b0c085326e2e..db6d39c3ae71 100644
---- a/Documentation/filesystems/erofs.txt
-+++ b/Documentation/filesystems/erofs.txt
-@@ -24,11 +24,11 @@ Here is the main features of EROFS:
-  - Metadata & data could be mixed by design;
- 
-  - 2 inode versions for different requirements:
--                          v1            v2
-+                          compact (v1)  extended (v2)
-    Inode metadata size:   32 bytes      64 bytes
-    Max file size:         4 GB          16 EB (also limited by max. vol size)
-    Max uids/gids:         65536         4294967296
--   File creation time:    no            yes (64 + 32-bit timestamp)
-+   File change time:      no            yes (64 + 32-bit timestamp)
-    Max hardlinks:         65536         4294967296
-    Metadata reserved:     4 bytes       14 bytes
- 
-@@ -39,7 +39,7 @@ Here is the main features of EROFS:
-  - Support POSIX.1e ACLs by using xattrs;
- 
-  - Support transparent file compression as an option:
--   LZ4 algorithm with 4 KB fixed-output compression for high performance;
-+   LZ4 algorithm with 4 KB fixed-sized output compression for high performance.
- 
- The following git tree provides the file system user-space tools under
- development (ex, formatting tool mkfs.erofs):
-@@ -85,7 +85,7 @@ All data areas should be aligned with the block size, but metadata areas
- may not. All metadatas can be now observed in two different spaces (views):
-  1. Inode metadata space
-     Each valid inode should be aligned with an inode slot, which is a fixed
--    value (32 bytes) and designed to be kept in line with v1 inode size.
-+    value (32 bytes) and designed to be kept in line with compact inode size.
- 
-     Each inode can be directly found with the following formula:
-          inode offset = meta_blkaddr * block_size + 32 * nid
-@@ -117,10 +117,10 @@ may not. All metadatas can be now observed in two different spaces (views):
-                                                        |-> aligned with 4B
- 
-     Inode could be 32 or 64 bytes, which can be distinguished from a common
--    field which all inode versions have -- i_advise:
-+    field which all inode versions have -- i_format:
- 
-         __________________               __________________
--       |     i_advise     |             |     i_advise     |
-+       |     i_format     |             |     i_format     |
-        |__________________|             |__________________|
-        |        ...       |             |        ...       |
-        |                  |             |                  |
-@@ -129,12 +129,13 @@ may not. All metadatas can be now observed in two different spaces (views):
-                                         |__________________| 64 bytes
- 
-     Xattrs, extents, data inline are followed by the corresponding inode with
--    proper alignes, and they could be optional for different data mappings,
--    _currently_ there are totally 3 valid data mappings supported:
-+    proper alignment, and they could be optional for different data mappings.
-+    _currently_ total 4 valid data mappings are supported:
- 
--     1) flat file data without data inline (no extent);
--     2) fixed-output size data compression (must have extents);
--     3) flat file data with tail-end data inline (no extent);
-+     0  flat file data without data inline (no extent);
-+     1  fixed-sized output data compression (with non-compacted indexes);
-+     2  flat file data with tail packing data inline (no extent);
-+     3  fixed-sized output data compression (with compacted indexes, v5.3+).
- 
-     The size of the optional xattrs is indicated by i_xattr_count in inode
-     header. Large xattrs or xattrs shared by many different files can be
-@@ -182,8 +183,8 @@ introduce another on-disk field at all.
- 
- Compression
- -----------
--Currently, EROFS supports 4KB fixed-output clustersize transparent file
--compression, as illustrated below:
-+Currently, EROFS supports 4KB fixed-sized output transparent file compression,
-+as illustrated below:
- 
-          |---- Variant-Length Extent ----|-------- VLE --------|----- VLE -----
-          clusterofs                      clusterofs            clusterofs
--- 
-2.20.1
+Thanks,
+Sourabh Jain
 
