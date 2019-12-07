@@ -2,90 +2,175 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6238DC2D0BE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 06:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E82C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 06:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F02624676
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 06:39:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dFQTnbuk"
+	by mail.kernel.org (Postfix) with ESMTP id C857C20867
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 06:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575701254;
+	bh=hDSrdJp5FnmJpID01avCkZdZ+J3Sonq9F81P4yAHzg4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kQbznLJ6F7tYX5z29YxuJZHx41d5ioamMrYNo+AAAJCDU9HKLwt3q7nZKSe2S/OTd
+	 ByoBm1lnitukpzzCUGBjWLDfDNRpGrffZG20YjtVLuUGTrxuFwks1cGvu6k75XmmyI
+	 /ulBBI3JkViPZ0jTYo72pFFSt5R+m3S1JUDj6wko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfLGGjW (ORCPT
+        id S1726578AbfLGGrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 01:39:22 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:39603 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725978AbfLGGjV (ORCPT
+        Sat, 7 Dec 2019 01:47:33 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38196 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfLGGrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 01:39:21 -0500
-X-UUID: 202a1b9ab8a94936b724c02845a026f3-20191207
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=qz9simjY54XSvDI25tNlpRELcfVBXCKb+vRfUEdSjks=;
-        b=dFQTnbukODvJ272L2Xev50buLt/kQadssaH6YaHKPGQMKrdOMrZr4WNhc2grZoWy6XEWWenQsNJF6AyNleVL0LnVsjnf6pgraHf/fLQ0PtW8XQ+AV6xe7Sqw2va2ovBYrO/9a5weOgOOAZkjtPyctD4RLSpfeycKkRXpPIIoeSQ=;
-X-UUID: 202a1b9ab8a94936b724c02845a026f3-20191207
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1401057786; Sat, 07 Dec 2019 14:39:11 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 7 Dec 2019 14:38:50 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 7 Dec 2019 14:38:44 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <pedrom.sousa@synopsys.com>, <jejb@linux.ibm.com>,
-        <matthias.bgg@gmail.com>
-CC:     <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <beanhuo@micron.com>,
-        <kuohong.wang@mediatek.com>, <peter.wang@mediatek.com>,
-        <chun-hung.wu@mediatek.com>, <andy.teng@mediatek.com>,
-        <leon.chen@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v1 1/2] soc: mediatek: add header for SiP service interface
-Date:   Sat, 7 Dec 2019 14:39:07 +0800
-Message-ID: <1575700748-28191-2-git-send-email-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1575700748-28191-1-git-send-email-stanley.chu@mediatek.com>
-References: <1575700748-28191-1-git-send-email-stanley.chu@mediatek.com>
+        Sat, 7 Dec 2019 01:47:32 -0500
+Received: by mail-lf1-f65.google.com with SMTP id r14so6948074lfm.5
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 22:47:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UPyMBRgocz3Gumc8hl0udOJ28y6fAihoSPqhWLZGSXM=;
+        b=h7pAQHlrS6wsadii68Qu+ijamfwzEaVopIOIiDv9h0hJUjMnoGk9P+OtTNLnGmPppc
+         W7AxQS9TnRlwOWRH1bRJ+xNjY0XkB6HAqCnGY1EtuiQ1JktHJD/nePqvOv+A95wC7Xjr
+         6eP1E881/JjuF6eV/8qFgevKqrjb1xXHiV/Ag=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UPyMBRgocz3Gumc8hl0udOJ28y6fAihoSPqhWLZGSXM=;
+        b=A1rz5mUZST6U28zNoyemEKaZ4mpg4jKOetmyfzDak/qS3pzSznPYzEL2l/M/KP8bt9
+         lYDLcSUvLgkav6Z2/g6vr8QFHeCPhjWkCNPpXdJynRDLrQAyVE0R5Jjb13VPmnDvgDDf
+         Q8wVEWTuCFSnj+lKLQBnnWSrX7aH2Vf8NC1CPchuDyxyjiNBspQmRFdFXF+QX8j2iBgq
+         FTV++41/i0pJ/vc/tVXJ9kl+DF/QcE0X27JzXvLld6AW/txIo733sg8mD9hUlOBzr9Nz
+         rvHhauHux1A7ZXZ9aroy8qwGTye/pIHuuJxE0+j4+knc5FOIIh4MRmlyFlWIjGdR5DHr
+         dZEw==
+X-Gm-Message-State: APjAAAVTCipS+4DR4pfMp2fMbkKAIkN4w1PS2kaSu45Ve3Q0Ouo8Szv0
+        WFnQiuKeTfGc9vbRAO0GtKqciyU4aD4=
+X-Google-Smtp-Source: APXvYqxFY1P1qKwjgFS79JrOp4MGfLQ9cybGi3Q7Livs9f1tjOLyEIrwlfiyM69a63GnWIutkOUing==
+X-Received: by 2002:ac2:544f:: with SMTP id d15mr10815068lfn.126.1575701249353;
+        Fri, 06 Dec 2019 22:47:29 -0800 (PST)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id b17sm7514044lfp.15.2019.12.06.22.47.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 22:47:28 -0800 (PST)
+Received: by mail-lj1-f176.google.com with SMTP id r19so10045262ljg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 22:47:27 -0800 (PST)
+X-Received: by 2002:a2e:9041:: with SMTP id n1mr10951802ljg.133.1575701247153;
+ Fri, 06 Dec 2019 22:47:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
+ <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
+ <20191206214725.GA2108@latitude> <CAHk-=wga0MPEH5hsesi4Cy+fgaaKENMYpbg2kK8UA0qE3iupgw@mail.gmail.com>
+ <20191207000015.GA1757@latitude>
+In-Reply-To: <20191207000015.GA1757@latitude>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 6 Dec 2019 22:47:11 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgkmG9xu_tvMbFTUyn3f2knr7POHjiwMtEmNxXzdPN8wg@mail.gmail.com>
+Message-ID: <CAHk-=wgkmG9xu_tvMbFTUyn3f2knr7POHjiwMtEmNxXzdPN8wg@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
+ not cursor and length [ver #2]
+To:     Johannes Hirte <johannes.hirte@datenkhaos.de>
+Cc:     David Howells <dhowells@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIGEgaGVhZGVyIGZvciB0aGUgU2lQIHNlcnZpY2UgaW50ZXJmYWNlIGRlZmluZWQgdG8gYWNj
-ZXNzDQp0aGUgVUZTSENJIGNvbnRyb2xsZXIgaGFuZGxpbmcgc2VjdXJlIGNvbW1hbmRzIGluIE1l
-ZGlhVGVrIENoaXBzZXRzLg0KDQpTaWduZWQtb2ZmLWJ5OiBTdGFubGV5IENodSA8c3RhbmxleS5j
-aHVAbWVkaWF0ZWsuY29tPg0KLS0tDQogaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrX3Np
-cF9zdmMuaCB8IDI2ICsrKysrKysrKysrKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAy
-NiBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvc29jL21l
-ZGlhdGVrL210a19zaXBfc3ZjLmgNCg0KZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc29jL21l
-ZGlhdGVrL210a19zaXBfc3ZjLmggYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGtfc2lw
-X3N2Yy5oDQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5kZXggMDAwMDAwMDAwMDAwLi43YjY5YWEw
-NmY1OGQNCi0tLSAvZGV2L251bGwNCisrKyBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210
-a19zaXBfc3ZjLmgNCkBAIC0wLDAgKzEsMjYgQEANCisvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
-cjogR1BMLTIuMCAqLw0KKy8qDQorICogQ29weXJpZ2h0IChDKSAyMDE5IE1lZGlhVGVrIEluYy4N
-CisgKi8NCisNCisjaWZuZGVmIF9fTVRLX1NJUF9TVkNfSA0KKyNkZWZpbmUgX19NVEtfU0lQX1NW
-Q19IDQorDQorLyogRXJyb3IgQ29kZSAqLw0KKyNkZWZpbmUgU0lQX1NWQ19FX1NVQ0NFU1MgICAg
-ICAgICAgICAgICAwDQorI2RlZmluZSBTSVBfU1ZDX0VfTk9UX1NVUFBPUlRFRCAgICAgICAgIC0x
-DQorI2RlZmluZSBTSVBfU1ZDX0VfSU5WQUxJRF9QQVJBTVMgICAgICAgIC0yDQorI2RlZmluZSBT
-SVBfU1ZDX0VfSU5WQUxJRF9SQU5HRSAgICAgICAgIC0zDQorI2RlZmluZSBTSVBfU1ZDX0VfUEVS
-TUlTU0lPTl9ERU5JRUQgICAgIC00DQorDQorI2lmZGVmIENPTkZJR19BUk02NA0KKyNkZWZpbmUg
-TVRLX1NJUF9TTUNfQUFSQ0hfQklUICAgICAgICAgICAweDQwMDAwMDAwDQorI2Vsc2UNCisjZGVm
-aW5lIE1US19TSVBfU01DX0FBUkNIX0JJVCAgICAgICAgICAgMHgwMDAwMDAwMA0KKyNlbmRpZg0K
-Kw0KKy8qIFVGUyByZWxhdGVkIFNNQyBjYWxsICovDQorI2RlZmluZSBNVEtfU0lQX1VGU19DT05U
-Uk9MIFwNCisJKDB4ODIwMDAyNzYgfCBNVEtfU0lQX1NNQ19BQVJDSF9CSVQpDQorDQorI2VuZGlm
-DQotLSANCjIuMTguMA0K
+On Fri, Dec 6, 2019 at 4:00 PM Johannes Hirte
+<johannes.hirte@datenkhaos.de> wrote:
+>
+> Tested with 5.4.0-11505-g347f56fb3890 and still the same wrong behavior.
+> Reliable testcase is facebook, where timeline isn't updated with firefox.
 
+Hmm. I'm not on FB, so that's not a great test for me.
+
+But I've been staring at the code for a long time, and I did find another issue.
+
+poll() and select() were subtly racy and broken. The code did
+
+        unsigned int head = READ_ONCE(pipe->head);
+        unsigned int tail = READ_ONCE(pipe->tail);
+
+which is ok in theory - select and poll can be racy, and doing racy
+reads is ok and we do it in other places too.
+
+But when you don't do proper locking and do racy poll/select, you need
+to make sure that *if* you were wrong, and said "there's nothing
+pending", you need to have added yourself to the wait-queue so that
+any changes caused poll to update.
+
+And the new pipe code did that wrong. It added itself to the poll wait
+queues *after* it had read that racy data, so you could get into a
+race where
+
+ - poll reads stale data
+
+      - data changes, wakeup happens
+
+ - poll adds itself to the poll wait queue after the wakeup
+
+ - poll returns "nothing to read/write" based on stale data, and never
+saw the wakeup event that told it otherwise.
+
+So a patch something like the appended (whitespace-damaged once again,
+because it's untested and I've only been _looking_ a the code) might
+solve that issue.
+
+That said, the race here is quite small. Since that firefox problem is
+apparently repeatable for you, the timing is either _very_ unlucky, or
+there is something else going on too.
+
+                  Linus
+
+--- snip snip ---
+
+diff --git a/fs/pipe.c b/fs/pipe.c
+index c561f7f5e902..4c39ea9b3419 100644
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -557,12 +557,24 @@ pipe_poll(struct file *filp, poll_table *wait)
+ {
+        __poll_t mask;
+        struct pipe_inode_info *pipe = filp->private_data;
+-       unsigned int head = READ_ONCE(pipe->head);
+-       unsigned int tail = READ_ONCE(pipe->tail);
++       unsigned int head, tail;
+
++       /*
++        * Reading only -- no need for acquiring the semaphore.
++        *
++        * But because this is racy, the code has to add the
++        * entry to the poll table _first_ ..
++        */
+        poll_wait(filp, &pipe->wait, wait);
+
+-       /* Reading only -- no need for acquiring the semaphore.  */
++       /*
++        * .. and only then can you do the racy tests. That way,
++        * if something changes and you got it wrong, the poll
++        * table entry will wake you up and fix it.
++        */
++       head = READ_ONCE(pipe->head);
++       tail = READ_ONCE(pipe->tail);
++
+        mask = 0;
+        if (filp->f_mode & FMODE_READ) {
+                if (!pipe_empty(head, tail))
