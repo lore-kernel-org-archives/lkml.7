@@ -2,156 +2,224 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785CAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9907C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F63206D6
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FA7206D6
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:20:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="M+x2cjaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfLGRSd (ORCPT
+        id S1726555AbfLGRUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 12:18:33 -0500
-Received: from fieldses.org ([173.255.197.46]:55114 "EHLO fieldses.org"
+        Sat, 7 Dec 2019 12:20:07 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:45141 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbfLGRSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 12:18:32 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 0A7DC1C95; Sat,  7 Dec 2019 12:18:32 -0500 (EST)
-Date:   Sat, 7 Dec 2019 12:18:32 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [GIT PULL] nfsd change for 5.5
-Message-ID: <20191207171832.GB24017@fieldses.org>
-References: <20191207171402.GA24017@fieldses.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191207171402.GA24017@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        id S1726420AbfLGRUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 12:20:07 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47Vbmz65Bwz9vBLP;
+        Sat,  7 Dec 2019 18:20:03 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=M+x2cjaW; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id IWhZ83DmAviw; Sat,  7 Dec 2019 18:20:03 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47Vbmz4WTnz9vBLM;
+        Sat,  7 Dec 2019 18:20:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1575739203; bh=wGJwZeRsClNhRcvPcTvmKeYbUIim15sV8rYIdLlEYjE=;
+        h=From:Subject:To:Cc:Date:From;
+        b=M+x2cjaWxqN4gPz82Gm0NQGkLddH8L8Fxp54s2uZ9RC/Y/A7Mr5SbaQ/KYpI+ixiQ
+         dy3n1Wd1EzRmsohwZiaOJCGZM2gtQEk+79CKv9C3I1lw6xjH/X6klmRjHRru3sSy9L
+         YOgETHy8kRIG2wjXdIq8SB8OQpzzLSh6afRW/Wh4=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4E78B8B7AC;
+        Sat,  7 Dec 2019 18:20:05 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id gw4CgMiQ6qPD; Sat,  7 Dec 2019 18:20:05 +0100 (CET)
+Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 02DB28B772;
+        Sat,  7 Dec 2019 18:20:05 +0100 (CET)
+Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 756A463154; Sat,  7 Dec 2019 17:20:04 +0000 (UTC)
+Message-Id: <72a6cd86137b2a7ab835213cf5c74df6ed2f6ea7.1575739197.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v5] powerpc/irq: inline call_do_irq() and call_do_softirq() on
+ PPC32
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Sat,  7 Dec 2019 17:20:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 07, 2019 at 12:14:02PM -0500, bfields wrote:
-> Please pull
-> 
->   git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.5
-> 
-> for nfsd changes for 5.5.
-> 
-> This is a relatively quiet cycle for nfsd, mainly various bugfixes.
-> 
-> Possibly most interesting is Trond's fixes for some callback races that
-> were due to my incomplete understanding of rpc client shutdown.
-> Unfortunately at the last minute I've started noticing a new
-> intermittent failure to send callbacks.  As the logic seems basically
-> correct, I'm leaving Trond's patches in for now, and hope to find a fix
-> in the next week so I don't have to revert those patches.
+call_do_irq() and call_do_softirq() are simple enough to be
+worth inlining.
 
-Oh, also, not included: server-to-server copy offload.  I think it's
-more or less ready, but due to some miscommunication (at least partly my
-fault), I didn't get them in my nfsd-next branch till this week.  And
-the client side (which it builds on) isn't merged yet last I checked.
-So, it seemed more prudent to back them out and wait till next time.
+Inlining them avoids an mflr/mtlr pair plus a save/reload on stack.
+It also allows GCC to keep the saved ksp_limit in an nonvolatile reg.
 
---b.
+This is inspired from S390 arch. Several other arches do more or
+less the same. The way sparc arch does seems odd thought.
 
-> 
-> --b.
-> 
-> Al Viro (1):
->       race in exportfs_decode_fh()
-> 
-> Andy Shevchenko (1):
->       nfsd: remove private bin2hex implementation
-> 
-> Christoph Hellwig (2):
->       sunrpc: remove __KERNEL__ ifdefs
->       lockd: remove __KERNEL__ ifdefs
-> 
-> Chuck Lever (4):
->       svcrdma: Improve DMA mapping trace points
->       SUNRPC: Trace gssproxy upcall results
->       SUNRPC: Fix svcauth_gss_proxy_init()
->       SUNRPC: Fix backchannel latency metrics
-> 
-> J. Bruce Fields (4):
->       nfsd: "\%s" should be "%s"
->       nfsd: mark cb path down on unknown errors
->       nfsd: document callback_wq serialization of callback code
->       nfsd: restore NFSv3 ACL support
-> 
-> Mao Wenan (1):
->       nfsd: Drop LIST_HEAD where the variable it declares is never used.
-> 
-> NeilBrown (1):
->       nfsd: check for EBUSY from vfs_rmdir/vfs_unink.
-> 
-> Olga Kornievskaia (1):
->       NFSD fixing possible null pointer derefering in copy offload
-> 
-> Patrick Steinhardt (1):
->       nfsd: depend on CRYPTO_MD5 for legacy client tracking
-> 
-> Pavel Tikhomirov (1):
->       sunrpc: fix crash when cache_head become valid before update
-> 
-> Scott Mayhew (3):
->       nfsd4: fix up replay_matches_cache()
->       nfsd: Fix cld_net->cn_tfm initialization
->       nfsd: v4 support requires CRYPTO_SHA256
-> 
-> Trond Myklebust (3):
->       nfsd: minor 4.1 callback cleanup
->       nfsd: Fix races between nfsd4_cb_release() and nfsd4_shutdown_callback()
->       nfsd: Ensure CLONE persists data and metadata changes to the target file
-> 
-> YueHaibing (1):
->       nfsd: remove set but not used variable 'len'
-> 
->  fs/exportfs/expfs.c                        |  31 +++++----
->  fs/nfsd/Kconfig                            |   3 +-
->  fs/nfsd/filecache.c                        |   2 -
->  fs/nfsd/nfs4callback.c                     | 104 +++++++++++++++++++++++------
->  fs/nfsd/nfs4proc.c                         |   6 +-
->  fs/nfsd/nfs4recover.c                      |  23 +++----
->  fs/nfsd/nfs4state.c                        |  19 ++++--
->  fs/nfsd/nfs4xdr.c                          |   2 -
->  fs/nfsd/nfsd.h                             |   3 +-
->  fs/nfsd/nfssvc.c                           |   3 +-
->  fs/nfsd/state.h                            |   1 +
->  fs/nfsd/vfs.c                              |  20 +++++-
->  fs/nfsd/vfs.h                              |   2 +-
->  include/linux/lockd/debug.h                |   4 --
->  include/linux/lockd/lockd.h                |   4 --
->  include/linux/sunrpc/auth.h                |   3 -
->  include/linux/sunrpc/auth_gss.h            |   2 -
->  include/linux/sunrpc/clnt.h                |   3 -
->  include/linux/sunrpc/gss_api.h             |   2 -
->  include/linux/sunrpc/gss_err.h             |   3 -
->  include/linux/sunrpc/msg_prot.h            |   3 -
->  include/linux/sunrpc/rpc_pipe_fs.h         |   3 -
->  include/linux/sunrpc/svcauth.h             |   4 --
->  include/linux/sunrpc/svcauth_gss.h         |   2 -
->  include/linux/sunrpc/xdr.h                 |   3 -
->  include/linux/sunrpc/xprt.h                |   4 --
->  include/linux/sunrpc/xprtsock.h            |   4 --
->  include/trace/events/rpcgss.h              |  45 +++++++++++++
->  include/trace/events/rpcrdma.h             |  30 +++++++--
->  include/trace/events/sunrpc.h              |  55 +++++++++++++++
->  net/sunrpc/auth_gss/gss_mech_switch.c      |   4 +-
->  net/sunrpc/auth_gss/svcauth_gss.c          |  92 ++++++++++++++++++-------
->  net/sunrpc/cache.c                         |   6 --
->  net/sunrpc/svc.c                           |   2 +
->  net/sunrpc/svcauth.c                       |   2 +
->  net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   1 +
->  net/sunrpc/xprtrdma/svc_rdma_sendto.c      |   8 ++-
->  net/sunrpc/xprtsock.c                      |   3 +-
->  38 files changed, 362 insertions(+), 149 deletions(-)
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
+
+---
+v2: no change.
+v3: no change.
+v4:
+- comment reminding the purpose of the inline asm block.
+- added r2 as clobbered reg
+v5:
+- Limiting the change to PPC32 for now.
+- removed r2 from the clobbered regs list (on PPC32 r2 points to current all the time)
+- Removed patch 1 and merged ksp_limit handling in here.
+---
+ arch/powerpc/include/asm/irq.h |  2 ++
+ arch/powerpc/kernel/irq.c      | 48 ++++++++++++++++++++++++++++++++++++++++++
+ arch/powerpc/kernel/misc_32.S  | 39 ----------------------------------
+ 3 files changed, 50 insertions(+), 39 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
+index 814dfab7e392..e4a92f0b4ad4 100644
+--- a/arch/powerpc/include/asm/irq.h
++++ b/arch/powerpc/include/asm/irq.h
+@@ -56,8 +56,10 @@ extern void *mcheckirq_ctx[NR_CPUS];
+ extern void *hardirq_ctx[NR_CPUS];
+ extern void *softirq_ctx[NR_CPUS];
+ 
++#ifdef CONFIG_PPC64
+ void call_do_softirq(void *sp);
+ void call_do_irq(struct pt_regs *regs, void *sp);
++#endif
+ extern void do_IRQ(struct pt_regs *regs);
+ extern void __init init_IRQ(void);
+ extern void __do_irq(struct pt_regs *regs);
+diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
+index 5645bc9cbc09..240eca12c71d 100644
+--- a/arch/powerpc/kernel/irq.c
++++ b/arch/powerpc/kernel/irq.c
+@@ -611,6 +611,54 @@ static inline void check_stack_overflow(void)
+ #endif
+ }
+ 
++#ifdef CONFIG_PPC32
++static inline void call_do_softirq(const void *sp)
++{
++	register unsigned long ret asm("r3");
++	unsigned long limit = current->thread.ksp_limit;
++
++	/* Adjust the stack limit */
++	current->thread.ksp_limit = (unsigned long)sp;
++
++	/* Temporarily switch r1 to sp, call __do_softirq() then restore r1. */
++	asm volatile(
++		"	"PPC_STLU"	1, %2(%1);\n"
++		"	mr		1, %1;\n"
++		"	bl		%3;\n"
++		"	"PPC_LL"	1, 0(1);\n" :
++		"=r"(ret) :
++		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_softirq) :
++		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
++		"r0", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
++
++	/* Restore stack limit */
++	current->thread.ksp_limit = limit;
++}
++
++static inline void call_do_irq(struct pt_regs *regs, void *sp)
++{
++	register unsigned long r3 asm("r3") = (unsigned long)regs;
++	unsigned long limit = current->thread.ksp_limit;
++
++	/* Adjust the stack limit */
++	current->thread.ksp_limit = (unsigned long)sp;
++
++	/* Temporarily switch r1 to sp, call __do_irq() then restore r1 */
++	asm volatile(
++		"	"PPC_STLU"	1, %2(%1);\n"
++		"	mr		1, %1;\n"
++		"	bl		%3;\n"
++		"	"PPC_LL"	1, 0(1);\n" :
++		"+r"(r3) :
++		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_irq) :
++		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
++		"r0", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
++
++	/* Restore stack limit */
++	current->thread.ksp_limit = limit;
++}
++#endif
++
+ void __do_irq(struct pt_regs *regs)
+ {
+ 	unsigned int irq;
+diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
+index d80212be8698..341a3cd199cb 100644
+--- a/arch/powerpc/kernel/misc_32.S
++++ b/arch/powerpc/kernel/misc_32.S
+@@ -28,45 +28,6 @@
+ 	.text
+ 
+ /*
+- * We store the saved ksp_limit in the unused part
+- * of the STACK_FRAME_OVERHEAD
+- */
+-_GLOBAL(call_do_softirq)
+-	mflr	r0
+-	stw	r0,4(r1)
+-	lwz	r10,THREAD+KSP_LIMIT(r2)
+-	stw	r3, THREAD+KSP_LIMIT(r2)
+-	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r3)
+-	mr	r1,r3
+-	stw	r10,8(r1)
+-	bl	__do_softirq
+-	lwz	r10,8(r1)
+-	lwz	r1,0(r1)
+-	lwz	r0,4(r1)
+-	stw	r10,THREAD+KSP_LIMIT(r2)
+-	mtlr	r0
+-	blr
+-
+-/*
+- * void call_do_irq(struct pt_regs *regs, void *sp);
+- */
+-_GLOBAL(call_do_irq)
+-	mflr	r0
+-	stw	r0,4(r1)
+-	lwz	r10,THREAD+KSP_LIMIT(r2)
+-	stw	r4, THREAD+KSP_LIMIT(r2)
+-	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r4)
+-	mr	r1,r4
+-	stw	r10,8(r1)
+-	bl	__do_irq
+-	lwz	r10,8(r1)
+-	lwz	r1,0(r1)
+-	lwz	r0,4(r1)
+-	stw	r10,THREAD+KSP_LIMIT(r2)
+-	mtlr	r0
+-	blr
+-
+-/*
+  * This returns the high 64 bits of the product of two 64-bit numbers.
+  */
+ _GLOBAL(mulhdu)
+-- 
+2.13.3
+
