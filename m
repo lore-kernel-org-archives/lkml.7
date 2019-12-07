@@ -7,170 +7,157 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F20DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF71C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24E3221835
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C1824676
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575716710;
-	bh=5qUetxT7lVLLT3D+MI17t6HtuFzj8D2c2u0mgdBjM4U=;
+	s=default; t=1575717125;
+	bh=WI+LemDcpYVITCWDtrnmlI0yhoN0fnrcBkkObYh83kQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RLg9+WcuAhrYKIVtftt+pB1QqKdy62u6RmLcroHBewhTkIFAq0tv2LWFYPjqT5KM0
-	 h7JOGoB8kvnnVXf2CSH1X1BfbF+RUFLp7UV/oSKK8xW4X7v/MHak555g1TNFxd3Fl3
-	 /bgL/ZaKwQRPBdeM+KNuVCmPsvhtl7OT6/6BbX8I=
+	b=wr16uC4Zf4Upj40jtJeadFt3/3SsS1tJGftvnnjX4E1b+OfIEAkWKo847KPLHhuT+
+	 nDj6cSjImEjq15qoTLOPdZ8KUAvaR1YxH8gRVbzo99S4ofUhbLme/Ah3DDeDlKlQW1
+	 HTrz87lKzOaIYIqBTKfnhBF9TYJnIoGqWW81AhN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfLGLFJ (ORCPT
+        id S1726409AbfLGLMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 06:05:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43602 "EHLO mail.kernel.org"
+        Sat, 7 Dec 2019 06:12:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfLGLFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 06:05:08 -0500
+        id S1726025AbfLGLMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 06:12:02 -0500
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 346FC21835;
-        Sat,  7 Dec 2019 11:05:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE3C524673;
+        Sat,  7 Dec 2019 11:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575716707;
-        bh=5qUetxT7lVLLT3D+MI17t6HtuFzj8D2c2u0mgdBjM4U=;
+        s=default; t=1575717121;
+        bh=WI+LemDcpYVITCWDtrnmlI0yhoN0fnrcBkkObYh83kQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=G6J2VL2OY83IIVDK7p8doX2MoRZU35GZMpY3K9S+07LvEXgATuSq5xFbzVXaV4zAy
-         /qRPHWoO8QrMyxum3NqrnUsS7Q3eIUmnZ/lfVRzGQeXWqhjL9vIl6GDjriuXAvKUOt
-         jFLeW0W3tHqtYDl91n38mjV/Gnt0ASKH3WxeMing=
-Date:   Sat, 7 Dec 2019 11:05:04 +0000
+        b=v80aqitChL36LevYdO7d+JONlcxEKJPjcmWF0Cjc0C9sXcZbAZAhfcP1FLz791ha6
+         hYPVBOpBpEMX5eUfuD10pg5oUoN90523xjSdVPxOCgb6a1oGbhAs0M9oOBEWTOHJzN
+         MW4KsiF/ojmy63bpbCiq71N0ZbVA5LCf8dvwnXcY=
+Date:   Sat, 7 Dec 2019 11:11:56 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: imu: adis: use new `delay` structure for SPI
- transfer delays
-Message-ID: <20191207110504.6db10b0a@archlinux>
-In-Reply-To: <20191204080904.2557-1-alexandru.ardelean@analog.com>
-References: <20191204080904.2557-1-alexandru.ardelean@analog.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] iio: adc: max9611: Fix too short conversion time
+ delay
+Message-ID: <20191207111156.7e5139f0@archlinux>
+In-Reply-To: <20191206131944.28707-1-geert+renesas@glider.be>
+References: <20191206131944.28707-1-geert+renesas@glider.be>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Dec 2019 10:09:04 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+On Fri,  6 Dec 2019 14:19:44 +0100
+Geert Uytterhoeven <geert+renesas@glider.be> wrote:
 
-> In a recent change to the SPI subsystem [1], a new `delay` struct was added
-> to replace the `delay_usecs`. This change replaces the current `delay_secs`
-> with `delay` for this driver.
-> 
-> The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-> that both `delay_usecs` & `delay` are used (in this order to preserve
-> backwards compatibility).
-> 
-> [1] commit bebcfd272df6485 ("spi: introduce `delay` field for
-> `spi_transfer` + spi_transfer_delay_exec()")
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-I don't yet have that patch in my upstream so this will have to wait until
-it gets there. Give me a poke if I seem to have forgotten about it.
-
-Thanks,
+> As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
+> reading in probe"), max9611 initialization sometimes fails on the
+> Salvator-X(S) development board with:
+>=20
+>     max9611 4-007f: Invalid value received from ADC 0x8000: aborting
+>     max9611: probe of 4-007f failed with error -5
+>=20
+> The max9611 driver tests communications with the chip by reading the die
+> temperature during the probe function, which returns an invalid value.
+>=20
+> According to the datasheet, the typical ADC conversion time is 2 ms, but
+> no minimum or maximum values are provided.  Maxim Technical Support
+> confirmed this was tested with temperature Ta=3D25 degreeC, and promised
+> to inform me if a maximum/minimum value is available (they didn't get
+> back to me, so I assume it is not).
+>=20
+> However, the driver assumes a 1 ms conversion time.  Usually the
+> usleep_range() call returns after more than 1.8 ms, hence it succeeds.
+> When it returns earlier, the data register may be read too early, and
+> the previous measurement value will be returned.  After boot, this is
+> the temperature POR (power-on reset) value, causing the failure above.
+>=20
+> Fix this by increasing the delay from 1000-2000 =C2=B5s to 3000-3300 =C2=
+=B5s.
+>=20
+> Note that this issue has always been present, but it was exposed by the
+> aformentioned commit.
+>=20
+> Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Ah. I picked up v2 and did the tidy up.  Oh well, same result ;)
 
 Jonathan
 
-
 > ---
->  drivers/iio/imu/adis.c | 27 ++++++++++++++++++---------
->  1 file changed, 18 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-> index 2cd2cc2316c6..95af67470668 100644
-> --- a/drivers/iio/imu/adis.c
-> +++ b/drivers/iio/imu/adis.c
-> @@ -38,7 +38,8 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
-> -			.delay_usecs = adis->data->write_delay,
-> +			.delay.value = adis->data->write_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  			.cs_change_delay.value = adis->data->cs_change_delay,
->  			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
-> @@ -46,7 +47,8 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
-> -			.delay_usecs = adis->data->write_delay,
-> +			.delay.value = adis->data->write_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  			.cs_change_delay.value = adis->data->cs_change_delay,
->  			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
-> @@ -54,19 +56,22 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
-> -			.delay_usecs = adis->data->write_delay,
-> +			.delay.value = adis->data->write_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  			.cs_change_delay.value = adis->data->cs_change_delay,
->  			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
->  			.tx_buf = adis->tx + 6,
->  			.bits_per_word = 8,
->  			.len = 2,
-> -			.delay_usecs = adis->data->write_delay,
-> +			.delay.value = adis->data->write_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
->  			.tx_buf = adis->tx + 8,
->  			.bits_per_word = 8,
->  			.len = 2,
-> -			.delay_usecs = adis->data->write_delay,
-> +			.delay.value = adis->data->write_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  		},
->  	};
->  
-> @@ -138,7 +143,8 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
-> -			.delay_usecs = adis->data->write_delay,
-> +			.delay.value = adis->data->write_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  			.cs_change_delay.value = adis->data->cs_change_delay,
->  			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
-> @@ -146,7 +152,8 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
-> -			.delay_usecs = adis->data->read_delay,
-> +			.delay.value = adis->data->read_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  			.cs_change_delay.value = adis->data->cs_change_delay,
->  			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
-> @@ -155,14 +162,16 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
-> -			.delay_usecs = adis->data->read_delay,
-> +			.delay.value = adis->data->read_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  			.cs_change_delay.value = adis->data->cs_change_delay,
->  			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
->  			.rx_buf = adis->rx + 2,
->  			.bits_per_word = 8,
->  			.len = 2,
-> -			.delay_usecs = adis->data->read_delay,
-> +			.delay.value = adis->data->read_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  		},
->  	};
->  
+> After this patch, probing of the two max9611 sensors succeeded during
+> ca. 3000 boot cycles on Salvator-X(S) boards, equipped with various
+> R-Car H3/M3-W/M3-N SoCs.
+>=20
+> v3:
+>   - Add Reviewed-by,
+>   - Join split comment line,
+>=20
+> v2:
+>   - Add Reviewed-by,
+>   - Add feedback from Maxim Technical Support,
+>   - Increase delay from 2000-2200 =C2=B5s to 3000-3300 =C2=B5s to play sa=
+fe.
+> ---
+>  drivers/iio/adc/max9611.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+> index bf76dfb3f2c9530b..6250d4bf46dc9642 100644
+> --- a/drivers/iio/adc/max9611.c
+> +++ b/drivers/iio/adc/max9611.c
+> @@ -89,6 +89,12 @@
+>  #define MAX9611_TEMP_SCALE_NUM		1000000
+>  #define MAX9611_TEMP_SCALE_DIV		2083
+> =20
+> +/*
+> + * Conversion time is 2 ms (typically) at Ta=3D25 degreeC
+> + * No maximum value is known, so play it safe
+> + */
+> +#define MAX9611_CONV_TIME_US_RANGE	3000, 3300
+> +
+>  struct max9611_dev {
+>  	struct device *dev;
+>  	struct i2c_client *i2c_client;
+> @@ -223,10 +229,9 @@ static int max9611_read_single(struct max9611_dev *m=
+ax9611,
+>  	}
+> =20
+>  	/*
+> -	 * need a delay here to make register configuration
+> -	 * stabilize. 1 msec at least, from empirical testing.
+> +	 * need a delay here to make register configuration stabilize.
+>  	 */
+> -	usleep_range(1000, 2000);
+> +	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+> =20
+>  	ret =3D i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
+>  	if (ret < 0) {
+> @@ -493,7 +498,7 @@ static int max9611_init(struct max9611_dev *max9611)
+>  			MAX9611_REG_CTRL2, 0);
+>  		return ret;
+>  	}
+> -	usleep_range(1000, 2000);
+> +	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+> =20
+>  	return 0;
+>  }
 
