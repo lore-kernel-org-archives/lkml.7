@@ -2,110 +2,99 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9345EC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E217AC43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E9F24670
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A663B2176D
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:55:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LakI9cil"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="azJLXR5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfLGUos (ORCPT
+        id S1726810AbfLGUyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 15:44:48 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37823 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbfLGUos (ORCPT
+        Sat, 7 Dec 2019 15:54:52 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33275 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbfLGUyv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 15:44:48 -0500
-Received: by mail-pf1-f193.google.com with SMTP id s18so5157048pfm.4;
-        Sat, 07 Dec 2019 12:44:48 -0800 (PST)
+        Sat, 7 Dec 2019 15:54:51 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 6so5099914pgk.0
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 12:54:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Xyf0SZecPpkfLjmlG+eMPlHT7I5Xhz/GSXg3wKF5298=;
-        b=LakI9cilJttAR/DfAQxOuA91gI4/zJVihz/ge7MdhSp+JjysZd1Y8vBysj+LSibOpD
-         3WZ4oruFthXPOpH0oFYnqk7iwJdSQF81TTAPiMZsIV4LU+NXyKzjE68pncawYSV/pIkI
-         eoQmWdXF+DKHmO06RT22Ypskk6TDYaOQmISpS9l9NAsKyECoghlwbgwa/2YnMNCn0ctw
-         lVghy0pbFXEZS6FL58SjN0705SO4C3IfseDo/etie2DmwoDzLGnuWKbXjRZtS46LonB/
-         UmrDocvFDDhmAPIX77ijeP6l2q9HOTO2HkfoxphQz5NOWQ5L5pENduz6rE0s5D4IU6Vd
-         PTHQ==
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NTwW2V/iqGwRUs5QGA+lcInh8k6UZJSdkBrxMBn7N5c=;
+        b=azJLXR5QMjtkLh9J/JHZ/1uQ1SIal5gfSQonVDzDZBSLg5WNyQ2UpA9uGxkIVe/TB3
+         F138SjDI+ucmcVym9VJn3Dbs0Nu2YXgYzsOCSiC4r3YzLbdz7HMGxyAu6BdRy+Z7vZvd
+         2y9s01UYjs0SJ86hyfYYZSwAFqzl75a+InlhpgTEvTm4Zsl1PGEpIdL4nAK8z5tjaaZQ
+         nDaOoJSJaxePw6GuQi8aebULpOYCrnU68gxjsirg3/8XAQYc3iCSf1+6TCwJXmr35E4o
+         DqaNWCOMwOak2PaNXqjm7i4wnIKNcMoEJJ6udrZ0vAK6GeTCsBIsy1KLJauml+m9Mg/h
+         3ktg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Xyf0SZecPpkfLjmlG+eMPlHT7I5Xhz/GSXg3wKF5298=;
-        b=etzUAA4fjgBi13NOHMlW5dSK85oOeDeCnLBGMRkyBPZ32B1VTvYiFMv9YfT2YEsKyu
-         guboIoORrKd1BV228M7TPKUSi9Y5KQqIdVwDKsf5LS+BTD/bobx41al6HCTMjvqT3zCE
-         YwcZyBXAXMWbGgOtSLzpPJujO3Wh8HgNTnGpkyqcf8S197moqtcuBIWAi2ZGiJtHrvsD
-         2Q1LOwdKRpY9+vMcrU439o6dpOKNm8SGmgHF7aldzMloHHMvaUrG2SFAuR5dinM1EXII
-         IfU3hPwKdbo/XtMwx78Yj5DYSaIgt9ufKkhxhi5GpIx2Q6PS4HG/1G2+9q5fJ8u901X3
-         5z/A==
-X-Gm-Message-State: APjAAAUNlv577pEFRD3ZvfgceOuiYlsbkO9kLo5ES4NhDXw7okYmsYrc
-        pN4ClDKARoRiPL+BhWF1Ano=
-X-Google-Smtp-Source: APXvYqx9jOthFQ3zKT9urFlJnFWqAP3oBNS+PKy6fXC71X8YS+7fEvHpDEQD9lpcr787AZVtYGYEUQ==
-X-Received: by 2002:a65:5a4d:: with SMTP id z13mr10757516pgs.21.1575751487293;
-        Sat, 07 Dec 2019 12:44:47 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id fh2sm7654327pjb.30.2019.12.07.12.44.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 12:44:46 -0800 (PST)
-Date:   Sat, 7 Dec 2019 12:44:44 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        emamd001@umn.edu
-Subject: Re: [PATCH] Input: Fix memory leak in psxpad_spi_probe
-Message-ID: <20191207204444.GT50317@dtor-ws>
-References: <20191121200115.24846-1-navid.emamdoost@gmail.com>
- <20191122190208.GA248138@dtor-ws>
- <20191126093434.GA1383178@kroah.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NTwW2V/iqGwRUs5QGA+lcInh8k6UZJSdkBrxMBn7N5c=;
+        b=Xj/4znH8hIHP6hEIT0yBMBO3G/vHBQ4pMGkjeBkkfidbxLhFad3aEvMdW1Pw4JvV7R
+         10na2F6coCBcI35BPpV4+irCh0E/1UryauEpor86rkfYdsBqIG99UqsHnmO4fV1lTege
+         6HPOKYTOOxbXLkJWHQAJJ3okedL5yN3A9FQumextEIReoW+3On5y7R00Gfam8KidHE4B
+         TiE7teRUa5nQf4I74FTKuXlcwetWAt9dIres9ZHOHnYTu2h/FQykW0Ful8BNBM1p/A3b
+         sgX4YGzJ63AGozb97s0DmZONn3ewi8YLciRlnYnDWNLemi5kRvx9tBhWrdW/OeJAh9fe
+         IrPQ==
+X-Gm-Message-State: APjAAAV8utbuQ+GbRcM/qiU4ojCPZfbvorHdm6K9PW5Y0SOr60sKK07A
+        j2NGtEBiBOc/bLcItt37TfkzpJMp6LIAvViS
+X-Google-Smtp-Source: APXvYqwj7KYX2mBIpiMNQj4ppQLXOMG9A94HF1IBDqXib7kadqQ74So9+6Tt7oj658Tte2fCiMUxHQ==
+X-Received: by 2002:a62:5bc4:: with SMTP id p187mr2075817pfb.255.1575752090960;
+        Sat, 07 Dec 2019 12:54:50 -0800 (PST)
+Received: from localhost.localdomain (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id q3sm19929032pgl.15.2019.12.07.12.54.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 07 Dec 2019 12:54:49 -0800 (PST)
+From:   Olof Johansson <olof@lixom.net>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        Olof Johansson <olof@lixom.net>
+Subject: [PATCH] objtool: silence build output from sync-check.sh
+Date:   Sat,  7 Dec 2019 12:54:20 -0800
+Message-Id: <20191207205419.9344-1-olof@lixom.net>
+X-Mailer: git-send-email 2.22.GIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191126093434.GA1383178@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 10:34:34AM +0100, Greg Kroah-Hartman wrote:
-> On Fri, Nov 22, 2019 at 11:02:08AM -0800, Dmitry Torokhov wrote:
-> > Hi Navid,
-> > 
-> > On Thu, Nov 21, 2019 at 02:01:11PM -0600, Navid Emamdoost wrote:
-> > > In the implementation of psxpad_spi_probe() the allocated memory for
-> > > pdev is leaked if psxpad_spi_init_ff() or input_register_polled_device()
-> > > fail. The solution is using device managed allocation, like the one used
-> > > for pad. Perform the allocation using
-> > > devm_input_allocate_polled_device().
-> > > 
-> > > Fixes: 8be193c7b1f4 ("Input: add support for PlayStation 1/2 joypads connected via SPI")
-> > > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > 
-> > This is fixed in the current version of the driver, but you can send it
-> > to stable@gerkernel.orf with my
-> 
-> Was it fixed by any specific patch, or just a side-affect of some other
-> larger change?
+The sync-check.sh script prints out the path due to a "cd -" at the end
+of the script, even on silent builds. This isn't needed, since the
+script is never sourced (so it won't change the working directory of
+the surrounding build anyway).
 
-It was fixed "by accident" when I converted the driver from using
-input_polled_dev to  standard input device in polled mode.
+Just remove the cd to make the build silent.
 
-Thanks.
+Fixes: 2ffd84ae973b ("objtool: Update sync-check.sh from perf's check-headers.sh")
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ tools/objtool/sync-check.sh | 2 --
+ 1 file changed, 2 deletions(-)
 
+diff --git a/tools/objtool/sync-check.sh b/tools/objtool/sync-check.sh
+index 9bd04bbed01e..2a1261bfbb62 100755
+--- a/tools/objtool/sync-check.sh
++++ b/tools/objtool/sync-check.sh
+@@ -48,5 +48,3 @@ check arch/x86/include/asm/inat.h     '-I "^#include [\"<]\(asm/\)*inat_types.h[
+ check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.h[\">]"'
+ check arch/x86/lib/inat.c             '-I "^#include [\"<]\(../include/\)*asm/insn.h[\">]"'
+ check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]" -I "^#include [\"<]\(../include/\)*asm/emulate_prefix.h[\">]"'
+-
+-cd -
 -- 
-Dmitry
+2.22.GIT
+
