@@ -2,85 +2,86 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE23C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB179C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 19:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E52B24673
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FDF24677
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 19:02:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rVVaTJgX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfLGS7G (ORCPT
+        id S1726595AbfLGTCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 13:59:06 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:35795 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfLGS7G (ORCPT
+        Sat, 7 Dec 2019 14:02:25 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:45181 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbfLGTCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 13:59:06 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MhUDj-1i7t2W2CQd-00ecPC; Sat, 07 Dec 2019 19:58:59 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "Theodore Ts'o" <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     youling 257 <youling257@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] char: random: fix urandom ioctl support
-Date:   Sat,  7 Dec 2019 19:58:20 +0100
-Message-Id: <20191207185837.4030699-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Sat, 7 Dec 2019 14:02:25 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r11so4112272pjp.12
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 11:02:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S+O3tniQbreYjLt+qRLs4KvW/hWdvmqmN88mvSWKL64=;
+        b=rVVaTJgX4MHCY/8CFIFmhOsoZFiInVECkykdIg2MsO5pH4XXKOQDO8K1Jm57yB+PQ/
+         wsFnIkh+F/RTBKMIL8FfTU2F+u5zlQDO/FJlfELaV/RZT0EHLzojQbYSPxtTcXL982z4
+         B/Amfn9DbBNp8o/T8u/HQHojc8WTfoBaB9i7oZg+nutiSdKSjxafTwOO3ywZe0j5vH6U
+         /T4v5STwef9ZVOq6msPvWw1wVjP68kMFXuocJIxckvOhb7zCE03/dKuvcS6cxsQOXGAE
+         sT33JVfCcXi3NAyNnGhG1mIdJlBv1L7IEisS9DCGGciaqMrVnoQdJxgE+Ab6JDfue5OG
+         VWLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S+O3tniQbreYjLt+qRLs4KvW/hWdvmqmN88mvSWKL64=;
+        b=EsOETkomOOyKsU5EdHEbaMXE7OMBz0MBHes30tDlhZIrVsUkf8/t7tLdIeCzCxWHqe
+         +J04M2K49haaHA6i6K6RBY6bxdFpRLBcUhId1jdbBawOYfMbfxW6Wp25XYj3u4GY9Hhu
+         DIsKWBRyOP1D6qy28x5Tw6VZ/3ujqQQ+kMtMocbXuo1NrLftVLp0afDsNqvRRUQuI0Ii
+         /yd6q+ryvUHP2LSGweg9uZD3gcXxHqt47uh37cciKRYjYNZJFTA3YiVQujHTP1SBs+cd
+         SDBy0svZPQlvfA9Ohv1ZCgEwXeCbG4L0A9xE4AJe2gu+cJkTALmxyvou/HLIaR7mZ/Kv
+         mPBQ==
+X-Gm-Message-State: APjAAAUrAWULgaFkadkl40wvYVAFUWDQGUWqXbofZ+8mV2o7Gex55v8o
+        dcVj9U/3hu5dAYxuF8xJCMFSTLBPet8kdh9JpuxperB+ovQ=
+X-Google-Smtp-Source: APXvYqysY6iW4Z7Hdm6HS9R4fuevTm5nuSeGPWXJaMlAouvKIhvTrtrexltFr2BdaGBJPCL/1A04ltY9ZFoWxhzOsWE=
+X-Received: by 2002:a17:90a:30a4:: with SMTP id h33mr22854724pjb.50.1575745344201;
+ Sat, 07 Dec 2019 11:02:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:8CwiCrTP/p6MJDsdA8rUtahJe11dgA3jWUvuqhYyaGBhbsLMeuX
- 9/TAY4wNzh4ZcUBMkSFOmzhMfFI+STet46uHpit1NvYfcnOcX0UdFzAI6UEutAfP7rxr6Ev
- AyZnKJZ0UF4hsyuu6ops+X9g429XbJhaeAb4yd7U2oo/YF+dWneW6uufkJwAO8llX/1Puzj
- ishS4bsB/1nhipk8z+YyA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WTPxP5nxjXw=:d1Q8mps8ui51i/dZdzQb8X
- GAHoroG9bmhNGAh6kXsavuNzLmwP65PkDY500dDOAmhu8+k6WdFoc2qDAUReeeBqy/BHKKOba
- DUuAXBoAglJbxMx+TYEs1TIIGZkhxomPc0/TkyOznPrIBXp2G+qGG/1iuWVno0+Uppkekb90S
- fOGAz4/jhIsYma0m/Shv6zwobgMwUrYYKy2JJI2JKPHkiNEwEn6QLa4wgNp+Dl2GeKMXUKaXR
- QSrJc5F+l++tEh+U8bzpereo4l1nVpu8ph5yoJL3mDpLK8FaJub44+KMM40SuL4tDn2A3d4Lf
- YYCxflL5OZSmgGa+DdapDmBgMip4i9XDBqOtlGyKxJfH4TpKGwk9XOHGDt/Mct0+28UCHu8yI
- U7K+fhIqpHg/qcL7npEDDtxFzIiAP9kAskgVeafiZDLW+w/OyUXrqGn0WkDfbr4x6HMXahfiZ
- SwghYuviSF5Q7c80F99+7JJkuy83oNs5tcXYVB5bFlVk5GClEo4Qz1yG9FVauk2KmAu9rkf2s
- TPZ+Ke3mvsWEpWmpqYv7O2UkZO9oI8WRhPVL8FAMKMEdWYqWTae33XAX3b347QVgBlU9vaQ60
- KeA/SBo9wMT1+lzma1OfnUFo+HalwjJFk+sK9Q2+xbgLW7dKDZ/GdQWpFXZJ4HQ+3zGkQHhjZ
- 3T81NyYt1qn9vBLuHUNGL1fVKbflgN8OZbJFa5WtaOcnp3CJitmPjXZDZwp9O8U8l//tDPjgl
- QbiamouWT8/1duQRPdPJgQi1uWRcGkzG3+z5WHM34+KRXAIn7ybax2DEnF/8sLI0NeUTeFZZO
- JzJ5DWhIvuHcol460ChVSfxBGd73XOlDC0ZcIzjEEwV6WKC0DdaDI3GesHwtzyz9ouv0AdgmT
- CFtA6Ra/z3w3LDkeX/Tg==
+References: <20191207034409.25668-1-yuehaibing@huawei.com>
+In-Reply-To: <20191207034409.25668-1-yuehaibing@huawei.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Sat, 7 Dec 2019 11:02:13 -0800
+Message-ID: <CAM_iQpVUZ2Hbk2=sJbjJ2gL9WHRFPGWwhYhSQAFFpRyjdgCYOw@mail.gmail.com>
+Subject: Re: [PATCH -next] tracing: remove set but not used variable 'buffer'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-My patch to move the /dev/random compat handling from
-fs/compat_ioctl.c int drivers missed the corresponding
-/dev/urandom support.
+On Fri, Dec 6, 2019 at 7:46 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> kernel/trace/trace_events_inject.c: In function trace_inject_entry:
+> kernel/trace/trace_events_inject.c:20:22: warning: variable buffer set but not used [-Wunused-but-set-variable]
+>
+> It is never used, so remove it.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Use the same compat_ptr_ioctl() in both devices.
+Right, this should be a leftover after I removed ring_buffer_nest_start().
+And my compiler failed to catch this.
 
-Fixes: 507e4e2b430b ("compat_ioctl: remove /dev/random commands")
-Reported-by: youling 257 <youling257@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/char/random.c | 1 +
- 1 file changed, 1 insertion(+)
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 46afd14facb7..9280ca4d85c0 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2176,6 +2176,7 @@ const struct file_operations urandom_fops = {
- 	.read  = urandom_read,
- 	.write = random_write,
- 	.unlocked_ioctl = random_ioctl,
-+	.compat_ioctl = compat_ptr_ioctl,
- 	.fasync = random_fasync,
- 	.llseek = noop_llseek,
- };
--- 
-2.20.0
-
+Thanks.
