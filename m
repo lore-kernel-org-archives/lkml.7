@@ -2,314 +2,127 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FA8C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 10:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0B0C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 10:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1549206D6
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 10:37:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575715054;
-	bh=03tkZ4Qslko3/IrvTMxw42gSR7I/sOU150wfj2BXJ20=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=R4pY1wkgn06JrKjTEiW+uYOKAtEFhPHTkm1NkC1HYuc4XkM1KKu0GpeQUYWKLrGUJ
-	 7xgUx/Uu6JUyBXilYeGTXH2khp0R4uReLqfMHT8KA6bN0R5V29y5yLosS0lS9RqoSn
-	 jklzUfSLCLYiAkFhsuFTYQc1p/twqbYsi4tqO+Sg=
+	by mail.kernel.org (Postfix) with ESMTP id 3CC1924670
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 10:41:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfLGKhd (ORCPT
+        id S1726415AbfLGKli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 05:37:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbfLGKhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 05:37:32 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C34F2053B;
-        Sat,  7 Dec 2019 10:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575715051;
-        bh=03tkZ4Qslko3/IrvTMxw42gSR7I/sOU150wfj2BXJ20=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mfVMPLDitdPuCa0bB4HhDQEkEzDvFKUcbtWoyMxJiZKc6OMSUlaaby9h+PTgZE3cm
-         c/MjBocSvb8ft6Oo/cwzF63LoobU3XpH/07owt3AUQO3U16P8FZ1uTmw8+zDk7Jgm5
-         GNV6FIrBlS19xnPyyBADUWdFTysb/NnEMueAbr8E=
-Date:   Sat, 7 Dec 2019 10:37:26 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <olivier.moysan@st.com>,
-        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH v2] iio: adc: stm32-adc: Add check on overrun interrupt
-Message-ID: <20191207103726.6d431237@archlinux>
-In-Reply-To: <1575277339-30237-1-git-send-email-fabrice.gasnier@st.com>
-References: <1575277339-30237-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 7 Dec 2019 05:41:38 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33448 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfLGKli (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 05:41:38 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id A4916283C82
+Message-ID: <79cb93108abc1f0a11f41ad3ab02cc5535b3e784.camel@collabora.com>
+Subject: Re: [PATCH v2] media: v4l2-device.h: Explicitly compare grpmask to
+ zero in v4l2_device_mask_call_all
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Date:   Sat, 07 Dec 2019 07:41:27 -0300
+In-Reply-To: <20191105045907.26123-1-natechancellor@gmail.com>
+References: <20191024201240.49063-1-natechancellor@gmail.com>
+         <20191105045907.26123-1-natechancellor@gmail.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Dec 2019 10:02:19 +0100
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+(Adding Hans)
 
-> Enable overrun interrupt on STM32 ADC. In case data register hasn't been
-> read (by CPU or DMA), overrun condition is detected when there's new
-> conversion data available. Stop grabbing data and log an error message.
-> Use a threaded irq to avoid printing the error message from hard irq
-> context.
+Hi Nathan, Nick,
+
+Thanks for the patch (and the patience).
+
+On Mon, 2019-11-04 at 21:59 -0700, Nathan Chancellor wrote:
+> When building with Clang + -Wtautological-constant-compare, several of
+> the ivtv drivers warn along the lines of:
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Given you have explicitly mentioned this as a fix I haven't assumed it
-was particularly urgent.
 
-Hence applied to the togreg branch of iio.git and pushed out as testing.
-If we want to request this being added to stable, we should do that after
-it is in mainline after the next merge window.
+Nitpick: s/ivtv/ivtv and cx18
 
-If you need it faster, let me know and add a fixes tag.
+>  drivers/media/pci/cx18/cx18-driver.c:1005:21: warning: converting the
+>  result of '<<' to a boolean always evaluates to true
+>  [-Wtautological-constant-compare]
+>                          cx18_call_hw(cx, CX18_HW_GPIO_RESET_CTRL,
+>                                          ^
+>  drivers/media/pci/cx18/cx18-cards.h:18:37: note: expanded from macro
+>  'CX18_HW_GPIO_RESET_CTRL'
+>  #define CX18_HW_GPIO_RESET_CTRL         (1 << 6)
+>                                            ^
+>  1 warning generated.
+> 
+> This is because the shift operation is implicitly converted to a boolean
+> in v4l2_device_mask_call_all before being negated. This can be solved by
+> just comparing the mask result to 0 explicitly so that there is no
+> boolean conversion.
+> 
+
+Perhaps it's interesting to mention the reason for this change,
+which you mentioned as a comment before:
+
+"""
+ The ultimate goal is to get
+-Wtautological-compare enabled because there are several subwarnings
+that would be helpful to have and right now they are all disabled.
+"""
+
+> Link: https://github.com/ClangBuiltLinux/linux/issues/752
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+> 
+> v1 -> v2: https://lore.kernel.org/lkml/20191024201240.49063-1-natechancellor@gmail.com/
+> 
+> * Fix typo in commit message
+> * Add Nick's Reviewed-by.
+> 
+>  include/media/v4l2-device.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/media/v4l2-device.h b/include/media/v4l2-device.h
+> index e0b8f2602670..8564b3227887 100644
+> --- a/include/media/v4l2-device.h
+> +++ b/include/media/v4l2-device.h
+> @@ -431,8 +431,8 @@ static inline bool v4l2_device_supports_requests(struct v4l2_device *v4l2_dev)
+>  		struct v4l2_subdev *__sd;				\
+>  									\
+>  		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
+> -			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
+> -			##args);					\
+> +			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
+> +			f , ##args);					\
+>  	} while (0)
+>  
+>  /**
+
+The change is small enough and if it helps enabling helpful
+warnings, then it seems a good idea.
+
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+
+For consistency, it would be good to also patch the other case(s).
 
 Thanks,
-
-Jonathan
-
-> ---
-> Changes in v2:
-> - Add a comment in the code, to give a hint on how to restart the capture,
->   as suggested by Jonathan. Also update the error message to mention a
->   restart is needed.
-> ---
->  drivers/iio/adc/stm32-adc-core.c | 14 +++++-----
->  drivers/iio/adc/stm32-adc-core.h |  9 +++++++
->  drivers/iio/adc/stm32-adc.c      | 55 ++++++++++++++++++++++++++++++++++++++--
->  3 files changed, 69 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-> index 6537f4f..97655d7 100644
-> --- a/drivers/iio/adc/stm32-adc-core.c
-> +++ b/drivers/iio/adc/stm32-adc-core.c
-> @@ -280,21 +280,21 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
->  static const struct stm32_adc_common_regs stm32f4_adc_common_regs = {
->  	.csr = STM32F4_ADC_CSR,
->  	.ccr = STM32F4_ADC_CCR,
-> -	.eoc1_msk = STM32F4_EOC1,
-> -	.eoc2_msk = STM32F4_EOC2,
-> -	.eoc3_msk = STM32F4_EOC3,
-> +	.eoc1_msk = STM32F4_EOC1 | STM32F4_OVR1,
-> +	.eoc2_msk = STM32F4_EOC2 | STM32F4_OVR2,
-> +	.eoc3_msk = STM32F4_EOC3 | STM32F4_OVR3,
->  	.ier = STM32F4_ADC_CR1,
-> -	.eocie_msk = STM32F4_EOCIE,
-> +	.eocie_msk = STM32F4_EOCIE | STM32F4_OVRIE,
->  };
->  
->  /* STM32H7 common registers definitions */
->  static const struct stm32_adc_common_regs stm32h7_adc_common_regs = {
->  	.csr = STM32H7_ADC_CSR,
->  	.ccr = STM32H7_ADC_CCR,
-> -	.eoc1_msk = STM32H7_EOC_MST,
-> -	.eoc2_msk = STM32H7_EOC_SLV,
-> +	.eoc1_msk = STM32H7_EOC_MST | STM32H7_OVR_MST,
-> +	.eoc2_msk = STM32H7_EOC_SLV | STM32H7_OVR_SLV,
->  	.ier = STM32H7_ADC_IER,
-> -	.eocie_msk = STM32H7_EOCIE,
-> +	.eocie_msk = STM32H7_EOCIE | STM32H7_OVRIE,
->  };
->  
->  static const unsigned int stm32_adc_offset[STM32_ADC_MAX_ADCS] = {
-> diff --git a/drivers/iio/adc/stm32-adc-core.h b/drivers/iio/adc/stm32-adc-core.h
-> index 2579d51..2322809 100644
-> --- a/drivers/iio/adc/stm32-adc-core.h
-> +++ b/drivers/iio/adc/stm32-adc-core.h
-> @@ -51,10 +51,12 @@
->  #define STM32F4_ADC_CCR			(STM32_ADCX_COMN_OFFSET + 0x04)
->  
->  /* STM32F4_ADC_SR - bit fields */
-> +#define STM32F4_OVR			BIT(5)
->  #define STM32F4_STRT			BIT(4)
->  #define STM32F4_EOC			BIT(1)
->  
->  /* STM32F4_ADC_CR1 - bit fields */
-> +#define STM32F4_OVRIE			BIT(26)
->  #define STM32F4_RES_SHIFT		24
->  #define STM32F4_RES_MASK		GENMASK(25, 24)
->  #define STM32F4_SCAN			BIT(8)
-> @@ -72,8 +74,11 @@
->  #define STM32F4_ADON			BIT(0)
->  
->  /* STM32F4_ADC_CSR - bit fields */
-> +#define STM32F4_OVR3			BIT(21)
->  #define STM32F4_EOC3			BIT(17)
-> +#define STM32F4_OVR2			BIT(13)
->  #define STM32F4_EOC2			BIT(9)
-> +#define STM32F4_OVR1			BIT(5)
->  #define STM32F4_EOC1			BIT(1)
->  
->  /* STM32F4_ADC_CCR - bit fields */
-> @@ -103,10 +108,12 @@
->  
->  /* STM32H7_ADC_ISR - bit fields */
->  #define STM32MP1_VREGREADY		BIT(12)
-> +#define STM32H7_OVR			BIT(4)
->  #define STM32H7_EOC			BIT(2)
->  #define STM32H7_ADRDY			BIT(0)
->  
->  /* STM32H7_ADC_IER - bit fields */
-> +#define STM32H7_OVRIE			STM32H7_OVR
->  #define STM32H7_EOCIE			STM32H7_EOC
->  
->  /* STM32H7_ADC_CR - bit fields */
-> @@ -155,7 +162,9 @@ enum stm32h7_adc_dmngt {
->  #define STM32H7_LINCALFACT_MASK		GENMASK(29, 0)
->  
->  /* STM32H7_ADC_CSR - bit fields */
-> +#define STM32H7_OVR_SLV			BIT(20)
->  #define STM32H7_EOC_SLV			BIT(18)
-> +#define STM32H7_OVR_MST			BIT(4)
->  #define STM32H7_EOC_MST			BIT(2)
->  
->  /* STM32H7_ADC_CCR - bit fields */
-> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> index 3b291d7..5f05bf9 100644
-> --- a/drivers/iio/adc/stm32-adc.c
-> +++ b/drivers/iio/adc/stm32-adc.c
-> @@ -117,7 +117,9 @@ struct stm32_adc_regs {
->   * struct stm32_adc_regspec - stm32 registers definition
->   * @dr:			data register offset
->   * @ier_eoc:		interrupt enable register & eocie bitfield
-> + * @ier_ovr:		interrupt enable register & overrun bitfield
->   * @isr_eoc:		interrupt status register & eoc bitfield
-> + * @isr_ovr:		interrupt status register & overrun bitfield
->   * @sqr:		reference to sequence registers array
->   * @exten:		trigger control register & bitfield
->   * @extsel:		trigger selection register & bitfield
-> @@ -128,7 +130,9 @@ struct stm32_adc_regs {
->  struct stm32_adc_regspec {
->  	const u32 dr;
->  	const struct stm32_adc_regs ier_eoc;
-> +	const struct stm32_adc_regs ier_ovr;
->  	const struct stm32_adc_regs isr_eoc;
-> +	const struct stm32_adc_regs isr_ovr;
->  	const struct stm32_adc_regs *sqr;
->  	const struct stm32_adc_regs exten;
->  	const struct stm32_adc_regs extsel;
-> @@ -337,7 +341,9 @@ static const unsigned int stm32f4_adc_smp_cycles[STM32_ADC_MAX_SMP + 1] = {
->  static const struct stm32_adc_regspec stm32f4_adc_regspec = {
->  	.dr = STM32F4_ADC_DR,
->  	.ier_eoc = { STM32F4_ADC_CR1, STM32F4_EOCIE },
-> +	.ier_ovr = { STM32F4_ADC_CR1, STM32F4_OVRIE },
->  	.isr_eoc = { STM32F4_ADC_SR, STM32F4_EOC },
-> +	.isr_ovr = { STM32F4_ADC_SR, STM32F4_OVR },
->  	.sqr = stm32f4_sq,
->  	.exten = { STM32F4_ADC_CR2, STM32F4_EXTEN_MASK, STM32F4_EXTEN_SHIFT },
->  	.extsel = { STM32F4_ADC_CR2, STM32F4_EXTSEL_MASK,
-> @@ -429,7 +435,9 @@ static const unsigned int stm32h7_adc_smp_cycles[STM32_ADC_MAX_SMP + 1] = {
->  static const struct stm32_adc_regspec stm32h7_adc_regspec = {
->  	.dr = STM32H7_ADC_DR,
->  	.ier_eoc = { STM32H7_ADC_IER, STM32H7_EOCIE },
-> +	.ier_ovr = { STM32H7_ADC_IER, STM32H7_OVRIE },
->  	.isr_eoc = { STM32H7_ADC_ISR, STM32H7_EOC },
-> +	.isr_ovr = { STM32H7_ADC_ISR, STM32H7_OVR },
->  	.sqr = stm32h7_sq,
->  	.exten = { STM32H7_ADC_CFGR, STM32H7_EXTEN_MASK, STM32H7_EXTEN_SHIFT },
->  	.extsel = { STM32H7_ADC_CFGR, STM32H7_EXTSEL_MASK,
-> @@ -506,6 +514,18 @@ static void stm32_adc_conv_irq_disable(struct stm32_adc *adc)
->  			   adc->cfg->regs->ier_eoc.mask);
->  }
->  
-> +static void stm32_adc_ovr_irq_enable(struct stm32_adc *adc)
-> +{
-> +	stm32_adc_set_bits(adc, adc->cfg->regs->ier_ovr.reg,
-> +			   adc->cfg->regs->ier_ovr.mask);
-> +}
-> +
-> +static void stm32_adc_ovr_irq_disable(struct stm32_adc *adc)
-> +{
-> +	stm32_adc_clr_bits(adc, adc->cfg->regs->ier_ovr.reg,
-> +			   adc->cfg->regs->ier_ovr.mask);
-> +}
-> +
->  static void stm32_adc_set_res(struct stm32_adc *adc)
->  {
->  	const struct stm32_adc_regs *res = &adc->cfg->regs->res;
-> @@ -1205,6 +1225,19 @@ static int stm32_adc_read_raw(struct iio_dev *indio_dev,
->  	}
->  }
->  
-> +static irqreturn_t stm32_adc_threaded_isr(int irq, void *data)
-> +{
-> +	struct stm32_adc *adc = data;
-> +	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-> +	const struct stm32_adc_regspec *regs = adc->cfg->regs;
-> +	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
-> +
-> +	if (status & regs->isr_ovr.mask)
-> +		dev_err(&indio_dev->dev, "Overrun, stopping: restart needed\n");
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
->  static irqreturn_t stm32_adc_isr(int irq, void *data)
->  {
->  	struct stm32_adc *adc = data;
-> @@ -1212,6 +1245,19 @@ static irqreturn_t stm32_adc_isr(int irq, void *data)
->  	const struct stm32_adc_regspec *regs = adc->cfg->regs;
->  	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
->  
-> +	if (status & regs->isr_ovr.mask) {
-> +		/*
-> +		 * Overrun occurred on regular conversions: data for wrong
-> +		 * channel may be read. Unconditionally disable interrupts
-> +		 * to stop processing data and print error message.
-> +		 * Restarting the capture can be done by disabling, then
-> +		 * re-enabling it (e.g. write 0, then 1 to buffer/enable).
-> +		 */
-> +		stm32_adc_ovr_irq_disable(adc);
-> +		stm32_adc_conv_irq_disable(adc);
-> +		return IRQ_WAKE_THREAD;
-> +	}
-> +
->  	if (status & regs->isr_eoc.mask) {
->  		/* Reading DR also clears EOC status flag */
->  		adc->buffer[adc->bufi] = stm32_adc_readw(adc, regs->dr);
-> @@ -1441,6 +1487,8 @@ static int __stm32_adc_buffer_postenable(struct iio_dev *indio_dev)
->  	/* Reset adc buffer index */
->  	adc->bufi = 0;
->  
-> +	stm32_adc_ovr_irq_enable(adc);
-> +
->  	if (!adc->dma_chan)
->  		stm32_adc_conv_irq_enable(adc);
->  
-> @@ -1481,6 +1529,8 @@ static void __stm32_adc_buffer_predisable(struct iio_dev *indio_dev)
->  	if (!adc->dma_chan)
->  		stm32_adc_conv_irq_disable(adc);
->  
-> +	stm32_adc_ovr_irq_disable(adc);
-> +
->  	if (adc->dma_chan)
->  		dmaengine_terminate_sync(adc->dma_chan);
->  
-> @@ -1818,8 +1868,9 @@ static int stm32_adc_probe(struct platform_device *pdev)
->  	if (adc->irq < 0)
->  		return adc->irq;
->  
-> -	ret = devm_request_irq(&pdev->dev, adc->irq, stm32_adc_isr,
-> -			       0, pdev->name, adc);
-> +	ret = devm_request_threaded_irq(&pdev->dev, adc->irq, stm32_adc_isr,
-> +					stm32_adc_threaded_isr,
-> +					0, pdev->name, adc);
->  	if (ret) {
->  		dev_err(&pdev->dev, "failed to request IRQ\n");
->  		return ret;
+Ezequiel
 
