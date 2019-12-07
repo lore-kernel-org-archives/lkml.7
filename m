@@ -2,184 +2,228 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE016C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 16:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E736C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 16:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECA52176D
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 16:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE13D21835
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 16:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cmCB3BJq"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="OxQPxA9b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfLGQQm (ORCPT
+        id S1726505AbfLGQ2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 11:16:42 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:58984 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbfLGQQm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 11:16:42 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB7G5Uwd104906;
-        Sat, 7 Dec 2019 16:16:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=Z1g6ETTgditdnaxVzYZyvy9YazZMEqW70B3znyg7hMM=;
- b=cmCB3BJqMlZVXlsjfjysBdPSgu+zWNVQZXzaaVmS8LO6pLh8XOjcK06pIM0EPZ8/GFpi
- F38V+aA55LkZMtZ18OdrUEEguHfz+y3CWU+opDksttJvVEgfu6frJVw/LKcML8LpzZcs
- UMeTZXLMngynXMRQYUcF1tyGeZ4P9+AqtNW7imuKXz1U+vsWBNhupTmd7u12OPkpfgA2
- a0ENKDFDBRwge52xh1qxlA0Nejo57aq0PKLR3PAcZDNVXKdyfSu2Kydyw5MZA4cUkmc/
- kD2/39CAoBCSYIYyqjuWtNKtfR/kqgXCS5/f8El2q1WSTsQNtinlbGPXKjaZ4WhsjYva AQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2wr41psk04-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 07 Dec 2019 16:16:20 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB7GAatn058986;
-        Sat, 7 Dec 2019 16:16:19 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2wr17cv8t6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 07 Dec 2019 16:16:19 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB7GGGHZ001543;
-        Sat, 7 Dec 2019 16:16:16 GMT
-Received: from localhost.us.oracle.com (/10.147.27.2)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 07 Dec 2019 08:16:16 -0800
-From:   Eric Snowberg <eric.snowberg@oracle.com>
-To:     gregkh@linuxfoundation.org
-Cc:     rafael@kernel.org, dhowells@redhat.com, matthewgarrett@google.com,
-        jmorris@namei.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        eric.snowberg@oracle.com
-Subject: [PATCH v2] debugfs: Return -EPERM when locked down
-Date:   Sat,  7 Dec 2019 11:16:03 -0500
-Message-Id: <20191207161603.35907-1-eric.snowberg@oracle.com>
-X-Mailer: git-send-email 2.18.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9463 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912070139
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9463 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912070139
+        Sat, 7 Dec 2019 11:28:36 -0500
+Received: from mail-eopbgr760112.outbound.protection.outlook.com ([40.107.76.112]:31149
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726414AbfLGQ2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 11:28:35 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h2eaV/dIXNq2Jt78SxRzb5cQ1jIhEmirTZ57xzsOj3ZvflXBRU3PtY394aTUIJ+LCvhVEU2nOkAWfqU61dj+3HaqXXZ8SxqBNaUEIPF7VHPhStz7CCDh7ZMTYMpNe6Lby/qz4iHSynKWxXHnVO130kMowPUEgbKvEuxvDmPd4oq7e9s94Xv8zH47AeTZCkTlS69SfQtHTKWjXcpwBbAqWz+5h89VtfK44HMrSMhXRR7CvXVDJBIXpcSi/j5uVclp1v1CM52bIi/NuTXpUBkjVCsYMM7hnbSNNxgr1HsaQ7mO28MO0elu7Emtj3nd+J9VCkc5Jn029EH11VwsNdhBDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zDU1HHm83zVOITBPaC2iqmu/hy2Td4uNl0fWfJaBY28=;
+ b=BBPT9f9ck6Gxd+rV2yHR7kVUVfW0HKVlbOCS3i/MTDQ45Vxx3fYCV3SLC/sO9sc0inftS47Ps1EbF8lCG7keMUtg9KoZNVHroTbGCNRO1s8mbdktZKmHRh58+ggzTjj3dQNBilZr8cqFhABFI8oeCm22JkN3PrurwUVaVM96fPE5TDO4KAPAC7oFrMAB6btJsJlQ3V/NXs0sbPHNwCynx4SBxl2ezt8pr4UI5beVZRqRO51n8M34F2mJe1tnzNQnWJitObMioLcAQzDl2BCZZ/RuLH6kR+NrCMUj0cbJjBZJlxfFjF3unJ5xOo2I6cgGkdwELVotT+t5xdgYyUM1JA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zDU1HHm83zVOITBPaC2iqmu/hy2Td4uNl0fWfJaBY28=;
+ b=OxQPxA9brOxD7qpl3/ibBaDFP97rGQn7jKH5YFYlKZjX/0ak4ow3vfWxLt45TFfoPYpg92aRj2kgyGsLQHk7ViSS5W+dZx9RJSkApBP8ZGq9LDp3pkYZ8wnXXpspw6fukIonVmP6P6kHoMM6Fj7gmpgfwpVMhl+3e5EdswZMZd4=
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com (10.175.115.19) by
+ CY4PR21MB0152.namprd21.prod.outlook.com (10.173.189.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.1; Sat, 7 Dec 2019 16:28:28 +0000
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c]) by CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c%4]) with mapi id 15.20.2516.003; Sat, 7 Dec 2019
+ 16:28:28 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Wei Hu <weh@microsoft.com>,
+        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "sam@ravnborg.org" <sam@ravnborg.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "info@metux.net" <info@metux.net>, "arnd@arndb.de" <arnd@arndb.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>
+CC:     kbuild test robot <lkp@intel.com>
+Subject: RE: [PATCH v3] video: hyperv: hyperv_fb: Use physical memory for fb
+ on HyperV Gen 1 VMs.
+Thread-Topic: [PATCH v3] video: hyperv: hyperv_fb: Use physical memory for fb
+ on HyperV Gen 1 VMs.
+Thread-Index: AQHVrCj6DBOdT46Ti02yKFHky2sSFKeu2nXg
+Date:   Sat, 7 Dec 2019 16:28:28 +0000
+Message-ID: <CY4PR21MB0629C3DA1201A3FB51A7F486D75E0@CY4PR21MB0629.namprd21.prod.outlook.com>
+References: <20191206113220.1849-1-weh@microsoft.com>
+In-Reply-To: <20191206113220.1849-1-weh@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-07T16:28:26.6621293Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0161c020-b57f-47ae-89d9-4ca338008b7a;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b53482a8-21e6-42fc-22fe-08d77b327e07
+x-ms-traffictypediagnostic: CY4PR21MB0152:|CY4PR21MB0152:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR21MB015299340C8D27D5DCBC9D9DD75E0@CY4PR21MB0152.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0244637DEA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(136003)(396003)(346002)(376002)(189003)(199004)(305945005)(6636002)(186003)(71200400001)(5660300002)(10090500001)(6506007)(66476007)(66556008)(9686003)(64756008)(110136005)(71190400001)(316002)(52536014)(86362001)(26005)(74316002)(10290500003)(8990500004)(2906002)(7416002)(8936002)(102836004)(229853002)(7696005)(33656002)(8676002)(1250700005)(66946007)(99286004)(4326008)(81156014)(55016002)(76176011)(478600001)(81166006)(66446008)(76116006)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0152;H:CY4PR21MB0629.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: a5gHl9OrTfyDJ+7d5eD9EaVMrFBA/J4mZCYjR9oia5/XLUWR5YXA3kcMO46PZK4soqj70FGxwsDgqxTDz0T2DqqqIkRVlgdSv4bOmEqmojE8cfBgIJAQV24aNypLXbMBlN5+loy4TSK64EEdOh8WuUK7V3LZnjdnf8lUNDFZFQXLisQTNVZG+FazgXr8SVBtwqgIw1TqaRF5Mi7PiXrP3aDwUDGGJfv55bhqyhGWGZeaGRfelFhWviOGwGYJxR0WJfohK5RDuXOAWpLaokyjFB5LgGixOCBkwQQEoz3ZFdUbWlX6cbykAwq0DAl6oiZBkvbKLnrksyit9aTQ4lgiGX9hCGUnLJq2W4rBaKClIHt0ca7VVwjZzlDNmsw+cENjSoOqXNShA8yu8oa19tbncU+pM4HBuz1Tn6uFVFvcOLOl/0x93ksHH2uCCd7iolpR9016VytMLFswFPLYwZtOOkERMO/sfp2F9k5vP3luwManJZ2tDiYmur96XYTJ7xUs
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b53482a8-21e6-42fc-22fe-08d77b327e07
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Dec 2019 16:28:28.5024
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TCs/WruEtQ+V+D/dnhQHW3EpsD5tjUOuu41ySIYNz10nMtx8cSFSayGB4u0v4lrgGRGAHAhedb0HcAK5CHqxoqEoPDF2IrVSY1i9xctRZqs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When lockdown is enabled, debugfs_is_locked_down returns 1. It will then
-trigger the following:
+From: Wei Hu <weh@microsoft.com> Sent: Friday, December 6, 2019 3:32 AM
+>=20
+> On Hyper-V, Generation 1 VMs can directly use VM's physical memory for
+> their framebuffers. This can improve the efficiency of framebuffer and
+> overall performence for VM. The physical memory assigned to framebuffer
+> must be contiguous. We use CMA allocator to get contiguouse physicial
+> memory when the framebuffer size is greater than 4MB. For size under
+> 4MB, we use alloc_pages to achieve this.
+>=20
+> To enable framebuffer memory allocation from CMA, supply a kernel
+> parameter to give enough space to CMA allocator at boot time. For
+> example:
+>     cma=3D130m
+> This gives 130MB memory to CAM allocator that can be allocated to
+> framebuffer. If this fails, we fall back to the old way of using
+> mmio for framebuffer.
+>=20
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Wei Hu <weh@microsoft.com>
+> ---
 
-WARNING: CPU: 48 PID: 3747
-CPU: 48 PID: 3743 Comm: bash Not tainted 5.4.0-1946.x86_64 #1
-Hardware name: Oracle Corporation ORACLE SERVER X7-2/ASM, MB, X7-2, BIOS 41060400 05/20/2019
-RIP: 0010:do_dentry_open+0x343/0x3a0
-Code: 00 40 08 00 45 31 ff 48 c7 43 28 40 5b e7 89 e9 02 ff ff ff 48 8b 53 28 4c 8b 72 70 4d 85 f6 0f 84 10 fe ff ff e9 f5 fd ff ff <0f> 0b 41 bf ea ff ff ff e9 3b ff ff ff 41 bf e6 ff ff ff e9 b4 fe
-RSP: 0018:ffffb8740dde7ca0 EFLAGS: 00010202
-RAX: ffffffff89e88a40 RBX: ffff928c8e6b6f00 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffff928dbfd97778 RDI: ffff9285cff685c0
-RBP: ffffb8740dde7cc8 R08: 0000000000000821 R09: 0000000000000030
-R10: 0000000000000057 R11: ffffb8740dde7a98 R12: ffff926ec781c900
-R13: ffff928c8e6b6f10 R14: ffffffff8936e190 R15: 0000000000000001
-FS:  00007f45f6777740(0000) GS:ffff928dbfd80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fff95e0d5d8 CR3: 0000001ece562006 CR4: 00000000007606e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- vfs_open+0x2d/0x30
- path_openat+0x2d4/0x1680
- ? tty_mode_ioctl+0x298/0x4c0
- do_filp_open+0x93/0x100
- ? strncpy_from_user+0x57/0x1b0
- ? __alloc_fd+0x46/0x150
- do_sys_open+0x182/0x230
- __x64_sys_openat+0x20/0x30
- do_syscall_64+0x60/0x1b0
- entry_SYSCALL_64_after_hwframe+0x170/0x1d5
-RIP: 0033:0x7f45f5e5ce02
-Code: 25 00 00 41 00 3d 00 00 41 00 74 4c 48 8d 05 25 59 2d 00 8b 00 85 c0 75 6d 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff ff 0f 05 <48> 3d 00 f0 ff ff 0f 87 a2 00 00 00 48 8b 4c 24 28 64 48 33 0c 25
-RSP: 002b:00007fff95e0d2e0 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 0000561178c069b0 RCX: 00007f45f5e5ce02
-RDX: 0000000000000241 RSI: 0000561178c08800 RDI: 00000000ffffff9c
-RBP: 00007fff95e0d3e0 R08: 0000000000000020 R09: 0000000000000005
-R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000003 R14: 0000000000000001 R15: 0000561178c08800
+[snip]
 
-Change the return type to int and return -EPERM when lockdown is enabled
-to remove the warning above. Also rename debugfs_is_locked_down to
-debugfs_locked_down to make it sound less like it returns a boolean.
+> +/*
+> + * Allocate enough contiguous physical memory.
+> + * Return physical address if succeeded or -1 if failed.
+> + */
+> +static phys_addr_t hvfb_get_phymem(struct hv_device *hdev,
+> +				   unsigned int request_size)
+> +{
+> +	struct page *page =3D NULL;
+> +	dma_addr_t dma_handle;
+> +	void *vmem;
+> +	unsigned int request_pages;
+> +	phys_addr_t paddr =3D 0;
+> +	unsigned int order =3D get_order(request_size);
+> +
+> +	if (request_size =3D=3D 0)
+> +		return -1;
+> +
+> +	if (order < MAX_ORDER) {
+> +		/* Call alloc_pages if the size is less than 2^MAX_ORDER */
+> +		page =3D alloc_pages(GFP_KERNEL | __GFP_ZERO, order);
+> +		if (!page)
+> +			return -1;
+> +
+> +		paddr =3D (page_to_pfn(page) << PAGE_SHIFT);
+> +		request_pages =3D (1 << order);
 
-Fixes: 5496197f9b08 ("debugfs: Restrict debugfs when the kernel is locked down")
-Signed-off-by: Eric Snowberg <eric.snowberg@oracle.com>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
-v2 changes:
-- debugfs_locked_down rename - recommended by Matthew Wilcox
+The above line is no longer needed.  request_pages was previously an
+argument to a pr_info() statement, but that statement has appropriately
+been removed.
 
- fs/debugfs/file.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+> +	} else {
+> +		/* Allocate from CMA */
+> +		hdev->device.coherent_dma_mask =3D DMA_BIT_MASK(64);
+> +
+> +		request_pages =3D (round_up(request_size, PAGE_SIZE) >>
+> +				 PAGE_SHIFT);
+> +
+> +		vmem =3D dma_alloc_coherent(&hdev->device,
+> +					  request_pages * PAGE_SIZE,
+> +					  &dma_handle,
+> +					  GFP_KERNEL | __GFP_NOWARN);
 
-diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-index dede25247b81..18eeeb093a68 100644
---- a/fs/debugfs/file.c
-+++ b/fs/debugfs/file.c
-@@ -142,18 +142,21 @@ EXPORT_SYMBOL_GPL(debugfs_file_put);
-  * We also need to exclude any file that has ways to write or alter it as root
-  * can bypass the permissions check.
-  */
--static bool debugfs_is_locked_down(struct inode *inode,
--				   struct file *filp,
--				   const struct file_operations *real_fops)
-+static int debugfs_locked_down(struct inode *inode,
-+			       struct file *filp,
-+			       const struct file_operations *real_fops)
- {
- 	if ((inode->i_mode & 07777) == 0444 &&
- 	    !(filp->f_mode & FMODE_WRITE) &&
- 	    !real_fops->unlocked_ioctl &&
- 	    !real_fops->compat_ioctl &&
- 	    !real_fops->mmap)
--		return false;
-+		return 0;
- 
--	return security_locked_down(LOCKDOWN_DEBUGFS);
-+	if (security_locked_down(LOCKDOWN_DEBUGFS))
-+		return -EPERM;
-+
-+	return 0;
- }
- 
- static int open_proxy_open(struct inode *inode, struct file *filp)
-@@ -168,7 +171,7 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
- 
- 	real_fops = debugfs_real_fops(filp);
- 
--	r = debugfs_is_locked_down(inode, filp, real_fops);
-+	r = debugfs_locked_down(inode, filp, real_fops);
- 	if (r)
- 		goto out;
- 
-@@ -298,7 +301,7 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
- 
- 	real_fops = debugfs_real_fops(filp);
- 
--	r = debugfs_is_locked_down(inode, filp, real_fops);
-+	r = debugfs_locked_down(inode, filp, real_fops);
- 	if (r)
- 		goto out;
- 
--- 
-2.18.1
+With the request_pages value no longer being needed, there's wasted motion
+in doing a PAGE_SHIFT shift to calculate request_pages, and then multiplyin=
+g by
+PAGE_SIZE.  The second argument above could just be
+round_up(request_size, PAGE_SIZE).   Then it would be exactly parallel to
+the second argument to dma_free_coherent() below in hvfb_release_phymem().
+The request_pages variable can be eliminated entirely.
+
+> +
+> +		if (!vmem)
+> +			return -1;
+> +
+> +		paddr =3D virt_to_phys(vmem);
+> +	}
+> +
+> +	return paddr;
+> +}
+> +
+> +/* Release contiguous physical memory */
+> +static void hvfb_release_phymem(struct hv_device *hdev,
+> +				phys_addr_t paddr, unsigned int size)
+> +{
+> +	unsigned int order =3D get_order(size);
+> +
+> +	if (order < MAX_ORDER)
+> +		__free_pages(pfn_to_page(paddr >> PAGE_SHIFT), order);
+> +	else
+> +		dma_free_coherent(&hdev->device,
+> +				  round_up(size, PAGE_SIZE),
+> +				  phys_to_virt(paddr),
+> +				  paddr);
+> +}
+> +
+>=20
+
+Everything else looks good.  The most recent changes to hvfb_getmem() worke=
+d
+out very nicely.
+
+Michael
 
