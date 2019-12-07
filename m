@@ -2,117 +2,147 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B0EC2D0BE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 19:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C71C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 19:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04CA42176D
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 19:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383A920637
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 19:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="HSWfbL1R";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nMRjGBn3"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="QbVMjENK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfLGTW5 (ORCPT
+        id S1726707AbfLGTbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 14:22:57 -0500
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:47997 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726473AbfLGTW4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 14:22:56 -0500
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 25A3960B;
-        Sat,  7 Dec 2019 14:22:55 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Sat, 07 Dec 2019 14:22:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
-         h=from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=Z2PjyZf3136gCvtJS7r8XhFYol
-        pFs7Qq0QrFZubMpCM=; b=HSWfbL1RCQWIFnBsdrVRkQaLS2TYI0LaPj/VDRTvnT
-        ldIZsB2gupLuHbodKyMnKt1kQd/Pr7X1L3U1RDZPmgbGTlfkwiJgcRPuRNuTRN5D
-        H5A9m31TJnU0wqh+80QlYCu8jxVIkTw0UAR55hN2G/iScfKDGv5Izbv59K4s68Wt
-        WPQmtkyt2tWwuo8R+X5XB1bAqFWEkCbNGIMJ5xvv2QAkS659Zi9nDYY31cm2T/Ff
-        va1BkoKdRz2gKk5Rz3Wx4cNWt6xUkZpyu+6riqGG931gKTIBhpitmleqNyuepa+b
-        jzRF6CjMtxwtyu6HUZnOJTKAG468Vt0XIx5m3SMAU2lA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Z2PjyZf3136gCvtJS
-        7r8XhFYolpFs7Qq0QrFZubMpCM=; b=nMRjGBn3tzAClgnICYBySrm/ENoibw3u6
-        tx2fC1IAGxGKmqKajoP+0SsT7vg6qAHP8RcxEC3OFr9xhzf7M+dgTwCcZ/K10c6D
-        xsPSOI5Uw1wTihZWdVN3RADyBz8SV6nYiLji0Wj+5ccohR00Ai+2+XRtVNhK+tsy
-        1n2OKWgDq4J8VLHra/KqFT0VRYpxRqbGROlGun3eZyjOOkbWiJT3EKWdE9x2WSEy
-        eAem2dUQLQR/8M0jsREiciqyNJj3Q1qqKmimA1WC7CtjYAJ1unel1OiCYK4copT6
-        Z7pkP6tPXhmybRAXCq0Y6qohi+k8GlHvCQUhAdtx/KCX6VZZP2h4A==
-X-ME-Sender: <xms:DfzrXRmpJRN1AyywKk3kYG79Eg5bpc5ViuUbW1HA7sToh0gWZvKKRw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudekhedguddvkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpeetlhhishhtrghirhcuhfhrrghntghishcuoegrlhhishhtrghi
-    rhesrghlihhsthgrihhrvdefrdhmvgeqnecukfhppeejfedrleefrdekgedrvddtkeenuc
-    frrghrrghmpehmrghilhhfrhhomheprghlihhsthgrihhrsegrlhhishhtrghirhdvfedr
-    mhgvnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:DvzrXaqDIWey4LD3tIiJ70YiTXjivHNS_kuFndwt3rMoxX9S3aIfTg>
-    <xmx:DvzrXSEBiX_6Di5fnn1lT8q4LAVeDMWjQpohdvoONgp0cq3LZXYbjQ>
-    <xmx:DvzrXexuW1uHyS8qlDMhp7T0BVv63nIGTCmgPUCfjEHvMvoF_o80_A>
-    <xmx:DvzrXfpMp_j_rK60mgG68zfbChFE1hv5ztTxxqh5X7XH0qxREg-yig>
-Received: from alistair-xps-14z.alistair23.me (c-73-93-84-208.hsd1.ca.comcast.net [73.93.84.208])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0CDEE80062;
-        Sat,  7 Dec 2019 14:22:52 -0500 (EST)
-From:   Alistair Francis <alistair@alistair23.me>
-To:     linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        wens@csie.org, mripard@kernel.org, alistair23@gmail.com,
-        Alistair Francis <alistair@alistair23.me>
-Subject: [PATCH] arm64: allwinner: Enable Bluetooth and WiFi on sopine baseboard
-Date:   Sat,  7 Dec 2019 11:22:49 -0800
-Message-Id: <20191207192249.8346-1-alistair@alistair23.me>
-X-Mailer: git-send-email 2.24.0
+        Sat, 7 Dec 2019 14:31:33 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:43511 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726489AbfLGTbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 14:31:33 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Vfdk0r78zFc;
+        Sat,  7 Dec 2019 20:28:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1575746938; bh=bz/RFAQz0L7Cvrw8unbCiXzOKkR3SU5Qf1fBd8CntZc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QbVMjENKVavMC63zT+xjuEbOmdRz64uTBpSrnk0KKYJZSD/vGbkoK6zM3TG4h6vQM
+         kX4hggbNTaWAFcTEgjJ2Gmzh4gu2Wvw+JOO2qv9lKqAMA/IqBnep2qad0fBwnAW0z2
+         jhCnhLkcOJFvh1lonEWQ/IiNixZKQBI/IzyXrsADSnBSM6HdT1c9G6mVTbtXBSBz03
+         ivUcG8DJBJlFq9IpPO3+sRl7uvdJEzhsN9fZExA6TccjDMzVEz3ythzvX8nDgZDIXo
+         iNSbJuaYpe9D3HoP7A8uMXIoiCeifyXUKViurzcZQUF8kr8YLAl8BZPau0LSIQbBkI
+         ku2jTq7Z9ftAA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Sat, 7 Dec 2019 20:31:28 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 00/19] Consolidate and improve NVIDIA Tegra CPUIDLE
+ driver(s)
+Message-ID: <20191207193128.GB19924@qmqm.qmqm.pl>
+References: <20191203004116.11771-1-digetx@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191203004116.11771-1-digetx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sopine board has an optional RTL8723BS WiFi + BT module that can be
-connected to UART1. Add this to the device tree so that it will work for
-users if connected.
+On Tue, Dec 03, 2019 at 03:40:57AM +0300, Dmitry Osipenko wrote:
+> Hello,
+> 
+> This series does the following:
+> 
+>   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
+>      into common drivers/cpuidle/ directory.
+> 
+>   2. Enables CPU cluster power-down idling state on Tegra30.
+> 
+> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
+> and of the Tegra's arch code in general. Please review, thanks!
+> 
+> Changelog:
+> 
+> v8: - Rebased on recent linux-next, now making use of
+>       cpuidle_driver_state_disabled(). [...]
 
-Signed-off-by: Alistair Francis <alistair@alistair23.me>
----
- .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Dear Dmitry
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 920103ec0046..0a91f9d8ed47 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -214,6 +214,20 @@ &uart0 {
- 	status = "okay";
- };
+This rebase was not complete, at least in patch 14 direct access to
+.disabled field (now removed in Linus' master) are left. The fixups
+needed are below (only compile-tested for now).
+
+Best Regards,
+Micha³ Miros³aw
+
+diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
+index 077ff15e32fb..2d325d3aab57 100644
+--- a/drivers/cpuidle/cpuidle-tegra.c
++++ b/drivers/cpuidle/cpuidle-tegra.c
+@@ -306,13 +306,12 @@ static struct cpuidle_driver tegra_idle_driver = {
+  */
+ void tegra_cpuidle_pcie_irqs_in_use(void)
+ {
+-	if (tegra_idle_driver.states[TEGRA_CC6].disabled ||
++	if ((tegra_idle_driver.states[TEGRA_CC6].flags & CPUIDLE_FLAG_UNUSABLE) &&
+ 	    tegra_get_chip_id() != TEGRA20)
+ 		return;
  
-+&uart1 {
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+        status = "okay";
-+
-+        bluetooth {
-+                compatible = "realtek,rtl8723bs-bt";
-+                reset-gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>; /* PL4 */
-+                device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
-+                host-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-+                firmware-postfix = "pine64";
-+        };
-+};
-+
- /* On Pi-2 connector */
- &uart2 {
- 	pinctrl-names = "default";
--- 
-2.24.0
-
+ 	pr_info("disabling CC6 state, since PCIe IRQs are in use\n");
+ 	cpuidle_driver_state_disabled(&tegra_idle_driver, TEGRA_CC6, true);
+-	tegra_idle_driver.states[TEGRA_CC6].disabled = true;
+ }
+ 
+ static void tegra_cpuidle_setup_tegra114_c7_state(void)
+@@ -328,7 +327,7 @@ static int tegra_cpuidle_probe(struct platform_device *pdev)
+ {
+ 	/* LP2 could be disabled in device-tree */
+ 	if (tegra_pmc_get_suspend_mode() < TEGRA_SUSPEND_LP2)
+-		tegra_idle_driver.states[TEGRA_CC6].disabled = true;
++		cpuidle_driver_state_disabled(&tegra_idle_driver, TEGRA_CC6, true);
+ 
+ 	/*
+ 	 * Required suspend-resume functionality, which is provided by the
+@@ -337,9 +336,9 @@ static int tegra_cpuidle_probe(struct platform_device *pdev)
+ 	 */
+ 	if (!IS_ENABLED(CONFIG_PM_SLEEP)) {
+ 		if (!tegra_cpuidle_using_firmware())
+-			tegra_idle_driver.states[TEGRA_C7].disabled = true;
++			cpuidle_driver_state_disabled(&tegra_idle_driver, TEGRA_C7, true);
+ 
+-		tegra_idle_driver.states[TEGRA_CC6].disabled = true;
++		cpuidle_driver_state_disabled(&tegra_idle_driver, TEGRA_CC6, true);
+ 	}
+ 
+ 	/*
+@@ -349,7 +348,7 @@ static int tegra_cpuidle_probe(struct platform_device *pdev)
+ 	switch (tegra_get_chip_id()) {
+ 	case TEGRA20:
+ 		/* Tegra20 isn't capable to power-off individual CPU cores */
+-		tegra_idle_driver.states[TEGRA_C7].disabled = true;
++		cpuidle_driver_state_disabled(&tegra_idle_driver, TEGRA_C7, true);
+ 		break;
+ 	case TEGRA30:
+ 		break;
+@@ -358,7 +357,7 @@ static int tegra_cpuidle_probe(struct platform_device *pdev)
+ 		tegra_cpuidle_setup_tegra114_c7_state();
+ 
+ 		/* coupled CC6 (LP2) state isn't implemented yet */
+-		tegra_idle_driver.states[TEGRA_CC6].disabled = true;
++		cpuidle_driver_state_disabled(&tegra_idle_driver, TEGRA_CC6, true);
+ 		break;
+ 	default:
+ 		return -EINVAL;
