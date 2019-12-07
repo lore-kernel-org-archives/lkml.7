@@ -2,231 +2,113 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0064DC43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDE0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 02:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C19CB20867
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2192F217F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 02:09:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BMWz+6gx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfLGBnk (ORCPT
+        id S1726442AbfLGCJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 20:43:40 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58934 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfLGBnj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 20:43:39 -0500
-Received: from fsav107.sakura.ne.jp (fsav107.sakura.ne.jp [27.133.134.234])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xB71gwrD035800;
-        Sat, 7 Dec 2019 10:42:58 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav107.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp);
- Sat, 07 Dec 2019 10:42:58 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp)
-Received: from ccsecurity.localdomain (softbank126040062084.bbtec.net [126.40.62.84])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xB71gmxs035757
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Sat, 7 Dec 2019 10:42:57 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: [PATCH v2] kconfig: Add yes2modconfig and mod2yesconfig targets.
-Date:   Sat,  7 Dec 2019 10:42:38 +0900
-Message-Id: <20191207014238.5507-1-penguin-kernel@I-love.SAKURA.ne.jp>
-X-Mailer: git-send-email 2.18.1
-In-Reply-To: <5a473c6c-cc1f-6648-31ec-3b40e415a836@infradead.org>
-References: <5a473c6c-cc1f-6648-31ec-3b40e415a836@infradead.org>
+        Fri, 6 Dec 2019 21:09:11 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34301 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726371AbfLGCJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 21:09:10 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47VCYr5Y8nz9sPf;
+        Sat,  7 Dec 2019 13:09:04 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1575684548;
+        bh=+0JuL1NBfWAFLxpfqXjZlVNiiaAfVa1OIU9nnVKfIlI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BMWz+6gx76bqNPDPz02K5XR+5faW+YPQ3DLWF9ujw6KxW79+/NCm0qoxgHQ+h0UHr
+         AvUKS2mmwZzb9pG6QCuhpJ6+zmeu8YMcxZA1xFXoqm8M12tKN0ALOdPir1usEwpTT3
+         lCwWrP4n85MK7pv2ZuMd0g4HnLmogxnn/1me4HOpDXNK/dogk74jTKWuayd0kLekhN
+         5GTPNrnmuyQ+Xj6/Mm+ii01tMu1Y5qBL2cc6+dejP9Y1lAtvUsdOn5LrvWZUweL0f5
+         F8YCrK6pEc8B5bLNK7lgOIUnOO0VzjbLYTOnPD+HhankuzY9M4bQFm9L4YaGcGywgW
+         sXFhuWWBgn2SQ==
+Date:   Sat, 7 Dec 2019 13:08:59 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Ritesh Harjani <riteshh@linux.ibm.com>
+Subject: Re: [git pull] vfs.git d_inode/d_flags barriers
+Message-ID: <20191207130859.4850b07f@canb.auug.org.au>
+In-Reply-To: <CAHk-=wgPd1dYZjywZqPYZP-7dD2ihwviYfYLY3i+K=OLk2ZozQ@mail.gmail.com>
+References: <20191206013819.GL4203@ZenIV.linux.org.uk>
+        <CAHk-=wgPd1dYZjywZqPYZP-7dD2ihwviYfYLY3i+K=OLk2ZozQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/z9xpQ9CcDuBmTZl9CI/9mPS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since kernel configs provided by syzbot are close to "make allyesconfig",
-it takes long time to rebuild. This is especially waste of time when we
-need to rebuild for many times (e.g. doing manual printk() inspection,
-bisect operations).
+--Sig_/z9xpQ9CcDuBmTZl9CI/9mPS
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-We can save time if we can exclude modules which are irrelevant to each
-problem. But "make localmodconfig" cannot exclude modules which are built
-into vmlinux because /sbin/lsmod output is used as the source of modules.
+Hi Linus,
 
-Therefore, this patch adds "make yes2modconfig" which converts from =y
-to =m if possible. After confirming that the interested problem is still
-reproducible, we can try "make localmodconfig" (and/or manually tune
-based on "Modules linked in:" line) in order to exclude modules which are
-irrelevant to the interested problem. While we are at it, this patch also
-adds "make mod2yesconfig" which converts from =m to =y in case someone
-wants to convert from =m to =y after "make localmodconfig".
+On Thu, 5 Dec 2019 18:15:54 -0800 Linus Torvalds <torvalds@linux-foundation=
+.org> wrote:
+>
+> On Thu, Dec 5, 2019 at 5:38 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes =20
+>=20
+> I'm not pulling this.
+>=20
+> Commit 6c2d4798a8d1 ("new helper: lookup_positive_unlocked()") results
+> in a new - and valid - compiler warning:
+>=20
+>   fs/quota/dquot.c: In function =E2=80=98dquot_quota_on_mount=E2=80=99:
+>   fs/quota/dquot.c:2499:1: warning: label =E2=80=98out=E2=80=99 defined b=
+ut not used
+> [-Wunused-label]
+>    2499 | out:
+>         | ^~~
+>=20
+> and I don't want to see new warnings in my tree.
+>=20
+> I wish linux-next would complain about warnings (assuming this had
+> been there), because they aren't ok.
 
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Dmitry Vyukov <dvyukov@google.com>
----
-Changelog since v1:
-- Updated the available 'help' targets in Makefile.
+I did ... https://lore.kernel.org/lkml/20191203093203.2f88400d@canb.auug.or=
+g.au/
 
- scripts/kconfig/Makefile   |  4 +++-
- scripts/kconfig/conf.c     | 17 +++++++++++++++++
- scripts/kconfig/confdata.c | 26 ++++++++++++++++++++++++++
- scripts/kconfig/lkc.h      |  3 +++
- 4 files changed, 49 insertions(+), 1 deletion(-)
+--=20
+Cheers,
+Stephen Rothwell
 
-diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-index 2f1a59fa5169..4da36f83277f 100644
---- a/scripts/kconfig/Makefile
-+++ b/scripts/kconfig/Makefile
-@@ -67,7 +67,7 @@ localyesconfig localmodconfig: $(obj)/conf
- #  deprecated for external use
- simple-targets := oldconfig allnoconfig allyesconfig allmodconfig \
- 	alldefconfig randconfig listnewconfig olddefconfig syncconfig \
--	helpnewconfig
-+	helpnewconfig yes2modconfig mod2yesconfig
- 
- PHONY += $(simple-targets)
- 
-@@ -135,6 +135,8 @@ help:
- 	@echo  '  allmodconfig	  - New config selecting modules when possible'
- 	@echo  '  alldefconfig    - New config with all symbols set to default'
- 	@echo  '  randconfig	  - New config with random answer to all options'
-+	@echo  '  yes2modconfig	  - Change answers from yes to mod if possible'
-+	@echo  '  mod2yesconfig	  - Change answers from mod to yes'
- 	@echo  '  listnewconfig   - List new options'
- 	@echo  '  helpnewconfig   - List new options and help text'
- 	@echo  '  olddefconfig	  - Same as oldconfig but sets new symbols to their'
-diff --git a/scripts/kconfig/conf.c b/scripts/kconfig/conf.c
-index 1f89bf1558ce..ae9ddf88c64d 100644
---- a/scripts/kconfig/conf.c
-+++ b/scripts/kconfig/conf.c
-@@ -34,6 +34,8 @@ enum input_mode {
- 	listnewconfig,
- 	helpnewconfig,
- 	olddefconfig,
-+	yes2modconfig,
-+	mod2yesconfig,
- };
- static enum input_mode input_mode = oldaskconfig;
- 
-@@ -467,6 +469,8 @@ static struct option long_opts[] = {
- 	{"listnewconfig",   no_argument,       NULL, listnewconfig},
- 	{"helpnewconfig",   no_argument,       NULL, helpnewconfig},
- 	{"olddefconfig",    no_argument,       NULL, olddefconfig},
-+	{"yes2modconfig",   no_argument,       NULL, yes2modconfig},
-+	{"mod2yesconfig",   no_argument,       NULL, mod2yesconfig},
- 	{NULL, 0, NULL, 0}
- };
- 
-@@ -489,6 +493,8 @@ static void conf_usage(const char *progname)
- 	printf("  --allmodconfig          New config where all options are answered with mod\n");
- 	printf("  --alldefconfig          New config with all symbols set to default\n");
- 	printf("  --randconfig            New config with random answer to all options\n");
-+	printf("  --yes2modconfig         Change answers from yes to mod if possible\n");
-+	printf("  --mod2yesconfig         Change answers from mod to yes\n");
- }
- 
- int main(int ac, char **av)
-@@ -553,6 +559,8 @@ int main(int ac, char **av)
- 		case listnewconfig:
- 		case helpnewconfig:
- 		case olddefconfig:
-+		case yes2modconfig:
-+		case mod2yesconfig:
- 			break;
- 		case '?':
- 			conf_usage(progname);
-@@ -587,6 +595,8 @@ int main(int ac, char **av)
- 	case listnewconfig:
- 	case helpnewconfig:
- 	case olddefconfig:
-+	case yes2modconfig:
-+	case mod2yesconfig:
- 		conf_read(NULL);
- 		break;
- 	case allnoconfig:
-@@ -638,6 +648,11 @@ int main(int ac, char **av)
- 		}
- 	}
- 
-+	if (input_mode == yes2modconfig)
-+		conf_rewrite_mod_or_yes(def_y2m);
-+	else if (input_mode == mod2yesconfig)
-+		conf_rewrite_mod_or_yes(def_m2y);
-+
- 	switch (input_mode) {
- 	case allnoconfig:
- 		conf_set_all_new_symbols(def_no);
-@@ -669,6 +684,8 @@ int main(int ac, char **av)
- 	case listnewconfig:
- 	case helpnewconfig:
- 	case syncconfig:
-+	case yes2modconfig:
-+	case mod2yesconfig:
- 		/* Update until a loop caused no more changes */
- 		do {
- 			conf_cnt = 0;
-diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-index 3569d2dec37c..6832a04a1aa4 100644
---- a/scripts/kconfig/confdata.c
-+++ b/scripts/kconfig/confdata.c
-@@ -1362,3 +1362,29 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
- 
- 	return has_changed;
- }
-+
-+bool conf_rewrite_mod_or_yes(enum conf_def_mode mode)
-+{
-+	struct symbol *sym;
-+	int i;
-+	bool has_changed = false;
-+
-+	if (mode == def_y2m) {
-+		for_all_symbols(i, sym) {
-+			if (sym_get_type(sym) == S_TRISTATE &&
-+			    sym->def[S_DEF_USER].tri == yes) {
-+				sym->def[S_DEF_USER].tri = mod;
-+				has_changed = true;
-+			}
-+		}
-+	} else if (mode == def_m2y) {
-+		for_all_symbols(i, sym) {
-+			if (sym_get_type(sym) == S_TRISTATE &&
-+			    sym->def[S_DEF_USER].tri == mod) {
-+				sym->def[S_DEF_USER].tri = yes;
-+				has_changed = true;
-+			}
-+		}
-+	}
-+	return has_changed;
-+}
-diff --git a/scripts/kconfig/lkc.h b/scripts/kconfig/lkc.h
-index 4fb16f316626..e8f3238dcc70 100644
---- a/scripts/kconfig/lkc.h
-+++ b/scripts/kconfig/lkc.h
-@@ -34,6 +34,8 @@ enum conf_def_mode {
- 	def_default,
- 	def_yes,
- 	def_mod,
-+	def_y2m,
-+	def_m2y,
- 	def_no,
- 	def_random
- };
-@@ -52,6 +54,7 @@ const char *conf_get_configname(void);
- void sym_set_change_count(int count);
- void sym_add_change_count(int count);
- bool conf_set_all_new_symbols(enum conf_def_mode mode);
-+bool conf_rewrite_mod_or_yes(enum conf_def_mode mode);
- void set_all_choice_values(struct symbol *csym);
- 
- /* confdata.c and expr.c */
--- 
-2.18.1
+--Sig_/z9xpQ9CcDuBmTZl9CI/9mPS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3rCbsACgkQAVBC80lX
+0Gxl8QgAmVlRrQXReAvUik1AyrMX3/qS2x3hAZKBlw8K7YfbjHiWd+PbDSpHRSRV
+qNnXUgvBGvnGgDyTEaN8LWt/c2UNaWtYK+VSn9e52vw1EdmBmTC8PjQUy5EJEiLZ
+19IjKm7YBkKZuDKzvueqVXB+BE4vhzp7fX7GaWsnyssbFN3wXUNzwPbxoqwHjM5l
+H07y3PAr/ar79ZTAatj79Sm9QPLj7qv2Fzi/OXmoPZNlTtWaCgfshODH79kw1sRx
+LV08iPfA0gqyb6PsioGBcF7P8jtyEIDUcNAx2ZAiEX047o0Ng0uGXVHoZAKCq4WM
+f+2Ais4A5FLl4X66abSuzSr0H9CU4A==
+=rzpu
+-----END PGP SIGNATURE-----
+
+--Sig_/z9xpQ9CcDuBmTZl9CI/9mPS--
