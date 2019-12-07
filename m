@@ -2,183 +2,117 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47508C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1405FC2BBE2
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCF220637
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC53F24673
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:13:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PA58yHXU"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="AFL2+H+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfLGRBx (ORCPT
+        id S1726553AbfLGRNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 12:01:53 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46046 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbfLGRBx (ORCPT
+        Sat, 7 Dec 2019 12:13:39 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44398 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbfLGRNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 12:01:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bhWCxXMSfUj2ikhu1QBLL9cZAf8fThN+0iWJPHVoqOw=; b=PA58yHXUCtzHkqiNs9B4pQP2x
-        8ddAlPAqnaekr1PY0g9cvLgDNOxFAaxQdNGu1VQRplfg1H68qCvcr7f+9qCgTdJwHxpHD7b4gUlGK
-        htWr+EJBIzgC4xmZ/d5sRLQmKIHjVt4ZHrxF9KbKfnNPGPuxG8AKz0KEFHtZkSAikaGuTdc2x+lRZ
-        yb+9oIdHEMD+VhptLFmCxpRqKfGe0vJhKz2U+7ORYt1XGef86GT24fyx2Z7mOofe8imRELf4+Gg0F
-        hXbQCsmzdjYCeV2WXdUPuvzccADJEuQDanIv54+2RmHUtcQaaAnwXbbq8hD9EH5+UMXNKxqCcEwLW
-        te5w8PZ5A==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iddSd-0001L7-MK; Sat, 07 Dec 2019 17:01:39 +0000
-Date:   Sat, 7 Dec 2019 09:01:39 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     Davide Libenzi <davidel@xmailserver.org>, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: eventfd: fix obsolete comment
-Message-ID: <20191207170139.GA32169@bombadil.infradead.org>
-References: <1575704733-11573-1-git-send-email-linmiaohe@huawei.com>
+        Sat, 7 Dec 2019 12:13:38 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q10so11242161wrm.11
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 09:13:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jR3SyHBUEWSPjBlDW1LeGn/KYMF0y8nruNnoz/13mkQ=;
+        b=AFL2+H+B1H0cUjM21DoS+EbPmSeWc+tVjHWCByl0XnHympdA1FNb5GilbogW6Vp6k8
+         /0v51aHKBg9h7alJHCY9O0Pyv8JakfMZMXWW+ay7kMm8HztvZcuwFHeYDwih1eOF0MXe
+         LUmrdjAIh3/bCLzXYh+/IISmwzaajZ0NH9T1nrmHIkS94ijrr/ua1fh0HO0tepKh4kWz
+         Ox0GKA4bkAHKiUulETJQrkXORtnNCIqUj+Y3CgDM11nemud34mfxSKzApX6atyLiVkm4
+         Zn3qp9eqjSvlcSFc8xZe8GDFW9fFR/8h5iMxkOawmFJfO92rH1hoIFbXuyB8seCGv41z
+         MgnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jR3SyHBUEWSPjBlDW1LeGn/KYMF0y8nruNnoz/13mkQ=;
+        b=rLV+YtM6eQbcZX8tX8H6MWPiUVWyy9oRiRp7mXOItvA8WKM/a2g1e3o9v62xhyCsI7
+         YO+9aciqyYF8Dw/WPomZShpB9W444pPTzgRbk+/zKBa9NuZnTTWrQJKqmlM9U6iQqFJ/
+         P3wXazAOf10l8fBAVqaJeKHFhTIf+wyLonbgrKbsw3vVMqkV60OcTdj4XrbFsA2b0S9n
+         g3x5McGFOHWU7aUvkHqm89f/BpAq2cSzFMoHq0Y/qhx2pnqDHPwH4ZtmrfH7oxfqwGvt
+         xahO8K4axi2FFfj9NNPteEBQy1YOwj+1p+R3jSOv3n9xWwD0A4Lb7wTVSa6oTP6bUE1T
+         j22w==
+X-Gm-Message-State: APjAAAWoA6XSiVIYuQSnqRti3J/s3cXZJUA7wEEk0arR0oNOqhCaIWvx
+        VcgmQgDRXC1l8C6TSeCfKfJJ7A==
+X-Google-Smtp-Source: APXvYqzzT6cpEXbdQzFCSXPWWrCMrulA7XTI6/VFmEaL73RKZUx/P2+UHqPR7ey6iRNw14U/hJqzAA==
+X-Received: by 2002:a5d:6350:: with SMTP id b16mr22200705wrw.132.1575738816490;
+        Sat, 07 Dec 2019 09:13:36 -0800 (PST)
+Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
+        by smtp.gmail.com with ESMTPSA id 2sm21102237wrq.31.2019.12.07.09.13.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Dec 2019 09:13:35 -0800 (PST)
+Date:   Sat, 7 Dec 2019 18:13:34 +0100
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, grygorii.strashko@ti.com,
+        robh+dt@kernel.org, rafal@milecki.pl, davem@davemloft.net,
+        andrew@lunn.ch, mark.rutland@arm.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: Cygnus: Fix MDIO node address/size cells
+Message-ID: <20191207171333.GD26173@netronome.com>
+References: <20191206181909.10962-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575704733-11573-1-git-send-email-linmiaohe@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191206181909.10962-1-f.fainelli@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 07, 2019 at 03:45:33PM +0800, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
+On Fri, Dec 06, 2019 at 10:19:09AM -0800, Florian Fainelli wrote:
+> The MDIO node on Cygnus had an reversed #address-cells and
+>  #size-cells properties, correct those.
 > 
-> since commit 36a7411724b1 ("eventfd_ctx_fdget(): use fdget() instead of
-> fget()"), this comment become outdated and looks confusing. Fix it with
-> the correct function name.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> Fixes: 40c26d3af60a ("ARM: dts: Cygnus: Add the ethernet switch and ethernet PHY")
+> Reported-by: Simon Horman <simon.horman@netronome.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Thanks Florian,
+
+this looks good to me.
+
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+
 > ---
->  fs/eventfd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/fs/eventfd.c b/fs/eventfd.c
-> index 8aa0ea8c55e8..0b8466b12932 100644
-> --- a/fs/eventfd.c
-> +++ b/fs/eventfd.c
-> @@ -352,7 +352,7 @@ EXPORT_SYMBOL_GPL(eventfd_fget);
->   * Returns a pointer to the internal eventfd context, otherwise the error
->   * pointers returned by the following functions:
->   *
-> - * eventfd_fget
-> + * fdget
-
-But this is wrong.  The error pointer is returned from eventfd_ctx_fileget(),
-not from fdget.
-
-Looking at the three callers of eventfd_ctx_fileget(), I think it would
-make sense to do this:
-
-diff --git a/drivers/vfio/virqfd.c b/drivers/vfio/virqfd.c
-index 997cb5d0a657..c35b614e3770 100644
---- a/drivers/vfio/virqfd.c
-+++ b/drivers/vfio/virqfd.c
-@@ -126,11 +126,6 @@ int vfio_virqfd_enable(void *opaque,
- 	INIT_WORK(&virqfd->inject, virqfd_inject);
- 
- 	irqfd = fdget(fd);
--	if (!irqfd.file) {
--		ret = -EBADF;
--		goto err_fd;
--	}
--
- 	ctx = eventfd_ctx_fileget(irqfd.file);
- 	if (IS_ERR(ctx)) {
- 		ret = PTR_ERR(ctx);
-diff --git a/fs/eventfd.c b/fs/eventfd.c
-index 8aa0ea8c55e8..d389ffd1dc07 100644
---- a/fs/eventfd.c
-+++ b/fs/eventfd.c
-@@ -349,17 +349,13 @@ EXPORT_SYMBOL_GPL(eventfd_fget);
-  * eventfd_ctx_fdget - Acquires a reference to the internal eventfd context.
-  * @fd: [in] Eventfd file descriptor.
-  *
-- * Returns a pointer to the internal eventfd context, otherwise the error
-- * pointers returned by the following functions:
-- *
-- * eventfd_fget
-+ * Returns a pointer to the internal eventfd context, or an error pointer;
-+ * see eventfd_ctx_fileget().
-  */
- struct eventfd_ctx *eventfd_ctx_fdget(int fd)
- {
- 	struct eventfd_ctx *ctx;
- 	struct fd f = fdget(fd);
--	if (!f.file)
--		return ERR_PTR(-EBADF);
- 	ctx = eventfd_ctx_fileget(f.file);
- 	fdput(f);
- 	return ctx;
-@@ -368,17 +364,18 @@ EXPORT_SYMBOL_GPL(eventfd_ctx_fdget);
- 
- /**
-  * eventfd_ctx_fileget - Acquires a reference to the internal eventfd context.
-- * @file: [in] Eventfd file pointer.
-- *
-- * Returns a pointer to the internal eventfd context, otherwise the error
-- * pointer:
-+ * @file: Eventfd file pointer.
-  *
-- * -EINVAL   : The @fd file descriptor is not an eventfd file.
-+ * Return: A pointer to the internal eventfd context, or an error pointer:
-+ * * -EBADF  - The @file is NULL.
-+ * * -EINVAL - The @file is not an eventfd file.
-  */
- struct eventfd_ctx *eventfd_ctx_fileget(struct file *file)
- {
- 	struct eventfd_ctx *ctx;
- 
-+	if (!file)
-+		return ERR_PTR(-EBADF);
- 	if (file->f_op != &eventfd_fops)
- 		return ERR_PTR(-EINVAL);
- 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 01f3f8b665e9..74b45bc439d8 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4676,11 +4676,6 @@ static ssize_t memcg_write_event_control(struct kernfs_open_file *of,
- 	INIT_WORK(&event->remove, memcg_event_remove);
- 
- 	efile = fdget(efd);
--	if (!efile.file) {
--		ret = -EBADF;
--		goto out_kfree;
--	}
--
- 	event->eventfd = eventfd_ctx_fileget(efile.file);
- 	if (IS_ERR(event->eventfd)) {
- 		ret = PTR_ERR(event->eventfd);
-diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
-index 67b6fc153e9c..814b99c33d44 100644
---- a/virt/kvm/eventfd.c
-+++ b/virt/kvm/eventfd.c
-@@ -306,11 +306,6 @@ kvm_irqfd_assign(struct kvm *kvm, struct kvm_irqfd *args)
- 	seqcount_init(&irqfd->irq_entry_sc);
- 
- 	f = fdget(args->fd);
--	if (!f.file) {
--		ret = -EBADF;
--		goto out;
--	}
--
- 	eventfd = eventfd_ctx_fileget(f.file);
- 	if (IS_ERR(eventfd)) {
- 		ret = PTR_ERR(eventfd);
-
-(not even compile tested)
+> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> index 2dac3efc7640..1bc45cfd5453 100644
+> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
+> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> @@ -174,8 +174,8 @@
+>  		mdio: mdio@18002000 {
+>  			compatible = "brcm,iproc-mdio";
+>  			reg = <0x18002000 0x8>;
+> -			#size-cells = <1>;
+> -			#address-cells = <0>;
+> +			#size-cells = <0>;
+> +			#address-cells = <1>;
+>  			status = "disabled";
+>  
+>  			gphy0: ethernet-phy@0 {
+> -- 
+> 2.17.1
+> 
