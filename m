@@ -2,109 +2,141 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0CEC43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 00:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5074C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 00:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A439A2245C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 00:38:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575679136;
-	bh=pXgE5bJzghH5mG4jiwsiWhC/T97HlG8oVxO+qHwaLtg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=quUTEMYp/npCfauGxzyogAnogOKIdp8RvtZqWoss+D7xELWqMBxsrabmcWjAtdgdd
-	 FzuQuuXNwanfbh0gl2dhPUNvHWoF9VPzAouokImhnO+MiFbPwlEOB9kyI7n/If0ro6
-	 hkgbPPF1dHi67ZDa7dW+DsF2Zth4UlFmAg/Q+vP8=
+	by mail.kernel.org (Postfix) with ESMTP id 74A9124670
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 00:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfLGAiz (ORCPT
+        id S1726489AbfLGAqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 19:38:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39642 "EHLO mail.kernel.org"
+        Fri, 6 Dec 2019 19:46:09 -0500
+Received: from mail.phunq.net ([66.183.183.73]:52232 "EHLO phunq.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbfLGAiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 19:38:55 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 555CC217F4;
-        Sat,  7 Dec 2019 00:38:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575679134;
-        bh=pXgE5bJzghH5mG4jiwsiWhC/T97HlG8oVxO+qHwaLtg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gOYIIK+Pufb0FTzfOJJIZVX9AevjAXpf2Gwym20jWFIoUoXfk+qI9BEPAkynHMXzD
-         lhztH0y2SyYKYFuCX5aS8W70c+aHV3gy47mr2w45LgvIimNT+wDD/PIDRh+rZssSn3
-         49Wn9C8bzZnwSdoV/p11WeyWl+iMWBjoA6FfKt1A=
-Date:   Fri, 6 Dec 2019 16:38:53 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Daniel Axtens <dja@axtens.net>
-Cc:     kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        aryabinin@virtuozzo.com, glider@google.com,
-        linux-kernel@vger.kernel.org, dvyukov@google.com,
-        daniel@iogearbox.net, cai@lca.pw
-Subject: Re: [PATCH 1/3] mm: add apply_to_existing_pages helper
-Message-Id: <20191206163853.cdeb5dc80a8622fb6323a8d2@linux-foundation.org>
-In-Reply-To: <20191205140407.1874-1-dja@axtens.net>
-References: <20191205140407.1874-1-dja@axtens.net>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1726388AbfLGAqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 19:46:08 -0500
+Received: from [172.16.1.14]
+        by phunq.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+        (Exim 4.92.3)
+        (envelope-from <daniel@phunq.net>)
+        id 1idOEX-0006U5-SC; Fri, 06 Dec 2019 16:46:05 -0800
+Subject: Re: [RFC] Thing 1: Shardmap for Ext4
+To:     Vyacheslav Dubeyko <slava@dubeyko.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+References: <176a1773-f5ea-e686-ec7b-5f0a46c6f731@phunq.net>
+ <20191127142508.GB5143@mit.edu>
+ <6b6242d9-f88b-824d-afe9-d42382a93b34@phunq.net>
+ <9ed62cfea37bfebfb76e378d482bd521c7403c1f.camel@dubeyko.com>
+ <c61706fb-3534-72b9-c4ae-0f0972bc566b@phunq.net>
+ <37c9494c40998d23d0d68afaa5a7f942a23e8986.camel@dubeyko.com>
+From:   Daniel Phillips <daniel@phunq.net>
+Message-ID: <a05837a0-a352-fc8d-5c9c-28d8065961fd@phunq.net>
+Date:   Fri, 6 Dec 2019 16:46:05 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <37c9494c40998d23d0d68afaa5a7f942a23e8986.camel@dubeyko.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  6 Dec 2019 01:04:05 +1100 Daniel Axtens <dja@axtens.net> wrote:
-
-> apply_to_page_range takes an address range, and if any parts of it
-> are not covered by the existing page table hierarchy, it allocates
-> memory to fill them in.
+On 2019-12-06 3:47 a.m., Vyacheslav Dubeyko wrote:
+> On Thu, 2019-12-05 at 01:46 -0800, Daniel Phillips wrote:
+>> On 2019-12-04 7:55 a.m., Vyacheslav Dubeyko wrote:
+>>>>
 > 
-> In some use cases, this is not what we want - we want to be able to
-> operate exclusively on PTEs that are already in the tables.
+> <snipped and reoredered>
 > 
-> Add apply_to_existing_pages for this. Adjust the walker functions
-> for apply_to_page_range to take 'create', which switches them between
-> the old and new modes.
+>> And here is a diagram of the Shardmap three level hashing scheme,
+>> which ties everything together:
+>>
+>>     https://github.com/danielbot/Shardmap/wiki/Shardmap-hashing-scheme
+>>
+>> This needs explanation. It is something new that you won't find in
+>> any
+>> textbook, this is the big reveal right here.
+>>
+> 
+> This diagram is pretty good and provides the high-level view of the
+> whole scheme. But, maybe, it makes sense to show the granularity of
+> hash code. It looks like the low hash is the hash of a name. Am I
+> correct?
 
-Wouldn't apply_to_existing_page_range() be a better name?
+Not quite. A 64 bit hash code is computed per name, then divided up into
+three parts as shown in the diagram. Each part of the hash addresses a
+different level of the Shardmap index hierarchy: high bits address the
+top level shard array, giving a pointer to a shard; middle bits address
+a hash bucket within that shard; low bits are used to resolve collisions
+within the hash bucket (and collisions still may occur even when the low
+bits are considered, forcing a record block access and full string
+compare.
 
---- a/include/linux/mm.h~mm-add-apply_to_existing_pages-helper-fix-fix
-+++ a/include/linux/mm.h
-@@ -2621,9 +2621,9 @@ static inline int vm_fault_to_errno(vm_f
- typedef int (*pte_fn_t)(pte_t *pte, unsigned long addr, void *data);
- extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
- 			       unsigned long size, pte_fn_t fn, void *data);
--extern int apply_to_existing_pages(struct mm_struct *mm, unsigned long address,
--				   unsigned long size, pte_fn_t fn,
--				   void *data);
-+extern int apply_to_existing_page_range(struct mm_struct *mm,
-+				   unsigned long address, unsigned long size,
-+				   pte_fn_t fn, void *data);
- 
- #ifdef CONFIG_PAGE_POISONING
- extern bool page_poisoning_enabled(void);
---- a/mm/memory.c~mm-add-apply_to_existing_pages-helper-fix-fix
-+++ a/mm/memory.c
-@@ -2184,12 +2184,12 @@ EXPORT_SYMBOL_GPL(apply_to_page_range);
-  * Unlike apply_to_page_range, this does _not_ fill in page tables
-  * where they are absent.
-  */
--int apply_to_existing_pages(struct mm_struct *mm, unsigned long addr,
--			    unsigned long size, pte_fn_t fn, void *data)
-+int apply_to_existing_page_range(struct mm_struct *mm, unsigned long addr,
-+				 unsigned long size, pte_fn_t fn, void *data)
- {
- 	return __apply_to_page_range(mm, addr, size, fn, data, false);
- }
--EXPORT_SYMBOL_GPL(apply_to_existing_pages);
-+EXPORT_SYMBOL_GPL(apply_to_existing_page_range);
- 
- /*
-  * handle_pte_fault chooses page fault handler according to an entry which was
-_
+> But how the mid- and high- parts of the hash code are defined?
 
+Given the above description, does the diagram make sense? If so I will
+add this description to the wiki.
+
+> It looks like that cached shard stores LBAs of record entry blocks are
+> associated with the low hash values.
+
+Rather, associated with the entire hash value.
+
+> But what does it mean that shard is cached?
+
+This is the cache form of the shard, meaning that the unordered hash/lba
+index pairs (duopack) were read in from media and loaded into this cache
+object (or newly created by recent directory operations.)
+
+> Here is a diagram of the cache structures, very simple:
+>>
+>>     https://github.com/danielbot/Shardmap/wiki/Shardmap-cache-format
+> 
+> This diagram is not easy to relate with the previous one. So, shard
+> table and shard array are the same entities or not?
+
+They are, and I have updated the hashing scheme diagram to refer to both
+as "array". I will similarly update the code, which currently calls the
+shard array field "map".
+
+> Or do you mean that
+> shard table is storeed on the volume but shard array is constructed in
+> memory?
+
+Sorry about that, it should be clear now. On the volume, a simple
+unordered collection of hash:lba pairs is stored per shard, which is
+reorganized into shard cache form (a hash table object) at demand-load
+time.
+
+>> There is a diagram here:
+>>
+> https://github.com/danielbot/Shardmap/wiki/Shardmap-record-block-format
+> 
+> I am slightly confused here. Does header be located at the bottom of
+> the record block?
+
+The header (just 32 bytes at the moment, possibly to be expanded to 48
+or 64) is stored at the top of the zeroth record entry block, which is
+therefore a little smaller than any other record entry block.
+
+> My understanding is that records grow from top of the
+> block down to the header direction. Am I correct? Why header is not
+> located at the top of the block with entry dictionary? Any special
+> purpose here?
+
+That should be clear now. I will add the above descriptive text to the
+wiki.
+
+Regards,
+
+Daniel
