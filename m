@@ -2,109 +2,143 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2D1C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 08:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F86BC43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 08:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088562173E
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 08:11:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="btS2l1nM"
+	by mail.kernel.org (Postfix) with ESMTP id 4A3272245C
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 08:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575707386;
+	bh=Tvys5XoKMMcFheCqtrB4mDdcAKthNCvO1SSzfwCfWBc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yIVs01a2z8qCy9hs4CqgkubE9CEjTwWCwF5KBZ3ANazXPDYcIw0GFD/LecgK5bmA2
+	 AwC5BlJy3XSxbhDefLVyuSAGcsglXRzL1HBsFVeLJ3KnMsuwvM2mMYgiPTV1lKMEe8
+	 COgbzZ4+U13pkHIDYI1VsaB+sx/fve5B8aWZVY60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfLGILS (ORCPT
+        id S1726605AbfLGI3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 03:11:18 -0500
-Received: from fd.dlink.ru ([178.170.168.18]:56400 "EHLO fd.dlink.ru"
+        Sat, 7 Dec 2019 03:29:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbfLGILR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 03:11:17 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 2847D1B20271; Sat,  7 Dec 2019 11:11:14 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 2847D1B20271
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1575706274; bh=MwiVH3xMX5haMC7XNC4MSDAegTxuMS0AOkP8FjLDZuw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=btS2l1nMTqfftVIMfPv2mIMOy2CCtx4Vg5aeHm2i9IGPAiK/dYAc5xCbz+Kh6m4lB
-         i3IM+0Zqa6HysRzYwiNZbOAGDcdFfwLLrXpXiuoKOK6UquPv/SGDxfITrKfilKMvcN
-         pktCHSBAY7q7U7dexqYIh98R9w5twe5UfdZjRsVA=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 520AF1B20271;
-        Sat,  7 Dec 2019 11:10:59 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 520AF1B20271
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id C372F1B203C6;
-        Sat,  7 Dec 2019 11:10:58 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Sat,  7 Dec 2019 11:10:58 +0300 (MSK)
+        id S1725976AbfLGI3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 03:29:43 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30919217BA;
+        Sat,  7 Dec 2019 08:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575707382;
+        bh=Tvys5XoKMMcFheCqtrB4mDdcAKthNCvO1SSzfwCfWBc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mG2nXwcFU2cdNbK1+GGju2NsFu7hcmON3UMSeTGZBepB4YW+gRRZqsGJS1J9Bia7B
+         lJeNmInqoGRTz5SNz67uo2B3mqB+b8fEK95rPbd0bCGjkTpvBEm44h/JBAxPBfeexr
+         9RVg0e0BRFwQGYTQgYToajw9fSCYCI9O8G7auz9k=
+Date:   Sat, 7 Dec 2019 09:29:39 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Eric Snowberg <eric.snowberg@oracle.com>
+Cc:     rafael@kernel.org, dhowells@redhat.com, matthewgarrett@google.com,
+        jmorris@namei.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] debugfs: Return -EPERM when locked down
+Message-ID: <20191207082939.GA204524@kroah.com>
+References: <20191206225909.46721-1-eric.snowberg@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Sat, 07 Dec 2019 11:10:58 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     David Miller <davem@davemloft.net>
-Cc:     rainersickinger.official@gmail.com,
-        shashidhar.lakkavalli@openmesh.com, john@phrozen.org,
-        andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        sdf@google.com, daniel@iogearbox.net, songliubraving@fb.com,
-        ast@kernel.org, mcroce@redhat.com, jakub@cloudflare.com,
-        edumazet@google.com, paulb@mellanox.com, komachi.yoshiki@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: dsa: fix flow dissection on Tx path
-In-Reply-To: <20191206.201950.100960973648804142.davem@davemloft.net>
-References: <20191205100235.14195-1-alobakin@dlink.ru>
- <20191206.201950.100960973648804142.davem@davemloft.net>
-User-Agent: Roundcube Webmail/1.4.0
-Message-ID: <ad7dd3a7a1e864939a18343e2e57c50e@dlink.ru>
-X-Sender: alobakin@dlink.ru
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191206225909.46721-1-eric.snowberg@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Miller wrote 07.12.2019 07:19:
-> From: Alexander Lobakin <alobakin@dlink.ru>
-> Date: Thu,  5 Dec 2019 13:02:35 +0300
+On Fri, Dec 06, 2019 at 05:59:09PM -0500, Eric Snowberg wrote:
+> When lockdown is enabled, debugfs_is_locked_down returns 1. It will then
+> trigger the following:
 > 
->> Commit 43e665287f93 ("net-next: dsa: fix flow dissection") added an
->> ability to override protocol and network offset during flow dissection
->> for DSA-enabled devices (i.e. controllers shipped as switch CPU ports)
->> in order to fix skb hashing for RPS on Rx path.
->> 
->> However, skb_hash() and added part of code can be invoked not only on
->> Rx, but also on Tx path if we have a multi-queued device and:
->>  - kernel is running on UP system or
->>  - XPS is not configured.
->> 
->> The call stack in this two cases will be like: dev_queue_xmit() ->
->> __dev_queue_xmit() -> netdev_core_pick_tx() -> netdev_pick_tx() ->
->> skb_tx_hash() -> skb_get_hash().
->> 
->> The problem is that skbs queued for Tx have both network offset and
->> correct protocol already set up even after inserting a CPU tag by DSA
->> tagger, so calling tag_ops->flow_dissect() on this path actually only
->> breaks flow dissection and hashing.
->> 
->> This can be observed by adding debug prints just before and right 
->> after
->> tag_ops->flow_dissect() call to the related block of code:
->   ...
->> In order to fix that we can add the check 'proto == htons(ETH_P_XDSA)'
->> to prevent code from calling tag_ops->flow_dissect() on Tx.
->> I also decided to initialize 'offset' variable so tagger callbacks can
->> now safely leave it untouched without provoking a chaos.
->> 
->> Fixes: 43e665287f93 ("net-next: dsa: fix flow dissection")
->> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+> WARNING: CPU: 48 PID: 3747
+> CPU: 48 PID: 3743 Comm: bash Not tainted 5.4.0-1946.x86_64 #1
+> Hardware name: Oracle Corporation ORACLE SERVER X7-2/ASM, MB, X7-2, BIOS 41060400 05/20/2019
+> RIP: 0010:do_dentry_open+0x343/0x3a0
+> Code: 00 40 08 00 45 31 ff 48 c7 43 28 40 5b e7 89 e9 02 ff ff ff 48 8b 53 28 4c 8b 72 70 4d 85 f6 0f 84 10 fe ff ff e9 f5 fd ff ff <0f> 0b 41 bf ea ff ff ff e9 3b ff ff ff 41 bf e6 ff ff ff e9 b4 fe
+> RSP: 0018:ffffb8740dde7ca0 EFLAGS: 00010202
+> RAX: ffffffff89e88a40 RBX: ffff928c8e6b6f00 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffff928dbfd97778 RDI: ffff9285cff685c0
+> RBP: ffffb8740dde7cc8 R08: 0000000000000821 R09: 0000000000000030
+> R10: 0000000000000057 R11: ffffb8740dde7a98 R12: ffff926ec781c900
+> R13: ffff928c8e6b6f10 R14: ffffffff8936e190 R15: 0000000000000001
+> FS:  00007f45f6777740(0000) GS:ffff928dbfd80000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007fff95e0d5d8 CR3: 0000001ece562006 CR4: 00000000007606e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> PKRU: 55555554
+> Call Trace:
+>  vfs_open+0x2d/0x30
+>  path_openat+0x2d4/0x1680
+>  ? tty_mode_ioctl+0x298/0x4c0
+>  do_filp_open+0x93/0x100
+>  ? strncpy_from_user+0x57/0x1b0
+>  ? __alloc_fd+0x46/0x150
+>  do_sys_open+0x182/0x230
+>  __x64_sys_openat+0x20/0x30
+>  do_syscall_64+0x60/0x1b0
+>  entry_SYSCALL_64_after_hwframe+0x170/0x1d5
+> RIP: 0033:0x7f45f5e5ce02
+> Code: 25 00 00 41 00 3d 00 00 41 00 74 4c 48 8d 05 25 59 2d 00 8b 00 85 c0 75 6d 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff ff 0f 05 <48> 3d 00 f0 ff ff 0f 87 a2 00 00 00 48 8b 4c 24 28 64 48 33 0c 25
+> RSP: 002b:00007fff95e0d2e0 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+> RAX: ffffffffffffffda RBX: 0000561178c069b0 RCX: 00007f45f5e5ce02
+> RDX: 0000000000000241 RSI: 0000561178c08800 RDI: 00000000ffffff9c
+> RBP: 00007fff95e0d3e0 R08: 0000000000000020 R09: 0000000000000005
+> R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000000000
+> R13: 0000000000000003 R14: 0000000000000001 R15: 0000561178c08800
 > 
-> Applied and queued up for -stable.
+> Change the return type to int and return -EPERM when lockdown is enabled
+> to remove the warning above.
 
-David, Andrew, Florian, Rainer,
-Thank you!
+Ugh, looks like no one ever even tested this?  :(
 
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+> Fixes: 5496197f9b08 ("debugfs: Restrict debugfs when the kernel is locked down")
+> Signed-off-by: Eric Snowberg <eric.snowberg@oracle.com>
+> ---
+>  fs/debugfs/file.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+> index dede25247b81..f31698f9b586 100644
+> --- a/fs/debugfs/file.c
+> +++ b/fs/debugfs/file.c
+> @@ -142,7 +142,7 @@ EXPORT_SYMBOL_GPL(debugfs_file_put);
+>   * We also need to exclude any file that has ways to write or alter it as root
+>   * can bypass the permissions check.
+>   */
+> -static bool debugfs_is_locked_down(struct inode *inode,
+> +static int debugfs_is_locked_down(struct inode *inode,
+>  				   struct file *filp,
+>  				   const struct file_operations *real_fops)
+>  {
+> @@ -151,9 +151,12 @@ static bool debugfs_is_locked_down(struct inode *inode,
+>  	    !real_fops->unlocked_ioctl &&
+>  	    !real_fops->compat_ioctl &&
+>  	    !real_fops->mmap)
+> -		return false;
+> +		return 0;
+>  
+> -	return security_locked_down(LOCKDOWN_DEBUGFS);
+> +	if (security_locked_down(LOCKDOWN_DEBUGFS))
+> +		return -EPERM;
+> +
+> +	return 0;
+>  }
+
+If you could make the change suggested for the name of the function,
+I'll be glad to queue it up.
+
+thanks,
+
+greg k-h
