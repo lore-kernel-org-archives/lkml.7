@@ -2,89 +2,72 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65D8C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 07:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EE8C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 07:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 791392173E
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 07:18:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="S/H7s0wf"
+	by mail.kernel.org (Postfix) with ESMTP id 893D22173E
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 07:21:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfLGHSI (ORCPT
+        id S1726595AbfLGHVF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 02:18:08 -0500
-Received: from ozlabs.org ([203.11.71.1]:43117 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbfLGHSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 02:18:07 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47VLQP02Thz9sQp;
-        Sat,  7 Dec 2019 18:18:04 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1575703085;
-        bh=J6CnWZDK7IbehjVb4HCsRnaeRzOsdUFeVe2tUiM32aE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=S/H7s0wf2ecObr/Z3bzXzy08NSM33853r/HG7n+DdDHIeCOMsKI0cOPfsQo4cvHAK
-         D7sSE216yB1KMILeVTV+wpcZ8QvpSPealz0WwF7uA9ySWwcnszIpZHdk7pMulGOPv6
-         eZqSBSfJQrPm3pGz5U00oTuNjttCjEfwJZAY2VyXiQ6gPkjiyrfLHDAWEB/gHwrqar
-         yNW+wpfR+Z1NavkfFhMPy7HkIMv37lVjWVDXA+f3+Mttyvzux6/Is4cqvNnceXbaNn
-         rl9RQ6Jypwfgtwl1UL6U4Xu9+kKhNw07uKaDfmkd5xb9zUf+hNLuyokWXp/W0W3X8+
-         hDpJy+0JSOf1w==
-Date:   Sat, 7 Dec 2019 18:18:03 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jouni Hogander <jouni.hogander@unikie.com>
-Subject: linux-next: Signed-off-by missing for commit in the net tree
-Message-ID: <20191207181803.0cada15d@canb.auug.org.au>
+        Sat, 7 Dec 2019 02:21:05 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2527 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725935AbfLGHVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 02:21:05 -0500
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 8417D6B030C277E91752;
+        Sat,  7 Dec 2019 15:21:03 +0800 (CST)
+Received: from dggeme715-chm.china.huawei.com (10.1.199.111) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 7 Dec 2019 15:21:03 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme715-chm.china.huawei.com (10.1.199.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Sat, 7 Dec 2019 15:21:03 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Sat, 7 Dec 2019 15:21:02 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KVM: get rid of var page in kvm_set_pfn_dirty()
+Thread-Topic: [PATCH] KVM: get rid of var page in kvm_set_pfn_dirty()
+Thread-Index: AdWszoDtsWxJ/gWEQkaDkTQc5F3KgQ==
+Date:   Sat, 7 Dec 2019 07:21:02 +0000
+Message-ID: <488cb59fccb74338aa7b8b7dcfc0c4fc@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.184.189.20]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/o_BXvv_SfkZT/UlWNB_BRH1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/o_BXvv_SfkZT/UlWNB_BRH1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-Commit
-
-  e0b60903b434 ("net-sysfs: Call dev_hold always in netdev_queue_add_kobjec=
-t")
-
-is missing a Signed-off-by from its author.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/o_BXvv_SfkZT/UlWNB_BRH1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3rUisACgkQAVBC80lX
-0GwUwwf/dZ/u5N/PWmA/qVYQpEnTqXzQfWn8qTn1r2TWWEvrUtSUlZdS2zVi6Hmf
-aTsfoy4vZOZtiCZRVnJjNh1mNKXvdr0XkuGKFdr6FjIu2mNr2f7K7jaDMVT23Lr2
-22oBPFl8xYqoliCGv7T/DMxHZjwVCQJ6XBtCkFQ1JNjDmm5gW3kGWrpdQj3rZEC9
-/NrmJ0hDUojq5OEVa1NJFocbQmK9dBpGR2arLFgwSql6a2QxxGuZL8gVAcXszcV1
-v6A7IrJmm4gv5tJRMDaOwjArBB1iCu5qj9Yh4wQGEVDNiKfz/UKRqYmJgwV1nsW9
-hSX7l7mGTN4lKXW4t8lFJUPO+4JAiA==
-=+rIm
------END PGP SIGNATURE-----
-
---Sig_/o_BXvv_SfkZT/UlWNB_BRH1--
+Sean Christopherson wrote:
+>On Thu, Dec 05, 2019 at 11:05:05AM +0800, linmiaohe wrote:
+>> From: Miaohe Lin <linmiaohe@huawei.com>
+>> 
+>> We can get rid of unnecessary var page in
+>> kvm_set_pfn_dirty() , thus make code style similar with 
+>> kvm_set_pfn_accessed().
+>
+>For future reference, there's no need to wrap so aggressively, preferred kernel style is to wrap at 75 columns (though for some reason I am in the habit of wrapping changelogs at 73 columns), e.g.:
+>
+>We can get rid of unnecessary var page in kvm_set_pfn_dirty(), thus make code style similar with kvm_set_pfn_accessed().
+>
+Many thanks for your remind. I would try to wrap changelogs at about 75 columns.
+Thanks again.
