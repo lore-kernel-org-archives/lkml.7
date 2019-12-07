@@ -2,99 +2,148 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E217AC43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B927C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A663B2176D
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 496E524673
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:05:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="azJLXR5Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDomRTLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfLGUyw (ORCPT
+        id S1726824AbfLGVFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 15:54:52 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33275 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbfLGUyv (ORCPT
+        Sat, 7 Dec 2019 16:05:22 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36573 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfLGVFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 15:54:51 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 6so5099914pgk.0
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 12:54:51 -0800 (PST)
+        Sat, 7 Dec 2019 16:05:22 -0500
+Received: by mail-pl1-f193.google.com with SMTP id k20so4163929pls.3;
+        Sat, 07 Dec 2019 13:05:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NTwW2V/iqGwRUs5QGA+lcInh8k6UZJSdkBrxMBn7N5c=;
-        b=azJLXR5QMjtkLh9J/JHZ/1uQ1SIal5gfSQonVDzDZBSLg5WNyQ2UpA9uGxkIVe/TB3
-         F138SjDI+ucmcVym9VJn3Dbs0Nu2YXgYzsOCSiC4r3YzLbdz7HMGxyAu6BdRy+Z7vZvd
-         2y9s01UYjs0SJ86hyfYYZSwAFqzl75a+InlhpgTEvTm4Zsl1PGEpIdL4nAK8z5tjaaZQ
-         nDaOoJSJaxePw6GuQi8aebULpOYCrnU68gxjsirg3/8XAQYc3iCSf1+6TCwJXmr35E4o
-         DqaNWCOMwOak2PaNXqjm7i4wnIKNcMoEJJ6udrZ0vAK6GeTCsBIsy1KLJauml+m9Mg/h
-         3ktg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=QG5kX6AYM8tSMzecYPD64LS8jMJM8DZLST+q6ta/2R8=;
+        b=NDomRTLZknql092NSwD/Y9OitpXT2rn4y9sSxZyiEfunpy5JKwaFi39JwRUEKL/W80
+         NxbbN9mMZhIomhuPjn9GjKLSIikz6eDKZOyL1n4ACzcX8kwxPuUJXIiNfFg2TII2CP3q
+         QB3epT60v4rTAht6X2hIQqhI88Zlp3uH7gOgGGpGHTiZjIatNyglUL6dsStfwjgeWmBY
+         UWFvBTR12shDt4BiSIoO3Fmf/9zc3OwkS537mM+EvoAsoUZRYcpbdOdvYDW6NmnZeK+s
+         2slKrPzhmxtyafjDmHwVlir2PoKFhSOZuUMbEe3mbZHWmTzKDVXRIYv57u4x5Dv5NXTw
+         w/yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NTwW2V/iqGwRUs5QGA+lcInh8k6UZJSdkBrxMBn7N5c=;
-        b=Xj/4znH8hIHP6hEIT0yBMBO3G/vHBQ4pMGkjeBkkfidbxLhFad3aEvMdW1Pw4JvV7R
-         10na2F6coCBcI35BPpV4+irCh0E/1UryauEpor86rkfYdsBqIG99UqsHnmO4fV1lTege
-         6HPOKYTOOxbXLkJWHQAJJ3okedL5yN3A9FQumextEIReoW+3On5y7R00Gfam8KidHE4B
-         TiE7teRUa5nQf4I74FTKuXlcwetWAt9dIres9ZHOHnYTu2h/FQykW0Ful8BNBM1p/A3b
-         sgX4YGzJ63AGozb97s0DmZONn3ewi8YLciRlnYnDWNLemi5kRvx9tBhWrdW/OeJAh9fe
-         IrPQ==
-X-Gm-Message-State: APjAAAV8utbuQ+GbRcM/qiU4ojCPZfbvorHdm6K9PW5Y0SOr60sKK07A
-        j2NGtEBiBOc/bLcItt37TfkzpJMp6LIAvViS
-X-Google-Smtp-Source: APXvYqwj7KYX2mBIpiMNQj4ppQLXOMG9A94HF1IBDqXib7kadqQ74So9+6Tt7oj658Tte2fCiMUxHQ==
-X-Received: by 2002:a62:5bc4:: with SMTP id p187mr2075817pfb.255.1575752090960;
-        Sat, 07 Dec 2019 12:54:50 -0800 (PST)
-Received: from localhost.localdomain (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
-        by smtp.gmail.com with ESMTPSA id q3sm19929032pgl.15.2019.12.07.12.54.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 07 Dec 2019 12:54:49 -0800 (PST)
-From:   Olof Johansson <olof@lixom.net>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        Olof Johansson <olof@lixom.net>
-Subject: [PATCH] objtool: silence build output from sync-check.sh
-Date:   Sat,  7 Dec 2019 12:54:20 -0800
-Message-Id: <20191207205419.9344-1-olof@lixom.net>
-X-Mailer: git-send-email 2.22.GIT
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=QG5kX6AYM8tSMzecYPD64LS8jMJM8DZLST+q6ta/2R8=;
+        b=AEVYjdo2E/mFJKCWL9yilD3CBHSVxgco7hrEwZmcpizyfYfI7e34VwHgKeOc7vQg8D
+         LKnTKpflC3OD8taL9mfNrVHFHUmkr9uCw5bnG44Ue5rRd8WAIJp5cSvmmtz0edlYZDXi
+         oiYlWNk5ih1t2U97Af+FrFEGQnb6Q5FPmZ1OXCdSuveTMYAlR+oBdEl6K4qensEYzLw6
+         +68/lTuIkA+mwrklKJbVX43UoN4G4AzHIZBiYT1G2dbq6GFG1ZhF65bfJ4tG5zoh/jeT
+         xK414xgkE3kcmeA3JAqHZoG5238eHz6fQ8KbiKqHGE3v2RSDn5qqMGFnXPZA83flmSzh
+         mL2g==
+X-Gm-Message-State: APjAAAVAXw3ZKey6294KHj6M+zlNm4Im+qX+YzGziR4rLWxZxBKFJJYL
+        32VMXG7RGFyVexQdUHu4kuc=
+X-Google-Smtp-Source: APXvYqwQN+C5vYeDE1APuPCTco4rVzaYRrWtxyK5ZSNAUvQvqzPmEbbdbVPxcw1y7aX+NhpNeDj1ow==
+X-Received: by 2002:a17:90a:e291:: with SMTP id d17mr24114314pjz.116.1575752721245;
+        Sat, 07 Dec 2019 13:05:21 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id m13sm19203025pga.70.2019.12.07.13.05.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Dec 2019 13:05:20 -0800 (PST)
+Date:   Sat, 7 Dec 2019 13:05:18 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] HID: hid-input: clear unmapped usages
+Message-ID: <20191207210518.GA181006@dtor-ws>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sync-check.sh script prints out the path due to a "cd -" at the end
-of the script, even on silent builds. This isn't needed, since the
-script is never sourced (so it won't change the working directory of
-the surrounding build anyway).
+We should not be leaving half-mapped usages with potentially invalid
+keycodes, as that may confuse hidinput_find_key() when the key is located
+by index, which may end up feeding way too large keycode into the VT
+keyboard handler and cause OOB write there:
 
-Just remove the cd to make the build silent.
+BUG: KASAN: global-out-of-bounds in clear_bit include/asm-generic/bitops-instrumented.h:56 [inline]
+BUG: KASAN: global-out-of-bounds in kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
+BUG: KASAN: global-out-of-bounds in kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
+Write of size 8 at addr ffffffff89a1b2d8 by task syz-executor108/1722
+...
+ kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
+ kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
+ input_to_handler+0x3b6/0x4c0 drivers/input/input.c:118
+ input_pass_values.part.0+0x2e3/0x720 drivers/input/input.c:145
+ input_pass_values drivers/input/input.c:949 [inline]
+ input_set_keycode+0x290/0x320 drivers/input/input.c:954
+ evdev_handle_set_keycode_v2+0xc4/0x120 drivers/input/evdev.c:882
+ evdev_do_ioctl drivers/input/evdev.c:1150 [inline]
 
-Fixes: 2ffd84ae973b ("objtool: Update sync-check.sh from perf's check-headers.sh")
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Reported-by: syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- tools/objtool/sync-check.sh | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/tools/objtool/sync-check.sh b/tools/objtool/sync-check.sh
-index 9bd04bbed01e..2a1261bfbb62 100755
---- a/tools/objtool/sync-check.sh
-+++ b/tools/objtool/sync-check.sh
-@@ -48,5 +48,3 @@ check arch/x86/include/asm/inat.h     '-I "^#include [\"<]\(asm/\)*inat_types.h[
- check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.h[\">]"'
- check arch/x86/lib/inat.c             '-I "^#include [\"<]\(../include/\)*asm/insn.h[\">]"'
- check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]" -I "^#include [\"<]\(../include/\)*asm/emulate_prefix.h[\">]"'
--
--cd -
+v2: fixed up interaction with hid-multitouch according to Benjamin's
+feedback
+
+Please consider tagging for stable.
+
+ drivers/hid/hid-input.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index 63855f275a38..9428f49fd218 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -1132,9 +1132,15 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 	}
+ 
+ mapped:
+-	if (device->driver->input_mapped && device->driver->input_mapped(device,
+-				hidinput, field, usage, &bit, &max) < 0)
+-		goto ignore;
++	if (device->driver->input_mapped &&
++	    device->driver->input_mapped(device, hidinput, field, usage,
++					 &bit, &max) < 0) {
++		/*
++		 * The driver indicated that no further generic handling
++		 * of the usage is desired.
++		 */
++		return;
++	}
+ 
+ 	set_bit(usage->type, input->evbit);
+ 
+@@ -1215,9 +1221,11 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		set_bit(MSC_SCAN, input->mscbit);
+ 	}
+ 
+-ignore:
+ 	return;
+ 
++ignore:
++	usage->type = 0;
++	usage->code = 0;
+ }
+ 
+ static void hidinput_handle_scroll(struct hid_usage *usage,
 -- 
-2.22.GIT
+2.24.0.393.g34dc348eaf-goog
 
+
+-- 
+Dmitry
