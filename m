@@ -2,148 +2,201 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B927C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C77C2BBE2
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 496E524673
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:05:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDomRTLZ"
+	by mail.kernel.org (Postfix) with ESMTP id E4DD124673
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfLGVFW (ORCPT
+        id S1726834AbfLGVN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 16:05:22 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36573 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbfLGVFW (ORCPT
+        Sat, 7 Dec 2019 16:13:56 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:59594 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfLGVN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 16:05:22 -0500
-Received: by mail-pl1-f193.google.com with SMTP id k20so4163929pls.3;
-        Sat, 07 Dec 2019 13:05:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=QG5kX6AYM8tSMzecYPD64LS8jMJM8DZLST+q6ta/2R8=;
-        b=NDomRTLZknql092NSwD/Y9OitpXT2rn4y9sSxZyiEfunpy5JKwaFi39JwRUEKL/W80
-         NxbbN9mMZhIomhuPjn9GjKLSIikz6eDKZOyL1n4ACzcX8kwxPuUJXIiNfFg2TII2CP3q
-         QB3epT60v4rTAht6X2hIQqhI88Zlp3uH7gOgGGpGHTiZjIatNyglUL6dsStfwjgeWmBY
-         UWFvBTR12shDt4BiSIoO3Fmf/9zc3OwkS537mM+EvoAsoUZRYcpbdOdvYDW6NmnZeK+s
-         2slKrPzhmxtyafjDmHwVlir2PoKFhSOZuUMbEe3mbZHWmTzKDVXRIYv57u4x5Dv5NXTw
-         w/yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=QG5kX6AYM8tSMzecYPD64LS8jMJM8DZLST+q6ta/2R8=;
-        b=AEVYjdo2E/mFJKCWL9yilD3CBHSVxgco7hrEwZmcpizyfYfI7e34VwHgKeOc7vQg8D
-         LKnTKpflC3OD8taL9mfNrVHFHUmkr9uCw5bnG44Ue5rRd8WAIJp5cSvmmtz0edlYZDXi
-         oiYlWNk5ih1t2U97Af+FrFEGQnb6Q5FPmZ1OXCdSuveTMYAlR+oBdEl6K4qensEYzLw6
-         +68/lTuIkA+mwrklKJbVX43UoN4G4AzHIZBiYT1G2dbq6GFG1ZhF65bfJ4tG5zoh/jeT
-         xK414xgkE3kcmeA3JAqHZoG5238eHz6fQ8KbiKqHGE3v2RSDn5qqMGFnXPZA83flmSzh
-         mL2g==
-X-Gm-Message-State: APjAAAVAXw3ZKey6294KHj6M+zlNm4Im+qX+YzGziR4rLWxZxBKFJJYL
-        32VMXG7RGFyVexQdUHu4kuc=
-X-Google-Smtp-Source: APXvYqwQN+C5vYeDE1APuPCTco4rVzaYRrWtxyK5ZSNAUvQvqzPmEbbdbVPxcw1y7aX+NhpNeDj1ow==
-X-Received: by 2002:a17:90a:e291:: with SMTP id d17mr24114314pjz.116.1575752721245;
-        Sat, 07 Dec 2019 13:05:21 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id m13sm19203025pga.70.2019.12.07.13.05.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 13:05:20 -0800 (PST)
-Date:   Sat, 7 Dec 2019 13:05:18 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] HID: hid-input: clear unmapped usages
-Message-ID: <20191207210518.GA181006@dtor-ws>
+        Sat, 7 Dec 2019 16:13:56 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 208A520041;
+        Sat,  7 Dec 2019 22:13:47 +0100 (CET)
+Date:   Sat, 7 Dec 2019 22:13:45 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/4] dt-bindings: display: panel: document panel-id
+Message-ID: <20191207211345.GA32369@ravnborg.org>
+References: <20191207203553.286017-1-robdclark@gmail.com>
+ <20191207203553.286017-2-robdclark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191207203553.286017-2-robdclark@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cm27Pg_UAAAA:8
+        a=e5mUnYsNAAAA:8 a=2slYeMzxh5QCkdzES2IA:9 a=CjuIK1q_8ugA:10
+        a=xmb-EsYY8bH0VWELuYED:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We should not be leaving half-mapped usages with potentially invalid
-keycodes, as that may confuse hidinput_find_key() when the key is located
-by index, which may end up feeding way too large keycode into the VT
-keyboard handler and cause OOB write there:
+On Sat, Dec 07, 2019 at 12:35:50PM -0800, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> For devices that have one of several possible panels installed, the
+> panel-id property gives firmware a generic way to locate and enable the
+> panel node corresponding to the installed panel.
 
-BUG: KASAN: global-out-of-bounds in clear_bit include/asm-generic/bitops-instrumented.h:56 [inline]
-BUG: KASAN: global-out-of-bounds in kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
-BUG: KASAN: global-out-of-bounds in kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
-Write of size 8 at addr ffffffff89a1b2d8 by task syz-executor108/1722
-...
- kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
- kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
- input_to_handler+0x3b6/0x4c0 drivers/input/input.c:118
- input_pass_values.part.0+0x2e3/0x720 drivers/input/input.c:145
- input_pass_values drivers/input/input.c:949 [inline]
- input_set_keycode+0x290/0x320 drivers/input/input.c:954
- evdev_handle_set_keycode_v2+0xc4/0x120 drivers/input/evdev.c:882
- evdev_do_ioctl drivers/input/evdev.c:1150 [inline]
+For display timings there is something similar.
+Here the property is named native-mode and is a phandle to the
+preferred timing.
+And it is documented that if no native-mode is specified the first
+timing in the tree is chosen.  
+So a different concept than this.
 
-Reported-by: syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+I could not from your otherwise well-documented changelog see why you
+wanted to go for an opauge integer and status rather than a phandle to
+the active display.
 
-v2: fixed up interaction with hid-multitouch according to Benjamin's
-feedback
+The panel-id, if I get it right, is optional and the important part is
+that the first panel with staus = "okay" is selected.
+This would cover my usecase fine.
+I have a target with four different displays and the bootloader
+knows what display is used (based on gpio etc).
+The bootloader (barebox in my case) uses a simple variant of the DT,
+but reads in the DT used by the kernel and can modify the DT before
+it is passed to the kernel.
 
-Please consider tagging for stable.
-
- drivers/hid/hid-input.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 63855f275a38..9428f49fd218 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -1132,9 +1132,15 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 	}
- 
- mapped:
--	if (device->driver->input_mapped && device->driver->input_mapped(device,
--				hidinput, field, usage, &bit, &max) < 0)
--		goto ignore;
-+	if (device->driver->input_mapped &&
-+	    device->driver->input_mapped(device, hidinput, field, usage,
-+					 &bit, &max) < 0) {
-+		/*
-+		 * The driver indicated that no further generic handling
-+		 * of the usage is desired.
-+		 */
-+		return;
-+	}
- 
- 	set_bit(usage->type, input->evbit);
- 
-@@ -1215,9 +1221,11 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		set_bit(MSC_SCAN, input->mscbit);
- 	}
- 
--ignore:
- 	return;
- 
-+ignore:
-+	usage->type = 0;
-+	usage->code = 0;
- }
- 
- static void hidinput_handle_scroll(struct hid_usage *usage,
--- 
-2.24.0.393.g34dc348eaf-goog
+	Sam
 
 
--- 
-Dmitry
+
+
+> Example of how to use this property:
+> 
+>     ivo_panel {
+>         compatible = "ivo,m133nwf4-r0";
+>         panel-id = <0xc5>;
+>         status = "disabled";
+> 
+>         ports {
+>             port {
+>                 ivo_panel_in_edp: endpoint {
+>                     remote-endpoint = <&sn65dsi86_out_ivo>;
+>                 };
+>             };
+>         };
+>     };
+> 
+>     boe_panel {
+>         compatible = "boe,nv133fhm-n61";
+>         panel-id = <0xc4>;
+>         status = "disabled";
+> 
+>         ports {
+>             port {
+>                 boe_panel_in_edp: endpoint {
+>                     remote-endpoint = <&sn65dsi86_out_boe>;
+>                 };
+>             };
+>         };
+>     };
+> 
+>     sn65dsi86: bridge@2c {
+>         compatible = "ti,sn65dsi86";
+> 
+>         ports {
+>             #address-cells = <1>;
+>             #size-cells = <0>;
+> 
+>             port@0 {
+>                 reg = <0>;
+>                 sn65dsi86_in_a: endpoint {
+>                     remote-endpoint = <&dsi0_out>;
+>                 };
+>             };
+> 
+>             port@1 {
+>                 reg = <1>;
+> 
+>                 sn65dsi86_out_boe: endpoint@c4 {
+>                     remote-endpoint = <&boe_panel_in_edp>;
+>                 };
+> 
+>                 sn65dsi86_out_ivo: endpoint@c5 {
+>                     remote-endpoint = <&ivo_panel_in_edp>;
+>                 };
+>             };
+>         };
+>     };
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  .../bindings/display/panel/panel-common.yaml  | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> index ef8d8cdfcede..6113319b91dd 100644
+> --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> @@ -75,6 +75,32 @@ properties:
+>        in the device graph bindings defined in
+>        Documentation/devicetree/bindings/graph.txt.
+>  
+> +  panel-id:
+> +    description:
+> +      To support the case where one of several different panels can be installed
+> +      on a device, the panel-id property can be used by the firmware to identify
+> +      which panel should have it's status changed to "ok".  This property is not
+> +      used by the HLOS itself.
+> +
+> +      For a device with multiple potential panels, a node for each potential
+> +      should be defined with status = "disabled", and an appropriate panel-id
+> +      property.  The video data producer should be setup with endpoints going to
+> +      each possible panel.  The firmware will find the dt node with a panel-id
+> +      matching the actual panel installed, and change it's status to "ok".
+> +
+> +      The exact method the firmware uses to determine the panel-id of the installed
+> +      panel is outside the scope of this binding, but a few examples are
+> +
+> +      1) u-boot module reading a value from a u-boot env var
+> +      2) EFI driver module reading a value from an EFI variable
+> +      3) device specific firmware reading some device specific GPIOs or
+> +         e-fuse
+> +
+> +      The panel-id values are an opaque integer.  They can be sparse.  The only
+> +      important thing is that each possible panel in the system has a unique
+> +      panel-id, and that the values configured in the device's DTB match the
+> +      values that the firmware is looking for.
+> +
+>    ddc-i2c-bus:
+>      $ref: /schemas/types.yaml#/definitions/phandle
+>      description:
+> -- 
+> 2.23.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
