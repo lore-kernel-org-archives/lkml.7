@@ -4,71 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95EAC43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D09EC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C67D206DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C67206DB
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 20:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AYpKXKAF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s5bZeDr0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfLGUgi (ORCPT
+        id S1727000AbfLGUgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 15:36:38 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39179 "EHLO
+        Sat, 7 Dec 2019 15:36:35 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46279 "EHLO
         mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbfLGUge (ORCPT
+        with ESMTP id S1726951AbfLGUgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 15:36:34 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b137so5077366pga.6
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 12:36:34 -0800 (PST)
+        Sat, 7 Dec 2019 15:36:32 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z124so5055634pgb.13
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 12:36:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NuLMD+vpCNoGiyyrC9smw6iJ6GTLCuAG8SiEJlfGjVQ=;
-        b=AYpKXKAF9cVhSOUeE0rNxEWXQ5UlDNg+Qn06frUuC/ydvfbPLUcDjnSBkeWPOwI6I6
-         LpRv7UPgVLO1B5pSDqq15EYmMOScSSqgHXr0Xv+Bbl1JqUDt7LoOs/NDE0/IvW/mXgQT
-         bp0g1dANmQ33bqP6+EqCBbWMSjbzd0ActrShyNkp13JL4aifwdFx+IW3VHDX1z6z+G4N
-         gOJsbHsep6T+JsCGxd+kxs3nmSPMIIMb0v6SIptBtkYkzBUauXSaXkD0GxrCss9fy9Nj
-         htKVb1CrEsvyQHzBdzchJ/J6lC5Fl3Xt8Ptfp4OllahNkqVEFcSgngUvr1Jrkd+/n6Xa
-         myug==
+        bh=y5s38wz/6dk76o2wu93apOYv5A1m/3RpeMLEd54gKHA=;
+        b=s5bZeDr0Sln+9g/a0EciNEuzuvps+Nd8eSHR6z8G3Ycx0YyHpqr46Js6YGYw7nPhr9
+         N2/9cpqmyhIf1JnmNWUN+m+HPBXc6M7Qszc44JENP5u7QgwkD95SjIJE7pr4InM6WYfQ
+         X0OlPgXFDJWR3GyD0VXGKwow5ut5scco33KtrJdQVrPCHNv4pAylg6wh7vM/3zS9Skcr
+         eSoqV8ar331KUVaLm5vpS2iQOyTlDQymKNY9NCuQnRKN0gYLe6qLoDfrGb6eHamR9FMK
+         CUZ0/oWQqk1zHLx4M9guPBwTOlUgdKznrz+z9m90DmzAT7uXI6mOihy4zS+012FGj3u/
+         2Vkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NuLMD+vpCNoGiyyrC9smw6iJ6GTLCuAG8SiEJlfGjVQ=;
-        b=ab27HT2bPuP3goImOKxX/Hn+IcSPi/sVwz1vgltQPcq+4+SnT9G5CLbaV0o82EfJZ3
-         cr4W0335VOQnXVoJRjqH62xCHONKYM9Tr1JoaaJbskZPPIPiOqwZeiXWjFB8v1iy2BX0
-         NmPYv3QRAVc4PEg/tG3orX0pcQEWo4p/UskJGkq6tr47P+2xOvxwuOeE3cAwbajiKpP1
-         +D6PSjfxB3/ZqyKlkQ/bUVv0AJe+QYVXtW8M2OULltJJM1DyChIUTj1y36qoSQWGywnE
-         yIQRbAZS9nVEsPhgRge+8rKkGBnwlEpHu7YX4/skcStcI+RIvoz4X7z9xm551aF0PsVP
-         2chQ==
-X-Gm-Message-State: APjAAAWG05jgnPqpl/qWIcmSQllYrJVpYSoadc1dnqf4WaENcYclQxqv
-        MYO7LvthF5lAw0mzgHSu0uC5TA==
-X-Google-Smtp-Source: APXvYqwF3axss4ziuaTI7f3irpvgaatsEyyoCLhoH6QDheWLdMZIFM01+feX6FrPD47K79MTg4bO+A==
-X-Received: by 2002:a63:115c:: with SMTP id 28mr10660719pgr.6.1575750993877;
-        Sat, 07 Dec 2019 12:36:33 -0800 (PST)
+        bh=y5s38wz/6dk76o2wu93apOYv5A1m/3RpeMLEd54gKHA=;
+        b=M0mlWKANZT1SSFAne6P3Lruj0P2FVV99yHmaqbk8VypFFDlOnpXzIuckFJfRLCabon
+         DzoFHQ7Yihx3iSSGhJO9vXoGjndy2cPIuLwgB8P7VBY2G1igxSgw6pQREFlk9A4FvnX1
+         sjqgdmo5K3bOrc3R2mdSWjeUoWvkJQKmFRxEm2Tk5m8h2159Qcd7LzLpbDnUJA3uZ1yP
+         NS2Vbt/HgbwhN5sPt2y2ghRQsAMSvTylHTG1ZsGC2A/NFjP1Y00v74jp1rBOGTdamRab
+         1O97g+Ctbtl9qF1Of+ameBqqKjo27ASvf0p0Cs2rdn0icvh65DOlCHrgZfqH4gTx28Eq
+         /ewQ==
+X-Gm-Message-State: APjAAAWJGJdmkWnsnrXdpBEXjLkK+A70CMj4+8fB7/2sTBM7984SWmox
+        ZHlJUlWpfX+o2OPXyMCH1ifd4w==
+X-Google-Smtp-Source: APXvYqxPvzGVJHajbJKyNuh/L/VZJpPacmlCJRWlTu4zUkXrUoGgX4pOBwfDBPRMamkQ922x9BnOCg==
+X-Received: by 2002:aa7:9118:: with SMTP id 24mr22439749pfh.182.1575750991839;
+        Sat, 07 Dec 2019 12:36:31 -0800 (PST)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d14sm22982186pfq.117.2019.12.07.12.36.31
+        by smtp.gmail.com with ESMTPSA id d14sm22982186pfq.117.2019.12.07.12.36.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 12:36:33 -0800 (PST)
+        Sat, 07 Dec 2019 12:36:31 -0800 (PST)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
+To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Pisati <p.pisati@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: qcom: msm8996: Define parent clocks for gcc
-Date:   Sat,  7 Dec 2019 12:36:03 -0800
-Message-Id: <20191207203603.2314424-3-bjorn.andersson@linaro.org>
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Pisati <p.pisati@gmail.com>
+Subject: [PATCH 1/2] clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
+Date:   Sat,  7 Dec 2019 12:36:02 -0800
+Message-Id: <20191207203603.2314424-2-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191207203603.2314424-1-bjorn.andersson@linaro.org>
 References: <20191207203603.2314424-1-bjorn.andersson@linaro.org>
@@ -79,29 +77,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CLKREF clocks in GCC are parented by RPM_SMD_LN_BB_CLK, through the
-CXO2 pad. Wire this up so that this is properly enabled when need by the
-various PHYs.
+The CLKREF clocks are all fed by the clock signal on the CXO2 pad on the
+SoC. Update the definition of these clocks to allow this to be wired up
+to the appropriate clock source.
+
+Retain "xo" as the global named parent to make the change a nop in the
+event that DT doesn't carry the necessary clocks definition.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/clock/qcom,gcc.yaml   |  6 ++--
+ drivers/clk/qcom/gcc-msm8996.c                | 35 +++++++++++++++----
+ 2 files changed, 32 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 4ca2e7b44559..c9c6efbbcc01 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -635,6 +635,9 @@ gcc: clock-controller@300000 {
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
- 			reg = <0x300000 0x90000>;
-+
-+			clocks = <&rpmcc RPM_SMD_LN_BB_CLK>;
-+			clock-names = "cxo2";
- 		};
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+index e73a56fb60ca..f8bd902d4e6d 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+@@ -41,19 +41,21 @@ properties:
  
- 		stm@3002000 {
+   clocks:
+     minItems: 1
+-    maxItems: 3
++    maxItems: 4
+     items:
+       - description: Board XO source
+       - description: Board active XO source
+       - description: Sleep clock source
++      - description: Second XO source
+ 
+   clock-names:
+     minItems: 1
+-    maxItems: 3
++    maxItems: 4
+     items:
+       - const: bi_tcxo
+       - const: bi_tcxo_ao
+       - const: sleep_clk
++      - const: cxo2
+ 
+   '#clock-cells':
+     const: 1
+diff --git a/drivers/clk/qcom/gcc-msm8996.c b/drivers/clk/qcom/gcc-msm8996.c
+index d004cdaa0e39..3c3a7ff04562 100644
+--- a/drivers/clk/qcom/gcc-msm8996.c
++++ b/drivers/clk/qcom/gcc-msm8996.c
+@@ -3046,7 +3046,10 @@ static struct clk_branch gcc_usb3_clkref_clk = {
+ 		.enable_mask = BIT(0),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gcc_usb3_clkref_clk",
+-			.parent_names = (const char *[]){ "xo" },
++			.parent_data = &(const struct clk_parent_data){
++				.fw_name = "cxo2",
++				.name = "xo",
++			},
+ 			.num_parents = 1,
+ 			.ops = &clk_branch2_ops,
+ 		},
+@@ -3060,7 +3063,10 @@ static struct clk_branch gcc_hdmi_clkref_clk = {
+ 		.enable_mask = BIT(0),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gcc_hdmi_clkref_clk",
+-			.parent_names = (const char *[]){ "xo" },
++			.parent_data = &(const struct clk_parent_data){
++				.fw_name = "cxo2",
++				.name = "xo",
++			},
+ 			.num_parents = 1,
+ 			.ops = &clk_branch2_ops,
+ 		},
+@@ -3074,7 +3080,10 @@ static struct clk_branch gcc_edp_clkref_clk = {
+ 		.enable_mask = BIT(0),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gcc_edp_clkref_clk",
+-			.parent_names = (const char *[]){ "xo" },
++			.parent_data = &(const struct clk_parent_data){
++				.fw_name = "cxo2",
++				.name = "xo",
++			},
+ 			.num_parents = 1,
+ 			.ops = &clk_branch2_ops,
+ 		},
+@@ -3088,7 +3097,10 @@ static struct clk_branch gcc_ufs_clkref_clk = {
+ 		.enable_mask = BIT(0),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gcc_ufs_clkref_clk",
+-			.parent_names = (const char *[]){ "xo" },
++			.parent_data = &(const struct clk_parent_data){
++				.fw_name = "cxo2",
++				.name = "xo",
++			},
+ 			.num_parents = 1,
+ 			.ops = &clk_branch2_ops,
+ 		},
+@@ -3102,7 +3114,10 @@ static struct clk_branch gcc_pcie_clkref_clk = {
+ 		.enable_mask = BIT(0),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gcc_pcie_clkref_clk",
+-			.parent_names = (const char *[]){ "xo" },
++			.parent_data = &(const struct clk_parent_data){
++				.fw_name = "cxo2",
++				.name = "xo",
++			},
+ 			.num_parents = 1,
+ 			.ops = &clk_branch2_ops,
+ 		},
+@@ -3116,7 +3131,10 @@ static struct clk_branch gcc_rx2_usb2_clkref_clk = {
+ 		.enable_mask = BIT(0),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gcc_rx2_usb2_clkref_clk",
+-			.parent_names = (const char *[]){ "xo" },
++			.parent_data = &(const struct clk_parent_data){
++				.fw_name = "cxo2",
++				.name = "xo",
++			},
+ 			.num_parents = 1,
+ 			.ops = &clk_branch2_ops,
+ 		},
+@@ -3130,7 +3148,10 @@ static struct clk_branch gcc_rx1_usb2_clkref_clk = {
+ 		.enable_mask = BIT(0),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gcc_rx1_usb2_clkref_clk",
+-			.parent_names = (const char *[]){ "xo" },
++			.parent_data = &(const struct clk_parent_data){
++				.fw_name = "cxo2",
++				.name = "xo",
++			},
+ 			.num_parents = 1,
+ 			.ops = &clk_branch2_ops,
+ 		},
 -- 
 2.24.0
 
