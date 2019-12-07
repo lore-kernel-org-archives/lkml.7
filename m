@@ -2,128 +2,162 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3C4C2BD09
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4DAC43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248EA205ED
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837612064B
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:09:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vnGHB43i"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="erVUUFtB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfLGBHq (ORCPT
+        id S1726475AbfLGBJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 20:07:46 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35819 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfLGBHq (ORCPT
+        Fri, 6 Dec 2019 20:09:43 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38291 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfLGBJn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 20:07:46 -0500
-Received: by mail-pg1-f196.google.com with SMTP id l24so4176858pgk.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 17:07:45 -0800 (PST)
+        Fri, 6 Dec 2019 20:09:43 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so9105260wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 17:09:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:subject:in-reply-to:cc:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jgPnL+5CfrvgeIvrxi5m1URbPq9UfCHRkF3knFWgGMo=;
-        b=vnGHB43imTN0QjS6hkVorlkKBz9FeRi7coqQYKVSZrNzu/moiA3L0lN/rlICiyRZHJ
-         Mh53ovWyz5PC6CNMvZVO7WD6S1sTZ6O5LGg+ugmfR6s7ghr/zccdDSRcdHvZVCHtN7vk
-         +MzaGgY460pFTYKZdZiU7yd9ELl1QotycSPLtwCk/MTZObu2SBttSveckWvIQRTPRJDb
-         VYkI+7gPM5D0vkj3UthTfXLDDaaf2wdIiaP37tRn3NR00CjhJJIC0ncgx/AYpOOCXfST
-         dbTRMxmf0dzFCZwJ4u5YxSgKZvnIl2uYwBkXhuvQHoEXnEj9IYeGoFnA8p/d1a5RZMQi
-         KScw==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yD+Kc1w68swJeTB/Vxg8esU+QpTKf/Y2rxrM02hsM8E=;
+        b=erVUUFtB6mpxaavF/Ysp04B0vSbTaHZdphEw6PTLPxx4Jh1Lr2T0Jk8GcojtMGgxI3
+         DBrW0+V6iZJe3f8YfhDCKupEhidu6nFRAn3EgPh/iKNjplr7NjNrVYW9yeieGHE8n8B6
+         82lbOmdaJ/+WYpSO8E560+uoe6p3ly2WEZ9B4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:in-reply-to:cc:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=jgPnL+5CfrvgeIvrxi5m1URbPq9UfCHRkF3knFWgGMo=;
-        b=U79isTARiPkN0i+k7FRRLGA7AeMEz7I7Arth7ji3k/++RVyPciivzwYGIEdGDVqZgZ
-         UbjzQSBc+cWenBzoO2t8LdFeBLcdH/3/b2jXBjeDaU1sCMI63y/zjXvbGCrqoObRVYok
-         ylZ44GL8UKcmF1L9Gq3PK41JVAhf0VugncpqSltCEDO3WItyV7havqheM+PhDuD36IcU
-         hj26jq0lmMOjYUudWVFNUPD/9e+UiP6iIquT0eLLgiOmQKlGLhimXxtNppoWZM4xYRLz
-         myK3deEXqgAmUPT5O1zczU2ACbMKDQ+d18bnCNVFhQmZ84K0lYNhjnLhJQWtxN2cXwnC
-         hhcA==
-X-Gm-Message-State: APjAAAXeZ4TaQEgHzE4ppbjRCU3/WO4qhwL6NiwZ8dsiGFPXPGMsGNeL
-        H+8o/XrlBUBm5TYexioKC+LUXA==
-X-Google-Smtp-Source: APXvYqw+i60gFlnrvD0Dor+Sp0d2gAyk8B4gXSdQsjoxvzXIiXKLyW9wvw9NoSdBgAup/UtS8uprIg==
-X-Received: by 2002:a62:be12:: with SMTP id l18mr10004721pff.206.1575680865151;
-        Fri, 06 Dec 2019 17:07:45 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:7f69:cd98:a2a2:a03d])
-        by smtp.gmail.com with ESMTPSA id y128sm17328385pfg.17.2019.12.06.17.07.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 17:07:44 -0800 (PST)
-Date:   Fri, 06 Dec 2019 17:07:44 -0800 (PST)
-X-Google-Original-Date: Fri, 06 Dec 2019 16:33:00 PST (-0800)
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject:     RE: [PATCH v3 5/6] gpio: sifive: Add GPIO driver for SiFive SoCs
-In-Reply-To: <208a63e8819b84f9dc03f270f2606294@www.loen.fr>
-CC:     yash.shah@sifive.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net,
-        bmeng.cn@gmail.com, Atish Patra <Atish.Patra@wdc.com>,
-        sagar.kadam@sifive.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
-To:     maz@kernel.org
-Message-ID: <mhng-be0f81d1-78d1-4e9c-8dae-1344635fbbb7@palmerdabbelt-glaptop>
-Mime-Version: 1.0 (MHng)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yD+Kc1w68swJeTB/Vxg8esU+QpTKf/Y2rxrM02hsM8E=;
+        b=S8Vv1Mq8PY5HQH14pizmxANC2VdKix08Wub6I2Ye//727HPJlYeOnsA7PLn7Qq7YBl
+         Fez8SpeK9J82yfqGBxQ8bnneht08RBoVAwHDOH+p/GQtIfrORl6ChSMnGAAjTZvtnSxl
+         pwcZW9Vm5Ev7332q3nSGdyJ6p8agoPNLf9wzV+iSEZ1FCDony99w+Ti5XqqFjkU4Y2Qi
+         hLCL0LPOqbjGjJudRYR0SnEUR6i5laOrQTx+isjPVv6KGdNqLHtaCCHsa0xa235HaSqH
+         FQMe6fq7iTjjxVrmH5GYRtA2QMj1fUWsNGSSdlosRXz7ZGmASSxtHUzBRrAJPpHy2KcK
+         7iOA==
+X-Gm-Message-State: APjAAAW5f8k6j8n2XgUDCdKBQT0hOxDNizkWsbTtNGWAS8xSmqd0YJMN
+        GPXU3JZoh5Cg3HjG4nkW6Pz6RA==
+X-Google-Smtp-Source: APXvYqxObGo3CZK1oMZD8K04TAdbPkiFZl31iS0EfNlkm/zzbTK+0LJdmEc/w156VyiqFzklzdlVMA==
+X-Received: by 2002:a7b:cbc4:: with SMTP id n4mr12296535wmi.118.1575680980554;
+        Fri, 06 Dec 2019 17:09:40 -0800 (PST)
+Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id d14sm18881353wru.9.2019.12.06.17.09.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 17:09:39 -0800 (PST)
+Subject: Re: [PATCH 1/2] dt-bindings: soc: Add binding doc for iProc IDM
+ device
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+References: <20191202233127.31160-1-ray.jui@broadcom.com>
+ <20191202233127.31160-2-ray.jui@broadcom.com>
+ <62254bbb-168e-c0ad-a72d-bd659a2c23fa@gmail.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <0f0e965b-2e57-8b6b-0c72-1a1008497793@broadcom.com>
+Date:   Fri, 6 Dec 2019 17:09:34 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <62254bbb-168e-c0ad-a72d-bd659a2c23fa@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 Nov 2019 01:12:10 PST (-0800), maz@kernel.org wrote:
-> On 2019-11-29 06:27, Yash Shah wrote:
->>> -----Original Message-----
->>> From: Linus Walleij <linus.walleij@linaro.org>
->>> Sent: 28 November 2019 17:50
->>> To: Yash Shah <yash.shah@sifive.com>
->>> Cc: bgolaszewski@baylibre.com; robh+dt@kernel.org;
->>> mark.rutland@arm.com; palmer@dabbelt.com; Paul Walmsley ( Sifive)
->>> <paul.walmsley@sifive.com>; aou@eecs.berkeley.edu;
->>> tglx@linutronix.de;
->>> jason@lakedaemon.net; maz@kernel.org; bmeng.cn@gmail.com;
->>> atish.patra@wdc.com; Sagar Kadam <sagar.kadam@sifive.com>; linux-
->>> gpio@vger.kernel.org; devicetree@vger.kernel.org; linux-
->>> riscv@lists.infradead.org; linux-kernel@vger.kernel.org; Sachin
->>> Ghadi
->>> <sachin.ghadi@sifive.com>
->>> Subject: Re: [PATCH v3 5/6] gpio: sifive: Add GPIO driver for SiFive
->>> SoCs
->>>
->>> On Mon, Nov 25, 2019 at 6:58 AM Yash Shah <yash.shah@sifive.com>
->>> wrote:
->>>
->>> > Adds the GPIO driver for SiFive RISC-V SoCs.
->>> >
->>> > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
->>> > [Atish: Various fixes and code cleanup]
->>> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
->>> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
->>>
->>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>>
->>> I suppose Marc will merge all patches into the irqchip tree as they
->>> are logically
->>> dependent? If you want the GPIO bindings and this driver directly
->>> merged
->>> (no deps) then I can do that as well.
->>
->> Yes, the GPIO driver have logical dependency on irqchip patches. It
->> is best if Marc merges all the patches into the irqchip tree.
->>
->> @Marc Zyngier, Are you going to merge all the patches into the
->> irqchip tree?
->
-> I'm happy to pick this up, but that's definitely 5.6 material as
-> I stopped collecting new 5.5 features a couple of weeks ago.
 
-Thanks!
+
+On 12/5/19 4:09 PM, Florian Fainelli wrote:
+> On 12/2/19 3:31 PM, Ray Jui wrote:
+>> Add binding document for iProc based IDM devices.
+>>
+>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> 
+> Looks good to me, it's 2019, nearly 2020, maybe make this a YAML
+> compatible binding since it is a new one?
+> 
+
+Sorry I am not aware of this YAML requirement until now.
+
+Is this a new requirement that new DT binding document should be made 
+with YAML format?
+
+Thanks,
+
+Ray
+
+
+>> ---
+>>   .../bindings/soc/bcm/brcm,iproc-idm.txt       | 44 +++++++++++++++++++
+>>   1 file changed, 44 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
+>> new file mode 100644
+>> index 000000000000..388c6b036d7e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
+>> @@ -0,0 +1,44 @@
+>> +Broadcom iProc Interconnect Device Management (IDM) device
+>> +
+>> +The Broadcom iProc IDM device allows control and monitoring of ASIC internal
+>> +bus transactions. Most importantly, it can be configured to detect bus
+>> +transaction timeout. In such case, critical information such as transaction
+>> +address that caused the error, bus master ID of the transaction that caused
+>> +the error, and etc., are made available from the IDM device.
+>> +
+>> +-------------------------------------------------------------------------------
+>> +
+>> +Required properties for IDM device node:
+>> +- compatible: must be "brcm,iproc-idm"
+>> +- reg: base address and length of the IDM register space
+>> +- interrupt: IDM interrupt number
+>> +- brcm,iproc-idm-bus: IDM bus string
+>> +
+>> +Optional properties for IDM device node:
+>> +- brcm,iproc-idm-elog: phandle to the device node of the IDM logging device
+>> +
+>> +-------------------------------------------------------------------------------
+>> +
+>> +Required properties for IDM error logging device node:
+>> +- compatible: must be "brcm,iproc-idm-elog";
+>> +- reg: base address and length of reserved memory location where IDM error
+>> +  events can be saved
+>> +
+>> +-------------------------------------------------------------------------------
+>> +
+>> +Example:
+>> +
+>> +idm {
+>> +	idm-elog {
+>> +		compatible = "brcm,iproc-idm-elog";
+>> +		reg = <0x8f221000 0x1000>;
+>> +	};
+>> +
+>> +	idm-mhb-paxc-axi {
+>> +		compatible = "brcm,iproc-idm";
+>> +		reg = <0x60406900 0x200>;
+>> +		interrupt = <GIC_SPI 516 IRQ_TYPE_LEVEL_HIGH>;
+>> +		brcm,iproc-idm-bus = "idm-mhb-paxc-axi";
+>> +		brcm,iproc-idm-elog = <&idm-elog>;
+>> +	};
+>> +};
+>>
+> 
+> 
