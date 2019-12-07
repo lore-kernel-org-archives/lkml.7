@@ -4,111 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C1FC2D0BE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1789C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F08782176D
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A522F2176D
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:48:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QzCesKk5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kDanjmi2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfLGSrq (ORCPT
+        id S1726741AbfLGSsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 13:47:46 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:44066 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfLGSrq (ORCPT
+        Sat, 7 Dec 2019 13:48:02 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38323 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbfLGSsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 13:47:46 -0500
-Received: by mail-pj1-f68.google.com with SMTP id w5so4100080pjh.11
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 10:47:46 -0800 (PST)
+        Sat, 7 Dec 2019 13:48:02 -0500
+Received: by mail-pl1-f193.google.com with SMTP id o8so4087985pls.5
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 10:48:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=g+o/W2tR+ah1gbz9xvaeab3ecUOZuYjDYmgHNmd5AdE=;
-        b=QzCesKk5H/QnhxdZttmRJxvB/kk5/osU5f08u62cZbz6Sxjf3Af66LOC5a+oHqhwey
-         3uIDSo1Fut3CXd3pqgvuUReoF2SLaLNOwW6RG5Tx62sPg57BPpJCWbspYo5ZgDDHa0O3
-         DiqZlUMOdguYLOKoQ2o8Bscf+q/Rs7+ueQ7Po=
+        bh=gIYTvT9Yg0a3HYHkSd1eqhNX0DVUa1na6x4qIySAj/s=;
+        b=kDanjmi2KTqwcxU+vWAA6MY44bNeH/m6+LJ+PXBtyz8m0/IEd5Id3ctmrutsjQlWol
+         nzRhS9ee3BeqtPgZQwsptPbKTwka3iyzO+GMbTS5U45YPei2BeQ4m1/Obijuy1h6PjDR
+         Fs/96o+Lq/d1RGFXUVbM7TUzvcWvzYHi/YCHc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=g+o/W2tR+ah1gbz9xvaeab3ecUOZuYjDYmgHNmd5AdE=;
-        b=VRU4+VT/nyqa0yv6pRdVNpk/FQFLw/fpQrRGFlnNwGw/tUSVOJqRY/KfFqOOR+QIKf
-         n9BA5U9tHMMLsAAzfOPJ7K0tSO4kV+omcpjF3gc25K0jLxIhM+g4HkNTkA+RTamEsLQe
-         8QeSVAzyWas/WmeQHmo01ml76//TH2Nb8hWkR0biqxgReg3OGTE69wdpGm3HbIi5L3CA
-         +LBHFd2R9X7oPmAR2lvDA3fKsT3RLopZSUIbcjXl2Fe+X17ZPlbWDaKR9kEUvt7+Bv0/
-         N2sDj9GTswIRyhuwfEwn8Ti11gRftEFpTfZwux2QFtlnc3w5kHyjl14fn0PsFXjpx/ey
-         WIBA==
-X-Gm-Message-State: APjAAAUxI6UFNYnDiHHFJG0xGKn4pqUEz9wkJEqCs6iRx3CEyygXAlBW
-        uTbj8UtQv4cBM49/tQczb0uYXg==
-X-Google-Smtp-Source: APXvYqwa3Dpc/KviQQujS/dXWsgQA88nMekSICflPCXO5hSENoJJVcES/7cGhMq4ddCjmdTCfeonoA==
-X-Received: by 2002:a17:902:ba84:: with SMTP id k4mr20720961pls.141.1575744465750;
-        Sat, 07 Dec 2019 10:47:45 -0800 (PST)
+        bh=gIYTvT9Yg0a3HYHkSd1eqhNX0DVUa1na6x4qIySAj/s=;
+        b=LNJWl/LG1u5TMFsAZUZMW8ChHFPj7nlpYzLeGTYj8/ki9l2IaNJ7/oDB2wplZpHU4b
+         qXQzb99+IZOsebe/dHyKA89FSotK1zwRgvT/xH1OXpVKBYAQnHuW5E22JqZgsTYcno/P
+         XIORo2Oko4KeJO0gynBye9NtAMNZJLm2Szhx82DsryB+TdfPo2zVw0d533/H+Jl5WlF0
+         rn8F8+XvTpdQWksFXCHyi0eAANPbD77/EryeDip0NnnVpkrbC0m5VeURCwyjVxjCoXuD
+         /zFJwhRrB65wm5z4nidtf1Kdpms+NX1OE+74sSLApjeoB9oSi2/QaKNDtu986IZjdGDC
+         zZ0g==
+X-Gm-Message-State: APjAAAXElAixDuL40U9IlV27Isr/2PukMyw4PI37aaaPWszF5ONCa/Ai
+        746pRbR224kk6UbwnyKvl8LgXyTqvfA=
+X-Google-Smtp-Source: APXvYqx3yu/c68zUTI1LPwAt2andskVpfvUBqNZ+i7uTa0sh9iba5RR78nUbCHT0uaN7c89V1ukSBw==
+X-Received: by 2002:a17:90a:e291:: with SMTP id d17mr23575494pjz.116.1575744481553;
+        Sat, 07 Dec 2019 10:48:01 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u190sm5112943pfb.60.2019.12.07.10.47.44
+        by smtp.gmail.com with ESMTPSA id 3sm18140868pfi.13.2019.12.07.10.48.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 10:47:44 -0800 (PST)
-Date:   Sat, 7 Dec 2019 10:47:44 -0800
+        Sat, 07 Dec 2019 10:48:00 -0800 (PST)
+Date:   Sat, 7 Dec 2019 10:47:59 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     SeongJae Park <sjpark@amazon.com>
 Cc:     shuah@kernel.org, linux-kselftest@vger.kernel.org,
         linux-kernel@vger.kernel.org, sj38.park@gmail.com,
         SeongJae Park <sjpark@amazon.de>
-Subject: Re: [PATCH 1/2] kselftest/runner: Print new line in print of timeout
- log
-Message-ID: <201912071047.E373E19A97@keescook>
+Subject: Re: [PATCH 2/2] kselftest: Support old perl versions
+Message-ID: <201912071047.D7BDF3DD9F@keescook>
 References: <20191202114221.827-1-sjpark@amazon.com>
+ <20191202114221.827-2-sjpark@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191202114221.827-1-sjpark@amazon.com>
+In-Reply-To: <20191202114221.827-2-sjpark@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 12:42:20PM +0100, SeongJae Park wrote:
+On Mon, Dec 02, 2019 at 12:42:21PM +0100, SeongJae Park wrote:
 > From: SeongJae Park <sjpark@amazon.de>
 > 
-> If a timeout failure occurs, kselftest kills the test process and prints
-> the timeout log.  If the test process has killed while printing a log
-> that ends with new line, the timeout log can be printed in middle of the
-> test process output so that it can be seems like a comment, as below:
+> On an old perl such as v5.10.1, `kselftest/prefix.pl` gives below error
+> message:
 > 
->     # test_process_log	not ok 3 selftests: timers: nsleep-lat # TIMEOUT
+>     Can't locate object method "autoflush" via package "IO::Handle" at kselftest/prefix.pl line 10.
 > 
-> This commit avoids such problem by printing one more line before the
-> TIMEOUT failure log.
+> This commit fixes the error by explicitly specifying the use of the
+> `IO::Handle` package.
 > 
 > Signed-off-by: SeongJae Park <sjpark@amazon.de>
 
-Acked-by: Kees Cook <keescook@chromium.org>
+Good catch!
 
-Cool, yeah, this looks fine to me. Nice idea!
+Acked-by: Kees Cook <keescook@chromium.org>
 
 -Kees
 
 > ---
->  tools/testing/selftests/kselftest/runner.sh | 1 +
+>  tools/testing/selftests/kselftest/prefix.pl | 1 +
 >  1 file changed, 1 insertion(+)
 > 
-> diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-> index 84de7bc74f2c..a8d20cbb711c 100644
-> --- a/tools/testing/selftests/kselftest/runner.sh
-> +++ b/tools/testing/selftests/kselftest/runner.sh
-> @@ -79,6 +79,7 @@ run_one()
->  		if [ $rc -eq $skip_rc ]; then	\
->  			echo "not ok $test_num $TEST_HDR_MSG # SKIP"
->  		elif [ $rc -eq $timeout_rc ]; then \
-> +			echo "#"
->  			echo "not ok $test_num $TEST_HDR_MSG # TIMEOUT"
->  		else
->  			echo "not ok $test_num $TEST_HDR_MSG # exit=$rc"
+> diff --git a/tools/testing/selftests/kselftest/prefix.pl b/tools/testing/selftests/kselftest/prefix.pl
+> index ec7e48118183..31f7c2a0a8bd 100755
+> --- a/tools/testing/selftests/kselftest/prefix.pl
+> +++ b/tools/testing/selftests/kselftest/prefix.pl
+> @@ -3,6 +3,7 @@
+>  # Prefix all lines with "# ", unbuffered. Command being piped in may need
+>  # to have unbuffering forced with "stdbuf -i0 -o0 -e0 $cmd".
+>  use strict;
+> +use IO::Handle;
+>  
+>  binmode STDIN;
+>  binmode STDOUT;
 > -- 
 > 2.17.1
 > 
