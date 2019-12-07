@@ -5,97 +5,91 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82CFC43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE147C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA0F9217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51BD217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 18:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m23WEjs0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uT5QOxiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfLGS1R (ORCPT
+        id S1726707AbfLGS2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 13:27:17 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:32855 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbfLGS1R (ORCPT
+        Sat, 7 Dec 2019 13:28:10 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55994 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfLGS2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 13:27:17 -0500
-Received: by mail-wr1-f66.google.com with SMTP id b6so11446769wrq.0;
-        Sat, 07 Dec 2019 10:27:15 -0800 (PST)
+        Sat, 7 Dec 2019 13:28:10 -0500
+Received: by mail-wm1-f66.google.com with SMTP id q9so11238805wmj.5;
+        Sat, 07 Dec 2019 10:28:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aa6l8+iIij3OJFvZOZzXN4zGANQjDpNH8fStlTqEIWk=;
-        b=m23WEjs0SI70EvQEPOu18sGGkvPE9oMetHFPvr71mG0HhwqWWg1Xm9y1GXtEVzJNJd
-         BHf5MPhhohaz4IHbrClTTK8LdIUevdwQbQC2OSweI+AOYmh/myE05PoWRN4RSjhqkBym
-         ixH1aJAQIsErfRPSCTvb42XQDtaokqcHJ0lYreCWdpEGZpYjCpvWDf6eMXGxCluS23zX
-         DFJnIZpad5T/sgRBlaMtTPT2gzaF2J0ohz6fFpSjhAKh7MDIpX5flD3r0mWvlmCwYPtK
-         siblTOSWp/FcbvzSvOGSKdiXV6e+eMDm4dhUqUhod6aNvpR7H894BjB5rNf2qhqKQpk2
-         FgHw==
+        h=from:to:cc:subject:date:message-id;
+        bh=6CRHheWLEsRhea36/j1vP5N19p+TB3XZ3DGdmSAxY+0=;
+        b=uT5QOxiUN7wOISYIchdN3/PmOfAiDusyP/3xELKBch63BgEYJS/uYGIfsWqv87jsmu
+         q7Co9vy0nDosT1cUVMsCFyy+su3e3F/BMt8Q8h3UkMBkDbqKTRdbVe15NLv6qXrgeg1f
+         yIdiS3C6dGW1FY52iwm4TDxH5seHfqzDLnqdiMKsSQgW0GeVjQVF3OImxY01EGGr2mfw
+         Xy5RXz2CZ0dZ0CVatOGacBj4sgb4u45knr4btZt3tAN47b/sioSYxrAdooVibv06e124
+         AK0JYoEOM7RmMyw1gJdFSALw8VVKgU+pGPyo98qDtOpSb3FWzsQVT22gX0lq0MNxVsmP
+         LxZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aa6l8+iIij3OJFvZOZzXN4zGANQjDpNH8fStlTqEIWk=;
-        b=TWMpSGIz7Axec7bPolCdBduTHAhsuXbG4XsWPiKpxCaRqqvBrcKn6KV6wPdPs72DGu
-         EvLyUHNbRi7agP88ltmitbR0ZR2JW1FA9yy7TMa/afCvZ7KNRhWu9O8ST/b1uwafM0wK
-         MtSQbF7p7voLJ8QaE/JGnF5/AzCLNNoLpnTON+MQtyb6pHDOxY5RsDMDqK1KUMyGj2pQ
-         IUY0vacJoFC3+wz27l0JjWwqDjtPZsKzl7ov/9EhocrTPfuOLRv8u5YYUvK//wa2NK9F
-         MvlJcOTecbqbYjr/gx7WIYvjzI3yjdUzkQjTf5H8Jon5IJGmn1pp7aAsRSpCsyEfvJXa
-         CUDQ==
-X-Gm-Message-State: APjAAAV7rlW+EqNVRUpdmG9Qd+Ta56dl9QHuWGAmZmFwYh7xA2I707+h
-        p/XU8SrDGxh3F9eCXk+PC34=
-X-Google-Smtp-Source: APXvYqwICamRNwt4rbMxw0f4GqN/RQjHGDcbcmSc52vaTC1Hr+sao7Nrm8Lq4bV60Q8319T2gQzRLA==
-X-Received: by 2002:adf:e6c6:: with SMTP id y6mr22131117wrm.284.1575743234887;
-        Sat, 07 Dec 2019 10:27:14 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6CRHheWLEsRhea36/j1vP5N19p+TB3XZ3DGdmSAxY+0=;
+        b=dxB5cmLWOCvB6LOBNMGT0E2ke5CS9lcX6ZAUGHW65Ec/J9r8ZE29W8qSfmx/wGYWxE
+         b581PblfwchM8oiHW72NGk9B+JfRpZOZC4dGRD+OM26nc4uwMGJ2v++9YSqp1a70aDVi
+         RAYvKn4IZ8khEqSIZdiC3MneiwZNupPEB3evMYUbbo655qgyXJR/2Nfxtj5Uev6Gkwdk
+         0gRvHG8IOi221RiXrILgWDd24BCNQQq7hTyTYje6ohyAl6tQjaTDeUY291yWBhLla8gl
+         6ggo2PrymZFGhOgK4EYNUHNERP+vVN/p8oYTKFnifIx8sXzWw/ZCBi9ekGaaPNTkaOtg
+         oZzg==
+X-Gm-Message-State: APjAAAW4g9TqnvORPzAHSAP2xzd+jiNGuxEerFDrUFpFe96w6rXW2sjL
+        rlGVPn1Ehi79cIXjYviZogY=
+X-Google-Smtp-Source: APXvYqyJBoKhsHw8vUh5/YF12V78QSjF7lV2IvsYf8eavpLbi8FeJ4WWVyHTNk+J4Ph9yNS1oRM6Yw==
+X-Received: by 2002:a1c:2745:: with SMTP id n66mr16850372wmn.171.1575743288012;
+        Sat, 07 Dec 2019 10:28:08 -0800 (PST)
 Received: from felia.fritz.box ([2001:16b8:2d4f:f100:30e3:988a:bff1:5a99])
-        by smtp.gmail.com with ESMTPSA id a127sm7916125wmh.43.2019.12.07.10.27.14
+        by smtp.gmail.com with ESMTPSA id z3sm20291562wrs.94.2019.12.07.10.28.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 10:27:14 -0800 (PST)
+        Sat, 07 Dec 2019 10:28:07 -0800 (PST)
 From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Przemyslaw Gaj <pgaj@cadence.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     linux-i3c@lists.infradead.org, kernel-janitors@vger.kernel.org,
-        agolec@cadence.com, rafalc@cadence.com, vitor.soares@synopsys.com,
-        linux-kernel@vger.kernel.org,
+To:     Micah Morton <mortonm@chromium.org>
+Cc:     linux-security-module@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
         Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: fix style in CADENCE I3C MASTER IP entry
-Date:   Sat,  7 Dec 2019 19:27:03 +0100
-Message-Id: <20191207182703.14102-1-lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: fix style in SAFESETID SECURITY MODULE
+Date:   Sat,  7 Dec 2019 19:27:51 +0100
+Message-Id: <20191207182751.14249-1-lukas.bulwahn@gmail.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit ae24f2b6f828 ("MAINTAINERS: add myself as maintainer of Cadence I3C
-master controller driver") slips in some formatting with spaces instead of
-tabs, which ./scripts/checkpatch.pl -f MAINTAINERS complains about:
-
-  #7838: FILE: MAINTAINERS:7838:
-  M:      Przemysław Gaj <pgaj@cadence.com>
+Commit fc5b34a35458 ("Add entry in MAINTAINERS file for SafeSetID LSM")
+slips in some formatting with spaces instead of tabs, which
+./scripts/checkpatch.pl -f MAINTAINERS complains about:
 
   WARNING: MAINTAINERS entries use one tab after TYPE:
-  #7839: FILE: MAINTAINERS:7839:
-  S:      Maintained
+  #14394: FILE: MAINTAINERS:14394:
+  +M:     Micah Morton <mortonm@chromium.org>
 
   WARNING: MAINTAINERS entries use one tab after TYPE:
-  #7840: FILE: MAINTAINERS:7840:
-  F:      Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
+  #14395: FILE: MAINTAINERS:14395:
+  +S:     Supported
 
   WARNING: MAINTAINERS entries use one tab after TYPE:
-  #7841: FILE: MAINTAINERS:7841:
-  F:      drivers/i3c/master/i3c-master-cdns.c
+  #14396: FILE: MAINTAINERS:14396:
+  +F:     security/safesetid/
 
-Fixes: ae24f2b6f828 ("MAINTAINERS: add myself as maintainer of Cadence I3C master controller driver")
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #14397: FILE: MAINTAINERS:14397:
+  +F:     Documentation/admin-guide/LSM/SafeSetID.rst
+
+Fixes: fc5b34a35458 ("Add entry in MAINTAINERS file for SafeSetID LSM")
 Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
 applies cleanly on current master (eea2d5da29e3) and next-20191207
@@ -104,24 +98,24 @@ applies cleanly on current master (eea2d5da29e3) and next-20191207
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 0fd82e674cf4..59d4cb7b2981 100644
+index 59d4cb7b2981..f282e5cbc40e 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -7835,10 +7835,10 @@ F:	Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
- F:	drivers/i3c/master/dw*
+@@ -14391,10 +14391,10 @@ F:	drivers/media/pci/saa7146/
+ F:	include/media/drv-intf/saa7146*
  
- I3C DRIVER FOR CADENCE I3C MASTER IP
--M:      Przemysław Gaj <pgaj@cadence.com>
--S:      Maintained
--F:      Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
--F:      drivers/i3c/master/i3c-master-cdns.c
-+M:	Przemysław Gaj <pgaj@cadence.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
-+F:	drivers/i3c/master/i3c-master-cdns.c
+ SAFESETID SECURITY MODULE
+-M:     Micah Morton <mortonm@chromium.org>
+-S:     Supported
+-F:     security/safesetid/
+-F:     Documentation/admin-guide/LSM/SafeSetID.rst
++M:	Micah Morton <mortonm@chromium.org>
++S:	Supported
++F:	security/safesetid/
++F:	Documentation/admin-guide/LSM/SafeSetID.rst
  
- IA64 (Itanium) PLATFORM
- M:	Tony Luck <tony.luck@intel.com>
+ SAMSUNG AUDIO (ASoC) DRIVERS
+ M:	Krzysztof Kozlowski <krzk@kernel.org>
 -- 
 2.17.1
 
