@@ -2,258 +2,161 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A990C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF75C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44DB9206DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 099C824677
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 21:36:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwRkQVVm"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RGkgLXTg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfLGVe4 (ORCPT
+        id S1726826AbfLGVgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 16:34:56 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35509 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfLGVez (ORCPT
+        Sat, 7 Dec 2019 16:36:46 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17051 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfLGVgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 16:34:55 -0500
-Received: by mail-ed1-f68.google.com with SMTP id f8so9095695edv.2;
-        Sat, 07 Dec 2019 13:34:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CSJqQNsnucOVOTO/ZHx/Qqr938fRmW2aU3y0RsfZOao=;
-        b=DwRkQVVm/Bt1ZkSy5b9uP5/eScH3XKMZqBeeVZEC7QJDmbC/Qa6jmJyBK30LRz6oZH
-         k6pHqnSqEtm+/PjanKp1PN35YlARPSB5KbuaWcpKCtw0WJkhxEBA9szSI8b1FCIt3imG
-         eSqQn3xWJsYpeW3DBYzHkvJ6Ws1UmAeK2zh5NYQfBKkRGxKjAmEzrl8nxC83KTwdg/Bk
-         GIkKzeNNwmW4BaPJT8K6i2ftByyisRjqDdauzxhYwk9/AhllrZrGXPwHjQHqq2vZ41tN
-         G44OMwtIwDOnzXFFdMVEGO693Z/YOtvjWow3mPbm8Ycz+IHoG1FV3WNknAlWS9GBVEXX
-         cWmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CSJqQNsnucOVOTO/ZHx/Qqr938fRmW2aU3y0RsfZOao=;
-        b=bQLNt54nBMjO1KLFY4X6rt8bLLBc4yGWYc7XfL4RZJ9ls3VtfB8GVnXD7UN9JjY53U
-         t+rVywGnGx1b/IjPNShXTsvCRkPFf1FtyIECw/bMESgb5mZReB77ZnfSjTTAEqCjM43q
-         gHdwCtuMgBnvygtknmOmXYbVXrqNHFFaJ9zt7lDd+8smCHiNmLXyny5s7ofy62Zn+ji/
-         lO8znbibTSfBQEHJFhyQi25+olGVj4DXBUVnn3F8ufA7FKHHZRFyM67zUr/eP/hA1fnF
-         wyQzQZwSmp5ZZuT37O4bUlydlGSYBKpo8fYPHSiyTjJxKSbqn8wIbpUtcSvK48kCLuTG
-         6YHQ==
-X-Gm-Message-State: APjAAAWUDVv3dtvKsJwbcOU9hGM2IpJJWIu8IVXfjMTbnCQ5e57IeyXx
-        O4TUZIWbBxMsw6IhiKjJiops67CrJsM3z9AvBnc=
-X-Google-Smtp-Source: APXvYqyllooDrvQo8dA4ReYMfwpP6UurOZ0BGv4XaB5kDH9rhmEuFzbdAnRxwoqGAgOP/vqRCbNw4Hqk0XOc6d3/gLI=
-X-Received: by 2002:a05:6402:2d7:: with SMTP id b23mr23785940edx.272.1575754492507;
- Sat, 07 Dec 2019 13:34:52 -0800 (PST)
+        Sat, 7 Dec 2019 16:36:45 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dec1b650000>; Sat, 07 Dec 2019 13:36:39 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 07 Dec 2019 13:36:44 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 07 Dec 2019 13:36:44 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 7 Dec
+ 2019 21:36:41 +0000
+Received: from [10.2.171.190] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 7 Dec 2019
+ 21:36:39 +0000
+Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
+ into PMC driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
+        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
+        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
+        <josephl@nvidia.com>, <vidyas@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
+References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
+ <1575600535-26877-4-git-send-email-skomatineni@nvidia.com>
+ <7cf4ff77-2f33-4ee5-0e09-5aa6aef3e8be@gmail.com>
+ <ad3a6743-4b36-fa25-9cc7-72803038ecc5@gmail.com>
+ <dc7a057a-0bed-0e6f-0987-edcfec47f867@gmail.com>
+ <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
+ <78644d45-2ae3-121f-99fc-0a46f205907d@nvidia.com>
+Message-ID: <b35916e1-c6ee-52ca-9111-5ae109437b6e@nvidia.com>
+Date:   Sat, 7 Dec 2019 13:36:39 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20191207203553.286017-1-robdclark@gmail.com> <20191207203553.286017-2-robdclark@gmail.com>
- <20191207211345.GA32369@ravnborg.org>
-In-Reply-To: <20191207211345.GA32369@ravnborg.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sat, 7 Dec 2019 13:34:42 -0800
-Message-ID: <CAF6AEGtOPYkjG1_9C2CmE_-fSfnAzmXLCvZXiA=iGb2YASKjig@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: display: panel: document panel-id
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        aarch64-laptops@lists.linaro.org,
-        Rob Clark <robdclark@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <78644d45-2ae3-121f-99fc-0a46f205907d@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575754599; bh=cnd0L8QMxX0KA6A+dNMO1BMHMk2Pp5YayeRWdRICX20=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=RGkgLXTgzk1pPP+qKWMNtWsV++9Y6kgHYj4+nsAPcsgyRf6FIwWYz5K/P/5B/v4FY
+         SaLwq3W4D4AInw3Zv5tLe6nnixjQakvd31kE63qDyD+YLkLsKeiW3hu2TIImEZ01SC
+         z7d2VA1AmmmuGQfHO8JTMC89xQS2LnjxKlHBsEKPoMUmgOwNj6ZcXjlObajS5a9HQT
+         rCzo0Jd4Cu+6i2pv43bkW02L0cEy04OMf18+6qw98WvJHexQFLHQrOrK2RyI8Y3mQK
+         1tRNQrdkR/vlo2xcY7rnTTJHTvmrAwpJUUXrMXtchypM2qOdCrNYQL8V7I44LHZJuo
+         7aXsj+9AleNWw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 7, 2019 at 1:13 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> On Sat, Dec 07, 2019 at 12:35:50PM -0800, Rob Clark wrote:
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > For devices that have one of several possible panels installed, the
-> > panel-id property gives firmware a generic way to locate and enable the
-> > panel node corresponding to the installed panel.
->
-> For display timings there is something similar.
-> Here the property is named native-mode and is a phandle to the
-> preferred timing.
-> And it is documented that if no native-mode is specified the first
-> timing in the tree is chosen.
-> So a different concept than this.
->
-> I could not from your otherwise well-documented changelog see why you
-> wanted to go for an opauge integer and status rather than a phandle to
-> the active display.
 
-I think a lot of cases, panel-id could simply be an integer 0..N, but
-for the snapdragon windows devices, they seem to assign each panel a
-unique id.  For example, the two possible panels that we've seen on
-the c630 are 0xc4 and 0xc5.  I think all the values we've seen so far
-on other aarch64 laptops fit in an u8, but the actual value is defined
-as u32.  The meaning behind those values is not really terribly
-important (and might well be arbitrary.. I'm not sure why they didn't
-go with a GUID).  All that matters is they match what DtbLoader pulls
-out of the u32 PanelId field in the UEFIDisplayInfo variable.  The
-intention behind describing the value as "opaque" was simply "don't
-assume it has to be 0..N".
-
-As far as using phandles, I had toyed around with the idea.. the ideal
-thing would be if I could compile the dtb with an unresolved phandle
-link, and then fixup that link in DtbLoader based on panel-id.  But
-this seems not to be possible, afaict I'd have to create a dummy node
-for the phandle to point to.  Maybe I'm missing something, if there
-were a way to do this then I could make this work without any drm
-patches.  Ofc I'm open to suggestions.
-
+On 12/7/19 11:59 AM, Sowjanya Komatineni wrote:
 >
-> The panel-id, if I get it right, is optional and the important part is
-> that the first panel with staus = "okay" is selected.
+> On 12/7/19 8:00 AM, Dmitry Osipenko wrote:
+>> 07.12.2019 18:53, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> 07.12.2019 18:47, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> 07.12.2019 17:28, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> 06.12.2019 05:48, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2, clk_out_3=20
+>>>>>> with
+>>>>>> mux and gate for each of these clocks.
+>>>>>>
+>>>>>> Currently these PMC clocks are registered by Tegra clock driver=20
+>>>>>> using
+>>>>>> clk_register_mux and clk_register_gate by passing PMC base address
+>>>>>> and register offsets and PMC programming for these clocks happens
+>>>>>> through direct PMC access by the clock driver.
+>>>>>>
+>>>>>> With this, when PMC is in secure mode any direct PMC access from the
+>>>>>> non-secure world does not go through and these clocks will not be
+>>>>>> functional.
+>>>>>>
+>>>>>> This patch adds these clocks registration with PMC as a clock=20
+>>>>>> provider
+>>>>>> for these clocks. clk_ops callback implementations for these clocks
+>>>>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC=20
+>>>>>> programming
+>>>>>> in secure mode and non-secure mode.
+>>>>>>
+>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>> ---
+>>>> [snip]
+>>>>
+>>>>>> +
+>>>>>> +static const struct clk_ops pmc_clk_gate_ops =3D {
+>>>>>> +=C2=A0=C2=A0=C2=A0 .is_enabled =3D pmc_clk_is_enabled,
+>>>>>> +=C2=A0=C2=A0=C2=A0 .enable =3D pmc_clk_enable,
+>>>>>> +=C2=A0=C2=A0=C2=A0 .disable =3D pmc_clk_disable,
+>>>>>> +};
+>>>>> What's the benefit of separating GATE from the MUX?
+>>>>>
+>>>>> I think it could be a single clock.
+>>>> According to TRM:
+>>>>
+>>>> 1. GATE and MUX are separate entities.
+>>>>
+>>>> 2. GATE is the parent of MUX (see PMC's CLK_OUT paths diagram in TRM).
+>>>>
+>>>> 3. PMC doesn't gate EXTPERIPH clock but could "force-enable" it,=20
+>>>> correct?
 
-yup, this was to ensure that the other panels don't probe, which was a
-problem pointed out by robher with my previous approach
+Was following existing clk-tegra-pmc as I am not sure of reason for=20
+having these clocks registered as separate mux and gate clocks.
 
-> This would cover my usecase fine.
-> I have a target with four different displays and the bootloader
-> knows what display is used (based on gpio etc).
-> The bootloader (barebox in my case) uses a simple variant of the DT,
-> but reads in the DT used by the kernel and can modify the DT before
-> it is passed to the kernel.
+Yes, PMC clocks can be registered as single clock and can use clk_ops=20
+for set/get parent and enable/disable.
 
-I'd be pretty happy if this (or whatever the eventual solution is)
-covers all the possible multi-sourced panel cases.. this comes up in
-nearly all consumer devices (laptops, phones, etc) and we pretty badly
-need an upstream solution for this.
+enable/disable of PMC clocks is for force-enable to force the clock to=20
+run regardless of ACCEPT_REQ or INVERT_REQ.
 
-BR,
--R
-
-
+>>> 4. clk_m_div2/4 are internal PMC OSC dividers and thus these clocks
+>>> should belong to PMC.
+>> Also, it should be "osc" and not "clk_m".
 >
->         Sam
+> I followed the same parents as it were in existing clk-tegra-pmc driver.
 >
+> Yeah they are wrong and they should be from osc and not clk_m.
 >
+> Will fix in next version.
 >
->
-> > Example of how to use this property:
-> >
-> >     ivo_panel {
-> >         compatible = "ivo,m133nwf4-r0";
-> >         panel-id = <0xc5>;
-> >         status = "disabled";
-> >
-> >         ports {
-> >             port {
-> >                 ivo_panel_in_edp: endpoint {
-> >                     remote-endpoint = <&sn65dsi86_out_ivo>;
-> >                 };
-> >             };
-> >         };
-> >     };
-> >
-> >     boe_panel {
-> >         compatible = "boe,nv133fhm-n61";
-> >         panel-id = <0xc4>;
-> >         status = "disabled";
-> >
-> >         ports {
-> >             port {
-> >                 boe_panel_in_edp: endpoint {
-> >                     remote-endpoint = <&sn65dsi86_out_boe>;
-> >                 };
-> >             };
-> >         };
-> >     };
-> >
-> >     sn65dsi86: bridge@2c {
-> >         compatible = "ti,sn65dsi86";
-> >
-> >         ports {
-> >             #address-cells = <1>;
-> >             #size-cells = <0>;
-> >
-> >             port@0 {
-> >                 reg = <0>;
-> >                 sn65dsi86_in_a: endpoint {
-> >                     remote-endpoint = <&dsi0_out>;
-> >                 };
-> >             };
-> >
-> >             port@1 {
-> >                 reg = <1>;
-> >
-> >                 sn65dsi86_out_boe: endpoint@c4 {
-> >                     remote-endpoint = <&boe_panel_in_edp>;
-> >                 };
-> >
-> >                 sn65dsi86_out_ivo: endpoint@c5 {
-> >                     remote-endpoint = <&ivo_panel_in_edp>;
-> >                 };
-> >             };
-> >         };
-> >     };
-> >
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > ---
-> >  .../bindings/display/panel/panel-common.yaml  | 26 +++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> > index ef8d8cdfcede..6113319b91dd 100644
-> > --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> > +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> > @@ -75,6 +75,32 @@ properties:
-> >        in the device graph bindings defined in
-> >        Documentation/devicetree/bindings/graph.txt.
-> >
-> > +  panel-id:
-> > +    description:
-> > +      To support the case where one of several different panels can be installed
-> > +      on a device, the panel-id property can be used by the firmware to identify
-> > +      which panel should have it's status changed to "ok".  This property is not
-> > +      used by the HLOS itself.
-> > +
-> > +      For a device with multiple potential panels, a node for each potential
-> > +      should be defined with status = "disabled", and an appropriate panel-id
-> > +      property.  The video data producer should be setup with endpoints going to
-> > +      each possible panel.  The firmware will find the dt node with a panel-id
-> > +      matching the actual panel installed, and change it's status to "ok".
-> > +
-> > +      The exact method the firmware uses to determine the panel-id of the installed
-> > +      panel is outside the scope of this binding, but a few examples are
-> > +
-> > +      1) u-boot module reading a value from a u-boot env var
-> > +      2) EFI driver module reading a value from an EFI variable
-> > +      3) device specific firmware reading some device specific GPIOs or
-> > +         e-fuse
-> > +
-> > +      The panel-id values are an opaque integer.  They can be sparse.  The only
-> > +      important thing is that each possible panel in the system has a unique
-> > +      panel-id, and that the values configured in the device's DTB match the
-> > +      values that the firmware is looking for.
-> > +
-> >    ddc-i2c-bus:
-> >      $ref: /schemas/types.yaml#/definitions/phandle
-> >      description:
-> > --
-> > 2.23.0
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
