@@ -2,173 +2,93 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB17C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 06:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F071C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 06:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4878120867
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 06:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF2A24670
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 06:53:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfLGGvF (ORCPT
+        id S1726538AbfLGGxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 01:51:05 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34128 "EHLO huawei.com"
+        Sat, 7 Dec 2019 01:53:06 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:60264 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725869AbfLGGvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 01:51:04 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D3A8565F0DE1928B90D6;
-        Sat,  7 Dec 2019 14:50:51 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Sat, 7 Dec 2019
- 14:50:44 +0800
-Subject: Re: [PATCH V4] scsi: avoid potential deadlock in iscsi_if_rx func
-To:     "wubo (T)" <wubo40@huawei.com>, Lee Duncan <LDuncan@suse.com>,
-        "cleech@redhat.com" <cleech@redhat.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "open-iscsi@googlegroups.com" <open-iscsi@googlegroups.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        id S1725869AbfLGGxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 01:53:06 -0500
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 389A7A547C66DEA8BCE8;
+        Sat,  7 Dec 2019 14:53:03 +0800 (CST)
+Received: from dggeme713-chm.china.huawei.com (10.1.199.109) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 7 Dec 2019 14:53:03 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme713-chm.china.huawei.com (10.1.199.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Sat, 7 Dec 2019 14:53:02 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Sat, 7 Dec 2019 14:53:02 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <kernellwp@gmail.com>
+CC:     Liran Alon <liran.alon@oracle.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ulrich Windl <Ulrich.Windl@rz.uni-regensburg.de>
-CC:     Mingfangsen <mingfangsen@huawei.com>
-References: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E3D4D2@dggeml505-mbx.china.huawei.com>
-From:   "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>
-Message-ID: <969e5733-db78-5664-cfad-e6f20d2e1fb4@huawei.com>
-Date:   Sat, 7 Dec 2019 14:50:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E3D4D2@dggeml505-mbx.china.huawei.com>
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH] KVM: vmx: remove unreachable statement in
+ vmx_get_msr_feature()
+Thread-Topic: [PATCH] KVM: vmx: remove unreachable statement in
+ vmx_get_msr_feature()
+Thread-Index: AdWsyg0ykRpYj0RCSySPadjbFxdshg==
+Date:   Sat, 7 Dec 2019 06:53:02 +0000
+Message-ID: <de7e3807522a493c8cb6012063491a96@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.184.189.20]
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.183]
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-friendly ping...
-
-On 2019/11/20 21:26, wubo (T) wrote:
-> In iscsi_if_rx func, after receiving one request through iscsi_if_recv_msg func,
-> iscsi_if_send_reply will be called to try to reply the request in do-loop. 
-> If the return of iscsi_if_send_reply func return -EAGAIN all the time, one deadlock will occur.
-> 
-> For example, a client only send msg without calling recvmsg func, then it will result in the watchdog soft lockup. 
-> The details are given as follows,
-> 
-> Details of the special case which can cause deadlock:
-> 
-> sock_fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_ISCSI); 
-> retval = bind(sock_fd, (struct sock addr*) & src_addr, sizeof(src_addr);
-> while (1) { 
->          state_msg = sendmsg(sock_fd, &msg, 0); 
->          //Note: recvmsg(sock_fd, &msg, 0) is not processed here.
-> }        
-> close(sock_fd); 
-> 
-> watchdog: BUG: soft lockup - CPU#7 stuck for 22s! [netlink_test:253305] Sample time: 4000897528 ns(HZ: 250) Sample stat: 
-> curr: user: 675503481560, nice: 321724050, sys: 448689506750, idle: 4654054240530, iowait: 40885550700, irq: 14161174020, softirq: 8104324140, st: 0
-> deta: user: 0, nice: 0, sys: 3998210100, idle: 0, iowait: 0, irq: 1547170, softirq: 242870, st: 0 Sample softirq:
->          TIMER:        992
->          SCHED:          8
-> Sample irqstat:
->          irq    2: delta       1003, curr:    3103802, arch_timer
-> CPU: 7 PID: 253305 Comm: netlink_test Kdump: loaded Tainted: G           OE     
-> Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-> pstate: 40400005 (nZcv daif +PAN -UAO)
-> pc : __alloc_skb+0x104/0x1b0
-> lr : __alloc_skb+0x9c/0x1b0
-> sp : ffff000033603a30
-> x29: ffff000033603a30 x28: 00000000000002dd
-> x27: ffff800b34ced810 x26: ffff800ba7569f00
-> x25: 00000000ffffffff x24: 0000000000000000
-> x23: ffff800f7c43f600 x22: 0000000000480020
-> x21: ffff0000091d9000 x20: ffff800b34eff200
-> x19: ffff800ba7569f00 x18: 0000000000000000
-> x17: 0000000000000000 x16: 0000000000000000
-> x15: 0000000000000000 x14: 0001000101000100
-> x13: 0000000101010000 x12: 0101000001010100
-> x11: 0001010101010001 x10: 00000000000002dd
-> x9 : ffff000033603d58 x8 : ffff800b34eff400
-> x7 : ffff800ba7569200 x6 : ffff800b34eff400
-> x5 : 0000000000000000 x4 : 00000000ffffffff
-> x3 : 0000000000000000 x2 : 0000000000000001
-> x1 : ffff800b34eff2c0 x0 : 0000000000000300 Call trace:
-> __alloc_skb+0x104/0x1b0
-> iscsi_if_rx+0x144/0x12bc [scsi_transport_iscsi]
-> netlink_unicast+0x1e0/0x258
-> netlink_sendmsg+0x310/0x378
-> sock_sendmsg+0x4c/0x70
-> sock_write_iter+0x90/0xf0
-> __vfs_write+0x11c/0x190
-> vfs_write+0xac/0x1c0
-> ksys_write+0x6c/0xd8
-> __arm64_sys_write+0x24/0x30
-> el0_svc_common+0x78/0x130
-> el0_svc_handler+0x38/0x78
-> el0_svc+0x8/0xc
-> 
-> Here, we add one limit of retry times in do-loop to avoid the deadlock.
-> 
-> V4: 
-> 	- modify the patch subject, no code change.
-> 
-> V3:  
-> 	- replace the error with warning as suggested by Ulrich 
-> 
-> V2:  
-> 	- add some debug kernel message as suggested by Lee Duncan
-> 
-> Signed-off-by: Bo Wu <wubo40@huawei.com>
-> Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-> Reviewed-by: Lee Duncan <LDuncan@suse.com>
-> ---
-> drivers/scsi/scsi_transport_iscsi.c | 7 +++++++
-> 1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-> index 417b868d8735..ed8d9709b9b9 100644
-> --- a/drivers/scsi/scsi_transport_iscsi.c
-> +++ b/drivers/scsi/scsi_transport_iscsi.c
-> @@ -24,6 +24,8 @@
-> 
->  #define ISCSI_TRANSPORT_VERSION "2.0-870"
-> 
-> +#define ISCSI_SEND_MAX_ALLOWED  10
-> +
-> #define CREATE_TRACE_POINTS
-> #include <trace/events/iscsi.h>
-> 
-> @@ -3682,6 +3684,7 @@ iscsi_if_rx(struct sk_buff *skb)
->                 struct nlmsghdr       *nlh;
->                 struct iscsi_uevent *ev;
->                 uint32_t group;
-> +                int retries = ISCSI_SEND_MAX_ALLOWED;
-> 
->                  nlh = nlmsg_hdr(skb);
->                 if (nlh->nlmsg_len < sizeof(*nlh) + sizeof(*ev) ||
-> @@ -3712,6 +3715,10 @@ iscsi_if_rx(struct sk_buff *skb)
->                                    break;
->                           err = iscsi_if_send_reply(portid, nlh->nlmsg_type,
->                                                         ev, sizeof(*ev));
-> +                          if (err == -EAGAIN && --retries < 0) {
-> +                                   printk(KERN_WARNING "Send reply failed, error %d\n", err);
-> +                                   break;
-> +                          }
->                 } while (err < 0 && err != -ECONNREFUSED && err != -ESRCH);
->                 skb_pull(skb, rlen);
->        }
-> --
-> 1.8.3.1
-> 
-> 
-> .
-> 
-
+DQpQYW9sbyBCb256aW5pIDxwYm9uemluaUByZWRoYXQuY29tPiB3cm90ZToNCj4+IFdhbnBlbmcg
+TGkgPGtlcm5lbGx3cEBnbWFpbC5jb20+IHdyb3RlOg0KPj4+Pg0KPj4+Pj4NCj4+Pj4+IEkgcGVy
+c29uYWxseSBqdXN0IHByZWZlciB0byByZW1vdmUgdGhlIOKAnGRlZmF1bHTigJ0gY2FzZSBhbmQg
+Y2hhbmdlIHRoaXMg4oCccmV0dXJuIDA74oCdIHRvIOKAnHJldHVybiAxO+KAnS4NCj4+Pj4+IEJ1
+dCBpdOKAmXMgYSBtYXR0ZXIgb2YgdGFzdGUgb2YgY291cnNlLg0KPj4+Pj4NCj4+Pj4gWWVzLiBB
+cyB3aGF0ICIgVHVybmlwIGdyZWVucywgYWxsIGhhdmUgbG92ZSAiIHNhaWQuIF5fXg0KPj4+DQo+
+Pj4gQWN0dWFsbHkgaXQgaXMgYSBncmVhdCBhcHByZWNpYXRlZCB0byBpbnRyb2R1Y2Ugc29tZXRo
+aW5nIG1vcmUgdXNlZnVsIGluc3RlYWQgb2YgdG9ucyBvZiBjbGVhbnVwcywgSSBzYXcgZ3V5cyBk
+aWQgb25lIGNsZWFudXAgYW5kIGNhbiBpbmN1ciBzZXZlcmFsIGJ1Z3MgYmVmb3JlLg0KPj4+DQo+
+PiBJJ2QgbGlrZSB0byBpbnRyb2R1Y2Ugc29tZXRoaW5nIG1vcmUgdXNlZnVsLCBidXQgc2lkZSBj
+b3JuZXIgY2xlYW51cHMgDQo+PiBtYXkgYmUgaGFyZCB0byBmb3VuZCBvdXQgc29tZXRoaW5nIHRv
+IGludHJvZHVjZS4gQW5kIHN1Y2ggY2xlYW51cHMgY2FuIA0KPj4gYWxzbyBiZSB2YWxpZGF0ZWQg
+YnkgY29kZSBpbnNwZWN0aW9uIHRvIGF2b2lkIHNvbWV0aGluZyBiYWQuIE1hbnkgdGhhbmtzLg0K
+Pj4gDQo+DQo+WWVhaCwgSSB0aGluayB5b3UgaGF2ZSBiZWVuIGRvaW5nIGEgZ29vZCBqb2IuICBV
+c3VhbGx5LCB3aGVuIHRoZSBjbGVhbnVwcyBpbnRyb2R1Y2UgYnVncyB0aGVyZSBhcmUgbWFueSBv
+dGhlciAic3VzcGljaW91cyIgdGhpbmdzLiAgRm9yIG1lIGl0J3MgY2xlYXIgdGhhdCB5b3UncmUg
+bGVhcm5pbmcgdGhlIGNvZGUgYW5kIG5vdCBqdXN0IG1lc3NpbmcgYXJvdW5kLg0KPg0KPlBhb2xv
+DQoNCk1hbnkgdGhhbmtzIGZvciB5b3VyIGFwcHJvdmUuIEkgcmVhbGx5IGZlZWwgZ3JhdGVmdWwg
+Zm9yIGl0LiBJbiBmYWN0LCBJIGFtIGludmVzdGlnYXRpbmcgdGhlDQpjb2RlIGFuZCBleHBlY3Qg
+YSBkZWVwIHVuZGVyc3RhbmRpbmcuIEJ1dCBpdCdzIHJlYWxseSBhIGVub3Jtb3VzLCBzb3BoaXN0
+aWNhdGVkIGFuZA0Kd29uZGVyZnVsIHdvcmxkLCB3aGF0IEkgY2FuIGRvIG5vdyBpcyB0cnkgdG8g
+a2VlcCB0aGUgY29kZSBjbGVhbi4gTWF5YmUgSSBjb3VsZCBpbnRyb2R1Y2Ugc29tZSB1c2VmdWwN
+CmZlYXR1cmVzIHNvbWVkYXkuIE1hbnkgdGhhbmtzIGFnYWluLg0KDQpCZXN0IHdpc2hlcy4NCg==
