@@ -2,132 +2,105 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00DBC43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 08:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E46C43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 08:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C332245C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 08:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E07512173E
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 08:07:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="akIv4X6Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XuzGvB7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfLGH6v (ORCPT
+        id S1726575AbfLGID7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 02:58:51 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36667 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfLGH6u (ORCPT
+        Sat, 7 Dec 2019 03:03:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20804 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725976AbfLGID7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 02:58:50 -0500
-Received: by mail-qk1-f196.google.com with SMTP id s25so3655800qks.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 23:58:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/OZxrpveecc01VbvYyTvB3V1kyWxv/dSiTH96dSfU/E=;
-        b=akIv4X6QceP15B8i+vSX5Mhe8GR7D0je98TUBcNOIid9R9ors1oCMMd369NO/6prIf
-         ppQGz4/d0ntDc1Md+hDtq/E0hrjj3Bqj3Vy2yra2MpXtRycHfVmtlDwPP9XL6zVLwz+W
-         8SwdOAA+QaVfpJOruQm2k6QZDrWlvMXkSnAauD8MnaXvY1cM19eiMbCqqTFTGSQDr722
-         EJIQqUAQxZ1nBy4P9DeFORT5RnVrFg/wShHz7IjjZ3l31B1l0m4z7EJ74lUuLUqC5aQs
-         RswYEzBPLJFUB9ZMVfoNA7hR8fCL6Wjxwmv7PHc92S2aaUawsRKVQ48NFvuxqMdNdzaU
-         gfwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/OZxrpveecc01VbvYyTvB3V1kyWxv/dSiTH96dSfU/E=;
-        b=ilYVV4VnPLIEFkEHA7gHeEcpNK0saoJ+W9H+tmekuf0JZyh45WmccemYxhcGinEvCE
-         T957l3mCzm/rnaGADUaOVQSASnJnLT5FFyCKWO4m4KhNDXazlltBMJXVSzhcmT0EbksV
-         234c6U9ClplqBnqzYuZd82ED/Tr1H1QBk2iVldn5nuBSAr/Q1eFfIzuaxDRYDC8APxim
-         XpskulQzktsw3+REb848hKQOs+b5EXyM5xxwkN7Ndl//c4UUwL8/z7gVRfZDbnbqRIuw
-         6DXlI/SjPwoKs8GeOZyJyvjIelWh17qMvcd/XRgl/Qzjek9YAJInro52kzTG0nTYD+27
-         c9Kw==
-X-Gm-Message-State: APjAAAU79+Xd4lexHerqGDdpfqDEE9ROPuceQjD5SVInzugcHRFTATcT
-        rJKrg2D72TN/TF18a+eRsxhL1rrl7I0=
-X-Google-Smtp-Source: APXvYqzvTxM1HQXuPba4AJRBPMMpNXtAjpTg4XAIUN0SPDIepGHTr/mLhv6SsJ1vChGTsAQgtK41QA==
-X-Received: by 2002:a05:620a:1324:: with SMTP id p4mr7967858qkj.497.1575705529543;
-        Fri, 06 Dec 2019 23:58:49 -0800 (PST)
-Received: from ovpn-121-247.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id d143sm1283497qke.123.2019.12.06.23.58.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Dec 2019 23:58:48 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     tglx@linutronix.de, john.stultz@linaro.org
-Cc:     sboyd@kernel.org, vikas.shivappa@linux.intel.com,
-        tony.luck@intel.com, tj@kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] timer: fix a debugobjects warning in del_timer()
-Date:   Sat,  7 Dec 2019 02:58:28 -0500
-Message-Id: <20191207075828.2347-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Sat, 7 Dec 2019 03:03:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575705838;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vliPqnCEhaC7aRJFwTK4kmONvLe/uovKYwo4EW/vES0=;
+        b=XuzGvB7eQTn5BVsGU3f1RxGyM/BSv/4dNCPQaTjNUaQ7Fpx+yC6k+nxAVkcKEFpIJeORCg
+        suRv+MNlViaueFe44A5FrdmuZ2HlEqnH7h199ezzUjHZbMpnA7hihJBlYHwcIXpf9Z9DuE
+        5sn6StaYZlhGldLeNhID4JNx29lXRS8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-e3lQR1x2NYGHNHG0AZGL-g-1; Sat, 07 Dec 2019 03:03:55 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8BAB61005502;
+        Sat,  7 Dec 2019 08:03:52 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-19.pek2.redhat.com [10.72.8.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A5DAB5D9CA;
+        Sat,  7 Dec 2019 08:03:40 +0000 (UTC)
+Date:   Sat, 7 Dec 2019 16:03:35 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     tglx@linutronix.de, chenxiang66@hisilicon.com,
+        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
+        maz@kernel.org, hare@suse.com, hch@lst.de, axboe@kernel.dk,
+        bvanassche@acm.org, peterz@infradead.org, mingo@redhat.com
+Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
+ for managed interrupt
+Message-ID: <20191207080335.GA6077@ming.t460p>
+References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
+ <1575642904-58295-2-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1575642904-58295-2-git-send-email-john.garry@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: e3lQR1x2NYGHNHG0AZGL-g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the commit e33026831bdb ("x86/intel_rdt/mbm: Handle counter
-overflow"), it will generate a debugobjects warning while offlining
-CPUs.
+On Fri, Dec 06, 2019 at 10:35:04PM +0800, John Garry wrote:
+> Currently the cpu allowed mask for the threaded part of a threaded irq
+> handler will be set to the effective affinity of the hard irq.
+>=20
+> Typically the effective affinity of the hard irq will be for a single cpu=
+. As such,
+> the threaded handler would always run on the same cpu as the hard irq.
+>=20
+> We have seen scenarios in high data-rate throughput testing that the cpu
+> handling the interrupt can be totally saturated handling both the hard
+> interrupt and threaded handler parts, limiting throughput.
 
-ODEBUG: assert_init not available (active state 0) object type:
-timer_list hint: 0x0
-WARNING: CPU: 143 PID: 789 at lib/debugobjects.c:484
-debug_print_object+0xfe/0x140
-Hardware name: HP Synergy 680 Gen9/Synergy 680 Gen9 Compute Module, BIOS
-I40 05/23/2018
-RIP: 0010:debug_print_object+0xfe/0x140
-Call Trace:
- debug_object_assert_init+0x1f5/0x240
- del_timer+0x6f/0xf0
- try_to_grab_pending+0x42/0x3c0
- cancel_delayed_work+0x7d/0x150
- resctrl_offline_cpu+0x3c0/0x520
- cpuhp_invoke_callback+0x197/0x1120
- cpuhp_thread_fun+0x252/0x2f0
- smpboot_thread_fn+0x255/0x440
- kthread+0x1e6/0x210
- ret_from_fork+0x3a/0x50
+Frankly speaking, I never observed that single CPU is saturated by one stor=
+age
+completion queue's interrupt load. Because CPU is still much quicker than
+current storage device.=20
 
-This is because in domain_remove_cpu() when "cpu == d->mbm_work_cpu", it
-calls cancel_delayed_work(&d->mbm_over) to deactivate the timer, and
-then mbm_setup_overflow_handler() calls schedule_delayed_work_on() with
-0 delay which does not activiate the timer in __queue_delayed_work().
+If there are more drives, one CPU won't handle more than one queue(drive)'s
+interrupt if (nr_drive * nr_hw_queues) < nr_cpu_cores.
 
-Later, when the last CPU in the same L3 cache goes offline, it calls
-cancel_delayed_work(&d->mbm_over) again in domain_remove_cpu() and
-trigger the warning because the timer is still inactive.
+So could you describe your case in a bit detail? Then we can confirm
+if this change is really needed.
 
-Since del_timer() could be called on both active and inactive timers,
-debug_assert_init() should be called only when there is an active timer.
+>=20
+> For when the interrupt is managed, allow the threaded part to run on all
+> cpus in the irq affinity mask.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- kernel/time/timer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I remembered that performance drop is observed by this approach in some
+test.
 
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 4820823515e9..90a7658dca07 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -1193,9 +1193,9 @@ int del_timer(struct timer_list *timer)
- 	unsigned long flags;
- 	int ret = 0;
- 
--	debug_assert_init(timer);
--
- 	if (timer_pending(timer)) {
-+		debug_assert_init(timer);
-+
- 		base = lock_timer_base(timer, &flags);
- 		ret = detach_if_pending(timer, base, true);
- 		raw_spin_unlock_irqrestore(&base->lock, flags);
--- 
-2.21.0 (Apple Git-122.2)
+
+Thanks,=20
+Ming
 
