@@ -2,230 +2,182 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5334C2BBE2
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E572FC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6AC1217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FFC24677
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 11:44:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UgUf7w3P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbfLGLga (ORCPT
+        id S1726414AbfLGLo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 06:36:30 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:37774 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726025AbfLGLga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 06:36:30 -0500
-Received: from linux.localdomain (unknown [123.138.236.242])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_xajjutdTiUIAA--.95S2;
-        Sat, 07 Dec 2019 19:36:04 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Tyler Hicks <tyhicks@canonical.com>
-Cc:     linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] fs: introduce is_dot_dotdot helper for cleanup
-Date:   Sat,  7 Dec 2019 19:35:48 +0800
-Message-Id: <1575718548-19017-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dx_xajjutdTiUIAA--.95S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxur15ZF45Ww47Jry3KF47XFb_yoW7JrW7pF
-        sxAFyxtrs7Gry5ur95tr1ruw1Yv3s7Wr17JrZxKa40yryaqrn5XrWIyw109wn3JFWDuFn0
-        gFZ8G34rCry5JFJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvCb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-        Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJV
-        W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka
-        0xkIwI1lc2xSY4AK67AK6r4kMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
-        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAI
-        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-        nxnUUI43ZEXa7IU5D3vUUUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Sat, 7 Dec 2019 06:44:27 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46310 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfLGLo0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 06:44:26 -0500
+Received: by mail-lj1-f195.google.com with SMTP id z17so10413177ljk.13
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 03:44:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=noLqQanQbnK+x5xF9NBNdaHzY6bHKm/YguNVSzLLRs8=;
+        b=UgUf7w3Px2Ofpq8vNvIc+I5YbSVu5X+2Go381iL0MdD8lIlkb0koa4Htd8fUtlS3Td
+         6yRp3yQwgzZRbaBg5A2zdDgmj8EO53X0lpaFbU+fdI6P0zKMFtVgiKTTGh89GOxwSKJz
+         KGiz77uCnQamHdgxr8SNbtPaBr0VcPdkFsfKYv2BM84nA+coKjOq/9rRDyNISWw08fIT
+         pz3AaMcx8noVyKPyhcvnoM9nKUqxmL7SbCwoo39A/IjIAYCows+Mzei71e63FTtDnh54
+         6ZivZ98SI4K9Jy2VF7uFmmvjOI2Tp3JK8x24+z9kIKOZomGoZ7YG1uKGKtlXLH5qkw2k
+         ZmIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=noLqQanQbnK+x5xF9NBNdaHzY6bHKm/YguNVSzLLRs8=;
+        b=n6XrHijbhDvbVVUjJAGEqkp9lVH+IJ/BNImvnhXO5kHkJ5Uj47gCSJVHCDS0PF69sU
+         vlAwrkq4WKSaBwpl723q7duFSwNW4RZwa1Sh5NzDuoRExm/eGvZr2S2nulJIwRTiVS8W
+         hfJ+qNN2M78IEtkWcJM1mlR3hhN6yFCXB1evRo/91ntsodPNpjz9Qhj+/B0lKek3btqR
+         wES40xOvosByNU3bNj3lvOyH9rWpLiyXJiEGzvzWGTpjS9q7XHIq3HhPzgGauxg3SmC9
+         EfxM0mK804u/rNxuq2YrWQUXT63FBUed+3d0JyDipWI00ATE+ZP9Yq4y5mGBR/KRISBm
+         s+Qw==
+X-Gm-Message-State: APjAAAXoiy9EvlvL68KHxsi55KM4wSn7Na9XrNUlm+L4CiVxO3uRwTgD
+        UXCX7eEB+TRaWXRi5u6zCCTrhw==
+X-Google-Smtp-Source: APXvYqz1vqly73aDm5n3BQ+fXG4izYsrEDXRa3r9B77B0WQiDdrXAtIaboVrpAn4I9udYSXQ8jJL5g==
+X-Received: by 2002:a2e:859a:: with SMTP id b26mr11402734lji.137.1575719063530;
+        Sat, 07 Dec 2019 03:44:23 -0800 (PST)
+Received: from khorivan (57-201-94-178.pool.ukrtel.net. [178.94.201.57])
+        by smtp.gmail.com with ESMTPSA id c189sm3761894lfg.75.2019.12.07.03.44.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Dec 2019 03:44:22 -0800 (PST)
+Date:   Sat, 7 Dec 2019 13:44:20 +0200
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        nsekhar@ti.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: ethernet: ti: davinci_cpdma: fix warning "device
+ driver frees DMA memory with different size"
+Message-ID: <20191207114419.GA2798@khorivan>
+Mail-Followup-To: Grygorii Strashko <grygorii.strashko@ti.com>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        nsekhar@ti.com, linux-kernel@vger.kernel.org
+References: <20191204165029.9264-1-grygorii.strashko@ti.com>
+ <20191204.123718.1152659362924451799.davem@davemloft.net>
+ <0c6b88b2-31b1-11f0-7baa-1ecd5f4b6644@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <0c6b88b2-31b1-11f0-7baa-1ecd5f4b6644@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There exists many similar and duplicate codes to check "." and "..",
-so introduce is_dot_dotdot helper to make the code more clean.
+On Thu, Dec 05, 2019 at 12:48:46PM +0200, Grygorii Strashko wrote:
+>
+>
+>On 04/12/2019 22:37, David Miller wrote:
+>>From: Grygorii Strashko <grygorii.strashko@ti.com>
+>>Date: Wed, 4 Dec 2019 18:50:29 +0200
+>>
+>>>@@ -1018,7 +1018,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
+>>>  	struct cpdma_chan		*chan = si->chan;
+>>>  	struct cpdma_ctlr		*ctlr = chan->ctlr;
+>>>  	int				len = si->len;
+>>>-	int				swlen = len;
+>>>+	int				swlen;
+>>>  	struct cpdma_desc __iomem	*desc;
+>>>  	dma_addr_t			buffer;
+>>>  	u32				mode;
+>>>@@ -1040,6 +1040,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
+>>>  		chan->stats.runt_transmit_buff++;
+>>>  	}
+>>>+	swlen = len;
+>>>  	mode = CPDMA_DESC_OWNER | CPDMA_DESC_SOP | CPDMA_DESC_EOP;
+>>>  	cpdma_desc_to_port(chan, mode, si->directed);
+>>>-- 
+>>>2.17.1
+>>>
+>>
+>>Now there is no reason to keep a separate swlen variable.
+>>
+>>The integral value is always consumed as the length before the descriptor bits
+>>are added to it.
+>>
+>>Therefore you can just use 'len' everywhere in this function now.
+>>
+>
+>Sry, but seems i can't, at least i can't just drop swlen.
+>
+>Below in this function:
+>	writel_relaxed(0, &desc->hw_next);
+>	writel_relaxed(buffer, &desc->hw_buffer);
+>	writel_relaxed(len, &desc->hw_len);
+>	writel_relaxed(mode | len, &desc->hw_mode);
+>^^ here the "len" should be use
+>
+>	writel_relaxed((uintptr_t)si->token, &desc->sw_token);
+>	writel_relaxed(buffer, &desc->sw_buffer);
+>	writel_relaxed(swlen, &desc->sw_len);
+>^^ and here "len"|CPDMA_DMA_EXT_MAP if (si->data_dma) [1]
+>
+>	desc_read(desc, sw_len);
+>
+>so additional if statement has to be added at [1] if "swlen" is dropped
+>
+>-- 
+>Best regards,
+>grygorii
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+Seems like yes,
 
-v3:
-  - use "name" and "len" as arguments instead of qstr
-  - move is_dot_dotdot() to include/linux/namei.h
+And the "swlen" can be avoided like this:
 
-v2:
-  - use the better performance implementation of is_dot_dotdot
-  - make it static inline and move it to include/linux/fs.h
+--- a/drivers/net/ethernet/ti/davinci_cpdma.c
++++ b/drivers/net/ethernet/ti/davinci_cpdma.c
+@@ -1018,7 +1018,6 @@ static int cpdma_chan_submit_si(struct submit_info *si)
+        struct cpdma_chan               *chan = si->chan;
+        struct cpdma_ctlr               *ctlr = chan->ctlr;
+        int                             len = si->len;
+-       int                             swlen = len;
+        struct cpdma_desc __iomem       *desc;
+        dma_addr_t                      buffer;
+        u32                             mode;
+@@ -1046,7 +1045,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
+        if (si->data_dma) {
+                buffer = si->data_dma;
+                dma_sync_single_for_device(ctlr->dev, buffer, len, chan->dir);
+-               swlen |= CPDMA_DMA_EXT_MAP;
++               writel_relaxed(len | CPDMA_DMA_EXT_MAP, &desc->sw_len);
+        } else {
+                buffer = dma_map_single(ctlr->dev, si->data_virt, len, chan->dir);
+                ret = dma_mapping_error(ctlr->dev, buffer);
+@@ -1054,6 +1053,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
+                        cpdma_desc_free(ctlr->pool, desc, 1);
+                        return -EINVAL;
+                }
++               writel_relaxed(len, &desc->sw_len);
+        }
+ 
+        /* Relaxed IO accessors can be used here as there is read barrier
+@@ -1065,7 +1065,6 @@ static int cpdma_chan_submit_si(struct submit_info *si)
+        writel_relaxed(mode | len, &desc->hw_mode);
+        writel_relaxed((uintptr_t)si->token, &desc->sw_token);
+        writel_relaxed(buffer, &desc->sw_buffer);
+-       writel_relaxed(swlen, &desc->sw_len);
+        desc_read(desc, sw_len);
+ 
+        __cpdma_chan_submit(chan, desc);
 
- fs/crypto/fname.c     | 16 +++-------------
- fs/ecryptfs/crypto.c  | 10 ----------
- fs/f2fs/f2fs.h        | 11 -----------
- fs/f2fs/hash.c        |  3 ++-
- fs/namei.c            |  6 ++----
- include/linux/namei.h | 10 ++++++++++
- 6 files changed, 17 insertions(+), 39 deletions(-)
+But not sure what is better.
 
-diff --git a/fs/crypto/fname.c b/fs/crypto/fname.c
-index 3da3707..ed1d7c5 100644
---- a/fs/crypto/fname.c
-+++ b/fs/crypto/fname.c
-@@ -11,21 +11,11 @@
-  * This has not yet undergone a rigorous security audit.
-  */
- 
-+#include <linux/namei.h>
- #include <linux/scatterlist.h>
- #include <crypto/skcipher.h>
- #include "fscrypt_private.h"
- 
--static inline bool fscrypt_is_dot_dotdot(const struct qstr *str)
--{
--	if (str->len == 1 && str->name[0] == '.')
--		return true;
--
--	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
--		return true;
--
--	return false;
--}
--
- /**
-  * fname_encrypt() - encrypt a filename
-  *
-@@ -255,7 +245,7 @@ int fscrypt_fname_disk_to_usr(struct inode *inode,
- 	const struct qstr qname = FSTR_TO_QSTR(iname);
- 	struct fscrypt_digested_name digested_name;
- 
--	if (fscrypt_is_dot_dotdot(&qname)) {
-+	if (is_dot_dotdot(qname.name, qname.len)) {
- 		oname->name[0] = '.';
- 		oname->name[iname->len - 1] = '.';
- 		oname->len = iname->len;
-@@ -323,7 +313,7 @@ int fscrypt_setup_filename(struct inode *dir, const struct qstr *iname,
- 	memset(fname, 0, sizeof(struct fscrypt_name));
- 	fname->usr_fname = iname;
- 
--	if (!IS_ENCRYPTED(dir) || fscrypt_is_dot_dotdot(iname)) {
-+	if (!IS_ENCRYPTED(dir) || is_dot_dotdot(iname->name, iname->len)) {
- 		fname->disk_name.name = (unsigned char *)iname->name;
- 		fname->disk_name.len = iname->len;
- 		return 0;
-diff --git a/fs/ecryptfs/crypto.c b/fs/ecryptfs/crypto.c
-index f91db24..2014f8f 100644
---- a/fs/ecryptfs/crypto.c
-+++ b/fs/ecryptfs/crypto.c
-@@ -1991,16 +1991,6 @@ int ecryptfs_encrypt_and_encode_filename(
- 	return rc;
- }
- 
--static bool is_dot_dotdot(const char *name, size_t name_size)
--{
--	if (name_size == 1 && name[0] == '.')
--		return true;
--	else if (name_size == 2 && name[0] == '.' && name[1] == '.')
--		return true;
--
--	return false;
--}
--
- /**
-  * ecryptfs_decode_and_decrypt_filename - converts the encoded cipher text name to decoded plaintext
-  * @plaintext_name: The plaintext name
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 5a888a0..3d5e684 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2767,17 +2767,6 @@ static inline bool f2fs_cp_error(struct f2fs_sb_info *sbi)
- 	return is_set_ckpt_flags(sbi, CP_ERROR_FLAG);
- }
- 
--static inline bool is_dot_dotdot(const struct qstr *str)
--{
--	if (str->len == 1 && str->name[0] == '.')
--		return true;
--
--	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
--		return true;
--
--	return false;
--}
--
- static inline bool f2fs_may_extent_tree(struct inode *inode)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-diff --git a/fs/f2fs/hash.c b/fs/f2fs/hash.c
-index 5bc4dcd..b8e123f 100644
---- a/fs/f2fs/hash.c
-+++ b/fs/f2fs/hash.c
-@@ -15,6 +15,7 @@
- #include <linux/cryptohash.h>
- #include <linux/pagemap.h>
- #include <linux/unicode.h>
-+#include <linux/namei.h>
- 
- #include "f2fs.h"
- 
-@@ -82,7 +83,7 @@ static f2fs_hash_t __f2fs_dentry_hash(const struct qstr *name_info,
- 	if (fname && !fname->disk_name.name)
- 		return cpu_to_le32(fname->hash);
- 
--	if (is_dot_dotdot(name_info))
-+	if (is_dot_dotdot(name, len))
- 		return 0;
- 
- 	/* Initialize the default seed for the hash checksum functions */
-diff --git a/fs/namei.c b/fs/namei.c
-index d6c91d1..acbfbe4 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2451,10 +2451,8 @@ static int lookup_one_len_common(const char *name, struct dentry *base,
- 	if (!len)
- 		return -EACCES;
- 
--	if (unlikely(name[0] == '.')) {
--		if (len < 2 || (len == 2 && name[1] == '.'))
--			return -EACCES;
--	}
-+	if (is_dot_dotdot(name, len))
-+		return -EACCES;
- 
- 	while (len--) {
- 		unsigned int c = *(const unsigned char *)name++;
-diff --git a/include/linux/namei.h b/include/linux/namei.h
-index 7fe7b87..8254486 100644
---- a/include/linux/namei.h
-+++ b/include/linux/namei.h
-@@ -92,4 +92,14 @@ retry_estale(const long error, const unsigned int flags)
- 	return error == -ESTALE && !(flags & LOOKUP_REVAL);
- }
- 
-+static inline bool is_dot_dotdot(const unsigned char *name, size_t len)
-+{
-+	if (unlikely(name[0] == '.')) {
-+		if (len < 2 || (len == 2 && name[1] == '.'))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- #endif /* _LINUX_NAMEI_H */
 -- 
-2.1.0
-
+Regards,
+Ivan Khoronzhuk
