@@ -2,147 +2,106 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C71C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 19:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90FCC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 19:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383A920637
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 19:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D72E2176D
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 19:33:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="QbVMjENK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcGFvZVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbfLGTbd (ORCPT
+        id S1726787AbfLGTd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 14:31:33 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:43511 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbfLGTbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 14:31:33 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Vfdk0r78zFc;
-        Sat,  7 Dec 2019 20:28:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1575746938; bh=bz/RFAQz0L7Cvrw8unbCiXzOKkR3SU5Qf1fBd8CntZc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QbVMjENKVavMC63zT+xjuEbOmdRz64uTBpSrnk0KKYJZSD/vGbkoK6zM3TG4h6vQM
-         kX4hggbNTaWAFcTEgjJ2Gmzh4gu2Wvw+JOO2qv9lKqAMA/IqBnep2qad0fBwnAW0z2
-         jhCnhLkcOJFvh1lonEWQ/IiNixZKQBI/IzyXrsADSnBSM6HdT1c9G6mVTbtXBSBz03
-         ivUcG8DJBJlFq9IpPO3+sRl7uvdJEzhsN9fZExA6TccjDMzVEz3ythzvX8nDgZDIXo
-         iNSbJuaYpe9D3HoP7A8uMXIoiCeifyXUKViurzcZQUF8kr8YLAl8BZPau0LSIQbBkI
-         ku2jTq7Z9ftAA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Sat, 7 Dec 2019 20:31:28 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 00/19] Consolidate and improve NVIDIA Tegra CPUIDLE
- driver(s)
-Message-ID: <20191207193128.GB19924@qmqm.qmqm.pl>
-References: <20191203004116.11771-1-digetx@gmail.com>
+        Sat, 7 Dec 2019 14:33:56 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37330 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbfLGTd4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 14:33:56 -0500
+Received: by mail-lf1-f67.google.com with SMTP id b15so7753798lfc.4;
+        Sat, 07 Dec 2019 11:33:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=ZqeyKQuSHI4BOC48li9FJR/nDDNru9OxRd5ZcNFeOSo=;
+        b=bcGFvZVGymPohW7Kz+0lmJh5NBMXwP13fhSiC2PMvT+x8BDSta9z4Gh62xDH0vMCNi
+         b5EeQfy1P6DUlYctjiKYMxkWRI9S7M58N8Aw6EfsEjIm/a2mnKj/lfWJPOjSLKw227Bk
+         y9uWb64wcTjjFlLGQHbHDbfzTzZr/e9TTkCIBixbHJOjP2aJlEvv1c7oW/50JE4tXaN8
+         uwO9KgTarTW/LOoZblr9YEdjIzSjbzcKWFO2VqPf3F58L9c89A0EzMCCv5HlRQpX2YPq
+         e5uEOITyeOHCtrgXAtgdaVRy7xouTdMeRd3iRQM2DxtyX6Ey+4G9SeRX3Sex7/epjxre
+         nnKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=ZqeyKQuSHI4BOC48li9FJR/nDDNru9OxRd5ZcNFeOSo=;
+        b=mba/ZGlRTmQelMq4jfhJWh40VJxF1xuJ4+zEUQ9sqsHmbTO93easVjpput5xVYHUiF
+         VBNSwxzdlBVCbF5jPPENE9T3PNdIi/IxiFNApzvqNvhws9z2TbyB3TsRG6bKGcB9Zzvd
+         hRngaAVMdOjsfbkFfBaQPCanJiR694J+e0v82EhRQ8F1XtrCb6O0w0sffXxjOUoQ2afZ
+         WRMWwXdpuqeTv3c7WmQTVp0OBGR4h/0QZWptSgFzCMUzCCztghFbKvSlxA5jHjaxMh8D
+         E+mcf22rtRUgVNNgCYF+nlX6WTlxgd0KjTbHjsRw3oKWb8lIMbpkzfdroKqs8xk8KjD5
+         B7dg==
+X-Gm-Message-State: APjAAAWb8/cRv3s0va1czutKTE8K6iEhY1cdwvXIGpBwEXt9rUV0vQx9
+        D9rqUMemFO8VK3B2mKpZbiSe801+UtRnWDItt8MSVhS2
+X-Google-Smtp-Source: APXvYqz3Rv5lELnvMvYi9DJu3Ziq1/sgCxXk7sid2BZsdSs6O5IYnCn8sS4VOkosJsIOT9yMeYwn0gdm4efpu+NsnJM=
+X-Received: by 2002:ac2:4199:: with SMTP id z25mr11276098lfh.102.1575747234015;
+ Sat, 07 Dec 2019 11:33:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191203004116.11771-1-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <157566809107.17007.16619855857308884231.stgit@warthog.procyon.org.uk>
+ <CAJTyqKNuv+5x7zUTT_O56h7cGOVSEergF+QDXGHCpxXygVG_CA@mail.gmail.com> <CAHk-=wiamjvQAw1y2ymstHbato_XtrkBeWYf1xbi1=94Zft2NA@mail.gmail.com>
+In-Reply-To: <CAHk-=wiamjvQAw1y2ymstHbato_XtrkBeWYf1xbi1=94Zft2NA@mail.gmail.com>
+Reply-To: mceier@gmail.com
+From:   Mariusz Ceier <mceier@gmail.com>
+Date:   Sat, 7 Dec 2019 19:33:42 +0000
+Message-ID: <CAJTyqKO9FX+0TDWL8goY1O5hDsrgXbt1TTuABjcZW_Oi33vVrg@mail.gmail.com>
+Subject: Re: [PATCH] pipe: Fix iteration end check in fuse_dev_splice_write()
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 03:40:57AM +0300, Dmitry Osipenko wrote:
-> Hello,
-> 
-> This series does the following:
-> 
->   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
->      into common drivers/cpuidle/ directory.
-> 
->   2. Enables CPU cluster power-down idling state on Tegra30.
-> 
-> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
-> and of the Tegra's arch code in general. Please review, thanks!
-> 
-> Changelog:
-> 
-> v8: - Rebased on recent linux-next, now making use of
->       cpuidle_driver_state_disabled(). [...]
+I can't reproduce it with ad910e36da4ca3a1bd436989f632d062dda0c921,
+seems it fixes the issue.
 
-Dear Dmitry
+Best regards,
+Mariusz Ceier
 
-This rebase was not complete, at least in patch 14 direct access to
-.disabled field (now removed in Linus' master) are left. The fixups
-needed are below (only compile-tested for now).
-
-Best Regards,
-Micha³ Miros³aw
-
-diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
-index 077ff15e32fb..2d325d3aab57 100644
---- a/drivers/cpuidle/cpuidle-tegra.c
-+++ b/drivers/cpuidle/cpuidle-tegra.c
-@@ -306,13 +306,12 @@ static struct cpuidle_driver tegra_idle_driver = {
-  */
- void tegra_cpuidle_pcie_irqs_in_use(void)
- {
--	if (tegra_idle_driver.states[TEGRA_CC6].disabled ||
-+	if ((tegra_idle_driver.states[TEGRA_CC6].flags & CPUIDLE_FLAG_UNUSABLE) &&
- 	    tegra_get_chip_id() != TEGRA20)
- 		return;
- 
- 	pr_info("disabling CC6 state, since PCIe IRQs are in use\n");
- 	cpuidle_driver_state_disabled(&tegra_idle_driver, TEGRA_CC6, true);
--	tegra_idle_driver.states[TEGRA_CC6].disabled = true;
- }
- 
- static void tegra_cpuidle_setup_tegra114_c7_state(void)
-@@ -328,7 +327,7 @@ static int tegra_cpuidle_probe(struct platform_device *pdev)
- {
- 	/* LP2 could be disabled in device-tree */
- 	if (tegra_pmc_get_suspend_mode() < TEGRA_SUSPEND_LP2)
--		tegra_idle_driver.states[TEGRA_CC6].disabled = true;
-+		cpuidle_driver_state_disabled(&tegra_idle_driver, TEGRA_CC6, true);
- 
- 	/*
- 	 * Required suspend-resume functionality, which is provided by the
-@@ -337,9 +336,9 @@ static int tegra_cpuidle_probe(struct platform_device *pdev)
- 	 */
- 	if (!IS_ENABLED(CONFIG_PM_SLEEP)) {
- 		if (!tegra_cpuidle_using_firmware())
--			tegra_idle_driver.states[TEGRA_C7].disabled = true;
-+			cpuidle_driver_state_disabled(&tegra_idle_driver, TEGRA_C7, true);
- 
--		tegra_idle_driver.states[TEGRA_CC6].disabled = true;
-+		cpuidle_driver_state_disabled(&tegra_idle_driver, TEGRA_CC6, true);
- 	}
- 
- 	/*
-@@ -349,7 +348,7 @@ static int tegra_cpuidle_probe(struct platform_device *pdev)
- 	switch (tegra_get_chip_id()) {
- 	case TEGRA20:
- 		/* Tegra20 isn't capable to power-off individual CPU cores */
--		tegra_idle_driver.states[TEGRA_C7].disabled = true;
-+		cpuidle_driver_state_disabled(&tegra_idle_driver, TEGRA_C7, true);
- 		break;
- 	case TEGRA30:
- 		break;
-@@ -358,7 +357,7 @@ static int tegra_cpuidle_probe(struct platform_device *pdev)
- 		tegra_cpuidle_setup_tegra114_c7_state();
- 
- 		/* coupled CC6 (LP2) state isn't implemented yet */
--		tegra_idle_driver.states[TEGRA_CC6].disabled = true;
-+		cpuidle_driver_state_disabled(&tegra_idle_driver, TEGRA_CC6, true);
- 		break;
- 	default:
- 		return -EINVAL;
+On Sat, 7 Dec 2019 at 18:56, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Sat, Dec 7, 2019 at 10:30 AM Mariusz Ceier <mceier@gmail.com> wrote:
+> >
+> > I believe it's still not complete fix for 8cefc107ca54. Loading videos
+> > (or streams) on youtube, twitch in firefox (71 or nightly) on kernel
+> > eea2d5da29e396b6cc1fb35e36bcbf5f57731015 still results in page
+> > rendering getting stuck (switching between tabs shows spinner instead
+> > of page content).
+>
+> Ok, so youtube (unlike facebook), I can test in firefox. Although it's
+> 70, not 71 or nightly. And it doesn't seem to fail for me.
+>
+> Of course, maybe the reason it doesn't fail for me is that I have a
+> patch in my tree that may be the fix. It's a very small race in
+> select()/poll(), and it's small enough that I wonder if it's really
+> the fix for this, but hey, it might be.
+>
+> It also might be that your version of firefox is different, or just
+> that you're hitting something else that I'm just not hitting.
+>
+> But I committed my patch and pushed it out, so that you could see if
+> that fixes it for you.
+>
+>                 Linus
