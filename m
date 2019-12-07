@@ -2,116 +2,68 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB433C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 22:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D976EC43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 22:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A52B821835
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 22:54:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z0w09Cc/"
+	by mail.kernel.org (Postfix) with ESMTP id A9B3224679
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 22:55:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575759325;
+	bh=5XzSFmIU7PVbmSshNy7EZ1NML47wHN86RFr0A/PoRQM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=MK6x42FOkX5tvBhnpYULJ+Mxzer+eQjjwDjRdzEiZ6aTQDysAgDGo2NkgzKl2cnN0
+	 Xn/ixNEDJRDoZ+3VdyZ+JdyhH8T0QDYmTSDhHH9llmgrLiqMwzUiUru3KLc1UJ4/5f
+	 Pd2XJ7+9l6Pd/X7KiW1nLLTu1g60dsiJvhAFqxjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfLGWy1 (ORCPT
+        id S1726668AbfLGWzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 17:54:27 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33315 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfLGWy1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 17:54:27 -0500
-Received: by mail-pf1-f193.google.com with SMTP id y206so5258417pfb.0;
-        Sat, 07 Dec 2019 14:54:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cvfdz5udoYz82rV5IF60wkSHWqYMMiaRlZ1jxaHcNl8=;
-        b=Z0w09Cc/v/rBnmUL5qWli1KSsd/0UP+Xl4IeCm9eIRXU/DnOHjVEPU2LfQ5iNvBAo0
-         T7b/zuGJ60mh+3AORTe4fZq0mBKldd7dVw++08BGStRLS1QshGf+EnbdhqYJ5ZnC6cpn
-         Lkmt81BIB8ax+WAMjXWXMCYxGjHZ6RlKe9EZ/ZrWBUZNbeFGrsN7zBmixvg7ZQ0b6ojn
-         w0XnHlJ6tmpfgf0sVWDYAvv2V8d8LHSxFcPlb4CLeiPEPZpTE9chiGKn5p+lSTDxSDRX
-         D5Wgj7quMyunmNdNNzPW2vRy/mE0GXX4sUOpxYOXO5ZAxOupgczHE4u5O4QaqjGK0pB9
-         NbJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cvfdz5udoYz82rV5IF60wkSHWqYMMiaRlZ1jxaHcNl8=;
-        b=UhLmD7BNdXZyydxxmjDE/vDi0HVDrpg61hYXSkB9214jesVtuwTEPMScLKaDubAiGW
-         ZMAGmaXzvTghoTskxEI853E4h1DfcedOWwMj+y6Ok7yP73Deb9cs/nuVHVysrDeUj+4n
-         5587FxFCw5RnMQVp2bTks3vtIZKE2WletwWZbW18+ztpnAHRwzjdTGz0g0PycTyXJyOB
-         SGJH2CdK/s4Iinkr2pvokkDHYThuMm7fegMkiyQAe+ydl52hrNLYg8c5pdy+1wpupJ7Y
-         tPHOnaYa1u+a1JhAO/MU5UEasBKnCCeqiSrzGUtVUBLyAg6LOYbpZPlAGzkW1KGltwZe
-         rKig==
-X-Gm-Message-State: APjAAAUPlL/Rx+d79equ7niFs14QdnDaiObDvWAH7jUHQeumGWJ39X+q
-        C/KRDDMKWnlvj45pvPA2B8m6Sr6z
-X-Google-Smtp-Source: APXvYqyAydU0GDvAjLvf7pXLtbLsOEH4iEst6lFRJS+pqD1M8CQzm5m7m/nzkhyAjsOLmRBoMraDWA==
-X-Received: by 2002:a63:190c:: with SMTP id z12mr10313390pgl.1.1575759266370;
-        Sat, 07 Dec 2019 14:54:26 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s22sm7407977pjr.5.2019.12.07.14.54.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 07 Dec 2019 14:54:25 -0800 (PST)
-Date:   Sat, 7 Dec 2019 14:54:24 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-alpha@vger.kernel.org, Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        kbuild test robot <lkp@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] time: posix-stubs: provide compat itimer supoprt for
- alpha
-Message-ID: <20191207225424.GA9476@roeck-us.net>
-References: <20191207191043.656328-1-arnd@arndb.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191207191043.656328-1-arnd@arndb.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sat, 7 Dec 2019 17:55:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbfLGWzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 17:55:24 -0500
+Subject: Re: [GIT PULL] xen: branch for v5.5-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575759323;
+        bh=5XzSFmIU7PVbmSshNy7EZ1NML47wHN86RFr0A/PoRQM=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=gDOVCVvIOUuw09yzMbNCCi1CGdykKlhtNlv/Ja1urANyNJYBEY7JnX11jB9ehPIAW
+         csvMWylu0t+YdRDURZq8AFMGJIuqOEe9q8gkXk0xHYOcVVKFhoJraJ/P/mWyHZiRkn
+         Tzfcz2Dh6FPX8dXJHq8m9fKkEehsiMumQofEYENs=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191206165511.14749-1-jgross@suse.com>
+References: <20191206165511.14749-1-jgross@suse.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191206165511.14749-1-jgross@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git
+ for-linus-5.5b-rc1-tag
+X-PR-Tracked-Commit-Id: 14855954f63608c5622d5eaa964d3872ce5c5514
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f74fd13f4585e418a3e630a82468be58bf1d98c1
+Message-Id: <157575932368.19906.7832606302436981258.pr-tracker-bot@kernel.org>
+Date:   Sat, 07 Dec 2019 22:55:23 +0000
+To:     Juergen Gross <jgross@suse.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 07, 2019 at 08:10:26PM +0100, Arnd Bergmann wrote:
-> Using compat_sys_getitimer and compat_sys_setitimer on alpha
-> causes a link failure in the Alpha tinyconfig and other configurations
-> that turn off CONFIG_POSIX_TIMERS.
-> 
-> Use the same #ifdef check for the stub version as well.
-> 
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Fixes: 4c22ea2b9120 ("y2038: use compat_{get,set}_itimer on alpha")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+The pull request you sent on Fri,  6 Dec 2019 17:55:11 +0100:
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+> git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.5b-rc1-tag
 
-> ---
->  kernel/time/posix-stubs.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/kernel/time/posix-stubs.c b/kernel/time/posix-stubs.c
-> index 67df65f887ac..20c65a7d4e3a 100644
-> --- a/kernel/time/posix-stubs.c
-> +++ b/kernel/time/posix-stubs.c
-> @@ -151,6 +151,9 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
->  
->  #ifdef CONFIG_COMPAT
->  COMPAT_SYS_NI(timer_create);
-> +#endif
-> +
-> +#if defined(CONFIG_COMPAT) || defined(CONFIG_ALPHA)
->  COMPAT_SYS_NI(getitimer);
->  COMPAT_SYS_NI(setitimer);
->  #endif
-> -- 
-> 2.20.0
-> 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f74fd13f4585e418a3e630a82468be58bf1d98c1
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
