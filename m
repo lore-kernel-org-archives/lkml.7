@@ -2,224 +2,249 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9907C43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3430C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FA7206D6
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:20:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="M+x2cjaW"
+	by mail.kernel.org (Postfix) with ESMTP id A395224677
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfLGRUH (ORCPT
+        id S1726599AbfLGRZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 12:20:07 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:45141 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbfLGRUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 12:20:07 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47Vbmz65Bwz9vBLP;
-        Sat,  7 Dec 2019 18:20:03 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=M+x2cjaW; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id IWhZ83DmAviw; Sat,  7 Dec 2019 18:20:03 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47Vbmz4WTnz9vBLM;
-        Sat,  7 Dec 2019 18:20:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1575739203; bh=wGJwZeRsClNhRcvPcTvmKeYbUIim15sV8rYIdLlEYjE=;
-        h=From:Subject:To:Cc:Date:From;
-        b=M+x2cjaWxqN4gPz82Gm0NQGkLddH8L8Fxp54s2uZ9RC/Y/A7Mr5SbaQ/KYpI+ixiQ
-         dy3n1Wd1EzRmsohwZiaOJCGZM2gtQEk+79CKv9C3I1lw6xjH/X6klmRjHRru3sSy9L
-         YOgETHy8kRIG2wjXdIq8SB8OQpzzLSh6afRW/Wh4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4E78B8B7AC;
-        Sat,  7 Dec 2019 18:20:05 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id gw4CgMiQ6qPD; Sat,  7 Dec 2019 18:20:05 +0100 (CET)
-Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 02DB28B772;
-        Sat,  7 Dec 2019 18:20:05 +0100 (CET)
-Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 756A463154; Sat,  7 Dec 2019 17:20:04 +0000 (UTC)
-Message-Id: <72a6cd86137b2a7ab835213cf5c74df6ed2f6ea7.1575739197.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v5] powerpc/irq: inline call_do_irq() and call_do_softirq() on
- PPC32
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Sat,  7 Dec 2019 17:20:04 +0000 (UTC)
+        Sat, 7 Dec 2019 12:25:11 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:54239 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbfLGRZK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 12:25:10 -0500
+Received: by mail-io1-f71.google.com with SMTP id m10so7344902ioo.20
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 09:25:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=qudlbjBQhSrocc4+6WLz4vgDTeNSziLeCxvyG2jwZtE=;
+        b=pSawD1yaP2QPhD7j8wrnRAmDXikn60lKqe8CnUzel+Uh9HPE2JQypR6OrBHaW+eZst
+         ngaAivA9Pio10+/gmA5Am1D/HOX8+KFTEEUjXvB7y+QgFOG6f0Klu4+1Eb1T5k10NcOW
+         tbH6zAYP+GbMqCqZsdPEtOE0fm+La49b1aDdA6cTSD6In2eoxJah+YC9Q6CDttBk48wB
+         SM8yVdbyqLtw1Uw8VOF2WTj5SkJBS/j+EvP2yQC0I/CZJsqQMFYrPBxCr+2OrvS1MIsj
+         qPITuNU/36JX1klqFBQR6D9n0KhidbXkILOaMezJo/sMR7DASpLLWquyr7CSaRfHgeHi
+         ROlA==
+X-Gm-Message-State: APjAAAXkCFZCkbhziA9Gn4eCKJU0r7IO4BcHiPjqwl3u8Xmp9v1882vA
+        dGewr5ZBNIzumWG95nCIdZWBKXSPBZTTD1BtN4T5dDIYYng8
+X-Google-Smtp-Source: APXvYqxv2GePV49PF3QhN0wdSWENDZndIIlxW+FSMrVgiQ+uKL2hlbDzhONrcBA8XfIRFiYLltHZ+dMnKHIJnl8aoL4ocUtKqhqa
+MIME-Version: 1.0
+X-Received: by 2002:a92:5c8a:: with SMTP id d10mr21480945ilg.137.1575739509530;
+ Sat, 07 Dec 2019 09:25:09 -0800 (PST)
+Date:   Sat, 07 Dec 2019 09:25:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b96b2b0599207174@google.com>
+Subject: BUG: sleeping function called from invalid context in tpk_write
+From:   syzbot <syzbot+2eeef62ee31f9460ad65@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, john.wanghui@huawei.com,
+        keescook@chromium.org, kernelfans@gmail.com, len.brown@intel.com,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org, zhangshaokun@hisilicon.com,
+        zhenzhong.duan@oracle.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-call_do_irq() and call_do_softirq() are simple enough to be
-worth inlining.
+Hello,
 
-Inlining them avoids an mflr/mtlr pair plus a save/reload on stack.
-It also allows GCC to keep the saved ksp_limit in an nonvolatile reg.
+syzbot found the following crash on:
 
-This is inspired from S390 arch. Several other arches do more or
-less the same. The way sparc arch does seems odd thought.
+HEAD commit:    eea2d5da Merge tag 'for-linus' of git://git.armlinux.org.u..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1706d1bce00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f07a23020fd7d21a
+dashboard link: https://syzkaller.appspot.com/bug?extid=2eeef62ee31f9460ad65
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1199bb7ae00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=109fd77ae00000
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+2eeef62ee31f9460ad65@syzkaller.appspotmail.com
+
+BUG: sleeping function called from invalid context at  
+kernel/locking/mutex.c:938
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/1
+1 lock held by swapper/1/0:
+  #0: ffffc90000da8d50 ((&sp->resync_t)){+.-.}, at: lockdep_copy_map  
+include/linux/lockdep.h:172 [inline]
+  #0: ffffc90000da8d50 ((&sp->resync_t)){+.-.}, at: call_timer_fn+0xe0/0x780  
+kernel/time/timer.c:1394
+Preemption disabled at:
+[<ffffffff8130614e>] start_secondary+0xde/0x410  
+arch/x86/kernel/smpboot.c:228
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  ___might_sleep.cold+0x1fb/0x23e kernel/sched/core.c:6800
+  __might_sleep+0x95/0x190 kernel/sched/core.c:6753
+  __mutex_lock_common kernel/locking/mutex.c:938 [inline]
+  __mutex_lock+0xc5/0x13c0 kernel/locking/mutex.c:1106
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1121
+  tpk_write+0x5d/0x340 drivers/char/ttyprintk.c:122
+  resync_tnc+0x1b6/0x320 drivers/net/hamradio/6pack.c:522
+  call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1404
+  expire_timers kernel/time/timer.c:1449 [inline]
+  __run_timers kernel/time/timer.c:1773 [inline]
+  __run_timers kernel/time/timer.c:1740 [inline]
+  run_timer_softirq+0x6c3/0x1790 kernel/time/timer.c:1786
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
+  invoke_softirq kernel/softirq.c:373 [inline]
+  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
+  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+  </IRQ>
+RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
+Code: 98 81 eb f9 eb 8a cc cc cc cc cc cc e9 07 00 00 00 0f 00 2d 04 83 61  
+00 f4 c3 66 90 e9 07 00 00 00 0f 00 2d f4 82 61 00 fb f4 <c3> cc 55 48 89  
+e5 41 57 41 56 41 55 41 54 53 e8 ce 93 9b f9 e8 79
+RSP: 0018:ffffc90000d3fd68 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
+RAX: 1ffffffff13266ae RBX: ffff8880a99fa340 RCX: 0000000000000000
+RDX: dffffc0000000000 RSI: 0000000000000006 RDI: ffff8880a99fabd4
+RBP: ffffc90000d3fd98 R08: ffff8880a99fa340 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffffffff8a790e80 R14: 0000000000000000 R15: 0000000000000001
+  arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:690
+  default_idle_call+0x84/0xb0 kernel/sched/idle.c:94
+  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+  do_idle+0x3c8/0x6e0 kernel/sched/idle.c:269
+  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:361
+  start_secondary+0x2f4/0x410 arch/x86/kernel/smpboot.c:264
+  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
+
+================================
+WARNING: inconsistent lock state
+5.4.0-syzkaller #0 Tainted: G        W
+--------------------------------
+inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+swapper/1/0 [HC0[0]:SC1[1]:HE1:SE0] takes:
+ffffffff8c110ab0 (&tpk_port.port_write_mutex){+.?.}, at:  
+tpk_write+0x5d/0x340 drivers/char/ttyprintk.c:122
+{SOFTIRQ-ON-W} state was registered at:
+   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+   __mutex_lock_common kernel/locking/mutex.c:959 [inline]
+   __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1106
+   mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1121
+   tpk_write+0x5d/0x340 drivers/char/ttyprintk.c:122
+   tnc_init drivers/net/hamradio/6pack.c:536 [inline]
+   sixpack_open+0x8d6/0xaaf drivers/net/hamradio/6pack.c:632
+   tty_ldisc_open.isra.0+0xa3/0x110 drivers/tty/tty_ldisc.c:464
+   tty_set_ldisc+0x30e/0x6b0 drivers/tty/tty_ldisc.c:591
+   tiocsetd drivers/tty/tty_io.c:2337 [inline]
+   tty_ioctl+0xe8d/0x14f0 drivers/tty/tty_io.c:2597
+   vfs_ioctl fs/ioctl.c:47 [inline]
+   file_ioctl fs/ioctl.c:545 [inline]
+   do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+   ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+   __do_sys_ioctl fs/ioctl.c:756 [inline]
+   __se_sys_ioctl fs/ioctl.c:754 [inline]
+   __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+irq event stamp: 195718
+hardirqs last  enabled at (195718): [<ffffffff81006743>]  
+trace_hardirqs_on_thunk+0x1a/0x1c arch/x86/entry/thunk_64.S:41
+hardirqs last disabled at (195717): [<ffffffff8100675f>]  
+trace_hardirqs_off_thunk+0x1a/0x1c arch/x86/entry/thunk_64.S:42
+softirqs last  enabled at (195642): [<ffffffff814732ac>]  
+_local_bh_enable+0x1c/0x30 kernel/softirq.c:162
+softirqs last disabled at (195643): [<ffffffff81475cab>] invoke_softirq  
+kernel/softirq.c:373 [inline]
+softirqs last disabled at (195643): [<ffffffff81475cab>]  
+irq_exit+0x19b/0x1e0 kernel/softirq.c:413
+
+other info that might help us debug this:
+  Possible unsafe locking scenario:
+
+        CPU0
+        ----
+   lock(&tpk_port.port_write_mutex);
+   <Interrupt>
+     lock(&tpk_port.port_write_mutex);
+
+  *** DEADLOCK ***
+
+1 lock held by swapper/1/0:
+  #0: ffffc90000da8d50 ((&sp->resync_t)){+.-.}, at: lockdep_copy_map  
+include/linux/lockdep.h:172 [inline]
+  #0: ffffc90000da8d50 ((&sp->resync_t)){+.-.}, at: call_timer_fn+0xe0/0x780  
+kernel/time/timer.c:1394
+
+stack backtrace:
+CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W         5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_usage_bug.cold+0x327/0x378 kernel/locking/lockdep.c:3101
+  valid_state kernel/locking/lockdep.c:3112 [inline]
+  mark_lock_irq kernel/locking/lockdep.c:3309 [inline]
+  mark_lock+0xbb4/0x1220 kernel/locking/lockdep.c:3666
+  mark_usage kernel/locking/lockdep.c:3566 [inline]
+  __lock_acquire+0x1e8e/0x4a00 kernel/locking/lockdep.c:3909
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+  __mutex_lock_common kernel/locking/mutex.c:959 [inline]
+  __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1106
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1121
+  tpk_write+0x5d/0x340 drivers/char/ttyprintk.c:122
+  resync_tnc+0x1b6/0x320 drivers/net/hamradio/6pack.c:522
+  call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1404
+  expire_timers kernel/time/timer.c:1449 [inline]
+  __run_timers kernel/time/timer.c:1773 [inline]
+  __run_timers kernel/time/timer.c:1740 [inline]
+  run_timer_softirq+0x6c3/0x1790 kernel/time/timer.c:1786
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
+  invoke_softirq kernel/softirq.c:373 [inline]
+  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
+  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+  </IRQ>
+RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
+Code: 98 81 eb f9 eb 8a cc cc cc cc cc cc e9 07 00 00 00 0f 00 2d 04 83 61  
+00 f4 c3 66 90 e9 07 00 00 00 0f 00 2d f4 82 61 00 fb f4 <c3> cc 55 48 89  
+e5 41 57 41 56 41 55 41 54 53 e8 ce 93 9b f9 e8 79
+RSP: 0018:ffffc90000d3fd68 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
+RAX: 1ffffffff13266ae RBX: ffff8880a99fa340 RCX: 0000000000000000
+RDX: dffffc0000000000 RSI: 0000000000000006 RDI: ffff8880a99fabd4
+RBP: ffffc90000d3fd98 R08: ffff8880a99fa340 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffffffff8a790e80 R14: 0000000000000000 R15: 0000000000000001
+  arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:690
+  default_idle_call+0x84/0xb0 kernel/sched/idle.c:94
+  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+  do_idle+0x3c8/0x6e0 kernel/sched/idle.c:269
+  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:361
+  start_secondary+0x2f4/0x410 arch/x86/kernel/smpboot.c:264
+  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 0 at kernel/locking/mutex.c:737 mutex_unlock+0x1d/0x30  
+kernel/locking/mutex.c:744
+
 
 ---
-v2: no change.
-v3: no change.
-v4:
-- comment reminding the purpose of the inline asm block.
-- added r2 as clobbered reg
-v5:
-- Limiting the change to PPC32 for now.
-- removed r2 from the clobbered regs list (on PPC32 r2 points to current all the time)
-- Removed patch 1 and merged ksp_limit handling in here.
----
- arch/powerpc/include/asm/irq.h |  2 ++
- arch/powerpc/kernel/irq.c      | 48 ++++++++++++++++++++++++++++++++++++++++++
- arch/powerpc/kernel/misc_32.S  | 39 ----------------------------------
- 3 files changed, 50 insertions(+), 39 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
-index 814dfab7e392..e4a92f0b4ad4 100644
---- a/arch/powerpc/include/asm/irq.h
-+++ b/arch/powerpc/include/asm/irq.h
-@@ -56,8 +56,10 @@ extern void *mcheckirq_ctx[NR_CPUS];
- extern void *hardirq_ctx[NR_CPUS];
- extern void *softirq_ctx[NR_CPUS];
- 
-+#ifdef CONFIG_PPC64
- void call_do_softirq(void *sp);
- void call_do_irq(struct pt_regs *regs, void *sp);
-+#endif
- extern void do_IRQ(struct pt_regs *regs);
- extern void __init init_IRQ(void);
- extern void __do_irq(struct pt_regs *regs);
-diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
-index 5645bc9cbc09..240eca12c71d 100644
---- a/arch/powerpc/kernel/irq.c
-+++ b/arch/powerpc/kernel/irq.c
-@@ -611,6 +611,54 @@ static inline void check_stack_overflow(void)
- #endif
- }
- 
-+#ifdef CONFIG_PPC32
-+static inline void call_do_softirq(const void *sp)
-+{
-+	register unsigned long ret asm("r3");
-+	unsigned long limit = current->thread.ksp_limit;
-+
-+	/* Adjust the stack limit */
-+	current->thread.ksp_limit = (unsigned long)sp;
-+
-+	/* Temporarily switch r1 to sp, call __do_softirq() then restore r1. */
-+	asm volatile(
-+		"	"PPC_STLU"	1, %2(%1);\n"
-+		"	mr		1, %1;\n"
-+		"	bl		%3;\n"
-+		"	"PPC_LL"	1, 0(1);\n" :
-+		"=r"(ret) :
-+		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_softirq) :
-+		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
-+		"r0", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
-+
-+	/* Restore stack limit */
-+	current->thread.ksp_limit = limit;
-+}
-+
-+static inline void call_do_irq(struct pt_regs *regs, void *sp)
-+{
-+	register unsigned long r3 asm("r3") = (unsigned long)regs;
-+	unsigned long limit = current->thread.ksp_limit;
-+
-+	/* Adjust the stack limit */
-+	current->thread.ksp_limit = (unsigned long)sp;
-+
-+	/* Temporarily switch r1 to sp, call __do_irq() then restore r1 */
-+	asm volatile(
-+		"	"PPC_STLU"	1, %2(%1);\n"
-+		"	mr		1, %1;\n"
-+		"	bl		%3;\n"
-+		"	"PPC_LL"	1, 0(1);\n" :
-+		"+r"(r3) :
-+		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_irq) :
-+		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
-+		"r0", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
-+
-+	/* Restore stack limit */
-+	current->thread.ksp_limit = limit;
-+}
-+#endif
-+
- void __do_irq(struct pt_regs *regs)
- {
- 	unsigned int irq;
-diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
-index d80212be8698..341a3cd199cb 100644
---- a/arch/powerpc/kernel/misc_32.S
-+++ b/arch/powerpc/kernel/misc_32.S
-@@ -28,45 +28,6 @@
- 	.text
- 
- /*
-- * We store the saved ksp_limit in the unused part
-- * of the STACK_FRAME_OVERHEAD
-- */
--_GLOBAL(call_do_softirq)
--	mflr	r0
--	stw	r0,4(r1)
--	lwz	r10,THREAD+KSP_LIMIT(r2)
--	stw	r3, THREAD+KSP_LIMIT(r2)
--	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r3)
--	mr	r1,r3
--	stw	r10,8(r1)
--	bl	__do_softirq
--	lwz	r10,8(r1)
--	lwz	r1,0(r1)
--	lwz	r0,4(r1)
--	stw	r10,THREAD+KSP_LIMIT(r2)
--	mtlr	r0
--	blr
--
--/*
-- * void call_do_irq(struct pt_regs *regs, void *sp);
-- */
--_GLOBAL(call_do_irq)
--	mflr	r0
--	stw	r0,4(r1)
--	lwz	r10,THREAD+KSP_LIMIT(r2)
--	stw	r4, THREAD+KSP_LIMIT(r2)
--	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r4)
--	mr	r1,r4
--	stw	r10,8(r1)
--	bl	__do_irq
--	lwz	r10,8(r1)
--	lwz	r1,0(r1)
--	lwz	r0,4(r1)
--	stw	r10,THREAD+KSP_LIMIT(r2)
--	mtlr	r0
--	blr
--
--/*
-  * This returns the high 64 bits of the product of two 64-bit numbers.
-  */
- _GLOBAL(mulhdu)
--- 
-2.13.3
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
