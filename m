@@ -6,50 +6,46 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3430C2D0BE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7695C43603
 	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A395224677
+	by mail.kernel.org (Postfix) with ESMTP id 78B0724670
 	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 17:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfLGRZL (ORCPT
+        id S1726562AbfLGRZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 12:25:11 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:54239 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfLGRZK (ORCPT
+        Sat, 7 Dec 2019 12:25:10 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:46328 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbfLGRZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 7 Dec 2019 12:25:10 -0500
-Received: by mail-io1-f71.google.com with SMTP id m10so7344902ioo.20
+Received: by mail-il1-f199.google.com with SMTP id s85so7965256ild.13
         for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 09:25:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=qudlbjBQhSrocc4+6WLz4vgDTeNSziLeCxvyG2jwZtE=;
-        b=pSawD1yaP2QPhD7j8wrnRAmDXikn60lKqe8CnUzel+Uh9HPE2JQypR6OrBHaW+eZst
-         ngaAivA9Pio10+/gmA5Am1D/HOX8+KFTEEUjXvB7y+QgFOG6f0Klu4+1Eb1T5k10NcOW
-         tbH6zAYP+GbMqCqZsdPEtOE0fm+La49b1aDdA6cTSD6In2eoxJah+YC9Q6CDttBk48wB
-         SM8yVdbyqLtw1Uw8VOF2WTj5SkJBS/j+EvP2yQC0I/CZJsqQMFYrPBxCr+2OrvS1MIsj
-         qPITuNU/36JX1klqFBQR6D9n0KhidbXkILOaMezJo/sMR7DASpLLWquyr7CSaRfHgeHi
-         ROlA==
-X-Gm-Message-State: APjAAAXkCFZCkbhziA9Gn4eCKJU0r7IO4BcHiPjqwl3u8Xmp9v1882vA
-        dGewr5ZBNIzumWG95nCIdZWBKXSPBZTTD1BtN4T5dDIYYng8
-X-Google-Smtp-Source: APXvYqxv2GePV49PF3QhN0wdSWENDZndIIlxW+FSMrVgiQ+uKL2hlbDzhONrcBA8XfIRFiYLltHZ+dMnKHIJnl8aoL4ocUtKqhqa
+        bh=xLP8G6QTOrxF3cZLHOdxhoMT8wRTn4AVg54Rs59OOgA=;
+        b=SiJGncozKHB2WPgtHKP3y4oUy6GLMGipuweh1ULTtffO6tlp8RAXfPx7M85cwqcXgB
+         JcEfvSYQztyrxE0RH7Y7JHALXFM3KO8r43kXwlZdNq3T4XA+Z+U6DiJEGehA/9d2kUAT
+         rJWRWUgePNO0m/8J2UJ5DwV84xji4EbTV2158eiw+T9rM+QvH+KRMqepAAjiDKOF2Z0k
+         nGYmu/ybIYlz9RScybd0WU10ULk3QaeHxGJqotVc5RiZjHZ5LJq8CRCZlmRup7aN2alY
+         3XSiB58EyT5pnPnW2LPKD0u7HPVy6O9iVh/PaWDi3Z0fvVEqi3DD9guHpR+VINHPdTxh
+         svug==
+X-Gm-Message-State: APjAAAWgMqi9V7jDmyEqWui0XEQPYvr1kkwYSuaSwhBtPirGObGpmB+5
+        cUOTOxcQtRlhMFgvkMxXrN/POT97JdxdqMpsBPfaoiTKuRMT
+X-Google-Smtp-Source: APXvYqwzUsYz2Re0zEZVbYDepM9BU5SDYtYC0J8qOECtKuSF6N2vzvRUL6ApetrDkf5817zfmQUBBSS0+kNsV+Mkiey9ItcTvz81
 MIME-Version: 1.0
-X-Received: by 2002:a92:5c8a:: with SMTP id d10mr21480945ilg.137.1575739509530;
+X-Received: by 2002:a92:45d2:: with SMTP id z79mr20306288ilj.76.1575739509264;
  Sat, 07 Dec 2019 09:25:09 -0800 (PST)
 Date:   Sat, 07 Dec 2019 09:25:09 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b96b2b0599207174@google.com>
-Subject: BUG: sleeping function called from invalid context in tpk_write
-From:   syzbot <syzbot+2eeef62ee31f9460ad65@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, john.wanghui@huawei.com,
-        keescook@chromium.org, kernelfans@gmail.com, len.brown@intel.com,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org, zhangshaokun@hisilicon.com,
-        zhenzhong.duan@oracle.com
+Message-ID: <000000000000b55d8805992071b5@google.com>
+Subject: INFO: task hung in tty_ldisc_hangup
+From:   syzbot <syzbot+3105793febc8f3e591ce@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,183 +56,177 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    eea2d5da Merge tag 'for-linus' of git://git.armlinux.org.u..
+HEAD commit:    7ada90eb Merge tag 'drm-next-2019-12-06' of git://anongit...
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1706d1bce00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13725446e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=f07a23020fd7d21a
-dashboard link: https://syzkaller.appspot.com/bug?extid=2eeef62ee31f9460ad65
+dashboard link: https://syzkaller.appspot.com/bug?extid=3105793febc8f3e591ce
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1199bb7ae00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=109fd77ae00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=118ae77ae00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=142ffc32e00000
+
+Bisection is inconclusive: the bug happens on the oldest tested release.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=120c41dae00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=160c41dae00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2eeef62ee31f9460ad65@syzkaller.appspotmail.com
+Reported-by: syzbot+3105793febc8f3e591ce@syzkaller.appspotmail.com
 
-BUG: sleeping function called from invalid context at  
-kernel/locking/mutex.c:938
-in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/1
-1 lock held by swapper/1/0:
-  #0: ffffc90000da8d50 ((&sp->resync_t)){+.-.}, at: lockdep_copy_map  
-include/linux/lockdep.h:172 [inline]
-  #0: ffffc90000da8d50 ((&sp->resync_t)){+.-.}, at: call_timer_fn+0xe0/0x780  
-kernel/time/timer.c:1394
-Preemption disabled at:
-[<ffffffff8130614e>] start_secondary+0xde/0x410  
-arch/x86/kernel/smpboot.c:228
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.4.0-syzkaller #0
+INFO: task login:10239 blocked for more than 143 seconds.
+       Not tainted 5.4.0-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+login           D27648 10239      1 0x80000002
+Call Trace:
+  context_switch kernel/sched/core.c:3385 [inline]
+  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
+  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
+  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
+  down_write_failed drivers/tty/tty_ldsem.c:262 [inline]
+  __ldsem_down_write_nested+0x3b2/0x8f0 drivers/tty/tty_ldsem.c:324
+  ldsem_down_write+0x33/0x40 drivers/tty/tty_ldsem.c:366
+  __tty_ldisc_lock drivers/tty/tty_ldisc.c:315 [inline]
+  tty_ldisc_lock+0x66/0xb0 drivers/tty/tty_ldisc.c:339
+  tty_ldisc_hangup+0x1c6/0x640 drivers/tty/tty_ldisc.c:745
+  __tty_hangup.part.0+0x2fb/0x750 drivers/tty/tty_io.c:625
+  __tty_hangup drivers/tty/tty_io.c:575 [inline]
+  tty_vhangup_session+0x25/0x30 drivers/tty/tty_io.c:735
+  disassociate_ctty.part.0+0xb4/0x740 drivers/tty/tty_jobctrl.c:267
+  disassociate_ctty+0x81/0xa0 drivers/tty/tty_jobctrl.c:261
+  do_exit+0x1b42/0x2ef0 kernel/exit.c:795
+  do_group_exit+0x135/0x360 kernel/exit.c:895
+  __do_sys_exit_group kernel/exit.c:906 [inline]
+  __se_sys_exit_group kernel/exit.c:904 [inline]
+  __x64_sys_exit_group+0x44/0x50 kernel/exit.c:904
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f0f83c781e8
+Code: Bad RIP value.
+RSP: 002b:00007ffd44a828e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f0f83c781e8
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00007f0f83f4d840 R08: 00000000000000e7 R09: ffffffffffffffa8
+R10: 00007f0f83f53740 R11: 0000000000000246 R12: 00007f0f83f4d840
+R13: 0000000000000001 R14: 0000000000000001 R15: 000000000060b798
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/1104:
+  #0: ffffffff899a4280 (rcu_read_lock){....}, at:  
+debug_show_all_locks+0x5f/0x279 kernel/locking/lockdep.c:5334
+1 lock held by rsyslogd/9591:
+  #0: ffff888098116b60 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+fs/file.c:801
+2 locks held by getty/9714:
+  #0: ffff88808ec58090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900018e32e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9715:
+  #0: ffff8880a7428090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900019632e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9716:
+  #0: ffff8880a8e92090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900019032e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9717:
+  #0: ffff888093f73090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900019532e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9718:
+  #0: ffff888098ddf090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900019432e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9719:
+  #0: ffff8880a72d4090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900018a32e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by login/10239:
+  #0: ffff88809b2d2198 (&tty->legacy_mutex){+.+.}, at: tty_lock+0xc7/0x130  
+drivers/tty/tty_mutex.c:19
+  #1: ffff88809b2d2090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_write+0x33/0x40 drivers/tty/tty_ldsem.c:366
+2 locks held by syz-executor540/10274:
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 PID: 1104 Comm: khungtaskd Not tainted 5.4.0-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
 Call Trace:
-  <IRQ>
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0x197/0x210 lib/dump_stack.c:118
-  ___might_sleep.cold+0x1fb/0x23e kernel/sched/core.c:6800
-  __might_sleep+0x95/0x190 kernel/sched/core.c:6753
-  __mutex_lock_common kernel/locking/mutex.c:938 [inline]
-  __mutex_lock+0xc5/0x13c0 kernel/locking/mutex.c:1106
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1121
-  tpk_write+0x5d/0x340 drivers/char/ttyprintk.c:122
-  resync_tnc+0x1b6/0x320 drivers/net/hamradio/6pack.c:522
-  call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1404
-  expire_timers kernel/time/timer.c:1449 [inline]
-  __run_timers kernel/time/timer.c:1773 [inline]
-  __run_timers kernel/time/timer.c:1740 [inline]
-  run_timer_softirq+0x6c3/0x1790 kernel/time/timer.c:1786
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-  </IRQ>
-RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
-Code: 98 81 eb f9 eb 8a cc cc cc cc cc cc e9 07 00 00 00 0f 00 2d 04 83 61  
-00 f4 c3 66 90 e9 07 00 00 00 0f 00 2d f4 82 61 00 fb f4 <c3> cc 55 48 89  
-e5 41 57 41 56 41 55 41 54 53 e8 ce 93 9b f9 e8 79
-RSP: 0018:ffffc90000d3fd68 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff13266ae RBX: ffff8880a99fa340 RCX: 0000000000000000
-RDX: dffffc0000000000 RSI: 0000000000000006 RDI: ffff8880a99fabd4
-RBP: ffffc90000d3fd98 R08: ffff8880a99fa340 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffffffff8a790e80 R14: 0000000000000000 R15: 0000000000000001
-  arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:690
-  default_idle_call+0x84/0xb0 kernel/sched/idle.c:94
-  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-  do_idle+0x3c8/0x6e0 kernel/sched/idle.c:269
-  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:361
-  start_secondary+0x2f4/0x410 arch/x86/kernel/smpboot.c:264
-  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
-
-================================
-WARNING: inconsistent lock state
-5.4.0-syzkaller #0 Tainted: G        W
---------------------------------
-inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
-swapper/1/0 [HC0[0]:SC1[1]:HE1:SE0] takes:
-ffffffff8c110ab0 (&tpk_port.port_write_mutex){+.?.}, at:  
-tpk_write+0x5d/0x340 drivers/char/ttyprintk.c:122
-{SOFTIRQ-ON-W} state was registered at:
-   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-   __mutex_lock_common kernel/locking/mutex.c:959 [inline]
-   __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1106
-   mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1121
-   tpk_write+0x5d/0x340 drivers/char/ttyprintk.c:122
-   tnc_init drivers/net/hamradio/6pack.c:536 [inline]
-   sixpack_open+0x8d6/0xaaf drivers/net/hamradio/6pack.c:632
-   tty_ldisc_open.isra.0+0xa3/0x110 drivers/tty/tty_ldisc.c:464
-   tty_set_ldisc+0x30e/0x6b0 drivers/tty/tty_ldisc.c:591
-   tiocsetd drivers/tty/tty_io.c:2337 [inline]
-   tty_ioctl+0xe8d/0x14f0 drivers/tty/tty_io.c:2597
-   vfs_ioctl fs/ioctl.c:47 [inline]
-   file_ioctl fs/ioctl.c:545 [inline]
-   do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-   ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-   __do_sys_ioctl fs/ioctl.c:756 [inline]
-   __se_sys_ioctl fs/ioctl.c:754 [inline]
-   __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-irq event stamp: 195718
-hardirqs last  enabled at (195718): [<ffffffff81006743>]  
-trace_hardirqs_on_thunk+0x1a/0x1c arch/x86/entry/thunk_64.S:41
-hardirqs last disabled at (195717): [<ffffffff8100675f>]  
-trace_hardirqs_off_thunk+0x1a/0x1c arch/x86/entry/thunk_64.S:42
-softirqs last  enabled at (195642): [<ffffffff814732ac>]  
-_local_bh_enable+0x1c/0x30 kernel/softirq.c:162
-softirqs last disabled at (195643): [<ffffffff81475cab>] invoke_softirq  
-kernel/softirq.c:373 [inline]
-softirqs last disabled at (195643): [<ffffffff81475cab>]  
-irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-
-other info that might help us debug this:
-  Possible unsafe locking scenario:
-
-        CPU0
-        ----
-   lock(&tpk_port.port_write_mutex);
-   <Interrupt>
-     lock(&tpk_port.port_write_mutex);
-
-  *** DEADLOCK ***
-
-1 lock held by swapper/1/0:
-  #0: ffffc90000da8d50 ((&sp->resync_t)){+.-.}, at: lockdep_copy_map  
-include/linux/lockdep.h:172 [inline]
-  #0: ffffc90000da8d50 ((&sp->resync_t)){+.-.}, at: call_timer_fn+0xe0/0x780  
-kernel/time/timer.c:1394
-
-stack backtrace:
-CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W         5.4.0-syzkaller #0
+  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+  watchdog+0xb11/0x10c0 kernel/hung_task.c:289
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 10274 Comm: syz-executor540 Not tainted 5.4.0-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
+RIP: 0010:preempt_count_add+0x22/0x160 kernel/sched/core.c:3779
+Code: 0f 1f 84 00 00 00 00 00 48 c7 c0 e0 24 63 8b 55 48 ba 00 00 00 00 00  
+fc ff df 48 89 c1 48 89 e5 41 54 83 e0 07 48 c1 e9 03 53 <83> c0 03 89 fb  
+0f b6 14 11 38 d0 7c 08 84 d2 0f 85 00 01 00 00 8b
+RSP: 0018:ffffc90003247628 EFLAGS: 00000806
+RAX: 0000000000000000 RBX: ffffc900032476a8 RCX: 1ffffffff16c649c
+RDX: dffffc0000000000 RSI: 0000000000000004 RDI: 0000000000000001
+RBP: ffffc90003247638 R08: 1ffff11015d07044 R09: ffffed1015d07045
+R10: ffffed1015d07044 R11: ffff8880ae838223 R12: ffff8880ae837400
+R13: ffffffff899c3620 R14: ffff8880906b4180 R15: 000000000000106e
+FS:  0000000001203880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffff600400 CR3: 0000000097677000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_usage_bug.cold+0x327/0x378 kernel/locking/lockdep.c:3101
-  valid_state kernel/locking/lockdep.c:3112 [inline]
-  mark_lock_irq kernel/locking/lockdep.c:3309 [inline]
-  mark_lock+0xbb4/0x1220 kernel/locking/lockdep.c:3666
-  mark_usage kernel/locking/lockdep.c:3566 [inline]
-  __lock_acquire+0x1e8e/0x4a00 kernel/locking/lockdep.c:3909
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-  __mutex_lock_common kernel/locking/mutex.c:959 [inline]
-  __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1106
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1121
-  tpk_write+0x5d/0x340 drivers/char/ttyprintk.c:122
-  resync_tnc+0x1b6/0x320 drivers/net/hamradio/6pack.c:522
-  call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1404
-  expire_timers kernel/time/timer.c:1449 [inline]
-  __run_timers kernel/time/timer.c:1773 [inline]
-  __run_timers kernel/time/timer.c:1740 [inline]
-  run_timer_softirq+0x6c3/0x1790 kernel/time/timer.c:1786
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-  </IRQ>
-RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
-Code: 98 81 eb f9 eb 8a cc cc cc cc cc cc e9 07 00 00 00 0f 00 2d 04 83 61  
-00 f4 c3 66 90 e9 07 00 00 00 0f 00 2d f4 82 61 00 fb f4 <c3> cc 55 48 89  
-e5 41 57 41 56 41 55 41 54 53 e8 ce 93 9b f9 e8 79
-RSP: 0018:ffffc90000d3fd68 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff13266ae RBX: ffff8880a99fa340 RCX: 0000000000000000
-RDX: dffffc0000000000 RSI: 0000000000000006 RDI: ffff8880a99fabd4
-RBP: ffffc90000d3fd98 R08: ffff8880a99fa340 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffffffff8a790e80 R14: 0000000000000000 R15: 0000000000000001
-  arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:690
-  default_idle_call+0x84/0xb0 kernel/sched/idle.c:94
-  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-  do_idle+0x3c8/0x6e0 kernel/sched/idle.c:269
-  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:361
-  start_secondary+0x2f4/0x410 arch/x86/kernel/smpboot.c:264
-  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 0 at kernel/locking/mutex.c:737 mutex_unlock+0x1d/0x30  
-kernel/locking/mutex.c:744
+  rcu_lockdep_current_cpu_online kernel/rcu/tree.c:969 [inline]
+  rcu_lockdep_current_cpu_online+0x34/0x130 kernel/rcu/tree.c:961
+  rcu_read_lock_held_common kernel/rcu/update.c:109 [inline]
+  rcu_read_lock_held_common+0xbd/0x130 kernel/rcu/update.c:99
+  rcu_read_lock_held+0x5b/0xb0 kernel/rcu/update.c:281
+  task_css_set include/linux/cgroup.h:478 [inline]
+  task_dfl_cgroup include/linux/cgroup.h:547 [inline]
+  cgroup_account_cputime include/linux/cgroup.h:776 [inline]
+  update_curr+0x693/0x8d0 kernel/sched/fair.c:860
+  pick_next_task_fair+0x221/0xc70 kernel/sched/fair.c:6680
+  pick_next_task kernel/sched/core.c:3921 [inline]
+  __schedule+0x375/0x1f90 kernel/sched/core.c:4051
+  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
+  paste_selection+0x2f5/0x460 drivers/tty/vt/selection.c:367
+  tioclinux+0x133/0x480 drivers/tty/vt/vt.c:3044
+  vt_ioctl+0x1a41/0x26d0 drivers/tty/vt/vt_ioctl.c:364
+  tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441219
+Code: e8 3c ad 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fffbf09e3f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441219
+RDX: 00000000200000c0 RSI: 000000000000541c RDI: 0000000000000004
+RBP: 000000000008ba8c R08: 000000000000000d R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402040
+R13: 00000000004020d0 R14: 0000000000000000 R15: 0000000000000000
 
 
 ---
@@ -246,5 +236,6 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 syzbot can test patches for this bug, for details see:
 https://goo.gl/tpsmEJ#testing-patches
