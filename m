@@ -2,168 +2,261 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A1EC43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 22:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ADFC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 22:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33819206DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 22:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E59A24684
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 22:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575758901;
-	bh=KhY9NpaNgwJjR6iwqCVzrDCeGP7hTLWk/ZTtwQz2RLY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BtbnfgbfTc2Cev58Kce+itvhURNC8yhIlHdz56wWhUn13qv1SU8pAeg4QTVmsJqN/
-	 LGlRznw91QCl5aMBDzqZ9MJdFTO28+14nA0nFtjDYPHN306S8Cq8oSlYLhd6ippf71
-	 B4Ji7L549HT5Po1fuG23iKFajj60AB0GS1FC2IwI=
+	s=default; t=1575758903;
+	bh=ULTk7VEDKTLvMWIBejxxPh1hFuBO2Z+aHgJwQjllNVM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nboMZMYfxxBwU5hoVuDYLECrrsxH8pWnAPIQP9V8Z9VUn7ePFUp3x7Ef1j7yIS/sH
+	 ugSyYpupMKbPk1BPKyGFlIVRagkzQSeQhT6PeR8+hupT8zdEq3qizLAPGcI24dhOsh
+	 ArApFE0aH5/fv4LwUyWMJbcXEBpgpzetfgWfiIqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfLGWsQ (ORCPT
+        id S1726949AbfLGWsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 17:48:16 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45269 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbfLGWsN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 17:48:13 -0500
-Received: by mail-lj1-f193.google.com with SMTP id d20so11443704ljc.12
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 14:48:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n+bzarr7WGG9UNw/1xFlnTHXwkh2li5KYb8dKx07T4w=;
-        b=D6hYWc8qs0agBGRnbrYf1SDdMDgkvhKHwhdLZrSu85/3YN1ltTHpwMKTMhYoV/i120
-         1onptQLl9ldf+3ruI4Bz9iKb/qrxCtvUs5vwPUmv15J/Ti+o0GKsC5Bp9Pf8ipD+F8TH
-         n4jC3g0rUdz+iIu4PIDtkZQjZvGINraOeGlyY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n+bzarr7WGG9UNw/1xFlnTHXwkh2li5KYb8dKx07T4w=;
-        b=NwG11uOvgv3M58EYHgPLJ53hikEYBz9ibq3k0PBpuP16q62w/HKFPprSAGv7isdTty
-         tzx2x81aPEZNJFScCjXge4QP5Jjnwr+OD+G/nzxMeDmkfMsLOXEm0XkTedQmsCcGiQwu
-         s61dsIiKQHMFgzjVxIcLbD6zX6EQ89TiiPJpK0KU5ML56aB0fHgcq4F/c8Wts5Rm2Y5r
-         zvVjDPQDmZs/9Uxg4DU6m/82wXGKvcW8YvAaf2VJaPfNog4ZNtaG+zIHxKOcd+vuP5vj
-         T/ALXxdIOse5w9OAz0q8KCpAQjb6j+8V4R0pqta7G4pycvAkFsbTsP+OP77rdWGgY9F3
-         r7XQ==
-X-Gm-Message-State: APjAAAX7SMYm4pgjrEhQFXaYCRzOS7WpYalhw9QLFYMxI90KwycRaLB7
-        SdA09KRAR+DYu6nvKERU9DVwe7m7sOw=
-X-Google-Smtp-Source: APXvYqwEU+YAHfEgtkPAVBfvmwwipTORywO0+xk8MNFnEh2hhRBrKeqncfAbwMb5xgurWX2kSl3pbQ==
-X-Received: by 2002:a2e:809a:: with SMTP id i26mr12265696ljg.108.1575758890965;
-        Sat, 07 Dec 2019 14:48:10 -0800 (PST)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id v2sm8712802ljv.70.2019.12.07.14.48.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Dec 2019 14:48:09 -0800 (PST)
-Received: by mail-lj1-f170.google.com with SMTP id a13so11465392ljm.10
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 14:48:09 -0800 (PST)
-X-Received: by 2002:a2e:91cb:: with SMTP id u11mr10211828ljg.82.1575758888845;
- Sat, 07 Dec 2019 14:48:08 -0800 (PST)
+        Sat, 7 Dec 2019 17:48:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbfLGWsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 17:48:19 -0500
+Received: from ziggy.de (unknown [95.169.229.25])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DB7C24677;
+        Sat,  7 Dec 2019 22:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575758897;
+        bh=ULTk7VEDKTLvMWIBejxxPh1hFuBO2Z+aHgJwQjllNVM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0f8dp+OB2CKbn7aO9c37ngAQblZMR1rQvOLH92DK3QYFWr5fsncWxde/kmyS0NBZv
+         rEM8SLwQKjNUg0WNMQeGWiwVcKU+Vi0DdoC1MbFn6Xhw7YXxFTQtCrEUGOSQuoujUj
+         U6sDGVllmB4dxI/0paboAMAFYGFg+okHFqqEjnWs=
+From:   matthias.bgg@kernel.org
+To:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
+        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
+        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
+        laurent.pinchart@ideasonboard.com, enric.balletbo@collabora.com
+Cc:     sean.wang@mediatek.com, sean.wang@kernel.org,
+        rdunlap@infradead.org, wens@csie.org, hsinyi@chromium.org,
+        frank-w@public-files.de, drinkcat@chromium.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, mbrugger@suse.com,
+        matthias.bgg@kernel.org
+Subject: [resend PATCH v6 03/12] drm/mediatek: Use regmap for register access
+Date:   Sat,  7 Dec 2019 23:47:31 +0100
+Message-Id: <20191207224740.24536-4-matthias.bgg@kernel.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191207224740.24536-1-matthias.bgg@kernel.org>
+References: <20191207224740.24536-1-matthias.bgg@kernel.org>
 MIME-Version: 1.0
-References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
- <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
- <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com> <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 7 Dec 2019 14:47:52 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
-Message-ID: <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
-Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
-To:     David Sterba <dsterba@suse.cz>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 6, 2019 at 7:50 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> The "make goes slow" problem bisects down to b667b8673443 ("pipe:
-> Advance tail pointer inside of wait spinlock in pipe_read()").
+From: Matthias Brugger <mbrugger@suse.com>
 
-I'm not entirely sure that ends up being 100% true. It did bisect to
-that, but the behavior wasn't entirely stable. There definitely is
-some nasty timing trigger.
+The mmsys memory space is shared between the drm and the
+clk driver. Use regmap to access it.
 
-But I did finally figure out what seems to have been going on with at
-least the biggest part of the build performance regression. It's seems
-to be a nasty interaction with the scheduler and the GNU make
-jobserver, and in particular the pipe wakeups really _really_ do seem
-to want to be synchronous both for the readers and the writers.
+Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c |  4 +-
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c  | 50 +++++++++++--------------
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.h  |  4 +-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 13 ++-----
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h  |  2 +-
+ 5 files changed, 30 insertions(+), 43 deletions(-)
 
-When a writer wakes up a reader, we want the reader to react quickly
-and vice versa. The most obvious case was for the GNU make jobserver,
-where sub-makes would do a single-byte write to the jobserver pipe,
-and we want to wake up the reader *immediatly*, because the reader is
-actually a lot more important than the writer. The reader is what gets
-the next job going, the writer just got done with the last one.
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index 34a731755791..259e2f4fa5fa 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -27,7 +27,7 @@
+  * @enabled: records whether crtc_enable succeeded
+  * @planes: array of 4 drm_plane structures, one for each overlay plane
+  * @pending_planes: whether any plane has pending changes to be applied
+- * @config_regs: memory mapped mmsys configuration register space
++ * @config_regs: regmap mapped mmsys configuration register space
+  * @mutex: handle to one of the ten disp_mutex streams
+  * @ddp_comp_nr: number of components in ddp_comp
+  * @ddp_comp: array of pointers the mtk_ddp_comp structures used by this crtc
+@@ -43,7 +43,7 @@ struct mtk_drm_crtc {
+ 	unsigned int			layer_nr;
+ 	bool				pending_planes;
+ 
+-	void __iomem			*config_regs;
++	struct regmap			*config_regs;
+ 	struct mtk_disp_mutex		*mutex;
+ 	unsigned int			ddp_comp_nr;
+ 	struct mtk_ddp_comp		**ddp_comp;
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index 8106a71a7404..b765181223e6 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -331,61 +331,53 @@ static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
+ 	return value;
+ }
+ 
+-static void mtk_ddp_sout_sel(void __iomem *config_regs,
++static void mtk_ddp_sout_sel(struct regmap *config_regs,
+ 			     enum mtk_ddp_comp_id cur,
+ 			     enum mtk_ddp_comp_id next)
+ {
+ 	if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
+-		writel_relaxed(BLS_TO_DSI_RDMA1_TO_DPI1,
+-			       config_regs + DISP_REG_CONFIG_OUT_SEL);
++		regmap_write(config_regs, DISP_REG_CONFIG_OUT_SEL,
++				BLS_TO_DSI_RDMA1_TO_DPI1);
+ 	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
+-		writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
+-			       config_regs + DISP_REG_CONFIG_OUT_SEL);
+-		writel_relaxed(DSI_SEL_IN_RDMA,
+-			       config_regs + DISP_REG_CONFIG_DSI_SEL);
+-		writel_relaxed(DPI_SEL_IN_BLS,
+-			       config_regs + DISP_REG_CONFIG_DPI_SEL);
++		regmap_write(config_regs, DISP_REG_CONFIG_OUT_SEL,
++				BLS_TO_DPI_RDMA1_TO_DSI);
++		regmap_write(config_regs, DISP_REG_CONFIG_DSI_SEL,
++				DSI_SEL_IN_RDMA);
++		regmap_write(config_regs, DISP_REG_CONFIG_DPI_SEL,
++				DPI_SEL_IN_BLS);
+ 	}
+ }
+ 
+-void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
++void mtk_ddp_add_comp_to_path(struct regmap *config_regs,
+ 			      enum mtk_ddp_comp_id cur,
+ 			      enum mtk_ddp_comp_id next)
+ {
+-	unsigned int addr, value, reg;
++	unsigned int addr, value;
+ 
+ 	value = mtk_ddp_mout_en(cur, next, &addr);
+-	if (value) {
+-		reg = readl_relaxed(config_regs + addr) | value;
+-		writel_relaxed(reg, config_regs + addr);
+-	}
++	if (value)
++		regmap_update_bits(config_regs, addr, value, value);
+ 
+ 	mtk_ddp_sout_sel(config_regs, cur, next);
+ 
+ 	value = mtk_ddp_sel_in(cur, next, &addr);
+-	if (value) {
+-		reg = readl_relaxed(config_regs + addr) | value;
+-		writel_relaxed(reg, config_regs + addr);
+-	}
++	if (value)
++		regmap_update_bits(config_regs, addr, value, value);
+ }
+ 
+-void mtk_ddp_remove_comp_from_path(void __iomem *config_regs,
++void mtk_ddp_remove_comp_from_path(struct regmap *config_regs,
+ 				   enum mtk_ddp_comp_id cur,
+ 				   enum mtk_ddp_comp_id next)
+ {
+-	unsigned int addr, value, reg;
++	unsigned int addr, value;
+ 
+ 	value = mtk_ddp_mout_en(cur, next, &addr);
+-	if (value) {
+-		reg = readl_relaxed(config_regs + addr) & ~value;
+-		writel_relaxed(reg, config_regs + addr);
+-	}
++	if (value)
++		regmap_update_bits(config_regs, addr, value, 0);
+ 
+ 	value = mtk_ddp_sel_in(cur, next, &addr);
+-	if (value) {
+-		reg = readl_relaxed(config_regs + addr) & ~value;
+-		writel_relaxed(reg, config_regs + addr);
+-	}
++	if (value)
++		regmap_update_bits(config_regs, addr, value, 0);
+ }
+ 
+ struct mtk_disp_mutex *mtk_disp_mutex_get(struct device *dev, unsigned int id)
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
+index 827be424a148..01ff8b68881f 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
+@@ -12,10 +12,10 @@ struct regmap;
+ struct device;
+ struct mtk_disp_mutex;
+ 
+-void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
++void mtk_ddp_add_comp_to_path(struct regmap *config_regs,
+ 			      enum mtk_ddp_comp_id cur,
+ 			      enum mtk_ddp_comp_id next);
+-void mtk_ddp_remove_comp_from_path(void __iomem *config_regs,
++void mtk_ddp_remove_comp_from_path(struct regmap *config_regs,
+ 				   enum mtk_ddp_comp_id cur,
+ 				   enum mtk_ddp_comp_id next);
+ 
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index 352b81a7a670..210455e9f46c 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/component.h>
+ #include <linux/iommu.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
+ #include <linux/of_platform.h>
+@@ -485,7 +486,6 @@ static int mtk_drm_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct mtk_drm_private *private;
+-	struct resource *mem;
+ 	struct device_node *node;
+ 	struct component_match *match = NULL;
+ 	int ret;
+@@ -499,14 +499,9 @@ static int mtk_drm_probe(struct platform_device *pdev)
+ 	INIT_WORK(&private->commit.work, mtk_atomic_work);
+ 	private->data = of_device_get_match_data(dev);
+ 
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	private->config_regs = devm_ioremap_resource(dev, mem);
+-	if (IS_ERR(private->config_regs)) {
+-		ret = PTR_ERR(private->config_regs);
+-		dev_err(dev, "Failed to ioremap mmsys-config resource: %d\n",
+-			ret);
+-		return ret;
+-	}
++	private->config_regs = syscon_node_to_regmap(dev->of_node);
++	if (IS_ERR(private->config_regs))
++		return PTR_ERR(private->config_regs);
+ 
+ 	/* Iterate over sibling DISP function blocks */
+ 	for_each_child_of_node(dev->of_node->parent, node) {
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+index e03fea12ff59..63a121577dcb 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+@@ -39,7 +39,7 @@ struct mtk_drm_private {
+ 
+ 	struct device_node *mutex_node;
+ 	struct device *mutex_dev;
+-	void __iomem *config_regs;
++	struct regmap *config_regs;
+ 	struct device_node *comp_node[DDP_COMPONENT_ID_MAX];
+ 	struct mtk_ddp_comp *ddp_comp[DDP_COMPONENT_ID_MAX];
+ 	const struct mtk_mmsys_driver_data *data;
+-- 
+2.24.0
 
-And when a reader empties a full pipe, it's because the writer is
-generating data, and you want to just get the writer going again asap.
-
-Anyway, I've spent way too much time looking at this and wondering
-about odd performance patterns. It seems to be mostly back up to
-normal.
-
-I say "mostly", because I still see times of "not as many concurrent
-compiles going as I'd expect". It might be a kbuild problem, it might
-be an issue with GNU make (I've seen problems with the make jobserver
-wanting many more tokens than expected before and the kernel makefiles
-- it migth be about deep subdirectories etc), and it might be some
-remaining pipe issue. But my allmodconfig builds aren't _enormously_
-slower than they used to be.
-
-But there's definitely some unhappy interaction with the jobserver. I
-have 16 threads (8 cores with HT), and I generally use "make -j32" to
-keep them busy because the jobserver isn't great. The pipe rework made
-even that 2x slop not work all that well. Something held on to tokens
-too long, and there was definitely some interaction with the pipe
-wakeup code. Using "-j64" hid the problem, but it was a problem.
-
-It might be the new scheduler balancing changes that are interacting
-with the pipe thing. I'm adding PeterZ, Ingo and Vincent to the cc,
-because I hadn't realized just how important the sync wakeup seems to
-be for pipe performance even at a big level.
-
-I've pushed out my pipe changes. I really didn't want to do that kind
-of stuff at the end of the merge window, but I spent a lot more time
-than I wanted looking at this code, because I was getting to the point
-where the alternative was to just revert it all.
-
-DavidH, give these a look:
-
-  85190d15f4ea pipe: don't use 'pipe_wait() for basic pipe IO
-  a28c8b9db8a1 pipe: remove 'waiting_writers' merging logic
-  f467a6a66419 pipe: fix and clarify pipe read wakeup logic
-  1b6b26ae7053 pipe: fix and clarify pipe write wakeup logic
-  ad910e36da4c pipe: fix poll/select race introduced by the pipe rework
-
-the top two of which are purely "I'm fed up looking at this code, this
-needs to go" kind of changes.
-
-In particular, that last change is because I think the GNU jobserver
-problem is partly a thundering herd issue: when a job token becomes
-free (ie somebody does a one-byte write to an empty jobserver pipe),
-it wakes up *everybody* who is waiting for a token. One of them will
-get it, and the others will go to sleep again. And then it repeats all
-over. I didn't fix it, but it _could_ be fixed with exclusive waits
-for readers/writers, but that means more smarts than pipe_wait() can
-do. And because the jobserver isn't great at keeping everybody happy,
-I'm using a much bigger "make -jX" value than the number of CPU's I
-have, which makes the herd bigger. And I suspect none of this helps
-the scheduler pick the _right_ process to run, which just makes
-scheduling an even bigger problem.
-
-            Linus
