@@ -2,82 +2,79 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2230BC43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2277FC43603
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D927A2173E
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:24:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TpREVbDl"
+	by mail.kernel.org (Postfix) with ESMTP id F362D2173E
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 01:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbfLGBYc (ORCPT
+        id S1726455AbfLGBaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 20:24:32 -0500
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:42628 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbfLGBYc (ORCPT
+        Fri, 6 Dec 2019 20:30:01 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:49393 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbfLGBaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 20:24:32 -0500
-Received: by mail-pf1-f202.google.com with SMTP id s25so5042018pfd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 17:24:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=I9mt7vf3xglkTwOGNx1fWAUc+1Y8ZQ1EzCG2Kz5JSK8=;
-        b=TpREVbDlmbGdl7X6OdfnkSHz32jO7t2DNQu3Fk0+D7+tFK24KvQvFfF9w+lqpKVmE/
-         HpShhZhO3ETyi9mCO8nAhgtoTsT113GqyU3oSlbOZpGcy8L/GcvI7DpFCKdZ1gd1DJyw
-         y3Ruv7vwuBf/IGXuEW8S+frgmHuqzeGHxm48lqohulrB59uyw5ScqOW0lG1K8efbNIaD
-         Ay7rWlhQXPGYCeI9Zix7wJm+nWZiGnme/vXqa/Ee0qJvlKC6doNI05HsPLQ7Gzpn6Szi
-         kEWt3D9bQ6/E998uSbqWGXtVsCerryQPmSJ2YsRamOKM3MWxNiJKYyInXPWA+wtay1q/
-         sIyg==
+        Fri, 6 Dec 2019 20:30:01 -0500
+Received: by mail-io1-f72.google.com with SMTP id t3so6108083ioj.16
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 17:30:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=I9mt7vf3xglkTwOGNx1fWAUc+1Y8ZQ1EzCG2Kz5JSK8=;
-        b=V32VCL3ktiuLvyQ+GaDFhjijzGbrsp5W7oUBlI6mXwAJ0pOFaSWC69pEC02ggvMfB5
-         QBEFROVu+S1RRECuvWFjDdYCLutUQU+Ew4ujKwKIgGzCVyWU8Jxx1hu/K0l85O9glP5k
-         lfKvjOBRGWSFIqLrNdkw16ml5q7wawJwHPu1ceL0IT3FP3CCeSVGr7dTI/qwq+bcihYZ
-         1cvZ57zityXr+o6ex++oZPyXX+cN6n0By6GmDHKcUyvnFTtGclmO91LY5YYOuXDArY/S
-         herafHjYH4QYIcTSY3cnZ6Kbe6/r6o7ENJznbYeZ5Dn7pvCMeka4IBoOupmaG4kc/PJn
-         OrCQ==
-X-Gm-Message-State: APjAAAVFnPp4NFIm1bTeSs6Af3lABQBxVYUeXBpMVkt1n8AveOrQhwIf
-        SKaAj9d5jvZ8jZI+wKhnDXtn2hlhE1ToAFiqLg5sMw==
-X-Google-Smtp-Source: APXvYqye9GJwzbmSJfQMzs/gTEW39cIotvIWty98XCfuzstgcfhNeQoBJIB2U0e+E7l62SaFjZY/+nW9N0M+gombP2pdOQ==
-X-Received: by 2002:a63:4824:: with SMTP id v36mr6767662pga.343.1575681871642;
- Fri, 06 Dec 2019 17:24:31 -0800 (PST)
-Date:   Fri,  6 Dec 2019 17:24:01 -0800
-In-Reply-To: <20191016141312.15684-1-anton.ivanov@cambridgegreys.com>
-Message-Id: <20191207012401.222282-1-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20191016141312.15684-1-anton.ivanov@cambridgegreys.com>
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: Re: [PATCH] um: Add back support for extra userspace libraries
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com
-Cc:     johannes.berg@intel.com, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=HNhXiE6HePkhSCnwQ3V/NPWMZ1Hpm58RJpGnE6ed2EU=;
+        b=qKIZiHOW1D2ErzigRZFn6uxA735SbXi4zVI8aLE62SPB2jZPG9CB5xxUrUmiphHr5b
+         ROnqKALHDmM+pMxhHEZy6Q+1mh3d5QSRLZR/kpowUsMBJNA9Mx3CTPq0njTcQos3ltxI
+         Z8/lDBbbXcKwvT2WzRRsrbKidjzWrvWhsVxBHZfjLknDFDeWT1K4ENvcPGOYoHLxHUsh
+         u30aphUpNkkYxSJzuD7f397KOI82FZRFe54LZ3vqanu05VrKmON9/GGH1Oz5CykIQ+fR
+         TskUDlUEQIoUKXN0AAS9b8jjUTI6wnzQXgbNq5xtvfqHLUUcOlOhp2UVbg0UiDZuCZZI
+         IBWg==
+X-Gm-Message-State: APjAAAVBE6+kvXCcH1DuVEDC2J6hQQBTXQCCH8nBFF2pL8IXl1NntTZJ
+        wnw+5txO/npl0Fy953Wbr2E3dYks5HZuadGC+P6xWIl40gaX
+X-Google-Smtp-Source: APXvYqxz9KBPD51VM3KJ5gnxGMtw4DWz8VDuRdv+40oCBMIhFEk1AOET+26mMuYYk8RExBPPeHQ+h/6hZNb57eiZ5RaZKKFaaCCq
+MIME-Version: 1.0
+X-Received: by 2002:a92:9f9c:: with SMTP id z28mr17483689ilk.239.1575682200860;
+ Fri, 06 Dec 2019 17:30:00 -0800 (PST)
+Date:   Fri, 06 Dec 2019 17:30:00 -0800
+In-Reply-To: <00000000000057e614057a9abcd3@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dc7fc70599131995@google.com>
+Subject: Re: KASAN: null-ptr-deref Read in refcount_sub_and_test_checked (2)
+From:   syzbot <syzbot+0468b73bdbb243217224@syzkaller.appspotmail.com>
+To:     hverkuil-cisco@xs4all.nl, kyungmin.park@samsung.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        m.szyprowski@samsung.com, mchehab+samsung@kernel.org,
+        mchehab@kernel.org, pawel@osciak.com,
+        syzkaller-bugs@googlegroups.com, tfiga@chromium.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> PCAP and VDE network transports require linking with userspace
-> libraries. The current build system has no means of passing these
-> as arguments.
->
-> This patch adds a script to expand the library list for linking
-> for these transports as well as any future driver that needs to
-> rely on additional libraries on the userspace side.
->
-> Signed-off-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+syzbot suspects this bug was fixed by commit:
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+commit 62dcb4f41836bd3c44b5b651bb6df07ea4cb1551
+Author: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Date:   Thu Nov 8 12:23:37 2018 +0000
+
+     media: vb2: check memory model for VIDIOC_CREATE_BUFS
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14972e41e00000
+start commit:   ccda4af0 Linux 4.20-rc2
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4a0a89f12ca9b0f5
+dashboard link: https://syzkaller.appspot.com/bug?extid=0468b73bdbb243217224
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d20893400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=118f5a2b400000
+
+If the result looks correct, please mark the bug fixed by replying with:
+
+#syz fix: media: vb2: check memory model for VIDIOC_CREATE_BUFS
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
