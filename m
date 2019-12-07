@@ -2,71 +2,192 @@ Return-Path: <SRS0=Iet2=Z5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235ABC43603
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 00:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A565C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 00:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23842245C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 00:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575677603;
-	bh=cRJyhwcrWWoggU0a/DQMLsTC6qlKaCboNpZR+V9cItk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1bck4Ab6caT74aELP9Jq1r4+b3TChsWB2IluSeCyfgPUprvhp354E+GnuZ+wzDiZH
-	 IYbz6Hf84rsfokh74H/FofNJ5qF9xRo7zmgfDInq8y+T54pmU0P2pFV2msL7mcnwx8
-	 egjExLn1LXg0duMSrKhIqg7Qotps5sed5ysTCo64=
+	by mail.kernel.org (Postfix) with ESMTP id CF410205ED
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Dec 2019 00:24:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GgYr0rmg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfLGANW (ORCPT
+        id S1726423AbfLGAYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Dec 2019 19:13:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33966 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbfLGANW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Dec 2019 19:13:22 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEDBC21835;
-        Sat,  7 Dec 2019 00:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575677601;
-        bh=cRJyhwcrWWoggU0a/DQMLsTC6qlKaCboNpZR+V9cItk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0NLnKdpqGtCiPZQVLL8zg+mDF5bzkCi2vuMbjbTJ48EwR9W0cjwchH9j4Il96rQBo
-         /rX8rPzKURxZY4272i9kUur/ez97JpHvQrLTvtdzm/zFl+20Q2dRanUDw6zxEAx6A8
-         WktX4tWKdP6+H9fkVTlV9ZoUNJ6RxJ5wrEOeEZ08=
-Date:   Fri, 6 Dec 2019 16:13:21 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] memcg: account security cred as well to kmemcg
-Message-Id: <20191206161321.35ec9a9dc0ed50222a06fee3@linux-foundation.org>
-In-Reply-To: <20191205223721.40034-1-shakeelb@google.com>
-References: <20191205223721.40034-1-shakeelb@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Fri, 6 Dec 2019 19:24:30 -0500
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:37758 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbfLGAY3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Dec 2019 19:24:29 -0500
+Received: by mail-pf1-f202.google.com with SMTP id 13so4975046pfj.4
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Dec 2019 16:24:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=5QskUqrSs8tfhni9O8M9nfwm0gn25mamJ/N+0daOZSo=;
+        b=GgYr0rmgQ4SIfZj52ZzHe23Vh0wuhLbhsjx5x0yvFHjxMONRS4whndS8mkm0Mhgg3d
+         Jz3P7AZTOF2bdV4BLiJP3zKP8ruj3NdC6kBl7SCzdwU5s5yG9XCLJYOFj9jUuvD1zsir
+         jfWv2cHws+AFbw1RIYCY9hHp6xSYDvQ66WombrhSUT92tJUylngUKaaScJp39VHIieUT
+         V3TznRF8MhDUny61c8jU4pGlLiWd8XGIRKKocNEChkh36F93f6zu/PY1FiqDBZPXAJnv
+         0fsR7MDwR9ikXI9xTGElm0wsbM4F6hH8qxpmMYEJ+B6S54qMMaLzk3FTT3/C1oCCv7gw
+         iuJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=5QskUqrSs8tfhni9O8M9nfwm0gn25mamJ/N+0daOZSo=;
+        b=MFG6QKXuG44I3Zmpfi3CYVm7p5IVJR3H0E9d6Bs/e78gEdV1kwk50UwBE15OLvrYOh
+         JTJr2F/Fcjbh5VhFa142bMCqlCH6HEwKLflXoJNN6Sc++lHAryoyd++bT9HSmgdmUST5
+         9W+3gygS6GEGLXP1/jM868bBuGIJIrK3csdQ3Je6QIGHNO5Bmk747r2nd/KfsfCnQjmj
+         6OtV4z/Z7Fmc4oMzauKcEU2WLM6f83xSTydNgleHLTtSiW7nNth+cqIrH5AWavJTDkFX
+         AGXJ2Ljw166zbPT/BqaiLuYbF4dgGVfh6EOc5/YNM2lqnx6gIJ0uy31uaQokuOzMEJJz
+         SzrQ==
+X-Gm-Message-State: APjAAAVu+n5HAD72bRznzsLIdO5s4q2jElokrJpi298go0W50CyJKhDT
+        k+ftftQUM0fLUF0+Q/mRX75/wGo9phOOPZg=
+X-Google-Smtp-Source: APXvYqwv2cS8roXs3o61C/0Z4Ss478NxQoub4UVFi4s0qZCzqLSz5ySy4LZM+5VlBHusfRzpt91TN0FrLJLWvtA=
+X-Received: by 2002:a63:4723:: with SMTP id u35mr6378799pga.194.1575678268770;
+ Fri, 06 Dec 2019 16:24:28 -0800 (PST)
+Date:   Fri,  6 Dec 2019 16:24:21 -0800
+Message-Id: <20191207002424.201796-1-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+Subject: [PATCH v6 0/3] Introduce Bandwidth OPPs for interconnects
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  5 Dec 2019 14:37:21 -0800 Shakeel Butt <shakeelb@google.com> wrote:
+Viresh/Stephen,
 
-> The cred_jar kmem_cache is already memcg accounted in the current
-> kernel but cred->security is not. Account cred->security to kmemcg.
-> 
-> Recently we saw high root slab usage on our production and on further
-> inspection, we found a buggy application leaking processes. Though that
-> buggy application was contained within its memcg but we observe much
-> more system memory overhead, couple of GiBs, during that period. This
-> overhead can adversely impact the isolation on the system. One of source
-> of high overhead, we found was cred->secuity objects.
+I don't think all the additional code/diff in this v6 series is worth it
+to avoid using the rate field to store peak bandwidth. However, since folks
+weren't too happy about it, here it is. I prefer the v5 series, but not
+too strongly tied to it. Let me know what you think Viresh/Stephen.
 
-A bit of an oversight and the fix is simple.  Is it worth a cc:stable?
+Btw, I wasn't sure of opp-hz = 0 or opp-level = 0 were allowed. Also,
+it's not clear why the duplicate check isn't done for opp-level when
+_opp_add() is called. Based on that, we could add opp-level comparison
+to opp_compare_key(). That's why you'll see a few spurious
+opp_key.level = 0 lines. Let me know how you want to go with that.
+
+I could also add a opp.key_type enum field to store what key type the
+opp entry is. But looks like I can get away without adding an
+unnecessary variable. So, I've skipped that for now.
+
+------
+
+Interconnects and interconnect paths quantify their performance levels in
+terms of bandwidth and not in terms of frequency. So similar to how we have
+frequency based OPP tables in DT and in the OPP framework, we need
+bandwidth OPP table support in DT and in the OPP framework.
+
+So with the DT bindings added in this patch series, the DT for a GPU
+that does bandwidth voting from GPU to Cache and GPU to DDR would look
+something like this:
+
+gpu_cache_opp_table: gpu_cache_opp_table {
+	compatible = "operating-points-v2";
+
+	gpu_cache_3000: opp-3000 {
+		opp-peak-KBps = <3000000>;
+		opp-avg-KBps = <1000000>;
+	};
+	gpu_cache_6000: opp-6000 {
+		opp-peak-KBps = <6000000>;
+		opp-avg-KBps = <2000000>;
+	};
+	gpu_cache_9000: opp-9000 {
+		opp-peak-KBps = <9000000>;
+		opp-avg-KBps = <9000000>;
+	};
+};
+
+gpu_ddr_opp_table: gpu_ddr_opp_table {
+	compatible = "operating-points-v2";
+
+	gpu_ddr_1525: opp-1525 {
+		opp-peak-KBps = <1525000>;
+		opp-avg-KBps = <452000>;
+	};
+	gpu_ddr_3051: opp-3051 {
+		opp-peak-KBps = <3051000>;
+		opp-avg-KBps = <915000>;
+	};
+	gpu_ddr_7500: opp-7500 {
+		opp-peak-KBps = <7500000>;
+		opp-avg-KBps = <3000000>;
+	};
+};
+
+gpu_opp_table: gpu_opp_table {
+	compatible = "operating-points-v2";
+	opp-shared;
+
+	opp-200000000 {
+		opp-hz = /bits/ 64 <200000000>;
+	};
+	opp-400000000 {
+		opp-hz = /bits/ 64 <400000000>;
+	};
+};
+
+gpu@7864000 {
+	...
+	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
+	...
+};
+
+v1 -> v3:
+- Lots of patch additions that were later dropped
+v3 -> v4:
+- Fixed typo bugs pointed out by Sibi.
+- Fixed bug that incorrectly reset rate to 0 all the time
+- Added units documentation
+- Dropped interconnect-opp-table property and related changes
+v4->v5:
+- Replaced KBps with kBps
+- Minor documentation fix
+v5->v6:
+- Added Rob's reviewed-by for the DT patch
+- Rewrote OPP patches to use separate field for peak_bw instead of
+  reusing rate field.
+- Pulled in opp-level parsing into _read_opp_key
+- Addressed minor code style and typo comments
+
+Cheers,
+Saravana
+
+Saravana Kannan (3):
+  dt-bindings: opp: Introduce opp-peak-kBps and opp-avg-kBps bindings
+  OPP: Add support for bandwidth OPP tables
+  OPP: Add helper function for bandwidth OPP tables
+
+ Documentation/devicetree/bindings/opp/opp.txt |  15 +-
+ .../devicetree/bindings/property-units.txt    |   4 +
+ drivers/opp/core.c                            | 316 +++++++++++++++---
+ drivers/opp/of.c                              |  63 ++--
+ drivers/opp/opp.h                             |   5 +
+ include/linux/pm_opp.h                        |  43 +++
+ 6 files changed, 383 insertions(+), 63 deletions(-)
+
+-- 
+2.24.0.393.g34dc348eaf-goog
+
