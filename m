@@ -2,313 +2,199 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98206C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE09C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0CF20692
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA5A207FD
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfLHNoy (ORCPT
+        id S1726592AbfLHNyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:44:54 -0500
-Received: from segapp02.wistron.com ([103.200.3.19]:60065 "EHLO
-        segapp03.wistron.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726308AbfLHNoy (ORCPT
+        Sun, 8 Dec 2019 08:54:39 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:59924 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726425AbfLHNyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 08:44:54 -0500
-Received: from EXCHAPP04.whq.wistron (unverified [10.37.38.27]) by TWNHUMSW4.wistron.com
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Tdbf3e18e9dc0a81672177c@TWNHUMSW4.wistron.com>;
- Sun, 8 Dec 2019 21:44:43 +0800
-Received: from EXCHAPP02.whq.wistron (10.37.38.25) by EXCHAPP04.whq.wistron
- (10.37.38.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Sun, 8 Dec 2019
- 21:44:42 +0800
-Received: from gitserver.wistron.com (10.37.38.233) by EXCHAPP02.whq.wistron
- (10.37.38.25) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Sun, 8 Dec 2019 21:44:42 +0800
-From:   Ben Pai <Ben_Pai@wistron.com>
-To:     <linux@roeck-us.net>
-CC:     <robh+dt@kernel.org>, <jdelvare@suse.com>,
-        <linux-kernel@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <corbet@lwn.net>,
-        <wangat@tw.ibm.com>, <Andy_YF_Wang@wistron.com>,
-        <Claire_Ku@wistron.com>, Ben Pai <Ben_Pai@wistron.com>
-Subject: [ v2] hwmon: (pmbus) Add Wistron power supply pmbus driver
-Date:   Sun, 8 Dec 2019 21:44:38 +0800
-Message-ID: <20191208134438.12925-1-Ben_Pai@wistron.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 8 Dec 2019 08:54:39 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1idx1A-0007d5-Sl; Sun, 08 Dec 2019 13:54:36 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1idx1A-0002Ks-E8; Sun, 08 Dec 2019 13:54:36 +0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 4DCD986404BE546FCECB58BFAA75AE1C5717B5025D110C3AEC5545EFF08BF4222000:8
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Tomi Valkeinen" <tomi.valkeinen@ti.com>,
+        "Prabhakar Lad" <prabhakar.csengg@gmail.com>
+Date:   Sun, 08 Dec 2019 13:52:50 +0000
+Message-ID: <lsq.1575813165.479482953@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 06/72] fbdev: ssd1307fb: return proper error code if
+ write command fails
+In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the driver to monitor Wisreon power supplies with hwmon over pmbus.
+3.16.79-rc1 review patch.  If anyone has any objections, please let me know.
 
-Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
+------------------
+
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+
+commit 5b72ae9a901cbfbe632570f278486142b037fe51 upstream.
+
+this patch fixes ssd1307fb_ssd1306_init() function to return
+proper error codes in case of failures.
+
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- .../devicetree/bindings/hwmon/wistron-wps.txt |  30 +++
- drivers/hwmon/pmbus/Kconfig                   |   9 +
- drivers/hwmon/pmbus/Makefile                  |   1 +
- drivers/hwmon/pmbus/wistron-wps.c             | 176 ++++++++++++++++++
- 4 files changed, 216 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/wistron-wps.txt
- create mode 100644 drivers/hwmon/pmbus/wistron-wps.c
+ drivers/video/fbdev/ssd1307fb.c | 67 ++++++++++++++++++++++++++-------
+ 1 file changed, 53 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/wistron-wps.txt b/Documentation/devicetree/bindings/hwmon/wistron-wps.txt
-new file mode 100644
-index 000000000000..aacb2e66736e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/wistron-wps.txt
-@@ -0,0 +1,30 @@
-+ver ibm-cffps
-+=======================
-+
-+Supported chips:
-+
-+  * Wistron Common Form Factor power supply(wps).
-+
-+Author: Ben Pai <Ben_Pai@wistron.com>
-+
-+Description
-+-----------
-+
-+Our company name is Wistron, so this driver is written to supports 
-+Wistron Common Form Factor power supplies(wps). This driver
-+is a client to the core PMBus driver. Read information from psu, 
-+and create debug-files and write information to them via driver.
-+
-+Usage Notes
-+-----------
-+
-+This driver does not auto-detect devices. You will have to instantiate the
-+devices explicitly. Please see Documentation/i2c/instantiating-devices for
-+details.
-+
-+Information of the data read
-+---------------------
-+FRU : name of psu manufacturer.
-+PN : part_number of psu.
-+SN : serial_number of psu.
-+mfr_date : Date of psu's manufacture.
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index d62d69bb7e49..ebb7024e58ab 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -219,6 +219,15 @@ config SENSORS_UCD9200
- 	  This driver can also be built as a module. If so, the module will
- 	  be called ucd9200.
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -320,7 +320,10 @@ static int ssd1307fb_ssd1306_init(struct
  
-+config SENSORS_WISTRON_WPS
-+	tristate "Wistron Power Supply"
-+	help
-+	  If you say yes here you get hardware monitoring support for the Wistron
-+	  power supply.
+ 	/* Set initial contrast */
+ 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_CONTRAST);
+-	ret = ret & ssd1307fb_write_cmd(par->client, 0x7f);
++	if (ret < 0)
++		return ret;
 +
-+	  This driver can also be built as a module. If so, the module will
-+	  be called wistron-wps.
++	ret = ssd1307fb_write_cmd(par->client, 0x7f);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -336,63 +339,99 @@ static int ssd1307fb_ssd1306_init(struct
+ 
+ 	/* Set multiplex ratio value */
+ 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_MULTIPLEX_RATIO);
+-	ret = ret & ssd1307fb_write_cmd(par->client, par->height - 1);
++	if (ret < 0)
++		return ret;
 +
- config SENSORS_ZL6100
- 	tristate "Intersil ZL6100 and compatibles"
- 	help
-diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-index 03bacfcfd660..cad38f99e8c5 100644
---- a/drivers/hwmon/pmbus/Makefile
-+++ b/drivers/hwmon/pmbus/Makefile
-@@ -25,4 +25,5 @@ obj-$(CONFIG_SENSORS_TPS40422)	+= tps40422.o
- obj-$(CONFIG_SENSORS_TPS53679)	+= tps53679.o
- obj-$(CONFIG_SENSORS_UCD9000)	+= ucd9000.o
- obj-$(CONFIG_SENSORS_UCD9200)	+= ucd9200.o
-+obj-$(CONFIG_SENSORS_WISTRON_WPS) += wistron-wps.o
- obj-$(CONFIG_SENSORS_ZL6100)	+= zl6100.o
-diff --git a/drivers/hwmon/pmbus/wistron-wps.c b/drivers/hwmon/pmbus/wistron-wps.c
-new file mode 100644
-index 000000000000..4e2649e7b3f2
---- /dev/null
-+++ b/drivers/hwmon/pmbus/wistron-wps.c
-@@ -0,0 +1,176 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright 2019 Wistron Corp.
-+ */
++	ret = ssd1307fb_write_cmd(par->client, par->height - 1);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	/* set display offset value */
+ 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_DISPLAY_OFFSET);
++	if (ret < 0)
++		return ret;
 +
-+#include <linux/bitops.h>
-+#include <linux/debugfs.h>
-+#include <linux/device.h>
-+#include <linux/fs.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/pmbus.h>
+ 	ret = ssd1307fb_write_cmd(par->client, 0x20);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	/* Set clock frequency */
+ 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_CLOCK_FREQ);
+-	ret = ret & ssd1307fb_write_cmd(par->client, 0xf0);
++	if (ret < 0)
++		return ret;
 +
-+#include "pmbus.h"
++	ret = ssd1307fb_write_cmd(par->client, 0xf0);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	/* Set precharge period in number of ticks from the internal clock */
+ 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_PRECHARGE_PERIOD);
+-	ret = ret & ssd1307fb_write_cmd(par->client, 0x22);
++	if (ret < 0)
++		return ret;
 +
-+#define WPS_FRU_CMD	   0x99
-+#define WPS_PN_CMD         0x9A
-+#define WPS_FW_CMD	   0x9B
-+#define WPS_DATE_CMD       0x9D
-+#define WPS_SN_CMD	   0x9E
++	ret = ssd1307fb_write_cmd(par->client, 0x22);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	/* Set COM pins configuration */
+ 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_COM_PINS_CONFIG);
+-	ret = ret & ssd1307fb_write_cmd(par->client, 0x22);
++	if (ret < 0)
++		return ret;
 +
-+enum {
-+	WPS_DEBUGFS_FRU,
-+	WPS_DEBUGFS_PN,
-+	WPS_DEBUGFS_SN,
-+	WPS_DEBUGFS_FW,
-+	WPS_DEBUGFS_DATE,
-+	WPS_DEBUGFS_NUM_ENTRIES
-+};
++	ret = ssd1307fb_write_cmd(par->client, 0x22);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	/* Set VCOMH */
+ 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_VCOMH);
+-	ret = ret & ssd1307fb_write_cmd(par->client, 0x49);
++	if (ret < 0)
++		return ret;
 +
-+struct wistron_wps {
-+	struct i2c_client *client;
-+	int debugfs_entries[WPS_DEBUGFS_NUM_ENTRIES];
-+};
++	ret = ssd1307fb_write_cmd(par->client, 0x49);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	/* Turn on the DC-DC Charge Pump */
+ 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_CHARGE_PUMP);
+-	ret = ret & ssd1307fb_write_cmd(par->client, 0x14);
++	if (ret < 0)
++		return ret;
 +
-+#define to_psu(x, y) container_of(x, struct wistron_wps, debugfs_entries[y])
++	ret = ssd1307fb_write_cmd(par->client, 0x14);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	/* Switch to horizontal addressing mode */
+ 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_ADDRESS_MODE);
+-	ret = ret & ssd1307fb_write_cmd(par->client,
+-					SSD1307FB_SET_ADDRESS_MODE_HORIZONTAL);
++	if (ret < 0)
++		return ret;
 +
-+static ssize_t wistron_wps_debugfs_op(struct file *file, char __user *buf,
-+				      size_t count, loff_t *ppos)
-+{
-+	u8 cmd;
-+	int rc;
-+	int *idxp = file->private_data;
-+	int idx = *idxp;
-+	struct wistron_wps *psu = to_psu(idxp, idx);
-+	char data[I2C_SMBUS_BLOCK_MAX] = { 0 };
++	ret = ssd1307fb_write_cmd(par->client,
++				  SSD1307FB_SET_ADDRESS_MODE_HORIZONTAL);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_COL_RANGE);
+-	ret = ret & ssd1307fb_write_cmd(par->client, 0x0);
+-	ret = ret & ssd1307fb_write_cmd(par->client, par->width - 1);
++	if (ret < 0)
++		return ret;
 +
-+	pmbus_set_page(psu->client, 0);
-+	switch (idx) {
-+	case WPS_DEBUGFS_FRU:
-+		cmd = WPS_FRU_CMD;
-+		break;
-+	case WPS_DEBUGFS_PN:
-+		cmd = WPS_PN_CMD;
-+		break;
-+	case WPS_DEBUGFS_SN:
-+		cmd = WPS_SN_CMD;
-+		break;
-+	case WPS_DEBUGFS_FW:
-+		cmd = WPS_FW_CMD;
-+		break;
-+	case WPS_DEBUGFS_DATE:
-+		cmd = WPS_DATE_CMD;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
++	ret = ssd1307fb_write_cmd(par->client, 0x0);
++	if (ret < 0)
++		return ret;
 +
-+	rc = i2c_smbus_read_block_data(psu->client, cmd, data);
-+	if (rc < 0)
-+		return rc;
++	ret = ssd1307fb_write_cmd(par->client, par->width - 1);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_PAGE_RANGE);
+-	ret = ret & ssd1307fb_write_cmd(par->client, 0x0);
+-	ret = ret & ssd1307fb_write_cmd(par->client,
+-					par->page_offset + (par->height / 8) - 1);
++	if (ret < 0)
++		return ret;
 +
-+done:
-+	data[rc] = '\n';
-+	rc += 2;
++	ret = ssd1307fb_write_cmd(par->client, 0x0);
++	if (ret < 0)
++		return ret;
 +
-+	return simple_read_from_buffer(buf, count, ppos, data, rc);
-+}
-+
-+static const struct file_operations wistron_wps_fops = {
-+
-+	.llseek = noop_llseek,
-+	.read = wistron_wps_debugfs_op,
-+	.open = simple_open,
-+};
-+
-+static struct pmbus_driver_info wistron_wps_info = {
-+	.pages = 1,
-+	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
-+		PMBUS_HAVE_PIN | PMBUS_HAVE_POUT | PMBUS_HAVE_FAN12 |
-+		PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-+		PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-+		PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
-+		PMBUS_HAVE_STATUS_FAN12,
-+};
-+
-+static struct pmbus_platform_data wistron_wps_pdata = {
-+	.flags = PMBUS_SKIP_STATUS_CHECK,
-+};
-+
-+static int wistron_wps_probe(struct i2c_client *client,
-+			     const struct i2c_device_id *id)
-+{
-+	int i, rc;
-+	struct dentry *debugfs;
-+	struct dentry *wistron_wps_dir;
-+	struct wistron_wps *psu;
-+
-+	client->dev.platform_data = &wistron_wps_pdata;
-+	rc = pmbus_do_probe(client, id, &wistron_wps_info);
-+	if (rc)
-+		return rc;
-+
-+	psu = devm_kzalloc(&client->dev, sizeof(*psu), GFP_KERNEL);
-+	if (!psu)
-+		return 0;
-+
-+	psu->client = client;
-+
-+	debugfs = pmbus_get_debugfs_dir(client);
-+	if (!debugfs)
-+		return 0;
-+
-+	wistron_wps_dir = debugfs_create_dir(client->name, debugfs);
-+	if (!wistron_wps_dir)
-+		return 0;
-+
-+	for (i = 0; i < WPS_DEBUGFS_NUM_ENTRIES; ++i)
-+		psu->debugfs_entries[i] = i;
-+
-+	debugfs_create_file("fru", 0444, wistron_wps_dir,
-+			    &psu->debugfs_entries[WPS_DEBUGFS_FRU],
-+			    &wistron_wps_fops);
-+	debugfs_create_file("part_number", 0444, wistron_wps_dir,
-+			    &psu->debugfs_entries[WPS_DEBUGFS_PN],
-+			    &wistron_wps_fops);
-+	debugfs_create_file("serial_number", 0444, wistron_wps_dir,
-+			    &psu->debugfs_entries[WPS_DEBUGFS_SN],
-+			    &wistron_wps_fops);
-+	debugfs_create_file("fw_version", 0444, wistron_wps_dir,
-+			    &psu->debugfs_entries[WPS_DEBUGFS_FW],
-+			    &wistron_wps_fops);
-+	debugfs_create_file("mfr_date", 0444, wistron_wps_dir,
-+			    &psu->debugfs_entries[WPS_DEBUGFS_DATE],
-+			    &wistron_wps_fops);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id wistron_wps_id[] = {
-+	{ "wistron_wps", 1 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, wistron_wps_id);
-+
-+static const struct of_device_id wistron_wps_of_match[] = {
-+	{ .compatible = "wistron, wps" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, wistron_wps_of_match);
-+
-+static struct i2c_driver wistron_wps_driver = {
-+	.driver = {
-+		.name = "wistron-wps",
-+		.of_match_table = wistron_wps_of_match,
-+	},
-+	.probe = wistron_wps_probe,
-+	.remove = pmbus_do_remove,
-+	.id_table = wistron_wps_id,
-+};
-+
-+module_i2c_driver(wistron_wps_driver);
-+
-+MODULE_AUTHOR("Ben Pai");
-+MODULE_DESCRIPTION("PMBus driver for Wistron power supplies");
-+MODULE_LICENSE("GPL");
--- 
-2.17.1
++	ret = ssd1307fb_write_cmd(par->client,
++				  par->page_offset + (par->height / 8) - 1);
+ 	if (ret < 0)
+ 		return ret;
+ 
 
