@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88BCC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C81C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84739206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F9F206E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfLHN5z (ORCPT
+        id S1727325AbfLHN6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:57:55 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60076 "EHLO
+        Sun, 8 Dec 2019 08:58:00 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60068 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726667AbfLHNyl (ORCPT
+        by vger.kernel.org with ESMTP id S1726661AbfLHNyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:41 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1C-0007dy-DK; Sun, 08 Dec 2019 13:54:38 +0000
+        id 1idx1B-0007dZ-N3; Sun, 08 Dec 2019 13:54:37 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1B-0002Mk-Ck; Sun, 08 Dec 2019 13:54:37 +0000
+        id 1idx1B-0002Lv-0Q; Sun, 08 Dec 2019 13:54:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David Sterba" <dsterba@suse.com>,
-        "Johannes Thumshirn" <jthumshirn@suse.de>,
-        "Nikolay Borisov" <nborisov@suse.com>
-Date:   Sun, 08 Dec 2019 13:53:13 +0000
-Message-ID: <lsq.1575813165.846189592@decadent.org.uk>
+        "Theodore Ts'o" <tytso@mit.edu>,
+        "Rakesh Pandit" <rakesh@tuxera.com>
+Date:   Sun, 08 Dec 2019 13:53:03 +0000
+Message-ID: <lsq.1575813165.296462381@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 29/72] btrfs: Relinquish CPUs in btrfs_compare_trees
+Subject: [PATCH 3.16 19/72] ext4: fix warning inside ext4_convert_unwritten_extents_endio
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,67 +55,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Rakesh Pandit <rakesh@tuxera.com>
 
-commit 6af112b11a4bc1b560f60a618ac9c1dcefe9836e upstream.
+commit e3d550c2c4f2f3dba469bc3c4b83d9332b4e99e1 upstream.
 
-When doing any form of incremental send the parent and the child trees
-need to be compared via btrfs_compare_trees. This  can result in long
-loop chains without ever relinquishing the CPU. This causes softlockup
-detector to trigger when comparing trees with a lot of items. Example
-report:
+Really enable warning when CONFIG_EXT4_DEBUG is set and fix missing
+first argument.  This was introduced in commit ff95ec22cd7f ("ext4:
+add warning to ext4_convert_unwritten_extents_endio") and splitting
+extents inside endio would trigger it.
 
-watchdog: BUG: soft lockup - CPU#0 stuck for 24s! [snapperd:16153]
-CPU: 0 PID: 16153 Comm: snapperd Not tainted 5.2.9-1-default #1 openSUSE Tumbleweed (unreleased)
-Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-pstate: 40000005 (nZcv daif -PAN -UAO)
-pc : __ll_sc_arch_atomic_sub_return+0x14/0x20
-lr : btrfs_release_extent_buffer_pages+0xe0/0x1e8 [btrfs]
-sp : ffff00001273b7e0
-Call trace:
- __ll_sc_arch_atomic_sub_return+0x14/0x20
- release_extent_buffer+0xdc/0x120 [btrfs]
- free_extent_buffer.part.0+0xb0/0x118 [btrfs]
- free_extent_buffer+0x24/0x30 [btrfs]
- btrfs_release_path+0x4c/0xa0 [btrfs]
- btrfs_free_path.part.0+0x20/0x40 [btrfs]
- btrfs_free_path+0x24/0x30 [btrfs]
- get_inode_info+0xa8/0xf8 [btrfs]
- finish_inode_if_needed+0xe0/0x6d8 [btrfs]
- changed_cb+0x9c/0x410 [btrfs]
- btrfs_compare_trees+0x284/0x648 [btrfs]
- send_subvol+0x33c/0x520 [btrfs]
- btrfs_ioctl_send+0x8a0/0xaf0 [btrfs]
- btrfs_ioctl+0x199c/0x2288 [btrfs]
- do_vfs_ioctl+0x4b0/0x820
- ksys_ioctl+0x84/0xb8
- __arm64_sys_ioctl+0x28/0x38
- el0_svc_common.constprop.0+0x7c/0x188
- el0_svc_handler+0x34/0x90
- el0_svc+0x8/0xc
-
-Fix this by adding a call to cond_resched at the beginning of the main
-loop in btrfs_compare_trees.
-
-Fixes: 7069830a9e38 ("Btrfs: add btrfs_compare_trees function")
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-[bwh: Backported to 3.16: adjust filename]
+Fixes: ff95ec22cd7f ("ext4: add warning to ext4_convert_unwritten_extents_endio")
+Signed-off-by: Rakesh Pandit <rakesh@tuxera.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/ctree.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ext4/extents.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/ctree.c
-+++ b/fs/btrfs/ctree.c
-@@ -5446,6 +5446,7 @@ int btrfs_compare_trees(struct btrfs_roo
- 	advance_left = advance_right = 0;
- 
- 	while (1) {
-+		cond_resched();
- 		if (advance_left && !left_end_reached) {
- 			ret = tree_advance(left_root, left_path, &left_level,
- 					left_root_level,
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -3775,8 +3775,8 @@ static int ext4_convert_unwritten_extent
+ 	 * illegal.
+ 	 */
+ 	if (ee_block != map->m_lblk || ee_len > map->m_len) {
+-#ifdef EXT4_DEBUG
+-		ext4_warning("Inode (%ld) finished: extent logical block %llu,"
++#ifdef CONFIG_EXT4_DEBUG
++		ext4_warning(inode->i_sb, "Inode (%ld) finished: extent logical block %llu,"
+ 			     " len %u; IO logical block %llu, len %u\n",
+ 			     inode->i_ino, (unsigned long long)ee_block, ee_len,
+ 			     (unsigned long long)map->m_lblk, map->m_len);
 
