@@ -2,138 +2,94 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D38DC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 17:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2445AC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 17:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD8A20692
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 17:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7E0206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 17:35:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uuzg0mJZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="opmYfujz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfLHRXH (ORCPT
+        id S1726538AbfLHRfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 12:23:07 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39860 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfLHRXH (ORCPT
+        Sun, 8 Dec 2019 12:35:40 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53762 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbfLHRfk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 12:23:07 -0500
-Received: by mail-wm1-f68.google.com with SMTP id s14so12374275wmh.4
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 09:23:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=TCJmDBLYuV/jWqc0iBCCs2tprqUMEIazO4OrAHZKLfw=;
-        b=uuzg0mJZTMfj6yBQSj2Y0Vu0/IKwg1wRZ73Cd+dUIkTUYO809Djo7/nyFdkNX++KyF
-         wl51N6LC8cyuXh4W5JdytzCFC0LzRUWUiAuDMCb0uEnWwnpgzA0on2BmJhqJ769V3OfK
-         Qth3XiMqVaWMv9mDRO7j1/PdOLzt88dZ+7lIgjxOaGQverIRRk9p/+D8Tp2rL1yhs1lS
-         Q95ZqZwlCuOtru4d9uIfI8RHfhbaKlS5otsQv+Pv+05cYkjzuYevogIPd0BmouIyemBH
-         XxjJ8mM6I8HOtuPKDH/OquE2HUut+hnaMyxfaKKDO/ULegd/GAtu6v4bdvpxmrcu7Eor
-         7Nrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=TCJmDBLYuV/jWqc0iBCCs2tprqUMEIazO4OrAHZKLfw=;
-        b=oczAxWQjdelJyyWuECqcsd4t0ZpMC74ky7J9QJabYHlsTTqmgc2mQhDrmak9KLVk6X
-         bsJKGSSDRXcR2PMU+5EKEhBXgM/UVl7Lp8cQglEK2v91DjccB2f8FCO+LBEKUCoAYzPD
-         akthtY2WaDljFtvEv8f22VaJRnnS3dS/5OCCZY6GgsNHSfTQFLkO3iCSPH6Ehjp9cL+I
-         uvRPTsuAjF5rR0ktiTffGSW44VHbVQdAIXa2Wm60X6GEuqIYMlacnH5yYss/3/8cEunW
-         yLhxz46jxJbjYEjt0Z/xRVPUUYq9CKpkFtcEoecI4KiRdnAzX6IfCS2Vqp83WFS4+kK8
-         dOGw==
-X-Gm-Message-State: APjAAAUl2sLdNikhka7rmq73vcsmIOxcEa5cxXkWsT+NL/YU0HgbJj7x
-        LlBk/gFZsiRmLRBQ49ixlti3VEI=
-X-Google-Smtp-Source: APXvYqwjfKyDgkVT30izndYAtXJS80kI/3gW8VNhHD0oJzHfdaJC5Pyld4r8NTpaFb9zIOwhVMvfzg==
-X-Received: by 2002:a7b:c851:: with SMTP id c17mr19474644wml.71.1575825785048;
-        Sun, 08 Dec 2019 09:23:05 -0800 (PST)
-Received: from avx2 ([46.53.249.42])
-        by smtp.gmail.com with ESMTPSA id k11sm1497102wmc.20.2019.12.08.09.23.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Dec 2019 09:23:04 -0800 (PST)
-Date:   Sun, 8 Dec 2019 20:23:01 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] ELF: smaller code generation around auxv vector fill
-Message-ID: <20191208172301.GD19716@avx2>
+        Sun, 8 Dec 2019 12:35:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ljVwhs1wUnQm/pzAJ67WBiI42QxXGjVUOsHzns6TOO8=; b=opmYfujzqK/WQ3iAOs8hPeCtr
+        GMVkcGXGqEA348bgdYIObZ93FjK+3jNRSNg9swTBCVYbQ0cHqyc24aZULNrhx8zb7Ux9C1RnE4ie3
+        cjRJpTVOhw0uXGx6DnUIYf2pnOEk+uPS83+frEi6W6TXGxd8QcZKuak4tzVDN2cAI70PKyoWLg/W4
+        cTSAeF80TlszDi5nFFZKKE4ZVorUl+2Dm69zwqdCo5vlZyj7Ah2dMCLTe/yLvv1RqAQDDJVgOKt7e
+        9VmI2Cec8WrSxPgvfknpL38GI9N8ata/itykme5tHwAD0S0X9PhFO6jz6+UcxVsy+Asp+/PYLayJt
+        qcDKptXGg==;
+Received: from [2601:1c0:6280:3f0::3deb]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ie0Sy-0002CH-QM; Sun, 08 Dec 2019 17:35:32 +0000
+Subject: Re: [PATCH] floppy: hide invalid floppy disk types
+To:     =?UTF-8?Q?Moritz_M=c3=bcller?= <moritzm.mueller@posteo.de>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@i4.cs.fau.de
+Cc:     "Philip K ." <philip@warpmail.net>
+References: <20191208165900.25588-1-moritzm.mueller@posteo.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <debf1513-7b56-2ad7-a6c7-3069e73efac6@infradead.org>
+Date:   Sun, 8 Dec 2019 09:35:30 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
+In-Reply-To: <20191208165900.25588-1-moritzm.mueller@posteo.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Filling auxv vector as array with index (auxv[i++] = ...) generates terrible
-code. "saved_auxv" should be reworked because it is the worst member
-of mm_struct by size/usefullness ratio but do it later.
+Hi,
 
-Meanwhile help gcc a little with *auxv++ idiom.
+one small typo:
 
-Space savings on x86_64:
+On 12/8/19 8:59 AM, Moritz Müller wrote:
+> diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
+> index 1bb8ec575352..9e6b32c50b67 100644
+> --- a/drivers/block/Kconfig
+> +++ b/drivers/block/Kconfig
+> @@ -72,6 +72,16 @@ config AMIGA_Z2RAM
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called z2ram.
+>  
+> +config FLOPPY_ALLOW_UNKNOWN_TYPES
+> +	bool "Allow floppy disks of unknown type to be registered."
+> +	default n
+> +	help
+> +	  Select this option if you want the Kernel to register floppy
+> +	  disks of an unknown type.
+> +
+> +	  This should usually not be enabled, because of cases where the
+> +	  system falsely recongizes a non-existent floppy disk as mountable.
 
-	add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-127 (-127)
-	Function                                     old     new   delta
-	load_elf_binary                             5470    5343    -127
+	                 recognizes
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
+> +
+>  config CDROM
+>  	tristate
+>  	select BLK_SCSI_REQUEST
 
- fs/binfmt_elf.c |   15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
 
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -177,7 +177,7 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
- 	unsigned char k_rand_bytes[16];
- 	int items;
- 	elf_addr_t *elf_info;
--	int ei_index = 0;
-+	int ei_index;
- 	const struct cred *cred = current_cred();
- 	struct vm_area_struct *vma;
- 
-@@ -231,8 +231,8 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
- 	/* update AT_VECTOR_SIZE_BASE if the number of NEW_AUX_ENT() changes */
- #define NEW_AUX_ENT(id, val) \
- 	do { \
--		elf_info[ei_index++] = id; \
--		elf_info[ei_index++] = val; \
-+		*elf_info++ = id; \
-+		*elf_info++ = val; \
- 	} while (0)
- 
- #ifdef ARCH_DLINFO
-@@ -276,12 +276,13 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
- 	}
- #undef NEW_AUX_ENT
- 	/* AT_NULL is zero; clear the rest too */
--	memset(&elf_info[ei_index], 0,
--	       sizeof current->mm->saved_auxv - ei_index * sizeof elf_info[0]);
-+	memset(elf_info, 0, (char *)current->mm->saved_auxv +
-+			sizeof(current->mm->saved_auxv) - (char *)elf_info);
- 
- 	/* And advance past the AT_NULL entry.  */
--	ei_index += 2;
-+	elf_info += 2;
- 
-+	ei_index = elf_info - (elf_addr_t *)current->mm->saved_auxv;
- 	sp = STACK_ADD(p, ei_index);
- 
- 	items = (argc + 1) + (envc + 1) + 1;
-@@ -339,7 +340,7 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
- 	current->mm->env_end = p;
- 
- 	/* Put the elf_info on the stack in the right place.  */
--	if (copy_to_user(sp, elf_info, ei_index * sizeof(elf_addr_t)))
-+	if (copy_to_user(sp, current->mm->saved_auxv, ei_index * sizeof(elf_addr_t)))
- 		return -EFAULT;
- 	return 0;
- }
+-- 
+~Randy
+
