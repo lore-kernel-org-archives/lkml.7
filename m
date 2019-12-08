@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E655DC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C94C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3169206E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E60206E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbfLHNzA (ORCPT
+        id S1727103AbfLHNzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:55:00 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60726 "EHLO
+        Sun, 8 Dec 2019 08:55:05 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60746 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727016AbfLHNyv (ORCPT
+        by vger.kernel.org with ESMTP id S1727016AbfLHNzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 08:54:51 -0500
+        Sun, 8 Dec 2019 08:55:01 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1C-0007eF-Tc; Sun, 08 Dec 2019 13:54:38 +0000
+        id 1idx1C-0007dj-4c; Sun, 08 Dec 2019 13:54:38 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1B-0002ND-Li; Sun, 08 Dec 2019 13:54:37 +0000
+        id 1idx1B-0002M5-2T; Sun, 08 Dec 2019 13:54:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,20 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        "David Howells" <dhowells@redhat.com>,
-        "Al Viro" <viro@zeniv.linux.org.uk>, linux-s390@vger.kernel.org,
-        "Heiko Carstens" <heiko.carstens@de.ibm.com>
-Date:   Sun, 08 Dec 2019 13:53:19 +0000
-Message-ID: <lsq.1575813165.422392579@decadent.org.uk>
+        "Felix Fietkau" <nbd@nbd.name>,
+        "Fabio Bettoni" <fbettoni@gmail.com>,
+        "Vignesh Raghavendra" <vigneshr@ti.com>,
+        "Tokunori Ikegami" <ikegami.t@gmail.com>,
+        "Hauke Mehrtens" <hauke@hauke-m.de>,
+        "Chris Packham" <chris.packham@alliedtelesis.co.nz>,
+        linux-mtd@lists.infradead.org,
+        "Joakim Tjernlund" <Joakim.Tjernlund@infinera.com>
+Date:   Sun, 08 Dec 2019 13:53:05 +0000
+Message-ID: <lsq.1575813165.444628518@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 35/72] hypfs: Fix error number left in struct pointer
- member
+Subject: [PATCH 3.16 21/72] mtd: cfi_cmdset_0002: Use chip_good() to retry
+ in do_write_oneword()
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,51 +62,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: David Howells <dhowells@redhat.com>
+From: Tokunori Ikegami <ikegami.t@gmail.com>
 
-commit b54c64f7adeb241423cd46598f458b5486b0375e upstream.
+commit 37c673ade35c707d50583b5b25091ff8ebdeafd7 upstream.
 
-In hypfs_fill_super(), if hypfs_create_update_file() fails,
-sbi->update_file is left holding an error number.  This is passed to
-hypfs_kill_super() which doesn't check for this.
+As reported by the OpenWRT team, write requests sometimes fail on some
+platforms.
+Currently to check the state chip_ready() is used correctly as described by
+the flash memory S29GL256P11TFI01 datasheet.
+Also chip_good() is used to check if the write is succeeded and it was
+implemented by the commit fb4a90bfcd6d8 ("[MTD] CFI-0002 - Improve error
+checking").
+But actually the write failure is caused on some platforms and also it can
+be fixed by using chip_good() to check the state and retry instead.
+Also it seems that it is caused after repeated about 1,000 times to retry
+the write one word with the reset command.
+By using chip_good() to check the state to be done it can be reduced the
+retry with reset.
+It is depended on the actual flash chip behavior so the root cause is
+unknown.
 
-Fix this by not setting sbi->update_value until after we've checked for
-error.
-
-Fixes: 24bbb1faf3f0 ("[PATCH] s390_hypfs filesystem")
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-cc: linux-s390@vger.kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+Cc: linux-mtd@lists.infradead.org
+Reported-by: Fabio Bettoni <fbettoni@gmail.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Signed-off-by: Tokunori Ikegami <ikegami.t@gmail.com>
+[vigneshr@ti.com: Fix a checkpatch warning]
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+[bwh: Backported to 3.16:
+ - chip_good() doesn't take a chip parameter
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/s390/hypfs/inode.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
---- a/arch/s390/hypfs/inode.c
-+++ b/arch/s390/hypfs/inode.c
-@@ -275,7 +275,7 @@ static int hypfs_show_options(struct seq
- static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
- {
- 	struct inode *root_inode;
--	struct dentry *root_dentry;
-+	struct dentry *root_dentry, *update_file;
- 	int rc = 0;
- 	struct hypfs_sb_info *sbi;
+--- a/drivers/mtd/chips/cfi_cmdset_0002.c
++++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+@@ -1295,29 +1295,36 @@ static int __xipram do_write_oneword(str
+ 			continue;
+ 		}
  
-@@ -306,9 +306,10 @@ static int hypfs_fill_super(struct super
- 		rc = hypfs_diag_create_files(root_dentry);
- 	if (rc)
- 		return rc;
--	sbi->update_file = hypfs_create_update_file(root_dentry);
--	if (IS_ERR(sbi->update_file))
--		return PTR_ERR(sbi->update_file);
-+	update_file = hypfs_create_update_file(root_dentry);
-+	if (IS_ERR(update_file))
-+		return PTR_ERR(update_file);
-+	sbi->update_file = update_file;
- 	hypfs_update_update(sb);
- 	pr_info("Hypervisor filesystem mounted\n");
- 	return 0;
+-		if (time_after(jiffies, timeo) && !chip_ready(map, adr)){
++		/*
++		 * We check "time_after" and "!chip_good" before checking
++		 * "chip_good" to avoid the failure due to scheduling.
++		 */
++		if (time_after(jiffies, timeo) &&
++		    !chip_good(map, adr, datum)) {
+ 			xip_enable(map, chip, adr);
+ 			printk(KERN_WARNING "MTD %s(): software timeout\n", __func__);
+ 			xip_disable(map, chip, adr);
++			ret = -EIO;
+ 			break;
+ 		}
+ 
+-		if (chip_ready(map, adr))
++		if (chip_good(map, adr, datum))
+ 			break;
+ 
+ 		/* Latency issues. Drop the lock, wait a while and retry */
+ 		UDELAY(map, chip, adr, 1);
+ 	}
++
+ 	/* Did we succeed? */
+-	if (!chip_good(map, adr, datum)) {
++	if (ret) {
+ 		/* reset on all failures. */
+ 		map_write( map, CMD(0xF0), chip->start );
+ 		/* FIXME - should have reset delay before continuing */
+ 
+-		if (++retry_cnt <= MAX_RETRIES)
++		if (++retry_cnt <= MAX_RETRIES) {
++			ret = 0;
+ 			goto retry;
+-
+-		ret = -EIO;
++		}
+ 	}
+ 	xip_enable(map, chip, adr);
+  op_done:
 
