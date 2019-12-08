@@ -2,127 +2,115 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E91C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 18:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E3DC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 18:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2192054F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 18:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C0A2054F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 18:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575828674;
+	bh=6D2BLjT1MjmYJi5BZ3eUc40zDPEQHm5kYxiP0y9flB4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tCza5Modn+zTFs+44z6LyAgj7dKCiiYaXxWP3oWIDZvzKW9IqHb0wgUHwg1OBb8JD
+	 t79ZUUFK2oke+/EOf+bYsg81vKb4IVEuGHsMcdRZSywBVWQXxb5U+WZ2dLssDZwjor
+	 Tm6Y1EqdcBIcc8LlOw4afkqmNAFEXqpL9kmO/DQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfLHSJp (ORCPT
+        id S1726566AbfLHSLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 13:09:45 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33892 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726220AbfLHSJp (ORCPT
+        Sun, 8 Dec 2019 13:11:13 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44914 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfLHSLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 13:09:45 -0500
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ie102-0003Xn-5H; Sun, 08 Dec 2019 18:09:42 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ie101-0005jy-FI; Sun, 08 Dec 2019 18:09:41 +0000
-Message-ID: <92faedffaa625da9d385a6af2e554d8e4744fa7a.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 43/72] thermal: Fix use-after-free when
- unregistering thermal zone device
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Ido Schimmel <idosch@mellanox.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        "wvw@google.com" <wvw@google.com>
-Date:   Sun, 08 Dec 2019 18:09:36 +0000
-In-Reply-To: <20191208162216.GA330015@splinter>
-References: <lsq.1575813164.154362148@decadent.org.uk>
-         <lsq.1575813165.267246545@decadent.org.uk>
-         <20191208162216.GA330015@splinter>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-wirjlZ8bMGe+H7G2uA/P"
-User-Agent: Evolution 3.30.5-1.1 
+        Sun, 8 Dec 2019 13:11:12 -0500
+Received: by mail-lf1-f67.google.com with SMTP id v201so8892912lfa.11
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 10:11:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4bP+MLqv2/4jxjq5G8WI3V8blQrwy5vvH8NjA0Oq9xU=;
+        b=H0B9voLfv9AYLRDixmAeg/5DRF8QLotazZN/4owvkzDMXfPsktWaen4Q3k9MedABQL
+         0pB2E+DsxZ88pf8Iftm8Zpi/eUzhjTeP2HrbKUH1z9La6YaZoUY5Mc7J6SV7VX3rGun9
+         NOn+0S2wMJe3ABAu0HEETzU4Av3UFzbmNvuFQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4bP+MLqv2/4jxjq5G8WI3V8blQrwy5vvH8NjA0Oq9xU=;
+        b=ZdehyLhcT65+BRwI628RRdLhjDtlNSsit8maM+49mUWqVn+gJDjwWYkgxeN405+8Ma
+         +Inz7DKXLfRftIkj/vATARIjeMA6Kj2lpZhWC91ViHly1RiEq8etLnw0wopPiTFFemrP
+         GbF3/LlaANZ+DIhQv8NZUGb4E4BQ1QMwlMFxvOEAL/wGEs7wN3rwFVq5VCfjrUHQ43qq
+         tDVZ3YoXhdsm0BjwDPqoXWPV0KHJDceyTU1tYexP9bjFBqY1SEqUXoz+GGVqdUywh4W3
+         J40icMpuzjulRg2jU5mRPjkbSjEDYxf3MeUItbV4iHQKBAmXkOEFiTtKD8ejwvjdtENb
+         qhKg==
+X-Gm-Message-State: APjAAAV9NLKR17SoMXQbX3fsRR36gH0UOd7BHvfkPmkaEmBRMay1+gfY
+        cSgs4i6vnAO5g9ak1ZPTP8dVQjR5FDY=
+X-Google-Smtp-Source: APXvYqypd/cd3H513YQtuoFqmxsBlp1mhOJ8PHcCeZQi0ns+0l7DThz1IFT8gEXyIdnOYHiqzaVnow==
+X-Received: by 2002:a19:5212:: with SMTP id m18mr13150437lfb.7.1575828669500;
+        Sun, 08 Dec 2019 10:11:09 -0800 (PST)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id w2sm9764155ljo.61.2019.12.08.10.11.07
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Dec 2019 10:11:08 -0800 (PST)
+Received: by mail-lf1-f49.google.com with SMTP id 15so8951269lfr.2
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 10:11:07 -0800 (PST)
+X-Received: by 2002:ac2:465e:: with SMTP id s30mr10244080lfo.134.1575828667708;
+ Sun, 08 Dec 2019 10:11:07 -0800 (PST)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
+ <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
+ <20191206214725.GA2108@latitude> <CAHk-=wga0MPEH5hsesi4Cy+fgaaKENMYpbg2kK8UA0qE3iupgw@mail.gmail.com>
+ <20191207000015.GA1757@latitude> <CAHk-=wjEa5oNcQ9+9fai1Awqktf+hzz_HZmChi8HZJWcL62+Cw@mail.gmail.com>
+ <20191208175602.GA1844@latitude>
+In-Reply-To: <20191208175602.GA1844@latitude>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 8 Dec 2019 10:10:51 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgh9zUy9nbiCgGjtrgw1V9Vk=01Ncju-0iib5Jn-V1arw@mail.gmail.com>
+Message-ID: <CAHk-=wgh9zUy9nbiCgGjtrgw1V9Vk=01Ncju-0iib5Jn-V1arw@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
+ not cursor and length [ver #2]
+To:     Johannes Hirte <johannes.hirte@datenkhaos.de>
+Cc:     David Howells <dhowells@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Dec 8, 2019 at 9:56 AM Johannes Hirte
+<johannes.hirte@datenkhaos.de> wrote:
+>
+> whereas with a fresh cloned repo I get:
+>
+> v5.4-13331-g9455d25f4e3b
+>
+> I assume the later is right. With this version the bug seems to be
+> fixed, regardless of the commit count. Tested with different websites
+> and firefox works as expected again.
 
---=-wirjlZ8bMGe+H7G2uA/P
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Ok, good. It was almost certainly the select/poll race fix - Mariusz
+Ceier reported a problem with youtube hanging, and confirmed that the
+poll/select fix seems to have cleared that one up. I suspect that your
+hang on fb and spiegel.de were the same thing.
 
-On Sun, 2019-12-08 at 16:22 +0000, Ido Schimmel wrote:
-> On Sun, Dec 08, 2019 at 01:53:27PM +0000, Ben Hutchings wrote:
-> > 3.16.79-rc1 review patch.  If anyone has any objections, please let me =
-know.
-> >=20
-> > ------------------
-> >=20
-> > From: Ido Schimmel <idosch@mellanox.com>
-> >=20
-> > commit 1851799e1d2978f68eea5d9dff322e121dcf59c1 upstream.
-> >=20
-> > thermal_zone_device_unregister() cancels the delayed work that polls th=
-e
-> > thermal zone, but it does not wait for it to finish. This is racy with
-> > respect to the freeing of the thermal zone device, which can result in =
-a
-> > use-after-free [1].
-> >=20
-> > Fix this by waiting for the delayed work to finish before freeing the
-> > thermal zone device. Note that thermal_zone_device_set_polling() is
-> > never invoked from an atomic context, so it is safe to call
-> > cancel_delayed_work_sync() that can block.
->=20
-> Ben,
->=20
-> Wei Wang (copied) found a problem with this patch and fixed it:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3D163b00cde7cf2206e248789d2780121ad5e6a70b
->=20
-> I believe you should take both patches to your tree.
+So I think the pipe code is stable again with current -git. Thanks for
+reporting and testing,
 
-Thanks, I will add that now that it is in Linus's tree.
-
-Ben.
-
---=20
-Ben Hutchings
-Never attribute to conspiracy what can adequately be explained
-by stupidity.
-
-
-
---=-wirjlZ8bMGe+H7G2uA/P
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3tPGAACgkQ57/I7JWG
-EQk0xQ/6A9/1JgUGvhugEymLOWmac/l4/q9YXBkp1D4vPJWLotMhLbySTWoQsZsh
-0VGykIh1xPqqwMvWNm4lhOYGIlgBYVEuz4VkCJgvOrFwi/4EW/qRSVpgYeJonX6Z
-ADTsovzAnAeZh5wKZ/zJwsZohNnW8lq90zHPG+7APYHeNuA/6N5WPToWdei8W6kp
-pmVSTP1BbeVvfBzLGDq4Z2I6MjQyJnW7Zr7oa66K6ZTVZWpibrXRYKa0qB35w2o/
-BhBgAhkKitA1ThF83XK5WAETd+4dZKMcpoiUK0+VZOv2Ida2SJbR1Uob8RFJfvRG
-1xrzwDmQvxPhjZnpsCT/h2XZJ+fVN5tCQBkQb9kLS7GGTcb8tUzCToBPPrQXkEK7
-oar8xSyWSVZuhlNRZw9dOZOfn6stgs3/qn8hnMqeu4AJhOGCHFqkW98rTH632n8j
-t/lsOIhAQBoxMZk4p8oqjQ8AzQywt0E5n5izeW4cOrN1m1sPnYAJwiho98HiU66U
-+n+R6Cz6TUjHEzKp0gpjVLfEuG12+9RurwcmjPoenAJZQIH+93fKUILbc/QZqmBw
-+8PzC18M1eI3VZtrjEUkaSyEEOtH46K5AqaJtQFOPXKbgHn0LJaF4CJbP7E9hcAP
-GUnDF2sGm9Bys7L9stfyxjGNU/KGwPE4t7dPYAwQgNCWxGGAwYc=
-=9wS6
------END PGP SIGNATURE-----
-
---=-wirjlZ8bMGe+H7G2uA/P--
+             Linus
