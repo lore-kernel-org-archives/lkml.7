@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A72C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E655DC43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51171206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3169206E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfLHNyv (ORCPT
+        id S1727081AbfLHNzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:54:51 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60522 "EHLO
+        Sun, 8 Dec 2019 08:55:00 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60726 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726915AbfLHNyq (ORCPT
+        by vger.kernel.org with ESMTP id S1727016AbfLHNyv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 08:54:46 -0500
+        Sun, 8 Dec 2019 08:54:51 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1G-0007hN-9K; Sun, 08 Dec 2019 13:54:42 +0000
+        id 1idx1C-0007eF-Tc; Sun, 08 Dec 2019 13:54:38 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1E-0002P5-R1; Sun, 08 Dec 2019 13:54:40 +0000
+        id 1idx1B-0002ND-Li; Sun, 08 Dec 2019 13:54:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Navid Emamdoost" <navid.emamdoost@gmail.com>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>
-Date:   Sun, 08 Dec 2019 13:53:42 +0000
-Message-ID: <lsq.1575813165.418047844@decadent.org.uk>
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        "David Howells" <dhowells@redhat.com>,
+        "Al Viro" <viro@zeniv.linux.org.uk>, linux-s390@vger.kernel.org,
+        "Heiko Carstens" <heiko.carstens@de.ibm.com>
+Date:   Sun, 08 Dec 2019 13:53:19 +0000
+Message-ID: <lsq.1575813165.422392579@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 58/72] crypto: user - fix memory leak in crypto_report
+Subject: [PATCH 3.16 35/72] hypfs: Fix error number left in struct pointer
+ member
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,34 +58,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: David Howells <dhowells@redhat.com>
 
-commit ffdde5932042600c6807d46c1550b28b0db6a3bc upstream.
+commit b54c64f7adeb241423cd46598f458b5486b0375e upstream.
 
-In crypto_report, a new skb is created via nlmsg_new(). This skb should
-be released if crypto_report_alg() fails.
+In hypfs_fill_super(), if hypfs_create_update_file() fails,
+sbi->update_file is left holding an error number.  This is passed to
+hypfs_kill_super() which doesn't check for this.
 
-Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-[bwh: Backported to 3.16: adjust filename]
+Fix this by not setting sbi->update_value until after we've checked for
+error.
+
+Fixes: 24bbb1faf3f0 ("[PATCH] s390_hypfs filesystem")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+cc: linux-s390@vger.kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- crypto/crypto_user.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/s390/hypfs/inode.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/crypto/crypto_user.c
-+++ b/crypto/crypto_user.c
-@@ -230,8 +230,10 @@ static int crypto_report(struct sk_buff
- drop_alg:
- 	crypto_mod_put(alg);
+--- a/arch/s390/hypfs/inode.c
++++ b/arch/s390/hypfs/inode.c
+@@ -275,7 +275,7 @@ static int hypfs_show_options(struct seq
+ static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
+ {
+ 	struct inode *root_inode;
+-	struct dentry *root_dentry;
++	struct dentry *root_dentry, *update_file;
+ 	int rc = 0;
+ 	struct hypfs_sb_info *sbi;
  
--	if (err)
-+	if (err) {
-+		kfree_skb(skb);
- 		return err;
-+	}
- 
- 	return nlmsg_unicast(crypto_nlsk, skb, NETLINK_CB(in_skb).portid);
- }
+@@ -306,9 +306,10 @@ static int hypfs_fill_super(struct super
+ 		rc = hypfs_diag_create_files(root_dentry);
+ 	if (rc)
+ 		return rc;
+-	sbi->update_file = hypfs_create_update_file(root_dentry);
+-	if (IS_ERR(sbi->update_file))
+-		return PTR_ERR(sbi->update_file);
++	update_file = hypfs_create_update_file(root_dentry);
++	if (IS_ERR(update_file))
++		return PTR_ERR(update_file);
++	sbi->update_file = update_file;
+ 	hypfs_update_update(sb);
+ 	pr_info("Hypervisor filesystem mounted\n");
+ 	return 0;
 
