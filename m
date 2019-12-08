@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F49FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0604C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2615D20721
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4892206F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfLHNyp (ORCPT
+        id S1727269AbfLHN4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:54:45 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:59988 "EHLO
+        Sun, 8 Dec 2019 08:56:14 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60420 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726425AbfLHNyl (ORCPT
+        by vger.kernel.org with ESMTP id S1726872AbfLHNyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 08:54:41 -0500
+        Sun, 8 Dec 2019 08:54:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1B-0007dQ-Ds; Sun, 08 Dec 2019 13:54:37 +0000
+        id 1idx1E-0007ft-UA; Sun, 08 Dec 2019 13:54:41 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1A-0002LW-QD; Sun, 08 Dec 2019 13:54:36 +0000
+        id 1idx1D-0002OM-Al; Sun, 08 Dec 2019 13:54:39 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Luis Araneda" <luaraneda@gmail.com>,
-        "Michal Simek" <michal.simek@xilinx.com>
-Date:   Sun, 08 Dec 2019 13:52:58 +0000
-Message-ID: <lsq.1575813165.3329877@decadent.org.uk>
+        syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com,
+        "Oliver Neukum" <oneukum@suse.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        "Sean Young" <sean@mess.org>
+Date:   Sun, 08 Dec 2019 13:53:33 +0000
+Message-ID: <lsq.1575813165.118383647@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 14/72] ARM: zynq: Use memcpy_toio instead of memcpy
- on smp bring-up
+Subject: [PATCH 3.16 49/72] media: b2c2-flexcop-usb: add sanity checking
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,45 +57,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Luis Araneda <luaraneda@gmail.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit b7005d4ef4f3aa2dc24019ffba03a322557ac43d upstream.
+commit 1b976fc6d684e3282914cdbe7a8d68fdce19095c upstream.
 
-This fixes a kernel panic on memcpy when
-FORTIFY_SOURCE is enabled.
+The driver needs an isochronous endpoint to be present. It will
+oops in its absence. Add checking for it.
 
-The initial smp implementation on commit aa7eb2bb4e4a
-("arm: zynq: Add smp support")
-used memcpy, which worked fine until commit ee333554fed5
-("ARM: 8749/1: Kconfig: Add ARCH_HAS_FORTIFY_SOURCE")
-enabled overflow checks at runtime, producing a read
-overflow panic.
-
-The computed size of memcpy args are:
-- p_size (dst): 4294967295 = (size_t) -1
-- q_size (src): 1
-- size (len): 8
-
-Additionally, the memory is marked as __iomem, so one of
-the memcpy_* functions should be used for read/write.
-
-Fixes: aa7eb2bb4e4a ("arm: zynq: Add smp support")
-Signed-off-by: Luis Araneda <luaraneda@gmail.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Reported-by: syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arm/mach-zynq/platsmp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/usb/b2c2/flexcop-usb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/arm/mach-zynq/platsmp.c
-+++ b/arch/arm/mach-zynq/platsmp.c
-@@ -65,7 +65,7 @@ int zynq_cpun_start(u32 address, int cpu
- 			* 0x4: Jump by mov instruction
- 			* 0x8: Jumping address
- 			*/
--			memcpy((__force void *)zero, &zynq_secondary_trampoline,
-+			memcpy_toio(zero, &zynq_secondary_trampoline,
- 							trampoline_size);
- 			writel(address, zero + trampoline_size);
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -508,6 +508,9 @@ static int flexcop_usb_probe(struct usb_
+ 	struct flexcop_device *fc = NULL;
+ 	int ret;
  
++	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
++		return -ENODEV;
++
+ 	if ((fc = flexcop_device_kmalloc(sizeof(struct flexcop_usb))) == NULL) {
+ 		err("out of memory\n");
+ 		return -ENOMEM;
 
