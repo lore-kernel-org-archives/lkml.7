@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED6FC2D0C0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 507ABC43603
 	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE2FB206E0
+	by mail.kernel.org (Postfix) with ESMTP id 2FE8A206E0
 	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:54:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfLHNyv (ORCPT
+        id S1726986AbfLHNys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:54:51 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60564 "EHLO
+        Sun, 8 Dec 2019 08:54:48 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60200 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726928AbfLHNyr (ORCPT
+        by vger.kernel.org with ESMTP id S1726761AbfLHNym (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 08:54:47 -0500
+        Sun, 8 Dec 2019 08:54:42 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1H-0007iC-98; Sun, 08 Dec 2019 13:54:43 +0000
+        id 1idx1C-0007e9-O3; Sun, 08 Dec 2019 13:54:38 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1F-0002Pe-Dl; Sun, 08 Dec 2019 13:54:41 +0000
+        id 1idx1B-0002Mu-Ff; Sun, 08 Dec 2019 13:54:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com,
-        "Johan Hovold" <johan@kernel.org>
-Date:   Sun, 08 Dec 2019 13:53:48 +0000
-Message-ID: <lsq.1575813165.866651942@decadent.org.uk>
+        "Nadav Amit" <nadav.amit@gmail.com>,
+        "Doug Reiland" <doug.reiland@intel.com>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Peter Xu" <peterx@redhat.com>
+Date:   Sun, 08 Dec 2019 13:53:15 +0000
+Message-ID: <lsq.1575813165.887619822@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 64/72] USB: adutux: fix use-after-free on disconnect
+Subject: [PATCH 3.16 31/72] KVM: x86: Manually calculate reserved bits
+ when loading PDPTRS
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,50 +59,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 44efc269db7929f6275a1fa927ef082e533ecde0 upstream.
+commit 16cfacc8085782dab8e365979356ce1ca87fd6cc upstream.
 
-The driver was clearing its struct usb_device pointer, which it used as
-an inverted disconnected flag, before deregistering the character device
-and without serialising against racing release().
+Manually generate the PDPTR reserved bit mask when explicitly loading
+PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
+current paging mode, which is unlikely to be PAE paging in the vast
+majority of flows that use load_pdptrs(), e.g. CR0 and CR4 emulation,
+__set_sregs(), etc...  This can cause KVM to incorrectly signal a bad
+PDPTR, or more likely, miss a reserved bit check and subsequently fail
+a VM-Enter due to a bad VMCS.GUEST_PDPTR.
 
-This could lead to a use-after-free if a racing release() callback
-observes the cleared pointer and frees the driver data before
-disconnect() is finished with it.
+Add a one off helper to generate the reserved bits instead of sharing
+code across the MMU's calculations and the PDPTR emulation.  The PDPTR
+reserved bits are basically set in stone, and pushing a helper into
+the MMU's calculation adds unnecessary complexity without improving
+readability.
 
-This could also lead to NULL-pointer dereferences in a racing open().
+Oppurtunistically fix/update the comment for load_pdptrs().
 
-Fixes: f08812d5eb8f ("USB: FIx locks and urb->status in adutux (updated)")
-Reported-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
-Tested-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20190925092913.8608-1-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Note, the buggy commit also introduced a deliberate functional change,
+"Also remove bit 5-6 from rsvd_bits_mask per latest SDM.", which was
+effectively (and correctly) reverted by commit cd9ae5fe47df ("KVM: x86:
+Fix page-tables reserved bits").  A bit of SDM archaeology shows that
+the SDM from late 2008 had a bug (likely a copy+paste error) where it
+listed bits 6:5 as AVL and A for PDPTEs used for 4k entries but reserved
+for 2mb entries.  I.e. the SDM contradicted itself, and bits 6:5 are and
+always have been reserved.
+
+Fixes: 20c466b56168d ("KVM: Use rsvd_bits_mask in load_pdptrs()")
+Cc: Nadav Amit <nadav.amit@gmail.com>
+Reported-by: Doug Reiland <doug.reiland@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/misc/adutux.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
---- a/drivers/usb/misc/adutux.c
-+++ b/drivers/usb/misc/adutux.c
-@@ -799,14 +799,15 @@ static void adu_disconnect(struct usb_in
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -465,8 +465,14 @@ int kvm_read_nested_guest_page(struct kv
+ 				       data, offset, len, access);
+ }
  
- 	dev = usb_get_intfdata(interface);
- 
--	mutex_lock(&dev->mtx);	/* not interruptible */
--	dev->udev = NULL;	/* poison */
- 	usb_deregister_dev(interface, &adu_class);
--	mutex_unlock(&dev->mtx);
- 
- 	mutex_lock(&adutux_mutex);
- 	usb_set_intfdata(interface, NULL);
- 
-+	mutex_lock(&dev->mtx);	/* not interruptible */
-+	dev->udev = NULL;	/* poison */
-+	mutex_unlock(&dev->mtx);
++static inline u64 pdptr_rsvd_bits(struct kvm_vcpu *vcpu)
++{
++	return rsvd_bits(cpuid_maxphyaddr(vcpu), 63) | rsvd_bits(5, 8) |
++	       rsvd_bits(1, 2);
++}
 +
- 	/* if the device is not opened, then we clean up right now */
- 	if (!dev->open_count)
- 		adu_delete(dev);
+ /*
+- * Load the pae pdptrs.  Return true is they are all valid.
++ * Load the pae pdptrs.  Return 1 if they are all valid, 0 otherwise.
+  */
+ int load_pdptrs(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu, unsigned long cr3)
+ {
+@@ -485,7 +491,7 @@ int load_pdptrs(struct kvm_vcpu *vcpu, s
+ 	}
+ 	for (i = 0; i < ARRAY_SIZE(pdpte); ++i) {
+ 		if (is_present_gpte(pdpte[i]) &&
+-		    (pdpte[i] & vcpu->arch.mmu.rsvd_bits_mask[0][2])) {
++		    (pdpte[i] & pdptr_rsvd_bits(vcpu))) {
+ 			ret = 0;
+ 			goto out;
+ 		}
 
