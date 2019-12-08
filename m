@@ -2,140 +2,159 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2407FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83781C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE8020637
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:41:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjJOMnNX"
+	by mail.kernel.org (Postfix) with ESMTP id 4C9B820706
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfLHFlT (ORCPT
+        id S1726387AbfLHFpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 00:41:19 -0500
-Received: from mail-il1-f178.google.com ([209.85.166.178]:41710 "EHLO
-        mail-il1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfLHFlS (ORCPT
+        Sun, 8 Dec 2019 00:45:10 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:44119 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfLHFpK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 00:41:18 -0500
-Received: by mail-il1-f178.google.com with SMTP id z90so9844818ilc.8;
-        Sat, 07 Dec 2019 21:41:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=zfMdFOoakf8Wg9qg01DxbmCM0vduPEB2PzzRtbTRZFA=;
-        b=FjJOMnNXPP5YU6mOAjCI/idcOdYEu5BeqdkCwzXCIHPV1ivqKYigNOPi2/0haX4JMZ
-         ft0TGLkI1/2ly90rMXydaaNXqM3OOGvoJ2V9ULcoEXGMtrTG6jAPMJPEQ/0onzJa26Dq
-         WrgXkIzUIIwaCre6UUPnmAY1gOzHTOyzJOw+Bwq/2NoaPdAPFPaLZpyT/GhuKNamx2sE
-         gK2itPMIMXgRiWnfoLbE6YEsXg9VCQo5QPcgvfjqTz6YsxpBY0i+8B1FJ/BFpQACAvHB
-         LMPqwm5fBtGlwICScdGJgoYeqkjJSummYaiO7m0E6GgPZY1BDcDzuxFQrrYzcnVvSyeR
-         DBsw==
+        Sun, 8 Dec 2019 00:45:10 -0500
+Received: by mail-il1-f199.google.com with SMTP id h87so8860617ild.11
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 21:45:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=zfMdFOoakf8Wg9qg01DxbmCM0vduPEB2PzzRtbTRZFA=;
-        b=ITAwGp6cwfhl0rVIV6Jpn5SI0iuO0JF1Ab8HErsl5pRfmy5wSz+VVGKv4Ps49Ppr8E
-         IaCdaGvN9dNs2aBWR0YU0R6Tx2a/lmaS2Gi1KSltObvO7+vzCgQKEUpdBlSRw/QDe6j0
-         40og8EGAxNnH3PVW48kP+G8rmls7fghhVXMUk9b1Cx+keGExnr2jeU4kT454c+p/K2+6
-         BTiUPqfRxL0zu3tsXamFKNOnaykqcpxljB2HMjfbqHlO215M7cTphNyBHkFg5I55pqLr
-         XuwzW/MWwZQpxOYLOOwseIR+DF9jA5xwRjX2sFN7Pi43xhSt3U7XVbKx8i0AMsxw3PUM
-         +oVQ==
-X-Gm-Message-State: APjAAAX2cSO/q+SD6dy/uwho8GB/gKHPzUYDOfd2UmSB7U39wMl2RCk/
-        vRNO5VdMoZRZxhmHlOlyKhSMwjuQQOOvSFn6b83ncw==
-X-Google-Smtp-Source: APXvYqxTT4JgxTIaDSPkefc1oUQdvE27nRxy8yvnTKO6Z2i+HMDktu+ZsDkQ33V6tSLYygOW6Y/QD3H7A+Vsm51bX8Y=
-X-Received: by 2002:a92:4883:: with SMTP id j3mr4476364ilg.272.1575783677400;
- Sat, 07 Dec 2019 21:41:17 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=MTe2qzn3l3HhjLyhnGZbKSX1tp0E1VU2WlXpFjF8hAI=;
+        b=NAYo2IciAu6RARg/ltRVwCN+joF4KDxXo93FTFLOJSYHS+Tw0fDUnGk+9cJ1YX2G61
+         Uq29OtQLPp0lGRm1IQwRZ7fr72z4Ig+ak6SQQUhXpSbmNAENq0nLm6RoF9slnwtAwVuo
+         HuIpusbbalqkqw6ybxm8PGqLMNMJCkeFEaQs8K/PwQrFsM+9FrJQWAJ7NJguyYGLU3Z7
+         aRJwWQazoTE3WNJ8gFyQhGJ8YL/97s49MzbJoYTt4Kbqc8/iBCj9uvX2mmJM/PnhtVyJ
+         lmpko+MKqBlJJYSVPPTfjLDYVQiVU+AinK9Yjs9AHkpnaGLWMcb+QcADTqUOuG0WvmQ6
+         2Zgw==
+X-Gm-Message-State: APjAAAXGQ1hwS2V3cyBTV7DZuNCOhvtbkBSW91H3jVTt87K1uwgkdqnP
+        PiTAItbXi4FOJMhJwJ/gi2n+5Hi20ccz6jRMoOXytTQ8sE5R
+X-Google-Smtp-Source: APXvYqxW47nvOh4dAUBDxjFaJuQSozp3vnJuHfQxbvXfs4l3Wt7CDKsCLcfmZfhyO0rgYJT2Fu+2v+hMe6MLmn1D/aZkB1jHYeL+
 MIME-Version: 1.0
-From:   Steve French <smfrench@gmail.com>
-Date:   Sat, 7 Dec 2019 23:41:06 -0600
-Message-ID: <CAH2r5mvexWusg28E6jn7C-=_TFnnZC-MJB1JUh6zFqyapkPv8Q@mail.gmail.com>
-Subject: [GIT PULL] SMB3 Fixes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a5d:9eda:: with SMTP id a26mr17559388ioe.238.1575783909020;
+ Sat, 07 Dec 2019 21:45:09 -0800 (PST)
+Date:   Sat, 07 Dec 2019 21:45:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000023dba505992ac8aa@google.com>
+Subject: memory leak in fasync_helper
+From:   syzbot <syzbot+4b1fe8105f8044a26162@syzkaller.appspotmail.com>
+To:     bfields@fieldses.org, jlayton@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull the following changes since commit
-21b26d2679584c6a60e861aa3e5ca09a6bab0633:
+Hello,
 
-  Merge tag '5.5-rc-smb3-fixes' of
-git://git.samba.org/sfrench/cifs-2.6 (2019-11-30 11:10:39 -0800)
+syzbot found the following crash on:
 
-are available in the Git repository at:
+HEAD commit:    bf929479 Merge branch 'for-linus' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=123e91e2e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=874c75a332209d41
+dashboard link: https://syzkaller.appspot.com/bug?extid=4b1fe8105f8044a26162
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=120faee2e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=178a0ef6e00000
 
-  git://git.samba.org/sfrench/cifs-2.6.git tags/5.5-rc-smb3-fixes-part2
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4b1fe8105f8044a26162@syzkaller.appspotmail.com
 
-for you to fetch changes up to 231e2a0ba56733c95cb77d8920e76502b2134e72:
+BUG: memory leak
+unreferenced object 0xffff88812a4082a0 (size 48):
+   comm "syz-executor670", pid 6989, jiffies 4294952355 (age 19.520s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 01 46 00 00 03 00 00 00  .........F......
+     00 00 00 00 00 00 00 00 00 6b 05 1f 81 88 ff ff  .........k......
+   backtrace:
+     [<000000002a74b343>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000002a74b343>] slab_post_alloc_hook mm/slab.h:586 [inline]
+     [<000000002a74b343>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000002a74b343>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000fa370506>] fasync_alloc fs/fcntl.c:895 [inline]
+     [<00000000fa370506>] fasync_add_entry fs/fcntl.c:953 [inline]
+     [<00000000fa370506>] fasync_helper+0x37/0xa9 fs/fcntl.c:982
+     [<000000006c3eaaf1>] sock_fasync+0x4d/0xa0 net/socket.c:1293
+     [<0000000098076f55>] ioctl_fioasync fs/ioctl.c:550 [inline]
+     [<0000000098076f55>] do_vfs_ioctl+0x409/0x810 fs/ioctl.c:655
+     [<00000000df24d2b9>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
+     [<000000003fec9c80>] __do_sys_ioctl fs/ioctl.c:720 [inline]
+     [<000000003fec9c80>] __se_sys_ioctl fs/ioctl.c:718 [inline]
+     [<000000003fec9c80>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
+     [<000000002bebbfe6>] do_syscall_64+0x73/0x1f0  
+arch/x86/entry/common.c:290
+     [<00000000722d8431>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-  smb3: improve check for when we send the security descriptor context
-on create (2019-12-07 17:38:22 -0600)
+BUG: memory leak
+unreferenced object 0xffff888128cdf240 (size 48):
+   comm "syz-executor670", pid 6990, jiffies 4294952942 (age 13.650s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 01 46 00 00 03 00 00 00  .........F......
+     00 00 00 00 00 00 00 00 00 d8 02 19 81 88 ff ff  ................
+   backtrace:
+     [<000000002a74b343>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000002a74b343>] slab_post_alloc_hook mm/slab.h:586 [inline]
+     [<000000002a74b343>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000002a74b343>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000fa370506>] fasync_alloc fs/fcntl.c:895 [inline]
+     [<00000000fa370506>] fasync_add_entry fs/fcntl.c:953 [inline]
+     [<00000000fa370506>] fasync_helper+0x37/0xa9 fs/fcntl.c:982
+     [<000000006c3eaaf1>] sock_fasync+0x4d/0xa0 net/socket.c:1293
+     [<0000000098076f55>] ioctl_fioasync fs/ioctl.c:550 [inline]
+     [<0000000098076f55>] do_vfs_ioctl+0x409/0x810 fs/ioctl.c:655
+     [<00000000df24d2b9>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
+     [<000000003fec9c80>] __do_sys_ioctl fs/ioctl.c:720 [inline]
+     [<000000003fec9c80>] __se_sys_ioctl fs/ioctl.c:718 [inline]
+     [<000000003fec9c80>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
+     [<000000002bebbfe6>] do_syscall_64+0x73/0x1f0  
+arch/x86/entry/common.c:290
+     [<00000000722d8431>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-----------------------------------------------------------------
-9 cifs/smb3 fixes:
-      - one fix for stable (oops during oplock break)
-      - two timestamp fixes including important one for updating mtime at close
-           to avoid stale metadata caching issue on dirty files (also
-improves perf
-           by using SMB2_CLOSE_FLAG_POSTQUERY_ATTRIB over the wire)
-      - two fixes for "modefromsid" mount option for file create
-            (now allows mode bits to be set more atomically and
-accurately on create
-            by adding "sd_context" on create when modefromsid
-specified on mount)
-       - two fixes for multichannel found in testing this week against
-different servers
-       - two small cleanup patches
-----------------------------------------------------------------
-Aurelien Aptel (1):
-      cifs: fix possible uninitialized access and race on iface_list
-
-Colin Ian King (1):
-      cifs: remove redundant assignment to pointer pneg_ctxt
-
-Deepa Dinamani (1):
-      fs: cifs: Fix atime update check vs mtime
-
-Paulo Alcantara (SUSE) (1):
-      cifs: Fix lookup of SMB connections on multichannel
-
-Pavel Shilovsky (1):
-      CIFS: Fix NULL-pointer dereference in smb2_push_mandatory_locks
-
-Steve French (4):
-      smb3: remove unused flag passed into close functions
-      smb3: query attributes on file close
-      smb3: fix mode passed in on create for modetosid mount option
-      smb3: improve check for when we send the security descriptor
-context on create
-
- fs/cifs/cifsacl.c   |  42 ++++++++++++++++----------
- fs/cifs/cifsacl.h   |  32 ++++++++++----------
- fs/cifs/cifsglob.h  |   4 +++
- fs/cifs/cifsproto.h |   1 +
- fs/cifs/connect.c   |   6 +++-
- fs/cifs/file.c      |  11 ++++---
- fs/cifs/inode.c     |   2 +-
- fs/cifs/sess.c      |  32 ++++++++++++++++++--
- fs/cifs/smb2inode.c |   2 +-
- fs/cifs/smb2ops.c   |  49 +++++++++++++++++++++++++++---
- fs/cifs/smb2pdu.c   | 128
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------
- fs/cifs/smb2pdu.h   |  21 +++++++++++++
- fs/cifs/smb2proto.h |   7 +++--
- 13 files changed, 265 insertions(+), 72 deletions(-)
+BUG: memory leak
+unreferenced object 0xffff888128cdff60 (size 48):
+   comm "syz-executor670", pid 6991, jiffies 4294953529 (age 7.780s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 01 46 00 00 03 00 00 00  .........F......
+     00 00 00 00 00 00 00 00 00 63 05 1f 81 88 ff ff  .........c......
+   backtrace:
+     [<000000002a74b343>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000002a74b343>] slab_post_alloc_hook mm/slab.h:586 [inline]
+     [<000000002a74b343>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000002a74b343>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000fa370506>] fasync_alloc fs/fcntl.c:895 [inline]
+     [<00000000fa370506>] fasync_add_entry fs/fcntl.c:953 [inline]
+     [<00000000fa370506>] fasync_helper+0x37/0xa9 fs/fcntl.c:982
+     [<000000006c3eaaf1>] sock_fasync+0x4d/0xa0 net/socket.c:1293
+     [<0000000098076f55>] ioctl_fioasync fs/ioctl.c:550 [inline]
+     [<0000000098076f55>] do_vfs_ioctl+0x409/0x810 fs/ioctl.c:655
+     [<00000000df24d2b9>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
+     [<000000003fec9c80>] __do_sys_ioctl fs/ioctl.c:720 [inline]
+     [<000000003fec9c80>] __se_sys_ioctl fs/ioctl.c:718 [inline]
+     [<000000003fec9c80>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
+     [<000000002bebbfe6>] do_syscall_64+0x73/0x1f0  
+arch/x86/entry/common.c:290
+     [<00000000722d8431>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
 
---
-Thanks,
 
-Steve
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
