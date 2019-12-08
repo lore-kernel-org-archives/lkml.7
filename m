@@ -2,94 +2,74 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3D8C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 14:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2585C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 14:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E10206E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 14:50:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Figp//I1"
+	by mail.kernel.org (Postfix) with ESMTP id B2FDB20637
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 14:55:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfLHOuB (ORCPT
+        id S1726538AbfLHOz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 09:50:01 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34277 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfLHOuA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 09:50:00 -0500
-Received: by mail-pl1-f195.google.com with SMTP id h13so4697540plr.1;
-        Sun, 08 Dec 2019 06:50:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H1ELSVHsVknGp/11Yyt/FGXIqph8XGH0LeCl+av56UI=;
-        b=Figp//I1vhQxA6Y9DOowovKWTdMAMf/EKLfh/wVhrbWN9rW/lQWafWPT6xZ9LRtJu6
-         icmLYGw26FTEHDzskHQxofdJTd/sstr3ZBC99YceBlYNSlInyZ5DkTJwflFDQzgltEMd
-         6Q/DjYE9pREd03OjgTQ8pgxj4pmnrMjAT3Vy+1jYYELvPQ8Ttj4cs0JJWgdTnztRCG3d
-         5aKHO8SbMFCsMoMFoJkJtRFxg79sZmYzZVaJcl9ijGaohohs7mSBOZTCUJvNpkeQFdJt
-         cbcTiCpynerQZqrPXnuMGhTeGcdshX7g3n4/QFeyYXOiaiRybb3QvY5Nd1Xz3C85uWnm
-         A4LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H1ELSVHsVknGp/11Yyt/FGXIqph8XGH0LeCl+av56UI=;
-        b=rYoPjQJ9z3IuZITwd5kacK46GuOmAjmpUcGfGJcocxHhIWmnAJbZOj15lxb38feEOR
-         wNx+lftxNyEQdFskenv7q9GcNAPmnj8tS+MxkZLRaggk512IT2chioV4mIdlbT27nWoA
-         5N1OdzBIzjT1ipWDhHH71Y49PS00rRipyzTbv0my9TnV481HYBEfz4e0nmEq1h+6tMZA
-         I+pohSROc3qvAYwMIXwTCRSGXPnOxgoFMeCdHYpy/u6SGf3zxsm8rWBIvfxCh7q7s1x5
-         0y+2z/iOc526aoUSft4PTQOgahZHkkR3kMlxuTVGxH+KuixqSc5UVc/LrExMbQusqXkB
-         iqDA==
-X-Gm-Message-State: APjAAAXc9mmultpr5OAzLXKw67nIt1Z7TvoPGHPzx8Twb6EkNh7feRLl
-        nOSS/r7PFXOqPoO0HfoCUjrjGXDX
-X-Google-Smtp-Source: APXvYqzSbwhdioteDX0lL/VPl2Y2j1hoQNvl8W3Pkm1S9rNfr3u5Y1I37v6pJLUEygAbg5rl9DdpwQ==
-X-Received: by 2002:a17:902:ab98:: with SMTP id f24mr25113614plr.257.1575816599906;
-        Sun, 08 Dec 2019 06:49:59 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y144sm24570986pfb.188.2019.12.08.06.49.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Dec 2019 06:49:59 -0800 (PST)
-Subject: Re: [PATCH 3.16 00/72] 3.16.79-rc1 review
-To:     Ben Hutchings <ben@decadent.org.uk>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        Denis Kirjanov <kda@linux-powerpc.org>
-References: <lsq.1575813164.154362148@decadent.org.uk>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <13922804-86b3-2f3f-5b59-3fe19afbfeef@roeck-us.net>
-Date:   Sun, 8 Dec 2019 06:49:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Sun, 8 Dec 2019 09:55:28 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:33340 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726308AbfLHOz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Dec 2019 09:55:28 -0500
+Received: from muedsl-82-207-238-043.citykom.de ([82.207.238.43] helo=phil.fritz.box)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1idxy1-00043q-L8; Sun, 08 Dec 2019 15:55:25 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     linux-rockchip@lists.infradead.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH 3/3] arm64: dts: rockchip: enable the gpu on px30-evb
+Date:   Sun,  8 Dec 2019 15:55:08 +0100
+Message-Id: <20191208145508.3124-3-heiko@sntech.de>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191208145508.3124-1-heiko@sntech.de>
+References: <20191208145508.3124-1-heiko@sntech.de>
 MIME-Version: 1.0
-In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/8/19 5:52 AM, Ben Hutchings wrote:
-> This is the start of the stable review cycle for the 3.16.79 release.
-> There are 72 patches in this series, which will be posted as responses
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue Dec 10 18:00:00 UTC 2019.
-> Anything received after that time might be too late.
-> 
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-Build results:
-	total: 136 pass: 136 fail: 0
-Qemu test results:
-	total: 229 pass: 229 fail: 0
+The px30 has a Mali Bifrost gpu, so enable it on the evb board
+and connect it with its supplying regulator.
 
-Guenter
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+---
+ arch/arm64/boot/dts/rockchip/px30-evb.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/px30-evb.dts b/arch/arm64/boot/dts/rockchip/px30-evb.dts
+index f2fcca21c04d..180995a590c1 100644
+--- a/arch/arm64/boot/dts/rockchip/px30-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/px30-evb.dts
+@@ -132,6 +132,11 @@ &gmac {
+ 	status = "okay";
+ };
+ 
++&gpu {
++	mali-supply = <&vdd_log>;
++	status = "okay";
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+-- 
+2.24.0
+
