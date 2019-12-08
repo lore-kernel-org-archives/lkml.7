@@ -2,107 +2,154 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519D6C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 18:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E12C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 18:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A48205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 18:05:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575828326;
-	bh=r4FhTC/6xvh6w6pD7bept1+KbN5XHcZPNqJ9cWc1TA8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EDCt+4+0e6pNNmXrY7+mXIoQkI344uOw357ubGNNb/rNQKT/ysQBXqtK26gjfLR9w
-	 S7QqJyt6gtow1djSYm2Br+G/ARiwRpQmJf4/L5nSkNcoheEVN9Rl+3TwrA4FgEJkyP
-	 RIFuYnBqeA7xFGkUNy1GrRoL7zkZ7N09ztuRN080=
+	by mail.kernel.org (Postfix) with ESMTP id 1EEEF206D6
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 18:05:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="K319RU8L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfLHSFM (ORCPT
+        id S1726598AbfLHSF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 13:05:12 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36719 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbfLHSFL (ORCPT
+        Sun, 8 Dec 2019 13:05:29 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38854 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfLHSF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 13:05:11 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n12so8936674lfe.3
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 10:05:10 -0800 (PST)
+        Sun, 8 Dec 2019 13:05:29 -0500
+Received: by mail-oi1-f194.google.com with SMTP id b8so4365669oiy.5;
+        Sun, 08 Dec 2019 10:05:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ABGlqVpN991a0nTMf6FEfD82UigkTYB16rwzNeGUA1o=;
-        b=fNvOByc3NZ0GAbRWTSkpquabTeoYcVtplUCgZggq3Aepi3EzJPLXx3abo3pWsDs5qf
-         sKNddR4IqoNSKmAJDSPx/RmG6lgfadYTYSOho6JTjI6xasLvp6XbhfV12IZg7Fxv9hB/
-         sv5caupH6WixLG01Msc9x2ZAIOHmQ87OQdy5A=
+        bh=mTKk2xaW6izThy3AlF0F8z6eeCX0vy7qq8T/sGHhvO8=;
+        b=K319RU8L98AdTYk+TFFH07liuRfMqrUGSHeB1yVizEaZI6tXBYIJ9U1sVAHlpPqkeV
+         8tT9kA6NvUJ6/a38fuTRpRIzIrjkaJosKJZy9PLidQKCmNHsJCabru0flsca74oTBtSs
+         IdKJzEC3hiUvqROeWgwGkV7LfATiSnJNBePgk8ilsolml224mUrQI9KxGk0LZjn+LhSs
+         nQl2G+dPsJAnsQj4j67dwKHH+6DyM17L2T76Gf9zhNekSINUnp0fNEZAwe4r4PtxmZGC
+         /CP1KywXsi2+YdqjsISyMOiL3rx8neF68UBtXhPwFwdg2qVq9WgHkxHgr8jmC26B4+4S
+         3CRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ABGlqVpN991a0nTMf6FEfD82UigkTYB16rwzNeGUA1o=;
-        b=s/hU5Pga91Ki1IWa2qDZjBxV2nn4cDcEGYqrNRz2nouswr8RmBRXxvq52k7DVXvBmC
-         6TxQmm2hM3+c6QN0b31RQqmbT4FY0UItiiEC6LD5GwPsakrHrNa2gnZQ+bR2bbPkwMlw
-         1y3vk0m9VN0oBSAHotZsEJHPmGhidHS2OVodQLfVkOs/wgdUtFhaK6lzzQDAeuCNSU/S
-         5kBlKDPz1anQlXqQ+wKS8Zx8FQT/7uJRMpmzFH3XehDT4dkkp2AZ9xlej3gYNZqARRzR
-         Th07A507vBwRaIKITYjiLhQX1Lp9noRqe9oaunjP2/UAo4O5fHUTpuBL9itYtHAjn07s
-         CFMg==
-X-Gm-Message-State: APjAAAUmN0JDZiqUVyuUTJl/IHsMFjtj8HTVkHdIyczDoZC/EhPZEJpP
-        5ZcfkPgkgYbdis35co8LsqB1vaG74pA=
-X-Google-Smtp-Source: APXvYqx+fM1KtF14GamFD1u5wHme+fUnT5MVClWlXsGipD7Wn8Sy9XITlzljTFywDADyMbnvcxEpbg==
-X-Received: by 2002:a19:7d04:: with SMTP id y4mr8830478lfc.111.1575828309322;
-        Sun, 08 Dec 2019 10:05:09 -0800 (PST)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id j10sm1451667ljc.76.2019.12.08.10.05.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Dec 2019 10:05:08 -0800 (PST)
-Received: by mail-lj1-f174.google.com with SMTP id h23so13017770ljc.8
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 10:05:08 -0800 (PST)
-X-Received: by 2002:a05:651c:239:: with SMTP id z25mr12153795ljn.48.1575828307903;
- Sun, 08 Dec 2019 10:05:07 -0800 (PST)
+        bh=mTKk2xaW6izThy3AlF0F8z6eeCX0vy7qq8T/sGHhvO8=;
+        b=XEMwn+6chDA7Ui2F68+if5B07OrMQsExONFOcuE1j1MLutDfjv+iQakpWK6v3wZBMt
+         cwaqcZobWehTvDdgrONXntpd6Mpqfran3c2JZ74+TRT4V5zkh9I0LbfuPzU0Mf5q1HUs
+         dgXQ5B8GmdvZG8b9vwhcdLX6J6jwqvRwm6DIcSkuDwDR55tEc2yr3gGIlXgJCYANoZ0q
+         rCxq2aonE5O33KBiKkPTFyoH+9W4J80I08WzsWhXjRJF56Oes7KKI9WPoPwdojzaqVPE
+         cpVjLrsFYPkbc8SdvlVU7lRK2bsrztkB6g02kNNbmAgMIJKkkzOb/GW8h6Ge5flSG5BN
+         53mg==
+X-Gm-Message-State: APjAAAWtxbTkR685KXHE0m6BPWz0f3dkndb9SbqFc4YbU8S7kCtPDJOo
+        Bw0o+oIvGpmhzRb86auR0OsR0ceeQey02mB8xXQ9pmS9
+X-Google-Smtp-Source: APXvYqwP8CfD4nzvIAMNoJSw6b/s3OlcStAt+9hJdYSDZk0uioly16Xg/QyBa2wBGQwlsNfEfJZOqcez8T1vcmuzP90=
+X-Received: by 2002:aca:dc45:: with SMTP id t66mr15872202oig.39.1575828327856;
+ Sun, 08 Dec 2019 10:05:27 -0800 (PST)
 MIME-Version: 1.0
-References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
- <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wj42ROD+dj1Nix=X7Raa9YjLfXykFczy0BkMqAXsFeLVA@mail.gmail.com>
- <CAHk-=wga+oXMeMjftCKGT=BA=B2Ucfwx18C5eV-DcPwOAJ18Fg@mail.gmail.com>
- <CAHk-=wj9pprDUeoJd5EeN-2x7+GXdSsm44mSv1y9f5e7MrTZ2A@mail.gmail.com>
- <qsh5n2$3pu9$1@blaine.gmane.org> <CABA31DrsaqT-TsOVx=kbRBnuM5He53+=NLgwm94swY-x1UPjuA@mail.gmail.com>
-In-Reply-To: <CABA31DrsaqT-TsOVx=kbRBnuM5He53+=NLgwm94swY-x1UPjuA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 8 Dec 2019 10:04:51 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgteio3DVccVPZrD-dd9BNDM5128EQqCFxaEOb4Eu9H=w@mail.gmail.com>
-Message-ID: <CAHk-=wgteio3DVccVPZrD-dd9BNDM5128EQqCFxaEOb4Eu9H=w@mail.gmail.com>
-Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
-To:     Akemi Yagi <toracat@elrepo.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
+References: <20191206100218.480348-1-jbrunet@baylibre.com> <20191206100218.480348-5-jbrunet@baylibre.com>
+In-Reply-To: <20191206100218.480348-5-jbrunet@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sun, 8 Dec 2019 19:05:16 +0100
+Message-ID: <CAFBinCDMxf6tJt+bkfN7W5CMJrqZ+F1zTC=q8xmYtxg7gpEJxg@mail.gmail.com>
+Subject: Re: [PATCH 4/4] arm64: dts: meson: add libretech-pc boards support
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 8, 2019 at 8:46 AM Akemi Yagi <toracat@elrepo.org> wrote:
->
-> I forgot to mention that the aforementioned bug in make was originally
-> reported for Fedora. They now have a patched version of make
-> (make-4.2.1-15.fc32) in Rawhide.
+Hi Jerome,
 
-Yes, as mentioned I do expect it's some jobserver interaction - I've
-seen bad jobserver behavior before. But my 'make' hasn't been upgraded
-since May, as far as I can tell from my logs, so the huge performance
-regression was new.
+this is looking good overall - I have some questions / nit-picks below
 
-So the huge slowdown is real, and was triggered by the kernel changes.
-But yes, it's entirely possible - even likely - that it's due to a
-jobserver bug that ends up being sensitive to scheduling.
+On Fri, Dec 6, 2019 at 11:02 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
+[...]
+> +       adc_keys {
+on most boards we use "adc-keys" instead of "adc_keys"
 
-We do treat even "user space is buggy and shouldn't have done that" as
-a regression.
+[...]
+> +               button-onoff {
+> +                       label = "On/Off";
+> +                       linux,code = <KEY_VENDOR>;
+based on the label I assumed that the code is KEY_POWER
+why is KEY_VENDOR the better choice here?
 
-It's annoying. Timing-related issues are some of the worst to debug.
-Particularly when (at least I) primarily debug by looking at the code
-and trying to see what's wrong that way.
+[...]
+> +       cvbs-connector {
+> +               compatible = "composite-video-connector";
+> +               status = "disabled";
+is there CVBS on the board? if I remember correctly the VPU driver
+works fine when omitting the CVBS connector
+so if the board doesn't have it you may drop the whole node instead of
+keeping it disabled
 
-                Linus
+[...]
+> +       leds {
+> +               compatible = "gpio-leds";
+> +
+> +               green {
+> +                       label = "librecomputer:green:disk";
+you can use the "function" and "color" properties instead of the (now
+deprecated) "label"
+
+[...]
+> +&external_mdio {
+> +       external_phy: ethernet-phy@0 {
+> +               reg = <0>;
+it would be great to have a comment above which PHY is used on this board
+
+> +               max-speed = <1000>;
+> +               reset-assert-us = <10000>;
+> +               reset-deassert-us = <30000>;
+> +               reset-gpios = <&gpio GPIOZ_14 GPIO_ACTIVE_LOW>;
+> +               interrupt-parent = <&gpio_intc>;
+a comment like /* MAC_INTR on GPIOZ_15 */ would be great here
+> +               interrupts = <25 IRQ_TYPE_LEVEL_LOW>;
+
+[...]
+> +&pinctrl_periphs {
+> +       /*
+> +        * Make sure the reset pin of the usb HUB is driven high to take
+> +        * it out of reset.
+> +        */
+> +       usb1_rst_pins: usb1_rst_irq {
+> +               mux {
+> +                       groups = "GPIODV_3";
+> +                       function = "gpio_periphs";
+> +                       bias-disable;
+> +                       output-high;
+> +               };
+> +       };
+on other boards (like Odroid-C2) we use a GPIO hog for this. I'm not
+sure which one is better
+
+[...]
+> +&pinctrl_periphs {
+> +       /*
+> +        * Make sure the irq pin of the TYPE C controller is not driven
+> +        * by the SoC.
+is this because the SoC default configuration pulls the IRQ line LOW,
+which then generates "phantom" IRQs?
+
+[...]
+> +       fusb302@22 {
+typec-portc@22
+
+[...]
+> +               interrupt-parent = <&gpio_intc>;
+> +               interrupts = <59 IRQ_TYPE_LEVEL_LOW>;
+a comment above with the GPIO number would be great
+
+
+Martin
