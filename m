@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EEBC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1C7C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD476206DB
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:40:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6085D206D6
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575841233;
-	bh=Vh+GHB7iBE8UpmI2vtnLLcBJcO6gDTjsLLsxwAQWEfo=;
+	s=default; t=1575841237;
+	bh=Y2/+nRGil84kB1YAUg4GuMY135VpMF2/SHRBNBk3S98=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=bSyJwInMIYRT92s7CVCyBEHFXHGjkZeYjDn57dh2LtVoAdubRU38Djj76HlbYN4G/
-	 3fNaj2jJeVsqzbAQi/gdbdxDHrAcSfp0y3TdOx1NjYB9Vl5mhCtW27Wa8YAQfbkRjg
-	 vYx4MzlIe5ANBoW/Ov3mS41HDSSbwObMymYkacC8=
+	b=xd0HxEFsdREHUh6t3zHeFknj2IxfC/f6NWfbhIJkd3PXh1h+akN+QX/Xa9jaaWZJL
+	 KZTuh35RxmCUzPH9oB5la/v7t57NsELe0fd2c3/ONLNB/JMYJ3F3qmO7Ato3kWEBep
+	 lWPe26fnFdE2GWDAY4TtJpgpnVQbum/QdRJlV7zY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfLHVkd (ORCPT
+        id S1727021AbfLHVkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 16:40:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57534 "EHLO mail.kernel.org"
+        Sun, 8 Dec 2019 16:40:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726983AbfLHVkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 16:40:31 -0500
-Subject: Re: [GIT] Networking
+        id S1726975AbfLHVk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Dec 2019 16:40:29 -0500
+Subject: Re: [GIT PULL] SMB3 Fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575841230;
-        bh=Vh+GHB7iBE8UpmI2vtnLLcBJcO6gDTjsLLsxwAQWEfo=;
+        s=default; t=1575841229;
+        bh=Y2/+nRGil84kB1YAUg4GuMY135VpMF2/SHRBNBk3S98=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=KGdRCYRu1oRM3GXjWw1FQHIdcMnmAPFDDlMtRYnsS6vgKIL8A404SAW7+dnWG8eyf
-         Rx/8HCHxF4xL4FsozZ5FXm5Zc+q7Iqs5R94flEEFIn9DtizfH4VBLPD5qK/Wfum+jc
-         0em1DtERbbewM22k9YPSlbZPbLfW9o+IPl/QxYSw=
+        b=Y082qrptHZD0E7/ifr4VqTTP+mAuDh6J/p/7eiFyT3U05ed7XSQh+g027FQ9udIJu
+         rcmdYuzT0iFziELLrnUK0D/zXwNH11h0+ZFr4kLyic2du9DOlfhG7PcZV11WRjFepa
+         e4whye4doFlQZ2pXSunsGXZFtMrhNAM5OvzBW0rk=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191208.012032.1258816267132319518.davem@redhat.com>
-References: <20191208.012032.1258816267132319518.davem@redhat.com>
+In-Reply-To: <CAH2r5mvexWusg28E6jn7C-=_TFnnZC-MJB1JUh6zFqyapkPv8Q@mail.gmail.com>
+References: <CAH2r5mvexWusg28E6jn7C-=_TFnnZC-MJB1JUh6zFqyapkPv8Q@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191208.012032.1258816267132319518.davem@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
- refs/heads/master
-X-PR-Tracked-Commit-Id: 0fc75219fe9a3c90631453e9870e4f6d956f0ebc
+X-PR-Tracked-Message-Id: <CAH2r5mvexWusg28E6jn7C-=_TFnnZC-MJB1JUh6zFqyapkPv8Q@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git
+ tags/5.5-rc-smb3-fixes-part2
+X-PR-Tracked-Commit-Id: 231e2a0ba56733c95cb77d8920e76502b2134e72
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 95e6ba5133163f8241c9ea2439369cec0452fec6
-Message-Id: <157584123092.22418.18372587348625646538.pr-tracker-bot@kernel.org>
-Date:   Sun, 08 Dec 2019 21:40:30 +0000
-To:     David Miller <davem@redhat.com>
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: a78f7cdddbbb2bb2ed6851fbb792072570517650
+Message-Id: <157584122926.22418.7130546428545261488.pr-tracker-bot@kernel.org>
+Date:   Sun, 08 Dec 2019 21:40:29 +0000
+To:     Steve French <smfrench@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 08 Dec 2019 01:20:32 -0800 (PST):
+The pull request you sent on Sat, 7 Dec 2019 23:41:06 -0600:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git refs/heads/master
+> git://git.samba.org/sfrench/cifs-2.6.git tags/5.5-rc-smb3-fixes-part2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/95e6ba5133163f8241c9ea2439369cec0452fec6
+https://git.kernel.org/torvalds/c/a78f7cdddbbb2bb2ed6851fbb792072570517650
 
 Thank you!
 
