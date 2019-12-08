@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5512C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83BFC43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92EA5206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4876206F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfLHNzw (ORCPT
+        id S1727264AbfLHN4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:55:52 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60502 "EHLO
+        Sun, 8 Dec 2019 08:56:03 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60430 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726903AbfLHNyq (ORCPT
+        by vger.kernel.org with ESMTP id S1726883AbfLHNyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 08:54:46 -0500
+        Sun, 8 Dec 2019 08:54:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1H-0007iu-HN; Sun, 08 Dec 2019 13:54:43 +0000
+        id 1idx1G-0007hK-6V; Sun, 08 Dec 2019 13:54:42 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1G-0002QJ-7I; Sun, 08 Dec 2019 13:54:42 +0000
+        id 1idx1E-0002P1-Jc; Sun, 08 Dec 2019 13:54:40 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,12 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+863724e7128e14b26732@syzkaller.appspotmail.com,
-        "Marc Kleine-Budde" <mkl@pengutronix.de>,
-        "Johan Hovold" <johan@kernel.org>
-Date:   Sun, 08 Dec 2019 13:53:56 +0000
-Message-ID: <lsq.1575813165.369617906@decadent.org.uk>
+        "Herbert Xu" <herbert@gondor.apana.org.au>
+Date:   Sun, 08 Dec 2019 13:53:41 +0000
+Message-ID: <lsq.1575813165.245786844@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 72/72] can: peak_usb: fix slab info leak
+Subject: [PATCH 3.16 57/72] crypto: user - Fix crypto_alg_match race
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,36 +54,118 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit f7a1337f0d29b98733c8824e165fca3371d7d4fd upstream.
+commit 016baaa1183bb0c5fb2a7de42413bba8a51c1bc8 upstream.
 
-Fix a small slab info leak due to a failure to clear the command buffer
-at allocation.
+The function crypto_alg_match returns an algorithm without taking
+any references on it.  This means that the algorithm can be freed
+at any time, therefore all users of crypto_alg_match are buggy.
 
-The first 16 bytes of the command buffer are always sent to the device
-in pcan_usb_send_cmd() even though only the first two may have been
-initialised in case no argument payload is provided (e.g. when waiting
-for a response).
+This patch fixes this by taking a reference count on the algorithm
+to prevent such races.
 
-Fixes: bb4785551f64 ("can: usb: PEAK-System Technik USB adapters driver core")
-Reported-by: syzbot+863724e7128e14b26732@syzkaller.appspotmail.com
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/can/usb/peak_usb/pcan_usb_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ crypto/crypto_user.c | 39 +++++++++++++++++++++++++++++----------
+ 1 file changed, 29 insertions(+), 10 deletions(-)
 
---- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-@@ -732,7 +732,7 @@ static int peak_usb_create_dev(struct pe
- 	dev = netdev_priv(netdev);
+--- a/crypto/crypto_user.c
++++ b/crypto/crypto_user.c
+@@ -65,10 +65,14 @@ static struct crypto_alg *crypto_alg_mat
+ 		else if (!exact)
+ 			match = !strcmp(q->cra_name, p->cru_name);
  
- 	/* allocate a buffer large enough to send commands */
--	dev->cmd_buf = kmalloc(PCAN_USB_MAX_CMD_LEN, GFP_KERNEL);
-+	dev->cmd_buf = kzalloc(PCAN_USB_MAX_CMD_LEN, GFP_KERNEL);
- 	if (!dev->cmd_buf) {
- 		err = -ENOMEM;
- 		goto lbl_free_candev;
+-		if (match) {
+-			alg = q;
+-			break;
+-		}
++		if (!match)
++			continue;
++
++		if (unlikely(!crypto_mod_get(q)))
++			continue;
++
++		alg = q;
++		break;
+ 	}
+ 
+ 	up_read(&crypto_alg_sem);
+@@ -211,9 +215,10 @@ static int crypto_report(struct sk_buff
+ 	if (!alg)
+ 		return -ENOENT;
+ 
++	err = -ENOMEM;
+ 	skb = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_ATOMIC);
+ 	if (!skb)
+-		return -ENOMEM;
++		goto drop_alg;
+ 
+ 	info.in_skb = in_skb;
+ 	info.out_skb = skb;
+@@ -221,6 +226,10 @@ static int crypto_report(struct sk_buff
+ 	info.nlmsg_flags = 0;
+ 
+ 	err = crypto_report_alg(alg, &info);
++
++drop_alg:
++	crypto_mod_put(alg);
++
+ 	if (err)
+ 		return err;
+ 
+@@ -293,6 +302,7 @@ static int crypto_update_alg(struct sk_b
+ 
+ 	up_write(&crypto_alg_sem);
+ 
++	crypto_mod_put(alg);
+ 	crypto_remove_final(&list);
+ 
+ 	return 0;
+@@ -303,6 +313,7 @@ static int crypto_del_alg(struct sk_buff
+ {
+ 	struct crypto_alg *alg;
+ 	struct crypto_user_alg *p = nlmsg_data(nlh);
++	int err;
+ 
+ 	if (!netlink_capable(skb, CAP_NET_ADMIN))
+ 		return -EPERM;
+@@ -319,13 +330,19 @@ static int crypto_del_alg(struct sk_buff
+ 	 * if we try to unregister. Unregistering such an algorithm without
+ 	 * removing the module is not possible, so we restrict to crypto
+ 	 * instances that are build from templates. */
++	err = -EINVAL;
+ 	if (!(alg->cra_flags & CRYPTO_ALG_INSTANCE))
+-		return -EINVAL;
++		goto drop_alg;
+ 
+-	if (atomic_read(&alg->cra_refcnt) != 1)
+-		return -EBUSY;
++	err = -EBUSY;
++	if (atomic_read(&alg->cra_refcnt) > 2)
++		goto drop_alg;
+ 
+-	return crypto_unregister_instance(alg);
++	err = crypto_unregister_instance(alg);
++
++drop_alg:
++	crypto_mod_put(alg);
++	return err;
+ }
+ 
+ static struct crypto_alg *crypto_user_skcipher_alg(const char *name, u32 type,
+@@ -404,8 +421,10 @@ static int crypto_add_alg(struct sk_buff
+ 		return -EINVAL;
+ 
+ 	alg = crypto_alg_match(p, exact);
+-	if (alg)
++	if (alg) {
++		crypto_mod_put(alg);
+ 		return -EEXIST;
++	}
+ 
+ 	if (strlen(p->cru_driver_name))
+ 		name = p->cru_driver_name;
 
