@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28625C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F49FC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05069206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2615D20721
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfLHN4B (ORCPT
+        id S1726894AbfLHNyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:56:01 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60452 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726888AbfLHNyp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:45 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:59988 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726425AbfLHNyl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Dec 2019 08:54:41 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1F-0007gr-Pc; Sun, 08 Dec 2019 13:54:41 +0000
+        id 1idx1B-0007dQ-Ds; Sun, 08 Dec 2019 13:54:37 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1E-0002Op-4a; Sun, 08 Dec 2019 13:54:40 +0000
+        id 1idx1A-0002LW-QD; Sun, 08 Dec 2019 13:54:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Navid Emamdoost" <navid.emamdoost@gmail.com>,
-        "Ganapathi Bhat" <gbhat@marvell.com>
-Date:   Sun, 08 Dec 2019 13:53:39 +0000
-Message-ID: <lsq.1575813165.739849210@decadent.org.uk>
+        "Luis Araneda" <luaraneda@gmail.com>,
+        "Michal Simek" <michal.simek@xilinx.com>
+Date:   Sun, 08 Dec 2019 13:52:58 +0000
+Message-ID: <lsq.1575813165.3329877@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 55/72] mwifiex: pcie: Fix memory leak in
- mwifiex_pcie_alloc_cmdrsp_buf
+Subject: [PATCH 3.16 14/72] ARM: zynq: Use memcpy_toio instead of memcpy
+ on smp bring-up
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,35 +56,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Luis Araneda <luaraneda@gmail.com>
 
-commit db8fd2cde93227e566a412cf53173ffa227998bc upstream.
+commit b7005d4ef4f3aa2dc24019ffba03a322557ac43d upstream.
 
-In mwifiex_pcie_alloc_cmdrsp_buf, a new skb is allocated which should be
-released if mwifiex_map_pci_memory() fails. The release is added.
+This fixes a kernel panic on memcpy when
+FORTIFY_SOURCE is enabled.
 
-Fixes: fc3314609047 ("mwifiex: use pci_alloc/free_consistent APIs for PCIe")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Ganapathi Bhat <gbhat@marvell.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16: adjust filename]
+The initial smp implementation on commit aa7eb2bb4e4a
+("arm: zynq: Add smp support")
+used memcpy, which worked fine until commit ee333554fed5
+("ARM: 8749/1: Kconfig: Add ARCH_HAS_FORTIFY_SOURCE")
+enabled overflow checks at runtime, producing a read
+overflow panic.
+
+The computed size of memcpy args are:
+- p_size (dst): 4294967295 = (size_t) -1
+- q_size (src): 1
+- size (len): 8
+
+Additionally, the memory is marked as __iomem, so one of
+the memcpy_* functions should be used for read/write.
+
+Fixes: aa7eb2bb4e4a ("arm: zynq: Add smp support")
+Signed-off-by: Luis Araneda <luaraneda@gmail.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/mwifiex/pcie.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/mach-zynq/platsmp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/mwifiex/pcie.c
-+++ b/drivers/net/wireless/mwifiex/pcie.c
-@@ -876,8 +876,10 @@ static int mwifiex_pcie_alloc_cmdrsp_buf
- 	}
- 	skb_put(skb, MWIFIEX_UPLD_SIZE);
- 	if (mwifiex_map_pci_memory(adapter, skb, MWIFIEX_UPLD_SIZE,
--				   PCI_DMA_FROMDEVICE))
-+				   PCI_DMA_FROMDEVICE)) {
-+		kfree_skb(skb);
- 		return -1;
-+	}
- 
- 	card->cmdrsp_buf = skb;
+--- a/arch/arm/mach-zynq/platsmp.c
++++ b/arch/arm/mach-zynq/platsmp.c
+@@ -65,7 +65,7 @@ int zynq_cpun_start(u32 address, int cpu
+ 			* 0x4: Jump by mov instruction
+ 			* 0x8: Jumping address
+ 			*/
+-			memcpy((__force void *)zero, &zynq_secondary_trampoline,
++			memcpy_toio(zero, &zynq_secondary_trampoline,
+ 							trampoline_size);
+ 			writel(address, zero + trampoline_size);
  
 
