@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F527C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18918C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75442206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFD8E20721
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfLHNyj (ORCPT
+        id S1727202AbfLHN7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:54:39 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:59910 "EHLO
+        Sun, 8 Dec 2019 08:59:22 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:59922 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725939AbfLHNyi (ORCPT
+        by vger.kernel.org with ESMTP id S1726418AbfLHNyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 08:54:38 -0500
+        Sun, 8 Dec 2019 08:54:39 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1A-0007d0-K0; Sun, 08 Dec 2019 13:54:36 +0000
+        id 1idx1A-0007d3-Ol; Sun, 08 Dec 2019 13:54:36 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1A-0002KY-86; Sun, 08 Dec 2019 13:54:36 +0000
+        id 1idx1A-0002Ki-Al; Sun, 08 Dec 2019 13:54:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mark Brown" <broonie@kernel.org>,
-        "Jean-Michel Hautbois" <jhautbois@gmail.com>,
-        "Jean-Michel Hautbois" <jean-michel.hautbois@veo-labs.com>
-Date:   Sun, 08 Dec 2019 13:52:46 +0000
-Message-ID: <lsq.1575813165.808531661@decadent.org.uk>
+        "Jacek Anaszewski" <jacek.anaszewski@gmail.com>,
+        "Nick Stoughton" <nstoughton@logitech.com>,
+        "Pavel Machek" <pavel@ucw.cz>
+Date:   Sun, 08 Dec 2019 13:52:48 +0000
+Message-ID: <lsq.1575813165.827469937@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 02/72] ASoC: sgtl5000: fix VAG power up timing
+Subject: [PATCH 3.16 04/72] leds: leds-lp5562 allow firmware files up to
+ the maximum length
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,30 +57,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jean-Michel Hautbois <jhautbois@gmail.com>
+From: Nick Stoughton <nstoughton@logitech.com>
 
-commit c803cc2dcd722e08020c1ba63bb5ceece4a19fdb upstream.
+commit ed2abfebb041473092b41527903f93390d38afa7 upstream.
 
-When power up, a "pop" is heard on line-in and mic-in.
-An analysis of the PCM shows it lasts ~400ms
-and looks like a filter response.
-VAG power up should be delayed by 400ms as VAG power down is.
+Firmware files are in ASCII, using 2 hex characters per byte. The
+maximum length of a firmware string is therefore
 
-Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+16 (commands) * 2 (bytes per command) * 2 (characters per byte) = 64
+
+Fixes: ff45262a85db ("leds: add new LP5562 LED driver")
+Signed-off-by: Nick Stoughton <nstoughton@logitech.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/soc/codecs/sgtl5000.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/leds/leds-lp5562.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -175,6 +175,7 @@ static int power_vag_event(struct snd_so
- 	case SND_SOC_DAPM_POST_PMU:
- 		snd_soc_update_bits(w->codec, SGTL5000_CHIP_ANA_POWER,
- 			SGTL5000_VAG_POWERUP, SGTL5000_VAG_POWERUP);
-+		msleep(400);
- 		break;
+--- a/drivers/leds/leds-lp5562.c
++++ b/drivers/leds/leds-lp5562.c
+@@ -263,7 +263,11 @@ static void lp5562_firmware_loaded(struc
+ {
+ 	const struct firmware *fw = chip->fw;
  
- 	case SND_SOC_DAPM_PRE_PMD:
+-	if (fw->size > LP5562_PROGRAM_LENGTH) {
++	/*
++	 * the firmware is encoded in ascii hex character, with 2 chars
++	 * per byte
++	 */
++	if (fw->size > (LP5562_PROGRAM_LENGTH * 2)) {
+ 		dev_err(&chip->cl->dev, "firmware data size overflow: %zu\n",
+ 			fw->size);
+ 		return;
 
