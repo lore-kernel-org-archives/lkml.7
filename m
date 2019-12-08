@@ -2,103 +2,170 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B14C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990E6C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F21F206D6
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7094E206F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:13:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HQjxQZbn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbfLHVNq (ORCPT
+        id S1726780AbfLHVNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 16:13:46 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:55857 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfLHVNp (ORCPT
+        Sun, 8 Dec 2019 16:13:48 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37571 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfLHVNr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 16:13:45 -0500
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 4C24A200006;
-        Sun,  8 Dec 2019 21:13:41 +0000 (UTC)
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH] clk: meson: pll: Fix by 0 division in __pll_params_to_rate()
-Date:   Sun,  8 Dec 2019 22:22:06 +0100
-Message-Id: <20191208212206.16808-1-repk@triplefau.lt>
+        Sun, 8 Dec 2019 16:13:47 -0500
+Received: by mail-ot1-f66.google.com with SMTP id k14so10495072otn.4;
+        Sun, 08 Dec 2019 13:13:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0kwV+KswtHN7mYaC55RJRRsqfRs6Nx3Ld51+tu4vFoQ=;
+        b=HQjxQZbnHf+jlQhInZKQ+e1iABi36NuPsOr4suD1ytiVAWqgvu/W7LRx1NgoepTw8j
+         Z1rv9heWIOYCPxULSnCSR0DgvItmztDLABRtRbxqphZGpgeVeqEE+eaxJWWnWz2ERR95
+         cGDbPyfH+RJVuATL4CMm/9Uv6GGVyQxO2bfvHgzNqd93GxKlEZX43LSPhVApi5o9X9jT
+         im2oanflYmwpnIT5ORHJmHEi7BzHxi78oXaju1LFQRwXdkvqucP/ndJ6YOoCTyqvaHO1
+         HJ//4A6Hw6+3ECp8DgneeZnyoUOPb5NQs54Yyx8e3qBg3/oPz/WFrsQa2J8n0coJN2Qt
+         5yAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0kwV+KswtHN7mYaC55RJRRsqfRs6Nx3Ld51+tu4vFoQ=;
+        b=pITilW3+eXRBnoma9oo96+9W9VVKI/cTBJGYGv0eXRNYBo/tquXilX6QvRYoIttUS2
+         CX8f1PsGgFaD5LvfYRYH4V4Jr5Pr5ufPEDOb64Qg9OYG62r9vvkit/HPHt/2s0oqsQJa
+         XweAHGGYsem/7q4BmoS6xWZ2fXVNAjTijSq8jgND85N7T4I5JgZvQkHbmKCem4BiNgKl
+         HRpcRcYHWgbhgMzdsN+rm+O/rdXGshw961JfG6Fw7qASTikBFgMr/0N66wKuD/sXcmP+
+         CBoRxl0Sr3T/bYyYZOauo1upExL2M8qSRKt5jXDBuxUl1hLj1Ytzu4PSOycuy5nA2qfg
+         fyzA==
+X-Gm-Message-State: APjAAAUlyhJzzdIgQq/33jRP9Xti19j1s/P6Si+wOw6k0fQlzSApf5OL
+        Gd/AcROqpVpsXe+0fo28Z8c=
+X-Google-Smtp-Source: APXvYqy7bZUrmTKtzvftWC/PbGIijpAIJL/5cklq+ZEYSotaEgnaQ+SE80XCvspKE8h+QUbEWABNJQ==
+X-Received: by 2002:a9d:5552:: with SMTP id h18mr18315822oti.122.1575839626207;
+        Sun, 08 Dec 2019 13:13:46 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id e65sm6099639otb.62.2019.12.08.13.13.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Dec 2019 13:13:45 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH v3] media: v4l2-device.h: Explicitly compare grp{id,mask} to zero in v4l2_device macros
+Date:   Sun,  8 Dec 2019 14:11:40 -0700
+Message-Id: <20191208211139.18514-1-natechancellor@gmail.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191105045907.26123-1-natechancellor@gmail.com>
+References: <20191105045907.26123-1-natechancellor@gmail.com>
 MIME-Version: 1.0
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some meson pll registers can be initialized with 0 as N value, introducing
-the following division by 0 when computing rate :
+When building with Clang + -Wtautological-constant-compare, several of
+the ivtv and cx18 drivers warn along the lines of:
 
-  UBSAN: Undefined behaviour in drivers/clk/meson/clk-pll.c:75:9
-  division by zero
-  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc3-608075-g86c9af8630e1-dirty #400
-  Call trace:
-   dump_backtrace+0x0/0x1c0
-   show_stack+0x14/0x20
-   dump_stack+0xc4/0x100
-   ubsan_epilogue+0x14/0x68
-   __ubsan_handle_divrem_overflow+0x98/0xb8
-   __pll_params_to_rate+0xdc/0x140
-   meson_clk_pll_recalc_rate+0x278/0x3a0
-   __clk_register+0x7c8/0xbb0
-   devm_clk_hw_register+0x54/0xc0
-   meson_eeclkc_probe+0xf4/0x1a0
-   platform_drv_probe+0x54/0xd8
-   really_probe+0x16c/0x438
-   driver_probe_device+0xb0/0xf0
-   device_driver_attach+0x94/0xa0
-   __driver_attach+0x70/0x108
-   bus_for_each_dev+0xd8/0x128
-   driver_attach+0x30/0x40
-   bus_add_driver+0x1b0/0x2d8
-   driver_register+0xbc/0x1d0
-   __platform_driver_register+0x78/0x88
-   axg_driver_init+0x18/0x20
-   do_one_initcall+0xc8/0x24c
-   kernel_init_freeable+0x2b0/0x344
-   kernel_init+0x10/0x128
-   ret_from_fork+0x10/0x18
+ drivers/media/pci/cx18/cx18-driver.c:1005:21: warning: converting the
+ result of '<<' to a boolean always evaluates to true
+ [-Wtautological-constant-compare]
+                         cx18_call_hw(cx, CX18_HW_GPIO_RESET_CTRL,
+                                         ^
+ drivers/media/pci/cx18/cx18-cards.h:18:37: note: expanded from macro
+ 'CX18_HW_GPIO_RESET_CTRL'
+ #define CX18_HW_GPIO_RESET_CTRL         (1 << 6)
+                                           ^
+ 1 warning generated.
 
-This checks if N is null before doing the division.
+This warning happens because the shift operation is implicitly converted
+to a boolean in v4l2_device_mask_call_all before being negated. This can
+be solved by just comparing the mask result to 0 explicitly so that
+there is no boolean conversion. The ultimate goal is to enable
+-Wtautological-compare globally because there are several subwarnings
+that would be helpful to have.
 
-Fixes: 8289aafa4f36 ("clk: meson: improve pll driver results with frac")
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+For visual consistency and avoidance of these warnings in the future,
+all of the implicitly boolean conversions in the v4l2_device macros
+are converted to explicit ones as well.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/752
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- drivers/clk/meson/clk-pll.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
-index ddb1e5634739..6649659f216a 100644
---- a/drivers/clk/meson/clk-pll.c
-+++ b/drivers/clk/meson/clk-pll.c
-@@ -66,6 +66,10 @@ static unsigned long __pll_params_to_rate(unsigned long parent_rate,
- 					 (1 << pll->frac.width));
- 	}
+v1 -> v2: https://lore.kernel.org/lkml/20191024201240.49063-1-natechancellor@gmail.com/
+
+* Fix typo in commit message
+* Add Nick's Reviewed-by.
+
+v2 -> v3: https://lore.kernel.org/lkml/20191105045907.26123-1-natechancellor@gmail.com/
+
+* Improve reasoning for change (Ezequiel)
+* Patch all implicit boolean conversions (Ezequiel)
+* Add Ezequiel's reviewed-by.
+
+ include/media/v4l2-device.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/include/media/v4l2-device.h b/include/media/v4l2-device.h
+index 5f36e0d2ede6..95353ae476a1 100644
+--- a/include/media/v4l2-device.h
++++ b/include/media/v4l2-device.h
+@@ -371,7 +371,7 @@ static inline bool v4l2_device_supports_requests(struct v4l2_device *v4l2_dev)
+ 		struct v4l2_subdev *__sd;				\
+ 									\
+ 		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
+-			!(grpid) || __sd->grp_id == (grpid), o, f ,	\
++			(grpid) == 0 || __sd->grp_id == (grpid), o, f ,	\
+ 			##args);					\
+ 	} while (0)
  
-+	/* Avoid by zero division */
-+	if (n == 0)
-+		return 0;
-+
- 	return DIV_ROUND_UP_ULL(rate, n);
- }
+@@ -403,7 +403,7 @@ static inline bool v4l2_device_supports_requests(struct v4l2_device *v4l2_dev)
+ ({									\
+ 	struct v4l2_subdev *__sd;					\
+ 	__v4l2_device_call_subdevs_until_err_p(v4l2_dev, __sd,		\
+-			!(grpid) || __sd->grp_id == (grpid), o, f ,	\
++			(grpid) == 0 || __sd->grp_id == (grpid), o, f ,	\
+ 			##args);					\
+ })
+ 
+@@ -431,8 +431,8 @@ static inline bool v4l2_device_supports_requests(struct v4l2_device *v4l2_dev)
+ 		struct v4l2_subdev *__sd;				\
+ 									\
+ 		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
+-			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
+-			##args);					\
++			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
++			f , ##args);					\
+ 	} while (0)
+ 
+ /**
+@@ -462,8 +462,8 @@ static inline bool v4l2_device_supports_requests(struct v4l2_device *v4l2_dev)
+ ({									\
+ 	struct v4l2_subdev *__sd;					\
+ 	__v4l2_device_call_subdevs_until_err_p(v4l2_dev, __sd,		\
+-			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
+-			##args);					\
++			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
++			f , ##args);					\
+ })
+ 
  
 -- 
 2.24.0
