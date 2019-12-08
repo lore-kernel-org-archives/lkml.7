@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23068C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDDDC43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECCC62071A
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35BD320721
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfLHN65 (ORCPT
+        id S1727379AbfLHN7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:58:57 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60004 "EHLO
+        Sun, 8 Dec 2019 08:59:03 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:59976 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726595AbfLHNyk (ORCPT
+        by vger.kernel.org with ESMTP id S1726589AbfLHNyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:40 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1B-0007dC-1R; Sun, 08 Dec 2019 13:54:37 +0000
+        id 1idx1B-0007dX-Kb; Sun, 08 Dec 2019 13:54:37 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1A-0002Kx-GH; Sun, 08 Dec 2019 13:54:36 +0000
+        id 1idx1A-0002Ll-Ue; Sun, 08 Dec 2019 13:54:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,18 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Daniel Vetter" <daniel@ffwll.ch>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
-        "Michal =?UTF-8?Q?Vok=C3=A1=C4=8D?=" <michal.vokac@ysoft.com>,
-        "David Airlie" <airlied@linux.ie>,
-        "Marko Kohtala" <marko.kohtala@okoko.fi>
-Date:   Sun, 08 Dec 2019 13:52:51 +0000
-Message-ID: <lsq.1575813165.322001255@decadent.org.uk>
+        "Marc Kleine-Budde" <mkl@pengutronix.de>,
+        "Sean Nyekjaer" <sean@geanix.com>
+Date:   Sun, 08 Dec 2019 13:53:01 +0000
+Message-ID: <lsq.1575813165.957212105@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 07/72] video: ssd1307fb: Start page range at page_offset
+Subject: [PATCH 3.16 17/72] can: mcp251x: mcp251x_hw_reset(): allow more
+ time after a reset
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -60,38 +56,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marko Kohtala <marko.kohtala@okoko.fi>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-commit dd9782834dd9dde3624ff1acea8859f3d3e792d4 upstream.
+commit d84ea2123f8d27144e3f4d58cd88c9c6ddc799de upstream.
 
-The page_offset was only applied to the end of the page range. This caused
-the display updates to cause a scrolling effect on the display because the
-amount of data written to the display did not match the range display
-expected.
+Some boards take longer than 5ms to power up after a reset, so allow
+some retries attempts before giving up.
 
-Fixes: 301bc0675b67 ("video: ssd1307fb: Make use of horizontal addressing mode")
-Signed-off-by: Marko Kohtala <marko.kohtala@okoko.fi>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190618074111.9309-4-marko.kohtala@okoko.fi
+Fixes: ff06d611a31c ("can: mcp251x: Improve mcp251x_hw_reset()")
+Tested-by: Sean Nyekjaer <sean@geanix.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/video/fbdev/ssd1307fb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/can/spi/mcp251x.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
---- a/drivers/video/fbdev/ssd1307fb.c
-+++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -426,7 +426,7 @@ static int ssd1307fb_ssd1306_init(struct
- 	if (ret < 0)
- 		return ret;
+--- a/drivers/net/can/spi/mcp251x.c
++++ b/drivers/net/can/spi/mcp251x.c
+@@ -626,7 +626,7 @@ static int mcp251x_setup(struct net_devi
+ static int mcp251x_hw_reset(struct spi_device *spi)
+ {
+ 	struct mcp251x_priv *priv = spi_get_drvdata(spi);
+-	u8 reg;
++	unsigned long timeout;
+ 	int ret;
  
--	ret = ssd1307fb_write_cmd(par->client, 0x0);
-+	ret = ssd1307fb_write_cmd(par->client, par->page_offset);
- 	if (ret < 0)
- 		return ret;
+ 	/* Wait for oscillator startup timer after power up */
+@@ -640,10 +640,19 @@ static int mcp251x_hw_reset(struct spi_d
+ 	/* Wait for oscillator startup timer after reset */
+ 	mdelay(MCP251X_OST_DELAY_MS);
+ 	
+-	reg = mcp251x_read_reg(spi, CANSTAT);
+-	if ((reg & CANCTRL_REQOP_MASK) != CANCTRL_REQOP_CONF)
+-		return -ENODEV;
++	/* Wait for reset to finish */
++	timeout = jiffies + HZ;
++	while ((mcp251x_read_reg(spi, CANSTAT) & CANCTRL_REQOP_MASK) !=
++	       CANCTRL_REQOP_CONF) {
++		usleep_range(MCP251X_OST_DELAY_MS * 1000,
++			     MCP251X_OST_DELAY_MS * 1000 * 2);
+ 
++		if (time_after(jiffies, timeout)) {
++			dev_err(&spi->dev,
++				"MCP251x didn't enter in conf mode after reset\n");
++			return -EBUSY;
++		}
++	}
+ 	return 0;
+ }
  
 
