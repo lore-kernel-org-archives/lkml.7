@@ -2,181 +2,106 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BDEC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 10:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BA6C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 10:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8CA20663
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 10:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16A32206D6
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 10:48:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="OblfVUjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfLHKd0 (ORCPT
+        id S1726483AbfLHKsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 05:33:26 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43356 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfLHKd0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 05:33:26 -0500
-Received: by mail-oi1-f196.google.com with SMTP id x14so3796033oic.10;
-        Sun, 08 Dec 2019 02:33:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m/XMm08gR2sjLP1gEIf1XClkapbPvq6gpn+AbMcpJ+I=;
-        b=Um+/KhIzVFAq2vKsJqrvV6jYnzMvw1U5d6TWczosi7KTPjD3cLnwbO7cf6zqVsFyBj
-         6aaSsK5Oi99Jx3z1+f7HixOFVUJfB5Wv03tm77I8kQGq2dvpE9zn4KT7W+Ofp0eU6MSA
-         swMkpsM+ZF0imXs+bxZYNYCN3uUa3hDrc0GrV18HSGKDGZL4b4tt/x8/ZV7s1JHmfnP6
-         8uNn9Ug2Mcurz2v2VX85DGLn4F57vC8f1V4YoBletw86pU3RN/PP4KXb1BPbvHuM5H8Y
-         GkNTmTFql42a+PFQwftuJDReOTJGncNnerXtXOMANRXnZK4hOukCdNAn8qkgomHWvw+p
-         cxhQ==
-X-Gm-Message-State: APjAAAUDAADFuiUgJDVathLWDubGdgZbxFmiNwWUrn++sHFDXjGFaXzX
-        p5tvu/4YuBS8FnyB1tzJd7dXVxk6J4gB3iP0LuadWQ==
-X-Google-Smtp-Source: APXvYqzR+hkxfTMnBIXwpZthVNtnPoiXTgABDZEwTSOdgQLsq0VFrYM2rl+gRViiuFCnkPpvfsMTLkjNg3VOIvqJH6o=
-X-Received: by 2002:aca:4e87:: with SMTP id c129mr19360701oib.153.1575801205174;
- Sun, 08 Dec 2019 02:33:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20191121183404.6e183d06@canb.auug.org.au> <CAMuHMdX8QyGkpPXfwS0EJhC6hR+gpYfvdpGWqdb=bSwJGmF7Ew@mail.gmail.com>
- <20191207164111.fpnpoipaiadaxyde@salvia>
-In-Reply-To: <20191207164111.fpnpoipaiadaxyde@salvia>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 8 Dec 2019 11:33:13 +0100
-Message-ID: <CAMuHMdV4_rva3LqTNaGfciFeJZFDhfuOG2z55XwY_+2-0n5PTg@mail.gmail.com>
-Subject: Re: nf_flow on big-endian (was: Re: linux-next: build warning after
- merge of the net-next tree)
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 8 Dec 2019 05:48:05 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:3725 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbfLHKsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Dec 2019 05:48:05 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47W3275p9cz9tySD;
+        Sun,  8 Dec 2019 11:47:59 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=OblfVUjh; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id Fjlqa5M82dtu; Sun,  8 Dec 2019 11:47:59 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47W3274WMKz9tyS4;
+        Sun,  8 Dec 2019 11:47:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1575802079; bh=j94t5POjnfwMOhIyjty//O1HCzuZ8xq1bFZy5q16/YI=;
+        h=From:Subject:To:Cc:Date:From;
+        b=OblfVUjh5JfrDrw8apQ0bQF9KcEp5Js0S9M8NuSccX70EezTCPqF55fkFa4bh6Plh
+         WACrOL5LuH3LXSQNXCK92twnILcnh7MxbRAnO/zhb4RiNzwjpIEEbeBMgWnach9Z4k
+         dpbuKlLh4dlyCG8gh6oa3iYuMhz8pslbIt5Am52w=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5E0DB8B77A;
+        Sun,  8 Dec 2019 11:48:02 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ggcHE-4w7EfL; Sun,  8 Dec 2019 11:48:02 +0100 (CET)
+Received: from localhost.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 070978B76F;
+        Sun,  8 Dec 2019 11:48:01 +0100 (CET)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id 30D2D63723; Sun,  8 Dec 2019 10:48:01 +0000 (UTC)
+Message-Id: <1bb34d3ea006c308221706290613e6cc5dc3cb74.1575802064.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/irq: don't use current_stack_pointer() in do_IRQ()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Sun,  8 Dec 2019 10:48:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pablo,
+Before commit 7306e83ccf5c ("powerpc: Don't use CURRENT_THREAD_INFO to
+find the stack"), the current stack base address was obtained by
+calling current_thread_info(). That inline function was simply masking
+out the value of r1.
 
-On Sat, Dec 7, 2019 at 5:41 PM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
-> On Tue, Nov 26, 2019 at 12:06:03PM +0100, Geert Uytterhoeven wrote:
-> > On Thu, Nov 21, 2019 at 8:36 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > > After merging the net-next tree, today's linux-next build (powerpc
-> > > allyesconfig) produced this warning:
-> > >
-> > > net/netfilter/nf_flow_table_offload.c: In function 'nf_flow_rule_match':
-> > > net/netfilter/nf_flow_table_offload.c:80:21: warning: unsigned conversion from 'int' to '__be16' {aka 'short unsigned int'} changes value from '327680' to '0' [-Woverflow]
-> > >    80 |   mask->tcp.flags = TCP_FLAG_RST | TCP_FLAG_FIN;
-> > >       |                     ^~~~~~~~~~~~
-> > >
-> > > Introduced by commit
-> > >
-> > >   c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
-> >
-> > This is now upstream, and must be completely broken on big-endian
-> > platforms.
-> >
-> > The other user of the flags field looks buggy, too
-> > (net/core/flow_dissector.c:__skb_flow_dissect_tcp()[*]):
-> >
-> >      key_tcp->flags = (*(__be16 *) &tcp_flag_word(th) & htons(0x0FFF));
-> >
-> > Disclaimer: I'm not familiar with the code or protocol, so below are just
-> > my gut feelings.
-> >
-> >      struct flow_dissector_key_tcp {
-> >             __be16 flags;
-> >     };
-> >
-> > Does this have to be __be16, i.e. does it go over the wire?
-> > If not, this should probably be __u16, and set using
-> > "be32_to_cpu(flags) >> 16"?
-> > If yes, "cpu_to_be16(be32_to_cpu(flags) >> 16)"?
-> > (Ugh, needs convenience macros)
-> >
-> > [*] ac4bb5de27010e41 ("net: flow_dissector: add support for dissection
-> > of tcp flags")
->
-> I'm attaching a tentative patch, please let me know this is fixing up
-> this issue there.
+In that commit, it was changed to using current_stack_pointer(), which
+is an heavier function as it is an outline assembly function which
+cannot be inlined and which reads the content of the stack at 0(r1)
 
-Thanks, this looks good to me, and fixes the build warning.
-For this localized change (not for the global interaction), with the nits
-below fixed:
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Revert to just getting r1 and masking out its value to obtain the base
+address of the stack pointer as before.
 
-> --- a/include/net/flow_dissector.h
-> +++ b/include/net/flow_dissector.h
-> @@ -189,10 +189,17 @@ struct flow_dissector_key_eth_addrs {
->
->  /**
->   * struct flow_dissector_key_tcp:
-> - * @flags: flags
-> + * @flags: TCP flags (16-bit, including the initial Data offset field bits)
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 7306e83ccf5c ("powerpc: Don't use CURRENT_THREAD_INFO to find the stack")
+---
+ arch/powerpc/kernel/irq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-@pad?
+diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
+index 240eca12c71d..bb34005ff9d2 100644
+--- a/arch/powerpc/kernel/irq.c
++++ b/arch/powerpc/kernel/irq.c
+@@ -693,10 +693,11 @@ void __do_irq(struct pt_regs *regs)
+ void do_IRQ(struct pt_regs *regs)
+ {
+ 	struct pt_regs *old_regs = set_irq_regs(regs);
++	register unsigned long r1 asm("r1");
+ 	void *cursp, *irqsp, *sirqsp;
+ 
+ 	/* Switch to the irq stack to handle this */
+-	cursp = (void *)(current_stack_pointer() & ~(THREAD_SIZE - 1));
++	cursp = (void *)(r1 & ~(THREAD_SIZE - 1));
+ 	irqsp = hardirq_ctx[raw_smp_processor_id()];
+ 	sirqsp = softirq_ctx[raw_smp_processor_id()];
+ 
+-- 
+2.13.3
 
-> + * @word: Data offset + reserved bits + TCP flags + window
-
-flag_word
-
->   */
->  struct flow_dissector_key_tcp {
-> -     __be16 flags;
-> +     union {
-> +             struct {
-> +                     __be16 flags;
-> +                     __be16 __pad;
-> +             };
-> +             __be32  flag_word;
-> +     };
->  };
->
->  /**
-> diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
-> index ca871657a4c4..83af4633f306 100644
-> --- a/net/core/flow_dissector.c
-> +++ b/net/core/flow_dissector.c
-> @@ -756,7 +756,7 @@ __skb_flow_dissect_tcp(const struct sk_buff *skb,
->       key_tcp = skb_flow_dissector_target(flow_dissector,
->                                           FLOW_DISSECTOR_KEY_TCP,
->                                           target_container);
-> -     key_tcp->flags = (*(__be16 *) &tcp_flag_word(th) & htons(0x0FFF));
-> +     key_tcp->flag_word = tcp_flag_word(th);
->  }
->
->  static void
-> diff --git a/net/netfilter/nf_flow_table_offload.c b/net/netfilter/nf_flow_table_offload.c
-> index c94ebad78c5c..30205d57226d 100644
-> --- a/net/netfilter/nf_flow_table_offload.c
-> +++ b/net/netfilter/nf_flow_table_offload.c
-> @@ -87,8 +87,8 @@ static int nf_flow_rule_match(struct nf_flow_match *match,
->
->       switch (tuple->l4proto) {
->       case IPPROTO_TCP:
-> -             key->tcp.flags = 0;
-> -             mask->tcp.flags = TCP_FLAG_RST | TCP_FLAG_FIN;
-> +             key->tcp.flag_word = 0;
-> +             mask->tcp.flag_word = TCP_FLAG_RST | TCP_FLAG_FIN;
->               match->dissector.used_keys |= BIT(FLOW_DISSECTOR_KEY_TCP);
->               break;
->       case IPPROTO_UDP:
-
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
