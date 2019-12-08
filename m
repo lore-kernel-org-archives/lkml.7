@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E96C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 881B6C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28088206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 651FC2071A
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfLHN5R (ORCPT
+        id S1727376AbfLHN5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:57:17 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60210 "EHLO
+        Sun, 8 Dec 2019 08:57:16 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60220 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726771AbfLHNyn (ORCPT
+        by vger.kernel.org with ESMTP id S1726780AbfLHNyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:43 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1C-0007eA-TY; Sun, 08 Dec 2019 13:54:38 +0000
+        id 1idx1D-0007eh-8d; Sun, 08 Dec 2019 13:54:39 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1B-0002Mz-HH; Sun, 08 Dec 2019 13:54:37 +0000
+        id 1idx1C-0002Nc-5D; Sun, 08 Dec 2019 13:54:38 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johannes Berg" <johannes.berg@intel.com>,
-        "Denis Kenzior" <denkenz@gmail.com>
-Date:   Sun, 08 Dec 2019 13:53:16 +0000
-Message-ID: <lsq.1575813165.169588071@decadent.org.uk>
+        "Vasily Gorbik" <gor@linux.ibm.com>,
+        "Heiko Carstens" <heiko.carstens@de.ibm.com>
+Date:   Sun, 08 Dec 2019 13:53:24 +0000
+Message-ID: <lsq.1575813165.135600170@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 32/72] cfg80211: Purge frame registrations on iftype
- change
+Subject: [PATCH 3.16 40/72] s390/topology: avoid firing events before
+ kobjs are created
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,38 +56,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Denis Kenzior <denkenz@gmail.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-commit c1d3ad84eae35414b6b334790048406bd6301b12 upstream.
+commit f3122a79a1b0a113d3aea748e0ec26f2cb2889de upstream.
 
-Currently frame registrations are not purged, even when changing the
-interface type.  This can lead to potentially weird situations where
-frames possibly not allowed on a given interface type remain registered
-due to the type switching happening after registration.
+arch_update_cpu_topology is first called from:
+kernel_init_freeable->sched_init_smp->sched_init_domains
 
-The kernel currently relies on userspace apps to actually purge the
-registrations themselves, this is not something that the kernel should
-rely on.
+even before cpus has been registered in:
+kernel_init_freeable->do_one_initcall->s390_smp_init
 
-Add a call to cfg80211_mlme_purge_registrations() to forcefully remove
-any registrations left over prior to switching the iftype.
+Do not trigger kobject_uevent change events until cpu devices are
+actually created. Fixes the following kasan findings:
 
-Signed-off-by: Denis Kenzior <denkenz@gmail.com>
-Link: https://lore.kernel.org/r/20190828211110.15005-1-denkenz@gmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+BUG: KASAN: global-out-of-bounds in kobject_uevent_env+0xb40/0xee0
+Read of size 8 at addr 0000000000000020 by task swapper/0/1
+
+BUG: KASAN: global-out-of-bounds in kobject_uevent_env+0xb36/0xee0
+Read of size 8 at addr 0000000000000018 by task swapper/0/1
+
+CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B
+Hardware name: IBM 3906 M04 704 (LPAR)
+Call Trace:
+([<0000000143c6db7e>] show_stack+0x14e/0x1a8)
+ [<0000000145956498>] dump_stack+0x1d0/0x218
+ [<000000014429fb4c>] print_address_description+0x64/0x380
+ [<000000014429f630>] __kasan_report+0x138/0x168
+ [<0000000145960b96>] kobject_uevent_env+0xb36/0xee0
+ [<0000000143c7c47c>] arch_update_cpu_topology+0x104/0x108
+ [<0000000143df9e22>] sched_init_domains+0x62/0xe8
+ [<000000014644c94a>] sched_init_smp+0x3a/0xc0
+ [<0000000146433a20>] kernel_init_freeable+0x558/0x958
+ [<000000014599002a>] kernel_init+0x22/0x160
+ [<00000001459a71d4>] ret_from_fork+0x28/0x30
+ [<00000001459a71dc>] kernel_thread_starter+0x0/0x10
+
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/wireless/util.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/s390/kernel/topology.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -926,6 +926,7 @@ int cfg80211_change_iface(struct cfg8021
- 		}
- 
- 		cfg80211_process_rdev_events(rdev);
-+		cfg80211_mlme_purge_registrations(dev->ieee80211_ptr);
+--- a/arch/s390/kernel/topology.c
++++ b/arch/s390/kernel/topology.c
+@@ -266,7 +266,8 @@ int arch_update_cpu_topology(void)
+ 	update_cpu_masks();
+ 	for_each_online_cpu(cpu) {
+ 		dev = get_cpu_device(cpu);
+-		kobject_uevent(&dev->kobj, KOBJ_CHANGE);
++		if (dev)
++			kobject_uevent(&dev->kobj, KOBJ_CHANGE);
  	}
- 
- 	err = rdev_change_virtual_intf(rdev, dev, ntype, flags, params);
+ 	return 1;
+ }
 
