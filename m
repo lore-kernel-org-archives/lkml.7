@@ -2,102 +2,106 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1927DC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 15:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0F2C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 15:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E980620637
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 15:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63693206DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 15:09:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfLHPAQ (ORCPT
+        id S1726490AbfLHPJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 10:00:16 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36708 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbfLHO6g (ORCPT
+        Sun, 8 Dec 2019 10:09:35 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33006 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726017AbfLHPJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 09:58:36 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1idy10-0000Qv-JV; Sun, 08 Dec 2019 15:58:30 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F39901C2884;
-        Sun,  8 Dec 2019 15:58:29 +0100 (CET)
-Date:   Sun, 08 Dec 2019 14:58:29 -0000
-From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/rt, workqueue: Use PREEMPTION
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191015191821.11479-35-bigeasy@linutronix.de>
-References: <20191015191821.11479-35-bigeasy@linutronix.de>
+        Sun, 8 Dec 2019 10:09:35 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1idyBf-0003I4-S2; Sun, 08 Dec 2019 15:09:31 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1idyBf-0003UD-Fd; Sun, 08 Dec 2019 15:09:31 +0000
+Message-ID: <59bfd3532560fce3732d933b2c4a1c20666596a6.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 00/72] 3.16.79-rc1 review
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Sun, 08 Dec 2019 15:09:26 +0000
+In-Reply-To: <13922804-86b3-2f3f-5b59-3fe19afbfeef@roeck-us.net>
+References: <lsq.1575813164.154362148@decadent.org.uk>
+         <13922804-86b3-2f3f-5b59-3fe19afbfeef@roeck-us.net>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-DHDOHOYEKFk+r7G0c9al"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Message-ID: <157581710980.21853.10591538571662051255.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     025f50f3866486a5278afa91f0d3b6b780141050
-Gitweb:        https://git.kernel.org/tip/025f50f3866486a5278afa91f0d3b6b780141050
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Tue, 15 Oct 2019 21:18:21 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 08 Dec 2019 14:37:37 +01:00
+--=-DHDOHOYEKFk+r7G0c9al
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-sched/rt, workqueue: Use PREEMPTION
+On Sun, 2019-12-08 at 06:49 -0800, Guenter Roeck wrote:
+> On 12/8/19 5:52 AM, Ben Hutchings wrote:
+> > This is the start of the stable review cycle for the 3.16.79 release.
+> > There are 72 patches in this series, which will be posted as responses
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >=20
+> > Responses should be made by Tue Dec 10 18:00:00 UTC 2019.
+> > Anything received after that time might be too late.
+> >=20
+>=20
+> Build results:
+> 	total: 136 pass: 136 fail: 0
+> Qemu test results:
+> 	total: 229 pass: 229 fail: 0
 
-CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
-Both PREEMPT and PREEMPT_RT require the same functionality which today
-depends on CONFIG_PREEMPT.
+Thanks for checking,
 
-Update the comment to use PREEMPTION because it is true for both
-preemption models.
+Be.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Tejun Heo <tj@kernel.org>
-Link: https://lore.kernel.org/r/20191015191821.11479-35-bigeasy@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/workqueue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--=20
+Ben Hutchings
+Never attribute to conspiracy what can adequately be explained
+by stupidity.
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index bc88fd9..bf57dc7 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -2280,7 +2280,7 @@ __acquires(&pool->lock)
- 	}
- 
- 	/*
--	 * The following prevents a kworker from hogging CPU on !PREEMPT
-+	 * The following prevents a kworker from hogging CPU on !PREEMPTION
- 	 * kernels, where a requeueing work item waiting for something to
- 	 * happen could deadlock with stop_machine as such work item could
- 	 * indefinitely requeue itself while all other CPUs are trapped in
+
+
+--=-DHDOHOYEKFk+r7G0c9al
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3tEiYACgkQ57/I7JWG
+EQmuxg/7Bv/QMGzeOtXYin3yn+5h/MicWF6a3A48EEJBvpx2ldYA8XF2eOSRVxXu
+knTCjfv4naISoi4esP/PC6Yt+Szdv857rUmuFGl5FEzIn4YXXvzeNad/CiPiejJX
+KUsNDhqYW4avXhT6rNk47qB3V7F5U9MePlWlECB5wMz8IcPIoLCCqAG1cPMFr7De
+Y7Prq3EtEHq4VQPA4478+MNM1Oy4uKGtJkkfBIZmSf9QIJtj1eoch4P41NuKq8KU
+fApxj/ncacXK9GUgMsMQFKL1KuOcdP7/BXAJ6It5Dmlk+tK1MDlE7jvxu3Lp3uz2
+yG9gveQJ4beylleLl0Nd5qvIgDh+MOgiqPslQKAdwQOTPE1LlCGeChtM3oMNNrHb
+DRhp7JydIQRdoHog1Apvw058pY/o+ePLFKNUt/OswQ3nBSiQC2sI2HjWoPabBGz8
+FJ3q9HRVtVsK2e09ifCJSZaZAyCMK/17btcIepnNrSGcCr8aJEXwygZJDQiPXSOq
+BYxu4ZX+gM2srcm1IDUoVxwFQQwhRbsSR+ZlLQWvU2Av73Nf03iK2X7jA4tuzhpm
+BXJu5etqrxhuvbCN/85YYtCkfF1i/JaTFGOydeBo82AWtOgbHVu7THdIg26u8f+1
+ASkTYefhlzRQrWJ4QOl850i9iVZUe311RRFTqTjxHOyrVj918E0=
+=c6lY
+-----END PGP SIGNATURE-----
+
+--=-DHDOHOYEKFk+r7G0c9al--
