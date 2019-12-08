@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE058C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFDFC43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9865206E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9EF1206E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfLHN6O (ORCPT
+        id S1727281AbfLHN6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:58:14 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60048 "EHLO
+        Sun, 8 Dec 2019 08:58:13 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60110 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726646AbfLHNyl (ORCPT
+        by vger.kernel.org with ESMTP id S1726678AbfLHNyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:41 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1C-0007ds-DL; Sun, 08 Dec 2019 13:54:38 +0000
+        id 1idx1C-0007eC-Nn; Sun, 08 Dec 2019 13:54:38 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1B-0002MU-9B; Sun, 08 Dec 2019 13:54:37 +0000
+        id 1idx1B-0002N8-Kw; Sun, 08 Dec 2019 13:54:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Alan Stern" <stern@rowland.harvard.edu>,
-        "Jiri Kosina" <jkosina@suse.cz>
-Date:   Sun, 08 Dec 2019 13:53:10 +0000
-Message-ID: <lsq.1575813165.907082376@decadent.org.uk>
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "Nathan Lynch" <nathanl@linux.ibm.com>
+Date:   Sun, 08 Dec 2019 13:53:18 +0000
+Message-ID: <lsq.1575813165.714960861@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 26/72] HID: prodikeys: Fix general protection fault
- during probe
+Subject: [PATCH 3.16 34/72] powerpc/pseries: correctly track irq state in
+ default idle
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,73 +56,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-commit 98375b86c79137416e9fd354177b85e768c16e56 upstream.
+commit 92c94dfb69e350471473fd3075c74bc68150879e upstream.
 
-The syzbot fuzzer provoked a general protection fault in the
-hid-prodikeys driver:
+prep_irq_for_idle() is intended to be called before entering
+H_CEDE (and it is used by the pseries cpuidle driver). However the
+default pseries idle routine does not call it, leading to mismanaged
+lazy irq state when the cpuidle driver isn't in use. Manifestations of
+this include:
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc5+ #28
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:pcmidi_submit_output_report drivers/hid/hid-prodikeys.c:300  [inline]
-RIP: 0010:pcmidi_set_operational drivers/hid/hid-prodikeys.c:558 [inline]
-RIP: 0010:pcmidi_snd_initialise drivers/hid/hid-prodikeys.c:686 [inline]
-RIP: 0010:pk_probe+0xb51/0xfd0 drivers/hid/hid-prodikeys.c:836
-Code: 0f 85 50 04 00 00 48 8b 04 24 4c 89 7d 10 48 8b 58 08 e8 b2 53 e4 fc
-48 8b 54 24 20 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f
-85 13 04 00 00 48 ba 00 00 00 00 00 fc ff df 49 8b
+* Dropped IPIs in the time immediately after a cpu comes
+  online (before it has installed the cpuidle handler), making the
+  online operation block indefinitely waiting for the new cpu to
+  respond.
 
-The problem is caused by the fact that pcmidi_get_output_report() will
-return an error if the HID device doesn't provide the right sort of
-output report, but pcmidi_set_operational() doesn't bother to check
-the return code and assumes the function call always succeeds.
+* Hitting this WARN_ON in arch_local_irq_restore():
+	/*
+	 * We should already be hard disabled here. We had bugs
+	 * where that wasn't the case so let's dbl check it and
+	 * warn if we are wrong. Only do that when IRQ tracing
+	 * is enabled as mfmsr() can be costly.
+	 */
+	if (WARN_ON_ONCE(mfmsr() & MSR_EE))
+		__hard_irq_disable();
 
-This patch adds the missing check and aborts the probe operation if
-necessary.
+Call prep_irq_for_idle() from pseries_lpar_idle() and honor its
+result.
 
-Reported-and-tested-by: syzbot+1088533649dafa1c9004@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 363edbe2614a ("powerpc: Default arch idle could cede processor on pseries")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190910225244.25056-1-nathanl@linux.ibm.com
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/hid/hid-prodikeys.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/pseries/setup.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/hid/hid-prodikeys.c
-+++ b/drivers/hid/hid-prodikeys.c
-@@ -557,10 +557,14 @@ static void pcmidi_setup_extra_keys(
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -360,6 +360,9 @@ static void pseries_lpar_idle(void)
+ 	 * low power mode by cedeing processor to hypervisor
+ 	 */
  
- static int pcmidi_set_operational(struct pcmidi_snd *pm)
- {
-+	int rc;
++	if (!prep_irq_for_idle())
++		return;
 +
- 	if (pm->ifnum != 1)
- 		return 0; /* only set up ONCE for interace 1 */
+ 	/* Indicate to hypervisor that we are idle. */
+ 	get_lppaca()->idle = 1;
  
--	pcmidi_get_output_report(pm);
-+	rc = pcmidi_get_output_report(pm);
-+	if (rc < 0)
-+		return rc;
- 	pcmidi_submit_output_report(pm, 0xc1);
- 	return 0;
- }
-@@ -689,7 +693,11 @@ static int pcmidi_snd_initialise(struct
- 	spin_lock_init(&pm->rawmidi_in_lock);
- 
- 	init_sustain_timers(pm);
--	pcmidi_set_operational(pm);
-+	err = pcmidi_set_operational(pm);
-+	if (err < 0) {
-+		pk_error("failed to find output report\n");
-+		goto fail_register;
-+	}
- 
- 	/* register it */
- 	err = snd_card_register(card);
 
