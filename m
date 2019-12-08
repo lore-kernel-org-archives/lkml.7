@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A04C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F19C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 923D2206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D683E206F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbfLHNzo (ORCPT
+        id S1727223AbfLHNzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:55:44 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60492 "EHLO
+        Sun, 8 Dec 2019 08:55:45 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60476 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726898AbfLHNyq (ORCPT
+        by vger.kernel.org with ESMTP id S1726897AbfLHNyq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:46 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1H-0007hz-0a; Sun, 08 Dec 2019 13:54:43 +0000
+        id 1idx1H-0007iB-8v; Sun, 08 Dec 2019 13:54:43 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1F-0002PK-5K; Sun, 08 Dec 2019 13:54:41 +0000
+        id 1idx1F-0002Pj-Fs; Sun, 08 Dec 2019 13:54:41 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "YueHaibing" <yuehaibing@huawei.com>
-Date:   Sun, 08 Dec 2019 13:53:45 +0000
-Message-ID: <lsq.1575813165.123568884@decadent.org.uk>
+        "Oliver Neukum" <oneukum@suse.com>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
+Date:   Sun, 08 Dec 2019 13:53:49 +0000
+Message-ID: <lsq.1575813165.759121037@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 61/72] appletalk: Set error code if register_snap_client
- failed
+Subject: [PATCH 3.16 65/72] Input: ff-memless - kill timer in destroy()
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,31 +55,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit c93ad1337ad06a718890a89cdd85188ff9a5a5cc upstream.
+commit fa3a5a1880c91bb92594ad42dfe9eedad7996b86 upstream.
 
-If register_snap_client fails in atalk_init,
-error code should be set, otherwise it will
-triggers NULL pointer dereference while unloading
-module.
+No timer must be left running when the device goes away.
 
-Fixes: 9804501fa122 ("appletalk: Fix potential NULL pointer dereference in unregister_snap_client")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-and-tested-by: syzbot+b6c55daa701fc389e286@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/1573726121.17351.3.camel@suse.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/appletalk/ddp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/input/ff-memless.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/net/appletalk/ddp.c
-+++ b/net/appletalk/ddp.c
-@@ -1928,6 +1928,7 @@ static int __init atalk_init(void)
- 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
- 	if (!ddp_dl) {
- 		pr_crit("Unable to register DDP with SNAP.\n");
-+		rc = -ENOMEM;
- 		goto out_sock;
- 	}
+--- a/drivers/input/ff-memless.c
++++ b/drivers/input/ff-memless.c
+@@ -489,6 +489,15 @@ static void ml_ff_destroy(struct ff_devi
+ {
+ 	struct ml_device *ml = ff->private;
+ 
++	/*
++	 * Even though we stop all playing effects when tearing down
++	 * an input device (via input_device_flush() that calls into
++	 * input_ff_flush() that stops and erases all effects), we
++	 * do not actually stop the timer, and therefore we should
++	 * do it here.
++	 */
++	del_timer_sync(&ml->timer);
++
+ 	kfree(ml->private);
+ }
  
 
