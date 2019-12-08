@@ -2,140 +2,74 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABDAC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 10:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9882C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 12:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F2D20637
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 10:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5A420692
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 12:38:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FzcV8FNt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U1XvJNbZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfLHKxs (ORCPT
+        id S1726460AbfLHMi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 05:53:48 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42161 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfLHKxs (ORCPT
+        Sun, 8 Dec 2019 07:38:28 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43270 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbfLHMi2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 05:53:48 -0500
-Received: by mail-ed1-f65.google.com with SMTP id e10so9787008edv.9;
-        Sun, 08 Dec 2019 02:53:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=RP445oumAyApvuuzSY5LdqaN1csStiseBJ96Rg6gPzY=;
-        b=FzcV8FNtYmwMpIO5ZRZ+YPRdcqZbrZEaM8iT05KkoBBtA4hwIvPRExCm6EQhLvf0/V
-         6vxpkRmZfssCaMMnMEL3rXS6onfm4++nKYeJ7D1NOGhAWtQZpLkdKfKzjNE0A2uwkurO
-         hSHGuxD863rSL6sAYLmEf1oUo6F1oVgBe5zrhuwVs6nncN/pbr0EFL/+K4f6I3mURkrd
-         WkWhK68eEZXqMwS7yc/J0sPi9LDEjDX3zfTa7f6ckm6RAGLHXGxQlwvtPViYAiBeCSmI
-         f8P3/JfazNb7BMSYxNG6oJUrjVWO4KOw7PWQvK0/FphAGft8QoNSCK0oR+dMLmBGaqav
-         kV+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=RP445oumAyApvuuzSY5LdqaN1csStiseBJ96Rg6gPzY=;
-        b=uXk14T7E7+ZkTs1jGiVHK067xjdxFeNE/HYefxK+e06kgHnd9KhTpRKwcUeQMs4xrI
-         T1pFcjiKuc+7FdDn5+WZHT2NO6GBBbj7+h+JCLqrpoHCOjrZSoJylli8XhLp0/DN6PGB
-         Df+gKBEITP3Cclve/BqBAtkIGjdWfwvGlmGBk91SJ33Qfu91Yzekjy85GP88LiOQkPqc
-         YxiIq7bPp7vA5pFEPMEWewWcXfMVdpVJkoz6HmYBDQ1RP609lkvFfdxfMjsj9TsxWRKX
-         buRcccEXRHh/lOFYEiWSIBdNGvp6FMRMhwT4GjlnwTPl4iJUDswgs4y8mebUSciGV8Td
-         orlw==
-X-Gm-Message-State: APjAAAWmwsvVFoJgm8RoSXYzmgawD7H2xJwa1hDeegdLx4rzha1G8JcK
-        8ubbgLTrB5q2s67Ducv7tFOOhTJYeSg=
-X-Google-Smtp-Source: APXvYqzKoOx2EKgpyTltHK8dmjzErAfRzYlsPNKZioPwoWXHOiOXc5mrHf/bkUbH3tGhwIA1AuppsQ==
-X-Received: by 2002:a17:906:489:: with SMTP id f9mr3125363eja.27.1575802426107;
-        Sun, 08 Dec 2019 02:53:46 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2d4e:6900:458f:723c:bc3a:78f2])
-        by smtp.gmail.com with ESMTPSA id y2sm23487eds.24.2019.12.08.02.53.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Dec 2019 02:53:45 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Thomas Hellstrom <thellstrom@vmware.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Sinclair Yeh <syeh@vmware.com>,
-        linux-graphics-maintainer@vmware.com,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] drm/vmwgfx: Replace deprecated PTR_RET
-Date:   Sun,  8 Dec 2019 11:53:28 +0100
-Message-Id: <20191208105328.15335-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 8 Dec 2019 07:38:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2ELcNaQndnrwr3FiX1NwpMEheNcsO2lBa0QVqsnMeCA=; b=U1XvJNbZbJPCjOt3AAVxDS0oF
+        Mh4MI6C2RCv9V/mL1VeDkpDKRcIa5JCrtsA48oc1ZWffNGpUIw9aDPdgh/eY/Z/Q4WtyE7XL7R13H
+        aNZLECIv8MGDhMqhxhCqK1oiWpsqzhojIEowfJv2H/LvRalBHVMMUfsS4I77I7ns/h7iIXi4HWqwb
+        GyxnngdRgaYtkRI5xGHMfFDIC8rl7qT9qa1tjyHUshnhjuP/W8K7z2hDCCVU0qUcb7uczdDPfpylS
+        gPg1CQlcwkjyKfXr2gYv2md+i1a3Ba+MfYDEpJDNCATOzq/5SM/3hvEgbW0A9/aYLu+vajeb1GHPp
+        ylpQUn9Uw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1idvp6-00061v-LN; Sun, 08 Dec 2019 12:38:04 +0000
+Date:   Sun, 8 Dec 2019 04:38:04 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] fs: introduce is_dot_dotdot helper for cleanup
+Message-ID: <20191208123804.GB32169@bombadil.infradead.org>
+References: <1575718548-19017-1-git-send-email-yangtiezhu@loongson.cn>
+ <20191208034144.GP4203@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191208034144.GP4203@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 508108ea2747 ("drm/vmwgfx: Don't refcount command-buffer managed
-resource lookups during command buffer validation") slips in use of
-deprecated PTR_RET. Use PTR_ERR_OR_ZERO instead.
+On Sun, Dec 08, 2019 at 03:41:44AM +0000, Al Viro wrote:
+> On Sat, Dec 07, 2019 at 07:35:48PM +0800, Tiezhu Yang wrote:
+> > There exists many similar and duplicate codes to check "." and "..",
+> > so introduce is_dot_dotdot helper to make the code more clean.
+> 
+> Umm...  No objections, in principle, but... you try to say that name
+> (e.g. in a phone conversation) without stuttering ;-/
+> 
+> Any suggestions from native speakers?
 
-As the PTR_ERR_OR_ZERO is a bit longer than PTR_RET, we introduce
-local variable ret for proper indentation and line-length limits.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-applies cleanly on current master (9455d25f4e3b) and next-20191207
-compile-tested on x86_64_defconfig + DRM_VMWGFX=y
-
- drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-index 934ad7c0c342..73489a45decb 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-@@ -2377,9 +2377,12 @@ static int vmw_cmd_dx_clear_rendertarget_view(struct vmw_private *dev_priv,
- {
- 	VMW_DECLARE_CMD_VAR(*cmd, SVGA3dCmdDXClearRenderTargetView) =
- 		container_of(header, typeof(*cmd), header);
-+	struct vmw_resource *ret;
- 
--	return PTR_RET(vmw_view_id_val_add(sw_context, vmw_view_rt,
--					   cmd->body.renderTargetViewId));
-+	ret = vmw_view_id_val_add(sw_context, vmw_view_rt,
-+				  cmd->body.renderTargetViewId);
-+
-+	return PTR_ERR_OR_ZERO(ret);
- }
- 
- /**
-@@ -2396,9 +2399,12 @@ static int vmw_cmd_dx_clear_depthstencil_view(struct vmw_private *dev_priv,
- {
- 	VMW_DECLARE_CMD_VAR(*cmd, SVGA3dCmdDXClearDepthStencilView) =
- 		container_of(header, typeof(*cmd), header);
-+	struct vmw_resource *ret;
-+
-+	ret = vmw_view_id_val_add(sw_context, vmw_view_ds,
-+				  cmd->body.depthStencilViewId);
- 
--	return PTR_RET(vmw_view_id_val_add(sw_context, vmw_view_ds,
--					   cmd->body.depthStencilViewId));
-+	return PTR_ERR_OR_ZERO(ret);
- }
- 
- static int vmw_cmd_dx_view_define(struct vmw_private *dev_priv,
-@@ -2741,9 +2747,12 @@ static int vmw_cmd_dx_genmips(struct vmw_private *dev_priv,
- {
- 	VMW_DECLARE_CMD_VAR(*cmd, SVGA3dCmdDXGenMips) =
- 		container_of(header, typeof(*cmd), header);
-+	struct vmw_resource *ret;
-+
-+	ret = vmw_view_id_val_add(sw_context, vmw_view_sr,
-+				  cmd->body.shaderResourceViewId);
- 
--	return PTR_RET(vmw_view_id_val_add(sw_context, vmw_view_sr,
--					   cmd->body.shaderResourceViewId));
-+	return PTR_ERR_OR_ZERO(ret);
- }
- 
- /**
--- 
-2.17.1
-
+I used "is_dot_or_dotdot" when discussing this patch with my wife verbally.
