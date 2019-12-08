@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80082C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FEDC43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7C2206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 579E8206F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfLHN5l (ORCPT
+        id S1727297AbfLHN5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:57:41 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60126 "EHLO
+        Sun, 8 Dec 2019 08:57:44 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60156 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726691AbfLHNym (ORCPT
+        by vger.kernel.org with ESMTP id S1726718AbfLHNym (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:42 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1C-0007eS-WA; Sun, 08 Dec 2019 13:54:39 +0000
+        id 1idx1D-0007em-87; Sun, 08 Dec 2019 13:54:39 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1B-0002NN-NZ; Sun, 08 Dec 2019 13:54:37 +0000
+        id 1idx1C-0002Ng-9e; Sun, 08 Dec 2019 13:54:38 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>,
-        "Shih-Yuan Lee (FourDollars)" <fourdollars@debian.org>
-Date:   Sun, 08 Dec 2019 13:53:21 +0000
-Message-ID: <lsq.1575813165.488210758@decadent.org.uk>
+        "Sebastian Ott" <sebott@linux.ibm.com>,
+        "Vasily Gorbik" <gor@linux.ibm.com>
+Date:   Sun, 08 Dec 2019 13:53:25 +0000
+Message-ID: <lsq.1575813165.739244209@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 37/72] ALSA: hda - Add laptop imic fixup for ASUS M9V
- laptop
+Subject: [PATCH 3.16 41/72] s390/cio: avoid calling strlen on null pointer
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,29 +55,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Shih-Yuan Lee (FourDollars)" <fourdollars@debian.org>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-commit 7b485d175631be676424aedb8cd2f66d0c93da78 upstream.
+commit ea298e6ee8b34b3ed4366be7eb799d0650ebe555 upstream.
 
-The same fixup to enable laptop imic is needed for ASUS M9V with AD1986A
-codec like another HP machine.
+Fix the following kasan finding:
+BUG: KASAN: global-out-of-bounds in ccwgroup_create_dev+0x850/0x1140
+Read of size 1 at addr 0000000000000000 by task systemd-udevd.r/561
 
-Signed-off-by: Shih-Yuan Lee (FourDollars) <fourdollars@debian.org>
-Link: https://lore.kernel.org/r/20190920134052.GA8035@localhost
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+CPU: 30 PID: 561 Comm: systemd-udevd.r Tainted: G    B
+Hardware name: IBM 3906 M04 704 (LPAR)
+Call Trace:
+([<0000000231b3db7e>] show_stack+0x14e/0x1a8)
+ [<0000000233826410>] dump_stack+0x1d0/0x218
+ [<000000023216fac4>] print_address_description+0x64/0x380
+ [<000000023216f5a8>] __kasan_report+0x138/0x168
+ [<00000002331b8378>] ccwgroup_create_dev+0x850/0x1140
+ [<00000002332b618a>] group_store+0x3a/0x50
+ [<00000002323ac706>] kernfs_fop_write+0x246/0x3b8
+ [<00000002321d409a>] vfs_write+0x132/0x450
+ [<00000002321d47da>] ksys_write+0x122/0x208
+ [<0000000233877102>] system_call+0x2a6/0x2c8
+
+Triggered by:
+openat(AT_FDCWD, "/sys/bus/ccwgroup/drivers/qeth/group",
+		O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0666) = 16
+write(16, "0.0.bd00,0.0.bd01,0.0.bd02", 26) = 26
+
+The problem is that __get_next_id in ccwgroup_create_dev might set "buf"
+buffer pointer to NULL and explicit check for that is required.
+
+Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/pci/hda/patch_analog.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/s390/cio/ccwgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_analog.c
-+++ b/sound/pci/hda/patch_analog.c
-@@ -332,6 +332,7 @@ static const struct hda_fixup ad1986a_fi
- 
- static const struct snd_pci_quirk ad1986a_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x30af, "HP B2800", AD1986A_FIXUP_LAPTOP_IMIC),
-+	SND_PCI_QUIRK(0x1043, 0x1153, "ASUS M9V", AD1986A_FIXUP_LAPTOP_IMIC),
- 	SND_PCI_QUIRK(0x1043, 0x1443, "ASUS Z99He", AD1986A_FIXUP_EAPD),
- 	SND_PCI_QUIRK(0x1043, 0x1447, "ASUS A8JN", AD1986A_FIXUP_EAPD),
- 	SND_PCI_QUIRK_MASK(0x1043, 0xff00, 0x8100, "ASUS P5", AD1986A_FIXUP_3STACK),
+--- a/drivers/s390/cio/ccwgroup.c
++++ b/drivers/s390/cio/ccwgroup.c
+@@ -369,7 +369,7 @@ int ccwgroup_create_dev(struct device *p
+ 		goto error;
+ 	}
+ 	/* Check for trailing stuff. */
+-	if (i == num_devices && strlen(buf) > 0) {
++	if (i == num_devices && buf && strlen(buf) > 0) {
+ 		rc = -EINVAL;
+ 		goto error;
+ 	}
 
