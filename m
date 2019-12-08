@@ -2,69 +2,91 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1C7C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD262C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6085D206D6
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575841237;
-	bh=Y2/+nRGil84kB1YAUg4GuMY135VpMF2/SHRBNBk3S98=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=xd0HxEFsdREHUh6t3zHeFknj2IxfC/f6NWfbhIJkd3PXh1h+akN+QX/Xa9jaaWZJL
-	 KZTuh35RxmCUzPH9oB5la/v7t57NsELe0fd2c3/ONLNB/JMYJ3F3qmO7Ato3kWEBep
-	 lWPe26fnFdE2GWDAY4TtJpgpnVQbum/QdRJlV7zY=
+	by mail.kernel.org (Postfix) with ESMTP id A91AA20637
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfLHVkc (ORCPT
+        id S1726748AbfLHVze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 16:40:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726975AbfLHVk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 16:40:29 -0500
-Subject: Re: [GIT PULL] SMB3 Fixes
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575841229;
-        bh=Y2/+nRGil84kB1YAUg4GuMY135VpMF2/SHRBNBk3S98=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Y082qrptHZD0E7/ifr4VqTTP+mAuDh6J/p/7eiFyT3U05ed7XSQh+g027FQ9udIJu
-         rcmdYuzT0iFziELLrnUK0D/zXwNH11h0+ZFr4kLyic2du9DOlfhG7PcZV11WRjFepa
-         e4whye4doFlQZ2pXSunsGXZFtMrhNAM5OvzBW0rk=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAH2r5mvexWusg28E6jn7C-=_TFnnZC-MJB1JUh6zFqyapkPv8Q@mail.gmail.com>
-References: <CAH2r5mvexWusg28E6jn7C-=_TFnnZC-MJB1JUh6zFqyapkPv8Q@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAH2r5mvexWusg28E6jn7C-=_TFnnZC-MJB1JUh6zFqyapkPv8Q@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git
- tags/5.5-rc-smb3-fixes-part2
-X-PR-Tracked-Commit-Id: 231e2a0ba56733c95cb77d8920e76502b2134e72
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a78f7cdddbbb2bb2ed6851fbb792072570517650
-Message-Id: <157584122926.22418.7130546428545261488.pr-tracker-bot@kernel.org>
-Date:   Sun, 08 Dec 2019 21:40:29 +0000
-To:     Steve French <smfrench@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Sun, 8 Dec 2019 16:55:34 -0500
+Received: from vmicros1.altlinux.org ([194.107.17.57]:58156 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfLHVze (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Dec 2019 16:55:34 -0500
+X-Greylist: delayed 556 seconds by postgrey-1.27 at vger.kernel.org; Sun, 08 Dec 2019 16:55:33 EST
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id CE56F72CCD5;
+        Mon,  9 Dec 2019 00:46:15 +0300 (MSK)
+Received: from beacon.altlinux.org (unknown [185.6.174.98])
+        by imap.altlinux.org (Postfix) with ESMTPSA id 9DF744A4AEF;
+        Mon,  9 Dec 2019 00:46:15 +0300 (MSK)
+From:   Vitaly Chikunov <vt@altlinux.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     "Dmitry V . Levin" <ldv@altlinux.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] tools lib: Disable redundant-delcs error for strlcpy
+Date:   Mon,  9 Dec 2019 00:46:07 +0300
+Message-Id: <20191208214607.20679-1-vt@altlinux.org>
+X-Mailer: git-send-email 2.11.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 7 Dec 2019 23:41:06 -0600:
+Disable `redundant-decls' error for strlcpy declaration and solve build
+error allowing users to compile vanilla kernels.
 
-> git://git.samba.org/sfrench/cifs-2.6.git tags/5.5-rc-smb3-fixes-part2
+When glibc have strlcpy (such as in ALT linux since 2004) objtool and
+perf build fails with something like:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a78f7cdddbbb2bb2ed6851fbb792072570517650
+  In file included from exec-cmd.c:3:
+  tools/include/linux/string.h:20:15: error: redundant redeclaration of ‘strlcpy’ [-Werror=redundant-decls]
+     20 | extern size_t strlcpy(char *dest, const char *src, size_t size);
+	|               ^~~~~~~
 
-Thank you!
+It's very hard to produce a perfect fix for that since it is a header
+file indirectly pulled from many sources from different Makefile builds.
 
+Fixes: ce99091 ("perf tools: Move strlcpy() from perf to tools/lib/string.c")
+Fixes: 0215d59 ("tools lib: Reinstate strlcpy() header guard with __UCLIBC__")
+Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
+Cc: Dmitry V. Levin <ldv@altlinux.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: stable@vger.kernel.org
+---
+ tools/include/linux/string.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
+index 980cb9266718..99ede7f5dfb8 100644
+--- a/tools/include/linux/string.h
++++ b/tools/include/linux/string.h
+@@ -17,7 +17,10 @@ int strtobool(const char *s, bool *res);
+  * However uClibc headers also define __GLIBC__ hence the hack below
+  */
+ #if defined(__GLIBC__) && !defined(__UCLIBC__)
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wredundant-decls"
+ extern size_t strlcpy(char *dest, const char *src, size_t size);
++#pragma GCC diagnostic pop
+ #endif
+ 
+ char *str_error_r(int errnum, char *buf, size_t buflen);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.11.0
+
