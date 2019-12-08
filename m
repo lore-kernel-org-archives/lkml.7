@@ -2,305 +2,170 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FA1C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3420EC43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBCDD206E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:24:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCVJyDsj"
+	by mail.kernel.org (Postfix) with ESMTP id F38882053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575840931;
+	bh=0T/mlW/i2N19yYI9RVNnLWFG29nhURWFEw1LcscPGkk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dUTrfN9got52bWq+x4J/A0R7fiePnrredQCTMMin6bNgKph3cuLpJh5LBIPq6ajjF
+	 Y1QmYw4OdF9qu3ZvOHNqE563MZtRaa3D39QwIy9qXWwno1Kv2gGmtIteKXcu8f9sDx
+	 wEu4Trm8o1eMAQImcvSgxEt6fzpufDR4ehiYwqkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfLHVYM (ORCPT
+        id S1726777AbfLHVf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 16:24:12 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33580 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbfLHVYL (ORCPT
+        Sun, 8 Dec 2019 16:35:29 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:47048 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbfLHVf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 16:24:11 -0500
-Received: by mail-ed1-f68.google.com with SMTP id r21so274486edq.0;
-        Sun, 08 Dec 2019 13:24:09 -0800 (PST)
+        Sun, 8 Dec 2019 16:35:28 -0500
+Received: by mail-lf1-f65.google.com with SMTP id f15so8291942lfl.13
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 13:35:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1nk/gKZH1FhHqU9Pe1PbIuJjILmu3krdS2vmCgQ6yeE=;
-        b=gCVJyDsjFA5BSxxGpDHN7BBuKg262JZYpJLAB4/sc1vsqnU3VGKRKlnVk+4QvmlnFr
-         fXoEx7IpAdg2JzzrCyMgZ0fyD/S7p7fc6oS3mfVafsUE/cwbXxkqnPoiv9hphR89TBBM
-         vcmo/6Q0dGS0mN4o6ykQdilIbLfw7jja+EepFumijs7QHoto5a5fHn4TYkRaOHpBEWpK
-         64xTC5cRyXMOUb0Kns/rXefwH8IwoUWGPtQ/+D0y+CLSMcDvVTBaFx5hkdDDgX3dmw4y
-         YuqcTZ5KIWj3VtxLeLMTccXJWeck2iDarqeE/wFpomB0fmGNnbAUDZpinsRamqgM0CVC
-         q9Qw==
+         :cc:content-transfer-encoding;
+        bh=uSATXKDDmvR07T7kUi8rHi7RN+bAfLLpofRbY4BLnYc=;
+        b=QDp02WtOAAN8JLUWqKZ1RMBdvq52AFxQlA60k5ue1vPtqtI974JZyKwoY75VqFwxG5
+         wUDgZAaIsmJW7fwWatKJDfq6JFa//u0FMI769Ck5v6nuPBk6RQObsYioypzjwB8qy/O7
+         ieejU5X44533UrSnW+Luvu+jyOKat8deoXhas=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1nk/gKZH1FhHqU9Pe1PbIuJjILmu3krdS2vmCgQ6yeE=;
-        b=PDKOJWNCy/3gQrEhVl+RpleUBT16Q0U04wOyfpYTKa/9Qusf2iuJLc5dKzeJJZFnOs
-         T11O70K2FcHCZzcMlDvI7oibEMkevaFMrq58ry4hRN+AnsdUu0AbaXKqCOiiE/Ym0V+K
-         1RLatdzIPmPfkLut5E0FUlwWx6AcnFf5xKCaXFnzgfdyKyzI1ivjKHFL7NT840UJjvjy
-         JnUUL27ILBSNp6V4mOTppC5xxYi66qP2jrWvmITAyu+JH0+ROPL5CiVHRBiSXWBUGBv7
-         N0j0AUiM3W9P3LIpNIB1b3Hp1qwxr+HivD4xJHbRAJ7Up+K3N4jESCgWsj0cFALRGxyS
-         SbCg==
-X-Gm-Message-State: APjAAAX1xnNYCdOO3SkZYIduMs+VR7MocCyORDhWldalkdEOP64eJJOw
-        R3nQs4j18l1P88wReqP/c6Y+f644mfpscS80rqQ=
-X-Google-Smtp-Source: APXvYqx73kfdWPrboFUtNODQvA4oqUZOQKE8IoT7QOlBvCEPaDkEwplbpUrC4KMgS7+Jwpf5kzfyBL4PWdanxlxzHxs=
-X-Received: by 2002:aa7:c49a:: with SMTP id m26mr29049116edq.264.1575840249055;
- Sun, 08 Dec 2019 13:24:09 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uSATXKDDmvR07T7kUi8rHi7RN+bAfLLpofRbY4BLnYc=;
+        b=F3KGhe37R2h4hjmPwcMc1bqHOTyY3TPjyNtqfIWRkYXKbsMVIZBimVTfTQsxjcn/ub
+         XFuAJsTRhX5+9cUWj01oAmUUE71Yw2JGFHAcPBBrYFconjwsqfIBME1EgzrvbIY7xiMt
+         nvystLORrd8MT0RzxqWXhNBZ6pgITrpLi42nBoOLHMP+7JdoGDgCUSQX/BK8QUv3JsZh
+         vg6QGd6N2f4THbQgRTGjW6C3L0FJJg7C24QsR+EshEhsS9ICdntRhupcd56CoiZCvwdV
+         y6OHSrMzHYcnyy4yxjJOESNWRkw35NF9laMFk0BAGmqfOr9z/14N8KrH3egQj+XRoUyZ
+         opVg==
+X-Gm-Message-State: APjAAAXFG1vFOLMAhoglm3ho9eDh8qJ6fR6wwBAger7euiKuxUL1F9IW
+        0s8UIpvCX6A9Gsa74UJzZT5/gzlZwRY=
+X-Google-Smtp-Source: APXvYqyiOKjfFcp1trUUUgOmaWvtp0nO9vmj6q19+/M1loVP/q9bm5J8EyejZCuNVJjPcPQQy2wuSA==
+X-Received: by 2002:ac2:424d:: with SMTP id m13mr13255965lfl.13.1575840925863;
+        Sun, 08 Dec 2019 13:35:25 -0800 (PST)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id c12sm7623854lfp.58.2019.12.08.13.35.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Dec 2019 13:35:25 -0800 (PST)
+Received: by mail-lj1-f177.google.com with SMTP id e10so13339749ljj.6
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 13:35:24 -0800 (PST)
+X-Received: by 2002:a2e:86c4:: with SMTP id n4mr10154411ljj.97.1575840924390;
+ Sun, 08 Dec 2019 13:35:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20191207203553.286017-1-robdclark@gmail.com> <20191207203553.286017-2-robdclark@gmail.com>
- <20191208144533.GA14311@pendragon.ideasonboard.com> <CAF6AEGurXhm28wJym-5GUiTzT1F96rs==GA2Xu+3_r6+gcB3qQ@mail.gmail.com>
- <20191208182757.GE14311@pendragon.ideasonboard.com>
-In-Reply-To: <20191208182757.GE14311@pendragon.ideasonboard.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sun, 8 Dec 2019 13:23:59 -0800
-Message-ID: <CAF6AEGsYa0p_6MgO+=gaok5GKkTDeUJYZw0MqiFc7+qUXuNS9A@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: display: panel: document panel-id
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        aarch64-laptops@lists.linaro.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20191208.012032.1258816267132319518.davem@redhat.com>
+In-Reply-To: <20191208.012032.1258816267132319518.davem@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 8 Dec 2019 13:35:08 -0800
+X-Gmail-Original-Message-ID: <CAHk-=widRc30Mcec8EwqxuMFr+dAFpM4gJjdVOKWJog4T60qKA@mail.gmail.com>
+Message-ID: <CAHk-=widRc30Mcec8EwqxuMFr+dAFpM4gJjdVOKWJog4T60qKA@mail.gmail.com>
+Subject: Re: [GIT] Networking
+To:     David Miller <davem@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 8, 2019 at 10:28 AM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
+On Sun, Dec 8, 2019 at 1:20 AM David Miller <davem@redhat.com> wrote:
 >
-> Hi Rob,
->
-> On Sun, Dec 08, 2019 at 08:50:32AM -0800, Rob Clark wrote:
-> > On Sun, Dec 8, 2019 at 6:45 AM Laurent Pinchart wrote:
-> > > On Sat, Dec 07, 2019 at 12:35:50PM -0800, Rob Clark wrote:
-> > > > From: Rob Clark <robdclark@chromium.org>
-> > > >
-> > > > For devices that have one of several possible panels installed, the
-> > > > panel-id property gives firmware a generic way to locate and enable the
-> > > > panel node corresponding to the installed panel.  Example of how to use
-> > > > this property:
-> > > >
-> > > >     ivo_panel {
-> > > >         compatible = "ivo,m133nwf4-r0";
-> > > >         panel-id = <0xc5>;
-> > > >         status = "disabled";
-> > > >
-> > > >         ports {
-> > > >             port {
-> > > >                 ivo_panel_in_edp: endpoint {
-> > > >                     remote-endpoint = <&sn65dsi86_out_ivo>;
-> > > >                 };
-> > > >             };
-> > > >         };
-> > > >     };
-> > > >
-> > > >     boe_panel {
-> > > >         compatible = "boe,nv133fhm-n61";
-> > > >         panel-id = <0xc4>;
-> > > >         status = "disabled";
-> > > >
-> > > >         ports {
-> > > >             port {
-> > > >                 boe_panel_in_edp: endpoint {
-> > > >                     remote-endpoint = <&sn65dsi86_out_boe>;
-> > > >                 };
-> > > >             };
-> > > >         };
-> > > >     };
-> > > >
-> > > >     sn65dsi86: bridge@2c {
-> > > >         compatible = "ti,sn65dsi86";
-> > > >
-> > > >         ports {
-> > > >             #address-cells = <1>;
-> > > >             #size-cells = <0>;
-> > > >
-> > > >             port@0 {
-> > > >                 reg = <0>;
-> > > >                 sn65dsi86_in_a: endpoint {
-> > > >                     remote-endpoint = <&dsi0_out>;
-> > > >                 };
-> > > >             };
-> > > >
-> > > >             port@1 {
-> > > >                 reg = <1>;
-> > > >
-> > > >                 sn65dsi86_out_boe: endpoint@c4 {
-> > > >                     remote-endpoint = <&boe_panel_in_edp>;
-> > > >                 };
-> > > >
-> > > >                 sn65dsi86_out_ivo: endpoint@c5 {
-> > > >                     remote-endpoint = <&ivo_panel_in_edp>;
-> > > >                 };
-> > > >             };
-> > > >         };
-> > > >     };
-> > > >
-> > > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > > ---
-> > > >  .../bindings/display/panel/panel-common.yaml  | 26 +++++++++++++++++++
-> > > >  1 file changed, 26 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> > > > index ef8d8cdfcede..6113319b91dd 100644
-> > > > --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> > > > +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> > > > @@ -75,6 +75,32 @@ properties:
-> > > >        in the device graph bindings defined in
-> > > >        Documentation/devicetree/bindings/graph.txt.
-> > > >
-> > > > +  panel-id:
-> > > > +    description:
-> > > > +      To support the case where one of several different panels can be installed
-> > > > +      on a device, the panel-id property can be used by the firmware to identify
-> > > > +      which panel should have it's status changed to "ok".  This property is not
-> > > > +      used by the HLOS itself.
-> > >
-> > > If your firmware can modify the status property of a panel, it can also
-> > > add DT nodes. As discussed before, I don't think this belongs to DT.
-> > > Even if panel-id isn't used by the operating system, you have Linux
-> > > kernel patches in this series that show that this isn't transparent.
-> >
-> > I've already explained several times why this is not feasible.  It
-> > would require DtbLoader to be familiar with each individual device,
-> > and be rev'd every time a new device appears.  That is not practical
-> > at all.
-> >
-> > (And fwiw, the ACPI tables describe each panel.. with an ACPI method
-> > that is passed the the panel-id and returns the appropriate table..
-> > since DT doesn't have methods, this is the solution.)
-> >
-> > I stand by this patch, we can't keep running away from this problem
-> > and wave the magic firmware wand.
->
-> I believe in firmware solutions more than firmware magic wands :-)
->
+>   git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
 
-and with that in mind, I think I've come up with a firmware solution,
-in the form of dtb overlays :-)
+Grr,
 
-I've managed to get DtbLoader to find and load a panel overlay based
-on the panel-id it reads, which drops all patches in the patchset
-except the last one, which now has this delta:
+This introduces a new warning for me:
 
----------
-diff --git a/arch/arm64/boot/dts/qcom/Makefile
-b/arch/arm64/boot/dts/qcom/Makefile
-index 6498a1ec893f..1a61e8da2521 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
-+subdir-y += panels
- dtb-$(CONFIG_ARCH_QCOM)    += apq8016-sbc.dtb
- dtb-$(CONFIG_ARCH_QCOM)    += apq8096-db820c.dtb
- dtb-$(CONFIG_ARCH_QCOM)    += ipq8074-hk01.dtb
-diff --git a/arch/arm64/boot/dts/qcom/panels/Makefile
-b/arch/arm64/boot/dts/qcom/panels/Makefile
-new file mode 100644
-index 000000000000..dbf55f423555
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/panels/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+dtb-$(CONFIG_ARCH_QCOM) += panel-c4.dtb
-+dtb-$(CONFIG_ARCH_QCOM) += panel-c5.dtb
-diff --git a/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
-b/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
-new file mode 100644
-index 000000000000..ebcf65419dad
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Panel overlay for panel-id 0xc4
-+ *
-+ * Copyright (c) 2019, Linaro Ltd.
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+/ {
-+    fragment@0 {
-+        target-path = "/panel";
-+        __overlay__ {
-+            compatible = "boe,nv133fhm-n61";
-+        };
-+    };
-+};
-diff --git a/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
-b/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
-new file mode 100644
-index 000000000000..0ad5bb6003e3
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Panel overlay for panel-id 0xc5
-+ *
-+ * Copyright (c) 2019, Linaro Ltd.
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+/ {
-+    fragment@0 {
-+        target-path = "/panel";
-+        __overlay__ {
-+            compatible = "ivo,m133nwf4-r0";
-+        };
-+    };
-+};
-diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-index c35d8099d8eb..92c76afb721c 100644
---- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-@@ -22,11 +22,13 @@
-         hsuart0 = &uart6;
-     };
+    drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c: In function
+=E2=80=98mlx5e_tc_tun_create_header_ipv6=E2=80=99:
+    drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c:332:20:
+warning: =E2=80=98n=E2=80=99 may be used uninitialized in this function
+[-Wmaybe-uninitialized]
+      332 |  struct neighbour *n;
+          |                    ^
 
-+    /*
-+     * stub node which defines how panel is connected to bridge, which
-+     * will be updated by panel specific overlay
-+     */
-     panel {
--        compatible = "ivo,m133nwf4-r0";
-         power-supply = <&vlcm_3v3>;
-         no-hpd;
--
-         ports {
-             port {
-                 panel_in_edp: endpoint {
----------
+which is very annoying.
 
-Side note, try as I might, I couldn't get the 'target = <&phandle>'
-approach to work in the overlays, so I ended up going with target-path
-instead.  From digging thru the fdt_overlay code, I *think* it is
-because I end up w/ an overlay dtb without symbols.  In the end, I
-guess target-path works just as well.
+The cause is commit 6c8991f41546 ("net: ipv6_stub: use
+ip6_dst_lookup_flow instead of ip6_dst_lookup") which changed
+mlx5e_route_lookup_ipv6() to use ipv6_dst_lookup_flow() which returns
+an error pointer, so it then does
 
+        if (IS_ERR(dst))
+                return PTR_ERR(dst);
 
-BR,
--R
+instead of
+
+        if (ret < 0)
+                return ret;
+
+in the old code.
+
+And that then means that the caller, which does
+
+        err =3D mlx5e_route_lookup_ipv6(priv, mirred_dev, &out_dev, &route_=
+dev,
+                                      &fl6, &n, &ttl);
+        if (err)
+                return err;
+
+and now gcc no longer sees that 'n' is always initialized when 'err'
+is zero. Because gcc apparently thinks that the
+
+        if (IS_ERR(dst))
+                return PTR_ERR(dst);
+
+thing can result in a zero return value (I guess the cast from a
+64-bit pointer to an 'int' is where it thinks "ok, that cast might
+lose high bits and become zero even when the original was tested to
+have a range where that will not happen).
+
+Anyway - the code is not buggy, but the new warning is simply not
+acceptable. We keep the build warning free even if it's gcc not being
+clever enough to see that "if it's uninitialized, we never get to the
+location where it's used".
+
+I don't know what the networking pattern for this is, but I did this
+in the merge
+
+--      struct neighbour *n;
+++      struct neighbour *n =3D NULL;
+
+and I'm not happy about having gotten a pull request that has this
+kind of shit in it, especially since it was _known_ shit.
+
+It could have been that people had compilers that didn't see this
+problem. But no.
+
+I see that Stephen Rothwell reported it four days ago, and David seems
+to have even answered it.
+
+And yet that warning was still there in the pull request.
+
+WTF?
+
+David, this is not acceptable.  You don't introduce new warnings in the tre=
+e.
+
+It doesn't matter one whit whether the warning is a false positive. A
+false positive warning will then be the cause of ignoring subsequent
+real warnings, which makes false positive warnings completely
+unacceptable.
+
+Fix your mindset, and stop sending me garbage.
+
+                   Linus
