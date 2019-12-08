@@ -2,130 +2,127 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B84BC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 16:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F141C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 17:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16AD3205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 16:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66230205F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 17:00:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="hnanfFNk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfLHQ4X (ORCPT
+        id S1726535AbfLHRAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 11:56:23 -0500
-Received: from mga09.intel.com ([134.134.136.24]:14998 "EHLO mga09.intel.com"
+        Sun, 8 Dec 2019 12:00:08 -0500
+Received: from mout01.posteo.de ([185.67.36.65]:59364 "EHLO mout01.posteo.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726465AbfLHQ4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 11:56:23 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Dec 2019 08:56:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,292,1571727600"; 
-   d="scan'208";a="224546789"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 08 Dec 2019 08:56:21 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1idzr2-0009Ae-Ih; Mon, 09 Dec 2019 00:56:20 +0800
-Date:   Mon, 9 Dec 2019 00:55:22 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Rodrigo Rolim Mendes de Alencar <455.rodrigo.alencar@gmail.com>
-Cc:     kbuild-all@lists.01.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alencar.fmce@imbel.gov.br,
-        Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Subject: Re: [PATCH] video: fbdev: added driver for sharp memory lcd displays
-Message-ID: <201912090055.QXDo7ygw%lkp@intel.com>
-References: <1575554335-27197-1-git-send-email-alencar.fmce@imbel.gov.br>
+        id S1726472AbfLHRAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Dec 2019 12:00:08 -0500
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id AFAD1160064
+        for <linux-kernel@vger.kernel.org>; Sun,  8 Dec 2019 18:00:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1575824405; bh=YFoFHhM4VD18eShuz4mN7CRcZATk+krghvupPMPzEP4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=hnanfFNki6YEUXmB6dssFQhzY8hOLrjsJ6lEV5hlLDpSTId9Lb8+dmOLfrH9DvvFc
+         PSJx3rJ745k6XqvYFE/aQ0n/LQbYqDlD2FS4ECVUT+p/sn4ww8SzRHfWcAoqvAyyyP
+         VPFHCo1dsYPGEH9y9XJynWxvSbjH1WNGByKvZgEtdSwlWtLuSgRtcxupSfQt/nKfwb
+         w97cnGfMmXeMHahzGEzPdmk1mLPxAuB9pcW0C6SGHAa5uNxCmb+sqTF6TEpOa+sO3z
+         QwMeiAu5lmRH+DJfn7n/EehFCmp6vxe5io1P/5HKKjM3pqo7atIxO93NQbwktsFSP1
+         NQd00H24qXEGQ==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 47WCHT0q04z6tmG;
+        Sun,  8 Dec 2019 18:00:05 +0100 (CET)
+From:   =?UTF-8?q?Moritz=20M=C3=BCller?= <moritzm.mueller@posteo.de>
+To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@i4.cs.fau.de
+Cc:     =?UTF-8?q?Moritz=20M=C3=BCller?= <moritzm.mueller@posteo.de>,
+        "Philip K ." <philip@warpmail.net>
+Subject: [PATCH] floppy: hide invalid floppy disk types
+Date:   Sun,  8 Dec 2019 17:59:00 +0100
+Message-Id: <20191208165900.25588-1-moritzm.mueller@posteo.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575554335-27197-1-git-send-email-alencar.fmce@imbel.gov.br>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rodrigo,
+In some cases floppy disks are recognised even though no such device
+exists. In our case this has been caused by the CMOS-RAM having a few
+wrong bits. This caused a non-existent floppy disk with the type 13
+(for example) to be registered as an available device, even though it
+could not be mounted by any user.
 
-Thank you for the patch! Perhaps something to improve:
+We believe this to be an instance of this bug:
 
-[auto build test WARNING on linux/master]
-[also build test WARNING on robh/for-next linus/master v5.4 next-20191208]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+ https://bugzilla.kernel.org/show_bug.cgi?id=13486
+ https://bugs.launchpad.net/ubuntu/+source/linux/+bug/384579
 
-url:    https://github.com/0day-ci/linux/commits/Rodrigo-Rolim-Mendes-de-Alencar/video-fbdev-added-driver-for-sharp-memory-lcd-displays/20191207-112607
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 26bc672134241a080a83b2ab9aa8abede8d30e1c
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-91-g817270f-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+This patch adds the option FLOPPY_ALLOW_UNKNOWN_TYPES to prevent the
+additional check that fixed the issue on our reference system, and
+increases the startup time of affected systems by over a minute.
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/video/fbdev/smemlcdfb.c:71:29: sparse: sparse: incorrect type in initializer (different address spaces) @@    expected unsigned char [usertype] *vmem @@    got signed char [usertype] *vmem @@
->> drivers/video/fbdev/smemlcdfb.c:71:29: sparse:    expected unsigned char [usertype] *vmem
->> drivers/video/fbdev/smemlcdfb.c:71:29: sparse:    got char [noderef] <asn:2> *screen_base
-
-vim +71 drivers/video/fbdev/smemlcdfb.c
-
-    67	
-    68	static void smemlcd_update(struct smemlcd_par *par)
-    69	{
-    70		struct spi_device *spi = par->spi;
-  > 71		u8 *vmem = par->info->screen_base;
-    72		u8 *buf_ptr = par->spi_buf;
-    73		int ret;
-    74		u32 i,j;
-    75	
-    76		if (par->start + par->height > par->info->var.yres) {
-    77			par->start = 0;
-    78			par->height = 0;
-    79		}
-    80		/* go to start line */
-    81		vmem += par->start * par->vmem_width;
-    82		/* update vcom */
-    83		par->vcom ^= SMEMLCD_FRAME_INVERSION;
-    84		/* mode selection */
-    85		*(buf_ptr++) = (par->height)? (SMEMLCD_DATA_UPDATE | par->vcom) : par->vcom;
-    86	
-    87		/* not all SPI masters have LSB-first mode, bitrev8 is used */
-    88		for (i = par->start + 1; i < par->start + par->height + 1; i++) {
-    89			/* gate line address */
-    90			*(buf_ptr++) = bitrev8(i);
-    91			/* data writing */
-    92			for (j = 0; j < par->spi_width; j++)
-    93				*(buf_ptr++) = bitrev8(*(vmem++));
-    94			/* dummy data */
-    95			*(buf_ptr++) = SMEMLCD_DUMMY_DATA;
-    96			/* video memory alignment */
-    97			for (; j < par->vmem_width; j++)
-    98				vmem++;
-    99		}
-   100		/* dummy data */
-   101		*(buf_ptr++) = SMEMLCD_DUMMY_DATA;
-   102	
-   103		ret = spi_write(spi, &(par->spi_buf[0]), par->height * (par->spi_width + 2) + 2);
-   104		if (ret < 0)
-   105			dev_err(&spi->dev, "Couldn't send SPI command.\n");
-   106	
-   107		par->start = U32_MAX;
-   108		par->height = 0;
-   109	}
-   110	
-
+Co-developed-by: Philip K. <philip@warpmail.net>
+Signed-off-by: Philip K. <philip@warpmail.net>
+Signed-off-by: Moritz Müller <moritzm.mueller@posteo.de>
 ---
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+ drivers/block/Kconfig  | 10 ++++++++++
+ drivers/block/floppy.c |  6 ++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
+index 1bb8ec575352..9e6b32c50b67 100644
+--- a/drivers/block/Kconfig
++++ b/drivers/block/Kconfig
+@@ -72,6 +72,16 @@ config AMIGA_Z2RAM
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called z2ram.
+ 
++config FLOPPY_ALLOW_UNKNOWN_TYPES
++	bool "Allow floppy disks of unknown type to be registered."
++	default n
++	help
++	  Select this option if you want the Kernel to register floppy
++	  disks of an unknown type.
++
++	  This should usually not be enabled, because of cases where the
++	  system falsely recongizes a non-existent floppy disk as mountable.
++
+ config CDROM
+ 	tristate
+ 	select BLK_SCSI_REQUEST
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 485865fd0412..9439444d46d0 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3949,7 +3949,9 @@ static void __init config_types(void)
+ 			} else
+ 				allowed_drive_mask &= ~(1 << drive);
+ 		} else {
++#ifdef CONFIG_FLOPPY_ALLOW_UNKNOWN_TYPES
+ 			params = &default_drive_params[0].params;
++#ifdef
+ 			snprintf(temparea, sizeof(temparea),
+ 				 "unknown type %d (usb?)", type);
+ 			name = temparea;
+@@ -4518,6 +4520,10 @@ static bool floppy_available(int drive)
+ 		return false;
+ 	if (fdc_state[FDC(drive)].version == FDC_NONE)
+ 		return false;
++#ifndef CONFIG_FLOPPY_ALLOW_UNKNOWN_TYPES
++	if (type >= ARRAY_SIZE(default_drive_params))
++		return false;
++#endif
+ 	return true;
+ }
+ 
+-- 
+2.20.1
+
