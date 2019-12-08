@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F19C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B582C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D683E206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121B4206F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfLHNzp (ORCPT
+        id S1726308AbfLHNzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:55:45 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60476 "EHLO
+        Sun, 8 Dec 2019 08:55:54 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60498 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726897AbfLHNyq (ORCPT
+        by vger.kernel.org with ESMTP id S1726908AbfLHNyq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:46 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1H-0007iB-8v; Sun, 08 Dec 2019 13:54:43 +0000
+        id 1idx1H-0007iW-Dt; Sun, 08 Dec 2019 13:54:43 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1F-0002Pj-Fs; Sun, 08 Dec 2019 13:54:41 +0000
+        id 1idx1F-0002Py-PW; Sun, 08 Dec 2019 13:54:41 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -36,12 +36,13 @@ From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
         "Oliver Neukum" <oneukum@suse.com>,
-        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
-Date:   Sun, 08 Dec 2019 13:53:49 +0000
-Message-ID: <lsq.1575813165.759121037@decadent.org.uk>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com
+Date:   Sun, 08 Dec 2019 13:53:52 +0000
+Message-ID: <lsq.1575813165.392564361@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 65/72] Input: ff-memless - kill timer in destroy()
+Subject: [PATCH 3.16 68/72] usb: iowarrior: fix deadlock on disconnect
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,35 +58,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oliver Neukum <oneukum@suse.com>
 
-commit fa3a5a1880c91bb92594ad42dfe9eedad7996b86 upstream.
+commit c468a8aa790e0dfe0a7f8a39db282d39c2c00b46 upstream.
 
-No timer must be left running when the device goes away.
+We have to drop the mutex before we close() upon disconnect()
+as close() needs the lock. This is safe to do by dropping the
+mutex as intfdata is already set to NULL, so open() will fail.
 
+Fixes: 03f36e885fc26 ("USB: open disconnect race in iowarrior")
+Reported-by: syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com
 Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-and-tested-by: syzbot+b6c55daa701fc389e286@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/1573726121.17351.3.camel@suse.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://lore.kernel.org/r/20190808092728.23417-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/input/ff-memless.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/usb/misc/iowarrior.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/input/ff-memless.c
-+++ b/drivers/input/ff-memless.c
-@@ -489,6 +489,15 @@ static void ml_ff_destroy(struct ff_devi
- {
- 	struct ml_device *ml = ff->private;
+--- a/drivers/usb/misc/iowarrior.c
++++ b/drivers/usb/misc/iowarrior.c
+@@ -898,19 +898,20 @@ static void iowarrior_disconnect(struct
+ 	dev = usb_get_intfdata(interface);
+ 	mutex_lock(&iowarrior_open_disc_lock);
+ 	usb_set_intfdata(interface, NULL);
++	/* prevent device read, write and ioctl */
++	dev->present = 0;
  
-+	/*
-+	 * Even though we stop all playing effects when tearing down
-+	 * an input device (via input_device_flush() that calls into
-+	 * input_ff_flush() that stops and erases all effects), we
-+	 * do not actually stop the timer, and therefore we should
-+	 * do it here.
-+	 */
-+	del_timer_sync(&ml->timer);
-+
- 	kfree(ml->private);
- }
+ 	minor = dev->minor;
++	mutex_unlock(&iowarrior_open_disc_lock);
++	/* give back our minor - this will call close() locks need to be dropped at this point*/
  
+-	/* give back our minor */
+ 	usb_deregister_dev(interface, &iowarrior_class);
+ 
+ 	mutex_lock(&dev->mutex);
+ 
+ 	/* prevent device read, write and ioctl */
+-	dev->present = 0;
+ 
+ 	mutex_unlock(&dev->mutex);
+-	mutex_unlock(&iowarrior_open_disc_lock);
+ 
+ 	if (dev->opened) {
+ 		/* There is a process that holds a filedescriptor to the device ,
 
