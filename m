@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B582C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5512C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121B4206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92EA5206F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfLHNzy (ORCPT
+        id S1727237AbfLHNzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:55:54 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60498 "EHLO
+        Sun, 8 Dec 2019 08:55:52 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60502 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726908AbfLHNyq (ORCPT
+        by vger.kernel.org with ESMTP id S1726903AbfLHNyq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:46 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1H-0007iW-Dt; Sun, 08 Dec 2019 13:54:43 +0000
+        id 1idx1H-0007iu-HN; Sun, 08 Dec 2019 13:54:43 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1F-0002Py-PW; Sun, 08 Dec 2019 13:54:41 +0000
+        id 1idx1G-0002QJ-7I; Sun, 08 Dec 2019 13:54:42 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Oliver Neukum" <oneukum@suse.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com
-Date:   Sun, 08 Dec 2019 13:53:52 +0000
-Message-ID: <lsq.1575813165.392564361@decadent.org.uk>
+        syzbot+863724e7128e14b26732@syzkaller.appspotmail.com,
+        "Marc Kleine-Budde" <mkl@pengutronix.de>,
+        "Johan Hovold" <johan@kernel.org>
+Date:   Sun, 08 Dec 2019 13:53:56 +0000
+Message-ID: <lsq.1575813165.369617906@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 68/72] usb: iowarrior: fix deadlock on disconnect
+Subject: [PATCH 3.16 72/72] can: peak_usb: fix slab info leak
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,48 +56,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit c468a8aa790e0dfe0a7f8a39db282d39c2c00b46 upstream.
+commit f7a1337f0d29b98733c8824e165fca3371d7d4fd upstream.
 
-We have to drop the mutex before we close() upon disconnect()
-as close() needs the lock. This is safe to do by dropping the
-mutex as intfdata is already set to NULL, so open() will fail.
+Fix a small slab info leak due to a failure to clear the command buffer
+at allocation.
 
-Fixes: 03f36e885fc26 ("USB: open disconnect race in iowarrior")
-Reported-by: syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20190808092728.23417-1-oneukum@suse.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The first 16 bytes of the command buffer are always sent to the device
+in pcan_usb_send_cmd() even though only the first two may have been
+initialised in case no argument payload is provided (e.g. when waiting
+for a response).
+
+Fixes: bb4785551f64 ("can: usb: PEAK-System Technik USB adapters driver core")
+Reported-by: syzbot+863724e7128e14b26732@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/misc/iowarrior.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/can/usb/peak_usb/pcan_usb_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/misc/iowarrior.c
-+++ b/drivers/usb/misc/iowarrior.c
-@@ -898,19 +898,20 @@ static void iowarrior_disconnect(struct
- 	dev = usb_get_intfdata(interface);
- 	mutex_lock(&iowarrior_open_disc_lock);
- 	usb_set_intfdata(interface, NULL);
-+	/* prevent device read, write and ioctl */
-+	dev->present = 0;
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+@@ -732,7 +732,7 @@ static int peak_usb_create_dev(struct pe
+ 	dev = netdev_priv(netdev);
  
- 	minor = dev->minor;
-+	mutex_unlock(&iowarrior_open_disc_lock);
-+	/* give back our minor - this will call close() locks need to be dropped at this point*/
- 
--	/* give back our minor */
- 	usb_deregister_dev(interface, &iowarrior_class);
- 
- 	mutex_lock(&dev->mutex);
- 
- 	/* prevent device read, write and ioctl */
--	dev->present = 0;
- 
- 	mutex_unlock(&dev->mutex);
--	mutex_unlock(&iowarrior_open_disc_lock);
- 
- 	if (dev->opened) {
- 		/* There is a process that holds a filedescriptor to the device ,
+ 	/* allocate a buffer large enough to send commands */
+-	dev->cmd_buf = kmalloc(PCAN_USB_MAX_CMD_LEN, GFP_KERNEL);
++	dev->cmd_buf = kzalloc(PCAN_USB_MAX_CMD_LEN, GFP_KERNEL);
+ 	if (!dev->cmd_buf) {
+ 		err = -ENOMEM;
+ 		goto lbl_free_candev;
 
