@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4654CC2BBE2
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980DAC43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF29206E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721E52176D
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfLHN4t (ORCPT
+        id S1727346AbfLHN4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:56:49 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60316 "EHLO
+        Sun, 8 Dec 2019 08:56:52 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60310 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726819AbfLHNyo (ORCPT
+        by vger.kernel.org with ESMTP id S1726818AbfLHNyo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:44 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1D-0007eo-JG; Sun, 08 Dec 2019 13:54:39 +0000
+        id 1idx1E-0007fc-I8; Sun, 08 Dec 2019 13:54:40 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1C-0002Nn-E7; Sun, 08 Dec 2019 13:54:38 +0000
+        id 1idx1C-0002O7-Vo; Sun, 08 Dec 2019 13:54:38 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Sebastian Ott" <sebott@linux.ibm.com>,
-        "Vasily Gorbik" <gor@linux.ibm.com>
-Date:   Sun, 08 Dec 2019 13:53:26 +0000
-Message-ID: <lsq.1575813165.725255212@decadent.org.uk>
+        "Ronnie Sahlberg" <lsahlber@redhat.com>,
+        "Steve French" <stfrench@microsoft.com>,
+        "Pavel Shilovsky" <pshilov@microsoft.com>
+Date:   Sun, 08 Dec 2019 13:53:30 +0000
+Message-ID: <lsq.1575813165.677152770@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 42/72] s390/cio: exclude subchannels with no parent
- from pseudo check
+Subject: [PATCH 3.16 46/72] CIFS: Fix oplock handling for SMB 2.1+ protocols
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,51 +56,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit ab5758848039de9a4b249d46e4ab591197eebaf2 upstream.
+commit a016e2794fc3a245a91946038dd8f34d65e53cc3 upstream.
 
-ccw console is created early in start_kernel and used before css is
-initialized or ccw console subchannel is registered. Until then console
-subchannel does not have a parent. For that reason assume subchannels
-with no parent are not pseudo subchannels. This fixes the following
-kasan finding:
+There may be situations when a server negotiates SMB 2.1
+protocol version or higher but responds to a CREATE request
+with an oplock rather than a lease.
 
-BUG: KASAN: global-out-of-bounds in sch_is_pseudo_sch+0x8e/0x98
-Read of size 8 at addr 00000000000005e8 by task swapper/0/0
+Currently the client doesn't handle such a case correctly:
+when another CREATE comes in the server sends an oplock
+break to the initial CREATE and the client doesn't send
+an ack back due to a wrong caching level being set (READ
+instead of RWH). Missing an oplock break ack makes the
+server wait until the break times out which dramatically
+increases the latency of the second CREATE.
 
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc8-07370-g6ac43dd12538 #2
-Hardware name: IBM 2964 NC9 702 (z/VM 6.4.0)
-Call Trace:
-([<000000000012cd76>] show_stack+0x14e/0x1e0)
- [<0000000001f7fb44>] dump_stack+0x1a4/0x1f8
- [<00000000007d7afc>] print_address_description+0x64/0x3c8
- [<00000000007d75f6>] __kasan_report+0x14e/0x180
- [<00000000018a2986>] sch_is_pseudo_sch+0x8e/0x98
- [<000000000189b950>] cio_enable_subchannel+0x1d0/0x510
- [<00000000018cac7c>] ccw_device_recognition+0x12c/0x188
- [<0000000002ceb1a8>] ccw_device_enable_console+0x138/0x340
- [<0000000002cf1cbe>] con3215_init+0x25e/0x300
- [<0000000002c8770a>] console_init+0x68a/0x9b8
- [<0000000002c6a3d6>] start_kernel+0x4fe/0x728
- [<0000000000100070>] startup_continue+0x70/0xd0
+Fix this by properly detecting oplocks when using SMB 2.1
+protocol version and higher.
 
-Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/s390/cio/css.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/cifs/smb2ops.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -1125,6 +1125,8 @@ device_initcall(cio_settle_init);
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -1006,6 +1006,11 @@ smb21_set_oplock_level(struct cifsInodeI
+ 	if (oplock == SMB2_OPLOCK_LEVEL_NOCHANGE)
+ 		return;
  
- int sch_is_pseudo_sch(struct subchannel *sch)
- {
-+	if (!sch->dev.parent)
-+		return 0;
- 	return sch == to_css(sch->dev.parent)->pseudo_subchannel;
- }
- 
++	/* Check if the server granted an oplock rather than a lease */
++	if (oplock & SMB2_OPLOCK_LEVEL_EXCLUSIVE)
++		return smb2_set_oplock_level(cinode, oplock, epoch,
++					     purge_cache);
++
+ 	if (oplock & SMB2_LEASE_READ_CACHING_HE) {
+ 		new_oplock |= CIFS_CACHE_READ_FLG;
+ 		strcat(message, "R");
 
