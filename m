@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F23C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0382C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 372F0206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C064C206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfLHNeB (ORCPT
+        id S1726667AbfLHNeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:34:01 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36600 "EHLO
+        Sun, 8 Dec 2019 08:34:09 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36598 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfLHNdu (ORCPT
+        with ESMTP id S1726378AbfLHNdu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:33:50 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1idwgp-0007gX-4a; Sun, 08 Dec 2019 14:33:35 +0100
+        id 1idwgo-0007gO-Fq; Sun, 08 Dec 2019 14:33:34 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 597C91C2883;
-        Sun,  8 Dec 2019 14:33:34 +0100 (CET)
-Date:   Sun, 08 Dec 2019 13:33:34 -0000
-From:   "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C22561C2880;
+        Sun,  8 Dec 2019 14:33:33 +0100 (CET)
+Date:   Sun, 08 Dec 2019 13:33:33 -0000
+From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: efi/urgent] efi/memreserve: Register reservations as 'reserved'
- in /proc/iomem
-Cc:     Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>, <stable@vger.kernel.org>,
+Subject: [tip: efi/urgent] efi/gop: Fix memory leak in __gop_query32/64()
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
         linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191206165542.31469-2-ardb@kernel.org>
-References: <20191206165542.31469-2-ardb@kernel.org>
+In-Reply-To: <20191206165542.31469-5-ardb@kernel.org>
+References: <20191206165542.31469-5-ardb@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157581201424.21853.10765012673649121432.tip-bot2@tip-bot2>
+Message-ID: <157581201369.21853.10246677238795985040.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,99 +60,149 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the efi/urgent branch of tip:
 
-Commit-ID:     ab0eb16205b43ece4c78e2259e681ff3d645ea66
-Gitweb:        https://git.kernel.org/tip/ab0eb16205b43ece4c78e2259e681ff3d645ea66
-Author:        Ard Biesheuvel <ardb@kernel.org>
-AuthorDate:    Fri, 06 Dec 2019 16:55:37 
+Commit-ID:     ff397be685e410a59c34b21ce0c55d4daa466bb7
+Gitweb:        https://git.kernel.org/tip/ff397be685e410a59c34b21ce0c55d4daa466bb7
+Author:        Arvind Sankar <nivedita@alum.mit.edu>
+AuthorDate:    Fri, 06 Dec 2019 16:55:40 
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Sun, 08 Dec 2019 12:42:18 +01:00
 
-efi/memreserve: Register reservations as 'reserved' in /proc/iomem
+efi/gop: Fix memory leak in __gop_query32/64()
 
-Memory regions that are reserved using efi_mem_reserve_persistent()
-are recorded in a special EFI config table which survives kexec,
-allowing the incoming kernel to honour them as well. However,
-such reservations are not visible in /proc/iomem, and so the kexec
-tools that load the incoming kernel and its initrd into memory may
-overwrite these reserved regions before the incoming kernel has a
-chance to reserve them from further use.
+efi_graphics_output_protocol::query_mode() returns info in
+callee-allocated memory which must be freed by the caller, which
+we aren't doing.
 
-Address this problem by adding these reservations to /proc/iomem as
-they are created. Note that reservations that are inherited from a
-previous kernel are memblock_reserve()'d early on, so they are already
-visible in /proc/iomem.
+We don't actually need to call query_mode() in order to obtain the
+info for the current graphics mode, which is already there in
+gop->mode->info, so just access it directly in the setup_gop32/64()
+functions.
 
-Tested-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
+Also nothing uses the size of the info structure, so don't update the
+passed-in size (which is the size of the gop_handle table in bytes)
+unnecessarily.
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: <stable@vger.kernel.org> # v5.4+
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 Cc: linux-efi@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191206165542.31469-2-ardb@kernel.org
+Link: https://lkml.kernel.org/r/20191206165542.31469-5-ardb@kernel.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- drivers/firmware/efi/efi.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+ drivers/firmware/efi/libstub/gop.c | 66 +++++------------------------
+ 1 file changed, 12 insertions(+), 54 deletions(-)
 
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index d101f07..b096195 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -979,6 +979,24 @@ static int __init efi_memreserve_map_root(void)
- 	return 0;
+diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
+index 69b2b01..b7bf1e9 100644
+--- a/drivers/firmware/efi/libstub/gop.c
++++ b/drivers/firmware/efi/libstub/gop.c
+@@ -84,30 +84,6 @@ setup_pixel_info(struct screen_info *si, u32 pixels_per_scan_line,
  }
  
-+static int efi_mem_reserve_iomem(phys_addr_t addr, u64 size)
-+{
-+	struct resource *res, *parent;
-+
-+	res = kzalloc(sizeof(struct resource), GFP_ATOMIC);
-+	if (!res)
-+		return -ENOMEM;
-+
-+	res->name	= "reserved";
-+	res->flags	= IORESOURCE_MEM;
-+	res->start	= addr;
-+	res->end	= addr + size - 1;
-+
-+	/* we expect a conflict with a 'System RAM' region */
-+	parent = request_resource_conflict(&iomem_resource, res);
-+	return parent ? request_resource(parent, res) : 0;
-+}
-+
- int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
+ static efi_status_t
+-__gop_query32(efi_system_table_t *sys_table_arg,
+-	      struct efi_graphics_output_protocol_32 *gop32,
+-	      struct efi_graphics_output_mode_info **info,
+-	      unsigned long *size, u64 *fb_base)
+-{
+-	struct efi_graphics_output_protocol_mode_32 *mode;
+-	efi_graphics_output_protocol_query_mode query_mode;
+-	efi_status_t status;
+-	unsigned long m;
+-
+-	m = gop32->mode;
+-	mode = (struct efi_graphics_output_protocol_mode_32 *)m;
+-	query_mode = (void *)(unsigned long)gop32->query_mode;
+-
+-	status = __efi_call_early(query_mode, (void *)gop32, mode->mode, size,
+-				  info);
+-	if (status != EFI_SUCCESS)
+-		return status;
+-
+-	*fb_base = mode->frame_buffer_base;
+-	return status;
+-}
+-
+-static efi_status_t
+ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+             efi_guid_t *proto, unsigned long size, void **gop_handle)
  {
- 	struct linux_efi_memreserve *rsv;
-@@ -1003,7 +1021,7 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
- 			rsv->entry[index].size = size;
+@@ -128,6 +104,7 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
  
- 			memunmap(rsv);
--			return 0;
-+			return efi_mem_reserve_iomem(addr, size);
- 		}
- 		memunmap(rsv);
- 	}
-@@ -1013,6 +1031,12 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
- 	if (!rsv)
- 		return -ENOMEM;
+ 	nr_gops = size / sizeof(u32);
+ 	for (i = 0; i < nr_gops; i++) {
++		struct efi_graphics_output_protocol_mode_32 *mode;
+ 		struct efi_graphics_output_mode_info *info = NULL;
+ 		efi_guid_t conout_proto = EFI_CONSOLE_OUT_DEVICE_GUID;
+ 		bool conout_found = false;
+@@ -145,9 +122,11 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 		if (status == EFI_SUCCESS)
+ 			conout_found = true;
  
-+	rc = efi_mem_reserve_iomem(__pa(rsv), SZ_4K);
-+	if (rc) {
-+		free_page((unsigned long)rsv);
-+		return rc;
-+	}
+-		status = __gop_query32(sys_table_arg, gop32, &info, &size,
+-				       &current_fb_base);
+-		if (status == EFI_SUCCESS && (!first_gop || conout_found) &&
++		mode = (void *)(unsigned long)gop32->mode;
++		info = (void *)(unsigned long)mode->info;
++		current_fb_base = mode->frame_buffer_base;
 +
- 	/*
- 	 * The memremap() call above assumes that a linux_efi_memreserve entry
- 	 * never crosses a page boundary, so let's ensure that this remains true
-@@ -1029,7 +1053,7 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
- 	efi_memreserve_root->next = __pa(rsv);
- 	spin_unlock(&efi_mem_reserve_persistent_lock);
- 
--	return 0;
-+	return efi_mem_reserve_iomem(addr, size);
++		if ((!first_gop || conout_found) &&
+ 		    info->pixel_format != PIXEL_BLT_ONLY) {
+ 			/*
+ 			 * Systems that use the UEFI Console Splitter may
+@@ -202,30 +181,6 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
  }
  
- static int __init efi_memreserve_root_init(void)
+ static efi_status_t
+-__gop_query64(efi_system_table_t *sys_table_arg,
+-	      struct efi_graphics_output_protocol_64 *gop64,
+-	      struct efi_graphics_output_mode_info **info,
+-	      unsigned long *size, u64 *fb_base)
+-{
+-	struct efi_graphics_output_protocol_mode_64 *mode;
+-	efi_graphics_output_protocol_query_mode query_mode;
+-	efi_status_t status;
+-	unsigned long m;
+-
+-	m = gop64->mode;
+-	mode = (struct efi_graphics_output_protocol_mode_64 *)m;
+-	query_mode = (void *)(unsigned long)gop64->query_mode;
+-
+-	status = __efi_call_early(query_mode, (void *)gop64, mode->mode, size,
+-				  info);
+-	if (status != EFI_SUCCESS)
+-		return status;
+-
+-	*fb_base = mode->frame_buffer_base;
+-	return status;
+-}
+-
+-static efi_status_t
+ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 	    efi_guid_t *proto, unsigned long size, void **gop_handle)
+ {
+@@ -246,6 +201,7 @@ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 
+ 	nr_gops = size / sizeof(u64);
+ 	for (i = 0; i < nr_gops; i++) {
++		struct efi_graphics_output_protocol_mode_64 *mode;
+ 		struct efi_graphics_output_mode_info *info = NULL;
+ 		efi_guid_t conout_proto = EFI_CONSOLE_OUT_DEVICE_GUID;
+ 		bool conout_found = false;
+@@ -263,9 +219,11 @@ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 		if (status == EFI_SUCCESS)
+ 			conout_found = true;
+ 
+-		status = __gop_query64(sys_table_arg, gop64, &info, &size,
+-				       &current_fb_base);
+-		if (status == EFI_SUCCESS && (!first_gop || conout_found) &&
++		mode = (void *)(unsigned long)gop64->mode;
++		info = (void *)(unsigned long)mode->info;
++		current_fb_base = mode->frame_buffer_base;
++
++		if ((!first_gop || conout_found) &&
+ 		    info->pixel_format != PIXEL_BLT_ONLY) {
+ 			/*
+ 			 * Systems that use the UEFI Console Splitter may
