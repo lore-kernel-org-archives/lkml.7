@@ -2,83 +2,113 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB72BC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4668C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F3820637
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD6020692
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:30:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="jLkzEE1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfLHFDB (ORCPT
+        id S1726163AbfLHF1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 00:03:01 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:36446 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfLHFDB (ORCPT
+        Sun, 8 Dec 2019 00:27:41 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34723 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725263AbfLHF1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 00:03:01 -0500
-Received: by mail-io1-f69.google.com with SMTP id 202so8187474iou.3
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 21:03:00 -0800 (PST)
+        Sun, 8 Dec 2019 00:27:40 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t2so12333540wrr.1
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 21:27:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z9pquV3bCMWDZGt16luo26JnnZC+AO01g0+9zHilts8=;
+        b=jLkzEE1Emr1PE83CAnq1AgI/inVp1i1XP/A3KxFtGeJPzlHjql/AW7qbDdoJ6RkwP/
+         M/blOWuFrHwTqVu0HD7XU6oBygARII63Io7FMuwFIxSBZNWXQE31nohsv70D5gUG4c0i
+         lNvmgd8v9iiNwDU13GC2k+iVIOlGqM5ZLBBwFS0BOKt6JCa7on8rMz9kSlcs7esYIHgo
+         fvsHYFEuxDFHfp+pl5oEMOHRNsbovOC8155cnN2xpFkU2AfJHF/8Ko8IyKuo7p2XDSiq
+         71OYrCMOENeHGiW1mvRDeWIrxseD+Z++mGviUs4LIgYBh6i6l3P4WQsYall4BQaOHbjs
+         zn5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=qxR8n/MO9nUojwz4mikH1ALZdXQUJxV8vd4w04E6/Ac=;
-        b=hXCFPWodiBS8iHIH2Nk+/sNuX+Evg3HKnwxjqTcTXFoYS1jeGDjrPMUYvmechKbL+F
-         1NUSFAvWdI8bswjXhzR1i0yqfxkKz5PXubVouPntqHBYQC/LgJ0m7OT/8LJ4D5zo0/Ur
-         i9/wAOOl61sizw/iOx77JaPIV8Nito/ceXNpBePIIFGmyjS+EQxc2B234WmU2JP0h3r5
-         bS9H4oUFQgRtGCBwrrx9+qj8xTWJU4DkEdIKBzuiOLjLHQyJ4+SigKHD7WEp8hwZ+Dv3
-         QY994NFJr4/bJqFJHDHcARl4LLXD8nw3HeZODHARSl6Lx8SdENsHzuAqWDHPe1deWKAY
-         AOMQ==
-X-Gm-Message-State: APjAAAWMxKLjhJtr4JzNie1PmNof6nHdDLrA4h6U2b3sXKm37tLI+IiK
-        +qOMWbcLOOwHxUPa4FVzcJjtKViiza5Gz6691IwJJUqd/evC
-X-Google-Smtp-Source: APXvYqwhYun6FRgcqHHP72qU2fze8Qfccpac/MDOfTBslHGmFtbVnfIYVfHJILMkuRSGVKPU9YNFZlZopc4zcKxXx7fBNK5x0SmW
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z9pquV3bCMWDZGt16luo26JnnZC+AO01g0+9zHilts8=;
+        b=acEQjW6HI7SHZX5nHrVrHKGjFsb0bF5gQC8bm/qYyGGFRbv5yduc1QKuSriPb+Sc0i
+         w3EqawFrHYIYd4PPpVq+LWNYI7e+uMKyC6vJR1dQN1J7zdMttzYY2bv99jzmOE0mdy13
+         PvsXEhyCevaIEC0K5uk2ANsghpenqLhfyM5r7ifTXWC7CZ3EJ8PtSrr4vn9FfTjUO7HT
+         T63pLIC4xS0tm2n0E40GeKhOx8ku+eqGuqZMssnfbIuCkLK+uPdKvvdrOcecHDQvtp1f
+         7K5WRiZRcKYizpcjcaIDVhgusJKwr9hhxngT1LFWgKaVrQzO4pYCrZ7ENJaCC/eqo9x5
+         sezQ==
+X-Gm-Message-State: APjAAAU9b7G6Ut1CD25uzUEAMtcB2Fcoq/kathZMgdcw+8jIRAE2/obt
+        epEHkHX1XP0ZZKFHQruhiRXr8ou2CVdGcpCE4Ju8xw==
+X-Google-Smtp-Source: APXvYqw49COcOiWILG4CPx3KrlSGO4gmMkeSr4gqepLQqQqL+tWII/HFy4Sqica4vGqIHrcRGxBt0cpTksMJcfg5rEs=
+X-Received: by 2002:adf:d850:: with SMTP id k16mr22791152wrl.96.1575782858366;
+ Sat, 07 Dec 2019 21:27:38 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9c52:: with SMTP id 18mr15554232iof.180.1575781380427;
- Sat, 07 Dec 2019 21:03:00 -0800 (PST)
-Date:   Sat, 07 Dec 2019 21:03:00 -0800
-In-Reply-To: <000000000000734545058bb27ebb@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006c96bd05992a318e@google.com>
-Subject: Re: WARNING in perf_reg_value
-From:   syzbot <syzbot+10189b9b0f8c4664badd@syzkaller.appspotmail.com>
-To:     acme@kernel.org, acme@redhat.com,
-        alexander.shishkin@linux.intel.com, arvid.brodin@alten.se,
-        bp@alien8.de, davem@davemloft.net, eranian@google.com,
-        hpa@zytor.com, jolsa@kernel.org, jolsa@redhat.com,
-        kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, mingo@redhat.com, netdev@vger.kernel.org,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org,
-        vincent.weaver@maine.edu, x86@kernel.org, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191207212916.130825-1-olof@lixom.net>
+In-Reply-To: <20191207212916.130825-1-olof@lixom.net>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Sun, 8 Dec 2019 10:57:27 +0530
+Message-ID: <CAAhSdy0ERFToCEPtpaV9WX=RTyVD_=2GKutE7=cLnYtY-dU-OA@mail.gmail.com>
+Subject: Re: [PATCH] riscv: Fix build dependency for loader
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+On Sun, Dec 8, 2019 at 2:59 AM Olof Johansson <olof@lixom.net> wrote:
+>
+> The Makefile addition for the flat image loader missed an obj prefix.
+>
+> For most parallel builds this worked out fine, but with -j1 the dependency
+> wasn't fulfilled and thus fails:
+>
+> arch/riscv/boot/loader.S: Assembler messages:
+> arch/riscv/boot/loader.S:7: Error: file not found: arch/riscv/boot/Image
+>
+> Fixes: 405fe7aa0dba ("riscv: provide a flat image loader")
+> Cc: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Olof Johansson <olof@lixom.net>
 
-commit 311633b604063a8a5d3fbc74d0565b42df721f68
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Wed Jul 10 06:24:54 2019 +0000
+LGTM.
 
-     hsr: switch ->dellink() to ->ndo_uninit()
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13e241dae00000
-start commit:   e01e060f Merge tag 'platform-drivers-x86-v5.2-3' of git://..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fa9f7e1b6a8bb586
-dashboard link: https://syzkaller.appspot.com/bug?extid=10189b9b0f8c4664badd
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16615caea00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14a222aea00000
+Regards,
+Anup
 
-If the result looks correct, please mark the bug fixed by replying with:
-
-#syz fix: hsr: switch ->dellink() to ->ndo_uninit()
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> ---
+>  arch/riscv/boot/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/boot/Makefile b/arch/riscv/boot/Makefile
+> index a474f98ce4fae..36db8145f9f46 100644
+> --- a/arch/riscv/boot/Makefile
+> +++ b/arch/riscv/boot/Makefile
+> @@ -24,7 +24,7 @@ $(obj)/Image: vmlinux FORCE
+>  $(obj)/Image.gz: $(obj)/Image FORCE
+>         $(call if_changed,gzip)
+>
+> -loader.o: $(src)/loader.S $(obj)/Image
+> +$(obj)/loader.o: $(src)/loader.S $(obj)/Image
+>
+>  $(obj)/loader: $(obj)/loader.o $(obj)/Image $(obj)/loader.lds FORCE
+>         $(Q)$(LD) -T $(obj)/loader.lds -o $@ $(obj)/loader.o
+> --
+> 2.11.0
+>
