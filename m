@@ -2,80 +2,89 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD6BC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B45C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20101206D6
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:51:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SqH0ZUHt"
+	by mail.kernel.org (Postfix) with ESMTP id C19B5206D6
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbfLHFvu (ORCPT
+        id S1726465AbfLHFwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 00:51:50 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:32942 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfLHFvu (ORCPT
+        Sun, 8 Dec 2019 00:52:38 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14472 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725268AbfLHFwi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 00:51:50 -0500
-Received: by mail-pf1-f193.google.com with SMTP id y206so5523383pfb.0;
-        Sat, 07 Dec 2019 21:51:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=nYFwbpLaaswUDwrRriDYGVEu+aiGIUE5GwrUGVWIogs=;
-        b=SqH0ZUHtV5w6vIrh8ywH6qMJlBblQA2fpSU3vCH3ONuSzuT3U7DmdF+cb2UCpf4Nae
-         JEgDq7KDPMIOBArjKHDOWXROKPEJQZPdp2sHVIVyUorRiateM7oom04IOdJZH9I/w+XU
-         ZoOdTINNE8WTVtCL60xEDhmgh6ds8ijdkl47IKWqriRF5IpKxZNbNSAGW5MzoGJr+ayG
-         VNMpI3si7sdw0fSykpKlYxM67Y85A+DOvxCDfVMTMeznXJd4b/hWl/ZYs6Ua7FVV5S51
-         VPAh/IdORpYLR9fWfLlkWBKM+SKkatziPglcPMrQ+0K0oZ46LW1lo3v6ejZi5KA7mL+u
-         Hpeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nYFwbpLaaswUDwrRriDYGVEu+aiGIUE5GwrUGVWIogs=;
-        b=Ua1+usmU35vNLTNxaL5O2JEAPdGUtnki80W1ZstDNYaksrYsUarkaQYQXwNsIXMHUw
-         cNeJ2/GoP6KB/ZkebjViECJHGr6O4jt4cdiyzs5G1RihhBW08GVUU0BRgwi4lVGU6bDr
-         RGwatMGZQOGt/T/ed5ZpddkyT1D3PFyFP1sr8zNkluMfE7UPypT5fWW7Yy5gDsc9EIhJ
-         bxxMfmuoOTz+dB6W77dlso4f1z8xuVSX2HY2fHGUVocRuDYDXSbo9bj8yW93nwg5YPYp
-         BKQgVMtUzIRT47J8bo9wUWtCpTLYKdVRhj7AWxSQIkc7G2rnVA3X780CdNYGSBI3mM5y
-         lRiQ==
-X-Gm-Message-State: APjAAAVijVebny4drbuSObtJbYxewWw8njsGEgtPdmo1G1n/VGFeCvEg
-        mM7IzuJAmjZpcjnSUHP/vSpa07lH
-X-Google-Smtp-Source: APXvYqxkTZ5n8iVdqPUrRNOtSrf+Jv96Wb4ztHxZHcQRio3VJpXbJQ0mkUrA2FY2D0n4B06esf6ncA==
-X-Received: by 2002:a62:7711:: with SMTP id s17mr15188546pfc.88.1575784308846;
-        Sat, 07 Dec 2019 21:51:48 -0800 (PST)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id k190sm20512799pga.73.2019.12.07.21.51.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Dec 2019 21:51:48 -0800 (PST)
-Subject: Re: memory leak in fasync_helper
-To:     syzbot <syzbot+4b1fe8105f8044a26162@syzkaller.appspotmail.com>,
-        bfields@fieldses.org, jlayton@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>
-References: <00000000000023dba505992ac8aa@google.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <50681a5e-96e1-da38-e936-f817389c8b65@gmail.com>
-Date:   Sat, 7 Dec 2019 21:51:46 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 8 Dec 2019 00:52:38 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB85l0cW122346
+        for <linux-kernel@vger.kernel.org>; Sun, 8 Dec 2019 00:52:36 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wrt571q79-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 00:52:36 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Sun, 8 Dec 2019 05:52:34 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 8 Dec 2019 05:52:29 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB85qSHj45547766
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 8 Dec 2019 05:52:28 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 151E64C040;
+        Sun,  8 Dec 2019 05:52:28 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A5EF74C044;
+        Sun,  8 Dec 2019 05:52:23 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.71.101])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun,  8 Dec 2019 05:52:23 +0000 (GMT)
+Subject: Re: [RFC 3/3] Allow sched_{get,set}attr to change latency_tolerance
+ of the task
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        patrick.bellasi@matbug.net, valentin.schneider@arm.com,
+        pavel@ucw.cz, dhaval.giani@oracle.com, qperret@qperret.net,
+        David.Laight@ACULAB.COM, morten.rasmussen@arm.com, pjt@google.com,
+        tj@kernel.org, viresh.kumar@linaro.org, rafael.j.wysocki@intel.com,
+        daniel.lezcano@linaro.org
+References: <20191125094618.30298-1-parth@linux.ibm.com>
+ <20191125094618.30298-4-parth@linux.ibm.com>
+ <20191203083915.yahl2qd3wnnkqxxs@e107158-lin.cambridge.arm.com>
+ <cfb607c1-6be9-853d-cfad-6787f78fa6ad@linux.ibm.com>
+ <ffe4f4de-d433-91be-00ce-20b625807f20@arm.com>
+ <09e9a3e1-9c43-a541-01e6-e1b429a63a6f@arm.com>
+From:   Parth Shah <parth@linux.ibm.com>
+Date:   Sun, 8 Dec 2019 11:22:22 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <00000000000023dba505992ac8aa@google.com>
+In-Reply-To: <09e9a3e1-9c43-a541-01e6-e1b429a63a6f@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120805-0028-0000-0000-000003C67394
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120805-0029-0000-0000-000024899C17
+Message-Id: <a7b1d996-a21a-c6ca-6281-243b3163bc37@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-07_08:2019-12-05,2019-12-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ bulkscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ adultscore=0 spamscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912080053
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -83,119 +92,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 12/7/19 9:45 PM, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    bf929479 Merge branch 'for-linus' of git://git.kernel.org/..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=123e91e2e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=874c75a332209d41
-> dashboard link: https://syzkaller.appspot.com/bug?extid=4b1fe8105f8044a26162
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=120faee2e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=178a0ef6e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+4b1fe8105f8044a26162@syzkaller.appspotmail.com
-> 
-> BUG: memory leak
-> unreferenced object 0xffff88812a4082a0 (size 48):
->   comm "syz-executor670", pid 6989, jiffies 4294952355 (age 19.520s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 01 46 00 00 03 00 00 00  .........F......
->     00 00 00 00 00 00 00 00 00 6b 05 1f 81 88 ff ff  .........k......
->   backtrace:
->     [<000000002a74b343>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
->     [<000000002a74b343>] slab_post_alloc_hook mm/slab.h:586 [inline]
->     [<000000002a74b343>] slab_alloc mm/slab.c:3319 [inline]
->     [<000000002a74b343>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
->     [<00000000fa370506>] fasync_alloc fs/fcntl.c:895 [inline]
->     [<00000000fa370506>] fasync_add_entry fs/fcntl.c:953 [inline]
->     [<00000000fa370506>] fasync_helper+0x37/0xa9 fs/fcntl.c:982
->     [<000000006c3eaaf1>] sock_fasync+0x4d/0xa0 net/socket.c:1293
->     [<0000000098076f55>] ioctl_fioasync fs/ioctl.c:550 [inline]
->     [<0000000098076f55>] do_vfs_ioctl+0x409/0x810 fs/ioctl.c:655
->     [<00000000df24d2b9>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
->     [<000000003fec9c80>] __do_sys_ioctl fs/ioctl.c:720 [inline]
->     [<000000003fec9c80>] __se_sys_ioctl fs/ioctl.c:718 [inline]
->     [<000000003fec9c80>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
->     [<000000002bebbfe6>] do_syscall_64+0x73/0x1f0 arch/x86/entry/common.c:290
->     [<00000000722d8431>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> BUG: memory leak
-> unreferenced object 0xffff888128cdf240 (size 48):
->   comm "syz-executor670", pid 6990, jiffies 4294952942 (age 13.650s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 01 46 00 00 03 00 00 00  .........F......
->     00 00 00 00 00 00 00 00 00 d8 02 19 81 88 ff ff  ................
->   backtrace:
->     [<000000002a74b343>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
->     [<000000002a74b343>] slab_post_alloc_hook mm/slab.h:586 [inline]
->     [<000000002a74b343>] slab_alloc mm/slab.c:3319 [inline]
->     [<000000002a74b343>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
->     [<00000000fa370506>] fasync_alloc fs/fcntl.c:895 [inline]
->     [<00000000fa370506>] fasync_add_entry fs/fcntl.c:953 [inline]
->     [<00000000fa370506>] fasync_helper+0x37/0xa9 fs/fcntl.c:982
->     [<000000006c3eaaf1>] sock_fasync+0x4d/0xa0 net/socket.c:1293
->     [<0000000098076f55>] ioctl_fioasync fs/ioctl.c:550 [inline]
->     [<0000000098076f55>] do_vfs_ioctl+0x409/0x810 fs/ioctl.c:655
->     [<00000000df24d2b9>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
->     [<000000003fec9c80>] __do_sys_ioctl fs/ioctl.c:720 [inline]
->     [<000000003fec9c80>] __se_sys_ioctl fs/ioctl.c:718 [inline]
->     [<000000003fec9c80>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
->     [<000000002bebbfe6>] do_syscall_64+0x73/0x1f0 arch/x86/entry/common.c:290
->     [<00000000722d8431>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> BUG: memory leak
-> unreferenced object 0xffff888128cdff60 (size 48):
->   comm "syz-executor670", pid 6991, jiffies 4294953529 (age 7.780s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 01 46 00 00 03 00 00 00  .........F......
->     00 00 00 00 00 00 00 00 00 63 05 1f 81 88 ff ff  .........c......
->   backtrace:
->     [<000000002a74b343>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
->     [<000000002a74b343>] slab_post_alloc_hook mm/slab.h:586 [inline]
->     [<000000002a74b343>] slab_alloc mm/slab.c:3319 [inline]
->     [<000000002a74b343>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
->     [<00000000fa370506>] fasync_alloc fs/fcntl.c:895 [inline]
->     [<00000000fa370506>] fasync_add_entry fs/fcntl.c:953 [inline]
->     [<00000000fa370506>] fasync_helper+0x37/0xa9 fs/fcntl.c:982
->     [<000000006c3eaaf1>] sock_fasync+0x4d/0xa0 net/socket.c:1293
->     [<0000000098076f55>] ioctl_fioasync fs/ioctl.c:550 [inline]
->     [<0000000098076f55>] do_vfs_ioctl+0x409/0x810 fs/ioctl.c:655
->     [<00000000df24d2b9>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
->     [<000000003fec9c80>] __do_sys_ioctl fs/ioctl.c:720 [inline]
->     [<000000003fec9c80>] __se_sys_ioctl fs/ioctl.c:718 [inline]
->     [<000000003fec9c80>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
->     [<000000002bebbfe6>] do_syscall_64+0x73/0x1f0 arch/x86/entry/common.c:290
->     [<00000000722d8431>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+On 12/6/19 9:34 PM, Dietmar Eggemann wrote:
 > 
 > 
+> On 05.12.19 10:24, Dietmar Eggemann wrote:
+>> On 03/12/2019 16:51, Parth Shah wrote:
+>>>  
+>>> On 12/3/19 2:09 PM, Qais Yousef wrote:
+>>>> On 11/25/19 15:16, Parth Shah wrote:
+>>
+>> [...]
+>>
+>>>>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+>>>>> index ea7abbf5c1bb..dfd36ec14404 100644
+>>>>> --- a/kernel/sched/core.c
+>>>>> +++ b/kernel/sched/core.c
+>>>>> @@ -4695,6 +4695,9 @@ static void __setscheduler_params(struct task_struct *p,
+>>>>>  	p->rt_priority = attr->sched_priority;
+>>>>>  	p->normal_prio = normal_prio(p);
+>>>>>  	set_load_weight(p, true);
+>>>>> +
+>>>>> +	/* Change latency tolerance of the task if !SCHED_FLAG_KEEP_PARAMS */
+>>
+>> IMHO, this comment seems to be gratuitous.
+>>
+>>>>> +	p->latency_tolerance = attr->sched_latency_tolerance;
+>>>>>  }
+>>
+>> [...]
+>>
 > 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> This also would require some changes to UAPI
+> (include/uapi/linux/sched.h, include/uapi/linux/sched/types.h), see
+> commit a509a7cd7974 ("sched/uclamp: Extend sched_setattr() to support
+> utilization clamping") and tools headers UAPI
+> (tools/include/uapi/linux/sched.h), see commit c093de6bd3c5 ("tools
+> headers UAPI: Sync sched.h with the kernel").
 > 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patche
 
-
-AF_SMC bug it seems....
-
-Repro does essentially :
-
-socket(AF_SMC, SOCK_STREAM, SMCPROTO_SMC) = 3
-ioctl(3, FIOASYNC, [-1])   = 0
-sendmsg(3, {msg_name=NULL, msg_namelen=0, msg_iov=NULL, msg_iovlen=0, msg_controllen=0, msg_flags=0}, MSG_FASTOPEN)
-
-
-console logs :
-
-__sock_release: fasync list not empty!
-
+Ok. Will add it. Thanks
 
