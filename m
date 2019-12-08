@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD97C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87927C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C97A206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A5A2166E
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfLHN6e (ORCPT
+        id S1727308AbfLHN6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:58:34 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60026 "EHLO
+        Sun, 8 Dec 2019 08:58:40 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60020 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726619AbfLHNyl (ORCPT
+        by vger.kernel.org with ESMTP id S1726607AbfLHNyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:41 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1B-0007dU-HR; Sun, 08 Dec 2019 13:54:37 +0000
+        id 1idx1A-0007dA-Vv; Sun, 08 Dec 2019 13:54:37 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1A-0002Lg-TX; Sun, 08 Dec 2019 13:54:36 +0000
+        id 1idx1A-0002L3-Id; Sun, 08 Dec 2019 13:54:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        "Nathan Lynch" <nathanl@linux.ibm.com>,
-        "Michael Ellerman" <mpe@ellerman.id.au>
-Date:   Sun, 08 Dec 2019 13:53:00 +0000
-Message-ID: <lsq.1575813165.769999342@decadent.org.uk>
+        "Hulk Robot" <hulkci@huawei.com>,
+        "YueHaibing" <yuehaibing@huawei.com>,
+        "Kalle Valo" <kvalo@codeaurora.org>
+Date:   Sun, 08 Dec 2019 13:52:52 +0000
+Message-ID: <lsq.1575813165.842305762@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 16/72] powerpc/rtas: use device model APIs and
- serialization during LPM
+Subject: [PATCH 3.16 08/72] libertas_tf: Use correct channel range in
+ lbtf_geo_init
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,90 +57,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit a6717c01ddc259f6f73364779df058e2c67309f8 upstream.
+commit 2ec4ad49b98e4a14147d04f914717135eca7c8b1 upstream.
 
-The LPAR migration implementation and userspace-initiated cpu hotplug
-can interleave their executions like so:
+It seems we should use 'range' instead of 'priv->range'
+in lbtf_geo_init(), because 'range' is the corret one
+related to current regioncode.
 
-1. Set cpu 7 offline via sysfs.
-
-2. Begin a partition migration, whose implementation requires the OS
-   to ensure all present cpus are online; cpu 7 is onlined:
-
-     rtas_ibm_suspend_me -> rtas_online_cpus_mask -> cpu_up
-
-   This sets cpu 7 online in all respects except for the cpu's
-   corresponding struct device; dev->offline remains true.
-
-3. Set cpu 7 online via sysfs. _cpu_up() determines that cpu 7 is
-   already online and returns success. The driver core (device_online)
-   sets dev->offline = false.
-
-4. The migration completes and restores cpu 7 to offline state:
-
-     rtas_ibm_suspend_me -> rtas_offline_cpus_mask -> cpu_down
-
-This leaves cpu7 in a state where the driver core considers the cpu
-device online, but in all other respects it is offline and
-unused. Attempts to online the cpu via sysfs appear to succeed but the
-driver core actually does not pass the request to the lower-level
-cpuhp support code. This makes the cpu unusable until the cpu device
-is manually set offline and then online again via sysfs.
-
-Instead of directly calling cpu_up/cpu_down, the migration code should
-use the higher-level device core APIs to maintain consistent state and
-serialize operations.
-
-Fixes: 120496ac2d2d ("powerpc: Bring all threads online prior to migration/hibernation")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190802192926.19277-2-nathanl@linux.ibm.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 691cdb49388b ("libertas_tf: command helper functions for libertas_tf")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/powerpc/kernel/rtas.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/net/wireless/libertas_tf/cmd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -855,15 +855,17 @@ static int rtas_cpu_state_change_mask(en
- 		return 0;
- 
- 	for_each_cpu(cpu, cpus) {
-+		struct device *dev = get_cpu_device(cpu);
-+
- 		switch (state) {
- 		case DOWN:
--			cpuret = cpu_down(cpu);
-+			cpuret = device_offline(dev);
- 			break;
- 		case UP:
--			cpuret = cpu_up(cpu);
-+			cpuret = device_online(dev);
+--- a/drivers/net/wireless/libertas_tf/cmd.c
++++ b/drivers/net/wireless/libertas_tf/cmd.c
+@@ -69,7 +69,7 @@ static void lbtf_geo_init(struct lbtf_pr
  			break;
  		}
--		if (cpuret) {
-+		if (cpuret < 0) {
- 			pr_debug("%s: cpu_%s for cpu#%d returned %d.\n",
- 					__func__,
- 					((state == UP) ? "up" : "down"),
-@@ -955,6 +957,8 @@ int rtas_ibm_suspend_me(struct rtas_args
- 	data.token = rtas_token("ibm,suspend-me");
- 	data.complete = &done;
  
-+	lock_device_hotplug();
-+
- 	/* All present CPUs must be online */
- 	cpumask_andnot(offline_mask, cpu_present_mask, cpu_online_mask);
- 	cpuret = rtas_online_cpus_mask(offline_mask);
-@@ -986,6 +990,7 @@ int rtas_ibm_suspend_me(struct rtas_args
- 				__func__);
- 
- out:
-+	unlock_device_hotplug();
- 	free_cpumask_var(offline_mask);
- 	return atomic_read(&data.error);
+-	for (ch = priv->range.start; ch < priv->range.end; ch++)
++	for (ch = range->start; ch < range->end; ch++)
+ 		priv->channels[CHAN_TO_IDX(ch)].flags = 0;
  }
+ 
 
