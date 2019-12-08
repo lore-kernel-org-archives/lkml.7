@@ -7,63 +7,61 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3097C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 17:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D38DC43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 17:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A70B20409
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 17:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD8A20692
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 17:23:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oXnxX3E0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uuzg0mJZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfLHRTX (ORCPT
+        id S1726506AbfLHRXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 12:19:23 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35115 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfLHRTX (ORCPT
+        Sun, 8 Dec 2019 12:23:07 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39860 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbfLHRXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 12:19:23 -0500
-Received: by mail-wr1-f67.google.com with SMTP id g17so13418850wro.2;
-        Sun, 08 Dec 2019 09:19:22 -0800 (PST)
+        Sun, 8 Dec 2019 12:23:07 -0500
+Received: by mail-wm1-f68.google.com with SMTP id s14so12374275wmh.4
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 09:23:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=hJ551783o9ImIc/f28xz8rKXrHYxNx70TgHA3JxmnaY=;
-        b=oXnxX3E0AsCAjLUi4ymzC7mQnsVvvUvM1731+3HdPdZL6kakMAdK8IyWnTBGfbIa0K
-         cOumCj+euP80G+nRBykvoYFsRI/wtwDgI9gwkzMxyd93bEECKS1rt7gzkfEavMPOrSGN
-         0NHudKJCMgFU29ZHDk8HNn6yZa3RJocdsfjGbJWEAhvsIMMOL6cvVmRy8dCfav3BsxTI
-         PFL1PW+CUBnvlRr41msShjHwRGZkYN+kasf7ow+y70HvuXaeyig79sEP9iQXE4e189Rr
-         TvaW57XFYrZxGxnfaNfK/qckAE/I8ZwtHu5TDb33Teu0EjO2Zc605+xgHm8LhwPhvAOd
-         ftzw==
+        bh=TCJmDBLYuV/jWqc0iBCCs2tprqUMEIazO4OrAHZKLfw=;
+        b=uuzg0mJZTMfj6yBQSj2Y0Vu0/IKwg1wRZ73Cd+dUIkTUYO809Djo7/nyFdkNX++KyF
+         wl51N6LC8cyuXh4W5JdytzCFC0LzRUWUiAuDMCb0uEnWwnpgzA0on2BmJhqJ769V3OfK
+         Qth3XiMqVaWMv9mDRO7j1/PdOLzt88dZ+7lIgjxOaGQverIRRk9p/+D8Tp2rL1yhs1lS
+         Q95ZqZwlCuOtru4d9uIfI8RHfhbaKlS5otsQv+Pv+05cYkjzuYevogIPd0BmouIyemBH
+         XxjJ8mM6I8HOtuPKDH/OquE2HUut+hnaMyxfaKKDO/ULegd/GAtu6v4bdvpxmrcu7Eor
+         7Nrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=hJ551783o9ImIc/f28xz8rKXrHYxNx70TgHA3JxmnaY=;
-        b=ZoKOsP0CVd93XG1qMD3EnU3vXgmOYM6UDY3wXZqj2SLF5QVcdXvqOZVRd2mWng41R4
-         v/hWVnsAPBz8Oxn1Qw57jniKTdFXqm7szZ0EKLsWzm9qedIJGNa5ghYcw0ma+iuIC019
-         ebhe22RfRdsCUl1KibadQw6iZd4uzORp9ArHdhLZ+ZlOXyIt0u7HnzakwzcsseVBfFk/
-         eCdG0QwqGnRHAdW0+u/QBrKHugG2XYnUFOQS2bQ3TIPO6HGRfFSzpfliWzv2ItjsKuff
-         Zqvk1y8/Le+vTTcaeKcSnC9PS2APdCs5XtaujUsB+mjqx8lG26utjJrSL7gajsrIaaye
-         wJaQ==
-X-Gm-Message-State: APjAAAUTu3Ip+HKA0FFBAtkoC6No5pKPYDa1u13yH7mjyFjRIKX+pxSH
-        yXfTqdVZ2PSLUmMTVe0E9Q==
-X-Google-Smtp-Source: APXvYqztbmerjte0PZPdfwvWOIfvnFfr1Lgq24F0mQ2x9aUA7P5VI0zZPPNVfdk6YUoMtOXikoulOw==
-X-Received: by 2002:adf:8150:: with SMTP id 74mr27860550wrm.114.1575825561893;
-        Sun, 08 Dec 2019 09:19:21 -0800 (PST)
+        bh=TCJmDBLYuV/jWqc0iBCCs2tprqUMEIazO4OrAHZKLfw=;
+        b=oczAxWQjdelJyyWuECqcsd4t0ZpMC74ky7J9QJabYHlsTTqmgc2mQhDrmak9KLVk6X
+         bsJKGSSDRXcR2PMU+5EKEhBXgM/UVl7Lp8cQglEK2v91DjccB2f8FCO+LBEKUCoAYzPD
+         akthtY2WaDljFtvEv8f22VaJRnnS3dS/5OCCZY6GgsNHSfTQFLkO3iCSPH6Ehjp9cL+I
+         uvRPTsuAjF5rR0ktiTffGSW44VHbVQdAIXa2Wm60X6GEuqIYMlacnH5yYss/3/8cEunW
+         yLhxz46jxJbjYEjt0Z/xRVPUUYq9CKpkFtcEoecI4KiRdnAzX6IfCS2Vqp83WFS4+kK8
+         dOGw==
+X-Gm-Message-State: APjAAAUl2sLdNikhka7rmq73vcsmIOxcEa5cxXkWsT+NL/YU0HgbJj7x
+        LlBk/gFZsiRmLRBQ49ixlti3VEI=
+X-Google-Smtp-Source: APXvYqwjfKyDgkVT30izndYAtXJS80kI/3gW8VNhHD0oJzHfdaJC5Pyld4r8NTpaFb9zIOwhVMvfzg==
+X-Received: by 2002:a7b:c851:: with SMTP id c17mr19474644wml.71.1575825785048;
+        Sun, 08 Dec 2019 09:23:05 -0800 (PST)
 Received: from avx2 ([46.53.249.42])
-        by smtp.gmail.com with ESMTPSA id h2sm24387086wrv.66.2019.12.08.09.19.20
+        by smtp.gmail.com with ESMTPSA id k11sm1497102wmc.20.2019.12.08.09.23.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Dec 2019 09:19:21 -0800 (PST)
-Date:   Sun, 8 Dec 2019 20:19:18 +0300
+        Sun, 08 Dec 2019 09:23:04 -0800 (PST)
+Date:   Sun, 8 Dec 2019 20:23:01 +0300
 From:   Alexey Dobriyan <adobriyan@gmail.com>
 To:     akpm@linux-foundation.org
-Cc:     dan.carpenter@oracle.com, will@kernel.org, ebiederm@xmission.com,
-        linux-arch@vger.kernel.org, security@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] execve: warn if process starts with executable stack
-Message-ID: <20191208171918.GC19716@avx2>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] ELF: smaller code generation around auxv vector fill
+Message-ID: <20191208172301.GD19716@avx2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -73,71 +71,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There were few episodes of silent downgrade to an executable stack over
-years:
+Filling auxv vector as array with index (auxv[i++] = ...) generates terrible
+code. "saved_auxv" should be reworked because it is the worst member
+of mm_struct by size/usefullness ratio but do it later.
 
-1) linking innocent looking assembly file will silently add executable
-   stack if proper linker options is not given as well:
+Meanwhile help gcc a little with *auxv++ idiom.
 
-	$ cat f.S
-	.intel_syntax noprefix
-	.text
-	.globl f
-	f:
-	        ret
+Space savings on x86_64:
 
-	$ cat main.c
-	void f(void);
-	int main(void)
-	{
-	        f();
-	        return 0;
-	}
-
-	$ gcc main.c f.S
-	$ readelf -l ./a.out
-	  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
-                         0x0000000000000000 0x0000000000000000  RWE    0x10
-			 					 ^^^
-
-2) converting C99 nested function into a closure
-https://nullprogram.com/blog/2019/11/15/
-
-	void intsort2(int *base, size_t nmemb, _Bool invert)
-	{
-	    int cmp(const void *a, const void *b)
-	    {
-	        int r = *(int *)a - *(int *)b;
-	        return invert ? -r : r;
-	    }
-	    qsort(base, nmemb, sizeof(*base), cmp);
-	}
-
-will silently require stack trampolines while non-closure version will not.
-
-Without doubt this behaviour is documented somewhere, add a warning so that
-developers and users can at least notice. After so many years of x86_64 having
-proper executable stack support it should not cause too many problems.
+	add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-127 (-127)
+	Function                                     old     new   delta
+	load_elf_binary                             5470    5343    -127
 
 Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
 ---
 
-	v2: print pathname instead of comm/pid
+ fs/binfmt_elf.c |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
- fs/exec.c |    5 +++++
- 1 file changed, 5 insertions(+)
-
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -761,6 +761,11 @@ int setup_arg_pages(struct linux_binprm *bprm,
- 		goto out_unlock;
- 	BUG_ON(prev != vma);
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -177,7 +177,7 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
+ 	unsigned char k_rand_bytes[16];
+ 	int items;
+ 	elf_addr_t *elf_info;
+-	int ei_index = 0;
++	int ei_index;
+ 	const struct cred *cred = current_cred();
+ 	struct vm_area_struct *vma;
  
-+	if (unlikely(vm_flags & VM_EXEC)) {
-+		pr_warn_once("process '%pD4' started with executable stack\n",
-+			     bprm->file);
-+	}
-+
- 	/* Move stack pages down in memory. */
- 	if (stack_shift) {
- 		ret = shift_arg_pages(vma, stack_shift);
+@@ -231,8 +231,8 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
+ 	/* update AT_VECTOR_SIZE_BASE if the number of NEW_AUX_ENT() changes */
+ #define NEW_AUX_ENT(id, val) \
+ 	do { \
+-		elf_info[ei_index++] = id; \
+-		elf_info[ei_index++] = val; \
++		*elf_info++ = id; \
++		*elf_info++ = val; \
+ 	} while (0)
+ 
+ #ifdef ARCH_DLINFO
+@@ -276,12 +276,13 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
+ 	}
+ #undef NEW_AUX_ENT
+ 	/* AT_NULL is zero; clear the rest too */
+-	memset(&elf_info[ei_index], 0,
+-	       sizeof current->mm->saved_auxv - ei_index * sizeof elf_info[0]);
++	memset(elf_info, 0, (char *)current->mm->saved_auxv +
++			sizeof(current->mm->saved_auxv) - (char *)elf_info);
+ 
+ 	/* And advance past the AT_NULL entry.  */
+-	ei_index += 2;
++	elf_info += 2;
+ 
++	ei_index = elf_info - (elf_addr_t *)current->mm->saved_auxv;
+ 	sp = STACK_ADD(p, ei_index);
+ 
+ 	items = (argc + 1) + (envc + 1) + 1;
+@@ -339,7 +340,7 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
+ 	current->mm->env_end = p;
+ 
+ 	/* Put the elf_info on the stack in the right place.  */
+-	if (copy_to_user(sp, elf_info, ei_index * sizeof(elf_addr_t)))
++	if (copy_to_user(sp, current->mm->saved_auxv, ei_index * sizeof(elf_addr_t)))
+ 		return -EFAULT;
+ 	return 0;
+ }
