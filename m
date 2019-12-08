@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA20BC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17AFC43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC88206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9301B206E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfLHNyu (ORCPT
+        id S1727115AbfLHNzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:54:50 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60434 "EHLO
+        Sun, 8 Dec 2019 08:55:19 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60684 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726879AbfLHNyp (ORCPT
+        by vger.kernel.org with ESMTP id S1726960AbfLHNys (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 08:54:45 -0500
+        Sun, 8 Dec 2019 08:54:48 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1G-0007hP-6V; Sun, 08 Dec 2019 13:54:42 +0000
+        id 1idx1H-0007iG-8v; Sun, 08 Dec 2019 13:54:43 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1E-0002PB-U8; Sun, 08 Dec 2019 13:54:40 +0000
+        id 1idx1F-0002Pn-Kp; Sun, 08 Dec 2019 13:54:41 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Navid Emamdoost" <navid.emamdoost@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Date:   Sun, 08 Dec 2019 13:53:43 +0000
-Message-ID: <lsq.1575813165.251391907@decadent.org.uk>
+        "Hillf Danton" <hdanton@sina.com>,
+        "syzbot" <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>,
+        "Andrey Konovalov" <andreyknvl@google.com>,
+        "Jiri Kosina" <jkosina@suse.cz>
+Date:   Sun, 08 Dec 2019 13:53:50 +0000
+Message-ID: <lsq.1575813165.786382069@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 59/72] scsi: bfa: release allocated memory in case of
- error
+Subject: [PATCH 3.16 66/72] HID: hiddev: do cleanup in failure of opening
+ a device
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,33 +58,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Hillf Danton <hdanton@sina.com>
 
-commit 0e62395da2bd5166d7c9e14cbc7503b256a34cb0 upstream.
+commit 6d4472d7bec39917b54e4e80245784ea5d60ce49 upstream.
 
-In bfad_im_get_stats if bfa_port_get_stats fails, allocated memory needs to
-be released.
+Undo what we did for opening before releasing the memory slice.
 
-Link: https://lore.kernel.org/r/20190910234417.22151-1-navid.emamdoost@gmail.com
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/bfa/bfad_attr.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/hid/usbhid/hiddev.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/scsi/bfa/bfad_attr.c
-+++ b/drivers/scsi/bfa/bfad_attr.c
-@@ -282,8 +282,10 @@ bfad_im_get_stats(struct Scsi_Host *shos
- 	rc = bfa_port_get_stats(BFA_FCPORT(&bfad->bfa),
- 				fcstats, bfad_hcb_comp, &fcomp);
- 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
--	if (rc != BFA_STATUS_OK)
-+	if (rc != BFA_STATUS_OK) {
-+		kfree(fcstats);
- 		return NULL;
-+	}
- 
- 	wait_for_completion(&fcomp.comp);
- 
+--- a/drivers/hid/usbhid/hiddev.c
++++ b/drivers/hid/usbhid/hiddev.c
+@@ -322,6 +322,10 @@ static int hiddev_open(struct inode *ino
+ 	return 0;
+ bail_unlock:
+ 	mutex_unlock(&hiddev->existancelock);
++
++	spin_lock_irq(&list->hiddev->list_lock);
++	list_del(&list->node);
++	spin_unlock_irq(&list->hiddev->list_lock);
+ bail:
+ 	file->private_data = NULL;
+ 	vfree(list);
 
