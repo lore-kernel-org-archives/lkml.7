@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE09C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A3BC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA5A207FD
+	by mail.kernel.org (Postfix) with ESMTP id CC86D206E0
 	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfLHNyj (ORCPT
+        id S1726659AbfLHNyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:54:39 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:59924 "EHLO
+        Sun, 8 Dec 2019 08:54:40 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:59946 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726425AbfLHNyj (ORCPT
+        by vger.kernel.org with ESMTP id S1726523AbfLHNyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 08:54:39 -0500
+        Sun, 8 Dec 2019 08:54:40 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1A-0007d5-Sl; Sun, 08 Dec 2019 13:54:36 +0000
+        id 1idx1B-0007dF-3l; Sun, 08 Dec 2019 13:54:37 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1A-0002Ks-E8; Sun, 08 Dec 2019 13:54:36 +0000
+        id 1idx1A-0002L7-JU; Sun, 08 Dec 2019 13:54:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Tomi Valkeinen" <tomi.valkeinen@ti.com>,
-        "Prabhakar Lad" <prabhakar.csengg@gmail.com>
-Date:   Sun, 08 Dec 2019 13:52:50 +0000
-Message-ID: <lsq.1575813165.479482953@decadent.org.uk>
+        "Grzegorz Halat" <ghalat@redhat.com>,
+        "Don Zickus" <dzickus@redhat.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>
+Date:   Sun, 08 Dec 2019 13:52:53 +0000
+Message-ID: <lsq.1575813165.85081378@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 06/72] fbdev: ssd1307fb: return proper error code if
- write command fails
+Subject: [PATCH 3.16 09/72] x86/reboot: Always use NMI fallback when
+ shutdown via reboot vector IPI fails
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,145 +57,122 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+From: Grzegorz Halat <ghalat@redhat.com>
 
-commit 5b72ae9a901cbfbe632570f278486142b037fe51 upstream.
+commit 747d5a1bf293dcb33af755a6d285d41b8c1ea010 upstream.
 
-this patch fixes ssd1307fb_ssd1306_init() function to return
-proper error codes in case of failures.
+A reboot request sends an IPI via the reboot vector and waits for all other
+CPUs to stop. If one or more CPUs are in critical regions with interrupts
+disabled then the IPI is not handled on those CPUs and the shutdown hangs
+if native_stop_other_cpus() is called with the wait argument set.
 
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Such a situation can happen when one CPU was stopped within a lock held
+section and another CPU is trying to acquire that lock with interrupts
+disabled. There are other scenarios which can cause such a lockup as well.
+
+In theory the shutdown should be attempted by an NMI IPI after the timeout
+period elapsed. Though the wait loop after sending the reboot vector IPI
+prevents this. It checks the wait request argument and the timeout. If wait
+is set, which is true for sys_reboot() then it won't fall through to the
+NMI shutdown method after the timeout period has finished.
+
+This was an oversight when the NMI shutdown mechanism was added to handle
+the 'reboot IPI is not working' situation. The mechanism was added to deal
+with stuck panic shutdowns, which do not have the wait request set, so the
+'wait request' case was probably not considered.
+
+Remove the wait check from the post reboot vector IPI wait loop and enforce
+that the wait loop in the NMI fallback path is invoked even if NMI IPIs are
+disabled or the registration of the NMI handler fails. That second wait
+loop will then hang if not all CPUs shutdown and the wait argument is set.
+
+[ tglx: Avoid the hard to parse line break in the NMI fallback path,
+  	add comments and massage the changelog ]
+
+Fixes: 7d007d21e539 ("x86/reboot: Use NMI to assist in shutting down if IRQ fails")
+Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Don Zickus <dzickus@redhat.com>
+Link: https://lkml.kernel.org/r/20190628122813.15500-1-ghalat@redhat.com
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/video/fbdev/ssd1307fb.c | 67 ++++++++++++++++++++++++++-------
- 1 file changed, 53 insertions(+), 14 deletions(-)
+ arch/x86/kernel/smp.c | 46 +++++++++++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 19 deletions(-)
 
---- a/drivers/video/fbdev/ssd1307fb.c
-+++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -320,7 +320,10 @@ static int ssd1307fb_ssd1306_init(struct
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -178,6 +178,12 @@ asmlinkage __visible void smp_reboot_int
+ 	irq_exit();
+ }
  
- 	/* Set initial contrast */
- 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_CONTRAST);
--	ret = ret & ssd1307fb_write_cmd(par->client, 0x7f);
-+	if (ret < 0)
-+		return ret;
++static int register_stop_handler(void)
++{
++	return register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
++				    NMI_FLAG_FIRST, "smp_stop");
++}
 +
-+	ret = ssd1307fb_write_cmd(par->client, 0x7f);
- 	if (ret < 0)
- 		return ret;
+ static void native_stop_other_cpus(int wait)
+ {
+ 	unsigned long flags;
+@@ -211,39 +217,41 @@ static void native_stop_other_cpus(int w
+ 		apic->send_IPI_allbutself(REBOOT_VECTOR);
  
-@@ -336,63 +339,99 @@ static int ssd1307fb_ssd1306_init(struct
+ 		/*
+-		 * Don't wait longer than a second if the caller
+-		 * didn't ask us to wait.
++		 * Don't wait longer than a second for IPI completion. The
++		 * wait request is not checked here because that would
++		 * prevent an NMI shutdown attempt in case that not all
++		 * CPUs reach shutdown state.
+ 		 */
+ 		timeout = USEC_PER_SEC;
+-		while (num_online_cpus() > 1 && (wait || timeout--))
++		while (num_online_cpus() > 1 && timeout--)
+ 			udelay(1);
+ 	}
+-	
+-	/* if the REBOOT_VECTOR didn't work, try with the NMI */
+-	if ((num_online_cpus() > 1) && (!smp_no_nmi_ipi))  {
+-		if (register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
+-					 NMI_FLAG_FIRST, "smp_stop"))
+-			/* Note: we ignore failures here */
+-			/* Hope the REBOOT_IRQ is good enough */
+-			goto finish;
+-
+-		/* sync above data before sending IRQ */
+-		wmb();
  
- 	/* Set multiplex ratio value */
- 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_MULTIPLEX_RATIO);
--	ret = ret & ssd1307fb_write_cmd(par->client, par->height - 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ssd1307fb_write_cmd(par->client, par->height - 1);
- 	if (ret < 0)
- 		return ret;
+-		pr_emerg("Shutting down cpus with NMI\n");
++	/* if the REBOOT_VECTOR didn't work, try with the NMI */
++	if (num_online_cpus() > 1) {
++		/*
++		 * If NMI IPI is enabled, try to register the stop handler
++		 * and send the IPI. In any case try to wait for the other
++		 * CPUs to stop.
++		 */
++		if (!smp_no_nmi_ipi && !register_stop_handler()) {
++			/* Sync above data before sending IRQ */
++			wmb();
  
- 	/* set display offset value */
- 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_DISPLAY_OFFSET);
-+	if (ret < 0)
-+		return ret;
-+
- 	ret = ssd1307fb_write_cmd(par->client, 0x20);
- 	if (ret < 0)
- 		return ret;
+-		apic->send_IPI_allbutself(NMI_VECTOR);
++			pr_emerg("Shutting down cpus with NMI\n");
  
- 	/* Set clock frequency */
- 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_CLOCK_FREQ);
--	ret = ret & ssd1307fb_write_cmd(par->client, 0xf0);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ssd1307fb_write_cmd(par->client, 0xf0);
- 	if (ret < 0)
- 		return ret;
++			apic->send_IPI_allbutself(NMI_VECTOR);
++		}
+ 		/*
+-		 * Don't wait longer than a 10 ms if the caller
+-		 * didn't ask us to wait.
++		 * Don't wait longer than 10 ms if the caller didn't
++		 * reqeust it. If wait is true, the machine hangs here if
++		 * one or more CPUs do not reach shutdown state.
+ 		 */
+ 		timeout = USEC_PER_MSEC * 10;
+ 		while (num_online_cpus() > 1 && (wait || timeout--))
+ 			udelay(1);
+ 	}
  
- 	/* Set precharge period in number of ticks from the internal clock */
- 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_PRECHARGE_PERIOD);
--	ret = ret & ssd1307fb_write_cmd(par->client, 0x22);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ssd1307fb_write_cmd(par->client, 0x22);
- 	if (ret < 0)
- 		return ret;
- 
- 	/* Set COM pins configuration */
- 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_COM_PINS_CONFIG);
--	ret = ret & ssd1307fb_write_cmd(par->client, 0x22);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ssd1307fb_write_cmd(par->client, 0x22);
- 	if (ret < 0)
- 		return ret;
- 
- 	/* Set VCOMH */
- 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_VCOMH);
--	ret = ret & ssd1307fb_write_cmd(par->client, 0x49);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ssd1307fb_write_cmd(par->client, 0x49);
- 	if (ret < 0)
- 		return ret;
- 
- 	/* Turn on the DC-DC Charge Pump */
- 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_CHARGE_PUMP);
--	ret = ret & ssd1307fb_write_cmd(par->client, 0x14);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ssd1307fb_write_cmd(par->client, 0x14);
- 	if (ret < 0)
- 		return ret;
- 
- 	/* Switch to horizontal addressing mode */
- 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_ADDRESS_MODE);
--	ret = ret & ssd1307fb_write_cmd(par->client,
--					SSD1307FB_SET_ADDRESS_MODE_HORIZONTAL);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ssd1307fb_write_cmd(par->client,
-+				  SSD1307FB_SET_ADDRESS_MODE_HORIZONTAL);
- 	if (ret < 0)
- 		return ret;
- 
- 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_COL_RANGE);
--	ret = ret & ssd1307fb_write_cmd(par->client, 0x0);
--	ret = ret & ssd1307fb_write_cmd(par->client, par->width - 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ssd1307fb_write_cmd(par->client, 0x0);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ssd1307fb_write_cmd(par->client, par->width - 1);
- 	if (ret < 0)
- 		return ret;
- 
- 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_PAGE_RANGE);
--	ret = ret & ssd1307fb_write_cmd(par->client, 0x0);
--	ret = ret & ssd1307fb_write_cmd(par->client,
--					par->page_offset + (par->height / 8) - 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ssd1307fb_write_cmd(par->client, 0x0);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ssd1307fb_write_cmd(par->client,
-+				  par->page_offset + (par->height / 8) - 1);
- 	if (ret < 0)
- 		return ret;
- 
+-finish:
+ 	local_irq_save(flags);
+ 	disable_local_APIC();
+ 	local_irq_restore(flags);
 
