@@ -2,88 +2,64 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99302C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 20:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28F4C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71BC0206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 20:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A609B20637
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfLHUz1 (ORCPT
+        id S1726659AbfLHVK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 15:55:27 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:55441 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfLHUz0 (ORCPT
+        Sun, 8 Dec 2019 16:10:28 -0500
+Received: from isilmar-4.linta.de ([136.243.71.142]:40496 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfLHVJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 15:55:26 -0500
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id DE367C0003;
-        Sun,  8 Dec 2019 20:55:22 +0000 (UTC)
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Yue Wang <yue.wang@Amlogic.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH 2/2] PCI: amlogic: Use PCIe pll gate when available
-Date:   Sun,  8 Dec 2019 22:03:20 +0100
-Message-Id: <20191208210320.15539-3-repk@triplefau.lt>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191208210320.15539-1-repk@triplefau.lt>
-References: <20191208210320.15539-1-repk@triplefau.lt>
+        Sun, 8 Dec 2019 16:09:39 -0500
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id C57AF200A85;
+        Sun,  8 Dec 2019 21:09:37 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 766AC20AD3; Sun,  8 Dec 2019 21:58:19 +0100 (CET)
+Date:   Sun, 8 Dec 2019 21:58:19 +0100
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     Simon Geis <simon.geis@fau.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Adam Zerella <adam.zerella@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
+        Lukas Panzer <lukas.panzer@fau.de>
+Subject: Re: [PATCH 12/12] PCMCIA: remove ifdef 0 block
+Message-ID: <20191208205819.GH240074@light.dominikbrodowski.net>
+References: <20191208160947.20694-2-simon.geis@fau.de>
+ <20191208160947.20694-13-simon.geis@fau.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191208160947.20694-13-simon.geis@fau.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to get PCIe working reliably on some AXG platforms, PCIe pll
-cml needs to be enabled. This is done by using the PCIE_PLL_CML_ENABLE
-clock gate.
+On Sun, Dec 08, 2019 at 05:09:47PM +0100, Simon Geis wrote:
+> indirect_read16 is similar to indirect_read with the exception that 
+> it reads 16 instead of 8 bit.
 
-This clock gate is optional, so do not fail if it is missing in the
-devicetree.
+... and, most importantly, indirect_read16 is unused in this module.
 
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
----
- drivers/pci/controller/dwc/pci-meson.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index 3772b02a5c55..32b70ea9a426 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -89,6 +89,7 @@ struct meson_pcie_clk_res {
- 	struct clk *mipi_gate;
- 	struct clk *port_clk;
- 	struct clk *general_clk;
-+	struct clk *pll_cml_gate;
- };
- 
- struct meson_pcie_rc_reset {
-@@ -300,6 +301,10 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
- 	if (IS_ERR(res->clk))
- 		return PTR_ERR(res->clk);
- 
-+	res->pll_cml_gate = meson_pcie_probe_clock(dev, "pll_cml_en", 0);
-+	if (IS_ERR(res->pll_cml_gate))
-+		res->pll_cml_gate = NULL;
-+
- 	return 0;
- }
- 
--- 
-2.24.0
-
+Thanks,
+	Dominik
