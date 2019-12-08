@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931EBC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 14:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 719CDC43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 14:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6468320709
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 14:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E67620637
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 14:59:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfLHO7I (ORCPT
+        id S1726973AbfLHO7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 09:59:08 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36902 "EHLO
+        Sun, 8 Dec 2019 09:59:14 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36907 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbfLHO7B (ORCPT
+        with ESMTP id S1726418AbfLHO7M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 09:59:01 -0500
+        Sun, 8 Dec 2019 09:59:12 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1idy1H-0000eu-1w; Sun, 08 Dec 2019 15:58:47 +0100
+        id 1idy1D-0000eP-Lv; Sun, 08 Dec 2019 15:58:43 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B8FE31C2894;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 54F5D1C2892;
         Sun,  8 Dec 2019 15:58:35 +0100 (CET)
 Date:   Sun, 08 Dec 2019 14:58:35 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/rt, ARM: Use CONFIG_PREEMPTION
+Subject: [tip: sched/urgent] sched/rt, powerpc: Use CONFIG_PREEMPTION
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
         Linus Torvalds <torvalds@linux-foundation.org>,
+        Paul Mackerras <paulus@samba.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191015191821.11479-2-bigeasy@linutronix.de>
-References: <20191015191821.11479-2-bigeasy@linutronix.de>
+        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191024160458.vlnf3wlcyjl2ich7@linutronix.de>
+References: <20191024160458.vlnf3wlcyjl2ich7@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <157581711564.21853.2427720102976898995.tip-bot2@tip-bot2>
+Message-ID: <157581711522.21853.9059237081859491021.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,126 +62,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     e7289c6de81c8e8991148e46c9ab43e2d23940f3
-Gitweb:        https://git.kernel.org/tip/e7289c6de81c8e8991148e46c9ab43e2d23940f3
+Commit-ID:     fdc5569eaba997852e0bfb57d11af496e4c1fa9a
+Gitweb:        https://git.kernel.org/tip/fdc5569eaba997852e0bfb57d11af496e4c1fa9a
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 15 Oct 2019 21:17:48 +02:00
+AuthorDate:    Thu, 24 Oct 2019 18:04:58 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Sun, 08 Dec 2019 14:37:32 +01:00
 
-sched/rt, ARM: Use CONFIG_PREEMPTION
+sched/rt, powerpc: Use CONFIG_PREEMPTION
 
 CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
 Both PREEMPT and PREEMPT_RT require the same functionality which today
 depends on CONFIG_PREEMPT.
 
-Switch the entry code, cache over to use CONFIG_PREEMPTION and add output
-in show_stack() for PREEMPT_RT.
+Switch the entry code over to use CONFIG_PREEMPTION.
 
-[bigeasy: +traps.c]
+[bigeasy: +Kconfig]
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul Mackerras <paulus@samba.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: https://lore.kernel.org/r/20191015191821.11479-2-bigeasy@linutronix.de
+Cc: linuxppc-dev@lists.ozlabs.org
+Link: https://lore.kernel.org/r/20191024160458.vlnf3wlcyjl2ich7@linutronix.de
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/arm/include/asm/switch_to.h | 2 +-
- arch/arm/kernel/entry-armv.S     | 4 ++--
- arch/arm/kernel/traps.c          | 2 ++
- arch/arm/mm/cache-v7.S           | 4 ++--
- arch/arm/mm/cache-v7m.S          | 4 ++--
- 5 files changed, 9 insertions(+), 7 deletions(-)
+ arch/powerpc/Kconfig           | 2 +-
+ arch/powerpc/kernel/entry_32.S | 4 ++--
+ arch/powerpc/kernel/entry_64.S | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/include/asm/switch_to.h b/arch/arm/include/asm/switch_to.h
-index d3e937d..007d8fe 100644
---- a/arch/arm/include/asm/switch_to.h
-+++ b/arch/arm/include/asm/switch_to.h
-@@ -10,7 +10,7 @@
-  * to ensure that the maintenance completes in case we migrate to another
-  * CPU.
-  */
--#if defined(CONFIG_PREEMPT) && defined(CONFIG_SMP) && defined(CONFIG_CPU_V7)
-+#if defined(CONFIG_PREEMPTION) && defined(CONFIG_SMP) && defined(CONFIG_CPU_V7)
- #define __complete_pending_tlbi()	dsb(ish)
- #else
- #define __complete_pending_tlbi()
-diff --git a/arch/arm/kernel/entry-armv.S b/arch/arm/kernel/entry-armv.S
-index 858d4e5..77f5483 100644
---- a/arch/arm/kernel/entry-armv.S
-+++ b/arch/arm/kernel/entry-armv.S
-@@ -211,7 +211,7 @@ __irq_svc:
- 	svc_entry
- 	irq_handler
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index e446bb5..c781170 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -106,7 +106,7 @@ config LOCKDEP_SUPPORT
+ config GENERIC_LOCKBREAK
+ 	bool
+ 	default y
+-	depends on SMP && PREEMPT
++	depends on SMP && PREEMPTION
+ 
+ config GENERIC_HWEIGHT
+ 	bool
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index d60908e..e1a4c39 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -897,7 +897,7 @@ resume_kernel:
+ 	bne-	0b
+ 1:
  
 -#ifdef CONFIG_PREEMPT
 +#ifdef CONFIG_PREEMPTION
- 	ldr	r8, [tsk, #TI_PREEMPT]		@ get preempt count
- 	ldr	r0, [tsk, #TI_FLAGS]		@ get flags
- 	teq	r8, #0				@ if preempt count != 0
-@@ -226,7 +226,7 @@ ENDPROC(__irq_svc)
+ 	/* check current_thread_info->preempt_count */
+ 	lwz	r0,TI_PREEMPT(r2)
+ 	cmpwi	0,r0,0		/* if non-zero, just restore regs and return */
+@@ -921,7 +921,7 @@ resume_kernel:
+ 	 */
+ 	bl	trace_hardirqs_on
+ #endif
+-#endif /* CONFIG_PREEMPT */
++#endif /* CONFIG_PREEMPTION */
+ restore_kuap:
+ 	kuap_restore r1, r2, r9, r10, r0
  
- 	.ltorg
+diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+index 3fd3ef3..a9a1d3c 100644
+--- a/arch/powerpc/kernel/entry_64.S
++++ b/arch/powerpc/kernel/entry_64.S
+@@ -846,7 +846,7 @@ resume_kernel:
+ 	bne-	0b
+ 1:
  
 -#ifdef CONFIG_PREEMPT
 +#ifdef CONFIG_PREEMPTION
- svc_preempt:
- 	mov	r8, lr
- 1:	bl	preempt_schedule_irq		@ irq en/disable is done inside
-diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
-index c053abd..abb7dd7 100644
---- a/arch/arm/kernel/traps.c
-+++ b/arch/arm/kernel/traps.c
-@@ -248,6 +248,8 @@ void show_stack(struct task_struct *tsk, unsigned long *sp)
+ 	/* Check if we need to preempt */
+ 	andi.	r0,r4,_TIF_NEED_RESCHED
+ 	beq+	restore
+@@ -877,7 +877,7 @@ resume_kernel:
+ 	li	r10,MSR_RI
+ 	mtmsrd	r10,1		  /* Update machine state */
+ #endif /* CONFIG_PPC_BOOK3E */
+-#endif /* CONFIG_PREEMPT */
++#endif /* CONFIG_PREEMPTION */
  
- #ifdef CONFIG_PREEMPT
- #define S_PREEMPT " PREEMPT"
-+#elif defined(CONFIG_PREEMPT_RT)
-+#define S_PREEMPT " PREEMPT_RT"
- #else
- #define S_PREEMPT ""
- #endif
-diff --git a/arch/arm/mm/cache-v7.S b/arch/arm/mm/cache-v7.S
-index 0ee8fc4..dc8f152 100644
---- a/arch/arm/mm/cache-v7.S
-+++ b/arch/arm/mm/cache-v7.S
-@@ -135,13 +135,13 @@ flush_levels:
- 	and	r1, r1, #7			@ mask of the bits for current cache only
- 	cmp	r1, #2				@ see what cache we have at this level
- 	blt	skip				@ skip if no cache, or just i-cache
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 	save_and_disable_irqs_notrace r9	@ make cssr&csidr read atomic
- #endif
- 	mcr	p15, 2, r10, c0, c0, 0		@ select current cache level in cssr
- 	isb					@ isb to sych the new cssr&csidr
- 	mrc	p15, 1, r1, c0, c0, 0		@ read the new csidr
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 	restore_irqs_notrace r9
- #endif
- 	and	r2, r1, #7			@ extract the length of the cache lines
-diff --git a/arch/arm/mm/cache-v7m.S b/arch/arm/mm/cache-v7m.S
-index a0035c4..1bc3a0a 100644
---- a/arch/arm/mm/cache-v7m.S
-+++ b/arch/arm/mm/cache-v7m.S
-@@ -183,13 +183,13 @@ flush_levels:
- 	and	r1, r1, #7			@ mask of the bits for current cache only
- 	cmp	r1, #2				@ see what cache we have at this level
- 	blt	skip				@ skip if no cache, or just i-cache
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 	save_and_disable_irqs_notrace r9	@ make cssr&csidr read atomic
- #endif
- 	write_csselr r10, r1			@ set current cache level
- 	isb					@ isb to sych the new cssr&csidr
- 	read_ccsidr r1				@ read the new csidr
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 	restore_irqs_notrace r9
- #endif
- 	and	r2, r1, #7			@ extract the length of the cache lines
+ 	.globl	fast_exc_return_irq
+ fast_exc_return_irq:
