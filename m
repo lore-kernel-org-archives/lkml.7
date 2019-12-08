@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFDFC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E7FC43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9EF1206E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B81A206E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfLHN6N (ORCPT
+        id S1727466AbfLHN6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:58:13 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60110 "EHLO
+        Sun, 8 Dec 2019 08:58:25 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60052 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726678AbfLHNyl (ORCPT
+        by vger.kernel.org with ESMTP id S1726653AbfLHNyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:41 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1C-0007eC-Nn; Sun, 08 Dec 2019 13:54:38 +0000
+        id 1idx1C-0007e1-DS; Sun, 08 Dec 2019 13:54:38 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1B-0002N8-Kw; Sun, 08 Dec 2019 13:54:37 +0000
+        id 1idx1B-0002Mo-EY; Sun, 08 Dec 2019 13:54:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "Nathan Lynch" <nathanl@linux.ibm.com>
-Date:   Sun, 08 Dec 2019 13:53:18 +0000
-Message-ID: <lsq.1575813165.714960861@decadent.org.uk>
+        "Tiejun Chen" <tiejun.chen@intel.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>
+Date:   Sun, 08 Dec 2019 13:53:14 +0000
+Message-ID: <lsq.1575813165.982457359@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 34/72] powerpc/pseries: correctly track irq state in
- default idle
+Subject: [PATCH 3.16 30/72] KVM: mmio: cleanup kvm_set_mmio_spte_mask
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,53 +55,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Tiejun Chen <tiejun.chen@intel.com>
 
-commit 92c94dfb69e350471473fd3075c74bc68150879e upstream.
+commit d143148383d0395539073dd6c2f25ddf6656bdcc upstream.
 
-prep_irq_for_idle() is intended to be called before entering
-H_CEDE (and it is used by the pseries cpuidle driver). However the
-default pseries idle routine does not call it, leading to mismanaged
-lazy irq state when the cpuidle driver isn't in use. Manifestations of
-this include:
+Just reuse rsvd_bits() inside kvm_set_mmio_spte_mask()
+for slightly better code.
 
-* Dropped IPIs in the time immediately after a cpu comes
-  online (before it has installed the cpuidle handler), making the
-  online operation block indefinitely waiting for the new cpu to
-  respond.
-
-* Hitting this WARN_ON in arch_local_irq_restore():
-	/*
-	 * We should already be hard disabled here. We had bugs
-	 * where that wasn't the case so let's dbl check it and
-	 * warn if we are wrong. Only do that when IRQ tracing
-	 * is enabled as mfmsr() can be costly.
-	 */
-	if (WARN_ON_ONCE(mfmsr() & MSR_EE))
-		__hard_irq_disable();
-
-Call prep_irq_for_idle() from pseries_lpar_idle() and honor its
-result.
-
-Fixes: 363edbe2614a ("powerpc: Default arch idle could cede processor on pseries")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190910225244.25056-1-nathanl@linux.ibm.com
+Signed-off-by: Tiejun Chen <tiejun.chen@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[bwh: Backported to 3.16 as dependency of commit 16cfacc80857
+ "KVM: x86: Manually calculate reserved bits when loading PDPTRS"]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/powerpc/platforms/pseries/setup.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kvm/mmu.c | 5 -----
+ arch/x86/kvm/mmu.h | 5 +++++
+ arch/x86/kvm/x86.c | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -360,6 +360,9 @@ static void pseries_lpar_idle(void)
- 	 * low power mode by cedeing processor to hypervisor
- 	 */
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -295,11 +295,6 @@ static bool check_mmio_spte(struct kvm *
+ 	return likely(kvm_gen == spte_gen);
+ }
  
-+	if (!prep_irq_for_idle())
-+		return;
+-static inline u64 rsvd_bits(int s, int e)
+-{
+-	return ((1ULL << (e - s + 1)) - 1) << s;
+-}
+-
+ void kvm_mmu_set_mask_ptes(u64 user_mask, u64 accessed_mask,
+ 		u64 dirty_mask, u64 nx_mask, u64 x_mask)
+ {
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -56,6 +56,11 @@
+ #define PFERR_RSVD_MASK (1U << PFERR_RSVD_BIT)
+ #define PFERR_FETCH_MASK (1U << PFERR_FETCH_BIT)
+ 
++static inline u64 rsvd_bits(int s, int e)
++{
++	return ((1ULL << (e - s + 1)) - 1) << s;
++}
 +
- 	/* Indicate to hypervisor that we are idle. */
- 	get_lppaca()->idle = 1;
+ int kvm_mmu_get_spte_hierarchy(struct kvm_vcpu *vcpu, u64 addr, u64 sptes[4]);
+ void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask);
  
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5689,7 +5689,7 @@ static void kvm_set_mmio_spte_mask(void)
+ 	 * entry to generate page fault with PFER.RSV = 1.
+ 	 */
+ 	 /* Mask the reserved physical address bits. */
+-	mask = ((1ull << (51 - maxphyaddr + 1)) - 1) << maxphyaddr;
++	mask = rsvd_bits(maxphyaddr, 51);
+ 
+ 	/* Bit 62 is always reserved for 32bit host. */
+ 	mask |= 0x3ull << 62;
 
