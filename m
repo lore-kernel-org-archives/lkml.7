@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF84BC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23068C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6926206E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECCC62071A
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:58:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbfLHN6w (ORCPT
+        id S1727360AbfLHN65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:58:52 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60008 "EHLO
+        Sun, 8 Dec 2019 08:58:57 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60004 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726596AbfLHNyk (ORCPT
+        by vger.kernel.org with ESMTP id S1726595AbfLHNyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:40 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1B-0007db-U8; Sun, 08 Dec 2019 13:54:37 +0000
+        id 1idx1B-0007dC-1R; Sun, 08 Dec 2019 13:54:37 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1B-0002M0-1f; Sun, 08 Dec 2019 13:54:37 +0000
+        id 1idx1A-0002Kx-GH; Sun, 08 Dec 2019 13:54:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,18 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>,
-        "Hans de Goede" <hdegoede@redhat.com>,
-        "Rui Salvaterra" <rsalvaterra@gmail.com>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>
-Date:   Sun, 08 Dec 2019 13:53:04 +0000
-Message-ID: <lsq.1575813165.40137105@decadent.org.uk>
+        "Daniel Vetter" <daniel@ffwll.ch>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
+        "Michal =?UTF-8?Q?Vok=C3=A1=C4=8D?=" <michal.vokac@ysoft.com>,
+        "David Airlie" <airlied@linux.ie>,
+        "Marko Kohtala" <marko.kohtala@okoko.fi>
+Date:   Sun, 08 Dec 2019 13:52:51 +0000
+Message-ID: <lsq.1575813165.322001255@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 20/72] media: sn9c20x: Add MSI MS-1039 laptop to
- flip_dmi_table
+Subject: [PATCH 3.16 07/72] video: ssd1307fb: Start page range at page_offset
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,38 +60,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Marko Kohtala <marko.kohtala@okoko.fi>
 
-commit 7e0bb5828311f811309bed5749528ca04992af2f upstream.
+commit dd9782834dd9dde3624ff1acea8859f3d3e792d4 upstream.
 
-Like a bunch of other MSI laptops the MS-1039 uses a 0c45:627b
-SN9C201 + OV7660 webcam which is mounted upside down.
+The page_offset was only applied to the end of the page range. This caused
+the display updates to cause a scrolling effect on the display because the
+amount of data written to the display did not match the range display
+expected.
 
-Add it to the sn9c20x flip_dmi_table to deal with this.
-
-Reported-by: Rui Salvaterra <rsalvaterra@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 301bc0675b67 ("video: ssd1307fb: Make use of horizontal addressing mode")
+Signed-off-by: Marko Kohtala <marko.kohtala@okoko.fi>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Michal Vokáč <michal.vokac@ysoft.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190618074111.9309-4-marko.kohtala@okoko.fi
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/usb/gspca/sn9c20x.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/video/fbdev/ssd1307fb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/usb/gspca/sn9c20x.c
-+++ b/drivers/media/usb/gspca/sn9c20x.c
-@@ -139,6 +139,13 @@ static const struct dmi_system_id flip_d
- 		}
- 	},
- 	{
-+		.ident = "MSI MS-1039",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT'L CO.,LTD."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "MS-1039"),
-+		}
-+	},
-+	{
- 		.ident = "MSI MS-1632",
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "MSI"),
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -426,7 +426,7 @@ static int ssd1307fb_ssd1306_init(struct
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = ssd1307fb_write_cmd(par->client, 0x0);
++	ret = ssd1307fb_write_cmd(par->client, par->page_offset);
+ 	if (ret < 0)
+ 		return ret;
+ 
 
