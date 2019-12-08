@@ -2,79 +2,148 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13579C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 12:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663EEC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD2220706
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 12:40:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="S+oiPd63"
+	by mail.kernel.org (Postfix) with ESMTP id 4649E206F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfLHMk6 (ORCPT
+        id S1726575AbfLHNdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 07:40:58 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:9531 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726163AbfLHMk6 (ORCPT
+        Sun, 8 Dec 2019 08:33:52 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36610 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfLHNdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 07:40:58 -0500
-X-UUID: 10fe5277c2ca45248ef3fb16e4980491-20191208
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=2WSGfiTkWDpT/mYBDWoIjtdi+bzFTArXnMsQV1RVFoI=;
-        b=S+oiPd63IANu67fS3XpDkKJSDxINQKHAYRoQEe6u0D5+4YVz10yFhKIjsYPT6wlBhChCSIhxxbkhBgdOqGnieZNheIhY4UtVVHcID3PGMEQ4wcEdpllSqoFtHBJDS7Fn0nswIXFzd/Ewu1zAZSzTFqOV88HvikxrnQW4m0LBLso=;
-X-UUID: 10fe5277c2ca45248ef3fb16e4980491-20191208
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 841033995; Sun, 08 Dec 2019 20:40:52 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 8 Dec 2019 20:39:59 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 8 Dec 2019 20:40:21 +0800
-Message-ID: <1575808849.12066.3.camel@mtkswgap22>
-Subject: Re: [PATCH v6 5/5] scsi: ufs: Do not free irq in suspend
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Can Guo <cang@codeaurora.org>
-CC:     <asutoshd@codeaurora.org>, <nguyenb@codeaurora.org>,
-        <rnayak@codeaurora.org>, <linux-scsi@vger.kernel.org>,
-        <kernel-team@android.com>, <saravanak@google.com>,
-        <salyzyn@google.com>, Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Sun, 8 Dec 2019 20:40:49 +0800
-In-Reply-To: <0101016ed3d69793-22918f99-23bf-495d-8a36-a9c108d1cbce-000000@us-west-2.amazonses.com>
-References: <1575512052-15999-1-git-send-email-cang@codeaurora.org>
-         <0101016ed3d69793-22918f99-23bf-495d-8a36-a9c108d1cbce-000000@us-west-2.amazonses.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Sun, 8 Dec 2019 08:33:51 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1idwgp-0007gW-4F; Sun, 08 Dec 2019 14:33:35 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 269171C2882;
+        Sun,  8 Dec 2019 14:33:34 +0100 (CET)
+Date:   Sun, 08 Dec 2019 13:33:34 -0000
+From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: efi/urgent] efi/gop: Return EFI_NOT_FOUND if there are no usable GOPs
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191206165542.31469-3-ardb@kernel.org>
+References: <20191206165542.31469-3-ardb@kernel.org>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: E6395AF04C83190C41F2F37EC7EB2F06A7D53DB6B5AA8BFFBFBB2EEAD866D8202000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Message-ID: <157581201403.21853.7025589605824516098.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2FuLA0KDQpPbiBUaHUsIDIwMTktMTItMDUgYXQgMDI6MTQgKzAwMDAsIENhbiBHdW8gd3Jv
-dGU6DQo+IFNpbmNlIHVmc2hjZCBpcnEgcmVzb3VyY2UgaXMgYWxsb2NhdGVkIHdpdGggdGhlIGRl
-dmljZSByZXNvdXJjZSBtYW5hZ2VtZW50DQo+IGF3YXJlIElSUSByZXF1ZXN0IGltcGxlbWVudGF0
-aW9uLCB3ZSBkb24ndCByZWFsbHkgbmVlZCB0byBmcmVlIHVwIGlycQ0KPiBkdXJpbmcgc3VzcGVu
-ZCwgZGlzYWJsaW5nIGl0IGR1cmluZyBzdXNwZW5kIGFuZCByZWVuYWJsaW5nIGl0IGR1cmluZyBy
-ZXN1bWUNCj4gc2hvdWxkIGJlIGdvb2QgZW5vdWdoLg0KDQpUaGlzIGlzIGdvb2QgaW4gY29uc2lk
-ZXJhdGlvbiBvZiBwZXJmb3JtYW5jZTogZW5hYmxlX2lycS9kaXNhYmxlX2lycQ0KcGVyZm9ybWFu
-Y2UgaXMgbXVjaCBiZXR0ZXIgdGhhbiByZXF1ZXN0X2lycS9mcmVlX2lycS4NCg0KUmV2aWV3ZWQt
-Ynk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQoNCg0KDQo=
+The following commit has been merged into the efi/urgent branch of tip:
 
+Commit-ID:     6fc3cec30dfeee7d3c5db8154016aff9d65503c5
+Gitweb:        https://git.kernel.org/tip/6fc3cec30dfeee7d3c5db8154016aff9d65503c5
+Author:        Arvind Sankar <nivedita@alum.mit.edu>
+AuthorDate:    Fri, 06 Dec 2019 16:55:38 
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 08 Dec 2019 12:42:18 +01:00
+
+efi/gop: Return EFI_NOT_FOUND if there are no usable GOPs
+
+If we don't find a usable instance of the Graphics Output Protocol
+(GOP) because none of them have a framebuffer (i.e. they were all
+PIXEL_BLT_ONLY), but all the EFI calls succeeded, we will return
+EFI_SUCCESS even though we didn't find a usable GOP.
+
+Fix this by explicitly returning EFI_NOT_FOUND if no usable GOPs are
+found, allowing the caller to probe for UGA instead.
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191206165542.31469-3-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ drivers/firmware/efi/libstub/gop.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
+index 0101ca4..08f3c1a 100644
+--- a/drivers/firmware/efi/libstub/gop.c
++++ b/drivers/firmware/efi/libstub/gop.c
+@@ -119,7 +119,7 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 	u64 fb_base;
+ 	struct efi_pixel_bitmask pixel_info;
+ 	int pixel_format;
+-	efi_status_t status = EFI_NOT_FOUND;
++	efi_status_t status;
+ 	u32 *handles = (u32 *)(unsigned long)gop_handle;
+ 	int i;
+ 
+@@ -175,7 +175,7 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 
+ 	/* Did we find any GOPs? */
+ 	if (!first_gop)
+-		goto out;
++		return EFI_NOT_FOUND;
+ 
+ 	/* EFI framebuffer */
+ 	si->orig_video_isVGA = VIDEO_TYPE_EFI;
+@@ -197,7 +197,7 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 	si->lfb_size = si->lfb_linelength * si->lfb_height;
+ 
+ 	si->capabilities |= VIDEO_CAPABILITY_SKIP_QUIRKS;
+-out:
++
+ 	return status;
+ }
+ 
+@@ -237,7 +237,7 @@ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 	u64 fb_base;
+ 	struct efi_pixel_bitmask pixel_info;
+ 	int pixel_format;
+-	efi_status_t status = EFI_NOT_FOUND;
++	efi_status_t status;
+ 	u64 *handles = (u64 *)(unsigned long)gop_handle;
+ 	int i;
+ 
+@@ -293,7 +293,7 @@ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 
+ 	/* Did we find any GOPs? */
+ 	if (!first_gop)
+-		goto out;
++		return EFI_NOT_FOUND;
+ 
+ 	/* EFI framebuffer */
+ 	si->orig_video_isVGA = VIDEO_TYPE_EFI;
+@@ -315,7 +315,7 @@ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 	si->lfb_size = si->lfb_linelength * si->lfb_height;
+ 
+ 	si->capabilities |= VIDEO_CAPABILITY_SKIP_QUIRKS;
+-out:
++
+ 	return status;
+ }
+ 
