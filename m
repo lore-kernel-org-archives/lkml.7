@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798B0C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 15:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6792C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 15:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0F420637
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 15:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DB520637
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 15:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfLHPAA (ORCPT
+        id S1727111AbfLHPAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 10:00:00 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36778 "EHLO
+        Sun, 8 Dec 2019 10:00:02 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36774 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfLHO6o (ORCPT
+        with ESMTP id S1726505AbfLHO6o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 09:58:44 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1idy10-0000Qy-S7; Sun, 08 Dec 2019 15:58:31 +0100
+        id 1idy16-0000SW-Ui; Sun, 08 Dec 2019 15:58:37 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 860111C2887;
-        Sun,  8 Dec 2019 15:58:30 +0100 (CET)
-Date:   Sun, 08 Dec 2019 14:58:30 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9D2601C2887;
+        Sun,  8 Dec 2019 15:58:31 +0100 (CET)
+Date:   Sun, 08 Dec 2019 14:58:31 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/rt, mm: Use CONFIG_PREEMPTION
+Subject: [tip: sched/urgent] sched/rt, xtensa: Use CONFIG_PREEMPTION
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Chistoph Lameter <cl@linux.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Chris Zankel <chris@zankel.net>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191015191821.11479-26-bigeasy@linutronix.de>
-References: <20191015191821.11479-26-bigeasy@linutronix.de>
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-xtensa@linux-xtensa.org, Ingo Molnar <mingo@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191015191821.11479-21-bigeasy@linutronix.de>
+References: <20191015191821.11479-21-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <157581711044.21853.1629437364165530874.tip-bot2@tip-bot2>
+Message-ID: <157581711152.21853.11757251223055370019.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,105 +61,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     923717cbab900fb23b31f16fb31b1d86b09bf702
-Gitweb:        https://git.kernel.org/tip/923717cbab900fb23b31f16fb31b1d86b09bf702
+Commit-ID:     6c5260d73d2b723f072c312eb80ef83711b4e166
+Gitweb:        https://git.kernel.org/tip/6c5260d73d2b723f072c312eb80ef83711b4e166
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 15 Oct 2019 21:18:12 +02:00
+AuthorDate:    Tue, 15 Oct 2019 21:18:07 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 08 Dec 2019 14:37:36 +01:00
+CommitterDate: Sun, 08 Dec 2019 14:37:35 +01:00
 
-sched/rt, mm: Use CONFIG_PREEMPTION
+sched/rt, xtensa: Use CONFIG_PREEMPTION
 
 CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
 Both PREEMPT and PREEMPT_RT require the same functionality which today
 depends on CONFIG_PREEMPT.
 
-Switch the pte_unmap_same() and SLUB code over to use CONFIG_PREEMPTION.
+Switch the entry code over to use CONFIG_PREEMPTION. Add PREEMPT_RT
+output to die().
+
+[bigeasy: +traps.c]
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Chistoph Lameter <cl@linux.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Acked-by: Max Filippov <jcmvbkbc@gmail.com>
+Cc: Chris Zankel <chris@zankel.net>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Pekka Enberg <penberg@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-mm@kvack.org
-Link: https://lore.kernel.org/r/20191015191821.11479-26-bigeasy@linutronix.de
+Cc: linux-xtensa@linux-xtensa.org
+Link: https://lore.kernel.org/r/20191015191821.11479-21-bigeasy@linutronix.de
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- mm/memory.c |  2 +-
- mm/slub.c   | 12 ++++++------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ arch/xtensa/kernel/entry.S | 2 +-
+ arch/xtensa/kernel/traps.c | 7 +++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 513c3ec..d56883c 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2151,7 +2151,7 @@ static inline int pte_unmap_same(struct mm_struct *mm, pmd_t *pmd,
- 				pte_t *page_table, pte_t orig_pte)
+diff --git a/arch/xtensa/kernel/entry.S b/arch/xtensa/kernel/entry.S
+index be89780..2c9e485 100644
+--- a/arch/xtensa/kernel/entry.S
++++ b/arch/xtensa/kernel/entry.S
+@@ -520,7 +520,7 @@ common_exception_return:
+ 	call4	schedule	# void schedule (void)
+ 	j	1b
+ 
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 6:
+ 	_bbci.l	a4, TIF_NEED_RESCHED, 4f
+ 
+diff --git a/arch/xtensa/kernel/traps.c b/arch/xtensa/kernel/traps.c
+index 87bd68d..0976e27 100644
+--- a/arch/xtensa/kernel/traps.c
++++ b/arch/xtensa/kernel/traps.c
+@@ -519,12 +519,15 @@ DEFINE_SPINLOCK(die_lock);
+ void die(const char * str, struct pt_regs * regs, long err)
  {
- 	int same = 1;
--#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT)
-+#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPTION)
- 	if (sizeof(pte_t) > sizeof(unsigned long)) {
- 		spinlock_t *ptl = pte_lockptr(mm, pmd);
- 		spin_lock(ptl);
-diff --git a/mm/slub.c b/mm/slub.c
-index d113897..f7c66dc 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1964,7 +1964,7 @@ static void *get_partial(struct kmem_cache *s, gfp_t flags, int node,
- 	return get_any_partial(s, flags, c);
- }
+ 	static int die_counter;
++	const char *pr = "";
++
++	if (IS_ENABLED(CONFIG_PREEMPTION))
++		pr = IS_ENABLED(CONFIG_PREEMPT_RT) ? " PREEMPT_RT" : " PREEMPT";
  
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- /*
-  * Calculate the next globally unique transaction for disambiguiation
-  * during cmpxchg. The transactions start with the cpu number and are then
-@@ -2009,7 +2009,7 @@ static inline void note_cmpxchg_failure(const char *n,
+ 	console_verbose();
+ 	spin_lock_irq(&die_lock);
  
- 	pr_info("%s %s: cmpxchg redo ", n, s->name);
- 
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 	if (tid_to_cpu(tid) != tid_to_cpu(actual_tid))
- 		pr_warn("due to cpu change %d -> %d\n",
- 			tid_to_cpu(tid), tid_to_cpu(actual_tid));
-@@ -2637,7 +2637,7 @@ static void *__slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
- 	unsigned long flags;
- 
- 	local_irq_save(flags);
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 	/*
- 	 * We may have been preempted and rescheduled on a different
- 	 * cpu before disabling interrupts. Need to reload cpu area
-@@ -2691,13 +2691,13 @@ redo:
- 	 * as we end up on the original cpu again when doing the cmpxchg.
- 	 *
- 	 * We should guarantee that tid and kmem_cache are retrieved on
--	 * the same cpu. It could be different if CONFIG_PREEMPT so we need
-+	 * the same cpu. It could be different if CONFIG_PREEMPTION so we need
- 	 * to check if it is matched or not.
- 	 */
- 	do {
- 		tid = this_cpu_read(s->cpu_slab->tid);
- 		c = raw_cpu_ptr(s->cpu_slab);
--	} while (IS_ENABLED(CONFIG_PREEMPT) &&
-+	} while (IS_ENABLED(CONFIG_PREEMPTION) &&
- 		 unlikely(tid != READ_ONCE(c->tid)));
- 
- 	/*
-@@ -2971,7 +2971,7 @@ redo:
- 	do {
- 		tid = this_cpu_read(s->cpu_slab->tid);
- 		c = raw_cpu_ptr(s->cpu_slab);
--	} while (IS_ENABLED(CONFIG_PREEMPT) &&
-+	} while (IS_ENABLED(CONFIG_PREEMPTION) &&
- 		 unlikely(tid != READ_ONCE(c->tid)));
- 
- 	/* Same with comment on barrier() in slab_alloc_node() */
+-	pr_info("%s: sig: %ld [#%d]%s\n", str, err, ++die_counter,
+-		IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "");
++	pr_info("%s: sig: %ld [#%d]%s\n", str, err, ++die_counter, pr);
+ 	show_regs(regs);
+ 	if (!user_mode(regs))
+ 		show_stack(NULL, (unsigned long*)regs->areg[1]);
