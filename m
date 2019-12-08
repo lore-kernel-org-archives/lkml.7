@@ -2,109 +2,114 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468A1C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 19:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C3CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 19:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208CC20663
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 19:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575832486;
-	bh=tTkmzbY4m+GKco6n1uwSzJblEedVC6WFt6EjHSfS5Ig=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HX63NAp0btJb0ek2ADaAWk682RfDpA2Da1BwJ5lki4EzZRXjTcKvnZaaaVMcgFxUz
-	 1nKVsswBUBfoqCB1H3at6Kt3HfzWJxmBYb4a5DyNX+NIN3OItw97Cq0RNL+XA3UdNi
-	 txTlOBqj+2i7VA0WjCVR+RkIJdsLsBXiwX5WrI3s=
+	by mail.kernel.org (Postfix) with ESMTP id D002F206DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 19:34:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HQmIHIGh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfLHTOp (ORCPT
+        id S1726602AbfLHTeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 14:14:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726505AbfLHTOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 14:14:44 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59DA820663;
-        Sun,  8 Dec 2019 19:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575832483;
-        bh=tTkmzbY4m+GKco6n1uwSzJblEedVC6WFt6EjHSfS5Ig=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QK050Y3INjD1EssBXAmgItNIdmGUfnDGORDizBHL7bLQjmL77lx61/JB+nC7w59H5
-         nGW443OOavMV4qkp/CiWnOKya6I+cj6P/nJO9jz+UVA45tX8sykS7giSE4206Po596
-         Mxcu4IzfJ6d1ZhuayRW7B5GXF3eaHLsT/3MsZKDw=
-Date:   Sun, 8 Dec 2019 19:14:39 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
-        Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: ad7292: Update SPDX
- identifier
-Message-ID: <20191208191439.3d24086b@archlinux>
-In-Reply-To: <CAL_JsqKOdmCn2cxGcjioUibXc=_2cTWtZb81nEx08CMv2fo6Pw@mail.gmail.com>
-References: <20191116205026.dvlevawj5obq7weh@smtp.gmail.com>
-        <CAL_JsqJzi_0eYj=rMxwQe+OTh_m3ngocOvcPZd-tykAwAJAw6g@mail.gmail.com>
-        <20191123122548.54f0f529@archlinux>
-        <CAL_JsqKOdmCn2cxGcjioUibXc=_2cTWtZb81nEx08CMv2fo6Pw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 8 Dec 2019 14:34:36 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:38324 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfLHTef (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Dec 2019 14:34:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=opNmX6AL5pe9BiEApgh4safJJRAYoGJDanS+73QXh4o=; b=HQmIHIGh6pFM4c8sq8vsdzEol
+        FJJw4CAdpQu5FBEmzwuax5uP7Pqqh0+86C6fUfExA4wQjHa0tQGL/xx2Sa04/NaX/Ui9VI+GYjzKl
+        3JFLiO+qaqc2ru18YySDKhzus/TBG6/PICSlaW9fMncAwYvw0OxmUfyhk7Mc2YQRVz7l9XPpG91ie
+        NeTRF5CPu3c/omskP0kYKkKyYLGPZeeAETo6CsDCo77R2lpl1+t2bE1vJa164rlGEdafeg3wGRzPa
+        thKQSfpuBY2Lu4KysTSnCp7sX4EHuGk/P//OqbDEozZzaXGFOaWFD6qH0A8MsdVeB+WJIAhhS0hjq
+        CTkxk4vyQ==;
+Received: from [2601:1c0:6280:3f0::3deb]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ie2K9-0005In-LR; Sun, 08 Dec 2019 19:34:33 +0000
+Subject: Re: [RFC PATCH v4 01/22] bootconfig: Add Extra Boot Config support
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <157528159833.22451.14878731055438721716.stgit@devnote2>
+ <157528160980.22451.2034344493364709160.stgit@devnote2>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <02b132dd-6f50-cf1d-6cc1-ff6bbbcf79cd@infradead.org>
+Date:   Sun, 8 Dec 2019 11:34:32 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <157528160980.22451.2034344493364709160.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Dec 2019 10:48:01 -0600
-Rob Herring <robh@kernel.org> wrote:
+Hi,
 
-> On Sat, Nov 23, 2019 at 6:25 AM Jonathan Cameron <jic23@kernel.org> wrote:
-> >
-> > On Fri, 22 Nov 2019 10:05:52 -0600
-> > Rob Herring <robh@kernel.org> wrote:
-> >  
-> > > On Sat, Nov 16, 2019 at 2:50 PM Marcelo Schmitt
-> > > <marcelo.schmitt1@gmail.com> wrote:  
-> > > >
-> > > > Update SPDX identifier to the preferred dual GPL-2.0 OR BSD-2-Clause
-> > > > licensing.
-> > > >
-> > > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > > > ---
-> > > > I split the changes into 2 different patches since they are about
-> > > > different issues.
-> > > >
-> > > >  Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)  
-> > >
-> > > Reviewed-by: Rob Herring <robh@kernel.org>  
-> > I've applied this to the fixes-togreg branch so it'll go in during
-> > the early RCs.  Nice not to have a release with a different
-> > license, particularly as this was me running too fast at taking
-> > patches.  
-> 
-> Please send patch 2 sooner rather than later. I would like 'make
-> dt_binding_check' to pass in rc1 (or rc2 at the latest) rather than
-> rc5/6 as happened in 5.4 cycle. It's hard to complain that patches
-> fail it when mainline is already broken.
+On 12/2/19 2:13 AM, Masami Hiramatsu wrote:
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 67a602ee17f1..13bb3eac804c 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -1235,6 +1235,17 @@ source "usr/Kconfig"
+>  
+>  endif
+>  
+> +config BOOT_CONFIG
+> +	bool "Boot config support"
+> +	select LIBXBC
+> +	default y
 
-I've sent Greg a pull request with these in, so hopefully should be in 
-place before rc2.
+questionable "default y".
+That needs lots of justification.
 
-Thanks,
+> +	help
+> +	 Extra boot config allows system admin to pass a config file as
+> +	 complemental extension of kernel cmdline when boot.
 
-Jonathan
+	                                          when booting.
 
-> 
-> Rob
+> +	 The boot config file is usually attached at the end of initramfs.
+
+The 3 help text lines above should be indented with one tab + 2 spaces,
+like the "If" line below.
+
+> +
+> +	  If unsure, say Y.
+> +
+>  choice
+>  	prompt "Compiler optimization level"
+>  	default CC_OPTIMIZE_FOR_PERFORMANCE
+
+
+-- 
+~Randy
 
