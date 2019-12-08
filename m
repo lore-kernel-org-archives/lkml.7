@@ -2,111 +2,128 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF77BC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 19:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B175FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 19:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E28020692
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 19:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1A220637
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 19:47:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="VaWCuzub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfLHTfJ (ORCPT
+        id S1726626AbfLHTrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 14:35:09 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:42005 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfLHTfJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 14:35:09 -0500
-Received: by mail-il1-f199.google.com with SMTP id n79so9994031ilh.9
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 11:35:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=gvAQ4NfvnOeIg1SkBSm6bTwN9I84q20C3o5MLaZUt60=;
-        b=uN/2kfqB5bheTrPzhEcGQhSws+2GsUvkQP31TDCP7GyucbSopeNjaykvUYA3hr5Exd
-         lUcWDlt1L4h2+Z0XpVnGaFExYzvuATxr8DMA0WiRiL0iYwQ+ROzJgFzbPLapkzT4QU4n
-         7C9GF9g8cROQjyPC6jU1FTnUTwLxk+/A96EQS833OKHmdvZYvdxQxMb//yqQqXi7hGDk
-         84LIgq1CQBErvgFFAWCXCnufDAs07iajXjR1uVBVoX6+j2VnS3kFp1m+MAKePDiss9XI
-         H0P5Ch5RRPuk9l3jQ3jnwUWw+GZuVpxnAgt1ZdE8tQVXdVoey8PmbF6U6Yr4CI5p0kQ/
-         Fmww==
-X-Gm-Message-State: APjAAAWF5fToNK2b6RZQrvnp1TgPmGaz5/y6d7BzCC22Yfdb3USvV2zR
-        cMP+pzR2umI+eI5YDlz7c7Ah5e08ozEDSPcr0bMFduZolBr0
-X-Google-Smtp-Source: APXvYqxpTAdjbwjwSyRrxHPnqf9fVl+0mX9ZKt0gKVJ9KuSJgBDpf5vT2xdqhaI+qdoIZM21SB8m78X/n87umw67yYCv/DrVR108
+        Sun, 8 Dec 2019 14:47:10 -0500
+Received: from mout01.posteo.de ([185.67.36.65]:47478 "EHLO mout01.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726513AbfLHTrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Dec 2019 14:47:10 -0500
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id 59E2B160061
+        for <linux-kernel@vger.kernel.org>; Sun,  8 Dec 2019 20:47:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1575834427; bh=7v8h57nbuElqsj5jB948wzc4FlIs7ExKcvJcrr350IA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VaWCuzubSCL8aiFo256pQRLTa51PaGnDfi+QmhK/RDsGes0z3xyVL9z9u2eLG6U5x
+         gRJNuZVb1voZnCThMX13T4GLZFGcJ1zLXeHlpkWWqZDLivDEOjPRX+lgM5WBIEVpYh
+         TRNGM5pw2PwZh0RSSq7UPZRQOwfmRkeskXdZFmZs/JCviR/KFcRqGihQIqU8h6thko
+         r0eceEGX4gHZQDfwE1P2uZav0Hng+kJQG8E8xeAq7wmVkkbiPbF7piBH1MTCEGJ+YG
+         gELQWS7MtohVzchyjOKuBY7yo5U3I4ZnzNHRh1MsfZSCnNODGds69U+vODUlvnEOYr
+         sT3BSwWKx4kmQ==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 47WH0B3N8Qz6tmG;
+        Sun,  8 Dec 2019 20:47:06 +0100 (CET)
+From:   =?UTF-8?q?Moritz=20M=C3=BCller?= <moritzm.mueller@posteo.de>
+To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@i4.cs.fau.de
+Cc:     =?UTF-8?q?Moritz=20M=C3=BCller?= <moritzm.mueller@posteo.de>,
+        "Philip K ." <philip@warpmail.net>
+Subject: [PATCH] floppy: hide invalid floppy disk types
+Date:   Sun,  8 Dec 2019 20:45:35 +0100
+Message-Id: <20191208194534.32270-1-moritzm.mueller@posteo.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:ccb9:: with SMTP id t25mr11790800jap.82.1575833708592;
- Sun, 08 Dec 2019 11:35:08 -0800 (PST)
-Date:   Sun, 08 Dec 2019 11:35:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006d0a820599366088@google.com>
-Subject: memory leak in erase_aeb
-From:   syzbot <syzbot+f317896aae32eb281a58@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        miquel.raynal@bootlin.com, richard@nod.at,
-        syzkaller-bugs@googlegroups.com, vigneshr@ti.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+In some cases floppy disks are being indexed, even though no actual
+device exists. In our case this was caused by the CMOS-RAM having a few
+peculiar bits. This caused a non-existent floppy disk of the type 13 to
+be registered as an possibly mountable device, even though it could not
+be mounted by any user.
 
-syzbot found the following crash on:
+We believe this to be an instance of this bug, as we had similar logs
+and issues:
 
-HEAD commit:    ad910e36 pipe: fix poll/select race introduced by the pipe..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16080232e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3beca47aecbf4a9c
-dashboard link: https://syzkaller.appspot.com/bug?extid=f317896aae32eb281a58
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14b527f2e00000
+ https://bugzilla.kernel.org/show_bug.cgi?id=13486
+ https://bugs.launchpad.net/ubuntu/+source/linux/+bug/384579
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f317896aae32eb281a58@syzkaller.appspotmail.com
+This patch adds the option FLOPPY_ALLOW_UNKNOWN_TYPES to prevent the
+additional check that fixed the issue on our reference system, and
+increases the startup time of affected systems by over a minute.
 
-BUG: memory leak
-unreferenced object 0xffff8881225039a0 (size 32):
-   comm "syz-executor.0", pid 7318, jiffies 4294950453 (age 8.280s)
-   hex dump (first 32 bytes):
-     00 00 00 00 03 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 01 00 00 00 02 00 00 00  ................
-   backtrace:
-     [<000000003a9d0e7e>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000003a9d0e7e>] slab_post_alloc_hook mm/slab.h:586 [inline]
-     [<000000003a9d0e7e>] slab_alloc mm/slab.c:3320 [inline]
-     [<000000003a9d0e7e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3484
-     [<00000000b53dfd0a>] erase_aeb+0x2a/0x100 drivers/mtd/ubi/wl.c:1691
-     [<000000005ccfba82>] ubi_wl_init+0x1ae/0x600 drivers/mtd/ubi/wl.c:1758
-     [<000000002350928f>] ubi_attach+0x665/0x18e7  
-drivers/mtd/ubi/attach.c:1605
-     [<0000000055aac88b>] ubi_attach_mtd_dev+0x5b3/0xd40  
-drivers/mtd/ubi/build.c:946
-     [<00000000071dc178>] ctrl_cdev_ioctl+0x149/0x1c0  
-drivers/mtd/ubi/cdev.c:1043
-     [<000000004c359338>] vfs_ioctl fs/ioctl.c:47 [inline]
-     [<000000004c359338>] file_ioctl fs/ioctl.c:545 [inline]
-     [<000000004c359338>] do_vfs_ioctl+0x551/0x890 fs/ioctl.c:732
-     [<000000002f3b4a0e>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:749
-     [<0000000071dee951>] __do_sys_ioctl fs/ioctl.c:756 [inline]
-     [<0000000071dee951>] __se_sys_ioctl fs/ioctl.c:754 [inline]
-     [<0000000071dee951>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:754
-     [<0000000069d4ede5>] do_syscall_64+0x73/0x220  
-arch/x86/entry/common.c:294
-     [<000000001a44675f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
+Co-developed-by: Philip K. <philip@warpmail.net>
+Signed-off-by: Philip K. <philip@warpmail.net>
+Signed-off-by: Moritz Müller <moritzm.mueller@posteo.de>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/block/Kconfig  | 10 ++++++++++
+ drivers/block/floppy.c |  6 ++++++
+ 2 files changed, 16 insertions(+)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
+index 1bb8ec575352..9e6b32c50b67 100644
+--- a/drivers/block/Kconfig
++++ b/drivers/block/Kconfig
+@@ -72,6 +72,16 @@ config AMIGA_Z2RAM
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called z2ram.
+ 
++config FLOPPY_ALLOW_UNKNOWN_TYPES
++	bool "Allow floppy disks of unknown type to be registered."
++	default n
++	help
++	  Select this option if you want the Kernel to register floppy
++	  disks of an unknown type.
++
++	  This should usually not be enabled, because of cases where the
++	  system falsely recognizes a non-existent floppy disk as mountable.
++
+ config CDROM
+ 	tristate
+ 	select BLK_SCSI_REQUEST
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 485865fd0412..9439444d46d0 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3949,7 +3949,9 @@ static void __init config_types(void)
+ 			} else
+ 				allowed_drive_mask &= ~(1 << drive);
+ 		} else {
++#ifdef CONFIG_FLOPPY_ALLOW_UNKNOWN_TYPES
+ 			params = &default_drive_params[0].params;
++#endif
+ 			snprintf(temparea, sizeof(temparea),
+ 				 "unknown type %d (usb?)", type);
+ 			name = temparea;
+@@ -4518,6 +4520,10 @@ static bool floppy_available(int drive)
+ 		return false;
+ 	if (fdc_state[FDC(drive)].version == FDC_NONE)
+ 		return false;
++#ifndef CONFIG_FLOPPY_ALLOW_UNKNOWN_TYPES
++	if (type >= ARRAY_SIZE(default_drive_params))
++		return false;
++#endif
+ 	return true;
+ }
+ 
+-- 
+2.20.1
+
