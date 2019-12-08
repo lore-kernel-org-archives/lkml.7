@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0604C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCA9C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4892206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A8320721
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfLHN4O (ORCPT
+        id S1727296AbfLHN4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:56:14 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60420 "EHLO
+        Sun, 8 Dec 2019 08:56:18 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60382 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726872AbfLHNyp (ORCPT
+        by vger.kernel.org with ESMTP id S1726847AbfLHNyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1E-0007ft-UA; Sun, 08 Dec 2019 13:54:41 +0000
+        id 1idx1F-0007gV-08; Sun, 08 Dec 2019 13:54:41 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1D-0002OM-Al; Sun, 08 Dec 2019 13:54:39 +0000
+        id 1idx1D-0002Of-PB; Sun, 08 Dec 2019 13:54:39 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com,
-        "Oliver Neukum" <oneukum@suse.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        "Sean Young" <sean@mess.org>
-Date:   Sun, 08 Dec 2019 13:53:33 +0000
-Message-ID: <lsq.1575813165.118383647@decadent.org.uk>
+        "David S. Miller" <davem@davemloft.net>,
+        "Navid Emamdoost" <navid.emamdoost@gmail.com>
+Date:   Sun, 08 Dec 2019 13:53:37 +0000
+Message-ID: <lsq.1575813165.120512974@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 49/72] media: b2c2-flexcop-usb: add sanity checking
+Subject: [PATCH 3.16 53/72] wimax: i2400: Fix memory leak in
+ i2400m_op_rfkill_sw_toggle
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,32 +56,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 1b976fc6d684e3282914cdbe7a8d68fdce19095c upstream.
+commit 6f3ef5c25cc762687a7341c18cbea5af54461407 upstream.
 
-The driver needs an isochronous endpoint to be present. It will
-oops in its absence. Add checking for it.
+In the implementation of i2400m_op_rfkill_sw_toggle() the allocated
+buffer for cmd should be released before returning. The
+documentation for i2400m_msg_to_dev() says when it returns the buffer
+can be reused. Meaning cmd should be released in either case. Move
+kfree(cmd) before return to be reached by all execution paths.
 
-Reported-by: syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Fixes: 2507e6ab7a9a ("wimax: i2400: fix memory leak")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/usb/b2c2/flexcop-usb.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wimax/i2400m/op-rfkill.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/usb/b2c2/flexcop-usb.c
-+++ b/drivers/media/usb/b2c2/flexcop-usb.c
-@@ -508,6 +508,9 @@ static int flexcop_usb_probe(struct usb_
- 	struct flexcop_device *fc = NULL;
- 	int ret;
+--- a/drivers/net/wimax/i2400m/op-rfkill.c
++++ b/drivers/net/wimax/i2400m/op-rfkill.c
+@@ -142,12 +142,12 @@ int i2400m_op_rfkill_sw_toggle(struct wi
+ 			"%d\n", result);
+ 	result = 0;
+ error_cmd:
+-	kfree(cmd);
+ 	kfree_skb(ack_skb);
+ error_msg_to_dev:
+ error_alloc:
+ 	d_fnend(4, dev, "(wimax_dev %p state %d) = %d\n",
+ 		wimax_dev, state, result);
++	kfree(cmd);
+ 	return result;
+ }
  
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	if ((fc = flexcop_device_kmalloc(sizeof(struct flexcop_usb))) == NULL) {
- 		err("out of memory\n");
- 		return -ENOMEM;
 
