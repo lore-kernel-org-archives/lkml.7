@@ -2,228 +2,104 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB724C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B14C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E6F20637
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575839602;
-	bh=F4D9vvmLe0U3Hh/gsNrxd+ojg1P2mYr09CJcs75rmHQ=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=s5HE2ejyAUdfBEFRllAyhCyOUT+525P0G+GKaJoMWKHUpxx/IrDnz6IpDx+3DjlRI
-	 7b9Z4XWpofU3DQ7rlS+N3Bd3RANF/H2KGtJcPsVd9pTgby0nGdMtEfDGgCArCvXBr/
-	 Owu0bOTNNWEjOaJa3nwBciOv20/EgDTTirem1S4w=
+	by mail.kernel.org (Postfix) with ESMTP id 6F21F206D6
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 21:13:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbfLHVNV (ORCPT
+        id S1726707AbfLHVNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 16:13:21 -0500
-Received: from mail-lj1-f169.google.com ([209.85.208.169]:41366 "EHLO
-        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfLHVNV (ORCPT
+        Sun, 8 Dec 2019 16:13:46 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:55857 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfLHVNp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 16:13:21 -0500
-Received: by mail-lj1-f169.google.com with SMTP id h23so13303288ljc.8
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 13:13:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=d3S3tZ4cyxYnqybCtgSUG/QSzGylVP+6oGA6c3aAP30=;
-        b=MCu8xXwViwxnt/W5lRZ1jEe9Q7Q77WzXDMckhiMbrfG3uGXhUJx7gdOkz0KeKNOSsd
-         On750D2T1DYYQxpA2zJ35buKOC2qiTumHBjY6pOlYoVy5Ba+CKNudMOmgeV013paeHJF
-         cLAq+ODv2koRUIVwVCsmkt078i0rP0y82yhiI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=d3S3tZ4cyxYnqybCtgSUG/QSzGylVP+6oGA6c3aAP30=;
-        b=tSswjUdbBGGbPyARdDm9E7O1xn+72lWJ5c7pEv428ccYlqogL8OmUeiNB1eGaAfTZQ
-         2xgGikcT95h0ZEYGdPRR6+GXIMgRsrnjNFo17HHMvB0HNLoYcJuxu3FlgivcGGNR6PLX
-         +3X+FKWzWf2AgtZqCcTDTb3qrlzVrj+xdQdAQMjSI5Sgv9Hqs/bS5HlYhcwGNzqojz94
-         A+DtD39P7L3DnLymf0cvTc08ysc/l3AuhwMPPiu+tjnqV4ktRKswpzHUMGn7ajq0+mlV
-         MgkIVVEyuxIB57WkDoLh3BXMzdhLFLS844pc8Ip2aDFNP+rNuqu1MKeiP7ACA83wimId
-         UWbA==
-X-Gm-Message-State: APjAAAUWy4fBd+8xvGB0eUnzU4GUK0H9Rj2afYAxFozqYzy13x1IgJQ7
-        KiiuswKibqzZvo7yPMW1TOa5CA3KvUo=
-X-Google-Smtp-Source: APXvYqzD82Ly78R3xnOD+w8Vgm9M6m/uPwVylLj11BGtUDeR6wWD+drmUIkBL6a0CY1a1HjZzFG4IQ==
-X-Received: by 2002:a2e:3312:: with SMTP id d18mr15050487ljc.222.1575839597000;
-        Sun, 08 Dec 2019 13:13:17 -0800 (PST)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id e8sm11637225ljb.45.2019.12.08.13.13.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Dec 2019 13:13:15 -0800 (PST)
-Received: by mail-lj1-f169.google.com with SMTP id k8so13301136ljh.5
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 13:13:15 -0800 (PST)
-X-Received: by 2002:a05:651c:239:: with SMTP id z25mr12456110ljn.48.1575839595143;
- Sun, 08 Dec 2019 13:13:15 -0800 (PST)
+        Sun, 8 Dec 2019 16:13:45 -0500
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 4C24A200006;
+        Sun,  8 Dec 2019 21:13:41 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH] clk: meson: pll: Fix by 0 division in __pll_params_to_rate()
+Date:   Sun,  8 Dec 2019 22:22:06 +0100
+Message-Id: <20191208212206.16808-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 8 Dec 2019 13:12:59 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whiKy63tpFVUUS1sH07ce692rKcoo0ztnHw5UaPaMg8Ng@mail.gmail.com>
-Message-ID: <CAHk-=whiKy63tpFVUUS1sH07ce692rKcoo0ztnHw5UaPaMg8Ng@mail.gmail.com>
-Subject: Fundamental race condition in wait_event_interruptible_exclusive() ?
-To:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So I'm looking at the thundering herd issue with pipes, and I have a
-truly monumentally silly benchmark for it:
+Some meson pll registers can be initialized with 0 as N value, introducing
+the following division by 0 when computing rate :
 
-        #include <unistd.h>
+  UBSAN: Undefined behaviour in drivers/clk/meson/clk-pll.c:75:9
+  division by zero
+  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc3-608075-g86c9af8630e1-dirty #400
+  Call trace:
+   dump_backtrace+0x0/0x1c0
+   show_stack+0x14/0x20
+   dump_stack+0xc4/0x100
+   ubsan_epilogue+0x14/0x68
+   __ubsan_handle_divrem_overflow+0x98/0xb8
+   __pll_params_to_rate+0xdc/0x140
+   meson_clk_pll_recalc_rate+0x278/0x3a0
+   __clk_register+0x7c8/0xbb0
+   devm_clk_hw_register+0x54/0xc0
+   meson_eeclkc_probe+0xf4/0x1a0
+   platform_drv_probe+0x54/0xd8
+   really_probe+0x16c/0x438
+   driver_probe_device+0xb0/0xf0
+   device_driver_attach+0x94/0xa0
+   __driver_attach+0x70/0x108
+   bus_for_each_dev+0xd8/0x128
+   driver_attach+0x30/0x40
+   bus_add_driver+0x1b0/0x2d8
+   driver_register+0xbc/0x1d0
+   __platform_driver_register+0x78/0x88
+   axg_driver_init+0x18/0x20
+   do_one_initcall+0xc8/0x24c
+   kernel_init_freeable+0x2b0/0x344
+   kernel_init+0x10/0x128
+   ret_from_fork+0x10/0x18
 
-        int main(int argc, char **argv)
-        {
-                int fd[2], counters[2];
+This checks if N is null before doing the division.
 
-                pipe(fd);
-                counters[0] = 0;
-                counters[1] = -1;
-                write(fd[1], counters, sizeof(counters));
+Fixes: 8289aafa4f36 ("clk: meson: improve pll driver results with frac")
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+ drivers/clk/meson/clk-pll.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-                /* 64 processes */
-                fork(); fork(); fork(); fork(); fork(); fork();
+diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+index ddb1e5634739..6649659f216a 100644
+--- a/drivers/clk/meson/clk-pll.c
++++ b/drivers/clk/meson/clk-pll.c
+@@ -66,6 +66,10 @@ static unsigned long __pll_params_to_rate(unsigned long parent_rate,
+ 					 (1 << pll->frac.width));
+ 	}
+ 
++	/* Avoid by zero division */
++	if (n == 0)
++		return 0;
++
+ 	return DIV_ROUND_UP_ULL(rate, n);
+ }
+ 
+-- 
+2.24.0
 
-                do {
-                        int i;
-                        read(fd[0], &i, sizeof(i));
-                        if (i < 0)
-                                continue;
-                        counters[0] = i+1;
-                        write(fd[1], counters, (1+(i & 1)) *sizeof(int));
-                } while (counters[0] < 1000000);
-                return 0;
-        }
-
-which basically passes an integer token around (with "-1" being
-"ignore" and being passed around occasionally as a test for partial
-reads).
-
-It passes that counter token around a million times, and every other
-time it also writes that "-1" case, so in a perfect world, you'd get
-1.5 million scheduling events, because that's how many write() ->
-read() pairings there are.
-
-Even in a perfect world there will be a few extra scheduling events
-because the whole "finish the pipeline" waits for _everybody_ to see
-that one million number, so the counter token gets passed around a bit
-more than exactly a million times, but that's in the noise.
-
-In reality, I get many more than that, because the write will wake up
-all the readers, even if only one (or two) get any values. You can see
-it easily with "perf stat" or whatever.
-
-Whatever, that's not the important part. The benchmark is obviously
-entirely artificial and not that interesting, it's just to show a
-point.
-
-I do have a tentative patch to fix it - use separate reader and writer
-wake queues, and exclusive waits.
-
-But when I was looking at using exclusive waits, I noticed an issue.
-It looks like wait_event_interruptible_exclusive() is fundamentally
-untrustworthy.
-
-What I'd _like_ to do is basically something like this in pipe_read():
-
-        .. read the data, pipe is now empty ..
-        __pipe_unlock();
-        .. wake writers if the pipe used to be full ..
-
-        // Wait for more data
-        err = wait_event_interruptible_exclusive(pipe->rd_wait,
-pipe_readable());
-        if (err)
-                return err;
-
-        // Remember that we need to wake up the next reader
-        // if we don't consume everything
-        wake_remaining_readers = true;
-
-        __pipe_lock();
-        .. loop back and read the data ..
-
-but it looks like the above pattern is actually buggy (the above
-doesn't have the parts at the end where we actually wake the next
-reader if we didn't empty the pipe, I'm just describing the waiting
-part).
-
-The reason it is buggy is that wait_event_interruptible_exclusive()
-does this (inside the __wait_event() macro that it expands to):
-
-                long __int = prepare_to_wait_event(&wq_head,
-&__wq_entry, state);\
-
-         \
-                if (condition)
-         \
-                        break;
-         \
-
-         \
-                if (___wait_is_interruptible(state) && __int) {
-         \
-                        __ret = __int;
-         \
-                        goto __out;
-         \
-
-and the thing is, if does that "__ret = __int" case and returns
--ERESTARTSYS, it's possible that the wakeup event has already been
-consumed, because we've added ourselves as an exclusive writer to the
-queue. So it _says_ it was interrupted, not woken up, and the wait got
-cancelled, but because we were an exclusive waiter, we might be the
-_only_ thing that got woken up, and the wakeup basically got forgotten
-- all the other exclusive waiters will remain waiting.
-
-Yes, yes, I can make the read_pipe() logic be that I ignore the return
-value entirely, and always take the pipe lock, and always loop back,
-and then the reading code will check for signal_pending() there, and
-do the wake_remaining_readers if there is still data to be read, and
-just do this instead:
-
-        wait_event_interruptible_exclusive(pipe->rd_wait, pipe_readable());
-
-        // Remember that we need to wake up the next reader
-        // if we don't consume everything
-        wake_remaining_readers = true;
-
-        __pipe_lock();
-        .. loop back and read the data ..
-
-but that's kind of sad. And the basic point is that the return value
-from wait_event_interruptible_exclusive() seems to not really be
-reliable. You can't really use it - even if it says you got
-interrupted, you still have to go back and check the condition and do
-the work, and only do interruptability handling after that.
-
-I dunno. Maybe this is fundamental to the interface? We do not have a
-lot of users that mix "interruptible" and "exclusive". In fact, I see
-only two cases that care about the return value, but at least the fuse
-use does seem to have exactly this problem with potentially lost
-wakeups because the ERESTARTSYS case ends up eating a wakeup without
-doing anything about it.
-
-Looks like the other user - the USB gadget HID thing - also has this
-buggy pattern of believing the return value, and losing a wakeup
-event.
-
-Adding Miklos and Felipe to the cc just because of the fuse and USB
-gadget potential issues, but this is mainly a scheduler maintainer
-question.
-
-It's possible that I've misread the wait-event code. PeterZ?
-
-                 Linus
