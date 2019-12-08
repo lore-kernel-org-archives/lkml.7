@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F51C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 16:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AE2C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 16:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92D4E20692
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 16:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0350C20692
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 16:20:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfLHQTC (ORCPT
+        id S1726538AbfLHQUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 11:19:02 -0500
-Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:49666 "EHLO
+        Sun, 8 Dec 2019 11:20:36 -0500
+Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:49680 "EHLO
         faui03.informatik.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726453AbfLHQTB (ORCPT
+        by vger.kernel.org with ESMTP id S1726453AbfLHQUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 11:19:01 -0500
+        Sun, 8 Dec 2019 11:20:35 -0500
 Received: from faui04f.informatik.uni-erlangen.de (faui04f.informatik.uni-erlangen.de [131.188.30.136])
-        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 0BD8A2415E8;
-        Sun,  8 Dec 2019 17:19:00 +0100 (CET)
+        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 2591A2415A1;
+        Sun,  8 Dec 2019 17:20:34 +0100 (CET)
 Received: by faui04f.informatik.uni-erlangen.de (Postfix, from userid 66991)
-        id EDDA9C20BCE; Sun,  8 Dec 2019 17:18:59 +0100 (CET)
+        id 14245C20BCA; Sun,  8 Dec 2019 17:10:57 +0100 (CET)
 From:   Simon Geis <simon.geis@fau.de>
 To:     Dominik Brodowski <linux@dominikbrodowski.net>
 Cc:     Simon Geis <simon.geis@fau.de>,
@@ -35,9 +35,11 @@ Cc:     Simon Geis <simon.geis@fau.de>,
         linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
         Lukas Panzer <lukas.panzer@fau.de>
 Subject: [PATCH 10/12] PCMCIA: include <linux/io.h> instead of <asm/io.h>
-Date:   Sun,  8 Dec 2019 17:18:44 +0100
-Message-Id: <20191208161844.22017-2-simon.geis@fau.de>
+Date:   Sun,  8 Dec 2019 17:09:45 +0100
+Message-Id: <20191208160947.20694-11-simon.geis@fau.de>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191208160947.20694-2-simon.geis@fau.de>
+References: <20191208160947.20694-2-simon.geis@fau.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
