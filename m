@@ -2,100 +2,140 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FB6C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2407FC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6494320637
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE8020637
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 05:41:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Wx4Tj8Sk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjJOMnNX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfLHFh3 (ORCPT
+        id S1726418AbfLHFlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 00:37:29 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:5263 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725268AbfLHFh3 (ORCPT
+        Sun, 8 Dec 2019 00:41:19 -0500
+Received: from mail-il1-f178.google.com ([209.85.166.178]:41710 "EHLO
+        mail-il1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfLHFlS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 00:37:29 -0500
-X-UUID: 39f6db29e94645b79f77cc28ff30df5b-20191208
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=JnqPU30kEl4+RpNJnlGsN4JNwgLzMQ4oKfpMLvPeckU=;
-        b=Wx4Tj8SkDAmVgSADeTZy0I0iQMYfQUfD4ImYPfqwkxZId2c/djEFQMadPwSIHoHW/s5p3n92jMT4jml6TZGekZSeo5753Zminh/jgJuFvIP3GpDBYLp6/MJFwXetqWxAIejdQkEtNakgQn5z2FxgWKxVIyMmVzenZLSdYG1BLOI=;
-X-UUID: 39f6db29e94645b79f77cc28ff30df5b-20191208
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 744958452; Sun, 08 Dec 2019 13:37:25 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 8 Dec 2019 13:37:00 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 8 Dec 2019 13:36:37 +0800
-Message-ID: <1575783443.12066.1.camel@mtkswgap22>
-Subject: Re: [PATCH v1 1/2] soc: mediatek: add header for SiP service
- interface
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "pedrom.sousa@synopsys.com" <pedrom.sousa@synopsys.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        Leon Chen =?UTF-8?Q?=28=E9=99=B3=E6=96=87=E9=8F=98=29?= 
-        <Leon.Chen@mediatek.com>,
-        "Andy Teng ( =?ISO-8859-1?Q?=1B$B{}G!9(=1B(B?=)" 
-        <Andy.Teng@mediatek.com>,
-        Chun-Hung Wu =?UTF-8?Q?=28=E5=B7=AB=E9=A7=BF=E5=AE=8F=29?= 
-        <Chun-hung.Wu@mediatek.com>,
-        Kuohong Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=8B=E9=B4=BB=29?= 
-        <kuohong.wang@mediatek.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Peter Wang =?UTF-8?Q?=28=E7=8E=8B=E4=BF=A1=E5=8F=8B=29?= 
-        <peter.wang@mediatek.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>
-Date:   Sun, 8 Dec 2019 13:37:23 +0800
-In-Reply-To: <b3c568f1-d57b-f3f3-b1da-4b312c595fc8@gmail.com>
-References: <1575700748-28191-1-git-send-email-stanley.chu@mediatek.com>
-         <1575700748-28191-2-git-send-email-stanley.chu@mediatek.com>
-         <b3c568f1-d57b-f3f3-b1da-4b312c595fc8@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Sun, 8 Dec 2019 00:41:18 -0500
+Received: by mail-il1-f178.google.com with SMTP id z90so9844818ilc.8;
+        Sat, 07 Dec 2019 21:41:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=zfMdFOoakf8Wg9qg01DxbmCM0vduPEB2PzzRtbTRZFA=;
+        b=FjJOMnNXPP5YU6mOAjCI/idcOdYEu5BeqdkCwzXCIHPV1ivqKYigNOPi2/0haX4JMZ
+         ft0TGLkI1/2ly90rMXydaaNXqM3OOGvoJ2V9ULcoEXGMtrTG6jAPMJPEQ/0onzJa26Dq
+         WrgXkIzUIIwaCre6UUPnmAY1gOzHTOyzJOw+Bwq/2NoaPdAPFPaLZpyT/GhuKNamx2sE
+         gK2itPMIMXgRiWnfoLbE6YEsXg9VCQo5QPcgvfjqTz6YsxpBY0i+8B1FJ/BFpQACAvHB
+         LMPqwm5fBtGlwICScdGJgoYeqkjJSummYaiO7m0E6GgPZY1BDcDzuxFQrrYzcnVvSyeR
+         DBsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=zfMdFOoakf8Wg9qg01DxbmCM0vduPEB2PzzRtbTRZFA=;
+        b=ITAwGp6cwfhl0rVIV6Jpn5SI0iuO0JF1Ab8HErsl5pRfmy5wSz+VVGKv4Ps49Ppr8E
+         IaCdaGvN9dNs2aBWR0YU0R6Tx2a/lmaS2Gi1KSltObvO7+vzCgQKEUpdBlSRw/QDe6j0
+         40og8EGAxNnH3PVW48kP+G8rmls7fghhVXMUk9b1Cx+keGExnr2jeU4kT454c+p/K2+6
+         BTiUPqfRxL0zu3tsXamFKNOnaykqcpxljB2HMjfbqHlO215M7cTphNyBHkFg5I55pqLr
+         XuwzW/MWwZQpxOYLOOwseIR+DF9jA5xwRjX2sFN7Pi43xhSt3U7XVbKx8i0AMsxw3PUM
+         +oVQ==
+X-Gm-Message-State: APjAAAX2cSO/q+SD6dy/uwho8GB/gKHPzUYDOfd2UmSB7U39wMl2RCk/
+        vRNO5VdMoZRZxhmHlOlyKhSMwjuQQOOvSFn6b83ncw==
+X-Google-Smtp-Source: APXvYqxTT4JgxTIaDSPkefc1oUQdvE27nRxy8yvnTKO6Z2i+HMDktu+ZsDkQ33V6tSLYygOW6Y/QD3H7A+Vsm51bX8Y=
+X-Received: by 2002:a92:4883:: with SMTP id j3mr4476364ilg.272.1575783677400;
+ Sat, 07 Dec 2019 21:41:17 -0800 (PST)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: ABB0BF249B6939E6F146B64C56060BDB722E71EF5051679CF21468003F6AF5F42000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+From:   Steve French <smfrench@gmail.com>
+Date:   Sat, 7 Dec 2019 23:41:06 -0600
+Message-ID: <CAH2r5mvexWusg28E6jn7C-=_TFnnZC-MJB1JUh6zFqyapkPv8Q@mail.gmail.com>
+Subject: [GIT PULL] SMB3 Fixes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRmxvcmlhbiwNCg0KT24gU3VuLCAyMDE5LTEyLTA4IGF0IDAxOjQwICswODAwLCBGbG9yaWFu
-IEZhaW5lbGxpIHdyb3RlOg0KDQo+ID4gKyNpZmRlZiBDT05GSUdfQVJNNjQNCj4gPiArI2RlZmlu
-ZSBNVEtfU0lQX1NNQ19BQVJDSF9CSVQgICAgICAgICAgIDB4NDAwMDAwMDANCj4gPiArI2Vsc2UN
-Cj4gPiArI2RlZmluZSBNVEtfU0lQX1NNQ19BQVJDSF9CSVQgICAgICAgICAgIDB4MDAwMDAwMDAN
-Cj4gPiArI2VuZGlmDQo+IA0KPiBDYW5ub3QgeW91IHVzZSB0aGUgZGVmaW5pdGlvbnMgZnJvbSBp
-bmNsdWRlL2xpbnV4L2FybS1zbWNjYy5oIGFuZCB1c2UNCj4gQVJNX1NNQ0NDX0NBTExfQ09OVl9T
-SElGVCBoZXJlIGFuZCBhc3NvY2lhdGVkIGhlbHBlcnM/DQo+IA0KPiA+ICsNCj4gPiArLyogVUZT
-IHJlbGF0ZWQgU01DIGNhbGwgKi8NCj4gPiArI2RlZmluZSBNVEtfU0lQX1VGU19DT05UUk9MIFwN
-Cj4gPiArCSgweDgyMDAwMjc2IHwgTVRLX1NJUF9TTUNfQUFSQ0hfQklUKQ0KPiANCj4gRG9lcyBi
-aXQgMzEgbWFwIHRvIHRoZSBmYXN0IHZzLiBzbG93IGNhbGwgb2YgdGhlIEFSTSBTTUNDQyBjb252
-ZW50aW9uIG9yDQo+IGRvZXMgaXQgaGF2ZSBhIGRpZmZlcmVudCBtZWFuaW5nIChzaG91bGQgbm90
-KS4gTGlrZXdpc2UgYml0IDI1IHdvdWxkIGJlDQo+IEFSTV9TTU1DQ0NfT1dORVJfU0lQIG5vPw0K
-PiANCj4gVGhhdCB3b3VsZCBsZWF2ZSB1cyB3aXRoIG9ubHkgMHgyNzYgd2hpY2ggaXMgYSB2YWxp
-ZCBmdW5jdGlvbiBudW1iZXIuDQoNClRoYW5rcyBzbyBtdWNoIGZvciB0aGVzZSBjb21tZW50cy4N
-CkknbGwgdHJ5IHRvIHVzZSBzdWl0YWJsZSBkZWZpbml0aW9ucyBpbnN0ZWFkIGluIG5leHQgdmVy
-c2lvbi4NCg0KU3RhbmxleQ0KDQo=
+Please pull the following changes since commit
+21b26d2679584c6a60e861aa3e5ca09a6bab0633:
 
+  Merge tag '5.5-rc-smb3-fixes' of
+git://git.samba.org/sfrench/cifs-2.6 (2019-11-30 11:10:39 -0800)
+
+are available in the Git repository at:
+
+  git://git.samba.org/sfrench/cifs-2.6.git tags/5.5-rc-smb3-fixes-part2
+
+for you to fetch changes up to 231e2a0ba56733c95cb77d8920e76502b2134e72:
+
+  smb3: improve check for when we send the security descriptor context
+on create (2019-12-07 17:38:22 -0600)
+
+----------------------------------------------------------------
+9 cifs/smb3 fixes:
+      - one fix for stable (oops during oplock break)
+      - two timestamp fixes including important one for updating mtime at close
+           to avoid stale metadata caching issue on dirty files (also
+improves perf
+           by using SMB2_CLOSE_FLAG_POSTQUERY_ATTRIB over the wire)
+      - two fixes for "modefromsid" mount option for file create
+            (now allows mode bits to be set more atomically and
+accurately on create
+            by adding "sd_context" on create when modefromsid
+specified on mount)
+       - two fixes for multichannel found in testing this week against
+different servers
+       - two small cleanup patches
+----------------------------------------------------------------
+Aurelien Aptel (1):
+      cifs: fix possible uninitialized access and race on iface_list
+
+Colin Ian King (1):
+      cifs: remove redundant assignment to pointer pneg_ctxt
+
+Deepa Dinamani (1):
+      fs: cifs: Fix atime update check vs mtime
+
+Paulo Alcantara (SUSE) (1):
+      cifs: Fix lookup of SMB connections on multichannel
+
+Pavel Shilovsky (1):
+      CIFS: Fix NULL-pointer dereference in smb2_push_mandatory_locks
+
+Steve French (4):
+      smb3: remove unused flag passed into close functions
+      smb3: query attributes on file close
+      smb3: fix mode passed in on create for modetosid mount option
+      smb3: improve check for when we send the security descriptor
+context on create
+
+ fs/cifs/cifsacl.c   |  42 ++++++++++++++++----------
+ fs/cifs/cifsacl.h   |  32 ++++++++++----------
+ fs/cifs/cifsglob.h  |   4 +++
+ fs/cifs/cifsproto.h |   1 +
+ fs/cifs/connect.c   |   6 +++-
+ fs/cifs/file.c      |  11 ++++---
+ fs/cifs/inode.c     |   2 +-
+ fs/cifs/sess.c      |  32 ++++++++++++++++++--
+ fs/cifs/smb2inode.c |   2 +-
+ fs/cifs/smb2ops.c   |  49 +++++++++++++++++++++++++++---
+ fs/cifs/smb2pdu.c   | 128
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------
+ fs/cifs/smb2pdu.h   |  21 +++++++++++++
+ fs/cifs/smb2proto.h |   7 +++--
+ 13 files changed, 265 insertions(+), 72 deletions(-)
+
+
+--
+Thanks,
+
+Steve
