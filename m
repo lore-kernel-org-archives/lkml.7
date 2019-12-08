@@ -2,223 +2,173 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_STARTS_WITH_NUMS,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B17C2D0BF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9C3C2D0BE
 	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 20:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 486BB206D6
+	by mail.kernel.org (Postfix) with ESMTP id 735BB20637
 	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 20:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kpB7c36+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kwIHKoYH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfLHUQT (ORCPT
+        id S1726621AbfLHUZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 15:16:19 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40349 "EHLO
+        Sun, 8 Dec 2019 15:25:25 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52480 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfLHUQS (ORCPT
+        with ESMTP id S1726513AbfLHUZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 15:16:18 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so12632995wmi.5;
-        Sun, 08 Dec 2019 12:16:16 -0800 (PST)
+        Sun, 8 Dec 2019 15:25:25 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so13217554wmc.2;
+        Sun, 08 Dec 2019 12:25:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kBNic8yjhi7MwhQU+7ms1kdN9cx8HM4qRMBV2epx5jQ=;
-        b=kpB7c36+OkSf8XzCEH4D6Eq7IlqPe8VdEJYs8B6VFGm11HMdJ1DSaggVUjottRhEEA
-         OC/rRW1bd4SPY6lcVGNWyrHOBEbkLvHF1l1EONIeWNDvMTnnuuxhmeCepivC5nF7vWCk
-         Y74C6AOERFd8/CzAK18HwM0zbzZKv9ruxyXQJBjkYcFx3Sj//BHv3QBONkl12c8DKZQ7
-         p1o5NO0AdZ7sh80IDE8BSO7ntNiXMY+5sDptkWPeyOglKRd19Xdwo5/bV9zCAqOqZvYa
-         VG7CMvHayrXdFi9U2yBq/ulb2Qxzdbs4grYHBUxZ6Ogt/3uWiIbbRlstv5k377cMAoZM
-         t3og==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rZuOVSsIOLORgQcyJUkFkX7+NHfebp3ftqDZpnNhVHI=;
+        b=kwIHKoYHrbfekVTgSUlg1aLlX9zpLbsy6LZrajc6UkAYDIeNweO0S0s4hsvP1GtsU/
+         34453WviStBNhCXxisY8OaAsrKEqKM4f27LS5VW1NryK85Bhp5Ik6P4Z9Aj9eGJveQ6C
+         /Fkc9neUMThjUO1JZMhbCw6y3Iy+89Dfst8RXduhjM8a1DcB86KAmu5QbFgHJbjMQPqp
+         2mHHH601DHQLZ7Q76zhdnyrk86HgPZT49SWIRwzZYSp3W/4JNTdf3KR1ztOdTLz8rsr+
+         SkYBUIw7IRpyEi41n7PaQLm6uVozsLXtB8a1OK+KBpN8uoHy/LJ5eL5ZkZXDymZUiHFM
+         SWBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=kBNic8yjhi7MwhQU+7ms1kdN9cx8HM4qRMBV2epx5jQ=;
-        b=I7eAcbr/nYc1sJbEOoE7a/S5Dsf4rR+8ceWq21anQhoOs3MRCMKgFysDiDGzVUPA/j
-         etAqgIVoVYwLL0bcqEDUtojWVuyhFkpGI3RnG/6bAwzYHpRWmyLcgLtp1n84Mtq572PQ
-         ni1GP576Y4rJKlH7CYkxSI9jV4aWAblA6ZAbnrkVHJPM/B+GEtnsN6c1t5o7UXUsuVHn
-         bz+DiQmbO1JyiUAqPFI9AcabkF4YBl2/pkLCx/SjLWSDwtMj4aSSfIbggfGJyJ3APi27
-         XZtWfAgCxF1jLRLIJ11UCDOJpfiiNYeHxM9M1PA6QFrK38J2fa4yJ+qQ7MYENdM0mnPh
-         t+lw==
-X-Gm-Message-State: APjAAAWiQ3zgkD3+w//o5JZ75i0Z0+zVmssjL3swH9NOjiXEMor76eTL
-        gPkIVEmvVV0ogOMMO6uUOn0=
-X-Google-Smtp-Source: APXvYqyhnRZsx/DaeKKcibrLTHZMGOODuu7WgIIC7QzdalxZ6JTYz+6Qp1TgqgZDg84i7NulOEfHSA==
-X-Received: by 2002:a7b:ce81:: with SMTP id q1mr21735651wmj.47.1575836175598;
-        Sun, 08 Dec 2019 12:16:15 -0800 (PST)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id n12sm11155867wmd.1.2019.12.08.12.16.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Dec 2019 12:16:14 -0800 (PST)
-To:     =?UTF-8?Q?Moritz_M=c3=bcller?= <moritzm.mueller@posteo.de>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@i4.cs.fau.de
-Cc:     "Philip K ." <philip@warpmail.net>
-References: <20191208194534.32270-1-moritzm.mueller@posteo.de>
-From:   Denis Efremov <yefremov.denis@gmail.com>
-Autocrypt: addr=yefremov.denis@gmail.com; keydata=
- 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
- ST/KYQ==
-Subject: Re: [PATCH] floppy: hide invalid floppy disk types
-Message-ID: <d3f0613c-6c3a-8efc-1c27-a6b75c34972f@gmail.com>
-Date:   Sun, 8 Dec 2019 23:16:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rZuOVSsIOLORgQcyJUkFkX7+NHfebp3ftqDZpnNhVHI=;
+        b=fbU9vYsUQYX5f6Jx2psnUsLw1LTOTUmP9BeyNhuqpZiKmpG0Qgamu7JTzh7vlt4l0j
+         oq8/KJ9Wsb23ZOKusXyPOPg9TYx9KytM9SFSoDaaZpi7IEN0pgG2AEh+FZMmzB8svDD+
+         hTQdm8QKJRPuNnBXEOUSgUzZsAOzwMwNeRXn7EEHX90J2hhRx72+LRzUm4WOyFFTFIkP
+         E9PpUaQPW65W0g7C0APG+GM7fdgg2be2nVyAfh2/LpSUdgopIETR+05Qb6QNxT61FL8b
+         6GPluWgD7HrmNXeg1ffxNu/DYzzF8ogcD9XBg3HZDv8EwYDG4H8hzBVnQ4VgTWEZU9Z+
+         CRlA==
+X-Gm-Message-State: APjAAAWoIczHQQuAaI4wKIyfUck68uuDE3l082riwUVFrs5Jt/p/auS4
+        ZhikDAlv6x3Wy6Vr+PhcITfXrvuOGeIXSYZzD/j25ZEPMTA=
+X-Google-Smtp-Source: APXvYqxwE0DDF5AzVPKzIWQIP3EkMtREDeLD3Y5ZUEHq7I+yta13o8/zhbVIu3lpq2QcAAfttUOSqMRUeV81a7wEcmk=
+X-Received: by 2002:a7b:c0d8:: with SMTP id s24mr22284690wmh.30.1575836722869;
+ Sun, 08 Dec 2019 12:25:22 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191208194534.32270-1-moritzm.mueller@posteo.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1575554335-27197-1-git-send-email-alencar.fmce@imbel.gov.br> <201912090055.QXDo7ygw%lkp@intel.com>
+In-Reply-To: <201912090055.QXDo7ygw%lkp@intel.com>
+From:   Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Date:   Sun, 8 Dec 2019 17:25:11 -0300
+Message-ID: <CACk9uecHrKDQHdL=fgz0xVF4oKUBOUUyRAt-cMn6m0YCOf9v_g@mail.gmail.com>
+Subject: Re: [PATCH] video: fbdev: added driver for sharp memory lcd displays
+To:     linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rodrigo Rolim Mendes de <alencar.fmce@imbel.gov.br>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello,
 
-On 08.12.2019 22:45, Moritz Müller wrote:
-> In some cases floppy disks are being indexed, even though no actual
-> device exists. In our case this was caused by the CMOS-RAM having a few
-> peculiar bits. This caused a non-existent floppy disk of the type 13 to
-> be registered as an possibly mountable device, even though it could not
-> be mounted by any user.
-> 
-> We believe this to be an instance of this bug, as we had similar logs
-> and issues:
-> 
->  https://bugzilla.kernel.org/show_bug.cgi?id=13486
->  https://bugs.launchpad.net/ubuntu/+source/linux/+bug/384579
-> 
-> This patch adds the option FLOPPY_ALLOW_UNKNOWN_TYPES to prevent the
-> additional check that fixed the issue on our reference system, and
-> increases the startup time of affected systems by over a minute.
+Em dom., 8 de dez. de 2019 =C3=A0s 13:56, kbuild test robot <lkp@intel.com>=
+ escreveu:
+>
+> Hi Rodrigo,
+>
+> Thank you for the patch! Perhaps something to improve:
+>
+> [auto build test WARNING on linux/master]
+> [also build test WARNING on robh/for-next linus/master v5.4 next-20191208=
+]
+> [if your patch is applied to the wrong git tree, please drop us a note to=
+ help
+> improve the system. BTW, we also suggest to use '--base' option to specif=
+y the
+> base tree in git format-patch, please see https://stackoverflow.com/a/374=
+06982]
+>
+> url:    https://github.com/0day-ci/linux/commits/Rodrigo-Rolim-Mendes-de-=
+Alencar/video-fbdev-added-driver-for-sharp-memory-lcd-displays/20191207-112=
+607
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t 26bc672134241a080a83b2ab9aa8abede8d30e1c
+> reproduce:
+>         # apt-get install sparse
+>         # sparse version: v0.6.1-91-g817270f-dirty
+>         make ARCH=3Dx86_64 allmodconfig
+>         make C=3D1 CF=3D'-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+>
+> sparse warnings: (new ones prefixed by >>)
+>
+> >> drivers/video/fbdev/smemlcdfb.c:71:29: sparse: sparse: incorrect type =
+in initializer (different address spaces) @@    expected unsigned char [use=
+rtype] *vmem @@    got signed char [usertype] *vmem @@
+> >> drivers/video/fbdev/smemlcdfb.c:71:29: sparse:    expected unsigned ch=
+ar [usertype] *vmem
+> >> drivers/video/fbdev/smemlcdfb.c:71:29: sparse:    got char [noderef] <=
+asn:2> *screen_base
+>
+> vim +71 drivers/video/fbdev/smemlcdfb.c
+>
+>     67
+>     68  static void smemlcd_update(struct smemlcd_par *par)
+>     69  {
+>     70          struct spi_device *spi =3D par->spi;
+>   > 71          u8 *vmem =3D par->info->screen_base;
 
-Does driver blacklisting solves your problem? Or you have real floppy drives in
-your system along with these "spurious" ones?
+A cast is really necessary here?
 
-> 
-> Co-developed-by: Philip K. <philip@warpmail.net>
-> Signed-off-by: Philip K. <philip@warpmail.net>
-> Signed-off-by: Moritz Müller <moritzm.mueller@posteo.de>
+>     72          u8 *buf_ptr =3D par->spi_buf;
+>     73          int ret;
+>     74          u32 i,j;
+>     75
+>     76          if (par->start + par->height > par->info->var.yres) {
+>     77                  par->start =3D 0;
+>     78                  par->height =3D 0;
+>     79          }
+>     80          /* go to start line */
+>     81          vmem +=3D par->start * par->vmem_width;
+>     82          /* update vcom */
+>     83          par->vcom ^=3D SMEMLCD_FRAME_INVERSION;
+>     84          /* mode selection */
+>     85          *(buf_ptr++) =3D (par->height)? (SMEMLCD_DATA_UPDATE | pa=
+r->vcom) : par->vcom;
+>     86
+>     87          /* not all SPI masters have LSB-first mode, bitrev8 is us=
+ed */
+>     88          for (i =3D par->start + 1; i < par->start + par->height +=
+ 1; i++) {
+>     89                  /* gate line address */
+>     90                  *(buf_ptr++) =3D bitrev8(i);
+>     91                  /* data writing */
+>     92                  for (j =3D 0; j < par->spi_width; j++)
+>     93                          *(buf_ptr++) =3D bitrev8(*(vmem++));
+>     94                  /* dummy data */
+>     95                  *(buf_ptr++) =3D SMEMLCD_DUMMY_DATA;
+>     96                  /* video memory alignment */
+>     97                  for (; j < par->vmem_width; j++)
+>     98                          vmem++;
+>     99          }
+>    100          /* dummy data */
+>    101          *(buf_ptr++) =3D SMEMLCD_DUMMY_DATA;
+>    102
+>    103          ret =3D spi_write(spi, &(par->spi_buf[0]), par->height * =
+(par->spi_width + 2) + 2);
+>    104          if (ret < 0)
+>    105                  dev_err(&spi->dev, "Couldn't send SPI command.\n"=
+);
+>    106
+>    107          par->start =3D U32_MAX;
+>    108          par->height =3D 0;
+>    109  }
+>    110
+>
 > ---
->  drivers/block/Kconfig  | 10 ++++++++++
->  drivers/block/floppy.c |  6 ++++++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-> index 1bb8ec575352..9e6b32c50b67 100644
-> --- a/drivers/block/Kconfig
-> +++ b/drivers/block/Kconfig
-> @@ -72,6 +72,16 @@ config AMIGA_Z2RAM
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called z2ram.
->  
-> +config FLOPPY_ALLOW_UNKNOWN_TYPES
-> +	bool "Allow floppy disks of unknown type to be registered."
-> +	default n
-> +	help
-> +	  Select this option if you want the Kernel to register floppy
-> +	  disks of an unknown type.
-> +
-> +	  This should usually not be enabled, because of cases where the
-> +	  system falsely recognizes a non-existent floppy disk as mountable.
-> +
->  config CDROM
->  	tristate
->  	select BLK_SCSI_REQUEST
-> diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-> index 485865fd0412..9439444d46d0 100644
-> --- a/drivers/block/floppy.c
-> +++ b/drivers/block/floppy.c
-> @@ -3949,7 +3949,9 @@ static void __init config_types(void)
->  			} else
->  				allowed_drive_mask &= ~(1 << drive);
->  		} else {
-> +#ifdef CONFIG_FLOPPY_ALLOW_UNKNOWN_TYPES
->  			params = &default_drive_params[0].params;
-> +#endif
-
-You can't just skip it with ifdef. This will result in uninitialized
-pointer dereference down the code.
-
-		struct floppy_drive_params *params;
-		...
-
-		if (type < ARRAY_SIZE(default_drive_params)) {
-			...
-		} else {
-#ifdef CONFIG_FLOPPY_ALLOW_UNKNOWN_TYPES
-			params = &default_drive_params[0].params;
-#endif
-			...
-		}
-		...
-		*UDP = *params; // << HERE
-
->  			snprintf(temparea, sizeof(temparea),
->  				 "unknown type %d (usb?)", type);
->  			name = temparea;
-> @@ -4518,6 +4520,10 @@ static bool floppy_available(int drive)
->  		return false;
->  	if (fdc_state[FDC(drive)].version == FDC_NONE)
->  		return false;
-> +#ifndef CONFIG_FLOPPY_ALLOW_UNKNOWN_TYPES
-> +	if (type >= ARRAY_SIZE(default_drive_params))
-> +		return false;
-> +#endif
->  	return true;
->  }
->  
-> 
-
-Thanks,
-Denis
+> 0-DAY kernel test infrastructure                 Open Source Technology C=
+enter
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corpor=
+ation
