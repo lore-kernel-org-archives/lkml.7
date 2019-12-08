@@ -2,147 +2,117 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1812AC43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 00:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04921C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 00:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF80214D8
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 00:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C334E2467A
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 00:25:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="FRa+gNKN"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="hnJNaWKW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfLHAIp (ORCPT
+        id S1726566AbfLHAZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 19:08:45 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35613 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfLHAIp (ORCPT
+        Sat, 7 Dec 2019 19:25:16 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41700 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfLHAZP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 19:08:45 -0500
-Received: by mail-pj1-f66.google.com with SMTP id w23so4298871pjd.2
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 16:08:45 -0800 (PST)
+        Sat, 7 Dec 2019 19:25:15 -0500
+Received: by mail-qk1-f195.google.com with SMTP id g15so9882574qka.8
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 16:25:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dXZlRb8cq1PmzSVNnBv1JsUvKa+HUrbvgeQMELIpBDY=;
-        b=FRa+gNKNyGY+isoLzWTjdOUoV7Coi1XYDUCljTDMSvLtrd91MQWHH0kKBB/jA9GIab
-         mCxNQdgbE72U4Pal6H6QutInxUi3w4ZziVwWc4lNTtg7d1JDFsFuV/ciNr0b9/xs6zQE
-         n7KBAL8lxmzEGIDpbxIK2Iqpa7bNPi+7mzVzc=
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=LA4N4ibkBTMQWH6ww1/KUYSWbMZArPv7/lp2zOrDSu8=;
+        b=hnJNaWKWfpk8rdHHlMhuWvvi23XJ/BjtwmmQm2Ds4RC64Uww6p1pUNvMoTI4R8ek9i
+         vPKf+/8PJBi/enFvBuT+z3IVCCET4zGZvGEroAcrg4bWv/WNeEK8HBGq5I0dwNnMge1F
+         y0B3YhkFqim13Wcy11ZxonJYkOtjzW5eIn/r7WAYPH/8TjkIxley7spZlwoq6S7C9uKm
+         iOyAL250ltcjyqxciCMhlHoiAlqcKAA1hEoRzfaDlEgHAFkmJlXf3JSWWz6OuQsY03SU
+         p7UJiqyCLkSOOZbM0Iuxiy0ABj4OY88yNdXoomGVIGE9IrUu+q5HN9lHkxDC9WuEcFXp
+         P8cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dXZlRb8cq1PmzSVNnBv1JsUvKa+HUrbvgeQMELIpBDY=;
-        b=EFJdWIGDCTEerpIReQDb8d26quMG15OmY1NS2Ifck4kURqc5DP4wWgnX7W7xy+nS/q
-         om+MCZVAoSE4yVyRSzSA8d0pU/h+BW+epTY3dK8Wfrcbrl7uywoLabGfVSO/or2FQp9M
-         IsiKU5usaOnGOGzTRbtZTHFDEVhH6l3EFDT4K4txhuxvwDGCSr+qS9px1BnnJiZNyFtA
-         00e2ROkSDmLa2nyUCcIaRF4pybHz31/WdHwpHRBn8ghL5WZgto01Ae6mZ8W0OxLgmY3u
-         qpB8WGodU5QWAbm7W9fS4SuC/lFzsucdlf0tkzwoTq/rwWo7z6PPEdRHXJBt8mT2KQ/6
-         CSsw==
-X-Gm-Message-State: APjAAAVjYgGXXTY/3QqpK5iLL+fAjyI88IIkFk4gPubOQDovxByZigRb
-        GaRSFcAg7sWgu1g3x7K0ZVbN5Q==
-X-Google-Smtp-Source: APXvYqxt6pXSjNAdOsypElD3oLaCojPyxuXzDU1l+0WiqQFa4oNYi73z1sh8qTAJoWfpZEnX8gSoPA==
-X-Received: by 2002:a17:902:9a92:: with SMTP id w18mr22192805plp.91.1575763724541;
-        Sat, 07 Dec 2019 16:08:44 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id z130sm20445219pgz.6.2019.12.07.16.08.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 16:08:43 -0800 (PST)
-Date:   Sat, 7 Dec 2019 19:08:42 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -tip] kprobes: Lock rcu_read_lock() while searching kprobe
-Message-ID: <20191208000842.GA62607@google.com>
-References: <157527193358.11113.14859628506665612104.stgit@devnote2>
- <20191202210854.GD17234@google.com>
- <20191203071329.GC115767@gmail.com>
- <20191203175712.GI2889@paulmck-ThinkPad-P72>
- <20191204100549.GB114697@gmail.com>
- <20191204161239.GL2889@paulmck-ThinkPad-P72>
- <20191206011137.GB142442@google.com>
- <20191206031151.GY2889@paulmck-ThinkPad-P72>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206031151.GY2889@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=LA4N4ibkBTMQWH6ww1/KUYSWbMZArPv7/lp2zOrDSu8=;
+        b=Ky4GwbQ5bCs+NN75DvQBIlMQERByAQeaEldhZgP4TWewjicfbdecr1AhVT2pkbfXv7
+         rIdvLy5AvfSOJ0DV2jTiBrCPhIQ2YPpX06SZzrRjmMfeOQ1eRZm3TidIeynk4wdQjvEG
+         X3d/iLwwtsLmmk8zwzJcU8WC5MtFTHWLzFzVDEmvNfxl3DGmgV7sOh1mTgh2viarbsL3
+         C3woa9Pbblb8HdO1TJuqzMQReIhjm+YWJii2gz6hYQaUG5Pwp78An0xxP2MmTeoKmqct
+         i49K/Gt9UGK3GBB3SXVvAIK7SJjUg5770BiTC1IAJSiBayMpnygHcirL7ovQHFmSf6eX
+         egXA==
+X-Gm-Message-State: APjAAAXt750LXjEltfm4LQbUdpBhH9BVhqS73q4cmo+xfxyPpMSaXkBw
+        3XwoynKefU0VmNowyqrFmMFKyQ==
+X-Google-Smtp-Source: APXvYqxNo8O7Ua5bKHiMIz9HWbpTC75H8jOLck7W0znKlSgbuBXgp2dYwdO4bkOKMiaHzJba8rS4yA==
+X-Received: by 2002:a37:4b4f:: with SMTP id y76mr21189522qka.46.1575764714648;
+        Sat, 07 Dec 2019 16:25:14 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id n19sm7380105qkn.52.2019.12.07.16.25.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 Dec 2019 16:25:13 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] timer: fix a debugobjects warning in del_timer()
+Date:   Sat, 7 Dec 2019 19:25:12 -0500
+Message-Id: <B476DCDF-9860-4600-AEF8-0C9AB9794138@lca.pw>
+References: <20191207075828.2347-1-cai@lca.pw>
+Cc:     sboyd@kernel.org, vikas.shivappa@linux.intel.com,
+        tony.luck@intel.com, tj@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20191207075828.2347-1-cai@lca.pw>
+To:     tglx@linutronix.de, john.stultz@linaro.org
+X-Mailer: iPhone Mail (17B111)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 07:11:51PM -0800, Paul E. McKenney wrote:
-> On Thu, Dec 05, 2019 at 08:11:37PM -0500, Joel Fernandes wrote:
-> > On Wed, Dec 04, 2019 at 08:12:39AM -0800, Paul E. McKenney wrote:
-> > > On Wed, Dec 04, 2019 at 11:05:50AM +0100, Ingo Molnar wrote:
-> > > > 
-> > > > * Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > > 
-> > > > > >  * This list-traversal primitive may safely run concurrently with
-> > > > > >  * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-> > > > > >  * as long as the traversal is guarded by rcu_read_lock().
-> > > > > >  */
-> > > > > > #define hlist_for_each_entry_rcu(pos, head, member, cond...)            \
-> > > > > > 
-> > > > > > is actively harmful. Why is it there?
-> > > > > 
-> > > > > For cases where common code might be invoked both from the reader
-> > > > > (with RCU protection) and from the updater (protected by some
-> > > > > lock).  This common code can then use the optional argument to
-> > > > > hlist_for_each_entry_rcu() to truthfully tell lockdep that it might be
-> > > > > called with either form of protection in place.
-> > > > > 
-> > > > > This also combines with the __rcu tag used to mark RCU-protected
-> > > > > pointers, in which case sparse complains when a non-RCU API is applied
-> > > > > to these pointers, to get back to your earlier question about use of
-> > > > > hlist_for_each_entry_rcu() within the update-side lock.
-> > > > > 
-> > > > > But what are you seeing as actively harmful about all of this?
-> > > > > What should we be doing instead?
-> > > > 
-> > > > Yeah, so basically in the write-locked path hlist_for_each_entry() 
-> > > > generates (slightly) more efficient code than hlist_for_each_entry_rcu(), 
-> > > > correct?
-> > > 
-> > > Potentially yes, if the READ_ONCE() constrains the compiler.  Or not,
-> > > depending of course on the compiler and the surrounding code.
-> > > 
-> > > > Also, the principle of passing warning flags around is problematic - but 
-> > > > I can see the point in this specific case.
-> > > 
-> > > Would it help to add an hlist_for_each_entry_protected() that expected
-> > > RCU-protected pointers and write-side protection, analogous to
-> > > rcu_dereference_protected()?  Or would that expansion of the RCU API
-> > > outweigh any benefits?
-> > 
-> > Personally, I like keeping the same API and using the optional argument like
-> > we did thus preventing too many APIs / new APIs.
-> 
-> Would you be willing to put together a prototype patch so that people
-> can see exactly how it would look?
 
-Hi Paul,
 
-I was referring to the same API we have at the moment (that is
-hlist_for_each_entry_rcu() with the additional cond parameter). I was saying
-let us keep that and not add a hlist_for_each_entry_protected() instead, so
-as to not proliferate the number of APIs.
+> On Dec 7, 2019, at 2:58 AM, Qian Cai <cai@lca.pw> wrote:
+>=20
+> Since the commit e33026831bdb ("x86/intel_rdt/mbm: Handle counter
+> overflow"), it will generate a debugobjects warning while offlining
+> CPUs.
+>=20
+> ODEBUG: assert_init not available (active state 0) object type:
+> timer_list hint: 0x0
+> WARNING: CPU: 143 PID: 789 at lib/debugobjects.c:484
+> debug_print_object+0xfe/0x140
+> Hardware name: HP Synergy 680 Gen9/Synergy 680 Gen9 Compute Module, BIOS
+> I40 05/23/2018
+> RIP: 0010:debug_print_object+0xfe/0x140
+> Call Trace:
+> debug_object_assert_init+0x1f5/0x240
+> del_timer+0x6f/0xf0
+> try_to_grab_pending+0x42/0x3c0
+> cancel_delayed_work+0x7d/0x150
+> resctrl_offline_cpu+0x3c0/0x520
+> cpuhp_invoke_callback+0x197/0x1120
+> cpuhp_thread_fun+0x252/0x2f0
+> smpboot_thread_fn+0x255/0x440
+> kthread+0x1e6/0x210
+> ret_from_fork+0x3a/0x50
+>=20
+> This is because in domain_remove_cpu() when "cpu =3D=3D d->mbm_work_cpu", i=
+t
+> calls cancel_delayed_work(&d->mbm_over) to deactivate the timer, and
+> then mbm_setup_overflow_handler() calls schedule_delayed_work_on() with
+> 0 delay which does not activiate the timer in __queue_delayed_work().
+>=20
+> Later, when the last CPU in the same L3 cache goes offline, it calls
+> cancel_delayed_work(&d->mbm_over) again in domain_remove_cpu() and
+> trigger the warning because the timer is still inactive.
+>=20
+> Since del_timer() could be called on both active and inactive timers,
+> debug_assert_init() should be called only when there is an active timer.
+>=20
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Or did I miss the point?
-
-thanks,
-
- - Joel
-
+Self-NACK this and I=E2=80=99ll post a more correct patch.=
