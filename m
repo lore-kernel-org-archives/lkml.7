@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2B5C43603
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCF9C43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6FC206F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78989206F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfLHN5G (ORCPT
+        id S1727359AbfLHN5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:57:06 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60260 "EHLO
+        Sun, 8 Dec 2019 08:57:10 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60230 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726801AbfLHNyn (ORCPT
+        by vger.kernel.org with ESMTP id S1726786AbfLHNyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Dec 2019 08:54:43 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1E-0007fL-A8; Sun, 08 Dec 2019 13:54:40 +0000
+        id 1idx1C-0007eB-Tb; Sun, 08 Dec 2019 13:54:38 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1C-0002Nx-NT; Sun, 08 Dec 2019 13:54:38 +0000
+        id 1idx1B-0002N3-Ip; Sun, 08 Dec 2019 13:54:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Steve French" <stfrench@microsoft.com>,
-        "Murphy Zhou" <jencce.kernel@gmail.com>,
-        "Aurelien Aptel" <aaptel@suse.com>
-Date:   Sun, 08 Dec 2019 13:53:28 +0000
-Message-ID: <lsq.1575813165.883003884@decadent.org.uk>
+        "Christoph Hellwig" <hch@lst.de>,
+        "Al Viro" <viro@zeniv.linux.org.uk>
+Date:   Sun, 08 Dec 2019 13:53:17 +0000
+Message-ID: <lsq.1575813165.869366735@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 44/72] CIFS: fix max ea value size
+Subject: [PATCH 3.16 33/72] configfs: fix a deadlock in configfs_symlink()
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,32 +55,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Murphy Zhou <jencce.kernel@gmail.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 63d37fb4ce5ae7bf1e58f906d1bf25f036fe79b2 upstream.
+commit 351e5d869e5ac10cb40c78b5f2d7dfc816ad4587 upstream.
 
-It should not be larger then the slab max buf size. If user
-specifies a larger size, it passes this check and goes
-straightly to SMB2_set_info_init performing an insecure memcpy.
+Configfs abuses symlink(2).  Unlike the normal filesystems, it
+wants the target resolved at symlink(2) time, like link(2) would've
+done.  The problem is that ->symlink() is called with the parent
+directory locked exclusive, so resolving the target inside the
+->symlink() is easily deadlocked.
 
-Signed-off-by: Murphy Zhou <jencce.kernel@gmail.com>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-[bwh: Backported to 3.16: adjust context]
+Short of really ugly games in sys_symlink() itself, all we can
+do is to unlock the parent before resolving the target and
+relock it after.  However, that invalidates the checks done
+by the caller of ->symlink(), so we have to
+	* check that dentry is still where it used to be
+(it couldn't have been moved, but it could've been unhashed)
+	* recheck that it's still negative (somebody else
+might've successfully created a symlink with the same name
+while we were looking the target up)
+	* recheck the permissions on the parent directory.
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+[bwh: Backported to 3.16: open-code inode_{,un}lock()]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/cifs/xattr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/configfs/symlink.c | 33 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/xattr.c
-+++ b/fs/cifs/xattr.c
-@@ -29,7 +29,7 @@
- #include "cifsproto.h"
- #include "cifs_debug.h"
+--- a/fs/configfs/symlink.c
++++ b/fs/configfs/symlink.c
+@@ -157,11 +157,42 @@ int configfs_symlink(struct inode *dir,
+ 	    !type->ct_item_ops->allow_link)
+ 		goto out_put;
  
--#define MAX_EA_VALUE_SIZE 65535
-+#define MAX_EA_VALUE_SIZE CIFSMaxBufSize
- #define CIFS_XATTR_DOS_ATTRIB "user.DosAttrib"
- #define CIFS_XATTR_CIFS_ACL "system.cifs_acl"
++	/*
++	 * This is really sick.  What they wanted was a hybrid of
++	 * link(2) and symlink(2) - they wanted the target resolved
++	 * at syscall time (as link(2) would've done), be a directory
++	 * (which link(2) would've refused to do) *AND* be a deep
++	 * fucking magic, making the target busy from rmdir POV.
++	 * symlink(2) is nothing of that sort, and the locking it
++	 * gets matches the normal symlink(2) semantics.  Without
++	 * attempts to resolve the target (which might very well
++	 * not even exist yet) done prior to locking the parent
++	 * directory.  This perversion, OTOH, needs to resolve
++	 * the target, which would lead to obvious deadlocks if
++	 * attempted with any directories locked.
++	 *
++	 * Unfortunately, that garbage is userland ABI and we should've
++	 * said "no" back in 2005.  Too late now, so we get to
++	 * play very ugly games with locking.
++	 *
++	 * Try *ANYTHING* of that sort in new code, and you will
++	 * really regret it.  Just ask yourself - what could a BOFH
++	 * do to me and do I want to find it out first-hand?
++	 *
++	 *  AV, a thoroughly annoyed bastard.
++	 */
++	mutex_unlock(&dir->i_mutex);
+ 	ret = get_target(symname, &path, &target_item, dentry->d_sb);
++	mutex_lock(&dir->i_mutex);
+ 	if (ret)
+ 		goto out_put;
  
+-	ret = type->ct_item_ops->allow_link(parent_item, target_item);
++	if (dentry->d_inode || d_unhashed(dentry))
++		ret = -EEXIST;
++	else
++		ret = inode_permission(dir, MAY_WRITE | MAY_EXEC);
++	if (!ret)
++		ret = type->ct_item_ops->allow_link(parent_item, target_item);
+ 	if (!ret) {
+ 		mutex_lock(&configfs_symlink_mutex);
+ 		ret = create_link(parent_item, target_item, dentry);
 
