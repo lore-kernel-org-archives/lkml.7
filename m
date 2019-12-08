@@ -2,158 +2,94 @@ Return-Path: <SRS0=RGqN=Z6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BC8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 00:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BEDC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 00:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6BF20663
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 00:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F0924677
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 00:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575766693;
+	bh=yFrXn5a6Pm82r9Pyt9R5S4hEloOxaSjyGJQA955foiE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vNf08yEpTVNp3FaS2nTB1UyRs1Rezn5sEvgpCsxp9nMSuLFdJbsTzNbE1wa7TOtqU
+	 Izuim/wwuWYiDzS0YNoyQAPS7ypDJ6uVA9MCL6hRDfQeJqdH1Q4AuJYRQJF1TViZcR
+	 WZkR/obcbKLr/MtmBRnUTljjdkm/YRdCyg5XDI+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfLHAsn (ORCPT
+        id S1726654AbfLHA6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Dec 2019 19:48:43 -0500
-Received: from mga14.intel.com ([192.55.52.115]:31815 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbfLHAsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Dec 2019 19:48:43 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Dec 2019 16:48:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,290,1571727600"; 
-   d="scan'208";a="202479633"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 07 Dec 2019 16:48:39 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1idkkY-00094a-Do; Sun, 08 Dec 2019 08:48:38 +0800
-Date:   Sun, 8 Dec 2019 08:48:29 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     James Sewart <jamessewart@arista.com>
-Cc:     kbuild-all@lists.01.org, linux-pci@vger.kernel.org,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v6 2/3] PCI: Add parameter nr_devfns to pci_add_dma_alias
-Message-ID: <201912080729.iJaJfY0k%lkp@intel.com>
-References: <D4C7374E-4DFE-4024-8E76-9F54BF421B62@arista.com>
+        Sat, 7 Dec 2019 19:58:12 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43865 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbfLHA6L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Dec 2019 19:58:11 -0500
+Received: by mail-lj1-f196.google.com with SMTP id a13so11619846ljm.10
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 16:58:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pjInLVbNXJAcoeCkZ2UVa8n0Yvnc+/klAZS5TAwHv4s=;
+        b=h6ddV75ipxBKXFOA9CDG/DsvE2JTK3HbVomfQE6untuDafGb0uM3UTD+kBuTeURAJr
+         YaLxU9OJ6BU0yKYe4O/Q1IYMqIaS6oyUAb7OTpsABdji+FCn80FeRKA9nWv9YeQerxr2
+         Ixb3YlsXil8s4tHITSEfWE+Fn1dKsFgLFg/0M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pjInLVbNXJAcoeCkZ2UVa8n0Yvnc+/klAZS5TAwHv4s=;
+        b=T8emoCzMR1Z6OOHeO8r+VonScq+P8AfNksjmubtSx+YoKesiEVpZ7+3XjNcMbHk5bX
+         cC/NJmO/Vcc6sM8JH3BSnSRbO0AR+Z98nNsBgh/iUS1Nw2bRtBibn3KJ93r+ehYI0V2k
+         3gMDTEP4JR00PLKK8/37p3c59l8IX45ASmVA+aNGZLD4LdRxyNYfQ6X9+NGZOi1fuMfG
+         Kk4DYZvs7zPqwko/kIoZEdOPiKkdvh+MrPhZ1aO8hhu6XlVxstyY3JsIwzoduuL0rnB9
+         2OR2aeohrfmyU1kK7yS9HCY0cDw/Mv0HXh/kZ/Wuck7NoQ79MEUL/Uyo9idxiF6jCAW7
+         9ezQ==
+X-Gm-Message-State: APjAAAWfF4/Qnrt0PX+p0S95EeN57+ab3rUY4Y8Szu9XThFGy1NU8zk9
+        5ASDBFU5isiJeKFG/cybFSWUh4vKBC4=
+X-Google-Smtp-Source: APXvYqz3Ljo5EEh69i7hPSN466FW9TM8pplKVyZhkePw7E+qKK9x/jdleztq2IPJ+nWzyUBcHtFXXQ==
+X-Received: by 2002:a2e:90da:: with SMTP id o26mr12722491ljg.25.1575766689081;
+        Sat, 07 Dec 2019 16:58:09 -0800 (PST)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id y72sm2309573lfa.12.2019.12.07.16.58.07
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 Dec 2019 16:58:08 -0800 (PST)
+Received: by mail-lj1-f176.google.com with SMTP id e10so11636979ljj.6
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Dec 2019 16:58:07 -0800 (PST)
+X-Received: by 2002:a2e:241a:: with SMTP id k26mr12682848ljk.26.1575766687450;
+ Sat, 07 Dec 2019 16:58:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D4C7374E-4DFE-4024-8E76-9F54BF421B62@arista.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20191207171402.GA24017@fieldses.org> <20191207171832.GB24017@fieldses.org>
+In-Reply-To: <20191207171832.GB24017@fieldses.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 7 Dec 2019 16:57:51 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgiQO7PCgQ5YKbJ86TLEs8G_M6k2OtFBY5m2AcNOCcJ0g@mail.gmail.com>
+Message-ID: <CAHk-=wgiQO7PCgQ5YKbJ86TLEs8G_M6k2OtFBY5m2AcNOCcJ0g@mail.gmail.com>
+Subject: Re: [GIT PULL] nfsd change for 5.5
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     linux-nfs@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+On Sat, Dec 7, 2019 at 9:18 AM J. Bruce Fields <bfields@fieldses.org> wrote:
+>
+> Oh, also, not included: server-to-server copy offload.  I think it's
+> more or less ready, but due to some miscommunication (at least partly my
+> fault), I didn't get them in my nfsd-next branch till this week.  And
+> the client side (which it builds on) isn't merged yet last I checked.
+> So, it seemed more prudent to back them out and wait till next time.
 
-Thank you for the patch! Perhaps something to improve:
+The cline side part should have just got merged (Trond and you both
+waited until the end of the merge window for your pull requests), but
+it's just as well to have the server side be done next release..
 
-[auto build test WARNING on v5.4-rc8]
-[also build test WARNING on next-20191206]
-[cannot apply to pci/next]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/James-Sewart/PCI-Fix-off-by-one-in-dma_alias_mask-allocation-size/20191204-034421
-base:    af42d3466bdc8f39806b26f593604fdc54140bcb
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-91-g817270f-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/iommu/amd_iommu.c:288:34: sparse: sparse: not enough arguments for function pci_add_dma_alias
-
-vim +288 drivers/iommu/amd_iommu.c
-
-e3156048346c28 Joerg Roedel   2016-04-08  234  
-e3156048346c28 Joerg Roedel   2016-04-08  235  static u16 get_alias(struct device *dev)
-e3156048346c28 Joerg Roedel   2016-04-08  236  {
-e3156048346c28 Joerg Roedel   2016-04-08  237  	struct pci_dev *pdev = to_pci_dev(dev);
-e3156048346c28 Joerg Roedel   2016-04-08  238  	u16 devid, ivrs_alias, pci_alias;
-e3156048346c28 Joerg Roedel   2016-04-08  239  
-6c0b43df74f900 Joerg Roedel   2016-05-09  240  	/* The callers make sure that get_device_id() does not fail here */
-e3156048346c28 Joerg Roedel   2016-04-08  241  	devid = get_device_id(dev);
-5ebb1bc2d63d90 Arindam Nath   2018-09-18  242  
-5ebb1bc2d63d90 Arindam Nath   2018-09-18  243  	/* For ACPI HID devices, we simply return the devid as such */
-5ebb1bc2d63d90 Arindam Nath   2018-09-18  244  	if (!dev_is_pci(dev))
-5ebb1bc2d63d90 Arindam Nath   2018-09-18  245  		return devid;
-5ebb1bc2d63d90 Arindam Nath   2018-09-18  246  
-e3156048346c28 Joerg Roedel   2016-04-08  247  	ivrs_alias = amd_iommu_alias_table[devid];
-5ebb1bc2d63d90 Arindam Nath   2018-09-18  248  
-e3156048346c28 Joerg Roedel   2016-04-08  249  	pci_for_each_dma_alias(pdev, __last_alias, &pci_alias);
-e3156048346c28 Joerg Roedel   2016-04-08  250  
-e3156048346c28 Joerg Roedel   2016-04-08  251  	if (ivrs_alias == pci_alias)
-e3156048346c28 Joerg Roedel   2016-04-08  252  		return ivrs_alias;
-e3156048346c28 Joerg Roedel   2016-04-08  253  
-e3156048346c28 Joerg Roedel   2016-04-08  254  	/*
-e3156048346c28 Joerg Roedel   2016-04-08  255  	 * DMA alias showdown
-e3156048346c28 Joerg Roedel   2016-04-08  256  	 *
-e3156048346c28 Joerg Roedel   2016-04-08  257  	 * The IVRS is fairly reliable in telling us about aliases, but it
-e3156048346c28 Joerg Roedel   2016-04-08  258  	 * can't know about every screwy device.  If we don't have an IVRS
-e3156048346c28 Joerg Roedel   2016-04-08  259  	 * reported alias, use the PCI reported alias.  In that case we may
-e3156048346c28 Joerg Roedel   2016-04-08  260  	 * still need to initialize the rlookup and dev_table entries if the
-e3156048346c28 Joerg Roedel   2016-04-08  261  	 * alias is to a non-existent device.
-e3156048346c28 Joerg Roedel   2016-04-08  262  	 */
-e3156048346c28 Joerg Roedel   2016-04-08  263  	if (ivrs_alias == devid) {
-e3156048346c28 Joerg Roedel   2016-04-08  264  		if (!amd_iommu_rlookup_table[pci_alias]) {
-e3156048346c28 Joerg Roedel   2016-04-08  265  			amd_iommu_rlookup_table[pci_alias] =
-e3156048346c28 Joerg Roedel   2016-04-08  266  				amd_iommu_rlookup_table[devid];
-e3156048346c28 Joerg Roedel   2016-04-08  267  			memcpy(amd_iommu_dev_table[pci_alias].data,
-e3156048346c28 Joerg Roedel   2016-04-08  268  			       amd_iommu_dev_table[devid].data,
-e3156048346c28 Joerg Roedel   2016-04-08  269  			       sizeof(amd_iommu_dev_table[pci_alias].data));
-e3156048346c28 Joerg Roedel   2016-04-08  270  		}
-e3156048346c28 Joerg Roedel   2016-04-08  271  
-e3156048346c28 Joerg Roedel   2016-04-08  272  		return pci_alias;
-e3156048346c28 Joerg Roedel   2016-04-08  273  	}
-e3156048346c28 Joerg Roedel   2016-04-08  274  
-5f226da1b1d706 Bjorn Helgaas  2019-02-08  275  	pci_info(pdev, "Using IVRS reported alias %02x:%02x.%d "
-5f226da1b1d706 Bjorn Helgaas  2019-02-08  276  		"for device [%04x:%04x], kernel reported alias "
-e3156048346c28 Joerg Roedel   2016-04-08  277  		"%02x:%02x.%d\n", PCI_BUS_NUM(ivrs_alias), PCI_SLOT(ivrs_alias),
-5f226da1b1d706 Bjorn Helgaas  2019-02-08  278  		PCI_FUNC(ivrs_alias), pdev->vendor, pdev->device,
-e3156048346c28 Joerg Roedel   2016-04-08  279  		PCI_BUS_NUM(pci_alias), PCI_SLOT(pci_alias),
-e3156048346c28 Joerg Roedel   2016-04-08  280  		PCI_FUNC(pci_alias));
-e3156048346c28 Joerg Roedel   2016-04-08  281  
-e3156048346c28 Joerg Roedel   2016-04-08  282  	/*
-e3156048346c28 Joerg Roedel   2016-04-08  283  	 * If we don't have a PCI DMA alias and the IVRS alias is on the same
-e3156048346c28 Joerg Roedel   2016-04-08  284  	 * bus, then the IVRS table may know about a quirk that we don't.
-e3156048346c28 Joerg Roedel   2016-04-08  285  	 */
-e3156048346c28 Joerg Roedel   2016-04-08  286  	if (pci_alias == devid &&
-e3156048346c28 Joerg Roedel   2016-04-08  287  	    PCI_BUS_NUM(ivrs_alias) == pdev->bus->number) {
-7afd16f882887c Linus Torvalds 2016-05-19 @288  		pci_add_dma_alias(pdev, ivrs_alias & 0xff);
-5f226da1b1d706 Bjorn Helgaas  2019-02-08  289  		pci_info(pdev, "Added PCI DMA alias %02x.%d\n",
-5f226da1b1d706 Bjorn Helgaas  2019-02-08  290  			PCI_SLOT(ivrs_alias), PCI_FUNC(ivrs_alias));
-e3156048346c28 Joerg Roedel   2016-04-08  291  	}
-e3156048346c28 Joerg Roedel   2016-04-08  292  
-e3156048346c28 Joerg Roedel   2016-04-08  293  	return ivrs_alias;
-e3156048346c28 Joerg Roedel   2016-04-08  294  }
-e3156048346c28 Joerg Roedel   2016-04-08  295  
-
-:::::: The code at line 288 was first introduced by commit
-:::::: 7afd16f882887c9adc69cd1794f5e57777723217 Merge tag 'pci-v4.7-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci
-
-:::::: TO: Linus Torvalds <torvalds@linux-foundation.org>
-:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+               Linus
