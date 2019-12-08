@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C94C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA20BC43603
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E60206E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC88206F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Dec 2019 13:55:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfLHNzF (ORCPT
+        id S1727003AbfLHNyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 08:55:05 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60746 "EHLO
+        Sun, 8 Dec 2019 08:54:50 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60434 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727016AbfLHNzB (ORCPT
+        by vger.kernel.org with ESMTP id S1726879AbfLHNyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 08:55:01 -0500
+        Sun, 8 Dec 2019 08:54:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1C-0007dj-4c; Sun, 08 Dec 2019 13:54:38 +0000
+        id 1idx1G-0007hP-6V; Sun, 08 Dec 2019 13:54:42 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1idx1B-0002M5-2T; Sun, 08 Dec 2019 13:54:37 +0000
+        id 1idx1E-0002PB-U8; Sun, 08 Dec 2019 13:54:40 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,20 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Felix Fietkau" <nbd@nbd.name>,
-        "Fabio Bettoni" <fbettoni@gmail.com>,
-        "Vignesh Raghavendra" <vigneshr@ti.com>,
-        "Tokunori Ikegami" <ikegami.t@gmail.com>,
-        "Hauke Mehrtens" <hauke@hauke-m.de>,
-        "Chris Packham" <chris.packham@alliedtelesis.co.nz>,
-        linux-mtd@lists.infradead.org,
-        "Joakim Tjernlund" <Joakim.Tjernlund@infinera.com>
-Date:   Sun, 08 Dec 2019 13:53:05 +0000
-Message-ID: <lsq.1575813165.444628518@decadent.org.uk>
+        "Navid Emamdoost" <navid.emamdoost@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Date:   Sun, 08 Dec 2019 13:53:43 +0000
+Message-ID: <lsq.1575813165.251391907@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 21/72] mtd: cfi_cmdset_0002: Use chip_good() to retry
- in do_write_oneword()
+Subject: [PATCH 3.16 59/72] scsi: bfa: release allocated memory in case of
+ error
 In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -62,83 +56,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tokunori Ikegami <ikegami.t@gmail.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 37c673ade35c707d50583b5b25091ff8ebdeafd7 upstream.
+commit 0e62395da2bd5166d7c9e14cbc7503b256a34cb0 upstream.
 
-As reported by the OpenWRT team, write requests sometimes fail on some
-platforms.
-Currently to check the state chip_ready() is used correctly as described by
-the flash memory S29GL256P11TFI01 datasheet.
-Also chip_good() is used to check if the write is succeeded and it was
-implemented by the commit fb4a90bfcd6d8 ("[MTD] CFI-0002 - Improve error
-checking").
-But actually the write failure is caused on some platforms and also it can
-be fixed by using chip_good() to check the state and retry instead.
-Also it seems that it is caused after repeated about 1,000 times to retry
-the write one word with the reset command.
-By using chip_good() to check the state to be done it can be reduced the
-retry with reset.
-It is depended on the actual flash chip behavior so the root cause is
-unknown.
+In bfad_im_get_stats if bfa_port_get_stats fails, allocated memory needs to
+be released.
 
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-Cc: linux-mtd@lists.infradead.org
-Reported-by: Fabio Bettoni <fbettoni@gmail.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
-Signed-off-by: Tokunori Ikegami <ikegami.t@gmail.com>
-[vigneshr@ti.com: Fix a checkpatch warning]
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-[bwh: Backported to 3.16:
- - chip_good() doesn't take a chip parameter
- - Adjust context]
+Link: https://lore.kernel.org/r/20190910234417.22151-1-navid.emamdoost@gmail.com
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/drivers/mtd/chips/cfi_cmdset_0002.c
-+++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-@@ -1295,29 +1295,36 @@ static int __xipram do_write_oneword(str
- 			continue;
- 		}
+ drivers/scsi/bfa/bfad_attr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/drivers/scsi/bfa/bfad_attr.c
++++ b/drivers/scsi/bfa/bfad_attr.c
+@@ -282,8 +282,10 @@ bfad_im_get_stats(struct Scsi_Host *shos
+ 	rc = bfa_port_get_stats(BFA_FCPORT(&bfad->bfa),
+ 				fcstats, bfad_hcb_comp, &fcomp);
+ 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
+-	if (rc != BFA_STATUS_OK)
++	if (rc != BFA_STATUS_OK) {
++		kfree(fcstats);
+ 		return NULL;
++	}
  
--		if (time_after(jiffies, timeo) && !chip_ready(map, adr)){
-+		/*
-+		 * We check "time_after" and "!chip_good" before checking
-+		 * "chip_good" to avoid the failure due to scheduling.
-+		 */
-+		if (time_after(jiffies, timeo) &&
-+		    !chip_good(map, adr, datum)) {
- 			xip_enable(map, chip, adr);
- 			printk(KERN_WARNING "MTD %s(): software timeout\n", __func__);
- 			xip_disable(map, chip, adr);
-+			ret = -EIO;
- 			break;
- 		}
+ 	wait_for_completion(&fcomp.comp);
  
--		if (chip_ready(map, adr))
-+		if (chip_good(map, adr, datum))
- 			break;
- 
- 		/* Latency issues. Drop the lock, wait a while and retry */
- 		UDELAY(map, chip, adr, 1);
- 	}
-+
- 	/* Did we succeed? */
--	if (!chip_good(map, adr, datum)) {
-+	if (ret) {
- 		/* reset on all failures. */
- 		map_write( map, CMD(0xF0), chip->start );
- 		/* FIXME - should have reset delay before continuing */
- 
--		if (++retry_cnt <= MAX_RETRIES)
-+		if (++retry_cnt <= MAX_RETRIES) {
-+			ret = 0;
- 			goto retry;
--
--		ret = -EIO;
-+		}
- 	}
- 	xip_enable(map, chip, adr);
-  op_done:
 
