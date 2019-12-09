@@ -2,108 +2,155 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8755C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE414C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5362068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E9462068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:02:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TL77VmqZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ea0xRToy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbfLIOCn (ORCPT
+        id S1727812AbfLIOCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:02:43 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:42301 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727684AbfLIOCl (ORCPT
+        Mon, 9 Dec 2019 09:02:47 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38786 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727684AbfLIOCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 09:02:41 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9E17Rh002940;
-        Mon, 9 Dec 2019 15:02:23 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=h0NDLxS3j9GuxtUF4CHpY+EnFaY9d7pHHOIkb2OZAns=;
- b=TL77VmqZ6PBbQBR4bgNU6G/GBf+MokTel3SnHpeiyO76m2Aa3yPOTu6R+dB+zSNQdVf0
- vauYvasBECN30yo6TxYqKQQWZIAjO6aZidp1Miyn5dm7zEWYrzX0LLw2LpqMCzO1pos9
- KJRAYmhEXNe1B1gOAAXspNV0Cy4WsPV/7NUjWRQRHndTlGhOVyyZMOjNbcS/mD9rQUWr
- ik1MGKkBCkcVpz7MfGAvXqQdG9MJ6Oj8taMOoEYbToFfKpy4x2iZ1MOdqkVFKI7T47s6
- ssFGg7FczNryUw10RQfmhakYWkoaQxq48dqQYUmJPo8bBeSB12lJkAw793nSRfnyjG5a FQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wrapxfpn1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Dec 2019 15:02:23 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1606D100038;
-        Mon,  9 Dec 2019 15:02:21 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EACFA2FF5F7;
-        Mon,  9 Dec 2019 15:02:20 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 9 Dec
- 2019 15:02:20 +0100
-Subject: Re: [PATCH V4 net-next 0/4] net: ethernet: stmmac: cleanup clock and
- optimization
-To:     Christophe Roullier <christophe.roullier@st.com>,
-        <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <peppe.cavallaro@st.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>
-References: <20191107084757.17910-1-christophe.roullier@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <5b1774f4-c0ec-030d-90a8-65b714545b9b@st.com>
-Date:   Mon, 9 Dec 2019 15:02:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191107084757.17910-1-christophe.roullier@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-09_04:2019-12-09,2019-12-09 signatures=0
+        Mon, 9 Dec 2019 09:02:45 -0500
+Received: by mail-qt1-f194.google.com with SMTP id z15so3712198qts.5;
+        Mon, 09 Dec 2019 06:02:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=9ldqJ1SZTM86i1NDUWb8AoCSQlQUTKFP3Yzg0EhQCsM=;
+        b=ea0xRToyTQAOSYaMQIUh7dMSvI/bYuX5NsGjwiP/tqHkEtEDAPmSkvqWOdiyAFHg6B
+         vDHB3pjTFIiPw0cUfdqbfcjVyw9Uxb+xzwXYjTjFA+lTSlE9pt/S8hXz7LnJFxzgb2MD
+         9Eolg70Jp3L5GJjMtq1ZRPfK4T0bkXtcC1se+gSI5YWlsfyRAxNysXN/8yBbxz5S2X3b
+         H78YA8nG8WUX/3Mm6v8Ya5uUM7FlbxN/ZtGAlOIkk9y+IfWFjghDAuvTkjhyVbKk/74v
+         F21z4Y0qHvu/3kZ59Lb+jY09NtMNBcjsqvRElL5AGwCjcVmGnaa7pOEGZ3+u+2AYSqzm
+         KUuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=9ldqJ1SZTM86i1NDUWb8AoCSQlQUTKFP3Yzg0EhQCsM=;
+        b=D9SSkkgYRdb2+2t3RFRfSZWd4iRP0agwWjB2B6/n7hYDbuvdB0cByARq/xiOpNQF0l
+         rKPLtNXImwlDRcZ6oM+YF8/ERbJyQz0fqAFuc42TFwhJxtKKCPUmxxdXmxwhowGUXnBm
+         3BinlqbfrZDN1Xv8sF1OSXT/9cSpp9Zs2dpgMUwMzSEk3hSTPNVUoGJY5HE80vBeyDYA
+         s/mHbqV3GTbsmkbBYv3kYgG3xVqOrsKXWZWeIusVW2Y75PiTqvSSRoWuy+3TIBz/8EYp
+         EUPcMPuPC9FsEySHlBLlvIWAYhIVnmFmSyluAdRJ+tOHc+76cT+F95qkeH/tJ5ntf0T9
+         g+iA==
+X-Gm-Message-State: APjAAAWNmarjo69Npfjq4tprBsTFT/OOr1/HoKx0tGLG7V6TwubMODMd
+        4x+Yz4d0zTrsGkma3nz85/M=
+X-Google-Smtp-Source: APXvYqztzrVLLGA7w+ahwGSQFwLTP6K8GAsDsLwxpdjc/fVJqXOcLNgNj4z6oBzvhbewNFKx0I1IGA==
+X-Received: by 2002:aed:2047:: with SMTP id 65mr25382186qta.78.1575900160420;
+        Mon, 09 Dec 2019 06:02:40 -0800 (PST)
+Received: from localhost.localdomain ([72.53.229.209])
+        by smtp.gmail.com with ESMTPSA id h28sm10128023qte.54.2019.12.09.06.02.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 06:02:39 -0800 (PST)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>, Pavel Machek <pavel@ucw.cz>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: [PATCH v5 2/2] dt-bindings: mfd: update TI tps6105x chip bindings
+Date:   Mon,  9 Dec 2019 09:02:34 -0500
+Message-Id: <20191209140234.6558-3-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191209140234.6558-1-TheSven73@gmail.com>
+References: <20191209140234.6558-1-TheSven73@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe
+The driver has been extended to optionally get its operational
+mode, regulator init data and LED naming from the devicetree.
 
-On 11/7/19 9:47 AM, Christophe Roullier wrote:
-> Some improvements:
->   - manage syscfg as optional clock,
->   - update slew rate of ETH_MDIO pin,
->   - Enable gating of the MAC TX clock during TX low-power mode
-> 
-> V4: Update with Andrew Lunn remark
-> 
-> Christophe Roullier (4):
->    net: ethernet: stmmac: Add support for syscfg clock
->    ARM: dts: stm32: remove syscfg clock on stm32mp157c ethernet
->    ARM: dts: stm32: adjust slew rate for Ethernet
->    ARM: dts: stm32: Enable gating of the MAC TX clock during TX low-power
->      mode on stm32mp157c
-> 
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi     |  9 ++++++--
->   arch/arm/boot/dts/stm32mp157c.dtsi            |  7 +++---
->   .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 23 +++++++------------
->   3 files changed, 18 insertions(+), 21 deletions(-)
-> 
+Tree: next-20191118
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+ .../devicetree/bindings/mfd/tps6105x.txt      | 47 ++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 1 deletion(-)
 
-For DT patches:
+diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+index 93602c7a19c8..d15763740a3f 100644
+--- a/Documentation/devicetree/bindings/mfd/tps6105x.txt
++++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+@@ -7,11 +7,56 @@ Required properties:
+ - compatible:		"ti,tps61050" or "ti,tps61052"
+ - reg:			Specifies the I2C slave address
+ 
+-Example:
++Optional sub-node:
++
++This subnode selects the chip's operational mode.
++There can be at most one single available subnode.
++
++- regulator: presence of this sub-node puts the chip in regulator mode.
++	see Documentation/devicetree/bindings/regulator/regulator.txt
++
++- led: presence of this sub-node puts the chip in led mode.
++	Optional properties:
++	- function : see ../leds/common.txt
++	- color    : see ../leds/common.txt
++	- label    : see ../leds/common.txt
++			(deprecated)
++
++Example (GPIO operation only):
++
++i2c0 {
++	tps61052@33 {
++		compatible = "ti,tps61052";
++		reg = <0x33>;
++	};
++};
++
++Example (GPIO + regulator operation):
+ 
+ i2c0 {
+ 	tps61052@33 {
+ 		compatible = "ti,tps61052";
+ 		reg = <0x33>;
++
++		regulator {
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-always-on;
++		};
++	};
++};
++
++Example (GPIO + led operation):
++
++#include <dt-bindings/leds/common.h>
++
++i2c0 {
++	tps61052@33 {
++		compatible = "ti,tps61052";
++		reg = <0x33>;
++
++		led {
++			color = <LED_COLOR_ID_WHITE>;
++		};
+ 	};
+ };
+-- 
+2.17.1
 
-Applied on stm32-next.
-
-Thanks.
-Alex
