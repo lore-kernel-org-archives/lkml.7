@@ -2,237 +2,157 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8B8C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E61C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE65206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54059206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:16:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eBqRe0Bn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjS6ZYwg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfLIVQT (ORCPT
+        id S1726917AbfLIVQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:16:19 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39695 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726562AbfLIVQS (ORCPT
+        Mon, 9 Dec 2019 16:16:31 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38202 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfLIVQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:16:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575926177;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xEO9nbx9697hVpozbdU8tSUscLkVPikvUY7MQsTd/ck=;
-        b=eBqRe0BnqShb1rKsIRwVDE2X9ykgdONCOs8uBy94JVRiBkqV1B7gg+Vq9jH3Y9c5aow6Ww
-        b1lKtShZYqqzQRP0QPb4+YnhPDWZi20xo24DASdGd+lK6Kz9BqiqdMallqY9Xdmgcc+pYo
-        LnT0ppEtms3fqFXNxo+Cz8V7xeDgt7k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-259-hvcrTAXGMPuFy7lTGImKYg-1; Mon, 09 Dec 2019 16:16:13 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE8F4DB60;
-        Mon,  9 Dec 2019 21:16:11 +0000 (UTC)
-Received: from x1.home (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 676BF60148;
-        Mon,  9 Dec 2019 21:16:08 +0000 (UTC)
-Date:   Mon, 9 Dec 2019 14:16:08 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [RFC PATCH 4/9] vfio-pci: register default
- dynamic-trap-bar-info region
-Message-ID: <20191209141608.310520fc@x1.home>
-In-Reply-To: <20191209062212.GL31791@joy-OptiPlex-7040>
-References: <20191205032419.29606-1-yan.y.zhao@intel.com>
-        <20191205032650.29794-1-yan.y.zhao@intel.com>
-        <20191205165530.1f29fe85@x1.home>
-        <20191206060407.GF31791@joy-OptiPlex-7040>
-        <20191206082038.2b1078d9@x1.home>
-        <20191209062212.GL31791@joy-OptiPlex-7040>
-Organization: Red Hat
+        Mon, 9 Dec 2019 16:16:31 -0500
+Received: by mail-ot1-f66.google.com with SMTP id h20so13566359otn.5;
+        Mon, 09 Dec 2019 13:16:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FPQYv1CbF5PEoyV5DeRvhLdH9ApHt5XdOf0DWTue2HU=;
+        b=QjS6ZYwgFxpo/3EKAkWOHJQjgc3+lg/XGoY+/I0Fb+FfiFr9BN3a7x+9JjDJAqlSGj
+         1AEfquUPPfsAvU2H6JH7duI5fFp/GMuv1aJZ4w+CcTVsypB8MAYJRHp5yx+FluqLWuec
+         iyloOOlIL5YfchuaJZ+LGklRyH+zn94xCCk0r9Np0shNXcHAAM2ZGR5sOIZz9Kem2OaZ
+         H7QTzOM5jIwjU2c6n0CdSHPx+FZn5nrjr8dVkUKksd+ZxgfbLR5NaLIzKFlg5pobnDGG
+         /FEinY/2W+/4wjxKj2d6PNz5/EosBGCaCcXTcy/P1TJTjejXocp/zBAKx88v1Jav47E+
+         Bq/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FPQYv1CbF5PEoyV5DeRvhLdH9ApHt5XdOf0DWTue2HU=;
+        b=UuN5h1g5/D29As4QOIeCXFKkEeqJH5x6PJJtZ1r1pd6igJudoGYPza3k+Bl93hV20W
+         p+6MreDcSdupnYnA6tTOEkODNBHSFejOYgg8zaZQDEDIK+4PvAksNiGoBTPMq0wM4jfo
+         IRS0YrNCz3Kj+bnxsg7cgp7wXKTLdq2V6O7bSPBKzt+vG2XdlC5gcxSDGLlOcZ3cT6Z6
+         3qvidBYG1JCaSGK3jpP1HYZqPwBg5Q0/Jfs0dEqR1RrAWvke1VkAC5CjJILFUcfcKBLT
+         7/FmBNv5LPDt5sVVBzsVzkoC76AlnaKEnUWUvf3qEMaQPQfb88ypUVLdAiQ3CmoxMKzC
+         NwJA==
+X-Gm-Message-State: APjAAAXcK0R1XoPhImJA5N8cpL6/oXOQQx4A+O5+lzeZUV8f1+zo7zEl
+        tL2KacQ4WSBaaAYA2PaBe7XpdguzL7A=
+X-Google-Smtp-Source: APXvYqy1MfB4bbMMrkLP5JgBCVwn6uHSi2l3IRpKKB9OtqFyxx7T73FbSy1fHrbn7gBsMT4+ZKAchw==
+X-Received: by 2002:a9d:74d8:: with SMTP id a24mr24272190otl.100.1575926190314;
+        Mon, 09 Dec 2019 13:16:30 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id 11sm461647otz.3.2019.12.09.13.16.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 13:16:29 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] net: tulip: Adjust indentation in {dmfe,uli526x}_init_module
+Date:   Mon,  9 Dec 2019 14:16:23 -0700
+Message-Id: <20191209211623.44166-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: hvcrTAXGMPuFy7lTGImKYg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Dec 2019 01:22:12 -0500
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+Clang warns:
 
-> On Fri, Dec 06, 2019 at 11:20:38PM +0800, Alex Williamson wrote:
-> > On Fri, 6 Dec 2019 01:04:07 -0500
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >   
-> > > On Fri, Dec 06, 2019 at 07:55:30AM +0800, Alex Williamson wrote:  
-> > > > On Wed,  4 Dec 2019 22:26:50 -0500
-> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > >     
-> > > > > Dynamic trap bar info region is a channel for QEMU and vendor driver to
-> > > > > communicate dynamic trap info. It is of type
-> > > > > VFIO_REGION_TYPE_DYNAMIC_TRAP_BAR_INFO and subtype
-> > > > > VFIO_REGION_SUBTYPE_DYNAMIC_TRAP_BAR_INFO.
-> > > > > 
-> > > > > This region has two fields: dt_fd and trap.
-> > > > > When QEMU detects a device regions of this type, it will create an
-> > > > > eventfd and write its eventfd id to dt_fd field.
-> > > > > When vendor drivre signals this eventfd, QEMU reads trap field of this
-> > > > > info region.
-> > > > > - If trap is true, QEMU would search the device's PCI BAR
-> > > > > regions and disable all the sparse mmaped subregions (if the sparse
-> > > > > mmaped subregion is disablable).
-> > > > > - If trap is false, QEMU would re-enable those subregions.
-> > > > > 
-> > > > > A typical usage is
-> > > > > 1. vendor driver first cuts its bar 0 into several sections, all in a
-> > > > > sparse mmap array. So initally, all its bar 0 are passthroughed.
-> > > > > 2. vendor driver specifys part of bar 0 sections to be disablable.
-> > > > > 3. on migration starts, vendor driver signals dt_fd and set trap to true
-> > > > > to notify QEMU disabling the bar 0 sections of disablable flags on.
-> > > > > 4. QEMU disables those bar 0 section and hence let vendor driver be able
-> > > > > to trap access of bar 0 registers and make dirty page tracking possible.
-> > > > > 5. on migration failure, vendor driver signals dt_fd to QEMU again.
-> > > > > QEMU reads trap field of this info region which is false and QEMU
-> > > > > re-passthrough the whole bar 0 region.
-> > > > > 
-> > > > > Vendor driver specifies whether it supports dynamic-trap-bar-info region
-> > > > > through cap VFIO_PCI_DEVICE_CAP_DYNAMIC_TRAP_BAR in
-> > > > > vfio_pci_mediate_ops->open().
-> > > > > 
-> > > > > If vfio-pci detects this cap, it will create a default
-> > > > > dynamic_trap_bar_info region on behalf of vendor driver with region len=0
-> > > > > and region->ops=null.
-> > > > > Vvendor driver should override this region's len, flags, rw, mmap in its
-> > > > > vfio_pci_mediate_ops.    
-> > > > 
-> > > > TBH, I don't like this interface at all.  Userspace doesn't pass data
-> > > > to the kernel via INFO ioctls.  We have a SET_IRQS ioctl for
-> > > > configuring user signaling with eventfds.  I think we only need to
-> > > > define an IRQ type that tells the user to re-evaluate the sparse mmap
-> > > > information for a region.  The user would enumerate the device IRQs via
-> > > > GET_IRQ_INFO, find one of this type where the IRQ info would also
-> > > > indicate which region(s) should be re-evaluated on signaling.  The user
-> > > > would enable that signaling via SET_IRQS and simply re-evaluate the    
-> > > ok. I'll try to switch to this way. Thanks for this suggestion.
-> > >   
-> > > > sparse mmap capability for the associated regions when signaled.    
-> > > 
-> > > Do you like the "disablable" flag of sparse mmap ?
-> > > I think it's a lightweight way for user to switch mmap state of a whole region,
-> > > otherwise going through a complete flow of GET_REGION_INFO and re-setup
-> > > region might be too heavy.  
-> > 
-> > No, I don't like the disable-able flag.  At what frequency do we expect
-> > regions to change?  It seems like we'd only change when switching into
-> > and out of the _SAVING state, which is rare.  It seems easy for
-> > userspace, at least QEMU, to drop the entire mmap configuration and  
-> ok. I'll try this way.
-> 
-> > re-read it.  Another concern here is how do we synchronize the event?
-> > Are we assuming that this event would occur when a user switch to
-> > _SAVING mode on the device?  That operation is synchronous, the device
-> > must be in saving mode after the write to device state completes, but
-> > it seems like this might be trying to add an asynchronous dependency.
-> > Will the write to device_state only complete once the user handles the
-> > eventfd?  How would the kernel know when the mmap re-evaluation is
-> > complete.  It seems like there are gaps here that the vendor driver
-> > could miss traps required for migration because the user hasn't
-> > completed the mmap transition yet.  Thanks,
-> > 
-> > Alex  
-> 
-> yes, this asynchronous event notification will cause vendor driver miss
-> traps. But it's supposed to be of very short period time. That's also a
-> reason for us to wish the re-evaluation to be lightweight. E.g. if it's
-> able to be finished before the first iterate, it's still safe.
+../drivers/net/ethernet/dec/tulip/uli526x.c:1812:3: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        switch (mode) {
+        ^
+../drivers/net/ethernet/dec/tulip/uli526x.c:1809:2: note: previous
+statement is here
+        if (cr6set)
+        ^
+1 warning generated.
 
-Making the re-evaluation lightweight cannot solve the race, it only
-masks it.
+../drivers/net/ethernet/dec/tulip/dmfe.c:2217:3: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        switch(mode) {
+        ^
+../drivers/net/ethernet/dec/tulip/dmfe.c:2214:2: note: previous
+statement is here
+        if (cr6set)
+        ^
+1 warning generated.
 
-> But I agree, the timing is not guaranteed, and so it's best for kernel
-> to wait for mmap re-evaluation to complete. 
-> 
-> migration_thread
->     |->qemu_savevm_state_setup
->     |   |->ram_save_setup
->     |   |   |->migration_bitmap_sync
->     |   |       |->kvm_log_sync
->     |   |       |->vfio_log_sync
->     |   |
->     |   |->vfio_save_setup
->     |       |->set_device_state(_SAVING)
->     |
->     |->qemu_savevm_state_pending
->     |   |->ram_save_pending
->     |   |   |->migration_bitmap_sync 
->     |   |      |->kvm_log_sync
->     |   |      |->vfio_log_sync
->     |   |->vfio_save_pending
->     |
->     |->qemu_savevm_state_iterate
->     |   |->ram_save_iterate //send pages
->     |   |->vfio_save_iterate
->     ...
-> 
-> 
-> Actually, we previously let qemu trigger the re-evaluation when migration starts.
-> And now the reason for we to wish kernel to trigger the mmap re-evaluation is that
-> there're other two possible use cases:
-> (1) keep passing through devices when migration starts and track dirty pages
->     using hardware IOMMU. Then when migration is about to complete, stop the
->     device and start trap PCI BARs for software emulation. (we made some
->     changes to let device stop ahead of vcpu )
+This warning occurs because there is a space before the tab on these
+lines. Remove them so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
 
-How is that possible?  I/O devices need to continue to work until the
-vCPU stops otherwise the vCPU can get blocked on the device.  Maybe QEMU
-should assume all mmaps should be dropped on vfio device after we pass
-some point of the migration process.
+While we are here, adjust the default block in dmfe_init_module to have
+a proper break between the label and assignment and add a space between
+the switch and opening parentheses to avoid a checkpatch warning.
 
-If there are a fixed set of mmap settings for a region and discrete
-conditions under which they become active (ex. switch device to SAVING
-mode) then QEMU could choose the right mapping itself and we wouldn't
-need to worry about this asynchronous signaling problem, it would just
-be defined as part of the protocol userspace needs to use.
+Fixes: e1c3e5014040 ("[PATCH] initialisation cleanup for ULI526x-net-driver")
+Link: https://github.com/ClangBuiltLinux/linux/issues/795
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/ethernet/dec/tulip/dmfe.c    | 7 ++++---
+ drivers/net/ethernet/dec/tulip/uli526x.c | 4 ++--
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-> (2) performance optimization. There's an example in GVT (mdev case): 
->     PCI BARs are passed through on vGPU initialization and are mmaped to a host
->     dummy buffer. Then after initialization done, start trap of PCI BARs of
->     vGPUs and start normal host mediation. The initial pass-through can save
->     1000000 times of mmio trap.
-
-Much of this discussion has me worried that many assumptions are being
-made about the user and device interaction.  Backwards compatible
-behavior is required.  If a mdev device presents an initial sparse mmap
-capability for this acceleration, how do you support an existing
-userspace that doesn't understand the new dynamic mmap semantics and
-continues to try to operate with the initial sparse mmap?  Doesn't this
-introduce another example of the raciness of the device trying to
-switch mmaps?  Seems that if QEMU doesn't handle the eventfd with
-sufficient timeliness the switch back to trap behavior could miss an
-important transaction.  This also seems like an optimization targeted
-at VMs running for only a short time, where it's not obvious to me that
-GVT-g overlaps those sorts of use cases.  How much initialization time
-is actually being saved with such a hack?  Thanks,
-
-Alex
+diff --git a/drivers/net/ethernet/dec/tulip/dmfe.c b/drivers/net/ethernet/dec/tulip/dmfe.c
+index 0efdbd1a4a6f..32d470d4122a 100644
+--- a/drivers/net/ethernet/dec/tulip/dmfe.c
++++ b/drivers/net/ethernet/dec/tulip/dmfe.c
+@@ -2214,15 +2214,16 @@ static int __init dmfe_init_module(void)
+ 	if (cr6set)
+ 		dmfe_cr6_user_set = cr6set;
+ 
+- 	switch(mode) {
+-   	case DMFE_10MHF:
++	switch (mode) {
++	case DMFE_10MHF:
+ 	case DMFE_100MHF:
+ 	case DMFE_10MFD:
+ 	case DMFE_100MFD:
+ 	case DMFE_1M_HPNA:
+ 		dmfe_media_mode = mode;
+ 		break;
+-	default:dmfe_media_mode = DMFE_AUTO;
++	default:
++		dmfe_media_mode = DMFE_AUTO;
+ 		break;
+ 	}
+ 
+diff --git a/drivers/net/ethernet/dec/tulip/uli526x.c b/drivers/net/ethernet/dec/tulip/uli526x.c
+index b1f30b194300..117ffe08800d 100644
+--- a/drivers/net/ethernet/dec/tulip/uli526x.c
++++ b/drivers/net/ethernet/dec/tulip/uli526x.c
+@@ -1809,8 +1809,8 @@ static int __init uli526x_init_module(void)
+ 	if (cr6set)
+ 		uli526x_cr6_user_set = cr6set;
+ 
+- 	switch (mode) {
+-   	case ULI526X_10MHF:
++	switch (mode) {
++	case ULI526X_10MHF:
+ 	case ULI526X_100MHF:
+ 	case ULI526X_10MFD:
+ 	case ULI526X_100MFD:
+-- 
+2.24.0
 
