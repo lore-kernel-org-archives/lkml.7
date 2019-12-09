@@ -2,150 +2,106 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECD1C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 03:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAB9C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 03:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB14206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 03:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA2A206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 03:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575861380;
+	bh=MdXAeM4nIuesUS1DGhu6YwaHYJFsIoKaB8559f5xhAI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C2DfZrbFrPAvNC3UDb8r8FzviJ6dKFD+TJUgV0xIH7BYYppx7WisRKqSENiA0rcr+
+	 X9dwLL5sc88mVTLmJFSbwZ1y2grTnW20qj6vyAS0fDiaQJ/+9gaX225N1QoQTFnCXh
+	 QqS+CZ0rd5k0Pme7aPjH1Rn9wItOuESBTQNx2EFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfLIDPU (ORCPT
+        id S1727035AbfLIDQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 22:15:20 -0500
-Received: from emcscan.emc.com.tw ([192.72.220.5]:23966 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbfLIDPU (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 22:15:20 -0500
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="33195837"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 09 Dec 2019 11:15:17 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(71513:0:AUTH_RELAY)
-        (envelope-from <dave.wang@emc.com.tw>); Mon, 09 Dec 2019 11:15:19 +0800 (CST)
-Received: from 42.73.254.157
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(101176:0:AUTH_LOGIN)
-        (envelope-from <dave.wang@emc.com.tw>); Mon, 09 Dec 2019 11:15:16 +0800 (CST)
-From:   Dave Wang <dave.wang@emc.com.tw>
-To:     Linux-input@vger.kernel.org, Linux-kernel@vger.kernel.org,
-        Dmitry.torokhov@gmail.com
-Cc:     phoenix@emc.com.tw, josh.chen@emc.com.tw, jingle.wu@emc.com.tw,
-        kai.heng.feng@canonical.com, "Dave.Wang" <dave.wang@emc.com.tw>
-Subject: [PATCH 3/6] Input: elantech - Increace and correct device information for pattern 0,1,2
-Date:   Sun,  8 Dec 2019 22:15:12 -0500
-Message-Id: <20191209031512.30313-1-dave.wang@emc.com.tw>
-X-Mailer: git-send-email 2.17.1
+        Sun, 8 Dec 2019 22:16:19 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36382 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbfLIDQS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Dec 2019 22:16:18 -0500
+Received: by mail-lj1-f193.google.com with SMTP id r19so13894849ljg.3
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 19:16:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0eZBzbT0umg6+Hs7q0Pnqxg4tmozetMjiZRECdwYTQ0=;
+        b=MWuYxiKb2CdwSMwdcUQLL2uhffAmgdvG0nK6gTfcO2CRxV0EDyfH78R4RWl7nvxi1m
+         VPXqRvcP3Y1Rqmgt4bq1b5gQp3Tim9naBLL3rs+ghsEI+/WZ7HKpaPQpBj88BYdb/5Ic
+         a5Y6pc+UVsIzS8JCmTj5F9uNcZYYFBKeLkqJI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0eZBzbT0umg6+Hs7q0Pnqxg4tmozetMjiZRECdwYTQ0=;
+        b=N5oV6y4LHqR/nzA47KOfyImf3jhIZRZcerXVeg3T5JlhfYNXEHmXHflXvCgAi77NDw
+         SfBe0VgrCiCd8a9SoYNjKc2aNkfyk4vuHSwW922Z8R85Os5A2/GiGWfLeRPJUe3veZTT
+         KIaNCqiGpD8a9SgMDyLWgFe3bGcahEPS2+PCqr/CICrsA3C7r1/yDbBA8FCDJjAHGqp2
+         tRliOP+MMeAKHQnAwca0ZSUiQ1AfihsXfaxYykcrkMWRqRRFIdzjAdENGXyk4hRm+0um
+         iYTwgrkrewG9gcG9kw59yIG5UDZCqLwhyG9COoriKjS+xD1+Yqqfff008gbFs/Ig63Qp
+         ijfA==
+X-Gm-Message-State: APjAAAUBjU68/vTSmCYrlZyZ4t7cEuXlZgAp+mUzrWUD+2jseOH9RmDG
+        fkJzQmrVNnp3CzrddymQKNDcDpvGwBQ=
+X-Google-Smtp-Source: APXvYqzTuQ9bHmS4+a3jFGGF7AP4AjN5yvyicEkVfBn/VMf1Sq+DBlVNewRNJDR6OdYAzfjkMygIHQ==
+X-Received: by 2002:a05:651c:285:: with SMTP id b5mr15342690ljo.14.1575861375654;
+        Sun, 08 Dec 2019 19:16:15 -0800 (PST)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id a9sm10071936lfk.23.2019.12.08.19.16.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Dec 2019 19:16:14 -0800 (PST)
+Received: by mail-lf1-f41.google.com with SMTP id 203so9424445lfa.12
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 19:16:14 -0800 (PST)
+X-Received: by 2002:ac2:50cc:: with SMTP id h12mr13797909lfm.29.1575861374341;
+ Sun, 08 Dec 2019 19:16:14 -0800 (PST)
+MIME-Version: 1.0
+References: <30808b0b-367a-266a-7ef4-de69c08e1319@internode.on.net>
+ <09396dca-3643-9a4b-070a-e7db2a07235e@internode.on.net> <CAHk-=wjj8SQx4YzS8yw7ZJJKiVLBY0g=d8rCSyPCM=8Pzmz+Zg@mail.gmail.com>
+ <20191209025209.GA4203@ZenIV.linux.org.uk> <CAHk-=whY0GL-FpnjUmc7fjDqz-yRJ=QBO7LT6aEzt-_raAb1bw@mail.gmail.com>
+In-Reply-To: <CAHk-=whY0GL-FpnjUmc7fjDqz-yRJ=QBO7LT6aEzt-_raAb1bw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 8 Dec 2019 19:15:58 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whyQ-Ets2v3bg7eP8GAGpzA7f2pqyiw5tPj8HFoxFcEjw@mail.gmail.com>
+Message-ID: <CAHk-=whyQ-Ets2v3bg7eP8GAGpzA7f2pqyiw5tPj8HFoxFcEjw@mail.gmail.com>
+Subject: Re: refcount_t: underflow; use-after-free with CIFS umount after
+ scsi-misc commit ef2cc88e2a205b8a11a19e78db63a70d3728cdf5
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Arthur Marsh <arthur.marsh@internode.on.net>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Dave.Wang" <dave.wang@emc.com.tw>
+On Sun, Dec 8, 2019 at 7:10 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> You're right that at least the CI bots might want to disable it for
+> bisecting. Or force a particular seed for RANDSTRUCT - I seem to
+> recall that there was some way to make it be at least repeatable for
+> any particular structure.
 
-Get and correct the device informations including fw_checksum, iap_checksum,
-ic_body, iap_version from differnet pattern.
+Yeah, if you build in the same directory and don't do a "distclean" or
+"git clean -dqfx", the seed remains in
+scripts/gcc-plgins/randomize_layout_seed.h across builds, and the
+result then _should_ be repeatable.
 
-Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
----
- drivers/input/mouse/elantech.c | 47 +++++++++++++++++++++++++++++++++-
- drivers/input/mouse/elantech.h |  8 ++++++
- 2 files changed, 54 insertions(+), 1 deletion(-)
+But yes, it's the kind of noise that is likely not worth fighting for
+bisection (or any random bug hunting) at all, and turning off
+RANDSTRUCT is probably the right thing to do.
 
-diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index afb87122b766..322b181d00e9 100644
---- a/drivers/input/mouse/elantech.c
-+++ b/drivers/input/mouse/elantech.c
-@@ -857,7 +857,8 @@ static int elantech_packet_check_v4(struct psmouse *psmouse)
- 	 */
- 	if (etd->info.crc_enabled)
- 		sanity_check = ((packet[3] & 0x08) == 0x00);
--	else if (ic_version == 7 && etd->info.samples[1] == 0x2A)
-+	else if (ic_version == 7 && etd->info.samples[1] == 0x2A &&
-+			etd->info.pattern == 0x00)
- 		sanity_check = ((packet[3] & 0x1c) == 0x10);
- 	else
- 		sanity_check = ((packet[0] & 0x08) == 0x00 &&
-@@ -1669,6 +1670,50 @@ static int elantech_query_info(struct psmouse *psmouse,
- 			     info->samples[2]);
- 	}
- 
-+	if (elantech_read_reg_params(psmouse, ETP_FW_CHECKSUM_QUERY,
-+				info->fw_checksum)) {
-+		psmouse_err(psmouse, "failed to get fw checksum\n");
-+		return -EINVAL;
-+	}
-+	psmouse_info(psmouse,
-+			 "Elan fw checksum result %02x, %02x, %02x\n",
-+			 info->fw_checksum[0],
-+			 info->fw_checksum[1],
-+			 info->fw_checksum[2]);
-+
-+	if (elantech_read_reg_params(psmouse, ETP_IAP_CHECKSUM_QUERY,
-+				info->iap_checksum)) {
-+		psmouse_err(psmouse, "failed to get iap checksum\n");
-+		return -EINVAL;
-+	}
-+	psmouse_info(psmouse,
-+			 "Elan iap checksum result %02x, %02x, %02x\n",
-+			 info->iap_checksum[0],
-+			 info->iap_checksum[1],
-+			 info->iap_checksum[2]);
-+
-+	if (info->pattern > 0x00) {
-+		if (info->send_cmd(psmouse, ETP_ICBODY_QUERY, info->ic_body)) {
-+			psmouse_err(psmouse, "failed to query ic body\n");
-+			return -EINVAL;
-+		}
-+		psmouse_info(psmouse,
-+			     "Elan ic body : %02x%02x, fw version : %02x\n",
-+			     info->ic_body[0],
-+			     info->ic_body[1],
-+			     info->ic_body[2]);
-+
-+		if (info->send_cmd(psmouse, ETP_IAP_VERSION_QUERY,
-+					info->iap_version)) {
-+			psmouse_err(psmouse, "failed to query iap version\n");
-+			return -EINVAL;
-+		}
-+		psmouse_info(psmouse,
-+			     "Elan iap interface type : %02x, iap version : %02x\n",
-+			     info->iap_version[1],
-+			     info->iap_version[2]);
-+	}
-+
- 	if (info->samples[1] == 0x74 && info->hw_version == 0x03) {
- 		/*
- 		 * This module has a bug which makes absolute mode
-diff --git a/drivers/input/mouse/elantech.h b/drivers/input/mouse/elantech.h
-index 0aae6a9de8f0..a633ffa0eb07 100644
---- a/drivers/input/mouse/elantech.h
-+++ b/drivers/input/mouse/elantech.h
-@@ -18,6 +18,10 @@
- #define ETP_CAPABILITIES_QUERY		0x02
- #define ETP_SAMPLE_QUERY		0x03
- #define ETP_RESOLUTION_QUERY		0x04
-+#define ETP_ICBODY_QUERY		0x05
-+#define ETP_IAP_VERSION_QUERY		0x06
-+#define ETP_IAP_CHECKSUM_QUERY		0x0A
-+#define ETP_FW_CHECKSUM_QUERY		0xFE
- 
- /*
-  * Command values for register reading or writing
-@@ -138,6 +142,10 @@ struct finger_pos {
- struct elantech_device_info {
- 	unsigned char capabilities[3];
- 	unsigned char samples[3];
-+	unsigned char fw_checksum[3];
-+	unsigned char iap_checksum[3];
-+	unsigned char ic_body[3];
-+	unsigned char iap_version[3];
- 	unsigned char debug;
- 	unsigned char hw_version;
- 	unsigned char pattern;
--- 
-2.17.1
+But I don't think Arthur had RANDSTRUCT enabled, so that should be fine.
 
+            Linus
