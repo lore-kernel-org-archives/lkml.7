@@ -2,106 +2,122 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117A8C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D05EC04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1EF2073D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C91E207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfLIN3U (ORCPT
+        id S1727706AbfLIN3f convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:29:20 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:40770 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727200AbfLIN3U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:29:20 -0500
-Received: by mail-ua1-f67.google.com with SMTP id v18so906911uaq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 05:29:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=p6yy6RPCwDZpxd4juLljS9qvo9MtkCCXsmRgQJgullU=;
-        b=Ssi6dZewsmGy/5Rf++kPgf54Spho4GRW097ra6tNNH1w3RUV03r8PmNEHuNaWuRWJG
-         /nsNXIsZvtPFMsj5C79ZjyNBivHFXYgW3lzD8etoZ1PLanSST5raippjTr2+RoMgb5W/
-         rfG3JvZBc6q3uVz0YBDgapKDSdA7RsA2Ar1eGzGThCL46fReL2rrrB/xA1mR+tiWlrcU
-         6EOWaiVZl5xQPkMnCRVTJC2NIXL2P38O4zhuUa6piDw9L/D4sbCL4X3larelInol5egy
-         NtJHh1F8d1PG1sgVLEnMV5GGMnoczP5ESHfD6P+RZxgKMZw+8rOmWF4dXgUJ31o7LWrU
-         L9vg==
-X-Gm-Message-State: APjAAAX7a1v2rYoXheJpA3viOCxtYiMSs7/ra+z6hxBQBbtbZ3ZNDH1l
-        o0V+PmDV2gzCkMBJ8AY5U2GWgg==
-X-Google-Smtp-Source: APXvYqzaZie3OXBH3ahijPvPnPnVVXg/Tm1KNZs5ozNQ2wMhjT5xVrdqO4FAePjYSVtpLgPACKsADA==
-X-Received: by 2002:ab0:5392:: with SMTP id k18mr24520201uaa.24.1575898159136;
-        Mon, 09 Dec 2019 05:29:19 -0800 (PST)
-Received: from work.celeiro ([191.177.180.119])
-        by smtp.gmail.com with ESMTPSA id x192sm12711726vkd.10.2019.12.09.05.29.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 05:29:18 -0800 (PST)
-From:   Rafael David Tinoco <rafaeldtinoco@ubuntu.com>
-To:     ebiggers3@gmail.com
-Cc:     adilger.kernel@dilger.ca,
-        bot+eb13811afcefe99cfe45081054e7883f569f949d@syzkaller.appspotmail.com,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Subject: ppc64el kernel access of bad area (ext4_htree_store_dirent->rb_insert_color)
-Date:   Mon,  9 Dec 2019 10:29:14 -0300
-Message-Id: <20191209132914.907306-1-rafaeldtinoco@ubuntu.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20171219215906.GA12465@gmail.com>
-References: <20171219215906.GA12465@gmail.com>
+        Mon, 9 Dec 2019 08:29:35 -0500
+Received: from mail-oln040092254031.outbound.protection.outlook.com ([40.92.254.31]:6887
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727200AbfLIN3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:29:35 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NTOVKWDKC34nQuSCQUsaCBIFIb0jTl+rHm+flqh7VX6QEk56OZwjSrBEBmPuoJtSmxv4KmIoJdNFxHVvL+qq9fhf2kGpouzc4h7/DLGrWOiANzV77Wv3o3tV8MZVMkuwbEFZy+CJ23bjkWEb/A057BMeX899YXRFxRX4pd3xw//HUPxr0TDwWlOjkqlTbLrAPnmQ7ryifJGA+lvRD7qWxy8Am+BRXJ06Qbky+/oYO3bp6Vgfeli1Zz2IqMwWPpO12PZntUteoNGdF3XwjLyGQKdWDI89sfecXvf4aQuoozw+0mF72XSiyWC2O7F5QqPhfAzpYkgftRJKJtvvbqdEnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lFpM1/LjlwttsvtxF3epBLhvFitQ/9uvTZOw78C08ts=;
+ b=OUO+9Eg6Zl6aPXqFHalXTQzORINwF0z/cchhgCk0zC5XM5350hlXsmMpBWOO6yiW7UBZkX11DUHoI9asaBfrn1eBy55hfQ7ySQvZcMJhgAUFMZFvcv2tSyhWjhLHvDUbXFP4vgakZwumxwJ8LjoDbnJHeA4WovojLFsnk4WgJ+XCJgj48eLEzQsUS0i1CEis1rGdiYlQomvqiLDg3UHrwCl6TFYzfcE/sHZEG1bws4Y9O0LMSdorcfuMo/JehI+gXoLvzSC3xOBNEuHJdkBs//arHZBWq9hZqJ8HilMFQEOtvAqYYmP0p7J2hQQqZNZdXaIT4dagHt2HaicOwkxVlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT053.eop-APC01.prod.protection.outlook.com
+ (10.152.250.53) by SG2APC01HT185.eop-APC01.prod.protection.outlook.com
+ (10.152.251.234) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.25; Mon, 9 Dec
+ 2019 13:29:30 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.59) by
+ SG2APC01FT053.mail.protection.outlook.com (10.152.250.240) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.25 via Frontend Transport; Mon, 9 Dec 2019 13:29:30 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
+ 13:29:30 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: Linux v5.5 serious PCI bug
+Thread-Topic: Linux v5.5 serious PCI bug
+Thread-Index: AQHVrozxq7Q7SfMf80m5ItEmvTDCAqexx4+AgAAErAA=
+Date:   Mon, 9 Dec 2019 13:29:30 +0000
+Message-ID: <PSXP216MB043859B2FDA7F999BF88157080580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20191209131239.GP2665@lahna.fi.intel.com>
+In-Reply-To: <20191209131239.GP2665@lahna.fi.intel.com>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SY2PR01CA0005.ausprd01.prod.outlook.com
+ (2603:10c6:1:14::17) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:BEB30873ABCC25B5565F5D3A6A36081768C3DD8669B47737EBFD0A309183371B;UpperCasedChecksum:8D1BC1703EE630EB29FDA5E04F4439190C7646E1C5BE41852E42BA12C1DBED6B;SizeAsReceived:7561;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [y7A3tuTwl0WLW6Q18MnKzshhVKbkEBF4gZPX2Tn4DjXarWvSp+XlWOfX69UKiTvf1Wku68q7XRc=]
+x-microsoft-original-message-id: <20191209132922.GA1911@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 43b09229-1e43-4caf-7604-08d77cabd1f7
+x-ms-traffictypediagnostic: SG2APC01HT185:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QkSNJJgEFuWe0zLghBrZizywqlWc2v9yCc6hqzWpO3u5LzBMbbGd6bUTcwoi33BXmQhMv7hHDv0lCN8aE35M+93n7NFbcPFtbcPa0hYk28+E762S3hmn7EfSe4hzg0+1mTbS5l6EYNrsFK8xPSbqqlOJ88/wEEgEivflMa7WGpHPzTCaZnh7nhyb/T2dr8oh
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <8C52A66FC21E644BA769DF57BFC497B5@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43b09229-1e43-4caf-7604-08d77cabd1f7
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 13:29:30.4370
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It looks like the same stacktrace that was reported in this thread. This has
-been reported to ppc64el AND we got a reproducer (ocfs2-tools autopkgtests).
+On Mon, Dec 09, 2019 at 03:12:39PM +0200, mika.westerberg@linux.intel.com wrote:
+> On Mon, Dec 09, 2019 at 12:34:04PM +0000, Nicholas Johnson wrote:
+> > Hi,
+> > 
+> > I have compiled Linux v5.5-rc1 and thought all was good until I 
+> > hot-removed a Gigabyte Aorus eGPU from Thunderbolt. The driver for the 
+> > GPU was not loaded (blacklisted) so the crash is nothing to do with the 
+> > GPU driver.
+> > 
+> > We had:
+> > - kernel NULL pointer dereference
+> > - refcount_t: underflow; use-after-free.
+> > 
+> > Attaching dmesg for now; will bisect and come back with results.
+> 
+> Looks like something related to iommu. Does it work if you disable it?
+> (intel_iommu=off in the command line).
+I thought it could be that, too.
 
-[ 85.605850] Faulting instruction address: 0xc000000000e81168
-[ 85.605901] Oops: Kernel access of bad area, sig: 11 [#1]
-[ 85.605970] LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-[ 85.606029] Modules linked in: ocfs2 quota_tree ocfs2_dlmfs ocfs2_stack_o2cb ocfs2_dlm ocfs2_nodemanager ocfs2_stackglue iptable_mangle xt_TCPMSS xt_tcpudp bpfilter dm_multipath scsi_dh_rdac scsi_dh_emc scsi_dh_alua vmx_crypto crct10dif_vpmsum sch_fq_codel ip_tables x_tables autofs4 btrfs xor zstd_compress raid6_pq libcrc32c crc32c_vpmsum virtio_net virtio_blk net_failover failover
-[ 85.606291] CPU: 0 PID: 1 Comm: systemd Not tainted 5.3.0-18-generic #19-Ubuntu
-[ 85.606350] NIP: c000000000e81168 LR: c00000000054f240 CTR: 0000000000000000
-[ 85.606410] REGS: c00000005a3e3700 TRAP: 0300 Not tainted (5.3.0-18-generic)
-[ 85.606469] MSR: 8000000000009033 <SF,EE,ME,IR,DR,RI,LE> CR: 28024448 XER: 00000000
-[ 85.606531] CFAR: 0000701f9806f638 DAR: 0000000001744098 DSISR: 40000000 IRQMASK: 0
-[ 85.606531] GPR00: 0000000000007374 c00000005a3e3990 c0000000019c9100 c00000004fe462a8
-[ 85.606531] GPR04: c00000005856d840 000000000000000e 0000000074656772 c00000004fe4a568
-[ 85.606531] GPR08: 0000000000000000 c000000058568004 0000000001744090 0000000000000000
-[ 85.606531] GPR12: 00000000e8086002 c000000001d60000 00007fffddd522d0 0000000000000000
-[ 85.606531] GPR16: 0000000000000000 0000000000000000 0000000000000000 c00000000755e07c
-[ 85.606531] GPR20: c0000000598caca8 c00000005a3e3a58 0000000000000000 c000000058292f00
-[ 85.606531] GPR24: c000000000eea710 0000000000000000 c00000005856d840 c00000000755e074
-[ 85.606531] GPR28: 000000006518907d c00000005a3e3a68 c00000004fe4b160 00000000027c47b6
-[ 85.607079] NIP [c000000000e81168] rb_insert_color+0x18/0x1c0
-[ 85.607137] LR [c00000000054f240] ext4_htree_store_dirent+0x140/0x1c0
-[ 85.607186] Call Trace:
-[ 85.607208] [c00000005a3e3990] [c00000000054f158] ext4_htree_store_dirent+0x58/0x1c0 (unreliable)
-[ 85.607279] [c00000005a3e39e0] [c000000000594cd8] htree_dirblock_to_tree+0x1b8/0x380
-[ 85.607340] [c00000005a3e3b00] [c0000000005962c0] ext4_htree_fill_tree+0xc0/0x3f0
-[ 85.607401] [c00000005a3e3c00] [c00000000054ebe4] ext4_readdir+0x814/0xce0
-[ 85.607459] [c00000005a3e3d40] [c000000000472d6c] iterate_dir+0x1fc/0x280
-[ 85.607511] [c00000005a3e3d90] [c0000000004746f0] ksys_getdents64+0xa0/0x1f0
-[ 85.607572] [c00000005a3e3e00] [c000000000474868] sys_getdents64+0x28/0x130
-[ 85.607622] [c00000005a3e3e20] [c00000000000b388] system_call+0x5c/0x70
-[ 85.607672] Instruction dump:
-[ 85.607703] 4082ffe8 4e800020 38600000 4e800020 60000000 60000000 e9230000 2c290000
-[ 85.607764] 4182018c e9490000 71480001 4c820020 <e90a0008> 7c284840 2fa80000 4182006c
-[ 85.607827] ---[ end trace cfc53af0f8d62cef ]---
-[ 85.610600]
-[ 86.611522] BUG: Unable to handle kernel data access at 0xc000030058567eff
-[ 86.611604] Faulting instruction address: 0xc000000000403aa8
-[ 86.611656] Oops: Kernel access of bad area, sig: 11 [#2]
-[ 86.611697] LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-[ 86.611748] Modules linked in: ocfs2 quota_tr
+The attachment "dmesg-4" from the original email is with iommu parameters.
+The attachment "dmesg-5" from the original email is with no iommu parameters.
+Attaching here "dmesg-6" with the iommu explicitly set off like you said.
 
-Thread from beginning 2018, so I guess this issue is pretty intermittent but
-might exist, and, perhaps, its related to specific arches/machines ?
+No difference, still broken. Although, with iommu off, there are less stack traces.
+
+Could it be sysfs-related?
+
+Kind regards,
+Nicholas
