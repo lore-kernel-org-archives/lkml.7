@@ -2,183 +2,205 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1B4C2BD09
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 850B8C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 125842073D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:03:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575932612;
-	bh=qkW7oh2XNUWXXPI/02Lyd8U3JVtxyxwCwW5ZlaO9meI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZRA3pm/vZivIZG0+HAzljYOvD/XYPNyoGl+Of4Nr5/3PDXWwLUldhSrBjr91qgd7D
-	 NnQPMMxc6iMMU/5kmm4q/tvkSYRpOtNMvsiS9PpYlWJV7El7h47HTTB7U/jAoJ7KNs
-	 MhNuKAC59Db/AoM5LwhIgpj3GXTO7lVVhUvxQols=
+	by mail.kernel.org (Postfix) with ESMTP id 52ED120721
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:05:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ftf6lP66"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbfLIXDb (ORCPT
+        id S1727183AbfLIXF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 18:03:31 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46912 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfLIXDa (ORCPT
+        Mon, 9 Dec 2019 18:05:28 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11032 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfLIXF2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 18:03:30 -0500
-Received: by mail-ot1-f65.google.com with SMTP id g18so13748729otj.13;
-        Mon, 09 Dec 2019 15:03:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mIeK58ZyBw/P30tMn5CgGP7nw/fqYsNmtUWT8mBCQPM=;
-        b=IjzyqIMAbJiOI7ASpW60l27nnPDRCGUWwkZOTlL0WN7HSoB2jUkeexGQ1OyTuT6Ave
-         Q9YtBWC6NN0h9q+Ng3TyjFN2dJZKV5I5n4sKH4l3WJlk9bFDqol3anmvdqw5oO1JDVvl
-         eSR0NK70xQNg2iNoM4QpEgbvtP7aZ42/qKQaZ/9HoL/OVX2oceWDLbBRGl2B17votDhV
-         aw/cVTcQT9xSX98GopB4Wd53Sz3F9uiUGAidh1e1XPc2edw8199yJL5Ee84t/xIpYXnY
-         4NJ/H625SjT3zu4PPDc9BYYzVG/I0d4ZrFx55WeR1kXMyA0A4pzNq75wFYC/kFHPe6HR
-         Z88g==
-X-Gm-Message-State: APjAAAUo4ZxqSp6D7Sexn7zjH0RywoM++o/p7vBK0b2UA/pp2XEIkGDh
-        2akUcI910MGujbqH9qI68vCQI+KuDDgT1IhX9mw=
-X-Google-Smtp-Source: APXvYqzS06CWYdOsYavQjsZV+tLraI3NwXBOyN8HRUI1R9B/eXaf/0xNyNhfIuzqY/3BkOWd6Qf11TLXujrvcr+hc+c=
-X-Received: by 2002:a05:6830:95:: with SMTP id a21mr22577442oto.167.1575932609343;
- Mon, 09 Dec 2019 15:03:29 -0800 (PST)
+        Mon, 9 Dec 2019 18:05:28 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5deed3240000>; Mon, 09 Dec 2019 15:05:08 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 09 Dec 2019 15:05:14 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 09 Dec 2019 15:05:14 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec
+ 2019 23:05:13 +0000
+Received: from [10.2.174.71] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec 2019
+ 23:05:12 +0000
+Subject: Re: [PATCH v3 08/15] ASoC: tegra: Add audio mclk control through
+ clk_out_1 and extern1
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
+        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
+        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
+        <josephl@nvidia.com>, <vidyas@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
+References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
+ <1575600535-26877-9-git-send-email-skomatineni@nvidia.com>
+ <0ce2e83b-800c-da1e-7a3c-3cf1427cfe20@gmail.com>
+ <2eeceabe-b5f0-6f9e-ff8c-4ac6167b7cc3@nvidia.com>
+ <5d26e32c-a346-4d42-9872-840964512144@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <79661e2f-dcd4-6dd5-9b4d-9dcc40de478a@nvidia.com>
+Date:   Mon, 9 Dec 2019 15:05:10 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1773028.iBGNyVBcMc@kreacher> <2991d01601fdbcf25d745a387eda74926f1192b2.camel@intel.com>
- <56a33219fc336c26b8ef9d8de1a3d50893a7b7d1.camel@linux.intel.com> <7cc9a74a0e16b8e3583401f6be43820377a8f875.camel@linux.intel.com>
-In-Reply-To: <7cc9a74a0e16b8e3583401f6be43820377a8f875.camel@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 10 Dec 2019 00:03:18 +0100
-Message-ID: <CAJZ5v0g=D3uOhETbAcuXEQfwNSK5RtK6-XVgOtRr-4n718Pifg@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: PM: Avoid attaching ACPI PM domain to certain devices
-To:     Todd Brandt <todd.e.brandt@linux.intel.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Brandt, Todd E" <todd.e.brandt@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5d26e32c-a346-4d42-9872-840964512144@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575932708; bh=FUMati2xFprKmdwY5+gL1lqirA4jatN/PWWrKL+LnNQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=Ftf6lP66CKxm1GpzyBnm+WvLl9XCDnM7rFQWOa6gGsy2bNXg+9eEYk6ZqbsSrQMUu
+         IEdkWfMsEzHFz6qmkfsR/03AUnimZfIA/IRxm4/ZZq7ibXTFlc38kK3Lg37WYqaTOY
+         Fdttr9H3xGxcW2LKvssUjQYJB1d5Z51Dn02bfKOJ509C3B9FXtGFwuE2z0Ftq/hu62
+         u4I5F6j4khuY6VQABJy5fxdrQR9g6l/iCSrkuvos3OYfjUX0ATgGz5oSCxzjSMAMXL
+         HfFZJvOGf0Bq6FIRfQvt451nFyreVjGODpj3Hk9AiQ3hrfozlPKMZXB2IFUi9ZwNT6
+         2Zar7EMcsJzjg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 11:49 PM Todd Brandt
-<todd.e.brandt@linux.intel.com> wrote:
->
-> On Thu, 2019-12-05 at 09:32 -0800, Todd Brandt wrote:
-> > On Wed, 2019-12-04 at 22:04 +0800, Zhang Rui wrote:
-> > > On Wed, 2019-12-04 at 02:54 +0100, Rafael J. Wysocki wrote:
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > Certain ACPI-enumerated devices represented as platform devices
-> > > > in
-> > > > Linux, like fans, require special low-level power management
-> > > > handling
-> > > > implemented by their drivers that is not in agreement with the
-> > > > ACPI
-> > > > PM domain behavior.  That leads to problems with managing ACPI
-> > > > fans
-> > > > during system-wide suspend and resume.
-> > > >
-> > > > For this reason, make acpi_dev_pm_attach() skip the affected
-> > > > devices
-> > > > by adding a list of device IDs to avoid to it and putting the IDs
-> > > > of
-> > > > the affected devices into that list.
-> > > >
-> > > > Fixes: e5cc8ef31267 (ACPI / PM: Provide ACPI PM callback routines
-> > > > for
-> > > > subsystems)
-> > > > Reported-by: Zhang Rui <rui.zhang@intel.com>
-> > > > Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > ---
-> > > >
-> > > > Rui,
-> > > >
-> > > > Please test this on the machine(s) affected by the fan
-> > > > suspend/resume
-> > > > issues.
-> > >
-> > > Sure, Todd and I will re-run stress test with this patch applied
-> > > when
-> > > 5.5-rc1 released.
-> >
-> > I've applied it 5.4.0 and will do a full stress test run this weekend
-> > in the lab (where 7 out of 20 machines have this issue). The kernel
-> > will be called "5.4.0-acpifanfix", and the data should be ready
-> > Sunday
-> > Dec 8.
-> >
-> > This is the issue I'll test for:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=204321
-> >
->
-> The test data is in and I'm very happy to report that the patch works
-> extremely well. Here's the data gathered on the bugzilla issue 204321:
-> ACPI fan resume is too long.
->
-> [With the patch]
->
-> Kernel              Host                      Test Run    Count Rate
-> 5.4.0-acpifanfix    otcpl-whl-u-clear         mem-x2351    1    0.04%
-> 5.4.0-acpifanfix    otcpl-z170x-ud5           mem-x2369    0    0%
-> 5.4.0-acpifanfix    otcpl-z170x-ud5           freeze-x2492 0    0%
-> 5.4.0-acpifanfix    otcpl-whl-u-clear         freeze-x2411 0    0%
-> 5.4.0-acpifanfix    otcpl-whl-u               mem-x2289    0    0%
-> 5.4.0-acpifanfix    otcpl-whl-u               freeze-x2389 0    0%
-> 5.4.0-acpifanfix    otcpl-icl-u-2             mem-x2273    0    0%
-> 5.4.0-acpifanfix    otcpl-icl-u-2             freeze-x817  0    0%
-> 5.4.0-acpifanfix    otcpl-glk-rvp-1           freeze-x122  0    0%
-> 5.4.0-acpifanfix    otcpl-dell-p5510-xeon-1   mem-x1851    0    0%
-> 5.4.0-acpifanfix    otcpl-dell-p5510-xeon-1   freeze-x1994 0    0%
-> 5.4.0-acpifanfix    otcpl-dell-inspiron-3493  mem-x1722    0    0%
-> 5.4.0-acpifanfix    otcpl-dell-inspiron-3493  freeze-x2102 0    0%
-> 5.4.0-acpifanfix    otcpl-cfl-u-01            mem-x39      0    0%
-> 5.4.0-acpifanfix    otcpl-cfl-u-01            freeze-x2091 0    0%
-> 5.4.0-acpifanfix    otcpl-cfl-h               mem-x415     0    0%
-> 5.4.0-acpifanfix    otcpl-cfl-h               freeze-x2265 0    0%
-> 5.4.0-acpifanfix    otcpl-aml-y               mem-x3126    0    0%
-> 5.4.0-acpifanfix    otcpl-aml-y               freeze-x2288 0    0%
->
-> [Without the patch]
->
-> Kernel    Host                      Test Run    Count Rate
-> 5.3.0+    otcpl-icl-u-2             mem-x2571    2571 100.00%
-> 5.3.0+    otcpl-whl-u               mem-x2497    2497 100.00%
-> 5.3.0+    otcpl-cfl-h               mem-x2068    2068 100.00%
-> 5.3.0+    otcpl-glk-rvp-1           mem-x75      74   98.67%
-> 5.3.0+    otcpl-cfl-u-01            mem-x1074    1050 97.77%
-> 5.3.0+    otcpl-glk-rvp-1           freeze-x45   12   26.67%
-> 5.3.0+    otcpl-whl-u               freeze-x2649 428  16.16%
-> 5.3.0+    otcpl-aml-y               freeze-x2434 373  15.32%
-> 5.3.0+    otcpl-cfl-u-01            freeze-x2419 123  5.08%
-> 5.3.0+    otcpl-latexo-ivb-cpt      freeze-x1914 97   5.07%
-> 5.3.0+    otcpl-whl-u-clear         mem-x2640    69   2.61%
-> 5.3.0+    otcpl-icl-u-2             freeze-x2757 59   2.14%
-> 5.3.0+    otcpl-whl-u-clear         freeze-x2830 53   1.87%
-> 5.3.0+    otcpl-tgl-rvp             freeze-x2086 20   0.96%
-> 5.3.0+    otcpl-cfl-h               freeze-x2457 8    0.33%
-> 5.3.0+    otcpl-latexo-ivb-cpt      mem-x2000    4    0.20%
-> 5.3.0+    otcpl-aml-y               mem-x2727    2    0.07%
-> 5.3.0+    otcpl-z170x-ud5           mem-x2669    0    0%
-> 5.3.0+    otcpl-z170x-ud5           freeze-x2881 0    0%
-> 5.3.0+    otcpl-lenovo-ideapad-130  mem-x2000    0    0%
-> 5.3.0+    otcpl-lenovo-ideapad-130  freeze-x2000 0    0%
-> 5.3.0+    otcpl-dell-p5510-xeon-2   mem-x570     0    0%
-> 5.3.0+    otcpl-dell-p5510-xeon-2   freeze-x1093 0    0%
-> 5.3.0+    otcpl-dell-p5510-xeon-1   mem-x2209    0    0%
-> 5.3.0+    otcpl-dell-p5510-xeon-1   freeze-x2431 0    0%
-> 5.3.0+    otcpl-dell-inspiron-3493  freeze-x1170 0    0%
-> 5.3.0+    otcpl-chromebook-hsw      freeze-x1305 0    0%
-> 5.3.0+    otcpl-chromebook-hsw      freeze-x368  0    0%
 
-Great, thanks for the verification!
-
-I will queue up the patch for the next ACPI pull request, then.
-
-Thanks!
+On 12/9/19 12:06 PM, Dmitry Osipenko wrote:
+> 07.12.2019 22:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 12/7/19 6:58 AM, Dmitry Osipenko wrote:
+>>> 06.12.2019 05:48, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> Current ASoC driver uses extern1 as cdev1 clock from Tegra30 onwards
+>>>> through device tree.
+>>>>
+>>>> Actual audio mclk is clk_out_1 and to use PLLA for mclk rate control,
+>>>> need to clk_out_1_mux parent to extern1 and extern1 parent to PLLA_OUT=
+0.
+>>>>
+>>>> Currently Tegra clock driver init sets the parents and enables both
+>>>> clk_out_1 and extern1 clocks. But these clocks parent and enables shou=
+ld
+>>>> be controlled by ASoC driver.
+>>>>
+>>>> Clock parents can be specified in device tree using assigned-clocks
+>>>> and assigned-clock-parents.
+>>>>
+>>>> To enable audio mclk, both clk_out_1 and extern1 clocks need to be
+>>>> enabled.
+>>>>
+>>>> This patch configures parents for clk_out_1 and extern1 clocks if devi=
+ce
+>>>> tree does not specify clock parents inorder to support old device tree
+>>>> and controls mclk using both clk_out_1 and extern1 clocks.
+>>>>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>  =C2=A0 sound/soc/tegra/tegra_asoc_utils.c | 66
+>>>> ++++++++++++++++++++++++++++++++++++++
+>>>>  =C2=A0 sound/soc/tegra/tegra_asoc_utils.h |=C2=A0 1 +
+>>>>  =C2=A0 2 files changed, 67 insertions(+)
+>>>>
+>>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
+>>>> b/sound/soc/tegra/tegra_asoc_utils.c
+>>>> index 536a578e9512..8e3a3740df7c 100644
+>>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
+>>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
+>>>> @@ -60,6 +60,7 @@ int tegra_asoc_utils_set_rate(struct
+>>>> tegra_asoc_utils_data *data, int srate,
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->set_mclk =3D 0;
+>>>>  =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk=
+_cdev1);
+>>>> +=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk_extern1);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk_pll_a_=
+out0);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk_pll_a)=
+;
+>>>>  =C2=A0 @@ -89,6 +90,14 @@ int tegra_asoc_utils_set_rate(struct
+>>>> tegra_asoc_utils_data *data, int srate,
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return err;
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>  =C2=A0 +=C2=A0=C2=A0=C2=A0 if (!IS_ERR_OR_NULL(data->clk_extern1)) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D clk_prepare_enable=
+(data->clk_extern1);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 de=
+v_err(data->dev, "Can't enable extern1: %d\n", err);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
+turn err;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>> +
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D clk_prepare_enable(data->clk_c=
+dev1);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(data->=
+dev, "Can't enable cdev1: %d\n", err);
+>>>> @@ -109,6 +118,7 @@ int tegra_asoc_utils_set_ac97_rate(struct
+>>>> tegra_asoc_utils_data *data)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int err;
+>>>>  =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk=
+_cdev1);
+>>>> +=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk_extern1);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk_pll_a_=
+out0);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk_pll_a)=
+;
+>>>>  =C2=A0 @@ -142,6 +152,14 @@ int tegra_asoc_utils_set_ac97_rate(struct
+>>>> tegra_asoc_utils_data *data)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return err;
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>  =C2=A0 +=C2=A0=C2=A0=C2=A0 if (!IS_ERR_OR_NULL(data->clk_extern1)) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D clk_prepare_enable=
+(data->clk_extern1);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 de=
+v_err(data->dev, "Can't enable extern1: %d\n", err);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
+turn err;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>> +=C2=A0=C2=A0=C2=A0 }
+>>> Why this is needed given that clk_extern1 is either a child of MCLK or
+>>> MCLK itself (on T20)? The child clocks are enabled when the parent is
+>>> enabled.
+>> For T30 and later, clk_extern1 is one of the source for clk_out_1_mux.
+>> clk_extern1 is in CAR and it has its own gate and mux.
+>>
+>> As audio mclk related clocks (clk_out_1, clk_out_1_mux, and extern1) are
+>> moved into ASoC driver from clock driver
+>>
+>> need to enable extern1 gate as well along with clk_out1 for T30 through
+>> T210.
+>>
+>> Just FYI, extern1 enable here happens only when data->clk_extern1 is
+>> available which is for T30 onwards.
+> clk_out_1 is the parent of extern1, thus extern1 is enabled by the clk
+> core whenever clk_out_1 is enabled because data->clk_cdev1=3Dclk_out_1. A=
+n
+> I missing something?
+>
+> [snip]
+extern1 is the parent for clk_out_1. explained extern1 clock path to=20
+clk_out in reply to your comment in other patch of this series.
