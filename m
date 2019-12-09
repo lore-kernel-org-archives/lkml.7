@@ -2,134 +2,119 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C756BC04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04B3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95DD6206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F060206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:15:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tFBqaJ6E"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dSwgz0pG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLIVOv (ORCPT
+        id S1726743AbfLIVPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:14:51 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37338 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfLIVOv (ORCPT
+        Mon, 9 Dec 2019 16:15:12 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:56396 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfLIVPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:14:51 -0500
-Received: by mail-oi1-f196.google.com with SMTP id x195so7767433oix.4;
-        Mon, 09 Dec 2019 13:14:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kI1cdqsohvrBZb1G7zvJRzw516Sb7QCZ7TtWVwq88mU=;
-        b=tFBqaJ6Eo9qr+Sygep748UzAdEO4AKba+6RRWjkEuwQCBVnTqgqwNo/cUrtj/iOeWX
-         I8bFZQypaMzklntlXxlO/YjyUMMq3d/aQCGFL0cMj5pKJBjcERHsQiDUUbQ3m5Au0EVf
-         Vxa0n5Rl9aByWwLOfUCe2W1u8KojEDq01cr4X1mc8rI2ETSD/gQrFAl6A6HZgE0bP74b
-         H2/I4xqbiJjh7sR4CoUVII7/+XT1iPQ9qfVT16LXgXwXrK/NQHA+jX+JFfygzdxKnjjG
-         uC98WlgJM+wz+vi0BfV2oFdMFnAhNEhwq04chyPC2jlHAloXxdJs8sHSy938bey5IqNY
-         YZGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kI1cdqsohvrBZb1G7zvJRzw516Sb7QCZ7TtWVwq88mU=;
-        b=lTPgsgUEMhqs+LbAomnAO+G6oCHLK7do9Aaa4UAybbP+1MDTZu/p1On2NPv3+d+sfN
-         C6zIa62LXydUgeX5RcljppSiwqwfWlz++Q2ZfTdWWpz98d7oka2fhmfu6rD73iq1BTGx
-         zakvLEEyvzKQfBYlOAnlH+bfdwx2KjKeKfkAcngtzk06Q32gmSnu2+JUhv5BUUNESRs4
-         WGR+68Id+WJtzmozb7iMBQrs7pCXPn7hYi4QYHFMCa2AyHGOoT0XEgsp82hADNuwL3jx
-         JLOPl5Xj9BwX9u4m5m5vty8/zdEgSV7TnUcbd/+/O3dHSLLmPeRoEFFTvcWX+4Hq/gpi
-         lJ2w==
-X-Gm-Message-State: APjAAAXGM9FO9OCN+jZKgsld/XI1ZRsKW4MnlyIBrnjcrHyGTAc4e9p4
-        yEWK/ba/oocZdBuTKl2iX39FIKIHC+4=
-X-Google-Smtp-Source: APXvYqzlMt4odPZ7cWf+kqQOZWfGPtDFYJUEA3rCViP6YFhPndf4Ihj37q8UtsN4ZJiubpAhb7h4OQ==
-X-Received: by 2002:aca:8d5:: with SMTP id 204mr981154oii.141.1575926089961;
-        Mon, 09 Dec 2019 13:14:49 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id g19sm397100otj.81.2019.12.09.13.14.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Dec 2019 13:14:49 -0800 (PST)
-Date:   Mon, 9 Dec 2019 14:14:47 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Stefano Stabellini <stefano.stabellini@eu.citrix.com>,
-        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] xen/blkfront: Adjust indentation in xlvbd_alloc_gendisk
-Message-ID: <20191209211447.GA43622@ubuntu-m2-xlarge-x86>
-References: <20191209201444.33243-1-natechancellor@gmail.com>
- <CAKwvOdmrGGn6f+XBOO3GCm-jVftLsFTUXdbhS9_iJVY03XqCjA@mail.gmail.com>
+        Mon, 9 Dec 2019 16:15:12 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB9LEHH3096116;
+        Mon, 9 Dec 2019 21:14:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=hv9HeQxEfDzHfPEsiur0m3wLUKoOIe5Nkd8kAnU/XqM=;
+ b=dSwgz0pG2lWSd6quJcho2IBvDFhhMqDU7Fi/t+sFaWy/8V8P7vvCzIPnOGfrJLijwSZe
+ rrX2RMCazVBEKOBABK9oZUPD8r+R34oD6Jmug5R+pGLA0l7SUj32RFt54M+wKhqRQE3w
+ zNo+z+x0LQLs1qtscirqVCAaJ29gpJ4AkMcopYaFlZJF2Ys3XFKG/XgHXuWleAkclvWk
+ UIjIFQmMBUFBMzOjfVutzXPgLreTYGiSEoHgLjEyzbKiG8oGs/Gbnb8osBpdvAqaMvkt
+ yZlU2ibcWyQ2ion3qQd3ocH+3Eq6V9nS4eD5Ic8yQoLFUajWtkGeho1dJr5AuaoinsjU hA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2wr4qra58j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Dec 2019 21:14:57 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB9LDWoY103614;
+        Mon, 9 Dec 2019 21:14:57 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2wsw6fsy30-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Dec 2019 21:14:57 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB9LEt8I020620;
+        Mon, 9 Dec 2019 21:14:55 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 09 Dec 2019 13:14:54 -0800
+Date:   Mon, 9 Dec 2019 16:15:02 -0500
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        stable@vger.kernel.org,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Bob Picco <bob.picco@oracle.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v1 1/3] mm: fix uninitialized memmaps on a partially
+ populated last section
+Message-ID: <20191209211502.zhbvzv2qwbvcperm@ca-dmjordan1.us.oracle.com>
+References: <20191209174836.11063-1-david@redhat.com>
+ <20191209174836.11063-2-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdmrGGn6f+XBOO3GCm-jVftLsFTUXdbhS9_iJVY03XqCjA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191209174836.11063-2-david@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9466 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=556
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912090167
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9466 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=609 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912090167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 01:07:41PM -0800, Nick Desaulniers wrote:
-> On Mon, Dec 9, 2019 at 12:14 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > Clang warns:
-> >
-> > ../drivers/block/xen-blkfront.c:1117:4: warning: misleading indentation;
-> > statement is not part of the previous 'if' [-Wmisleading-indentation]
-> >                 nr_parts = PARTS_PER_DISK;
-> >                 ^
-> > ../drivers/block/xen-blkfront.c:1115:3: note: previous statement is here
-> >                 if (err)
-> >                 ^
-> >
-> > This is because there is a space at the beginning of this line; remove
-> > it so that the indentation is consistent according to the Linux kernel
-> > coding style and clang no longer warns.
-> >
-> > While we are here, the previous line has some trailing whitespace; clean
-> > that up as well.
-> >
-> > Fixes: c80a420995e7 ("xen-blkfront: handle Xen major numbers other than XENVBD")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/791
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> >  drivers/block/xen-blkfront.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
-> > index a74d03913822..c02be06c5299 100644
-> > --- a/drivers/block/xen-blkfront.c
-> > +++ b/drivers/block/xen-blkfront.c
-> > @@ -1113,8 +1113,8 @@ static int xlvbd_alloc_gendisk(blkif_sector_t capacity,
-> 
-> While you're here, would you please also removing the single space
-> before the labels in this function?
-> 
-> In vim:
-> 
-> /^ [a-zA-Z]
-> 
-> turns up 5 labels with this.
+Hi David,
 
-That should probably be a separate patch since there are only two labels
-in the function I am touching here. I'll whip up a v2 if the maintainers
-want it though or I'll just draft a separate patch when I am done
-addressing all of the misleading indentation warnings.
+On Mon, Dec 09, 2019 at 06:48:34PM +0100, David Hildenbrand wrote:
+> If max_pfn is not aligned to a section boundary, we can easily run into
+> BUGs. This can e.g., be triggered on x86-64 under QEMU by specifying a
+> memory size that is not a multiple of 128MB (e.g., 4097MB, but also
+> 4160MB). I was told that on real HW, we can easily have this scenario
+> (esp., one of the main reasons sub-section hotadd of devmem was added).
+> 
+> The issue is, that we have a valid memmap (pfn_valid()) for the
+> whole section, and the whole section will be marked "online".
+> pfn_to_online_page() will succeed, but the memmap contains garbage.
+> 
+> E.g., doing a "cat /proc/kpageflags > /dev/null" results in
+> 
+> [  303.218313] BUG: unable to handle page fault for address: fffffffffffffffe
+> [  303.218899] #PF: supervisor read access in kernel mode
+> [  303.219344] #PF: error_code(0x0000) - not-present page
+> [  303.219787] PGD 12614067 P4D 12614067 PUD 12616067 PMD 0
+> [  303.220266] Oops: 0000 [#1] SMP NOPTI
+> [  303.220587] CPU: 0 PID: 424 Comm: cat Not tainted 5.4.0-next-20191128+ #17
 
-Thanks for the reply!
-Nathan
+I can't reproduce this on x86-64 qemu, next-20191128 or mainline, with either
+memory size.  What config are you using?  How often are you hitting it?
+
+It may not have anything to do with the config, and I may be getting lucky with
+the garbage in my memory.
