@@ -2,138 +2,179 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA80C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2C3C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1DCF20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:31:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575873105;
-	bh=JNkb10Pp1zc5am3FaANhCosXMk76s6PelvibBjYsbEY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xUXkncwRy09VjgsDCDjQ2qPmLF2JQaGyT/xZVS6CQQaOtbRpFPcFlwBFHKtkMld9a
-	 BjMOoHGDe8Y9oX1htRtby9dQFqBOosb6jqQL7+JDiTPZIrOOg6hLW6mGeR+poHyiQ/
-	 wnQdRWCkhly3XVIwS/Dql6AXNN+b/Wx22aiSRIxI=
+	by mail.kernel.org (Postfix) with ESMTP id 922BB206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfLIGbp (ORCPT
+        id S1727160AbfLIGcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 01:31:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbfLIGbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 01:31:44 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A72FE206D3;
-        Mon,  9 Dec 2019 06:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575873104;
-        bh=JNkb10Pp1zc5am3FaANhCosXMk76s6PelvibBjYsbEY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Jv7TDuaJMLzYAplOE7S/vegyKqXBl777tgut/yWVB777Oc75VcrOu/z40SOYG8q0H
-         /LWCB8Okp1KJ4T1qTAscOO67lW/j7LEPxs09U61Yb0+bNpXdIh5IIuQrfxT1wmdDlN
-         es01oTBnJhrAlNGZZes3u1spL6M4crN53P9fA3VI=
-Date:   Mon, 9 Dec 2019 14:31:29 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/4] arm64: dts: ls1028a: add missing sai nodes
-Message-ID: <20191209063128.GC3365@dragon>
-References: <20191123201317.25861-1-michael@walle.cc>
- <20191123201317.25861-3-michael@walle.cc>
+        Mon, 9 Dec 2019 01:32:09 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55456 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726623AbfLIGcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 01:32:09 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 14B709B79E07160C53B3;
+        Mon,  9 Dec 2019 14:32:06 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 9 Dec 2019
+ 14:31:56 +0800
+Subject: Re: mmotm 2019-12-06-19-46 uploaded
+To:     Andrew Morton <akpm@linux-foundation.org>, <broonie@kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-next@vger.kernel.org>,
+        <mhocko@suse.cz>, <mm-commits@vger.kernel.org>,
+        <sfr@canb.auug.org.au>, jinyuqi <jinyuqi@huawei.com>
+References: <20191207034723.OPvz2A9wZ%akpm@linux-foundation.org>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <c0691301-fa72-b9fe-5cb8-815275f84555@hisilicon.com>
+Date:   Mon, 9 Dec 2019 14:31:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191123201317.25861-3-michael@walle.cc>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191207034723.OPvz2A9wZ%akpm@linux-foundation.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 09:13:15PM +0100, Michael Walle wrote:
-> The LS1028A has six SAI cores.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 42 +++++++++++++++++++
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index f2e71fd57b20..6730922c2d47 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -534,6 +534,20 @@
->  			status = "disabled";
->  		};
->  
-> +		sai3: audio-controller@f120000 {
-> +			#sound-dai-cells = <0>;
-> +			compatible = "fsl,vf610-sai";
-> +			reg = <0x0 0xf120000 0x0 0x10000>;
-> +			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
-> +				 <&clockgen 4 1>, <&clockgen 4 1>;
-> +			clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +			dma-names = "tx", "rx";
-> +			dmas = <&edma0 1 8>,
-> +			       <&edma0 1 7>;
-> +			status = "disabled";
-> +		};
-> +
->  		sai4: audio-controller@f130000 {
->  			#sound-dai-cells = <0>;
->  			compatible = "fsl,vf610-sai";
-> @@ -548,6 +562,34 @@
->  			status = "disabled";
->  		};
->  
-> +		sai5: audio-controller@f140000 {
-> +			#sound-dai-cells = <0>;
-> +			compatible = "fsl,vf610-sai";
-> +			reg = <0x0 0xf140000 0x0 0x10000>;
-> +			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
-> +				 <&clockgen 4 1>, <&clockgen 4 1>;
-> +			clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +			dma-names = "tx", "rx";
-> +			dmas = <&edma0 1 12>,
-> +			       <&edma0 1 11>;
-> +			status = "disabled";
-> +		};
-> +
-> +		sai6: audio-controller@f150000 {
-> +			#sound-dai-cells = <0>;
-> +			compatible = "fsl,vf610-sai";
-> +			reg = <0x0 0xf150000 0x0 0x10000>;
-> +			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
-> +				 <&clockgen 4 1>, <&clockgen 4 1>;
-> +			clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +			dma-names = "tx", "rx";
-> +			dmas = <&edma0 1 14>,
-> +			       <&edma0 1 13>;
-> +			status = "disabled";
-> +		};
-> +
->  		tmu: tmu@1f00000 {
+Hi Andrew,
 
-Not sure what your base is, but I have tmu@1f80000.  And that makes
-the patch applying fail here.
+About this patch,
+https://lore.kernel.org/lkml/1573091048-10595-1-git-send-email-zhangshaokun@hisilicon.com/
 
-Shawn
+It is not in linux-next or your trees now, has it been dropped?
 
->  			compatible = "fsl,qoriq-tmu";
->  			reg = <0x0 0x1f80000 0x0 0x10000>;
-> -- 
-> 2.20.1
+Thanks,
+Shaokun
+
+On 2019/12/7 11:47, Andrew Morton wrote:
+> The mm-of-the-moment snapshot 2019-12-06-19-46 has been uploaded to
 > 
+>    http://www.ozlabs.org/~akpm/mmotm/
+> 
+> mmotm-readme.txt says
+> 
+> README for mm-of-the-moment:
+> 
+> http://www.ozlabs.org/~akpm/mmotm/
+> 
+> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> more than once a week.
+> 
+> You will need quilt to apply these patches to the latest Linus release (5.x
+> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> http://ozlabs.org/~akpm/mmotm/series
+> 
+> The file broken-out.tar.gz contains two datestamp files: .DATE and
+> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> followed by the base kernel version against which this patch series is to
+> be applied.
+> 
+> This tree is partially included in linux-next.  To see which patches are
+> included in linux-next, consult the `series' file.  Only the patches
+> within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+> linux-next.
+> 
+> 
+> A full copy of the full kernel tree with the linux-next and mmotm patches
+> already applied is available through git within an hour of the mmotm
+> release.  Individual mmotm releases are tagged.  The master branch always
+> points to the latest release, so it's constantly rebasing.
+> 
+> 	https://github.com/hnaz/linux-mm
+> 
+> The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
+> contains daily snapshots of the -mm tree.  It is updated more frequently
+> than mmotm, and is untested.
+> 
+> A git copy of this tree is also available at
+> 
+> 	https://github.com/hnaz/linux-mm
+> 
+> 
+> 
+> This mmotm tree contains the following patches against 5.4:
+> (patches marked "*" will be included in linux-next)
+> 
+>   origin.patch
+> * hacking-group-sysrq-kgdb-ubsan-into-generic-kernel-debugging-instruments.patch
+> * hacking-create-submenu-for-arch-special-debugging-options.patch
+> * hacking-group-kernel-data-structures-debugging-together.patch
+> * hacking-move-kernel-testing-and-coverage-options-to-same-submenu.patch
+> * hacking-move-oops-into-lockups-and-hangs.patch
+> * hacking-move-sched_stack_end_check-after-debug_stack_usage.patch
+> * hacking-create-a-submenu-for-scheduler-debugging-options.patch
+> * hacking-move-debug_bugverbose-to-printk-and-dmesg-options.patch
+> * hacking-move-debug_fs-to-generic-kernel-debugging-instruments.patch
+> * lib-fix-kconfig-indentation.patch
+> * kasan-fix-crashes-on-access-to-memory-mapped-by-vm_map_ram.patch
+> * kasan-fix-crashes-on-access-to-memory-mapped-by-vm_map_ram-v2.patch
+> * mm-add-apply_to_existing_pages-helper.patch
+> * mm-add-apply_to_existing_pages-helper-fix.patch
+> * mm-add-apply_to_existing_pages-helper-fix-fix.patch
+> * kasan-use-apply_to_existing_pages-for-releasing-vmalloc-shadow.patch
+> * kasan-use-apply_to_existing_pages-for-releasing-vmalloc-shadow-fix.patch
+> * kasan-dont-assume-percpu-shadow-allocations-will-succeed.patch
+> * mm-vmscan-protect-shrinker-idr-replace-with-config_memcg.patch
+> * proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
+> * proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
+> * mm-zsmallocc-fix-the-migrated-zspage-statistics.patch
+> * mm-thp-tweak-reclaim-compaction-effort-of-local-only-and-all-node-allocations.patch
+> * x86-mm-split-vmalloc_sync_all.patch
+> * kcov-fix-struct-layout-for-kcov_remote_arg.patch
+> * memcg-account-security-cred-as-well-to-kmemcg.patch
+> * mm-move_pages-return-valid-node-id-in-status-if-the-page-is-already-on-the-target-node.patch
+> * ramfs-support-o_tmpfile.patch
+>   mm.patch
+> * mm-avoid-slub-allocation-while-holding-list_lock.patch
+> * mm-vmscan-expose-cgroup_ino-for-memcg-reclaim-tracepoints.patch
+> * mm-pgmap-use-correct-alignment-when-looking-at-first-pfn-from-a-region.patch
+> * mm-mmap-fix-the-adjusted-length-error.patch
+> * mm-memmap_init-update-variable-name-in-memmap_init_zone.patch
+> * mm-memory_hotplug-shrink-zones-when-offlining-memory.patch
+> * mm-memory_hotplug-poison-memmap-in-remove_pfn_range_from_zone.patch
+> * mm-memory_hotplug-we-always-have-a-zone-in-find_smallestbiggest_section_pfn.patch
+> * mm-memory_hotplug-dont-check-for-all-holes-in-shrink_zone_span.patch
+> * mm-memory_hotplug-drop-local-variables-in-shrink_zone_span.patch
+> * mm-memory_hotplug-cleanup-__remove_pages.patch
+> * mm-oom-avoid-printk-iteration-under-rcu.patch
+> * mm-oom-avoid-printk-iteration-under-rcu-fix.patch
+> * info-task-hung-in-generic_file_write_iter.patch
+> * info-task-hung-in-generic_file_write-fix.patch
+> * kernel-hung_taskc-monitor-killed-tasks.patch
+> * string-add-stracpy-and-stracpy_pad-mechanisms.patch
+> * documentation-checkpatch-prefer-stracpy-strscpy-over-strcpy-strlcpy-strncpy.patch
+> * aio-simplify-read_events.patch
+> * smp_mb__beforeafter_atomic-update-documentation.patch
+> * ipc-mqueuec-remove-duplicated-code.patch
+> * ipc-mqueuec-update-document-memory-barriers.patch
+> * ipc-msgc-update-and-document-memory-barriers.patch
+> * ipc-semc-document-and-update-memory-barriers.patch
+> * ipc-consolidate-all-xxxctl_down-functions.patch
+>   linux-next.patch
+>   linux-next-git-rejects.patch
+> * drivers-block-null_blk_mainc-fix-layout.patch
+> * drivers-block-null_blk_mainc-fix-uninitialized-var-warnings.patch
+> * pinctrl-fix-pxa2xxc-build-warnings.patch
+> * drivers-tty-serial-sh-scic-suppress-warning.patch
+> * fix-read-buffer-overflow-in-delta-ipc.patch
+>   make-sure-nobodys-leaking-resources.patch
+>   releasing-resources-with-children.patch
+>   mutex-subsystem-synchro-test-module.patch
+>   kernel-forkc-export-kernel_thread-to-modules.patch
+>   workaround-for-a-pci-restoring-bug.patch
+> 
+> .
+> 
+
