@@ -2,98 +2,163 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAC1C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9D1C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C579D207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:37:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575909479;
-	bh=Y+fycx14m6RoaafnS2lJ7fBJdj74H70OsFzxd+srkAk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wkglxAmVPmC8mXJ0nTfVEwuUzK7a62dauzgeextcASjjyu/8jMIk9cv2w0MsESiso
-	 lV0zFqT0D3b4BhUtyWqwzCjX43Hv+BFQnd1v9fsKc73j/76RL0URkdiOvqZVtPBd8v
-	 FX943mz/w1eaVoAmwNNADRHLkIEdA4vTjE2aM6mE=
+	by mail.kernel.org (Postfix) with ESMTP id 246482073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:39:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="cVp0woY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfLIQh6 (ORCPT
+        id S1726589AbfLIQi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:37:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:37854 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfLIQh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:37:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 453F01FB;
-        Mon,  9 Dec 2019 08:37:57 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B783F3F718;
-        Mon,  9 Dec 2019 08:37:56 -0800 (PST)
-Date:   Mon, 9 Dec 2019 16:37:55 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-Subject: Re: Regulator probe on demand (or circular dependencies)
-Message-ID: <20191209163755.GF5483@sirena.org.uk>
-References: <23236201-a387-7257-35a4-ee4ed2f6bfd0@ideasonboard.com>
+        Mon, 9 Dec 2019 11:38:59 -0500
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:22416 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfLIQi7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 11:38:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1575909537; x=1607445537;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=seCUnC3Ccht6HhiXNa+L08XOaY3OaU3bzWyiNoyyAC0=;
+  b=cVp0woY10cor8ak17Vr3hudijR0e/pjIHurhdNeRghf9UglSqwRJL+vg
+   ImtvE1Fn6hjf2gCOSVVyQqe/0FihVpPj0qAN24xN2mkM8FvbRBQ4jEaXr
+   x8eEw6sRlgSq8Th6aB/YDgJAkFNOeJnzdqC0lXJy2ahAVogL+0W1Lb5/+
+   E=;
+IronPort-SDR: +ky132fkU9oUO03TqJLj1tGr3dOcbjEJGz/yuZhaiubAMblrrSqJ8AAO2HYO7YvkeRYF1heu4w
+ MtAmoN6m1s5A==
+X-IronPort-AV: E=Sophos;i="5.69,296,1571702400"; 
+   d="scan'208";a="8283041"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 09 Dec 2019 16:38:48 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id 4B369A1A3C;
+        Mon,  9 Dec 2019 16:38:46 +0000 (UTC)
+Received: from EX13D32EUC002.ant.amazon.com (10.43.164.94) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Dec 2019 16:38:46 +0000
+Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
+ EX13D32EUC002.ant.amazon.com (10.43.164.94) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Dec 2019 16:38:45 +0000
+Received: from EX13D32EUC003.ant.amazon.com ([10.43.164.24]) by
+ EX13D32EUC003.ant.amazon.com ([10.43.164.24]) with mapi id 15.00.1367.000;
+ Mon, 9 Dec 2019 16:38:45 +0000
+From:   "Durrant, Paul" <pdurrant@amazon.com>
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Subject: RE: [PATCH 3/4] xen/interface: don't discard pending work in
+ FRONT/BACK_RING_ATTACH
+Thread-Topic: [PATCH 3/4] xen/interface: don't discard pending work in
+ FRONT/BACK_RING_ATTACH
+Thread-Index: AQHVq3SEQ22T+F2O5E+9q5oO42T5TKex2ayAgAArEUA=
+Date:   Mon, 9 Dec 2019 16:38:45 +0000
+Message-ID: <23a1e955fcaa4e948f5290a7252256fb@EX13D32EUC003.ant.amazon.com>
+References: <20191205140123.3817-1-pdurrant@amazon.com>
+ <20191205140123.3817-4-pdurrant@amazon.com>
+ <8a42e7a2-e1aa-69ff-32a4-f43cc5df10d9@suse.com>
+In-Reply-To: <8a42e7a2-e1aa-69ff-32a4-f43cc5df10d9@suse.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.164.211]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UBnjLfzoMQYIXCvq"
-Content-Disposition: inline
-In-Reply-To: <23236201-a387-7257-35a4-ee4ed2f6bfd0@ideasonboard.com>
-X-Cookie: We read to say that we have read.
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---UBnjLfzoMQYIXCvq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Dec 06, 2019 at 04:38:04PM +0000, Kieran Bingham wrote:
-
-> The MAX9286 also exposes 2 GPIO pins, as such I have configured the
-> MAX9286 driver [1] to expose a gpio-chip [2].
-
-So this seems like a MFD then?  The nice thing about using the MFD
-subsystem is that it means that the drivers for the various subsystems
-on the device can instantiate in any order and defer separately without
-interfering with each other which seems like it's the issue here.
-
->  - is there anything I can do here within regulator_dev_lookup() to
->    attempt creating the regulator_dev 'on-demand' when
->    of_find_regulator_by_node(node) returns empty? (or is that crazy, and
->    just a rabbit-hole?)
-
-This seems like a terrible idea, you'll have a half baked regulator in
-the system which will need special casing all over the place and
-doubtless be an ongoing source of bugs.
-
---UBnjLfzoMQYIXCvq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3ueGIACgkQJNaLcl1U
-h9DMDAf8CpQOBN0monPnjHxv964dVMtgkGtKsdUu8Oe9P6GjpeW7mEjijunzKrs6
-sleWk7koDmdZlJkRnjYhnZISIOKlrxLG5qWQPXaQDhtEJMcyqMiKNL4lTk5UVDbB
-sKMmSyFw+cOK03ocOiwZ3qVFXO8SpT3Xw3lp+1sw2z7v+R9LhY0QcicaqYmvtxal
-DsH+LmdJfATO5dLdHYWBnBGoFMr5o5POk8WkqkualCFU3pSkA6khlR9KegwfzK6l
-uy1zPcsMkrN47yYTFXREAZarPhmQ5AfSsE/k/qeyJiElP/uXJdhNswPYAO6m/yxr
-jyWeDQX+l3rCS6EGzdJgNVYymBxFgw==
-=AasC
------END PGP SIGNATURE-----
-
---UBnjLfzoMQYIXCvq--
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKw7xyZ2VuIEdyb8OfIDxqZ3Jv
+c3NAc3VzZS5jb20+DQo+IFNlbnQ6IDA5IERlY2VtYmVyIDIwMTkgMTM6NTUNCj4gVG86IER1cnJh
+bnQsIFBhdWwgPHBkdXJyYW50QGFtYXpvbi5jb20+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnOw0KPiB4ZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcNCj4gQ2M6IEJvcmlzIE9zdHJv
+dnNreSA8Ym9yaXMub3N0cm92c2t5QG9yYWNsZS5jb20+OyBTdGVmYW5vIFN0YWJlbGxpbmkNCj4g
+PHNzdGFiZWxsaW5pQGtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMy80XSB4ZW4v
+aW50ZXJmYWNlOiBkb24ndCBkaXNjYXJkIHBlbmRpbmcgd29yayBpbg0KPiBGUk9OVC9CQUNLX1JJ
+TkdfQVRUQUNIDQo+IA0KPiBPbiAwNS4xMi4xOSAxNTowMSwgUGF1bCBEdXJyYW50IHdyb3RlOg0K
+PiA+IEN1cnJlbnRseSB0aGVzZSBtYWNyb3Mgd2lsbCBza2lwIG92ZXIgYW55IHJlcXVlc3RzL3Jl
+c3BvbnNlcyB0aGF0IGFyZQ0KPiA+IGFkZGVkIHRvIHRoZSBzaGFyZWQgcmluZyB3aGlsc3QgaXQg
+aXMgZGV0YWNoZWQuIFRoaXMsIGluIGdlbmVyYWwsIGlzIG5vdA0KPiA+IGEgZGVzaXJhYmxlIHNl
+bWFudGljIHNpbmNlIG1vc3QgZnJvbnRlbmQgaW1wbGVtZW50YXRpb25zIHdpbGwgZXZlbnR1YWxs
+eQ0KPiA+IGJsb2NrIHdhaXRpbmcgZm9yIGEgcmVzcG9uc2Ugd2hpY2ggd291bGQgZWl0aGVyIG5l
+dmVyIGFwcGVhciBvciBuZXZlciBiZQ0KPiA+IHByb2Nlc3NlZC4NCj4gPg0KPiA+IE5PVEU6IFRo
+ZXNlIG1hY3JvcyBhcmUgY3VycmVudGx5IHVudXNlZC4gQkFDS19SSU5HX0FUVEFDSCgpLCBob3dl
+dmVyLA0KPiB3aWxsDQo+ID4gICAgICAgIGJlIHVzZWQgaW4gYSBzdWJzZXF1ZW50IHBhdGNoLg0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGF1bCBEdXJyYW50IDxwZHVycmFudEBhbWF6b24uY29t
+Pg0KPiA+IC0tLQ0KPiA+IENjOiBCb3JpcyBPc3Ryb3Zza3kgPGJvcmlzLm9zdHJvdnNreUBvcmFj
+bGUuY29tPg0KPiA+IENjOiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+DQo+ID4gQ2M6
+IFN0ZWZhbm8gU3RhYmVsbGluaSA8c3N0YWJlbGxpbmlAa2VybmVsLm9yZz4NCj4gPiAtLS0NCj4g
+PiAgIGluY2x1ZGUveGVuL2ludGVyZmFjZS9pby9yaW5nLmggfCA0ICsrLS0NCj4gPiAgIDEgZmls
+ZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZm
+IC0tZ2l0IGEvaW5jbHVkZS94ZW4vaW50ZXJmYWNlL2lvL3JpbmcuaA0KPiBiL2luY2x1ZGUveGVu
+L2ludGVyZmFjZS9pby9yaW5nLmgNCj4gPiBpbmRleCAzZjQwNTAxZmM2MGIuLjQwNWFkZmVkODdl
+NiAxMDA2NDQNCj4gPiAtLS0gYS9pbmNsdWRlL3hlbi9pbnRlcmZhY2UvaW8vcmluZy5oDQo+ID4g
+KysrIGIvaW5jbHVkZS94ZW4vaW50ZXJmYWNlL2lvL3JpbmcuaA0KPiA+IEBAIC0xNDMsMTQgKzE0
+MywxNCBAQCBzdHJ1Y3QgX19uYW1lIyNfYmFja19yaW5nIHsNCj4gCQlcDQo+ID4gICAjZGVmaW5l
+IEZST05UX1JJTkdfQVRUQUNIKF9yLCBfcywgX19zaXplKSBkbyB7CQkJCVwNCj4gPiAgICAgICAo
+X3IpLT5zcmluZyA9IChfcyk7CQkJCQkJCVwNCj4gPiAgICAgICAoX3IpLT5yZXFfcHJvZF9wdnQg
+PSAoX3MpLT5yZXFfcHJvZDsJCQkJXA0KPiA+IC0gICAgKF9yKS0+cnNwX2NvbnMgPSAoX3MpLT5y
+c3BfcHJvZDsJCQkJCVwNCj4gPiArICAgIChfciktPnJzcF9jb25zID0gKF9zKS0+cmVxX3Byb2Q7
+CQkJCQlcDQo+ID4gICAgICAgKF9yKS0+bnJfZW50cyA9IF9fUklOR19TSVpFKF9zLCBfX3NpemUp
+OwkJCQlcDQo+ID4gICB9IHdoaWxlICgwKQ0KPiA+DQo+ID4gICAjZGVmaW5lIEJBQ0tfUklOR19B
+VFRBQ0goX3IsIF9zLCBfX3NpemUpIGRvIHsJCQkJXA0KPiA+ICAgICAgIChfciktPnNyaW5nID0g
+KF9zKTsJCQkJCQkJXA0KPiA+ICAgICAgIChfciktPnJzcF9wcm9kX3B2dCA9IChfcyktPnJzcF9w
+cm9kOwkJCQlcDQo+ID4gLSAgICAoX3IpLT5yZXFfY29ucyA9IChfcyktPnJlcV9wcm9kOwkJCQkJ
+XA0KPiA+ICsgICAgKF9yKS0+cmVxX2NvbnMgPSAoX3MpLT5yc3BfcHJvZDsJCQkJCVwNCj4gPiAg
+ICAgICAoX3IpLT5ucl9lbnRzID0gX19SSU5HX1NJWkUoX3MsIF9fc2l6ZSk7CQkJCVwNCj4gPiAg
+IH0gd2hpbGUgKDApDQo+IA0KPiBMZXRzIGxvb2sgYXQgYWxsIHBvc3NpYmxlIHNjZW5hcmlvcyB3
+aGVyZSBCQUNLX1JJTkdfQVRUQUNIKCkNCj4gbWlnaHQgaGFwcGVuOg0KPiANCj4gSW5pdGlhbGx5
+IChhZnRlciBbRlJPTlR8QkFDS11fUklOR19JTklUKCksIGxlYXZpbmcgX3B2dCBhd2F5KToNCj4g
+cmVxX3Byb2Q9MCwgcnNwX2NvbnM9MCwgcnNwX3Byb2Q9MCwgcmVxX2NvbnM9MA0KPiBVc2luZyBC
+QUNLX1JJTkdfQVRUQUNIKCkgaXMgZmluZSAobm8gY2hhbmdlKQ0KPiANCj4gUmVxdWVzdCBxdWV1
+ZWQ6DQo+IHJlcV9wcm9kPTEsIHJzcF9jb25zPTAsIHJzcF9wcm9kPTAsIHJlcV9jb25zPTANCj4g
+VXNpbmcgQkFDS19SSU5HX0FUVEFDSCgpIGlzIGZpbmUgKG5vIGNoYW5nZSkNCj4gDQo+IGFuZCB0
+YWtlbiBieSBiYWNrZW5kOg0KPiByZXFfcHJvZD0xLCByc3BfY29ucz0wLCByc3BfcHJvZD0wLCBy
+ZXFfY29ucz0xDQo+IFVzaW5nIEJBQ0tfUklOR19BVFRBQ0goKSBpcyByZXNldHRpbmcgcmVxX2Nv
+bnMgdG8gMCwgd2lsbCByZXN1bHQNCj4gaW4gcmVkb2luZyByZXF1ZXN0IChmb3IgYmxrIHRoaXMg
+aXMgZmluZSwgb3RoZXIgZGV2aWNlcyBsaWtlIFNDU0kNCj4gdGFwZXMgd2lsbCBoYXZlIGlzc3Vl
+cyB3aXRoIHRoYXQpLiBPbmUgcG9zc2libGUgc29sdXRpb24gd291bGQgYmUNCj4gdG8gZW5zdXJl
+IGFsbCB0YWtlbiByZXF1ZXN0cyBhcmUgZWl0aGVyIHN0b3BwZWQgb3IgdGhlIHJlc3BvbnNlDQo+
+IGlzIHF1ZXVlZCBhbHJlYWR5Lg0KDQpZZXMsIGl0IGlzIHRoZSBhc3N1bXB0aW9uIHRoYXQgYSBi
+YWNrZW5kIHdpbGwgZHJhaW4gYW5kIGNvbXBsZXRlIGFueSByZXF1ZXN0cyBpdCBpcyBoYW5kbGlu
+ZywgYnV0IGl0IHdpbGwgbm90IGRlYWwgd2l0aCBuZXcgb25lcyBiZWluZyBwb3N0ZWQgYnkgdGhl
+IGZyb250ZW5kLiBUaGlzIGRvZXMgYXBwZWFyIHRvIGJlIHRoZSBjYXNlIGZvciBibGtiYWNrLg0K
+DQo+IA0KPiBSZXNwb25zZSBxdWV1ZWQ6DQo+IHJlcV9wcm9kPTEsIHJzcF9jb25zPTAsIHJzcF9w
+cm9kPTEsIHJlcV9jb25zPTENCj4gVXNpbmcgQkFDS19SSU5HX0FUVEFDSCgpIGlzIGZpbmUgKG5v
+IGNoYW5nZSkNCj4gDQo+IFJlc3BvbnNlIHRha2VuOg0KPiByZXFfcHJvZD0xLCByc3BfY29ucz0x
+LCByc3BfcHJvZD0xLCByZXFfY29ucz0xDQo+IFVzaW5nIEJBQ0tfUklOR19BVFRBQ0goKSBpcyBm
+aW5lIChubyBjaGFuZ2UpDQo+IA0KPiBJbiBnZW5lcmFsIEkgYmVsaWV2ZSB0aGUgW0ZST05UfEJB
+Q0tdX1JJTkdfQVRUQUNIKCkgbWFjcm9zIGFyZSBub3QNCj4gZmluZSB0byBiZSB1c2VkIGluIHRo
+ZSBjdXJyZW50IHN0YXRlLCBhcyB0aGUgKl9wdnQgZmllbGRzIG5vcm1hbGx5IG5vdA0KPiBhY2Nl
+c3NpYmxlIGJ5IHRoZSBvdGhlciBlbmQgYXJlIGluaXRpYWxpemVkIHVzaW5nIHRoZSAocG9zc2li
+bHkNCj4gdW50cnVzdGVkKSB2YWx1ZXMgZnJvbSB0aGUgc2hhcmVkIHJpbmcuIFRoZXJlIG5lZWRz
+IGF0IGxlYXN0IHRvIGJlIGENCj4gdGVzdCBmb3IgdGhlIHZhbHVlcyB0byBiZSBzYW5lLCBhbmQg
+eW91ciBjaGFuZ2Ugc2hvdWxkIG5vdCByZXN1bHQgaW4gdGhlDQo+IHNhbWUgdmFsdWUgdG8gYmUg
+cmVhZCB0d2ljZSwgYXMgaXQgY291bGQgaGF2ZSBjaGFuZ2VkIGluIGJldHdlZW4uDQoNCldoYXQg
+dGVzdCB3b3VsZCB5b3UgYXBwbHkgdG8gc2FuaXRpemUgdGhlIHZhbHVlIG9mIHRoZSBwdnQgcG9p
+bnRlcj8gQW5vdGhlciBvcHRpb24gd291bGQgYmUgdG8gaGF2ZSBhIGJhY2tlbmQgd3JpdGUgaXRz
+IHB2dCB2YWx1ZSBpbnRvIHRoZSB4ZW5zdG9yZSBiYWNrZW5kIGFyZWEgd2hlbiB0aGUgcmluZyBp
+cyB1bm1hcHBlZCwgc28gdGhhdCBhIG5ldyBpbnN0YW5jZSBkZWZpbml0ZWx5IHJlc3VtZXMgd2hl
+cmUgdGhlIG9sZCBvbmUgbGVmdCBvZmYuIFRoZSB2YWx1ZSBvZiByc3BfcHJvZCBjb3VsZCwgb2Yg
+Y291cnNlLCBiZSBvdmVyd3JpdHRlbiBieSB0aGUgZ3Vlc3QgYXQgYW55IHRpbWUgYW5kIHNvIHRo
+ZXJlJ3MgbGl0dGxlIHBvaW50IGluIGF0dGVtcHRpbmcgc2FuaXRpemUgaXQuDQoNCj4gDQo+IEFz
+IHRoaXMgaXMgYW4gZXJyb3Igd2hpY2ggY2FuIGhhcHBlbiBpbiBvdGhlciBPUydzLCB0b28sIEkn
+ZCByZWNvbW1lbmQNCj4gdG8gYWRkIHRoZSBhZGFwdGVkIG1hY3JvcyAocGx1cyBhIGNvbW1lbnQg
+cmVnYXJkaW5nIHRoZSBwb3NzaWJsZQ0KPiBwcm9ibGVtIG5vdGVkIGFib3ZlIGZvciBzcGVjaWFs
+IGRldmljZXMgbGlrZSB0YXBlcykgdG8gdGhlIFhlbiB2YXJpYW50DQo+IG9mIHJpbmcuaC4NCj4g
+DQoNCkkgY2FuIGNlcnRhaW5seSBzZW5kIGEgcGF0Y2ggdG8gWGVuIG9uY2Ugd2UgYWdyZWUgb24g
+dGhlIGZpbmFsIGRlZmluaXRpb24uDQoNCiAgUGF1bA0KDQo+IA0KPiBKdWVyZ2VuDQo=
