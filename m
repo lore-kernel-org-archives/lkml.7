@@ -2,107 +2,128 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C450CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1011C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28562073D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 897022068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbfLINyC (ORCPT
+        id S1727643AbfLINzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:54:02 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:47258 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727436AbfLINyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:54:00 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1C4F51A0789;
-        Mon,  9 Dec 2019 14:53:59 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 101611A0781;
-        Mon,  9 Dec 2019 14:53:59 +0100 (CET)
-Received: from fsr-ub1864-103.ro-buh02.nxp.com (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B375C20564;
-        Mon,  9 Dec 2019 14:53:58 +0100 (CET)
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     broonie@kernel.org
-Cc:     kuninori.morimoto.gx@renesas.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH] ASoC: simple-card: Don't create separate link when platform is present
-Date:   Mon,  9 Dec 2019 15:53:53 +0200
-Message-Id: <20191209135353.17427-1-daniel.baluta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 9 Dec 2019 08:55:23 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59704 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727268AbfLINzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:55:23 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B3B57AC3F;
+        Mon,  9 Dec 2019 13:55:20 +0000 (UTC)
+Subject: Re: [PATCH 3/4] xen/interface: don't discard pending work in
+ FRONT/BACK_RING_ATTACH
+To:     Paul Durrant <pdurrant@amazon.com>, linux-kernel@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+References: <20191205140123.3817-1-pdurrant@amazon.com>
+ <20191205140123.3817-4-pdurrant@amazon.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <8a42e7a2-e1aa-69ff-32a4-f43cc5df10d9@suse.com>
+Date:   Mon, 9 Dec 2019 14:55:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <20191205140123.3817-4-pdurrant@amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In normal sound case all DAIs are detected as CPU-Codec.
-simple_dai_link_of supports the presence of a platform but it counts
-it as a CPU DAI resulting in the creation of an extra link.
+On 05.12.19 15:01, Paul Durrant wrote:
+> Currently these macros will skip over any requests/responses that are
+> added to the shared ring whilst it is detached. This, in general, is not
+> a desirable semantic since most frontend implementations will eventually
+> block waiting for a response which would either never appear or never be
+> processed.
+> 
+> NOTE: These macros are currently unused. BACK_RING_ATTACH(), however, will
+>        be used in a subsequent patch.
+> 
+> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+> ---
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Stefano Stabellini <sstabellini@kernel.org>
+> ---
+>   include/xen/interface/io/ring.h | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/xen/interface/io/ring.h b/include/xen/interface/io/ring.h
+> index 3f40501fc60b..405adfed87e6 100644
+> --- a/include/xen/interface/io/ring.h
+> +++ b/include/xen/interface/io/ring.h
+> @@ -143,14 +143,14 @@ struct __name##_back_ring {						\
+>   #define FRONT_RING_ATTACH(_r, _s, __size) do {				\
+>       (_r)->sring = (_s);							\
+>       (_r)->req_prod_pvt = (_s)->req_prod;				\
+> -    (_r)->rsp_cons = (_s)->rsp_prod;					\
+> +    (_r)->rsp_cons = (_s)->req_prod;					\
+>       (_r)->nr_ents = __RING_SIZE(_s, __size);				\
+>   } while (0)
+>   
+>   #define BACK_RING_ATTACH(_r, _s, __size) do {				\
+>       (_r)->sring = (_s);							\
+>       (_r)->rsp_prod_pvt = (_s)->rsp_prod;				\
+> -    (_r)->req_cons = (_s)->req_prod;					\
+> +    (_r)->req_cons = (_s)->rsp_prod;					\
+>       (_r)->nr_ents = __RING_SIZE(_s, __size);				\
+>   } while (0)
 
-Adding a platform property to a link description like:
+Lets look at all possible scenarios where BACK_RING_ATTACH()
+might happen:
 
-simple-audio-card,dai-link {
-	cpu {
-		sound-dai = <&sai1>;
-	};
-	plat {
-		sound-dai = <&dsp>;
-	};
-	codec {
-		sound-dai = <&wm8960>;
-	}
+Initially (after [FRONT|BACK]_RING_INIT(), leaving _pvt away):
+req_prod=0, rsp_cons=0, rsp_prod=0, req_cons=0
+Using BACK_RING_ATTACH() is fine (no change)
 
-will result in the creation of two links:
-	* sai1 <-> wm8960
-	* dsp  <-> wm8960
+Request queued:
+req_prod=1, rsp_cons=0, rsp_prod=0, req_cons=0
+Using BACK_RING_ATTACH() is fine (no change)
 
-which is obviously not what we want. We just want one single link
-with:
-	* sai1 <-> wm8960 (and platform set to dsp).
+and taken by backend:
+req_prod=1, rsp_cons=0, rsp_prod=0, req_cons=1
+Using BACK_RING_ATTACH() is resetting req_cons to 0, will result
+in redoing request (for blk this is fine, other devices like SCSI
+tapes will have issues with that). One possible solution would be
+to ensure all taken requests are either stopped or the response
+is queued already.
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- sound/soc/generic/simple-card.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Response queued:
+req_prod=1, rsp_cons=0, rsp_prod=1, req_cons=1
+Using BACK_RING_ATTACH() is fine (no change)
 
-diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-index 10b82bf043d1..55e9f8800b3e 100644
---- a/sound/soc/generic/simple-card.c
-+++ b/sound/soc/generic/simple-card.c
-@@ -371,6 +371,7 @@ static int simple_for_each_link(struct asoc_simple_priv *priv,
- 	do {
- 		struct asoc_simple_data adata;
- 		struct device_node *codec;
-+		struct device_node *plat;
- 		struct device_node *np;
- 		int num = of_get_child_count(node);
- 
-@@ -381,6 +382,9 @@ static int simple_for_each_link(struct asoc_simple_priv *priv,
- 			ret = -ENODEV;
- 			goto error;
- 		}
-+		/* get platform */
-+		plat = of_get_child_by_name(node, is_top ?
-+					    PREFIX "plat" : "plat");
- 
- 		/* get convert-xxx property */
- 		memset(&adata, 0, sizeof(adata));
-@@ -389,6 +393,8 @@ static int simple_for_each_link(struct asoc_simple_priv *priv,
- 
- 		/* loop for all CPU/Codec node */
- 		for_each_child_of_node(node, np) {
-+			if (plat == np)
-+				continue;
- 			/*
- 			 * It is DPCM
- 			 * if it has many CPUs,
--- 
-2.17.1
+Response taken:
+req_prod=1, rsp_cons=1, rsp_prod=1, req_cons=1
+Using BACK_RING_ATTACH() is fine (no change)
 
+In general I believe the [FRONT|BACK]_RING_ATTACH() macros are not
+fine to be used in the current state, as the *_pvt fields normally not
+accessible by the other end are initialized using the (possibly
+untrusted) values from the shared ring. There needs at least to be a
+test for the values to be sane, and your change should not result in the
+same value to be read twice, as it could have changed in between.
+
+As this is an error which can happen in other OS's, too, I'd recommend
+to add the adapted macros (plus a comment regarding the possible
+problem noted above for special devices like tapes) to the Xen variant
+of ring.h.
+
+
+Juergen
