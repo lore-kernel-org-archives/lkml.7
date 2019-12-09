@@ -2,141 +2,106 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466D6C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 117A8C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F8320726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1EF2073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfLIN3O (ORCPT
+        id S1727683AbfLIN3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:29:14 -0500
-Received: from foss.arm.com ([217.140.110.172]:60532 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727200AbfLIN3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:29:14 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DC39328;
-        Mon,  9 Dec 2019 05:29:13 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F2943F718;
-        Mon,  9 Dec 2019 05:29:09 -0800 (PST)
-Subject: Re: [RFCv1 0/8] RK3399 clean shutdown issue
-To:     Anand Moon <linux.amoon@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Daniel Schultz <d.schultz@phytec.de>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191206184536.2507-1-linux.amoon@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <724aa7db-3838-16f9-d344-1789ae2a5746@arm.com>
-Date:   Mon, 9 Dec 2019 13:29:08 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Dec 2019 08:29:20 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:40770 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727200AbfLIN3U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:29:20 -0500
+Received: by mail-ua1-f67.google.com with SMTP id v18so906911uaq.7
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 05:29:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=p6yy6RPCwDZpxd4juLljS9qvo9MtkCCXsmRgQJgullU=;
+        b=Ssi6dZewsmGy/5Rf++kPgf54Spho4GRW097ra6tNNH1w3RUV03r8PmNEHuNaWuRWJG
+         /nsNXIsZvtPFMsj5C79ZjyNBivHFXYgW3lzD8etoZ1PLanSST5raippjTr2+RoMgb5W/
+         rfG3JvZBc6q3uVz0YBDgapKDSdA7RsA2Ar1eGzGThCL46fReL2rrrB/xA1mR+tiWlrcU
+         6EOWaiVZl5xQPkMnCRVTJC2NIXL2P38O4zhuUa6piDw9L/D4sbCL4X3larelInol5egy
+         NtJHh1F8d1PG1sgVLEnMV5GGMnoczP5ESHfD6P+RZxgKMZw+8rOmWF4dXgUJ31o7LWrU
+         L9vg==
+X-Gm-Message-State: APjAAAX7a1v2rYoXheJpA3viOCxtYiMSs7/ra+z6hxBQBbtbZ3ZNDH1l
+        o0V+PmDV2gzCkMBJ8AY5U2GWgg==
+X-Google-Smtp-Source: APXvYqzaZie3OXBH3ahijPvPnPnVVXg/Tm1KNZs5ozNQ2wMhjT5xVrdqO4FAePjYSVtpLgPACKsADA==
+X-Received: by 2002:ab0:5392:: with SMTP id k18mr24520201uaa.24.1575898159136;
+        Mon, 09 Dec 2019 05:29:19 -0800 (PST)
+Received: from work.celeiro ([191.177.180.119])
+        by smtp.gmail.com with ESMTPSA id x192sm12711726vkd.10.2019.12.09.05.29.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 05:29:18 -0800 (PST)
+From:   Rafael David Tinoco <rafaeldtinoco@ubuntu.com>
+To:     ebiggers3@gmail.com
+Cc:     adilger.kernel@dilger.ca,
+        bot+eb13811afcefe99cfe45081054e7883f569f949d@syzkaller.appspotmail.com,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Subject: ppc64el kernel access of bad area (ext4_htree_store_dirent->rb_insert_color)
+Date:   Mon,  9 Dec 2019 10:29:14 -0300
+Message-Id: <20191209132914.907306-1-rafaeldtinoco@ubuntu.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20171219215906.GA12465@gmail.com>
+References: <20171219215906.GA12465@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191206184536.2507-1-linux.amoon@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/12/2019 6:45 pm, Anand Moon wrote:
-> Most of the RK3399 SBC boards do not perform clean
-> shutdown and clean reboot.
+It looks like the same stacktrace that was reported in this thread. This has
+been reported to ppc64el AND we got a reproducer (ocfs2-tools autopkgtests).
 
-FWIW reboot problems on RK3399 have been tracked down to issues in 
-upstream ATF, and are unrelated to the PMIC.
+[ 85.605850] Faulting instruction address: 0xc000000000e81168
+[ 85.605901] Oops: Kernel access of bad area, sig: 11 [#1]
+[ 85.605970] LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+[ 85.606029] Modules linked in: ocfs2 quota_tree ocfs2_dlmfs ocfs2_stack_o2cb ocfs2_dlm ocfs2_nodemanager ocfs2_stackglue iptable_mangle xt_TCPMSS xt_tcpudp bpfilter dm_multipath scsi_dh_rdac scsi_dh_emc scsi_dh_alua vmx_crypto crct10dif_vpmsum sch_fq_codel ip_tables x_tables autofs4 btrfs xor zstd_compress raid6_pq libcrc32c crc32c_vpmsum virtio_net virtio_blk net_failover failover
+[ 85.606291] CPU: 0 PID: 1 Comm: systemd Not tainted 5.3.0-18-generic #19-Ubuntu
+[ 85.606350] NIP: c000000000e81168 LR: c00000000054f240 CTR: 0000000000000000
+[ 85.606410] REGS: c00000005a3e3700 TRAP: 0300 Not tainted (5.3.0-18-generic)
+[ 85.606469] MSR: 8000000000009033 <SF,EE,ME,IR,DR,RI,LE> CR: 28024448 XER: 00000000
+[ 85.606531] CFAR: 0000701f9806f638 DAR: 0000000001744098 DSISR: 40000000 IRQMASK: 0
+[ 85.606531] GPR00: 0000000000007374 c00000005a3e3990 c0000000019c9100 c00000004fe462a8
+[ 85.606531] GPR04: c00000005856d840 000000000000000e 0000000074656772 c00000004fe4a568
+[ 85.606531] GPR08: 0000000000000000 c000000058568004 0000000001744090 0000000000000000
+[ 85.606531] GPR12: 00000000e8086002 c000000001d60000 00007fffddd522d0 0000000000000000
+[ 85.606531] GPR16: 0000000000000000 0000000000000000 0000000000000000 c00000000755e07c
+[ 85.606531] GPR20: c0000000598caca8 c00000005a3e3a58 0000000000000000 c000000058292f00
+[ 85.606531] GPR24: c000000000eea710 0000000000000000 c00000005856d840 c00000000755e074
+[ 85.606531] GPR28: 000000006518907d c00000005a3e3a68 c00000004fe4b160 00000000027c47b6
+[ 85.607079] NIP [c000000000e81168] rb_insert_color+0x18/0x1c0
+[ 85.607137] LR [c00000000054f240] ext4_htree_store_dirent+0x140/0x1c0
+[ 85.607186] Call Trace:
+[ 85.607208] [c00000005a3e3990] [c00000000054f158] ext4_htree_store_dirent+0x58/0x1c0 (unreliable)
+[ 85.607279] [c00000005a3e39e0] [c000000000594cd8] htree_dirblock_to_tree+0x1b8/0x380
+[ 85.607340] [c00000005a3e3b00] [c0000000005962c0] ext4_htree_fill_tree+0xc0/0x3f0
+[ 85.607401] [c00000005a3e3c00] [c00000000054ebe4] ext4_readdir+0x814/0xce0
+[ 85.607459] [c00000005a3e3d40] [c000000000472d6c] iterate_dir+0x1fc/0x280
+[ 85.607511] [c00000005a3e3d90] [c0000000004746f0] ksys_getdents64+0xa0/0x1f0
+[ 85.607572] [c00000005a3e3e00] [c000000000474868] sys_getdents64+0x28/0x130
+[ 85.607622] [c00000005a3e3e20] [c00000000000b388] system_call+0x5c/0x70
+[ 85.607672] Instruction dump:
+[ 85.607703] 4082ffe8 4e800020 38600000 4e800020 60000000 60000000 e9230000 2c290000
+[ 85.607764] 4182018c e9490000 71480001 4c820020 <e90a0008> 7c284840 2fa80000 4182006c
+[ 85.607827] ---[ end trace cfc53af0f8d62cef ]---
+[ 85.610600]
+[ 86.611522] BUG: Unable to handle kernel data access at 0xc000030058567eff
+[ 86.611604] Faulting instruction address: 0xc000000000403aa8
+[ 86.611656] Oops: Kernel access of bad area, sig: 11 [#2]
+[ 86.611697] LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+[ 86.611748] Modules linked in: ocfs2 quota_tr
 
-> These patches try to help resolve the issue with proper
-> shutdown by turning off the PMIC.
-
-As mentioned elsewhere[1], although this is what the BSP kernel seems to 
-do, and in practice it's unlikely to matter for the majority of devboard 
-users like you and me, I still feel a bit uncomfortable with this 
-solution for systems using ATF as in principle the secure world might 
-want to know about orderly shutdowns, and this effectively makes every 
-shutdown an unexpected power loss from secure software's point of view.
-
-Robin.
-
-[1] 
-http://lists.infradead.org/pipermail/linux-rockchip/2019-December/028183.html
-
-> For reference
-> RK805 PMCI data sheet:
-> [0] http://rockchip.fr/RK805%20datasheet%20V1.3.pdf
-> RK808 PMIC data sheet:
-> [1] http://rockchip.fr/RK808%20datasheet%20V1.4.pdf
-> RK817 PMIC data sheet:
-> [2] http://rockchip.fr/RK817%20datasheet%20V1.01.pdf
-> RK818 PMIC data sheet:
-> [3] http://rockchip.fr/RK818%20datasheet%20V1.0.pdf
-> 
-> Reboot issue:
-> My guess is that we need to some proper sequence of
-> setting to PMCI to perform clean.
-> 
-> If you have any input please share them.
-> 
-> Tested on SBC
-> Rock960 Model A
-> Odroid N1
-> Rock64
-> 
-> -Anand Moon
-> 
-> Anand Moon (8):
->    mfd: rk808: Refactor shutdown functions
->    mfd: rk808: use syscore for RK805 PMIC shutdown
->    mfd: rk808: use syscore for RK808 PMIC shutdown
->    mfd: rk808: use syscore for RK818 PMIC shutdown
->    mfd: rk808: cleanup unused function pointer
->    mfd: rk808: use common syscore for all PMCI for clean shutdown
->    arm64: rockchip: drop unused field from rk8xx i2c node
->    arm: rockchip: drop unused field from rk8xx i2c node
-> 
->   arch/arm/boot/dts/rk3036-kylin.dts            |   1 -
->   arch/arm/boot/dts/rk3188-px3-evb.dts          |   1 -
->   arch/arm/boot/dts/rk3288-evb-rk808.dts        |   1 -
->   arch/arm/boot/dts/rk3288-phycore-som.dtsi     |   1 -
->   arch/arm/boot/dts/rk3288-popmetal.dts         |   1 -
->   arch/arm/boot/dts/rk3288-tinker.dtsi          |   1 -
->   arch/arm/boot/dts/rk3288-veyron.dtsi          |   1 -
->   arch/arm/boot/dts/rk3288-vyasa.dts            |   1 -
->   arch/arm/boot/dts/rv1108-elgin-r1.dts         |   1 -
->   arch/arm/boot/dts/rv1108-evb.dts              |   1 -
->   arch/arm64/boot/dts/rockchip/px30-evb.dts     |   1 -
->   arch/arm64/boot/dts/rockchip/rk3328-a1.dts    |   1 -
->   arch/arm64/boot/dts/rockchip/rk3328-evb.dts   |   1 -
->   .../arm64/boot/dts/rockchip/rk3328-roc-cc.dts |   1 -
->   .../arm64/boot/dts/rockchip/rk3328-rock64.dts |   1 -
->   .../boot/dts/rockchip/rk3368-geekbox.dts      |   1 -
->   arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi |   1 -
->   .../boot/dts/rockchip/rk3368-px5-evb.dts      |   1 -
->   .../boot/dts/rockchip/rk3399-firefly.dts      |   1 -
->   .../boot/dts/rockchip/rk3399-hugsun-x99.dts   |   1 -
->   .../boot/dts/rockchip/rk3399-khadas-edge.dtsi |   1 -
->   .../boot/dts/rockchip/rk3399-leez-p710.dts    |   1 -
->   .../boot/dts/rockchip/rk3399-nanopi4.dtsi     |   1 -
->   .../boot/dts/rockchip/rk3399-orangepi.dts     |   1 -
->   arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi |   1 -
->   .../boot/dts/rockchip/rk3399-roc-pc.dtsi      |   1 -
->   .../boot/dts/rockchip/rk3399-rock-pi-4.dts    |   1 -
->   .../boot/dts/rockchip/rk3399-rock960.dtsi     |   1 -
->   .../boot/dts/rockchip/rk3399-rockpro64.dts    |   1 -
->   .../boot/dts/rockchip/rk3399-sapphire.dtsi    |   1 -
->   drivers/mfd/rk808.c                           | 144 +++++-------------
->   include/linux/mfd/rk808.h                     |   2 -
->   32 files changed, 42 insertions(+), 134 deletions(-)
-> 
+Thread from beginning 2018, so I guess this issue is pretty intermittent but
+might exist, and, perhaps, its related to specific arches/machines ?
