@@ -2,95 +2,81 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8853AC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A80C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5417F20692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:31:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="TQXKisb/"
+	by mail.kernel.org (Postfix) with ESMTP id 23B352068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfLIUbX (ORCPT
+        id S1726691AbfLIUby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:31:23 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40822 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbfLIUbW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:31:22 -0500
-Received: by mail-lj1-f195.google.com with SMTP id s22so17193106ljs.7
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 12:31:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RtSnkh/bQ3nRcwbPWyDEoC5sS6sTfNQ61n5WXag4RSg=;
-        b=TQXKisb/u+nCZaUFIHZbt6vrBToHvsyyouYG83bL9aHsrrjtRvdZJwM/ghFdOcNL0l
-         7PwEsI2aN6kU6bd43IEAstkXa6YHlDXIOgcVERCOMQHucxZJOQ9BK7Fsx2wuivc2+4VI
-         pYS+1LsVVnCQXPWL+2Y77ddGR7l38DTZ2RwKIFM9qvspawn4aM+iNu57Ek/PcDFJQ3Eb
-         itaCwV988R+Rnfy/GmZbzGIelc409+ljtTRAXZXdKrMuauXcKavAsJC/j6Lkr+MlexwH
-         XOFXIlLPFh+hANyweaeumsdP/KP5yvaPutyihrpesAZJJx8D5KVix6iJSHodZCcXXw40
-         NbyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RtSnkh/bQ3nRcwbPWyDEoC5sS6sTfNQ61n5WXag4RSg=;
-        b=tXNeBZ489OnfZ9ZCuf4jhbJ89hdICUQQDzLt8um25kN5utuunHvPsRCvBFz+5CSsew
-         +jNTW4hKrycrsbneZDft/rHBS04/T0f4a7oBSbql5e6p4Yp5N7GuWbQTXN/VZpxtF3Ea
-         fmf4EtzrhSui8OLQCP/qTkx4Q0OFjdgj5FZz689ZaVxTBtXhkhv5innBjNblTVo4tSzp
-         DL8aXqyBwtDML4omQjKlooyke+vawNWcAHUBArDW5hJzpgmSBnV6LwC1M2W3JMQ63WmY
-         +aLKdZiJyjGkD9KRQcEoZW12hpDc1OLlv5ycKmZ4sSsAf4J6JAmYjZxXAmc/WsUsw8Ag
-         Wk/Q==
-X-Gm-Message-State: APjAAAXFTM5csPwPBFsu7r/n98kKWSkR1clr1EltSbk+7Mwk98ssGXpK
-        2byl2BNEyp384eZve/CgrskRmnWk/XFDuUBDUpDQ
-X-Google-Smtp-Source: APXvYqwNuaM3T1RoYDtFsytt5qY7kCFzvkm2V35m9l8RLEbT2lVNz1KT7NTjE2alakRLWdNQcQZBGT6GCrkypO1NLyE=
-X-Received: by 2002:a2e:9d9a:: with SMTP id c26mr686698ljj.225.1575923480292;
- Mon, 09 Dec 2019 12:31:20 -0800 (PST)
+        Mon, 9 Dec 2019 15:31:54 -0500
+Received: from mga14.intel.com ([192.55.52.115]:54463 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbfLIUby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 15:31:54 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 12:25:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
+   d="scan'208";a="215208124"
+Received: from nshalmon-mobl.ger.corp.intel.com (HELO localhost) ([10.252.8.146])
+  by orsmga006.jf.intel.com with ESMTP; 09 Dec 2019 12:25:54 -0800
+Date:   Mon, 9 Dec 2019 22:25:52 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Jeffrin Jose <jeffrin@rajagiritech.edu.in>, peterz@infradead.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
+Subject: Re: [PROBLEM]:  WARNING: lock held when returning to user space!
+ (5.4.1 #16 Tainted: G )
+Message-ID: <20191209202552.GK19243@linux.intel.com>
+References: <20191207173420.GA5280@debian>
+ <20191209103432.GC3306@willie-the-truck>
 MIME-Version: 1.0
-References: <20191201183347.18122-1-frextrite@gmail.com> <20191202211915.GF17234@google.com>
- <CAHC9VhTTS43aKQojtoBRRipP7TwhaVnK7DAqpFN0J0_FNLY+sw@mail.gmail.com> <20191202233458.GN17234@google.com>
-In-Reply-To: <20191202233458.GN17234@google.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 9 Dec 2019 15:31:09 -0500
-Message-ID: <CAHC9VhSLM=MBXEXiwG+in1+WrTvVpSJxm+eYH51xRfMkoCafBA@mail.gmail.com>
-Subject: Re: [PATCH v3] kernel: audit.c: Add __rcu annotation to RCU pointer
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Amol Grover <frextrite@gmail.com>, Eric Paris <eparis@redhat.com>,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>, paulmck@kernel.org,
-        rcu@vger.kernel.org, rostedt@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209103432.GC3306@willie-the-truck>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 6:35 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> On Mon, Dec 02, 2019 at 06:24:29PM -0500, Paul Moore wrote:
-> > On Mon, Dec 2, 2019 at 4:19 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > Good idea to CC the following on RCU patches:
-> > > Paul McKenney
-> > > Steven Rostedt
-> > > (Any others on the RCU maintainers list).
-> > > And, the list: rcu@vger.kernel.org
-> > >
-> > > Could anyone Ack the patch? Looks safe and straight forward.
-> >
-> > FWIW, this looks reasonable to me, but I don't see this as a critical
-> > fix that needs to go in during the merge window.  Unless I see any
-> > objections, I'll plan on merging this into audit/next once the merge
-> > window closes.
->
-> Sounds good, thanks!
+On Mon, Dec 09, 2019 at 10:34:32AM +0000, Will Deacon wrote:
+> Hi,
+> 
+> [expanding cc list]
+> 
+> On Sat, Dec 07, 2019 at 11:04:20PM +0530, Jeffrin Jose wrote:
+> > i got the following  output related from typical dmesg output from 5.4.1 kernel
+> 
+> Was this during boot or during some other operation?
+> 
+> > ================================================
+> > WARNING: lock held when returning to user space!
+> > 5.4.1 #16 Tainted: G            E    
+> > ------------------------------------------------
+> > tpm2-abrmd/691 is leaving the kernel with locks still held!
+> > 2 locks held by tpm2-abrmd/691:
+> >  #0: ffff8881ee784ba8 (&chip->ops_sem){.+.+}, at: tpm_try_get_ops+0x2b/0xc0 [tpm]
+> >  #1: ffff8881ee784d88 (&chip->tpm_mutex){+.+.}, at: tpm_try_get_ops+0x57/0xc0 [tpm]
+> 
+> Can you reproduce this failure on v5.5-rc1?
 
-FYI, it's in audit/next now.  Thanks again.
+Does this appear after variable amount of time or detemitically always
+at certain point of time (e.g. when the daemon starts or perhaps always
+when doing a certain operations with TSS)?
 
--- 
-paul moore
-www.paul-moore.com
+Do we have possibility to get the user code path that gets executed when
+this happens?
+
+/Jarkko
