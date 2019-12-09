@@ -2,108 +2,130 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F2FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BBBC00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD562077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:26:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dym3GMJQ"
+	by mail.kernel.org (Postfix) with ESMTP id 8DDE92077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbfLIS0B (ORCPT
+        id S1726881AbfLIS0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:26:01 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:46356 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfLIS0A (ORCPT
+        Mon, 9 Dec 2019 13:26:31 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:37364 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726408AbfLIS0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:26:00 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9IPtM9095286;
-        Mon, 9 Dec 2019 12:25:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575915955;
-        bh=wHjPXA26kNlnCk1JrNudGWLJavjZeOcEMg0UiUtbdZ8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dym3GMJQR0LJ3UuJ6i408gxdRMDtMZD5zTxWSbnrjkuG+QTkTXZLvYVt8b9H/xoOL
-         ItOs1wwi2IciH1iaNPXfrfWcXDMjfl+67I6wfTwAWLyDL2cplKYfWwFxiPQxZZy1Dq
-         JBj1faQQC+Iv4gMz5gD4BnoQ1pCwkZDtKfcKngqs=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9IPsIO055343
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Dec 2019 12:25:55 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 12:25:54 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 12:25:54 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9IPsad010705;
-        Mon, 9 Dec 2019 12:25:54 -0600
-Subject: Re: [PATCH net-next v2 0/2] Rebase of patches
-To:     David Miller <davem@davemloft.net>
-CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <bunk@kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>
-References: <20191209175943.23110-1-dmurphy@ti.com>
- <20191209.101005.1980841296607612612.davem@davemloft.net>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <898c9346-311e-4c93-9f83-afe255b54243@ti.com>
-Date:   Mon, 9 Dec 2019 12:23:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 13:26:31 -0500
+Received: (qmail 4869 invoked by uid 2102); 9 Dec 2019 13:26:30 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 9 Dec 2019 13:26:30 -0500
+Date:   Mon, 9 Dec 2019 13:26:30 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Jiri Kosina <jikos@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>
+cc:     syzbot <syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: INFO: rcu detected stall in hub_event
+In-Reply-To: <Pine.LNX.4.44L0.1911251216350.1565-100000@iolanthe.rowland.org>
+Message-ID: <Pine.LNX.4.44L0.1912091318210.1462-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20191209.101005.1980841296607612612.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David
+On Mon, 25 Nov 2019, Alan Stern wrote:
 
-On 12/9/19 12:10 PM, David Miller wrote:
-> From: Dan Murphy <dmurphy@ti.com>
-> Date: Mon, 9 Dec 2019 11:59:41 -0600
+> Jiri:
+> 
+> On Sat, 23 Nov 2019, Andrey Konovalov wrote:
+> 
+> > I'm not sure, but the stack trace reminds me of this issue, so this
+> > report might be related:
+> > 
+> > https://groups.google.com/d/msg/syzkaller-bugs/X0zVbh8aFEM/NsPcshjxBgAJ
+> 
+> No, the issue is quite different, although it is also a bug in the HID
+> parser.  The big problem is that the parser assumes all usages will
+> belong to a collection.
+> 
+> There's also a second, smaller bug: hid_apply_multipler() assumes every
+> Resolution Multiplier control is associated with a Logical Collection
+> (i.e., there's no way the routine can ever set multiplier_collection to
+> NULL) even though there's a big quotation from the HID Usage Table
+> manual at the start of the function saying that they don't have to be.  
+> This bug can be fixed easily, though.
+> 
+> The first bug is more troublesome.  hid_add_usage() explicitly sets the 
+> parser->local.collection_index[] entry to 0 if the current collection 
+> stack is empty.  But there's no way to distinguish this 0 from a 
+> genuine index value that happens to point to the first collection!
+> 
+> So what should happen when a usage appears outside of all collections?  
+> Is it a bug in the report descriptor (the current code suggests that it 
+> is not)?
+> 
+> Or should we use a different sentinel value for the collection_index[]
+> entry, one that cannot be confused with a genuine value, such as
+> UINT_MAX?
+
+On Tue, 26 Nov 2019, Jiri Kosina wrote:
+
+> Alan, did you get a test result from syzbot on this patch? My mailbox 
+> doesn't seem to have it.
+
+On Tue, 26 Nov 2019, syzbot wrote:
+
+> Hello,
 >
->> This is a rebase of the dp83867 patches on top of the net-next tree
-> That's not what this patch series does.
+> syzbot has tested the proposed patch and the reproducer did not trigger
+> crash:
 >
-> The introductory posting is where you describe, at a high level, what the
-> whole patch series is doing as a unit, how it is doing it, and why it is
-> doing it that way.
->
-> It also serves as the single email I can respond to when I want to let you
-> know that I've applied the patch series.
->
-> Please read the documentation under Documentation/ if you still are unsure
-> what this introductory posting is all about and how you should compose one.
->
-> Thank you.
+> Reported-and-tested-by:
+> syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com
 
-I understand what a cover letter is.
+Jiri:
 
-I don't normally see cover letters required for small patchsets like 
-this in other trees.  The commit messages should explain in detail what 
-is being changed as the cover letters are not committed to the kernel.  
-I only add cover letters when the patchsets are significant, per the 
-Documentation/ you eluded to.
+Now we've got the answer.  The current question is: What should I do
+with the patch?  It seems rather ad-hoc, not a proper solution to the
+problem.
 
-But if you require this for the linux net tree then I can add them as I 
-move forward it is not a problem either way.
+To refresh your memory, here is the patch that syzbot tested:
 
-Dan
+ drivers/hid/hid-core.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
+Index: usb-devel/drivers/hid/hid-core.c
+===================================================================
+--- usb-devel.orig/drivers/hid/hid-core.c
++++ usb-devel/drivers/hid/hid-core.c
+@@ -1057,6 +1057,8 @@ static void hid_apply_multiplier(struct
+ 	while (multiplier_collection->parent_idx != -1 &&
+ 	       multiplier_collection->type != HID_COLLECTION_LOGICAL)
+ 		multiplier_collection = &hid->collection[multiplier_collection->parent_idx];
++	if (multiplier_collection->type != HID_COLLECTION_LOGICAL)
++		multiplier_collection = NULL;
+ 
+ 	effective_multiplier = hid_calculate_multiplier(hid, multiplier);
+ 
+@@ -1191,6 +1193,9 @@ int hid_open_report(struct hid_device *d
+ 	}
+ 	device->collection_size = HID_DEFAULT_NUM_COLLECTIONS;
+ 
++	/* Needed for usages before the first collection */
++	device->collection[0].parent_idx = -1;
++
+ 	ret = -EINVAL;
+ 	while ((start = fetch_item(start, end, &item)) != NULL) {
+ 
+Alan Stern
 
