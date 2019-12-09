@@ -2,112 +2,193 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56DEC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43D1C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8F1D20637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575924459;
-	bh=xjQtbBTSqhoMGJwn3RUeOi50GwFWIhX8xMZTaQKQu9c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zG2kjaHraAkh2YEaH3FSVF9ZqFTrJ6qaVrsbUlNnwiD7V7XVpd2XIY+S8J3/no29X
-	 cyTgeqe66KdweiPD12GKyuNuHPderVqGZq9Q6YPwvKEdM7tm/W+dsWSNlyHBEV6Rvh
-	 r8A5hBDgNHNJ55LvvCbCHpFi8DHuSRfb3SLaW/Ts=
+	by mail.kernel.org (Postfix) with ESMTP id 9E0F62068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:50:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KewqzZ67"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfLIUrj (ORCPT
+        id S1726682AbfLIUuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:47:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:45592 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbfLIUri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:47:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E147A328;
-        Mon,  9 Dec 2019 12:47:37 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E6833F718;
-        Mon,  9 Dec 2019 12:47:37 -0800 (PST)
-Date:   Mon, 9 Dec 2019 20:47:35 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com, allison@lohutok.net, pdeschrijver@nvidia.com,
-        pgaikwad@nvidia.com, mturquette@baylibre.com,
-        horms+renesas@verge.net.au, Jisheng.Zhang@synaptics.com,
-        krzk@kernel.org, arnd@arndb.de, spujar@nvidia.com,
-        josephl@nvidia.com, vidyas@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        alexios.zavras@intel.com, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v3 09/15] ASoC: tegra: Add fallback for audio mclk
-Message-ID: <20191209204735.GK5483@sirena.org.uk>
-References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-10-git-send-email-skomatineni@nvidia.com>
- <20191209164027.GG5483@sirena.org.uk>
- <7fe879fd-dae3-1e64-1031-cd9f00e31552@gmail.com>
+        Mon, 9 Dec 2019 15:50:17 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44245 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfLIUuR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 15:50:17 -0500
+Received: by mail-ot1-f68.google.com with SMTP id x3so13440454oto.11
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 12:50:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=a0z9b/fkZig/G7onSfzc2Xau8/wqkpIlIH1o9ziXfO0=;
+        b=KewqzZ67eCJA9rsLegJPup+LEo0UaO8XtrPvGuu19iDVHzUu1NLEt49+HiTE2qqDAi
+         Qgs1RhtYHm4QDykQec0Zr66/Q4Btt5fbLgPZMVuM4wJIT5BBI/drs/AV+vzFLi6/WJef
+         x1D75rymK5cMsZ918vJFmzmjIv8XyTDXiO6eaEVNMQHf47qt1mlIngtj4UJ6CKywyefd
+         MgwAQ/YNkUtC0sx5g+06Au7iKg6f5ZGYovmfUtqqXlV9yJrHrIWwoOztZzmn9ncSp+0/
+         yjIVMx8iZTcdJRyxYzlxqt/iuW4eO3hPyy7h5R9pzkdBeQ4Z31tsMOEnCpB2eVWbkl29
+         t7qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=a0z9b/fkZig/G7onSfzc2Xau8/wqkpIlIH1o9ziXfO0=;
+        b=b9DkBJn2zOVogMRy4pFRlfWcGJVEIJIK4L64F/YT00VH0Cu5LyOvU9YuC9LDqOwKm1
+         PaXHKpisQm3JKWDoMv8L1GKfOCZsOCxUD+7B4bxKU6lwbZyB6hia4XL6WXmb1dFrsDTC
+         CPxmTNSbo3VmBc/yhnw/ZnjVMOmf8N44cFt6KwoqjlgzzoSr0ihFeuwIU9N7alUpgt9u
+         LwLpaeGLg+uWm0KOP8dGMH+ia7YmNLkcrLDVwKsgnBNeeXD16SHqW0igpM8l23MCGvQE
+         0SMhfNHsAyAWV5ditSb7UKvGHwGxgrFTLAMR3o8cr68zCQP/hGZHYWIhZSYfdo/jUvgK
+         G6og==
+X-Gm-Message-State: APjAAAUNm5iy1G0nn5rY6qqOF5fqDwAzkGRSvVquCvZ2h5CJR4OcsqKw
+        Rva7FXbsrTtXGID4qJqRYh4=
+X-Google-Smtp-Source: APXvYqwcs6FBEhf12NatET7C92kg8e/a6i0Gd/Cl4K8D9L5c4Ksvjlg5tApvV70N2s9qDrj9rwG8bQ==
+X-Received: by 2002:a05:6830:20cf:: with SMTP id z15mr23195602otq.277.1575924615824;
+        Mon, 09 Dec 2019 12:50:15 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id f3sm389396oto.57.2019.12.09.12.50.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 12:50:15 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] mtd: onenand_base: Adjust indentation in onenand_read_ops_nolock
+Date:   Mon,  9 Dec 2019 13:50:10 -0700
+Message-Id: <20191209205010.4115-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LQ77YLfPrO/qF/pM"
-Content-Disposition: inline
-In-Reply-To: <7fe879fd-dae3-1e64-1031-cd9f00e31552@gmail.com>
-X-Cookie: We read to say that we have read.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Clang warns:
 
---LQ77YLfPrO/qF/pM
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+../drivers/mtd/nand/onenand/onenand_base.c:1269:3: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        while (!ret) {
+        ^
+../drivers/mtd/nand/onenand/onenand_base.c:1266:2: note: previous
+statement is here
+        if (column + thislen > writesize)
+        ^
+1 warning generated.
 
-On Mon, Dec 09, 2019 at 11:31:59PM +0300, Dmitry Osipenko wrote:
-> 09.12.2019 19:40, Mark Brown =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+This warning occurs because there is a space before the tab of the while
+loop. There are spaces at the beginning of a lot of the lines in this
+block, remove them so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
 
-> > Why would this need to be a stable fix?  Presumably people with stable
-> > kernels are using the old device tree anyway?
+Fixes: a8de85d55700 ("[MTD] OneNAND: Implement read-while-load")
+Link: https://github.com/ClangBuiltLinux/linux/issues/794
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/mtd/nand/onenand/onenand_base.c | 64 ++++++++++++-------------
+ 1 file changed, 32 insertions(+), 32 deletions(-)
 
-> At least Rob Herring is asking to maintain backwards compatibility
-> because some ditros are using newer device-trees with stable kernels.
+diff --git a/drivers/mtd/nand/onenand/onenand_base.c b/drivers/mtd/nand/onenand/onenand_base.c
+index 77bd32a683e1..c84ac749d70e 100644
+--- a/drivers/mtd/nand/onenand/onenand_base.c
++++ b/drivers/mtd/nand/onenand/onenand_base.c
+@@ -1266,26 +1266,26 @@ static int onenand_read_ops_nolock(struct mtd_info *mtd, loff_t from,
+ 	if (column + thislen > writesize)
+ 		thislen = writesize - column;
+ 
+- 	while (!ret) {
+- 		/* If there is more to load then start next load */
+- 		from += thislen;
+- 		if (read + thislen < len) {
++	while (!ret) {
++		/* If there is more to load then start next load */
++		from += thislen;
++		if (read + thislen < len) {
+ 			this->command(mtd, ONENAND_CMD_READ, from, writesize);
+- 			/*
+- 			 * Chip boundary handling in DDP
+- 			 * Now we issued chip 1 read and pointed chip 1
++			/*
++			 * Chip boundary handling in DDP
++			 * Now we issued chip 1 read and pointed chip 1
+ 			 * bufferram so we have to point chip 0 bufferram.
+- 			 */
+- 			if (ONENAND_IS_DDP(this) &&
+- 			    unlikely(from == (this->chipsize >> 1))) {
+- 				this->write_word(ONENAND_DDP_CHIP0, this->base + ONENAND_REG_START_ADDRESS2);
+- 				boundary = 1;
+- 			} else
+- 				boundary = 0;
+- 			ONENAND_SET_PREV_BUFFERRAM(this);
+- 		}
+- 		/* While load is going, read from last bufferRAM */
+- 		this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
++			 */
++			if (ONENAND_IS_DDP(this) &&
++			    unlikely(from == (this->chipsize >> 1))) {
++				this->write_word(ONENAND_DDP_CHIP0, this->base + ONENAND_REG_START_ADDRESS2);
++				boundary = 1;
++			} else
++				boundary = 0;
++			ONENAND_SET_PREV_BUFFERRAM(this);
++		}
++		/* While load is going, read from last bufferRAM */
++		this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
+ 
+ 		/* Read oob area if needed */
+ 		if (oobbuf) {
+@@ -1302,23 +1302,23 @@ static int onenand_read_ops_nolock(struct mtd_info *mtd, loff_t from,
+ 		}
+ 
+  		/* See if we are done */
+- 		read += thislen;
+- 		if (read == len)
+- 			break;
+- 		/* Set up for next read from bufferRAM */
+- 		if (unlikely(boundary))
+- 			this->write_word(ONENAND_DDP_CHIP1, this->base + ONENAND_REG_START_ADDRESS2);
+- 		ONENAND_SET_NEXT_BUFFERRAM(this);
+- 		buf += thislen;
++		read += thislen;
++		if (read == len)
++			break;
++		/* Set up for next read from bufferRAM */
++		if (unlikely(boundary))
++			this->write_word(ONENAND_DDP_CHIP1, this->base + ONENAND_REG_START_ADDRESS2);
++		ONENAND_SET_NEXT_BUFFERRAM(this);
++		buf += thislen;
+ 		thislen = min_t(int, writesize, len - read);
+- 		column = 0;
+- 		cond_resched();
+- 		/* Now wait for load */
+- 		ret = this->wait(mtd, FL_READING);
+- 		onenand_update_bufferram(mtd, from, !ret);
++		column = 0;
++		cond_resched();
++		/* Now wait for load */
++		ret = this->wait(mtd, FL_READING);
++		onenand_update_bufferram(mtd, from, !ret);
+ 		if (mtd_is_eccerr(ret))
+ 			ret = 0;
+- 	}
++	}
+ 
+ 	/*
+ 	 * Return success, if no ECC failures, else -EBADMSG
+-- 
+2.24.0
 
-You're talking about forwards compatibility not backwards here.  Are
-those distros actually using LTS kernels?
-
-> I'm personally also tending to use the newer DTB with older kernel
-> version whenever there is a need to check something using stable kernel.
-> Perhaps losing sound is not very important, but will be nicer if that
-> doesn't happen.
-
-That really does sound like a "you broke it, you get all the pieces"
-situation TBH...  I'd be a lot more comfortable if the stable kernels
-were sticking to bugfix only though I do appreciate that they're not
-really that any more.
-
---LQ77YLfPrO/qF/pM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3usucACgkQJNaLcl1U
-h9DLZgf/bl+y6tN1f9+6Q5i4PkGjVAppOzDxi0mDZ6TrvcSLsNfAhK9+1IH7w0+x
-F90tauu6Flsm9/TnoDK5Csuotm+nKlkXidXNL5qfSzW4azrXes5gdOrwpicKOnEG
-7T92jLjHOCPaANNqKrtX+29qAamyxmKOCW/8AKH8SNjerkCDZfZks3yjqilm4i4A
-6jwUUAi9ij8TvZlSGteUlqfmib7FdxodH0Gud2q3lYFUKWrKpGnPh823iHtTpiKK
-EGDYhbcuS1BeEP6dB/7baejQjkrEjpz7YslmD2KjGlUWIRVEpKPqU/SY63e7mChB
-UDCefmC858Tzlkyi7AFFmjnFrTfrMQ==
-=IA00
------END PGP SIGNATURE-----
-
---LQ77YLfPrO/qF/pM--
