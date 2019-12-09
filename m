@@ -2,121 +2,109 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C8EC2BD09
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECEDC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E406206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 580B32068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:52:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DVG3I5AZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FogYBJaC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfLIXum (ORCPT
+        id S1727333AbfLIXws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 18:50:42 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43457 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726592AbfLIXum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 18:50:42 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47X0Lk37jXz9sP3;
-        Tue, 10 Dec 2019 10:50:38 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1575935440;
-        bh=tB1tEE9yZsNC/cIieXkeqYkTAoKYSZQuXenCeTy4aEM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DVG3I5AZtu7fc8hfNiPqoS1ZDntDLcPlb1hE+k1IjznrIK8jZy/y7wgsGhdZeduXO
-         l/d+1T+t5XINVdIWwevj13MR1vlRBnfBNerqcYj7KOzDYs2nD0GcD11vIhzAv0rV9M
-         OO3eWj6rFweX3GmxqhOEeetkVNdOOgCz8EZhtimJzZg8Ef4CHAa2M8r08nsg0TyXGd
-         A2ObZpgHiPQepNs3PQWj4GR1940CP1tdYAAp2NSbhb28Y80HVoERI5rWQa0HSZGR7F
-         cKXMqY19M44nBzLr0zS4/vLui/tLHBAg8uwpPffMhs6D8ahCO5loftcDXQLirvV5xY
-         KGTzG7ccnOqYQ==
-Date:   Tue, 10 Dec 2019 10:50:37 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paul Moore <paul@paul-moore.com>,
-        David Howells <dhowells@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: linux-next: manual merge of the selinux tree with the keys tree
-Message-ID: <20191210105037.085b3418@canb.auug.org.au>
+        Mon, 9 Dec 2019 18:52:48 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44791 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfLIXwr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 18:52:47 -0500
+Received: by mail-pg1-f195.google.com with SMTP id x7so7911421pgl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 15:52:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GY/+1o1zLdYfvCqb5s+Ly8hX35JVekQIGLz3reNdQ0w=;
+        b=FogYBJaCrQ5GcvCWjiTFxrHKEneYcAB8vY4Tjhcat7UFdWay6/83ZOXe9McWW+X5ig
+         Y7813rzWdHgwZpJFd1S09IEXMnWvL3d8TJj4M4sMXrBlbYm2CNcAHMtEmWDl/1ZIltZJ
+         qyHpBdGQAXi96ky96uVlmQYgqidE40eTHqsyg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GY/+1o1zLdYfvCqb5s+Ly8hX35JVekQIGLz3reNdQ0w=;
+        b=N5+wQSK3KzdSLjGx982IUIKqk0eu5gWQ+/FLkJbmyTBa22gRtwpLIOe96C3BqMAYI2
+         ECdGCNgPWOOiWi/d41wMQ8igLx6QiQCz2zZoZKgBsyJqrDa2D9DmFEN583SJFk8x4tsI
+         FeCKUUFFvrI/FCaLWtmhx1vQK1WwB2+cVv37nCvzalkzHLxVYZj0eV2jeCSymkLjuhay
+         vPEG/h3MT/6pK63yJRK+PYXT7bQ9hz07W2bwgOiSurn9pHgZnOkchVsk5WnNvth7to2A
+         BEv0R5wZFVGs8j3UPU9EfyeTzIQaBhyUjCgtgBmGXfmOvgCiJwhReJqVg4WGjKf4Ihlm
+         Hq8g==
+X-Gm-Message-State: APjAAAWEx6eGgWobtFQpZlfU1Z/8QngxEBFFW1Fg/NVhnJJBA9HtWk0w
+        Dfcp07ZqfWc7CBzlCau53IoyXw==
+X-Google-Smtp-Source: APXvYqy9TUL5rqDcp/B/qy16AJcabYQBNLq0iyZvX4GNbmTFLCh8dcHod2fiqqveCZmOOIunkNEaxw==
+X-Received: by 2002:a05:6a00:5b:: with SMTP id i27mr32641625pfk.112.1575935567260;
+        Mon, 09 Dec 2019 15:52:47 -0800 (PST)
+Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
+        by smtp.gmail.com with ESMTPSA id k66sm635587pgk.16.2019.12.09.15.52.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 15:52:46 -0800 (PST)
+From:   Brian Norris <briannorris@chromium.org>
+To:     linux-wireless@vger.kernel.org
+Cc:     <linux-kernel@vger.kernel.org>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Brian Norris <briannorris@chromium.org>
+Subject: [PATCH] mwifiex: start out with BSS type ANY, not STA
+Date:   Mon,  9 Dec 2019 15:51:16 -0800
+Message-Id: <20191209235116.142692-1-briannorris@chromium.org>
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LZvt=Xvn9U/a5nMBHM1SIvx";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/LZvt=Xvn9U/a5nMBHM1SIvx
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+mwifiex starts out by setting up 3 possible interfaces, but usually only
+1 of them gets initialized later. Currently, we leave the
+"uninitialized" interfaces with bss_type==0, which means
+MWIFIEX_BSS_TYPE_STA. This gives misleading results for things like
+mwifiex_get_intf_num(..., MWIFIEX_BSS_TYPE_STA), giving the answer "3"
+even when we only have 1 initialized STA.
 
-Hi all,
+This bug doesn't affect functions like mwifiex_get_unused_bss_num(),
+which are looking at the bss_mode field instead (to see
+NL80211_IFTYPE_UNSPECIFIED, which happens to be 0...) for finding
+uninitialized interfaces.
 
-Today's linux-next merge of the selinux tree got a conflict in:
+Let's make mwifiex_get_intf_num() give a proper answer, by making its
+initial value the proper uninitialized value -- ANY.
 
-  include/linux/lsm_audit.h
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
+ drivers/net/wireless/marvell/mwifiex/main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-between commit:
+diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
+index a9657ae6d782..a9063411d243 100644
+--- a/drivers/net/wireless/marvell/mwifiex/main.c
++++ b/drivers/net/wireless/marvell/mwifiex/main.c
+@@ -97,6 +97,8 @@ static int mwifiex_register(void *card, struct device *dev,
+ 
+ 		adapter->priv[i]->adapter = adapter;
+ 		adapter->priv_num++;
++		/* Start out as uninitialized. */
++		adapter->priv[i]->bss_type = MWIFIEX_BSS_TYPE_ANY;
+ 	}
+ 	mwifiex_init_lock_list(adapter);
+ 
+-- 
+2.24.0.393.g34dc348eaf-goog
 
-  59336b0f8000 ("smack: Implement the watch_key and post_notification hooks=
-")
-
-from the keys tree and commit:
-
-  59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
-
-from the selinux tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/lsm_audit.h
-index 734d67889826,99d629fd9944..000000000000
---- a/include/linux/lsm_audit.h
-+++ b/include/linux/lsm_audit.h
-@@@ -74,7 -74,7 +74,8 @@@ struct common_audit_data=20
-  #define LSM_AUDIT_DATA_FILE	12
-  #define LSM_AUDIT_DATA_IBPKEY	13
-  #define LSM_AUDIT_DATA_IBENDPORT 14
- -#define LSM_AUDIT_DATA_LOCKDOWN 15
- +#define LSM_AUDIT_DATA_NOTIFICATION 15
-++#define LSM_AUDIT_DATA_LOCKDOWN 16
-  	union 	{
-  		struct path path;
-  		struct dentry *dentry;
-
---Sig_/LZvt=Xvn9U/a5nMBHM1SIvx
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3u3c0ACgkQAVBC80lX
-0GwzYQf/bWcyUWEOX5e1WKK6yzk6As0CLMr5tBEe/Dy0ckM2VgdzQNWYWVXnpgqf
-uwr5VE///GYRdXpsJysES6yppb5ShKnIl0ZE5eU4NrLNYIY9CkCsgoQqMGMgevkM
-YaZ0c22Af73cSlV6MTHmdtSJOarYJgqApQsnsS1WvH06d7OBBTZkzYKBpIEozDcu
-YaE8PyQ70Y0NE+kBWmVzGYMb0YczVPMLrj5iKFCvOlSRjQT182BxN64HFSfc6xEP
-vUDrzJSGjlgKnj8Sj8u1itXfAYn93nGLlt6MjjHRR5mBTFb5Hd2n1vmWVLa/txQw
-UkcxXsUO4nAAiNVaX+ns3im30BRFaA==
-=1cdt
------END PGP SIGNATURE-----
-
---Sig_/LZvt=Xvn9U/a5nMBHM1SIvx--
