@@ -2,159 +2,136 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B26DDC04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D50E5C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D049206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F432071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:37:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fbeEtoMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfLIVea (ORCPT
+        id S1726683AbfLIVhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:34:30 -0500
-Received: from mga01.intel.com ([192.55.52.88]:18340 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726408AbfLIVea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:34:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 13:34:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
-   d="scan'208";a="224929832"
-Received: from tstruk-mobl1.jf.intel.com (HELO [10.7.196.67]) ([10.7.196.67])
-  by orsmga002.jf.intel.com with ESMTP; 09 Dec 2019 13:34:29 -0800
-Subject: Re: [PROBLEM]: WARNING: lock held when returning to user space!
- (5.4.1 #16 Tainted: G )
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Jeffrin Jose <jeffrin@rajagiritech.edu.in>, peterz@infradead.org,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
-References: <20191207173420.GA5280@debian>
- <20191209103432.GC3306@willie-the-truck>
- <20191209202552.GK19243@linux.intel.com>
-From:   Tadeusz Struk <tadeusz.struk@intel.com>
-Autocrypt: addr=tadeusz.struk@intel.com; keydata=
- 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
-Message-ID: <34e5340f-de75-f20e-7898-6142eac45c13@intel.com>
-Date:   Mon, 9 Dec 2019 13:34:29 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 16:37:05 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50605 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfLIVhF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 16:37:05 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p9so963279wmg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 13:37:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KMJA3Di2ivxRbsSzXza7HsfMjXgBB0+KSpDg3SPUVLQ=;
+        b=fbeEtoMzrLwHuNHnyz+UGn1uIq/g+CCc1Vu86q1v5Y4P/Ybr/MCajyIR5+R5yVpZVb
+         m+j3G2l6qbjJ69H3hu8o6ZXNc6SMFxMfQ6YLAxAwNeGvUJez38zK0yRa+gFf6+IeDTHk
+         X+CdKDHe+vLzB+uUNXfuWrvkP8BWbNAwzUDbwhjcmog1nh/FkCVmTjtAiLFJuRkUP2TV
+         8xR4laFN7pI25TkJ0M8Vk4ATu0qzO0Dy/SyoILHA1J9t0ZRHLN8NYKnwnZJKu8ZM0rl+
+         S3cL8FpaGea5mEPvlSfQ5km/1EFdvbraDBWPTL8EwyVee4kkYNCwN+c//TFKMEooXcne
+         W4ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KMJA3Di2ivxRbsSzXza7HsfMjXgBB0+KSpDg3SPUVLQ=;
+        b=Sl7ogIcSihgw5S+utvoaoVUsGs8TMG+rkJ9xXztIbonlgnXHfssajrdOPqRk7/aFkw
+         iFyOlZYfFljDln1IXPMdsXBSfliRAmm+kfLPYdFkbWVJSeQNLHXJxYCyasT8gwxUCGa1
+         6O+5MG2tz0VfTFC1qDYnVHyCPh9/9tUsJjpTiZwKA72DxwERdc7cia8SIQ12ri8ixUID
+         54t5OAw10eLKtpnyEu1hehB4SQ0i23V3ULd0eOY22ZaQAM8Wii/yeoa97XSYmmaYQLkI
+         q8twvnN4k0suIAOeEyEuHhhb7+w9GywsJxatekRWRP+elVMENSbhVUoCjS4/n0Lcs1IM
+         C/AA==
+X-Gm-Message-State: APjAAAWvlyPoKFgapM2Kto2C5TO2tgY2bXP3hyxmoa3/XnPcFxEL99x4
+        gBqI9LCZa3NqbxDoBIwP2BY=
+X-Google-Smtp-Source: APXvYqwXM97IR9th+kenNyJrOC96LNA0sb6otipYNvRNIp2l2DLLT8pGqubHjKwnSLLSr7fNt92ohQ==
+X-Received: by 2002:a7b:cd82:: with SMTP id y2mr1244266wmj.58.1575927423069;
+        Mon, 09 Dec 2019 13:37:03 -0800 (PST)
+Received: from localhost.localdomain ([2a02:a03f:40f6:4600:a51f:44c:fbfb:c44])
+        by smtp.gmail.com with ESMTPSA id i16sm731578wmb.36.2019.12.09.13.37.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 13:37:02 -0800 (PST)
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>
+Subject: [PATCH v2] misc: xilinx_sdfec: fix xsdfec_poll()'s return type
+Date:   Mon,  9 Dec 2019 22:36:55 +0100
+Message-Id: <20191209213655.57985-1-luc.vanoostenryck@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20191209202552.GK19243@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/9/19 12:25 PM, Jarkko Sakkinen wrote:
-> On Mon, Dec 09, 2019 at 10:34:32AM +0000, Will Deacon wrote:
->> Hi,
->>
->> [expanding cc list]
->>
->> On Sat, Dec 07, 2019 at 11:04:20PM +0530, Jeffrin Jose wrote:
->>> i got the following  output related from typical dmesg output from 5.4.1 kernel
->>
->> Was this during boot or during some other operation?
->>
->>> ================================================
->>> WARNING: lock held when returning to user space!
->>> 5.4.1 #16 Tainted: G            E    
->>> ------------------------------------------------
->>> tpm2-abrmd/691 is leaving the kernel with locks still held!
->>> 2 locks held by tpm2-abrmd/691:
->>>  #0: ffff8881ee784ba8 (&chip->ops_sem){.+.+}, at: tpm_try_get_ops+0x2b/0xc0 [tpm]
->>>  #1: ffff8881ee784d88 (&chip->tpm_mutex){+.+.}, at: tpm_try_get_ops+0x57/0xc0 [tpm]
->>
->> Can you reproduce this failure on v5.5-rc1?
-> 
-> Does this appear after variable amount of time or detemitically always
-> at certain point of time (e.g. when the daemon starts or perhaps always
-> when doing a certain operations with TSS)?
-> 
-> Do we have possibility to get the user code path that gets executed when
-> this happens?
+xsdfec_poll() is defined as returning 'unsigned int' but the
+.poll method is declared as returning '__poll_t', a bitwise type.
 
-I think that's expected for a non-blocking operation.
-To get rid of the warning it should be changed to something like this:
+Fix this by using the proper return type and using the EPOLL
+constants instead of the POLL ones, as required for __poll_t.
 
-diff --git a/drivers/char/tpm/tpm-dev-common.c
-b/drivers/char/tpm/tpm-dev-common.c
-index 2ec47a69a2a6..47f1c0c5c8de 100644
---- a/drivers/char/tpm/tpm-dev-common.c
-+++ b/drivers/char/tpm/tpm-dev-common.c
-@@ -61,6 +61,12 @@ static void tpm_dev_async_work(struct work_struct *work)
+CC: Derek Kiernan <derek.kiernan@xilinx.com>
+CC: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Acked-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+---
 
- 	mutex_lock(&priv->buffer_mutex);
- 	priv->command_enqueued = false;
-+	ret = tpm_try_get_ops(priv->chip);
-+	if (ret) {
-+		priv->response_length = ret;
-+		goto out;
-+	}
-+
- 	ret = tpm_dev_transmit(priv->chip, priv->space, priv->data_buffer,
- 			       sizeof(priv->data_buffer));
- 	tpm_put_ops(priv->chip);
-@@ -68,6 +74,7 @@ static void tpm_dev_async_work(struct work_struct *work)
- 		priv->response_length = ret;
- 		mod_timer(&priv->user_read_timer, jiffies + (120 * HZ));
- 	}
-+out:
- 	mutex_unlock(&priv->buffer_mutex);
- 	wake_up_interruptible(&priv->async_wait);
+Greg,
+
+Can you take this in your tree?
+Thanks.
+
+Change since v1:
+- add Dragan's ack.
+
+ drivers/misc/xilinx_sdfec.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+index 11835969e982..48ba7e02bed7 100644
+--- a/drivers/misc/xilinx_sdfec.c
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -1025,25 +1025,25 @@ static long xsdfec_dev_compat_ioctl(struct file *file, unsigned int cmd,
  }
-@@ -205,6 +212,7 @@ ssize_t tpm_common_write(struct file *file, const
-char __user *buf,
- 		priv->command_enqueued = true;
- 		queue_work(tpm_dev_wq, &priv->async_work);
- 		mutex_unlock(&priv->buffer_mutex);
-+		tpm_put_ops(priv->chip);
- 		return size;
- 	}
-
-
-
+ #endif
+ 
+-static unsigned int xsdfec_poll(struct file *file, poll_table *wait)
++static __poll_t xsdfec_poll(struct file *file, poll_table *wait)
+ {
+-	unsigned int mask = 0;
++	__poll_t mask = 0;
+ 	struct xsdfec_dev *xsdfec;
+ 
+ 	xsdfec = container_of(file->private_data, struct xsdfec_dev, miscdev);
+ 
+ 	if (!xsdfec)
+-		return POLLNVAL | POLLHUP;
++		return EPOLLNVAL | EPOLLHUP;
+ 
+ 	poll_wait(file, &xsdfec->waitq, wait);
+ 
+ 	/* XSDFEC ISR detected an error */
+ 	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
+ 	if (xsdfec->state_updated)
+-		mask |= POLLIN | POLLPRI;
++		mask |= EPOLLIN | EPOLLPRI;
+ 
+ 	if (xsdfec->stats_updated)
+-		mask |= POLLIN | POLLRDNORM;
++		mask |= EPOLLIN | EPOLLRDNORM;
+ 	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
+ 
+ 	return mask;
 -- 
-Tadeusz
+2.24.0
+
