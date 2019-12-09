@@ -2,135 +2,94 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04A9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22173C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17A32068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:32:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="b2QZylIm"
+	by mail.kernel.org (Postfix) with ESMTP id DE850207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575905803;
+	bh=NS9mxvcsD7b/zbjH82c5BNOLSu5+ateBZISVE+8tY3U=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=f01ZhMMEGEWcq1j+w87IvlQ6D/h8OQhKv1+vODYIQsVELcYzoKUh5I5vF/iqJvQ6r
+	 bubgK4n2v2fMAjqht6RuFg9j9QEn8Rxv6NP6qXalHLF63XWEcNn6T2oIJ/9ILScWCI
+	 zzCn++UVPVYpMvAzYCdivkODYIllt2J/7o/3iYYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLIPcr (ORCPT
+        id S1726608AbfLIPgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:32:47 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36954 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfLIPcr (ORCPT
+        Mon, 9 Dec 2019 10:36:41 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:36144 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725904AbfLIPgl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 10:32:47 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C44B6FCF;
-        Mon,  9 Dec 2019 16:32:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575905565;
-        bh=0cB0KQ3w+T+YFNjQmKzHnWoA1Lbe2MnHeWDxvrD8lXM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b2QZylIm5A2WoRrkTXJACdWQ8pVO3Oc6jF1G0+p6ZZZ5RxitGUqTKPs/gxaeVL5xs
-         knCiwQStorSLSz+tdnbQ0oSMO4fc+799n85bSK0hRusxluYigK4T5+5JzphL63NLCZ
-         cFkTOH3wYDnQiipsxpDzlK3VP6tXltJ+KHLb+rDw=
-Date:   Mon, 9 Dec 2019 17:32:38 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Archit Taneja <architt@codeaurora.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: Re: [PATCH RESEND 3/4] dt-bindings: drm/bridge: analogix-anx78xx:
- support bypass GPIO
-Message-ID: <20191209153238.GE12841@pendragon.ideasonboard.com>
-References: <20191209145016.227784-1-hsinyi@chromium.org>
- <20191209145016.227784-4-hsinyi@chromium.org>
- <20191209145552.GD12841@pendragon.ideasonboard.com>
- <CAJMQK-hNSF-Vu4CfTKiCUdBRmaONf=Lp3NN0-nFor6mxY1seJg@mail.gmail.com>
+        Mon, 9 Dec 2019 10:36:41 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ieL5J-0002fY-Gf; Mon, 09 Dec 2019 16:36:29 +0100
+To:     Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity  for managed interrupt
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJMQK-hNSF-Vu4CfTKiCUdBRmaONf=Lp3NN0-nFor6mxY1seJg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Dec 2019 15:36:29 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     John Garry <john.garry@huawei.com>, Ming Lei <ming.lei@redhat.com>,
+        <tglx@linutronix.de>, <chenxiang66@hisilicon.com>,
+        <bigeasy@linutronix.de>, <linux-kernel@vger.kernel.org>,
+        <hare@suse.com>, <hch@lst.de>, <axboe@kernel.dk>,
+        <bvanassche@acm.org>, <peterz@infradead.org>, <mingo@redhat.com>
+In-Reply-To: <fd4192c6-351a-144f-9c31-d5a89c6fdedf@suse.de>
+References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
+ <1575642904-58295-2-git-send-email-john.garry@huawei.com>
+ <20191207080335.GA6077@ming.t460p>
+ <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
+ <305198e5-f76f-ded4-946b-9cfade18f08c@suse.de>
+ <c06752c858229854b37af3b47779b126@www.loen.fr>
+ <fd4192c6-351a-144f-9c31-d5a89c6fdedf@suse.de>
+Message-ID: <017fd81e113181218b0fe75db737df98@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: hare@suse.de, john.garry@huawei.com, ming.lei@redhat.com, tglx@linutronix.de, chenxiang66@hisilicon.com, bigeasy@linutronix.de, linux-kernel@vger.kernel.org, hare@suse.com, hch@lst.de, axboe@kernel.dk, bvanassche@acm.org, peterz@infradead.org, mingo@redhat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hsin-Yi,
-
-On Mon, Dec 09, 2019 at 11:09:34PM +0800, Hsin-Yi Wang wrote:
-> On Mon, Dec 9, 2019 at 10:55 PM Laurent Pinchart wrote:
-> > On Mon, Dec 09, 2019 at 10:50:15PM +0800, Hsin-Yi Wang wrote:
-> > > Support optional feature: bypass GPIO.
-> > >
-> > > Some SoC (eg. mt8173) have a hardware mux that connects to 2 ports:
-> > > anx7688 and hdmi. When the GPIO is active, the bridge is bypassed.
-> >
-> > This doesn't look like the right place to fix this, as the mux is
-> > unrelated to the bridge. You would have to duplicate this logic in every
-> > bridge driver otherwise.
-> >
-> > Could you describe the hardware topology in a bit more details ? I can
-> > then try to advise on how to best support it.
+On 2019-12-09 15:25, Hannes Reinecke wrote:
+> On 12/9/19 4:17 PM, Marc Zyngier wrote:
+>> On 2019-12-09 15:09, Hannes Reinecke wrote:
+>> [slight digression]
+>>
+>>> My idea here is slightly different: can't we leverage SMT?
+>>> Most modern CPUs do SMT (I guess even ARM does it nowadays)
+>>> (Yes, I know about spectre and things. We're talking performance 
+>>> here :-)
+>> I only know two of those: Cavium TX2 and ARM Neoverse-E1.
+>> ARM SMT CPUs are the absolute minority (and I can't say I'm 
+>> displeased).
 >
-> Hi Laurent,
-> 
-> The mt8173 layout is:
-> 
-> MT8173 HDMI bridge-- hardware mux --- HDMI
->                                                    |
->                                                     ------------ anx7688
+> Ach, too bad.
+>
+> Still a nice idea, putting SMT finally to some use ...
 
-You may have used a proportional font when writing this, the | doesn't
-align with anything using a fixed font. Do I assume correctly that the
-hardware multiplexer is actually a demultiplexer with one input and two
-outputs ?
-                                     +-----------+
-+---------+         +------+    /--> | HDMI      |
-| MT8173  |  HDMI   |   -->| --/     | Connector |
-|  HDMI   | ------> |--/   |         +-----------+
-| Encoder |         |    ->| --\     +-----------+      +-----------+
-+---------+         +------+    \--> | ANX7688   | ---> | USB-C     |
-                                     | Bridge    |      | Connector |
-				     +-----------+      +-----------+
+But isn't your SMT idea just a special case of providing an affinity
+for the thread (and in this case relative to the affinity of the hard
+IRQ)?
 
-> There's a hardware mux that takes mt8173 hdmi as input and has 2
-> output port: native hdmi and anx7688 bridge.
-> If gpio is active, we would like it to go to HDMI.
-> 
-> Previous approach is to make hardware mux a generic gpio mux bridge,
-> but this is probably a very rare use case that is only for
-> mt8173.(https://lore.kernel.org/lkml/57723AD2.8020806@codeaurora.org/)
-> We merge the mux and anx7688 to a single bridge and leave this as an
-> optional feature in this time.
+You could apply the same principle to target any CPU affinity, and 
+maybe
+provide hints for the placement if you're really keen (same L3, for
+example).
 
-I think that's a better approach, at least at the DT level. The HDMI
-demultiplexer should be represented as a DT node with 3 ports (one input
-and two outputs) with a control GPIO.
-
-From a video point of view, the ANX7688 should be represented as a DT
-node with 2 ports (one input and one output), regardless of whether it
-is used in conjunction with an HDMI switch as shown above, or directly
-connected to the output of an HDMI encoder. However, as the ANX7688
-supports both DP output and USB-C output, the situation may be slightly
-more complex. Please see https://patchwork.kernel.org/patch/11184895/
-for a similar discussion, related to the ANX7625.
-
-In any case, I don't think the ANX7688 should care about the GPIO.
-
+         M.
 -- 
-Regards,
-
-Laurent Pinchart
+Jazz is not dead. It just smells funny...
