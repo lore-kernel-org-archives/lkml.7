@@ -2,163 +2,184 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A57C2D0D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFD9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD3D206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 627D7206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:54:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WhsiSQ3U"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mUW88DZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfLIWye (ORCPT
+        id S1727629AbfLIWy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 17:54:34 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9283 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727595AbfLIWyU (ORCPT
+        Mon, 9 Dec 2019 17:54:28 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:38807 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727605AbfLIWyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Dec 2019 17:54:20 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5deed07c0000>; Mon, 09 Dec 2019 14:53:48 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 09 Dec 2019 14:54:09 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 09 Dec 2019 14:54:09 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec
- 2019 22:54:08 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec
- 2019 22:54:08 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 9 Dec 2019 22:54:07 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5deed08e0000>; Mon, 09 Dec 2019 14:54:06 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v8 20/26] powerpc: book3s64: convert to pin_user_pages() and put_user_page()
-Date:   Mon, 9 Dec 2019 14:53:38 -0800
-Message-ID: <20191209225344.99740-21-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191209225344.99740-1-jhubbard@nvidia.com>
-References: <20191209225344.99740-1-jhubbard@nvidia.com>
+Received: by mail-pj1-f66.google.com with SMTP id l4so6522784pjt.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 14:54:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=GZbS2xfEltGE7F6nx/Sqk3zKGRtEeNKmrbNzg2JwiAc=;
+        b=mUW88DZZcUm77HMOxXwdlW6E09GhqoZdMi73UXyZvqXuxha8a/66J2NeEmajC50CRk
+         uppHSqsk6KZHN5slwK1hx8E1lS59JSJvffgtzvzQCCxoXvGEDs9g6yOrYKjrRQc0U2VJ
+         F14XddSIXzsYYLvZsaRRw8i6eGlXsRTa8DVQOtQgFAg4WGiZIXhzticlJkngYIiqZUiS
+         zYvyRcJUcIUxVNQf3PvH7XVTAVQq++X8LmuBCfi53vTg7GhZ2oC5qsbIOHt1PGov85IV
+         P+2JlSX9fuav7dYzPqKnHewt2fbwfzjZ+dAb5juXdJEkLzYajGr6Yer6SwKDajIRbAit
+         eEXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=GZbS2xfEltGE7F6nx/Sqk3zKGRtEeNKmrbNzg2JwiAc=;
+        b=RAxF1aYqjrgVprZOwQsKsqCfqnrlPi6PmIY/paHKM87x+ZEjDq3rleGqfdlpLIVj/F
+         OzFZ4CdxV4y7cyUEe4OvfiCFQyCJfiIMLkUTiH8MTB9JRJZWAEQKGA9E8RauoyibJy/E
+         XebDyuhjlzLyxxrQ0SK0ezhqXCRdJddx81nXMIgzmUy6DKxWlq3/vXLJlfb58CwlXi1Y
+         tz7sNWjLMNZS9mv86JqgGvjJJrdMjBohQXkAnFV6dGUPY3VxuR+zrA8q/O1SYfGudmOM
+         /v5BdyaUFyeYWw0ZBIXjdyhdufbajFbuZUbXPG5ljac4yu5sV0mktzqCe+wTZ64OuygH
+         mwmA==
+X-Gm-Message-State: APjAAAX20EG/FU+rR43xCKLwWwUo7l4hvd3H0174P4hGKgVghmK0/sWz
+        4FzrqRpct9JR9FxQZQ3aBl82AA==
+X-Google-Smtp-Source: APXvYqwNJMLkK5JvNCFW6hNtE0esgiRwTzkpNVJU4zltb0IL3k5qCFuUjWhWC1FqrZ+fqHmQWyHuQg==
+X-Received: by 2002:a17:902:d883:: with SMTP id b3mr1804416plz.231.1575932059858;
+        Mon, 09 Dec 2019 14:54:19 -0800 (PST)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id a25sm499720pfo.116.2019.12.09.14.54.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Dec 2019 14:54:19 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jian Hu <jian.hu@amlogic.com>, "Rob Herring" <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: meson-a1: add I2C nodes
+In-Reply-To: <20191202111253.94872-1-jian.hu@amlogic.com>
+References: <20191202111253.94872-1-jian.hu@amlogic.com>
+Date:   Mon, 09 Dec 2019 14:54:18 -0800
+Message-ID: <7hsgltqfdx.fsf@baylibre.com>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575932029; bh=IrXYbV9R0vnJHGhlZjINDlSdvrs03wECmgURaURVtqE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=WhsiSQ3UbR8GTS9scmwBNOQ/VjWAqEEZK2GbNKhscKkyJkniMbVphYecKC59S9YrX
-         ufMC9MTwKq4Gp4zyHdkyeKaMuJMkrv7Ehp+e4gd8ndi924GMRltfG3U/zMTMCltoUa
-         K15wFcxvvC86D0DI9eoa0+kOx0RfNTczuMCM7MMiH/qHiERgXSakVbMoEwGq4OvaFU
-         YbdZ5NNdE4Yqe4nsIw2CamEhAngv2/zrToBWvdywK+54kSSIBO+f2a+OxHsRT1DRtt
-         0rEVgLblQxXNtGO9+koQiwcw8bykNgsIgy/jl5HLId9MEksa2ZuWW1A72sJdteNmrN
-         5jokdoze79MoA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Convert from get_user_pages() to pin_user_pages().
+Hi Jian,
 
-2. As required by pin_user_pages(), release these pages via
-put_user_page(). In this case, do so via put_user_pages_dirty_lock().
+Jian Hu <jian.hu@amlogic.com> writes:
 
-That has the side effect of calling set_page_dirty_lock(), instead
-of set_page_dirty(). This is probably more accurate.
+> There are four I2C controllers in A1 series,
+> Share the same comptible with AXG.The I2C nodes
+> depend on pinmux and clock controller.
+>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 149 ++++++++++++++++++++++
+>  1 file changed, 149 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> index eab2ecd36aa8..d0a73d953f5e 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> @@ -16,6 +16,13 @@
+>  	#address-cells = <2>;
+>  	#size-cells = <2>;
+>  
+> +	aliases {
+> +		i2c0 = &i2c0;
+> +		i2c1 = &i2c1;
+> +		i2c2 = &i2c2;
+> +		i2c3 = &i2c3;
+> +	};
+> +
+>  	cpus {
+>  		#address-cells = <2>;
+>  		#size-cells = <0>;
+> @@ -117,6 +124,46 @@
+>  				};
+>  			};
+>  
+> +			i2c0: i2c@1400 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x1400 0x0 0x24>;
 
-As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
-dealing with a file backed page where we have reference on the inode it
-hangs off." [1]
+The AXG DT files use 0x20 for the length.  You are using 0x24.  I don't
+see any additional registers added to the driver, so this doesn't look right.
 
-[1] https://lore.kernel.org/r/20190723153640.GB720@lst.de
+> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c1: i2c@5c00 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x5c00 0x0 0x24>;
+> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c2: i2c@6800 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x6800 0x0 0x24>;
+> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c3: i2c@6c00 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x6c00 0x0 0x24>;
+> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
+> +				status = "disabled";
+> +			};
+> +
+>  			uart_AO: serial@1c00 {
+>  				compatible = "amlogic,meson-gx-uart",
+>  					     "amlogic,meson-ao-uart";
+> @@ -171,3 +218,105 @@
+>  		#clock-cells = <0>;
+>  	};
+>  };
+> +
+> +&periphs_pinctrl {
+> +	i2c0_f11_pins:i2c0-f11 {
+> +		mux {
+> +			groups = "i2c0_sck_f11",
+> +				"i2c0_sda_f12";
+> +			function = "i2c0";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
 
-Cc: Jan Kara <jack@suse.cz>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- arch/powerpc/mm/book3s64/iommu_api.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+Can you also add some comment to the changelog about the need for
+drive-strength compared to AXG.
 
-diff --git a/arch/powerpc/mm/book3s64/iommu_api.c b/arch/powerpc/mm/book3s6=
-4/iommu_api.c
-index 56cc84520577..fc1670a6fc3c 100644
---- a/arch/powerpc/mm/book3s64/iommu_api.c
-+++ b/arch/powerpc/mm/book3s64/iommu_api.c
-@@ -103,7 +103,7 @@ static long mm_iommu_do_alloc(struct mm_struct *mm, uns=
-igned long ua,
- 	for (entry =3D 0; entry < entries; entry +=3D chunk) {
- 		unsigned long n =3D min(entries - entry, chunk);
-=20
--		ret =3D get_user_pages(ua + (entry << PAGE_SHIFT), n,
-+		ret =3D pin_user_pages(ua + (entry << PAGE_SHIFT), n,
- 				FOLL_WRITE | FOLL_LONGTERM,
- 				mem->hpages + entry, NULL);
- 		if (ret =3D=3D n) {
-@@ -167,9 +167,8 @@ static long mm_iommu_do_alloc(struct mm_struct *mm, uns=
-igned long ua,
- 	return 0;
-=20
- free_exit:
--	/* free the reference taken */
--	for (i =3D 0; i < pinned; i++)
--		put_page(mem->hpages[i]);
-+	/* free the references taken */
-+	put_user_pages(mem->hpages, pinned);
-=20
- 	vfree(mem->hpas);
- 	kfree(mem);
-@@ -212,10 +211,9 @@ static void mm_iommu_unpin(struct mm_iommu_table_group=
-_mem_t *mem)
- 		if (!page)
- 			continue;
-=20
--		if (mem->hpas[i] & MM_IOMMU_TABLE_GROUP_PAGE_DIRTY)
--			SetPageDirty(page);
-+		put_user_pages_dirty_lock(&page, 1,
-+				mem->hpas[i] & MM_IOMMU_TABLE_GROUP_PAGE_DIRTY);
-=20
--		put_page(page);
- 		mem->hpas[i] =3D 0;
- 	}
- }
---=20
-2.24.0
+> +		};
+> +	};
 
+Kevin
