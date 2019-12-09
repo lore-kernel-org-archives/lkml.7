@@ -2,122 +2,87 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AFEC2BD09
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700ACC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 518512077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3965F2077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575906917;
+	bh=s4orNUHN0J0s3pQE1X+WGrJPoZrPr0vnnT4uBvizWKg=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=tUDmbusBypf7V4SeCxCP0dLKzz8pCZo9ZEYB/dmL6E4h1ZbK1FeJstr4IyzPnQZ0s
+	 6+s+PZbQwH3lip0QBdhoiwMFu+zG4iWpnDy3jH6pv9Bij6Kb3iVre4xj132LpVCD63
+	 cFZ8aNi4IArZAwwU1Z1DHXUHOJRXQ1136xrAvZnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfLIPyH (ORCPT
+        id S1726584AbfLIPzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:54:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbfLIPyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 10:54:07 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 900B82073D;
-        Mon,  9 Dec 2019 15:54:04 +0000 (UTC)
-Date:   Mon, 9 Dec 2019 10:54:03 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v4 01/22] bootconfig: Add Extra Boot Config support
-Message-ID: <20191209105403.788f492a@gandalf.local.home>
-In-Reply-To: <20191209145009.502ece2e58ffab5e31430a0e@kernel.org>
-References: <157528159833.22451.14878731055438721716.stgit@devnote2>
-        <157528160980.22451.2034344493364709160.stgit@devnote2>
-        <02b132dd-6f50-cf1d-6cc1-ff6bbbcf79cd@infradead.org>
-        <20191209145009.502ece2e58ffab5e31430a0e@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 9 Dec 2019 10:55:16 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:44313 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726080AbfLIPzP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 10:55:15 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ieLNI-0002w7-5L; Mon, 09 Dec 2019 16:55:04 +0100
+To:     Qais Yousef <qais.yousef@arm.com>
+Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity  for managed interrupt
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Dec 2019 15:55:03 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Hannes Reinecke <hare@suse.de>, John Garry <john.garry@huawei.com>,
+        Ming Lei <ming.lei@redhat.com>, <tglx@linutronix.de>,
+        <chenxiang66@hisilicon.com>, <bigeasy@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <hare@suse.com>, <hch@lst.de>,
+        <axboe@kernel.dk>, <bvanassche@acm.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>
+In-Reply-To: <20191209154932.dyysdktbosi3vlbx@e107158-lin.cambridge.arm.com>
+References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
+ <1575642904-58295-2-git-send-email-john.garry@huawei.com>
+ <20191207080335.GA6077@ming.t460p>
+ <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
+ <305198e5-f76f-ded4-946b-9cfade18f08c@suse.de>
+ <c06752c858229854b37af3b47779b126@www.loen.fr>
+ <20191209154932.dyysdktbosi3vlbx@e107158-lin.cambridge.arm.com>
+Message-ID: <3e974fa60d0b5371e93fce86b23f686d@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: qais.yousef@arm.com, hare@suse.de, john.garry@huawei.com, ming.lei@redhat.com, tglx@linutronix.de, chenxiang66@hisilicon.com, bigeasy@linutronix.de, linux-kernel@vger.kernel.org, hare@suse.com, hch@lst.de, axboe@kernel.dk, bvanassche@acm.org, peterz@infradead.org, mingo@redhat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Dec 2019 14:50:09 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> Hi Randy,
-> 
-> Thank you for your review!
-> 
-> On Sun, 8 Dec 2019 11:34:32 -0800
-> Randy Dunlap <rdunlap@infradead.org> wrote:
-> 
-> > Hi,
-> > 
-> > On 12/2/19 2:13 AM, Masami Hiramatsu wrote:  
-> > > diff --git a/init/Kconfig b/init/Kconfig
-> > > index 67a602ee17f1..13bb3eac804c 100644
-> > > --- a/init/Kconfig
-> > > +++ b/init/Kconfig
-> > > @@ -1235,6 +1235,17 @@ source "usr/Kconfig"
-> > >  
-> > >  endif
-> > >  
-> > > +config BOOT_CONFIG
-> > > +	bool "Boot config support"
-> > > +	select LIBXBC
-> > > +	default y  
-> > 
-> > questionable "default y".
-> > That needs lots of justification.  
-> 
-> OK, I can make it 'n' by default.
-> 
-> I thought that was OK because most of the memories for the
-> bootconfig support were released after initialization.
-> If user doesn't pass the bootconfig, only the code for
-> /proc/bootconfig remains on runtime memory.
-
-As 'n' is usually the default, I will argue this should be 'y'!
-
-This is not some new fancy feature, or device that Linus
-complains about "my X is important!". I will say this X *is* important!
-This will (I hope) become standard in all kernel configs. One could even
-argue that there shouldn't even be a config for this at all (forced
-'y'). This would hurt more not to have than to have. I would hate to
-try to load special options only to find out that the kernel was
-compiled with default configs and this wasn't enabled.
-
-This is extended boot config support that can be useful for most
-developers. The only ones that should say 'n' are those that are
-working to get a "tiny" kernel at boot up. As Masami said, the memory
-is freed after init, thus this should not be an issue for 99.9% of
-kernel users.
-
--- Steve
-
-
-> 
-> > > +	help
-> > > +	 Extra boot config allows system admin to pass a config file as
-> > > +	 complemental extension of kernel cmdline when boot.  
-> > 
-> > 	                                          when booting.  
+On 2019-12-09 15:49, Qais Yousef wrote:
+> On 12/09/19 15:17, Marc Zyngier wrote:
+>> On 2019-12-09 15:09, Hannes Reinecke wrote:
+>>
+>> [slight digression]
+>>
+>> > My idea here is slightly different: can't we leverage SMT?
+>> > Most modern CPUs do SMT (I guess even ARM does it nowadays)
+>> > (Yes, I know about spectre and things. We're talking performance 
+>> here
+>> > :-)
+>>
+>> I only know two of those: Cavium TX2 and ARM Neoverse-E1.
 >
+> There's the Cortex-A65 too.
+
+Which is the exact same core as E1 (but don't tell anyone... ;-).
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
