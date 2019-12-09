@@ -2,100 +2,103 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5332C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D4FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8BA820692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39652207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:22:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MugDM+mL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dbzFKeQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfLIQWU (ORCPT
+        id S1726884AbfLIQWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:22:20 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41232 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfLIQWU (ORCPT
+        Mon, 9 Dec 2019 11:22:25 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48286 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfLIQWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:22:20 -0500
-Received: by mail-pf1-f196.google.com with SMTP id s18so7482356pfd.8;
-        Mon, 09 Dec 2019 08:22:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1WchXByJdtEUq90E1n/vrDWDGRooLaARsJZ93BiIjh4=;
-        b=MugDM+mL+KSCPyqjfhhBXj9LjxiGzJb5I2Z3C8EHAV8QVerqqSPA9KemYncix6rnsd
-         OVjezkkRyH6ybNmQ8s3s4+rZT4hAU+zeGHjX809S7p0lJPY83r/W6b8U/C+OKP8nvNxC
-         43/MgzRWHTGr9zroE2VHUZmRYeshEBe6Ifl3KWYZANOuRoRqPs6NgfKA+3VDxC1eiaEA
-         a+QGVmPBbT/yNfzHL0RouwRtR9IpqrhA8ukMaVYzP7BidTxpY3u2dGrO0Ae2Hr5oaJC9
-         n1QKEhgPFoehNUqBrqUFn4jiHkhpN7F/CeeWTy8kAD6TT5h4r0SoSogNWDn3O0W+YUQe
-         FwRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1WchXByJdtEUq90E1n/vrDWDGRooLaARsJZ93BiIjh4=;
-        b=c0VSm2vC8jjwAb+rbwhckBVWaQWHm9yKGRGn5v9Rfu89Ph+lSHRej7nBaGbmJ4dysv
-         E1ce91dYkVhcIafMRn+MvBN5xEuw0vMYpnty571Z9aXPVUvGEdfYtRgUOAN81tq6xdwd
-         Bmnfbr/gUc+tN9MQVhzQqT0i4877mEcMOLVaAyYxTGKsPwXLKSjTR89X5OpNzREqdRKE
-         q89rEY5Xk05Fl4YvXN0Nbz0WdX3OA1jNhHh0f9HGzzvUjeeNrDH07tcmQdS4VzC+vzOW
-         Q8TGOApO95GNBfF1K3gk7Jdrol4yFob56dKCYcpDIeMM4Ua3flul4aNdTbe85HJAuk/g
-         qAHw==
-X-Gm-Message-State: APjAAAVBG+4YChqHzRs22Z8BUd/yLbMlFBjmIhooN0P3ykajXJXmeF80
-        6MPTVLjXwOe/+ZFPK8/7WneCno5AGHU=
-X-Google-Smtp-Source: APXvYqwhWzAsuYvQLN0xKCm+fPbIVs0ilIo5yZp/kpbRUMNEqJ7Z5ywErb8fmqFQ1dQu+zf4drHaAw==
-X-Received: by 2002:a63:6d0e:: with SMTP id i14mr20013323pgc.12.1575908539486;
-        Mon, 09 Dec 2019 08:22:19 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id u10sm46106pgg.41.2019.12.09.08.22.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 08:22:18 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Taku Izumi <izumi.taku@jp.fujitsu.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] fjes: fix missed check in fjes_acpi_add
-Date:   Tue, 10 Dec 2019 00:22:07 +0800
-Message-Id: <20191209162207.14934-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 9 Dec 2019 11:22:21 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9GMI7Z104372;
+        Mon, 9 Dec 2019 10:22:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575908538;
+        bh=11P/kNtBZr7To0mT7AsXhF9sB871Rf94OEck46/XMgI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=dbzFKeQEGsD5elBkX4hgBjCcgUo8rksyXW9Z82/Lri6FFb7XVyWg90B7i3sbPe0VC
+         AyOsptONJDCvWAIhaIYpEjhVJ1fxiEL/EXJYfzZE4ip0bcj2q2anZ99d6FcpR/rDzx
+         kjPXOw/WLkhgGkZ3Grddwjkt3R0FadHMkrrwjgk8=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9GMINa093851
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 10:22:18 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 10:22:14 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 10:22:14 -0600
+Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9GMBdO002331;
+        Mon, 9 Dec 2019 10:22:12 -0600
+From:   Jyri Sarha <jsarha@ti.com>
+To:     <kishon@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <praneeth@ti.com>, <yamonkar@cadence.com>,
+        <sjakhade@cadence.com>, <rogerq@ti.com>, <jsarha@ti.com>
+Subject: [PATCH 2/3] dt-bindings: phy: Add lane<n>-mode property to WIZ (SERDES wrapper)
+Date:   Mon, 9 Dec 2019 18:22:11 +0200
+Message-ID: <fb79923b1591cc5f26b6973beb92ce503ad3f4d1.1575906694.git.jsarha@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1575906694.git.jsarha@ti.com>
+References: <cover.1575906694.git.jsarha@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fjes_acpi_add() misses a check for platform_device_register_simple().
-Add a check to fix it.
+Add property to indicate the usage of SERDES lane controlled by the
+WIZ wrapper. The wrapper configuration has some variation depending on
+how each lane is going to be used.
 
-Fixes: 658d439b2292 ("fjes: Introduce FUJITSU Extended Socket Network Device driver")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- drivers/net/fjes/fjes_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/phy/ti,phy-j721e-wiz.yaml    | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/net/fjes/fjes_main.c b/drivers/net/fjes/fjes_main.c
-index b517c1af9de0..91a1059517f5 100644
---- a/drivers/net/fjes/fjes_main.c
-+++ b/drivers/net/fjes/fjes_main.c
-@@ -166,6 +166,9 @@ static int fjes_acpi_add(struct acpi_device *device)
- 	/* create platform_device */
- 	plat_dev = platform_device_register_simple(DRV_NAME, 0, fjes_resource,
- 						   ARRAY_SIZE(fjes_resource));
-+	if (IS_ERR(plat_dev))
-+		return PTR_ERR(plat_dev);
-+
- 	device->driver_data = plat_dev;
+diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+index 94e3b4b5ed8e..399725f65278 100644
+--- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
++++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+@@ -97,6 +97,18 @@ patternProperties:
+       Torrent SERDES should follow the bindings specified in
+       Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
  
- 	return 0;
++  "^lane[1-4]-mode$":
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [0, 1, 2, 3, 4, 5, 6]
++    description: |
++     Integer describing static lane usage for the lane indicated in
++     the property name. For Sierra there may be properties lane0 and
++     lane1, for Torrent all lane[1-4]-mode properties may be
++     there. The constants to indicate the lane usage are defined in
++     "include/dt-bindings/phy/phy.h". The lane is assumed to be unused
++     if its lane<n>-use property does not exist.
++
+ required:
+   - compatible
+   - power-domains
 -- 
-2.24.0
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
