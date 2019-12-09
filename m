@@ -2,153 +2,96 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716E2C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FB1C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5142820726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45947206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:00:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=iluvatar.ai header.i=@iluvatar.ai header.b="F3HhOdnr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfLIJ7c (ORCPT
+        id S1727338AbfLIKAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:59:32 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40674 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727307AbfLIJ7c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:59:32 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 1F91828BA5C
-Subject: Re: [resend PATCH v6 07/12] clk: mediatek: mt2712e: switch to
- platform device probing
-To:     matthias.bgg@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com
-Cc:     sean.wang@mediatek.com, sean.wang@kernel.org,
-        rdunlap@infradead.org, wens@csie.org, hsinyi@chromium.org,
-        frank-w@public-files.de, drinkcat@chromium.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, mbrugger@suse.com
-References: <20191207224740.24536-1-matthias.bgg@kernel.org>
- <20191207224740.24536-8-matthias.bgg@kernel.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <9f4f8481-66de-6ca5-f9e0-6c6fa6a857eb@collabora.com>
-Date:   Mon, 9 Dec 2019 10:59:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 9 Dec 2019 05:00:06 -0500
+Received: from owa.iluvatar.ai ([103.91.158.24]:16133 "EHLO smg.iluvatar.ai"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727200AbfLIKAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 05:00:06 -0500
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Dec 2019 05:00:04 EST
+X-AuditID: 0a650161-78bff700000078a3-9f-5dee2de096fb
+Received: from owa.iluvatar.ai (s-10-101-1-102.iluvatar.local [10.101.1.102])
+        by smg.iluvatar.ai (Symantec Messaging Gateway) with SMTP id 7B.F0.30883.0ED2EED5; Mon,  9 Dec 2019 19:20:00 +0800 (HKT)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; d=iluvatar.ai; s=key_2018;
+        c=relaxed/relaxed; t=1575884707; h=from:subject:to:date:message-id;
+        bh=4XY6KZy5NFgqtGCerKi26yFsh/3MiJ6OzvRR3Z9dvrw=;
+        b=F3HhOdnrOFHJ8EUYcI6dCcUMs7jE6v9RPJHfkluSmPDlJdvhE52A0KDst39yd9GhXefhAyENZtK
+        Kwg5vNp32vDRDm+xPvY3oUS+BLPha5JVUM8oF6fUGQZS3L+eZP6HgfkkkNUJjxpKJEuHZec8Axclt
+        yLUCLplrfBkOxIQoQco=
+Received: from hsj-Precision-5520.iluvatar.local (10.101.199.253) by
+ S-10-101-1-102.iluvatar.local (10.101.1.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1415.2; Mon, 9 Dec 2019 17:45:07 +0800
+From:   Huang Shijie <sjhuang@iluvatar.ai>
+To:     <jbaron@akamai.com>
+CC:     <linux-kernel@vger.kernel.org>, <1537577747@qq.com>,
+        Huang Shijie <sjhuang@iluvatar.ai>
+Subject: [PATCH] lib/dynamic_debug: make better dynamic log output
+Date:   Mon, 9 Dec 2019 17:44:37 +0800
+Message-ID: <20191209094437.14866-1-sjhuang@iluvatar.ai>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191207224740.24536-8-matthias.bgg@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.101.199.253]
+X-ClientProxiedBy: S-10-101-1-102.iluvatar.local (10.101.1.102) To
+ S-10-101-1-102.iluvatar.local (10.101.1.102)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJLMWRmVeSWpSXmKPExsXClcqYpvtA912sQXeHscXkqwfYLGYsPs5q
+        cXnXHDYHZo/JRxYwe9x6tpbV4/MmuQDmKC6blNSczLLUIn27BK6M9ubcghdsFat67jA2MJ5m
+        7WLk4JAQMJFo+lzQxcjFISRwglHi2NtHbF2MnBzMAhISB1+8YAZJsAi8ZZLYeXQ3K0RVK5PE
+        xBU3mECq2AQ0JOaeuMsMMklEQFzi/XxXiOZYibld+8DCwgJOEnv3RoCEWQRUJBb+OcgCYvMK
+        WEgs37CAGcSWEJCXWL3hADNEXFDi5MwnLCCtQgIKEi9WakGUKEks2TuLCcIulPj+8i7LBEaB
+        WUgunYWkewEj0ypG/uLcdL3MnNKyxJLEIr3EzE2MkPBL3MF4o/Ol3iFGAQ5GJR7eCYFvY4VY
+        E8uKK3MPMUpwMCuJ8C6Z+CpWiDclsbIqtSg/vqg0J7X4EKM0B4uSOK/Qv6cxQgLpiSWp2amp
+        BalFMFkmDk6pBqapbo3Vs7r8Ofw6Yp6GGUrN+rDkptTd5c6bL6Uf5Jy+a/2+VWJTsk1WPUu/
+        xdCy1u1bE5NyetHs+IvcvdOUfmfmX6z6v3Yv0+/arODc3fzR/ruzandZ2IUaHGQsEUlyDDz7
+        MZqF9elplUvs86M+ZXKzvDArDG9d8PdTTabuvg+BO+Nbo52SF69fenzKBZtI8XsbXJR7r+lX
+        GOjM+SzL5rPk0qq9VitsHWb/ttC1K1PMtgoyU7I9FvRbIvTz1euncpuXvdS8Hphyeu6eM9Ui
+        DApJ3o+Llhls7V0RO11qnt+M5PVT1J3EDE6fFuK6ca5e6NfkXCbBKe92aR1YNlvPJKnH48k5
+        cZZz1aam33cnRyixFGckGmoxFxUnAgB4aCFhvAIAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+The driver strings and device name is not changed for the driver's dynamic
+log output. But the dynamic_emit_prefix() which contains the function names
+may changed when the function names are changed.
 
-On 7/12/19 23:47, matthias.bgg@kernel.org wrote:
-> From: Matthias Brugger <mbrugger@suse.com>
-> 
-> Switch probing for the MMSYS to support invocation to a
-> plain paltform device. The driver will be probed by the DRM subsystem.
-> 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> ---
->  drivers/clk/mediatek/clk-mt2712-mm.c | 39 +++++++++++++++++++---------
+So the patch makes the better dynamic log output.
 
-Same comments as previous patch.
+Signed-off-by: Huang Shijie <sjhuang@iluvatar.ai>
+---
+ lib/dynamic_debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  1 file changed, 27 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/clk/mediatek/clk-mt2712-mm.c b/drivers/clk/mediatek/clk-mt2712-mm.c
-> index 1c5948be35f3..d018db568263 100644
-> --- a/drivers/clk/mediatek/clk-mt2712-mm.c
-> +++ b/drivers/clk/mediatek/clk-mt2712-mm.c
-> @@ -4,14 +4,20 @@
->   * Author: Weiyi Lu <weiyi.lu@mediatek.com>
->   */
->  
-> +#include <linux/module.h>
->  #include <linux/clk-provider.h>
->  #include <linux/platform_device.h>
-> +#include <linux/slab.h>
->  
->  #include "clk-mtk.h"
->  #include "clk-gate.h"
->  
->  #include <dt-bindings/clock/mt2712-clk.h>
->  
-> +struct clk_mt2712_mm_priv {
-> +	struct clk_onecell_data *clk_data;
-> +};
-> +
->  static const struct mtk_gate_regs mm0_cg_regs = {
->  	.set_ofs = 0x104,
->  	.clr_ofs = 0x108,
-> @@ -128,16 +134,22 @@ static const struct mtk_gate mm_clks[] = {
->  
->  static int clk_mt2712_mm_probe(struct platform_device *pdev)
->  {
-> -	struct clk_onecell_data *clk_data;
->  	int r;
-> -	struct device_node *node = pdev->dev.of_node;
-> +	struct device_node *node = pdev->dev.parent->of_node;
-> +	struct clk_mt2712_mm_priv *private;
-> +
-> +	private = devm_kzalloc(&pdev->dev, sizeof(*private), GFP_KERNEL);
-> +	if (!private)
-> +		return -ENOMEM;
->  
-> -	clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
-> +	private->clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
-> +	platform_set_drvdata(pdev, private);
->  
->  	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
-> -			clk_data);
-> +			private->clk_data);
->  
-> -	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-> +	r = of_clk_add_provider(node, of_clk_src_onecell_get,
-> +			private->clk_data);
->  
->  	if (r != 0)
->  		pr_err("%s(): could not register clock provider: %d\n",
-> @@ -146,17 +158,20 @@ static int clk_mt2712_mm_probe(struct platform_device *pdev)
->  	return r;
->  }
->  
-> -static const struct of_device_id of_match_clk_mt2712_mm[] = {
-> -	{ .compatible = "mediatek,mt2712-mmsys", },
-> -	{}
-> -};
-> +static int clk_mt2712_mm_remove(struct platform_device *pdev)
-> +{
-> +	struct clk_mt2712_mm_priv *private = platform_get_drvdata(pdev);
-> +
-> +	kfree(private->clk_data);
-> +
-> +	return 0;
-> +}
->  
->  static struct platform_driver clk_mt2712_mm_drv = {
->  	.probe = clk_mt2712_mm_probe,
-> +	.remove = clk_mt2712_mm_remove,
->  	.driver = {
->  		.name = "clk-mt2712-mm",
-> -		.of_match_table = of_match_clk_mt2712_mm,
->  	},
->  };
-> -
-> -builtin_platform_driver(clk_mt2712_mm_drv);
-> +module_platform_driver(clk_mt2712_mm_drv);
-> 
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index c60409138e13..8cfcdd5bd1ff 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -590,8 +590,8 @@ void __dynamic_dev_dbg(struct _ddebug *descriptor,
+ 		char buf[PREFIX_SIZE];
+ 
+ 		dev_printk_emit(LOGLEVEL_DEBUG, dev, "%s%s %s: %pV",
+-				dynamic_emit_prefix(descriptor, buf),
+ 				dev_driver_string(dev), dev_name(dev),
++				dynamic_emit_prefix(descriptor, buf),
+ 				&vaf);
+ 	}
+ 
+-- 
+2.17.1
+
