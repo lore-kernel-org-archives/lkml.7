@@ -2,104 +2,139 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1E3C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D4C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA09206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71C92068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jpa16NEu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUTP4Id4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfLIVTP (ORCPT
+        id S1726614AbfLIVWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:19:15 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35631 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbfLIVTP (ORCPT
+        Mon, 9 Dec 2019 16:22:24 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43509 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfLIVWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:19:15 -0500
-Received: by mail-il1-f195.google.com with SMTP id g12so14120314ild.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 13:19:15 -0800 (PST)
+        Mon, 9 Dec 2019 16:22:23 -0500
+Received: by mail-lj1-f195.google.com with SMTP id a13so17341201ljm.10;
+        Mon, 09 Dec 2019 13:22:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V+fINYfX0WThUMVmPz7Se9rxOk/QEnp1Ar+VHOYBVxM=;
-        b=jpa16NEuZwY2KSfk6NP5RUXRbZTqhOxIOn2ULnB+NQIxcDKg4iwohsasp3jzuTuHAb
-         TgUg2VjcSreaaNF1TxupKHVp3rONn6ZriWLhvEyhlf3aIXKMvpmF2XG5Q6nzjYFXmXmb
-         QhT3AdjSQXpcBJmnXhpX20x8D9bYKVGNoen0o=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hfN3ul6hjpl2dirTMlovPdIO/5/d4Exh0KyMwDDvy9s=;
+        b=aUTP4Id4O4xbxCmkQMemUqwf+A6XD+HWrtRRDtNvHeAqGPYt2T8zoBr8af50sSF/oh
+         xqCUEMME2zGnIDV506uYLvC+55NONJC2GZD3Y4rxe4Iz7tkTxtB2Za1zo36pWtR2UAEh
+         gjx4z0BLc3W/F7zrsdBmgpOORCvU/ByXEicuBJyz0by+jfoRFmEuI9CFvOZ0Kj50qJQY
+         jzcR+MEBiYLrFmGsfkRHKgFHtdCjdAuFy5AOMMmU6m4sd+r3xN+bJxRSQ5KIJHPkM4sg
+         Jmk3qM7H5wgXEyw2LPRE+jZVBCP7JeQ8boLIcTXKq72tMPsQEkRuS5pzsfl7ezpKiHn2
+         sD9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V+fINYfX0WThUMVmPz7Se9rxOk/QEnp1Ar+VHOYBVxM=;
-        b=AkJRhyknRIDdJj0m6VVVHmamrnY/jDAQiz0Q8BZj+ErDWMNWDXF8B+6InkRTUIIxQY
-         0BuT02Z7xvi4MbiCOMC3T7n9gLYB3TJv7xCqN6H9vg3vi9McPqsp/E7IaTk5Vng/KTTb
-         jo8lERSXWmCEQWIqj6GldhjkX55I3COChLkKBPfAH+kXs8MxK2bhJZc0hRnBQBG5GzYJ
-         iWIULd/oPqc0QcpyrxG6ss1Rj7rz1e8VK+ebVN+h3RV7sIqb7mT22KmjdYMaiOsBJ5Gk
-         mAvY8VJfRztQpLkDQpCWRuOiBWSAZFw72Xe9QAvm9hNCKOmNCnqmwhEt2dSJo3KuNkFS
-         xdCg==
-X-Gm-Message-State: APjAAAWl7ddRv65zibAJbfPjKiBc0AjgYUD7Wi3iP5knjazdrR+Q5h0n
-        QyQd20Un8rBVI7RmmRg02kaGqbXwR48=
-X-Google-Smtp-Source: APXvYqxmPzCdnnANb/BAmlBjNhUmbG+FKLnMKiUUkelpaGeslGo9VYtaktmWAxStpDIbEVb2hRDjHw==
-X-Received: by 2002:a92:8c90:: with SMTP id s16mr30927942ill.38.1575926354555;
-        Mon, 09 Dec 2019 13:19:14 -0800 (PST)
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com. [209.85.166.181])
-        by smtp.gmail.com with ESMTPSA id y11sm204372ilp.46.2019.12.09.13.19.13
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hfN3ul6hjpl2dirTMlovPdIO/5/d4Exh0KyMwDDvy9s=;
+        b=tVPAo+Zpo80nE29T3Y0EQnY1rc2uNgyxzOH2zqQPpStcA1dN7xD0k3GLWMpwpq/Ggq
+         j8Oqe0/hTNCGICwJ3+pYuV08Pj5cqofM+yVMknK+2BDzp11plZRa4409a+YHmx/BR/U+
+         2Gpd4Vj0pUd0ODG8chcx7JkCVKMEnexWRXBapo5/DumRaPIOR0Lgp3R69Upb/cdhGjHf
+         wuz4LPqabsmfF93bClID4Xfqlrk5zmxz2XyoL4qHqpfYj67XsFhvb5UB0LoAg7IHqR2Y
+         ajOqguVBaDdecWaYYuM/fQPAPOR2swZb/wYLaQxQ0v2mAsnaU4SFb1msRdMrecU5/h96
+         bA9Q==
+X-Gm-Message-State: APjAAAVm7bkayiwq6OgwQq7QjSEF5BPMhwzbofh3HPsp2Coedk11Vh9x
+        YSMC6UxJVtJZ93T5U0LEXw46gE3G
+X-Google-Smtp-Source: APXvYqzkedDuJ1mylj4K6QNH/bG8ZkXNM30pZ3tfzuwZ2lJA23WGf4luIwH5aJBrVQwHx+41Wuj0yg==
+X-Received: by 2002:a2e:7e07:: with SMTP id z7mr16979405ljc.165.1575926540462;
+        Mon, 09 Dec 2019 13:22:20 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id s16sm300639lfc.35.2019.12.09.13.22.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 13:19:13 -0800 (PST)
-Received: by mail-il1-f181.google.com with SMTP id a7so14104758ild.6
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 13:19:13 -0800 (PST)
-X-Received: by 2002:a92:d581:: with SMTP id a1mr27952212iln.218.1575926352743;
- Mon, 09 Dec 2019 13:19:12 -0800 (PST)
+        Mon, 09 Dec 2019 13:22:19 -0800 (PST)
+Subject: Re: [PATCH v8 00/19] Consolidate and improve NVIDIA Tegra CPUIDLE
+ driver(s)
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191203004116.11771-1-digetx@gmail.com>
+ <20191207215216.GA9561@qmqm.qmqm.pl>
+ <0b3a861d-e5e8-ddca-ac60-0a3c61a9d9dc@gmail.com>
+ <20191209160420.GA24097@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <323f5f70-5249-e75a-98cc-7fdca2d375c2@gmail.com>
+Date:   Tue, 10 Dec 2019 00:22:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <lsq.1575813164.154362148@decadent.org.uk> <lsq.1575813165.830287385@decadent.org.uk>
-In-Reply-To: <lsq.1575813165.830287385@decadent.org.uk>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 9 Dec 2019 13:19:01 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XpyONBT_XcKLRj2qkcJHkVntoHJJs=tYbVjzF9V10ziQ@mail.gmail.com>
-Message-ID: <CAD=FV=XpyONBT_XcKLRj2qkcJHkVntoHJJs=tYbVjzF9V10ziQ@mail.gmail.com>
-Subject: Re: [PATCH 3.16 10/72] video: of: display_timing: Add of_node_put()
- in of_get_display_timing()
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "# 4.0+" <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        David Airlie <airlied@linux.ie>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191209160420.GA24097@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+09.12.2019 19:04, Michał Mirosław пишет:
+> On Sun, Dec 08, 2019 at 01:56:14AM +0300, Dmitry Osipenko wrote:
+>> 08.12.2019 00:52, Michał Mirosław пишет:
+>>> On Tue, Dec 03, 2019 at 03:40:57AM +0300, Dmitry Osipenko wrote:
+>>>> Hello,
+>>>>
+>>>> This series does the following:
+>>>>
+>>>>   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
+>>>>      into common drivers/cpuidle/ directory.
+>>>>
+>>>>   2. Enables CPU cluster power-down idling state on Tegra30.
+>>>>
+>>>> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
+>>>> and of the Tegra's arch code in general. Please review, thanks!
+>>>
+>>> I did a quick smoke test for this series on top of Linus' master:
+>>>  - rebuilding with the patches applied, CONFIG_ARM_TEGRA_CPUIDLE=n - works
+>>>  - building with CONFIG_ARM_TEGRA_CPUIDLE=y - doesn't boot
+>>>
+>>> The hang is somewhere early in the boot process, before simplefb can
+>>> take the console and show any logs. If I get BOOTFB to work again I might
+>>> be able to get some more info.
+>>
+>> Thank you very much for trying these patches!
+>>
+>> Could you please try to make ARM_TEGRA_CPUIDLE "tristate" in the Kconfig
+>> and compile it as a loadable module? That way you'll get framebuffer
+>> shown before the hang happens.
+>>
+>> Does LP2 suspend/resume work for you? There should be
+>> "nvidia,suspend-mode = <2>" in the PMC's node of device-tree.
+> 
+> Not at the moment. I also tried suspend-mode = <1> and <0>, but it
+> made no difference.
 
-On Sun, Dec 8, 2019 at 5:54 AM Ben Hutchings <ben@decadent.org.uk> wrote:
->
-> 3.16.79-rc1 review patch.  If anyone has any objections, please let me know.
->
-> ------------------
->
-> From: Douglas Anderson <dianders@chromium.org>
->
-> commit 4faba50edbcc1df467f8f308893edc3fdd95536e upstream.
->
-> =46romcode inspection it can be seen that of_get_display_timing() is
-> lacking an of_node_put().  Add it.
+If LP2 doesn't work, then it explains why you're getting the hang.
 
-I don't object, but I am curious why "From code" got turned into
-"=46romcode" in the commit message.
+Are you using TF300T for the testing? I'm recalling that LP2 worked for
+you sometime ago on TF300T, maybe some offending change was introduced
+since then. Could you please try to do the git bisection or at least
+find out what is the last good kernel version?
+
+I rebased this series on a recent linux-next and you could find the
+rebased patches here [1].
+
+[1] https://github.com/grate-driver/linux/commits/master
+
+With [1] you should be able to remove "nvidia,suspend-mode" property
+from the device-tree to get cpuidle working with the disabled CC6 state
+(LP2). Could you please check that at least disabled CC6 works for you?
