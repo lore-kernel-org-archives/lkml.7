@@ -2,107 +2,188 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9BAC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C33FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD1D206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34DFC206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:15:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HwguWYyp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfLIKP1 (ORCPT
+        id S1727328AbfLIKPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:15:27 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46110 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726279AbfLIKP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 05:15:27 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 67BABB3E2;
-        Mon,  9 Dec 2019 10:15:24 +0000 (UTC)
-Subject: Re: [PATCH v3 0/1] xen/blkback: Squeeze page pools if a memory
- pressure
-To:     "Durrant, Paul" <pdurrant@amazon.com>,
-        "Park, Seongjae" <sjpark@amazon.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "roger.pau@citrix.com" <roger.pau@citrix.com>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sj38.park@gmail.com" <sj38.park@gmail.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-References: <20191209085839.21215-1-sjpark@amazon.com>
- <954f7beb-9d40-253e-260b-4750809bf808@suse.com>
- <026ba79524da43648371e5bca437a5e4@EX13D32EUC003.ant.amazon.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <e913c44e-c898-9504-1e2a-927563563208@suse.com>
-Date:   Mon, 9 Dec 2019 11:15:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 05:15:31 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37951 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfLIKPa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 05:15:30 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so14263336wmi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 02:15:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=TcyeAKWxbs45jp/CfRj2pE3INadVkQJZA/zsi4FujnU=;
+        b=HwguWYypGOrERHEKBqG6yBbaJtfalNYU6k6DcWv9kigbL85xY7HsZi3xywYDWTsVPp
+         KHf8pD/KhFroU7HAsUnm2fBOM0AvcAvKvhu6/lw/osI1eThQuEYsWRCbc0md14+6/sOq
+         1joqtMyTmfJuvipkL29zWET0eVNo1c3yy2/3ljQvhH3ASCsNjbQMQSO9Kj6FmKNW/fQX
+         KV+B99rwc7GY2Wwq7u46yCEDyWODY2ilmw8zJgQv6ZerL90rUqepxVETfAvJjbcQDH9r
+         OtCPoqZUH8BufkBmygWVHZ81g70kFqvS/SfVSaOPjTllBJ6BHTE5wU3Iea6lugKB9Fhw
+         xvwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=TcyeAKWxbs45jp/CfRj2pE3INadVkQJZA/zsi4FujnU=;
+        b=U1HexoTyr5W5qHxaiqGMANozSY3Bwvfsr5t4iI7CO2fL0Ewb3s86u817eT1KMpetJu
+         32butky0tM7MxuPK5XGgYsV6Slcszu2/4FaSAFrn1Yn+Wj2SN9IqjeeK5yGFQ0BdibBe
+         DgeqTpDJYwdtId3R2ZOgAOQTtABk9GQaFXAvlYrJNL2Rgf8CY/V4Iiv0vey2SVh0FSZn
+         x6cImXEtY/M8VAQghuYIaJy+LWVcnsUa9RMBfTPBi5Gc7afor/YM7hvavFb1uoJfnnf9
+         cTAPDoJORoW0RxI7j3rXQWb6V2jwGlYlXnLkwDkw+jI3VQB6+MYyk3OR9EE2tH8FzodV
+         KOmg==
+X-Gm-Message-State: APjAAAUhWpSdMVVxdp+kJTxo6q9MQJfCcgWhNg4JsZ66p9tspUv4kA44
+        gCcpgVC9xjdoIHMKBGevQTLaGw==
+X-Google-Smtp-Source: APXvYqzllFTCkE0DiwNkEV+3aqKGy90vjjwlpWPCDPLN8xnRxxdHfYXmJTNDkH4yfls7b/VxgydkCg==
+X-Received: by 2002:a1c:2155:: with SMTP id h82mr24577971wmh.21.1575886527834;
+        Mon, 09 Dec 2019 02:15:27 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id s82sm13064173wms.28.2019.12.09.02.15.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 02:15:27 -0800 (PST)
+References: <20191206100218.480348-1-jbrunet@baylibre.com> <20191206100218.480348-5-jbrunet@baylibre.com> <CAFBinCDMxf6tJt+bkfN7W5CMJrqZ+F1zTC=q8xmYtxg7gpEJxg@mail.gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] arm64: dts: meson: add libretech-pc boards support
+In-reply-to: <CAFBinCDMxf6tJt+bkfN7W5CMJrqZ+F1zTC=q8xmYtxg7gpEJxg@mail.gmail.com>
+Date:   Mon, 09 Dec 2019 11:15:26 +0100
+Message-ID: <1jmuc1erep.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <026ba79524da43648371e5bca437a5e4@EX13D32EUC003.ant.amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.12.19 10:46, Durrant, Paul wrote:
->> -----Original Message-----
->> From: Jürgen Groß <jgross@suse.com>
->> Sent: 09 December 2019 09:39
->> To: Park, Seongjae <sjpark@amazon.com>; axboe@kernel.dk;
->> konrad.wilk@oracle.com; roger.pau@citrix.com
->> Cc: linux-block@vger.kernel.org; linux-kernel@vger.kernel.org; Durrant,
->> Paul <pdurrant@amazon.com>; sj38.park@gmail.com; xen-
->> devel@lists.xenproject.org
->> Subject: Re: [PATCH v3 0/1] xen/blkback: Squeeze page pools if a memory
->> pressure
->>
->> On 09.12.19 09:58, SeongJae Park wrote:
->>> Each `blkif` has a free pages pool for the grant mapping.  The size of
->>> the pool starts from zero and be increased on demand while processing
->>> the I/O requests.  If current I/O requests handling is finished or 100
->>> milliseconds has passed since last I/O requests handling, it checks and
->>> shrinks the pool to not exceed the size limit, `max_buffer_pages`.
->>>
->>> Therefore, `blkfront` running guests can cause a memory pressure in the
->>> `blkback` running guest by attaching a large number of block devices and
->>> inducing I/O.
->>
->> I'm having problems to understand how a guest can attach a large number
->> of block devices without those having been configured by the host admin
->> before.
->>
->> If those devices have been configured, dom0 should be ready for that
->> number of devices, e.g. by having enough spare memory area for ballooned
->> pages.
->>
->> So either I'm missing something here or your reasoning for the need of
->> the patch is wrong.
->>
-> 
-> I think the underlying issue is that persistent grant support is hogging memory in the backends, thereby compromising scalability. IIUC this patch is essentially a band-aid to get back to the scalability that was possible before persistent grant support was added. Ultimately the right answer should be to get rid of persistent grants support and use grant copy, but such a change is clearly more invasive and would need far more testing.
 
-Persistent grants are hogging ballooned pages, which is equivalent to
-memory only in case of the backend's domain memory being equal or
-rather near to its max memory size.
+On Sun 08 Dec 2019 at 19:05, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-So configuring the backend domain with enough spare area for ballooned
-pages should make this problem much less serious.
+> Hi Jerome,
+>
+> this is looking good overall - I have some questions / nit-picks below
+>
+> On Fri, Dec 6, 2019 at 11:02 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> [...]
+>> +       adc_keys {
+> on most boards we use "adc-keys" instead of "adc_keys"
+>
+> [...]
+>> +               button-onoff {
+>> +                       label = "On/Off";
+>> +                       linux,code = <KEY_VENDOR>;
+> based on the label I assumed that the code is KEY_POWER
+> why is KEY_VENDOR the better choice here?
+>
 
-Another problem in this area is the amount of maptrack frames configured
-for a driver domain, which will limit the number of concurrent foreign
-mappings of that domain.
+My bad - The button is labeled with "UPDATE" ... nothing really matches
+in the KEYs ... so VENDOR it is.
 
-So instead of having a blkback specific solution I'd rather have a
-common callback for backends to release foreign mappings in order to
-enable a global resource management.
+I have just copy/pasted the section and forgot to update the rest
 
+> [...]
+>> +       cvbs-connector {
+>> +               compatible = "composite-video-connector";
+>> +               status = "disabled";
+> is there CVBS on the board? if I remember correctly the VPU driver
+> works fine when omitting the CVBS connector
+> so if the board doesn't have it you may drop the whole node instead of
+> keeping it disabled
 
-Juergen
+The CVBS output could be provided on one the GPIO header.
+Since it is not really standard, I prefer to keep off and leave to
+option to easily turn it on if someone wants to use it.
+
+I'll had a comment for that.
+
+>
+> [...]
+>> +       leds {
+>> +               compatible = "gpio-leds";
+>> +
+>> +               green {
+>> +                       label = "librecomputer:green:disk";
+> you can use the "function" and "color" properties instead of the (now
+> deprecated) "label"
+>
+> [...]
+>> +&external_mdio {
+>> +       external_phy: ethernet-phy@0 {
+>> +               reg = <0>;
+> it would be great to have a comment above which PHY is used on this board
+>
+>> +               max-speed = <1000>;
+>> +               reset-assert-us = <10000>;
+>> +               reset-deassert-us = <30000>;
+>> +               reset-gpios = <&gpio GPIOZ_14 GPIO_ACTIVE_LOW>;
+>> +               interrupt-parent = <&gpio_intc>;
+> a comment like /* MAC_INTR on GPIOZ_15 */ would be great here
+>> +               interrupts = <25 IRQ_TYPE_LEVEL_LOW>;
+>
+> [...]
+>> +&pinctrl_periphs {
+>> +       /*
+>> +        * Make sure the reset pin of the usb HUB is driven high to take
+>> +        * it out of reset.
+>> +        */
+>> +       usb1_rst_pins: usb1_rst_irq {
+>> +               mux {
+>> +                       groups = "GPIODV_3";
+>> +                       function = "gpio_periphs";
+>> +                       bias-disable;
+>> +                       output-high;
+>> +               };
+>> +       };
+> on other boards (like Odroid-C2) we use a GPIO hog for this. I'm not
+> sure which one is better
+>
+
+This is at least tied to the related device.
+
+I have discussed "hog" vs "pinctrl" matter with Bartosz Golaszewski and
+we could not find any reason not proceed with pinctrl when possible.
+
+> [...]
+>> +&pinctrl_periphs {
+>> +       /*
+>> +        * Make sure the irq pin of the TYPE C controller is not driven
+>> +        * by the SoC.
+> is this because the SoC default configuration pulls the IRQ line LOW,
+> which then generates "phantom" IRQs?
+
+No. It is just making sure the pin is claimed and properly configured.
+
+Since our interrupt and gpio controller are completly de-coupled it is
+not necessarily the case without it (... and yes, the same is true for the
+other device using gpio irqs)
+
+>
+> [...]
+>> +       fusb302@22 {
+> typec-portc@22
+>
+> [...]
+>> +               interrupt-parent = <&gpio_intc>;
+>> +               interrupts = <59 IRQ_TYPE_LEVEL_LOW>;
+> a comment above with the GPIO number would be great
+>
+>
+> Martin
+
