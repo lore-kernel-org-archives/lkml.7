@@ -6,87 +6,198 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9460C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 03:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C350C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 03:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17D820663
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 03:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A1A2071A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 03:42:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfLIDmE (ORCPT
+        id S1727049AbfLIDmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 22:42:04 -0500
-Received: from mail.zju.edu.cn ([61.164.42.155]:10754 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726748AbfLIDmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 22:42:04 -0500
-X-Greylist: delayed 133167 seconds by postgrey-1.27 at vger.kernel.org; Sun, 08 Dec 2019 22:42:03 EST
-Received: from localhost.localdomain (unknown [10.181.191.229])
-        by mail-app4 (Coremail) with SMTP id cS_KCgAn74iCwu1d6bMGAw--.10849S3;
-        Mon, 09 Dec 2019 11:41:54 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] btrfs: add missing check after link_free_space
-Date:   Mon,  9 Dec 2019 11:41:14 +0800
-Message-Id: <20191209034114.16212-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cS_KCgAn74iCwu1d6bMGAw--.10849S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrZrWkJw1DWF45AF4kAw17GFg_yoWDCrg_ZF
-        97A3W8tr43Kryxuwn5Kw1rXrZY9wsYkFyFq3WIkF17GayfZwn8XrsFyryxCFnIga18JFsF
-        y34kZr17Ga47ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb2AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
-        GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv
-        6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
-        C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48J
-        MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
-        IF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
+        Sun, 8 Dec 2019 22:42:09 -0500
+Received: from emcscan.emc.com.tw ([192.72.220.5]:43216 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726748AbfLIDmH (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Sun, 8 Dec 2019 22:42:07 -0500
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="33196496"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 09 Dec 2019 11:42:06 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(71506:0:AUTH_RELAY)
+        (envelope-from <dave.wang@emc.com.tw>); Mon, 09 Dec 2019 11:42:07 +0800 (CST)
+Received: from 42.73.254.157
+        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(101173:0:AUTH_LOGIN)
+        (envelope-from <dave.wang@emc.com.tw>); Mon, 09 Dec 2019 11:42:07 +0800 (CST)
+From:   Dave Wang <dave.wang@emc.com.tw>
+To:     Linux-input@vger.kernel.org, Linux-kernel@vger.kernel.org,
+        Dmitry.torokhov@gmail.com
+Cc:     phoenix@emc.com.tw, josh.chen@emc.com.tw, jingle.wu@emc.com.tw,
+        kai.heng.feng@canonical.com, "Dave.Wang" <dave.wang@emc.com.tw>
+Subject: [PATCH 4/6] Input: elantech - High resolution report for new pattern 2
+Date:   Sun,  8 Dec 2019 22:41:59 -0500
+Message-Id: <20191209034159.30394-1-dave.wang@emc.com.tw>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The return value of link_free_space is checked out-sync.
-One branch of an if statement uses an extra check after
-WARN_ON() but its peer branch does not. WARN_ON() does
-not change the control flow, thus only using this check
-might be insufficient.
+From: "Dave.Wang" <dave.wang@emc.com.tw>
 
-Fix this by simply adding a check on ret.
+Due to the higher resolution touchpad is produced, the former
+resolution bits were not enough. Extend the resolution bits
+from 12 to 14 bits and also remove the mk value for new pattern 2.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
---
-Changes in v2:
-  - Add memory free for free space entry.
+Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
 ---
- fs/btrfs/free-space-cache.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/input/mouse/elantech.c | 66 +++++++++++++++++++++++++---------
+ 1 file changed, 49 insertions(+), 17 deletions(-)
 
-diff --git a/fs/btrfs/free-space-cache.c b/fs/btrfs/free-space-cache.c
-index 3283da419200..ba2e6cea5233 100644
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -2437,6 +2437,10 @@ int btrfs_remove_free_space(struct btrfs_block_group *block_group,
- 			if (info->bytes) {
- 				ret = link_free_space(ctl, info);
- 				WARN_ON(ret);
-+				if (ret) {
-+					kmem_cache_free(btrfs_free_space_cachep, info);
-+					goto out_lock;
-+				}
- 			} else {
- 				kmem_cache_free(btrfs_free_space_cachep, info);
- 			}
+diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
+index 322b181d00e9..53d7ff719d76 100644
+--- a/drivers/input/mouse/elantech.c
++++ b/drivers/input/mouse/elantech.c
+@@ -639,15 +639,21 @@ static void process_packet_head_v4(struct psmouse *psmouse)
+ 	struct elantech_data *etd = psmouse->private;
+ 	unsigned char *packet = psmouse->packet;
+ 	int id = ((packet[3] & 0xe0) >> 5) - 1;
+-	int pres, traces;
++	int pres, traces = 0;
+ 
+ 	if (id < 0)
+ 		return;
+ 
+-	etd->mt[id].x = ((packet[1] & 0x0f) << 8) | packet[2];
+-	etd->mt[id].y = etd->y_max - (((packet[4] & 0x0f) << 8) | packet[5]);
+-	pres = (packet[1] & 0xf0) | ((packet[4] & 0xf0) >> 4);
+-	traces = (packet[0] & 0xf0) >> 4;
++	if (etd->info.pattern <= 0x01) {
++		etd->mt[id].x = ((packet[1] & 0x0f) << 8) | packet[2];
++		etd->mt[id].y = etd->y_max - (((packet[4] & 0x0f) << 8) | packet[5]);
++		pres = (packet[1] & 0xf0) | ((packet[4] & 0xf0) >> 4);
++		traces = (packet[0] & 0xf0) >> 4;
++	} else {
++		etd->mt[id].x = ((packet[1] & 0x3f) << 8) | packet[2];
++		etd->mt[id].y = etd->y_max - (((packet[4] & 0x3f) << 8) | packet[5]);
++		pres = (packet[4] & 0xc0) | ((packet[1] & 0xc0) >> 2) | ((packet[0] & 0xf0) >> 4);
++	}
+ 
+ 	input_mt_slot(dev, id);
+ 	input_mt_report_slot_state(dev, MT_TOOL_FINGER, true);
+@@ -655,9 +661,11 @@ static void process_packet_head_v4(struct psmouse *psmouse)
+ 	input_report_abs(dev, ABS_MT_POSITION_X, etd->mt[id].x);
+ 	input_report_abs(dev, ABS_MT_POSITION_Y, etd->mt[id].y);
+ 	input_report_abs(dev, ABS_MT_PRESSURE, pres);
+-	input_report_abs(dev, ABS_MT_TOUCH_MAJOR, traces * etd->width);
+-	/* report this for backwards compatibility */
+-	input_report_abs(dev, ABS_TOOL_WIDTH, traces);
++	if (etd->info.pattern <= 0x01) {
++		input_report_abs(dev, ABS_MT_TOUCH_MAJOR, traces * etd->width);
++		/* report this for backwards compatibility */
++		input_report_abs(dev, ABS_TOOL_WIDTH, traces);
++	}
+ 
+ 	elantech_input_sync_v4(psmouse);
+ }
+@@ -1057,15 +1065,24 @@ static int elantech_set_absolute_mode(struct psmouse *psmouse)
+ }
+ 
+ /*
+- * (value from firmware) * 10 + 790 = dpi
++ * pattern <= 0x01:
++ *	(value from firmware) * 10 + 790 = dpi
++ * else
++ *	((value from firmware) + 3) * 100 = dpi
++ *
+  * we also have to convert dpi to dots/mm (*10/254 to avoid floating point)
+  */
+-static unsigned int elantech_convert_res(unsigned int val)
++static unsigned int elantech_convert_res(unsigned int val,
++					unsigned char pattern)
+ {
+-	return (val * 10 + 790) * 10 / 254;
++	if (pattern <= 0x01)
++		return (val * 10 + 790) * 10 / 254;
++	else
++		return ((val + 3) * 100) * 10 / 254;
+ }
+ 
+ static int elantech_get_resolution_v4(struct psmouse *psmouse,
++					  unsigned char pattern,
+ 				      unsigned int *x_res,
+ 				      unsigned int *y_res,
+ 				      unsigned int *bus)
+@@ -1075,8 +1092,8 @@ static int elantech_get_resolution_v4(struct psmouse *psmouse,
+ 	if (elantech_send_cmd(psmouse, ETP_RESOLUTION_QUERY, param))
+ 		return -1;
+ 
+-	*x_res = elantech_convert_res(param[1] & 0x0f);
+-	*y_res = elantech_convert_res((param[1] & 0xf0) >> 4);
++	*x_res = elantech_convert_res(param[1] & 0x0f, pattern);
++	*y_res = elantech_convert_res((param[1] & 0xf0) >> 4, pattern);
+ 	*bus = param[2];
+ 
+ 	return 0;
+@@ -1194,7 +1211,8 @@ static int elantech_set_input_params(struct psmouse *psmouse)
+ 		 */
+ 		input_set_abs_params(dev, ABS_PRESSURE, ETP_PMIN_V2,
+ 				     ETP_PMAX_V2, 0, 0);
+-		input_set_abs_params(dev, ABS_TOOL_WIDTH, ETP_WMIN_V2,
++		if (etd->info.pattern <= 0x01)
++			input_set_abs_params(dev, ABS_TOOL_WIDTH, ETP_WMIN_V2,
+ 				     ETP_WMAX_V2, 0, 0);
+ 		/* Multitouch capable pad, up to 5 fingers. */
+ 		input_mt_init_slots(dev, ETP_MAX_FINGERS, 0);
+@@ -1206,7 +1224,8 @@ static int elantech_set_input_params(struct psmouse *psmouse)
+ 		 * The firmware reports how many trace lines the finger spans,
+ 		 * convert to surface unit as Protocol-B requires.
+ 		 */
+-		input_set_abs_params(dev, ABS_MT_TOUCH_MAJOR, 0,
++		if (etd->info.pattern <= 0x01)
++			input_set_abs_params(dev, ABS_MT_TOUCH_MAJOR, 0,
+ 				     ETP_WMAX_V2 * width, 0, 0);
+ 		break;
+ 	}
+@@ -1628,6 +1647,7 @@ static int elantech_query_info(struct psmouse *psmouse,
+ {
+ 	unsigned char param[3];
+ 	unsigned char traces;
++	unsigned char y_max_l;
+ 
+ 	memset(info, 0, sizeof(*info));
+ 
+@@ -1732,6 +1752,7 @@ static int elantech_query_info(struct psmouse *psmouse,
+ 	info->y_res = 31;
+ 	if (info->hw_version == 4) {
+ 		if (elantech_get_resolution_v4(psmouse,
++							info->pattern,
+ 					       &info->x_res,
+ 					       &info->y_res,
+ 					       &info->bus)) {
+@@ -1800,8 +1821,19 @@ static int elantech_query_info(struct psmouse *psmouse,
+ 		if (info->send_cmd(psmouse, ETP_FW_ID_QUERY, param))
+ 			return -EINVAL;
+ 
+-		info->x_max = (0x0f & param[0]) << 8 | param[1];
+-		info->y_max = (0xf0 & param[0]) << 4 | param[2];
++		if (info->pattern <= 0x01) {
++			info->x_max = (0x0f & param[0]) << 8 | param[1];
++			info->y_max = (0xf0 & param[0]) << 4 | param[2];
++		} else {
++			info->x_max = (param[0] << 8) | param[1];
++			y_max_l = param[2];
++
++			if (info->send_cmd(psmouse, ETP_SAMPLE_QUERY, param))
++				return -1;
++
++			info->y_max = param[2] << 8 | y_max_l;
++		}
++
+ 		traces = info->capabilities[1];
+ 		if ((traces < 2) || (traces > info->x_max))
+ 			return -EINVAL;
 -- 
-2.21.0 (Apple Git-122)
+2.17.1
 
