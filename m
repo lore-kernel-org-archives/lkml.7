@@ -2,73 +2,179 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DKIM_ADSP_NXDOMAIN,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCF8C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07D9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FF020709
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C394420692
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:13:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0YvdE3p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbfLICJh (ORCPT
+        id S1726877AbfLICNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 21:09:37 -0500
-Received: from li1843-175.members.linode.com ([172.104.24.175]:57366 "EHLO
-        mail.stoffel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbfLICJh (ORCPT
+        Sun, 8 Dec 2019 21:13:55 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:40566 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbfLICNz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 21:09:37 -0500
-X-Greylist: delayed 533 seconds by postgrey-1.27 at vger.kernel.org; Sun, 08 Dec 2019 21:09:36 EST
-Received: from quad.stoffel.org (66-189-75-104.dhcp.oxfr.ma.charter.com [66.189.75.104])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.stoffel.org (Postfix) with ESMTPSA id 80E521EDDC;
-        Sun,  8 Dec 2019 21:00:42 -0500 (EST)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-        id E9A93A5DE1; Sun,  8 Dec 2019 21:00:41 -0500 (EST)
-Date:   Sun, 8 Dec 2019 21:00:41 -0500
-From:   John Stoffel <john@quad.stoffel.home>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] fs: introduce is_dot_dotdot helper for cleanup
-Message-ID: <20191209020041.et776tzhxqsqqfs5@quad.stoffel.home>
-References: <1575718548-19017-1-git-send-email-yangtiezhu@loongson.cn>
- <20191208034144.GP4203@ZenIV.linux.org.uk>
- <20191208123804.GB32169@bombadil.infradead.org>
+        Sun, 8 Dec 2019 21:13:55 -0500
+Received: by mail-il1-f193.google.com with SMTP id b15so11336148ila.7;
+        Sun, 08 Dec 2019 18:13:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=k15R5nnH7ejDpMt2qDC/YjWGHq/27T3NqR985G0b1io=;
+        b=e0YvdE3pADvK2Ktnt0flJw9zLH2RNpK3dJowZUsSejzeefqwu7BqYYIeAY01iQt7cn
+         Z9s/Gk0ybxsjTSfOItKoypebt/D1cSPOPwVd1PBfSvFvNPpUph4qoH1IcXYJyDaJhRTL
+         j5FOw6lY1ggO3hL/aExyG+zCF6bG3Lu5ACeuK0YxQfJFk3r3dK473a4gLDcOacqGeiuU
+         yqg3OHtgpPy7qZ/Rl9BVaHBCJZkqKBh5tZl5FLFoHHAc0J05ijxNFI3Oi5DNRUf7xvDc
+         yAI4qM2ofJdINtkmivJhdalTyrdIO8v8rkoTQQ5/9xCv2gECnlcpbO/SOAnu+eRIHRO1
+         d8zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=k15R5nnH7ejDpMt2qDC/YjWGHq/27T3NqR985G0b1io=;
+        b=B8rVOxu+ng1LiM2Hk4C/QSePR+ZPxWb6lEMxQp5QBrMQ+LgUE4YMyBHSfuZnqUkI+z
+         lz3KlzQUal15K8YlHIAEaisKGrF7O4w1qqzo7Tr7grSCnnQihlIOUNzWttkbwTL+nTS7
+         nJcwhR4pt5AZyHKzbKjP20pJepiJ/7OTv+R6a0RyFDw7fqTNDjjIG+EdloCU1yFMicKy
+         6bMIh4bhI4WUWWSUvXCvYzDEKEsm5qUf0v3X0sp7uj3lnwEGkdrcujw3APnXHHRqzxuD
+         Th2q9uJ0P6MY7gjOK5SpHPA/vwI5TTa202fNE/WYMA0/35DNsuUaqQvsBiR95WZ6XjJg
+         6a5g==
+X-Gm-Message-State: APjAAAWvFzfnmKPM28BwFV3/dbrdyhGwIZRPRWUd5ZF8QqMx+r5ySxzH
+        eZzS4wbjG4ww6P2lQKdEFEyclRoDU0nwSpkqaJ4=
+X-Google-Smtp-Source: APXvYqxv5NywBnj4CHBu47U5qi0QCZ9tpg7hVXEx/R4Tuj/ZqbHkan08oiS9gCkMH9qRlDjKXXFtvT/03EDiC01wC4c=
+X-Received: by 2002:a92:6a08:: with SMTP id f8mr24730721ilc.27.1575857634060;
+ Sun, 08 Dec 2019 18:13:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191208123804.GB32169@bombadil.infradead.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20191204031005.2638-1-gmayyyha@gmail.com> <20191204103629.GA22244@hermes.olymp>
+ <CAB9OAC2vzPy=ELYzDRjBvA6m8T8AvwdJugS2NoCczwD1+Xb36Q@mail.gmail.com> <20191205102433.GA5758@hermes.olymp>
+In-Reply-To: <20191205102433.GA5758@hermes.olymp>
+From:   Yanhu Cao <gmayyyha@gmail.com>
+Date:   Mon, 9 Dec 2019 10:13:41 +0800
+Message-ID: <CAB9OAC3eH89pA4EORu93gE+r9LJ7CW_gBYr4dSn0u3K3+p7T8w@mail.gmail.com>
+Subject: Re: [PATCH] ceph: check set quota operation support before syncing setxattr.
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     jlayton@kernel.org, sage@redhat.com, idryomov@gmail.com,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 08, 2019 at 04:38:04AM -0800, Matthew Wilcox wrote:
-> On Sun, Dec 08, 2019 at 03:41:44AM +0000, Al Viro wrote:
-> > On Sat, Dec 07, 2019 at 07:35:48PM +0800, Tiezhu Yang wrote:
-> > > There exists many similar and duplicate codes to check "." and "..",
-> > > so introduce is_dot_dotdot helper to make the code more clean.
-> > 
-> > Umm...  No objections, in principle, but... you try to say that name
-> > (e.g. in a phone conversation) without stuttering ;-/
-> > 
-> > Any suggestions from native speakers?
-> 
-> I used "is_dot_or_dotdot" when discussing this patch with my wife verbally.
+On Thu, Dec 5, 2019 at 6:24 PM Luis Henriques <lhenriques@suse.com> wrote:
+>
+> On Thu, Dec 05, 2019 at 10:42:46AM +0800, Yanhu Cao wrote:
+> > On Wed, Dec 4, 2019 at 6:36 PM Luis Henriques <lhenriques@suse.com> wro=
+te:
+> > >
+> > > On Wed, Dec 04, 2019 at 11:10:05AM +0800, Yanhu Cao wrote:
+> > > > Environment
+> > > > -----------
+> > > > ceph version: 12.2.*
+> > > > kernel version: 4.19+
+> > > >
+> > > > setfattr quota operation actually sends op to MDS, and settings
+> > > > effective. but kclient outputs 'Operation not supported'. This may =
+confuse
+> > > > users' understandings.
+> > >
+> > > What exactly do you mean by "settings effective"?  There have been
+> > > changes in the way CephFS quotas work in mimic and, if you're using a
+> > > Luminous cluster (12.2.*) the kernel client effectively does *not*
+> > > support quotas -- you'll be able to exceed the quotas you've tried to
+> > > set because the client won't be checking the limits.  Thus, -EOPNOTSU=
+PP
+> > > seems appropriate for this scenario.
+> > >
+> > > I guess that the confusing part is that the xattr is actually set in
+> > > that case, but the kernel client won't be able to use it to validate
+> > > quotas in the filesystem tree because realms won't be created.
+> > >
+> > Yes. we use kcephfs+nfs for CentOS6.*, it does not support ceph-fuse(12=
+.2.*).
+> > The operating system of other applications is CentOS7.*, which uses
+> > ceph-fuse and can get quota settings set by kclient.
+>
+> Ok, so if I understand correctly, you're setting quotas with the kernel
+> client but actually using ceph-fuse on CentOS7 (I'm assuming a Luminous
+> cluster).  This should work fine for the fuse-client, but please note
+> that the kernel client will not respect quotas.
+Yes. do with fuse-client now.
 
-*thumbs up*  Both for the wife, and the name.  :-)
+>
+> Anyway, the ideal solution for this would be for the kernel to not set
+> the xattr if the cluster doesn't support the new quotas format
+> introduced in Mimic.  Unfortunately, the only way we have to find that
+> out is to set the xattr and see if we get a snap_realm.
+Therefore, I think that if kclient is incompatible with the ceph
+version, logically, op should not be sent to MDS.
 
--- 
+Thanks.
+BRs
+
+>
+> Cheers,
+> --
+> Lu=C3=ADs
+>
+> >
+> > Thanks.
+> > BRs
+> >
+> > > Cheers,
+> > > --
+> > > Lu=C3=ADs
+> > > >
+> > > > If the kernel version and ceph version are not compatible, should c=
+heck
+> > > > quota operations are supported first, then do sync_setxattr.
+> > > >
+> > > > reference: https://docs.ceph.com/docs/master/cephfs/quota/
+> > > >
+> > > > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+> > > > ---
+> > > >  fs/ceph/xattr.c | 6 ++++--
+> > > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+> > > > index cb18ee637cb7..189aace75186 100644
+> > > > --- a/fs/ceph/xattr.c
+> > > > +++ b/fs/ceph/xattr.c
+> > > > @@ -1132,8 +1132,8 @@ int __ceph_setxattr(struct inode *inode, cons=
+t char *name,
+> > > >                                   "during filling trace\n", inode);
+> > > >               err =3D -EBUSY;
+> > > >       } else {
+> > > > -             err =3D ceph_sync_setxattr(inode, name, value, size, =
+flags);
+> > > > -             if (err >=3D 0 && check_realm) {
+> > > > +             err =3D 0;
+> > > > +             if (check_realm) {
+> > > >                       /* check if snaprealm was created for quota i=
+node */
+> > > >                       spin_lock(&ci->i_ceph_lock);
+> > > >                       if ((ci->i_max_files || ci->i_max_bytes) &&
+> > > > @@ -1142,6 +1142,8 @@ int __ceph_setxattr(struct inode *inode, cons=
+t char *name,
+> > > >                               err =3D -EOPNOTSUPP;
+> > > >                       spin_unlock(&ci->i_ceph_lock);
+> > > >               }
+> > > > +             if (err =3D=3D 0)
+> > > > +                     err =3D ceph_sync_setxattr(inode, name, value=
+, size, flags);
+> > > >       }
+> > > >  out:
+> > > >       ceph_free_cap_flush(prealloc_cf);
+> > > > --
+> > > > 2.21.0 (Apple Git-122.2)
+> > > >
