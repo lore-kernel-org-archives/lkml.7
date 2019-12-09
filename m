@@ -2,129 +2,148 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3E3C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0DAC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E54B20726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:56:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jo1DFtbf"
+	by mail.kernel.org (Postfix) with ESMTP id 72AA320726
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:05:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfLIO4z (ORCPT
+        id S1726562AbfLIPFQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:56:55 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:37693 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfLIO4z (ORCPT
+        Mon, 9 Dec 2019 10:05:16 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:22842 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725956AbfLIPFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 09:56:55 -0500
-Received: by mail-il1-f193.google.com with SMTP id t9so12975433iln.4;
-        Mon, 09 Dec 2019 06:56:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GZjkca3Zp9sYYYIS/QPCEF0H2DGmE3kQodC7U7RI6jg=;
-        b=Jo1DFtbfEqbVJQq5XZ5LYzCv5LfIMXre5rs2IBqXAEswSM4ZyGHTOACUpAWl/JxobF
-         HLX/pPfXm0RL9M3l645yavzaROmAbjPrumBgCxOs+qt0jECTLvAP2saRGhxDiE4oVabe
-         x5ksCotFtF8bz+kAXYWj99jBeJUme6AdylQlFhZHK5Pd5Gk1t3eZiddRZuYK0LK40RxD
-         YSVYDjyxUtLqzzIQK4xOZoi+glaFkyr5SiLcxWGHnk44UhVVdqwlxJe//NV2RaRGPTNP
-         gl8tmVv118OmwBXVwaHHpaVbbEq1vi6cVvltYUcazpnix7+plbZ6LF5IODbwmjQ4/C3R
-         9miQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GZjkca3Zp9sYYYIS/QPCEF0H2DGmE3kQodC7U7RI6jg=;
-        b=HGkTwBtNpfa0PsAvonHxJuAzOIxbuXF03Cfft+CY/0La5g/uYt4+7CnOehphaIlYAf
-         oeVVf4hvIWtiwAV8s5Z29TaVHg0+9ptlOm1akBduHliIGI0nOWkFyawwi23sQAhGcrp5
-         M784IiwdijVdyyiJP05KvYzUrW5cB6ayAHEmvRFzhV+JcQ+8c4g3uuC+H2kJBACGGorh
-         k6gAXLtw4YyHf2rxQnJg0tEkgbyF9itKdCruZWlqLsvb+Xzf98EsM+JYWl9TZEEdfyJA
-         R9t1oB/NrFSVKWP/AE2RfY0ssvSrHX5YY9j/WFuGC+Bs3ef2OP5gex6vM3907pQ6ROM7
-         Al/A==
-X-Gm-Message-State: APjAAAXsKve5UM7kJ0xhJpWIDjOoQcCXi2/iZJ48/TC16wV2jlNNzNnh
-        6UrflmFgg8uYpJi46BVnYk0yzGhLQYid/1iMFwcOUGi6
-X-Google-Smtp-Source: APXvYqxlvrvi0P/1yFULp5Ov9uTz23XUXUnTAB4CPJ8ux5bZ/ALMike0pN8bBYyFrKhz/ds6VBHl/XO9ocuzIVo34UE=
-X-Received: by 2002:a92:3919:: with SMTP id g25mr10786954ila.221.1575903414183;
- Mon, 09 Dec 2019 06:56:54 -0800 (PST)
+        Mon, 9 Dec 2019 10:05:16 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-250-xcW0IChpMEyv3Vdq0rFWyg-1; Mon, 09 Dec 2019 15:05:13 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 9 Dec 2019 15:05:12 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 9 Dec 2019 15:05:12 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'network dev' <netdev@vger.kernel.org>,
+        "'x86@kernel.org'" <x86@kernel.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Subject: RE: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
+Thread-Topic: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
+Thread-Index: AdWsNynavvs+VRwOQ6mSStk+IzVA6ACaJgVw
+Date:   Mon, 9 Dec 2019 15:05:12 +0000
+Message-ID: <0a3ac42bb3044373bb15a9a3da1c2af9@AcuMS.aculab.com>
+References: <23db23416d3148fa86e54dccc6152266@AcuMS.aculab.com>
+In-Reply-To: <23db23416d3148fa86e54dccc6152266@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20191206184536.2507-1-linux.amoon@gmail.com> <724aa7db-3838-16f9-d344-1789ae2a5746@arm.com>
-In-Reply-To: <724aa7db-3838-16f9-d344-1789ae2a5746@arm.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 9 Dec 2019 20:26:42 +0530
-Message-ID: <CANAwSgTPrP5FS3xb7SadZ+BwASWQxfO8rBmno8ZW0JzAxcqWKA@mail.gmail.com>
-Subject: Re: [RFCv1 0/8] RK3399 clean shutdown issue
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Daniel Schultz <d.schultz@phytec.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-rockchip@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: xcW0IChpMEyv3Vdq0rFWyg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+From: David Laight
+> Sent: 06 December 2019 13:40
+> Some tests I've done seem to show that recvmsg() is much slower that recvfrom()
+> even though most of what they do is the same.
+> One thought is that the difference is all the extra copy_from_user() needed by
+> recvmsg. CONFIG_HARDENED_USERCOPY can add a significant cost.
+> 
+> I've built rebuilt my 5.4-rc7 kernel with all the copy_to/from_user() in net/socket.c
+> replaced with the '_' prefixed versions (that don't call check_object()).
+> And also changed rw_copy_check_uvector() in fs/read_write.c.
+...
+> Anyway using PERF_COUNT_HW_CPU_CYCLES I've got the following
+> histograms for the number of cycles in each recv call.
+> There are about the same number (2.8M) in each column over
+> an elapsed time of 20 seconds.
+> There are 450 active UDP sockets, each receives 1 message every 20ms.
+> Every 10ms a RT thread that is pinned to a cpu reads all the pending messages.
+> This is a 4 core hyperthreading (8 cpu) system.
+> During these tests 5 other threads are also busy.
+> There are no sends (on those sockets).
 
-On Mon, 9 Dec 2019 at 18:59, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 06/12/2019 6:45 pm, Anand Moon wrote:
-> > Most of the RK3399 SBC boards do not perform clean
-> > shutdown and clean reboot.
->
-> FWIW reboot problems on RK3399 have been tracked down to issues in
-> upstream ATF, and are unrelated to the PMIC.
+I've repeated the measurements with HT disabled.
+The initial peak in the previous data will be running against an idle cpu.
+The second peak when the other cpu is doing work.
 
-Yes I am aware of this changes.
-But, I have tired to study *RK808 datasheet V1.4* [0] below section
-*5.2.3 Power Channel Control/Monitor Registers*
-for clean reboot I was going to try disable some bit in below
-into reboot handle in the future patch.
+I've also expanded the vertical scale.
+(My histogram code uses 64 buckets.)
 
-DCDC_EN_REG
-SLEEP_SET_OFF_REG1
-SLEEP_SET_OFF_REG2
-DCDC_UV_STS_REG
+         |       recvfrom      |       recvmsg
+ cycles  |   unhard  |    hard |   unhard  |    hard
+-----------------------------------------------------
+   1504:          1          0          0          0
+   1568:        255          3          0          0
+   1632:      15266        473         83          0
+   1696:     178767      18853       7110          1
+   1760:     423080     154636     123239        416
+   1824:     441977     410044     401895      23493
+   1888:     366640     508236     423648     186572
+   1952:     267423     431819     383269     347182
+   2016:     183694     305336     288347     384365
+   2080:     126643     191582     196172     358854
+   2144:      89987     116667     133757     275872
+   2208:      65903      73875      92185     197145
+   2272:      54161      52637      68537     138436
+   2336:      46558      43771      55740      98829
+   2400:      42672      40982      50058      76901
+   2464:      42855      42297      48429      66309
+   2528:      51673      44994      51165      61234
+   2592:     113385     107986     117982     125652
+   2656:      59586      57875      65416      72992
+   2720:      49211      47269      57081      67369
+   2784:      34911      31505      41435      51525
+   2848:      29386      24238      34025      43631
+   2912:      23522      17538      27094      35947
+   2976:      20768      14279      23747      30293
+   3040:      16973      12210      19851      26209
+   3104:      13962      10500      16625      22017
+   3168:      11669       9287      13922      18978
+   3232:       9519       8003      11773      16307
+   3296:       8119       6926       9993      14346
+   3360:       6818       5906       8532      12032
+   3424:       5867       5002       7241      10499
+   3488:       5319       4492       6107       9087
+   3552:       4835       3796       5625       7858
+   3616:       4544       3530       5270       6840
+   3680:       4113       3263       4845       6140
+   3744:       3691       2883       4315       5430
+   3808:       3325       2467       3798       4651
+   3872:       2901       2191       3412       4101
+   3936:       2499       1784       3127       3593
+   4000:       2273       1594       2636       3163
+   4064:       1868       1372       2231       2819
+  4128+:      50073      45330      51853      53752
 
-I was going see if this helps to do clean reboot.
-further more use this in suspend/resume operation.
+This shows that the hardened usercopy has a significant cost in recvmsg.
+All the places I changed contain explicit length checks.
 
-[0] http://rockchip.fr/RK808%20datasheet%20V1.4.pdf
+I'm going to see how much of the additional cost of recvmsg is down to
+the iov reading code.
+A lot of code will be passing exactly one buffer, and the code to process
+it is massive.
 
-But I feed that their is some more issue with related to mmc or PCIe
-not able to cleanly release the resources while reboot which caused
-then to disable after reboot.
+More odd is the peak at 2592 cycles in all 4 traces.
+I'm having difficulty thinking of an 'artefact' that wouldn't add an offset.
 
->
-> > These patches try to help resolve the issue with proper
-> > shutdown by turning off the PMIC.
->
-> As mentioned elsewhere[1], although this is what the BSP kernel seems to
-> do, and in practice it's unlikely to matter for the majority of devboard
-> users like you and me, I still feel a bit uncomfortable with this
-> solution for systems using ATF as in principle the secure world might
-> want to know about orderly shutdowns, and this effectively makes every
-> shutdown an unexpected power loss from secure software's point of view.
->
-> Robin.
->
-> [1]
-> http://lists.infradead.org/pipermail/linux-rockchip/2019-December/028183.html
->
+	David
 
-Yes I have follow the mailing list and I read this thread.
-I am not aware of ATF complete architecture.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
--Anand
