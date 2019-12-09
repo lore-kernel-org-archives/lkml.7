@@ -2,109 +2,119 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DC8C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4935CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E3E2077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F52520836
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:42:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfLIRkA convert rfc822-to-8bit (ORCPT
+        id S1726674AbfLIRmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 12:40:00 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49439 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfLIRj6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 12:39:58 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1ieN0l-0006ad-55; Mon, 09 Dec 2019 18:39:55 +0100
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1ieN0i-0001wW-8t; Mon, 09 Dec 2019 18:39:52 +0100
-Date:   Mon, 9 Dec 2019 18:39:52 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Fabio Estevam <festevam@gmail.com>, netdev@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1] ARM i.MX6q: make sure PHY fixup for KSZ9031 is
- applied only on one board
-Message-ID: <20191209173952.qnkzfrbixjgi2jfy@pengutronix.de>
-References: <20191209084430.11107-1-o.rempel@pengutronix.de>
- <20191209171508.GD9099@lunn.ch>
+        Mon, 9 Dec 2019 12:42:52 -0500
+Received: from mga03.intel.com ([134.134.136.65]:13261 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbfLIRmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 12:42:52 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 09:42:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
+   d="scan'208";a="244532940"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Dec 2019 09:42:50 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id CAFDE122; Mon,  9 Dec 2019 19:42:48 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/2] x86/mtrr: Make use of macros from mm.h
+Date:   Mon,  9 Dec 2019 19:42:47 +0200
+Message-Id: <20191209174248.45342-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20191209171508.GD9099@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 18:37:00 up 24 days,  8:55, 32 users,  load average: 0.03, 0.03,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Use predefined macros from mm.h instead of open coded PAGE_ALIGNED()
+and PFN_DOWN(). This will show explicitly the meaning of the operations.
 
-On Mon, Dec 09, 2019 at 06:15:08PM +0100, Andrew Lunn wrote:
-> Hi Oleksij
-> 
-> > This patch changes the MICREL KSZ9031 fixup, which was introduced for
-> > the "Data Modul eDM-QMX6" board in following patch, to be only activated
-> > for this specific board.
-> 
-> ...
-> 
-> >  static void __init imx6q_enet_phy_init(void)
-> >  {
-> > +	/* Warning: please do not extend this fixup list. This fixups are
-> > +	 * applied even on boards where related PHY is not directly connected
-> > +	 * to the ethernet controller. For example with switch in the middle.
-> > +	 */
-> >  	if (IS_BUILTIN(CONFIG_PHYLIB)) {
-> >  		phy_register_fixup_for_uid(PHY_ID_KSZ9021, MICREL_PHY_ID_MASK,
-> >  				ksz9021rn_phy_fixup);
-> > -		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
-> > -				ksz9031rn_phy_fixup);
-> > +
-> > +		if (of_machine_is_compatible("dmo,imx6q-edmqmx6"))
-> > +			phy_register_fixup_for_uid(PHY_ID_KSZ9031,
-> > +						   MICREL_PHY_ID_MASK,
-> > +						   ksz9031rn_phy_fixup);
-> > +
-> >  		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffef,
-> >  				ar8031_phy_fixup);
-> >  		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,
-> 
-> What about the other 3 fixups? Are they not also equally broken,
-> applied for all boards, not specific boards?
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ arch/x86/kernel/cpu/mtrr/if.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-Yes. all of them are broken.
-I just trying to not wake all wasp at one time. Most probably there are
-board working by accident. So, it will be good to have at least separate
-patches for each fixup.
-
+diff --git a/arch/x86/kernel/cpu/mtrr/if.c b/arch/x86/kernel/cpu/mtrr/if.c
+index 4d36dcc1cf87..a51eb8e4c079 100644
+--- a/arch/x86/kernel/cpu/mtrr/if.c
++++ b/arch/x86/kernel/cpu/mtrr/if.c
+@@ -2,6 +2,7 @@
+ #include <linux/capability.h>
+ #include <linux/seq_file.h>
+ #include <linux/uaccess.h>
++#include <linux/mm.h>
+ #include <linux/proc_fs.h>
+ #include <linux/ctype.h>
+ #include <linux/string.h>
+@@ -49,10 +50,10 @@ mtrr_file_add(unsigned long base, unsigned long size,
+ 		FILE_FCOUNT(file) = fcount;
+ 	}
+ 	if (!page) {
+-		if ((base & (PAGE_SIZE - 1)) || (size & (PAGE_SIZE - 1)))
++		if (!PAGE_ALIGNED(base) || !PAGE_ALIGNED(size))
+ 			return -EINVAL;
+-		base >>= PAGE_SHIFT;
+-		size >>= PAGE_SHIFT;
++		base = PFN_DOWN(base);
++		size = PFN_DOWN(size);
+ 	}
+ 	reg = mtrr_add_page(base, size, type, true);
+ 	if (reg >= 0)
+@@ -68,10 +69,10 @@ mtrr_file_del(unsigned long base, unsigned long size,
+ 	int reg;
+ 
+ 	if (!page) {
+-		if ((base & (PAGE_SIZE - 1)) || (size & (PAGE_SIZE - 1)))
++		if (!PAGE_ALIGNED(base) || !PAGE_ALIGNED(size))
+ 			return -EINVAL;
+-		base >>= PAGE_SHIFT;
+-		size >>= PAGE_SHIFT;
++		base = PFN_DOWN(base);
++		size = PFN_DOWN(size);
+ 	}
+ 	reg = mtrr_del_page(-1, base, size);
+ 	if (reg < 0)
+@@ -134,7 +135,7 @@ mtrr_write(struct file *file, const char __user *buf, size_t len, loff_t * ppos)
+ 		return -EINVAL;
+ 
+ 	size = simple_strtoull(ptr + 5, &ptr, 0);
+-	if ((base & 0xfff) || (size & 0xfff))
++	if (!PAGE_ALIGNED(base) || !PAGE_ALIGNED(size))
+ 		return -EINVAL;
+ 	ptr = skip_spaces(ptr);
+ 
+@@ -146,8 +147,8 @@ mtrr_write(struct file *file, const char __user *buf, size_t len, loff_t * ppos)
+ 	if (i < 0)
+ 		return i;
+ 
+-	base >>= PAGE_SHIFT;
+-	size >>= PAGE_SHIFT;
++	base = PFN_DOWN(base);
++	size = PFN_DOWN(size);
+ 	err = mtrr_add_page((unsigned long)base, (unsigned long)size, i, true);
+ 	if (err < 0)
+ 		return err;
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.24.0
+
