@@ -2,148 +2,153 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0DAC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D5CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72AA320726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 029E420726
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:05:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T0U0RYf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfLIPFQ convert rfc822-to-8bit (ORCPT
+        id S1726631AbfLIPFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:05:16 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:22842 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725956AbfLIPFQ (ORCPT
+        Mon, 9 Dec 2019 10:05:35 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58534 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfLIPFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 10:05:16 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-250-xcW0IChpMEyv3Vdq0rFWyg-1; Mon, 09 Dec 2019 15:05:13 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 9 Dec 2019 15:05:12 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 9 Dec 2019 15:05:12 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'network dev' <netdev@vger.kernel.org>,
-        "'x86@kernel.org'" <x86@kernel.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-Subject: RE: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
-Thread-Topic: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
-Thread-Index: AdWsNynavvs+VRwOQ6mSStk+IzVA6ACaJgVw
-Date:   Mon, 9 Dec 2019 15:05:12 +0000
-Message-ID: <0a3ac42bb3044373bb15a9a3da1c2af9@AcuMS.aculab.com>
-References: <23db23416d3148fa86e54dccc6152266@AcuMS.aculab.com>
-In-Reply-To: <23db23416d3148fa86e54dccc6152266@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 9 Dec 2019 10:05:34 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9F5NDJ130665;
+        Mon, 9 Dec 2019 09:05:23 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575903923;
+        bh=XNER3J3YDTiVz49WC0ITFYur4Q7s4xSP545U1ahkPeo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=T0U0RYf/NxPInPqdVS5xs2WZZqG02iJDAD6F3Fi/9Ru2MTZgY5jrzUAHSL5x2Mn7c
+         C/scQrm8z/1tV/bKh/5RYQhZMg/WnwCnCS6pU9HRkzO3LX56MfuOC5hVfooU8pMMUV
+         4vH+/j/+UmC6uPtytAJJStE5PSY/QBp6mWjvuQFY=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9F5NDt108360
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 09:05:23 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 09:05:22 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 09:05:21 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9F5JIq111204;
+        Mon, 9 Dec 2019 09:05:20 -0600
+Subject: Re: [PATCH v3 2/2] drm/bridge: tc358767: Expose test mode
+ functionality via debugfs
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+CC:     <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20191209050857.31624-1-andrew.smirnov@gmail.com>
+ <20191209050857.31624-3-andrew.smirnov@gmail.com>
+ <45afdff8-4f91-f5be-a299-d0c7fed71ea7@ti.com>
+ <CAHQ1cqH8XTYysd1Nv2Q0EziXfJWeemZeyyZZ3OKoCv8=XrHZWA@mail.gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <f873e4de-eabf-2746-8ad8-3d3c7d64a270@ti.com>
+Date:   Mon, 9 Dec 2019 17:05:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-MC-Unique: xcW0IChpMEyv3Vdq0rFWyg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <CAHQ1cqH8XTYysd1Nv2Q0EziXfJWeemZeyyZZ3OKoCv8=XrHZWA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Laight
-> Sent: 06 December 2019 13:40
-> Some tests I've done seem to show that recvmsg() is much slower that recvfrom()
-> even though most of what they do is the same.
-> One thought is that the difference is all the extra copy_from_user() needed by
-> recvmsg. CONFIG_HARDENED_USERCOPY can add a significant cost.
+On 09/12/2019 16:38, Andrey Smirnov wrote:
+> On Mon, Dec 9, 2019 at 1:38 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+>>
+>> (Cc'ing Daniel for the last paragraph)
+>>
+>> On 09/12/2019 07:08, Andrey Smirnov wrote:
+>>> Presently, the driver code artificially limits test pattern mode to a
+>>> single pattern with fixed color selection. It being a kernel module
+>>> parameter makes switching "test pattern" <-> "proper output" modes
+>>> on-the-fly clunky and outright impossible if the driver is built into
+>>> the kernel.
+>>
+>> That's not correct, /sys/module/tc358767/parameters/test is there even if the driver is built-in.
+>>
 > 
-> I've built rebuilt my 5.4-rc7 kernel with all the copy_to/from_user() in net/socket.c
-> replaced with the '_' prefixed versions (that don't call check_object()).
-> And also changed rw_copy_check_uvector() in fs/read_write.c.
-...
-> Anyway using PERF_COUNT_HW_CPU_CYCLES I've got the following
-> histograms for the number of cycles in each recv call.
-> There are about the same number (2.8M) in each column over
-> an elapsed time of 20 seconds.
-> There are 450 active UDP sockets, each receives 1 message every 20ms.
-> Every 10ms a RT thread that is pinned to a cpu reads all the pending messages.
-> This is a 4 core hyperthreading (8 cpu) system.
-> During these tests 5 other threads are also busy.
-> There are no sends (on those sockets).
+> True, I'll drop the "impossible" part of the descrption. Having to
+> unbind and bind device to the driver to use that parameter definitely
+> falls under "clunky" for me still, so I'll just stick to that in the
+> description.
 
-I've repeated the measurements with HT disabled.
-The initial peak in the previous data will be running against an idle cpu.
-The second peak when the other cpu is doing work.
+You don't need to re-bind. You can change the module parameter at runtime, and if the driver happens 
+to use the value, then it uses the new value. If I recall right, changing the module parameter and 
+then doing a full modeset from userspace made the driver to use the test mode (I'm not 100% sure, 
+though).
 
-I've also expanded the vertical scale.
-(My histogram code uses 64 buckets.)
+In any case, I'm not advocating for the use of module parameter here =)
 
-         |       recvfrom      |       recvmsg
- cycles  |   unhard  |    hard |   unhard  |    hard
------------------------------------------------------
-   1504:          1          0          0          0
-   1568:        255          3          0          0
-   1632:      15266        473         83          0
-   1696:     178767      18853       7110          1
-   1760:     423080     154636     123239        416
-   1824:     441977     410044     401895      23493
-   1888:     366640     508236     423648     186572
-   1952:     267423     431819     383269     347182
-   2016:     183694     305336     288347     384365
-   2080:     126643     191582     196172     358854
-   2144:      89987     116667     133757     275872
-   2208:      65903      73875      92185     197145
-   2272:      54161      52637      68537     138436
-   2336:      46558      43771      55740      98829
-   2400:      42672      40982      50058      76901
-   2464:      42855      42297      48429      66309
-   2528:      51673      44994      51165      61234
-   2592:     113385     107986     117982     125652
-   2656:      59586      57875      65416      72992
-   2720:      49211      47269      57081      67369
-   2784:      34911      31505      41435      51525
-   2848:      29386      24238      34025      43631
-   2912:      23522      17538      27094      35947
-   2976:      20768      14279      23747      30293
-   3040:      16973      12210      19851      26209
-   3104:      13962      10500      16625      22017
-   3168:      11669       9287      13922      18978
-   3232:       9519       8003      11773      16307
-   3296:       8119       6926       9993      14346
-   3360:       6818       5906       8532      12032
-   3424:       5867       5002       7241      10499
-   3488:       5319       4492       6107       9087
-   3552:       4835       3796       5625       7858
-   3616:       4544       3530       5270       6840
-   3680:       4113       3263       4845       6140
-   3744:       3691       2883       4315       5430
-   3808:       3325       2467       3798       4651
-   3872:       2901       2191       3412       4101
-   3936:       2499       1784       3127       3593
-   4000:       2273       1594       2636       3163
-   4064:       1868       1372       2231       2819
-  4128+:      50073      45330      51853      53752
+>> Hmm, actually, just echoing 0 to tstctl multiple times, it makes the screen go black and then
+>> restores it with every other echo.
+>>
+> 
+> Strange, works on my setup every time. No error messages in kernel log
+> I assume? Probably unrelated, but when you echo "0" and the screen
 
-This shows that the hardened usercopy has a significant cost in recvmsg.
-All the places I changed contain explicit length checks.
+No errors.
 
-I'm going to see how much of the additional cost of recvmsg is down to
-the iov reading code.
-A lot of code will be passing exactly one buffer, and the code to process
-it is massive.
+> stays black, what do you see in DP_SINK_STATUS register:
+> 
+> dd if=/dev/drm_dp_aux0 bs=1 skip=$((0x205)) count=1 2>/dev/null | hexdump -Cv
+> 
+> ? Note that this needs CONFIG_DRM_DP_AUX_CHARDEV to be enabled.
 
-More odd is the peak at 2592 cycles in all 4 traces.
-I'm having difficulty thinking of an 'artefact' that wouldn't add an offset.
+I'll check this later, and do a few more tests.
 
-	David
+>>> +     debugfs = debugfs_create_dir(dev_name(dev), NULL);
+>>> +     if (!IS_ERR(debugfs)) {
+>>> +             debugfs_create_file_unsafe("tstctl", 0200, debugfs, tc,
+>>> +                                        &tc_tstctl_fops);
+>>> +             devm_add_action_or_reset(dev, tc_remove_debugfs, debugfs);
+>>> +     }
+>>> +
+>>
+>> For me this creates debugfs/3-000f/tstctl. I don't think that's a clear or usable path, and could
+>> even cause a name conflict in the worst case.
+>>
+> 
+> I agree on usability aspect, but I am not sure I can see how a
+> conflict can happen. What scenario do you have in mind that would
+> cause that? My thinking was that the combination of I2C bus number +
+> I2C address should always be unique on the system, but maybe I am
+> missing something?
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Well, the dir name doesn't have "i2c" anywhere, so at least in theory, some other bus could have 
+"3-000f" address too.
 
+Maybe bigger problem is that it's not at all obvious what "3-000f" means. All the other debugfs dirs 
+make sense when you look at the name, and "3-000f" looks very odd there.
+
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
