@@ -2,124 +2,55 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 374FDC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64033C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12BDC2073D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2371A2073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:45:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="pk77XMTi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfLIIoj (ORCPT
+        id S1727435AbfLIIpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 03:44:39 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58011 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbfLIIoh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 03:44:37 -0500
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1ieEee-0007WR-G5; Mon, 09 Dec 2019 09:44:32 +0100
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1ieEed-0002y7-Ri; Mon, 09 Dec 2019 09:44:31 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH v1] ARM i.MX6q: make sure PHY fixup for KSZ9031 is applied only on one board
-Date:   Mon,  9 Dec 2019 09:44:30 +0100
-Message-Id: <20191209084430.11107-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.24.0
+        Mon, 9 Dec 2019 03:45:01 -0500
+Received: from mx1.riseup.net ([198.252.153.129]:35724 "EHLO mx1.riseup.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727047AbfLIIpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 03:45:00 -0500
+Received: from capuchin.riseup.net (capuchin-pn.riseup.net [10.0.1.176])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "*.riseup.net", Issuer "Sectigo RSA Domain Validation Secure Server CA" (not verified))
+        by mx1.riseup.net (Postfix) with ESMTPS id 47WcFm1P00zDrTD
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Dec 2019 00:45:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+        t=1575881100; bh=rECP+XlLZk/ggncFYtwe2zQD/k3a47VHBkv8utHOHBs=;
+        h=Date:From:To:Subject:In-Reply-To:References:Reply-To:From;
+        b=pk77XMTiBS6bGTHv+vSHlQhMHXKYMqtyyXos6ex9WQYCABnIFsnSWCVV0ge2mA8py
+         pV11NAt8wgRKYVF5lNLqfcAFXkSjM3omDzq0x5EwdAtHINMiO83IThoB0JiSshQ5qg
+         yP58qJF5QQyHAjNCncYfbJIVx/h+eZRUQfyZ6sNc=
+X-Riseup-User-ID: C98F8C6519189001D8F3EC788B1BB774F9A608C91D384D2C14A601E2FAA79ECC
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+         by capuchin.riseup.net (Postfix) with ESMTPSA id 47WcFl4HBXz8tpS
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Dec 2019 00:44:59 -0800 (PST)
+Date:   Mon, 9 Dec 2019 10:44:55 +0200
+From:   Kernel User <linux-kernel@riseup.net>
+To:     linux-kernel@vger.kernel.org
+Subject: Re: CPU vulnerabilities and web JavaScript
+Message-ID: <20191209104455.2fbbcd4c@localhost>
+In-Reply-To: <20191208214958.492988dd@localhost>
+References: <20191208214958.492988dd@localhost>
+Reply-To: linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently all board specific fixups defined in mach-imx*.c are not
-working properly. They are applied on all boards with the same iMX SoC
-variant and even if:
-- PHY needs different settings because of different board design
-- PHY needs different settings if it is not connected directly to the SoC.
-  For example, the PHY is connected to a switch and the switch is connected
-  to the SoC.
-
-Since most PHY drivers don't know about changed default settings, these
-settings will not be restored by the PHY driver after reset or
-suspend/resume cycle.
-
-This patch changes the MICREL KSZ9031 fixup, which was introduced for
-the "Data Modul eDM-QMX6" board in following patch, to be only activated
-for this specific board.
-
-|commit dbf6719a4a080669acb5087893704586c791aa41
-|Author: Sascha Hauer <s.hauer@pengutronix.de>
-|Date:   Thu Jun 20 17:34:33 2013 +0200
-|
-| ARM: i.MX6: add ethernet phy fixup for KSZ9031
-|
-| The KSZ9031 is used on the i.MX6 based Data Modul eDM-QMX6
-| board. It needs the same fixup to the rx/tx delays as other
-| i.MX6 boards.
-
-If some board was working by accident with this fixup, it will probably
-break and should be fixed properly by setting related device tree
-properties.
-
-To fix this properly the "eDM-QMX6" devicetree:
-
-    arch/arm/boot/dts/imx6q-dmo-edmqmx6.dts
-
-should have board specific *-skew-ps properties. See:
-
-    Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- arch/arm/mach-imx/mach-imx6q.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
-index 6441281cf4f2..2370cb5d8501 100644
---- a/arch/arm/mach-imx/mach-imx6q.c
-+++ b/arch/arm/mach-imx/mach-imx6q.c
-@@ -162,11 +162,19 @@ static int ar8035_phy_fixup(struct phy_device *dev)
- 
- static void __init imx6q_enet_phy_init(void)
- {
-+	/* Warning: please do not extend this fixup list. This fixups are
-+	 * applied even on boards where related PHY is not directly connected
-+	 * to the ethernet controller. For example with switch in the middle.
-+	 */
- 	if (IS_BUILTIN(CONFIG_PHYLIB)) {
- 		phy_register_fixup_for_uid(PHY_ID_KSZ9021, MICREL_PHY_ID_MASK,
- 				ksz9021rn_phy_fixup);
--		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
--				ksz9031rn_phy_fixup);
-+
-+		if (of_machine_is_compatible("dmo,imx6q-edmqmx6"))
-+			phy_register_fixup_for_uid(PHY_ID_KSZ9031,
-+						   MICREL_PHY_ID_MASK,
-+						   ksz9031rn_phy_fixup);
-+
- 		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffef,
- 				ar8031_phy_fixup);
- 		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,
--- 
-2.24.0
-
+Anybody?
+Please.
