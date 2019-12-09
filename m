@@ -2,105 +2,125 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C36C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8442C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFC324655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="AtitwyU5"
+	by mail.kernel.org (Postfix) with ESMTP id A679D205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfLISnZ (ORCPT
+        id S1727045AbfLISnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:43:25 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46210 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbfLISnX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:43:23 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z124so7522028pgb.13
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:43:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=IIH0mWEOKsrcmUy6W4S6vhOIAF99APXeNHDFU0+OuwU=;
-        b=AtitwyU5jG9dUQgdTtVCGo+WvR+V5xoyOXDZnvs1Xma9x4r123GcU5mVq2ySCFO27j
-         bp/826+4nJMux9V+IUJgYpLdDKC5BraO2w9IVzwB406YKaGsk631poHYEoGnWSpIfyWo
-         uYyCIHrNASD0reSbdZqLgB+vV1uAmtBV1XhL0HAfAAbS4Tqp0MoTg//95jLuNNB8tfKl
-         qPMvG+UirHZ0IpBISVMc9wMYj4Jf7FPt4dkUoW78W7gNnMnxhoi7/66HyEj46GLzLjNB
-         rEXqVybTNZBWCO60EuWtp34Wu18BnPXGDJ8QujFJVWzHatSopGoUgnTPJTc53NWGKwi/
-         BhHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=IIH0mWEOKsrcmUy6W4S6vhOIAF99APXeNHDFU0+OuwU=;
-        b=H3ew6NcqEySe0oI/GUz7xMaYoA9+K2WxOopmwMO+BUfaIdkaK5UrIE26We8B0QJKnq
-         jcquBQBAYRvThxaEPHEZlHIMsIqOEILYU6utkD6kBhX2R+bNO2HIUnaocN8T+TC3G4iU
-         ddhOwVzfvzKiMWLc/9FPG2iOEQg3OTZ1/kL5knLG1S52FS1AGaspvSN2SxxUTq4lTpid
-         QkxSOLQP5gzD30T01qt7z2f2Y17M2Wl0kHj3Fdwff6kOx5wttaCI9HgzuzQhgtfizHwu
-         2qDppis3yexx+LzFEuAIb3AO4SCIZ7E+/moBQ7TlVE0SllnmIIhpKYTPvVZLwLGTp/UB
-         uaXA==
-X-Gm-Message-State: APjAAAXjHq+Gm3teHiOBvzGxr9QPtoXCIylyjRynt1/lxGI+5OLL5Klj
-        JW5yMFeRYjv9TMwFYzzzGP8TuA==
-X-Google-Smtp-Source: APXvYqxzV/mu35PgMYvXJ8tR4re+h252qjg9YNYgXGnvNKzHqxJjS+0qR0RPmVMaDkNSG+YYcc0pGA==
-X-Received: by 2002:a63:3245:: with SMTP id y66mr20161392pgy.234.1575917002492;
-        Mon, 09 Dec 2019 10:43:22 -0800 (PST)
-Received: from ?IPv6:2601:646:c200:1ef2:e2:ee2:815a:30c4? ([2601:646:c200:1ef2:e2:ee2:815a:30c4])
-        by smtp.gmail.com with ESMTPSA id a2sm200336pfg.90.2019.12.09.10.43.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 10:43:21 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
-Date:   Mon, 9 Dec 2019 10:43:19 -0800
-Message-Id: <F6840B11-060A-48F2-9FFE-774E73C50765@amacapital.net>
-References: <efffc167eff1475f94f745f733171d59@AcuMS.aculab.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        network dev <netdev@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-In-Reply-To: <efffc167eff1475f94f745f733171d59@AcuMS.aculab.com>
-To:     David Laight <David.Laight@aculab.com>
-X-Mailer: iPhone Mail (17A878)
+        Mon, 9 Dec 2019 13:43:17 -0500
+Received: from mail.bugwerft.de ([46.23.86.59]:34256 "EHLO mail.bugwerft.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726780AbfLISm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:42:59 -0500
+Received: from zenbar.fritz.box (pD95EF75D.dip0.t-ipconnect.de [217.94.247.93])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 33BBC2E5CE1;
+        Mon,  9 Dec 2019 18:29:09 +0000 (UTC)
+From:   Daniel Mack <daniel@zonque.org>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
+        pascal.huerst@gmail.com, Daniel Mack <daniel@zonque.org>
+Subject: [PATCH 03/10] dt-bindings: gpio: Add documentation for AD242x GPIO controllers
+Date:   Mon,  9 Dec 2019 19:35:04 +0100
+Message-Id: <20191209183511.3576038-5-daniel@zonque.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191209183511.3576038-1-daniel@zonque.org>
+References: <20191209183511.3576038-1-daniel@zonque.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This device must be place as a sub-device of an AD242x MFD node.
 
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+---
+ .../bindings/gpio/adi,ad242x-gpio.yaml        | 65 +++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/adi,ad242x-gpio.yaml
 
-> On Dec 9, 2019, at 3:01 AM, David Laight <David.Laight@aculab.com> wrote:
->=20
-> =EF=BB=BFFrom: Eric Dumazet
->> Sent: 06 December 2019 14:22
-> ...
->> Real question is : Do you actually need to use recvmsg() instead of recvf=
-rom() ?
->> If recvmsg() provides additional cmsg, this is not surprising it is more e=
-xpensive.
->=20
-> Except I'm not passing in a buffer for it.
-> The reason I'm looking at recvmsg is that I'd like to use recvmmsg it orde=
-r to
-> read out more than one message from a socket without doing an extra poll()=
-.
-> Note that I don't expect there to be a second message most of the time and=
+diff --git a/Documentation/devicetree/bindings/gpio/adi,ad242x-gpio.yaml b/Documentation/devicetree/bindings/gpio/adi,ad242x-gpio.yaml
+new file mode 100644
+index 000000000000..0a5a339fc84e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/adi,ad242x-gpio.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/gpio/adi,ad242x-gpio.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Analog Devices AD242x GPIO controller
++
++maintainers:
++  - Daniel Mack <daniel@zonque.org>
++
++description: |
++  This module is part of the AD242x MFD device. For more details and an example
++  refer to Documentation/devicetree/bindings/mfd/ad242x.yaml.
++
++properties:
++  compatible:
++    enum:
++      - adi,ad2428w-gpio
++
++  "#gpio-cells":
++    const: 2
++
++  gpio-controller: true
++
++  gpio-over-distance:
++    type: object
++    description: |
++      Sub-node to configure pins as 'GPIO over distance'.
++      Pins in this mode are not accessible as regular GPIOs; instead, their
++      state is transparantly mirrored between one or multiple nodes.
++
++      Each child node of the 'gpio-over-distance' node describes one pin
++      that is to be configured in 'over distance' mode
++
++    properties:
++      pin:
++        type: object
++        properties:
++          reg:
++            maxItems: 1
++
++          adi,virtual-port-mask:
++            $ref: '/schemas/types.yaml#/definitions/uint32'
++            description: |
++              The virtual port mask to assign this GPIO to.
++              Multiple GPIOs can use the same virtual port to link them
++              together. Refer to the datasheet for the details.
++
++          adi,gpio-output:
++            type: boolean
++            description: Configures this GPIO as output. Defaults to input mode.
++
++          adi,gpio-inverted:
++            type: boolean
++            description: Inverts the GPIO value
++
++        required:
++          - reg
++          - adi,virtual-port-mask
++
++required:
++  - compatible
++  - '#gpio-cells'
++  - gpio-controller
+-- 
+2.23.0
 
-> almost never a third one.
->=20
-> Although I think that will only ever 'win' if recvmmsg() called vfs_poll()=
- to find
-> if there was more data to read before doing any of the copy_from_user() et=
-c
-
-I would suggest a more general improvement: add a -EAGAIN fast path to recvm=
-sg().  If the socket is nonblocking and has no data to read, then there shou=
-ldn=E2=80=99t be a need to process the iovec at all.=
