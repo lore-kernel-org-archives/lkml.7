@@ -2,113 +2,93 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAA0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8165C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A68A5206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E252206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:44:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/al3Bw8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727746AbfLINnI (ORCPT
+        id S1727767AbfLINoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:43:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:60976 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbfLINnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:43:08 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A0B2328;
-        Mon,  9 Dec 2019 05:43:07 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFEB23F718;
-        Mon,  9 Dec 2019 05:43:06 -0800 (PST)
-Subject: Re: [PATCH] mfd: rk808: Always use poweroff when requested
-To:     Soeren Moch <smoch@web.de>, Lee Jones <lee.jones@linaro.org>
-Cc:     linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191209115746.12953-1-smoch@web.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <40f82334-8f89-e2bd-985a-b09f71be20ce@arm.com>
-Date:   Mon, 9 Dec 2019 13:43:05 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Dec 2019 08:44:30 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39960 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfLINoa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:44:30 -0500
+Received: by mail-oi1-f193.google.com with SMTP id 6so6309734oix.7;
+        Mon, 09 Dec 2019 05:44:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pdtrpdD1TKIjvb8irx4vWJg8+w04giYZXMmV837pN2g=;
+        b=T/al3Bw8wn27lr3SLBgNIYFJs63fsI0DIaot21MQzkCVT4iZZT2NYjs5gJSJz4znGj
+         8uHbiqVU0MyxiterYKYbi0iazUDeDA71H4Z33DYgRMdbEvSygujbrg0L+QUVoTlbBtku
+         3oPvYqYbuFQUClKdzeI724fbXIX2lYSrVb+/EjYq20tF/8KPtPYcBh9VnhEVEvqVLpOe
+         JdJKgXwu57YIVoWXwI1UMSJ++EQBYdOWDDBxFfaSBTfSk9C2EU/RY2d5kxpJMGcMG91x
+         +zIev+3/ST2HH3ioHuzEMkQXsNzh2R8/XvEySepe1mr8h67Fs/EkyUwFEGNMBsO7bUkJ
+         kTnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pdtrpdD1TKIjvb8irx4vWJg8+w04giYZXMmV837pN2g=;
+        b=DWwnSvgS7H4pvng+8dRmoYSx/g4zEsHa63wRT29FeLB+elSVbiB7roZY4U+ghNprFk
+         ilkOLvg03vcQ8UcyYmoSY/8HMWgQO9rKDQP69K1xIel4U4OuOckZaFwDgkRk04TW36rj
+         kZ6oXoDLZzTSYKORUvO8aNUjgLHSp+5J04QvAAnk3JBfyatmT6tO6s1w16/sUKNQrs8M
+         iISlxK9UbBEBiRTPYrP+6afvu9X1em0ET1yxq0nvY9wP7B0oNVPAvrXoaLjc5rnh+OWL
+         8bIPOpNO2C6n1tqbDftwC5RTKc1ubTDo8Tgxu98CmD5htRMtXQ59GDQ1KKF/2/9W3AAW
+         YpRg==
+X-Gm-Message-State: APjAAAX/gC54HHfxsfe6cbYg7peut0M3aC1lKNlpzEcebyxYqAu11tS0
+        PVcsuVJJjTBMF03GULpLlvEejertypCzODAXnNE=
+X-Google-Smtp-Source: APXvYqwZ7NMEhCMa1CsGy9xOP12ehMUrB/FCbl2ilogCpY1zCGGz6MQ/XHN66Y9YL/Qw/iNI5SRd5y+Jfz0YzL7xQTQ=
+X-Received: by 2002:aca:3cc3:: with SMTP id j186mr23081279oia.169.1575899069062;
+ Mon, 09 Dec 2019 05:44:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191209115746.12953-1-smoch@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20191121142726.22856-1-TheSven73@gmail.com> <20191121142726.22856-3-TheSven73@gmail.com>
+ <20191209123206.GI3468@dell>
+In-Reply-To: <20191209123206.GI3468@dell>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Mon, 9 Dec 2019 08:44:18 -0500
+Message-ID: <CAGngYiX4hgEM7cjeLE-sRswDXTff92OqdBWNgx5WGNmPjuqsUA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: mfd: update TI tps6105x chip bindings
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/12/2019 11:57 am, Soeren Moch wrote:
-> With the device tree property "rockchip,system-power-controller" we
-> explicitly request to use this PMIC to power off the system. So always
-> register our poweroff function, even if some other handler (probably
-> PSCI poweroff) was registered before.
+Hi Lee, thank you for the review.
 
-This seems preferable to abusing syscore ops, and at least it does allow 
-the firmware behaviour to be encapsulated in the DT (and thus more 
-easily updated if and when a firmware-based shutdown can be achieved on 
-currently-crippled boards) rather than baking assumptions into the 
-kernel. And in the meantime, I *would* quite like to be able to power 
-down my RK3399 board without having to lean on the button... so I guess,
+On Mon, Dec 9, 2019 at 7:32 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> > Tree: next-20191118
+>
+> Why is this in your commit message?
 
-Acked-by: Robin Murphy <robin.murphy@arm.com>
+I have been posting patches against various maintainer trees lately, which
+will not apply to mainline or next. So I have been including base tree
+information in the patch itself.
 
-> Signed-off-by: Soeren Moch <smoch@web.de>
-> ---
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-rockchip@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->   drivers/mfd/rk808.c | 11 ++---------
->   1 file changed, 2 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
-> index a69a6742ecdc..616e44e7ef98 100644
-> --- a/drivers/mfd/rk808.c
-> +++ b/drivers/mfd/rk808.c
-> @@ -550,7 +550,7 @@ static int rk808_probe(struct i2c_client *client,
->   	const struct mfd_cell *cells;
->   	int nr_pre_init_regs;
->   	int nr_cells;
-> -	int pm_off = 0, msb, lsb;
-> +	int msb, lsb;
->   	unsigned char pmic_id_msb, pmic_id_lsb;
->   	int ret;
->   	int i;
-> @@ -674,16 +674,9 @@ static int rk808_probe(struct i2c_client *client,
->   		goto err_irq;
->   	}
-> 
-> -	pm_off = of_property_read_bool(np,
-> -				"rockchip,system-power-controller");
-> -	if (pm_off && !pm_power_off) {
-> +	if (of_property_read_bool(np, "rockchip,system-power-controller")) {
->   		rk808_i2c_client = client;
->   		pm_power_off = rk808->pm_pwroff_fn;
-> -	}
-> -
-> -	if (pm_off && !pm_power_off_prepare) {
-> -		if (!rk808_i2c_client)
-> -			rk808_i2c_client = client;
->   		pm_power_off_prepare = rk808->pm_pwroff_prep_fn;
->   	}
-> 
-> --
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
+Base-tree info on patches is high on developers' wish list, but not yet
+standardized. This was discussed at the 2019 kernel maintainers
+summit:
+https://lwn.net/Articles/803619/
