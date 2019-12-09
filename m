@@ -2,31 +2,31 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DF4C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83395C00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2808206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB7A206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfLITOE (ORCPT
+        id S1726953AbfLITOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:14:04 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:56026 "EHLO ale.deltatee.com"
+        Mon, 9 Dec 2019 14:14:07 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:56032 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfLITOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:14:04 -0500
+        id S1726365AbfLITOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:14:05 -0500
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ieOTk-00025k-Lg; Mon, 09 Dec 2019 12:13:57 -0700
+        id 1ieOTk-00025q-NL; Mon, 09 Dec 2019 12:13:57 -0700
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ieOTd-0001Me-0k; Mon, 09 Dec 2019 12:13:49 -0700
+        id 1ieOTd-0001Mv-Me; Mon, 09 Dec 2019 12:13:49 -0700
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
@@ -43,16 +43,19 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon,  9 Dec 2019 12:13:40 -0700
-Message-Id: <20191209191346.5197-1-logang@deltatee.com>
+        Logan Gunthorpe <logang@deltatee.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Date:   Mon,  9 Dec 2019 12:13:46 -0700
+Message-Id: <20191209191346.5197-7-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191209191346.5197-1-logang@deltatee.com>
+References: <20191209191346.5197-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, hch@lst.de, dan.j.williams@intel.com, akpm@linux-foundation.org, catalin.marinas@arm.com, benh@kernel.crashing.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, will@kernel.org, luto@kernel.org, peterz@infradead.org, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, hch@lst.de, dan.j.williams@intel.com, akpm@linux-foundation.org, catalin.marinas@arm.com, benh@kernel.crashing.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, will@kernel.org, luto@kernel.org, peterz@infradead.org, logang@deltatee.com, jgg@ziepe.ca
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 0/6] Allow setting caching mode in arch_add_memory() for P2PDMA
+Subject: [PATCH 6/6] mm/memremap: Set caching mode for PCI P2PDMA memory to WC
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,73 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+PCI BAR IO memory should never be mapped as WB, however prior to this
+the PAT bits were set WB and it was typically overridden by MTRR
+registers set by the firmware.
 
-Currently, the page tables created using memremap_pages() are always
-created with the PAGE_KERNEL cacheing mode. However, the P2PDMA code
-is creating pages for PCI BAR memory which should never be accessed
-through the cache and instead use either WC or UC. This still works in
-most cases, on x86, because the MTRR registers typically override the
-caching settings in the page tables for all of the IO memory to be
-UC-. However, this tends not to work so well on other arches or
-some rare x86 machines that have firmware which does not setup the
-MTRR registers in this way.
+Set PCI P2PDMA memory to be WC (writecombining) as the only current
+user (the NVMe CMB) was originally mapped WC before the P2PDMA code
+replaced the mapping with devm_memremap_pages().
 
-Instead of this, this series proposes a change to arch_add_memory()
-to take the pgprot required by the mapping which allows us to
-explicitly set pagetable entries for P2PDMA memory to WC.
+Future use-cases may need to generalize this by adding flags to
+select the caching type, as some P2PDMA cases will not want WC.
+However, those use-cases are not upstream yet and this can be changed
+when they arrive.
 
-This changes is pretty routine for most of the arches: x86_64, s390, arm64
-and powerpc simply need to thread the pgprot through to where the page tables
-are setup. x86_32 unfortunately sets up the page tables at boot so
-must use _set_memory_prot() to change their caching mode. ia64 and sh
-don't appear to have an easy way to change the page tables so, for now
-at least, we just return -EINVAL on such mappings and thus they will
-not support P2PDMA memory until the work for this is done.
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ mm/memremap.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Thanks,
-
-Logan
-
---
-
-Logan Gunthorpe (6):
-  x86/mm: Thread pgprot_t through init_memory_mapping()
-  x86/mm: Introduce _set_memory_prot()
-  powerpc/mm: Thread pgprot_t through create_section_mapping()
-  s390/mm: Thread pgprot_t through vmem_add_mapping()
-  mm, memory_hotplug: Provide argument for the pgprot_t in
-    arch_add_memory()
-  mm/memremap: Set caching mode for PCI P2PDMA memory to WC
-
- arch/arm64/mm/mmu.c                        |  4 +--
- arch/ia64/mm/init.c                        |  5 +++-
- arch/powerpc/include/asm/book3s/64/hash.h  |  3 +-
- arch/powerpc/include/asm/book3s/64/radix.h |  3 +-
- arch/powerpc/include/asm/sparsemem.h       |  3 +-
- arch/powerpc/mm/book3s64/hash_utils.c      |  5 ++--
- arch/powerpc/mm/book3s64/pgtable.c         |  7 +++--
- arch/powerpc/mm/book3s64/radix_pgtable.c   | 18 +++++++-----
- arch/powerpc/mm/mem.c                      |  7 +++--
- arch/s390/include/asm/pgtable.h            |  3 +-
- arch/s390/mm/extmem.c                      |  3 +-
- arch/s390/mm/init.c                        |  4 +--
- arch/s390/mm/vmem.c                        | 10 +++----
- arch/sh/mm/init.c                          |  5 +++-
- arch/x86/include/asm/page_types.h          |  3 --
- arch/x86/include/asm/pgtable.h             |  3 ++
- arch/x86/include/asm/set_memory.h          |  1 +
- arch/x86/kernel/amd_gart_64.c              |  3 +-
- arch/x86/mm/init.c                         |  9 +++---
- arch/x86/mm/init_32.c                      | 10 +++++--
- arch/x86/mm/init_64.c                      | 34 ++++++++++++----------
- arch/x86/mm/mm_internal.h                  |  3 +-
- arch/x86/mm/pageattr.c                     |  7 +++++
- arch/x86/platform/efi/efi_64.c             |  3 +-
- include/linux/memory_hotplug.h             |  2 +-
- mm/memory_hotplug.c                        |  2 +-
- mm/memremap.c                              |  5 +++-
- 27 files changed, 104 insertions(+), 61 deletions(-)
-
---
+diff --git a/mm/memremap.c b/mm/memremap.c
+index 4edcca074e15..ced32593e4a7 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -187,7 +187,10 @@ void *memremap_pages(struct dev_pagemap *pgmap, int nid)
+ 		}
+ 		break;
+ 	case MEMORY_DEVICE_DEVDAX:
++		need_devmap_managed = false;
++		break;
+ 	case MEMORY_DEVICE_PCI_P2PDMA:
++		pgprot = pgprot_writecombine(pgprot);
+ 		need_devmap_managed = false;
+ 		break;
+ 	default:
+-- 
 2.20.1
+
