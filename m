@@ -2,143 +2,108 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E746C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CB4C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70DDC206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D4C4206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:12:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AzLikofF"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PLTuiULk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfLIWFS (ORCPT
+        id S1726816AbfLIWMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 17:05:18 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20708 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726743AbfLIWFR (ORCPT
+        Mon, 9 Dec 2019 17:12:39 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35729 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfLIWMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 17:05:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575929117;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=foPomkZZHn+fl/+k/LBQXwFbzjdsSjHkkGqYwk6TqkM=;
-        b=AzLikofF8C3Iytx4YNwACrDKLEE5Q+8aM4arrtDh807TwcKCmY4zuT2RiY683nziVfY47y
-        64u7RWtaLn4kaAX09BIZ088A0c1S+icpM5o28u+AcI0rrg7NJRwTPJW4pKnB7p6FaKe69v
-        EOgEcxUM7iBViwSYnOj1AAo62euKv4o=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-415-F1kAscUePPqZ0fj6ctg55g-1; Mon, 09 Dec 2019 17:05:13 -0500
-Received: by mail-qt1-f198.google.com with SMTP id o24so487804qtr.17
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 14:05:13 -0800 (PST)
+        Mon, 9 Dec 2019 17:12:38 -0500
+Received: by mail-pl1-f193.google.com with SMTP id s10so6386534plp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 14:12:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=ItZ6nMPESHqLIASUC8LoX6fE4/wm+TwTGtRQ1RnKUZ0=;
+        b=PLTuiULkvl88lhZJ7eXEZyEeyBFYh9ogHEt4KRJu32M2cSkg+0HS26NQbqT2+JfAs8
+         dFf9qlMcSwGgR4627eFALudbNGexXTuCa6SEd7v3Hx7SK9dSKEmEDuk0v3Y9NsZMgpq/
+         mxKlvx6opX6J7hpzmDQ29YK/mcz6eYhMYpvY7riVO3pCebZFVxPLkDvLO1gjPrP4dbl0
+         qw0SWvQc7uOLp3QQ6G2B5Umx3KsUyg6T/YMGTRGxF0aoJzaXX7Q/e5NoJnusYIyu4tta
+         Y4nffcrao80vVYOpikWwtkLJbMFNjwwLDRDUfSTT/wF3gKdXO1iPaFge9FbUtvSWhNtK
+         rqrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nx7/jgy/0hqWMwbx9WXuS3LtbNfgu/8UAt4zNXzHNaM=;
-        b=cZNIX5RRIdFKbi/EfQckny+9Z9NQcfeuCeodpFVnPTyg4c70QpxH45kNkS+0Q2MNFK
-         oQ7fwduOjErIpcyhyCpscH7DcJQ5n1LAEf0OId97l+nuMLJevdQidyXUG5O1P9twbhHx
-         1ogl6ONnpTAEP2o2hDKJFjwFBJHtJLJmX2a8LgT0tRNam8CCvpvXn7wSRNf9+4PH9ItD
-         eOXJOwo1ib92L9oHsE5emVyfiRk+MoISk2X/xTC3WEV/8l59F9xpAHbfJllQI7iIl885
-         uCvQp36cSCbBGqP8VqkvEANfrqmCoW+S/dOh2K2WMnjF7YftIi8Q1wjkyDVlDYwoAo7F
-         Xu/g==
-X-Gm-Message-State: APjAAAXRl6sPJr/i4XK694QmDcHzPBmM9ISXa5uNURHGxz9hrM3Ua0Zq
-        OxCQlSmXC1IVD1W7es31iacuhmQLyVBLWyqNGk1wNy2/WTxdzGpvPB+l5miHK588VfKtxXeI/4N
-        9uYqYiN90Xn7S0uGSJtIGfs3X
-X-Received: by 2002:a37:794:: with SMTP id 142mr6911041qkh.348.1575929112524;
-        Mon, 09 Dec 2019 14:05:12 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwxwnec2wNeIpqiKODeEI2N6KwumS+V0HMESm4wg/+r3zeVfUjC0y3kANOIn7fAvQZWAunnvg==
-X-Received: by 2002:a37:794:: with SMTP id 142mr6910997qkh.348.1575929111957;
-        Mon, 09 Dec 2019 14:05:11 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id z4sm280179qkz.62.2019.12.09.14.05.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 14:05:11 -0800 (PST)
-Date:   Mon, 9 Dec 2019 17:05:10 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RFC 01/15] KVM: Move running VCPU from ARM to common code
-Message-ID: <20191209220510.GB3352@xz-x1>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-2-peterx@redhat.com>
- <20191203190126.GC19877@linux.intel.com>
- <a9d3301c-4c2f-9624-dc52-1033b940ef06@redhat.com>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ItZ6nMPESHqLIASUC8LoX6fE4/wm+TwTGtRQ1RnKUZ0=;
+        b=GvT90WQ1fMii1OktlreN//OVJRvyfVyBB/lb41MLYKu92V0X5qltgZssJvPGlXs3Iu
+         fQTxYCvabW7oROrKuKPzsNAKJ01bDzAW5Y1RrhRk1T0xGagJR8LFg5A53bynt/7Ng4Qn
+         s4+6niB3/Rqoq6jkk43DvNl0Nu/pL4/y2R/TXargkWLR5GA6suBsip1M/kaOUBKzBbpf
+         gkK1dGiZuMEmH1qFOXnPo6S/NaakFtQyrcz/xKF/3GsjV9nFkPc8+weh21OFXRPmbBly
+         Re7JBEO2kvu4CoZBsoF9g4v/+gAHynYY8pH+8Hics6pFEmbtnzyUFiXPD/6hzrEVi2Aj
+         2xaA==
+X-Gm-Message-State: APjAAAXG2Q89Xl/23ak20Z433e8KzG7/nKaN7moRU4tfejbiA9BhhUZl
+        H2YXNw14MIT2DALrI0+wS+z3Lw==
+X-Google-Smtp-Source: APXvYqx22xb5jLxK6hTsSuOBQ53SZCEaDbusHD9ujqDQUXDe6tywX359eNJglK+iOHzOxi2uui8Ynw==
+X-Received: by 2002:a17:902:a614:: with SMTP id u20mr31864485plq.107.1575929557672;
+        Mon, 09 Dec 2019 14:12:37 -0800 (PST)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id q13sm345574pjc.4.2019.12.09.14.12.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Dec 2019 14:12:37 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Anand Moon <linux.amoon@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC-next 0/1] Odroid C2: Enable DVFS for cpu
+In-Reply-To: <20191101143126.2549-1-linux.amoon@gmail.com>
+References: <20191101143126.2549-1-linux.amoon@gmail.com>
+Date:   Mon, 09 Dec 2019 14:12:36 -0800
+Message-ID: <7hfthtrvvv.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <a9d3301c-4c2f-9624-dc52-1033b940ef06@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-MC-Unique: F1kAscUePPqZ0fj6ctg55g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 10:42:27AM +0100, Paolo Bonzini wrote:
-> On 03/12/19 20:01, Sean Christopherson wrote:
-> > In case it was clear, I strongly dislike adding kvm_get_running_vcpu().
-> > IMO, it's a unnecessary hack.  The proper change to ensure a valid vCPU=
- is
-> > seen by mark_page_dirty_in_ring() when there is a current vCPU is to
-> > plumb the vCPU down through the various call stacks.  Looking up the ca=
-ll
-> > stacks for mark_page_dirty() and mark_page_dirty_in_slot(), they all
-> > originate with a vcpu->kvm within a few functions, except for the rare
-> > case where the write is coming from a non-vcpu ioctl(), in which case
-> > there is no current vCPU.
-> >=20
-> > The proper change is obviously much bigger in scope and would require
-> > touching gobs of arch specific code, but IMO the end result would be wo=
-rth
-> > the effort.  E.g. there's a decent chance it would reduce the API betwe=
-en
-> > common KVM and arch specific code by eliminating the exports of variant=
-s
-> > that take "struct kvm *" instead of "struct kvm_vcpu *".
->=20
-> It's not that simple.  In some cases, the "struct kvm *" cannot be
-> easily replaced with a "struct kvm_vcpu *" without making the API less
-> intuitive; for example think of a function that takes a kvm_vcpu pointer
-> but then calls gfn_to_hva(vcpu->kvm) instead of the expected
-> kvm_vcpu_gfn_to_hva(vcpu).
->=20
-> That said, looking at the code again after a couple years I agree that
-> the usage of kvm_get_running_vcpu() is ugly.  But I don't think it's
-> kvm_get_running_vcpu()'s fault, rather it's the vCPU argument in
-> mark_page_dirty_in_slot and mark_page_dirty_in_ring that is confusing
-> and we should not be adding.
->=20
-> kvm_get_running_vcpu() basically means "you can use the per-vCPU ring
-> and avoid locking", nothing more.  Right now we need the vCPU argument
-> in mark_page_dirty_in_ring for kvm_arch_vcpu_memslots_id(vcpu), but that
-> is unnecessary and is the real source of confusion (possibly bugs too)
-> if it gets out of sync.
->=20
-> Instead, let's add an as_id field to struct kvm_memory_slot (which is
-> trivial to initialize in __kvm_set_memory_region), and just do
->=20
-> =09as_id =3D slot->as_id;
-> =09vcpu =3D kvm_get_running_vcpu();
->=20
-> in mark_page_dirty_in_ring.
+Anand Moon <linux.amoon@gmail.com> writes:
 
-Looks good.  I'm adding another patch for it, and dropping patch 2 then.
+> Some how this patch got lost, so resend this again.
+>
+> [0] https://patchwork.kernel.org/patch/11136545/
+>
+> This patch enable DVFS on GXBB Odroid C2.
+>
+> DVFS has been tested by running the arm64 cpuburn
+> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
+> PM-QA testing
+> [2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
+>
+> Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
 
-Thanks,
+Have you tested with the Harkernel u-boot?
 
---=20
-Peter Xu
+Last I remember, enabling CPUfreq will cause system hangs with the
+Hardkernel u-boot because of improperly enabled frequencies, so I'm not
+terribly inclined to merge this patch.
 
+> Patch based on my next-20191031 for 5.5.x kernel.
+> Hope this is not late entry.
+
+Re: "too late".  FYI... when you post things as RFC, it means you're
+looking for comments (Request For Comment) but that it's not intended
+for merging.
+
+I didn't see any comments on this, but I also didn't see a non-RFC
+follow-up, so I didn't queue it for v5.5.
+
+Kevin
